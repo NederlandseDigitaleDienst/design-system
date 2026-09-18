@@ -110,6 +110,5 @@ waarom de lijst leeg is.
 
 ## Gezien in
 
-WIES bouwde dit patroon voor zijn gebruikers-, opdrachten- en
-wie-zit-waar-lijsten; `odi-startpagina` nam het facetfilter daarvandaan over
-voor een statische site van 144 items.
+Dit patroon is uit productiecode gedestilleerd en daarna in een tweede product
+overgenomen. De tokenstrip is het deel dat het vaakst zelf wordt nagebouwd.

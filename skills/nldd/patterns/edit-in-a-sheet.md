@@ -100,6 +100,7 @@ title-bar, en `dismiss-text` zetten zodat er een zichtbare sluitknop is.
 
 ## Gezien in
 
-`sheet > page` komt in de meeste applicaties van het veld voor (het staat nu nog
-verstopt in het Vue-bootstrapvoorbeeld). WIES gebruikt hetzelfde patroon voor
-zijn filter-sheets en foutmeldingen naast de lijst, in Jinja2 in plaats van Vue.
+Deze compositie komt in vrijwel elke applicatie op dit systeem voor, in Vue,
+Angular en server-gerenderde templates. Het imperatieve deel (`show()` en
+`hide()` spiegelen) is framework-werk; het complete Vue-voorbeeld staat in
+[`../examples/bootstrap-vue.md`](../examples/bootstrap-vue.md).

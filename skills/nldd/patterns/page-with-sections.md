@@ -175,6 +175,6 @@ Wat jij nog moet doen: de koppenstructuur (`h1`-`h6` in de titelslots), en een
 ## Gezien in
 
 `page > simple-section` en `simple-section > title` zijn de meest voorkomende
-composities in het hele veld, in alle onderzochte producten. De uitgewerkte
-content- en landingspagina met hero, kaartenraster en footer staat in
+composities op dit systeem, in elk onderzocht product. De uitgewerkte content-
+en landingspagina met hero, kaartenraster en footer staat in
 [`../examples/content-page.md`](../examples/content-page.md).

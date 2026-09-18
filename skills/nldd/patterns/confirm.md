@@ -117,7 +117,5 @@ paginastructuur meedoet.
 
 ## Gezien in
 
-`inline-dialog > button` komt in de helft van de onderzochte producten voor, en
-`modal-dialog > button` in een kwart: de inline-variant wordt dus veel vaker
-gebruikt dan de onderbrekende, wat precies de bedoeling is. WIES bouwde zijn
-foutpagina's expres op een inline dialog in plaats van op een modal.
+De inline variant wordt in de praktijk veel vaker gebruikt dan de
+onderbrekende modal. Dat is de bedoeling: zie "wanneer niet" hierboven.

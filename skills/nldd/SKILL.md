@@ -206,8 +206,7 @@ root-element. Er is geen aparte thema-toggle-API op `nldd-app-view`.
 ## Gebruikspatronen
 
 Elk patroon heeft een reden. De voorbeelden zijn gedestilleerd uit code die in
-productie draait, van [regelrecht](https://github.com/MinBZK/regelrecht) (Vue en
-Astro) tot [WIES](https://github.com/RijksICTGilde/wies) (Django en Jinja2).
+productie draait, in Vue, Astro, Angular en server-gerenderde templates.
 
 > **Bouw je iets, begin dan bij [`patterns/`](patterns/).** Daar staan de acht
 > basispatronen uitgewerkt met hun compositie, werkende code en het waarom:

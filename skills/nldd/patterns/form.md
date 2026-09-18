@@ -104,7 +104,7 @@ en `invalid` pas bij verzending zetten en niet terwijl iemand typt.
 
 ## Gezien in
 
-`form-field > text-field` en `container > form-field` komen in de meeste
-onderzochte producten voor. `nldd-form-section` staat er juist opvallend weinig
-in, terwijl veel apps de veldgroepering met de hand nabouwen: daarom staat het
-hier expliciet in de compositie.
+`form-field` met een invoerveld erin is een van de meest voorkomende
+composities op dit systeem. `nldd-form-section` juist niet, terwijl apps de
+veldgroepering wel met de hand nabouwen: daarom staat het hier expliciet in de
+compositie.

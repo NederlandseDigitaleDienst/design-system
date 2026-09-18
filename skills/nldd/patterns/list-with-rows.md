@@ -143,13 +143,10 @@ heeft niets.
 
 ## Gezien in
 
-De meest voorkomende compositie in het hele veld: `list > list-item` en
-`list-item > text-cell` komen in alle onderzochte producten voor, van de
-Vue-apps van regelrecht tot de Jinja2-templates van WIES en de Angular-code van
-de Fundament Console (daar 352 keer `list-item > text-cell`).
+De meest voorkomende compositie op dit systeem, in elk onderzocht product en in
+elk framework: Vue, Angular en server-gerenderde templates.
 
-De lege toestanden zijn de uitzondering. In de Angular-frontends staat
-`slot="empty"` één keer en `slot="no-results"` geen enkele, terwijl er wel
-honderden rijen gerenderd worden. Dat is waarom die twee slots hierboven
-uitgeschreven staan: ze bestaan, ze doen precies wat je zelf zou nabouwen, en
-vrijwel niemand vindt ze.
+De lege toestanden zijn de uitzondering. `slot="empty"` en `slot="no-results"`
+worden vrijwel nergens gebruikt, ook niet in apps die honderden rijen renderen.
+Ze bestaan, ze doen precies wat je anders zelf nabouwt, en vrijwel niemand
+vindt ze. Vandaar dat ze hierboven zijn uitgeschreven.

@@ -81,8 +81,6 @@ meer dan één is, en het overloop-alternatief per item.
 
 ## Gezien in
 
-`toolbar > toolbar-item` staat honderden keren in het veld. WIES ontdekte de
-lege-overloop-fout in productie en gaf daarna elk item een menu-alternatief;
-de tabbalk in het opdrachtenpaneel kreeg `priority="1"` in plaats van een menu.
-De Fundament Console kwam er in Angular zelfstandig op uit: 53 keer een
-`slot="overflow"` naast 72 werkbalkitems.
+Werkbalken staan in elke applicatie op dit systeem. De lege-overloop-fout is in
+meerdere producten los van elkaar tegengekomen: hij is op een breed scherm
+onzichtbaar en valt pas op als iemand het venster smal maakt.
