@@ -13,12 +13,15 @@ Digitale Dienst (Rijksoverheid). Ben je bezig met het **ontwikkelen van het
 designsysteem zelf** (nieuwe componenten, CSS-conventies), gebruik dan
 `/component` en `/css`, niet deze skill.
 
-Twee bestanden horen hierbij:
+Drie plekken horen hierbij:
 
+- [`patterns/`](patterns/): de acht basispatronen, dus hoe je componenten
+  samenstelt tot een pagina, een lijst, een formulier, een menu, een sheet of een
+  bevestiging. Begin hier als je iets bouwt.
 - [`reference.md`](reference.md): gegenereerde snelreferentie van elk
   `nldd-*` element met zijn attributen, slots en events.
-- [`examples/`](examples/): werkende bootstrap- en patroonvoorbeelden voor
-  platte HTML, Vue 3, layout-patronen en een complete content-pagina.
+- [`examples/`](examples/): werkende bootstrap-voorbeelden voor platte HTML en
+  Vue 3, en een complete content-pagina.
 
 De levende documentatie met visuele voorbeelden staat in
 [Storybook](https://nederlandsedigitaledienst.github.io/design-system/). De exacte types staan in de
@@ -202,9 +205,21 @@ root-element. Er is geen aparte thema-toggle-API op `nldd-app-view`.
 
 ## Gebruikspatronen
 
-Elk patroon heeft een reden. De voorbeelden zijn gedestilleerd uit
-[regelrecht](https://github.com/MinBZK/regelrecht), de productie-app die dit
-systeem het meest volwassen gebruikt.
+Elk patroon heeft een reden. De voorbeelden zijn gedestilleerd uit code die in
+productie draait, van [regelrecht](https://github.com/MinBZK/regelrecht) (Vue en
+Astro) tot [WIES](https://github.com/RijksICTGilde/wies) (Django en Jinja2).
+
+> **Bouw je iets, begin dan bij [`patterns/`](patterns/).** Daar staan de acht
+> basispatronen uitgewerkt met hun compositie, werkende code en het waarom:
+> [pagina met secties](patterns/page-with-sections.md),
+> [werkbalk met acties](patterns/toolbar-with-actions.md),
+> [lijst met rijen](patterns/list-with-rows.md),
+> [een lijst filteren](patterns/filter-a-list.md),
+> [formulier](patterns/form.md),
+> [menu bij een knop](patterns/menu-from-a-button.md),
+> [bewerken in een sheet](patterns/edit-in-a-sheet.md) en
+> [bevestigen](patterns/confirm.md). De secties hieronder geven de losse
+> regels en de mechaniek eronder.
 
 ### Layout componeren
 
@@ -521,6 +536,9 @@ bestaat, zonder foutmelding, alleen een stille terugval op de default.
    controls per component.
 2. **`.d.ts` types in het pakket**: de exacte, actuele API.
 3. **[`reference.md`](reference.md)**: offline snelreferentie van alle elementen.
+4. **[`patterns/`](patterns/)**: hoe je die elementen samenstelt, met het waarom
+   erbij. De referentie zegt wat een component kan; een patroon zegt hoe je er
+   een taak mee afhandelt.
 4. **[`changelog.md`](changelog.md)**: de release notes per versie. Raadpleeg
    dit als een attribuut, slot of gedrag pas vanaf een bepaalde versie bestaat,
    of om te zien wat er sinds jouw versie is veranderd.

@@ -57,6 +57,13 @@ jobs:
       - name: Validate component API documentation
         run: npm run validate:component-api
 
+      # The two checks above only cover generated output and the JSDoc behind
+      # it. SKILL.md, patterns/*.md and examples/*.md are hand-written, and
+      # their code blocks are what consumers and agents copy, so a tag or
+      # attribute that no longer exists is a bug we ship.
+      - name: Validate hand-written skill markup
+        run: npm run validate:skill-markup
+
       # Guards reference.md (JSDoc-derived) against drift on every PR.
       # changelog.md is intentionally NOT guarded here: it is synced from the
       # root CHANGELOG by the release pipeline (@semantic-release/exec), so it

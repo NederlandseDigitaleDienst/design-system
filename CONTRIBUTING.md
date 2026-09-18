@@ -17,6 +17,29 @@ component het al te kunnen, en anders helpt die context bij het ontwerp.
 Voor kwetsbaarheden geldt een andere route. Die staan in
 [`SECURITY.md`](./SECURITY.md) en horen niet in een openbaar issue.
 
+### Een patroon voorstellen
+
+Een patroon is geen component: het beschrijft hoe je bestaande componenten
+samenstelt tot iets dat een taak afhandelt. De set staat in
+[`skills/nldd/patterns/`](./skills/nldd/patterns/) en blijft **expres klein**;
+acht patronen die kloppen zijn nuttiger dan een catalogus die niemand bijhoudt.
+
+Stel je er een voor, begin dan bij het probleem en het bewijs, niet bij de code:
+
+- **Welke taak** van de gebruiker lost dit op, en waarom lukt dat nu niet met wat
+  er al staat?
+- **Waar draait het?** Noem de producten of schermen waar deze compositie nu al
+  in gebruik is. Een patroon dat in meerdere producten van verschillende teams
+  terugkomt is een patroon van het systeem; iets dat in één app staat is
+  voorlopig een gewoonte van die app. Dat laatste sluit niets uit, maar het
+  bepaalt wel hoe hard het bewijs is.
+- **Wat is de regel?** Een patroon zonder "waarom zo" is een stuk voorbeeldcode,
+  en dat kan in Storybook.
+
+Code mag later. Draait het patroon eenmaal, dan moet elke `nldd-*`-tag in de
+documentatie bestaan: `npm run validate:skill-markup` controleert dat in CI,
+tegen de echte component-API.
+
 ## Lokaal draaien
 
 Je hebt Node 18 of hoger nodig.
