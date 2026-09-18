@@ -79,4 +79,6 @@ Wat jij nog moet doen: `popup-type` zetten, en de toetsafhandeling van een
 
 WIES verving hiermee negen handmatige `anchor="id"`-koppelingen door de
 `popup`-slot: rijmenu's bij gebruikers, labels en teamleden, en de menu's in
-het opdrachtenpaneel.
+het opdrachtenpaneel. `menu > menu-item` is ook in de Fundament Console de op
+twee na meest voorkomende compositie (118 keer). Die staat halverwege dezelfde
+omslag: 34 keer de `popup`-slot naast nog 49 handmatige anchors.

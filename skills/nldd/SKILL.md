@@ -539,10 +539,10 @@ bestaat, zonder foutmelding, alleen een stille terugval op de default.
 4. **[`patterns/`](patterns/)**: hoe je die elementen samenstelt, met het waarom
    erbij. De referentie zegt wat een component kan; een patroon zegt hoe je er
    een taak mee afhandelt.
-4. **[`changelog.md`](changelog.md)**: de release notes per versie. Raadpleeg
+5. **[`changelog.md`](changelog.md)**: de release notes per versie. Raadpleeg
    dit als een attribuut, slot of gedrag pas vanaf een bepaalde versie bestaat,
    of om te zien wat er sinds jouw versie is veranderd.
-5. **[`design-guidelines.md`](design-guidelines.md)**: de interface- en
+6. **[`design-guidelines.md`](design-guidelines.md)**: de interface- en
    ontwerpvoorkeuren van het systeem (invoer en formulieren, navigatie, feedback
    en state, microcopy, visuele hiërarchie, strategie). Dit is de canonieke bron
    voor *ontwerp*keuzes; raadpleeg het bij vormgeven, microcopy schrijven of een

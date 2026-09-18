@@ -51,9 +51,11 @@ herinneren. Twee bronnen wegen het zwaarst:
 
 1. **De commits van de ontwerper van dit systeem in echte producten**, met de
    regel expliciet in het commitbericht. Die leveren het "waarom".
-2. **Hoe vaak een compositie over verschillende producten heen terugkomt**
-   (Vue, Astro, Angular en Jinja2). Dat scheidt een patroon van het systeem van
-   een gewoonte van één app.
+2. **Hoe vaak een compositie over verschillende producten heen terugkomt.**
+   Gemeten over zestien frontends van vier organisaties, in Vue, Astro, Angular
+   en Jinja2. Dat scheidt een patroon van het systeem van een gewoonte van één
+   app: elke compositie hieronder komt in minstens drie van die frameworks voor,
+   ook in code van teams die elkaar niet kennen.
 
 Een patroon voorstellen doe je via een issue, met het probleem en het bewijs
 erbij: waar draait dit, en welke taak lost het op. Code mag later.

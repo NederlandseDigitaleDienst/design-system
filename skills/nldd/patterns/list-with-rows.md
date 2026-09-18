@@ -145,4 +145,11 @@ heeft niets.
 
 De meest voorkomende compositie in het hele veld: `list > list-item` en
 `list-item > text-cell` komen in alle onderzochte producten voor, van de
-Vue-apps van regelrecht tot de Jinja2-templates van WIES.
+Vue-apps van regelrecht tot de Jinja2-templates van WIES en de Angular-code van
+de Fundament Console (daar 352 keer `list-item > text-cell`).
+
+De lege toestanden zijn de uitzondering. In de Angular-frontends staat
+`slot="empty"` één keer en `slot="no-results"` geen enkele, terwijl er wel
+honderden rijen gerenderd worden. Dat is waarom die twee slots hierboven
+uitgeschreven staan: ze bestaan, ze doen precies wat je zelf zou nabouwen, en
+vrijwel niemand vindt ze.
