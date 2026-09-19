@@ -13,12 +13,10 @@ user-invocable: true
 Bij elke merge naar `main` zet semantic-release bovenaan een nieuw versieblok:
 
 ```
-## <small>0.8.57 (2026-06-08)</small>
-
-* feat(button): add variant ([a1b2c3d](https://github.com/NederlandseDigitaleDienst/design-system/commit/a1b2c3d))
+## [0.8.57](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.56...v0.8.57) (2026-06-08)
 ```
 
-→ De `## <small>{versie} ({datum})</small>`-kop **én** de (squashed) commit-regels komen **van de pipeline**. Die schrijf je dus **nooit zelf**.
+→ De `## [{versie}]({compare-link}) ({datum})`-kop komt **van de pipeline**. Die schrijf je dus **nooit zelf**.
 
 ## Wat jij doet: changes boven de laatste versie
 
@@ -37,17 +35,16 @@ Handmatige entries komen **bovenaan het bestand, bóven het nieuwste versieblok*
 ### Breaking
 - …
 
-## <small>0.8.56 (2026-06-03)</small>   ← vorige (laatste) release, blijft staan
+## [0.8.56](…/compare/v0.8.55...v0.8.56) (2026-06-03)   ← vorige (laatste) release, blijft staan
 …
 ```
 
 **Na de volgende merge** voegt de pipeline het versieblok eroverheen — jouw secties horen er dan vanzelf onder:
 
 ```
-## <small>0.8.57 (2026-06-08)</small>   ← door pipeline toegevoegd
+## [0.8.57](…/compare/v0.8.56...v0.8.57) (2026-06-08)   ← door pipeline toegevoegd
 
-* feat(button): … ([hash](url))          ← door pipeline toegevoegd
-### Highlights                            ← jouw entries, nu onder de nieuwe versie
+### Highlights                                          ← jouw entries, nu onder de nieuwe versie
 - …
 ```
 
@@ -56,7 +53,7 @@ Handmatige entries komen **bovenaan het bestand, bóven het nieuwste versieblok*
 - ❌ **Geen** `## {versie}` of datum zelf toevoegen — dat doet de pipeline.
 - ❌ **Geen** `## Unreleased`-kop — past niet in het semantic-release-format.
 - ❌ **Geen** `##` voor je secties — gebruik `###`.
-- ❌ Niet onderaan of in een ouder versieblok plakken — altijd helemaal bovenaan, boven de laatste `## <small>…</small>`.
+- ❌ Niet onderaan of in een ouder versieblok plakken — altijd helemaal bovenaan, boven de laatste `## [x.y.z](…) (datum)`.
 - ❌ Versie niet zelf verhogen — conventionele commits bepalen de bump.
 
 ## De kopjes (`###`)
