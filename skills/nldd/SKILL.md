@@ -28,6 +28,10 @@ De levende documentatie met visuele voorbeelden staat in
 `.d.ts` bestanden van het pakket. Gebruik die twee als bron van waarheid voor
 detailvragen; deze skill leert je hoe je het systeem *goed* gebruikt.
 
+Zet je een **bestaande** applicatie om naar dit systeem in plaats van een nieuwe
+te bouwen, gebruik dan de `nldd-migratie` skill. Die gaat over wat er bij zo'n
+omzetting stil misgaat en hoe je dat merkt.
+
 ## De visie: standaarden als gedrag, niet als kennis
 
 Het uitgangspunt van dit systeem is dat een ontwikkelaar de Rijkshuisstijl, de
