@@ -9,6 +9,18 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **A skill for migrating an existing codebase** (`nldd-migratie`). What goes
+  wrong when you convert an application that already exists, and how you notice
+  before your users do. The system fails silently, so the skill is built around
+  checks that make the silence audible: what to verify before you convert
+  anything, how to measure what a page still *does* rather than how it looks,
+  and what to do when the fault is ours rather than yours. Separate files cover
+  coming from Tailwind and rendering HTML on the server with fragment swaps
+  (htmx, Turbo, Unpoly, LiveView), where one rule explains most of the
+  trouble: a swap does not run a component's lifecycle the way a page load does.
+
 ## [0.8.92](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.91...v0.8.92) (2026-09-22)
 
 ### Highlights
