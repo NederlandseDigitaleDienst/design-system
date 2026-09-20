@@ -470,19 +470,21 @@ describe('nldd-toggle-button – tooltip', () => {
 	it('shows the tooltip on focus in radio mode, where the focus is on the host', async () => {
 		el = await fixture<NLDDToggleButton>('<nldd-toggle-button type="radio" name="opmaak" value="vet" icon="bold" accessible-label="Vet"></nldd-toggle-button>');
 		await waitForUpdate(el);
-		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip') as HTMLElement & { _visible?: boolean };
+		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip') as HTMLElement & { _visible?: boolean; updateComplete: Promise<boolean> };
 		const bubble = tooltip.shadowRoot!.querySelector('.tooltip') as HTMLElement;
 
 		(el as NLDDToggleButton).focus();
 		await waitForUpdate(tooltip);
 		expect(bubble.matches(':popover-open')).toBe(true);
 
-		// The tooltip waits 50ms before it goes, and a test that budgets
-		// wall-clock time for that measures how busy the machine is.
-		tooltip.style.setProperty('--_hide-delay', '0');
-		// WCAG 1.4.13: away without moving focus.
-		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
-		await until(() => !bubble.matches(':popover-open'));
+		// WCAG 1.4.13: away without moving focus. Dispatch on the tooltip and
+		// not on the host: the tooltip lives in the host's shadow root and its
+		// keydown listener sits on itself, so an event fired at the host bubbles
+		// up and away from it. Fired at the host this test passed for the wrong
+		// reason, waiting out the 50ms hide timer that the pointer-leave path
+		// starts, which is why it failed under load and never on a quiet machine.
+		tooltip.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+		await tooltip.updateComplete;
 		expect(bubble.matches(':popover-open')).toBe(false);
 	});
 
