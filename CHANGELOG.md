@@ -83,6 +83,19 @@ here; consult the commit history if you need that level of detail.
   people. Your own theme overrides then point at a name that no longer exists,
   with no error and no visible break, just a silent fall back to the default.
 
+- **A skill for proposing a change** (`nldd-design-contribute`). Where a report
+  goes first, which depends on who you are: inside NLDD it goes to the design
+  system channel on Mattermost, which is shorter than an issue and where the
+  maintainer reads along, and from outside NLDD it goes to a GitHub issue. Then
+  how to write it so it gets somewhere: describe the problem in your interface
+  rather than only the component you have in mind, because often something
+  existing already does it, and when it does not, your context shapes the design.
+  It also states plainly what to expect, that the maintainer decides and a
+  rejection comes with a reason, and it carries the rule that keeps the pattern
+  set small: a composition used by several teams is a pattern of the system, one
+  that lives in a single app is that app's habit for now. `CONTRIBUTING.md` stays
+  the source for maintainers; this is the consumer's half of it.
+
 ## [0.8.92](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.91...v0.8.92) (2026-09-22)
 
 ### Highlights

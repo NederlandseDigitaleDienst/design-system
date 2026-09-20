@@ -36,7 +36,7 @@ Bekijk de live component documentatie: **https://nederlandsedigitaledienst.githu
 
 Deze repository is ook een Claude Code marketplace. De `nldd`-plugin geeft
 Claude de kennis om met `@nldd/design-system` te werken: de juiste tags,
-attributen, CSS-tokens en patronen. Hij levert vier skills:
+attributen, CSS-tokens en patronen. Hij levert vijf skills:
 
 | Skill | Waarvoor |
 |-------|----------|
@@ -44,6 +44,7 @@ attributen, CSS-tokens en patronen. Hij levert vier skills:
 | `nldd-design-build` | Een applicatie bouwen: de visie erachter, de basispatronen en hoe je componenten samenstelt. |
 | `nldd-design-migrate` | Een bestaande frontend omzetten naar dit systeem. |
 | `nldd-design-upgrade` | Een applicatie die al op dit systeem draait naar een nieuwere versie brengen. |
+| `nldd-design-contribute` | Een wijziging voorstellen: een ontbrekend component, een patroon, of een bug. |
 
 Claude kiest zelf welke hij nodig heeft; aanroepen kan ook met `/nldd-design`,
 of met `/nldd:nldd-design` als een skill van je eigen project dezelfde naam

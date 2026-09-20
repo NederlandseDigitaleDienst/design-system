@@ -1,6 +1,6 @@
 ---
 name: nldd-design
-description: "Het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid): de componentreferentie, de release-historie en de ontwerprichtlijnen. Triggers: vragen over welke nldd-* componenten bestaan, welke attributen, slots of events een component heeft, welke icoonnamen geldig zijn, of wat er in een versie is veranderd. Bouw je een app: nldd-design-build. Zet je een bestaande app om: nldd-design-migrate. Verhoog je een versie: nldd-design-upgrade."
+description: "Het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid): de componentreferentie, de release-historie en de ontwerprichtlijnen. Triggers: vragen over welke nldd-* componenten bestaan, welke attributen, slots of events een component heeft, welke icoonnamen geldig zijn, of wat er in een versie is veranderd. Bouw je een app: nldd-design-build. Zet je een bestaande app om: nldd-design-migrate. Verhoog je een versie: nldd-design-upgrade. Stel je iets voor: nldd-design-contribute."
 metadata:
   type: reference
 ---
@@ -29,6 +29,7 @@ ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
 | een nieuwe applicatie bouwen | `nldd-design-build`: de visie, de patronen, hoe je componenten samenstelt |
 | een bestaande applicatie omzetten | `nldd-design-migrate`: wat er stil misgaat en hoe je het merkt |
 | een versie verhogen | `nldd-design-upgrade`: het upgradepad uit de changelog |
+| iets voorstellen aan het systeem | `nldd-design-contribute`: hoe je een issue opbouwt |
 | het designsysteem zelf ontwikkelen | de maintainer-skills `/component` en `/css`, niet deze skills |
 
 Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor

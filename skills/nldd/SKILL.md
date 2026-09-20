@@ -1,29 +1,29 @@
 ---
 name: nldd
-description: "VERVANGEN. Deze skill is opgesplitst. Gebruik nldd-design-build om een applicatie te bouwen met @nldd/design-system, nldd-design om een component, attribuut, slot, event of icoonnaam op te zoeken of te zien wat er in een versie veranderde, nldd-design-migrate om een bestaande frontend om te zetten, en nldd-design-upgrade om een versie te verhogen. Alle vier zitten al in de nldd-plugin; je hoeft niets te installeren. Deze verwijzing verdwijnt na 1 maart 2027."
+description: "VERVANGEN. Deze skill is opgesplitst. Gebruik nldd-design-build om een applicatie te bouwen met @nldd/design-system, nldd-design om een component, attribuut, slot, event of icoonnaam op te zoeken of te zien wat er in een versie veranderde, nldd-design-migrate om een bestaande frontend om te zetten, nldd-design-upgrade om een versie te verhogen, en nldd-design-contribute om een wijziging voor te stellen. Alle vijf zitten al in de nldd-plugin; je hoeft niets te installeren. Deze verwijzing verdwijnt na 1 maart 2027."
 metadata:
   type: reference
 ---
 
-# Deze skill is opgesplitst in vier
+# Deze skill is opgesplitst in vijf
 
 `nldd` betekende vier dingen tegelijk: de organisatie, het npm-pakket, de
-plugin en deze skill. Hij is nu gesplitst in vier skills die zeggen waar ze
+plugin en deze skill. Hij is nu gesplitst in vijf skills die zeggen waar ze
 over gaan.
 
 ## Je hoeft niets te installeren
 
-Alle vier zitten in dezelfde `nldd`-plugin die je al hebt. Er is geen tweede
+Alle vijf zitten in dezelfde `nldd`-plugin die je al hebt. Er is geen tweede
 plugin, geen extra marketplace, en `enabledPlugins` hoeft niet aangepast: dat
 verwijst naar `nldd@nldd-plugins`, en die naam is niet veranderd.
 
-Werkt een van de vier niet, dan draai je een oude versie van de plugin:
+Werkt een van de vijf niet, dan draai je een oude versie van de plugin:
 
 ```
 /plugin marketplace update nldd-plugins
 ```
 
-## Welke van de vier heb je nodig
+## Welke van de vijf heb je nodig
 
 | Je gaat | Gebruik | Wat erin zit |
 |---|---|---|
@@ -31,6 +31,7 @@ Werkt een van de vier niet, dan draai je een oude versie van de plugin:
 | opzoeken welk component, attribuut, slot, event of icoon er is, of wat er in een versie veranderde | **`nldd-design`** | de componentreferentie, de changelog, de ontwerprichtlijnen |
 | een bestaande frontend omzetten naar dit systeem | **`nldd-design-migrate`** | wat er stil misgaat, per herkomst: Tailwind, een ander design system, server-gerenderd |
 | een applicatie die al op dit systeem draait naar een nieuwere versie brengen | **`nldd-design-upgrade`** | het upgradepad uit de changelog, en waarom het versienummer niets zegt |
+| iets voorstellen: een ontbrekend component, een patroon, een bug | **`nldd-design-contribute`** | hoe je een issue opbouwt, en waarom het probleem vóór de oplossing komt |
 
 Weet je het niet zeker: begin bij `nldd-design-build`. Die verwijst door naar
 de naslag waar dat nodig is.
@@ -61,7 +62,7 @@ vangt ze nu nog op, maar hij verdwijnt.
    skillnaam matchen.
 3. **`Skill(nldd)` in permissieregels**: die matcht niet meer, dus je krijgt
    een permissieprompt waar je die eerder niet had. Maak er
-   `Skill(nldd-design-build)` van, of voeg alle vier toe.
+   `Skill(nldd-design-build)` van, of voeg alle vijf toe.
 4. **Scripts of CI** die `claude -p "/nldd ..."` aanroepen.
 
 Eén zoekopdracht vindt ze allemaal:

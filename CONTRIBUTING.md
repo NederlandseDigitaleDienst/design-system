@@ -1,7 +1,15 @@
 # Bijdragen aan het NLDD Designsysteem
 
-Alles begint bij een issue. Wie beslist en waarom staat in
+Werk je binnen NLDD, dan is het design system-kanaal op Mattermost de kortste
+weg: daar leest de maintainer mee en hoeft er geen issue bij. Kom je van buiten,
+dan begint het bij een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues).
+Wie beslist en waarom staat in
 [`PROJECT_GOVERNANCE.md`](./PROJECT_GOVERNANCE.md).
+
+Dit bestand is de bron voor onderhouders en gaat verder dan wat een afnemer
+nodig heeft. Gebruik je het systeem en wil je iets voorstellen, dan staat die
+kant samengevat in de `nldd-design-contribute` skill, die met de plugin
+meereist.
 
 ## Een probleem melden of iets voorstellen
 
