@@ -509,9 +509,8 @@ Wat jij nog moet doen:
 
 Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan
 [`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md). Kort waarom het een
-eigen skill is: semantic-release verhoogt altijd het patch-nummer, ook bij een
-breaking change, dus het versienummer zegt niet of een sprong veilig is. De
-changelog wel.
+eigen skill is: dit project brengt alles uit als patch, ook een breaking change,
+dus het versienummer zegt niet of een sprong veilig is. De changelog wel.
 
 ## Bron van waarheid
 

@@ -22,9 +22,14 @@ met een kleinere delta en één extra valkuil, hieronder.
 ## Het versienummer zegt niets, de changelog alles
 
 Dit is het belangrijkste dat je over dit systeem moet weten voordat je upgradet.
-semantic-release verhoogt het **patch**-nummer bij elke `feat`, `fix` en
-breaking change. Er is dus geen major- of minor-signaal: `0.8.80` naar `0.8.90`
-ziet uit als tien onschuldige patches en kan een verwijderd attribuut bevatten.
+Dit project brengt **alles** uit als patch: `feat`, `fix`, `refactor`, `docs` en
+ook een breaking change. Dat is een bewuste keuze in `.releaserc.json`, geen
+standaardgedrag van semantic-release, dat normaal een minor voor een `feat` en
+een major voor een breaking change zou geven. Reken hier dus niet op de
+semver-conventie die je elders gewend bent.
+
+Gevolg: er is geen major- of minor-signaal. `0.8.80` naar `0.8.90` ziet uit als
+tien onschuldige patches en kan een verwijderd attribuut bevatten.
 
 Leun daarom nooit op het versienummer om te beoordelen of een sprong veilig is.
 Gebruik [`changelog.md`](../nldd-design/changelog.md) als je upgradepad.

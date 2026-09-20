@@ -32,9 +32,11 @@ here; consult the commit history if you need that level of detail.
   which is the wrong place twice over: an upgrade is not building something new,
   and it is not a migration either, so whichever of the two you reached for, the
   guidance was in the other one. It matters here more than in most systems
-  because semantic-release only ever raises the patch number, including for a
-  breaking change, so the version number tells you nothing about whether a jump
-  is safe.
+  because this project releases everything as a patch, including a breaking
+  change, so the version number tells you nothing about whether a jump is safe.
+  That is a deliberate choice in `.releaserc.json`, not how semantic-release
+  behaves by default, which makes it easy to assume the usual semver signal is
+  there when it is not.
 
   **A skill named `nldd` stays behind to catch the old name**, and does
   nothing but point at the four. It is deliberately findable by the model and
