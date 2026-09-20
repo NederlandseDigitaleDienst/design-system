@@ -19,9 +19,33 @@ here; consult the commit history if you need that level of detail.
   component reference, the changelog and the design guidelines, moves to
   `nldd-design`: that is reference material whether you are building something
   new or converting something old, and a migration needs it as much as a new
-  app does. The plugin is still called `nldd`, so installing it does not
-  change. Call a skill by name, or name one in your own instruction files, and
-  you update that reference.
+  app does.
+
+  **The plugin is still called `nldd`.** Installing it does not change, and
+  `enabledPlugins` and `extraKnownMarketplaces` point at `nldd@nldd-plugins`,
+  the plugin, so leave those alone.
+
+  What to check, quietest first, because the first two give you no error at
+  all:
+
+  1. **The skill name in your own instruction files**: `CLAUDE.md`,
+     `.claude/rules/*.md`, `AGENTS.md`, or the body of a skill of your own that
+     says "use the nldd skill". Claude reads the instruction, does not find the
+     skill, and carries on without it. Nothing warns; the output is just worse.
+  2. **The skill name in subagent definitions** (`.claude/agents/*.md`) **and in
+     hooks that match on it.** Equally silent.
+  3. **`Skill(nldd)` in permission rules.** It stops matching, so you get a
+     permission prompt where you had none.
+  4. **Scripts or CI that call `claude -p "/nldd ..."`.** Since Claude Code
+     2.1.273 an unknown slash command is no longer a free deterministic
+     rejection but a model call that answers with a "did you mean" text, so a
+     script checking the exit code still sees 0 and now gets billed, variable
+     output instead of a fixed error.
+  5. **Typing `/nldd` interactively.** The loudest and least harmful.
+
+  Invoke a skill either way: `/nldd-design-bouwen` is the short form, and
+  `/nldd:nldd-design-bouwen` always resolves to ours even when a skill of your
+  own carries the same name.
 
 ### Added
 

@@ -10,8 +10,8 @@ metadata:
 Je gebruikt deze skill als je een **applicatie** bouwt bovenop
 `@nldd/design-system`: de web component-bibliotheek van de Nederlandse
 Digitale Dienst (Rijksoverheid). Ben je bezig met het **ontwikkelen van het
-designsysteem zelf** (nieuwe componenten, CSS-conventies), gebruik dan
-`/component` en `/css`, niet deze skill.
+designsysteem zelf** (nieuwe componenten, CSS-conventies), gebruik dan de
+maintainer-skills `/component` en `/css` uit deze repo, niet deze skill.
 
 Twee plekken horen bij deze skill:
 

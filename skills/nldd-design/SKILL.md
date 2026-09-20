@@ -28,7 +28,11 @@ ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
 |---|---|
 | een nieuwe applicatie bouwen | `nldd-design-bouwen`: de visie, de patronen, hoe je componenten samenstelt |
 | een bestaande applicatie omzetten | `nldd-design-migreren`: wat er stil misgaat en hoe je het merkt |
-| het design system zelf ontwikkelen | `/component` en `/css`, niet deze skills |
+| het design system zelf ontwikkelen | de maintainer-skills `/component` en `/css`, niet deze skills |
+
+Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor
+(`/nldd:nldd-design`). Die tweede werkt altijd; de korte gaat naar een eigen
+skill van je project als die toevallig dezelfde naam draagt.
 
 ## Drie gewoonten die tijd schelen
 
