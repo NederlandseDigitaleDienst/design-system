@@ -96,8 +96,8 @@ zoekveld en de toolbar blijven staan als weg terug. Zie
 [lijst met rijen](list-with-rows.md).
 
 **Geef het zoekveld een `accessible-label`.** Het valt terug op de
-`placeholder`, maar zodra er een waarde in staat is die niet meer zichtbaar en
-heeft een schermlezergebruiker niets.
+`placeholder`, maar zodra er een waarde in staat is die niet meer zichtbaar, en
+heeft een schermlezergebruiker daar dus niets aan.
 
 ## Toegankelijkheid
 
