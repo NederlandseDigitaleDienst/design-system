@@ -30,7 +30,10 @@ import { checkMarkup } from './lib/skill-markup.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
 const componentsDir = resolve(repoRoot, 'src/components');
-const skillDir = resolve(repoRoot, 'skills/nldd');
+const skillsRoot = resolve(repoRoot, 'skills');
+
+/** Generated from the components themselves, so already guarded against drift. */
+const GENERATED = new Set(['reference.md', 'changelog.md', 'design-guidelines.md']);
 
 const SKIP_SUFFIXES = ['.styles.ts', '.template.ts', '.test.ts', '.stories.ts', '.i18n.ts'];
 
@@ -96,20 +99,25 @@ function collectIconNames() {
 
 /** The hand-written skill files. reference.md and changelog.md are generated. */
 function skillFiles() {
-	const files = [join(skillDir, 'SKILL.md')];
-	for (const sub of ['patterns', 'examples']) {
-		const dir = join(skillDir, sub);
-		let entries;
-		try {
-			entries = readdirSync(dir);
-		} catch (err) {
-			if (err.code === 'ENOENT') continue;
-			throw err;
+	// Every .md under skills/, minus the generated ones. Walking the tree rather
+	// than naming directories means a new skill is covered the day it lands: the
+	// first version of the migration skill shipped with its tags checked by hand,
+	// which is the thing this script exists to replace.
+	const files = [];
+	const walk = (dir) => {
+		for (const entry of readdirSync(dir, { withFileTypes: true })) {
+			const full = join(dir, entry.name);
+			if (entry.isDirectory()) walk(full);
+			else if (entry.name.endsWith('.md') && !GENERATED.has(entry.name)) files.push(full);
 		}
-		for (const name of entries.filter((f) => f.endsWith('.md')).sort())
-			files.push(join(dir, name));
+	};
+	try {
+		walk(skillsRoot);
+	} catch (err) {
+		if (err.code === 'ENOENT') return [];
+		throw err;
 	}
-	return files;
+	return files.sort();
 }
 
 const api = collectApi();
