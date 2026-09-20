@@ -21,6 +21,13 @@ here; consult the commit history if you need that level of detail.
   new or converting something old, and a migration needs it as much as a new
   app does.
 
+  **A skill named `nldd` stays behind to catch the old name**, and does
+  nothing but point at the three. It is deliberately findable by the model and
+  not just by `/nldd`, because the reference that breaks most quietly is a line
+  in your own `CLAUDE.md` saying "use the nldd skill": nobody types anything
+  there, so a slash command would not catch it. **It is removed after 1 March
+  2027**, so update your references rather than lean on it.
+
   **The plugin is still called `nldd`.** Installing it does not change, and
   `enabledPlugins` and `extraKnownMarketplaces` point at `nldd@nldd-plugins`,
   the plugin, so leave those alone.
