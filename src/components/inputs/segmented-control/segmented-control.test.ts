@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate, deepActiveElement, until } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDSegmentedControl, NLDDSegmentedControlItem } from './segmented-control.js';
 import './segmented-control.js';
 
