@@ -1,6 +1,6 @@
 ---
 name: nldd-migratie
-description: "Zet een bestaande frontend om naar @nldd/design-system: Tailwind, CSS modules, of handgeschreven componenten. Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: gebruik de `nldd` skill. Voor het ontwikkelen van het design system zelf: /component, /css."
+description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: gebruik de `nldd` skill. Voor het ontwikkelen van het design system zelf: /component, /css."
 metadata:
   type: reference
 ---
@@ -16,6 +16,10 @@ lees dan ook:
 
 - [`van-tailwind.md`](van-tailwind.md): de compilervalstrik, de tokenbrug,
   botsende globale regels, iconen.
+- [`van-een-ander-design-system.md`](van-een-ander-design-system.md): je draaide
+  al op een componentbibliotheek (NL Design System, ROOS van RVO, of een eigen
+  systeem). Verzonnen tokennamen, de donkere weergave als controle, en twee
+  systemen naast elkaar.
 - [`server-gerenderd.md`](server-gerenderd.md): HTML op de server met
   fragmentwissels (htmx, Turbo, Unpoly, LiveView). Wat een swap anders doet dan
   een paginalading, de nieuwe stack ernaast zetten, en wat vendoren van de
