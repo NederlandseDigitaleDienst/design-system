@@ -74,7 +74,7 @@ variabele die niet bestaat, zonder fallback.
 
 **Verander je de publieke API van een component** (attributen, slots, events),
 draai dan `npm run generate:skill-docs` en commit het resultaat mee. De
-gegenereerde referentie in `skills/nldd-design-bouwen/` wordt in CI vergeleken met de JSDoc,
+gegenereerde referentie in `skills/nldd-design/` wordt in CI vergeleken met de JSDoc,
 en loopt die uit de pas dan faalt de build.
 
 ## Commits
