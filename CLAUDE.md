@@ -88,7 +88,7 @@ Elk component MOET minimaal een **smoke test** hebben. Run tests met `npm test`.
 Versies worden **automatisch** verhoogd door semantic-release bij merge naar main.
 
 Leidend criterium: verandert de commit wat consumers krijgen (`dist/` of de
-meegeleverde `skills/nldd-design-bouwen/*`)? Zo ja, dan hoort er een release uit te komen.
+meegeleverde `skills/*`)? Zo ja, dan hoort er een release uit te komen.
 `docs:` telt daarin mee, want de plugin-versie volgt de pakketversie: zonder
 release halen consumers de gewijzigde skill-docs nooit op (zie Plugin-versie).
 
@@ -153,6 +153,6 @@ Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/do
 
 ## Plugin-versie
 
-De Claude Code plugin (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`) levert de nldd-consumer-skill via `source: "./"`. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skill nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
+De Claude Code plugin (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`) levert de drie consumentenskills (`nldd-design`, `nldd-design-bouwen`, `nldd-design-migreren`) via `source: "./"`. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skills nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
 
 Daarom volgt de plugin-versie automatisch de pakketversie. `package.json` is de enige bron; `npm run generate:plugin-version` (onderdeel van `generate:skill-docs`) schrijft die versie naar beide plugin-manifesten. semantic-release draait dit in `prepareCmd` en commit de manifesten mee in de release-commit, zodat de plugin-versie meebeweegt met elke release die de skill-docs verandert. Bewerk de `version`-velden niet handmatig.

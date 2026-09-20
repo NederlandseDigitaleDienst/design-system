@@ -104,7 +104,7 @@ Bullet-lijst onder elk kopje; begin met de component/het token vetgedrukt:
 ## Helpers
 
 - **Startpunt:** `npm run changelog:draft` — print een platte lijst van alle commits sinds de laatste `v*`-tag (met GitHub-links), om uit te curaten: highlights kiezen, ruis trimmen, in secties groeperen.
-- **Na het bewerken van `CHANGELOG.md` — niet vergeten:** `npm run generate:skill-changelog` (of `npm run generate:skill-docs`). Dit regenereert `skills/nldd-design/changelog.md` (de gekopieerde changelog in de consumer-`nldd`-skill) zodat die in sync blijft. Sla je dit over, dan loopt de consumer-skill achter op de echte changelog.
+- **Na het bewerken van `CHANGELOG.md` — niet vergeten:** `npm run generate:skill-changelog` (of `npm run generate:skill-docs`). Dit regenereert `skills/nldd-design/changelog.md` (de gekopieerde changelog in de `nldd-design`-skill, de gedeelde naslag die met de plugin meereist) zodat die in sync blijft. Sla je dit over, dan lezen consumenten een changelog die achterloopt op de echte.
 
 ## Ter referentie
 
