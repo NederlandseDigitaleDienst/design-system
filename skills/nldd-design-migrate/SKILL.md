@@ -1,6 +1,6 @@
 ---
 name: nldd-design-migrate
-description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het designsysteem', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit systeem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het designsysteem zelf: /component, /css."
+description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit systeem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het designsysteem zelf: die kennis zit in de repository, niet in deze plugin, zie nldd-design-contribute."
 metadata:
   type: reference
 ---

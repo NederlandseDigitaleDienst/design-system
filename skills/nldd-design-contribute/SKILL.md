@@ -1,6 +1,6 @@
 ---
 name: nldd-design-contribute
-description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het design system', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het design system', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Binnen NLDD gaat het naar het design system-kanaal op Mattermost, buiten NLDD naar een GitHub-issue. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade."
+description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het design system', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het design system', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Binnen NLDD gaat het naar het design system-kanaal op Mattermost, buiten NLDD naar een GitHub-issue. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het design system zelf check je die uit."
 metadata:
   type: reference
 ---
@@ -114,17 +114,54 @@ Eerlijk over hoe dit project werkt, zodat je weet wat je krijgt:
 
 Kan, maar meld het eerst, via het kanaal of een issue, en schrijf daarna de
 code. Anders bouw je misschien iets wat een bestaand component al kan, of iets
-dat op een ontwerpkeuze afketst die je niet kende. Wat er van een wijziging wordt
-verwacht (tests in een echte browser, geen CSS-fallbacks, conventionele commits)
-staat in
-[`CONTRIBUTING.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/CONTRIBUTING.md)
-in de repository; dat is de bron voor onderhouders en die loopt verder dan deze
-skill. Eén ding dat verrast: elke `nldd-*`-tag in de documentatie wordt in CI
-gecontroleerd tegen de echte component-API, dus een voorbeeld met een verzonnen
-attribuut laat de build falen.
+dat op een ontwerpkeuze afketst die je niet kende.
+
+### Deze plugin helpt je niet bij het bouwen aan het systeem zelf
+
+Belangrijk om te weten, want het is een makkelijke aanname: de skills in deze
+plugin zijn er voor wie het pakket **gebruikt**. Ze leren je niet hoe je een
+component in dit systeem schrijft. Vraag je Claude met alleen deze plugin om een
+nieuw component te bouwen, dan mist hij de conventies en levert hij iets dat er
+van buiten goed uitziet en de interne regels overtreedt.
+
+De kennis die je daarvoor nodig hebt zit in de **repository zelf**, als
+repo-locale skills onder `.claude/skills/`. Die reizen expres niet mee met de
+plugin: ze gaan over de binnenkant van dit systeem, veranderen met de codebase
+mee, en zouden bij een afnemer alleen in de weg zitten.
+
+Je krijgt ze door de repository uit te checken en Claude Code daarin te starten;
+ze laden dan automatisch:
+
+```
+git clone https://github.com/NederlandseDigitaleDienst/design-system
+cd design-system
+npm ci
+```
+
+Wat er dan beschikbaar is:
+
+| Skill | Waarvoor |
+|---|---|
+| `/component` | een Lit- en TypeScript-component implementeren: bestandsindeling, naamgeving, templates, de verplichte tests |
+| `/css` | de CSS-conventies: breakpoints per stuk (geen mobile-first overrides), at-rule nesting, de vijf variabelenlagen |
+| `/changelog` | een entry schrijven die een consument iets zegt, boven het nieuwste versieblok |
+| `/translation-keys` | de conventies voor i18n-keys en microcopy |
+| `/worktree` | een worktree opzetten voor een nieuwe branch, met `.env` en `.claude/` erin |
+| `/storybook-manager` | Storybook-instances starten en stoppen over meerdere worktrees |
+
+Die lijst kan met de codebase meebewegen; `ls .claude/skills/` in je checkout is
+de actuele waarheid.
+
+`CONTRIBUTING.md` in die repository is de bron voor wat er van een wijziging
+wordt verwacht (tests in een echte browser, geen CSS-fallbacks, conventionele
+commits) en loopt verder dan deze skill. Eén ding dat verrast: elke
+`nldd-*`-tag in de documentatie wordt in CI gecontroleerd tegen de echte
+component-API, dus een voorbeeld met een verzonnen attribuut laat de build falen.
+
+## De andere skills in deze plugin
 
 Bouw je iets wat je *niet* wilt voorstellen maar wel moet werken, dan hoort dat
-bij [`nldd-design-build`](../nldd-design-build/SKILL.md). En loop je hier tegen
-iets aan na een versiebump, kijk dan eerst bij
+bij [`nldd-design-build`](../nldd-design-build/SKILL.md). Loop je hier tegen iets
+aan na een versiebump, kijk dan eerst bij
 [`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md): een breaking change kan
 in een patch zitten.

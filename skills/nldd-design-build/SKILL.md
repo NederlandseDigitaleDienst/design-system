@@ -1,6 +1,6 @@
 ---
 name: nldd-design-build
-description: "Bouw applicaties met de web components van het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens). Voor een versie verhogen: nldd-design-upgrade. NIET voor het ontwikkelen van het designsysteem zelf (daarvoor: /component, /css)."
+description: "Bouw applicaties met de web components van het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens). Voor een versie verhogen: nldd-design-upgrade. NIET voor het ontwikkelen van het designsysteem zelf: die kennis zit niet in deze plugin maar in de repository, zie nldd-design-contribute."
 metadata:
   type: reference
 ---
@@ -10,8 +10,10 @@ metadata:
 Je gebruikt deze skill als je een **applicatie** bouwt bovenop
 `@nldd/design-system`: de web component-bibliotheek van de Nederlandse
 Digitale Dienst (Rijksoverheid). Ben je bezig met het **ontwikkelen van het
-designsysteem zelf** (nieuwe componenten, CSS-conventies), gebruik dan de
-maintainer-skills `/component` en `/css` uit deze repo, niet deze skill.
+design system zelf** (nieuwe componenten, CSS-conventies), gebruik dan de
+repo-locale skills van de repository zelf, niet deze skill. Die reizen niet mee
+met de plugin; [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md)
+zegt hoe je erbij komt.
 
 Twee plekken horen bij deze skill:
 

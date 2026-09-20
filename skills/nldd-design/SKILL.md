@@ -30,7 +30,7 @@ ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
 | een bestaande applicatie omzetten | `nldd-design-migrate`: wat er stil misgaat en hoe je het merkt |
 | een versie verhogen | `nldd-design-upgrade`: het upgradepad uit de changelog |
 | iets voorstellen aan het systeem | `nldd-design-contribute`: hoe je een issue opbouwt |
-| het designsysteem zelf ontwikkelen | de maintainer-skills `/component` en `/css`, niet deze skills |
+| het designsysteem zelf ontwikkelen | niet deze skills: die kennis zit als repo-locale skills in de repository, zie `nldd-design-contribute` |
 
 Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor
 (`/nldd:nldd-design`). Die tweede werkt altijd; de korte gaat naar een eigen
