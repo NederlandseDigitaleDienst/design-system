@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "nldd",
-      "description": "Werk met het NLDD Designsysteem (@nldd/design-system). Drie skills: nldd-design om componenten, attributen, iconen en releases op te zoeken, nldd-design-bouwen om een applicatie te bouwen, en nldd-design-migreren om een bestaande frontend om te zetten. Voor consumenten van het pakket, niet voor wie het systeem zelf onderhoudt.",
+      "description": "Werk met het NLDD Designsysteem (@nldd/design-system). Vier skills: nldd-design om componenten, attributen, iconen en releases op te zoeken, nldd-design-build om een applicatie te bouwen, nldd-design-migrate om een bestaande frontend om te zetten, en nldd-design-upgrade om een versie te verhogen. Voor consumenten van het pakket, niet voor wie het systeem zelf onderhoudt.",
       "version": "0.8.92",
       "author": {
         "name": "Nederlandse Digitale Dienst"

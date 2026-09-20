@@ -21,7 +21,7 @@ Voor kwetsbaarheden geldt een andere route. Die staan in
 
 Een patroon is geen component: het beschrijft hoe je bestaande componenten
 samenstelt tot iets dat een taak afhandelt. De set staat in
-[`skills/nldd-design-bouwen/patterns/`](./skills/nldd-design-bouwen/patterns/) en blijft **expres klein**;
+[`skills/nldd-design-build/patterns/`](./skills/nldd-design-build/patterns/) en blijft **expres klein**;
 acht patronen die kloppen zijn nuttiger dan een catalogus die niemand bijhoudt.
 
 Stel je er een voor, begin dan bij het probleem en het bewijs, niet bij de code:

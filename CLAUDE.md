@@ -143,7 +143,7 @@ De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs
 
 ## Patronen
 
-Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. De acht basispatronen staan in `skills/nldd-design-bouwen/patterns/` (pagina met secties, werkbalk, lijst, filteren, formulier, menu, bewerk-sheet, bevestigen) en reizen met de plugin mee naar consumenten. Ze zijn met de hand geschreven, niet gegenereerd.
+Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. De acht basispatronen staan in `skills/nldd-design-build/patterns/` (pagina met secties, werkbalk, lijst, filteren, formulier, menu, bewerk-sheet, bevestigen) en reizen met de plugin mee naar consumenten. Ze zijn met de hand geschreven, niet gegenereerd.
 
 Houd de set klein: patroonbibliotheken gaan dood aan achterstallig onderhoud, niet aan een verkeerd formaat. Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
@@ -153,6 +153,6 @@ Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/do
 
 ## Plugin-versie
 
-De Claude Code plugin (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`) levert de drie consumentenskills (`nldd-design`, `nldd-design-bouwen`, `nldd-design-migreren`) via `source: "./"`. Daarnaast staat er een vierde, `skills/nldd/`, die alleen doorverwijst: die vangt verwijzingen naar de oude skillnaam op en **hoort na 1 maart 2027 verwijderd te worden**, samen met de regel erover in de changelog. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skills nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
+De Claude Code plugin (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`) levert de vier consumentenskills (`nldd-design`, `nldd-design-build`, `nldd-design-migrate`, `nldd-design-upgrade`) via `source: "./"`. Daarnaast staat er een vijfde, `skills/nldd/`, die alleen doorverwijst: die vangt verwijzingen naar de oude skillnaam op en **hoort na 1 maart 2027 verwijderd te worden**, samen met de regel erover in de changelog. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skills nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
 
 Daarom volgt de plugin-versie automatisch de pakketversie. `package.json` is de enige bron; `npm run generate:plugin-version` (onderdeel van `generate:skill-docs`) schrijft die versie naar beide plugin-manifesten. semantic-release draait dit in `prepareCmd` en commit de manifesten mee in de release-commit, zodat de plugin-versie meebeweegt met elke release die de skill-docs verandert. Bewerk de `version`-velden niet handmatig.

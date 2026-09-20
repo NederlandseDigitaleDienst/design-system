@@ -17,18 +17,27 @@ here; consult the commit history if you need that level of detail.
 
 ### Breaking
 
-- **The skills are now `nldd-design-bouwen`, `nldd-design-migreren` and
-  `nldd-design`.** `nldd` meant four things at once: the organisation, the npm
-  package, the plugin and the skill inside it, so the name said nothing about
-  what the skill was for and its description had to carry an anti-trigger
-  instead. The names now say the task. What is shared between them, the
-  component reference, the changelog and the design guidelines, moves to
-  `nldd-design`: that is reference material whether you are building something
-  new or converting something old, and a migration needs it as much as a new
-  app does.
+- **The skills are now `nldd-design`, `nldd-design-build`,
+  `nldd-design-migrate` and `nldd-design-upgrade`.** `nldd` meant four things at
+  once: the organisation, the npm package, the plugin and the skill inside it,
+  so the name said nothing about what the skill was for and its description had
+  to carry an anti-trigger instead. The names now say the task. What is shared
+  between them, the component reference, the changelog and the design
+  guidelines, moves to `nldd-design`: that is reference material whether you are
+  building something new or converting something old, and a migration needs it
+  as much as a new app does.
+
+  **Raising the version of an app that already runs on this system is its own
+  skill**, `nldd-design-upgrade`. It sat as a section inside the build skill,
+  which is the wrong place twice over: an upgrade is not building something new,
+  and it is not a migration either, so whichever of the two you reached for, the
+  guidance was in the other one. It matters here more than in most systems
+  because semantic-release only ever raises the patch number, including for a
+  breaking change, so the version number tells you nothing about whether a jump
+  is safe.
 
   **A skill named `nldd` stays behind to catch the old name**, and does
-  nothing but point at the three. It is deliberately findable by the model and
+  nothing but point at the four. It is deliberately findable by the model and
   not just by `/nldd`, because the reference that breaks most quietly is a line
   in your own `CLAUDE.md` saying "use the nldd skill": nobody types anything
   there, so a slash command would not catch it. **It is removed after 1 March
@@ -56,13 +65,13 @@ here; consult the commit history if you need that level of detail.
      output instead of a fixed error.
   5. **Typing `/nldd` interactively.** The loudest and least harmful.
 
-  Invoke a skill either way: `/nldd-design-bouwen` is the short form, and
-  `/nldd:nldd-design-bouwen` always resolves to ours even when a skill of your
+  Invoke a skill either way: `/nldd-design-build` is the short form, and
+  `/nldd:nldd-design-build` always resolves to ours even when a skill of your
   own carries the same name.
 
 ### Added
 
-- **A skill for migrating an existing codebase** (`nldd-design-migreren`). What goes
+- **A skill for migrating an existing codebase** (`nldd-design-migrate`). What goes
   wrong when you convert an application that already exists, and how you notice
   before your users do. The system fails silently, so the skill is built around
   checks that make the silence audible: what to verify before you convert
@@ -71,6 +80,12 @@ here; consult the commit history if you need that level of detail.
   coming from Tailwind and rendering HTML on the server with fragment swaps
   (htmx, Turbo, Unpoly, LiveView), where one rule explains most of the
   trouble: a swap does not run a component's lifecycle the way a page load does.
+
+- **A skill for raising the version** (`nldd-design-upgrade`). Reading the
+  changelog as an upgrade path: which entries to read first, what to search your
+  own code for, and why renamed CSS variables are the trap that catches most
+  people. Your own theme overrides then point at a name that no longer exists,
+  with no error and no visible break, just a silent fall back to the default.
 
 ## [0.8.92](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.91...v0.8.92) (2026-09-22)
 

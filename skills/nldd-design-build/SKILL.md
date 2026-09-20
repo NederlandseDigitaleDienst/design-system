@@ -1,6 +1,6 @@
 ---
-name: nldd-design-bouwen
-description: "Bouw applicaties met de web components van het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens) of upgraden van dit systeem. NIET voor het ontwikkelen van het design system zelf (daarvoor: /component, /css)."
+name: nldd-design-build
+description: "Bouw applicaties met de web components van het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens). Voor een versie verhogen: nldd-design-upgrade. NIET voor het ontwikkelen van het design system zelf (daarvoor: /component, /css)."
 metadata:
   type: reference
 ---
@@ -32,7 +32,7 @@ De levende documentatie met visuele voorbeelden staat in
 detailvragen; deze skill leert je hoe je het systeem *goed* gebruikt.
 
 Zet je een **bestaande** applicatie om naar dit systeem in plaats van een nieuwe
-te bouwen, gebruik dan de `nldd-design-migreren` skill. Die gaat over wat er bij zo'n
+te bouwen, gebruik dan de `nldd-design-migrate` skill. Die gaat over wat er bij zo'n
 omzetting stil misgaat en hoe je dat merkt.
 
 ## De visie: standaarden als gedrag, niet als kennis
@@ -507,34 +507,11 @@ Wat jij nog moet doen:
 
 ## Upgraden naar een nieuwe versie
 
-Het systeem brengt versies uit als patches (semantic-release verhoogt het
-patch-nummer bij elke `feat`, `fix` of breaking change). Het versienummer alleen
-zegt dus niet of een upgrade veilig is; **de changelog wel.** Gebruik
-[`changelog.md`](../nldd-design/changelog.md) als je upgradepad.
-
-Werkwijze bij het verhogen van je `@nldd/design-system` versie:
-
-1. **Lees elke versie tussen jouw huidige en de doelversie.** De entries staan
-   nieuwste eerst, met een kop per release (versienummer + datum). Sla niets
-   over: een breaking change kan in een tussenliggende patch zitten.
-2. **Scan de `Breaking` / `Breaking Changes` secties eerst.** Die bevatten
-   concrete migratie-instructies: een verwijderd attribuut met zijn vervanger,
-   hernoemde variabelen, gewijzigd gedrag. Een echt voorbeeld uit de changelog:
-   `variant="box-on-tinted"` op `nldd-list` is verwijderd, met als vervanger
-   `<nldd-list variant="box" background="base">`.
-3. **Pas de migraties toe in je code** voordat je de nieuwe versie in gebruik
-   neemt. Zoek je app door op de verwijderde attributen, variabelenamen of
-   componenten uit de breaking entries.
-4. **Lees `Highlights`, `Added` en `Changed`** voor nieuwe componenten of
-   attributen die je oudere, omslachtigere code kunnen vervangen.
-5. **Verifieer tegen [`reference.md`](../nldd-design/reference.md)** of een attribuut, slot of
-   event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij
-   exact deze release.
-
-Vuistregel: ga niet meer dan een handvol patches in één sprong omhoog zonder de
-tussenliggende `Breaking` secties te lezen. Hernoemde CSS-variabelen zijn de meest
-gemiste val: je eigen thema-overrides verwijzen dan naar een naam die niet meer
-bestaat, zonder foutmelding, alleen een stille terugval op de default.
+Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan
+[`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md). Kort waarom het een
+eigen skill is: semantic-release verhoogt altijd het patch-nummer, ook bij een
+breaking change, dus het versienummer zegt niet of een sprong veilig is. De
+changelog wel.
 
 ## Bron van waarheid
 

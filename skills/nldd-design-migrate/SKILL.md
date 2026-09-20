@@ -1,13 +1,13 @@
 ---
-name: nldd-design-migreren
-description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-bouwen. Voor het ontwikkelen van het design system zelf: /component, /css."
+name: nldd-design-migrate
+description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit systeem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het design system zelf: /component, /css."
 metadata:
   type: reference
 ---
 
 # Een bestaande codebase omzetten naar het NLDD Design System
 
-De `nldd-design-bouwen` skill leert je hoe de componenten werken. Deze skill gaat over iets
+De `nldd-design-build` skill leert je hoe de componenten werken. Deze skill gaat over iets
 anders: wat er misgaat als je een **bestaande** applicatie omzet, en hoe je dat
 merkt voordat je gebruikers het merken.
 

@@ -7,7 +7,7 @@ De set is expres klein. Acht patronen die kloppen zijn nuttiger dan een complete
 catalogus die niet is bijgehouden. Staat jouw geval er niet bij, kijk dan of een
 van deze acht de compositie al dekt; zo niet, dan is
 [`../reference.md`](../../nldd-design/reference.md) de volledige API en
-[Storybook](https://minbzk.github.io/storybook/) het levende voorbeeld.
+[Storybook](https://nederlandsedigitaledienst.github.io/design-system/) het levende voorbeeld.
 
 **De opbouw van een scherm**
 

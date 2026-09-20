@@ -1,6 +1,6 @@
 ---
 name: nldd-design
-description: "Het NLDD Design System (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid): de componentreferentie, de release-historie en de ontwerprichtlijnen. Triggers: vragen over welke nldd-* componenten bestaan, welke attributen, slots of events een component heeft, welke icoonnamen geldig zijn, wat er in een versie is veranderd, of hoe je naar een nieuwe versie upgradet. Bouw je een app: nldd-design-bouwen. Zet je een bestaande app om: nldd-design-migreren."
+description: "Het NLDD Design System (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid): de componentreferentie, de release-historie en de ontwerprichtlijnen. Triggers: vragen over welke nldd-* componenten bestaan, welke attributen, slots of events een component heeft, welke icoonnamen geldig zijn, of wat er in een versie is veranderd. Bouw je een app: nldd-design-build. Zet je een bestaande app om: nldd-design-migrate. Verhoog je een versie: nldd-design-upgrade."
 metadata:
   type: reference
 ---
@@ -20,14 +20,15 @@ ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
   migratiestappen bij elke breaking change.
 - [`design-guidelines.md`](design-guidelines.md): de interface- en
   ontwerpvoorkeuren van het systeem. Canoniek voor ontwerpkeuzes, waar de
-  andere twee skills over mechaniek gaan.
+  andere skills over mechaniek gaan.
 
 ## Waar je verder moet zijn
 
 | Je gaat | Gebruik |
 |---|---|
-| een nieuwe applicatie bouwen | `nldd-design-bouwen`: de visie, de patronen, hoe je componenten samenstelt |
-| een bestaande applicatie omzetten | `nldd-design-migreren`: wat er stil misgaat en hoe je het merkt |
+| een nieuwe applicatie bouwen | `nldd-design-build`: de visie, de patronen, hoe je componenten samenstelt |
+| een bestaande applicatie omzetten | `nldd-design-migrate`: wat er stil misgaat en hoe je het merkt |
+| een versie verhogen | `nldd-design-upgrade`: het upgradepad uit de changelog |
 | het design system zelf ontwikkelen | de maintainer-skills `/component` en `/css`, niet deze skills |
 
 Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor
@@ -46,7 +47,7 @@ release zitten. Dan krijg je twee faalvormen tegelijk, en geen van beide meldt
 zich.
 
 **De levende documentatie staat in
-[Storybook](https://minbzk.github.io/storybook/),** met visuele voorbeelden en
+[Storybook](https://nederlandsedigitaledienst.github.io/design-system/),** met visuele voorbeelden en
 controls per component. De exacte types staan in de `.d.ts` bestanden van het
 pakket. Gebruik die twee voor detailvragen; deze skills leren je hoe je het
 systeem goed gebruikt.
