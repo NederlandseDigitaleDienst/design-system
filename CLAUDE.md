@@ -88,7 +88,7 @@ Elk component MOET minimaal een **smoke test** hebben. Run tests met `npm test`.
 Versies worden **automatisch** verhoogd door semantic-release bij merge naar main.
 
 Leidend criterium: verandert de commit wat consumers krijgen (`dist/` of de
-meegeleverde `skills/nldd/*`)? Zo ja, dan hoort er een release uit te komen.
+meegeleverde `skills/nldd-design-bouwen/*`)? Zo ja, dan hoort er een release uit te komen.
 `docs:` telt daarin mee, want de plugin-versie volgt de pakketversie: zonder
 release halen consumers de gewijzigde skill-docs nooit op (zie Plugin-versie).
 
@@ -116,7 +116,7 @@ Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit d
 
 - Zet de entry **direct bovenaan**, boven het nieuwste versieblok. **Geen `## Unreleased`-kopje** — dat past niet in het door semantic-release gegenereerde format.
 - Gebruik de Keep-a-Changelog-secties (`### Added`, `### Fixed`, `### Breaking`, …), zoals de bestaande versieblokken.
-- Regenereer daarna de skill-kopie: `npm run generate:skill-changelog` (of `npm run generate:skill-docs`). `skills/nldd/changelog.md` is een gegenereerde kopie van de root-CHANGELOG en moet in sync blijven.
+- Regenereer daarna de skill-kopie: `npm run generate:skill-changelog` (of `npm run generate:skill-docs`). `skills/nldd-design/changelog.md` is een gegenereerde kopie van de root-CHANGELOG en moet in sync blijven.
 
 ## Iconen
 
@@ -134,16 +134,16 @@ kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet
 gebruiken).
 
 Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs`
-(de icoon- en aliaslijst in `skills/nldd/reference.md`), en zet een nieuw icoon
+(de icoon- en aliaslijst in `skills/nldd-design/reference.md`), en zet een nieuw icoon
 in de changelog onder `### Highlights`.
 
 ## Ontwerprichtlijnen
 
-De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs/Ontwerprichtlijnen"): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes). Heb je de directory `.claude/skills/ontwerprichtlijnen/` lokaal nog staan (van de oude generator), verwijder die dan handmatig; hij is nu een ongetrackte overblijver.
+De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs/Ontwerprichtlijnen"): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes). Heb je de directory `.claude/skills/ontwerprichtlijnen/` lokaal nog staan (van de oude generator), verwijder die dan handmatig; hij is nu een ongetrackte overblijver.
 
 ## Patronen
 
-Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. De acht basispatronen staan in `skills/nldd/patterns/` (pagina met secties, werkbalk, lijst, filteren, formulier, menu, bewerk-sheet, bevestigen) en reizen met de plugin mee naar consumenten. Ze zijn met de hand geschreven, niet gegenereerd.
+Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. De acht basispatronen staan in `skills/nldd-design-bouwen/patterns/` (pagina met secties, werkbalk, lijst, filteren, formulier, menu, bewerk-sheet, bevestigen) en reizen met de plugin mee naar consumenten. Ze zijn met de hand geschreven, niet gegenereerd.
 
 Houd de set klein: patroonbibliotheken gaan dood aan achterstallig onderhoud, niet aan een verkeerd formaat. Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 

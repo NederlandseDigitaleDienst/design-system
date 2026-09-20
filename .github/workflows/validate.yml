@@ -73,8 +73,8 @@ jobs:
         run: |
           set -e
           npm run generate:component-reference
-          git diff --exit-code skills/nldd/reference.md \
-            || (echo "::error::skills/nldd/reference.md is verouderd. Draai 'npm run generate:component-reference' en commit het resultaat." && exit 1)
+          git diff --exit-code skills/nldd-design/reference.md \
+            || (echo "::error::skills/nldd-design/reference.md is verouderd. Draai 'npm run generate:component-reference' en commit het resultaat." && exit 1)
 
       # The manifest is committed rather than built on publish, so a change to a
       # component's public API is visible in the diff of a pull request.

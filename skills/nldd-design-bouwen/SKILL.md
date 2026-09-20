@@ -1,5 +1,5 @@
 ---
-name: nldd
+name: nldd-design-bouwen
 description: "Bouw applicaties met de web components van het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens) of upgraden van dit systeem. NIET voor het ontwikkelen van het design system zelf (daarvoor: /component, /css)."
 metadata:
   type: reference
@@ -13,15 +13,18 @@ Digitale Dienst (Rijksoverheid). Ben je bezig met het **ontwikkelen van het
 designsysteem zelf** (nieuwe componenten, CSS-conventies), gebruik dan
 `/component` en `/css`, niet deze skill.
 
-Drie plekken horen hierbij:
+Twee plekken horen bij deze skill:
 
 - [`patterns/`](patterns/): de acht basispatronen, dus hoe je componenten
   samenstelt tot een pagina, een lijst, een formulier, een menu, een sheet of een
   bevestiging. Begin hier als je iets bouwt.
-- [`reference.md`](reference.md): gegenereerde snelreferentie van elk
-  `nldd-*` element met zijn attributen, slots en events.
 - [`examples/`](examples/): werkende bootstrap-voorbeelden voor platte HTML en
   Vue 3, en een complete content-pagina.
+
+De naslag staat apart, in `nldd-design`, want die geldt ook als je niets nieuws
+bouwt: de [componentreferentie](../nldd-design/reference.md) met elk `nldd-*`
+element en de icoonnamen, de [changelog](../nldd-design/changelog.md) en de
+[ontwerprichtlijnen](../nldd-design/design-guidelines.md).
 
 De levende documentatie met visuele voorbeelden staat in
 [Storybook](https://nederlandsedigitaledienst.github.io/design-system/). De exacte types staan in de
@@ -29,7 +32,7 @@ De levende documentatie met visuele voorbeelden staat in
 detailvragen; deze skill leert je hoe je het systeem *goed* gebruikt.
 
 Zet je een **bestaande** applicatie om naar dit systeem in plaats van een nieuwe
-te bouwen, gebruik dan de `nldd-migratie` skill. Die gaat over wat er bij zo'n
+te bouwen, gebruik dan de `nldd-design-migreren` skill. Die gaat over wat er bij zo'n
 omzetting stil misgaat en hoe je dat merkt.
 
 ## De visie: standaarden als gedrag, niet als kennis
@@ -64,7 +67,7 @@ standaard.
   control weghalen alleen om het beeld op te ruimen verschuift de complexiteit,
   het lost niets op. Het bredere principe (UI in de content verwerken, niet
   minder controls om het minder controls) staat in
-  [`design-guidelines.md`](design-guidelines.md).
+  [`design-guidelines.md`](../nldd-design/design-guidelines.md).
 
 ### Progressieve onthulling op smalle schermen
 
@@ -293,7 +296,7 @@ onderbreking verdienen.
 > Wanneer is een modal überhaupt gerechtvaardigd, en wat is het primary-label in
 > een bevestiging? Dat zijn ontwerpkeuzes, geen component-mechaniek. De voorkeur
 > is undo boven confirm en een contextueel-window (popover) boven een modal; zie
-> [`design-guidelines.md`](design-guidelines.md) ("Feedback en state").
+> [`design-guidelines.md`](../nldd-design/design-guidelines.md) ("Feedback en state").
 
 ### Imperatieve API spiegelen (sheets, popovers, modals)
 
@@ -436,7 +439,7 @@ dit adres", gebruik je `nldd-form-field-help-text`.
 
 *Ontwerpkeuzes rond formulieren* (markeer optionele velden in plaats van
 verplichte, volg de gedachtegang van de gebruiker in de vraagvolgorde, één veld
-voor de volledige naam) staan in [`design-guidelines.md`](design-guidelines.md)
+voor de volledige naam) staan in [`design-guidelines.md`](../nldd-design/design-guidelines.md)
 ("Invoer en formulieren"). Het `optional`-attribuut op `nldd-form-field` toont
 daarbij zelf de "Optioneel"-badge.
 
@@ -507,7 +510,7 @@ Wat jij nog moet doen:
 Het systeem brengt versies uit als patches (semantic-release verhoogt het
 patch-nummer bij elke `feat`, `fix` of breaking change). Het versienummer alleen
 zegt dus niet of een upgrade veilig is; **de changelog wel.** Gebruik
-[`changelog.md`](changelog.md) als je upgradepad.
+[`changelog.md`](../nldd-design/changelog.md) als je upgradepad.
 
 Werkwijze bij het verhogen van je `@nldd/design-system` versie:
 
@@ -524,7 +527,7 @@ Werkwijze bij het verhogen van je `@nldd/design-system` versie:
    componenten uit de breaking entries.
 4. **Lees `Highlights`, `Added` en `Changed`** voor nieuwe componenten of
    attributen die je oudere, omslachtigere code kunnen vervangen.
-5. **Verifieer tegen [`reference.md`](reference.md)** of een attribuut, slot of
+5. **Verifieer tegen [`reference.md`](../nldd-design/reference.md)** of een attribuut, slot of
    event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij
    exact deze release.
 
@@ -538,14 +541,14 @@ bestaat, zonder foutmelding, alleen een stille terugval op de default.
 1. **[Storybook](https://nederlandsedigitaledienst.github.io/design-system/)**: levende voorbeelden en
    controls per component.
 2. **`.d.ts` types in het pakket**: de exacte, actuele API.
-3. **[`reference.md`](reference.md)**: offline snelreferentie van alle elementen.
+3. **[`reference.md`](../nldd-design/reference.md)**: offline snelreferentie van alle elementen.
 4. **[`patterns/`](patterns/)**: hoe je die elementen samenstelt, met het waarom
    erbij. De referentie zegt wat een component kan; een patroon zegt hoe je er
    een taak mee afhandelt.
-5. **[`changelog.md`](changelog.md)**: de release notes per versie. Raadpleeg
+5. **[`changelog.md`](../nldd-design/changelog.md)**: de release notes per versie. Raadpleeg
    dit als een attribuut, slot of gedrag pas vanaf een bepaalde versie bestaat,
    of om te zien wat er sinds jouw versie is veranderd.
-6. **[`design-guidelines.md`](design-guidelines.md)**: de interface- en
+6. **[`design-guidelines.md`](../nldd-design/design-guidelines.md)**: de interface- en
    ontwerpvoorkeuren van het systeem (invoer en formulieren, navigatie, feedback
    en state, microcopy, visuele hiërarchie, strategie). Dit is de canonieke bron
    voor *ontwerp*keuzes; raadpleeg het bij vormgeven, microcopy schrijven of een
@@ -554,7 +557,7 @@ bestaat, zonder foutmelding, alleen een stille terugval op de default.
 
 **Iconen.** `nldd-icon name="…"` accepteert namen uit een vaste set. De
 volledige lijst (iconen plus aliassen) staat onder "Iconen" in
-[`reference.md`](reference.md); verzin geen naam, kies er een uit die set.
+[`reference.md`](../nldd-design/reference.md); verzin geen naam, kies er een uit die set.
 
 ## Grenzen van deze skill
 

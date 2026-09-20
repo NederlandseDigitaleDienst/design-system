@@ -1,5 +1,5 @@
 /**
- * Generates skills/nldd/reference.md from component JSDoc.
+ * Generates skills/nldd-design/reference.md from component JSDoc.
  *
  * Walks src/components, parses the leading JSDoc block of each component
  * entry file for @element, @attr, @slot and @fires tags, and emits one
@@ -7,7 +7,7 @@
  * consumer-facing reference in sync with the source: the JSDoc is the
  * single source of truth.
  *
- * WARNING: this script overwrites skills/nldd/reference.md in-place.
+ * WARNING: this script overwrites skills/nldd-design/reference.md in-place.
  * After changing a component's public API (attributes, slots, events),
  * run `npm run generate:component-reference` and commit the result.
  *
@@ -22,7 +22,7 @@ import { extractComponentBlocks, extractLeadingBlock, parseComponent, parseTyped
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const componentsDir = resolve(__dirname, '../src/components');
-const outputPath = resolve(__dirname, '../skills/nldd/reference.md');
+const outputPath = resolve(__dirname, '../skills/nldd-design/reference.md');
 
 // Human-readable titles for the category directories, in display order.
 const CATEGORY_TITLES = {

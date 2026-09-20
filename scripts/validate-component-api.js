@@ -1,7 +1,7 @@
 /**
  * Checks that every attribute a component actually has is documented.
  *
- * The JSDoc `@attr` block is hand-written and feeds skills/nldd/reference.md,
+ * The JSDoc `@attr` block is hand-written and feeds skills/nldd-design/reference.md,
  * the plugin skill and anything generated from it. The existing drift check
  * only proves the generator ran: it compares generated output against generated
  * output, so a property that never reached the JSDoc stays invisible to it.
@@ -132,5 +132,5 @@ for (const { tag, file, attributes } of problems) {
 	for (const name of attributes) console.error(`      @attr ${name}`);
 }
 console.error('\nVoeg ze toe aan het JSDoc-blok van het component. Zonder @attr-regel');
-console.error('ontbreken ze in skills/nldd/reference.md en in alles wat daaruit volgt.');
+console.error('ontbreken ze in skills/nldd-design/reference.md en in alles wat daaruit volgt.');
 process.exit(1);

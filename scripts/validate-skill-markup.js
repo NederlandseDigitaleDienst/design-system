@@ -152,7 +152,7 @@ if (errors.length > 0) {
 	console.error(
 		'\nDeze bestanden worden door consumenten en agents gekopieerd, dus een tag of\n' +
 			'attribuut dat niet bestaat is een fout die we uitleveren. De huidige API\n' +
-			'staat in skills/nldd/reference.md.',
+			'staat in skills/nldd-design/reference.md.',
 	);
 	process.exit(1);
 }

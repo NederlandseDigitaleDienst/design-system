@@ -15,9 +15,23 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Breaking
+
+- **The skills are now `nldd-design-bouwen`, `nldd-design-migreren` and
+  `nldd-design`.** `nldd` meant four things at once: the organisation, the npm
+  package, the plugin and the skill inside it, so the name said nothing about
+  what the skill was for and its description had to carry an anti-trigger
+  instead. The names now say the task. What is shared between them, the
+  component reference, the changelog and the design guidelines, moves to
+  `nldd-design`: that is reference material whether you are building something
+  new or converting something old, and a migration needs it as much as a new
+  app does. The plugin is still called `nldd`, so installing it does not
+  change. Call a skill by name, or name one in your own instruction files, and
+  you update that reference.
+
 ### Added
 
-- **A skill for migrating an existing codebase** (`nldd-migratie`). What goes
+- **A skill for migrating an existing codebase** (`nldd-design-migreren`). What goes
   wrong when you convert an application that already exists, and how you notice
   before your users do. The system fails silently, so the skill is built around
   checks that make the silence audible: what to verify before you convert

@@ -37,7 +37,7 @@ De echte namen zijn beschrijvend en Nederlands waar het om kleur gaat:
 `--semantics-surfaces-base-background-color`,
 `--semantics-surfaces-tinted-background-color`,
 `--primitives-color-groen-500`, `-oranje-`, `-lintblauw-`. Zoek ze op in
-[`reference.md`](../nldd/reference.md) en in
+[`reference.md`](../nldd-design/reference.md) en in
 `node_modules/@nldd/design-system/dist/css/`, en grep het pakket voordat je een
 naam opschrijft.
 

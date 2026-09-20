@@ -21,7 +21,7 @@ Voor kwetsbaarheden geldt een andere route. Die staan in
 
 Een patroon is geen component: het beschrijft hoe je bestaande componenten
 samenstelt tot iets dat een taak afhandelt. De set staat in
-[`skills/nldd/patterns/`](./skills/nldd/patterns/) en blijft **expres klein**;
+[`skills/nldd-design-bouwen/patterns/`](./skills/nldd-design-bouwen/patterns/) en blijft **expres klein**;
 acht patronen die kloppen zijn nuttiger dan een catalogus die niemand bijhoudt.
 
 Stel je er een voor, begin dan bij het probleem en het bewijs, niet bij de code:
@@ -74,7 +74,7 @@ variabele die niet bestaat, zonder fallback.
 
 **Verander je de publieke API van een component** (attributen, slots, events),
 draai dan `npm run generate:skill-docs` en commit het resultaat mee. De
-gegenereerde referentie in `skills/nldd/` wordt in CI vergeleken met de JSDoc,
+gegenereerde referentie in `skills/nldd-design-bouwen/` wordt in CI vergeleken met de JSDoc,
 en loopt die uit de pas dan faalt de build.
 
 ## Commits
@@ -134,7 +134,7 @@ Deze secties zijn in gebruik:
 - **Removed**: API's die eruit zijn.
 
 Heb je met de hand iets aan de changelog toegevoegd, draai dan
-`npm run generate:skill-changelog`. `skills/nldd/changelog.md` is een kopie die
+`npm run generate:skill-changelog`. `skills/nldd-design/changelog.md` is een kopie die
 met de plugin meereist en in sync moet blijven.
 
 ## Releases

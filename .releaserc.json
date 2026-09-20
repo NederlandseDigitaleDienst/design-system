@@ -102,9 +102,9 @@
           "package.json",
           "package-lock.json",
           "CHANGELOG.md",
-          "skills/nldd/changelog.md",
-          "skills/nldd/reference.md",
-          "skills/nldd/design-guidelines.md",
+          "skills/nldd-design/changelog.md",
+          "skills/nldd-design/reference.md",
+          "skills/nldd-design/design-guidelines.md",
           ".claude-plugin/plugin.json",
           ".claude-plugin/marketplace.json",
           "publiccode.yml"

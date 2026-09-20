@@ -14,7 +14,7 @@
  * link to ../../src/docs/... would break after a marketplace install. Hence a
  * real copy, regenerated from the single source of truth.
  *
- * WARNING: overwrites skills/nldd/design-guidelines.md in-place. Run
+ * WARNING: overwrites skills/nldd-design/design-guidelines.md in-place. Run
  * `npm run generate:skill-docs` after editing the guidelines and commit the
  * result.
  *
@@ -27,7 +27,7 @@ import { generatedHeader, readSource, writeGenerated } from './lib/skill-doc.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const sourcePath = resolve(__dirname, '../src/docs/design-guidelines.mdx');
-const outputPath = resolve(__dirname, '../skills/nldd/design-guidelines.md');
+const outputPath = resolve(__dirname, '../skills/nldd-design/design-guidelines.md');
 
 const mdx = readSource(
 	sourcePath,

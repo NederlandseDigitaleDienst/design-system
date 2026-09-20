@@ -1,13 +1,13 @@
 ---
-name: nldd-migratie
-description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: gebruik de `nldd` skill. Voor het ontwikkelen van het design system zelf: /component, /css."
+name: nldd-design-migreren
+description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-bouwen. Voor het ontwikkelen van het design system zelf: /component, /css."
 metadata:
   type: reference
 ---
 
 # Een bestaande codebase omzetten naar het NLDD Design System
 
-De `nldd` skill leert je hoe de componenten werken. Deze skill gaat over iets
+De `nldd-design-bouwen` skill leert je hoe de componenten werken. Deze skill gaat over iets
 anders: wat er misgaat als je een **bestaande** applicatie omzet, en hoe je dat
 merkt voordat je gebruikers het merken.
 
@@ -24,6 +24,12 @@ lees dan ook:
   fragmentwissels (htmx, Turbo, Unpoly, LiveView). Wat een swap anders doet dan
   een paginalading, de nieuwe stack ernaast zetten, en wat vendoren van de
   bundel je oplevert en kost.
+
+De naslag die je bij een omzetting het hardst nodig hebt, staat in de skill
+`nldd-design`: de [componentreferentie](../nldd-design/reference.md) om te
+controleren of een attribuut of icoonnaam echt bestaat, en de
+[changelog](../nldd-design/changelog.md) om te zien wat er tussen jouw versie en
+de doelversie is veranderd.
 
 Wat je in de componentdocumentatie kunt opzoeken staat hier niet in; wat hier
 staat heeft in echte migraties tijd gekost.

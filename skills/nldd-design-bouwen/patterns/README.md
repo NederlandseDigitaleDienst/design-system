@@ -6,7 +6,7 @@ deze dingen samen tot iets dat een taak van de gebruiker afhandelt".
 De set is expres klein. Acht patronen die kloppen zijn nuttiger dan een complete
 catalogus die niet is bijgehouden. Staat jouw geval er niet bij, kijk dan of een
 van deze acht de compositie al dekt; zo niet, dan is
-[`../reference.md`](../reference.md) de volledige API en
+[`../reference.md`](../../nldd-design/reference.md) de volledige API en
 [Storybook](https://minbzk.github.io/storybook/) het levende voorbeeld.
 
 **De opbouw van een scherm**
@@ -38,7 +38,7 @@ Deze bestanden beschrijven **compositie-mechaniek**: welk component in welk
 component, en waarom die volgorde. De keuzes daarachter (wanneer een modal
 gerechtvaardigd is, hoe je microcopy schrijft, waarom je optionele velden
 markeert in plaats van verplichte) staan in
-[`../design-guidelines.md`](../design-guidelines.md). Die blijven de canonieke
+[`../design-guidelines.md`](../../nldd-design/design-guidelines.md). Die blijven de canonieke
 bron voor ontwerpvragen.
 
 Twee dingen staan er bewust niet in, omdat de ontwerprichtlijnen ze afwijzen:
