@@ -75,6 +75,21 @@ describe('nldd-modal-dialog', () => {
 		expect(el.shadowRoot!.querySelector('nldd-inline-dialog')).not.toBeNull();
 	});
 
+	/* An overlay that ends its opening animation on a transform keeps that
+	 * transform, and an element inside it that positions itself against the
+	 * viewport (a CodeMirror completion popup) then resolves against the
+	 * overlay instead and lands beside the page. `backwards` leaves nothing
+	 * behind, `both` did. */
+	it('keeps no transform once it has opened', async () => {
+		el = await fixture('<nldd-modal-dialog></nldd-modal-dialog>');
+		await waitForUpdate(el);
+		const dialog = el.shadowRoot!.querySelector('dialog')!;
+		(el as NLDDModalDialog).show();
+		await (el as NLDDModalDialog).updateComplete;
+		await Promise.all(dialog.getAnimations().map((animation) => animation.finished));
+		expect(getComputedStyle(dialog).transform).toBe('none');
+	});
+
 	it('does not throw when show() is called on an already-open dialog', async () => {
 		el = await fixture('<nldd-modal-dialog></nldd-modal-dialog>');
 		await waitForUpdate(el);

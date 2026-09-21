@@ -85,6 +85,55 @@ describe('nldd-text-editor typeaheads', () => {
 		expect(detail).toEqual({ trigger: ':', candidate: emoji[0], from: 4, to: 6 });
 	});
 
+	/* CodeMirror places a tooltip with `position: fixed`, against the viewport,
+	 * and an ancestor with a transform becomes the frame that resolves against:
+	 * the list then counts that ancestor's offset twice and lands beside the
+	 * page, which is where an nldd-modal-dialog put it. Measured against the
+	 * editor, it follows the editor wherever that sits. Where it ends up in
+	 * pixels is CodeMirror's own arithmetic, and it clamps against the space it
+	 * has, so this asks the one thing that is ours: which frame it measures in. */
+	it('measures its list against the editor, not the viewport', async () => {
+		el = await make('zie #alg', [{ trigger: '#', source: byLabel(channels) }]);
+		await openList(el);
+		const list = el.shadowRoot.querySelector('.cm-tooltip-autocomplete') as HTMLElement;
+		expect(getComputedStyle(list).position).toBe('absolute');
+	});
+
+	/* An nldd-sheet and an nldd-modal-dialog hide their overflow, so a list that
+	 * runs past their edge is cut off there. CodeMirror measures the room it has
+	 * against the window, which knows nothing of that box. */
+	it('keeps its list inside a container that hides its overflow', async () => {
+		const wrap = document.createElement('div');
+		// Narrower than the test window, so the window is not what holds the list
+		// in: without the fix it would stay on screen and still leave this box.
+		// The list's own minimum is a token, and a test document has no
+		// variables.css, so it comes along here.
+		wrap.style.cssText = 'overflow: hidden; width: 300px; padding: 8px; --primitives-area-280: 280px';
+		document.body.appendChild(wrap);
+		try {
+			wrap.innerHTML = '<nldd-text-editor accessible-label="t"></nldd-text-editor>';
+			el = wrap.firstElementChild as unknown as El;
+			await el.updateComplete;
+			await waitForUpdate(el);
+			el.value = 'een eindje naar rechts #alg';
+			el.typeaheads = [{ trigger: '#', source: byLabel(channels) }];
+			await el.updateComplete;
+			el.view.dispatch({ selection: { anchor: el.view.state.doc.length } });
+			await openList(el);
+
+			const list = el.shadowRoot.querySelector('.cm-tooltip-autocomplete') as HTMLElement;
+			const room = wrap.getBoundingClientRect();
+			const caret = el.view.coordsAtPos(el.view.state.selection.main.head)!;
+			// Without this the test proves nothing: the list has to want to run past
+			// the edge before staying inside it means anything.
+			expect(caret.left + list.getBoundingClientRect().width).toBeGreaterThan(room.right);
+			expect(list.getBoundingClientRect().right).toBeLessThanOrEqual(room.right);
+			expect(list.getBoundingClientRect().left).toBeGreaterThanOrEqual(room.left);
+		} finally {
+			wrap.remove();
+		}
+	});
+
 	it('writes the trigger, the text and a space when there is no insert', async () => {
 		el = await make('zie #alg', [{ trigger: '#', source: byLabel(channels) }]);
 		await openList(el);

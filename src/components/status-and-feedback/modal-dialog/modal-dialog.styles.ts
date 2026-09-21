@@ -68,7 +68,7 @@ export const modalDialogStyles = css`
 	}
 
 	.modal-dialog[open] {
-		animation: modal-dialog-in var(--_animation-duration) var(--_animation-easing) both;
+		animation: modal-dialog-in var(--_animation-duration) var(--_animation-easing) backwards;
 	}
 
 	.modal-dialog.is-closing {

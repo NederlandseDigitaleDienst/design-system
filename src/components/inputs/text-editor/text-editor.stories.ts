@@ -6,6 +6,9 @@ import '../../inputs/segmented-control/segmented-control.js';
 import '../../inputs/toggle-button/toggle-button.js';
 import '../../actions/button/button.js';
 import '../../actions/button-bar/button-bar.js';
+import '../../status-and-feedback/modal-dialog/modal-dialog.js';
+import '../../layout/sheet/sheet.js';
+import '../../layout/container/container.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import '../../layout/spacer/spacer.js';
@@ -561,6 +564,60 @@ export const Mentions = {
 		docs: {
 			description: {
 				story: 'Typ `@` voor een typeahead. De editor kent zelf geen gebruikers: de consumer levert kandidaten via de `mentionSource`-property (aangeroepen met de tekst na `@`). Een keuze voegt een markdown-token `[@Naam](user:id)` in (als token gerenderd, degradeert tot een gewone link) en vuurt `nldd-text-editor-mention` met id + range.',
+			},
+		},
+	},
+};
+
+export const MentionsInEenOverlay = {
+	render: () => {
+		const users = [
+			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
+			{ id: '2', text: 'Bram Jansen', supportingText: 'Communicatie' },
+			{ id: '3', text: 'Chen Wei', supportingText: 'Data' },
+			{ id: '4', text: 'Dewi Pratama', supportingText: 'Juridisch' },
+			{ id: '5', text: 'Emma Bakker', supportingText: 'Beleid' },
+		];
+		const source = (query: string) =>
+			users.filter((user) => user.text.toLowerCase().includes(query.toLowerCase()));
+		const tags = [
+			{ trigger: '#', source: (query: string) => ['beleid', 'begroting', 'besluit', 'bezwaar']
+				.filter((tag) => tag.startsWith(query.toLowerCase()))
+				.map((tag) => ({ id: tag, text: tag, symbol: '#' })) },
+		];
+		const open = (e: Record<string, any>) => e.currentTarget.nextElementSibling.show();
+		return html`
+			<nldd-button variant="primary" text="Open modal dialog" @click=${open}></nldd-button>
+			<nldd-modal-dialog accessible-label="Notitie">
+				<nldd-text-editor
+					rows="6"
+					accessible-label="Notitie"
+					.value=${'Typ `@` voor een naam of `#` voor een label.'}
+					.mentionSource=${source}
+					.typeaheads=${tags}
+				></nldd-text-editor>
+				<nldd-button slot="actions" variant="primary" text="Bewaar"></nldd-button>
+			</nldd-modal-dialog>
+
+			<nldd-button variant="secondary" text="Open sheet" @click=${open}></nldd-button>
+			<nldd-sheet accessible-label="Notitie in een sheet">
+				<nldd-container padding="16">
+					<nldd-text-editor
+						rows="6"
+						accessible-label="Notitie"
+						.value=${'Ook hier: typ `@` of `#`.'}
+						.mentionSource=${source}
+						.typeaheads=${tags}
+					></nldd-text-editor>
+				</nldd-container>
+			</nldd-sheet>
+		`;
+	},
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'De typeahead in een overlay. Open de dialog of de sheet en typ `@` of `#`: de lijst hoort pal onder de cursor te staan, niet ergens naast het scherm. Twee dingen kwamen hier samen. CodeMirror plaatst zijn popup `fixed`, dus ten opzichte van het venster, en een voorouder met een transform wordt dan het referentiekader. De openingsanimaties van de dialog en de sheet lieten zo\'n transform staan, ook na afloop, omdat ze eindigden met `fill-mode: both`. Test dit met het browservenster op de voorgrond: CodeMirror plaatst de popup in een `requestAnimationFrame`, en die staat stil in een achtergrondtab.',
 			},
 		},
 	},
