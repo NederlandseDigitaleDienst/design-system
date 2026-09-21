@@ -1,8 +1,8 @@
 /**
  * Nederlandse Digitale Dienst Spacer Component (Lit + TypeScript)
  *
- * Add explicit space between elements. Components in this design system
- * have no margins of their own — all whitespace is set by a spacer.
+ * Add explicit space between elements. Components here have no margins
+ * of their own — all whitespace is set by a spacer.
  *
  * ### Sizing
  * Use a single `size` attribute for whitespace that's the same at every
