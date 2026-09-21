@@ -109,11 +109,31 @@ export function nextFrames(): Promise<void> {
  * you can count. Waiting a fixed number of ticks passes on a quick machine and
  * fails on a loaded one, which reads as a flaky test rather than as the timing
  * assumption it is. Giving up after a timeout keeps a real regression failing.
+ *
+ * The budget is generous on purpose. It is not how long the thing takes, it is
+ * the ceiling before a test gives up, so raising it slows nothing down: a
+ * condition that holds returns on the next poll either way. One second was too
+ * tight for a chain of timer, render and popover close on a loaded CI runner,
+ * which made the two tooltip tests fail on and off without anything being
+ * wrong with them.
  */
-export async function until(condition: () => boolean, timeout = 1000): Promise<void> {
+export async function until(
+	condition: () => boolean,
+	{ timeout = 5000, throwOnTimeout = true }: { timeout?: number; throwOnTimeout?: boolean } = {},
+): Promise<void> {
 	const deadline = performance.now() + timeout;
 	while (!condition()) {
-		if (performance.now() > deadline) return;
+		if (performance.now() > deadline) {
+			// Returning silently leaves the assertion that follows to report
+			// "expected true to be false", which says nothing about the wait
+			// having run out and sends you looking at the component instead.
+			// A test that waits for something it expects NOT to happen passes
+			// `throwOnTimeout: false`, because there the timeout is the point.
+			if (!throwOnTimeout) return;
+			throw new Error(
+				`until(): de voorwaarde werd niet waar binnen ${timeout}ms.\n${condition}`,
+			);
+		}
 		await new Promise(resolve => setTimeout(resolve, 10));
 	}
 }

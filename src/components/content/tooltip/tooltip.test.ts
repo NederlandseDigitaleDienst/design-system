@@ -36,7 +36,10 @@ function instantHide(el: NLDDTooltip): void {
 async function triggerShow(el: NLDDTooltip, trigger: Element): Promise<void> {
 	instantShow(el);
 	trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-	await until(() => isTooltipVisible(el));
+	// Not every caller expects the tooltip to appear: the empty-text and
+	// timing=never tests use this same flow to assert that it stays away, and
+	// there running out the clock is the answer rather than a failure.
+	await until(() => isTooltipVisible(el), { throwOnTimeout: false });
 	// The popover being open is not the same as the show having settled. Hiding
 	// it while it is still opening leaves it open, so let the render finish
 	// before a test does anything with it.

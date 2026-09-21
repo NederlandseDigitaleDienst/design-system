@@ -1,13 +1,21 @@
 # Beveiliging
 
-Ontdek je een kwetsbaarheid in het NLDD Design System, meld hem dan via het
-Nationaal Cyber Security Centrum:
+Ontdek je een kwetsbaarheid in het NLDD Design System, meld hem dan
+vertrouwelijk via GitHub:
+
+**https://github.com/NederlandseDigitaleDienst/design-system/security/advisories/new**
+
+Je melding is dan alleen zichtbaar voor jou en de beheerders van deze
+repository. Meld een kwetsbaarheid niet in een openbaar issue.
+
+Heb je geen GitHub-account, of meld je liever niet via GitHub, dan kan het ook
+via het Nationaal Cyber Security Centrum:
 
 **https://www.ncsc.nl/contact/kwetsbaarheid-melden**
 
-Vermeld daarbij "MinBZK/CIO-office github security response", zodat je melding
-bij de juiste mensen terechtkomt. Meld een kwetsbaarheid niet in een openbaar
-issue.
+Vermeld daarbij dat het gaat om het design system van de Nederlandse Digitale
+Dienst (https://github.com/NederlandseDigitaleDienst/design-system). Het NCSC
+brengt je melding dan bij ons onder de aandacht.
 
 ## Wat we van je vragen
 
@@ -31,18 +39,16 @@ Verder:
 
 ## Wat je van ons mag verwachten
 
-De afhandeling volgt het beleid van het NCSC, en de informatie op
-https://www.ncsc.nl/contact/kwetsbaarheid-melden is daarin leidend. In het
-kort:
+Meld je via het NCSC, dan volgt de afhandeling het beleid op
+https://www.ncsc.nl/contact/kwetsbaarheid-melden. Meld je via GitHub:
 
-- Je krijgt een reactie op je melding met een inschatting en een verwachte
-  oplosdatum.
-- Meld je volgens bovenstaande route, dan onderneemt de Rijksoverheid geen
-  juridische stappen tegen je naar aanleiding van de melding.
-- Je persoonsgegevens gaan niet naar derden zonder je toestemming, tenzij dat
-  wettelijk moet. Melden onder pseudoniem of anoniem kan.
-- Je hoort van ons hoe het staat met de oplossing.
-- Bij publicatie noemen we je als ontdekker, tenzij je dat liever niet hebt.
+- Je krijgt een reactie op je melding met een inschatting.
+- Je hoort van ons hoe het staat met de oplossing. Dat gesprek loopt in de
+  melding zelf, en daar kun je ook meewerken aan de fix.
+- Is de kwetsbaarheid opgelost, dan publiceren we een security advisory.
+- In die advisory noemen we je als ontdekker, tenzij je dat liever niet hebt.
+- Je melding, en daarmee je GitHub-account, zien alleen de beheerders. Wil je
+  je account er niet aan koppelen, meld dan via het NCSC.
 
 ## Welke versies
 
