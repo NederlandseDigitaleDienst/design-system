@@ -85,29 +85,15 @@ describe('nldd-text-editor typeaheads', () => {
 		expect(detail).toEqual({ trigger: ':', candidate: emoji[0], from: 4, to: 6 });
 	});
 
-	/* CodeMirror places a tooltip with `position: fixed`, against the viewport,
-	 * and an ancestor with a transform becomes the frame that resolves against:
-	 * the list then counts that ancestor's offset twice and lands beside the
-	 * page, which is where an nldd-modal-dialog put it. Measured against the
-	 * editor, it follows the editor wherever that sits. Where it ends up in
-	 * pixels is CodeMirror's own arithmetic, and it clamps against the space it
-	 * has, so this asks the one thing that is ours: which frame it measures in. */
-	it('measures its list against the editor, not the viewport', async () => {
-		el = await make('zie #alg', [{ trigger: '#', source: byLabel(channels) }]);
-		await openList(el);
-		const list = el.shadowRoot.querySelector('.cm-tooltip-autocomplete') as HTMLElement;
-		expect(getComputedStyle(list).position).toBe('absolute');
-	});
-
-	/* An nldd-sheet and an nldd-modal-dialog hide their overflow, so a list that
-	 * runs past their edge is cut off there. CodeMirror measures the room it has
-	 * against the window, which knows nothing of that box. */
-	it('keeps its list inside a container that hides its overflow', async () => {
+	/* CodeMirror hangs its tooltip in the editor, so an nldd-sheet or an
+	 * nldd-modal-dialog around it cut the list off at its edge, and an ancestor
+	 * with a transform sent it beside the page. It opens in the top layer now,
+	 * like an nldd-menu, where none of that reaches it. */
+	it('opens its list in the top layer, out of reach of a container that clips', async () => {
 		const wrap = document.createElement('div');
-		// Narrower than the test window, so the window is not what holds the list
-		// in: without the fix it would stay on screen and still leave this box.
-		// The list's own minimum is a token, and a test document has no
-		// variables.css, so it comes along here.
+		// Narrower than the test window, so the list has somewhere to stick out to.
+		// Its minimum width is a token, and a test document has no variables.css,
+		// so that comes along here.
 		wrap.style.cssText = 'overflow: hidden; width: 300px; padding: 8px; --primitives-area-280: 280px';
 		document.body.appendChild(wrap);
 		try {
@@ -122,13 +108,17 @@ describe('nldd-text-editor typeaheads', () => {
 			await openList(el);
 
 			const list = el.shadowRoot.querySelector('.cm-tooltip-autocomplete') as HTMLElement;
+			const frame = el.shadowRoot.querySelector('.cm-nldd-popups') as HTMLElement;
+			expect(frame.contains(list)).toBe(true);
+			expect(frame.matches(':popover-open')).toBe(true);
+			// Past the edge of the box, and still the topmost thing there: a clipped
+			// list would end at that edge, and one behind the page would not answer.
 			const room = wrap.getBoundingClientRect();
-			const caret = el.view.coordsAtPos(el.view.state.selection.main.head)!;
-			// Without this the test proves nothing: the list has to want to run past
-			// the edge before staying inside it means anything.
-			expect(caret.left + list.getBoundingClientRect().width).toBeGreaterThan(room.right);
-			expect(list.getBoundingClientRect().right).toBeLessThanOrEqual(room.right);
-			expect(list.getBoundingClientRect().left).toBeGreaterThanOrEqual(room.left);
+			const rect = list.getBoundingClientRect();
+			expect(rect.right).toBeGreaterThan(room.right);
+			expect(document.elementFromPoint(room.right + 8, rect.top + 8)).toBe(el);
+			// And off the window's edge by the margin an nldd-menu keeps.
+			expect(rect.right).toBeLessThanOrEqual(window.innerWidth - 16);
 		} finally {
 			wrap.remove();
 		}

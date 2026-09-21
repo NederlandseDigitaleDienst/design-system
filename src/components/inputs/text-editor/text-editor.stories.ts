@@ -617,7 +617,7 @@ export const MentionsInEenOverlay = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'De typeahead in een overlay. Open de dialog of de sheet en typ `@` of `#`: de lijst hoort pal onder de cursor te staan, niet ergens naast het scherm. Twee dingen kwamen hier samen. CodeMirror plaatst zijn popup `fixed`, dus ten opzichte van het venster, en een voorouder met een transform wordt dan het referentiekader. De openingsanimaties van de dialog en de sheet lieten zo\'n transform staan, ook na afloop, omdat ze eindigden met `fill-mode: both`. Test dit met het browservenster op de voorgrond: CodeMirror plaatst de popup in een `requestAnimationFrame`, en die staat stil in een achtergrondtab.',
+				story: 'De typeahead in een overlay. Open de dialog of de sheet en typ `@` of `#`: de lijst hoort pal onder de cursor te staan, in z\'n volle hoogte, en niet ergens naast het scherm. CodeMirror hangt zijn lijst in de editor, dus gold alles eromheen ook voor de lijst: een overlay verbergt z\'n overflow en knipte hem af, en een voorouder met een transform werd het referentiekader voor een `fixed` popup, waardoor hij naast de pagina belandde. De lijst opent nu in de top layer, net als een nldd-menu. Test dit met het browservenster op de voorgrond: CodeMirror plaatst de popup in een `requestAnimationFrame`, en die staat stil in een achtergrondtab.',
 			},
 		},
 	},

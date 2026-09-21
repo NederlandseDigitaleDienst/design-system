@@ -6,7 +6,7 @@ import {
 	type CompletionContext,
 	type CompletionResult,
 } from '@codemirror/autocomplete';
-import { EditorView, tooltips, type Rect } from '@codemirror/view';
+import { EditorView, ViewPlugin, tooltips } from '@codemirror/view';
 import type { EditorState, Extension } from '@codemirror/state';
 import { enclosingNamed } from './text-editor.syntax.js';
 import '../../content/avatar/avatar.js';
@@ -263,59 +263,84 @@ function completionSource(
 }
 
 /**
- * The box the popup has to stay inside: every ancestor that hides its overflow,
- * through the shadow boundaries, within the window.
+ * A frame for the list in the top layer, the way an nldd-menu opens.
  *
- * CodeMirror measures against the window, and an editor in an nldd-sheet or an
- * nldd-modal-dialog sits in a box far smaller than that. It saw room that was
- * not there, left the list where it was, and the overlay cut it off at its edge.
+ * CodeMirror hangs its tooltip in the editor, so everything around the editor
+ * applies to it: an nldd-sheet and an nldd-modal-dialog hide their overflow and
+ * cut the list off at their edge, and an ancestor with a transform becomes the
+ * frame a `position: fixed` tooltip resolves against, which put the list beside
+ * the page. In the top layer none of that reaches it, and it has the window to
+ * itself instead of the room left in a short dialog.
  *
- * Follows the flattened tree, the way the layout does: an editor handed to an
- * overlay is a child of the host in the DOM, but it is laid out, and clipped,
- * where its slot sits.
+ * It keeps the same distance from the window's edge that an nldd-menu does.
+ *
+ * The frame is `manual`, so only this opens and closes it, and it is opened
+ * from a mutation observer rather than on an update: CodeMirror measures the
+ * tooltip right after it puts it there, and a closed popover has no size.
  */
-function clippingSpace(view: EditorView): Rect {
-	const win = view.dom.ownerDocument.defaultView ?? window;
-	let space: Rect = { left: 0, top: 0, right: win.innerWidth, bottom: win.innerHeight };
+/** What an nldd-menu keeps free of the window's edge (--_viewport-margin). */
+const VIEWPORT_MARGIN = 16;
 
-	for (let node: Node | null = view.dom.parentNode; node; ) {
-		if (node instanceof ShadowRoot) {
-			node = node.host;
-			continue;
-		}
-		if (!(node instanceof Element)) break;
+function topLayerPopups(): Extension {
+	const frame = document.createElement('div');
+	frame.popover = 'manual';
+	frame.className = 'cm-nldd-popups';
 
-		const style = win.getComputedStyle(node);
-		if (style.overflowX !== 'visible' || style.overflowY !== 'visible') {
-			// The content box, not the border box it clips at: a list that ends
-			// exactly on the edge of a dialog reads as cut off, and this lines it
-			// up with the text inside.
-			const rect = node.getBoundingClientRect();
-			const inset = (side: 'Left' | 'Top' | 'Right' | 'Bottom') =>
-				parseFloat(style[`border${side}Width`]) + parseFloat(style[`padding${side}`]);
-			space = {
-				left: Math.max(space.left, rect.left + inset('Left')),
-				top: Math.max(space.top, rect.top + inset('Top')),
-				right: Math.min(space.right, rect.right - inset('Right')),
-				bottom: Math.min(space.bottom, rect.bottom - inset('Bottom')),
-			};
-		}
-		node = node.assignedSlot ?? node.parentNode;
-	}
+	const sync = () => {
+		// A tooltip, not a child: CodeMirror keeps an empty container in the frame
+		// for as long as the editor lives, and an always-open popover would have
+		// gone into the top layer before the overlay around it, and so under it.
+		const wanted = frame.querySelector('.cm-tooltip') !== null;
+		if (wanted === frame.matches(':popover-open')) return;
+		// A frame that is no longer in the document throws on either call.
+		try {
+			if (wanted) frame.showPopover();
+			else frame.hidePopover();
+		} catch { /* gone from the document */ }
+	};
 
-	return space;
+	const keeper = ViewPlugin.define((view) => {
+		view.dom.appendChild(frame);
+		const observer = new MutationObserver(sync);
+		observer.observe(frame, { childList: true, subtree: true });
+		return {
+			destroy() {
+				observer.disconnect();
+				frame.remove();
+			},
+		};
+	});
+
+	const space = () => ({
+		left: VIEWPORT_MARGIN,
+		top: VIEWPORT_MARGIN,
+		right: window.innerWidth - VIEWPORT_MARGIN,
+		bottom: window.innerHeight - VIEWPORT_MARGIN,
+	});
+
+	return [tooltips({ parent: frame, tooltipSpace: space }), keeper];
 }
-
-/* CodeMirror places a tooltip with `position: fixed`, against the viewport. An
- * ancestor with a transform becomes the containing block for that, and then the
- * popup counts the ancestor's offset twice and lands beside the page: an
- * nldd-modal-dialog keeps the identity transform its opening animation ends on,
- * and a consumer's own container may carry one. Measured against the editor
- * instead, the popup follows the editor wherever it sits. */
-const popupPosition = tooltips({ position: 'absolute', tooltipSpace: clippingSpace });
 
 // The suggestion popup styled to match nldd-menu.
 const popupTheme = EditorView.theme({
+	// The popover's own box is only a frame for CodeMirror's tooltips, which
+	// place themselves against the window: no look of its own, and no surface
+	// over the page that would swallow a click.
+	'.cm-nldd-popups': {
+		position: 'fixed',
+		inset: '0',
+		width: 'auto',
+		height: 'auto',
+		margin: '0',
+		border: 'none',
+		padding: '0',
+		background: 'none',
+		overflow: 'visible',
+		pointerEvents: 'none',
+	},
+	'.cm-nldd-popups .cm-tooltip': {
+		pointerEvents: 'auto',
+	},
 	'.cm-tooltip.cm-tooltip-autocomplete': {
 		// CodeMirror gives every tooltip a hairline of its own; an nldd-menu has
 		// none and leans on its shadow, so this one drops it too.
@@ -438,7 +463,7 @@ export function typeaheads(
 		if (typeaheadQueryAt(update.state, update.state.selection.main.head, triggers)) startCompletion(update.view);
 	});
 	return [
-		popupPosition,
+		topLayerPopups(),
 		autocompletion({
 			override: [completionSource(getTypeaheads, onChoose)],
 			icons: false,
