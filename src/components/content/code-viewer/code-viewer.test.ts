@@ -35,10 +35,10 @@ describe('nldd-code-viewer', () => {
 		el = await fixture('<nldd-code-viewer>x</nldd-code-viewer>');
 		await waitForUpdate(el);
 		const content = el.shadowRoot!.querySelector('.cm-content')!;
-		expect(content.getAttribute('role')).toBe('document'); // not CodeMirror's default "textbox"
+		expect(content.getAttribute('role')).toBe('code'); // not CodeMirror's default "textbox"
 	});
 
-	it('laat de textbox-attributen van CodeMirror niet op role="document" staan', async () => {
+	it('laat de textbox-attributen van CodeMirror niet op role="code" staan', async () => {
 		el = await fixture('<nldd-code-viewer>x</nldd-code-viewer>');
 		await waitForUpdate(el);
 		const viewer = el as NLDDCodeViewer;

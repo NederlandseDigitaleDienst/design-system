@@ -123,12 +123,15 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			EditorState.readOnly.of(true),
 			// CodeMirror puts role="textbox" on .cm-content regardless of the editable
 			// facet, so a display-only block would be announced as an editable field.
-			// Override it: this is readable content, not an input. aria-multiline and
-			// aria-readonly belong to textbox and are invalid on document, so drop them
-			// too. null only works because updateAttrs() compares with == and so never
-			// writes a null value; Attrs is typed string-only, hence the cast.
+			// Say what it is instead: a block of code, the role that stands for the
+			// <code> element this would be if CodeMirror did not build divs.
+			// aria-multiline and aria-readonly belong to a textbox and are allowed on
+			// no other role, so they go. A null value only removes them because
+			// updateAttrs() compares with ==, where an attribute that was never
+			// written matches null and so is never written; Attrs is typed
+			// string-only, hence the cast.
 			EditorView.contentAttributes.of({
-				role: 'document',
+				role: 'code',
 				'aria-multiline': null,
 				'aria-readonly': null,
 			} as unknown as Record<string, string>),
