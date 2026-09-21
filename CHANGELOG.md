@@ -13,6 +13,8 @@ here; consult the commit history if you need that level of detail.
 
 - **The system is called the NLDD Designsysteem.** Half the name was English while everything under it is Dutch, down to the colors: `lintblauw`, `robijnrood`, `mosgroen`. The category is Dutch now and the organisation keeps its name. Nothing you type changes: the package is still `@nldd/design-system`, the tags are still `nldd-button` and `NLDDButton`, and the repository keeps its name. In Dutch prose it is "het designsysteem", and there is no abbreviation.
 
+- **A redrawn favicon and touch icon.** A simpler mark on a white field, with the blue tile behind it. Both ship in `dist` and are exported as `@nldd/design-system/favicon.svg` and `/touch-icon.png`, so a page that references them picks up the new drawing. The old favicon swapped its tile and mark under `prefers-color-scheme: dark`; this one keeps its colors.
+
 ### Fixed
 
 - **A radio no longer holds a second radio inside it.** Since 0.8.89 `nldd-radio-button`, `nldd-radio-button-field` and `nldd-toggle-button` in radio mode carry `role="radio"` themselves, and each still rendered a native radio inside to answer `required`. Out of sight and out of the tab order, but accessibility checkers read the nesting itself: axe reported `nested-interactive` once for every option, so a radio group of two failed twice. That radio is `hidden` now. It still answers `required` in the browser's own words, and an invalid submit puts the focus and the message on the radio itself. In `nldd-segmented-control` they land where Tab would: on the chosen option, or the first one that is enabled.
