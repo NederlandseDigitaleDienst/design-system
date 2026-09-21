@@ -27,7 +27,7 @@ npm-debug.log*
 # Test coverage
 coverage/
 
-# Vitest browser screenshots (.vitest/ since vitest 5)
+# Vitest browser screenshots
 __screenshots__/
 .vitest-attachments/
 .vitest/

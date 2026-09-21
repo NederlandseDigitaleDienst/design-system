@@ -33,9 +33,6 @@ export const skipLinkStyles = css`
 		position: absolute;
 		top: 0;
 		left: 0;
-		/* Out of sight and out of the layout. Hidden with opacity alone it kept
-		   the width of its label, which counts for the page's scroll width, so a
-		   long label made every page scroll sideways with nothing to show for it. */
 		clip-path: inset(50%);
 		z-index: var(--_z-index);
 		border-radius: var(--semantics-controls-md-corner-radius);
@@ -51,8 +48,6 @@ export const skipLinkStyles = css`
 	.skip-link:has(:focus-visible) {
 		clip-path: none;
 		width: auto;
-		/* Within the element it wraps, so it stays on the page at 320px and at
-		   200% text size, where its label used to run past the edge. */
 		max-width: 100%;
 		height: auto;
 		overflow: visible;
@@ -71,7 +66,6 @@ export const skipLinkStyles = css`
 		padding: var(--primitives-space-4) var(--primitives-space-16);
 		align-items: center;
 		color: var(--semantics-links-color);
-		/* -tight, not -flat: a label that wraps needs the room between its lines. */
 		font: var(--primitives-font-body-md-medium-tight);
 		text-decoration: underline;
 		appearance: none;

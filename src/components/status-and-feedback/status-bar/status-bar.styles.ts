@@ -72,8 +72,6 @@ export const statusBarStyles = css`
 		border-radius: var(--_corner-radius);
 		background-color: var(--_background-color);
 		width: 100%;
-		/* A minimum, not a height: the bar is 24px, the text follows the reader's
-		   own size, and at 200% a fixed height cut the line off top and bottom. */
 		min-height: var(--_height);
 		overflow: hidden;
 		padding-inline: var(--_inline-padding);
