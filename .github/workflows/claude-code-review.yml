@@ -40,7 +40,7 @@ jobs:
 
             ## Project context
 
-            This is the NLDD Designsysteem — a library of vanilla Web Components for the
+            This is the NLDD Design System — a library of vanilla Web Components for the
             Nederlandse Digitale Dienst (Rijksoverheid). Components are built with Lit +
             TypeScript and documented in Storybook.
 
