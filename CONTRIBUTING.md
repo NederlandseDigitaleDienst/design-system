@@ -1,4 +1,4 @@
-# Bijdragen aan het NLDD Design System
+# Bijdragen aan het NLDD Designsysteem
 
 Alles begint bij een issue. Wie beslist en waarom staat in
 [`PROJECT_GOVERNANCE.md`](./PROJECT_GOVERNANCE.md).

@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Date Field Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Date Field Component (Lit + TypeScript)
  *
  * A text field for a date, with an optional calendar in a popover. The value is
  * always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy).

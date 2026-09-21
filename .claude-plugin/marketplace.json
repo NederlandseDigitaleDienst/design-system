@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "nldd-plugins",
   "metadata": {
-    "description": "Plugin voor het NLDD Design System (Nederlandse Digitale Dienst, Rijksoverheid)"
+    "description": "Plugin voor het NLDD Designsysteem (Nederlandse Digitale Dienst, Rijksoverheid)"
   },
   "owner": {
     "name": "Nederlandse Digitale Dienst"
@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "nldd",
-      "description": "Bouw applicaties met het NLDD Design System (@nldd/design-system): de visie erachter en hoe je de web components goed gebruikt. Voor consumenten van het pakket, niet voor wie het systeem zelf onderhoudt.",
+      "description": "Bouw applicaties met het NLDD Designsysteem (@nldd/design-system): de visie erachter en hoe je de web components goed gebruikt. Voor consumenten van het pakket, niet voor wie het systeem zelf onderhoudt.",
       "version": "0.8.91",
       "author": {
         "name": "Nederlandse Digitale Dienst"

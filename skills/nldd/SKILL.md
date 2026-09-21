@@ -1,16 +1,16 @@
 ---
 name: nldd
-description: "Bouw applicaties met de web components van het NLDD Design System (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens) of upgraden van dit systeem. NIET voor het ontwikkelen van het design system zelf (daarvoor: /component, /css)."
+description: "Bouw applicaties met de web components van het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens) of upgraden van dit systeem. NIET voor het ontwikkelen van het design system zelf (daarvoor: /component, /css)."
 metadata:
   type: reference
 ---
 
-# NLDD Design System: voor wie ermee bouwt
+# NLDD Designsysteem: voor wie ermee bouwt
 
 Je gebruikt deze skill als je een **applicatie** bouwt bovenop
 `@nldd/design-system`: de web component-bibliotheek van de Nederlandse
 Digitale Dienst (Rijksoverheid). Ben je bezig met het **ontwikkelen van het
-design system zelf** (nieuwe componenten, CSS-conventies), gebruik dan
+designsysteem zelf** (nieuwe componenten, CSS-conventies), gebruik dan
 `/component` en `/css`, niet deze skill.
 
 Twee bestanden horen hierbij:
@@ -537,13 +537,13 @@ volledige lijst (iconen plus aliassen) staat onder "Iconen" in
 
 ## Grenzen van deze skill
 
-Deze skill gaat over het *gebruiken* van het design system: welke componenten,
+Deze skill gaat over het *gebruiken* van het designsysteem: welke componenten,
 welke patronen, welke visie. Wat erbuiten valt en je zelf invult vanuit je
 applicatie- en frameworkkeuzes: state-management en validatieregels,
 server-side foutafhandeling, routing, en het testen van je eigen app. Voor
 SSR/hydratie geldt de algemene web-componentenpraktijk (de componenten
 upgraden client-side; render geen kritieke inhoud uitsluitend in hun shadow
-DOM). De componenten zelf zijn los getest binnen het design system; jouw
+DOM). De componenten zelf zijn los getest binnen het designsysteem; jouw
 app-tests schrijf je met je eigen testopstelling.
 
 > Voor onderhouders: `reference.md`, `changelog.md` en `design-guidelines.md`

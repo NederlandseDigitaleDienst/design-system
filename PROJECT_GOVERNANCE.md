@@ -1,4 +1,4 @@
-# Bestuur van het NLDD Design System
+# Bestuur van het NLDD Designsysteem
 
 Dit document beschrijft wie beslist over dit project, hoe je daar invloed op
 hebt en wat er gebeurt als de maintainer wegvalt. Gedragsregels staan in

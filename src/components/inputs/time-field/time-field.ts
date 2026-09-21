@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Time Field Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Time Field Component (Lit + TypeScript)
  *
  * A text field for a time. The value is always 24-hour `HH:mm`, which is how
  * Dutch shows it too, so unlike nldd-date-field there is nothing to convert.

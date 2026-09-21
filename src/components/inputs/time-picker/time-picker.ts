@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Time Picker Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Time Picker Component (Lit + TypeScript)
  *
  * Two columns, hours and minutes, that slide like a wheel past the selection in
  * the middle. The component works on its own (inline on a page, in a filter

@@ -1,7 +1,7 @@
 {
   "name": "@nldd/design-system",
   "version": "0.8.91",
-  "description": "Design System voor Nederlandse Digitale Dienst",
+  "description": "Designsysteem voor de Nederlandse Digitale Dienst",
   "type": "module",
   "main": "dist/components/components.js",
   "module": "dist/components/components.js",

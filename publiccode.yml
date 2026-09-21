@@ -6,7 +6,7 @@
 
 publiccodeYmlVersion: "0.7"
 
-name: NLDD Design System
+name: NLDD Designsysteem
 url: "https://github.com/NederlandseDigitaleDienst/design-system"
 landingURL: "https://nederlandsedigitaledienst.github.io/design-system/"
 
@@ -25,7 +25,7 @@ description:
       Web components voor overheidsinterfaces, met de huisstijl,
       toegankelijkheid en het interactiegedrag ingebouwd.
     longDescription: >-
-      Het NLDD Design System levert de bouwstenen voor interfaces van de
+      Het NLDD Designsysteem levert de bouwstenen voor interfaces van de
       Nederlandse Digitale Dienst als web components. Knoppen, formuliervelden,
       lijsten, tabellen, navigatie, overlays en paginastructuren zitten erin,
       met de Rijkshuisstijl, de toegankelijkheidseisen en het verwachte

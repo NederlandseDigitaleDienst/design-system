@@ -1,6 +1,6 @@
 # NLDD Icon Style Guide
 
-Stijlregels voor het ontwerpen en aanleveren van SVG-iconen in het NLDD Design System.
+Stijlregels voor het ontwerpen en aanleveren van SVG-iconen in het NLDD Designsysteem.
 
 ## Canvas
 

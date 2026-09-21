@@ -1,6 +1,6 @@
 # Breakpoints
 
-Het design system definieert vijf vaste breakpoints die door alle responsive componenten worden gebruikt. Ze zijn beschikbaar in CSS én in JavaScript zodat media-queries en runtime-logica niet uit elkaar kunnen lopen.
+Het designsysteem definieert vijf vaste breakpoints die door alle responsive componenten worden gebruikt. Ze zijn beschikbaar in CSS én in JavaScript zodat media-queries en runtime-logica niet uit elkaar kunnen lopen.
 
 | Naam    | Waarde   | Gebruik                                           |
 | ------- | -------- | ------------------------------------------------- |
@@ -12,7 +12,7 @@ Het design system definieert vijf vaste breakpoints die door alle responsive com
 
 ## Gebruik in CSS
 
-In `@media` of `@container` query conditions moeten altijd **letterlijke waardes** staan — CSS-spec staat geen `var(--…)` toe in query conditions. Componenten in het design system schrijven dus expliciet:
+In `@media` of `@container` query conditions moeten altijd **letterlijke waardes** staan — CSS-spec staat geen `var(--…)` toe in query conditions. Componenten in het designsysteem schrijven dus expliciet:
 
 ```css
 @media (min-width: 641px) { … }      /* mdMin */

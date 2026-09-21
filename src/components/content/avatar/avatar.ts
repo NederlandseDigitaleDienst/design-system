@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Avatar Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Avatar Component (Lit + TypeScript)
  *
  * Shows one person or organization as a compact, round (person) or rounded
  * (organization) representation. The content follows a fixed fallback chain: an

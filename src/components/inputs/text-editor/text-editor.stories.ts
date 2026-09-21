@@ -628,13 +628,13 @@ export const Typeaheads = {
 export const Annotations = {
 	render: () => {
 		const sample =
-			'De Rijksoverheid werkt aan een toegankelijk design system. Componenten zijn herbruikbaar en consistent.\n\nFeedback is welkom op elk onderdeel.';
+			'De Rijksoverheid werkt aan een toegankelijk designsysteem. Componenten zijn herbruikbaar en consistent.\n\nFeedback is welkom op elk onderdeel.';
 		const at = (needle: string) => {
 			const start = sample.indexOf(needle);
 			return { start, end: start + needle.length, quote: needle };
 		};
 		const annotations = [
-			{ id: 'a1', ...at('toegankelijk design system') },
+			{ id: 'a1', ...at('toegankelijk designsysteem') },
 			{ id: 'a2', ...at('herbruikbaar en consistent') },
 			// Two annotations on the same text merge into one underline + a "2" badge.
 			{ id: 'a3', ...at('Feedback') },

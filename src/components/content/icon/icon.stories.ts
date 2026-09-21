@@ -70,7 +70,7 @@ export default {
 		customColor: {
 			name: 'custom-color',
 			control: 'color',
-			description: 'Een eigen kleur, als CSS-kleurwaarde. Voor een kleur die het design system niet kan kennen. Wint van `color`.',
+			description: 'Een eigen kleur, als CSS-kleurwaarde. Voor een kleur die het designsysteem niet kan kennen. Wint van `color`.',
 		},
 	},
 	args: {
@@ -206,7 +206,7 @@ export const OwnColor = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Voor een kleur die het design system niet kan kennen: de mantel van een kabel, een kleur die iemand zelf koos. `custom-color` neemt elke CSS-kleurwaarde en wint van `color`.',
+				story: 'Voor een kleur die het designsysteem niet kan kennen: de mantel van een kabel, een kleur die iemand zelf koos. `custom-color` neemt elke CSS-kleurwaarde en wint van `color`.',
 			},
 		},
 	},

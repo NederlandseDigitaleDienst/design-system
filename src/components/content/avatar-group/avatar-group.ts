@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Avatar Group Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Avatar Group Component (Lit + TypeScript)
  *
  * Shows several avatars as one group: they overlap, and each one gets a ring in
  * the surface color so they stay apart where they meet. The ring uses the same

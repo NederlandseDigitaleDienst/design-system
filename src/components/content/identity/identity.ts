@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Identity Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Identity Component (Lit + TypeScript)
  *
  * An editorial line that shows authors or editors: optional avatar or avatars,
  * a name line and supporting text (a role or a date, for instance). Every part

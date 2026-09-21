@@ -1,4 +1,4 @@
-# NLDD Design System
+# NLDD Designsysteem
 
 Web Components voor Nederlandse Digitale Dienst (Rijksoverheid).
 
@@ -125,7 +125,7 @@ Mis je een component of wil je een wijziging voorstellen? [Maak een issue aan](h
 
 ## Fonts
 
-Het design system gebruikt twee fonts, met verschillende licenties:
+Het designsysteem gebruikt twee fonts, met verschillende licenties:
 
 - **JetBrains Mono** (monospace) — vrij te gebruiken onder de
   [SIL Open Font License 1.1](https://openfontlicense.org).
@@ -143,7 +143,7 @@ buiten het hierboven beschreven kader.
 
 Copyright © 2026 Staat der Nederlanden.
 
-De broncode van dit design system valt onder de **EUPL-1.2**. De volledige
+De broncode van dit designsysteem valt onder de **EUPL-1.2**. De volledige
 licentietekst staat in [`LICENSE`](./LICENSE).
 
 De fontbestanden in `src/assets/fonts/` vallen daar niet onder; die hebben hun

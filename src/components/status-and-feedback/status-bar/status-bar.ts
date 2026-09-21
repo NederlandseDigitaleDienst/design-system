@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Status Bar Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Status Bar Component (Lit + TypeScript)
  *
  * A narrow, page-wide status bar (24px) with a deep background color per
  * variant. Use it for persistent system state: an outage, planned maintenance,

@@ -1,5 +1,5 @@
 /**
- * Nederlandse Digitale Dienst Design System Components
+ * NLDD Designsysteem Components
  *
  * Import this file to register all components:
  * import '@nldd/design-system';

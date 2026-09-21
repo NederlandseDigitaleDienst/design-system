@@ -1,6 +1,6 @@
 ## Third-party notices
 
-Het NLDD Design System (de broncode) is gelicentieerd onder **EUPL-1.2**,
+Het NLDD Designsysteem (de broncode) is gelicentieerd onder **EUPL-1.2**,
 zie [`LICENSE`](./LICENSE) voor de volledige tekst. De fontbestanden in
 `src/assets/fonts/` vallen daar niet onder; die hebben hun eigen licenties:
 
@@ -49,7 +49,7 @@ Het feit dat de fontbestanden in deze repository aanwezig zijn impliceert
 geen licentie of toestemming buiten het hierboven beschreven kader; de
 publicatie dient om consumers binnen dat kader (zoals overheidspartners
 en contractors die voor de Rijksoverheid werken) een werkende installatie
-van het design system te bieden.
+van het designsysteem te bieden.
 
 Volledige gebruiksvoorwaarden:
 https://www.rijkshuisstijl.nl/basiselementen/typografie/gebruiksvoorwaarden-typografie
