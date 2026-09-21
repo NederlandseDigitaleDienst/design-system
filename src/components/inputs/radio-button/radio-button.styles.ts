@@ -27,7 +27,6 @@ export const radioButtonStyles = css`
 
 	/* # Elements */
 
-
 	.radio-button__outer-shape {
 		box-sizing: border-box;
 		position: relative;

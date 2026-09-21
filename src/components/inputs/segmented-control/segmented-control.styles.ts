@@ -71,7 +71,6 @@ export const segmentedControlStyles = css`
 
 	/* # Elements */
 
-
 	::slotted(nldd-segmented-control-item[selected]) {
 		position: relative;
 		z-index: var(--_selected-z-index);
