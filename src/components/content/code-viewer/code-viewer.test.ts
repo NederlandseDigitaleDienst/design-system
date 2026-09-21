@@ -38,6 +38,27 @@ describe('nldd-code-viewer', () => {
 		expect(content.getAttribute('role')).toBe('document'); // not CodeMirror's default "textbox"
 	});
 
+	it('laat de textbox-attributen van CodeMirror niet op role="document" staan', async () => {
+		el = await fixture('<nldd-code-viewer>x</nldd-code-viewer>');
+		await waitForUpdate(el);
+		const viewer = el as NLDDCodeViewer;
+		const expectNoTextboxAttrs = () => {
+			const content = el.shadowRoot!.querySelector('.cm-content')!;
+			expect(content.hasAttribute('aria-multiline')).toBe(false);
+			expect(content.hasAttribute('aria-readonly')).toBe(false);
+		};
+		expectNoTextboxAttrs();
+
+		el.textContent = 'y';
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.cm-content')!.textContent).toContain('y');
+		expectNoTextboxAttrs();
+
+		viewer.wrap = true;
+		await waitForUpdate(el);
+		expectNoTextboxAttrs();
+	});
+
 	// Regression: a detach/reattach — as Vue <KeepAlive> does when switching a
 	// v-if panel back into view — destroyed the CodeMirror view on disconnect
 	// but never re-mounted it (Lit's firstUpdated is one-shot), so the viewer
