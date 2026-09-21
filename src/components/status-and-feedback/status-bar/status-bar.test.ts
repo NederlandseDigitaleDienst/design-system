@@ -10,6 +10,28 @@ describe('nldd-status-bar', () => {
 		if (el) cleanup(el);
 	});
 
+	/* WCAG 1.4.4: text up to 200% without losing content. The bar is 24px and the
+	   text follows the reader's own size, so a fixed height cut the line off. The
+	   height is a token, and a test document has no variables.css, so it comes
+	   along here. */
+	it('kapt zijn tekst niet af als de tekstgrootte omhoog gaat', async () => {
+		const root = document.documentElement;
+		const eigen = root.style.fontSize;
+		root.style.fontSize = '32px'; // 200%
+		try {
+			el = await fixture('<nldd-status-bar variant="warning" text="Storing" style="--components-status-bar-height: 24px"></nldd-status-bar>');
+			await waitForUpdate(el);
+			const bar = el.shadowRoot!.querySelector('.status-bar') as HTMLElement;
+			const text = el.shadowRoot!.querySelector('.status-bar__text') as HTMLElement;
+			expect(bar.getBoundingClientRect().height).toBeGreaterThanOrEqual(text.getBoundingClientRect().height);
+			// And still one line, cut off with an ellipsis where it is too long.
+			expect(getComputedStyle(text).whiteSpace).toBe('nowrap');
+			expect(getComputedStyle(text).textOverflow).toBe('ellipsis');
+		} finally {
+			root.style.fontSize = eigen;
+		}
+	});
+
 	it('rendert zonder fouten', async () => {
 		el = await fixture('<nldd-status-bar></nldd-status-bar>');
 		await waitForUpdate(el);
