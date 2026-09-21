@@ -27,15 +27,6 @@ export const radioButtonStyles = css`
 
 	/* # Elements */
 
-	.radio-button__validation-input {
-		position: absolute;
-		inset: 0;
-		opacity: 0;
-		margin: 0;
-		pointer-events: none;
-		width: 100%;
-		height: 100%;
-	}
 
 	.radio-button__outer-shape {
 		box-sizing: border-box;

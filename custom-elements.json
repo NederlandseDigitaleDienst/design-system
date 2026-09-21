@@ -7332,6 +7332,20 @@
             },
             {
               "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -7779,6 +7793,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -8278,6 +8306,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -8899,6 +8941,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -9535,6 +9591,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -10704,6 +10774,20 @@
             },
             {
               "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -11255,6 +11339,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -11848,6 +11946,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -12465,6 +12577,20 @@
             },
             {
               "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -12983,6 +13109,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -13611,6 +13751,20 @@
             },
             {
               "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -14127,6 +14281,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -14783,6 +14951,20 @@
             },
             {
               "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "The group has no focus of its own, so an invalid submit lands where Tab\nwould: on the chosen option, or the first one that is enabled.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "formStateRestoreCallback",
               "return": {
                 "type": {
@@ -15359,6 +15541,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -16056,6 +16252,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -18631,6 +18841,20 @@
             },
             {
               "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -19398,6 +19622,20 @@
             },
             {
               "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -20080,6 +20318,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -21259,6 +21511,20 @@
             },
             {
               "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -21786,6 +22052,20 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -37104,6 +37384,16 @@
                 }
               },
               "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for."
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own."
             },
             {
               "kind": "method",

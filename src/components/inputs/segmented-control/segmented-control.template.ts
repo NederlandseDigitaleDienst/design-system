@@ -7,16 +7,16 @@ export function segmentedControlTemplate(component: NLDDSegmentedControl): Templ
 	// radios now and have no input to read it from. Checked as soon as something
 	// is selected, because that is what a radio asks — one of these, not this one.
 	// The name is for the platform: a radio without one is in no group, and a
-	// radio in no group never reports a missing value.
+	// radio in no group never reports a missing value. Hidden, like the one in the
+	// radio button: it carries a constraint and nothing else.
 	return html`
 		<input class="segmented-control__validation-input"
 			type="radio"
 			name="nldd-validation"
+			hidden
 			?required=${component.required && component.type !== 'checkbox'}
 			?disabled=${component.disabled}
 			.checked=${!!component.value}
-			tabindex="-1"
-			aria-hidden="true"
 		>
 		<slot @slotchange=${component._onSlotChange}></slot>
 	`;

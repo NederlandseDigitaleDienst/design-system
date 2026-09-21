@@ -17,6 +17,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A radio no longer holds a second radio inside it.** Since 0.8.89 `nldd-radio-button`, `nldd-radio-button-field` and `nldd-toggle-button` in radio mode carry `role="radio"` themselves, and each still rendered a native radio inside to answer `required`. Out of sight and out of the tab order, but accessibility checkers read the nesting itself: axe reported `nested-interactive` once for every option, so a radio group of two failed twice. That radio is `hidden` now. It still answers `required` in the browser's own words, and an invalid submit puts the focus and the message on the radio itself. In `nldd-segmented-control` they land where Tab would: on the chosen option, or the first one that is enabled.
+
 - **A `rel` of your own adds to `noopener noreferrer` instead of replacing it.** On a link that opens a new tab, `nldd-button`, `nldd-icon-button` and `nldd-status-bar` dropped their `noopener noreferrer` the moment you set a `rel` yourself, so `target="_blank" rel="external"` sent the page it opened the address you came from. `nldd-list-item` and `nldd-list-item-segment` never added it at all. Every component that renders a link now does what `nldd-link`, `nldd-card` and `nldd-avatar` already did: with `target="_blank"`, `noopener noreferrer` is added to the `rel` you set.
 
 ## [0.8.89](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.88...v0.8.89) (2026-09-18)

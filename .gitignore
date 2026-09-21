@@ -27,9 +27,10 @@ npm-debug.log*
 # Test coverage
 coverage/
 
-# Vitest browser screenshots
+# Vitest browser screenshots (.vitest/ since vitest 5)
 __screenshots__/
 .vitest-attachments/
+.vitest/
 
 # Generated files
 src/components/content/icon/ndd-icon-registry.ts

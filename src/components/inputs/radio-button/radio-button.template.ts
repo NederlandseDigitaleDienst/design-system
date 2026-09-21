@@ -16,16 +16,16 @@ export function radioButtonTemplate(component: NLDDRadioButton): TemplateResult 
 	// focused. The input is only there to answer `required` for the form, and it
 	// answers the question a radio asks: is anything in this group checked. The
 	// name is for the platform: a radio without one is in no group, and a radio in
-	// no group never reports a missing value.
+	// no group never reports a missing value. It is hidden, since rendered it would
+	// be a radio inside the element that is the radio, and hidden it still reports.
 	return html`
 		<input class="radio-button__validation-input"
 			type="radio"
 			name="nldd-validation"
+			hidden
 			?required=${component.required}
 			?disabled=${component.disabled}
 			.checked=${component._groupHasSelection}
-			tabindex="-1"
-			aria-hidden="true"
 		>
 		<div class="radio-button__outer-shape"
 			aria-hidden="true"

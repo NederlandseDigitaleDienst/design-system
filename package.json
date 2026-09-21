@@ -539,6 +539,7 @@
     "@storybook/web-components-vite": "^10.6.0",
     "@vitest/browser-playwright": "5.0.0",
     "@vitest/coverage-v8": "5.0.0",
+    "axe-core": "^4.13.0",
     "conventional-changelog": "^8.1.0",
     "conventional-changelog-conventionalcommits": "10.2.1",
     "eslint": "^10.8.0",

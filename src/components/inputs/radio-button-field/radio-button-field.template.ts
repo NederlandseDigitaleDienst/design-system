@@ -7,17 +7,18 @@ export function radioButtonFieldTemplate(component: NLDDRadioButtonField): Templ
 	// label it is announced by. The radio button inside only draws the shape,
 	// and the input only answers `required` for the form, which a radio asks of
 	// its whole group. The name is for the platform: a radio without one is in no
-	// group, and a radio in no group never reports a missing value.
+	// group, and a radio in no group never reports a missing value. It is hidden,
+	// since rendered it would be a radio inside the element that is the radio, and
+	// hidden it still reports.
 	return html`
 		<div class="radio-button-field">
 			<input class="radio-button-field__validation-input"
 				type="radio"
 				name="nldd-validation"
+				hidden
 				?required=${component.required}
 				?disabled=${component.disabled}
 				.checked=${component._answered}
-				tabindex="-1"
-				aria-hidden="true"
 			>
 			<div class="radio-button-field__control">
 				<nldd-radio-button
