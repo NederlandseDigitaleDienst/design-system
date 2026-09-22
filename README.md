@@ -58,6 +58,31 @@ Toevoegen en installeren:
 
 Bijwerken naar een nieuwere versie doe je met `/plugin marketplace update nldd-plugins`.
 
+### Kom je van een versie met één `nldd`-skill?
+
+De plugin heette altijd al `nldd` en blijft zo heten, dus je installatie en je
+`enabledPlugins` blijven werken. Wat veranderde zijn de **skills** erin: waar er
+één `nldd` was, zijn er nu vier met een naam die zegt waar ze over gaan.
+
+Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee
+zonder foutmelding:
+
+1. in je eigen `CLAUDE.md`, `.claude/rules/*.md` of `AGENTS.md` ("gebruik de nldd
+   skill"). Claude vindt hem niet en gaat verder zonder;
+2. in subagent-definities (`.claude/agents/*.md`) en hooks die op de naam matchen;
+3. in `Skill(nldd)` in permissieregels: die matcht niet meer, dus je krijgt een
+   prompt waar je die eerder niet had;
+4. in scripts of CI die `claude -p "/nldd ..."` aanroepen.
+
+Eén zoekopdracht vindt ze:
+
+```
+rg -n '\bnldd\b' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
+```
+
+Laat `nldd@nldd-plugins` staan: dat is de pluginnaam en die klopt nog. Er blijft
+tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwijzen.
+
 ## Development setup
 
 ```bash
