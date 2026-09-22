@@ -22,7 +22,7 @@ const SAMPLE_SRCSET =
 const SAMPLE_LQIP = '28,28,164,164,106,170,99';
 
 /**
- * Een gestylede wrapper rond `<img>` met de design system tokens voor radius,
+ * Een gestylede wrapper rond `<img>` met de tokens van het designsysteem voor radius,
  * achtergrond en caption. Reserveert ruimte via `aspect-ratio` om layout-shift
  * te voorkomen tijdens het laden. Voor avatars: `shape="circle"` met
  * `aspect-ratio="1/1"`.

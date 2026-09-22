@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 
 // One flat slot: cells and segments line up in source order, and the
 // first/last child IS the row edge (the edge rules in the styles key off
@@ -47,7 +48,7 @@ export const template = (
 			<a class="list-item__action"
 				href=${href}
 				target=${target ?? nothing}
-				rel=${rel ?? nothing}
+				rel=${linkRel(rel, target) || nothing}
 				aria-disabled=${disabled ? 'true' : nothing}
 				aria-expanded=${ariaExpanded}
 				tabindex=${actionTabindex ?? nothing}

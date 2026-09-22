@@ -1,4 +1,4 @@
-# Hulp bij het NLDD Design System
+# Hulp bij het NLDD Designsysteem
 
 ## Waar je antwoord vindt
 

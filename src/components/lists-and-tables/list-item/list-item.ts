@@ -155,7 +155,7 @@ function releaseTabbable(el: RovingControl): void {
  * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
  * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology.
- * @attr {string} rel - Link rel forwarded to the `<a>` (e.g. 'noopener noreferrer'); only applies with `href`
+ * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
  *
  * @slot - Cells and segments, in source order
@@ -235,7 +235,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	@property({ reflect: true })
 	target?: string;
 
-	/** Link rel (e.g. 'noopener noreferrer'). Forwarded to the `<a>`; only applies with href. */
+	/** Link rel, forwarded to the `<a>` with href. With target '_blank',
+	 *  'noopener noreferrer' is added to it. */
 	@property({ reflect: true })
 	rel?: string;
 

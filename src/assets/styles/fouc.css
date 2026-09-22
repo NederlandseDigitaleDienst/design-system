@@ -1,6 +1,6 @@
 /* Reduce FOUC — flash of unstyled / not-yet-upgraded web components.
  *
- * Bundled into the design system's global stylesheet, so importing
+ * Bundled into the global stylesheet, so importing
  * '@nldd/design-system/styles' pulls it in. Also importable on its own:
  *   import '@nldd/design-system/styles/fouc';
  * (or, in an Astro layout, in the frontmatter — it applies to the whole page).

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDToolbar, NLDDToolbarItem, NLDDToolbarTitle } from './toolbar.js';
 import type { NLDDToolbarTranslations } from './toolbar.i18n.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 import '../icon-button/icon-button.js';
 
 // # Item template
@@ -33,7 +34,7 @@ export function toolbarTitleTemplate(component: NLDDToolbarTitle) {
 			<a class="toolbar__title-link"
 				href=${component.href}
 				target=${component.target || nothing}
-				rel=${component.target === '_blank' ? 'noopener noreferrer' : nothing}
+				rel=${linkRel(null, component.target) || nothing}
 			>
 				<slot name="media"></slot>
 				${titleGroup}${component.target === '_blank' ? html`<span class="toolbar__opens-in-new-tab-hint">${component._t('components.toolbar.opens-in-new-tab-label')}</span>` : nothing}

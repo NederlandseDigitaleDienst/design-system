@@ -33,17 +33,24 @@ export const skipLinkStyles = css`
 		position: absolute;
 		top: 0;
 		left: 0;
-		opacity: 0;
+		clip-path: inset(50%);
 		z-index: var(--_z-index);
 		border-radius: var(--semantics-controls-md-corner-radius);
 		box-shadow: var(--_box-shadow);
 		background-color: var(--semantics-surfaces-base-background-color);
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
 		pointer-events: none;
 		justify-content: center;
 	}
 
 	.skip-link:has(:focus-visible) {
-		opacity: 1;
+		clip-path: none;
+		width: auto;
+		max-width: 100%;
+		height: auto;
+		overflow: visible;
 		pointer-events: auto;
 	}
 
@@ -59,9 +66,8 @@ export const skipLinkStyles = css`
 		padding: var(--primitives-space-4) var(--primitives-space-16);
 		align-items: center;
 		color: var(--semantics-links-color);
-		font: var(--primitives-font-body-md-medium-flat);
+		font: var(--primitives-font-body-md-medium-tight);
 		text-decoration: underline;
-		white-space: nowrap;
 		appearance: none;
 	}
 

@@ -1,6 +1,6 @@
 # Beveiliging
 
-Ontdek je een kwetsbaarheid in het NLDD Design System, meld hem dan
+Ontdek je een kwetsbaarheid in het NLDD Designsysteem, meld hem dan
 vertrouwelijk via GitHub:
 
 **https://github.com/NederlandseDigitaleDienst/design-system/security/advisories/new**
@@ -13,7 +13,7 @@ via het Nationaal Cyber Security Centrum:
 
 **https://www.ncsc.nl/contact/kwetsbaarheid-melden**
 
-Vermeld daarbij dat het gaat om het design system van de Nederlandse Digitale
+Vermeld daarbij dat het gaat om het designsysteem van de Nederlandse Digitale
 Dienst (https://github.com/NederlandseDigitaleDienst/design-system). Het NCSC
 brengt je melding dan bij ons onder de aandacht.
 

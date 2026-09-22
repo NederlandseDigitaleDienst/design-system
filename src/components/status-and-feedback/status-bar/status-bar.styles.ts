@@ -72,7 +72,7 @@ export const statusBarStyles = css`
 		border-radius: var(--_corner-radius);
 		background-color: var(--_background-color);
 		width: 100%;
-		height: var(--_height);
+		min-height: var(--_height);
 		overflow: hidden;
 		padding-inline: var(--_inline-padding);
 		gap: var(--_gap);

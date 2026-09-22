@@ -30,6 +30,7 @@ coverage/
 # Vitest browser screenshots
 __screenshots__/
 .vitest-attachments/
+.vitest/
 
 # Generated files
 src/components/content/icon/ndd-icon-registry.ts

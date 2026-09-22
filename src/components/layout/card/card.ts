@@ -18,7 +18,7 @@
  * @attr {string} href - Makes the whole card a link to this URL (empty = no link)
  * @attr {boolean} button - Makes the whole card a button; ignored when `href` is set
  * @attr {string} target - Link target for href (e.g. '_blank'); adjusts rel automatically and adds an "Opent in nieuw tabblad" announcement for '_blank'
- * @attr {string} rel - Link rel for href; defaults to 'noopener noreferrer' with target='_blank'
+ * @attr {string} rel - Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys (e.g. the "Opent in nieuw tabblad" announcement)
  *
  * @slot header - Header content (e.g. nldd-title)
@@ -64,17 +64,6 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 
 	@property({ type: String })
 	rel = '';
-
-	/** Resolve rel for the overlay link: add noopener noreferrer for _blank
-	 *  (mirrors nldd-link), merged with any consumer-set rel. */
-	_resolvedRel(): string {
-		const base = this.rel ?? '';
-		if (this.target !== '_blank') return base;
-		const parts = new Set(base.split(/\s+/).filter(Boolean));
-		parts.add('noopener');
-		parts.add('noreferrer');
-		return [...parts].join(' ');
-	}
 
 	private _warnedLabel = false;
 

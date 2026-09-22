@@ -97,7 +97,7 @@ een tag die nooit upgradet: het element staat in de DOM, z'n properties zijn
 
 ```typescript
 /**
- * NLDD Design System {DisplayName} Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst {DisplayName} Component (Lit + TypeScript)
  *
  * @element nldd-{naam}
  * @attr {string} size - Component size: 'xs' | 'sm' | 'md' (standaard: 'md')

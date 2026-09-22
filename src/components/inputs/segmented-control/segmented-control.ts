@@ -383,6 +383,13 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		this.values = [...this._initialValues];
 	}
 
+	/** The group has no focus of its own, so an invalid submit lands where Tab
+	 *  would: on the chosen option, or the first one that is enabled. */
+	override validationAnchor(): HTMLElement | undefined {
+		const items = this._getItems().filter((item) => !item.disabled);
+		return items.find((item) => item.selected) ?? items[0];
+	}
+
 
 	formStateRestoreCallback(state: FormData | string | null): void {
 		if (state === null) return;

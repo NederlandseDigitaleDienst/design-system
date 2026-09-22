@@ -61,17 +61,17 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 		// only answers `required` for the form, and what a radio asks there is
 		// whether anything in its group is selected. The name is for the platform:
 		// a radio without one is in no group, and a radio in no group never reports
-		// a missing value.
+		// a missing value. It is hidden, since rendered it would be a radio inside the
+		// element that is the radio, and hidden it still reports.
 		result = html`
 			<div class="toggle-button">
 				<input class="toggle-button__validation-input"
 					type="radio"
 					name="nldd-validation"
+					hidden
 					?required=${component.required}
 					?disabled=${component.disabled}
 					.checked=${component._groupHasSelection}
-					tabindex="-1"
-					aria-hidden="true"
 				>
 				${icon}
 				${textContent}

@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Status Bar Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Status Bar Component (Lit + TypeScript)
  *
  * A narrow, page-wide status bar (24px) with a deep background color per
  * variant. Use it for persistent system state: an outage, planned maintenance,
@@ -35,7 +35,7 @@
  * @attr {string} text - The status text (one line; truncated with an ellipsis)
  * @attr {string} href - Makes the whole bar a link (renders an <a>)
  * @attr {string} target - Link target (e.g. '_blank'); only used with href
- * @attr {string} rel - Link rel; defaults to 'noopener noreferrer' with target='_blank'
+ * @attr {string} rel - Link rel, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Makes the whole bar a button; ignored when href is set
  */
 import { LitElement } from 'lit';
@@ -81,12 +81,6 @@ export class NLDDStatusBar extends LitElement {
 		// the live-region role is present from the start; updated() keeps it in sync
 		// on later variant changes.
 		this._applyAriaForVariant(this.variant);
-	}
-
-	/** @internal Auto-secure rel for new-tab links unless the consumer set one. */
-	_resolvedRel(): string {
-		if (this.rel) return this.rel;
-		return this.target === '_blank' ? 'noopener noreferrer' : '';
 	}
 
 	override updated(changed: Map<string, unknown>): void {

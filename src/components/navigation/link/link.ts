@@ -19,7 +19,7 @@
  * @element nldd-link
  * @attr {string} href - Link target
  * @attr {string} target - Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "Opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2).
- * @attr {string} rel - Link rel attribute; defaults to 'noopener noreferrer' with target='_blank'
+ * @attr {string} rel - Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {string} size - Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' | 'sm' | 'md' | 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap.
  * @attr {string} text - Link text (alternative to the default slot)
  * @attr {string} start-icon - Icon before the text
@@ -88,16 +88,6 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 			e.preventDefault();
 			e.stopPropagation();
 		}
-	}
-
-	/** @internal */
-	_resolvedRel(): string {
-		const base = this.rel ?? '';
-		if (this.target !== '_blank') return base;
-		const parts = new Set(base.split(/\s+/).filter(Boolean));
-		parts.add('noopener');
-		parts.add('noreferrer');
-		return [...parts].join(' ');
 	}
 
 	override render() {

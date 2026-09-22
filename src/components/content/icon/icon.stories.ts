@@ -38,7 +38,7 @@ export default {
 		status: { type: 'stable' },
 		docs: {
 			description: {
-				component: 'A flexible icon component. By default fills its parent and inherits color. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the design system cannot know, set `custom-color` to any CSS color value.',
+				component: 'A flexible icon component. By default fills its parent and inherits color. Set `size` for a fixed spacer-aligned dimension; set `color` for a functional semantic or a rijkskleur. For a color the system cannot know, set `custom-color` to any CSS color value.',
 			},
 		},
 	},
@@ -70,7 +70,7 @@ export default {
 		customColor: {
 			name: 'custom-color',
 			control: 'color',
-			description: 'Een eigen kleur, als CSS-kleurwaarde. Voor een kleur die het design system niet kan kennen. Wint van `color`.',
+			description: 'Een eigen kleur, als CSS-kleurwaarde. Voor een kleur die het designsysteem niet kan kennen. Wint van `color`.',
 		},
 	},
 	args: {
@@ -206,7 +206,7 @@ export const OwnColor = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Voor een kleur die het design system niet kan kennen: de mantel van een kabel, een kleur die iemand zelf koos. `custom-color` neemt elke CSS-kleurwaarde en wint van `color`.',
+				story: 'Voor een kleur die het designsysteem niet kan kennen: de mantel van een kabel, een kleur die iemand zelf koos. `custom-color` neemt elke CSS-kleurwaarde en wint van `color`.',
 			},
 		},
 	},

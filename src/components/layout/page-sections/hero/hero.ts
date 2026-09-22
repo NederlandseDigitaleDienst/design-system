@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Hero Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Hero Component (Lit + TypeScript)
  *
  * A page header with a media area and a text panel (the main) that can stand in
  * six positions. Every area is rectangular.

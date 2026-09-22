@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import type { NLDDButton } from './button.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;
@@ -98,7 +99,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 	const popupSlot = html`<slot name="popup" @slotchange=${this._popup.handleSlotChange}></slot>`;
 
 	if (this.href) {
-		const resolvedRel = this._resolvedRel();
+		const resolvedRel = linkRel(this.rel, this.target);
 		return html`
 			<a class=${buttonClass}
 				href=${this.href}

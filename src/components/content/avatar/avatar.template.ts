@@ -1,5 +1,6 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDAvatar } from './avatar.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 import '../tooltip/tooltip.js';
 
 export function avatarTemplate(component: NLDDAvatar): TemplateResult {
@@ -50,7 +51,7 @@ export function avatarTemplate(component: NLDDAvatar): TemplateResult {
 			<a class="avatar avatar--interactive"
 				href=${component.href}
 				target=${component.target || nothing}
-				rel=${component._resolvedRel() || nothing}
+				rel=${linkRel(component.rel, component.target) || nothing}
 				aria-label=${controlLabel}
 				tabindex=${component.noTab ? '-1' : nothing}
 			>${content}</a>

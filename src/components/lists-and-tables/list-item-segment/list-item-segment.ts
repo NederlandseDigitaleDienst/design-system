@@ -38,7 +38,7 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {boolean} button - Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {string} href - Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`.
  * @attr {string} target - Link target forwarded to the `<a>`; only applies with `href`
- * @attr {string} rel - Link rel forwarded to the `<a>`; only applies with `href`
+ * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} checkbox - Makes the segment a `role="checkbox"` control. Wins over `button`, loses to `href`.
  * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
  * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded.

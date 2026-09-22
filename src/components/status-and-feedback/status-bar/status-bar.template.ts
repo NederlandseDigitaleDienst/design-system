@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import type { NLDDStatusBar } from './status-bar.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 
 export function statusBarTemplate(component: NLDDStatusBar) {
 	const interactive = Boolean(component.href || component.button);
@@ -18,7 +19,7 @@ export function statusBarTemplate(component: NLDDStatusBar) {
 			<a class="status-bar"
 				href=${component.href}
 				target=${component.target || nothing}
-				rel=${component._resolvedRel() || nothing}
+				rel=${linkRel(component.rel, component.target) || nothing}
 			>${content}</a>
 		`;
 	}

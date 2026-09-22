@@ -1,5 +1,6 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDCard } from './card.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 
 export function cardTemplate(component: NLDDCard): TemplateResult {
 	// A new-tab link is a change of context, so announce it (WCAG 2.1 SC 3.2.2).
@@ -20,7 +21,7 @@ export function cardTemplate(component: NLDDCard): TemplateResult {
 				<a class="card__action"
 					href=${component.href}
 					target=${component.target || nothing}
-					rel=${component._resolvedRel() || nothing}
+					rel=${linkRel(component.rel, component.target) || nothing}
 					aria-label=${linkLabel}
 				></a>
 			` : component.button ? html`

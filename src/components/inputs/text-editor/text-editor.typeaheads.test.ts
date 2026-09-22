@@ -85,6 +85,45 @@ describe('nldd-text-editor typeaheads', () => {
 		expect(detail).toEqual({ trigger: ':', candidate: emoji[0], from: 4, to: 6 });
 	});
 
+	/* CodeMirror hangs its tooltip in the editor, so an nldd-sheet or an
+	 * nldd-modal-dialog around it cut the list off at its edge, and an ancestor
+	 * with a transform sent it beside the page. It opens in the top layer now,
+	 * like an nldd-menu, where none of that reaches it. */
+	it('opens its list in the top layer, out of reach of a container that clips', async () => {
+		const wrap = document.createElement('div');
+		// Narrower than the test window, so the list has somewhere to stick out to.
+		// Its minimum width is a token, and a test document has no variables.css,
+		// so that comes along here.
+		wrap.style.cssText = 'overflow: hidden; width: 300px; padding: 8px; --primitives-area-280: 280px';
+		document.body.appendChild(wrap);
+		try {
+			wrap.innerHTML = '<nldd-text-editor accessible-label="t"></nldd-text-editor>';
+			el = wrap.firstElementChild as unknown as El;
+			await el.updateComplete;
+			await waitForUpdate(el);
+			el.value = 'een eindje naar rechts #alg';
+			el.typeaheads = [{ trigger: '#', source: byLabel(channels) }];
+			await el.updateComplete;
+			el.view.dispatch({ selection: { anchor: el.view.state.doc.length } });
+			await openList(el);
+
+			const list = el.shadowRoot.querySelector('.cm-tooltip-autocomplete') as HTMLElement;
+			const frame = el.shadowRoot.querySelector('.cm-nldd-popups') as HTMLElement;
+			expect(frame.contains(list)).toBe(true);
+			expect(frame.matches(':popover-open')).toBe(true);
+			// Past the edge of the box, and still the topmost thing there: a clipped
+			// list would end at that edge, and one behind the page would not answer.
+			const room = wrap.getBoundingClientRect();
+			const rect = list.getBoundingClientRect();
+			expect(rect.right).toBeGreaterThan(room.right);
+			expect(document.elementFromPoint(room.right + 8, rect.top + 8)).toBe(el);
+			// And off the window's edge by the margin an nldd-menu keeps.
+			expect(rect.right).toBeLessThanOrEqual(window.innerWidth - 16);
+		} finally {
+			wrap.remove();
+		}
+	});
+
 	it('writes the trigger, the text and a space when there is no insert', async () => {
 		el = await make('zie #alg', [{ trigger: '#', source: byLabel(channels) }]);
 		await openList(el);

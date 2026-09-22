@@ -44,7 +44,7 @@ export type IconColor =
  * Color: by default the icon inherits its parent's `color`. Set `color` to one
  * of the functional semantics (`primary-content`, `secondary-content`,
  * `accent`, `critical`, `warning`, `success`) or a rijkskleur (`lintblauw`,
- * `paars`, `groen`, …). For a color the design system cannot know — the jacket
+ * `paars`, `groen`, …). For a color the system cannot know — the jacket
  * of a cable, a color someone picked — set `custom-color` to any CSS color.
  *
  * @element nldd-icon
@@ -52,7 +52,7 @@ export type IconColor =
  * @attr {string} name - The name of the icon to display
  * @attr {string} size - `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96).
  * @attr {string} color - Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent.
- * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the design system cannot know. It wins over `color`.
+ * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know. It wins over `color`.
  * @attr {boolean} box - Draw the icon on a filled square. `color` and `custom-color` then paint the box and the glyph takes the contrasting color, and `size` measures the box: the glyph is four fifths of it, the corner radius a fifth.
  *
  * @example

@@ -240,12 +240,12 @@ describe('nldd-icon-button – href / link rendering', () => {
 		expect(el.shadowRoot!.querySelector('a')!.getAttribute('href')).toBe('/overzicht');
 	});
 
-	it('forwards target and rel to the anchor element', async () => {
-		el = await fixture<NLDDIconButton>('<nldd-icon-button href="/overzicht" target="_blank" rel="noopener" icon="arrow-left" text="Terug"></nldd-icon-button>');
+	it('forwards target, and adds noopener noreferrer to a rel of your own', async () => {
+		el = await fixture<NLDDIconButton>('<nldd-icon-button href="/overzicht" target="_blank" rel="external" icon="arrow-left" text="Terug"></nldd-icon-button>');
 		await waitForUpdate(el);
 		const a = el.shadowRoot!.querySelector('a')!;
 		expect(a.getAttribute('target')).toBe('_blank');
-		expect(a.getAttribute('rel')).toBe('noopener');
+		expect(a.getAttribute('rel')).toBe('external noopener noreferrer');
 	});
 
 	it('defaults rel to noopener noreferrer when target is _blank and rel is not set', async () => {

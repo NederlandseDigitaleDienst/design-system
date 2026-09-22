@@ -6,6 +6,9 @@ import '../../inputs/segmented-control/segmented-control.js';
 import '../../inputs/toggle-button/toggle-button.js';
 import '../../actions/button/button.js';
 import '../../actions/button-bar/button-bar.js';
+import '../../status-and-feedback/modal-dialog/modal-dialog.js';
+import '../../layout/sheet/sheet.js';
+import '../../layout/container/container.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import '../../layout/spacer/spacer.js';
@@ -566,6 +569,60 @@ export const Mentions = {
 	},
 };
 
+export const MentionsInEenOverlay = {
+	render: () => {
+		const users = [
+			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
+			{ id: '2', text: 'Bram Jansen', supportingText: 'Communicatie' },
+			{ id: '3', text: 'Chen Wei', supportingText: 'Data' },
+			{ id: '4', text: 'Dewi Pratama', supportingText: 'Juridisch' },
+			{ id: '5', text: 'Emma Bakker', supportingText: 'Beleid' },
+		];
+		const source = (query: string) =>
+			users.filter((user) => user.text.toLowerCase().includes(query.toLowerCase()));
+		const tags = [
+			{ trigger: '#', source: (query: string) => ['beleid', 'begroting', 'besluit', 'bezwaar']
+				.filter((tag) => tag.startsWith(query.toLowerCase()))
+				.map((tag) => ({ id: tag, text: tag, symbol: '#' })) },
+		];
+		const open = (e: Record<string, any>) => e.currentTarget.nextElementSibling.show();
+		return html`
+			<nldd-button variant="primary" text="Open modal dialog" @click=${open}></nldd-button>
+			<nldd-modal-dialog accessible-label="Notitie">
+				<nldd-text-editor
+					rows="6"
+					accessible-label="Notitie"
+					.value=${'Typ `@` voor een naam of `#` voor een label.'}
+					.mentionSource=${source}
+					.typeaheads=${tags}
+				></nldd-text-editor>
+				<nldd-button slot="actions" variant="primary" text="Bewaar"></nldd-button>
+			</nldd-modal-dialog>
+
+			<nldd-button variant="secondary" text="Open sheet" @click=${open}></nldd-button>
+			<nldd-sheet accessible-label="Notitie in een sheet">
+				<nldd-container padding="16">
+					<nldd-text-editor
+						rows="6"
+						accessible-label="Notitie"
+						.value=${'Ook hier: typ `@` of `#`.'}
+						.mentionSource=${source}
+						.typeaheads=${tags}
+					></nldd-text-editor>
+				</nldd-container>
+			</nldd-sheet>
+		`;
+	},
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'De typeahead in een overlay. Open de dialog of de sheet en typ `@` of `#`: de lijst hoort pal onder de cursor te staan, in z\'n volle hoogte, en niet ergens naast het scherm. CodeMirror hangt zijn lijst in de editor, dus gold alles eromheen ook voor de lijst: een overlay verbergt z\'n overflow en knipte hem af, en een voorouder met een transform werd het referentiekader voor een `fixed` popup, waardoor hij naast de pagina belandde. De lijst opent nu in de top layer, net als een nldd-menu. Test dit met het browservenster op de voorgrond: CodeMirror plaatst de popup in een `requestAnimationFrame`, en die staat stil in een achtergrondtab.',
+			},
+		},
+	},
+};
+
 export const Typeaheads = {
 	render: () => {
 		const people = [
@@ -628,13 +685,13 @@ export const Typeaheads = {
 export const Annotations = {
 	render: () => {
 		const sample =
-			'De Rijksoverheid werkt aan een toegankelijk design system. Componenten zijn herbruikbaar en consistent.\n\nFeedback is welkom op elk onderdeel.';
+			'De Rijksoverheid werkt aan een toegankelijk designsysteem. Componenten zijn herbruikbaar en consistent.\n\nFeedback is welkom op elk onderdeel.';
 		const at = (needle: string) => {
 			const start = sample.indexOf(needle);
 			return { start, end: start + needle.length, quote: needle };
 		};
 		const annotations = [
-			{ id: 'a1', ...at('toegankelijk design system') },
+			{ id: 'a1', ...at('toegankelijk designsysteem') },
 			{ id: 'a2', ...at('herbruikbaar en consistent') },
 			// Two annotations on the same text merge into one underline + a "2" badge.
 			{ id: 'a3', ...at('Feedback') },

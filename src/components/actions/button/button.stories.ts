@@ -3,6 +3,9 @@ import './button.js';
 import '../button-group/button-group.js';
 import '../menu/menu.js';
 import '../../layout/popover/popover.js';
+import '../../layout/container/container.js';
+import '../../content/rich-text/rich-text.js';
+import '../../content/title/title.js';
 import { ICONS } from './../../content/icon/icon.js';
 
 /**
@@ -424,11 +427,13 @@ export const WithPopover = {
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 			<nldd-button expandable text="Info">
 				<nldd-popover slot="popup" accessible-label="Toelichting" width="280px">
-					<div style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
-						<strong>Zorgtoeslag</strong>
-						<span>Een tegemoetkoming in de kosten van je zorgverzekering, afhankelijk van je inkomen.</span>
+					<nldd-container padding="16" gap="8">
+						<nldd-title size="6"><h2>Zorgtoeslag</h2></nldd-title>
+						<nldd-rich-text>
+							<p>Een tegemoetkoming in de kosten van je zorgverzekering, afhankelijk van je inkomen.</p>
+						</nldd-rich-text>
 						<nldd-button variant="primary" text="Meer lezen"></nldd-button>
-					</div>
+					</nldd-container>
 				</nldd-popover>
 			</nldd-button>
 		</div>

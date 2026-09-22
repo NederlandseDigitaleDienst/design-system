@@ -24,7 +24,7 @@
  * @attr {string} accessible-label - Accessible label for the button, overrides text for screen readers
  * @attr {string} href - When set, renders an <a> element instead of <button>
  * @attr {string} target - Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden "opens in new tab" announcement for screen readers (WCAG 2.1 SC 3.2.2).
- * @attr {string} rel - Link rel attribute; defaults to 'noopener noreferrer' when target is '_blank'
+ * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  *
  * @slot text - Slot for custom button content (e.g. text with inline markup). Used when the text attribute is empty or not set (an empty string counts as "not set", since the attribute and the unset property are indistinguishable). Provide accessible-label when the slotted content isn't plain text.
@@ -194,7 +194,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 
 	/**
 	 * Link rel attribute. Only used when href is set.
-	 * Defaults to 'noopener noreferrer' when target is '_blank' and rel is not explicitly set.
+	 * With target '_blank', 'noopener noreferrer' is added to it.
 	 */
 	@property({ type: String })
 	rel: string | undefined = undefined;
@@ -270,13 +270,6 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 		if (this.href) return;
 		if (this.type === 'submit') this._internals.form?.requestSubmit();
 		else if (this.type === 'reset') this._internals.form?.reset();
-	}
-
-	/** Resolves the effective rel value for link rendering. */
-	_resolvedRel(): string {
-		if (this.rel) return this.rel;
-		if (this.target === '_blank') return 'noopener noreferrer';
-		return '';
 	}
 
 	/**

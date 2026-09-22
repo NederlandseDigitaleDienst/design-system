@@ -1,12 +1,13 @@
 import { html, nothing } from 'lit';
 import type { NLDDLink } from './link.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;
 }
 
 export function template(this: NLDDLink, helpers: TemplateHelpers) {
-	const resolvedRel = this._resolvedRel();
+	const resolvedRel = linkRel(this.rel, this.target);
 	// A new-tab link is a change of context, so announce it (WCAG 2.1 SC 3.2.2).
 	// Suppressed when disabled (the <a> carries no href, so it doesn't navigate).
 	const opensInNewTabHint = !this.disabled && this.href && this.target === '_blank'

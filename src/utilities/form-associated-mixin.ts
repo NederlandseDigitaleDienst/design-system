@@ -25,6 +25,8 @@ export interface FormAssociatedElement {
 	commitFormValue(): void;
 	/** The native control whose constraints the host reports as its own. */
 	validationTarget(): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+	/** Where an invalid submit points its message and puts the focus. */
+	validationAnchor(): HTMLElement | undefined;
 	/** A reason of your own, on top of the native ones. Empty clears it. */
 	setCustomValidity(message: string): void;
 	commitValidity(): void;
@@ -95,6 +97,21 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 		}
 
 		/**
+		 * Where an invalid submit points its message and puts the focus.
+		 *
+		 * The native control, where the user reads and fixes it. Not when that
+		 * control is hidden, as the radio that only carries `required` is: a radio
+		 * inside an element that is itself the radio is a control inside a control,
+		 * and a hidden element cannot hold the message. Then it goes on this
+		 * element. Override where neither is what the user should land on, such as
+		 * a group that has no focus of its own.
+		 */
+		validationAnchor(): HTMLElement | undefined {
+			const target = this.validationTarget();
+			return target && !target.hidden ? target : undefined;
+		}
+
+		/**
 		 * A reason the host is invalid that no attribute can express: a server that
 		 * refused the value, or an nldd-validation-list whose rule it fails. Kept
 		 * beside the native flags rather than replacing them, because
@@ -135,7 +152,7 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 				message = custom;
 			}
 
-			const anchor = (target ?? this) as HTMLElement;
+			const anchor = this.validationAnchor();
 			if (Object.keys(flags).length === 0) {
 				this.internals.setValidity({});
 				return;

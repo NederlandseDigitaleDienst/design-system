@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Nederlandse Digitale Dienst Design System is built with accessibility at its core, ensuring compliance with **DigiToegankelijk** (Dutch Digital Accessibility Standard) and **WCAG 2.1 Level AA** requirements. All components are developed following WAI-ARIA authoring practices and are designed to work seamlessly with assistive technologies.
+The NLDD Designsysteem is built with accessibility at its core, ensuring compliance with **DigiToegankelijk** (Dutch Digital Accessibility Standard) and **WCAG 2.1 Level AA** requirements. All components are developed following WAI-ARIA authoring practices and are designed to work seamlessly with assistive technologies.
 
 ### Core Principles
 

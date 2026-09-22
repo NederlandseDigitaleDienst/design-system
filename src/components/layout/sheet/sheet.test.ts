@@ -39,6 +39,22 @@ describe('nldd-sheet', () => {
 		expect(el.hasAttribute('placement')).toBe(false);
 	});
 
+	/* See the same test on nldd-modal-dialog: an opening animation that ends on
+	 * a transform leaves that transform behind, and anything inside positioned
+	 * against the viewport then measures against the sheet. */
+	it('keeps no transform once it has opened', async () => {
+		// The duration and the easing are tokens, and a test document has no
+		// variables.css: without them the `animation` shorthand is invalid and
+		// nothing animates at all.
+		el = await fixture('<nldd-sheet style="--semantics-sheets-side-animation-duration: 20ms; --semantics-sheets-bottom-animation-duration: 20ms; --primitives-transition-easing-default: linear"></nldd-sheet>');
+		await waitForUpdate(el);
+		const dialog = el.shadowRoot!.querySelector('dialog')!;
+		(el as NLDDSheet).show();
+		await (el as NLDDSheet).updateComplete;
+		await Promise.all(dialog.getAnimations().map((animation) => animation.finished));
+		expect(getComputedStyle(dialog).transform).toBe('none');
+	});
+
 	it('opens modal, with a backdrop and the page behind it inert', async () => {
 		el = await fixture('<nldd-sheet></nldd-sheet>');
 		await waitForUpdate(el);

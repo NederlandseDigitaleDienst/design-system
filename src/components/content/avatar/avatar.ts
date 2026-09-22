@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Avatar Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Avatar Component (Lit + TypeScript)
  *
  * Shows one person or organization as a compact, round (person) or rounded
  * (organization) representation. The content follows a fixed fallback chain: an
@@ -40,7 +40,7 @@
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for an avatar that is a link or a button inside a roving container (a row of an nldd-list). Does nothing on a decorative avatar.
  * @attr {boolean} button - Makes the avatar a button; ignored when `href` is set
  * @attr {string} target - Link target for href (e.g. '_blank'); completes rel and announces "Opens in a new tab"
- * @attr {string} rel - Link rel for href; defaults to 'noopener noreferrer' when target='_blank'
+ * @attr {string} rel - Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @example
@@ -146,17 +146,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	/** True once the avatar is a control itself. */
 	get isInteractive(): boolean {
 		return Boolean(this.href) || this.button;
-	}
-
-	/** Resolves rel for the link: _blank adds noopener/noreferrer (mirroring
-	 *  nldd-link and nldd-card), merged with a rel of your own. */
-	_resolvedRel(): string {
-		const base = this.rel ?? '';
-		if (this.target !== '_blank') return base;
-		const parts = new Set(base.split(/\s+/).filter(Boolean));
-		parts.add('noopener');
-		parts.add('noreferrer');
-		return [...parts].join(' ');
 	}
 
 	private _warnedLabel = false;

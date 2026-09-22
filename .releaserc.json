@@ -80,7 +80,7 @@
       "@semantic-release/changelog",
       {
         "changelogFile": "CHANGELOG.md",
-        "changelogTitle": "# Changelog\n\nAll notable changes to the NLDD design system are documented here.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\nVersions are bumped automatically by semantic-release on merge to main \u2014\nthe type of conventional-commit determines the release. Conventional types\n`chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted\nhere; consult the commit history if you need that level of detail."
+        "changelogTitle": "# Changelog\n\nAll notable changes to the NLDD Designsysteem are documented here.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\nVersions are bumped automatically by semantic-release on merge to main \u2014\nthe type of conventional-commit determines the release. Conventional types\n`chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted\nhere; consult the commit history if you need that level of detail."
       }
     ],
     [

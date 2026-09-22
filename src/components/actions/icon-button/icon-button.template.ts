@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import type { NLDDIconButton } from './icon-button.js';
+import { linkRel } from '../../../utilities/link-rel.js';
 import '../../content/tooltip/tooltip.js';
 
 function renderContent(component: NLDDIconButton) {
@@ -74,7 +75,7 @@ export function template(this: NLDDIconButton) {
 
 	const renderButton = () => {
 		if (this.href) {
-			const resolvedRel = this._resolvedRel();
+			const resolvedRel = linkRel(this.rel, this.target);
 			return html`
 				<a class="icon-button"
 					href=${this.href}

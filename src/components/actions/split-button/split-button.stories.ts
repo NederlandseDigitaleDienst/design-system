@@ -3,6 +3,9 @@ import { html, nothing } from 'lit';
 import './split-button.js';
 import '../../actions/menu/menu.js';
 import '../../layout/popover/popover.js';
+import '../../layout/container/container.js';
+import '../../content/rich-text/rich-text.js';
+import '../../content/title/title.js';
 import { ICONS } from '../../content/icon/icon.js';
 
 /**
@@ -183,11 +186,13 @@ export const MetPopover = {
 			@menu-click=${action('menu-click')}
 		>
 			<nldd-popover accessible-label="Deelopties" width="280px">
-				<div style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
-					<strong>Deel deze pagina</strong>
-					<span>Kies hoe je deze pagina wilt delen met anderen.</span>
+				<nldd-container padding="16" gap="8">
+					<nldd-title size="6"><h2>Deel deze pagina</h2></nldd-title>
+					<nldd-rich-text>
+						<p>Kies hoe je deze pagina wilt delen met anderen.</p>
+					</nldd-rich-text>
 					<nldd-button variant="primary" text="Kopieer link"></nldd-button>
-				</div>
+				</nldd-container>
 			</nldd-popover>
 		</nldd-split-button>
 	`,

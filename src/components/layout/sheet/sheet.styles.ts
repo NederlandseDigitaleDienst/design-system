@@ -95,7 +95,7 @@ export const sheetStyles = css`
 			height: var(--_height, calc(100dvh - var(--semantics-sheets-bottom-top-inset)));
 
 			&[open] {
-				animation: sheet-slide-in-bottom var(--semantics-sheets-bottom-animation-duration) var(--primitives-transition-easing-default) both;
+				animation: sheet-slide-in-bottom var(--semantics-sheets-bottom-animation-duration) var(--primitives-transition-easing-default) backwards;
 			}
 
 			&.is-closing {
@@ -110,7 +110,7 @@ export const sheetStyles = css`
 			height: calc(100dvh - var(--semantics-overlays-inset) * 2);
 
 			&[open] {
-				animation: sheet-slide-in-right var(--semantics-sheets-side-animation-duration) var(--primitives-transition-easing-default) both;
+				animation: sheet-slide-in-right var(--semantics-sheets-side-animation-duration) var(--primitives-transition-easing-default) backwards;
 			}
 
 			&.is-closing {
@@ -145,7 +145,7 @@ export const sheetStyles = css`
 			height: calc(100dvh - var(--semantics-overlays-inset) * 2);
 
 			&[open] {
-				animation: sheet-slide-in-left var(--semantics-sheets-side-animation-duration) var(--primitives-transition-easing-default) both;
+				animation: sheet-slide-in-left var(--semantics-sheets-side-animation-duration) var(--primitives-transition-easing-default) backwards;
 			}
 
 			&.is-closing {
@@ -169,7 +169,7 @@ export const sheetStyles = css`
 			height: var(--_height, calc(100dvh - var(--semantics-sheets-bottom-top-inset)));
 
 			&[open] {
-				animation: sheet-slide-in-bottom var(--semantics-sheets-bottom-animation-duration) var(--primitives-transition-easing-default) both;
+				animation: sheet-slide-in-bottom var(--semantics-sheets-bottom-animation-duration) var(--primitives-transition-easing-default) backwards;
 			}
 
 			&.is-closing {

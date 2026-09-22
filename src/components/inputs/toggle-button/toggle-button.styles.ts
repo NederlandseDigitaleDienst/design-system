@@ -212,13 +212,4 @@ export const toggleButtonStyles = css`
 		height: 100%;
 	}
 
-	.toggle-button__validation-input {
-		position: absolute;
-		inset: 0;
-		opacity: 0;
-		margin: 0;
-		pointer-events: none;
-		width: 100%;
-		height: 100%;
-	}
 `;

@@ -1,5 +1,5 @@
 /**
- * NLDD Design System Date Picker Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Date Picker Component (Lit + TypeScript)
  *
  * A calendar for picking a date or a period. The component works on its own
  * (inline on a page, in a filter panel) and also sits in the popover of

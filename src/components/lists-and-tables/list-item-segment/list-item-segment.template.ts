@@ -1,4 +1,5 @@
 import { html, nothing } from 'lit';
+import { linkRel } from '../../../utilities/link-rel.js';
 
 export type ListItemSegmentControl = 'link' | 'button' | 'checkbox' | 'plain';
 
@@ -23,7 +24,7 @@ export function template(
 		return html`<a class="list-item-segment"
 			href=${href ?? nothing}
 			target=${target ?? nothing}
-			rel=${rel ?? nothing}
+			rel=${linkRel(rel, target) || nothing}
 			aria-disabled=${disabled ? 'true' : nothing}
 			aria-expanded=${ariaExpanded}
 			aria-current=${ariaCurrent}

@@ -71,16 +71,6 @@ export const segmentedControlStyles = css`
 
 	/* # Elements */
 
-	.segmented-control__validation-input {
-		position: absolute;
-		inset: 0;
-		opacity: 0;
-		margin: 0;
-		pointer-events: none;
-		width: 100%;
-		height: 100%;
-	}
-
 	::slotted(nldd-segmented-control-item[selected]) {
 		position: relative;
 		z-index: var(--_selected-z-index);

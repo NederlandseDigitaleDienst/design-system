@@ -20,7 +20,7 @@
  * @attr {string} tooltip-timing - Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button).
  * @attr {string} href - When set, renders an <a> element instead of <button>
  * @attr {string} target - Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2).
- * @attr {string} rel - Link rel attribute; defaults to 'noopener noreferrer' when target is '_blank'
+ * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  * @attr {string} popovertarget - ID of a popover element to toggle; forwarded to the inner <button>
  *
@@ -182,7 +182,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 
 	/**
 	 * Link rel attribute. Only used when href is set.
-	 * Defaults to 'noopener noreferrer' when target is '_blank' and rel is not explicitly set.
+	 * With target '_blank', 'noopener noreferrer' is added to it.
 	 */
 	@property({ type: String })
 	rel: string | undefined = undefined;
@@ -225,13 +225,6 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 		} else if (!inaccessible) {
 			this._warnedA11y = false;
 		}
-	}
-
-	/** Resolves the effective rel value for link rendering. */
-	_resolvedRel(): string {
-		if (this.rel) return this.rel;
-		if (this.target === '_blank') return 'noopener noreferrer';
-		return '';
 	}
 
 	protected _handleClick(e: MouseEvent): void {

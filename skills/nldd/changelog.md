@@ -6,7 +6,7 @@
 
 # Changelog
 
-All notable changes to the NLDD design system are documented here.
+All notable changes to the NLDD Designsysteem are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -14,6 +14,32 @@ Versions are bumped automatically by semantic-release on merge to main —
 the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
+
+### Highlights
+
+- **The design system has a Dutch name: the NLDD Designsysteem.** Half the name was English while everything under it is Dutch, down to the color names. Nothing you type changes: the package, the tags and the class names stay as they are, and the repository keeps its name. What changes is what you read, in Storybook, in the docs and in the skill that ships with the plugin.
+
+- **A typeahead in the text editor works in an overlay.** The `@`-mention list and your own typeaheads were invisible as soon as the editor stood in a sheet, a window or a modal dialog. They open in the top layer now, the way a menu does, so they show up under the cursor at their full height wherever the editor sits.
+
+### Changed
+
+- **The system is called the NLDD Designsysteem.** Half the name was English while everything under it is Dutch, down to the colors: `lintblauw`, `robijnrood`, `mosgroen`. The category is Dutch now and the organization keeps its name. Nothing you type changes: the package is still `@nldd/design-system`, the tags are still `nldd-button` and `NLDDButton`, and the repository keeps its name. In Dutch prose it is "het designsysteem", and there is no abbreviation.
+
+- **A redrawn favicon and touch icon.** A simpler mark on a white field, with the blue tile behind it. Both ship in `dist` and are exported as `@nldd/design-system/favicon.svg` and `/touch-icon.png`, so a page that references them picks up the new drawing. The old favicon swapped its tile and mark under `prefers-color-scheme: dark`; this one keeps its colors.
+
+### Fixed
+
+- **A typeahead in the text editor appears where you are typing, inside an overlay too.** The `@`-mention list and your own typeaheads in `nldd-text-editor` worked, but you could not see them once the editor sat in an `nldd-sheet`, an `nldd-modal-dialog` or an `nldd-window`: the list landed beside the page, or was cut off at the edge of the overlay. CodeMirror hangs that list in the editor, so everything around the editor applied to it. An overlay hides its overflow and cut it off, and an ancestor with a transform became the frame a `position: fixed` list measures against, which counted the overlay's offset twice. The list opens in the top layer now, the way an `nldd-menu` does: nothing around the editor reaches it, and it has the whole window instead of the room left over in a short dialog. The overlays keep no transform once they are open either, where the animation that slides an `nldd-sheet` or an `nldd-modal-dialog` in used to leave the position it ended on behind, so anything else in an overlay that positions itself against the viewport lands right as well.
+
+- **A page with `nldd-code-viewer` passes axe again, and the viewer says it holds code.** Its content carried `role="document"` together with CodeMirror's `aria-multiline` and `aria-readonly`, two attributes that belong to a text field and are allowed on no other role. axe reported that as a critical `aria-allowed-attr` violation on every page with a viewer. Both attributes are gone, and the role is `code`: the one that stands for the `<code>` element this would be if CodeMirror did not build its own markup. `document` said it held a document of its own, which was a roundabout way of saying it is not an input.
+
+- **`nldd-skip-link` no longer makes every page scroll sideways.** It was hidden with `opacity: 0`, which keeps an element in the layout, and its label was held on one line. The browser counted that full width, so at 320 CSS px, the width WCAG asks a page to reflow to, a written-out label pushed the page wider than the screen, on every page at once and with nothing visible to explain it. At 200% text size a label as ordinary as "Direct naar de inhoud" was enough. Hidden, it now takes no room at all. Focused, it stays where it sits, wraps within the element it belongs to, and gets the line height that wrapping asks for.
+
+- **`nldd-status-bar` keeps its line whole at 200% text size.** The bar was 24px tall while its text follows the reader's own size, so a bigger size cut the line off at the top and the bottom, accents and descenders first, even where the label was short enough to fit. The height is a minimum now: 24px as long as the text fits, taller when it does not. Text that is too long still ends in an ellipsis on one line, the way it did.
+
+- **A radio no longer holds a second radio inside it.** Since 0.8.89 `nldd-radio-button`, `nldd-radio-button-field` and `nldd-toggle-button` in radio mode carry `role="radio"` themselves, and each still rendered a native radio inside to answer `required`. Out of sight and out of the tab order, but accessibility checkers read the nesting itself: axe reported `nested-interactive` once for every option, so a radio group of two failed twice. That radio is `hidden` now. It still answers `required` in the browser's own words, and an invalid submit puts the focus and the message on the radio itself. In `nldd-segmented-control` they land where Tab would: on the chosen option, or the first one that is enabled.
+
+- **A `rel` of your own adds to `noopener noreferrer` instead of replacing it.** On a link that opens a new tab, `nldd-button`, `nldd-icon-button` and `nldd-status-bar` dropped their `noopener noreferrer` the moment you set a `rel` yourself, so `target="_blank" rel="external"` sent the page it opened the address you came from. `nldd-list-item` and `nldd-list-item-segment` never added it at all. Every component that renders a link now does what `nldd-link`, `nldd-card` and `nldd-avatar` already did: with `target="_blank"`, `noopener noreferrer` is added to the `rel` you set.
 
 ## [0.8.91](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.90...v0.8.91) (2026-09-20)
 

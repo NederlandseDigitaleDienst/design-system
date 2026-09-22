@@ -4,7 +4,7 @@ import '../../actions/button/button.js';
 
 /**
  * Gebruik een spacer om ruimte tussen elementen te creëren.
- * Componenten in dit design system hebben geen eigen margins — alle witruimte
+ * Componenten in dit designsysteem hebben geen eigen margins — alle witruimte
  * wordt expliciet bepaald met een spacer. Dat maakt de ruimte zichtbaar en
  * aanpasbaar zonder de componenten zelf te wijzigen.
  *
