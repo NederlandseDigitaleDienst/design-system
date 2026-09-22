@@ -10,7 +10,7 @@ name: NLDD Designsysteem
 url: "https://github.com/NederlandseDigitaleDienst/design-system"
 landingURL: "https://nederlandsedigitaledienst.github.io/design-system/"
 
-softwareVersion: "0.8.91"
+softwareVersion: "0.8.92"
 releaseDate: "2026-08-07"
 
 softwareType: library

@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.8.92](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.91...v0.8.92) (2026-09-22)
+
 ### Highlights
 
 - **The design system has a Dutch name: the NLDD Designsysteem.** Half the name was English while everything under it is Dutch, down to the color names. Nothing you type changes: the package, the tags and the class names stay as they are, and the repository keeps its name. What changes is what you read, in Storybook, in the docs and in the skill that ships with the plugin.
