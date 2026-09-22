@@ -63,7 +63,7 @@ Bijwerken naar een nieuwere versie doe je met `/plugin marketplace update nldd-p
 
 De plugin heette altijd al `nldd` en blijft zo heten, dus je installatie en je
 `enabledPlugins` blijven werken. Wat veranderde zijn de **skills** erin: waar er
-één `nldd` was, zijn er nu vier met een naam die zegt waar ze over gaan.
+één `nldd` was, zijn er nu vijf met een naam die zegt waar ze over gaan.
 
 Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee
 zonder foutmelding:
