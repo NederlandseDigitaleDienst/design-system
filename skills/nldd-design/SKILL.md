@@ -1,11 +1,11 @@
 ---
 name: nldd-design
-description: "Het NLDD Design System (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid): de componentreferentie, de release-historie en de ontwerprichtlijnen. Triggers: vragen over welke nldd-* componenten bestaan, welke attributen, slots of events een component heeft, welke icoonnamen geldig zijn, of wat er in een versie is veranderd. Bouw je een app: nldd-design-build. Zet je een bestaande app om: nldd-design-migrate. Verhoog je een versie: nldd-design-upgrade."
+description: "Het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid): de componentreferentie, de release-historie en de ontwerprichtlijnen. Triggers: vragen over welke nldd-* componenten bestaan, welke attributen, slots of events een component heeft, welke icoonnamen geldig zijn, of wat er in een versie is veranderd. Bouw je een app: nldd-design-build. Zet je een bestaande app om: nldd-design-migrate. Verhoog je een versie: nldd-design-upgrade."
 metadata:
   type: reference
 ---
 
-# NLDD Design System: de naslag
+# NLDD Designsysteem: de naslag
 
 Dit is de gedeelde naslag van het design system. Hij hoort bij geen van beide
 werkwijzen in het bijzonder, want de API, de release-historie en de

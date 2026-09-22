@@ -5,7 +5,7 @@ metadata:
   type: reference
 ---
 
-# Een bestaande codebase omzetten naar het NLDD Design System
+# Een bestaande codebase omzetten naar het NLDD Designsysteem
 
 De `nldd-design-build` skill leert je hoe de componenten werken. Deze skill gaat over iets
 anders: wat er misgaat als je een **bestaande** applicatie omzet, en hoe je dat
