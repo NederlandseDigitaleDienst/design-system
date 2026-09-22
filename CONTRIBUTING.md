@@ -1,6 +1,6 @@
 # Bijdragen aan het NLDD Designsysteem
 
-Werk je binnen NLDD, dan is het design system-kanaal op Mattermost de kortste
+Werk je binnen NLDD, dan is het designsysteem-kanaal op Mattermost de kortste
 weg: daar leest de maintainer mee en hoeft er geen issue bij. Kom je van buiten,
 dan begint het bij een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues).
 Wie beslist en waarom staat in

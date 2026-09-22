@@ -1,11 +1,11 @@
 ---
 name: nldd-design-contribute
-description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het design system', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het design system', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Binnen NLDD gaat het naar het design system-kanaal op Mattermost, buiten NLDD naar een GitHub-issue. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het design system zelf check je die uit."
+description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het designsysteem', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het designsysteem', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Binnen NLDD gaat het naar het designsysteem-kanaal op Mattermost, buiten NLDD naar een GitHub-issue. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het designsysteem zelf check je die uit."
 metadata:
   type: reference
 ---
 
-# Iets voorstellen aan het design system
+# Iets voorstellen aan het designsysteem
 
 Je gebruikt deze skill als je met `@nldd/design-system` werkt en iets tegenkomt
 dat erin zou moeten zitten: een component dat mist, een variant die je nabouwt,
@@ -16,7 +16,7 @@ een compositie die je in elk project opnieuw maakt, of gedrag dat kapot is.
 Dat hangt af van wie je bent, en het is de enige vraag die je vooraf moet
 beantwoorden.
 
-- **Werk je binnen NLDD**, dan gaat het naar het design system-kanaal op
+- **Werk je binnen NLDD**, dan gaat het naar het designsysteem-kanaal op
   Mattermost. Dat is de voorkeursroute voor intern: korter dan een issue, en de
   maintainer leest mee. Een gesprek daar is genoeg; je hoeft er geen issue bij
   te openen.
