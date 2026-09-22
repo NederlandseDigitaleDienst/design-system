@@ -106,9 +106,9 @@ release halen consumers de gewijzigde skill-docs nooit op (zie Plugin-versie).
 
 ## Changelog
 
-`CHANGELOG.md` wordt door semantic-release beheerd: bij elke merge naar main zet het een nieuw versieblok (`## <small>x.y.z (datum)</small>`) bovenaan, afgeleid van de conventionele commits.
+`CHANGELOG.md` wordt door semantic-release beheerd: bij elke merge naar main zet het een nieuw versieblok (`## [x.y.z](compare-link) (datum)`) bovenaan, afgeleid van de conventionele commits.
 
-**De leesbare inhoud schrijf je met de hand.** Dat is bewust: `nldd-avatar - nieuw component voor een persoon of organisatie` zegt een consument veel meer dan `refactor(avatar): rename css var`. Commit-titels schrijf je voor reviewers, changelog-entries voor consumers. Het gegenereerde deel is daarom expres niet meer dan een kale bullet per release (de PR-titel); de `### Highlights` / `### Added`-secties eronder zijn handwerk.
+**De leesbare inhoud schrijf je met de hand.** Dat is bewust: `nldd-avatar - nieuw component voor een persoon of organisatie` zegt een consument veel meer dan `refactor(avatar): rename css var`. Commit-titels schrijf je voor reviewers, changelog-entries voor consumers. Het gegenereerde deel is daarom expres niet meer dan het versiekopje; de `### Highlights` / `### Added`-secties eronder zijn handwerk.
 
 Laat daarom de regel `"preset": "conventionalcommits"` in `.releaserc.json` staan. Haal je die weg, dan valt de release-notes-generator terug op zijn eigen default en gaat hij de notes alsnog in `### Features` / `### Bug Fixes` opdelen, wat je juist niet wilt.
 
