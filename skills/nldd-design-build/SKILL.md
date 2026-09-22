@@ -1,6 +1,6 @@
 ---
 name: nldd-design-build
-description: "Bouw applicaties met de web components van het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens). Voor een versie verhogen: nldd-design-upgrade. NIET voor het ontwikkelen van het design system zelf (daarvoor: /component, /css)."
+description: "Bouw applicaties met de web components van het NLDD Designsysteem (@nldd/design-system, Nederlandse Digitale Dienst, Rijksoverheid). Triggers: @nldd/design-system, 'nldd-' tags, vragen over layout, sheets, popovers, modals, formulieren, toegankelijkheid, CSS-variabelen (tokens). Voor een versie verhogen: nldd-design-upgrade. NIET voor het ontwikkelen van het designsysteem zelf (daarvoor: /component, /css)."
 metadata:
   type: reference
 ---

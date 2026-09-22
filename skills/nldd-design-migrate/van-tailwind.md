@@ -76,7 +76,7 @@ Drie kanttekeningen, want dit wordt makkelijk oververkocht:
 
 ## Globale regels die botsen
 
-Drie patronen uit een typische Tailwind-setup vechten met het design system en
+Drie patronen uit een typische Tailwind-setup vechten met het designsysteem en
 moeten weg of scoped worden:
 
 - `*:focus-visible { outline: ... }` verdubbelt met de eigen focusring van de
@@ -93,7 +93,7 @@ modus komt gratis met het palet, maar half omgezette schermen met `bg-white` en
 
 ## Wat je overhoudt
 
-Reken op een klein eigen CSS-bestand voor wat het design system bewust niet
+Reken op een klein eigen CSS-bestand voor wat het designsysteem bewust niet
 regelt: hoe tekst afkapt (`truncate`, `line-clamp`), `text-transform` en
 `letter-spacing` die `nldd-text` niet heeft, `object-fit`, `flex-shrink`,
 scroll-snap, en het hover-reveal-patroon.

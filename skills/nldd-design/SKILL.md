@@ -7,7 +7,7 @@ metadata:
 
 # NLDD Designsysteem: de naslag
 
-Dit is de gedeelde naslag van het design system. Hij hoort bij geen van beide
+Dit is de gedeelde naslag van het designsysteem. Hij hoort bij geen van beide
 werkwijzen in het bijzonder, want de API, de release-historie en de
 ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
 
@@ -29,7 +29,7 @@ ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
 | een nieuwe applicatie bouwen | `nldd-design-build`: de visie, de patronen, hoe je componenten samenstelt |
 | een bestaande applicatie omzetten | `nldd-design-migrate`: wat er stil misgaat en hoe je het merkt |
 | een versie verhogen | `nldd-design-upgrade`: het upgradepad uit de changelog |
-| het design system zelf ontwikkelen | de maintainer-skills `/component` en `/css`, niet deze skills |
+| het designsysteem zelf ontwikkelen | de maintainer-skills `/component` en `/css`, niet deze skills |
 
 Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor
 (`/nldd:nldd-design`). Die tweede werkt altijd; de korte gaat naar een eigen

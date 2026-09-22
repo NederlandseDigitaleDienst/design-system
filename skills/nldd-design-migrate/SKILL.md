@@ -1,6 +1,6 @@
 ---
 name: nldd-design-migrate
-description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit systeem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het design system zelf: /component, /css."
+description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het designsysteem', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit systeem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het designsysteem zelf: /component, /css."
 metadata:
   type: reference
 ---
@@ -350,7 +350,7 @@ Drie gewoonten die steeds tijd scheelden of kostten:
 ## Ligt het aan het systeem, meld het dan
 
 Vecht je met een component, dan is dat meestal verkeerd gebruik. Maar soms ligt
-het aan het design system, en dan is een workaround de duurste oplossing die je
+het aan het designsysteem, en dan is een workaround de duurste oplossing die je
 kunt kiezen.
 
 Meld het als een component niet doet wat zijn eigen documentatie zegt, als een

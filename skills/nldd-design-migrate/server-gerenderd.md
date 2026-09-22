@@ -86,7 +86,7 @@ daar in string-concatenatie en lookup-tabellen zitten in plaats van in markup.
 ## Zet er een test op die het oude systeem eruit houdt
 
 Dit is de check die de hoofdskill niet noemt, en hij is goedkoop. Definieer een
-lijst markers van het oude design system, render een representatief formulier
+lijst markers van het oude designsysteem, render een representatief formulier
 in een test, en assert dat geen marker in de uitvoer voorkomt. Doe dat voor de
 gewone render én voor de render met validatiefouten.
 
@@ -118,7 +118,7 @@ er iets dat je moet willen:
 > **Vendoring ruilt "stil kapot gaan op een moment dat je niet koos" in voor
 > "bewust achterlopen".**
 
-Niets werkt die bundel automatisch bij, dus een hernoeming in het design system
+Niets werkt die bundel automatisch bij, dus een hernoeming in het designsysteem
 kan je app niet breken. Bij npm met een caret-range komt een nieuwe minor
 binnen bij de eerstvolgende installatie, en een attribuut dat stil is hernoemd
 laat dan al je meldingen verdwijnen zonder dat iemand iets wijzigde.
