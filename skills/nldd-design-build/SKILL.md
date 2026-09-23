@@ -191,7 +191,7 @@ Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan [`n
 3. **[`reference.md`](../nldd-design/reference.md)**: offline snelreferentie van alle elementen.
 4. **[`patterns/`](patterns/)**: hoe je die elementen samenstelt, met het waarom erbij. De referentie zegt wat een component kan; een patroon zegt hoe je er een taak mee afhandelt.
 5. **[`changelog.md`](../nldd-design/changelog.md)**: de release notes per versie. Raadpleeg dit als een attribuut, slot of gedrag pas vanaf een bepaalde versie bestaat, of om te zien wat er sinds jouw versie is veranderd.
-6. **[`design-guidelines.md`](../nldd-design/design-guidelines.md)**: de interface- en ontwerpvoorkeuren van het systeem (invoer en formulieren, navigatie, feedback en state, microcopy, visuele hiërarchie, strategie). Dit is de canonieke bron voor *ontwerp*keuzes; raadpleeg het bij vormgeven, microcopy schrijven of een UI reviewen. Deze SKILL.md beschrijft de component-*mechaniek*, de guidelines beschrijven de keuzes erachter.
+6. **[`design-guidelines.md`](../nldd-design/design-guidelines.md)**: de interface- en ontwerpvoorkeuren van het systeem (invoer en formulieren, navigatie, feedback en state, copywriting, visuele hiërarchie, strategie). Dit is de canonieke bron voor *ontwerp*keuzes; raadpleeg het bij vormgeven, microcopy schrijven of een UI reviewen. Deze SKILL.md beschrijft de component-*mechaniek*, de guidelines beschrijven de keuzes erachter.
 
 **Iconen.** `icon="…"`, op `nldd-icon` en op elk component dat een icoon rendert, accepteert namen uit een vaste set. De volledige lijst (iconen plus aliassen) staat onder "Iconen" in [`reference.md`](../nldd-design/reference.md); verzin geen naam, kies er een uit die set.
 
