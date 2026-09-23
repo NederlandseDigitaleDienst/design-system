@@ -35,9 +35,10 @@ zodra er een app-view op de pagina staat. Plaats je inhoud erin.
     <nldd-container padding="16"
       sm-padding="8"
     >
-      <nldd-title size="1">
-        <h1>Subsidieaanvraag</h1>
-      </nldd-title>
+      <nldd-title size="1"
+        text="Subsidieaanvraag"
+        heading-level="1"
+      ></nldd-title>
 
       <nldd-spacer size="24"></nldd-spacer>
 

@@ -1,4 +1,5 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
+import { useArgs } from 'storybook/preview-api';
 import './popover.js';
 import '../container/container.js';
 import '../../actions/button/button.js';
@@ -40,7 +41,30 @@ export default {
 		},
 		status: { type: 'experimental' },
 	},
+	args: {
+		width: '',
+		smFullHeight: false,
+		placement: 'bottom-start',
+		top: '',
+		right: '',
+		bottom: '',
+		left: '',
+		centered: false,
+		accessibleLabel: 'Voorbeeld popover',
+		open: false,
+	},
 	argTypes: {
+		width: {
+			control: 'text',
+			description: 'Breedte als CSS-lengte, bijvoorbeeld `400px`. Een breedte uit de inhoud (`fit-content`, `auto`) wordt genegeerd.',
+			table: { defaultValue: { summary: '320px' } },
+		},
+		smFullHeight: {
+			name: 'sm-full-height',
+			control: 'boolean',
+			description: 'Op sm, waar de popover een bottom sheet is, de volle hoogte vullen in plaats van mee te krimpen met de inhoud.',
+			table: { defaultValue: { summary: false } },
+		},
 		placement: {
 			control: 'select',
 			options: [
@@ -49,51 +73,78 @@ export default {
 				'right-start', 'right', 'right-end',
 				'left-start', 'left', 'left-end',
 			],
-			description: 'Floating UI placement t.o.v. anchor',
+			description: 'Plaats ten opzichte van het anker.',
 			table: { defaultValue: { summary: 'bottom-start' } },
 		},
-		width: {
+		top: {
 			control: 'text',
-			description: 'Expliciete width (bv. "400px"). Default 320px via CSS variable.',
-			table: { defaultValue: { summary: '320px' } },
+			description: 'Afstand tot de bovenrand van het scherm. Met een rand of `centered` staat de popover los van zijn anker.',
+		},
+		right: {
+			control: 'text',
+			description: 'Afstand tot de rechterrand van het scherm. Zie `top`.',
+		},
+		bottom: {
+			control: 'text',
+			description: 'Afstand tot de onderrand van het scherm. Zie `top`.',
+		},
+		left: {
+			control: 'text',
+			description: 'Afstand tot de linkerrand van het scherm. Zie `top`.',
+		},
+		centered: {
+			control: 'boolean',
+			description: 'Centreert de popover op het scherm, los van zijn anker. Een rand die je zet wint op zijn eigen as.',
+			table: { defaultValue: { summary: false } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
-			description: 'Toegankelijke naam (aria-label). Verplicht.',
+			description: 'Toegankelijke naam van de popover. Verplicht: zonder label heet elke popover "Popover".',
 			table: { defaultValue: { summary: 'Popover' } },
 		},
-	},
-	args: {
-		placement: 'bottom-start',
-		width: '',
-		accessibleLabel: 'Voorbeeld popover',
+		open: {
+			control: 'boolean',
+			description: 'Of de popover open is. Aanzetten opent hem bij zijn anker; sluit hij zichzelf (Escape, een klik erbuiten, het anker), dan gaat `open` vanzelf weer uit.',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
-const Template = ({ placement, width, accessibleLabel }: Record<string, any>) => html`
-	<nldd-button id="trigger-default" text="Open popover"></nldd-button>
-
-	<nldd-popover
-		anchor="trigger-default"
-		placement=${placement}
-		width=${width || ''}
-		accessible-label=${accessibleLabel}
-	>
-		<nldd-container padding="16">
-			<nldd-rich-text>
-				<p>Dit is een eenvoudige popover. Klik buiten of druk op Esc om te sluiten.</p>
-			</nldd-rich-text>
-		</nldd-container>
-	</nldd-popover>
-`;
+const Template = ({ width, smFullHeight, placement, top, right, bottom, left, centered, accessibleLabel, open }: Record<string, any>) => {
+	const [, updateArgs] = useArgs();
+	return html`
+		<nldd-button id="trigger-default" text="Open popover"></nldd-button>
+		<nldd-popover
+			width=${width || nothing}
+			?sm-full-height=${smFullHeight}
+			anchor="trigger-default"
+			placement=${placement}
+			top=${top || nothing}
+			right=${right || nothing}
+			bottom=${bottom || nothing}
+			left=${left || nothing}
+			?centered=${centered}
+			accessible-label=${accessibleLabel}
+			?open=${open}
+			@open=${() => updateArgs({ open: true })}
+			@close=${() => updateArgs({ open: false })}
+		>
+			<nldd-container padding="16">
+				<nldd-rich-text>
+					<p>Dit is een eenvoudige popover. Klik buiten of druk op Esc om te sluiten.</p>
+				</nldd-rich-text>
+			</nldd-container>
+		</nldd-popover>
+	`;
+};
 
 export const Standaard = {
 	render: Template,
 };
 
 /* eslint-disable lit-a11y/no-autofocus -- de popover leest [autofocus] als gedocumenteerde focus-target-API bij openen */
-export const MetForm = {
+export const MetFormulier = {
 	render: () => html`
 		<nldd-button id="trigger-form" text="Open form"></nldd-button>
 
@@ -122,7 +173,7 @@ export const MetForm = {
 };
 /* eslint-enable lit-a11y/no-autofocus */
 
-export const Placements = {
+export const Plaatsingen = {
 	render: () => html`
 		<div style="display: flex; gap: 1rem; align-items: center; justify-content: center; min-height: 320px;">
 			<nldd-button id="trigger-placement-bottom-start" text="Bottom start"></nldd-button>

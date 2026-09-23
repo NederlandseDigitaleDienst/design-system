@@ -67,38 +67,22 @@ function onKvkInput(event) {
 </template>
 ```
 
-## 4. Een sheet aansturen via de imperatieve API
+## 4. Een sheet openen en sluiten met `open`
 
-`nldd-sheet` (net als popover en modal) stelt `show()` en `hide()` beschikbaar.
-Mount het element niet in en uit met `v-if`; dan slaat de animatie over en
-verlies je DOM-toestand. Spiegel in plaats daarvan een ref naar `show()`/`hide()`.
+`nldd-sheet` heeft, net als window, modal en popover, een attribuut `open`.
+Bind je toestand daaraan. Mount het element niet in en uit met `v-if`: dan
+slaat de animatie over en verlies je DOM-toestand.
 
 ```vue
 <script setup>
-import { ref, watch, nextTick } from 'vue';
-
-const props = defineProps({ open: Boolean });
+defineProps({ open: Boolean });
 const emit = defineEmits(['close']);
-const sheetEl = ref(null);
-
-watch(
-  () => props.open,
-  async (open) => {
-    if (!open) {
-      sheetEl.value?.hide();
-      return;
-    }
-    await nextTick();
-    sheetEl.value?.show();
-  },
-  { immediate: true },
-);
 </script>
 
 <template>
   <nldd-sheet
-    ref="sheetEl"
     placement="right"
+    :open="open"
     @close="emit('close')"
   >
     <nldd-page>
@@ -113,13 +97,15 @@ watch(
 </template>
 ```
 
+**Laat `close` je toestand uitzetten.** De sheet sluit zichzelf bij Esc, een
+klik ernaast of de sluitknop. Hij zet dan `open` uit en vuurt `close`. Zet in
+de handler je eigen toestand uit, zodat de binding en de sheet hetzelfde zeggen.
+
 **Eén handler, niet twee.** Luister alleen naar `@close` op de sheet, niet ook
 naar `@dismiss` op de title-bar. De sheet vangt het bubbelende `dismiss`-event
-zelf op en roept intern `hide()` aan, wat `close` vuurt. Zou je daarnaast
-`@dismiss="emit('close')"` zetten, dan krijg je twee `close`-emits op één klik.
+zelf op en sluit. Zou je daarnaast `@dismiss="emit('close')"` zetten, dan krijg
+je twee `close`-emits op één klik.
 
-**Waarom de `@close` `emit('close')` aanroept en niet direct `hide()`:** de
-sheet sluit zichzelf bij Esc, klik-buiten of de dismiss-knop en vuurt dan
-`close`. Laat dat de gedeelde `open`-state omlaag zetten, zodat de `watch` één
-keer `hide()` doet. Roep je in de handler zelf weer `hide()` aan, dan krijg je
-een `hide()` → `@close` → `hide()` lus.
+**De titel is de naam.** De sheet neemt de tekst van zijn titelbalk over als
+toegankelijke naam. Een `accessible-label` is alleen nodig als de naam anders
+moet luiden dan de titel.

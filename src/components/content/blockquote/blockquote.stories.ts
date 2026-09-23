@@ -55,18 +55,18 @@ const Template = ({ quote, attribution, cite }: Record<string, any>) => html`
 	</nldd-blockquote>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const WithCiteUrl = {
+export const MetCite = {
 	render: Template,
 	args: {
 		cite: 'https://www.digitaleoverheid.nl/',
 	},
 };
 
-export const LongQuote = {
+export const LangCitaat = {
 	render: () => html`
 		<nldd-blockquote>
 			<p>

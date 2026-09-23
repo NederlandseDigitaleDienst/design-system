@@ -179,7 +179,7 @@ export const Types = {
  * De maat gebruikt dezelfde spacer-uitgelijnde schaal als `nldd-icon`. De
  * initialen en het terugval-icoon schalen mee.
  */
-export const Maten = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			${SIZES.map(size => html`
@@ -238,7 +238,7 @@ export const IcoonUitlijning = {
 		<div style="display: flex; gap: 24px; align-items: center;">
 			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
 				icoon
-				<nldd-icon name="person" size="24" style="outline: 1px dashed var(--semantics-dividers-color);"></nldd-icon>
+				<nldd-icon icon="person" size="24" style="outline: 1px dashed var(--semantics-dividers-color);"></nldd-icon>
 			</span>
 			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
 				avatar (edge-to-edge)

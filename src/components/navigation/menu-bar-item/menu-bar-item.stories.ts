@@ -65,11 +65,11 @@ const Template = ({
 	></nldd-menu-bar-item>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const WithIcon = {
+export const MetIcoon = {
 	render: Template,
 	args: {
 		text: 'Zoeken',
@@ -77,7 +77,8 @@ export const WithIcon = {
 	},
 };
 
-export const Current = {
+export const ToestandCurrent = {
+	name: 'Toestand current',
 	render: Template,
 	args: {
 		text: 'Home',
@@ -85,7 +86,7 @@ export const Current = {
 	},
 };
 
-export const AsLink = {
+export const AlsLink = {
 	render: Template,
 	args: {
 		text: 'Home',
@@ -93,7 +94,7 @@ export const AsLink = {
 	},
 };
 
-export const IconOnly = {
+export const AlleenIcoon = {
 	render: Template,
 	args: {
 		text: 'Zoeken',
@@ -103,6 +104,7 @@ export const IconOnly = {
 };
 
 export const ContentPriorityIcon = {
+	name: 'Content-priority icon',
 	render: Template,
 	args: {
 		text: 'Zoeken',
@@ -113,6 +115,7 @@ export const ContentPriorityIcon = {
 };
 
 export const ContentPriorityText = {
+	name: 'Content-priority text',
 	render: Template,
 	args: {
 		text: 'Mijn DigID',
@@ -122,7 +125,8 @@ export const ContentPriorityText = {
 	},
 };
 
-export const Disabled = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: {
 		text: 'Uitgeschakeld',
@@ -130,7 +134,7 @@ export const Disabled = {
 	},
 };
 
-export const Expandable = {
+export const MetExpandable = {
 	render: () => html`
 		<nldd-menu-bar-item text="Account" icon="person" expandable>
 			<nldd-menu>
@@ -144,7 +148,7 @@ export const Expandable = {
 	parameters: { controls: { disable: true } },
 };
 
-export const AllStates = {
+export const AlleToestanden = {
 	render: () => html`
 		<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
 			<nldd-menu-bar-item text="Default"></nldd-menu-bar-item>

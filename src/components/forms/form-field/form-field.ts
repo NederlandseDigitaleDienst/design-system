@@ -1,14 +1,25 @@
 /**
  * Nederlandse Digitale Dienst Form Field Components (Lit + TypeScript)
  *
+ * A field around one input: its label, supporting label, optional badge,
+ * validation and help text. It finds the input among its children, hands it
+ * the label as its accessible name and gives it an id, so you write no `for`
+ * or `id` yourself.
+ *
+ * Mark the optional fields with `optional`, not the required ones; the design
+ * guidelines say why. Put the requirements on a value in an
+ * nldd-validation-list inside the same field. What only your server knows,
+ * such as a password found in a breach, the app names in `unmet` on the input
+ * itself: see nldd-validation-list.
+ *
  * @element nldd-form-field
  *
  * @attr {string} label-alignment - 'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.
- * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
  * @attr {string} label - Field label text. Omit for no-label layout.
  * @attr {string} supporting-label - Short supporting text below the label. Same typography as optional badge.
  * @attr {boolean} optional - Shows an optional badge next to the label.
  * @attr {string} optional-label - Text for the optional badge. Defaults to 'Optioneel'.
+ * @attr {string} form-label-alignment - Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.
  *
  * @slot - The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text.
  *

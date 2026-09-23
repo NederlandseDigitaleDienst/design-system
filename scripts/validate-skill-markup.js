@@ -1,10 +1,11 @@
 /**
- * Checks the nldd-* markup in the hand-written skill docs against the real API.
+ * Checks the nldd-* markup in the skill docs against the real API.
  *
  * reference.md is generated, so it cannot drift: a stale attribute there fails
- * the drift check in CI. SKILL.md, patterns/*.md and examples/*.md are written
- * by hand and nothing checked them, so a renamed attribute could sit in the
- * consumer skill until someone hit it in their own app. Those code blocks are
+ * the drift check in CI. SKILL.md and examples/*.md are written by hand, and
+ * patterns/*.md are generated from the markup in src/patterns/, which nothing
+ * else checks. A renamed attribute could sit in the consumer skill until
+ * someone hit it in their own app. Those code blocks are
  * what a consumer (or an agent reading the skill) copies, so a tag or attribute
  * that does not exist is a bug we ship.
  *
@@ -15,7 +16,7 @@
  *
  * What it flags: an unknown `<nldd-*>` tag, an attribute the tag does not
  * document (mixin attributes included), a `slot=` the surrounding component does
- * not declare, and an `<nldd-icon name>` outside the icon set.
+ * not declare, and an `icon` value outside the icon set.
  *
  * Usage: node scripts/validate-skill-markup.js
  */

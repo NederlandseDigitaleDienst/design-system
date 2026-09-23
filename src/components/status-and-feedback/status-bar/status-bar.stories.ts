@@ -118,7 +118,7 @@ export const AlsLink = {
 	parameters: { controls: { disable: true } },
 };
 
-export const AlsButton = {
+export const AlsKnop = {
 	render: () => html`
 		<nldd-status-bar variant="accent"
 			text="U werkt in een testomgeving — terug naar de live-omgeving"

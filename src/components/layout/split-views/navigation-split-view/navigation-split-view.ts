@@ -11,11 +11,11 @@
  * Use <code>nldd-split-view-pane</code> as direct children for automatic
  * back button handling.
  *
- * @attr {boolean} inspector-auto-hidden - Inspector hidden to free up space for other panes (read-only, set by the split view)
  * @attr {boolean} inspector-as-sheet - Always show the inspector as a sheet regardless of available space
  * @attr {boolean} primary-sidebar-as-sheet - Always show the primary sidebar as a sheet, keeping main visible at full width
  * @attr {string} inspector-accessible-label - Accessible name for the inspector sheet dialog (default: 'Details')
  * @attr {string} primary-sidebar-accessible-label - Accessible name for the primary sidebar sheet dialog (default: 'Navigatie')
+ * @attr {boolean} inspector-auto-hidden - Inspector hidden to free up space for other panes (read-only, set by the split view)
  * @attr {boolean} sidebar-as-sheet - @deprecated alias for primary-sidebar-as-sheet (kept for backwards compatibility)
  * @attr {string} sidebar-accessible-label - @deprecated alias for primary-sidebar-accessible-label (kept for backwards compatibility)
  *
@@ -48,20 +48,11 @@ export class NLDDNavigationSplitView extends LitElement {
 	// visible full-stack pane flow (do not clip) in root-scroll mode.
 	private _scrollMode = new ScrollModeController(this);
 
-	@property({ type: Boolean, reflect: true, attribute: 'inspector-auto-hidden' })
-	inspectorAutoHidden = false;
-
 	@property({ type: Boolean, reflect: true, attribute: 'inspector-as-sheet' })
 	inspectorAsSheet = false;
 
 	@property({ type: Boolean, reflect: true, attribute: 'primary-sidebar-as-sheet' })
 	primarySidebarAsSheet = false;
-
-	/**
-	 * @deprecated Use primary-sidebar-as-sheet. Kept as an alias for backwards compatibility.
-	 */
-	@property({ type: Boolean, reflect: true, attribute: 'sidebar-as-sheet' })
-	sidebarAsSheet = false;
 
 	/** Accessible name for the inspector sheet dialog. */
 	@property({ type: String, attribute: 'inspector-accessible-label' })
@@ -70,6 +61,15 @@ export class NLDDNavigationSplitView extends LitElement {
 	/** Accessible name for the primary sidebar sheet dialog. */
 	@property({ type: String, attribute: 'primary-sidebar-accessible-label' })
 	primarySidebarAccessibleLabel = 'Navigatie';
+
+	@property({ type: Boolean, reflect: true, attribute: 'inspector-auto-hidden' })
+	inspectorAutoHidden = false;
+
+	/**
+	 * @deprecated Use primary-sidebar-as-sheet. Kept as an alias for backwards compatibility.
+	 */
+	@property({ type: Boolean, reflect: true, attribute: 'sidebar-as-sheet' })
+	sidebarAsSheet = false;
 
 	/**
 	 * @deprecated Use primary-sidebar-accessible-label. Kept as an alias for backwards compatibility.

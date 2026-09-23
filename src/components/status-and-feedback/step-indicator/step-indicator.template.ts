@@ -43,9 +43,9 @@ export function stepIndicatorItemTemplate(component: NLDDStepIndicatorItem): Tem
 	// A past step shows a check mark instead of its number; the number stays in
 	// the status text for anyone who can't see it.
 	const marker = component.icon
-		? html`<nldd-icon class="step-indicator__item-icon" name=${component.icon}></nldd-icon>`
+		? html`<nldd-icon class="step-indicator__item-icon" icon=${component.icon}></nldd-icon>`
 		: status === 'past'
-			? html`<nldd-icon class="step-indicator__item-icon" name="check-mark"></nldd-icon>`
+			? html`<nldd-icon class="step-indicator__item-icon" icon="check-mark"></nldd-icon>`
 			: html`<span class="step-indicator__item-number">${component._index}</span>`;
 
 	const content = html`

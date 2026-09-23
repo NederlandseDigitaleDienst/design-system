@@ -246,7 +246,7 @@ describe('nldd-list-item – expanded', () => {
 			`<nldd-list type="tree" accessible-label="X">
 				<nldd-list-item>
 					<nldd-list-item-segment button disclosure accessible-label="Uitklappen">
-						<nldd-icon-cell size="20"><nldd-icon name="chevron-right"></nldd-icon></nldd-icon-cell>
+						<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 					</nldd-list-item-segment>
 					<nldd-text-cell text="Tak"></nldd-text-cell>
 					<nldd-list-item slot="children"><nldd-text-cell text="Blad"></nldd-text-cell></nldd-list-item>

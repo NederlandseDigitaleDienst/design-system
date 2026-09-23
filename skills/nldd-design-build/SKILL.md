@@ -300,30 +300,28 @@ onderbreking verdienen.
 > is undo boven confirm en een contextueel-window (popover) boven een modal; zie
 > [`design-guidelines.md`](../nldd-design/design-guidelines.md) ("Feedback en state").
 
-### Imperatieve API spiegelen (sheets, popovers, modals)
+### Overlays openen met `open` (sheets, windows, modals, popovers)
 
-Deze surfaces stellen `show()` en `hide()` beschikbaar als methoden. Spiegel je
-toestand naar die calls in plaats van het element te mounten/unmounten, zodat de
-animatie speelt. Spiegel óók de andere kant op, anders krijg je een
-`hide()` → `@close` → `hide()` lus.
+Deze overlays hebben een attribuut `open`. Bind je toestand daaraan, en koppel
+het `close`-event aan diezelfde toestand. Sluit de gebruiker de overlay zelf,
+met Esc, een klik ernaast of de sluitknop in de titelbalk, dan zet de overlay
+`open` uit en vuurt hij `close`.
 
-```js
-// Vue, vereenvoudigd uit regelrecht
-watch(() => props.open, async (open) => {
-  if (!open) { sheetEl.value?.hide(); return; }
-  await nextTick();
-  sheetEl.value?.show();
-}, { immediate: true });
+```html
+<!-- Vue -->
+<nldd-sheet :open="isOpen" @close="isOpen = false">
+  <nldd-page>
+    <nldd-top-title-bar slot="header" text="Bewerken" dismiss-text="Sluiten"></nldd-top-title-bar>
+  </nldd-page>
+</nldd-sheet>
 ```
 
-*Waarom:* mount/unmount slaat de in- en uit-animatie over en verliest
-DOM-toestand. De imperatieve methoden animeren wel.
+*Waarom:* laat het element staan en mount het niet pas bij het openen. Mounten
+en unmounten slaan de in- en uitanimatie over en verliezen DOM-toestand.
 
-Belangrijk: dit fragment toont alleen de `watch`-kant. De sheet sluit zichzelf
-bij Esc of klik-buiten en vuurt dan `close`; koppel `@close` aan een
-`emit('close')` die diezelfde `open`-state omlaag zet, niet aan een directe
-`hide()`. Anders krijg je de `hide()` → `@close` → `hide()` lus. Het complete,
-werkende component staat in [`examples/bootstrap-vue.md`](examples/bootstrap-vue.md).
+`show()` en `hide()` bestaan nog en zetten `open` mee. Gebruik ze in code
+zonder binding. Een popover opent alleen bij zijn anker. Het complete
+Vue-component staat in [`examples/bootstrap-vue.md`](examples/bootstrap-vue.md).
 
 ### Lijstrijen componeren uit cellen
 
@@ -533,7 +531,7 @@ dus het versienummer zegt niet of een sprong veilig is. De changelog wel.
    UI reviewen. Deze SKILL.md beschrijft de component-*mechaniek*, de guidelines
    beschrijven de keuzes erachter.
 
-**Iconen.** `nldd-icon name="…"` accepteert namen uit een vaste set. De
+**Iconen.** `icon="…"`, op `nldd-icon` en op elk component dat een icoon rendert, accepteert namen uit een vaste set. De
 volledige lijst (iconen plus aliassen) staat onder "Iconen" in
 [`reference.md`](../nldd-design/reference.md); verzin geen naam, kies er een uit die set.
 

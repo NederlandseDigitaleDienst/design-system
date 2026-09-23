@@ -143,15 +143,12 @@ export function checkMarkup(source, { api, mixinAttrs = new Set(), iconNames = n
 			if (parent && api.get(parent)?.attrs.has(attr)) continue;
 			problems.push({ line, message: `<${tag}> heeft geen attribuut "${name}"` });
 		}
-		// Icon names live in two places: `name` on nldd-icon, and `icon` on the
-		// 17 components that render one themselves (banner, tag, menu-item,
-		// icon-cell and so on). Checking only nldd-icon missed those, which is
-		// how a wrong icon name reached a consumer before (see the Fundament
-		// commit "repair broken icon names").
-		const iconAttr = attrs.find((a) => {
-			const n = a.name.toLowerCase();
-			return n === 'icon' || (tag === 'nldd-icon' && n === 'name');
-		});
+		// Icon names live in `icon`, on nldd-icon and on the 17 components that
+		// render one themselves (banner, tag, menu-item, icon-cell and so on).
+		// Checking only nldd-icon missed those, which is how a wrong icon name
+		// reached a consumer before (see the Fundament commit "repair broken
+		// icon names").
+		const iconAttr = attrs.find((a) => a.name.toLowerCase() === 'icon');
 		// Skip a bound value: the name then comes from the app, not the doc.
 		if (iconAttr?.value && !iconAttr.value.includes('{') && !iconNames.has(iconAttr.value)) {
 			problems.push({ line, message: `onbekende icoonnaam "${iconAttr.value}"` });

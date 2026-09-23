@@ -93,7 +93,7 @@ export const template = ({
 								<div class="list__search-field-icon"
 									aria-hidden="true"
 								>
-									<nldd-icon name="search"></nldd-icon>
+									<nldd-icon icon="search"></nldd-icon>
 								</div>
 								<input class="list__search-field-input"
 									type="text"

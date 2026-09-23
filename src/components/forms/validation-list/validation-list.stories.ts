@@ -76,7 +76,7 @@ regel herhalen zegt hetzelfde drie keer.
  * genoemd. De control loopt hier mee met de schakelaar, want zo staat het in een
  * echte app: het formulier keurt af, en de lijst volgt.
  */
-export const Default = ({ hint, judging, for: control }: Record<string, unknown>) => html`
+export const Standaard = ({ hint, judging, for: control }: Record<string, unknown>) => html`
 	<nldd-form-field label="Wachtwoord">
 		<nldd-password-field id="password" name="password" ?invalid=${judging}></nldd-password-field>
 		<nldd-validation-list ?hint=${hint} ?judging=${judging} for=${control || nothing}>

@@ -39,6 +39,10 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		inspectorAsSheet: false,
+		primarySidebarAsSheet: false,
+	},
 	argTypes: {
 		inspectorAsSheet: {
 			name: 'inspector-as-sheet',
@@ -52,10 +56,6 @@ export default {
 			description: 'Toon de zijbalk altijd als sheet, inhoudsgebied blijft altijd zichtbaar',
 			table: { defaultValue: { summary: 'false' } },
 		},
-	},
-	args: {
-		inspectorAsSheet: false,
-		primarySidebarAsSheet: false,
 	},
 };
 
@@ -98,7 +98,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 			?primary-sidebar-as-sheet=${primarySidebarAsSheet}
 		>
 			<nldd-split-view-pane slot="primary-sidebar">
-				<nldd-page sticky-header>
+				<nldd-page sticky-header accessible-label="Navigatie">
 					<nldd-top-title-bar
 						slot="header"
 						text="Zijbalk"
@@ -125,7 +125,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 			</nldd-split-view-pane>
 
 			<nldd-split-view-pane slot="secondary-sidebar" has-content>
-				<nldd-page sticky-header>
+				<nldd-page sticky-header accessible-label="Tweede navigatie">
 					<nldd-top-title-bar
 						slot="header"
 						text="Secundaire zijbalk"
@@ -151,7 +151,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 			</nldd-split-view-pane>
 
 			<nldd-split-view-pane slot="main" has-content>
-				<nldd-page sticky-header>
+				<nldd-page sticky-header landmarks="page">
 					<nldd-top-title-bar
 						slot="header"
 						text="Inhoud"
@@ -182,7 +182,7 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 			</nldd-split-view-pane>
 
 			<nldd-split-view-pane slot="inspector">
-				<nldd-page sticky-header>
+				<nldd-page sticky-header accessible-label="Details">
 					<nldd-top-title-bar
 						slot="header"
 						text="Inspecteur"
@@ -240,7 +240,7 @@ export const GenestdeSplitView = {
 		<nldd-split-view-pane slot="main" has-content>
 			<nldd-bar-split-view>
 				<nldd-split-view-pane slot="main">
-					<nldd-page sticky-header>
+					<nldd-page sticky-header landmarks="page">
 						<nldd-top-title-bar
 							slot="header"
 							text="Inhoud"

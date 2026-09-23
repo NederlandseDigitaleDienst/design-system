@@ -120,7 +120,7 @@ export const topTitleBarStyles = css`
 		white-space: nowrap;
 	}
 
-	.top-title-bar__title:has(+ .top-title-bar__subtitle) {
+	.top-title-bar__title:has(+ .top-title-bar__supporting-text) {
 		font: var(--primitives-font-body-md-semi-bold-flat);
 	}
 
@@ -130,7 +130,7 @@ export const topTitleBarStyles = css`
 		}
 	}
 
-	.top-title-bar__subtitle {
+	.top-title-bar__supporting-text {
 		margin: 0;
 		overflow: hidden;
 		color: var(--semantics-content-secondary-color);

@@ -4,14 +4,20 @@
  * A modal window with overlay backdrop, based on the native <dialog> element.
  * Internally renders an <nldd-inline-dialog> for the visual structure.
  *
+ * Open and close it with `open`, bound to your state together with the close
+ * event: the dialog clears `open` itself when the user closes it. show() and
+ * hide() do the same for code without a binding. Keep the dialog in the DOM
+ * rather than mounting it when it opens, or the animations are skipped.
+ *
  * @element nldd-modal-dialog
  *
  * @attr {'alert'} variant - Forwarded to nldd-inline-dialog; 'alert' forces icon and color
- * @attr {string} icon - Forwarded to nldd-inline-dialog; absent when not set
+ * @attr {'left'|'center'} horizontal-alignment - Forwarded to nldd-inline-dialog. Unset derives it there: slotted content aligns left, a bare message stays centered.
  * @attr {string} text - Forwarded to nldd-inline-dialog; main text
  * @attr {string} supporting-text - Forwarded to nldd-inline-dialog; supporting text
- * @attr {'left'|'center'} horizontal-alignment - Forwarded to nldd-inline-dialog. Unset derives it there: slotted content aligns left, a bare message stays centered.
+ * @attr {string} icon - Forwarded to nldd-inline-dialog; absent when not set
  * @attr {string} accessible-label - Accessible name for the dialog (aria-label); falls back to text
+ * @attr {boolean} open - Whether the dialog is open. Set it to open or close the dialog, as an alternative to show() and hide(). The dialog clears it itself when it closes another way (Escape, the backdrop), so bind it together with the close event.
  *
  * @slot - Optional custom content, forwarded to nldd-inline-dialog
  * @slot actions - nldd-button elements, forwarded to nldd-inline-dialog
@@ -45,8 +51,8 @@ export class NLDDModalDialog extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<InlineDialogVariant | ''>('') })
 	variant: InlineDialogVariant | '' = '';
 
-	@property({ type: String, reflect: true })
-	icon = '';
+	@property({ reflect: true, attribute: 'horizontal-alignment', converter: reflectNonDefault<InlineDialogHorizontalAlignment | ''>('') })
+	horizontalAlignment: InlineDialogHorizontalAlignment | '' = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
@@ -54,12 +60,23 @@ export class NLDDModalDialog extends LitElement {
 	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
 	supportingText = '';
 
-	@property({ reflect: true, attribute: 'horizontal-alignment', converter: reflectNonDefault<InlineDialogHorizontalAlignment | ''>('') })
-	horizontalAlignment: InlineDialogHorizontalAlignment | '' = '';
+	@property({ type: String, reflect: true })
+	icon = '';
 
 	/** Accessible name for the dialog — forwarded as aria-label. Falls back to text. */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
+
+	@property({ type: Boolean, reflect: true })
+	open = false;
+
+	override updated(changed: Map<string, unknown>): void {
+		if (changed.has('open')) {
+			const dialog = this._dialog;
+			if (this.open && (!dialog?.open || this._closing)) this.show();
+			else if (!this.open && dialog?.open && !this._closing) this.hide();
+		}
+	}
 
 	private _closing = false;
 
@@ -85,9 +102,17 @@ export class NLDDModalDialog extends LitElement {
 		this._cancelPendingOpen?.();
 		this._cancelPendingOpen = null;
 
-		if (dialog.open) return;
-		dialog.showModal();
-		this._manageFocus();
+		if (this._closing) {
+			// Opened again while the close animation runs: call the close off.
+			window.clearTimeout(this._closeFallback);
+			this._closing = false;
+			dialog.classList.remove('is-closing');
+		} else {
+			if (dialog.open) return;
+			dialog.showModal();
+			this._manageFocus();
+		}
+		this.open = true;
 		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
 	}
 
@@ -112,6 +137,7 @@ export class NLDDModalDialog extends LitElement {
 		const dialog = this._dialog;
 		if (!dialog || !dialog.open || this._closing) return;
 
+		this.open = false;
 		this._closing = true;
 		dialog.classList.add('is-closing');
 

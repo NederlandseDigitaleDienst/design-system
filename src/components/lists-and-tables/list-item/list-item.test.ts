@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement, installUniversalReset, nextFrames } from '../../../test-utils.js';
 import { _resetInputModalityForTesting, getInputModality } from '../../../utilities/input-modality.js';
 import './list-item.js';
@@ -718,7 +718,7 @@ describe('nldd-list-item – divider markers', () => {
 			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
-						<nldd-icon-cell size="20"><nldd-icon name="star"></nldd-icon></nldd-icon-cell>
+						<nldd-icon-cell size="20"><nldd-icon icon="star"></nldd-icon></nldd-icon-cell>
 						<nldd-spacer-cell size="40"></nldd-spacer-cell>
 						<nldd-text-cell text="Met icoon"></nldd-text-cell>
 					</nldd-list-item>
@@ -738,7 +738,7 @@ describe('nldd-list-item – divider markers', () => {
 			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
-						<nldd-icon-cell divider-start size="20"><nldd-icon name="star"></nldd-icon></nldd-icon-cell>
+						<nldd-icon-cell divider-start size="20"><nldd-icon icon="star"></nldd-icon></nldd-icon-cell>
 						<nldd-spacer-cell size="40"></nldd-spacer-cell>
 						<nldd-text-cell text="Met icoon"></nldd-text-cell>
 					</nldd-list-item>
@@ -825,7 +825,7 @@ describe('nldd-list-item – divider markers', () => {
 						<nldd-cell width="fit-content"><nldd-avatar name="Bart" style="width: 32px; height: 32px"></nldd-avatar></nldd-cell>
 						<nldd-spacer-cell size="40"></nldd-spacer-cell>
 						<nldd-list-item-segment button width="full">
-							<nldd-icon-cell size="20"><nldd-icon name="star"></nldd-icon></nldd-icon-cell>
+							<nldd-icon-cell size="20"><nldd-icon icon="star"></nldd-icon></nldd-icon-cell>
 							<nldd-spacer-cell size="40"></nldd-spacer-cell>
 							<nldd-text-cell text="Na het icoon"></nldd-text-cell>
 						</nldd-list-item-segment>
@@ -874,7 +874,7 @@ describe('nldd-list-item – divider markers', () => {
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-text-cell text="Geen icoon"></nldd-text-cell>
-						<nldd-icon-cell size="20"><nldd-icon name="chevron-right"></nldd-icon></nldd-icon-cell>
+						<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 					</nldd-list-item>
 				</nldd-list>
 			</div>
@@ -932,7 +932,7 @@ describe('nldd-list-item – divider markers', () => {
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-spacer-cell size="40"></nldd-spacer-cell>
-						<nldd-icon-cell divider-start size="20"><nldd-icon name="star"></nldd-icon></nldd-icon-cell>
+						<nldd-icon-cell divider-start size="20"><nldd-icon icon="star"></nldd-icon></nldd-icon-cell>
 					</nldd-list-item>
 				</nldd-list>
 			</div>
@@ -1097,7 +1097,7 @@ describe('nldd-list-item divider met verborgen cellen', () => {
 		const el = await fixture(`
 			<nldd-list>
 				<nldd-list-item>
-					<nldd-cell><nldd-icon name="info"></nldd-icon></nldd-cell>
+					<nldd-cell><nldd-icon icon="info"></nldd-icon></nldd-cell>
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
 					<nldd-text-cell divider-start style="display: none" text="Verborgen"></nldd-text-cell>
 					<nldd-text-cell divider-start text="Zichtbaar"></nldd-text-cell>
@@ -1129,7 +1129,7 @@ describe('nldd-list-item divider zonder eigen marker', () => {
 		const el = await fixture(`
 			<nldd-list>
 				<nldd-list-item>
-					<nldd-cell><nldd-icon name="info"></nldd-icon></nldd-cell>
+					<nldd-cell><nldd-icon icon="info"></nldd-icon></nldd-cell>
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
 					<nldd-text-cell style="display: none" text="Verborgen"></nldd-text-cell>
 					<nldd-text-cell text="Zichtbaar"></nldd-text-cell>
@@ -1296,5 +1296,106 @@ describe('nldd-list-item – disabled', () => {
 		await waitForUpdate(el);
 		const rows = [...el.querySelectorAll('nldd-list-item')] as NLDDListItem[];
 		expect(rows[1]._isRovingStop).toBe(false);
+	});
+});
+
+describe('nldd-list-item – what goes in a row', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const strayWarnings = (warn: { mock: { calls: unknown[][] } }) =>
+		warn.mock.calls.filter(([message]) => String(message).includes('sits directly in a row'));
+
+	const mount = async (content: string) => {
+		el = await fixture(`<nldd-list><nldd-list-item button>${content}</nldd-list-item></nldd-list>`);
+		const row = el.querySelector('nldd-list-item') as HTMLElement;
+		await waitForUpdate(row);
+		await nextFrames();
+	};
+
+	it('warns about bare text in a row', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		await mount('Dossier 2024-001');
+		expect(strayWarnings(warn)).toHaveLength(1);
+		expect(String(strayWarnings(warn)[0][0])).toContain('bare text ("Dossier 2024-001")');
+	});
+
+	it('warns about an element that is not a cell or a segment', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		await mount('<span>Dossier</span>');
+		expect(strayWarnings(warn)).toHaveLength(1);
+		expect(String(strayWarnings(warn)[0][0])).toContain('<span>');
+	});
+
+	it('does not warn about cells, segments or whitespace', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		await mount(`
+			<nldd-text-cell text="Dossier"></nldd-text-cell>
+			<nldd-cell></nldd-cell>
+		`);
+		expect(strayWarnings(warn)).toHaveLength(0);
+		cleanup(el);
+		el = await fixture(`<nldd-list><nldd-list-item>
+			<nldd-list-item-segment button><nldd-text-cell text="Dossier"></nldd-text-cell></nldd-list-item-segment>
+		</nldd-list-item></nldd-list>`);
+		await waitForUpdate(el.querySelector('nldd-list-item') as HTMLElement);
+		await nextFrames();
+		expect(strayWarnings(warn)).toHaveLength(0);
+	});
+
+	const nestedWarnings = (warn: { mock: { calls: unknown[][] } }) =>
+		warn.mock.calls.filter(([message]) => String(message).includes('is its own control'));
+
+	it('warns about a control inside a row that is its own control', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`<nldd-list><nldd-list-item href="/dossier">
+			<nldd-text-cell text="Dossier"></nldd-text-cell>
+			<nldd-cell><nldd-icon-button icon="delete" accessible-label="Verwijder"></nldd-icon-button></nldd-cell>
+		</nldd-list-item></nldd-list>`);
+		await waitForUpdate(el.querySelector('nldd-list-item') as HTMLElement);
+		await nextFrames();
+		expect(nestedWarnings(warn)).toHaveLength(1);
+		expect(String(nestedWarnings(warn)[0][0])).toContain('<nldd-icon-button>');
+	});
+
+	it('warns about a segment in a row that is its own control', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`<nldd-list><nldd-list-item button>
+			<nldd-list-item-segment button><nldd-text-cell text="Dossier"></nldd-text-cell></nldd-list-item-segment>
+		</nldd-list-item></nldd-list>`);
+		await waitForUpdate(el.querySelector('nldd-list-item') as HTMLElement);
+		await nextFrames();
+		expect(nestedWarnings(warn)).toHaveLength(1);
+	});
+
+	it('does not warn about a decorative glyph, or controls in a row without an action', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`<nldd-list>
+			<nldd-list-item checkbox>
+				<nldd-cell><nldd-checkbox decorative></nldd-checkbox></nldd-cell>
+				<nldd-text-cell text="Dossier"></nldd-text-cell>
+			</nldd-list-item>
+			<nldd-list-item>
+				<nldd-list-item-segment href="/dossier"><nldd-text-cell text="Dossier"></nldd-text-cell></nldd-list-item-segment>
+				<nldd-list-item-segment button><nldd-icon-cell icon="delete"></nldd-icon-cell></nldd-list-item-segment>
+			</nldd-list-item>
+		</nldd-list>`);
+		const rows = [...el.querySelectorAll('nldd-list-item')] as HTMLElement[];
+		await Promise.all(rows.map((row) => waitForUpdate(row)));
+		await nextFrames();
+		expect(nestedWarnings(warn)).toHaveLength(0);
+	});
+
+	it('warns once per row', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		await mount('Eerste');
+		const row = el.querySelector('nldd-list-item') as HTMLElement;
+		row.append(document.createTextNode(' tweede'));
+		await nextFrames();
+		expect(strayWarnings(warn)).toHaveLength(1);
 	});
 });

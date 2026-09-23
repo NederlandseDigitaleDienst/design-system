@@ -8,7 +8,7 @@ function renderValidationIcon(component: NLDDComboBox): TemplateResult | typeof 
 		return html`
 			<div class="combo-box__validation-icon-area">
 				<nldd-icon class="combo-box__validation-icon"
-					name="invalid"
+					icon="invalid"
 					aria-hidden="true"
 				></nldd-icon>
 			</div>
@@ -18,7 +18,7 @@ function renderValidationIcon(component: NLDDComboBox): TemplateResult | typeof 
 		return html`
 			<div class="combo-box__validation-icon-area">
 				<nldd-icon class="combo-box__validation-icon"
-					name="valid"
+					icon="valid"
 					aria-hidden="true"
 				></nldd-icon>
 			</div>

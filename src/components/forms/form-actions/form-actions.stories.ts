@@ -25,6 +25,9 @@ export default {
 		},
 		status: { type: 'experimental' },
 	},
+	args: {
+		labelAlignment: 'top',
+	},
 	argTypes: {
 		labelAlignment: {
 			name: 'label-alignment',
@@ -32,9 +35,6 @@ export default {
 			options: ['top', 'right', 'left'],
 			table: { defaultValue: { summary: 'top' } },
 		},
-	},
-	args: {
-		labelAlignment: 'top',
 	},
 };
 

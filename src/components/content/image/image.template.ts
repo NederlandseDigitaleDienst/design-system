@@ -62,7 +62,7 @@ export function imageTemplate(component: NLDDImage) {
 		<div class="image__error"
 			aria-hidden=${component.decorative ? 'true' : nothing}
 		>
-			<nldd-icon name="broken-image" size="32" color="secondary-content"></nldd-icon>
+			<nldd-icon icon="broken-image" size="32" color="secondary-content"></nldd-icon>
 			${component.decorative ? nothing : html`<span class="image__error-text">${component.alt}</span>`}
 		</div>
 	` : nothing;

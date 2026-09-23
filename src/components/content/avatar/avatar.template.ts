@@ -38,7 +38,7 @@ export function avatarTemplate(component: NLDDAvatar): TemplateResult {
 		` : nothing}
 		${showIcon ? html`
 			<nldd-icon class="avatar__icon"
-				name=${component.resolvedIcon}
+				icon=${component.resolvedIcon}
 			></nldd-icon>
 		` : nothing}
 	`;

@@ -4,7 +4,9 @@
  * A horizontal split view with multiple equal panes side by side.
  * The number of panes is set via the `panes` attribute. Each pane
  * automatically gets a numbered slot: pane-1, pane-2, etc.
- * Panes that do not fit the available width are automatically hidden.
+ * Panes that do not fit the available width are automatically hidden, from
+ * right to left: `pane-1` is the last to go. Put the main content in `pane-1`
+ * and an inspector or detail in the last pane.
  *
  * @element nldd-side-by-side-split-view
  *

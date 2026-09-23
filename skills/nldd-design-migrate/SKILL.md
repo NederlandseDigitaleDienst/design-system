@@ -318,9 +318,11 @@ makkelijk:
 - **Selectie die alleen in kleur zit** faalt 1.4.1. Gebruik de eigen
   `current`/`checked` van het component, plus een tweede kanaal zoals een icoon.
 
-Voeg je een kop-tag puur voor de semantiek toe (met de stijl van het component
-erbinnen), zet dan een reset zodat de standaardgrootte en -marge van de browser
-niet vechten met het component:
+Is de kop een `nldd-title`, geef hem dan `heading-level`: de titel rendert de
+kop zelf, zonder marge en in zijn eigen grootte. Voeg je elders een kop-tag puur
+voor de semantiek toe (met de stijl van het component erbinnen), zet dan een
+reset zodat de standaardgrootte en -marge van de browser niet vechten met het
+component:
 
 ```css
 h1:not(nldd-rich-text h1), h2:not(nldd-rich-text h2) /* … */ {

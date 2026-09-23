@@ -119,7 +119,7 @@ export function documentTabBarItemTemplate(component: NLDDDocumentTabBarItem): T
 					@click=${component._handleDismiss}
 				>
 					<span class="document-tab-bar__item-dismiss-icon">
-						<nldd-icon name="dismiss"></nldd-icon>
+						<nldd-icon icon="dismiss"></nldd-icon>
 					</span>
 				</button>
 			</div>

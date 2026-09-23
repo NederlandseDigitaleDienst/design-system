@@ -43,7 +43,7 @@ describe('nldd-tag', () => {
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('nldd-icon');
 		expect(icon).not.toBeNull();
-		expect(icon!.getAttribute('name')).toBe('check-mark');
+		expect(icon!.getAttribute('icon')).toBe('check-mark');
 	});
 
 	it('sets aria-label and role=img on icon-only tag with accessible-label', async () => {
@@ -209,7 +209,7 @@ describe('nldd-tag', () => {
 				await waitForUpdate(el);
 				expect(hasIcon(el)).toBe(true);
 				// The placeholder lives in the icon slot's default content.
-				const placeholder = el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]');
+				const placeholder = el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]');
 				expect(placeholder).not.toBeNull();
 			});
 
@@ -217,7 +217,7 @@ describe('nldd-tag', () => {
 				el = await fixture<NLDDTag>('<nldd-tag variant="icon" icon="check-mark" accessible-label="OK"></nldd-tag>');
 				await waitForUpdate(el);
 				const icon = el.shadowRoot!.querySelector('.tag__icon nldd-icon');
-				expect(icon!.getAttribute('name')).toBe('check-mark');
+				expect(icon!.getAttribute('icon')).toBe('check-mark');
 			});
 		});
 	});

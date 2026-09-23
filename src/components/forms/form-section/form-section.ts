@@ -20,7 +20,7 @@
  *         <fieldset class="form-section">
  *             <legend class="form-section__header">
  *                 <span class="form-section__title">Title</span>
- *                 <span class="form-section__subtitle">Subtitle</span>
+ *                 <span class="form-section__supporting-text">Supporting text</span>
  *             </legend>
  *             <div class="form-section__main">
  *                 [user's children]
@@ -35,9 +35,9 @@
  * grouping*, not as page structure. For real page headings, use a separate
  * heading element above the form.
  *
- * **Supporting-text length**: the subtitle sits as a `<span>` inside the
+ * **Supporting-text length**: the supporting text sits as a `<span>` inside the
  * `<legend>` so a screen reader reads it along as the group label. Side effect:
- * on every field entry within the section, the whole legend (title + subtitle)
+ * on every field entry within the section, the whole legend (title + supporting text)
  * is spoken again. Keep `supporting-text` short (roughly 80 characters or less)
  * and use it to introduce the group ("Vul je adresgegevens in"), not for
  * detailed instructions. For a longer explanation on one specific field, use
@@ -67,7 +67,7 @@
 const FIELDSET_CLASS = 'form-section';
 const HEADER_CLASS = 'form-section__header';
 const TITLE_CLASS = 'form-section__title';
-const SUBTITLE_CLASS = 'form-section__subtitle';
+const SUPPORTING_TEXT_CLASS = 'form-section__supporting-text';
 const MAIN_CLASS = 'form-section__main';
 
 export class NLDDFormSection extends HTMLElement {
@@ -193,10 +193,10 @@ export class NLDDFormSection extends HTMLElement {
 		}
 
 		if (supportingText) {
-			const subtitleSpan = document.createElement('span');
-			subtitleSpan.className = SUBTITLE_CLASS;
-			subtitleSpan.textContent = supportingText;
-			legend.appendChild(subtitleSpan);
+			const supportingTextSpan = document.createElement('span');
+			supportingTextSpan.className = SUPPORTING_TEXT_CLASS;
+			supportingTextSpan.textContent = supportingText;
+			legend.appendChild(supportingTextSpan);
 		}
 
 		// Hide the legend completely (including its space) when empty, so

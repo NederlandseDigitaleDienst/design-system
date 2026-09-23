@@ -17,14 +17,19 @@ gelden er andere regels.
 
 ## Vier valkuilen op die grens
 
-**`show()` faalt stil op een net ingewisselde overlay.** Lit heeft de
-shadow-`<dialog>` nog niet gerenderd, dus de aanroep doet niets. Geen
-foutmelding, het venster gaat gewoon niet open.
+**Open een overlay met `open` in de markup.** Een net ingewisselde overlay
+heeft zijn shadow-`<dialog>` nog niet gerenderd. Het attribuut `open` wacht
+zelf op die eerste render, en werkt voor sheet, window, modal en popover zonder
+een regel JavaScript:
 
-```js
-await el.updateComplete;
-el.show();
+```html
+<nldd-sheet open>
+  <nldd-page><!-- inhoud --></nldd-page>
+</nldd-sheet>
 ```
+
+`show()` wacht bij sheet, window en modal ook zelf. Bij een popover moet
+bovendien het anker er al staan, anders opent hij niet.
 
 **`href` en een fragment-attribuut op hetzelfde element vechten.** Componenten
 die intern een `<a>` renderen (`nldd-list-item`, `nldd-card`,

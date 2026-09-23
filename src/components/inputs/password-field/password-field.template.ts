@@ -8,7 +8,7 @@ function renderValidationIcon(component: NLDDPasswordField): TemplateResult | ty
 		return html`
 			<div class="password-field__validation-icon-area">
 				<nldd-icon class="password-field__validation-icon"
-					name="invalid"
+					icon="invalid"
 					aria-hidden="true"
 				></nldd-icon>
 			</div>
@@ -18,7 +18,7 @@ function renderValidationIcon(component: NLDDPasswordField): TemplateResult | ty
 		return html`
 			<div class="password-field__validation-icon-area">
 				<nldd-icon class="password-field__validation-icon"
-					name="valid"
+					icon="valid"
 					aria-hidden="true"
 				></nldd-icon>
 			</div>

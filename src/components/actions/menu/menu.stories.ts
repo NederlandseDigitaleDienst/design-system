@@ -14,7 +14,7 @@ export default {
 	tags: ['autodocs'],
 };
 
-export const Default = {
+export const Standaard = {
 	tags: ['!autodocs'],
 	render: () => html`
 		<nldd-button expandable text="Open menu">
@@ -28,9 +28,9 @@ export const Default = {
 /**
  * `details` toont een secundair label rechts van het item — bijvoorbeeld de
  * huidige waarde of een aantal. Voor sneltoetsen is er het aparte
- * `shortcut`-attribuut (zie de KeyboardShortcuts-story).
+ * `shortcut`-attribuut (zie de story Sneltoetsen).
  */
-export const WithDetails = {
+export const MetDetails = {
 	render: () => html`
 		<nldd-button expandable text="Voorkeuren">
 			<nldd-menu slot="popup">
@@ -50,7 +50,7 @@ export const WithDetails = {
  * platform-specifieke weergave. Op touch-only apparaten verdwijnt de hint, want
  * daar is hij niet aanroepbaar.
  */
-export const KeyboardShortcuts = {
+export const Sneltoetsen = {
 	render: () => html`
 		<nldd-button expandable text="Bewerken">
 			<nldd-menu slot="popup">
@@ -63,7 +63,7 @@ export const KeyboardShortcuts = {
 	`,
 };
 
-export const WithIcons = {
+export const MetIconen = {
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">
@@ -136,7 +136,7 @@ export const Breedte = {
 	},
 };
 
-export const WithDivider = {
+export const MetScheidingslijn = {
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">
@@ -173,7 +173,7 @@ export const Radio = {
 	`,
 };
 
-export const MixedIconsAndCheckable = {
+export const IconenEnVinkjes = {
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">
@@ -199,7 +199,8 @@ export const MixedIconsAndCheckable = {
 	},
 };
 
-export const Disabled = {
+export const ItemDisabled = {
+	name: 'Item disabled',
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">
@@ -211,7 +212,7 @@ export const Disabled = {
 	`,
 };
 
-export const Destructive = {
+export const Destructief = {
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">
@@ -231,7 +232,7 @@ export const Destructive = {
 	},
 };
 
-export const WithGroups = {
+export const MetGroepen = {
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">
@@ -257,7 +258,7 @@ export const WithGroups = {
 	},
 };
 
-export const WithMultiLevelSubmenu = {
+export const MetSubmenuOpMeerdereNiveaus = {
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">
@@ -287,7 +288,7 @@ export const WithMultiLevelSubmenu = {
 	},
 };
 
-export const WithSubmenu = {
+export const MetSubmenu = {
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">
@@ -320,7 +321,8 @@ export const WithSubmenu = {
 	},
 };
 
-export const DebugSafeTriangle = {
+export const DebugVeiligeDriehoek = {
+	name: 'Debug: veilige driehoek',
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup" debug-safe-triangle>
@@ -345,7 +347,7 @@ export const DebugSafeTriangle = {
 	},
 };
 
-export const MixedFlatAndGroups = {
+export const PlatEnGroepenGemengd = {
 	render: () => html`
 		<nldd-button expandable text="Open menu">
 			<nldd-menu slot="popup">

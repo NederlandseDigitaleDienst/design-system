@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './toolbar.js';
 import '../menu/menu.js';
@@ -159,5 +159,60 @@ describe('nldd-toolbar-item – overflow declaration', () => {
 		const button = source.shadowRoot!.querySelector('.menu__item')!;
 		expect(button.hasAttribute('role')).toBe(false);
 		expect(button.hasAttribute('aria-checked')).toBe(false);
+	});
+});
+
+describe('nldd-toolbar-item – overflow alternative', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const overflowWarnings = (warn: { mock: { calls: unknown[][] } }) =>
+		warn.mock.calls.filter(([message]) => String(message).includes('nothing in slot="overflow"'));
+
+	it('warns at load when an item has no alternative in the overflow menu', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<nldd-toolbar>
+				<nldd-toolbar-item slot="start">
+					<nldd-icon-button icon="search" accessible-label="Zoeken"></nldd-icon-button>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		`);
+		await waitForUpdate(el.querySelector('nldd-toolbar-item') as HTMLElement);
+		expect(overflowWarnings(warn)).toHaveLength(1);
+		expect(String(overflowWarnings(warn)[0][0])).toContain('("Zoeken")');
+	});
+
+	it('does not warn when the item has an alternative', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<nldd-toolbar>
+				<nldd-toolbar-item slot="start">
+					<nldd-icon-button icon="search" accessible-label="Zoeken"></nldd-icon-button>
+					<nldd-menu-item slot="overflow" text="Zoeken" icon="search"></nldd-menu-item>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		`);
+		await waitForUpdate(el.querySelector('nldd-toolbar-item') as HTMLElement);
+		expect(overflowWarnings(warn)).toHaveLength(0);
+	});
+
+	it('warns once per item', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<nldd-toolbar>
+				<nldd-toolbar-item slot="start" label="Een"></nldd-toolbar-item>
+				<nldd-toolbar-item slot="start" label="Twee"></nldd-toolbar-item>
+			</nldd-toolbar>
+		`);
+		const items = [...el.querySelectorAll('nldd-toolbar-item')] as HTMLElement[];
+		await Promise.all(items.map((item) => waitForUpdate(item)));
+		(items[0] as HTMLElement & { priority: number }).priority = 3;
+		await waitForUpdate(items[0]);
+		expect(overflowWarnings(warn).map(([message]) => String(message).match(/\("(\w+)"\)/)?.[1])).toEqual(['Een', 'Twee']);
 	});
 });

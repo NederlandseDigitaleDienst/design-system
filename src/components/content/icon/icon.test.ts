@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 // The tokens themselves, because `box` leans on two of them: the spacer that a
 // fixed size resolves to, and the contrast color the glyph flips to.
 import '../../../assets/styles/variables.css';
@@ -82,7 +82,7 @@ describe('nldd-icon – relative sizes', () => {
 	});
 
 	const mount = async (attrs: string, wrapper = 'div style="width: 40px; font-size: 12px"'): Promise<HTMLElement> => {
-		el = await fixture<HTMLElement>(`<${wrapper}><nldd-icon name="check" ${attrs}></nldd-icon></${wrapper.split(' ')[0]}>`);
+		el = await fixture<HTMLElement>(`<${wrapper}><nldd-icon icon="check" ${attrs}></nldd-icon></${wrapper.split(' ')[0]}>`);
 		const icon = el.querySelector('nldd-icon') as HTMLElement;
 		await waitForUpdate(icon);
 		return icon;
@@ -155,5 +155,40 @@ describe('nldd-icon – relative sizes', () => {
 		const icon = await mount('custom-color="rgb(17, 17, 17)"', box);
 		expect(getComputedStyle(icon).backgroundColor).toBe('rgba(0, 0, 0, 0)');
 		expect(getComputedStyle(icon.shadowRoot!.querySelector('svg')!).color).toBe('rgb(17, 17, 17)');
+	});
+});
+
+describe('nldd-icon – icon attribute', () => {
+	let el: NLDDIcon;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	it('draws the icon named in icon, not the placeholder', async () => {
+		const placeholder = await fixture<NLDDIcon>('<nldd-icon></nldd-icon>');
+		await waitForUpdate(placeholder);
+		const placeholderSvg = placeholder.shadowRoot!.innerHTML;
+		cleanup(placeholder);
+
+		el = await fixture<NLDDIcon>('<nldd-icon icon="heart"></nldd-icon>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('svg')).not.toBeNull();
+		expect(el.shadowRoot!.innerHTML).not.toBe(placeholderSvg);
+	});
+
+	it('warns once per page about the old name attribute, and ignores it', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDIcon>('<nldd-icon name="heart"></nldd-icon>');
+		await waitForUpdate(el);
+		expect(el.icon).toBe('circle-dashed');
+		expect(warn).toHaveBeenCalledTimes(1);
+		expect(warn.mock.calls[0][0]).toContain('icon="heart"');
+		cleanup(el);
+
+		el = await fixture<NLDDIcon>('<nldd-icon name="star"></nldd-icon>');
+		await waitForUpdate(el);
+		expect(warn).toHaveBeenCalledTimes(1);
 	});
 });

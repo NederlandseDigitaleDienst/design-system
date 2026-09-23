@@ -164,21 +164,21 @@ describe('nldd-avatar', () => {
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.avatar__icon');
 		expect(icon).not.toBeNull();
-		expect(icon!.getAttribute('name')).toBe('person');
+		expect(icon!.getAttribute('icon')).toBe('person');
 	});
 
 	it('falls back to the building icon for an organization', async () => {
 		el = await fixture('<nldd-avatar type="organization" decorative></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.resolvedIcon).toBe('building');
-		expect(el.shadowRoot!.querySelector('.avatar__icon')!.getAttribute('name')).toBe('building');
+		expect(el.shadowRoot!.querySelector('.avatar__icon')!.getAttribute('icon')).toBe('building');
 	});
 
 	it('lets the icon attribute override the fallback icon', async () => {
 		el = await fixture('<nldd-avatar icon="star" decorative></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.resolvedIcon).toBe('star');
-		expect(el.shadowRoot!.querySelector('.avatar__icon')!.getAttribute('name')).toBe('star');
+		expect(el.shadowRoot!.querySelector('.avatar__icon')!.getAttribute('icon')).toBe('star');
 	});
 
 	it('exposes role=img and the name as label when named and not decorative', async () => {

@@ -159,7 +159,7 @@ export const InEenFormulierveld = {
  * waarop je drukt. Vlak en knop delen dezelfde hoekradius, en omdat de rand van
  * het vlak een inset-schaduw is en geen echte rand, vallen die hoeken samen.
  */
-export const Maten = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 420px;">
 			<nldd-file-field accessible-label="Bijlage md"></nldd-file-field>

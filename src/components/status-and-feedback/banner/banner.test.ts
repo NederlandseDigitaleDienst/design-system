@@ -57,14 +57,14 @@ describe('nldd-banner', () => {
 		el = await fixture(`<nldd-banner variant="${variant}"></nldd-banner>`);
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.banner__icon nldd-icon');
-		expect(icon!.getAttribute('name')).toBe(expectedIcon);
+		expect(icon!.getAttribute('icon')).toBe(expectedIcon);
 	});
 
 	it('icon attribute overrides the default', async () => {
 		el = await fixture('<nldd-banner variant="success" icon="star"></nldd-banner>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.banner__icon nldd-icon');
-		expect(icon!.getAttribute('name')).toBe('star');
+		expect(icon!.getAttribute('icon')).toBe('star');
 	});
 
 

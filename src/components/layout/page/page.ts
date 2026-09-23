@@ -22,11 +22,38 @@
  * the page owns the scroller, only its own bars count: the chrome above the page
  * sits outside that scroller and does not push sticky content down.
  *
+ * ## Landmarks
+ * A page carries the landmarks of a document: its header is the banner, its
+ * content the main landmark, its footer the contentinfo. A document has one of
+ * each, so a page that sits beside another one cannot have them. Such a page
+ * renders a section and a plain div instead, which drops all three at once: a
+ * header inside sectioning content is no longer a banner. With
+ * `accessible-label` that section is a named region, so there is still one
+ * landmark to jump to; without a name it is no landmark at all, which beats an
+ * unnamed one.
+ *
+ * `landmarks` says which of the two a page is, and `auto` (the default) reads
+ * it off where the page sits:
+ * - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a
+ *   region, because the overlay is not the document;
+ * - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or
+ *   nldd-stacked-split-view a region, because those place pages beside each
+ *   other;
+ * - anywhere else the page, including the `main` slot of an
+ *   nldd-bar-split-view, which stacks bars around a single content area.
+ *
+ * So an app shell has no main until you say which pane holds the primary
+ * content, with `landmarks="page"` on that one page. Only the application
+ * knows which pane that is. Two pages that both render a main is invalid HTML,
+ * and the page says so in development.
+ *
  * @element nldd-page
  *
+ * @attr {'inherit'|'base'|'tinted'} background - Use a gray background instead of white
+ * @attr {string} accessible-label - Name of the landmark this page is: the region it becomes beside another page, or its main landmark
  * @attr {boolean} sticky-header - Sticky header
  * @attr {boolean} sticky-footer - Sticky footer
- * @attr {'inherit'|'base'|'tinted'} background - Use a gray background instead of white
+ * @attr {'auto'|'page'|'region'} landmarks - Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three
  *
  * @slot header - Header content
  * @slot - Main content (scrollable)
@@ -39,9 +66,30 @@ import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../.
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
 
+type Landmarks = 'auto' | 'page' | 'region';
+
+/** An overlay is a document of its own, so the page inside it is not the page. */
+const OVERLAYS = ['nldd-sheet', 'nldd-modal-dialog', 'nldd-window', 'nldd-popover'];
+
+/** Split views that place pages beside each other; a bar split view does not. */
+const PANED_SPLIT_VIEWS = [
+	'nldd-navigation-split-view',
+	'nldd-side-by-side-split-view',
+	'nldd-stacked-split-view',
+];
+
+/** Every connected page, so one can see whether another already holds the main. */
+const _connectedPages = new Set<NLDDPage>();
+
 @customElement('nldd-page')
 export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	static override styles = pageStyles;
+
+	@property({ type: String, reflect: true })
+	background: 'inherit' | 'base' | 'tinted' = 'inherit';
+
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true, attribute: 'sticky-header' })
 	stickyHeader = false;
@@ -50,10 +98,53 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	stickyFooter = false;
 
 	@property({ type: String, reflect: true })
-	background: 'inherit' | 'base' | 'tinted' = 'inherit';
+	landmarks: Landmarks = 'auto';
 
 	@state()
 	_scrolled = false;
+
+	/** What `landmarks="auto"` reads off the page's surroundings. */
+	@state()
+	private _derived: 'page' | 'region' = 'page';
+
+	private _warnedDuplicateMain = false;
+
+	/** True when this page renders a section instead of the document landmarks. @internal */
+	get _isRegion(): boolean {
+		return this.landmarks === 'auto' ? this._derived === 'region' : this.landmarks === 'region';
+	}
+
+	/**
+	 * Reads whether this page sits somewhere that already has a page: inside an
+	 * overlay, or in a pane beside other panes. The first of those an ancestor
+	 * matches decides, so a page in a sheet inside a pane is a region for the
+	 * sheet's sake.
+	 */
+	private _deriveLandmarks(): void {
+		for (let el = this.parentElement; el; el = el.parentElement) {
+			const tag = el.localName;
+			if (OVERLAYS.includes(tag) || PANED_SPLIT_VIEWS.includes(tag)) {
+				this._derived = 'region';
+				return;
+			}
+		}
+		this._derived = 'page';
+	}
+
+	/**
+	 * A document has one main, and two pages claiming it is invalid HTML that
+	 * nothing on screen gives away. Hidden pages count: a pane that is collapsed
+	 * at this window width is the same markup at another. Only the page that
+	 * arrived later says it, so one mistake is one message.
+	 */
+	private _warnOnSecondMain(): void {
+		if (!import.meta.env?.DEV || this._warnedDuplicateMain || this._isRegion) return;
+		const [first, ...rest] = [..._connectedPages].filter((page) => !page._isRegion);
+		const other = first === this ? undefined : first;
+		if (!other || !rest.includes(this)) return;
+		this._warnedDuplicateMain = true;
+		console.warn('nldd-page: a second page renders a main landmark, which a document may have only one of. Leave `landmarks` at "auto" on pages in a pane or an overlay, or set landmarks="region" on the ones that are not the document\'s page.', this, other);
+	}
 
 	private _scrollMode: 'nested' | 'root' = 'nested';
 	private _scrollTarget: EventTarget | null = null;
@@ -101,6 +192,8 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 
 	override connectedCallback() {
 		super.connectedCallback();
+		this._deriveLandmarks();
+		_connectedPages.add(this);
 		// Set container-type/name as inline style on the host element. Doing
 		// this from a `:host` rule inside the shadow DOM works in Chromium
 		// but Safari does not always recognize the host as a container for
@@ -130,6 +223,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();
+		_connectedPages.delete(this);
 		window.removeEventListener('resize', this._onResize);
 		this._scrollProvider?.unregisterScrollConsumer(this);
 		this._scrollProvider = null;
@@ -149,6 +243,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 
 	override updated(changed: PropertyValues) {
 		if (changed.has('stickyHeader')) this._configureScroll();
+		this._warnOnSecondMain();
 	}
 
 	/**

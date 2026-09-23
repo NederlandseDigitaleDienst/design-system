@@ -515,7 +515,7 @@ describe('nldd-segmented-control-item – tooltip', () => {
 		const icon = el.shadowRoot!.querySelector('.segmented-control__item-icon nldd-icon');
 		const text = el.shadowRoot!.querySelector('.segmented-control__item-text')!;
 		expect(icon).not.toBeNull();
-		expect(icon!.getAttribute('name')).toBe('bold');
+		expect(icon!.getAttribute('icon')).toBe('bold');
 		expect(text.textContent?.trim()).toBe('Vet');
 		// The visible text stays readable, and the item carries the name it is
 		// announced by: it is the radio.
@@ -528,7 +528,7 @@ describe('nldd-segmented-control-item – tooltip', () => {
 			<nldd-segmented-control-item variant="icon" text="Vet"></nldd-segmented-control-item>
 		`);
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 	});
 
 	it('icon-and-text with text but no icon shows the placeholder', async () => {
@@ -536,7 +536,7 @@ describe('nldd-segmented-control-item – tooltip', () => {
 			<nldd-segmented-control-item variant="icon-and-text" text="Vet"></nldd-segmented-control-item>
 		`);
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 		expect(el.shadowRoot!.querySelector('.segmented-control__item-text')!.textContent?.trim()).toBe('Vet');
 	});
 
@@ -545,7 +545,7 @@ describe('nldd-segmented-control-item – tooltip', () => {
 			<nldd-segmented-control-item variant="icon-and-text"></nldd-segmented-control-item>
 		`);
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 	});
 
 	it('participates in FormData via form-associated API (radio)', async () => {

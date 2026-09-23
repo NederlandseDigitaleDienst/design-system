@@ -106,11 +106,11 @@ const Template = ({
 	</div>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const WithLogoWordmark = {
+export const MetWoordmerk = {
 	render: Template,
 	args: {
 		logoTitle: 'Nederlandse Digitale Dienst',
@@ -122,7 +122,7 @@ export const WithLogoWordmark = {
 
 // Een terugknop hoort bij een view die je binnenkomt vanaf een ander scherm, en
 // die heeft doorgaans geen hoofdnavigatie meer: de knop is de weg terug.
-export const WithBackButton = {
+export const MetTerugknop = {
 	render: Template,
 	args: {
 		backHref: '/',
@@ -182,7 +182,7 @@ export const RegelRecht = {
 	parameters: { controls: { disable: true } },
 };
 
-export const SmallViewport = {
+export const SmalScherm = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-top-navigation-bar website-title="Ontwerpsysteem">
@@ -251,7 +251,7 @@ export const MeerlaagsMenu = {
 	parameters: { controls: { disable: true } },
 };
 
-export const ManyGlobalItems = {
+export const VeelGlobaleItems = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-top-navigation-bar logo-title="Nederlandse Digitale Dienst" logo-subtitle="Ministerie van Economische Zaken en Klimaat">
@@ -289,7 +289,7 @@ export const ManyGlobalItems = {
 	parameters: { controls: { disable: true } },
 };
 
-export const MinimalLogo = {
+export const MinimaalLogo = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-top-navigation-bar></nldd-top-navigation-bar>
@@ -298,7 +298,7 @@ export const MinimalLogo = {
 	parameters: { controls: { disable: true } },
 };
 
-export const AllStates = {
+export const AlleToestanden = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 32px;">
 			<div style=${layoutArea}>

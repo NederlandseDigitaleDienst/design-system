@@ -16,7 +16,7 @@ const PAGE = api({
 	'nldd-page': { attrs: ['sticky-header', 'tinted'], slots: ['header', 'footer'] },
 	'nldd-title': { attrs: ['size', 'color'] },
 	'nldd-container': { attrs: ['padding', 'gap'] },
-	'nldd-icon': { attrs: ['name', 'size'] },
+	'nldd-icon': { attrs: ['icon', 'size'] },
 });
 
 test('vindt een onbekend component', () => {
@@ -80,7 +80,7 @@ test('laat een attribuut staan dat de ouder documenteert voor zijn kinderen', ()
 });
 
 test('vindt een onbekende icoonnaam', () => {
-	const problems = checkMarkup('<nldd-icon name="bestaat-niet"></nldd-icon>', {
+	const problems = checkMarkup('<nldd-icon icon="bestaat-niet"></nldd-icon>', {
 		api: PAGE,
 		iconNames: new Set(['settings', 'logout']),
 	});
@@ -102,7 +102,7 @@ test('controleert ook de icoonnaam in het icon-attribuut van andere componenten'
 
 test('laat een bestaande icoonnaam staan', () => {
 	assert.deepEqual(
-		checkMarkup('<nldd-icon name="settings"></nldd-icon>', {
+		checkMarkup('<nldd-icon icon="settings"></nldd-icon>', {
 			api: PAGE,
 			iconNames: new Set(['settings']),
 		}),
@@ -113,7 +113,7 @@ test('laat een bestaande icoonnaam staan', () => {
 // A bound icon name comes from the app at runtime, so the doc cannot be wrong.
 test('slaat een gebonden icoonnaam over', () => {
 	assert.deepEqual(
-		checkMarkup('<nldd-icon name="{{ icon }}"></nldd-icon>', {
+		checkMarkup('<nldd-icon icon="{{ icon }}"></nldd-icon>', {
 			api: PAGE,
 			iconNames: new Set(['settings']),
 		}),

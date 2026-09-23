@@ -13,6 +13,9 @@ export const ICONS: string[] = [
 	...Object.keys(aliases),
 ].sort();
 
+/** One warning per page: a missed rename is one search-and-replace, not one per icon. */
+let warnedAboutName = false;
+
 export type IconSize = 'full' | 'inherit' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
 
 export type IconColor =
@@ -49,7 +52,7 @@ export type IconColor =
  *
  * @element nldd-icon
  *
- * @attr {string} name - The name of the icon to display
+ * @attr {string} icon - The name of the icon to display. The same attribute every other component that renders an icon takes.
  * @attr {string} size - `full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96).
  * @attr {string} color - Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent.
  * @attr {string} custom-color - A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know. It wins over `color`.
@@ -57,10 +60,10 @@ export type IconColor =
  *
  * @example
  * ```html
- * <nldd-icon name="heart"></nldd-icon>
- * <nldd-icon name="trash" size="24" color="critical"></nldd-icon>
- * <nldd-icon name="leaf" size="32" color="mosgroen"></nldd-icon>
- * <nldd-icon name="circle-filled" size="16" custom-color="#3b82f6"></nldd-icon>
+ * <nldd-icon icon="heart"></nldd-icon>
+ * <nldd-icon icon="trash" size="24" color="critical"></nldd-icon>
+ * <nldd-icon icon="leaf" size="32" color="mosgroen"></nldd-icon>
+ * <nldd-icon icon="circle-filled" size="16" custom-color="#3b82f6"></nldd-icon>
  * ```
  */
 @customElement('nldd-icon')
@@ -68,7 +71,7 @@ export class NLDDIcon extends LitElement {
 	static override styles = iconStyles;
 
 	@property({ type: String })
-	name = 'circle-dashed';
+	icon = 'circle-dashed';
 
 	@property({ reflect: true, converter: reflectNonDefault<IconSize>('full') })
 	size: IconSize = 'full';
@@ -104,12 +107,18 @@ export class NLDDIcon extends LitElement {
 		if (!this.hasAttribute('aria-hidden')) {
 			this.setAttribute('aria-hidden', 'true');
 		}
-		this._iconSvg = this._loadIcon(this.name);
+		// `name` was renamed to `icon`. An unknown attribute does nothing, so
+		// without this the only sign of a missed rename is a dashed circle.
+		if (import.meta.env?.DEV && this.hasAttribute('name') && !warnedAboutName) {
+			warnedAboutName = true;
+			console.warn(`NLDDIcon: the name attribute is now icon. Rename name="${this.getAttribute('name')}" to icon="${this.getAttribute('name')}", here and on every other nldd-icon.`);
+		}
+		this._iconSvg = this._loadIcon(this.icon);
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
-		if (changedProperties.has('name') && this.name) {
-			this._iconSvg = this._loadIcon(this.name);
+		if (changedProperties.has('icon') && this.icon) {
+			this._iconSvg = this._loadIcon(this.icon);
 		}
 		if (changedProperties.has('customColor')) {
 			if (this.customColor) this.style.setProperty('--_custom-color', this.customColor);

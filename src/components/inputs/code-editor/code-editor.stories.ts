@@ -160,11 +160,12 @@ const Template = ({
 	></nldd-code-editor>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const InputField = {
+export const VariantInputField = {
+	name: 'Variant input-field',
 	render: () => html`
 		<nldd-code-editor
 			variant="input-field"
@@ -177,7 +178,7 @@ export const InputField = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Highlighted = {
+export const MetSyntaxkleuring = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
 			<nldd-code-editor variant="input-field" language="yaml" rows="8" .value=${SAMPLE_YAML} accessible-label="YAML"></nldd-code-editor>
@@ -187,7 +188,7 @@ export const Highlighted = {
 	parameters: { controls: { disable: true } },
 };
 
-export const LineNumbers = {
+export const MetRegelnummers = {
 	render: () => html`
 		<nldd-code-editor
 			variant="input-field"
@@ -201,7 +202,8 @@ export const LineNumbers = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Simple = {
+export const VariantSimple = {
+	name: 'Variant simple',
 	render: () => html`
 		<nldd-code-editor
 			variant="simple"
@@ -220,7 +222,7 @@ export const Simple = {
 	},
 };
 
-export const InContainer = {
+export const InEenContainer = {
 	render: () => html`
 		<nldd-container
 			padding="24"
@@ -246,7 +248,7 @@ export const InContainer = {
 	},
 };
 
-export const Wrap = {
+export const MetWrap = {
 	render: () => html`
 		<nldd-code-editor
 			variant="input-field"
@@ -259,7 +261,8 @@ export const Wrap = {
 	parameters: { controls: { disable: true } },
 };
 
-export const ReadOnly = {
+export const ToestandReadonly = {
+	name: 'Toestand readonly',
 	render: () => html`
 		<nldd-code-editor
 			variant="input-field"
@@ -272,7 +275,8 @@ export const ReadOnly = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Disabled = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: () => html`
 		<nldd-code-editor
 			variant="input-field"

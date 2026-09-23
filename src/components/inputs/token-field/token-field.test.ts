@@ -50,6 +50,19 @@ describe('nldd-token-field', () => {
 		expect(el.shadowRoot!.querySelector('nldd-token')!.getAttribute('text')).toBe('Alpha');
 	});
 
+	it('names each dismiss button after its token', async () => {
+		el = await fixture(`
+			<nldd-token-field accessible-label="Tags">
+				<nldd-menu>
+					<nldd-menu-item value="a" text="Alpha"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-token-field>
+		`);
+		el.values = ['a'];
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('nldd-token')!.getAttribute('dismiss-text')).toBe('Verwijder "Alpha"');
+	});
+
 	it('falls back to the raw value when no matching option exists', async () => {
 		el = await fixture('<nldd-token-field accessible-label="Tags"></nldd-token-field>');
 		el.values = ['x'];

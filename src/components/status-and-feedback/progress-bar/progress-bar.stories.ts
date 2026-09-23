@@ -128,7 +128,7 @@ export const Standaard = {
 	render: Template,
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 24px;">
 			<nldd-progress-bar size="sm" value="40" text="Klein (4px)"></nldd-progress-bar>
@@ -139,7 +139,7 @@ export const Sizes = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Colors = {
+export const Kleuren = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 12px;">
 			${ALL_COLORS.map(c => html`
@@ -150,7 +150,8 @@ export const Colors = {
 	parameters: { controls: { disable: true } },
 };
 
-export const MultiSegmentProgress = {
+export const MeerdereSegmenten = {
+	name: 'Voortgang in meerdere segmenten',
 	render: () => html`
 		<nldd-progress-bar mode="progress" max="100" text="Verwerking" value-text="2 van 3 stappen voltooid">
 			<nldd-progress-bar-segment-indicator value="40" color="success" name="Geüpload"></nldd-progress-bar-segment-indicator>
@@ -167,7 +168,8 @@ export const MultiSegmentProgress = {
 	},
 };
 
-export const Distribution = {
+export const ModusDistribution = {
+	name: 'Modus distribution',
 	render: () => html`
 		<nldd-progress-bar mode="distribution" size="lg" max="500" text="Opslag" value-text="350 GB van 500 GB">
 			<nldd-progress-bar-segment-indicator value="200" color="hemelblauw" name="Foto's" tooltip-text="Foto's: 200 GB (40%)"></nldd-progress-bar-segment-indicator>
@@ -185,7 +187,8 @@ export const Distribution = {
 	},
 };
 
-export const Indeterminate = {
+export const ToestandIndeterminate = {
+	name: 'Toestand indeterminate',
 	render: () => html`
 		<nldd-progress-bar indeterminate color="accent" text="Bezig met laden"></nldd-progress-bar>
 	`,
@@ -199,7 +202,8 @@ export const Indeterminate = {
 	},
 };
 
-export const ValueFormats = {
+export const Waardeformaten = {
+	name: 'Waardeformaten (value-format)',
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px;">
 			<nldd-progress-bar value="60" max="100" text="Percentage" value-format="percentage"></nldd-progress-bar>
@@ -211,7 +215,8 @@ export const ValueFormats = {
 	parameters: { controls: { disable: true } },
 };
 
-export const ValueDisplay = {
+export const Waardeweergave = {
+	name: 'Waardeweergave (value-display)',
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px;">
 			<nldd-progress-bar value="60" text="Inline (boven de balk)" value-display="inline"></nldd-progress-bar>

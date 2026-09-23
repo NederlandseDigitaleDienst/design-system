@@ -133,7 +133,7 @@ const Template = ({
 	></nldd-date-picker>
 `;
 
-export const Default = Template.bind({});
+export const Standaard = Template.bind({});
 
 export const Periode = () => html`
 	<nldd-date-picker

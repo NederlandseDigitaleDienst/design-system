@@ -35,18 +35,18 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  *
  * @element nldd-list-item-segment
  *
- * @attr {boolean} button - Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
+ * @attr {'fit-content'|'full'} width - `full` lets the segment grow to fill the row (default: 'fit-content')
  * @attr {string} href - Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`.
  * @attr {string} target - Link target forwarded to the `<a>`; only applies with `href`
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
+ * @attr {boolean} button - Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the segment a `role="checkbox"` control. Wins over `button`, loses to `href`.
+ * @attr {boolean} disclosure - Marks the segment as the row's disclosure control: `aria-expanded` comes from the parent item's `expanded`, so the state lives in one place. A slotted `nldd-icon-cell` rotates a quarter turn while the row is open
+ * @attr {string} accessible-label - Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action.
  * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
  * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded.
- * @attr {boolean} disclosure - Marks the segment as the row's disclosure control: `aria-expanded` comes from the parent item's `expanded`, so the state lives in one place. A slotted `nldd-icon-cell` rotates a quarter turn while the row is open
  * @attr {boolean} current - Marks the segment as the current page (`aria-current="page"`). The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
  * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
- * @attr {'fit-content'|'full'} width - `full` lets the segment grow to fill the row (default: 'fit-content')
- * @attr {string} accessible-label - Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action.
  *
  * @slot - The cells that belong to this segment
  *
@@ -56,8 +56,8 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
 export class NLDDListItemSegment extends LitElement {
 	static override styles = [listItemSegmentStyles];
 
-	@property({ type: Boolean, reflect: true })
-	button = false;
+	@property({ reflect: true, converter: reflectNonDefault<ListItemSegmentWidth>('fit-content') })
+	width: ListItemSegmentWidth = 'fit-content';
 
 	@property({ reflect: true })
 	href?: string;
@@ -69,14 +69,10 @@ export class NLDDListItemSegment extends LitElement {
 	rel?: string;
 
 	@property({ type: Boolean, reflect: true })
+	button = false;
+
+	@property({ type: Boolean, reflect: true })
 	checkbox = false;
-
-	@property({ type: Boolean, reflect: true })
-	checked = false;
-
-	/** Undefined (attribute absent) means "discloses nothing" — no aria-expanded is emitted. */
-	@property({ type: Boolean, reflect: true })
-	expanded?: boolean;
 
 	/**
 	 * Marks this segment as the row's disclosure control: it takes `aria-expanded`
@@ -90,17 +86,21 @@ export class NLDDListItemSegment extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	disclosure = false;
 
+	@property({ attribute: 'accessible-label' })
+	accessibleLabel = '';
+
+	@property({ type: Boolean, reflect: true })
+	checked = false;
+
+	/** Undefined (attribute absent) means "discloses nothing" — no aria-expanded is emitted. */
+	@property({ type: Boolean, reflect: true })
+	expanded?: boolean;
+
 	@property({ type: Boolean, reflect: true })
 	current = false;
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
-
-	@property({ reflect: true, converter: reflectNonDefault<ListItemSegmentWidth>('fit-content') })
-	width: ListItemSegmentWidth = 'fit-content';
-
-	@property({ attribute: 'accessible-label' })
-	accessibleLabel = '';
 
 	/** Set by the parent nldd-list-item, mirroring its list's type. */
 	@state()

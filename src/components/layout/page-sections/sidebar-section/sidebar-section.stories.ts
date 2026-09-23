@@ -79,36 +79,39 @@ export default {
 		},
 		status: { type: 'experimental' },
 	},
+	args: {
+		width: '',
+		sidebarLabel: '',
+		noCollapse: false,
+		stickyTop: '',
+		stickyBottom: '',
+	},
 	argTypes: {
 		width: pageSectionArgTypes.width,
+		sidebarLabel: {
+			name: 'sidebar-label',
+			control: 'text',
+			description: 'Toegankelijke naam voor de zijbalk (de aside op lg en de sheet op sm/md).',
+			table: { defaultValue: { summary: 'Zijbalk' } },
+		},
 		noCollapse: {
 			name: 'no-collapse',
 			control: 'boolean',
 			description: 'Niet inklappen tot een sheet; is de sectie smaller dan lg, dan stapelt de zijbalk boven de main.',
-		},
-		sidebarLabel: {
-			name: 'sidebar-label',
-			control: 'text',
-			description: 'Toegankelijke naam voor de zijbalk (de aside op lg en de sheet op sm/md). Default "Zijbalk".',
-			table: { defaultValue: { summary: 'Zijbalk' } },
+			table: { defaultValue: { summary: 'false' } },
 		},
 		stickyTop: {
 			name: 'sticky-top',
 			control: 'text',
-			description: 'Sticky top-inset op lg (CSS-lengte; default = 16px).',
+			description: 'Afstand tot de bovenkant als de zijbalk sticky is, op lg (CSS-lengte)',
+			table: { defaultValue: { summary: '16px' } },
 		},
 		stickyBottom: {
 			name: 'sticky-bottom',
 			control: 'text',
-			description: 'Sticky bottom-inset op lg (CSS-lengte; default = 16px).',
+			description: 'Afstand tot de onderkant als de zijbalk sticky is, op lg (CSS-lengte)',
+			table: { defaultValue: { summary: '16px' } },
 		},
-	},
-	args: {
-		width: '',
-		noCollapse: false,
-		sidebarLabel: '',
-		stickyTop: '',
-		stickyBottom: '',
 	},
 };
 
@@ -117,8 +120,8 @@ export const Standaard = {
 		${triggerStyle}
 		<nldd-sidebar-section
 			width=${args.width || nothing}
-			?no-collapse=${args.noCollapse}
 			sidebar-label=${args.sidebarLabel || nothing}
+			?no-collapse=${args.noCollapse}
 			sticky-top=${args.stickyTop || nothing}
 			sticky-bottom=${args.stickyBottom || nothing}
 			@open=${reflectExpanded(true)}

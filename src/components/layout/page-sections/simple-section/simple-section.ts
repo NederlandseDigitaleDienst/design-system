@@ -5,22 +5,30 @@
  * Contains optional header and footer slots. The padding and spacing between
  * slots adjust automatically via container queries.
  *
- * @element nldd-simple-section
+ * Use one section per content block and repeat the section rather than
+ * building columns inside one: the section sets the reading width and the
+ * padding itself. For two columns there are nldd-one-half-one-half-section,
+ * nldd-two-thirds-one-third-section, nldd-one-third-two-thirds-section and
+ * nldd-sidebar-section. Give a section its surface with `background` instead
+ * of a background color of your own; that is how the components inside know
+ * which surface they are on.
  *
- * @slot header - Content above the main content
- * @slot - Main content
- * @slot footer - Content below the main content
+ * @element nldd-simple-section
  *
  * @attr {'inherit'|'base'|'tinted'} [background] - Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface).
  * @attr {'inherit'|'light'|'dark'|'inverted'} [scheme] - Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme).
  * @attr {string} [width] - Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.
- * @attr {'left'|'center'|'right'} [horizontal-alignment] - Where the body's children sit across the body ('left' default). Use it to place something narrower than the body, such as a container with a max-width.
- * @attr {'top'|'center'|'bottom'} [vertical-alignment] - Where the body's children sit down the section ('top' default). Only visible when the section is taller than its content.
  * @attr {string} [height] - Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width).
  * @attr {string} [padding-block] - Block (top and bottom) padding override (token 0-96; '0' strips it).
  * @attr {string} [padding-top] - Top padding override.
  * @attr {string} [padding-bottom] - Bottom padding override.
  * @attr {string} [sm-padding-block] - Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}).
+ * @attr {'left'|'center'|'right'} [horizontal-alignment] - Where the body's children sit across the body ('left' default). Use it to place something narrower than the body, such as a container with a max-width.
+ * @attr {'top'|'center'|'bottom'} [vertical-alignment] - Where the body's children sit down the section ('top' default). Only visible when the section is taller than its content.
+ *
+ * @slot header - Content above the main content
+ * @slot - Main content
+ * @slot footer - Content below the main content
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';

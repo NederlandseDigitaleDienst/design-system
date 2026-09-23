@@ -179,12 +179,11 @@ const Template = ({
 	></nldd-image>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const WithCaption = {
-	name: 'With caption',
+export const MetCaption = {
 	render: Template,
 	args: {
 		caption: 'Klein koolwitje op een vlinderstruik.',
@@ -192,7 +191,7 @@ export const WithCaption = {
 	},
 };
 
-export const Shapes = {
+export const Vormen = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: flex-end;">
 			<div style="width: 200px;">
@@ -227,8 +226,7 @@ export const Shapes = {
 	parameters: { controls: { disable: true } },
 };
 
-export const AspectRatios = {
-	name: 'Aspect ratios',
+export const Beeldverhoudingen = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; flex-wrap: wrap;">
 			${['21/9', '16/9', '3/2', '4/3', '1/1', '3/4', '2/3'].map(ratio => html`
@@ -247,7 +245,7 @@ export const AspectRatios = {
 };
 
 export const ObjectFit = {
-	name: 'Object-fit comparison',
+	name: 'Object-fit vergeleken',
 	render: () => html`
 		<div style="display: flex; gap: 16px; flex-wrap: wrap;">
 			${['cover', 'contain', 'fill', 'scale-down', 'none'].map(fit => html`
@@ -266,8 +264,8 @@ export const ObjectFit = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Decorative = {
-	name: 'Decorative (background-style)',
+export const Decoratief = {
+	name: 'Met decorative (als achtergrond)',
 	render: () => html`
 		<div style="max-width: 480px;">
 			<nldd-image
@@ -280,8 +278,8 @@ export const Decorative = {
 	parameters: { controls: { disable: true } },
 };
 
-export const SlottedImage = {
-	name: 'Slotted img (consumer-provided)',
+export const EigenImgInDeSlot = {
+	name: 'Eigen img in de slot',
 	render: () => html`
 		<div style="max-width: 480px;">
 			<nldd-image aspect-ratio="16/9" shape="rounded">
@@ -308,8 +306,8 @@ export const SlottedImage = {
  * Rechts: met src — placeholder is even zichtbaar en wordt overlapt zodra de
  * afbeelding geladen is.
  */
-export const LQIPPlaceholder = {
-	name: 'LQIP placeholder',
+export const PlaceholderMetLqip = {
+	name: 'Placeholder met LQIP',
 	render: () => html`
 		<div style="display: flex; gap: 24px; flex-wrap: wrap;">
 			<div style="width: 320px;">
@@ -343,8 +341,8 @@ export const LQIPPlaceholder = {
  *
  * Een decoratieve afbeelding (`decorative`) toont alleen het icoon, geen tekst.
  */
-export const ErrorState = {
-	name: 'Error state',
+export const AfbeeldingLaadtNiet = {
+	name: 'Als de afbeelding niet laadt',
 	render: () => html`
 		<div style="display: flex; gap: 24px; flex-wrap: wrap;">
 			<div style="width: 320px;">
@@ -377,8 +375,8 @@ export const ErrorState = {
  * ooit offline gaan, dan kun je je placeholders nog steeds genereren met dit
  * lokale alternatief.
  */
-export const LQIPEncoderTool = {
-	name: 'LQIP encoder tool',
+export const LqipEncoder = {
+	name: 'LQIP-encoder',
 	render: () => html`<nldd-lqip-encoder></nldd-lqip-encoder>`,
 	parameters: { controls: { disable: true } },
 };

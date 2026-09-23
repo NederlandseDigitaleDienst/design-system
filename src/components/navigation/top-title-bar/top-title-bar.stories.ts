@@ -195,10 +195,12 @@ export const MetTitelAnker = {
 			@dismiss=${action('dismiss')}
 		></nldd-top-title-bar>
 		<nldd-simple-section>
-			<nldd-title id="page-title-bar" size="2">
-				<h1>Paginatitel</h1>
-				<p slot="subtitle">Scroll omlaag om te zien hoe de compacte stand wordt geactiveerd.</p>
-			</nldd-title>
+			<nldd-title id="page-title-bar"
+				size="2"
+				text="Paginatitel"
+				supporting-text="Scroll omlaag om te zien hoe de compacte stand wordt geactiveerd."
+				heading-level="1"
+			></nldd-title>
 			<div style="height: 600px;"></div>
 		</nldd-simple-section>
 	</nldd-page>
@@ -224,10 +226,12 @@ export const MetTitelAnkerZonderActies = {
 			@dismiss=${action('dismiss')}
 		></nldd-top-title-bar>
 		<nldd-simple-section>
-			<nldd-title id="page-title-bar-2" size="2">
-				<h1>Paginatitel</h1>
-				<p slot="subtitle">Zonder terugknop of sluitknop.</p>
-			</nldd-title>
+			<nldd-title id="page-title-bar-2"
+				size="2"
+				text="Paginatitel"
+				supporting-text="Zonder terugknop of sluitknop."
+				heading-level="1"
+			></nldd-title>
 			<div style="height: 600px;"></div>
 		</nldd-simple-section>
 	</nldd-page>

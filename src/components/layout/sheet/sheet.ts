@@ -12,12 +12,23 @@
  * never inside a split view's content flow: as a slotted flex child it would steal
  * pane height (see `nldd-split-view-pane`).
  *
+ * A sheet holds a whole nldd-page: an nldd-top-title-bar in its header slot,
+ * the content, and a footer when there are actions. The page behaves as it does
+ * anywhere else, with only the middle scrolling, and the text of the bar is
+ * also the sheet's accessible name. Do not build a header of your own.
+ *
+ * Open and close it with `open`, bound to your state together with the close
+ * event: the sheet clears `open` itself when the user closes it. show() and
+ * hide() do the same for code without a binding. Keep the sheet in the DOM
+ * rather than mounting it when it opens, or the animations are skipped.
+ *
  * @element nldd-sheet
  *
- * @attr {string} placement - Sheet position: 'left' | 'right' | 'bottom' (default: 'right')
- * @attr {string} height - Custom height for bottom sheets (and for any sheet on sm viewports, where all placements collapse to bottom). Accepts: `'full'` (default — viewport minus top-inset, identical to omitting the attribute), `'fit-content'` (collapse to content size), or any CSS length/percentage (e.g. `'50dvh'`, `'480px'`, `'50%'`). Always clamped to `100dvh - top-inset` so the sheet can't extend past the dismiss-tap area. No effect on side sheets at md+.
- * @attr {string} accessible-label - Accessible name for the dialog, forwarded as aria-label (default: 'Venster')
  * @attr {string} width - Custom width for side sheets (left/right) as a CSS length (e.g. '480px', '32rem'). Applied from the md breakpoint up; ignored on sm (bottom sheet) and for `placement="bottom"`. Clamped to `100vw - 2 * inset` so the sheet always fits.
+ * @attr {string} height - Custom height for bottom sheets (and for any sheet on sm viewports, where all placements collapse to bottom). Accepts: `'full'` (default — viewport minus top-inset, identical to omitting the attribute), `'fit-content'` (collapse to content size), or any CSS length/percentage (e.g. `'50dvh'`, `'480px'`, `'50%'`). Always clamped to `100dvh - top-inset` so the sheet can't extend past the dismiss-tap area. No effect on side sheets at md+.
+ * @attr {string} placement - Sheet position: 'left' | 'right' | 'bottom' (default: 'right')
+ * @attr {string} accessible-label - Accessible name for the dialog, forwarded as aria-label. Unset, the sheet takes the text of the nldd-top-title-bar inside it, and without one it is called 'Venster'.
+ * @attr {boolean} open - Whether the sheet is open. Set it to open or close the sheet, as an alternative to show() and hide(). The sheet clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event.
  *
  * @slot - Sheet content
  *
@@ -37,6 +48,7 @@ import { isPointerMode } from '../../../utilities/input-modality.js';
 import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
+import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 
 type Placement = 'left' | 'right' | 'bottom';
 
@@ -49,8 +61,13 @@ const SHEET_CLOSE_TIMEOUT_MS = 1000;
 export class NLDDSheet extends LitElement {
 	static override styles = sheetStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<Placement>('right') })
-	placement: Placement = 'right';
+	/**
+	 * Custom width for side sheets (left/right) from the md breakpoint up.
+	 * CSS length (e.g. '480px', '32rem'). Ignored on sm viewports (bottom-sheet
+	 * fallback) and for `placement="bottom"`. Clamped to `100vw - 2 * inset`.
+	 */
+	@property({ type: String, reflect: true })
+	width = '';
 
 	/**
 	 * Custom height for bottom sheets (and for any sheet on sm viewports
@@ -62,19 +79,28 @@ export class NLDDSheet extends LitElement {
 	@property({ type: String, reflect: true })
 	height = '';
 
+	@property({ reflect: true, converter: reflectNonDefault<Placement>('right') })
+	placement: Placement = 'right';
+
 	/** Accessible name for the dialog — forwarded as aria-label to the dialog element. */
 	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = 'Venster';
+	accessibleLabel = '';
 
-	/**
-	 * Custom width for side sheets (left/right) from the md breakpoint up.
-	 * CSS length (e.g. '480px', '32rem'). Ignored on sm viewports (bottom-sheet
-	 * fallback) and for `placement="bottom"`. Clamped to `100vw - 2 * inset`.
-	 */
-	@property({ type: String, reflect: true })
-	width = '';
+	private _titleBar = new TitleBarLabelController(this);
+
+	get _resolvedAccessibleLabel(): string {
+		return this.accessibleLabel || this._titleBar.text || 'Venster';
+	}
+
+	@property({ type: Boolean, reflect: true })
+	open = false;
 
 	override updated(changed: Map<string, unknown>) {
+		if (changed.has('open')) {
+			const dialog = this._dialog;
+			if (this.open && (!dialog?.open || this._closing)) this.show();
+			else if (!this.open && dialog?.open && !this._closing) this.hide();
+		}
 		if (changed.has('width')) {
 			if (this.width) {
 				this.style.setProperty('--_width', this.width);
@@ -147,13 +173,21 @@ export class NLDDSheet extends LitElement {
 		// New open cycle: the next close may emit again.
 		this._closeEmitted = false;
 
-		// Warn once per instance when the consumer has not provided a meaningful accessible label
-		if (import.meta.env?.DEV && this.accessibleLabel === 'Venster' && !this._hasWarnedLabel) {
+		// Warn once per instance when the sheet has no name of its own to go by
+		if (import.meta.env?.DEV && !this.accessibleLabel && !this._titleBar.text && !this._hasWarnedLabel) {
 			this._hasWarnedLabel = true;
-			console.warn('<nldd-sheet>: No accessible-label provided. Screen readers will announce this dialog as "Venster". Set accessible-label to a descriptive name matching the dialog title.');
+			console.warn('<nldd-sheet>: No accessible-label and no nldd-top-title-bar with text inside. Screen readers will announce this dialog as "Venster". Give the title bar a text, or set accessible-label.');
 		}
 
-		dialog.showModal();
+		if (this._closing) {
+			// Opened again while the close animation runs: call the close off.
+			window.clearTimeout(this._closeFallback);
+			this._closing = false;
+			dialog.classList.remove('is-closing');
+		} else {
+			dialog.showModal();
+		}
+		this.open = true;
 		this._manageFocus();
 		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
 	}
@@ -179,6 +213,7 @@ export class NLDDSheet extends LitElement {
 		const dialog = this._dialog;
 		if (!dialog || !dialog.open || this._closing) return;
 
+		this.open = false;
 		this._closing = true;
 		dialog.classList.add('is-closing');
 
@@ -240,6 +275,7 @@ export class NLDDSheet extends LitElement {
 	private _closeEmitted = false;
 
 	private _emitClose(): void {
+		this.open = false;
 		if (this._closeEmitted) return;
 		this._closeEmitted = true;
 		this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));

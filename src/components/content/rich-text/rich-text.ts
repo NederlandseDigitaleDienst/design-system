@@ -5,6 +5,15 @@
  * typography. Uses no shadow DOM so styles apply to all nested elements.
  * Import nldd-rich-text.css globally in your application.
  *
+ * ## Direct children
+ * The rich text lays out its direct children in a grid: the vertical rhythm
+ * between headings, paragraphs and lists, and the width zones below, apply to
+ * those children only. A single wrapper `div` without `class`, `style`, `role`
+ * or `data-width`, as a markdown renderer or a component root produces it, is
+ * passed through with `display: contents`, so its children count as direct.
+ * Any other wrapper becomes a single grid item, and the paragraphs inside it
+ * lose their spacing.
+ *
  * ## Width zones
  * Children are placed in three zones: text (headings, paragraphs, lists,
  * blockquote, div/section) reads at the `main` size; media and tables (img,
@@ -17,21 +26,21 @@
  *
  * @element nldd-rich-text
  *
- * @attr {string} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
- * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
- * @attr {boolean} hyphens - Opt-in automatic hyphenation for running text (p,
- *   li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for
- *   instance): without language information the browser does not hyphenate. An
- *   `overflow-wrap: break-word` safety net on p/li is always on, independent of
- *   this attribute, so long URLs and compounds break neatly instead of
- *   overflowing even without a dictionary.
  * @attr {string} color - 'content' (the default) takes the system's own content
  *   colors, each element its own. 'inherit' lets all text follow the color of
  *   the surface instead (for colored areas such as the filled categories).
  *   Links stay underlined as an affordance; secondary text (figcaption) gets
  *   the same color at a lowered opacity. Known v1 gaps: inline code, mark,
  *   tables and hr keep their own surfaces.
+ * @attr {string} spacing - Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'
+ * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
+ * @attr {boolean} hyphens - Opt-in automatic hyphenation for running text (p,
+ *   li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for
+ *   instance): without language information the browser does not hyphenate. An
+ *   `overflow-wrap: break-word` safety net on p/li is always on, independent of
+ *   this attribute, so long URLs and compounds break neatly instead of
+ *   overflowing even without a dictionary.
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -45,20 +54,20 @@ const MANAGED_LABEL_ATTR = 'data-nldd-managed-label';
 
 @customElement('nldd-rich-text')
 export class NLDDRichText extends LitElement {
+	@property({ reflect: true, converter: reflectNonDefault<'content' | 'inherit'>('content') })
+	color: 'content' | 'inherit' = 'content';
+
 	@property({ reflect: true, converter: reflectNonDefault<Spacing>('snug') })
 	spacing: Spacing = 'snug';
 
 	@property({ type: Boolean, reflect: true })
 	centered = false;
 
-	@property({ type: Boolean, reflect: true })
-	hyphens = false;
-
-	@property({ reflect: true, converter: reflectNonDefault<'content' | 'inherit'>('content') })
-	color: 'content' | 'inherit' = 'content';
-
 	@property({ type: Object })
 	translations: Partial<NLDDRichTextTranslations> = {};
+
+	@property({ type: Boolean, reflect: true })
+	hyphens = false;
 
 	public _t(key: keyof NLDDRichTextTranslations): string {
 		return this.translations[key] ?? nlddRichTextTranslations[key];

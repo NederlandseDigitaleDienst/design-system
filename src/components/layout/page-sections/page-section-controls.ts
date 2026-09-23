@@ -8,77 +8,82 @@ import {
 } from 'lit/directive.js';
 
 const PADDING_OPTIONS = [
-	'', '0', '2', '4', '6', '8', '10', '12', '16', '20', '24',
+	'(auto)', '0', '2', '4', '6', '8', '10', '12', '16', '20', '24',
 	'28', '32', '40', '44', '48', '56', '64', '80', '96',
 ];
 
-const paddingControl = (description: string) => ({
+const paddingControl = (name: string, description: string) => ({
+	name,
 	control: { type: 'select' as const },
 	options: PADDING_OPTIONS,
+	mapping: { '(auto)': '' },
 	description,
+	table: { defaultValue: { summary: '(auto)' } },
 });
 
 /**
  * Shared Storybook controls for the PageSectionMixin surface API
  * (background, scheme, width, height and the 12 block-padding overrides).
- * Spread into a section story's `argTypes` / `args`, and bind onto the host
+ * Spread into a section story's `args` / `argTypes`, and bind onto the host
  * element in `render` with the `pageSectionAttrs` directive.
  */
-export const pageSectionArgTypes = {
-	background: {
-		control: { type: 'select' },
-		options: ['inherit', 'base', 'tinted'],
-		description: 'Oppervlak: "inherit" (transparant) toont het oppervlak van de ouder; "base"/"tinted" tekenen een oppervlak en cascaden het naar afstammelingen',
-		table: { defaultValue: { summary: 'inherit' } },
-	},
-	scheme: {
-		control: { type: 'select' },
-		options: ['inherit', 'light', 'dark', 'inverted'],
-		description: 'Kleurschema: "inherit" erft; "inverted" is het tegenovergestelde van het omliggende paginaschema',
-		table: { defaultValue: { summary: 'inherit' } },
-	},
-	width: {
-		control: 'text',
-		description: 'Body max-width: "full" verwijdert de constraint, of een CSS length (bv. "480px") overschrijft de default max-width',
-	},
-	height: {
-		control: 'text',
-		description: 'Minimale sectiehoogte (CSS length, bv. "400px", "100dvh") — net als width op de body-max-width, mapt height op min-height van de host',
-	},
-	'padding-block': paddingControl('Block (boven+onder) padding-override (token 0–96; "0" verwijdert de padding)'),
-	'padding-top': paddingControl('Override van alleen de bovenpadding'),
-	'padding-bottom': paddingControl('Override van alleen de onderpadding'),
-	'sm-padding-block': paddingControl('Block-padding op sm (≤640px)'),
-	'sm-padding-top': paddingControl('Bovenpadding op sm (≤640px)'),
-	'sm-padding-bottom': paddingControl('Onderpadding op sm (≤640px)'),
-	'md-padding-block': paddingControl('Block-padding op md (641–1007px)'),
-	'md-padding-top': paddingControl('Bovenpadding op md (641–1007px)'),
-	'md-padding-bottom': paddingControl('Onderpadding op md (641–1007px)'),
-	'lg-padding-block': paddingControl('Block-padding op lg (≥1008px)'),
-	'lg-padding-top': paddingControl('Bovenpadding op lg (≥1008px)'),
-	'lg-padding-bottom': paddingControl('Onderpadding op lg (≥1008px)'),
-};
-
 export const pageSectionArgs = {
 	background: 'inherit',
 	scheme: 'inherit',
 	width: '',
 	height: '',
-	'padding-block': '',
-	'padding-top': '',
-	'padding-bottom': '',
-	'sm-padding-block': '',
-	'sm-padding-top': '',
-	'sm-padding-bottom': '',
-	'md-padding-block': '',
-	'md-padding-top': '',
-	'md-padding-bottom': '',
-	'lg-padding-block': '',
-	'lg-padding-top': '',
-	'lg-padding-bottom': '',
+	paddingBlock: '',
+	paddingTop: '',
+	paddingBottom: '',
+	smPaddingBlock: '',
+	smPaddingTop: '',
+	smPaddingBottom: '',
+	mdPaddingBlock: '',
+	mdPaddingTop: '',
+	mdPaddingBottom: '',
+	lgPaddingBlock: '',
+	lgPaddingTop: '',
+	lgPaddingBottom: '',
 };
 
-const PAGE_SECTION_ATTR_KEYS = Object.keys(pageSectionArgs);
+export const pageSectionArgTypes = {
+	background: {
+		control: { type: 'select' },
+		options: ['inherit', 'base', 'tinted'],
+		description: 'Oppervlak: "inherit" laat het oppervlak van de ouder doorschijnen, "base" en "tinted" tekenen een eigen oppervlak dat naar de inhoud cascadeert',
+		table: { defaultValue: { summary: 'inherit' } },
+	},
+	scheme: {
+		control: { type: 'select' },
+		options: ['inherit', 'light', 'dark', 'inverted'],
+		description: 'Kleurschema: "inherit" volgt de pagina, "inverted" is het tegenovergestelde daarvan',
+		table: { defaultValue: { summary: 'inherit' } },
+	},
+	width: {
+		control: 'text',
+		description: 'Maximale breedte van de inhoud: "full" haalt de grens weg, een CSS-lengte (bv. "480px") vervangt hem',
+	},
+	height: {
+		control: 'text',
+		description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. "400px" of "100dvh")',
+	},
+	paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, "0" haalt hem weg)'),
+	paddingTop: paddingControl('padding-top', 'Alleen de padding boven'),
+	paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'),
+	smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'),
+	smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'),
+	smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'),
+	mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'),
+	mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'),
+	mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'),
+	lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'),
+	lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'),
+	lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'),
+};
+
+const toAttribute = (key: string) => key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+
+const PAGE_SECTION_ATTRS = Object.keys(pageSectionArgs).map((key) => [key, toAttribute(key)]);
 
 class PageSectionAttrsDirective extends Directive {
 	constructor(partInfo: PartInfo) {
@@ -94,12 +99,12 @@ class PageSectionAttrsDirective extends Directive {
 
 	override update(part: ElementPart, [args]: [Record<string, unknown>]) {
 		const el = part.element;
-		for (const key of PAGE_SECTION_ATTR_KEYS) {
+		for (const [key, attribute] of PAGE_SECTION_ATTRS) {
 			const value = args[key];
 			if (typeof value === 'string' && value !== '') {
-				el.setAttribute(key, value);
+				el.setAttribute(attribute, value);
 			} else {
-				el.removeAttribute(key);
+				el.removeAttribute(attribute);
 			}
 		}
 		return nothing;

@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import './one-third-two-thirds-section.js';
+import '../../../content/title/title.js';
 import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
@@ -13,8 +14,8 @@ import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-
  * ## Gebruik
  * ```html
  * <nldd-one-third-two-thirds-section>
- *   <nldd-rich-text slot="header"><h2>Sectietitel</h2></nldd-rich-text>
- *   <nldd-rich-text slot="aside"><p>Zijkolom.</p></nldd-rich-text>
+ *   <nldd-title slot="header" text="Sectietitel" heading-level="2"></nldd-title>
+ *   <nldd-rich-text slot="left"><p>Zijkolom.</p></nldd-rich-text>
  *   <nldd-rich-text><p>Hoofdinhoud.</p></nldd-rich-text>
  * </nldd-one-third-two-thirds-section>
  * ```
@@ -32,16 +33,17 @@ export default {
 			type: 'stable',
 		},
 	},
-	argTypes: pageSectionArgTypes,
 	args: pageSectionArgs,
+	argTypes: pageSectionArgTypes,
 };
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-one-third-two-thirds-section ${pageSectionAttrs(args)}>
-			<nldd-rich-text slot="header">
-				<h2>Sectietitel</h2>
-			</nldd-rich-text>
+			<nldd-title slot="header"
+				text="Sectietitel"
+				heading-level="2"
+			></nldd-title>
 			<nldd-rich-text slot="left">
 				<h3>Zijkolom</h3>
 				<p>Gebruik de zijkolom voor navigatie, filters of aanvullende informatie.</p>

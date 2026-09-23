@@ -24,10 +24,11 @@ Daarbinnen stapel je secties.
 <nldd-app-view>
   <nldd-page>
     <nldd-simple-section>
-      <nldd-title size="1">
-        <span slot="overline">RegelRecht</span>
-        <h1>van wet naar digitale werking</h1>
-      </nldd-title>
+      <nldd-title size="1"
+        overline="RegelRecht"
+        text="van wet naar digitale werking"
+        heading-level="1"
+      ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-rich-text>
         <p>
@@ -47,20 +48,21 @@ Een rij gelijkwaardige kaarten is een `nldd-collection` (layout `grid`) met
 
 ```html
     <nldd-simple-section>
-      <nldd-title size="2"
-        slot="header"
-      >
-        <h2>Wat is RegelRecht?</h2>
-      </nldd-title>
+      <nldd-title slot="header"
+        size="2"
+        text="Wat is RegelRecht?"
+        heading-level="2"
+      ></nldd-title>
 
       <nldd-collection layout="grid"
         item-width="320px"
       >
         <nldd-card>
           <nldd-container padding="16">
-            <nldd-title size="4">
-              <h3>Van analoog recht naar code</h3>
-            </nldd-title>
+            <nldd-title size="4"
+              text="Van analoog recht naar code"
+              heading-level="3"
+            ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
               <p>Kunnen we traditionele wetgeving transformeren naar

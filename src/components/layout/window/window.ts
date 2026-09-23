@@ -5,21 +5,28 @@
  * CSS values. Always modal.
  *
  * No header of its own: consumers use nldd-page with a sticky header inside for
- * a title bar.
+ * a title bar. The text of the nldd-top-title-bar in that header is also the
+ * window's accessible name.
+ *
+ * Open and close it with `open`, bound to your state together with the close
+ * event: the window clears `open` itself when the user closes it. show() and
+ * hide() do the same for code without a binding. Keep the window in the DOM
+ * rather than mounting it when it opens, or the animations are skipped.
  *
  * @element nldd-window
  *
- * @attr {boolean} no-light-dismiss - A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a wizard, a form with filled-in fields. Escape and the dismiss button keep working.
- * @attr {string} accessible-label - (required) Accessible name (aria-label). Falls back to the i18n default ('Venster') when unset. Always pass a unique, descriptive name per window.
- * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.
- * @attr {string} top - CSS top position of the top edge (e.g. '0', '100px')
- * @attr {string} left - CSS left position of the left edge
- * @attr {string} right - CSS right value
- * @attr {string} bottom - CSS bottom value
- * @attr {boolean} centered - Centers both axes on the viewport. Overridable per axis: `centered top="0"` is horizontally centered, top aligned. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides.
+ * @attr {'inherit'|'light'|'dark'} scheme - Color scheme (default 'inherit').
  * @attr {string} width - CSS width (default: var(--components-window-default-width))
  * @attr {string} height - CSS height (default: content height)
- * @attr {'inherit'|'light'|'dark'} scheme - Color scheme (default 'inherit').
+ * @attr {string} top - CSS top position of the top edge (e.g. '0', '100px')
+ * @attr {string} right - CSS right value
+ * @attr {string} bottom - CSS bottom value
+ * @attr {string} left - CSS left position of the left edge
+ * @attr {boolean} centered - Centers both axes on the viewport. Overridable per axis: `centered top="0"` is horizontally centered, top aligned. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides.
+ * @attr {string} accessible-label - Accessible name (aria-label). Unset, the window takes the text of the nldd-top-title-bar inside it, and without one the i18n default ('Venster'). Each window needs a unique, descriptive name, from either.
+ * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.
+ * @attr {boolean} no-light-dismiss - A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a wizard, a form with filled-in fields. Escape and the dismiss button keep working.
+ * @attr {boolean} open - Whether the window is open. Set it to open or close the window, as an alternative to show() and hide(). The window clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event.
  *
  * @slot - Complete window content (e.g. nldd-page)
  *
@@ -38,6 +45,8 @@ import { nlddWindowTranslations, type NLDDWindowTranslations } from './window.i1
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
+import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
+import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 
@@ -45,8 +54,29 @@ export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 export class NLDDWindow extends LitElement {
 	static override styles = windowStyles;
 
-	@property({ type: Boolean, reflect: true, attribute: 'no-light-dismiss' })
-	noLightDismiss = false;
+	@property({ type: String, reflect: true })
+	scheme: NLDDWindowScheme = 'inherit';
+
+	@property({ type: String, reflect: true })
+	width: string | undefined;
+
+	@property({ type: String, reflect: true })
+	height: string | undefined;
+
+	@property({ type: String, reflect: true })
+	top: string | undefined;
+
+	@property({ type: String, reflect: true })
+	right: string | undefined;
+
+	@property({ type: String, reflect: true })
+	bottom: string | undefined;
+
+	@property({ type: String, reflect: true })
+	left: string | undefined;
+
+	@property({ type: Boolean, reflect: true })
+	centered = false;
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
@@ -58,32 +88,15 @@ export class NLDDWindow extends LitElement {
 	@property({ type: Object })
 	translations: Partial<NLDDWindowTranslations> = {};
 
-	@property({ type: String, reflect: true })
-	top: string | undefined;
-
-	@property({ type: String, reflect: true })
-	left: string | undefined;
-
-	@property({ type: String, reflect: true })
-	right: string | undefined;
-
-	@property({ type: String, reflect: true })
-	bottom: string | undefined;
+	@property({ type: Boolean, reflect: true, attribute: 'no-light-dismiss' })
+	noLightDismiss = false;
 
 	@property({ type: Boolean, reflect: true })
-	centered = false;
-
-	@property({ type: String, reflect: true })
-	width: string | undefined;
-
-	@property({ type: String, reflect: true })
-	height: string | undefined;
-
-	@property({ type: String, reflect: true })
-	scheme: NLDDWindowScheme = 'inherit';
+	open = false;
 
 	private _closing = false;
 	private _hasWarnedLabel = false;
+	private _titleBar = new TitleBarLabelController(this);
 
 	private get _dialog(): HTMLDialogElement | null {
 		return this.shadowRoot?.querySelector('dialog') ?? null;
@@ -110,6 +123,11 @@ export class NLDDWindow extends LitElement {
 	}
 
 	override updated(changed: PropertyValues): void {
+		if (changed.has('open')) {
+			const dialog = this._dialog;
+			if (this.open && !dialog?.open) this.show();
+			else if (!this.open && dialog?.open) this.hide();
+		}
 		this._applyPositionStyles();
 		if (changed.has('scheme')) {
 			this._applyScheme();
@@ -134,31 +152,51 @@ export class NLDDWindow extends LitElement {
 	}
 
 	get _resolvedAccessibleLabel(): string {
-		return this.accessibleLabel || this._t('components.window.accessible-label');
+		return this.accessibleLabel || this._titleBar.text || this._t('components.window.accessible-label');
 	}
+
+	/** Cancels a `show()` that is waiting for the first render; null when none is. */
+	private _cancelPendingOpen: (() => void) | null = null;
 
 	show(): void {
 		const dialog = this._dialog;
-		if (!dialog) return;
+		if (!dialog) {
+			this._cancelPendingOpen?.();
+			this._cancelPendingOpen = openWhenRendered(
+				this,
+				() => this._dialog,
+				() => this.show(),
+			);
+			return;
+		}
+
+		this._cancelPendingOpen?.();
+		this._cancelPendingOpen = null;
 
 		// New open cycle: the next close may emit again.
 		this._closeEmitted = false;
 
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this._hasWarnedLabel) {
+		if (import.meta.env?.DEV && !this.accessibleLabel && !this._titleBar.text && !this._hasWarnedLabel) {
 			this._hasWarnedLabel = true;
-			console.warn(`<nldd-window>: No accessible-label provided. Screen readers will announce this window as "${this._t('components.window.accessible-label')}". Set accessible-label to a unique, descriptive name.`);
+			console.warn(`<nldd-window>: No accessible-label and no nldd-top-title-bar with text inside. Screen readers will announce this window as "${this._t('components.window.accessible-label')}". Give the title bar a text, or set accessible-label.`);
 		}
 
 		dialog.showModal();
+		this.open = true;
 		this._applyPositionStyles();
 		this._manageFocus();
 		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
 	}
 
 	hide(): void {
+		// A hide() beats a show() that is still waiting for the first render.
+		this._cancelPendingOpen?.();
+		this._cancelPendingOpen = null;
+
 		const dialog = this._dialog;
 		if (!dialog || !dialog.open || this._closing) return;
 
+		this.open = false;
 		this._closing = true;
 		dialog.close();
 		this._closing = false;
@@ -174,6 +212,7 @@ export class NLDDWindow extends LitElement {
 	private _closeEmitted = false;
 
 	private _emitClose(): void {
+		this.open = false;
 		if (this._closeEmitted) return;
 		this._closeEmitted = true;
 		this.dispatchEvent(new CustomEvent('close', { bubbles: false, composed: true }));

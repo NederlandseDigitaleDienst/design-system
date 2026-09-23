@@ -142,7 +142,7 @@ export { parseTypedTag, parseNamedTag, parseComponent, extractLeadingBlock, esca
 const INTERNAL_TAGS = new Set(['nldd-lqip-encoder']);
 
 // --- Icon names ---
-// The valid `name` values for <nldd-icon> are the SVG filenames in the icon
+// The valid `icon` values are the SVG filenames in the icon
 // folder plus the aliases. Both are build inputs, so we read them directly to
 // give consumers an offline, in-sync catalog instead of "see Storybook".
 
@@ -179,7 +179,7 @@ function renderIcons({ names, aliases }) {
 	const out = [
 		'## Iconen',
 		'',
-		`Geldige \`name\`-waarden voor \`<nldd-icon>\` (${names.length} iconen` +
+		`Geldige waarden voor \`icon\`, op \`<nldd-icon>\` en op elk component dat een icoon rendert (${names.length} iconen` +
 			`${aliases.length ? ` + ${aliases.length} aliassen` : ''}). Verzin geen naam; kies er een uit deze set.`,
 		'',
 		'**Iconen**',

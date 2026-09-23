@@ -27,17 +27,17 @@
  * @attr {boolean} hidden - Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat.
  *
  * @slot - The control shown in the toolbar (e.g. nldd-icon-button)
- * @slot overflow - nldd-menu-item / nldd-menu-divider / nldd-menu-group children, shown in the overflow menu when this item overflows
+ * @slot overflow - Required: nldd-menu-item / nldd-menu-divider / nldd-menu-group children, shown in the overflow menu when this item overflows. Without them the action is gone on a narrow toolbar, and the item warns in development.
  *
  * ---
  *
  * @element nldd-toolbar-title
- * @attr {string} text - Title text.
- * @attr {string} supporting-text - Secondary supporting text shown below the title.
- * @attr {string} align - Text alignment: 'left' | 'center' (default: 'left').
  * @attr {string} width - Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width.
  * @attr {string} min-width - Minimum width as a CSS length (default: '0', so the title shrink-wraps its content and the next element sits against it).
  * @attr {string} max-width - Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row).
+ * @attr {string} align - Text alignment: 'left' | 'center' (default: 'left').
+ * @attr {string} text - Title text.
+ * @attr {string} supporting-text - Secondary supporting text shown below the title.
  * @attr {'sm'|'md'|'lg'} size - Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts.
  *
  * @attr {string} href - Makes the mark and the name one link, for the place this window belongs to (usually the app's own start). The `action` slot stays outside it: a control inside a link is a control you cannot reach without following the link.
@@ -116,6 +116,16 @@ export class NLDDToolbarItem extends LitElement {
 	// reactive properties: Lit would reflect them asynchronously, which would
 	// desync the attribute from the synchronous getBoundingClientRect reads.
 
+	override firstUpdated(): void {
+		// Without an alternative the action is simply gone once the toolbar runs
+		// out of room, and that only happens on a narrow screen. Say it at load,
+		// where a wide screen sees it too, not at the moment the item overflows.
+		if (!import.meta.env?.DEV || this.querySelector(':scope > [slot="overflow"]')) return;
+		const control = this.querySelector(':scope > :not([slot])');
+		const name = control?.getAttribute('accessible-label') || control?.getAttribute('text') || this.label;
+		console.warn(`nldd-toolbar-item${name ? ` ("${name}")` : ''}: nothing in slot="overflow". On a narrow toolbar this item moves into the overflow menu, and without an nldd-menu-item there its action is gone. Add one in slot="overflow".`);
+	}
+
 	override render() {
 		return toolbarItemTemplate(this);
 	}
@@ -128,21 +138,6 @@ export class NLDDToolbarItem extends LitElement {
 export class NLDDToolbarTitle extends LitElement {
 	static override styles = toolbarTitleStyles;
 
-	@property({ type: String, reflect: true })
-	href = '';
-
-	@property({ type: String, reflect: true })
-	target = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	text = '';
-
-	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
-	supportingText = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<TitleAlign>('left') })
-	align: TitleAlign = 'left';
-
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
@@ -152,12 +147,27 @@ export class NLDDToolbarTitle extends LitElement {
 	@property({ reflect: true, attribute: 'max-width', converter: reflectNonDefault<string>('') })
 	maxWidth = '';
 
-	/** Set by nldd-toolbar; not part of the public API. @internal */
-	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
-	size: Size = 'md';
+	@property({ reflect: true, converter: reflectNonDefault<TitleAlign>('left') })
+	align: TitleAlign = 'left';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	text = '';
+
+	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
+	supportingText = '';
+
+	@property({ type: String, reflect: true })
+	href = '';
+
+	@property({ type: String, reflect: true })
+	target = '';
 
 	@property({ type: Object })
 	translations: Partial<NLDDToolbarTranslations> = {};
+
+	/** Set by nldd-toolbar; not part of the public API. @internal */
+	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
+	size: Size = 'md';
 
 	public _t(key: keyof NLDDToolbarTranslations): string {
 		return this.translations[key] ?? nlddToolbarTranslations[key];

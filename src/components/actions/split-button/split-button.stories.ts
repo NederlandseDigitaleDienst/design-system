@@ -99,13 +99,13 @@ const Template = ({ variant, size, width, text, icon, disabled }: Record<string,
 	>${menu}</nldd-split-button>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 	args: {},
 };
 
 // All variants overview
-export const Variants = {
+export const Varianten = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-split-button text="Opslaan" variant="primary">${menu}</nldd-split-button>
@@ -119,7 +119,7 @@ export const Variants = {
 };
 
 // Start icon
-export const WithStartIcon = {
+export const MetStartIcon = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-split-button text="Opslaan" icon="check-mark" variant="primary">${menu}</nldd-split-button>
@@ -133,7 +133,7 @@ export const WithStartIcon = {
 };
 
 // All sizes overview
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-split-button text="Opslaan" size="lg">${menu}</nldd-split-button>
@@ -159,7 +159,8 @@ export const VolleBreedte = {
 };
 
 // Disabled
-export const Disabled = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-split-button text="Opslaan" disabled size="md">${menu}</nldd-split-button>
@@ -187,7 +188,10 @@ export const MetPopover = {
 		>
 			<nldd-popover accessible-label="Deelopties" width="280px">
 				<nldd-container padding="16" gap="8">
-					<nldd-title size="6"><h2>Deel deze pagina</h2></nldd-title>
+					<nldd-title size="6"
+						text="Deel deze pagina"
+						heading-level="2"
+					></nldd-title>
 					<nldd-rich-text>
 						<p>Kies hoe je deze pagina wilt delen met anderen.</p>
 					</nldd-rich-text>

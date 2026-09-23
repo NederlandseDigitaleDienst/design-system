@@ -1,6 +1,10 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
 import './page.js';
+import '../sheet/sheet.js';
+import '../split-views/side-by-side-split-view/side-by-side-split-view.js';
+import '../split-views/split-view-pane/split-view-pane.js';
+import '../split-views/bar-split-view/bar-split-view.js';
 
 describe('nldd-page', () => {
 	let el: HTMLElement;
@@ -295,6 +299,122 @@ describe('nldd-page', () => {
 			// last-pick and thus must not carry is-last.
 			expect(el.querySelector('#b')!.classList.contains('is-last')).toBe(true);
 			expect(el.querySelector('#footer')!.classList.contains('is-last')).toBe(false);
+		});
+	});
+
+
+	/* ============================================================
+	   Landmarks
+	   ============================================================ */
+
+	describe('landmarks', () => {
+		const tags = (page: HTMLElement) => ({
+			outer: page.shadowRoot!.querySelector('.page')!.localName,
+			body: page.shadowRoot!.querySelector('.page__main')!.localName,
+		});
+
+		it('is the page on its own: header, main and footer carry the document landmarks', async () => {
+			el = await fixture('<nldd-page></nldd-page>');
+			await waitForUpdate(el);
+			expect(tags(el)).toEqual({ outer: 'div', body: 'main' });
+			expect(el.shadowRoot!.querySelector('header.page__header')).not.toBeNull();
+			expect(el.shadowRoot!.querySelector('footer.page__footer')).not.toBeNull();
+		});
+
+		it('is a region in a pane, so the second page does not claim the document', async () => {
+			el = await fixture(`
+				<nldd-side-by-side-split-view panes="2">
+					<nldd-split-view-pane slot="pane-1"><nldd-page id="een"></nldd-page></nldd-split-view-pane>
+					<nldd-split-view-pane slot="pane-2"><nldd-page id="twee"></nldd-page></nldd-split-view-pane>
+				</nldd-side-by-side-split-view>
+			`);
+			for (const page of el.querySelectorAll('nldd-page')) await waitForUpdate(page as HTMLElement);
+			for (const page of el.querySelectorAll('nldd-page')) {
+				expect(tags(page as HTMLElement)).toEqual({ outer: 'section', body: 'div' });
+			}
+		});
+
+		it('keeps the page in the main slot of a bar split view, which places no page beside it', async () => {
+			el = await fixture(`
+				<nldd-bar-split-view>
+					<nldd-page slot="main"></nldd-page>
+				</nldd-bar-split-view>
+			`);
+			const page = el.querySelector('nldd-page') as HTMLElement;
+			await waitForUpdate(page);
+			expect(tags(page)).toEqual({ outer: 'div', body: 'main' });
+		});
+
+		it('is a region inside an overlay, which is not the document', async () => {
+			el = await fixture('<nldd-sheet><nldd-page></nldd-page></nldd-sheet>');
+			const page = el.querySelector('nldd-page') as HTMLElement;
+			await waitForUpdate(page);
+			expect(tags(page)).toEqual({ outer: 'section', body: 'div' });
+		});
+
+		it('lets landmarks="page" promote the pane that holds the primary content', async () => {
+			el = await fixture(`
+				<nldd-side-by-side-split-view panes="2">
+					<nldd-split-view-pane slot="pane-1"><nldd-page landmarks="page"></nldd-page></nldd-split-view-pane>
+					<nldd-split-view-pane slot="pane-2"><nldd-page></nldd-page></nldd-split-view-pane>
+				</nldd-side-by-side-split-view>
+			`);
+			const [een, twee] = [...el.querySelectorAll('nldd-page')] as HTMLElement[];
+			await waitForUpdate(een);
+			await waitForUpdate(twee);
+			expect(tags(een)).toEqual({ outer: 'div', body: 'main' });
+			expect(tags(twee)).toEqual({ outer: 'section', body: 'div' });
+		});
+
+		it('lets landmarks="region" step down outside a pane', async () => {
+			el = await fixture('<nldd-page landmarks="region"></nldd-page>');
+			await waitForUpdate(el);
+			expect(tags(el)).toEqual({ outer: 'section', body: 'div' });
+		});
+
+		it('names the region with accessible-label, and the main when it is the page', async () => {
+			el = await fixture('<nldd-page landmarks="region" accessible-label="Dossier 2024-001"></nldd-page>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('.page')!.getAttribute('aria-label')).toBe('Dossier 2024-001');
+			expect(el.shadowRoot!.querySelector('.page__main')!.hasAttribute('aria-label')).toBe(false);
+			cleanup(el);
+
+			el = await fixture('<nldd-page accessible-label="Dossiers"></nldd-page>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('.page__main')!.getAttribute('aria-label')).toBe('Dossiers');
+			expect(el.shadowRoot!.querySelector('.page')!.hasAttribute('aria-label')).toBe(false);
+		});
+
+		it('leaves an unnamed region without a landmark rather than an unnamed one', async () => {
+			el = await fixture('<nldd-page landmarks="region"></nldd-page>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('.page')!.hasAttribute('aria-label')).toBe(false);
+		});
+
+		it('warns about a second page that renders a main, hidden or not', async () => {
+			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+			el = await fixture(`
+				<div>
+					<nldd-page></nldd-page>
+					<nldd-page hidden></nldd-page>
+				</div>
+			`);
+			for (const page of el.querySelectorAll('nldd-page')) await waitForUpdate(page as HTMLElement);
+			expect(warn.mock.calls.filter(([message]) => String(message).includes('second page')).length).toBe(1);
+			warn.mockRestore();
+		});
+
+		it('says nothing when the other pages are regions', async () => {
+			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+			el = await fixture(`
+				<nldd-side-by-side-split-view panes="2">
+					<nldd-split-view-pane slot="pane-1"><nldd-page landmarks="page"></nldd-page></nldd-split-view-pane>
+					<nldd-split-view-pane slot="pane-2"><nldd-page></nldd-page></nldd-split-view-pane>
+				</nldd-side-by-side-split-view>
+			`);
+			for (const page of el.querySelectorAll('nldd-page')) await waitForUpdate(page as HTMLElement);
+			expect(warn.mock.calls.filter(([message]) => String(message).includes('second page'))).toEqual([]);
+			warn.mockRestore();
 		});
 	});
 

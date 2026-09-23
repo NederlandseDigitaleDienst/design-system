@@ -18,6 +18,22 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		size: 'md',
+		width: '',
+		placeholder: 'Zoeken',
+		accessibleLabel: '',
+		showSearchButton: false,
+		invalid: false,
+		disabled: false,
+		name: '',
+		value: '',
+		required: false,
+		minlength: null,
+		maxlength: null,
+		pattern: '',
+		noSpellcheck: false,
+	},
 	argTypes: {
 		size: {
 			control: 'select',
@@ -27,12 +43,32 @@ export default {
 		},
 		width: {
 			control: 'text',
-			description: 'Optionele vaste breedte (any CSS length, bv. "240px"). Leeg = stretch.',
+			description: 'Vaste breedte als CSS-lengte (bv. "240px"); leeg vult de beschikbare breedte',
+		},
+		placeholder: {
+			control: 'text',
+			description: 'Placeholdertekst',
+			table: { defaultValue: { summary: 'Zoeken' } },
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijke naam van het veld; valt terug op de placeholder',
 		},
 		showSearchButton: {
 			name: 'show-search-button',
 			control: 'boolean',
 			description: 'Toont een zoekknop aan de rechterkant',
+			table: { defaultValue: { summary: false } },
+		},
+		invalid: {
+			control: 'boolean',
+			description: 'Ongeldig; aangekondigd met aria-invalid, er wordt niets voor getekend',
+			table: { defaultValue: { summary: false } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
 		name: {
@@ -43,87 +79,50 @@ export default {
 			control: 'text',
 			description: 'Huidige zoekwaarde',
 		},
-		placeholder: {
-			control: 'text',
-			description: 'Placeholder tekst',
-			table: { defaultValue: { summary: 'Zoeken' } },
-		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Toegankelijkheidslabel voor de input. Valt automatisch terug op de placeholder als niet ingevuld.',
-		},
 		required: {
 			control: 'boolean',
-			description: 'Verplichte staat.',
-			table: { defaultValue: { summary: false } },
-		},
-		noSpellcheck: {
-			name: 'no-spellcheck',
-			control: 'boolean',
-			description: 'Disables browser spellchecking on the inner input',
-			table: { defaultValue: { summary: false } },
-		},
-		invalid: {
-			control: 'boolean',
-			description: 'Ongeldige staat. Wordt aangekondigd met aria-invalid; er wordt niets voor getekend.',
-			table: { defaultValue: { summary: false } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Uitgeschakelde toestand',
+			description: 'Verplicht veld',
 			table: { defaultValue: { summary: false } },
 		},
 		minlength: {
 			control: 'number',
-			description: 'Minimaal aantal tekens.',
+			description: 'Minimaal aantal tekens',
 			table: { type: { summary: 'number' } },
 		},
 		maxlength: {
 			control: 'number',
-			description: 'Maximaal aantal tekens.',
+			description: 'Maximaal aantal tekens',
 			table: { type: { summary: 'number' } },
 		},
 		pattern: {
 			control: 'text',
 			description: 'Reguliere expressie waar de waarde aan moet voldoen, als het native `pattern`.',
 		},
-
-	},
-	args: {
-		size: 'md',
-		width: '',
-		showSearchButton: false,
-		name: '',
-		value: '',
-		placeholder: 'Zoeken',
-		accessibleLabel: '',
-		required: false,
-		noSpellcheck: false,
-		invalid: false,
-		disabled: false,
-		minlength: null,
-		maxlength: null,
-		pattern: '',
+		noSpellcheck: {
+			name: 'no-spellcheck',
+			control: 'boolean',
+			description: 'Zet de spellingcontrole van de browser uit',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
-const Template = ({ size, showSearchButton, name, value, placeholder, accessibleLabel, invalid, disabled, required, noSpellcheck, width, minlength, maxlength, pattern }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, accessibleLabel, showSearchButton, invalid, disabled, name, value, required, minlength, maxlength, pattern, noSpellcheck }: Record<string, any>) => html`
 	<nldd-search-field
+		size=${size}
+		width=${width}
+		placeholder=${placeholder}
+		accessible-label=${accessibleLabel}
+		?show-search-button=${showSearchButton}
+		?invalid=${invalid}
+		?disabled=${disabled}
+		name=${name}
+		value=${value}
+		?required=${required}
 		minlength=${minlength ?? nothing}
 		maxlength=${maxlength ?? nothing}
 		pattern=${pattern || nothing}
-		value=${value}
-		placeholder=${placeholder}
-		accessible-label=${accessibleLabel}
-		size=${size}
-		?invalid=${invalid}
-		?required=${required}
-		?disabled=${disabled}
-		?show-search-button=${showSearchButton}
-		name=${name}
 		?no-spellcheck=${noSpellcheck}
-		width=${width}
 	></nldd-search-field>
 `;
 

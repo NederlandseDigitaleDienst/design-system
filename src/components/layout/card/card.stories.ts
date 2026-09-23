@@ -15,7 +15,7 @@ import '../../layout/container/container.js';
  * ```html
  * <nldd-card>
  *   <nldd-container slot="header" padding-top="16" padding-inline="16">
- *     <nldd-title><h3>Titel</h3></nldd-title>
+ *     <nldd-title text="Titel" heading-level="3"></nldd-title>
  *   </nldd-container>
  *   <nldd-container padding="16">
  *     <p>Inhoud van de kaart.</p>
@@ -38,6 +38,13 @@ export default {
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
 		status: { type: 'experimental' },
+	},
+	args: {
+		background: 'base',
+		accessibleLabel: '',
+		href: '',
+		target: '',
+		rel: '',
 	},
 	argTypes: {
 		background: {
@@ -67,13 +74,6 @@ export default {
 			description: 'Link rel voor href (bijv. noopener)',
 		},
 	},
-	args: {
-		background: 'base',
-		accessibleLabel: '',
-		href: '',
-		target: '',
-		rel: '',
-	},
 };
 
 export const Standaard = (args: Record<string, any>) => html`
@@ -82,7 +82,10 @@ export const Standaard = (args: Record<string, any>) => html`
 		accessible-label=${args.accessibleLabel || nothing}
 	>
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"><h3>Kaarttitel</h3></nldd-title>
+			<nldd-title size="4"
+				text="Kaarttitel"
+				heading-level="3"
+			></nldd-title>
 		</nldd-container>
 		<nldd-container padding="16">
 			<nldd-rich-text>
@@ -113,7 +116,10 @@ export const AlleenBody = () => html`
 export const MetHeader = () => html`
 	<nldd-card>
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"><h3>Alleen header en body</h3></nldd-title>
+			<nldd-title size="4"
+				text="Alleen header en body"
+				heading-level="3"
+			></nldd-title>
 		</nldd-container>
 		<nldd-container padding="16">
 			<nldd-rich-text>
@@ -126,7 +132,10 @@ export const MetHeader = () => html`
 export const VasteHoogte = () => html`
 	<nldd-card style="height: 400px;">
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"><h3>Vaste hoogte</h3></nldd-title>
+			<nldd-title size="4"
+				text="Vaste hoogte"
+				heading-level="3"
+			></nldd-title>
 		</nldd-container>
 		<nldd-container padding="16">
 			<nldd-rich-text>
@@ -173,7 +182,10 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 		style="max-width: 360px;"
 	>
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"><h3>Dossier 2024-001</h3></nldd-title>
+			<nldd-title size="4"
+				text="Dossier 2024-001"
+				heading-level="3"
+			></nldd-title>
 		</nldd-container>
 		<nldd-container padding="16">
 			<nldd-rich-text>
@@ -207,7 +219,10 @@ export const KaartAlsKnop = () => html`
 		@click=${() => window.alert('Kaart geactiveerd')}
 	>
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"><h3>Dossier 2024-001</h3></nldd-title>
+			<nldd-title size="4"
+				text="Dossier 2024-001"
+				heading-level="3"
+			></nldd-title>
 		</nldd-container>
 		<nldd-container padding="16">
 			<nldd-rich-text>

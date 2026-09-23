@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import './one-half-one-half-section.js';
+import '../../../content/title/title.js';
 import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
@@ -13,8 +14,8 @@ import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-
  * ## Gebruik
  * ```html
  * <nldd-one-half-one-half-section>
- *   <nldd-rich-text slot="header"><h2>Sectietitel</h2></nldd-rich-text>
- *   <nldd-rich-text<p>Linkerkolom.</p></nldd-rich-text>
+ *   <nldd-title slot="header" text="Sectietitel" heading-level="2"></nldd-title>
+ *   <nldd-rich-text slot="left"><p>Linkerkolom.</p></nldd-rich-text>
  *   <nldd-rich-text slot="right"><p>Rechterkolom.</p></nldd-rich-text>
  * </nldd-one-half-one-half-section>
  * ```
@@ -32,16 +33,17 @@ export default {
 			type: 'stable',
 		},
 	},
-	argTypes: pageSectionArgTypes,
 	args: pageSectionArgs,
+	argTypes: pageSectionArgTypes,
 };
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-one-half-one-half-section ${pageSectionAttrs(args)}>
-			<nldd-rich-text slot="header">
-				<h2>Sectietitel</h2>
-			</nldd-rich-text>
+			<nldd-title slot="header"
+				text="Sectietitel"
+				heading-level="2"
+			></nldd-title>
 			<nldd-rich-text>
 				<h3>Linkerkolom</h3>
 				<p>Dit is de linkerkolom. Beide kolommen nemen de helft van de beschikbare breedte in.</p>

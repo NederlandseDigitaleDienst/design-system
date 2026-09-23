@@ -26,6 +26,14 @@ export default {
 	title: 'Components/Lists & Tables/List',
 	component: 'nldd-list',
 	tags: ['autodocs'],
+	args: {
+		variant: 'simple',
+		type: 'list',
+		dividers: 'always',
+		height: '',
+		accessibleLabel: '',
+		reorderable: false,
+	},
 	argTypes: {
 		variant: {
 			control: 'select',
@@ -51,6 +59,17 @@ export default {
 			table: { type: { summary: 'string' } },
 			if: { arg: 'type', eq: 'listbox' },
 		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijke naam van de lijst, bij `type="listbox"` van het zoekveld. Bij `type="navigation"` zet je `aria-label` op het element zelf.',
+		},
+		reorderable: {
+			control: 'boolean',
+			description: 'Rijen verslepen om de volgorde te veranderen. Alleen bij `type="list"`: de pijltjes verplaatsen dan rijen in plaats van de focus.',
+			table: { defaultValue: { summary: false } },
+			if: { arg: 'type', eq: 'list' },
+		},
 	},
 	parameters: {
 		docs: {
@@ -69,19 +88,15 @@ Selectie-state wordt **altijd door de consumer beheerd**: de lijst muteert nooit
 	},
 };
 
-export const Default = {
-	args: {
-		variant: 'simple',
-		type: 'list',
-		dividers: 'always',
-		height: '',
-	},
+export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-list
 			variant=${args.variant}
 			type=${args.type}
 			dividers=${args.dividers}
 			height=${args.type === 'listbox' && args.height ? args.height : nothing}
+			accessible-label=${args.accessibleLabel || nothing}
+			?reorderable=${args.type === 'list' && args.reorderable}
 		>
 			<nldd-list-item>
 				<nldd-text-cell text="Item 1"></nldd-text-cell>
@@ -96,8 +111,7 @@ export const Default = {
 	`,
 };
 
-export const ArrowNavigation = {
-	name: 'Arrow navigation',
+export const Pijltjesnavigatie = {
 	args: {
 		variant: 'simple',
 		type: 'list',
@@ -123,8 +137,8 @@ export const ArrowNavigation = {
 	},
 };
 
-export const ArrowNavigationWithControls = {
-	name: 'Arrow navigation met controls',
+export const PijltjesnavigatieMetControls = {
+	name: 'Pijltjesnavigatie met controls',
 	args: {
 		variant: 'simple',
 		type: 'list',
@@ -163,7 +177,7 @@ export const ArrowNavigationWithControls = {
 	},
 };
 
-export const Variants = {
+export const Varianten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 32px;">
 			<nldd-list variant="simple">
@@ -197,12 +211,12 @@ export const Variants = {
 	},
 };
 
-export const WithMultipleColumns = {
+export const MetMeerdereKolommen = {
 	render: () => html`
 		<nldd-list variant="box-tinted">
 			<nldd-list-item button>
 				<nldd-icon-cell size="24" vertical-alignment="top">
-					<nldd-icon name="calendar-event"></nldd-icon>
+					<nldd-icon icon="calendar-event"></nldd-icon>
 				</nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text="Primaire titel" supporting-text="Ondersteunende tekst eronder"></nldd-text-cell>
@@ -215,12 +229,12 @@ export const WithMultipleColumns = {
 				></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-icon-cell color="secondary" size="16">
-					<nldd-icon name="chevron-right"></nldd-icon>
+					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item button>
 				<nldd-icon-cell size="24" vertical-alignment="top">
-					<nldd-icon name="certificate"></nldd-icon>
+					<nldd-icon icon="certificate"></nldd-icon>
 				</nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text="Andere titel" supporting-text="Meer beschrijving hier"></nldd-text-cell>
@@ -233,14 +247,14 @@ export const WithMultipleColumns = {
 				></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-icon-cell color="secondary" size="16">
-					<nldd-icon name="chevron-right"></nldd-icon>
+					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
 };
 
-export const WithInteractiveItems = {
+export const MetInteractieveRijen = {
 	render: () => html`
 		<nldd-list variant="box-tinted">
 			<nldd-list-item button>
@@ -258,7 +272,7 @@ export const WithInteractiveItems = {
 
 // — Type: navigation ——————————————————————————————————————————————————————————
 
-export const TypeNavigation = {
+export const Navigatie = {
 	render: () => {
 		const onClick = (e: Record<string, any>) => {
 			const item = e.target.closest('nldd-list-item');
@@ -400,7 +414,7 @@ export const Listbox = {
 	},
 };
 
-export const ListboxSimple = {
+export const ListboxEenvoudig = {
 	render: () => buildListbox('simple'),
 	parameters: {
 		controls: { disable: true },
@@ -415,7 +429,7 @@ export const ListboxSimple = {
 
 // — Reorderable ———————————————————————————————————————————————————————————————
 
-export const ReorderableList = {
+export const Herschikbaar = {
 	// Imperative render is intentional: the nldd-reorder handler needs to mutate
 	// the DOM in-place to demonstrate actual reordering. A standard Storybook
 	// render function cannot do this because Lit templates are stateless.
@@ -464,7 +478,7 @@ export const ReorderableList = {
 
 // — Empty slot ————————————————————————————————————————————————————————————————
 
-export const Empty = {
+export const Leeg = {
 	render: () => html`
 		<nldd-list variant="box-tinted">
 			<nldd-inline-dialog
@@ -487,8 +501,8 @@ export const Empty = {
 	},
 };
 
-export const EmptyWithoutSlot = {
-	name: 'Empty: slot niet gevuld',
+export const LeegZonderSlot = {
+	name: 'Leeg: slot niet gevuld',
 	render: () => html`
 		<nldd-list variant="box-tinted"></nldd-list>
 	`,
@@ -502,7 +516,7 @@ export const EmptyWithoutSlot = {
 	},
 };
 
-export const Radiogroup = {
+export const Radiogroep = {
 	render: () => {
 		// Consumer-managed selection, and this story is the example of it: a radio
 		// row goes on and never off, not even when another is picked, because which
@@ -559,7 +573,7 @@ export const Radiogroup = {
 	},
 };
 
-export const Form = {
+export const Formulier = {
 	render: () => html`
 		<nldd-list type="form" variant="box-tinted" accessible-label="Eigenschappen">
 			<nldd-list-item>

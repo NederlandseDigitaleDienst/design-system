@@ -143,11 +143,11 @@ const Template = ({ size, color, customColor, pulse, text, number, max, icon, ac
 	`;
 };
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<nldd-badge size="md" number="3"></nldd-badge>
@@ -161,7 +161,7 @@ export const Sizes = {
 	},
 };
 
-export const Colors = {
+export const Kleuren = {
 	render: () => html`
 		<div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
 			${COLORS.map(c => html`<nldd-badge color=${c} number="3"></nldd-badge>`)}
@@ -188,7 +188,7 @@ export const Colors = {
  * ook bij een kleur die niemand vooraf kende. Kent de browser `contrast-color()`
  * al, dan doet die het rekenwerk.
  */
-export const OwnColor = {
+export const EigenKleur = {
 	name: 'Inherit en custom-color',
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
@@ -208,7 +208,7 @@ export const OwnColor = {
 	},
 };
 
-export const Pulse = {
+export const MetPulse = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center;">
 			<nldd-badge color="critical" pulse></nldd-badge>
@@ -227,7 +227,7 @@ export const Pulse = {
 	},
 };
 
-export const Dot = {
+export const Stip = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<nldd-badge color="critical"></nldd-badge>
@@ -247,7 +247,7 @@ export const Dot = {
 	},
 };
 
-export const WithText = {
+export const MetTekst = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<nldd-badge color="accent" text="Nieuw"></nldd-badge>
@@ -260,7 +260,7 @@ export const WithText = {
 	},
 };
 
-export const WithNumber = {
+export const MetGetal = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<nldd-badge number="1"></nldd-badge>
@@ -279,7 +279,7 @@ export const WithNumber = {
 	},
 };
 
-export const WithIcon = {
+export const MetIcoon = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<nldd-badge color="success" icon="check-mark"></nldd-badge>
@@ -298,7 +298,7 @@ export const WithIcon = {
 	},
 };
 
-export const WithIconAndText = {
+export const MetIcoonEnTekst = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<nldd-badge color="success" icon="check-mark" text="Geverifieerd"></nldd-badge>
@@ -316,18 +316,18 @@ export const WithIconAndText = {
 	},
 };
 
-export const OverlayOnIcon = {
+export const OpEenIcoon = {
 	render: () => html`
 		<div style="display: flex; gap: var(--primitives-space-24); align-items: center;">
 			<span style="position: relative; display: inline-flex; width: var(--primitives-space-32); height: var(--primitives-space-32);">
-				<nldd-icon name="envelope"></nldd-icon>
+				<nldd-icon icon="envelope"></nldd-icon>
 				<nldd-badge
 					number="3"
 					style="position: absolute; top: calc(var(--primitives-space-4) * -1); right: calc(var(--primitives-space-8) * -1);"
 				></nldd-badge>
 			</span>
 			<span style="position: relative; display: inline-flex; width: var(--primitives-space-32); height: var(--primitives-space-32);">
-				<nldd-icon name="envelope"></nldd-icon>
+				<nldd-icon icon="envelope"></nldd-icon>
 				<nldd-badge
 					size="sm"
 					number="3"
@@ -335,13 +335,13 @@ export const OverlayOnIcon = {
 				></nldd-badge>
 			</span>
 			<span style="position: relative; display: inline-flex; width: var(--primitives-space-32); height: var(--primitives-space-32);">
-				<nldd-icon name="envelope"></nldd-icon>
+				<nldd-icon icon="envelope"></nldd-icon>
 				<nldd-badge
 					style="position: absolute; top: 0; right: 0;"
 				></nldd-badge>
 			</span>
 			<span style="position: relative; display: inline-flex; width: var(--primitives-space-32); height: var(--primitives-space-32);">
-				<nldd-icon name="envelope"></nldd-icon>
+				<nldd-icon icon="envelope"></nldd-icon>
 				<nldd-badge
 					size="sm"
 					style="position: absolute; top: 0; right: 0;"

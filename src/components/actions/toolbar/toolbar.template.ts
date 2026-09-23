@@ -22,7 +22,7 @@ export function toolbarTitleTemplate(component: NLDDToolbarTitle) {
 	const titleGroup = html`
 		<div class="toolbar__title-group">
 			${component.text ? html`<p class="toolbar__title">${component.text}</p>` : nothing}
-			${component.supportingText ? html`<p class="toolbar__subtitle">${component.supportingText}</p>` : nothing}
+			${component.supportingText ? html`<p class="toolbar__supporting-text">${component.supportingText}</p>` : nothing}
 		</div>
 	`;
 

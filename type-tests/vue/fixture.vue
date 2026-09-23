@@ -24,5 +24,5 @@ const onChange = (event: CustomEvent) => void event.detail;
 
 	<nldd-date-picker week-numbers :first-day-of-week="1" />
 
-	<nldd-icon name="calendar" />
+	<nldd-icon icon="calendar" />
 </template>

@@ -23,7 +23,7 @@ function renderValidationIcon(component: NLDDDateField): TemplateResult | typeof
 		<div class="date-field__validation-icon-area">
 			<span class="date-field__validation-icon">
 				<nldd-icon
-					name=${name}
+					icon=${name}
 					aria-hidden="true"
 				></nldd-icon>
 			</span>

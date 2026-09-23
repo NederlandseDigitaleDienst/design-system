@@ -489,11 +489,12 @@ const Template = ({
 	></nldd-text-editor>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const InputField = {
+export const VariantInputField = {
+	name: 'Variant input-field',
 	render: () => html`
 		<nldd-text-editor variant="input-field" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>
 	`,
@@ -530,14 +531,14 @@ export const Links = {
 	},
 };
 
-export const Placeholder = {
+export const MetPlaceholder = {
 	render: () => html`
 		<nldd-text-editor rows="6" placeholder="Schrijf hier je toelichting in markdown…" accessible-label="Tekst"></nldd-text-editor>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
-export const Mentions = {
+export const Vermeldingen = {
 	render: () => {
 		const users = [
 			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
@@ -569,7 +570,7 @@ export const Mentions = {
 	},
 };
 
-export const MentionsInEenOverlay = {
+export const VermeldingenInEenOverlay = {
 	render: () => {
 		const users = [
 			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
@@ -682,7 +683,7 @@ export const Typeaheads = {
 	},
 };
 
-export const Annotations = {
+export const Annotaties = {
 	render: () => {
 		const sample =
 			'De Rijksoverheid werkt aan een toegankelijk designsysteem. Componenten zijn herbruikbaar en consistent.\n\nFeedback is welkom op elk onderdeel.';
@@ -717,7 +718,7 @@ export const Annotations = {
 	},
 };
 
-export const AnnotationAuthoring = {
+export const AnnotatiesMaken = {
 	render: () => {
 		const wrap = document.createElement('div');
 		wrap.style.display = 'grid';
@@ -783,7 +784,7 @@ export const AnnotationAuthoring = {
 	},
 };
 
-export const Mixed = {
+export const Gemengd = {
 	render: () => {
 		const users = [
 			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
@@ -849,7 +850,7 @@ export const Mixed = {
 	},
 };
 
-export const WithToolbar = {
+export const MetWerkbalk = {
 	render: () =>
 		toolbarEditor(
 			html`<nldd-text-editor variant="simple" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,

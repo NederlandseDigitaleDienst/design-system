@@ -23,7 +23,7 @@ export default {
 	}
 };
 
-export const Default = {
+export const Standaard = {
 	args: { size: 'md', orientation: 'vertical' },
 	render: (args: Record<string, any>) => html`
 	<nldd-button-group size=${args.size} orientation=${args.orientation}>
@@ -33,7 +33,8 @@ export const Default = {
 	`,
 };
 
-export const Horizontal = {
+export const OrientatieHorizontal = {
+	name: 'Oriëntatie horizontal',
 	args: { size: 'md', orientation: 'horizontal' },
 	render: (args: Record<string, any>) => html`
 	<nldd-button-group size=${args.size} orientation=${args.orientation}>
@@ -43,7 +44,8 @@ export const Horizontal = {
 	`,
 };
 
-export const SizeSmall = {
+export const GrootteSm = {
+	name: 'Grootte sm',
 	args: { size: 'sm', orientation: 'horizontal' },
 	render: (args: Record<string, any>) => html`
 	<nldd-button-group size=${args.size} orientation=${args.orientation}>
@@ -53,7 +55,7 @@ export const SizeSmall = {
 	`,
 };
 
-export const ThreeButtons = {
+export const DrieKnoppen = {
 	args: { size: 'md', orientation: 'vertical' },
 	render: (args: Record<string, any>) => html`
 	<nldd-button-group size=${args.size} orientation=${args.orientation}>
@@ -64,7 +66,8 @@ export const ThreeButtons = {
 	`,
 };
 
-export const MaxEnforced = {
+export const MaximaalDrieKnoppen = {
+	name: 'Maximaal drie knoppen (de vierde verdwijnt)',
 	args: { size: 'md', orientation: 'vertical' },
 	render: (args: Record<string, any>) => html`
 	<nldd-button-group size=${args.size} orientation=${args.orientation}>
@@ -74,5 +77,4 @@ export const MaxEnforced = {
 		<nldd-button variant="secondary" text="Een knop te veel"></nldd-button>
 	</nldd-button-group>
 	`,
-	name: 'Max 3 Enforced (4th button hidden)',
 };

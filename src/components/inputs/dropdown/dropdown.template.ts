@@ -7,7 +7,7 @@ function renderValidationIcon(component: NLDDDropdown): TemplateResult | typeof 
 		return html`
 			<div class="dropdown__validation-icon-area">
 				<nldd-icon class="dropdown__validation-icon"
-					name="invalid"
+					icon="invalid"
 					aria-hidden="true"
 				></nldd-icon>
 			</div>
@@ -17,7 +17,7 @@ function renderValidationIcon(component: NLDDDropdown): TemplateResult | typeof 
 		return html`
 			<div class="dropdown__validation-icon-area">
 				<nldd-icon class="dropdown__validation-icon"
-					name="valid"
+					icon="valid"
 					aria-hidden="true"
 				></nldd-icon>
 			</div>
@@ -33,7 +33,7 @@ export function dropdownTemplate(component: NLDDDropdown): TemplateResult {
 			<span class="dropdown__value">${component._displayValue}</span>
 			${renderValidationIcon(component)}
 			<div class="dropdown__picker-icon">
-				<nldd-icon name="chevron-up-chevron-down"></nldd-icon>
+				<nldd-icon icon="chevron-up-chevron-down"></nldd-icon>
 			</div>
 		</div>
 	`;

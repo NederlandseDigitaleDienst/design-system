@@ -10,11 +10,11 @@
  * click it, it is `nldd-token`.
  *
  * @element nldd-tag
+ * @attr {string} variant - What is visible: 'text' | 'icon' | 'icon-and-text'. Unset → detected from which of text/icon is present.
  * @attr {string} color - Color variant. Semantic: 'neutral' | 'accent' | 'success' | 'warning' | 'critical'. Rijkshuisstijl colors: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. (default: 'neutral')
  * @attr {string} size - Tag size: 'sm' | 'md' (default: 'md')
  * @attr {string} text - Tag text (alternative to the default slot)
  * @attr {string} icon - Icon before the text
- * @attr {string} variant - What is visible: 'text' | 'icon' | 'icon-and-text'. Unset → detected from which of text/icon is present.
  * @attr {string} accessible-label - Accessible label for screen readers. Use this on icon-only tags without visible text.
  *
  * @slot - Tag text
@@ -61,6 +61,9 @@ type Variant = 'text' | 'icon' | 'icon-and-text';
 export class NLDDTag extends LitElement {
 	static override styles = tagStyles;
 
+	@property({ reflect: true, converter: reflectNonDefault<Variant | ''>('') })
+	variant: Variant | '' = '';
+
 	@property({ reflect: true, converter: reflectNonDefault<Color>('neutral') })
 	color: Color = 'neutral';
 
@@ -72,9 +75,6 @@ export class NLDDTag extends LitElement {
 
 	@property({ type: String })
 	icon = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<Variant | ''>('') })
-	variant: Variant | '' = '';
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';

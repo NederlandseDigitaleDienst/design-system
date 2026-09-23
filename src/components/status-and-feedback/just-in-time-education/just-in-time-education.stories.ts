@@ -95,4 +95,4 @@ const Template = ({
 	</div>
 `;
 
-export const Default = Template.bind({});
+export const Standaard = Template.bind({});

@@ -157,7 +157,8 @@ export const IcoonKleur = {
 	},
 };
 
-export const Alert = {
+export const VariantAlert = {
+	name: 'Variant alert',
 	render: () => html`
 	<nldd-inline-dialog
 		variant="alert"
@@ -171,7 +172,8 @@ export const Alert = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Success = {
+export const VariantSuccess = {
+	name: 'Variant success',
 	render: () => html`
 	<nldd-inline-dialog
 		variant="success"
@@ -191,7 +193,8 @@ export const Success = {
  * (`timing="instant"`, geen anti-flash-vertraging). Overrulet een expliciet
  * `icon`.
  */
-export const Loading = {
+export const VariantLoading = {
+	name: 'Variant loading',
 	render: () => html`
 	<nldd-inline-dialog
 		variant="loading"

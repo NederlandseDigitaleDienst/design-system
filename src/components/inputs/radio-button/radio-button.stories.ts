@@ -109,17 +109,20 @@ export const Standaard = {
  * onder elkaar in één document, en radio buttons met dezelfde naam vormen daar
  * samen één groep: dan zou er van al deze demo's maar één aangevinkt kunnen
  * zijn en maar één te focussen met Tab. */
-export const Geselecteerd = {
+export const ToestandChecked = {
+	name: 'Toestand checked',
 	render: Template,
 	args: { checked: true, name: 'demo-geselecteerd' },
 };
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: { disabled: true, name: 'demo-uitgeschakeld' },
 };
 
-export const GeselecteerdUitgeschakeld = {
+export const ToestandCheckedEnDisabled = {
+	name: 'Toestand checked en disabled',
 	render: Template,
 	args: { checked: true, disabled: true, name: 'demo-geselecteerd-uitgeschakeld' },
 };

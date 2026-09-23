@@ -57,7 +57,7 @@ describe('nldd-badge', () => {
 		const badge = el.shadowRoot!.querySelector('.badge')!;
 		expect(badge.classList.contains('badge--icon-only')).toBe(true);
 		expect(badge.classList.contains('badge--dot')).toBe(false);
-		expect(el.shadowRoot!.querySelector('.badge__icon nldd-icon')!.getAttribute('name')).toBe('check-mark');
+		expect(el.shadowRoot!.querySelector('.badge__icon nldd-icon')!.getAttribute('icon')).toBe('check-mark');
 		expect(el.shadowRoot!.querySelector('.badge__text')).toBeNull();
 	});
 

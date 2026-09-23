@@ -12,30 +12,42 @@ export default {
 	title: 'Components/Lists & Tables/List Item',
 	component: 'nldd-list-item',
 	tags: ['autodocs'],
+	args: {
+		size: 'md',
+		href: '',
+		button: false,
+		checkbox: false,
+		radio: false,
+		selected: false,
+		checked: false,
+		expanded: false,
+		current: false,
+		disabled: false,
+	},
 	argTypes: {
 		size: {
 			control: 'select',
 			options: ['sm', 'md'],
-			description: 'Size of the list item',
+			description: 'Grootte van de rij. Gaat door naar de cellen waar `size` hetzelfde betekent, dus je zet hem één keer per rij.',
 			table: { defaultValue: { summary: 'md' } },
 		},
 		href: {
 			control: 'text',
-			description: 'Maakt het hele item een link. Wint van `checkbox` en `button`.',
+			description: 'Maakt het hele item een link. Wint van `checkbox`, `radio` en `button`.',
 		},
 		button: {
 			control: 'boolean',
-			description: 'Maakt het hele item een button. De laatste van de drie: `href` en `checkbox` winnen er allebei van.',
+			description: 'Maakt het hele item een button. De laatste van de vier: `href`, `checkbox` en `radio` winnen er alle drie van.',
 			table: { defaultValue: { summary: false } },
 		},
 		checkbox: {
 			control: 'boolean',
-			description: 'Maakt de hele rij een checkbox-control. Wint van `button`, verliest van `href`.',
+			description: 'Maakt de hele rij een checkbox-control. Wint van `radio` en `button`, verliest van `href`.',
 			table: { defaultValue: { summary: false } },
 		},
-		checked: {
+		radio: {
 			control: 'boolean',
-			description: 'Aangevinkte staat van een checkbox-rij',
+			description: 'Maakt de hele rij één radio van een groep. Zet de rijen in een `nldd-list type="radiogroup"`. Wint van `button`, verliest van `href` en `checkbox`.',
 			table: { defaultValue: { summary: false } },
 		},
 		selected: {
@@ -43,14 +55,19 @@ export default {
 			description: 'Een rij die je koos. Blijft grijs, ook met de focus erin; er mogen er meerdere zijn. Voor de rij waar je bent is `current` de juiste.',
 			table: { defaultValue: { summary: false } },
 		},
-		current: {
+		checked: {
 			control: 'boolean',
-			description: 'De rij waar je bent: de pagina waar een menu-item heen wijst, het record dat de lijst open heeft staan. In rust net zo grijs als `selected`, en zodra de focus in de rij staat kleurt hij accent. Eén rij per lijst draagt het, waar `selected` er meerdere mag hebben.',
+			description: 'Aangevinkte staat van een checkbox- of radio-rij.',
 			table: { defaultValue: { summary: false } },
 		},
 		expanded: {
 			control: 'boolean',
 			description: 'Uitklapstaat; hoort bij een rij die iets opent (de kindrijen van een tak)',
+		},
+		current: {
+			control: 'boolean',
+			description: 'De rij waar je bent: de pagina waar een menu-item heen wijst, het record dat de lijst open heeft staan. In rust net zo grijs als `selected`, en zodra de focus in de rij staat kleurt hij accent. Eén rij per lijst draagt het, waar `selected` er meerdere mag hebben.',
+			table: { defaultValue: { summary: false } },
 		},
 		disabled: {
 			control: 'boolean',
@@ -60,18 +77,7 @@ export default {
 	},
 };
 
-export const Default = {
-	args: {
-		size: 'md',
-		href: '',
-		button: false,
-		checkbox: false,
-		checked: false,
-		selected: false,
-		current: false,
-		expanded: false,
-		disabled: false,
-	},
+export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-list variant="simple">
 			<nldd-list-item
@@ -79,10 +85,11 @@ export const Default = {
 				href=${args.href || nothing}
 				?button=${args.button}
 				?checkbox=${args.checkbox}
-				?checked=${args.checked}
+				?radio=${args.radio}
 				?selected=${args.selected}
-				?current=${args.current}
+				?checked=${args.checked}
 				?expanded=${args.expanded}
+				?current=${args.current}
 				?disabled=${args.disabled}
 			>
 				<nldd-text-cell text="Text cell" supporting-text="Supporting text"></nldd-text-cell>
@@ -91,7 +98,8 @@ export const Default = {
 	`,
 };
 
-export const SizeMD = {
+export const GrootteMd = {
+	name: 'Grootte md',
 	render: () => html`
 		<nldd-list variant="simple">
 			<nldd-list-item size="md">
@@ -101,7 +109,8 @@ export const SizeMD = {
 	`,
 };
 
-export const SizeSM = {
+export const GrootteSm = {
+	name: 'Grootte sm',
 	render: () => html`
 		<nldd-list variant="simple">
 			<nldd-list-item size="sm">
@@ -111,7 +120,8 @@ export const SizeSM = {
 	`,
 };
 
-export const Selected = {
+export const ToestandSelected = {
+	name: 'Toestand selected',
 	render: () => html`
 		<nldd-list variant="simple">
 			<nldd-list-item>
@@ -145,8 +155,7 @@ export const Selected = {
  * segmenten zit, de selected-rij blijft grijs. Voor `expanded`, de staat van een
  * segment dat iets open heeft staan, zie de story van `nldd-list-item-segment`.
  */
-export const StateLadder = {
-	name: 'De staten op een rij',
+export const AlleToestanden = {
 	render: () => html`
 		<nldd-list type="navigation" aria-label="Staten">
 			<nldd-list-item button>
@@ -160,7 +169,7 @@ export const StateLadder = {
 			</nldd-list-item>
 			<nldd-list-item current>
 				<nldd-list-item-segment button disclosure accessible-label="Uitklappen">
-					<nldd-icon-cell size="20"><nldd-icon name="chevron-right"></nldd-icon></nldd-icon-cell>
+					<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 				</nldd-list-item-segment>
 				<nldd-list-item-segment button width="full">
 					<nldd-text-cell text="Current met segmenten: focus in een segment kleurt de rij accent"></nldd-text-cell>
@@ -168,7 +177,7 @@ export const StateLadder = {
 			</nldd-list-item>
 			<nldd-list-item selected>
 				<nldd-list-item-segment button disclosure accessible-label="Uitklappen">
-					<nldd-icon-cell size="20"><nldd-icon name="chevron-right"></nldd-icon></nldd-icon-cell>
+					<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 				</nldd-list-item-segment>
 				<nldd-list-item-segment button width="full">
 					<nldd-text-cell text="Selected met segmenten: blijft grijs, ook met de focus erin"></nldd-text-cell>
@@ -178,7 +187,7 @@ export const StateLadder = {
 	`,
 };
 
-export const AlsButton = {
+export const AlsKnop = {
 	render: () => html`
 		<nldd-list variant="simple">
 			<nldd-list-item button>
@@ -204,7 +213,7 @@ export const AlsLink = {
 	`,
 };
 
-export const BoxWithGutters = {
+export const BoxMetMarges = {
 	render: () => html`
 		<nldd-list variant="box-tinted">
 			<nldd-list-item>
@@ -217,20 +226,20 @@ export const BoxWithGutters = {
 	`,
 };
 
-export const WithLeadingAndTrailingCells = {
+export const MetCellenVooraanEnAchteraan = {
 	render: () => html`
 		<nldd-list variant="box-tinted">
 			<nldd-list-item>
-				<div style="width: 32px; height: 32px; background: var(--primitives-color-neutral-150); border-radius: 8px;"></div>
+				<nldd-icon-cell icon="document" size="32"></nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text="Item with start icon"></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-icon-cell size="16">
-					<nldd-icon name="chevron-right"></nldd-icon>
+					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-				<div style="width: 32px; height: 32px; background: var(--primitives-color-neutral-150); border-radius: 8px;"></div>
+				<nldd-icon-cell icon="document" size="32"></nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text="Another item"></nldd-text-cell>
 			</nldd-list-item>
@@ -238,14 +247,14 @@ export const WithLeadingAndTrailingCells = {
 	`,
 };
 
-export const SimpleWithTrailingCells = {
+export const SimpelMetCellenAchteraan = {
 	render: () => html`
 		<nldd-list variant="simple">
 			<nldd-list-item>
 				<nldd-text-cell text="Trailing cells"></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-icon-cell size="16">
-					<nldd-icon name="chevron-right"></nldd-icon>
+					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item>
@@ -260,7 +269,7 @@ export const SimpleWithTrailingCells = {
  * `nldd-list` de hendel herkent in het composed event path. Zonder dit attribuut
  * werkt slepen via pointer en toetsenbord niet.
  */
-export const WithDragHandle = {
+export const MetSleepgreep = {
 	// Imperative render: the nldd-reorder handler mutates the DOM in place so
 	// keyboard + pointer drag actually move items. A standard Storybook render
 	// function can't do this because Lit templates are stateless.
@@ -304,26 +313,26 @@ export const WithDragHandle = {
  * om het effect te zien: de secundaire tekst verdwijnt onder 600px, de trailing
  * chevron onder 480px.
  */
-export const ResponsiveCells = {
+export const ResponsieveCellen = {
 	render: () => html`
 		<nldd-list variant="box-tinted">
 			<nldd-list-item>
-				<nldd-icon-cell><nldd-icon name="file-text"></nldd-icon></nldd-icon-cell>
+				<nldd-icon-cell><nldd-icon icon="file-text"></nldd-icon></nldd-icon-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell text="Begroting 2026"></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell width="fit-content" color="secondary" text="Gewijzigd 2 uur geleden" hide-below="480px"></nldd-text-cell>
 				<nldd-spacer-cell size="8" hide-below="280px"></nldd-spacer-cell>
-				<nldd-icon-cell hide-below="280px"><nldd-icon name="chevron-right-small"></nldd-icon></nldd-icon-cell>
+				<nldd-icon-cell hide-below="280px"><nldd-icon icon="chevron-right-small"></nldd-icon></nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-				<nldd-icon-cell><nldd-icon name="folder"></nldd-icon></nldd-icon-cell>
+				<nldd-icon-cell><nldd-icon icon="folder"></nldd-icon></nldd-icon-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell text="Projecten"></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell width="fit-content" color="secondary" text="Gisteren" hide-below="480px"></nldd-text-cell>
 				<nldd-spacer-cell size="8" hide-below="280px"></nldd-spacer-cell>
-				<nldd-icon-cell hide-below="280px"><nldd-icon name="chevron-right-small"></nldd-icon></nldd-icon-cell>
+				<nldd-icon-cell hide-below="280px"><nldd-icon icon="chevron-right-small"></nldd-icon></nldd-icon-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,

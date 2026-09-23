@@ -32,23 +32,27 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		mainPosition: 'bottom-left',
-		mainWidth: '1/2',
+		height: '',
 		mainBackground: 'accent',
+		mainWidth: '1/2',
+		mainPosition: 'bottom-left',
 		mediaAspectRatio: '',
 		mediaSrc: MEDIA,
 		mediaSrcset: '',
 		mediaSizes: '',
 		mediaAlt: '',
-		height: '',
 	},
 	argTypes: {
-		mainPosition: {
-			name: 'main-position',
+		height: {
+			control: 'text',
+			description: 'Minimale hoogte van de sectie, elke CSS-lengte (bijv. 600px of 100dvh); de hero groeit verder met de content',
+		},
+		mainBackground: {
+			name: 'main-background',
 			control: 'select',
-			options: ['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'],
-			description: 'Positie van het tekstpaneel',
-			table: { defaultValue: { summary: 'bottom-left' } },
+			options: ['base', 'accent', 'lintblauw', 'donkerblauw', 'hemelblauw', 'lichtblauw', 'paars', 'violet', 'robijnrood', 'roze', 'rood', 'oranje', 'donkergeel', 'geel', 'donkerbruin', 'bruin', 'donkergroen', 'groen', 'mosgroen', 'mintgroen'],
+			description: 'Vlakkleur van het paneel: base of een filled-category',
+			table: { defaultValue: { summary: 'accent' } },
 		},
 		mainWidth: {
 			name: 'main-width',
@@ -57,12 +61,12 @@ export default {
 			description: 'Breedte van het paneel; full maakt een volle strook (genegeerd bij left/right)',
 			table: { defaultValue: { summary: '1/2' } },
 		},
-		mainBackground: {
-			name: 'main-background',
+		mainPosition: {
+			name: 'main-position',
 			control: 'select',
-			options: ['base', 'accent', 'lintblauw', 'donkerblauw', 'hemelblauw', 'lichtblauw', 'paars', 'violet', 'robijnrood', 'roze', 'rood', 'oranje', 'donkergeel', 'geel', 'donkerbruin', 'bruin', 'donkergroen', 'groen', 'mosgroen', 'mintgroen'],
-			description: 'Vlakkleur van het paneel: base of een filled-category',
-			table: { defaultValue: { summary: 'accent' } },
+			options: ['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'],
+			description: 'Positie van het tekstpaneel',
+			table: { defaultValue: { summary: 'bottom-left' } },
 		},
 		mediaAspectRatio: {
 			name: 'media-aspect-ratio',
@@ -92,30 +96,26 @@ export default {
 			control: 'text',
 			description: 'Alt-tekst voor media-src; leeg = decoratief',
 		},
-		height: {
-			control: 'text',
-			description: 'Minimale hoogte van de sectie, elke CSS-lengte (bijv. 600px of 100dvh); de hero groeit verder met de content',
-		},
 	},
 };
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-hero
-		main-position=${args.mainPosition}
-		main-width=${args.mainWidth}
+		height=${args.height || nothing}
 		main-background=${args.mainBackground}
+		main-width=${args.mainWidth}
+		main-position=${args.mainPosition}
 		media-aspect-ratio=${args.mediaAspectRatio || nothing}
 		media-src=${args.mediaSrc || nothing}
 		media-srcset=${args.mediaSrcset || nothing}
 		media-sizes=${args.mediaSizes || nothing}
 		media-alt=${args.mediaAlt || nothing}
-		height=${args.height || nothing}
 	>
 		<nldd-title color="inherit"
 			size="2"
-		>
-			<h1>Regels die voor je werken</h1>
-		</nldd-title>
+			text="Regels die voor je werken"
+			heading-level="1"
+		></nldd-title>
 		<nldd-spacer size="8"></nldd-spacer>
 		<nldd-rich-text color="inherit">
 			<p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar.</p>
@@ -149,9 +149,9 @@ export const AllePosities = {
 					>
 					<nldd-title color="inherit"
 						size="4"
-					>
-						<h2>main-position="${position}"</h2>
-					</nldd-title>
+						text='main-position="${position}"'
+						heading-level="2"
+					></nldd-title>
 				</nldd-hero>
 			`)}
 		</div>
@@ -176,10 +176,10 @@ export const VolleStrook = {
 				>
 				<nldd-title color="inherit"
 					size="3"
-				>
-					<h1>Volle onderstrook</h1>
-					<p slot="subtitle">main-position="bottom-left" — het mediavlak staat erboven</p>
-				</nldd-title>
+					text="Volle onderstrook"
+					supporting-text='main-position="bottom-left" — het mediavlak staat erboven'
+					heading-level="1"
+				></nldd-title>
 			</nldd-hero>
 			<nldd-hero main-position="top-left"
 				main-width="full"
@@ -191,10 +191,10 @@ export const VolleStrook = {
 				>
 				<nldd-title color="inherit"
 					size="3"
-				>
-					<h1>Volle bovenstrook</h1>
-					<p slot="subtitle">main-position="top-left" — het mediavlak staat eronder</p>
-				</nldd-title>
+					text="Volle bovenstrook"
+					supporting-text='main-position="top-left" — het mediavlak staat eronder'
+					heading-level="1"
+				></nldd-title>
 			</nldd-hero>
 		</div>
 	`,
@@ -212,16 +212,17 @@ export const ZonderMedia = {
 			<nldd-hero main-background="hemelblauw">
 				<nldd-title color="inherit"
 					size="2"
-				>
-					<h1>Kleurvlak zonder fotografie</h1>
-					<p slot="subtitle">De main beslaat de volledige hero</p>
-				</nldd-title>
+					text="Kleurvlak zonder fotografie"
+					supporting-text="De main beslaat de volledige hero"
+					heading-level="1"
+				></nldd-title>
 			</nldd-hero>
 			<nldd-hero main-background="base">
-				<nldd-title size="2">
-					<h1>Base zonder media</h1>
-					<p slot="subtitle">Rand zodat de vorm zichtbaar blijft</p>
-				</nldd-title>
+				<nldd-title size="2"
+					text="Base zonder media"
+					supporting-text="Rand zodat de vorm zichtbaar blijft"
+					heading-level="1"
+				></nldd-title>
 			</nldd-hero>
 		</div>
 	`,
@@ -243,9 +244,9 @@ export const MetRichText = {
 			>
 			<nldd-title color="inherit"
 				size="3"
-			>
-				<h1>Volle hoogte links</h1>
-			</nldd-title>
+				text="Volle hoogte links"
+				heading-level="1"
+			></nldd-title>
 			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-rich-text color="inherit">
 				<p>Het paneel beslaat de volle hoogte; het mediavlak staat ernaast. Ook <a href="#">links</a> erven de contentkleur.</p>

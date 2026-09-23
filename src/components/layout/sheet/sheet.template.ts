@@ -5,7 +5,7 @@ import type { NLDDSheet } from './sheet.js';
 export function sheetTemplate(component: NLDDSheet) {
 	return html`
 		<dialog class="sheet"
-			aria-label=${component.accessibleLabel}
+			aria-label=${component._resolvedAccessibleLabel}
 			aria-modal="true"
 			@pointerdown=${component._handleDialogPointerDown}
 			@click=${component._handleDialogClick}
