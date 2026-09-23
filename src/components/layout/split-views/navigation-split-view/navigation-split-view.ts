@@ -5,6 +5,11 @@
  * The sidebars show navigation or lists, the main area shows primary content,
  * and the inspector shows additional details or properties of the selection.
  * Panes are shown automatically when content is slotted into them.
+ * When they stop fitting, panes drop in a fixed order: the inspector goes
+ * first, then the primary sidebar collapses into the secondary sidebar. If
+ * that still does not fit, the view stacks and shows one pane at a time:
+ * main when it has content, otherwise the secondary sidebar, otherwise the
+ * primary sidebar.
  *
  * @element nldd-navigation-split-view
  *

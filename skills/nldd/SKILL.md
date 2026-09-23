@@ -23,7 +23,7 @@ Werkt een van de vijf niet, dan draai je een oude versie van de plugin:
 
 | Je gaat | Gebruik | Wat erin zit |
 |---|---|---|
-| een applicatie bouwen op `@nldd/design-system` | **`nldd-design-build`** | de visie, de acht basispatronen, bootstrap-voorbeelden voor HTML en Vue |
+| een applicatie bouwen op `@nldd/design-system` | **`nldd-design-build`** | de visie, de basispatronen, bootstrap-voorbeelden voor HTML en Vue |
 | opzoeken welk component, attribuut, slot, event of icoon er is, of wat er in een versie veranderde | **`nldd-design`** | de componentreferentie, de changelog, de ontwerprichtlijnen |
 | een bestaande frontend omzetten naar dit systeem | **`nldd-design-migrate`** | wat er stil misgaat, per herkomst: Tailwind, een ander design system, server-gerenderd |
 | een applicatie die al op dit systeem draait naar een nieuwere versie brengen | **`nldd-design-upgrade`** | het upgradepad uit de changelog, en waarom het versienummer niets zegt |

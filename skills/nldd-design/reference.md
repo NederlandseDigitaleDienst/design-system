@@ -7,14 +7,9 @@
 
 # Componentreferentie — @nldd/design-system
 
-Elk custom element met zijn attributen, slots en events. Dit is een offline
-snelreferentie; de levende documentatie met voorbeelden staat in
-[Storybook](https://nederlandsedigitaledienst.github.io/design-system/), en de exacte types staan in
-de `.d.ts` bestanden van het pakket.
+Elk custom element met zijn attributen, slots en events. Dit is een offline snelreferentie; de levende documentatie met voorbeelden staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/), en de exacte types staan in de `.d.ts` bestanden van het pakket.
 
-> Deze referentie komt uit de JSDoc van de componenten. Dat elk attribuut er
-> in staat, wordt in CI afgedwongen: `npm run validate:component-api`
-> vergelijkt de `@property`-decorators met de `@attr`-regels.
+> Deze referentie komt uit de JSDoc van de componenten. Dat elk attribuut er in staat, wordt in CI afgedwongen: `npm run validate:component-api` vergelijkt de `@property`-decorators met de `@attr`-regels.
 
 ## Actions
 
@@ -1793,7 +1788,7 @@ A page header with a media area and a text panel (the main) that can stand in si
 
 ### `<nldd-navigation-split-view>`
 
-A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them.
+A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them. When they stop fitting, panes drop in a fixed order: the inspector goes first, then the primary sidebar collapses into the secondary sidebar. If that still does not fit, the view stacks and shows one pane at a time: main when it has content, otherwise the secondary sidebar, otherwise the primary sidebar.
 
 **Attributes**
 

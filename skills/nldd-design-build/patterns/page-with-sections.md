@@ -157,4 +157,4 @@ Wat jij nog moet doen: een `heading-level` op elke titel en titelbalk, zodat de 
 
 ## Gezien in
 
-`page > simple-section` en `simple-section > title` zijn de meest voorkomende composities op dit systeem, in elk onderzocht product. Een uitgewerkte content- en landingspagina met hero, kaartenraster en footer staat in [content-page](../examples/content-page.md).
+`page > simple-section` en `simple-section > title` zijn de meest voorkomende composities op dit systeem, in elk onderzocht product. Een uitgewerkte landings- of informatiepagina met hero, kaartenraster en footer staat in [contentpagina](content-page.md).

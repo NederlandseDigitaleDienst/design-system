@@ -1,19 +1,15 @@
 # Patronen
 
-Een component beantwoordt "wat is dit ding". Een patroon beantwoordt "hoe zet ik
-deze dingen samen tot iets dat een taak van de gebruiker afhandelt".
+Een component beantwoordt "wat is dit ding". Een patroon beantwoordt "hoe zet ik deze dingen samen tot iets dat een taak van de gebruiker afhandelt".
 
-De set is expres klein. Acht patronen die kloppen zijn nuttiger dan een complete
-catalogus die niet is bijgehouden. Staat jouw geval er niet bij, kijk dan of een
-van deze acht de compositie al dekt; zo niet, dan is
-[`../reference.md`](../../nldd-design/reference.md) de volledige API en
-[Storybook](https://nederlandsedigitaledienst.github.io/design-system/) het levende voorbeeld.
+De set is expres klein. Een kleine set die klopt is nuttiger dan een complete catalogus die niet is bijgehouden. Staat jouw geval er niet bij, kijk dan of een van deze patronen de compositie al dekt; zo niet, dan is [`../reference.md`](../../nldd-design/reference.md) de volledige API en [Storybook](https://nederlandsedigitaledienst.github.io/design-system/) het levende voorbeeld.
 
 **De opbouw van een scherm**
 
 | Patroon | Voor welke taak |
 |---|---|
 | [Pagina met secties](page-with-sections.md) | Een pagina opbouwen die op elke breedte leesbaar blijft |
+| [Contentpagina](content-page.md) | Een landings- of informatiepagina met kaarten, een uitgelicht vlak en een footer |
 | [Werkbalk met acties](toolbar-with-actions.md) | Acties boven een scherm die ook op smal bereikbaar blijven |
 
 **Inhoud tonen**
@@ -34,38 +30,19 @@ van deze acht de compositie al dekt; zo niet, dan is
 
 ## Waar patronen ophouden
 
-Deze bestanden beschrijven **compositie-mechaniek**: welk component in welk
-component, en waarom die volgorde. De keuzes daarachter (wanneer een modal
-gerechtvaardigd is, hoe je microcopy schrijft, waarom je optionele velden
-markeert in plaats van verplichte) staan in
-[`../design-guidelines.md`](../../nldd-design/design-guidelines.md). Die blijven de canonieke
-bron voor ontwerpvragen.
+Deze bestanden beschrijven **compositie-mechaniek**: welk component in welk component, en waarom die volgorde. De keuzes daarachter (wanneer een modal gerechtvaardigd is, hoe je microcopy schrijft, waarom je optionele velden markeert in plaats van verplichte) staan in [`../design-guidelines.md`](../../nldd-design/design-guidelines.md). Die blijven de canonieke bron voor ontwerpvragen.
 
-Twee dingen staan er bewust niet in, omdat de ontwerprichtlijnen ze afwijzen:
-**wizards** ("een symptoom van een slechte onderliggende UI") en **megamenu's**.
+Twee dingen staan er bewust niet in, omdat de ontwerprichtlijnen ze afwijzen: **wizards** ("een symptoom van een slechte onderliggende UI") en **megamenu's**.
 
 ## Hoe deze patronen tot stand komen
 
-Ze zijn afgeleid uit code die in productie draait, niet uit wat we ons
-herinneren. Twee bronnen wegen het zwaarst:
+Ze zijn afgeleid uit code die in productie draait, niet uit wat we ons herinneren. Twee bronnen wegen het zwaarst:
 
-1. **Commits waarin de regel expliciet wordt opgeschreven,** door wie het
-   systeem heeft ontworpen. Die leveren het "waarom" achter een compositie.
-2. **Hoe vaak een compositie over producten heen terugkomt,** gemeten in de
-   broncode van de apps die op dit systeem draaien, in Vue, Astro, Angular en
-   server-gerenderde templates. Een compositie die alleen in één app voorkomt is
-   een gewoonte van die app; wat terugkomt in code van teams die elkaar niet
-   kennen, is een patroon van het systeem.
+1. **Commits waarin de regel expliciet wordt opgeschreven,** door wie het systeem heeft ontworpen. Die leveren het "waarom" achter een compositie.
+2. **Hoe vaak een compositie over producten heen terugkomt,** gemeten in de broncode van de apps die op dit systeem draaien, in Vue, Astro, Angular en server-gerenderde templates. Een compositie die alleen in één app voorkomt is een gewoonte van die app; wat terugkomt in code van teams die elkaar niet kennen, is een patroon van het systeem.
 
-Een patroon voorstellen doe je via een issue, met het probleem en het bewijs
-erbij: waar draait dit, en welke taak lost het op. Code mag later.
+Een patroon voorstellen doe je via een issue, met het probleem en het bewijs erbij: waar draait dit, en welke taak lost het op. Code mag later.
 
-Elk patroon staat ook in
-[Storybook](https://nederlandsedigitaledienst.github.io/design-system/), onder
-"Patronen", met de voorbeelden live en een test op wat het patroon belooft. De
-bestanden hier zijn uit die pagina's gegenereerd, uit dezelfde markup die daar
-draait: het voorbeeld dat je kopieert, is het voorbeeld dat getest is.
+Elk patroon staat ook in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/), onder "Patronen", met de voorbeelden live en een test op wat het patroon belooft. De bestanden hier zijn uit die pagina's gegenereerd, uit dezelfde markup die daar draait: het voorbeeld dat je kopieert, is het voorbeeld dat getest is.
 
-Elk `nldd-*`-element in deze bestanden wordt in CI gecontroleerd tegen de echte
-component-API (`npm run validate:skill-markup`), dus een tag, attribuut, slot of
-icoonnaam die niet bestaat laat de build falen.
+Elk `nldd-*`-element in deze bestanden wordt in CI gecontroleerd tegen de echte component-API (`npm run validate:skill-markup`), dus een tag, attribuut, slot of icoonnaam die niet bestaat laat de build falen.

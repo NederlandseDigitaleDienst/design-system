@@ -1,0 +1,57 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './content-page.stories';
+
+<Meta of={Stories} />
+
+# Contentpagina
+
+**Welk probleem dit oplost.** Een landings-, informatie- of campagnepagina bouwen: lopende tekst, een raster met kaarten, een uitgelicht vlak en een footer, zonder er een applicatieschil omheen te zetten.
+
+**Wanneer wel.** Een pagina die iets uitlegt of aanprijst aan iemand die nog niet ingelogd is.
+
+**Wanneer niet.** Werkt de gebruiker in de pagina, dan bouw je een scherm en geen contentpagina, zie [pagina met secties](?path=/docs/patronen-pagina-met-secties--docs). Panelen naast elkaar, een werkbalk of een inspector horen hier niet: dat is een applicatie, en die begint bij een split view.
+
+## Compositie
+
+```
+nldd-app-view                            de buitenste schil
+  └─ nldd-page
+       ├─ slot="header"                  nldd-top-navigation-bar
+       ├─ nldd-simple-section            de hero, met een nldd-title size="1"
+       ├─ nldd-simple-section            background="tinted", een uitgelicht blok
+       │    └─ nldd-collection           layout="grid", item-width
+       │         └─ nldd-card            met een nldd-container voor de padding
+       ├─ nldd-two-thirds-one-third-section
+       │    ├─ slot="left"               de lopende uitleg
+       │    └─ slot="right"              een ondersteunende kaart
+       ├─ nldd-simple-section            scheme="inverted", de oproep
+       └─ slot="footer"                  nldd-page-footer
+```
+
+<Canvas of={Stories.Standaard} />
+
+## Waarom zo
+
+**Een verticale stapel secties, geen panelen.** Een contentpagina is een [pagina](?path=/docs/components-layout-page--docs) met secties eronder, net als elk ander scherm. Het verschil zit in wat erin staat, niet in de constructie, dus de regels uit [pagina met secties](?path=/docs/patronen-pagina-met-secties--docs) gelden hier onverkort: één sectie per blok, één `h1`, en geen kopniveau overslaan.
+
+**Een rij gelijkwaardige kaarten is een collection.** De [collection](?path=/docs/components-layout-collection--docs) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint. Een eigen CSS-grid doet hetzelfde werk over, en anders.
+
+**Een kaart zet zelf geen padding.** De [kaart](?path=/docs/components-layout-card--docs) laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand.
+
+**Uitleg links, kaart rechts: pak de sectie die dat al is.** De [twee derde, een derde-sectie](?path=/docs/components-layout-page-sections-two-thirds-one-third-section--docs) heeft een `left`- en een `right`-slot en laat de kolommen onder de 280px vanzelf onder elkaar vallen. Zelf twee kolommen maken kost een mediaquery die de sectie al voor je schrijft.
+
+**Een vlak maak je met `background` en `scheme`, niet met eigen CSS.** Elke page-section kent allebei, en ze cascaderen het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Ze horen bij elkaar. `scheme="inverted"` draait het kleurschema om, maar zonder `background` schildert de sectie niets, en dan staat lichte tekst op een lichte pagina. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer. Loopt het vlak van rand tot rand, bijvoorbeeld om een afbeelding, pak dan de [full bleed-sectie](?path=/docs/components-layout-page-sections-full-bleed-section--docs): die heeft geen horizontale padding, dus zet er zelf een container omheen als er tekst in staat.
+
+**Een label op een kaart is een tag.** Een [tag](?path=/docs/components-content-tag--docs) is een eigenschap die iemand heeft toegekend, zoals "Vacature". Een badge is voor een aantal of voor een toestand die het systeem zelf bijhoudt, en een token is iets dat je kunt weghalen.
+
+**De footer is een component, geen eigen blok.** De [page footer](?path=/docs/components-layout-page-footer--docs) heeft een rij voor je eigen inhoud en een `legal-bar` eronder, trekt de scheidingslijnen tussen de gevulde rijen, en draagt het id waar een skip link naartoe kan springen.
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: de leesbreedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, en de juridische rij als eigen navigatie met een naam.
+
+Wat jij nog moet doen: een `heading-level` op elke titel, ook op die in de footer, en een tekst in een kaart die een link is. Die kaart ontleent zijn naam aan wat erin staat, dus een kaart met alleen een afbeelding krijgt een `accessible-label`.
+
+## Gezien in
+
+Deze compositie komt van de publieke pagina's op dit systeem, waar hij naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test; dit is dezelfde pagina, nu getoetst.

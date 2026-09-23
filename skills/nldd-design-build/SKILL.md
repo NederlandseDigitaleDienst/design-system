@@ -11,8 +11,8 @@ Je gebruikt deze skill als je een **applicatie** bouwt bovenop `@nldd/design-sys
 
 Twee plekken horen bij deze skill:
 
-- [`patterns/`](patterns/): de acht basispatronen, dus hoe je componenten samenstelt tot een pagina, een lijst, een formulier, een menu, een sheet of een bevestiging. Begin hier als je iets bouwt.
-- [`examples/`](examples/): werkende bootstrap-voorbeelden voor platte HTML en Vue 3, en een complete content-pagina.
+- [`patterns/`](patterns/): de basispatronen, dus hoe je componenten samenstelt tot een scherm dat een taak van de gebruiker afhandelt. Begin hier als je iets bouwt.
+- [`examples/`](examples/): het pakket aan de praat krijgen, in platte HTML en in Vue 3.
 
 De naslag staat apart, in `nldd-design`, want die geldt ook als je niets nieuws bouwt: de [componentreferentie](../nldd-design/reference.md) met elk `nldd-*` element en de icoonnamen, de [changelog](../nldd-design/changelog.md) en de [ontwerprichtlijnen](../nldd-design/design-guidelines.md).
 
@@ -26,33 +26,16 @@ Het uitgangspunt van dit systeem is dat een ontwikkelaar de Rijkshuisstijl, de t
 
 Dat heeft één belangrijke consequentie voor jou: **als je tegen een component vecht, gebruik je het verkeerd.** De componenten dragen opzettelijk meningen. Werk ermee mee.
 
-### Inhoud eerst, chroom verdient zijn plek
+Kan een component iets niet wat het zou moeten kunnen, of is het kapot, dan is dat geen gebruiksfout maar een melding waard. [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md) zegt waar die heen gaat en hoe je hem opbouwt: het probleem eerst, de oplossing later.
 
-Begin bij de inhoud. Navigatie, werkbalken en koppen zijn er om de inhoud te dienen, niet andersom. Voeg ze toe wanneer ze een taak ondersteunen, niet als standaard.
-
-- **Vermijd sticky headers tenzij de inhoud ze nodig heeft.** Een sticky kop is alleen verantwoord als een sectie langer is dan het scherm en de gebruiker de context permanent nodig heeft. `nldd-page` ondersteunt een sticky header (`sticky-header`) en meet zelf de hoogte zodat de inhoud er niet onder schuift, maar de standaard is: geen sticky. Kies je er toch voor, verantwoord dan waarom.
-- **Minimaliseer chroom.** Een platte pagina met inhoud is bijna altijd beter dan dezelfde inhoud verpakt in een modal, een sheet en een werkbalk. Voeg een laag pas toe als de taak erom vraagt. Let op de keerzijde: chroom of een control weghalen alleen om het beeld op te ruimen verschuift de complexiteit, het lost niets op. Het bredere principe (UI in de content verwerken, niet minder controls om het minder controls) staat in [`design-guidelines.md`](../nldd-design/design-guidelines.md).
-
-### Progressieve onthulling op smalle schermen
-
-Het systeem verbergt secundaire inhoud zelf wanneer de ruimte krap wordt. Leun daarop in plaats van ertegen te werken.
-
-- **Split views verbergen panelen van rechts naar links.** `nldd-side-by-side-split-view` en `nldd-navigation-split-view` stellen automatisch in welke panelen verborgen worden als ze niet meer passen. **Links = hoogste prioriteit.** Plaats het belangrijkste paneel (de hoofdinhoud) links, secundaire panelen (inspector, detail) rechts. Die verdwijnen dan eerst.
-- **Verberg, vouw niet dicht in een vaste hoek.** Op smalle schermen verhuist secundaire inhoud naar een sheet of popover in plaats van samengeperst te blijven.
+Wat je vormgeeft is daarmee geen keuze van deze skill. Wanneer een sticky header mag, hoeveel chroom een scherm verdient, hoe je microcopy schrijft: dat staat in [`design-guidelines.md`](../nldd-design/design-guidelines.md), en dat is de enige bron. Lees die voordat je iets ontwerpt. Hier staat de mechaniek eronder.
 
 ### Componeer, herstijl niet
 
-Gebruik componenten zoals ze zijn en stuur ze via attributen en variabelen. Reik niet in de shadow DOM, override geen interne ARIA, plak geen klassen op childcomponenten.
+Gebruik componenten zoals ze zijn en stuur ze via hun attributen. Reik niet in de shadow DOM, override geen interne ARIA, plak geen klassen op childcomponenten.
 
-- **Stuur via attributen en CSS-variabelen, niet via interne overrides.** Wil je een rustiger of nadrukkelijker component? Kies een ander component in plaats van de ARIA of de stijl van het huidige te verbouwen. De `nldd-banner` zegt het zelf in zijn documentatie: "if you need a quieter component, pick a different one rather than overriding the banner's ARIA."
+- **Stuur via attributen, niet via interne overrides.** Wil je een rustiger of nadrukkelijker component? Kies een ander component in plaats van de ARIA of de stijl van het huidige te verbouwen. De `nldd-banner` zegt het zelf in zijn documentatie: "if you need a quieter component, pick a different one rather than overriding the banner's ARIA."
 - **Reik alleen in de shadow DOM als het echt moet,** en doe het dan defensief (zie het patroon hieronder). Het is een ontsnappingsluik, geen route.
-
-### Leun op native HTML waar het systeem dat doet
-
-Het systeem vervangt native elementen niet, het verpakt ze. Dat geeft je de volledige browser-toegankelijkheid en formulierafhandeling gratis.
-
-- **`nldd-dropdown` is een visuele schil om een native `<select>`.** Geef een echte `<select>` als slotted child; de browser houdt de controle over toetsenbord, formulierwaarde en toegankelijkheid.
-- **Voor links in CMS- of markdown-output gebruik je `nldd-rich-text` met een rauwe `<a>`,** niet `nldd-link`. `nldd-link` is voor UI-navigatie en actiegebieden, niet voor lopende tekst.
 
 ## Installeren en bootstrappen
 
@@ -98,9 +81,13 @@ Voor tree-shaking kun je ook per component importeren via de subpath-export (bij
 
 De complete setups, inclusief de Vue-config en het per-component importeren, staan in [`examples/bootstrap-html.md`](examples/bootstrap-html.md) en [`examples/bootstrap-vue.md`](examples/bootstrap-vue.md).
 
-## De vijf CSS-lagen
+## CSS-variabelen
 
-Alle visuele waarden komen uit CSS-variabelen; niets is hardcoded. Dat maakt licht/donker-thema's mogelijk via `light-dark()` en houdt je app in de huisstijl. De variabelen zijn gelaagd:
+Alle visuele waarden in de componenten komen uit CSS-variabelen en niets is hardcoded. Zo werkt licht en donker, en zo blijft de huisstijl erin zitten. Voor jou is het vooral iets om van af te blijven: de variabelen zijn de bedrading van het systeem, geen publieke API. Ze worden hernoemd, samengevoegd en verwijderd wanneer een component daarom vraagt, en de changelog beschrijft zo'n wijziging vanuit dat component, niet vanuit jouw stylesheet. Gebruik je ze toch, dan is dat op eigen risico.
+
+Stuur een component dus via zijn attributen. Ruimte stuur je met `nldd-container` en `nldd-spacer`, tekst met `nldd-title` en `nldd-rich-text`, en de kleuren komen uit de componenten zelf. Pak eerst een component, dan zit de huisstijl er al in en beweegt je app mee als het systeem verandert.
+
+Wat je in de devtools ziet staan, is gelaagd:
 
 | Laag | Prefix | Wat het is |
 |------|--------|------------|
@@ -110,7 +97,7 @@ Alle visuele waarden komen uit CSS-variabelen; niets is hardcoded. Dat maakt lic
 | **Context** | `--context-*` | Communicatie tussen componenten (bijv. achtergrondkleur die doorcascadeert). |
 | **Lokaal** | `--_*` | **Intern aan een component. Raak deze niet aan.** |
 
-Je hebt deze variabelen zelden nodig. Ruimte stuur je met `nldd-container` en `nldd-spacer`, tekst met `nldd-title` en `nldd-rich-text`, en de kleuren komen uit de componenten zelf. Pak eerst een component; dan zit de huisstijl er al in en blijft je app meebewegen als het systeem verandert. Houd je daarna nog eigen CSS over voor iets dat geen component is, gebruik dan `--primitives-*` in plaats van een hardcoded waarde.
+Houd je daarna nog eigen CSS over voor iets dat geen component is, dan is een `--primitives-*` de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
 
 **Zet geen `light-dark()` om een primitive heen.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Wikkel je hem in nog een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond. Eén verwijzing volstaat.
 
@@ -122,17 +109,7 @@ Je hebt deze variabelen zelden nodig. Ruimte stuur je met `nldd-container` en `n
 
 Elk patroon heeft een reden. De voorbeelden zijn gedestilleerd uit code die in productie draait, in Vue, Astro, Angular en server-gerenderde templates.
 
-> **Bouw je iets, begin dan bij [`patterns/`](patterns/).** Daar staan de acht
-> basispatronen uitgewerkt met hun compositie, werkende code en het waarom:
-> [pagina met secties](patterns/page-with-sections.md),
-> [werkbalk met acties](patterns/toolbar-with-actions.md),
-> [lijst met rijen](patterns/list-with-rows.md),
-> [een lijst filteren](patterns/filter-a-list.md),
-> [formulier](patterns/form.md),
-> [menu bij een knop](patterns/menu-from-a-button.md),
-> [bewerken in een sheet](patterns/edit-in-a-sheet.md) en
-> [bevestigen](patterns/confirm.md). De secties hieronder geven de losse
-> regels en de mechaniek eronder.
+> **Bouw je iets, begin dan bij [`patterns/`](patterns/).** Daar staat elk patroon uitgewerkt met zijn compositie, werkende code en het waarom, en [`patterns/README.md`](patterns/README.md) zegt per taak welk patroon je nodig hebt. De secties hieronder geven de losse regels en de mechaniek eronder.
 
 ### Layout componeren
 
@@ -175,7 +152,7 @@ Elk patroon heeft een reden. De voorbeelden zijn gedestilleerd uit code die in p
 </nldd-app-view>
 ```
 
-*Waarom:* de `*-section` componenten (`nldd-simple-section`, `nldd-two-thirds-one-third-section`, en de andere page-sections) regelen responsive padding en kolom-wrapping zelf via container queries. Grids van gelijkwaardige items bouw je met `nldd-collection` + `nldd-card`, niet met eigen CSS-grid. Het volledige patroon staat in [`examples/content-page.md`](examples/content-page.md).
+*Waarom:* de `*-section` componenten (`nldd-simple-section`, `nldd-two-thirds-one-third-section`, en de andere page-sections) regelen responsive padding en kolom-wrapping zelf via container queries. Grids van gelijkwaardige items bouw je met `nldd-collection` + `nldd-card`, niet met eigen CSS-grid. Het volledige patroon staat in [`patterns/content-page.md`](patterns/content-page.md).
 
 ### Sheet, modal of popover: kies bewust
 
@@ -185,7 +162,7 @@ Dit zijn geen uitwisselbare overlays. Elk heeft een doel:
 |---------|--------------|-----------|
 | **`nldd-sheet`** | Secundaire inhoud die context behoudt: formulieren, bewerk-oppervlakken, detail. Schuift in vanaf de zijkant (onderkant op mobiel). | Korte bevestigingen. |
 | **`nldd-modal-dialog`** | Het uiterste geval: een onomkeerbare actie waar geen veiliger weg omheen is. Onderbreekt bewust. | Data-invoer, complexe formulieren, of bevestigingen die ook met undo kunnen. |
-| **`nldd-popover`** | Lichte, niet-blokkerende panelen verankerd aan een trigger: filters, snelacties, zoekvelden. Sluit bij Esc en klik-buiten. | Inhoud die de hele aandacht vraagt. |
+| **`nldd-popover`** | Lichte, niet-blokkerende panelen verankerd aan een trigger: filters, snelacties, zoekvelden. Sluit bij Esc en klik-buiten. | Ingevulde formulieren, want een klik ernaast sluit hem. En alles zonder trigger om aan te haken. |
 
 *Vuistregel:* secundaire inhoud op een smal scherm hoort in een **sheet**, niet in een modal. Een modal onderbreekt; reserveer dat voor momenten die een onderbreking verdienen.
 
@@ -223,7 +200,7 @@ Bouw rijen op uit cellen binnen een `nldd-list-item`. Niet uit losse divs.
 </nldd-list>
 ```
 
-Beschikbare cellen: `nldd-text-cell`, `nldd-icon-cell`, `nldd-title-cell`, `nldd-description-cell`, `nldd-spacer-cell`, en meer (zie `reference.md`).
+Beschikbare cellen: `nldd-text-cell`, `nldd-icon-cell`, `nldd-title-cell`, `nldd-description-cell`, `nldd-spacer-cell`, `nldd-cell` voor eigen inhoud, en meer (zie `reference.md`).
 
 **Zet nooit kale tekst in een rij.** De cel bepaalt lettertype, grootte, kleur en uitlijning, en stemt die af op de rijhoogte. Tekst die je er los in hangt krijgt niets van dat alles mee: in een klikbare rij zit de slot in een `<button>` en erft je tekst de browserstijl van een knop, wat neerkomt op 13px Arial. Loopt je tekst over meerdere alinea's of bevat hij opmaak, gebruik dan `nldd-rich-text` in een `nldd-cell`.
 
