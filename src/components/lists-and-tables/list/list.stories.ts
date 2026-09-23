@@ -742,7 +742,11 @@ export const Formulier = {
 					width="full"
 					text="Aangemaakt"
 				></nldd-text-cell>
-				<nldd-text-cell text="24 juli 2026"></nldd-text-cell>
+				<nldd-spacer-cell size="12"></nldd-spacer-cell>
+				<nldd-text-cell
+					width="fit-content"
+					text="24 juli 2026"
+				></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
