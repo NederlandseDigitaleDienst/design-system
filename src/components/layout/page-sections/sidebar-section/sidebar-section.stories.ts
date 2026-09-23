@@ -171,7 +171,8 @@ export const EigenSheetTitelbalk = {
 			@open=${reflectExpanded(true)}
 			@close=${reflectExpanded(false)}
 		>
-			<nldd-top-title-bar slot="sheet-top-title-bar"
+			<nldd-top-title-bar
+				slot="sheet-top-title-bar"
 				text="Filters"
 				dismiss-text="Klaar"
 			>

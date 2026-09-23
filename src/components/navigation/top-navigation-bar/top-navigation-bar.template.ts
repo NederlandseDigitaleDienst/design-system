@@ -107,14 +107,16 @@ export function template(component: NLDDTopNavigationBar) {
 							></nldd-menu-bar-item>
 						</div>
 						<div class="top-navigation-bar__global-menu-bar">
-							<slot name="global"
+							<slot
+								name="global"
 								@slotchange=${component._onGlobalSlotChange}
 							></slot>
 						</div>
 					</div>
 					<div class="top-navigation-bar__menu-bar-end">
 						<div class="top-navigation-bar__utility-menu-bar">
-							<slot name="utility"
+							<slot
+								name="utility"
 								@slotchange=${component._onUtilitySlotChange}
 							></slot>
 						</div>

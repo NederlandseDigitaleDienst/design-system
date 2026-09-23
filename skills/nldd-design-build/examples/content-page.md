@@ -24,7 +24,8 @@ Daarbinnen stapel je secties.
 <nldd-app-view>
   <nldd-page>
     <nldd-simple-section>
-      <nldd-title size="1"
+      <nldd-title
+        size="1"
         overline="RegelRecht"
         text="van wet naar digitale werking"
         heading-level="1"
@@ -48,18 +49,21 @@ Een rij gelijkwaardige kaarten is een `nldd-collection` (layout `grid`) met
 
 ```html
     <nldd-simple-section>
-      <nldd-title slot="header"
+      <nldd-title
+        slot="header"
         size="2"
         text="Wat is RegelRecht?"
         heading-level="2"
       ></nldd-title>
 
-      <nldd-collection layout="grid"
+      <nldd-collection
+        layout="grid"
         item-width="320px"
       >
         <nldd-card>
           <nldd-container padding="16">
-            <nldd-title size="4"
+            <nldd-title
+              size="4"
               text="Van analoog recht naar code"
               heading-level="3"
             ></nldd-title>
@@ -105,7 +109,8 @@ niet-interactief), niet `nldd-badge` (dat is voor notificatie-aantallen en
 statusstippen).
 
 ```html
-<nldd-tag color="lintblauw"
+<nldd-tag
+  color="lintblauw"
   text="Vacature"
 ></nldd-tag>
 ```
@@ -114,7 +119,8 @@ statusstippen).
 
 ```html
     <nldd-page-footer>
-      <nldd-container padding="24"
+      <nldd-container
+        padding="24"
         gap="8"
       >
         <!-- hoofd-footerinhoud, bijv. een grid van linklijsten -->

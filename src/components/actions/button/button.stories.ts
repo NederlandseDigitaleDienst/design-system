@@ -427,7 +427,8 @@ export const MetPopover = {
 			<nldd-button expandable text="Info">
 				<nldd-popover slot="popup" accessible-label="Toelichting" width="280px">
 					<nldd-container padding="16" gap="8">
-						<nldd-title size="6"
+						<nldd-title
+							size="6"
 							text="Zorgtoeslag"
 							heading-level="2"
 						></nldd-title>
@@ -531,19 +532,23 @@ export const OpKleurvlak = {
 		<div style="display: flex; flex-direction: column; gap: 16px;">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-button-group orientation="horizontal">
-					<nldd-button variant="inherit-filled"
+					<nldd-button
+						variant="inherit-filled"
 						text="Inherit filled"
 						supporting-text="Met ondertekst"
 					></nldd-button>
-					<nldd-button variant="inherit-tinted"
+					<nldd-button
+						variant="inherit-tinted"
 						text="Inherit tinted"
 					></nldd-button>
-					<nldd-button variant="inherit-filled"
+					<nldd-button
+						variant="inherit-filled"
 						text="Open"
 						expandable
 						expanded
 					></nldd-button>
-					<nldd-button variant="inherit-tinted"
+					<nldd-button
+						variant="inherit-tinted"
 						text="Open"
 						expandable
 						expanded
@@ -552,20 +557,24 @@ export const OpKleurvlak = {
 			</div>
 			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-button-group orientation="horizontal">
-					<nldd-button variant="inherit-filled"
+					<nldd-button
+						variant="inherit-filled"
 						text="Inherit filled"
 					></nldd-button>
-					<nldd-button variant="inherit-tinted"
+					<nldd-button
+						variant="inherit-tinted"
 						text="Inherit tinted"
 					></nldd-button>
 				</nldd-button-group>
 			</div>
 			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-button-group orientation="horizontal">
-					<nldd-button variant="inherit-filled"
+					<nldd-button
+						variant="inherit-filled"
 						text="Zonder context (flip)"
 					></nldd-button>
-					<nldd-button variant="inherit-tinted"
+					<nldd-button
+						variant="inherit-tinted"
 						text="Inherit tinted"
 					></nldd-button>
 				</nldd-button-group>

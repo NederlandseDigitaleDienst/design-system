@@ -111,7 +111,8 @@ const Template = (args: Record<string, any>) => html`
 		media-sizes=${args.mediaSizes || nothing}
 		media-alt=${args.mediaAlt || nothing}
 	>
-		<nldd-title color="inherit"
+		<nldd-title
+			color="inherit"
 			size="2"
 			text="Regels die voor je werken"
 			heading-level="1"
@@ -122,10 +123,12 @@ const Template = (args: Record<string, any>) => html`
 		</nldd-rich-text>
 		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-button-group orientation="horizontal">
-			<nldd-button variant="inherit-filled"
+			<nldd-button
+				variant="inherit-filled"
 				text="Bekijk de regels"
 			></nldd-button>
-			<nldd-button variant="inherit-tinted"
+			<nldd-button
+				variant="inherit-tinted"
 				text="Meer informatie"
 			></nldd-button>
 		</nldd-button-group>
@@ -140,14 +143,17 @@ export const AllePosities = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 24px;">
 			${['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'].map((position) => html`
-				<nldd-hero main-position=${position}
+				<nldd-hero
+					main-position=${position}
 					main-background="donkerblauw"
 				>
-					<img slot="media"
+					<img
+						slot="media"
 						src=${MEDIA}
 						alt=""
 					>
-					<nldd-title color="inherit"
+					<nldd-title
+						color="inherit"
 						size="4"
 						text='main-position="${position}"'
 						heading-level="2"
@@ -166,30 +172,36 @@ export const AllePosities = {
 export const VolleStrook = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 24px;">
-			<nldd-hero main-position="bottom-left"
+			<nldd-hero
+				main-position="bottom-left"
 				main-width="full"
 				main-background="lintblauw"
 			>
-				<img slot="media"
+				<img
+					slot="media"
 					src=${MEDIA}
 					alt=""
 				>
-				<nldd-title color="inherit"
+				<nldd-title
+					color="inherit"
 					size="3"
 					text="Volle onderstrook"
 					supporting-text='main-position="bottom-left" — het mediavlak staat erboven'
 					heading-level="1"
 				></nldd-title>
 			</nldd-hero>
-			<nldd-hero main-position="top-left"
+			<nldd-hero
+				main-position="top-left"
 				main-width="full"
 				main-background="lintblauw"
 			>
-				<img slot="media"
+				<img
+					slot="media"
 					src=${MEDIA}
 					alt=""
 				>
-				<nldd-title color="inherit"
+				<nldd-title
+					color="inherit"
 					size="3"
 					text="Volle bovenstrook"
 					supporting-text='main-position="top-left" — het mediavlak staat eronder'
@@ -210,7 +222,8 @@ export const ZonderMedia = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 24px;">
 			<nldd-hero main-background="hemelblauw">
-				<nldd-title color="inherit"
+				<nldd-title
+					color="inherit"
 					size="2"
 					text="Kleurvlak zonder fotografie"
 					supporting-text="De main beslaat de volledige hero"
@@ -218,7 +231,8 @@ export const ZonderMedia = {
 				></nldd-title>
 			</nldd-hero>
 			<nldd-hero main-background="base">
-				<nldd-title size="2"
+				<nldd-title
+					size="2"
 					text="Base zonder media"
 					supporting-text="Rand zodat de vorm zichtbaar blijft"
 					heading-level="1"
@@ -235,14 +249,17 @@ export const ZonderMedia = {
  */
 export const MetRichText = {
 	render: () => html`
-		<nldd-hero main-position="left"
+		<nldd-hero
+			main-position="left"
 			main-background="oranje"
 		>
-			<img slot="media"
+			<img
+				slot="media"
 				src=${MEDIA}
 				alt=""
 			>
-			<nldd-title color="inherit"
+			<nldd-title
+				color="inherit"
 				size="3"
 				text="Volle hoogte links"
 				heading-level="1"

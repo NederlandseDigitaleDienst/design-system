@@ -29,19 +29,23 @@ nldd-button (of nldd-icon-button)   expandable
 ```
 
 ```html
-<nldd-button text="Acties"
+<nldd-button
+  text="Acties"
   expandable
 >
   <nldd-menu slot="popup">
-    <nldd-menu-item text="Bewerk"
+    <nldd-menu-item
+      text="Bewerk"
       icon="edit"
       shortcut="Cmd+E"
     ></nldd-menu-item>
-    <nldd-menu-item text="Dupliceer"
+    <nldd-menu-item
+      text="Dupliceer"
       icon="copy"
     ></nldd-menu-item>
     <nldd-menu-divider></nldd-menu-divider>
-    <nldd-menu-item text="Verwijder"
+    <nldd-menu-item
+      text="Verwijder"
       icon="delete"
       destructive
     ></nldd-menu-item>
@@ -53,22 +57,26 @@ Een keuze uit een set is een groep items met `type="radio"`, iets dat aan of uit
 staat een item met `type="checkbox"`. Beide houden hun stand bij met `selected`.
 
 ```html
-<nldd-button text="Sorteer"
+<nldd-button
+  text="Sorteer"
   start-icon="sort"
   expandable
 >
   <nldd-menu slot="popup">
     <nldd-menu-group text="Sorteer op">
-      <nldd-menu-item type="radio"
+      <nldd-menu-item
+        type="radio"
         text="Datum"
         selected
       ></nldd-menu-item>
-      <nldd-menu-item type="radio"
+      <nldd-menu-item
+        type="radio"
         text="Naam"
       ></nldd-menu-item>
     </nldd-menu-group>
     <nldd-menu-divider></nldd-menu-divider>
-    <nldd-menu-item type="checkbox"
+    <nldd-menu-item
+      type="checkbox"
       text="Toon afgesloten zaken"
     ></nldd-menu-item>
   </nldd-menu>

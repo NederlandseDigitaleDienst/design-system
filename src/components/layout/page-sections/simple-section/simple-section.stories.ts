@@ -59,11 +59,13 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-simple-section ${pageSectionAttrs(args)}
+		<nldd-simple-section
+			${pageSectionAttrs(args)}
 			horizontal-alignment=${args.horizontalAlignment === 'left' ? nothing : args.horizontalAlignment}
 			vertical-alignment=${args.verticalAlignment === 'top' ? nothing : args.verticalAlignment}
 		>
-			<nldd-title slot="header"
+			<nldd-title
+				slot="header"
 				text="Sectietitel"
 				heading-level="2"
 			></nldd-title>
@@ -86,7 +88,8 @@ export const Standaard = {
 export const Oppervlak = {
 	render: () => html`
 		<nldd-simple-section background="tinted" scheme="dark">
-			<nldd-title slot="header"
+			<nldd-title
+				slot="header"
 				text="Donkere, getinte sectie"
 				heading-level="2"
 			></nldd-title>

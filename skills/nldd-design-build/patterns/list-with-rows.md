@@ -33,10 +33,12 @@ nldd-list                      accessible-label, variant, type
 <nldd-list accessible-label="Dossiers">
   <nldd-list-item href="#dossier-2024-001">
     <nldd-icon-cell icon="document"></nldd-icon-cell>
-    <nldd-text-cell text="Dossier 2024-001"
+    <nldd-text-cell
+      text="Dossier 2024-001"
       supporting-text="Laatst gewijzigd op 3 maart"
     ></nldd-text-cell>
-    <nldd-text-cell width="fit-content"
+    <nldd-text-cell
+      width="fit-content"
       color="secondary"
       text="In behandeling"
     ></nldd-text-cell>
@@ -44,10 +46,12 @@ nldd-list                      accessible-label, variant, type
 
   <nldd-list-item href="#dossier-2024-002">
     <nldd-icon-cell icon="document"></nldd-icon-cell>
-    <nldd-text-cell text="Dossier 2024-002"
+    <nldd-text-cell
+      text="Dossier 2024-002"
       supporting-text="Laatst gewijzigd op 28 februari"
     ></nldd-text-cell>
-    <nldd-text-cell width="fit-content"
+    <nldd-text-cell
+      width="fit-content"
       color="success"
       text="Afgerond"
     ></nldd-text-cell>
@@ -76,34 +80,42 @@ waarschuwt de rij.
 ```html
 <nldd-list accessible-label="Opdrachten">
   <nldd-list-item>
-    <nldd-list-item-segment href="#modernisering-inkoop"
+    <nldd-list-item-segment
+      href="#modernisering-inkoop"
       width="full"
     >
-      <nldd-text-cell text="Modernisering Inkoop"
+      <nldd-text-cell
+        text="Modernisering Inkoop"
         supporting-text="Rijkswaterstaat"
       ></nldd-text-cell>
     </nldd-list-item-segment>
-    <nldd-list-item-segment button
+    <nldd-list-item-segment
+      button
       accessible-label="Bewerk Modernisering Inkoop"
     >
-      <nldd-icon-cell icon="edit"
+      <nldd-icon-cell
+        icon="edit"
         size="20"
       ></nldd-icon-cell>
     </nldd-list-item-segment>
   </nldd-list-item>
 
   <nldd-list-item>
-    <nldd-list-item-segment href="#open-data-architectuur"
+    <nldd-list-item-segment
+      href="#open-data-architectuur"
       width="full"
     >
-      <nldd-text-cell text="Open Data Architectuur"
+      <nldd-text-cell
+        text="Open Data Architectuur"
         supporting-text="Kadaster"
       ></nldd-text-cell>
     </nldd-list-item-segment>
-    <nldd-list-item-segment button
+    <nldd-list-item-segment
+      button
       accessible-label="Bewerk Open Data Architectuur"
     >
-      <nldd-icon-cell icon="edit"
+      <nldd-icon-cell
+        icon="edit"
         size="20"
       ></nldd-icon-cell>
     </nldd-list-item-segment>
@@ -121,11 +133,13 @@ er niets in staat, want dan verdwijnt de lege toestand mee.
 
 ```html
 <nldd-list accessible-label="Dossiers">
-  <nldd-inline-dialog slot="empty"
+  <nldd-inline-dialog
+    slot="empty"
     text="Nog geen dossiers"
     supporting-text="Zodra er een aanvraag binnenkomt, verschijnt die hier."
   ></nldd-inline-dialog>
-  <nldd-inline-dialog slot="no-results"
+  <nldd-inline-dialog
+    slot="no-results"
     text="Geen dossiers gevonden"
     supporting-text="Pas je zoekopdracht of filters aan."
   ></nldd-inline-dialog>

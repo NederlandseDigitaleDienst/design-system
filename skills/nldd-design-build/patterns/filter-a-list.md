@@ -39,30 +39,37 @@ nldd-sheet                     de filterkeuzes zelf
 
 ```html
 <nldd-page>
-  <nldd-top-title-bar slot="header"
+  <nldd-top-title-bar
+    slot="header"
     text="Dossiers"
   ></nldd-top-title-bar>
-  <nldd-search-field slot="header"
+  <nldd-search-field
+    slot="header"
     placeholder="Zoek een dossier"
   ></nldd-search-field>
 
   <nldd-simple-section>
-    <nldd-container layout="wrap"
+    <nldd-container
+      layout="wrap"
       gap="8"
     >
-      <nldd-button id="filters-openen"
+      <nldd-button
+        id="filters-openen"
         variant="secondary"
         size="sm"
         text="Filters"
         start-icon="filter"
       ></nldd-button>
-      <nldd-token text="Status: In behandeling"
+      <nldd-token
+        text="Status: In behandeling"
         control="dismiss"
       ></nldd-token>
-      <nldd-token text="Team: Uitvoering"
+      <nldd-token
+        text="Team: Uitvoering"
         control="dismiss"
       ></nldd-token>
-      <nldd-button variant="neutral-transparent"
+      <nldd-button
+        variant="neutral-transparent"
         size="sm"
         text="Wis alle filters"
       ></nldd-button>
@@ -71,17 +78,20 @@ nldd-sheet                     de filterkeuzes zelf
     <nldd-spacer size="16"></nldd-spacer>
 
     <nldd-list accessible-label="Dossiers">
-      <nldd-inline-dialog slot="no-results"
+      <nldd-inline-dialog
+        slot="no-results"
         text="Geen dossiers gevonden"
         supporting-text="Pas je zoekopdracht of filters aan."
       ></nldd-inline-dialog>
       <nldd-list-item href="#dossier-2024-001">
-        <nldd-text-cell text="Dossier 2024-001"
+        <nldd-text-cell
+          text="Dossier 2024-001"
           supporting-text="In behandeling, team Uitvoering"
         ></nldd-text-cell>
       </nldd-list-item>
       <nldd-list-item href="#dossier-2024-007">
-        <nldd-text-cell text="Dossier 2024-007"
+        <nldd-text-cell
+          text="Dossier 2024-007"
           supporting-text="In behandeling, team Uitvoering"
         ></nldd-text-cell>
       </nldd-list-item>
@@ -89,11 +99,13 @@ nldd-sheet                     de filterkeuzes zelf
   </nldd-simple-section>
 </nldd-page>
 
-<nldd-sheet placement="right"
+<nldd-sheet
+  placement="right"
   width="400px"
 >
   <nldd-page sticky-footer>
-    <nldd-top-title-bar slot="header"
+    <nldd-top-title-bar
+      slot="header"
       text="Filters"
       dismiss-text="Sluiten"
     ></nldd-top-title-bar>
@@ -101,23 +113,27 @@ nldd-sheet                     de filterkeuzes zelf
     <nldd-simple-section>
       <nldd-form name="filters">
         <nldd-form-section text="Status">
-          <nldd-checkbox-field name="status"
+          <nldd-checkbox-field
+            name="status"
             value="in-behandeling"
             label="In behandeling"
             checked
           ></nldd-checkbox-field>
-          <nldd-checkbox-field name="status"
+          <nldd-checkbox-field
+            name="status"
             value="afgerond"
             label="Afgerond"
           ></nldd-checkbox-field>
         </nldd-form-section>
         <nldd-form-section text="Team">
-          <nldd-checkbox-field name="team"
+          <nldd-checkbox-field
+            name="team"
             value="uitvoering"
             label="Uitvoering"
             checked
           ></nldd-checkbox-field>
-          <nldd-checkbox-field name="team"
+          <nldd-checkbox-field
+            name="team"
             value="beleid"
             label="Beleid"
           ></nldd-checkbox-field>
@@ -125,10 +141,12 @@ nldd-sheet                     de filterkeuzes zelf
       </nldd-form>
     </nldd-simple-section>
 
-    <nldd-container slot="footer"
+    <nldd-container
+      slot="footer"
       padding="16"
     >
-      <nldd-button variant="primary"
+      <nldd-button
+        variant="primary"
         text="Toon dossiers"
         width="full"
       ></nldd-button>

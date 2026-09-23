@@ -90,7 +90,8 @@ export default {
 const Template = ({ size, text, showText, timing, noBackdrop, complete }: Record<string, unknown>) => html`
 	<div style="width: 360px;">
 		<nldd-card accessible-label="Voorbeeldkaart">
-			<nldd-activity-indicator size=${size as string}
+			<nldd-activity-indicator
+				size=${size as string}
 				text=${text as string}
 				?show-text=${showText as boolean}
 				timing=${timing as string}

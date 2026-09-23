@@ -263,7 +263,8 @@ door de volgorde van de panelen.
   <nldd-page>
     <nldd-simple-section><!-- hero --></nldd-simple-section>
     <nldd-simple-section>
-      <nldd-collection layout="grid"
+      <nldd-collection
+        layout="grid"
         item-width="320px"
       >
         <nldd-card><!-- ... --></nldd-card>

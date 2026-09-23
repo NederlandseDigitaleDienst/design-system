@@ -40,7 +40,8 @@ export default {
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-two-thirds-one-third-section ${pageSectionAttrs(args)}>
-			<nldd-title slot="header"
+			<nldd-title
+				slot="header"
 				text="Sectietitel"
 				heading-level="2"
 			></nldd-title>

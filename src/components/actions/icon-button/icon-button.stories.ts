@@ -401,7 +401,8 @@ export const MetPopover = {
 			<nldd-icon-button icon="info-circle" text="Info">
 				<nldd-popover slot="popup" accessible-label="Toelichting" width="280px">
 					<nldd-container padding="16" gap="8">
-						<nldd-title size="6"
+						<nldd-title
+							size="6"
 							text="Zorgtoeslag"
 							heading-level="2"
 						></nldd-title>

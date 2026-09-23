@@ -87,7 +87,8 @@ export default {
 
 export const Standaard = ({ size, color, text, supportingText, overline, headingLevel }: Record<string, any>) => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title size=${size}
+		<nldd-title
+			size=${size}
 			color=${color || nothing}
 			text=${text || nothing}
 			supporting-text=${supportingText || nothing}
@@ -102,7 +103,8 @@ export const Standaard = ({ size, color, text, supportingText, overline, heading
 export const MetOverline = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title text="Artikel 1"
+		<nldd-title
+			text="Artikel 1"
 			overline="Wet op de zorgtoeslag"
 			heading-level="1"
 		></nldd-title>
@@ -114,7 +116,8 @@ export const MetOverline = {
 export const MetSupportingText = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title text="Wet op de zorgtoeslag"
+		<nldd-title
+			text="Wet op de zorgtoeslag"
 			supporting-text="Laatste wijziging: 1 januari 2024"
 			heading-level="1"
 		></nldd-title>
@@ -126,7 +129,8 @@ export const MetSupportingText = {
 export const MetOverlineEnSupportingText = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title text="Begripsbepalingen"
+		<nldd-title
+			text="Begripsbepalingen"
 			supporting-text="Ingangsdatum: 1 januari 2024"
 			overline="Hoofdstuk 1"
 			heading-level="1"
@@ -139,7 +143,8 @@ export const MetOverlineEnSupportingText = {
 export const MetActies = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title text="Wet op de zorgtoeslag"
+		<nldd-title
+			text="Wet op de zorgtoeslag"
 			heading-level="1"
 		>
 			<nldd-button slot="end" variant="secondary" size="sm" text="Bewerken"></nldd-button>
@@ -155,7 +160,8 @@ export const AlleGrootten = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 24px; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		${[1, 2, 3, 4, 5, 6].map(s => html`
-			<nldd-title size=${s}
+			<nldd-title
+				size=${s}
 				text="Grootte ${s}"
 				heading-level="2"
 			></nldd-title>
@@ -175,7 +181,8 @@ export const OpKleurvlak = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px;">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-title color="inherit"
+				<nldd-title
+					color="inherit"
 					size="2"
 					text="Titel volgt de contentkleur"
 					supporting-text="Ondersteunende tekst op verlaagde dekking"
@@ -184,7 +191,8 @@ export const OpKleurvlak = {
 				></nldd-title>
 			</div>
 			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-title color="inherit"
+				<nldd-title
+					color="inherit"
 					size="2"
 					text="Zwarte content op oranje"
 					supporting-text="Ondersteunende tekst op verlaagde dekking"

@@ -43,7 +43,8 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 		? html`<nldd-icon class="toggle-button__icon"
 				icon=${component.icon}
 			></nldd-icon>`
-		: html`<slot name="icon"
+		: html`<slot
+				name="icon"
 				@slotchange=${component.requestUpdate}
 			>${showPlaceholder ? html`<nldd-icon class="toggle-button__icon"
 					icon="icon-placeholder"

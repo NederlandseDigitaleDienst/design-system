@@ -77,10 +77,12 @@ function renderPicker(component: NLDDDateField): TemplateResult | typeof nothing
 					dismiss-text=${component._t('components.date-field.cancel-action')}
 					@dismiss=${component._handlePickerDismiss}
 				></nldd-top-title-bar>
-				<nldd-container padding="16"
+				<nldd-container
+					padding="16"
 					@change=${component._handlePickerChange}
 				>
-					<slot name="picker"
+					<slot
+						name="picker"
 						@slotchange=${component._handlePickerSlotChange}
 					></slot>
 					${component._hasSlottedPicker ? nothing : html`

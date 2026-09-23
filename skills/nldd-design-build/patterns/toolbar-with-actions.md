@@ -30,35 +30,42 @@ nldd-toolbar                       size, label
 
 ```html
 <nldd-toolbar>
-  <nldd-toolbar-item slot="start"
+  <nldd-toolbar-item
+    slot="start"
     priority="1"
   >
-    <nldd-button variant="primary"
+    <nldd-button
+      variant="primary"
       text="Nieuw document"
       start-icon="add"
     ></nldd-button>
-    <nldd-menu-item slot="overflow"
+    <nldd-menu-item
+      slot="overflow"
       text="Nieuw document"
       icon="add"
     ></nldd-menu-item>
   </nldd-toolbar-item>
 
   <nldd-toolbar-item slot="start">
-    <nldd-button variant="secondary"
+    <nldd-button
+      variant="secondary"
       text="Filter"
       start-icon="filter"
     ></nldd-button>
-    <nldd-menu-item slot="overflow"
+    <nldd-menu-item
+      slot="overflow"
       text="Filter"
       icon="filter"
     ></nldd-menu-item>
   </nldd-toolbar-item>
 
   <nldd-toolbar-item slot="end">
-    <nldd-icon-button icon="settings"
+    <nldd-icon-button
+      icon="settings"
       text="Instellingen"
     ></nldd-icon-button>
-    <nldd-menu-item slot="overflow"
+    <nldd-menu-item
+      slot="overflow"
       text="Instellingen"
       icon="settings"
     ></nldd-menu-item>
@@ -86,38 +93,46 @@ hoge priority, zodat hij als laatste naar de overloop gaat.
 
 ```html
 <nldd-toolbar>
-  <nldd-toolbar-item slot="start"
+  <nldd-toolbar-item
+    slot="start"
     priority="2"
   >
     <nldd-tab-bar accessible-label="Weergave">
-      <nldd-tab-bar-item text="Overzicht"
+      <nldd-tab-bar-item
+        text="Overzicht"
         current
       ></nldd-tab-bar-item>
       <nldd-tab-bar-item text="Tijdlijn"></nldd-tab-bar-item>
       <nldd-tab-bar-item text="Documenten"></nldd-tab-bar-item>
     </nldd-tab-bar>
-    <nldd-menu-group slot="overflow"
+    <nldd-menu-group
+      slot="overflow"
       text="Weergave"
     >
-      <nldd-menu-item type="radio"
+      <nldd-menu-item
+        type="radio"
         text="Overzicht"
         selected
       ></nldd-menu-item>
-      <nldd-menu-item type="radio"
+      <nldd-menu-item
+        type="radio"
         text="Tijdlijn"
       ></nldd-menu-item>
-      <nldd-menu-item type="radio"
+      <nldd-menu-item
+        type="radio"
         text="Documenten"
       ></nldd-menu-item>
     </nldd-menu-group>
   </nldd-toolbar-item>
 
   <nldd-toolbar-item slot="end">
-    <nldd-button variant="secondary"
+    <nldd-button
+      variant="secondary"
       text="Deel"
       start-icon="share"
     ></nldd-button>
-    <nldd-menu-item slot="overflow"
+    <nldd-menu-item
+      slot="overflow"
       text="Deel"
       icon="share"
     ></nldd-menu-item>

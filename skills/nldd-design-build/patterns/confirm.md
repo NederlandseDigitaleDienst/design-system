@@ -32,20 +32,24 @@ nldd-modal-dialog            open, variant, text, supporting-text
 ```
 
 ```html
-<nldd-button id="document-verwijderen"
+<nldd-button
+  id="document-verwijderen"
   variant="destructive"
   text="Verwijder document"
 ></nldd-button>
 
-<nldd-modal-dialog variant="alert"
+<nldd-modal-dialog
+  variant="alert"
   text="Document definitief verwijderen?"
   supporting-text="Dit document en zijn versies worden verwijderd. Dit kan niet ongedaan worden gemaakt."
 >
-  <nldd-button slot="actions"
+  <nldd-button
+    slot="actions"
     variant="primary"
     text="Behoud document"
   ></nldd-button>
-  <nldd-button slot="actions"
+  <nldd-button
+    slot="actions"
     variant="destructive"
     text="Verwijder definitief"
   ></nldd-button>
@@ -60,12 +64,14 @@ niet hoeft te blokkeren.
 
 ```html
 <nldd-simple-section>
-  <nldd-inline-dialog icon="search"
+  <nldd-inline-dialog
+    icon="search"
     text="Geen resultaten"
     supporting-text="Er is niets dat bij je filters past."
     heading-level="2"
   >
-    <nldd-button slot="actions"
+    <nldd-button
+      slot="actions"
       variant="secondary"
       text="Wis alle filters"
     ></nldd-button>

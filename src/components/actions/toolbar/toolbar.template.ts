@@ -98,7 +98,8 @@ export function template(
 				<slot name="end"></slot>
 			</div>
 			<div class="toolbar__overflow-button ${hasOverflow ? '' : 'is-hidden'}">
-				<nldd-icon-button size=${component.size}
+				<nldd-icon-button
+					size=${component.size}
 					icon="ellipsis"
 					text=${t('components.toolbar.overflow-action')}
 					tooltip-timing="never"

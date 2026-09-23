@@ -188,7 +188,8 @@ export const MetPopover = {
 		>
 			<nldd-popover accessible-label="Deelopties" width="280px">
 				<nldd-container padding="16" gap="8">
-					<nldd-title size="6"
+					<nldd-title
+						size="6"
 						text="Deel deze pagina"
 						heading-level="2"
 					></nldd-title>

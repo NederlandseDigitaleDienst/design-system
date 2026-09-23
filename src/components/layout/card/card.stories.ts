@@ -82,7 +82,8 @@ export const Standaard = (args: Record<string, any>) => html`
 		accessible-label=${args.accessibleLabel || nothing}
 	>
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"
+			<nldd-title
+				size="4"
 				text="Kaarttitel"
 				heading-level="3"
 			></nldd-title>
@@ -116,7 +117,8 @@ export const AlleenBody = () => html`
 export const MetHeader = () => html`
 	<nldd-card>
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"
+			<nldd-title
+				size="4"
 				text="Alleen header en body"
 				heading-level="3"
 			></nldd-title>
@@ -132,7 +134,8 @@ export const MetHeader = () => html`
 export const VasteHoogte = () => html`
 	<nldd-card style="height: 400px;">
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"
+			<nldd-title
+				size="4"
 				text="Vaste hoogte"
 				heading-level="3"
 			></nldd-title>
@@ -175,14 +178,16 @@ export const MetAfbeelding = () => html`
  * met `position: relative; z-index: 1` — zoals de "Markeer"-knop hieronder.
  */
 export const KlikbareKaart = (args: Record<string, any>) => html`
-	<nldd-card href=${args.href || nothing}
+	<nldd-card
+		href=${args.href || nothing}
 		target=${args.target || nothing}
 		rel=${args.rel || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
 		style="max-width: 360px;"
 	>
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"
+			<nldd-title
+				size="4"
 				text="Dossier 2024-001"
 				heading-level="3"
 			></nldd-title>
@@ -194,7 +199,8 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 		</nldd-container>
 		<nldd-container slot="footer" padding-inline="16" padding-bottom="16">
 			<nldd-button-group orientation="horizontal">
-				<nldd-button variant="secondary"
+				<nldd-button
+					variant="secondary"
 					text="Markeer"
 					style="position: relative; z-index: 1;"
 				></nldd-button>
@@ -213,13 +219,15 @@ KlikbareKaart.args = {
  * op `nldd-card` zelf werkt dus direct, en Enter/Space doen het native.
  */
 export const KaartAlsKnop = () => html`
-	<nldd-card button
+	<nldd-card
+		button
 		accessible-label="Dossier 2024-001 openen"
 		style="max-width: 360px;"
 		@click=${() => window.alert('Kaart geactiveerd')}
 	>
 		<nldd-container slot="header" padding-top="16" padding-inline="16">
-			<nldd-title size="4"
+			<nldd-title
+				size="4"
 				text="Dossier 2024-001"
 				heading-level="3"
 			></nldd-title>

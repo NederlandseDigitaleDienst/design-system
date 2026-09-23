@@ -494,11 +494,13 @@ export const Breedtezones = {
 				</tbody>
 			</table>
 			<p>Afbeeldingen krijgen het wide-accent: iets breder dan de tekst, zonder de pagina te domineren.</p>
-			<img src="sample-images/butterfly-960.jpg"
+			<img
+				src="sample-images/butterfly-960.jpg"
 				alt="Vlinder op een bloem"
 			>
 			<p>Componenten zoals een banner vallen onder de full-default en vullen de beschikbare breedte met hun eigen gedrag.</p>
-			<nldd-banner variant="accent"
+			<nldd-banner
+				variant="accent"
 				text="Een component pakt automatisch de volle breedte"
 			></nldd-banner>
 			<p data-width="wide">Deze paragraaf staat bewust op <code>data-width="wide"</code> en leest dus iets breder dan de main-maat — de per-item override wint van elke default.</p>
@@ -522,7 +524,8 @@ export const OpKleurvlak = {
 					<h3>Op een donker vlak</h3>
 					<p>Alle tekst erft de contentkleur van het vlak, inclusief <a href="#">links met hun onderstreping</a> en <strong>nadruk</strong>.</p>
 					<figure>
-						<img src="sample-images/butterfly-480.jpg"
+						<img
+							src="sample-images/butterfly-480.jpg"
 							alt="Vlinder op een bloem"
 						>
 						<figcaption>Figuur 1 — de figcaption staat op verlaagde dekking</figcaption>

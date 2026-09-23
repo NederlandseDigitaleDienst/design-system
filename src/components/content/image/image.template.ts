@@ -102,7 +102,8 @@ export function imageTemplate(component: NLDDImage) {
 		<figure class="image__figure">
 			${media}
 			<figcaption class="image__caption">
-				<slot name="caption" @slotchange=${component._onCaptionSlotChange}
+				<slot
+					name="caption" @slotchange=${component._onCaptionSlotChange}
 				>${component.caption}</slot>
 				${component.credit ? html`<span class="image__credit">${component.credit}</span>` : nothing}
 			</figcaption>

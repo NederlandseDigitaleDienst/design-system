@@ -32,18 +32,21 @@ nldd-app-view                  de buitenste schil
 ```html
 <nldd-app-view>
   <nldd-page>
-    <nldd-top-navigation-bar slot="header"
+    <nldd-top-navigation-bar
+      slot="header"
       website-title="Mijn Dienst"
     ></nldd-top-navigation-bar>
 
     <nldd-simple-section>
-      <nldd-title slot="header"
+      <nldd-title
+        slot="header"
         size="1"
         overline="Dossier"
         text="Aanvraag 2024-001"
         heading-level="1"
       >
-        <nldd-button slot="end"
+        <nldd-button
+          slot="end"
           variant="primary"
           text="Nieuwe aanvraag"
         ></nldd-button>
@@ -54,21 +57,25 @@ nldd-app-view                  de buitenste schil
     </nldd-simple-section>
 
     <nldd-simple-section background="tinted">
-      <nldd-title slot="header"
+      <nldd-title
+        slot="header"
         size="2"
         text="Openstaande taken"
         heading-level="2"
       ></nldd-title>
-      <nldd-list variant="box-base"
+      <nldd-list
+        variant="box-base"
         accessible-label="Openstaande taken"
       >
         <nldd-list-item href="#documenten-controleren">
-          <nldd-text-cell text="Documenten controleren"
+          <nldd-text-cell
+            text="Documenten controleren"
             supporting-text="Voor vrijdag"
           ></nldd-text-cell>
         </nldd-list-item>
         <nldd-list-item href="#besluit-versturen">
-          <nldd-text-cell text="Besluit versturen"
+          <nldd-text-cell
+            text="Besluit versturen"
             supporting-text="Na goedkeuring"
           ></nldd-text-cell>
         </nldd-list-item>
@@ -117,18 +124,21 @@ de hoofdinhoud dus in `pane-1` en het detail of de inspector rechts.
   <nldd-side-by-side-split-view panes="2">
     <nldd-split-view-pane slot="pane-1">
       <nldd-page landmarks="page">
-        <nldd-top-title-bar slot="header"
+        <nldd-top-title-bar
+          slot="header"
           text="Dossiers"
         ></nldd-top-title-bar>
         <nldd-simple-section>
           <nldd-list accessible-label="Dossiers">
             <nldd-list-item href="#dossier-2024-001">
-              <nldd-text-cell text="Dossier 2024-001"
+              <nldd-text-cell
+                text="Dossier 2024-001"
                 supporting-text="In behandeling"
               ></nldd-text-cell>
             </nldd-list-item>
             <nldd-list-item href="#dossier-2024-002">
-              <nldd-text-cell text="Dossier 2024-002"
+              <nldd-text-cell
+                text="Dossier 2024-002"
                 supporting-text="Afgerond"
               ></nldd-text-cell>
             </nldd-list-item>
@@ -137,11 +147,13 @@ de hoofdinhoud dus in `pane-1` en het detail of de inspector rechts.
       </nldd-page>
     </nldd-split-view-pane>
 
-    <nldd-split-view-pane slot="pane-2"
+    <nldd-split-view-pane
+      slot="pane-2"
       background="tinted"
     >
       <nldd-page accessible-label="Dossier 2024-001">
-        <nldd-top-title-bar slot="header"
+        <nldd-top-title-bar
+          slot="header"
           text="Dossier 2024-001"
           heading-level="2"
         ></nldd-top-title-bar>

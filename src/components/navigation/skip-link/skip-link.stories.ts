@@ -87,7 +87,8 @@ export const MetHref = {
 			</nldd-simple-section>
 			<nldd-simple-section id="contact-form" tabindex="-1">
 				<nldd-form novalidate label-alignment="right">
-					<nldd-title size="3"
+					<nldd-title
+						size="3"
 						text="Contactformulier"
 						heading-level="2"
 					></nldd-title>

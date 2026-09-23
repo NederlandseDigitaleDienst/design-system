@@ -111,7 +111,8 @@ const descriptions = [
 const descriptionOrder = [0, 2, 3, 1, 2, 0, 1, 3, 3, 1, 0, 2];
 
 const itemContent = (i: any) => html`
-	<nldd-title size="4"
+	<nldd-title
+		size="4"
 		text="Item ${i + 1}"
 		heading-level="3"
 	></nldd-title>
@@ -266,7 +267,8 @@ export const InSimpleSectie = {
 	render: () => html`
 	<nldd-page background="tinted">
 		<nldd-simple-section>
-			<nldd-title slot="header"
+			<nldd-title
+				slot="header"
 				size="2"
 				text="Sectietitel"
 				heading-level="2"

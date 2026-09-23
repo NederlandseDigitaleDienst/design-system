@@ -30,16 +30,19 @@ nldd-sheet                     open, placement, width
 ```
 
 ```html
-<nldd-button id="aanvraag-bewerken"
+<nldd-button
+  id="aanvraag-bewerken"
   variant="primary"
   text="Bewerk aanvraag"
 ></nldd-button>
 
-<nldd-sheet placement="right"
+<nldd-sheet
+  placement="right"
   width="480px"
 >
   <nldd-page sticky-footer>
-    <nldd-top-title-bar slot="header"
+    <nldd-top-title-bar
+      slot="header"
       text="Aanvraag bewerken"
       dismiss-text="Sluiten"
     ></nldd-top-title-bar>
@@ -49,7 +52,8 @@ nldd-sheet                     open, placement, width
         <nldd-form-field label="Titel">
           <nldd-text-field name="titel"></nldd-text-field>
         </nldd-form-field>
-        <nldd-form-field label="Toelichting"
+        <nldd-form-field
+          label="Toelichting"
           optional
         >
           <nldd-multi-line-text-field name="toelichting"></nldd-multi-line-text-field>
@@ -57,10 +61,12 @@ nldd-sheet                     open, placement, width
       </nldd-form>
     </nldd-simple-section>
 
-    <nldd-container slot="footer"
+    <nldd-container
+      slot="footer"
       padding="16"
     >
-      <nldd-button variant="primary"
+      <nldd-button
+        variant="primary"
         text="Bewaar"
         width="full"
       ></nldd-button>

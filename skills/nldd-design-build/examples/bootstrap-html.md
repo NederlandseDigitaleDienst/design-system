@@ -32,10 +32,12 @@ zodra er een app-view op de pagina staat. Plaats je inhoud erin.
 ```html
 <nldd-app-view>
   <nldd-page>
-    <nldd-container padding="16"
+    <nldd-container
+      padding="16"
       sm-padding="8"
     >
-      <nldd-title size="1"
+      <nldd-title
+        size="1"
         text="Subsidieaanvraag"
         heading-level="1"
       ></nldd-title>
@@ -44,19 +46,22 @@ zodra er een app-view op de pagina staat. Plaats je inhoud erin.
 
       <nldd-form>
         <nldd-form-field label="KvK-nummer">
-          <nldd-text-field name="kvk"
+          <nldd-text-field
+            name="kvk"
             type="text"
           ></nldd-text-field>
         </nldd-form-field>
 
         <nldd-form-field label="Gevraagd bedrag">
-          <nldd-number-field name="bedrag"
+          <nldd-number-field
+            name="bedrag"
             min="0"
           ></nldd-number-field>
         </nldd-form-field>
 
         <nldd-form-actions>
-          <nldd-button variant="primary"
+          <nldd-button
+            variant="primary"
             type="submit"
             text="Aanvraag indienen"
           ></nldd-button>

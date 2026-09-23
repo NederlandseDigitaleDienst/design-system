@@ -699,6 +699,13 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 <!-- GOED — één attribuut zonder class: op één regel -->
 <slot name="header"></slot>
 
+<!-- GOED — geen class, meerdere attributen: de tag staat alleen op de eerste regel -->
+<nldd-title
+	size="1"
+	text="Subsidieaanvraag"
+	heading-level="1"
+></nldd-title>
+
 <!-- GOED — child component in wrapper -->
 <span class="checkbox__icon">
 	<nldd-icon icon="check-mark-small"></nldd-icon>
@@ -717,6 +724,11 @@ ${component.hasBadge ? html`<span class="dialog__badge">${component.badge}</span
 
 <!-- FOUT — class op child component -->
 <nldd-icon class="checkbox__icon" icon="check-mark-small"></nldd-icon>
+
+<!-- FOUT — eerste attribuut op de tag-regel zonder class -->
+<nldd-title size="1"
+	text="Subsidieaanvraag"
+></nldd-title>
 
 <!-- FOUT — class op aparte regel -->
 <input

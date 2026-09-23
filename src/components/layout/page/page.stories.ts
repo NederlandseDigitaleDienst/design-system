@@ -87,7 +87,8 @@ const footer = html`
 
 const content = html`
 	<nldd-simple-section>
-		<nldd-title id="page-title"
+		<nldd-title
+			id="page-title"
 			size="2"
 			text="Paginatitel"
 			heading-level="1"

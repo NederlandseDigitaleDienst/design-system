@@ -31,14 +31,17 @@ nldd-form                              name, method, label-alignment
 ```
 
 ```html
-<nldd-form name="aanvraag"
+<nldd-form
+  name="aanvraag"
   method="post"
 >
-  <nldd-form-section text="Contactgegevens"
+  <nldd-form-section
+    text="Contactgegevens"
     supporting-text="Zo kunnen we je bereiken."
   >
     <nldd-form-field label="E-mailadres">
-      <nldd-text-field name="email"
+      <nldd-text-field
+        name="email"
         type="email"
         autocomplete="email"
         required
@@ -52,10 +55,12 @@ nldd-form                              name, method, label-alignment
       </nldd-form-field-help-text>
     </nldd-form-field>
 
-    <nldd-form-field label="Telefoonnummer"
+    <nldd-form-field
+      label="Telefoonnummer"
       optional
     >
-      <nldd-text-field name="telefoon"
+      <nldd-text-field
+        name="telefoon"
         type="tel"
         autocomplete="tel"
       ></nldd-text-field>
@@ -64,7 +69,8 @@ nldd-form                              name, method, label-alignment
 
   <nldd-form-section text="Je vraag">
     <nldd-form-field label="Waar gaat je vraag over?">
-      <nldd-multi-line-text-field name="vraag"
+      <nldd-multi-line-text-field
+        name="vraag"
         required
       ></nldd-multi-line-text-field>
       <nldd-validation-list>
@@ -74,7 +80,8 @@ nldd-form                              name, method, label-alignment
   </nldd-form-section>
 
   <nldd-form-actions>
-    <nldd-button variant="primary"
+    <nldd-button
+      variant="primary"
       type="submit"
       text="Verstuur aanvraag"
     ></nldd-button>

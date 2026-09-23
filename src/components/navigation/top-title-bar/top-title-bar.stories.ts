@@ -195,7 +195,8 @@ export const MetTitelAnker = {
 			@dismiss=${action('dismiss')}
 		></nldd-top-title-bar>
 		<nldd-simple-section>
-			<nldd-title id="page-title-bar"
+			<nldd-title
+				id="page-title-bar"
 				size="2"
 				text="Paginatitel"
 				supporting-text="Scroll omlaag om te zien hoe de compacte stand wordt geactiveerd."
@@ -226,7 +227,8 @@ export const MetTitelAnkerZonderActies = {
 			@dismiss=${action('dismiss')}
 		></nldd-top-title-bar>
 		<nldd-simple-section>
-			<nldd-title id="page-title-bar-2"
+			<nldd-title
+				id="page-title-bar-2"
 				size="2"
 				text="Paginatitel"
 				supporting-text="Zonder terugknop of sluitknop."

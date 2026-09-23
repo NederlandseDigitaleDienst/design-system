@@ -56,7 +56,8 @@ export default {
    document; de andere panelen zijn benoemde regio's. */
 const paneContent = (title: any, slot: any) => html`
 	<nldd-split-view-pane slot=${slot}>
-		<nldd-page sticky-header
+		<nldd-page
+			sticky-header
 			landmarks=${slot === 'pane-1' ? 'page' : nothing}
 			accessible-label=${slot === 'pane-1' ? nothing : title}
 		>
