@@ -71,15 +71,11 @@ Een property die **niet** varieert per breakpoint blijft buiten queries — dat 
 
 ## At-rule positie: nest binnen de selector
 
-Voorkeur: `@media`/`@container` genest binnen de selector via native CSS
-nesting. Niet gehoist als top-level wrapper. Argumenten:
+Voorkeur: `@media`/`@container` genest binnen de selector via native CSS nesting. Niet gehoist als top-level wrapper. Argumenten:
 
-- **Lokaliteit**: alle responsive-regels voor een component-element staan
-  bij elkaar — om uit te zoeken hoe `.foo` zich gedraagt zoek je op `.foo`,
-  niet op alle media queries verspreid door 't bestand
+- **Lokaliteit**: alle responsive-regels voor een component-element staan bij elkaar — om uit te zoeken hoe `.foo` zich gedraagt zoek je op `.foo`, niet op alle media queries verspreid door 't bestand
 - **Geen selector-duplicatie**: één keer `.foo {}`, daarbinnen alle varianten
-- **Past bij component-architectuur**: elk element heeft één regel met
-  z'n volledige verantwoordelijkheid
+- **Past bij component-architectuur**: elk element heeft één regel met z'n volledige verantwoordelijkheid
 
 ❌ **Wrapper rond selector (vermijd):**
 ```css
@@ -107,10 +103,7 @@ nesting. Niet gehoist als top-level wrapper. Argumenten:
 
 ## Lokale CSS-variabelen bovenaan
 
-Declareer lokale custom properties (`--_*` voor private, `--components-*`/
-`--context-*` voor public) bovenaan het `:host` (of vergelijkbare top-level
-selector) blok, gescheiden van de rest met een witregel. Zo zie je in één
-oogopslag wat er instelbaar is voordat je de eigen properties leest.
+Declareer lokale custom properties (`--_*` voor private, `--components-*`/ `--context-*` voor public) bovenaan het `:host` (of vergelijkbare top-level selector) blok, gescheiden van de rest met een witregel. Zo zie je in één oogopslag wat er instelbaar is voordat je de eigen properties leest.
 
 ```css
 :host {
@@ -126,9 +119,7 @@ oogopslag wat er instelbaar is voordat je de eigen properties leest.
 
 ## Volgorde: kleinste breakpoint eerst
 
-Plaats `@media`/`@container` blokken in oplopende volgorde — sm, md, lg.
-Binnen elk paar (eerst `@media`, dan `@container`) ook in die volgorde.
-Maakt scannen voorspelbaar: linksboven sm, rechtsonder lg.
+Plaats `@media`/`@container` blokken in oplopende volgorde — sm, md, lg. Binnen elk paar (eerst `@media`, dan `@container`) ook in die volgorde. Maakt scannen voorspelbaar: linksboven sm, rechtsonder lg.
 
 ```css
 .foo {
@@ -146,9 +137,7 @@ Maakt scannen voorspelbaar: linksboven sm, rechtsonder lg.
 
 ## Witregels tussen breakpoint-blokken
 
-Zet een witregel tussen elk `@media`/`@container` blok binnen dezelfde
-selector — ook tussen twee opeenvolgende `@media` of twee opeenvolgende
-`@container` blokken. Dat geeft elk breakpoint visueel z'n eigen ruimte.
+Zet een witregel tussen elk `@media`/`@container` blok binnen dezelfde selector — ook tussen twee opeenvolgende `@media` of twee opeenvolgende `@container` blokken. Dat geeft elk breakpoint visueel z'n eigen ruimte.
 
 ```css
 .foo {
@@ -263,11 +252,7 @@ Deze workaround is acceptabel als de regel-explosie anders te erg wordt. Documen
 
 ## State-conditional layouts (label-alignment, etc.)
 
-Sommige componenten hebben layouts die alleen wisselen op basis van een
-**combinatie** van state en breakpoint. Bijvoorbeeld `nldd-form-field` gaat
-naar row-layout alleen wanneer `[label-alignment='left'/'right']` én
-viewport ≥ md. Dat is een **state-conditional override**, geen mobile-first
-override. Patroon:
+Sommige componenten hebben layouts die alleen wisselen op basis van een **combinatie** van state en breakpoint. Bijvoorbeeld `nldd-form-field` gaat naar row-layout alleen wanneer `[label-alignment='left'/'right']` én viewport ≥ md. Dat is een **state-conditional override**, geen mobile-first override. Patroon:
 
 ```css
 .foo { flex-direction: column; }   /* default — geldt overal tenzij... */
@@ -279,35 +264,20 @@ override. Patroon:
 }
 ```
 
-De convention is **niet** van toepassing hier — de base (`column`) is een
-universele default die overal geldt tenzij de state-selector matcht. Dit
-mag zo blijven.
+De convention is **niet** van toepassing hier — de base (`column`) is een universele default die overal geldt tenzij de state-selector matcht. Dit mag zo blijven.
 
 ## Host-layout is niet van jou: wrapper of `!important`
 
-Outer-document-regels die het host-element matchen (een consumer-reset als
-`* { margin: 0; padding: 0; border: 0 }`) verslaan elke normale
-`:host`-declaratie, ongeacht specificiteit (CSS Scoping: bij normale
-declaraties wint de buitenste context). Zet margin, padding en border met
-een niet-nulwaarde daarom niet kaal op `:host`:
+Outer-document-regels die het host-element matchen (een consumer-reset als `* { margin: 0; padding: 0; border: 0 }`) verslaan elke normale `:host`-declaratie, ongeacht specificiteit (CSS Scoping: bij normale declaraties wint de buitenste context). Zet margin, padding en border met een niet-nulwaarde daarom niet kaal op `:host`:
 
-1. **Voorkeur**: het visuele kader op een wrapper-element in de shadow root.
-   Marges kunnen mee zodra de host `flow-root` is (eigen formatting context),
-   en een query-container kan mee zolang de padding meeverhuist.
-2. **Kan het niet naar binnen** (negatieve margins, subgrid-deelnemers) →
-   `!important` op de host-declaratie, met een comment. Elke andere
-   host-rule op dezelfde property moet dan mee in `!important`.
+1. **Voorkeur**: het visuele kader op een wrapper-element in de shadow root. Marges kunnen mee zodra de host `flow-root` is (eigen formatting context), en een query-container kan mee zolang de padding meeverhuist.
+2. **Kan het niet naar binnen** (negatieve margins, subgrid-deelnemers) → `!important` op de host-declaratie, met een comment. Elke andere host-rule op dezelfde property moet dan mee in `!important`.
 
-`npm run validate:host-styles` (onderdeel van de build) bewaakt dit.
-Zie de component-skill (SLOTTED CONTENT & HOST-CSS ISOLATIE) voor het
-volledige verhaal.
+`npm run validate:host-styles` (onderdeel van de build) bewaakt dit. Zie de component-skill (SLOTTED CONTENT & HOST-CSS ISOLATIE) voor het volledige verhaal.
 
 ## Geen overbodige comments
 
-CSS-properties spreken voor zichzelf. Comments alleen voor het uitleggen
-van iets niet-vanzelfsprekends (een workaround, browser-quirk, of een
-ongebruikelijk patroon). Geen comments die simpelweg herhalen wat de code
-doet (bv. "padding per breakpoint" boven een blok met padding-rules).
+CSS-properties spreken voor zichzelf. Comments alleen voor het uitleggen van iets niet-vanzelfsprekends (een workaround, browser-quirk, of een ongebruikelijk patroon). Geen comments die simpelweg herhalen wat de code doet (bv. "padding per breakpoint" boven een blok met padding-rules).
 
 ## Checklist bij review
 

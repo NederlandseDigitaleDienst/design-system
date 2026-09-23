@@ -43,19 +43,11 @@ Zoek in `src/components/` of het component al bestaat.
 
 **Naamconventies:**
 
-- **Primitives:** `--primitives-{property}-{variant}-{scale}`
-  bijv. `--primitives-color-accent-750`
-- **Semantics:** `--semantics-{group}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}`
-  bijv. `--semantics-buttons-neutral-tinted-is-hovered-background-color`
-- **Components:** `--components-{component}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}`
-  bijv. `--components-checkbox-md-check-icon-size`
-- **Context:** `--context-{context}-{property}`
-  Gedeelde variabelen voor communicatie tussen componenten. Niet gedefinieerd in variables.css.
-  bijv. `--context-parent-background-color`
-- **Lokaal:** `--_{variant}-{state}-{element}-{element-variant}-{element-state}-{property}`
-  Interne variabelen binnen een component. Definieer defaults in `:host`.
-  bijv. `--_background-color`
-  Het `{element}`-segment is de **volledige BEM-elementnaam**, niet afgekort: `--_disclosure-icon-margin-right`, niet `--_disclosure-margin-right`. Laat het element-segment weg voor het root-block (`--_background-color`). Gebruik één generieke naam als de var door meerdere elementen gedeeld wordt (bijv. `--_icon-size` voor `__start-icon` én `__end-icon`).
+- **Primitives:** `--primitives-{property}-{variant}-{scale}` bijv. `--primitives-color-accent-750`
+- **Semantics:** `--semantics-{group}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` bijv. `--semantics-buttons-neutral-tinted-is-hovered-background-color`
+- **Components:** `--components-{component}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` bijv. `--components-checkbox-md-check-icon-size`
+- **Context:** `--context-{context}-{property}` Gedeelde variabelen voor communicatie tussen componenten. Niet gedefinieerd in variables.css. bijv. `--context-parent-background-color`
+- **Lokaal:** `--_{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` Interne variabelen binnen een component. Definieer defaults in `:host`. bijv. `--_background-color` Het `{element}`-segment is de **volledige BEM-elementnaam**, niet afgekort: `--_disclosure-icon-margin-right`, niet `--_disclosure-margin-right`. Laat het element-segment weg voor het root-block (`--_background-color`). Gebruik één generieke naam als de var door meerdere elementen gedeeld wordt (bijv. `--_icon-size` voor `__start-icon` én `__end-icon`).
 
 Primitives zijn basiswaarden — gebruik ze niet direct in componenten. Semantics geven context voor een groep componenten. Component variabelen zijn specifiek voor één component.
 
@@ -80,14 +72,9 @@ src/components/{categorie}/{naam}/
 
 ### Stap 5: Registreer het component
 
-Zet een regel in `src/components/index.ts` en draai `npm run build:exports`.
-Die genereert de `exports`-map in `package.json` uit dat bestand.
+Zet een regel in `src/components/index.ts` en draai `npm run build:exports`. Die genereert de `exports`-map in `package.json` uit dat bestand.
 
-Sla je dit over, dan bouwt alles, slagen alle tests en staat het component
-netjes in `dist`, maar heeft `package.json` er geen subpad voor. Een consument
-die per component importeert, en dat doen ze, krijgt dan geen foutmelding maar
-een tag die nooit upgradet: het element staat in de DOM, z'n properties zijn
-`undefined` en er gebeurt niets.
+Sla je dit over, dan bouwt alles, slagen alle tests en staat het component netjes in `dist`, maar heeft `package.json` er geen subpad voor. Een consument die per component importeert, en dat doen ze, krijgt dan geen foutmelding maar een tag die nooit upgradet: het element staat in de DOM, z'n properties zijn `undefined` en er gebeurt niets.
 
 ---
 
@@ -140,17 +127,9 @@ declare global {
 **JSDoc-opmaak:**
 
 - Proza (de beschrijving bovenaan) wrapt op ~80 tekens.
-- Een tagregel (`@attr`, `@prop`, `@fires`, `@slot`, `@method`) blijft op één
-  regel, hoe lang die ook wordt. Dat leest slechter in de bron, maar wel goed in
-  de gegenereerde tabel — en geen enkele generator hoeft vervolgregels te
-  begrijpen.
-- Moet er toch gebroken worden, spring dan één niveau in. Niet uitlijnen op de
-  kolom van de beschrijving: dan houd je nog maar een handvol tekens per regel
-  over en lijkt de tekst afgekapt.
-- Eén spatie tussen `@attr`, het type, de naam en het streepje. Niet uitlijnen in
-  kolommen: dan dwingt één langere attribuutnaam je het hele blok opnieuw te
-  padden, wat een diff vol witruimte oplevert zonder dat de gegenereerde docs
-  veranderen.
+- Een tagregel (`@attr`, `@prop`, `@fires`, `@slot`, `@method`) blijft op één regel, hoe lang die ook wordt. Dat leest slechter in de bron, maar wel goed in de gegenereerde tabel — en geen enkele generator hoeft vervolgregels te begrijpen.
+- Moet er toch gebroken worden, spring dan één niveau in. Niet uitlijnen op de kolom van de beschrijving: dan houd je nog maar een handvol tekens per regel over en lijkt de tekst afgekapt.
+- Eén spatie tussen `@attr`, het type, de naam en het streepje. Niet uitlijnen in kolommen: dan dwingt één langere attribuutnaam je het hele blok opnieuw te padden, wat een diff vol witruimte oplevert zonder dat de gegenereerde docs veranderen.
 
 
 **`{naam}.styles.ts`:**

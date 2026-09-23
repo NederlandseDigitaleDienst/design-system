@@ -7,20 +7,13 @@ metadata:
 
 # NLDD Designsysteem: de naslag
 
-Dit is de gedeelde naslag van het designsysteem. Hij hoort bij geen van beide
-werkwijzen in het bijzonder, want de API, de release-historie en de
-ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
+Dit is de gedeelde naslag van het designsysteem. Hij hoort bij geen van beide werkwijzen in het bijzonder, want de API, de release-historie en de ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
 
 ## Wat hier staat
 
-- [`reference.md`](reference.md): elk `nldd-*` element met zijn attributen,
-  slots en events, plus de volledige icoonnamenlijst. Gegenereerd uit de JSDoc
-  van de componenten, dus dit is wat het pakket werkelijk kan.
-- [`changelog.md`](changelog.md): wat er per versie veranderde, met de
-  migratiestappen bij elke breaking change.
-- [`design-guidelines.md`](design-guidelines.md): de interface- en
-  ontwerpvoorkeuren van het systeem. Canoniek voor ontwerpkeuzes, waar de
-  andere skills over mechaniek gaan.
+- [`reference.md`](reference.md): elk `nldd-*` element met zijn attributen, slots en events, plus de volledige icoonnamenlijst. Gegenereerd uit de JSDoc van de componenten, dus dit is wat het pakket werkelijk kan.
+- [`changelog.md`](changelog.md): wat er per versie veranderde, met de migratiestappen bij elke breaking change.
+- [`design-guidelines.md`](design-guidelines.md): de interface- en ontwerpvoorkeuren van het systeem. Canoniek voor ontwerpkeuzes, waar de andere skills over mechaniek gaan.
 
 ## Waar je verder moet zijn
 
@@ -32,26 +25,15 @@ ontwerprichtlijnen gelden of je nu iets nieuws bouwt of iets bestaands omzet.
 | iets voorstellen aan het systeem | `nldd-design-contribute`: hoe je een issue opbouwt |
 | het designsysteem zelf ontwikkelen | niet deze skills: die kennis zit als repo-locale skills in de repository, zie `nldd-design-contribute` |
 
-Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor
-(`/nldd:nldd-design`). Die tweede werkt altijd; de korte gaat naar een eigen
-skill van je project als die toevallig dezelfde naam draagt.
+Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor (`/nldd:nldd-design`). Die tweede werkt altijd; de korte gaat naar een eigen skill van je project als die toevallig dezelfde naam draagt.
 
 ## Drie gewoonten die tijd schelen
 
-**Verzin nooit een naam.** Icoonnamen en tokennamen zijn gesloten sets. Een
-verzonnen icoonnaam rendert niets, een verzonnen CSS-variabele valt stil terug
-op niets. Zoek ze op in [`reference.md`](reference.md).
+**Verzin nooit een naam.** Icoonnamen en tokennamen zijn gesloten sets. Een verzonnen icoonnaam rendert niets, een verzonnen CSS-variabele valt stil terug op niets. Zoek ze op in [`reference.md`](reference.md).
 
-**Lees de changelog per versie, niet alleen die van je doelversie.** Een
-hernoeming zonder terugvalgedrag en een verwijderd element kunnen in dezelfde
-release zitten. Dan krijg je twee faalvormen tegelijk, en geen van beide meldt
-zich.
+**Lees de changelog per versie, niet alleen die van je doelversie.** Een hernoeming zonder terugvalgedrag en een verwijderd element kunnen in dezelfde release zitten. Dan krijg je twee faalvormen tegelijk, en geen van beide meldt zich.
 
-**De levende documentatie staat in
-[Storybook](https://nederlandsedigitaledienst.github.io/design-system/),** met visuele voorbeelden en
-controls per component. De exacte types staan in de `.d.ts` bestanden van het
-pakket. Gebruik die twee voor detailvragen; deze skills leren je hoe je het
-systeem goed gebruikt.
+**De levende documentatie staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/),** met visuele voorbeelden en controls per component. De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee voor detailvragen; deze skills leren je hoe je het systeem goed gebruikt.
 
 > Voor onderhouders: alle drie de bestanden hier zijn gegenereerd, uit
 > respectievelijk de JSDoc van de componenten, de root-CHANGELOG en

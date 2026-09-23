@@ -87,10 +87,7 @@ Elk component MOET minimaal een **smoke test** hebben. Run tests met `npm test`.
 
 Versies worden **automatisch** verhoogd door semantic-release bij merge naar main.
 
-Leidend criterium: verandert de commit wat consumers krijgen (`dist/` of de
-meegeleverde `skills/*`)? Zo ja, dan hoort er een release uit te komen.
-`docs:` telt daarin mee, want de plugin-versie volgt de pakketversie: zonder
-release halen consumers de gewijzigde skill-docs nooit op (zie Plugin-versie).
+Leidend criterium: verandert de commit wat consumers krijgen (`dist/` of de meegeleverde `skills/*`)? Zo ja, dan hoort er een release uit te komen. `docs:` telt daarin mee, want de plugin-versie volgt de pakketversie: zonder release halen consumers de gewijzigde skill-docs nooit op (zie Plugin-versie).
 
 | Commit type | Versieverhoging |
 |-------------|-----------------|
@@ -120,22 +117,11 @@ Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit d
 
 ## Iconen
 
-Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam
-is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een
-alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js`
-(`'brand': 'seal-star'`). Optimaliseer nieuwe bestanden naar de huisstijl:
-geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur,
-pad afgerond op twee decimalen, tabs, elk pad op een eigen regel.
+Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js` (`'brand': 'seal-star'`). Optimaliseer nieuwe bestanden naar de huisstijl: geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur, pad afgerond op twee decimalen, tabs, elk pad op een eigen regel.
 
-Nieuwe en hertekende iconen krijgen een "Nieuw"- of "Bijgewerkt"-label in de
-icon-gallery. Die twee lijsten staan in `icon-gallery-status.ts` en worden bij
-elke batch **vervangen**, afgeleid uit de git-historie; dat bestand legt in zijn
-kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet
-gebruiken).
+Nieuwe en hertekende iconen krijgen een "Nieuw"- of "Bijgewerkt"-label in de icon-gallery. Die twee lijsten staan in `icon-gallery-status.ts` en worden bij elke batch **vervangen**, afgeleid uit de git-historie; dat bestand legt in zijn kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet gebruiken).
 
-Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs`
-(de icoon- en aliaslijst in `skills/nldd-design/reference.md`), en zet een nieuw icoon
-in de changelog onder `### Highlights`.
+Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs` (de icoon- en aliaslijst in `skills/nldd-design/reference.md`), en zet een nieuw icoon in de changelog onder `### Highlights`.
 
 ## Ontwerprichtlijnen
 

@@ -5,17 +5,11 @@ import * as Stories from './toolbar-with-actions.stories';
 
 # Werkbalk met acties
 
-**Welk probleem dit oplost.** Een rij acties boven een scherm of paneel, die ook
-op een smal scherm bereikbaar blijft, zonder dat je zelf mediaqueries schrijft
-of knoppen verstopt.
+**Welk probleem dit oplost.** Een rij acties boven een scherm of paneel, die ook op een smal scherm bereikbaar blijft, zonder dat je zelf mediaqueries schrijft of knoppen verstopt.
 
-**Wanneer wel.** Een werkomgeving of paneel met meer dan twee acties die bij de
-hele weergave horen.
+**Wanneer wel.** Een werkomgeving of paneel met meer dan twee acties die bij de hele weergave horen.
 
-**Wanneer niet.** Horen de acties bij één rij, dan horen ze in die rij, zie
-[lijst met rijen](?path=/docs/patronen-lijst-met-rijen--docs). Is er maar één
-actie, zet dan een knop neer. En voeg geen werkbalk toe omdat het er
-professioneel uitziet: elke balk kost ruimte die de inhoud nodig heeft.
+**Wanneer niet.** Horen de acties bij één rij, dan horen ze in die rij, zie [lijst met rijen](?path=/docs/patronen-lijst-met-rijen--docs). Is er maar één actie, zet dan een knop neer. En voeg geen werkbalk toe omdat het er professioneel uitziet: elke balk kost ruimte die de inhoud nodig heeft.
 
 ## Compositie
 
@@ -31,38 +25,22 @@ nldd-toolbar                       size, label
 
 ## Waarom zo
 
-**Elk item heeft een alternatief in het overloopmenu.** Als de ruimte krap
-wordt, verhuist de [werkbalk](?path=/docs/components-actions-toolbar--docs)
-items naar de overloop. Zonder `nldd-menu-item` in `slot="overflow"` is de
-actie dan weg. Dat zie je op een breed scherm nooit, dus het item waarschuwt er
-in development al voor bij het laden.
+**Elk item heeft een alternatief in het overloopmenu.** Als de ruimte krap wordt, verhuist de [werkbalk](?path=/docs/components-actions-toolbar--docs) items naar de overloop. Zonder `nldd-menu-item` in `slot="overflow"` is de actie dan weg. Dat zie je op een breed scherm nooit, dus het item waarschuwt er in development al voor bij het laden.
 
-**De primaire actie krijgt de hoogste `priority`.** Items met een lagere
-priority verhuizen als eerste. Wat altijd zichtbaar moet blijven, zet je hoger,
-en de plek in de HTML doet daarvoor niet ter zake.
+**De primaire actie krijgt de hoogste `priority`.** Items met een lagere priority verhuizen als eerste. Wat altijd zichtbaar moet blijven, zet je hoger, en de plek in de HTML doet daarvoor niet ter zake.
 
-**Een tabbalk krijgt als alternatief een menugroep met radio-items.** Een keuze
-uit een set is in het menu precies wat een tab in de balk is: een
-`nldd-menu-group` met een `type="radio"`-item per tab, en de actieve tab
-`selected`. Beide volgen dezelfde toestand in je eigen code. Geef de tabbalk een
-hoge priority, zodat hij als laatste naar de overloop gaat.
+**Een tabbalk krijgt als alternatief een menugroep met radio-items.** Een keuze uit een set is in het menu precies wat een tab in de balk is: een `nldd-menu-group` met een `type="radio"`-item per tab, en de actieve tab `selected`. Beide volgen dezelfde toestand in je eigen code. Geef de tabbalk een hoge priority, zodat hij als laatste naar de overloop gaat.
 
 <Canvas of={Stories.MetTabbalk} />
 
-**Zet `size` op de werkbalk, niet op elke knop.** De werkbalk geeft hem door aan
-alle controls erin.
+**Zet `size` op de werkbalk, niet op elke knop.** De werkbalk geeft hem door aan alle controls erin.
 
 ## Toegankelijkheid
 
-Wat je gratis krijgt: de toolbar-rol, de overloopknop met zijn label en
-`aria-expanded`, en een tabbalk en menu met de rollen die bij een keuze horen.
+Wat je gratis krijgt: de toolbar-rol, de overloopknop met zijn label en `aria-expanded`, en een tabbalk en menu met de rollen die bij een keuze horen.
 
-Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `label` op de
-werkbalk als er meer dan één op de pagina staat, en het overloop-alternatief per
-item.
+Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `label` op de werkbalk als er meer dan één op de pagina staat, en het overloop-alternatief per item.
 
 ## Gezien in
 
-Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in
-meerdere producten los van elkaar tegengekomen: hij is op een breed scherm
-onzichtbaar en valt pas op als iemand het venster smal maakt.
+Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerdere producten los van elkaar tegengekomen: hij is op een breed scherm onzichtbaar en valt pas op als iemand het venster smal maakt.

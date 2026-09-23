@@ -6,17 +6,11 @@
 
 # Patroon: formulier
 
-**Welk probleem dit oplost.** Gegevens van iemand vragen, in een indeling die
-leesbaar blijft, met labels die aan hun veld vastzitten en fouten die op de
-juiste plek en het juiste moment verschijnen.
+**Welk probleem dit oplost.** Gegevens van iemand vragen, in een indeling die leesbaar blijft, met labels die aan hun veld vastzitten en fouten die op de juiste plek en het juiste moment verschijnen.
 
-**Wanneer wel.** Elke keer dat je invoervelden verzamelt die samen verstuurd
-worden.
+**Wanneer wel.** Elke keer dat je invoervelden verzamelt die samen verstuurd worden.
 
-**Wanneer niet.** Voor één los zoekveld in een werkbalk gebruik je een
-[zoekveld](../../nldd-design/reference.md#nldd-search-field) zonder formulier
-eromheen. En voor een lange reeks stappen: geen wizard, zie de
-[ontwerprichtlijnen](../../nldd-design/design-guidelines.md).
+**Wanneer niet.** Voor één los zoekveld in een werkbalk gebruik je een [zoekveld](../../nldd-design/reference.md#nldd-search-field) zonder formulier eromheen. En voor een lange reeks stappen: geen wizard, zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md).
 
 ## Compositie
 
@@ -91,57 +85,26 @@ nldd-form                              name, method, label-alignment
 
 ## Waarom zo
 
-**Het veld regelt de koppelingen, jij zet alleen de onderdelen erin.** Een
-[form field](../../nldd-design/reference.md#nldd-form-field) vindt het
-invoerveld tussen zijn kinderen en koppelt het label, de eisen en de hulptekst
-eraan. Geen `for` en geen `id`: zet je die zelf, dan ga je ertegen in.
+**Het veld regelt de koppelingen, jij zet alleen de onderdelen erin.** Een [form field](../../nldd-design/reference.md#nldd-form-field) vindt het invoerveld tussen zijn kinderen en koppelt het label, de eisen en de hulptekst eraan. Geen `for` en geen `id`: zet je die zelf, dan ga je ertegen in.
 
-**Groepeer met een form section, niet met een eigen kop en een div.** Een
-[form section](../../nldd-design/reference.md#nldd-form-section) rendert een
-echte fieldset, dus een schermlezer noemt de groep als je het eerste veld
-binnengaat. Een groepsnaam is geen kop: zet voor de paginastructuur een echte
-kop boven het formulier.
+**Groepeer met een form section, niet met een eigen kop en een div.** Een [form section](../../nldd-design/reference.md#nldd-form-section) rendert een echte fieldset, dus een schermlezer noemt de groep als je het eerste veld binnengaat. Een groepsnaam is geen kop: zet voor de paginastructuur een echte kop boven het formulier.
 
-**Zet `label-alignment` op het formulier, niet per veld.** Het
-[formulier](../../nldd-design/reference.md#nldd-form) geeft hem door aan elk veld
-en aan de acties, zodat de knoppen onder de velden uitkomen en niet onder de
-labels. Daarom staan de acties in een
-[form actions](../../nldd-design/reference.md#nldd-form-actions) en niet los
-onder het formulier.
+**Zet `label-alignment` op het formulier, niet per veld.** Het [formulier](../../nldd-design/reference.md#nldd-form) geeft hem door aan elk veld en aan de acties, zodat de knoppen onder de velden uitkomen en niet onder de labels. Daarom staan de acties in een [form actions](../../nldd-design/reference.md#nldd-form-actions) en niet los onder het formulier.
 
-**Eén primaire actie, zonder "Annuleer" ernaast.** Een uitweg pal naast de knop
-die verstuurt kost bij een misklik alles wat er is ingevuld. Heeft het formulier
-een uitweg nodig, zet die dan op afstand, bijvoorbeeld in de titelbalk. Zie de
-[ontwerprichtlijnen](../../nldd-design/design-guidelines.md#invoer-en-formulieren).
+**Eén primaire actie, zonder "Annuleer" ernaast.** Een uitweg pal naast de knop die verstuurt kost bij een misklik alles wat er is ingevuld. Heeft het formulier een uitweg nodig, zet die dan op afstand, bijvoorbeeld in de titelbalk. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#invoer-en-formulieren).
 
-**Markeer wat optioneel is, niet wat verplicht is.** `optional` op het veld
-toont zelf het label "Optioneel". Verplichte velden zijn de regel, dus die
-krijgen geen sterretje.
+**Markeer wat optioneel is, niet wat verplicht is.** `optional` op het veld toont zelf het label "Optioneel". Verplichte velden zijn de regel, dus die krijgen geen sterretje.
 
-**De eisen staan in een validation list, geschreven als eis.** Een
-[validation list](../../nldd-design/reference.md#nldd-validation-list) toont een
-eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld.
-Schrijf een item als de eis ("Een apenstaartje"), niet als de opdracht ("Vul een
-apenstaartje in").
+**De eisen staan in een validation list, geschreven als eis.** Een [validation list](../../nldd-design/reference.md#nldd-validation-list) toont een eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld. Schrijf een item als de eis ("Een apenstaartje"), niet als de opdracht ("Vul een apenstaartje in").
 
-**Importeer de globale stylesheet.** Het formulier en de form section hebben
-geen shadow DOM: autofill vindt een invoerveld alleen met een echte `<form>`
-erboven, en een `<legend>` in de shadow DOM wordt niet overal als groepsnaam
-voorgelezen. Hun opmaak zit daarom in `@nldd/design-system/styles`. Laat je die
-stylesheet weg, dan lijkt het formulier kapot.
+**Importeer de globale stylesheet.** Het formulier en de form section hebben geen shadow DOM: autofill vindt een invoerveld alleen met een echte `<form>` erboven, en een `<legend>` in de shadow DOM wordt niet overal als groepsnaam voorgelezen. Hun opmaak zit daarom in `@nldd/design-system/styles`. Laat je die stylesheet weg, dan lijkt het formulier kapot.
 
 ## Toegankelijkheid
 
-Wat je gratis krijgt: de koppeling van label en veld, de groepsnaam van elke
-form section, de fout die aan het veld gekoppeld wordt, en de focus die bij het
-versturen naar het eerste veld gaat dat niet klopt.
+Wat je gratis krijgt: de koppeling van label en veld, de groepsnaam van elke form section, de fout die aan het veld gekoppeld wordt, en de focus die bij het versturen naar het eerste veld gaat dat niet klopt.
 
-Wat jij nog moet doen: `autocomplete` per veld, want de browser kan niet raden
-wat een veld betekent, en een `type` die bij de invoer past, zoals `email` of
-`tel`.
+Wat jij nog moet doen: `autocomplete` per veld, want de browser kan niet raden wat een veld betekent, en een `type` die bij de invoer past, zoals `email` of `tel`.
 
 ## Gezien in
 
-Een form field met een invoerveld erin is een van de meest voorkomende
-composities op dit systeem. De form section juist niet, terwijl apps de
-groepering wel met de hand nabouwen: daarom staat hij hier in de compositie.
+Een form field met een invoerveld erin is een van de meest voorkomende composities op dit systeem. De form section juist niet, terwijl apps de groepering wel met de hand nabouwen: daarom staat hij hier in de compositie.
