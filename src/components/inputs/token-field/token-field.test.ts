@@ -24,6 +24,17 @@ describe('nldd-token-field', () => {
 		expect(el.shadowRoot!.querySelector('.token-field__input')).toBeTruthy();
 	});
 
+	it('houdt het validatie-icoon bovenin zodra het veld meerdere rijen wordt', async () => {
+		el = await fixture<TokenFieldEl>('<nldd-token-field accessible-label="Landen" valid style="width: 300px"></nldd-token-field>');
+		el.values = ['Nederland', 'België', 'Duitsland', 'Luxemburg'];
+		await waitForUpdate(el);
+		const area = el.shadowRoot!.querySelector('.token-field__validation-icon-area')!.getBoundingClientRect();
+		const field = el.shadowRoot!.querySelector('.token-field')!.getBoundingClientRect();
+		// The field wrapped, so a centered icon would sit well below its top edge.
+		expect(field.height).toBeGreaterThan(area.height * 1.5);
+		expect(area.top - field.top).toBeLessThan(area.height / 2);
+	});
+
 	it('renders a dismissible token per value', async () => {
 		el = await fixture('<nldd-token-field accessible-label="Tags"></nldd-token-field>');
 		el.values = ['a', 'b'];

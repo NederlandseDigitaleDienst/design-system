@@ -169,12 +169,13 @@ export const tokenFieldStyles = css`
 	/* Absolute so it doesn't change the frame height; the frame reserves its area. */
 	.token-field__validation-icon-area {
 		position: absolute;
-		inset-block: 0;
+		inset-block-start: 0;
 		inset-inline-end: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		width: var(--_validation-icon-area-size);
+		height: var(--_validation-icon-area-size);
 		pointer-events: none;
 	}
 
