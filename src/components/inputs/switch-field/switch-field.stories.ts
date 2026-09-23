@@ -84,10 +84,26 @@ export const Standaard = {
 export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
-		<nldd-switch-field label="Niet aan" value="1"></nldd-switch-field>
-		<nldd-switch-field label="Aan" value="2" checked></nldd-switch-field>
-		<nldd-switch-field label="Uitgeschakeld" value="3" disabled></nldd-switch-field>
-		<nldd-switch-field label="Aan en uitgeschakeld" value="4" checked disabled></nldd-switch-field>
+		<nldd-switch-field
+			label="Niet aan"
+			value="1"
+		></nldd-switch-field>
+		<nldd-switch-field
+			label="Aan"
+			value="2"
+			checked
+		></nldd-switch-field>
+		<nldd-switch-field
+			label="Uitgeschakeld"
+			value="3"
+			disabled
+		></nldd-switch-field>
+		<nldd-switch-field
+			label="Aan en uitgeschakeld"
+			value="4"
+			checked
+			disabled
+		></nldd-switch-field>
 	</div>
 `,
 	parameters: { controls: { disable: true } },

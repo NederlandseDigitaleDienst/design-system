@@ -5256,6 +5256,15 @@
             },
             {
               "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<NLDDTokenTranslations>"
+              },
+              "default": "{}",
+              "attribute": "translations"
+            },
+            {
+              "kind": "field",
               "name": "roving",
               "type": {
                 "text": "boolean"
@@ -5347,6 +5356,15 @@
               "default": "''",
               "fieldName": "menuText",
               "description": "Accessible label for the menu button. Unset, it is `Toon opties voor \"{text}\"`."
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<NLDDTokenTranslations>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "description": "Override translation keys; unset keys fall back to Dutch"
             },
             {
               "name": "roving",
@@ -5908,7 +5926,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "One requirement of a value, with the rule that checks it. Give every item an id that names its field as well as its rule: an id has to be unique in the whole document, and `length` is the first thing three fields in one form will all reach for. Write the text as the requirement (\"Minimaal 8 tekens\"), not as the command (\"Gebruik minimaal 8 tekens\"): before a verdict it stands there as what the field wants, after one as what the value does not meet.",
           "name": "NLDDValidationItem",
           "members": [
             {
@@ -28471,7 +28489,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them. When they stop fitting, panes drop in a fixed order: the inspector goes first, then the primary sidebar collapses into the secondary sidebar. If that still does not fit, the view stacks and shows one pane at a time: main when it has content, otherwise the secondary sidebar, otherwise the primary sidebar.",
+          "description": "A four-column layout with a primary sidebar, secondary sidebar, main content area, and inspector. The sidebars show navigation or lists, the main area shows primary content, and the inspector shows additional details or properties of the selection. Panes are shown automatically when content is slotted into them. When they stop fitting, panes drop in a fixed order: the inspector goes first, then the primary sidebar collapses into the secondary sidebar. If that still does not fit, the view stacks and shows one pane at a time: main when it has content, otherwise the secondary sidebar, otherwise the primary sidebar. Use <code>nldd-split-view-pane</code> as direct children for automatic back button handling.",
           "name": "NLDDNavigationSplitView",
           "members": [
             {

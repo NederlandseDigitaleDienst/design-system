@@ -84,7 +84,11 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-list dividers="never" accessible-label="Tijdlijn" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Tijdlijn"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
 			<nldd-timeline-track-cell
 				status=${args.status}
@@ -97,7 +101,10 @@ export const Standaard = {
 				icon=${args.icon}
 			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Aanvraag ingediend" supporting-text="3 maart 2026"></nldd-title-cell>
+			<nldd-title-cell
+				text="Aanvraag ingediend"
+				supporting-text="3 maart 2026"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -110,26 +117,48 @@ export const Standaard = {
  */
 export const Tijdlijn = {
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Verloop aanvraag" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Verloop aanvraag"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" position="first"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				position="first"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Aanvraag ingediend" supporting-text="3 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="Aanvraag ingediend"
+				supporting-text="3 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
 			<nldd-timeline-track-cell status="past"></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="In behandeling genomen" supporting-text="5 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="In behandeling genomen"
+				supporting-text="5 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
 			<nldd-timeline-track-cell status="current"></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Beoordeling" supporting-text="Nu bezig"></nldd-title-cell>
+			<nldd-title-cell
+				text="Beoordeling"
+				supporting-text="Nu bezig"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="future" position="last"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="future"
+				position="last"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Besluit" supporting-text="Verwacht 20 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="Besluit"
+				supporting-text="Verwacht 20 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -143,11 +172,20 @@ export const Tijdlijn = {
  */
 export const EnkeleRij = {
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Tijdlijn">
+		<nldd-list
+			dividers="never"
+			accessible-label="Tijdlijn"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" position="only"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				position="only"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Aanvraag ontvangen" supporting-text="1 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="Aanvraag ontvangen"
+				supporting-text="1 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -165,21 +203,48 @@ export const EnkeleRij = {
  */
 export const Stappenlijst = {
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Voortgang aanvraag" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Voortgang aanvraag"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" size="md" position="first" icon="check-mark"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				size="md"
+				position="first"
+				icon="check-mark"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Gegevens" supporting-text="Afgerond"></nldd-title-cell>
+			<nldd-title-cell
+				text="Gegevens"
+				supporting-text="Afgerond"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item aria-current="step">
-			<nldd-timeline-track-cell status="current" size="md" text="2"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="current"
+				size="md"
+				text="2"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Controle" supporting-text="Huidige stap"></nldd-title-cell>
+			<nldd-title-cell
+				text="Controle"
+				supporting-text="Huidige stap"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="future" size="md" position="last" text="3"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="future"
+				size="md"
+				position="last"
+				text="3"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Bevestigen" supporting-text="Nog te doen"></nldd-title-cell>
+			<nldd-title-cell
+				text="Bevestigen"
+				supporting-text="Nog te doen"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -206,36 +271,76 @@ export const Stappenlijst = {
 export const GenesteVoortgang = {
 	name: 'Geneste voortgang (line)',
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Werkorder" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Werkorder"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" size="md" position="first" icon="check-mark"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				size="md"
+				position="first"
+				icon="check-mark"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Materiaal verzamelen" supporting-text="Afgerond"></nldd-title-cell>
+			<nldd-title-cell
+				text="Materiaal verzamelen"
+				supporting-text="Afgerond"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="current" size="md" line="both" text="2"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="current"
+				size="md"
+				line="both"
+				text="2"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Switch vervangen" supporting-text="Bezig"></nldd-title-cell>
+			<nldd-title-cell
+				text="Switch vervangen"
+				supporting-text="Bezig"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" size="md" variant="minor"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				size="md"
+				variant="minor"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Apparaat spanningsloos maken"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item aria-current="step">
-			<nldd-timeline-track-cell status="current" size="md" variant="minor"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="current"
+				size="md"
+				variant="minor"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Oude onderdeel verwijderen"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="future" size="md" variant="minor"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="future"
+				size="md"
+				variant="minor"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Nieuw onderdeel plaatsen"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="future" size="md" position="last" text="3"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="future"
+				size="md"
+				position="last"
+				text="3"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Testen en afmelden" supporting-text="Nog te doen"></nldd-title-cell>
+			<nldd-title-cell
+				text="Testen en afmelden"
+				supporting-text="Nog te doen"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -255,14 +360,27 @@ export const GenesteVoortgang = {
 export const KaartOnderEenStap = {
 	name: 'Kaart onder een stap',
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Werkorder" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Werkorder"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" size="md" position="first" icon="check-mark"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				size="md"
+				position="first"
+				icon="check-mark"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-title-cell text="Materiaal verzamelen"></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" size="md" variant="none"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				size="md"
+				variant="none"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-cell width="full">
 				<nldd-box background="base">
@@ -273,9 +391,17 @@ export const KaartOnderEenStap = {
 			</nldd-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="current" size="md" position="last" text="2"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="current"
+				size="md"
+				position="last"
+				text="2"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Switch vervangen" supporting-text="Bezig"></nldd-title-cell>
+			<nldd-title-cell
+				text="Switch vervangen"
+				supporting-text="Bezig"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -284,31 +410,66 @@ export const KaartOnderEenStap = {
 
 export const Substappen = {
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Voortgang aanvraag" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Voortgang aanvraag"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" size="md" position="first" icon="check-mark"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				size="md"
+				position="first"
+				icon="check-mark"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Gegevens" supporting-text="Afgerond"></nldd-title-cell>
+			<nldd-title-cell
+				text="Gegevens"
+				supporting-text="Afgerond"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" size="md" variant="minor"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				size="md"
+				variant="minor"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Contactgegevens"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" size="md" variant="minor"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				size="md"
+				variant="minor"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Bankrekening"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item aria-current="step">
-			<nldd-timeline-track-cell status="current" size="md" text="2"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="current"
+				size="md"
+				text="2"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Controle" supporting-text="Huidige stap"></nldd-title-cell>
+			<nldd-title-cell
+				text="Controle"
+				supporting-text="Huidige stap"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="future" size="md" position="last" text="3"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="future"
+				size="md"
+				position="last"
+				text="3"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Bevestigen" supporting-text="Nog te doen"></nldd-title-cell>
+			<nldd-title-cell
+				text="Bevestigen"
+				supporting-text="Nog te doen"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -321,26 +482,48 @@ export const Substappen = {
  */
 export const Tussenstappen = {
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Verloop aanvraag" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Verloop aanvraag"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" position="first"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				position="first"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-text-cell text="Aanvraag ingediend" supporting-text="3 maart"></nldd-text-cell>
+			<nldd-text-cell
+				text="Aanvraag ingediend"
+				supporting-text="3 maart"
+			></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" variant="minor"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				variant="minor"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Ontvangstbevestiging verstuurd"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item>
 			<nldd-timeline-track-cell status="current"></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-text-cell text="Beoordeling" supporting-text="Nu bezig"></nldd-text-cell>
+			<nldd-text-cell
+				text="Beoordeling"
+				supporting-text="Nu bezig"
+			></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="future" position="last"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="future"
+				position="last"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-text-cell text="Besluit" supporting-text="Verwacht 20 maart"></nldd-text-cell>
+			<nldd-text-cell
+				text="Besluit"
+				supporting-text="Verwacht 20 maart"
+			></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -358,11 +541,21 @@ export const Tussenstappen = {
  */
 export const ZonderStip = {
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Tijdlijn met tussenkop" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Tijdlijn met tussenkop"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" position="first"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				position="first"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Aanvraag ingediend" supporting-text="3 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="Aanvraag ingediend"
+				supporting-text="3 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
 			<nldd-timeline-track-cell variant="none"></nldd-timeline-track-cell>
@@ -370,9 +563,15 @@ export const ZonderStip = {
 			<nldd-title-cell text="Maart"></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" position="last"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				position="last"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="In behandeling genomen" supporting-text="5 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="In behandeling genomen"
+				supporting-text="5 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -387,21 +586,39 @@ export const ZonderStip = {
  */
 export const MetDividers = {
 	render: () => html`
-		<nldd-list accessible-label="Verloop aanvraag" style="max-width: 420px;">
+		<nldd-list
+			accessible-label="Verloop aanvraag"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" position="first"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				position="first"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Aanvraag ingediend" supporting-text="3 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="Aanvraag ingediend"
+				supporting-text="3 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
 			<nldd-timeline-track-cell status="current"></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Beoordeling" supporting-text="Nu bezig"></nldd-title-cell>
+			<nldd-title-cell
+				text="Beoordeling"
+				supporting-text="Nu bezig"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="future" position="last"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="future"
+				position="last"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Besluit" supporting-text="Verwacht 20 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="Besluit"
+				supporting-text="Verwacht 20 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -419,26 +636,51 @@ export const MetDividers = {
  */
 export const NieuwsteBovenaan = {
 	render: () => html`
-		<nldd-list dividers="never" accessible-label="Verloop aanvraag" style="max-width: 420px;">
+		<nldd-list
+			dividers="never"
+			accessible-label="Verloop aanvraag"
+			style="max-width: 420px;"
+		>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="future" position="first"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="future"
+				position="first"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Besluit" supporting-text="Verwacht 20 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="Besluit"
+				supporting-text="Verwacht 20 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="current" direction="up"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="current"
+				direction="up"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Beoordeling" supporting-text="Nu bezig"></nldd-title-cell>
+			<nldd-title-cell
+				text="Beoordeling"
+				supporting-text="Nu bezig"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
 			<nldd-timeline-track-cell status="past"></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="In behandeling genomen" supporting-text="5 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="In behandeling genomen"
+				supporting-text="5 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell status="past" position="last"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell
+				status="past"
+				position="last"
+			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
-			<nldd-title-cell text="Aanvraag ingediend" supporting-text="3 maart"></nldd-title-cell>
+			<nldd-title-cell
+				text="Aanvraag ingediend"
+				supporting-text="3 maart"
+			></nldd-title-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,

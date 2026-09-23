@@ -112,9 +112,18 @@ export const MeerdereRedacteuren = {
 			supporting-text="Laatst bijgewerkt op 12 juni 2026"
 		>
 			<nldd-avatar-group slot="avatars">
-				<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
-				<nldd-avatar name="Petra Pietersen" decorative></nldd-avatar>
-				<nldd-avatar name="Ahmed Karim" decorative></nldd-avatar>
+				<nldd-avatar
+					name="Jan Jansen"
+					decorative
+				></nldd-avatar>
+				<nldd-avatar
+					name="Petra Pietersen"
+					decorative
+				></nldd-avatar>
+				<nldd-avatar
+					name="Ahmed Karim"
+					decorative
+				></nldd-avatar>
 			</nldd-avatar-group>
 		</nldd-identity>
 	`,
@@ -170,9 +179,18 @@ export const SmalleContainer = {
 					supporting-text="Laatst bijgewerkt op 12 juni 2026"
 				>
 					<nldd-avatar-group slot="avatars">
-						<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
-						<nldd-avatar name="Petra Pietersen" decorative></nldd-avatar>
-						<nldd-avatar name="Ahmed Karim" decorative></nldd-avatar>
+						<nldd-avatar
+							name="Jan Jansen"
+							decorative
+						></nldd-avatar>
+						<nldd-avatar
+							name="Petra Pietersen"
+							decorative
+						></nldd-avatar>
+						<nldd-avatar
+							name="Ahmed Karim"
+							decorative
+						></nldd-avatar>
 					</nldd-avatar-group>
 				</nldd-identity>
 			</div>
@@ -181,7 +199,11 @@ export const SmalleContainer = {
 					text="Jan Jansen"
 					supporting-text="Redacteur · 12 juni 2026"
 				>
-					<nldd-avatar slot="avatars" name="Jan Jansen" decorative></nldd-avatar>
+					<nldd-avatar
+						slot="avatars"
+						name="Jan Jansen"
+						decorative
+					></nldd-avatar>
 				</nldd-identity>
 			</div>
 		</div>

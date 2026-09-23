@@ -581,6 +581,7 @@ A self-contained piece of data the user is handling: a person in an address fiel
 | `control` | `'none' \| 'dismiss' \| 'menu'` | Control type (default: 'none') |
 | `dismiss-text` | `string` | Accessible label for the dismiss button. Unset, it names the token: `Verwijder "{text}"`, so a row of tokens does not read as a row of identical buttons. |
 | `menu-text` | `string` | Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`. |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `roving` | `boolean` | Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable. |
 | `expanded` | `boolean` | Reflects whether the token's menu is open (control="menu"); managed by the token. |
 | `disabled` | `boolean` | Disabled state |

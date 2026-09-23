@@ -8,7 +8,10 @@ export function simpleSectionTemplate(component: NLDDSimpleSection): TemplateRes
 				<header class="simple-section__header"
 					hidden
 				>
-					<slot name="header" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="header"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</header>
 				<div class="simple-section__main">
 					<slot></slot>
@@ -16,7 +19,10 @@ export function simpleSectionTemplate(component: NLDDSimpleSection): TemplateRes
 				<footer class="simple-section__footer"
 					hidden
 				>
-					<slot name="footer" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="footer"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</footer>
 			</div>
 		</section>

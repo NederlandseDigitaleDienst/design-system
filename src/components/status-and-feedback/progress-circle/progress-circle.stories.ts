@@ -131,12 +131,36 @@ export const Standaard = {
 export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center;">
-			<nldd-progress-circle size="24" value="60" text="24"></nldd-progress-circle>
-			<nldd-progress-circle size="32" value="60" text="32"></nldd-progress-circle>
-			<nldd-progress-circle size="48" value="60" text="48"></nldd-progress-circle>
-			<nldd-progress-circle size="56" value="60" text="56"></nldd-progress-circle>
-			<nldd-progress-circle size="80" value="60" text="80"></nldd-progress-circle>
-			<nldd-progress-circle size="96" value="60" text="96"></nldd-progress-circle>
+			<nldd-progress-circle
+				size="24"
+				value="60"
+				text="24"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="32"
+				value="60"
+				text="32"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="48"
+				value="60"
+				text="48"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="56"
+				value="60"
+				text="56"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="80"
+				value="60"
+				text="80"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="96"
+				value="60"
+				text="96"
+			></nldd-progress-circle>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -146,7 +170,12 @@ export const Kleuren = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center;">
 			${ALL_COLORS.map(c => html`
-				<nldd-progress-circle color=${c} value="65" text=${c} size="56"></nldd-progress-circle>
+				<nldd-progress-circle
+					color=${c}
+					value="65"
+					text=${c}
+					size="56"
+				></nldd-progress-circle>
 			`)}
 		</div>
 	`,
@@ -156,9 +185,22 @@ export const Kleuren = {
 export const MeerdereSegmenten = {
 	name: 'Voortgang in meerdere segmenten',
 	render: () => html`
-		<nldd-progress-circle mode="progress" size="80" max="100" text="Verwerking">
-			<nldd-progress-circle-segment-indicator value="40" color="success" name="Geüpload"></nldd-progress-circle-segment-indicator>
-			<nldd-progress-circle-segment-indicator value="30" color="accent" name="Verwerken"></nldd-progress-circle-segment-indicator>
+		<nldd-progress-circle
+			mode="progress"
+			size="80"
+			max="100"
+			text="Verwerking"
+		>
+			<nldd-progress-circle-segment-indicator
+				value="40"
+				color="success"
+				name="Geüpload"
+			></nldd-progress-circle-segment-indicator>
+			<nldd-progress-circle-segment-indicator
+				value="30"
+				color="accent"
+				name="Verwerken"
+			></nldd-progress-circle-segment-indicator>
 		</nldd-progress-circle>
 	`,
 	parameters: {
@@ -174,11 +216,32 @@ export const MeerdereSegmenten = {
 export const ModusDistribution = {
 	name: 'Modus distribution',
 	render: () => html`
-		<nldd-progress-circle mode="distribution" size="80" max="500" text="Opslag (500 GB)">
-			<nldd-progress-circle-segment-indicator value="200" color="hemelblauw" name="Foto's"></nldd-progress-circle-segment-indicator>
-			<nldd-progress-circle-segment-indicator value="100" color="oranje" name="Video's"></nldd-progress-circle-segment-indicator>
-			<nldd-progress-circle-segment-indicator value="50" color="paars" name="Documenten"></nldd-progress-circle-segment-indicator>
-			<nldd-progress-circle-segment-indicator value="150" color="neutral" name="Vrij"></nldd-progress-circle-segment-indicator>
+		<nldd-progress-circle
+			mode="distribution"
+			size="80"
+			max="500"
+			text="Opslag (500 GB)"
+		>
+			<nldd-progress-circle-segment-indicator
+				value="200"
+				color="hemelblauw"
+				name="Foto's"
+			></nldd-progress-circle-segment-indicator>
+			<nldd-progress-circle-segment-indicator
+				value="100"
+				color="oranje"
+				name="Video's"
+			></nldd-progress-circle-segment-indicator>
+			<nldd-progress-circle-segment-indicator
+				value="50"
+				color="paars"
+				name="Documenten"
+			></nldd-progress-circle-segment-indicator>
+			<nldd-progress-circle-segment-indicator
+				value="150"
+				color="neutral"
+				name="Vrij"
+			></nldd-progress-circle-segment-indicator>
 		</nldd-progress-circle>
 	`,
 	parameters: {
@@ -194,7 +257,11 @@ export const ModusDistribution = {
 export const ToestandIndeterminate = {
 	name: 'Toestand indeterminate',
 	render: () => html`
-		<nldd-progress-circle indeterminate color="accent" text="Bezig met laden"></nldd-progress-circle>
+		<nldd-progress-circle
+			indeterminate
+			color="accent"
+			text="Bezig met laden"
+		></nldd-progress-circle>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -210,10 +277,38 @@ export const Waardeformaten = {
 	name: 'Waardeformaten (value-format)',
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: flex-start;">
-			<nldd-progress-circle size="56" value="60" max="100" text="Percentage" value-format="percentage" value-display="inline"></nldd-progress-circle>
-			<nldd-progress-circle size="56" value="60" max="100" text="Absoluut" value-format="absolute" value-display="inline"></nldd-progress-circle>
-			<nldd-progress-circle size="56" value="60" max="100" text="Breuk" value-format="fraction" value-display="inline"></nldd-progress-circle>
-			<nldd-progress-circle size="56" value="60" max="100" text="Custom (value-text)" value-text="Bijna klaar" value-display="inline"></nldd-progress-circle>
+			<nldd-progress-circle
+				size="56"
+				value="60"
+				max="100"
+				text="Percentage"
+				value-format="percentage"
+				value-display="inline"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="56"
+				value="60"
+				max="100"
+				text="Absoluut"
+				value-format="absolute"
+				value-display="inline"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="56"
+				value="60"
+				max="100"
+				text="Breuk"
+				value-format="fraction"
+				value-display="inline"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="56"
+				value="60"
+				max="100"
+				text="Custom (value-text)"
+				value-text="Bijna klaar"
+				value-display="inline"
+			></nldd-progress-circle>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -223,9 +318,24 @@ export const Waardeweergave = {
 	name: 'Waardeweergave (value-display)',
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: flex-start;">
-			<nldd-progress-circle size="56" value="60" text="Inline (onder de label)" value-display="inline"></nldd-progress-circle>
-			<nldd-progress-circle size="56" value="60" text="Tooltip (hover de cirkel)" value-display="tooltip"></nldd-progress-circle>
-			<nldd-progress-circle size="56" value="60" text="Verborgen" value-display="none"></nldd-progress-circle>
+			<nldd-progress-circle
+				size="56"
+				value="60"
+				text="Inline (onder de label)"
+				value-display="inline"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="56"
+				value="60"
+				text="Tooltip (hover de cirkel)"
+				value-display="tooltip"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="56"
+				value="60"
+				text="Verborgen"
+				value-display="none"
+			></nldd-progress-circle>
 		</div>
 	`,
 	parameters: {
@@ -240,7 +350,11 @@ export const Waardeweergave = {
 
 export const ZonderCaption = {
 	render: () => html`
-		<nldd-progress-circle size="56" value="40" value-display="none"></nldd-progress-circle>
+		<nldd-progress-circle
+			size="56"
+			value="40"
+			value-display="none"
+		></nldd-progress-circle>
 	`,
 	parameters: {
 		controls: { disable: true },

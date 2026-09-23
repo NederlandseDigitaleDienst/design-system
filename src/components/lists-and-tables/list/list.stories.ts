@@ -150,7 +150,10 @@ export const PijltjesnavigatieMetControls = {
 		>
 			${['NL-00001', 'NL-00002', 'NL-00003'].map((label) => html`
 				<nldd-list-item>
-					<nldd-text-cell width="full" text=${label}></nldd-text-cell>
+					<nldd-text-cell
+						width="full"
+						text=${label}
+					></nldd-text-cell>
 					<nldd-cell width="fit-content">
 						<nldd-icon-button
 							icon="ellipsis"
@@ -159,8 +162,14 @@ export const PijltjesnavigatieMetControls = {
 							accessible-label="Acties voor ${label}"
 						>
 							<nldd-menu slot="popup">
-								<nldd-menu-item text="Bewerken" icon="edit"></nldd-menu-item>
-								<nldd-menu-item text="Verwijderen" icon="trash"></nldd-menu-item>
+								<nldd-menu-item
+									text="Bewerken"
+									icon="edit"
+								></nldd-menu-item>
+								<nldd-menu-item
+									text="Verwijderen"
+									icon="trash"
+								></nldd-menu-item>
 							</nldd-menu>
 						</nldd-icon-button>
 					</nldd-cell>
@@ -215,11 +224,17 @@ export const MetMeerdereKolommen = {
 	render: () => html`
 		<nldd-list variant="box-tinted">
 			<nldd-list-item button>
-				<nldd-icon-cell size="24" vertical-alignment="top">
+				<nldd-icon-cell
+					size="24"
+					vertical-alignment="top"
+				>
 					<nldd-icon icon="calendar-event"></nldd-icon>
 				</nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
-				<nldd-text-cell text="Primaire titel" supporting-text="Ondersteunende tekst eronder"></nldd-text-cell>
+				<nldd-text-cell
+					text="Primaire titel"
+					supporting-text="Ondersteunende tekst eronder"
+				></nldd-text-cell>
 				<nldd-spacer-cell></nldd-spacer-cell>
 				<nldd-text-cell
 					color="secondary"
@@ -228,16 +243,25 @@ export const MetMeerdereKolommen = {
 					text="Detail"
 				></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
-				<nldd-icon-cell color="secondary" size="16">
+				<nldd-icon-cell
+					color="secondary"
+					size="16"
+				>
 					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item button>
-				<nldd-icon-cell size="24" vertical-alignment="top">
+				<nldd-icon-cell
+					size="24"
+					vertical-alignment="top"
+				>
 					<nldd-icon icon="certificate"></nldd-icon>
 				</nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
-				<nldd-text-cell text="Andere titel" supporting-text="Meer beschrijving hier"></nldd-text-cell>
+				<nldd-text-cell
+					text="Andere titel"
+					supporting-text="Meer beschrijving hier"
+				></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell
 					color="secondary"
@@ -246,7 +270,10 @@ export const MetMeerdereKolommen = {
 					text="Meer detail"
 				></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
-				<nldd-icon-cell color="secondary" size="16">
+				<nldd-icon-cell
+					color="secondary"
+					size="16"
+				>
 					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
 			</nldd-list-item>
@@ -283,7 +310,12 @@ export const Navigatie = {
 			item.setAttribute('selected', '');
 		};
 		return html`
-			<nldd-list type="navigation" variant="box-tinted" aria-label="Hoofdmenu" @click=${onClick}>
+			<nldd-list
+				type="navigation"
+				variant="box-tinted"
+				aria-label="Hoofdmenu"
+				@click=${onClick}
+			>
 				<nldd-list-item href="#dashboard"><nldd-text-cell text="Dashboard"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item href="#aanvragen" selected><nldd-text-cell text="Aanvragen"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item href="#meldingen"><nldd-text-cell text="Meldingen"></nldd-text-cell></nldd-list-item>
@@ -382,9 +414,19 @@ const buildListbox = (variant: 'box' | 'simple') => {
 				accessible-label="Filter op categorie"
 				@change=${onCategoryChange}
 			>
-				<nldd-toggle-button value="all" text="Alles" selected></nldd-toggle-button>
-				<nldd-toggle-button value="groente" text="Groente"></nldd-toggle-button>
-				<nldd-toggle-button value="fruit" text="Fruit"></nldd-toggle-button>
+				<nldd-toggle-button
+					value="all"
+					text="Alles"
+					selected
+				></nldd-toggle-button>
+				<nldd-toggle-button
+					value="groente"
+					text="Groente"
+				></nldd-toggle-button>
+				<nldd-toggle-button
+					value="fruit"
+					text="Fruit"
+				></nldd-toggle-button>
 			</nldd-toggle-button-group>
 			${data.map(({ label }) => html`
 				<nldd-list-item button>
@@ -451,11 +493,21 @@ export const Herschikbaar = {
 
 		const el = document.createElement('div');
 		render(html`
-			<nldd-list variant="box-tinted" reorderable @nldd-reorder=${onReorder}>
+			<nldd-list
+				variant="box-tinted"
+				reorderable
+				@nldd-reorder=${onReorder}
+			>
 				${labels.map((label) => html`
 					<nldd-list-item>
-						<nldd-drag-handle-cell size="sm" reorderable-only></nldd-drag-handle-cell>
-						<nldd-spacer-cell reorderable-only size="8"></nldd-spacer-cell>
+						<nldd-drag-handle-cell
+							size="sm"
+							reorderable-only
+						></nldd-drag-handle-cell>
+						<nldd-spacer-cell
+							reorderable-only
+							size="8"
+						></nldd-spacer-cell>
 						<nldd-text-cell text="${label}"></nldd-text-cell>
 					</nldd-list-item>
 				`)}
@@ -487,7 +539,11 @@ export const Leeg = {
 				text="Geen resultaten"
 				supporting-text="Pas de filters aan of probeer een andere zoekterm."
 			>
-				<nldd-button slot="actions" variant="neutral-tinted" text="Filters wissen"></nldd-button>
+				<nldd-button
+					slot="actions"
+					variant="neutral-tinted"
+					text="Filters wissen"
+				></nldd-button>
 			</nldd-inline-dialog>
 		</nldd-list>
 	`,
@@ -534,30 +590,62 @@ export const Radiogroep = {
 		};
 
 		return html`
-		<nldd-list type="radiogroup" variant="box-tinted" accessible-label="Niveau" @change=${onChange}>
-			<nldd-list-item radio checked>
+		<nldd-list
+			type="radiogroup"
+			variant="box-tinted"
+			accessible-label="Niveau"
+			@change=${onChange}
+		>
+			<nldd-list-item
+				radio
+				checked
+			>
 				<nldd-cell width="fit-content">
-					<nldd-radio-button decorative checked></nldd-radio-button>
+					<nldd-radio-button
+						decorative
+						checked
+					></nldd-radio-button>
 				</nldd-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
-				<nldd-text-cell width="full" text="Alle niveaus"></nldd-text-cell>
-				<nldd-text-cell width="fit-content" color="secondary" text="30"></nldd-text-cell>
+				<nldd-text-cell
+					width="full"
+					text="Alle niveaus"
+				></nldd-text-cell>
+				<nldd-text-cell
+					width="fit-content"
+					color="secondary"
+					text="30"
+				></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item radio>
 				<nldd-cell width="fit-content">
 					<nldd-radio-button decorative></nldd-radio-button>
 				</nldd-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
-				<nldd-text-cell width="full" text="Fouten"></nldd-text-cell>
-				<nldd-text-cell width="fit-content" color="secondary" text="5"></nldd-text-cell>
+				<nldd-text-cell
+					width="full"
+					text="Fouten"
+				></nldd-text-cell>
+				<nldd-text-cell
+					width="fit-content"
+					color="secondary"
+					text="5"
+				></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item radio>
 				<nldd-cell width="fit-content">
 					<nldd-radio-button decorative></nldd-radio-button>
 				</nldd-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
-				<nldd-text-cell width="full" text="Waarschuwingen"></nldd-text-cell>
-				<nldd-text-cell width="fit-content" color="secondary" text="6"></nldd-text-cell>
+				<nldd-text-cell
+					width="full"
+					text="Waarschuwingen"
+				></nldd-text-cell>
+				<nldd-text-cell
+					width="fit-content"
+					color="secondary"
+					text="6"
+				></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`;
@@ -575,40 +663,85 @@ export const Radiogroep = {
 
 export const Formulier = {
 	render: () => html`
-		<nldd-list type="form" variant="box-tinted" accessible-label="Eigenschappen">
+		<nldd-list
+			type="form"
+			variant="box-tinted"
+			accessible-label="Eigenschappen"
+		>
 			<nldd-list-item>
-				<nldd-text-cell width="full" text="Vervaldatum"></nldd-text-cell>
+				<nldd-text-cell
+					width="full"
+					text="Vervaldatum"
+				></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-cell width="fit-content">
-					<nldd-date-field size="sm" value="2026-08-23"></nldd-date-field>
+					<nldd-date-field
+						size="sm"
+						value="2026-08-23"
+					></nldd-date-field>
 				</nldd-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-				<nldd-text-cell width="full" text="Toegewezen aan"></nldd-text-cell>
+				<nldd-text-cell
+					width="full"
+					text="Toegewezen aan"
+				></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-cell width="180px">
-					<nldd-combo-box size="sm" text="Yara Nijhuis" value="yara">
+					<nldd-combo-box
+						size="sm"
+						text="Yara Nijhuis"
+						value="yara"
+					>
 						<nldd-menu>
-							<nldd-menu-item value="yara" text="Yara Nijhuis"></nldd-menu-item>
-							<nldd-menu-item value="ruben" text="Ruben de Groot"></nldd-menu-item>
+							<nldd-menu-item
+								value="yara"
+								text="Yara Nijhuis"
+							></nldd-menu-item>
+							<nldd-menu-item
+								value="ruben"
+								text="Ruben de Groot"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-combo-box>
 				</nldd-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-				<nldd-text-cell width="full" text="Prioriteit"></nldd-text-cell>
+				<nldd-text-cell
+					width="full"
+					text="Prioriteit"
+				></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-cell width="fit-content">
-					<nldd-button variant="secondary" size="sm" expandable popup-type="menu" text="Hoog">
-						<nldd-menu slot="popup" placement="bottom-end">
-							<nldd-menu-item type="radio" text="Hoog" selected></nldd-menu-item>
-							<nldd-menu-item type="radio" text="Laag"></nldd-menu-item>
+					<nldd-button
+						variant="secondary"
+						size="sm"
+						expandable
+						popup-type="menu"
+						text="Hoog"
+					>
+						<nldd-menu
+							slot="popup"
+							placement="bottom-end"
+						>
+							<nldd-menu-item
+								type="radio"
+								text="Hoog"
+								selected
+							></nldd-menu-item>
+							<nldd-menu-item
+								type="radio"
+								text="Laag"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-button>
 				</nldd-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-				<nldd-text-cell width="full" text="Aangemaakt"></nldd-text-cell>
+				<nldd-text-cell
+					width="full"
+					text="Aangemaakt"
+				></nldd-text-cell>
 				<nldd-text-cell text="24 juli 2026"></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>

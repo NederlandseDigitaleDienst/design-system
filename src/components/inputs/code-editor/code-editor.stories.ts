@@ -181,8 +181,20 @@ export const VariantInputField = {
 export const MetSyntaxkleuring = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
-			<nldd-code-editor variant="input-field" language="yaml" rows="8" .value=${SAMPLE_YAML} accessible-label="YAML"></nldd-code-editor>
-			<nldd-code-editor variant="input-field" language="json" rows="6" .value=${SAMPLE_JSON} accessible-label="JSON"></nldd-code-editor>
+			<nldd-code-editor
+				variant="input-field"
+				language="yaml"
+				rows="8"
+				.value=${SAMPLE_YAML}
+				accessible-label="YAML"
+			></nldd-code-editor>
+			<nldd-code-editor
+				variant="input-field"
+				language="json"
+				rows="6"
+				.value=${SAMPLE_JSON}
+				accessible-label="JSON"
+			></nldd-code-editor>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },

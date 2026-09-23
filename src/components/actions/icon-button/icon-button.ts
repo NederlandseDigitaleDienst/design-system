@@ -29,7 +29,10 @@
  *
  * @example
  * ```html
- * <nldd-icon-button text="Download" icon="download"></nldd-icon-button>
+ * <nldd-icon-button
+ * 	text="Download"
+ * 	icon="download"
+ * ></nldd-icon-button>
  * ```
  *
  * @fires click - When button is clicked (not fired when disabled)

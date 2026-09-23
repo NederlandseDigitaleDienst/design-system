@@ -282,7 +282,10 @@ export const EigenImgInDeSlot = {
 	name: 'Eigen img in de slot',
 	render: () => html`
 		<div style="max-width: 480px;">
-			<nldd-image aspect-ratio="16/9" shape="rounded">
+			<nldd-image
+				aspect-ratio="16/9"
+				shape="rounded"
+			>
 				<img
 					src=${SAMPLE_SRC}
 					alt=${SAMPLE_ALT}

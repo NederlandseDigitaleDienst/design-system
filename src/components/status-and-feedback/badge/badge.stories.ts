@@ -15,7 +15,10 @@ import { ICONS } from './../../content/icon/icon.js';
  * ```html
  * <nldd-badge number="3"></nldd-badge>
  * <nldd-badge></nldd-badge> <!-- toont stip -->
- * <nldd-badge color="success" text="Nieuw"></nldd-badge>
+ * <nldd-badge
+ * 	color="success"
+ * 	text="Nieuw"
+ * ></nldd-badge>
  * ```
  */
 const SEMANTIC_COLORS = ['critical', 'accent', 'neutral', 'warning', 'success'];
@@ -150,8 +153,14 @@ export const Standaard = {
 export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-badge size="md" number="3"></nldd-badge>
-			<nldd-badge size="sm" number="3"></nldd-badge>
+			<nldd-badge
+				size="md"
+				number="3"
+			></nldd-badge>
+			<nldd-badge
+				size="sm"
+				number="3"
+			></nldd-badge>
 			<nldd-badge size="md"></nldd-badge>
 			<nldd-badge size="sm"></nldd-badge>
 		</div>
@@ -193,14 +202,32 @@ export const EigenKleur = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
 			<span style="color: #a90061; display: inline-flex; gap: 8px; align-items: center;">
-				<nldd-badge color="inherit" number="3"></nldd-badge>
+				<nldd-badge
+					color="inherit"
+					number="3"
+				></nldd-badge>
 				Erft de kleur van deze zin
 			</span>
-			<nldd-badge custom-color="#f8fafc" number="3"></nldd-badge>
-			<nldd-badge custom-color="#eab308" number="3"></nldd-badge>
-			<nldd-badge custom-color="#3b82f6" number="3"></nldd-badge>
-			<nldd-badge custom-color="#374151" number="3"></nldd-badge>
-			<nldd-badge custom-color="oklch(0.6 0.2 20)" text="Eigen"></nldd-badge>
+			<nldd-badge
+				custom-color="#f8fafc"
+				number="3"
+			></nldd-badge>
+			<nldd-badge
+				custom-color="#eab308"
+				number="3"
+			></nldd-badge>
+			<nldd-badge
+				custom-color="#3b82f6"
+				number="3"
+			></nldd-badge>
+			<nldd-badge
+				custom-color="#374151"
+				number="3"
+			></nldd-badge>
+			<nldd-badge
+				custom-color="oklch(0.6 0.2 20)"
+				text="Eigen"
+			></nldd-badge>
 		</div>
 	`,
 	parameters: {
@@ -211,10 +238,24 @@ export const EigenKleur = {
 export const MetPulse = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center;">
-			<nldd-badge color="critical" pulse></nldd-badge>
-			<nldd-badge color="success" pulse></nldd-badge>
-			<nldd-badge color="accent" pulse number="3"></nldd-badge>
-			<nldd-badge color="success" pulse text="Online"></nldd-badge>
+			<nldd-badge
+				color="critical"
+				pulse
+			></nldd-badge>
+			<nldd-badge
+				color="success"
+				pulse
+			></nldd-badge>
+			<nldd-badge
+				color="accent"
+				pulse
+				number="3"
+			></nldd-badge>
+			<nldd-badge
+				color="success"
+				pulse
+				text="Online"
+			></nldd-badge>
 		</div>
 	`,
 	parameters: {
@@ -250,9 +291,18 @@ export const Stip = {
 export const MetTekst = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-badge color="accent" text="Nieuw"></nldd-badge>
-			<nldd-badge color="success" text="Live"></nldd-badge>
-			<nldd-badge color="warning" text="Bèta"></nldd-badge>
+			<nldd-badge
+				color="accent"
+				text="Nieuw"
+			></nldd-badge>
+			<nldd-badge
+				color="success"
+				text="Live"
+			></nldd-badge>
+			<nldd-badge
+				color="warning"
+				text="Bèta"
+			></nldd-badge>
 		</div>
 	`,
 	parameters: {
@@ -266,7 +316,10 @@ export const MetGetal = {
 			<nldd-badge number="1"></nldd-badge>
 			<nldd-badge number="12"></nldd-badge>
 			<nldd-badge number="150"></nldd-badge>
-			<nldd-badge number="150" max="9"></nldd-badge>
+			<nldd-badge
+				number="150"
+				max="9"
+			></nldd-badge>
 		</div>
 	`,
 	parameters: {
@@ -282,10 +335,22 @@ export const MetGetal = {
 export const MetIcoon = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-badge color="success" icon="check-mark"></nldd-badge>
-			<nldd-badge color="warning" icon="alert"></nldd-badge>
-			<nldd-badge color="critical" icon="dismiss-circle"></nldd-badge>
-			<nldd-badge color="accent" icon="info-circle"></nldd-badge>
+			<nldd-badge
+				color="success"
+				icon="check-mark"
+			></nldd-badge>
+			<nldd-badge
+				color="warning"
+				icon="alert"
+			></nldd-badge>
+			<nldd-badge
+				color="critical"
+				icon="dismiss-circle"
+			></nldd-badge>
+			<nldd-badge
+				color="accent"
+				icon="info-circle"
+			></nldd-badge>
 		</div>
 	`,
 	parameters: {
@@ -301,9 +366,21 @@ export const MetIcoon = {
 export const MetIcoonEnTekst = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-badge color="success" icon="check-mark" text="Geverifieerd"></nldd-badge>
-			<nldd-badge color="warning" icon="alert" text="Let op"></nldd-badge>
-			<nldd-badge color="accent" icon="info-circle" number="3"></nldd-badge>
+			<nldd-badge
+				color="success"
+				icon="check-mark"
+				text="Geverifieerd"
+			></nldd-badge>
+			<nldd-badge
+				color="warning"
+				icon="alert"
+				text="Let op"
+			></nldd-badge>
+			<nldd-badge
+				color="accent"
+				icon="info-circle"
+				number="3"
+			></nldd-badge>
 		</div>
 	`,
 	parameters: {

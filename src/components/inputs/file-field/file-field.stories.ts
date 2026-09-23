@@ -14,7 +14,10 @@ import '../../forms/form-field/form-field.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-file-field accept=".pdf" name="bijlage"></nldd-file-field>
+ * <nldd-file-field
+ * 	accept=".pdf"
+ * 	name="bijlage"
+ * ></nldd-file-field>
  * ```
  *
  * Er is geen `value`: browsers verbieden het programmatisch zetten van een
@@ -131,7 +134,10 @@ export const Standaard = ({
  */
 export const Meerdere = {
 	render: () => html`
-		<nldd-file-field multiple accessible-label="Bijlagen"></nldd-file-field>
+		<nldd-file-field
+			multiple
+			accessible-label="Bijlagen"
+		></nldd-file-field>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -144,7 +150,12 @@ export const InEenFormulierveld = {
 	name: 'In een formulierveld',
 	render: () => html`
 		<nldd-form-field label="Bewijsstuk">
-			<nldd-file-field accept=".pdf" name="bewijsstuk" invalid unmet="bewijsstuk-verplicht"></nldd-file-field>
+			<nldd-file-field
+				accept=".pdf"
+				name="bewijsstuk"
+				invalid
+				unmet="bewijsstuk-verplicht"
+			></nldd-file-field>
 			<nldd-validation-list>
 				<nldd-validation-item id="bewijsstuk-verplicht">Kies een bestand</nldd-validation-item>
 			</nldd-validation-list>
@@ -163,7 +174,10 @@ export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 420px;">
 			<nldd-file-field accessible-label="Bijlage md"></nldd-file-field>
-			<nldd-file-field size="sm" accessible-label="Bijlage sm"></nldd-file-field>
+			<nldd-file-field
+				size="sm"
+				accessible-label="Bijlage sm"
+			></nldd-file-field>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },

@@ -78,9 +78,21 @@ const toolbar = html`
 					variant="icon"
 					accessible-label="Tekststijl"
 				>
-					<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="onderstrepen" text="Onderstrepen" icon="underlined"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bold"
+						text="Vet"
+						icon="bold"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="italic"
+						text="Cursief"
+						icon="italic"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="onderstrepen"
+						text="Onderstrepen"
+						icon="underlined"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
 				<nldd-menu-item
 					slot="overflow"
@@ -108,9 +120,21 @@ const toolbar = html`
 					variant="icon"
 					accessible-label="Lijsttype"
 				>
-					<nldd-segmented-control-item value="none" text="Geen" icon="minus-small"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="bullet" text="Lijst" icon="bullet-list"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="numbered" text="Genummerd" icon="numbered-list"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="none"
+						text="Geen"
+						icon="minus-small"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bullet"
+						text="Lijst"
+						icon="bullet-list"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="numbered"
+						text="Genummerd"
+						icon="numbered-list"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
 				<nldd-menu-item
 					slot="overflow"
@@ -150,7 +174,10 @@ const toolbar = html`
 				label="Sla op"
 				priority="10"
 			>
-				<nldd-button variant="primary" text="Sla op"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Sla op"
+				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
 					text="Sla op"
@@ -318,7 +345,10 @@ export const ResponsieveBalken = {
 						slot="start"
 						label="Sla op"
 					>
-						<nldd-button variant="primary" text="Sla op"></nldd-button>
+						<nldd-button
+							variant="primary"
+							text="Sla op"
+						></nldd-button>
 						<nldd-menu-item
 							slot="overflow"
 							text="Sla op"

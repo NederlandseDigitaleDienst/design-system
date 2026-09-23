@@ -26,9 +26,18 @@ export default {
 export const Standaard = {
 	args: { size: 'md', orientation: 'vertical' },
 	render: (args: Record<string, any>) => html`
-	<nldd-button-group size=${args.size} orientation=${args.orientation}>
-		<nldd-button variant="primary" text="Bewaar"></nldd-button>
-		<nldd-button variant="secondary" text="Bewaar en maak nieuwe"></nldd-button>
+	<nldd-button-group
+		size=${args.size}
+		orientation=${args.orientation}
+	>
+		<nldd-button
+			variant="primary"
+			text="Bewaar"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Bewaar en maak nieuwe"
+		></nldd-button>
 	</nldd-button-group>
 	`,
 };
@@ -37,9 +46,18 @@ export const OrientatieHorizontal = {
 	name: 'Oriëntatie horizontal',
 	args: { size: 'md', orientation: 'horizontal' },
 	render: (args: Record<string, any>) => html`
-	<nldd-button-group size=${args.size} orientation=${args.orientation}>
-		<nldd-button variant="primary" text="Bewaar"></nldd-button>
-		<nldd-button variant="secondary" text="Bewaar en maak nieuwe"></nldd-button>
+	<nldd-button-group
+		size=${args.size}
+		orientation=${args.orientation}
+	>
+		<nldd-button
+			variant="primary"
+			text="Bewaar"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Bewaar en maak nieuwe"
+		></nldd-button>
 	</nldd-button-group>
 	`,
 };
@@ -48,9 +66,18 @@ export const GrootteSm = {
 	name: 'Grootte sm',
 	args: { size: 'sm', orientation: 'horizontal' },
 	render: (args: Record<string, any>) => html`
-	<nldd-button-group size=${args.size} orientation=${args.orientation}>
-		<nldd-button variant="primary" text="Bewaar"></nldd-button>
-		<nldd-button variant="secondary" text="Bewaar en maak nieuwe"></nldd-button>
+	<nldd-button-group
+		size=${args.size}
+		orientation=${args.orientation}
+	>
+		<nldd-button
+			variant="primary"
+			text="Bewaar"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Bewaar en maak nieuwe"
+		></nldd-button>
 	</nldd-button-group>
 	`,
 };
@@ -58,10 +85,22 @@ export const GrootteSm = {
 export const DrieKnoppen = {
 	args: { size: 'md', orientation: 'vertical' },
 	render: (args: Record<string, any>) => html`
-	<nldd-button-group size=${args.size} orientation=${args.orientation}>
-		<nldd-button variant="primary" text="Bewaar"></nldd-button>
-		<nldd-button variant="secondary" text="Bewaar en maak nieuwe"></nldd-button>
-		<nldd-button variant="destructive" text="Verwijder"></nldd-button>
+	<nldd-button-group
+		size=${args.size}
+		orientation=${args.orientation}
+	>
+		<nldd-button
+			variant="primary"
+			text="Bewaar"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Bewaar en maak nieuwe"
+		></nldd-button>
+		<nldd-button
+			variant="destructive"
+			text="Verwijder"
+		></nldd-button>
 	</nldd-button-group>
 	`,
 };
@@ -70,11 +109,26 @@ export const MaximaalDrieKnoppen = {
 	name: 'Maximaal drie knoppen (de vierde verdwijnt)',
 	args: { size: 'md', orientation: 'vertical' },
 	render: (args: Record<string, any>) => html`
-	<nldd-button-group size=${args.size} orientation=${args.orientation}>
-		<nldd-button variant="primary" text="Bewaar"></nldd-button>
-		<nldd-button variant="secondary" text="Bewaar en maak nieuwe"></nldd-button>
-		<nldd-button variant="destructive" text="Verwijder"></nldd-button>
-		<nldd-button variant="secondary" text="Een knop te veel"></nldd-button>
+	<nldd-button-group
+		size=${args.size}
+		orientation=${args.orientation}
+	>
+		<nldd-button
+			variant="primary"
+			text="Bewaar"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Bewaar en maak nieuwe"
+		></nldd-button>
+		<nldd-button
+			variant="destructive"
+			text="Verwijder"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Een knop te veel"
+		></nldd-button>
 	</nldd-button-group>
 	`,
 };

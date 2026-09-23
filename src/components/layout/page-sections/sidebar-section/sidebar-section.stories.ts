@@ -9,7 +9,10 @@ import '../../../navigation/top-title-bar/top-title-bar.js';
 import '../../container/container.js';
 
 const sidebar = html`
-	<nldd-title size="sm" text="Filters"></nldd-title>
+	<nldd-title
+		size="sm"
+		text="Filters"
+	></nldd-title>
 	<nldd-rich-text>
 		<ul>
 			<li><a href="#alles">Alles</a></li>
@@ -176,7 +179,11 @@ export const EigenSheetTitelbalk = {
 				text="Filters"
 				dismiss-text="Klaar"
 			>
-				<nldd-button slot="toolbar" variant="critical-transparent" text="Reset"></nldd-button>
+				<nldd-button
+					slot="toolbar"
+					variant="critical-transparent"
+					text="Reset"
+				></nldd-button>
 			</nldd-top-title-bar>
 			<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
 			${trigger}

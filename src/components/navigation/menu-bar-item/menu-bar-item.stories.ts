@@ -136,7 +136,11 @@ export const ToestandDisabled = {
 
 export const MetExpandable = {
 	render: () => html`
-		<nldd-menu-bar-item text="Account" icon="person" expandable>
+		<nldd-menu-bar-item
+			text="Account"
+			icon="person"
+			expandable
+		>
 			<nldd-menu>
 				<nldd-menu-item text="Mijn profiel"></nldd-menu-item>
 				<nldd-menu-item text="Instellingen"></nldd-menu-item>
@@ -152,16 +156,53 @@ export const AlleToestanden = {
 	render: () => html`
 		<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
 			<nldd-menu-bar-item text="Default"></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Current" current></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="With Icon" icon="magnifier"></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Icon Only" icon="magnifier" icon-only></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Priority Icon" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Priority Icon (compact)" icon="magnifier" content-priority="icon" compact></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Priority Text" icon="person" content-priority="text"></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Priority Text (compact)" icon="person" content-priority="text" compact></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Disabled" disabled></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Link" href="/"></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Expandable" expandable>
+			<nldd-menu-bar-item
+				text="Current"
+				current
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="With Icon"
+				icon="magnifier"
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Icon Only"
+				icon="magnifier"
+				icon-only
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Priority Icon"
+				icon="magnifier"
+				content-priority="icon"
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Priority Icon (compact)"
+				icon="magnifier"
+				content-priority="icon"
+				compact
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Priority Text"
+				icon="person"
+				content-priority="text"
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Priority Text (compact)"
+				icon="person"
+				content-priority="text"
+				compact
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Disabled"
+				disabled
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Link"
+				href="/"
+			></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Expandable"
+				expandable
+			>
 				<nldd-menu>
 					<nldd-menu-item text="Optie 1"></nldd-menu-item>
 					<nldd-menu-item text="Optie 2"></nldd-menu-item>

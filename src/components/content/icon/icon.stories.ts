@@ -157,7 +157,10 @@ export const Grootten = {
 		<div style="display: flex; gap: 24px; align-items: end;">
 			${FIXED_SIZES.map(size => html`
 				<div style="text-align: center;">
-					<nldd-icon icon="heart" size=${size}></nldd-icon>
+					<nldd-icon
+						icon="heart"
+						size=${size}
+					></nldd-icon>
 					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${size}px</div>
 				</div>
 			`)}
@@ -171,7 +174,11 @@ export const FunctioneleKleuren = {
 		<div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
 			${FUNCTIONAL_COLORS.map(color => html`
 				<div style="text-align: center;">
-					<nldd-icon icon="heart" size="40" color=${color}></nldd-icon>
+					<nldd-icon
+						icon="heart"
+						size="40"
+						color=${color}
+					></nldd-icon>
 					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${color}</div>
 				</div>
 			`)}
@@ -185,7 +192,11 @@ export const Rijkskleuren = {
 		<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 16px;">
 			${RIJKSKLEUREN.map(color => html`
 				<div style="text-align: center;">
-					<nldd-icon icon="heart" size="40" color=${color}></nldd-icon>
+					<nldd-icon
+						icon="heart"
+						size="40"
+						color=${color}
+					></nldd-icon>
 					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${color}</div>
 				</div>
 			`)}
@@ -199,7 +210,11 @@ export const EigenKleur = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center;">
 			${['#ef4444', '#f97316', '#22c55e', '#3b82f6', '#8b5cf6'].map(color => html`
-				<nldd-icon icon="circle-filled" size="40" custom-color=${color}></nldd-icon>
+				<nldd-icon
+					icon="circle-filled"
+					size="40"
+					custom-color=${color}
+				></nldd-icon>
 			`)}
 		</div>
 	`,
@@ -216,15 +231,44 @@ export const EigenKleur = {
 export const MetBox = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-icon icon="terminal" size="40" box color="accent"></nldd-icon>
-			<nldd-icon icon="shield-check-mark" size="40" box color="success"></nldd-icon>
-			<nldd-icon icon="cloud" size="40" box color="critical"></nldd-icon>
-			<nldd-icon icon="puzzle-piece" size="40" box custom-color="#a90061"></nldd-icon>
-			<nldd-icon icon="tulip" size="40" box custom-color="#f5c400"></nldd-icon>
+			<nldd-icon
+				icon="terminal"
+				size="40"
+				box
+				color="accent"
+			></nldd-icon>
+			<nldd-icon
+				icon="shield-check-mark"
+				size="40"
+				box
+				color="success"
+			></nldd-icon>
+			<nldd-icon
+				icon="cloud"
+				size="40"
+				box
+				color="critical"
+			></nldd-icon>
+			<nldd-icon
+				icon="puzzle-piece"
+				size="40"
+				box
+				custom-color="#a90061"
+			></nldd-icon>
+			<nldd-icon
+				icon="tulip"
+				size="40"
+				box
+				custom-color="#f5c400"
+			></nldd-icon>
 		</div>
 		<nldd-spacer size="24"></nldd-spacer>
 		<div style="width: 120px; height: 200px; outline: 1px dashed #bbb;">
-			<nldd-icon icon="heart" box color="accent"></nldd-icon>
+			<nldd-icon
+				icon="heart"
+				box
+				color="accent"
+			></nldd-icon>
 		</div>
 	`,
 	parameters: {
@@ -270,8 +314,16 @@ export const Icoongalerij = {
 			applyFilters(wrapper);
 		};
 		return html`
-			<nldd-container data-gallery gap="16" padding="16">
-				<nldd-container layout="row" gap="12" vertical-alignment="center">
+			<nldd-container
+				data-gallery
+				gap="16"
+				padding="16"
+			>
+				<nldd-container
+					layout="row"
+					gap="12"
+					vertical-alignment="center"
+				>
 					<nldd-search-field
 						width="full"
 						placeholder="Icoon op naam of alias zoeken"
@@ -286,12 +338,25 @@ export const Icoongalerij = {
 						accessible-label="Filter op status"
 						@change=${handleStatusFilter}
 					>
-						<nldd-segmented-control-item value="all" text="Alles"></nldd-segmented-control-item>
-						<nldd-segmented-control-item value="new" text="Nieuw"></nldd-segmented-control-item>
-						<nldd-segmented-control-item value="updated" text="Bijgewerkt"></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="all"
+							text="Alles"
+						></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="new"
+							text="Nieuw"
+						></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="updated"
+							text="Bijgewerkt"
+						></nldd-segmented-control-item>
 					</nldd-segmented-control>
 				</nldd-container>
-				<nldd-collection item-width="180px" max-items="999" gap="16">
+				<nldd-collection
+					item-width="180px"
+					max-items="999"
+					gap="16"
+				>
 					${iconNames.map(iconName => {
 						const iconAliases = Object.entries(aliases)
 							.filter(([, target]) => target === iconName)
@@ -304,11 +369,25 @@ export const Icoongalerij = {
 								? html`<nldd-tag size="sm" text="Bijgewerkt" style="position: absolute; top: 8px; right: 8px;"></nldd-tag>`
 								: '';
 						return html`
-							<nldd-card data-search-tokens=${searchTokens} data-status=${status ?? nothing} style="position: relative;">
+							<nldd-card
+								data-search-tokens=${searchTokens}
+								data-status=${status ?? nothing}
+								style="position: relative;"
+							>
 								${statusTag}
-								<nldd-container padding="16" horizontal-alignment="center" style="text-align: center;">
-									<nldd-icon icon=${iconName} size="32"></nldd-icon>
-									<nldd-spacer size="12" direction="vertical"></nldd-spacer>
+								<nldd-container
+									padding="16"
+									horizontal-alignment="center"
+									style="text-align: center;"
+								>
+									<nldd-icon
+										icon=${iconName}
+										size="32"
+									></nldd-icon>
+									<nldd-spacer
+										size="12"
+										direction="vertical"
+									></nldd-spacer>
 									<div style="font: var(--primitives-font-body-xs-regular-tight);">${iconName}</div>
 									${iconAliases.length > 0 ? html`
 										<div style="font: var(--primitives-font-body-xxs-regular-tight); color: var(--semantics-content-secondary-color);">

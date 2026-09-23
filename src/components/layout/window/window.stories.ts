@@ -127,7 +127,10 @@ const pageContent = html`
 const Template = (args: Record<string, unknown>) => {
 	const [, updateArgs] = useArgs();
 	return html`
-		<nldd-button text="Open venster" @click=${setNextOpen}></nldd-button>
+		<nldd-button
+			text="Open venster"
+			@click=${setNextOpen}
+		></nldd-button>
 		<nldd-window
 			scheme=${args.scheme || nothing}
 			width=${args.width || nothing}
@@ -162,7 +165,10 @@ export const Standaard = {
 
 export const Gepositioneerd = {
 	render: () => html`
-		<nldd-button text="Open rechtsonder" @click=${openNext}></nldd-button>
+		<nldd-button
+			text="Open rechtsonder"
+			@click=${openNext}
+		></nldd-button>
 		<nldd-window
 			right="32px"
 			bottom="32px"
@@ -191,22 +197,38 @@ export const Gepositioneerd = {
 
 export const MetFooter = {
 	render: () => html`
-		<nldd-button text="Open venster met footer" @click=${openNext}></nldd-button>
+		<nldd-button
+			text="Open venster met footer"
+			@click=${openNext}
+		></nldd-button>
 		<nldd-window
 			height="400px"
 			accessible-label="Venster met footer"
 		>
-			<nldd-page sticky-header sticky-footer>
+			<nldd-page
+				sticky-header
+				sticky-footer
+			>
 				<nldd-top-title-bar
 					slot="header"
 					text="Venster met acties"
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				${pageContent}
-				<nldd-container slot="footer" padding-inline="16" padding-bottom="16">
+				<nldd-container
+					slot="footer"
+					padding-inline="16"
+					padding-bottom="16"
+				>
 					<nldd-button-group orientation="horizontal">
-						<nldd-button variant="primary" text="Opslaan"></nldd-button>
-						<nldd-button variant="secondary" text="Annuleer"></nldd-button>
+						<nldd-button
+							variant="primary"
+							text="Opslaan"
+						></nldd-button>
+						<nldd-button
+							variant="secondary"
+							text="Annuleer"
+						></nldd-button>
 					</nldd-button-group>
 				</nldd-container>
 			</nldd-page>

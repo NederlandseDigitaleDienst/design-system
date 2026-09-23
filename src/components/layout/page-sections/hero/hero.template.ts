@@ -20,7 +20,10 @@ export function heroTemplate(component: NLDDHero): TemplateResult {
 				<div class="hero__media"
 					?hidden=${!component._hasMedia}
 				>
-					<slot name="media" @slotchange=${component._onMediaSlotChange}></slot>
+					<slot
+						name="media"
+						@slotchange=${component._onMediaSlotChange}
+					></slot>
 					${mediaImage}
 				</div>
 				<div class="hero__main">

@@ -61,9 +61,21 @@ export type IconColor =
  * @example
  * ```html
  * <nldd-icon icon="heart"></nldd-icon>
- * <nldd-icon icon="trash" size="24" color="critical"></nldd-icon>
- * <nldd-icon icon="leaf" size="32" color="mosgroen"></nldd-icon>
- * <nldd-icon icon="circle-filled" size="16" custom-color="#3b82f6"></nldd-icon>
+ * <nldd-icon
+ * 	icon="trash"
+ * 	size="24"
+ * 	color="critical"
+ * ></nldd-icon>
+ * <nldd-icon
+ * 	icon="leaf"
+ * 	size="32"
+ * 	color="mosgroen"
+ * ></nldd-icon>
+ * <nldd-icon
+ * 	icon="circle-filled"
+ * 	size="16"
+ * 	custom-color="#3b82f6"
+ * ></nldd-icon>
  * ```
  */
 @customElement('nldd-icon')

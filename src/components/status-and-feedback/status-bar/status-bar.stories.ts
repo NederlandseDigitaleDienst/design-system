@@ -98,11 +98,26 @@ export const Standaard = {
 export const AlleVarianten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px;">
-			<nldd-status-bar variant="neutral" text="Conceptversie — nog niet gepubliceerd"></nldd-status-bar>
-			<nldd-status-bar variant="accent" text="U bekijkt een voorbeeldweergave"></nldd-status-bar>
-			<nldd-status-bar variant="success" text="Alle systemen operationeel"></nldd-status-bar>
-			<nldd-status-bar variant="warning" text="Gepland onderhoud op zaterdag 14 juni, 22:00–00:00"></nldd-status-bar>
-			<nldd-status-bar variant="critical" text="Storing: inloggen met DigiD is op dit moment niet beschikbaar"></nldd-status-bar>
+			<nldd-status-bar
+				variant="neutral"
+				text="Conceptversie — nog niet gepubliceerd"
+			></nldd-status-bar>
+			<nldd-status-bar
+				variant="accent"
+				text="U bekijkt een voorbeeldweergave"
+			></nldd-status-bar>
+			<nldd-status-bar
+				variant="success"
+				text="Alle systemen operationeel"
+			></nldd-status-bar>
+			<nldd-status-bar
+				variant="warning"
+				text="Gepland onderhoud op zaterdag 14 juni, 22:00–00:00"
+			></nldd-status-bar>
+			<nldd-status-bar
+				variant="critical"
+				text="Storing: inloggen met DigiD is op dit moment niet beschikbaar"
+			></nldd-status-bar>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -133,7 +148,10 @@ export const AlsKnop = {
 export const LangeTekst = {
 	render: () => html`
 		<div style="max-width: 360px;">
-			<nldd-status-bar variant="warning" text="Gepland onderhoud op zaterdag 14 juni van 22:00 tot 00:00 — sommige onderdelen zijn dan tijdelijk niet bereikbaar"></nldd-status-bar>
+			<nldd-status-bar
+				variant="warning"
+				text="Gepland onderhoud op zaterdag 14 juni van 22:00 tot 00:00 — sommige onderdelen zijn dan tijdelijk niet bereikbaar"
+			></nldd-status-bar>
 		</div>
 	`,
 	parameters: {

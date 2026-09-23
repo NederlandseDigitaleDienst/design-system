@@ -87,7 +87,9 @@ export const template = ({
 		<div class="list">
 			<div class="list__header">
 				${isListbox ? html`
-					<div class="list__search-bar" ?hidden=${!showControls}>
+					<div class="list__search-bar"
+						?hidden=${!showControls}
+					>
 						<div class="list__search-field">
 							<label class="list__search-field-label">
 								<div class="list__search-field-icon"
@@ -126,16 +128,25 @@ export const template = ({
 								</div>
 							` : nothing}
 						</div>
-						<div class="list__search-bar-end" ?hidden=${!listbox.hasSearchBarEnd}>
-							<slot name="search-bar-end" @slotchange=${listbox.onSearchBarEndSlotChange}></slot>
+						<div class="list__search-bar-end"
+							?hidden=${!listbox.hasSearchBarEnd}
+						>
+							<slot
+								name="search-bar-end"
+								@slotchange=${listbox.onSearchBarEndSlotChange}
+							></slot>
 						</div>
 					</div>
 				` : nothing}
-				<div class="list__toolbar" ?hidden=${!hasToolbar || !showControls}>
+				<div class="list__toolbar"
+					?hidden=${!hasToolbar || !showControls}
+				>
 					<slot name="toolbar"></slot>
 				</div>
 			</div>
-			<div class="list__main" ?hidden=${!showMain}>
+			<div class="list__main"
+				?hidden=${!showMain}
+			>
 				<div class="list__items"
 					id=${ifDefined(isListbox ? listbox.listboxId : undefined)}
 					role=${itemsRole}
@@ -147,8 +158,14 @@ export const template = ({
 				<div class="list__empty"
 					?hidden=${!showEmpty && !showNoResults}
 				>
-					<slot name="empty" ?hidden=${!showEmpty}></slot>
-					<slot name="no-results" ?hidden=${!showNoResults}></slot>
+					<slot
+						name="empty"
+						?hidden=${!showEmpty}
+					></slot>
+					<slot
+						name="no-results"
+						?hidden=${!showNoResults}
+					></slot>
 				</div>
 			</div>
 		</div>

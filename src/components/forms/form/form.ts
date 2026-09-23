@@ -72,7 +72,10 @@
  *
  * Auto-wrap mode:
  * ```html
- * <nldd-form name="profile" novalidate>
+ * <nldd-form
+ * 	name="profile"
+ * 	novalidate
+ * >
  *   <nldd-text-field name="email" autocomplete="email"></nldd-text-field>
  *   <nldd-button type="submit" text="Verstuur"></nldd-button>
  * </nldd-form>
@@ -80,7 +83,10 @@
  *
  * User-provided form mode (React/Vue/Angular):
  * ```html
- * <nldd-form name="profile" novalidate>
+ * <nldd-form
+ * 	name="profile"
+ * 	novalidate
+ * >
  *   <form>
  *     <nldd-text-field name="email" autocomplete="email"></nldd-text-field>
  *     <nldd-button type="submit" text="Verstuur"></nldd-button>

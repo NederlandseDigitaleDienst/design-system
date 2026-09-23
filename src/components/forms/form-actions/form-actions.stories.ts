@@ -40,12 +40,23 @@ export default {
 
 const Template = ({ labelAlignment }: Record<string, any>) => html`
 	<nldd-form novalidate>
-		<nldd-form-field label-alignment=${labelAlignment} label="E-mail">
-			<nldd-text-field name="email" autocomplete="email" type="email"></nldd-text-field>
+		<nldd-form-field
+			label-alignment=${labelAlignment}
+			label="E-mail"
+		>
+			<nldd-text-field
+				name="email"
+				autocomplete="email"
+				type="email"
+			></nldd-text-field>
 		</nldd-form-field>
 		<nldd-form-actions label-alignment=${labelAlignment}>
 			<nldd-button-group>
-				<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+				<nldd-button
+					variant="primary"
+					type="submit"
+					text="Opslaan"
+				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>

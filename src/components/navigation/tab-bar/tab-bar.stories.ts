@@ -56,9 +56,19 @@ export default {
 // Every item always has both icon and text for accessible, complete markup.
 // variant on the item forces a specific visual presentation.
 const tabBarItems = html`
-	<nldd-tab-bar-item current text="Home" icon="home"></nldd-tab-bar-item>
-	<nldd-tab-bar-item text="Profiel" icon="profile"></nldd-tab-bar-item>
-	<nldd-tab-bar-item text="Zoeken" icon="search"></nldd-tab-bar-item>
+	<nldd-tab-bar-item
+		current
+		text="Home"
+		icon="home"
+	></nldd-tab-bar-item>
+	<nldd-tab-bar-item
+		text="Profiel"
+		icon="profile"
+	></nldd-tab-bar-item>
+	<nldd-tab-bar-item
+		text="Zoeken"
+		icon="search"
+	></nldd-tab-bar-item>
 `;
 
 const Template = ({ variant, size, centered, disabled, accessibleLabel }: Record<string, any>) => html`
@@ -80,7 +90,10 @@ export const Standaard = {
 export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: () => html`
-	<nldd-tab-bar disabled accessible-label="Uitgeschakeld">
+	<nldd-tab-bar
+		disabled
+		accessible-label="Uitgeschakeld"
+	>
 		${tabBarItems}
 	</nldd-tab-bar>
 `,
@@ -110,13 +123,25 @@ export const Groot = {
 	name: 'Groot (lg)',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 24px; align-items: flex-start;">
-		<nldd-tab-bar size="lg" variant="icon-and-text" accessible-label="Icon en tekst">
+		<nldd-tab-bar
+			size="lg"
+			variant="icon-and-text"
+			accessible-label="Icon en tekst"
+		>
 			${tabBarItems}
 		</nldd-tab-bar>
-		<nldd-tab-bar size="lg" variant="text" accessible-label="Tekst">
+		<nldd-tab-bar
+			size="lg"
+			variant="text"
+			accessible-label="Tekst"
+		>
 			${tabBarItems}
 		</nldd-tab-bar>
-		<nldd-tab-bar size="lg" variant="icon" accessible-label="Icoon">
+		<nldd-tab-bar
+			size="lg"
+			variant="icon"
+			accessible-label="Icoon"
+		>
 			${tabBarItems}
 		</nldd-tab-bar>
 	</div>
@@ -161,7 +186,10 @@ export const Gemengd = {
 
 export const Navigatie = {
 	render: () => html`
-	<nldd-tab-bar navigation accessible-label="Hoofdnavigatie">
+	<nldd-tab-bar
+		navigation
+		accessible-label="Hoofdnavigatie"
+	>
 		<nldd-tab-bar-item
 			current
 			text="Home"

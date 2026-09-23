@@ -166,8 +166,16 @@ export const Types = {
 				{ type: 'organization', name: 'Kamer van Koophandel', initials: 'KvK' },
 			].map(({ type, name, initials }) => html`
 				<div style="display: flex; gap: 12px; align-items: center;">
-					<nldd-avatar type=${type} name=${name} initials=${initials || nothing} size="48"></nldd-avatar>
-					<nldd-avatar type=${type} size="48"></nldd-avatar>
+					<nldd-avatar
+						type=${type}
+						name=${name}
+						initials=${initials || nothing}
+						size="48"
+					></nldd-avatar>
+					<nldd-avatar
+						type=${type}
+						size="48"
+					></nldd-avatar>
 				</div>
 			`)}
 		</div>
@@ -183,7 +191,10 @@ export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			${SIZES.map(size => html`
-				<nldd-avatar name="Bart van de Biezen" size=${size}></nldd-avatar>
+				<nldd-avatar
+					name="Bart van de Biezen"
+					size=${size}
+				></nldd-avatar>
 			`)}
 		</div>
 	`,
@@ -214,11 +225,19 @@ export const KleurInherit = {
 	render: () => html`
 		<div style="display: flex; gap: 20px; align-items: center;">
 			<span style="display: inline-flex; align-items: center; gap: 8px; color: var(--semantics-content-color);">
-				<nldd-avatar name="Bart van de Biezen" color="inherit" size="24"></nldd-avatar>
+				<nldd-avatar
+					name="Bart van de Biezen"
+					color="inherit"
+					size="24"
+				></nldd-avatar>
 				Bart van de Biezen
 			</span>
 			<span style="display: inline-flex; align-items: center; gap: 8px; color: var(--semantics-content-accent-color);">
-				<nldd-avatar name="Anna Ismaili" color="inherit" size="24"></nldd-avatar>
+				<nldd-avatar
+					name="Anna Ismaili"
+					color="inherit"
+					size="24"
+				></nldd-avatar>
 				Anna Ismaili
 			</span>
 		</div>
@@ -238,15 +257,28 @@ export const IcoonUitlijning = {
 		<div style="display: flex; gap: 24px; align-items: center;">
 			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
 				icoon
-				<nldd-icon icon="person" size="24" style="outline: 1px dashed var(--semantics-dividers-color);"></nldd-icon>
+				<nldd-icon
+					icon="person"
+					size="24"
+					style="outline: 1px dashed var(--semantics-dividers-color);"
+				></nldd-icon>
 			</span>
 			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
 				avatar (edge-to-edge)
-				<nldd-avatar name="Bart van de Biezen" size="24" style="outline: 1px dashed var(--semantics-dividers-color);"></nldd-avatar>
+				<nldd-avatar
+					name="Bart van de Biezen"
+					size="24"
+					style="outline: 1px dashed var(--semantics-dividers-color);"
+				></nldd-avatar>
 			</span>
 			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
 				avatar (icon-aligned)
-				<nldd-avatar name="Bart van de Biezen" size="24" icon-aligned style="outline: 1px dashed var(--semantics-dividers-color);"></nldd-avatar>
+				<nldd-avatar
+					name="Bart van de Biezen"
+					size="24"
+					icon-aligned
+					style="outline: 1px dashed var(--semantics-dividers-color);"
+				></nldd-avatar>
 			</span>
 		</div>
 	`,
@@ -260,9 +292,19 @@ export const IcoonUitlijning = {
 export const Initialen = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-avatar name="Bart van de Biezen" size="48"></nldd-avatar>
-			<nldd-avatar name="Petra van der Berg" size="48"></nldd-avatar>
-			<nldd-avatar initials="AI" name="Anna Ismaili" size="48"></nldd-avatar>
+			<nldd-avatar
+				name="Bart van de Biezen"
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				name="Petra van der Berg"
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				initials="AI"
+				name="Anna Ismaili"
+				size="48"
+			></nldd-avatar>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -276,11 +318,31 @@ export const Initialen = {
 export const BredeInitialen = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-avatar initials="II" decorative size="48"></nldd-avatar>
-			<nldd-avatar initials="AB" decorative size="48"></nldd-avatar>
-			<nldd-avatar initials="WW" decorative size="48"></nldd-avatar>
-			<nldd-avatar initials="MMM" decorative size="48"></nldd-avatar>
-			<nldd-avatar initials="WWW" decorative size="48"></nldd-avatar>
+			<nldd-avatar
+				initials="II"
+				decorative
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				initials="AB"
+				decorative
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				initials="WW"
+				decorative
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				initials="MMM"
+				decorative
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				initials="WWW"
+				decorative
+				size="48"
+			></nldd-avatar>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -326,8 +388,14 @@ export const TerugvalIcoon = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<nldd-avatar size="48"></nldd-avatar>
-			<nldd-avatar type="organization" size="48"></nldd-avatar>
-			<nldd-avatar icon="star" size="48"></nldd-avatar>
+			<nldd-avatar
+				type="organization"
+				size="48"
+			></nldd-avatar>
+			<nldd-avatar
+				icon="star"
+				size="48"
+			></nldd-avatar>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -342,9 +410,23 @@ export const TerugvalIcoon = {
 export const LinkOfKnop = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center;">
-			<nldd-avatar name="Bart van de Biezen" size="48" href="#profiel"></nldd-avatar>
-			<nldd-avatar name="Anke Jacobs" size="48" button accessible-label="Profielmenu van Anke Jacobs openen"></nldd-avatar>
-			<nldd-avatar type="organization" name="Rijkswaterstaat" size="48" href="#organisatie"></nldd-avatar>
+			<nldd-avatar
+				name="Bart van de Biezen"
+				size="48"
+				href="#profiel"
+			></nldd-avatar>
+			<nldd-avatar
+				name="Anke Jacobs"
+				size="48"
+				button
+				accessible-label="Profielmenu van Anke Jacobs openen"
+			></nldd-avatar>
+			<nldd-avatar
+				type="organization"
+				name="Rijkswaterstaat"
+				size="48"
+				href="#organisatie"
+			></nldd-avatar>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },

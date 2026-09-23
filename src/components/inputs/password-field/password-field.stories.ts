@@ -220,10 +220,22 @@ export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-password-field placeholder="Neutral"></nldd-password-field>
-		<nldd-password-field .value=${"strong-password"} valid></nldd-password-field>
-		<nldd-password-field .value=${"123"} invalid></nldd-password-field>
-		<nldd-password-field .value=${"disabled"} disabled></nldd-password-field>
-		<nldd-password-field .value=${"unmasked"} .masked=${false}></nldd-password-field>
+		<nldd-password-field
+			.value=${"strong-password"}
+			valid
+		></nldd-password-field>
+		<nldd-password-field
+			.value=${"123"}
+			invalid
+		></nldd-password-field>
+		<nldd-password-field
+			.value=${"disabled"}
+			disabled
+		></nldd-password-field>
+		<nldd-password-field
+			.value=${"unmasked"}
+			.masked=${false}
+		></nldd-password-field>
 	</div>
 `,
 	parameters: { controls: { disable: true } },
@@ -233,7 +245,10 @@ export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-password-field placeholder="Medium (md)"></nldd-password-field>
-		<nldd-password-field placeholder="Small (sm)" size="sm"></nldd-password-field>
+		<nldd-password-field
+			placeholder="Small (sm)"
+			size="sm"
+		></nldd-password-field>
 	</div>
 `,
 	parameters: { controls: { disable: true } },

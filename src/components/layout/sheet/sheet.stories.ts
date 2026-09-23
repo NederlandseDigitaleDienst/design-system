@@ -84,7 +84,10 @@ const pageContent = html`
 const Template = (args: Record<string, any>) => {
 	const [, updateArgs] = useArgs();
 	return html`
-		<nldd-button text="Open sheet" @click=${setNextOpen}></nldd-button>
+		<nldd-button
+			text="Open sheet"
+			@click=${setNextOpen}
+		></nldd-button>
 		<nldd-sheet
 			width=${args.width || nothing}
 			height=${args.height || nothing}
@@ -130,7 +133,10 @@ export const Onder = {
 
 export const MetTerugknop = {
 	render: () => html`
-		<nldd-button text="Open sheet" @click=${openNext}></nldd-button>
+		<nldd-button
+			text="Open sheet"
+			@click=${openNext}
+		></nldd-button>
 		<nldd-sheet placement="right">
 			<nldd-page sticky-header>
 				<nldd-top-title-bar
@@ -152,19 +158,36 @@ export const MetTerugknop = {
 
 export const MetStickyFooter = {
 	render: () => html`
-		<nldd-button text="Open sheet" @click=${openNext}></nldd-button>
+		<nldd-button
+			text="Open sheet"
+			@click=${openNext}
+		></nldd-button>
 		<nldd-sheet placement="right">
-			<nldd-page sticky-header sticky-footer>
+			<nldd-page
+				sticky-header
+				sticky-footer
+			>
 				<nldd-top-title-bar
 					slot="header"
 					text="Sheet met footer"
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				${pageContent}
-				<nldd-container slot="footer" padding="16">
+				<nldd-container
+					slot="footer"
+					padding="16"
+				>
 					<nldd-button-group orientation="vertical">
-						<nldd-button variant="primary" text="Opslaan" width="full"></nldd-button>
-						<nldd-button variant="secondary" text="Annuleer" width="full"></nldd-button>
+						<nldd-button
+							variant="primary"
+							text="Opslaan"
+							width="full"
+						></nldd-button>
+						<nldd-button
+							variant="secondary"
+							text="Annuleer"
+							width="full"
+						></nldd-button>
 					</nldd-button-group>
 				</nldd-container>
 			</nldd-page>

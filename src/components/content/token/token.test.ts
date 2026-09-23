@@ -193,6 +193,22 @@ describe('nldd-token – dismiss', () => {
 		const dismiss = el.shadowRoot!.querySelector('.token__dismiss-action nldd-icon-button')!;
 		expect(dismiss.getAttribute('accessible-label')).toBe('Remove filter');
 	});
+
+	it('takes the words of both labels from the translations', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="dismiss">Spoed</nldd-token>');
+		el.translations = {
+			'components.token.dismiss-action': 'Remove',
+			'components.token.open-token-menu-action': 'Show options for',
+		};
+		await waitForUpdate(el);
+		const dismiss = el.shadowRoot!.querySelector('.token__dismiss-action nldd-icon-button')!;
+		expect(dismiss.getAttribute('accessible-label')).toBe('Remove "Spoed"');
+
+		el.control = 'menu';
+		await waitForUpdate(el);
+		const menu = el.shadowRoot!.querySelector('.token__menu-action nldd-icon-button')!;
+		expect(menu.getAttribute('accessible-label')).toBe('Show options for "Spoed"');
+	});
 });
 
 

@@ -16,9 +16,15 @@ import '../../content/rich-text/rich-text.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-button id="trigger" text="Open"></nldd-button>
+ * <nldd-button
+ * 	id="trigger"
+ * 	text="Open"
+ * ></nldd-button>
  *
- * <nldd-popover anchor="trigger" accessible-label="Voorbeeld">
+ * <nldd-popover
+ * 	anchor="trigger"
+ * 	accessible-label="Voorbeeld"
+ * >
  *   <nldd-container padding="16">
  *     <nldd-rich-text><p>Inhoud</p></nldd-rich-text>
  *   </nldd-container>
@@ -114,7 +120,10 @@ export default {
 const Template = ({ width, smFullHeight, placement, top, right, bottom, left, centered, accessibleLabel, open }: Record<string, any>) => {
 	const [, updateArgs] = useArgs();
 	return html`
-		<nldd-button id="trigger-default" text="Open popover"></nldd-button>
+		<nldd-button
+			id="trigger-default"
+			text="Open popover"
+		></nldd-button>
 		<nldd-popover
 			width=${width || nothing}
 			?sm-full-height=${smFullHeight}
@@ -146,7 +155,10 @@ export const Standaard = {
 /* eslint-disable lit-a11y/no-autofocus -- de popover leest [autofocus] als gedocumenteerde focus-target-API bij openen */
 export const MetFormulier = {
 	render: () => html`
-		<nldd-button id="trigger-form" text="Open form"></nldd-button>
+		<nldd-button
+			id="trigger-form"
+			text="Open form"
+		></nldd-button>
 
 		<nldd-popover
 			anchor="trigger-form"
@@ -162,7 +174,11 @@ export const MetFormulier = {
 					</nldd-form-field>
 					<nldd-form-actions>
 						<nldd-button-group>
-							<nldd-button variant="primary" type="submit" text="Pas toe"></nldd-button>
+							<nldd-button
+								variant="primary"
+								type="submit"
+								text="Pas toe"
+							></nldd-button>
 						</nldd-button-group>
 					</nldd-form-actions>
 				</nldd-form>
@@ -176,23 +192,51 @@ export const MetFormulier = {
 export const Plaatsingen = {
 	render: () => html`
 		<div style="display: flex; gap: 1rem; align-items: center; justify-content: center; min-height: 320px;">
-			<nldd-button id="trigger-placement-bottom-start" text="Bottom start"></nldd-button>
-			<nldd-popover anchor="trigger-placement-bottom-start" placement="bottom-start" accessible-label="Bottom start">
+			<nldd-button
+				id="trigger-placement-bottom-start"
+				text="Bottom start"
+			></nldd-button>
+			<nldd-popover
+				anchor="trigger-placement-bottom-start"
+				placement="bottom-start"
+				accessible-label="Bottom start"
+			>
 				<nldd-container padding="16"><nldd-rich-text><p>placement="bottom-start"</p></nldd-rich-text></nldd-container>
 			</nldd-popover>
 
-			<nldd-button id="trigger-placement-top-start" text="Top start"></nldd-button>
-			<nldd-popover anchor="trigger-placement-top-start" placement="top-start" accessible-label="Top start">
+			<nldd-button
+				id="trigger-placement-top-start"
+				text="Top start"
+			></nldd-button>
+			<nldd-popover
+				anchor="trigger-placement-top-start"
+				placement="top-start"
+				accessible-label="Top start"
+			>
 				<nldd-container padding="16"><nldd-rich-text><p>placement="top-start"</p></nldd-rich-text></nldd-container>
 			</nldd-popover>
 
-			<nldd-button id="trigger-placement-right" text="Right"></nldd-button>
-			<nldd-popover anchor="trigger-placement-right" placement="right" accessible-label="Right">
+			<nldd-button
+				id="trigger-placement-right"
+				text="Right"
+			></nldd-button>
+			<nldd-popover
+				anchor="trigger-placement-right"
+				placement="right"
+				accessible-label="Right"
+			>
 				<nldd-container padding="16"><nldd-rich-text><p>placement="right"</p></nldd-rich-text></nldd-container>
 			</nldd-popover>
 
-			<nldd-button id="trigger-placement-left" text="Left"></nldd-button>
-			<nldd-popover anchor="trigger-placement-left" placement="left" accessible-label="Left">
+			<nldd-button
+				id="trigger-placement-left"
+				text="Left"
+			></nldd-button>
+			<nldd-popover
+				anchor="trigger-placement-left"
+				placement="left"
+				accessible-label="Left"
+			>
 				<nldd-container padding="16"><nldd-rich-text><p>placement="left"</p></nldd-rich-text></nldd-container>
 			</nldd-popover>
 		</div>

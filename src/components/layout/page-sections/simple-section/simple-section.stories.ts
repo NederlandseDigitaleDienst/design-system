@@ -87,7 +87,10 @@ export const Standaard = {
  */
 export const Oppervlak = {
 	render: () => html`
-		<nldd-simple-section background="tinted" scheme="dark">
+		<nldd-simple-section
+			background="tinted"
+			scheme="dark"
+		>
 			<nldd-title
 				slot="header"
 				text="Donkere, getinte sectie"
@@ -106,7 +109,10 @@ export const Oppervlak = {
  */
 export const MinimaleHoogte = {
 	render: () => html`
-		<nldd-simple-section background="tinted" height="320px">
+		<nldd-simple-section
+			background="tinted"
+			height="320px"
+		>
 			<nldd-rich-text>
 				<p>Deze sectie is minimaal 320px hoog, ook met weinig inhoud.</p>
 			</nldd-rich-text>
@@ -150,12 +156,18 @@ export const Uitlijning = {
  */
 export const BlockPadding = {
 	render: () => html`
-		<nldd-simple-section background="base" padding-bottom="0">
+		<nldd-simple-section
+			background="base"
+			padding-bottom="0"
+		>
 			<nldd-rich-text>
 				<p>Deze sectie laat de standaard bovenpadding staan maar verwijdert de onderpadding (<code>padding-bottom="0"</code>), zodat ze strak aansluit op de volgende sectie.</p>
 			</nldd-rich-text>
 		</nldd-simple-section>
-		<nldd-simple-section background="tinted" padding-top="0">
+		<nldd-simple-section
+			background="tinted"
+			padding-top="0"
+		>
 			<nldd-rich-text>
 				<p>De volgende sectie verwijdert juist haar bovenpadding (<code>padding-top="0"</code>).</p>
 			</nldd-rich-text>

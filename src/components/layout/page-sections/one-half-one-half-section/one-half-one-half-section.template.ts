@@ -8,7 +8,10 @@ export function oneHalfOneHalfSectionTemplate(component: NLDDOneHalfOneHalfSecti
 				<header class="one-half-one-half-section__header"
 					hidden
 				>
-					<slot name="header" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="header"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</header>
 				<div class="one-half-one-half-section__columns">
 					<div class="one-half-one-half-section__left-column">
@@ -22,7 +25,10 @@ export function oneHalfOneHalfSectionTemplate(component: NLDDOneHalfOneHalfSecti
 				<footer class="one-half-one-half-section__footer"
 					hidden
 				>
-					<slot name="footer" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="footer"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</footer>
 			</div>
 		</section>

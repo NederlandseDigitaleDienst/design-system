@@ -95,7 +95,12 @@ export const Standaard = ({ size, color, text, supportingText, overline, heading
 			overline=${overline || nothing}
 			heading-level=${headingLevel ?? nothing}
 		>
-			<nldd-button slot="end" variant="secondary" size="sm" text="Actie"></nldd-button>
+			<nldd-button
+				slot="end"
+				variant="secondary"
+				size="sm"
+				text="Actie"
+			></nldd-button>
 		</nldd-title>
 	</div>
 `;
@@ -147,9 +152,21 @@ export const MetActies = {
 			text="Wet op de zorgtoeslag"
 			heading-level="1"
 		>
-			<nldd-button slot="end" variant="secondary" size="sm" text="Bewerken"></nldd-button>
-			<nldd-spacer slot="end" size="8"></nldd-spacer>
-			<nldd-button slot="end" size="sm" text="Opslaan"></nldd-button>
+			<nldd-button
+				slot="end"
+				variant="secondary"
+				size="sm"
+				text="Bewerken"
+			></nldd-button>
+			<nldd-spacer
+				slot="end"
+				size="8"
+			></nldd-spacer>
+			<nldd-button
+				slot="end"
+				size="sm"
+				text="Opslaan"
+			></nldd-button>
 		</nldd-title>
 	</div>
 `,

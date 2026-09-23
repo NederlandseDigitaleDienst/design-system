@@ -76,7 +76,10 @@ nldd-sheet                     open, placement, width
 
 ```html
 <!-- Vue -->
-<nldd-sheet :open="isOpen" @close="isOpen = false">
+<nldd-sheet
+  :open="isOpen"
+  @close="isOpen = false"
+>
   <nldd-page><!-- zoals hierboven --></nldd-page>
 </nldd-sheet>
 ```

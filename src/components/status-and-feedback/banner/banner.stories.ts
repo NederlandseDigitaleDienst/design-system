@@ -105,11 +105,31 @@ export const Standaard = {
 export const AlleVarianten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px;">
-			<nldd-banner variant="neutral" text="Standaard mededeling" supporting-text="Met wat extra context."></nldd-banner>
-			<nldd-banner variant="accent" text="Uitgelicht" supporting-text="Een geaccentueerde mededeling die de aandacht trekt."></nldd-banner>
-			<nldd-banner variant="success" text="Opgeslagen" supporting-text="Je wijzigingen zijn bewaard."></nldd-banner>
-			<nldd-banner variant="warning" text="Let op" supporting-text="Deze actie heeft gevolgen voor andere gebruikers."></nldd-banner>
-			<nldd-banner variant="critical" text="Er ging iets mis" supporting-text="Controleer de gemarkeerde velden hieronder."></nldd-banner>
+			<nldd-banner
+				variant="neutral"
+				text="Standaard mededeling"
+				supporting-text="Met wat extra context."
+			></nldd-banner>
+			<nldd-banner
+				variant="accent"
+				text="Uitgelicht"
+				supporting-text="Een geaccentueerde mededeling die de aandacht trekt."
+			></nldd-banner>
+			<nldd-banner
+				variant="success"
+				text="Opgeslagen"
+				supporting-text="Je wijzigingen zijn bewaard."
+			></nldd-banner>
+			<nldd-banner
+				variant="warning"
+				text="Let op"
+				supporting-text="Deze actie heeft gevolgen voor andere gebruikers."
+			></nldd-banner>
+			<nldd-banner
+				variant="critical"
+				text="Er ging iets mis"
+				supporting-text="Controleer de gemarkeerde velden hieronder."
+			></nldd-banner>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -117,9 +137,21 @@ export const AlleVarianten = {
 
 export const MetActies = {
 	render: () => html`
-		<nldd-banner variant="neutral" text="Nieuwe versie beschikbaar" supporting-text="Ververs de pagina om de laatste versie van de applicatie te laden.">
-			<nldd-button slot="actions" variant="accent-filled" text="Ververs nu"></nldd-button>
-			<nldd-button slot="actions" variant="neutral-tinted" text="Later"></nldd-button>
+		<nldd-banner
+			variant="neutral"
+			text="Nieuwe versie beschikbaar"
+			supporting-text="Ververs de pagina om de laatste versie van de applicatie te laden."
+		>
+			<nldd-button
+				slot="actions"
+				variant="accent-filled"
+				text="Ververs nu"
+			></nldd-button>
+			<nldd-button
+				slot="actions"
+				variant="neutral-tinted"
+				text="Later"
+			></nldd-button>
 		</nldd-banner>
 	`,
 	parameters: { controls: { disable: true } },
@@ -127,7 +159,11 @@ export const MetActies = {
 
 export const MetRichContent = {
 	render: () => html`
-		<nldd-banner variant="warning" text="Onderhoud gepland" heading-level="2">
+		<nldd-banner
+			variant="warning"
+			text="Onderhoud gepland"
+			heading-level="2"
+		>
 			<nldd-rich-text spacing="flat">
 				<p>Op zondag 28 mei wordt het systeem onderhouden tussen 02:00 en 04:00. Tijdens deze periode:</p>
 				<ul>
@@ -136,7 +172,11 @@ export const MetRichContent = {
 					<li>Zijn lopende meldingen tijdelijk niet zichtbaar</li>
 				</ul>
 			</nldd-rich-text>
-			<nldd-button slot="actions" variant="neutral-tinted" text="Meer informatie"></nldd-button>
+			<nldd-button
+				slot="actions"
+				variant="neutral-tinted"
+				text="Meer informatie"
+			></nldd-button>
 		</nldd-banner>
 	`,
 	parameters: { controls: { disable: true } },
@@ -144,7 +184,12 @@ export const MetRichContent = {
 
 export const Sluitbaar = {
 	render: () => html`
-		<nldd-banner variant="neutral" text="Nieuw in deze versie" supporting-text="Je kunt nu in je dossier filteren op type." dismissible></nldd-banner>
+		<nldd-banner
+			variant="neutral"
+			text="Nieuw in deze versie"
+			supporting-text="Je kunt nu in je dossier filteren op type."
+			dismissible
+		></nldd-banner>
 	`,
 	parameters: {
 		controls: { disable: true },

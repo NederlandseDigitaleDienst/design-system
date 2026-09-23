@@ -87,16 +87,28 @@ export const MetIconButton = {
 export const Posities = {
 	render: () => html`
 		<div style="display: flex; gap: 2rem; justify-content: center; padding: 4rem;">
-			<nldd-tooltip text="Boven" placement="top">
+			<nldd-tooltip
+				text="Boven"
+				placement="top"
+			>
 				<nldd-button text="Top"></nldd-button>
 			</nldd-tooltip>
-			<nldd-tooltip text="Onder" placement="bottom">
+			<nldd-tooltip
+				text="Onder"
+				placement="bottom"
+			>
 				<nldd-button text="Bottom"></nldd-button>
 			</nldd-tooltip>
-			<nldd-tooltip text="Links" placement="left">
+			<nldd-tooltip
+				text="Links"
+				placement="left"
+			>
 				<nldd-button text="Left"></nldd-button>
 			</nldd-tooltip>
-			<nldd-tooltip text="Rechts" placement="right">
+			<nldd-tooltip
+				text="Rechts"
+				placement="right"
+			>
 				<nldd-button text="Right"></nldd-button>
 			</nldd-tooltip>
 		</div>

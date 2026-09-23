@@ -13,7 +13,10 @@ import { ICONS } from './../icon/icon.js';
  * ## Gebruik
  * ```html
  * <nldd-tag text="Concept"></nldd-tag>
- * <nldd-tag color="success" text="Gepubliceerd"></nldd-tag>
+ * <nldd-tag
+ * 	color="success"
+ * 	text="Gepubliceerd"
+ * ></nldd-tag>
  * ```
  */
 export default {
@@ -111,29 +114,98 @@ export const Standaard = {
 export const Kleuren = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
-			<nldd-tag color="neutral" text="neutral"></nldd-tag>
-			<nldd-tag color="accent" text="accent"></nldd-tag>
-			<nldd-tag color="success" text="success"></nldd-tag>
-			<nldd-tag color="warning" text="warning"></nldd-tag>
-			<nldd-tag color="critical" text="critical"></nldd-tag>
-			<nldd-tag color="lintblauw" text="lintblauw"></nldd-tag>
-			<nldd-tag color="donkerblauw" text="donkerblauw"></nldd-tag>
-			<nldd-tag color="hemelblauw" text="hemelblauw"></nldd-tag>
-			<nldd-tag color="lichtblauw" text="lichtblauw"></nldd-tag>
-			<nldd-tag color="paars" text="paars"></nldd-tag>
-			<nldd-tag color="violet" text="violet"></nldd-tag>
-			<nldd-tag color="robijnrood" text="robijnrood"></nldd-tag>
-			<nldd-tag color="roze" text="roze"></nldd-tag>
-			<nldd-tag color="rood" text="rood"></nldd-tag>
-			<nldd-tag color="oranje" text="oranje"></nldd-tag>
-			<nldd-tag color="donkergeel" text="donkergeel"></nldd-tag>
-			<nldd-tag color="geel" text="geel"></nldd-tag>
-			<nldd-tag color="donkerbruin" text="donkerbruin"></nldd-tag>
-			<nldd-tag color="bruin" text="bruin"></nldd-tag>
-			<nldd-tag color="donkergroen" text="donkergroen"></nldd-tag>
-			<nldd-tag color="groen" text="groen"></nldd-tag>
-			<nldd-tag color="mosgroen" text="mosgroen"></nldd-tag>
-			<nldd-tag color="mintgroen" text="mintgroen"></nldd-tag>
+			<nldd-tag
+				color="neutral"
+				text="neutral"
+			></nldd-tag>
+			<nldd-tag
+				color="accent"
+				text="accent"
+			></nldd-tag>
+			<nldd-tag
+				color="success"
+				text="success"
+			></nldd-tag>
+			<nldd-tag
+				color="warning"
+				text="warning"
+			></nldd-tag>
+			<nldd-tag
+				color="critical"
+				text="critical"
+			></nldd-tag>
+			<nldd-tag
+				color="lintblauw"
+				text="lintblauw"
+			></nldd-tag>
+			<nldd-tag
+				color="donkerblauw"
+				text="donkerblauw"
+			></nldd-tag>
+			<nldd-tag
+				color="hemelblauw"
+				text="hemelblauw"
+			></nldd-tag>
+			<nldd-tag
+				color="lichtblauw"
+				text="lichtblauw"
+			></nldd-tag>
+			<nldd-tag
+				color="paars"
+				text="paars"
+			></nldd-tag>
+			<nldd-tag
+				color="violet"
+				text="violet"
+			></nldd-tag>
+			<nldd-tag
+				color="robijnrood"
+				text="robijnrood"
+			></nldd-tag>
+			<nldd-tag
+				color="roze"
+				text="roze"
+			></nldd-tag>
+			<nldd-tag
+				color="rood"
+				text="rood"
+			></nldd-tag>
+			<nldd-tag
+				color="oranje"
+				text="oranje"
+			></nldd-tag>
+			<nldd-tag
+				color="donkergeel"
+				text="donkergeel"
+			></nldd-tag>
+			<nldd-tag
+				color="geel"
+				text="geel"
+			></nldd-tag>
+			<nldd-tag
+				color="donkerbruin"
+				text="donkerbruin"
+			></nldd-tag>
+			<nldd-tag
+				color="bruin"
+				text="bruin"
+			></nldd-tag>
+			<nldd-tag
+				color="donkergroen"
+				text="donkergroen"
+			></nldd-tag>
+			<nldd-tag
+				color="groen"
+				text="groen"
+			></nldd-tag>
+			<nldd-tag
+				color="mosgroen"
+				text="mosgroen"
+			></nldd-tag>
+			<nldd-tag
+				color="mintgroen"
+				text="mintgroen"
+			></nldd-tag>
 		</div>
 	`,
 	parameters: {
@@ -149,8 +221,14 @@ export const Kleuren = {
 export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
-			<nldd-tag size="md" text="Medium"></nldd-tag>
-			<nldd-tag size="sm" text="Small"></nldd-tag>
+			<nldd-tag
+				size="md"
+				text="Medium"
+			></nldd-tag>
+			<nldd-tag
+				size="sm"
+				text="Small"
+			></nldd-tag>
 		</div>
 	`,
 	parameters: {
@@ -161,9 +239,21 @@ export const Grootten = {
 export const MetIcoon = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
-			<nldd-tag color="success" text="Goedgekeurd" icon="check-mark"></nldd-tag>
-			<nldd-tag color="warning" text="Let op" icon="alert"></nldd-tag>
-			<nldd-tag color="critical" text="Afgewezen" icon="dismiss-circle"></nldd-tag>
+			<nldd-tag
+				color="success"
+				text="Goedgekeurd"
+				icon="check-mark"
+			></nldd-tag>
+			<nldd-tag
+				color="warning"
+				text="Let op"
+				icon="alert"
+			></nldd-tag>
+			<nldd-tag
+				color="critical"
+				text="Afgewezen"
+				icon="dismiss-circle"
+			></nldd-tag>
 		</div>
 	`,
 	parameters: {

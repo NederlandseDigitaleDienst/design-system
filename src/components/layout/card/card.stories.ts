@@ -81,7 +81,11 @@ export const Standaard = (args: Record<string, any>) => html`
 		background=${args.background || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
 	>
-		<nldd-container slot="header" padding-top="16" padding-inline="16">
+		<nldd-container
+			slot="header"
+			padding-top="16"
+			padding-inline="16"
+		>
 			<nldd-title
 				size="4"
 				text="Kaarttitel"
@@ -94,10 +98,20 @@ export const Standaard = (args: Record<string, any>) => html`
 				visueel te groeperen met een duidelijke structuur van header, body en footer.</p>
 			</nldd-rich-text>
 		</nldd-container>
-		<nldd-container slot="footer" padding-inline="16" padding-bottom="16">
+		<nldd-container
+			slot="footer"
+			padding-inline="16"
+			padding-bottom="16"
+		>
 			<nldd-button-group orientation="horizontal">
-				<nldd-button variant="primary" text="Bevestig"></nldd-button>
-				<nldd-button variant="secondary" text="Annuleer"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Bevestig"
+				></nldd-button>
+				<nldd-button
+					variant="secondary"
+					text="Annuleer"
+				></nldd-button>
 			</nldd-button-group>
 		</nldd-container>
 	</nldd-card>
@@ -116,7 +130,11 @@ export const AlleenBody = () => html`
 
 export const MetHeader = () => html`
 	<nldd-card>
-		<nldd-container slot="header" padding-top="16" padding-inline="16">
+		<nldd-container
+			slot="header"
+			padding-top="16"
+			padding-inline="16"
+		>
 			<nldd-title
 				size="4"
 				text="Alleen header en body"
@@ -133,7 +151,11 @@ export const MetHeader = () => html`
 
 export const VasteHoogte = () => html`
 	<nldd-card style="height: 400px;">
-		<nldd-container slot="header" padding-top="16" padding-inline="16">
+		<nldd-container
+			slot="header"
+			padding-top="16"
+			padding-inline="16"
+		>
 			<nldd-title
 				size="4"
 				text="Vaste hoogte"
@@ -146,9 +168,16 @@ export const VasteHoogte = () => html`
 				dankzij flex-grow op de main sectie.</p>
 			</nldd-rich-text>
 		</nldd-container>
-		<nldd-container slot="footer" padding-inline="16" padding-bottom="16">
+		<nldd-container
+			slot="footer"
+			padding-inline="16"
+			padding-bottom="16"
+		>
 			<nldd-button-group orientation="horizontal">
-				<nldd-button variant="primary" text="Actie"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Actie"
+				></nldd-button>
 			</nldd-button-group>
 		</nldd-container>
 	</nldd-card>
@@ -185,7 +214,11 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 		accessible-label=${args.accessibleLabel || nothing}
 		style="max-width: 360px;"
 	>
-		<nldd-container slot="header" padding-top="16" padding-inline="16">
+		<nldd-container
+			slot="header"
+			padding-top="16"
+			padding-inline="16"
+		>
 			<nldd-title
 				size="4"
 				text="Dossier 2024-001"
@@ -197,7 +230,11 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 				<p>De hele kaart is een link. Klik waar dan ook om het dossier te openen.</p>
 			</nldd-rich-text>
 		</nldd-container>
-		<nldd-container slot="footer" padding-inline="16" padding-bottom="16">
+		<nldd-container
+			slot="footer"
+			padding-inline="16"
+			padding-bottom="16"
+		>
 			<nldd-button-group orientation="horizontal">
 				<nldd-button
 					variant="secondary"
@@ -225,7 +262,11 @@ export const KaartAlsKnop = () => html`
 		style="max-width: 360px;"
 		@click=${() => window.alert('Kaart geactiveerd')}
 	>
-		<nldd-container slot="header" padding-top="16" padding-inline="16">
+		<nldd-container
+			slot="header"
+			padding-top="16"
+			padding-inline="16"
+		>
 			<nldd-title
 				size="4"
 				text="Dossier 2024-001"

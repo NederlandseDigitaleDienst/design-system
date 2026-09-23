@@ -118,7 +118,10 @@ export const Standaard = {
 };
 
 export const MetSupportingLabel = () => html`
-	<nldd-form-field label="Geboortedatum" supporting-label="DD-MM-JJJJ">
+	<nldd-form-field
+		label="Geboortedatum"
+		supporting-label="DD-MM-JJJJ"
+	>
 		<nldd-text-field></nldd-text-field>
 	</nldd-form-field>
 `;
@@ -133,7 +136,11 @@ export const MetHulptekst = () => html`
 `;
 
 export const Optioneel = () => html`
-	<nldd-form-field label="Telefoonnummer" optional supporting-label="Alleen gebruikt voor tweestapsverificatie.">
+	<nldd-form-field
+		label="Telefoonnummer"
+		optional
+		supporting-label="Alleen gebruikt voor tweestapsverificatie."
+	>
 		<nldd-text-field type="tel"></nldd-text-field>
 	</nldd-form-field>
 `;
@@ -161,13 +168,21 @@ export const MeerdereFouten = () => html`
 `;
 
 export const LabelRechts = () => html`
-	<nldd-form-field label="Volledige naam" label-alignment="right" supporting-label="Zoals vermeld in uw paspoort.">
+	<nldd-form-field
+		label="Volledige naam"
+		label-alignment="right"
+		supporting-label="Zoals vermeld in uw paspoort."
+	>
 		<nldd-text-field></nldd-text-field>
 	</nldd-form-field>
 `;
 
 export const LabelLinks = () => html`
-	<nldd-form-field label="Volledige naam" label-alignment="left" supporting-label="Zoals vermeld in uw paspoort.">
+	<nldd-form-field
+		label="Volledige naam"
+		label-alignment="left"
+		supporting-label="Zoals vermeld in uw paspoort."
+	>
 		<nldd-text-field></nldd-text-field>
 	</nldd-form-field>
 `;
@@ -177,10 +192,20 @@ export const VolledigFormulierLabelBoven = () => html`
 		<nldd-form-field label="Volledige naam">
 			<nldd-text-field input-id="top-volledige-naam"></nldd-text-field>
 		</nldd-form-field>
-		<nldd-form-field label="E-mailadres" supporting-label="We sturen een bevestigingsmail.">
-			<nldd-text-field type="email" input-id="top-email"></nldd-text-field>
+		<nldd-form-field
+			label="E-mailadres"
+			supporting-label="We sturen een bevestigingsmail."
+		>
+			<nldd-text-field
+				type="email"
+				input-id="top-email"
+			></nldd-text-field>
 		</nldd-form-field>
-		<nldd-form-field label="Telefoonnummer" optional supporting-label="Alleen gebruikt voor tweestapsverificatie.">
+		<nldd-form-field
+			label="Telefoonnummer"
+			optional
+			supporting-label="Alleen gebruikt voor tweestapsverificatie."
+		>
 			<nldd-text-field
 				type="tel"
 				input-id="top-telefoon"
@@ -190,12 +215,20 @@ export const VolledigFormulierLabelBoven = () => html`
 				<nldd-validation-item id="top-telefoon-formaat" match="^[0-9 +-]+$">Alleen cijfers, spaties, + en -</nldd-validation-item>
 			</nldd-validation-list>
 		</nldd-form-field>
-		<nldd-form-field label="Opmerkingen" optional supporting-label="Eventuele aanvullende opmerkingen.">
+		<nldd-form-field
+			label="Opmerkingen"
+			optional
+			supporting-label="Eventuele aanvullende opmerkingen."
+		>
 			<nldd-text-field input-id="top-opmerkingen"></nldd-text-field>
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button-group>
-				<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+				<nldd-button
+					variant="primary"
+					type="submit"
+					text="Opslaan"
+				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>
@@ -203,14 +236,29 @@ export const VolledigFormulierLabelBoven = () => html`
 
 export const VolledigFormulierLabelRechts = () => html`
 	<div style="container-type: inline-size;">
-		<nldd-form label-alignment="right" novalidate>
-			<nldd-form-field label="Volledige naam" supporting-label="Zoals vermeld in uw paspoort.">
+		<nldd-form
+			label-alignment="right"
+			novalidate
+		>
+			<nldd-form-field
+				label="Volledige naam"
+				supporting-label="Zoals vermeld in uw paspoort."
+			>
 				<nldd-text-field input-id="right-full-name"></nldd-text-field>
 			</nldd-form-field>
-			<nldd-form-field label="E-mailadres" supporting-label="We sturen een bevestigingsmail.">
-				<nldd-text-field type="email" input-id="rechts-email"></nldd-text-field>
+			<nldd-form-field
+				label="E-mailadres"
+				supporting-label="We sturen een bevestigingsmail."
+			>
+				<nldd-text-field
+					type="email"
+					input-id="rechts-email"
+				></nldd-text-field>
 			</nldd-form-field>
-			<nldd-form-field label="Telefoonnummer" optional>
+			<nldd-form-field
+				label="Telefoonnummer"
+				optional
+			>
 				<nldd-text-field
 					type="tel"
 					input-id="right-phone"
@@ -220,12 +268,20 @@ export const VolledigFormulierLabelRechts = () => html`
 					<nldd-validation-item id="rechts-telefoon-formaat" match="^[0-9 +-]+$">Alleen cijfers, spaties, + en -</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
-			<nldd-form-field label="Opmerkingen" optional supporting-label="Eventuele aanvullende opmerkingen.">
+			<nldd-form-field
+				label="Opmerkingen"
+				optional
+				supporting-label="Eventuele aanvullende opmerkingen."
+			>
 				<nldd-text-field input-id="right-comments"></nldd-text-field>
 			</nldd-form-field>
 			<nldd-form-actions>
 				<nldd-button-group>
-					<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+					<nldd-button
+						variant="primary"
+						type="submit"
+						text="Opslaan"
+					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>
 		</nldd-form>

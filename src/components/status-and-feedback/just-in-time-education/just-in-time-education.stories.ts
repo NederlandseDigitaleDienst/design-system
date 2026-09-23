@@ -90,7 +90,10 @@ const Template = ({
 			?dismissable=${dismissable}
 			?active=${active}
 		>
-			<nldd-search-field placeholder="Zoeken" width="320px"></nldd-search-field>
+			<nldd-search-field
+				placeholder="Zoeken"
+				width="320px"
+			></nldd-search-field>
 		</nldd-just-in-time-education>
 	</div>
 `;

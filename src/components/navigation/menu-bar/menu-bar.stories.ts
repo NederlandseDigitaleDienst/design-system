@@ -30,7 +30,10 @@ const Template = ({
 			overflow-text=${(overflowText as string) || nothing}
 			?compact=${compact}
 		>
-			<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Home"
+				current
+			></nldd-menu-bar-item>
 			<nldd-menu-bar-item text="Aanvragen & activeren"></nldd-menu-bar-item>
 			<nldd-menu-bar-item text="Manieren van inloggen"></nldd-menu-bar-item>
 			<nldd-menu-bar-item text="Veiligheid"></nldd-menu-bar-item>
@@ -47,7 +50,10 @@ export const WeinigItems = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-menu-bar>
-				<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+				<nldd-menu-bar-item
+					text="Home"
+					current
+				></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Contact"></nldd-menu-bar-item>
 			</nldd-menu-bar>
 		</div>
@@ -59,7 +65,10 @@ export const VeelItems = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-menu-bar>
-				<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+				<nldd-menu-bar-item
+					text="Home"
+					current
+				></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Onderwerpen"></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Documenten en publicaties"></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Ministeries"></nldd-menu-bar-item>
@@ -77,7 +86,10 @@ export const SmalleContainer = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-menu-bar>
-				<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+				<nldd-menu-bar-item
+					text="Home"
+					current
+				></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Aanvragen & activeren"></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Manieren van inloggen"></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Veiligheid"></nldd-menu-bar-item>
@@ -92,15 +104,38 @@ export const MetExpandableItems = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-menu-bar>
-				<nldd-menu-bar-item text="NL" expandable content-priority="icon">
+				<nldd-menu-bar-item
+					text="NL"
+					expandable
+					content-priority="icon"
+				>
 					<nldd-menu>
-						<nldd-menu-item text="Nederlands" type="radio" selected></nldd-menu-item>
-						<nldd-menu-item text="English" type="radio"></nldd-menu-item>
-						<nldd-menu-item text="Papiamentu" type="radio"></nldd-menu-item>
+						<nldd-menu-item
+							text="Nederlands"
+							type="radio"
+							selected
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="English"
+							type="radio"
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="Papiamentu"
+							type="radio"
+						></nldd-menu-item>
 					</nldd-menu>
 				</nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Account" icon="person" expandable content-priority="text">
+				<nldd-menu-bar-item
+					text="Zoeken"
+					icon="magnifier"
+					content-priority="icon"
+				></nldd-menu-bar-item>
+				<nldd-menu-bar-item
+					text="Account"
+					icon="person"
+					expandable
+					content-priority="text"
+				>
 					<nldd-menu>
 						<nldd-menu-item text="Mijn profiel"></nldd-menu-item>
 						<nldd-menu-divider></nldd-menu-divider>
@@ -117,14 +152,34 @@ export const Compact = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-menu-bar compact>
-				<nldd-menu-bar-item text="NL" expandable content-priority="icon">
+				<nldd-menu-bar-item
+					text="NL"
+					expandable
+					content-priority="icon"
+				>
 					<nldd-menu>
-						<nldd-menu-item text="Nederlands" type="radio" selected></nldd-menu-item>
-						<nldd-menu-item text="English" type="radio"></nldd-menu-item>
+						<nldd-menu-item
+							text="Nederlands"
+							type="radio"
+							selected
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="English"
+							type="radio"
+						></nldd-menu-item>
 					</nldd-menu>
 				</nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Mijn DigID" icon="person" expandable content-priority="text">
+				<nldd-menu-bar-item
+					text="Zoeken"
+					icon="magnifier"
+					content-priority="icon"
+				></nldd-menu-bar-item>
+				<nldd-menu-bar-item
+					text="Mijn DigID"
+					icon="person"
+					expandable
+					content-priority="text"
+				>
 					<nldd-menu>
 						<nldd-menu-item text="Mijn gegevens"></nldd-menu-item>
 						<nldd-menu-divider></nldd-menu-divider>

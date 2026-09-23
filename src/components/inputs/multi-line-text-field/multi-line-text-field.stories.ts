@@ -206,10 +206,22 @@ export const AlleToestanden = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
 			<nldd-multi-line-text-field placeholder="Neutral"></nldd-multi-line-text-field>
-			<nldd-multi-line-text-field .value=${'Geldige inhoud op meerdere\nregels'} valid></nldd-multi-line-text-field>
-			<nldd-multi-line-text-field .value=${'Ongeldige inhoud op meerdere\nregels'} invalid></nldd-multi-line-text-field>
-			<nldd-multi-line-text-field .value=${'Disabled'} disabled></nldd-multi-line-text-field>
-			<nldd-multi-line-text-field .value=${'Readonly inhoud die niet bewerkt mag worden.'} readonly></nldd-multi-line-text-field>
+			<nldd-multi-line-text-field
+				.value=${'Geldige inhoud op meerdere\nregels'}
+				valid
+			></nldd-multi-line-text-field>
+			<nldd-multi-line-text-field
+				.value=${'Ongeldige inhoud op meerdere\nregels'}
+				invalid
+			></nldd-multi-line-text-field>
+			<nldd-multi-line-text-field
+				.value=${'Disabled'}
+				disabled
+			></nldd-multi-line-text-field>
+			<nldd-multi-line-text-field
+				.value=${'Readonly inhoud die niet bewerkt mag worden.'}
+				readonly
+			></nldd-multi-line-text-field>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -219,7 +231,10 @@ export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
 			<nldd-multi-line-text-field placeholder="Medium (md)"></nldd-multi-line-text-field>
-			<nldd-multi-line-text-field placeholder="Small (sm)" size="sm"></nldd-multi-line-text-field>
+			<nldd-multi-line-text-field
+				placeholder="Small (sm)"
+				size="sm"
+			></nldd-multi-line-text-field>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -255,7 +270,10 @@ export const Meegroeiend = {
 
 export const InteractiefVoorbeeld = {
 	render: () => html`
-		<nldd-form label-alignment="right" novalidate>
+		<nldd-form
+			label-alignment="right"
+			novalidate
+		>
 			<nldd-form-field label="Toelichting">
 				<nldd-multi-line-text-field
 					name="notes"
@@ -275,7 +293,11 @@ export const InteractiefVoorbeeld = {
 			</nldd-form-field>
 			<nldd-form-actions>
 				<nldd-button-group>
-					<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+					<nldd-button
+						variant="primary"
+						type="submit"
+						text="Opslaan"
+					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>
 		</nldd-form>

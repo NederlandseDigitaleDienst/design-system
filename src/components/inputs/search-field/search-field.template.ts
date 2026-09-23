@@ -14,7 +14,9 @@ export function searchFieldTemplate(component: NLDDSearchField): TemplateResult 
 	return html`
 		<div class="search-field">
 			<label class="search-field__label">
-				<div class="search-field__search-icon" aria-hidden="true">
+				<div class="search-field__search-icon"
+					aria-hidden="true"
+				>
 					<nldd-icon icon="search"></nldd-icon>
 				</div>
 				<input class="search-field__input"

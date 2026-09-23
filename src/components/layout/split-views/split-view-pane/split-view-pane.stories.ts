@@ -18,7 +18,10 @@ import '../../../navigation/top-title-bar/top-title-bar.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-split-view-pane slot="main" has-content>
+ * <nldd-split-view-pane
+ * 	slot="main"
+ * 	has-content
+ * >
  *   <nldd-page sticky-header>
  *     <nldd-top-title-bar slot="header" text="Inhoud" back-text="Terug"></nldd-top-title-bar>
  *     ...

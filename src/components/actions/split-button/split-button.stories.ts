@@ -79,10 +79,19 @@ export default {
 
 const menu = html`
 	<nldd-menu>
-		<nldd-menu-item text="Opslaan als…" @select=${action('select: save-as')}></nldd-menu-item>
-		<nldd-menu-item text="Opslaan en sluiten" @select=${action('select: save-and-close')}></nldd-menu-item>
+		<nldd-menu-item
+			text="Opslaan als…"
+			@select=${action('select: save-as')}
+		></nldd-menu-item>
+		<nldd-menu-item
+			text="Opslaan en sluiten"
+			@select=${action('select: save-and-close')}
+		></nldd-menu-item>
 		<nldd-menu-divider></nldd-menu-divider>
-		<nldd-menu-item text="Verwijderen" @select=${action('select: delete')}></nldd-menu-item>
+		<nldd-menu-item
+			text="Verwijderen"
+			@select=${action('select: delete')}
+		></nldd-menu-item>
 	</nldd-menu>
 `;
 
@@ -186,8 +195,14 @@ export const MetPopover = {
 			@action-click=${action('action-click')}
 			@menu-click=${action('menu-click')}
 		>
-			<nldd-popover accessible-label="Deelopties" width="280px">
-				<nldd-container padding="16" gap="8">
+			<nldd-popover
+				accessible-label="Deelopties"
+				width="280px"
+			>
+				<nldd-container
+					padding="16"
+					gap="8"
+				>
 					<nldd-title
 						size="6"
 						text="Deel deze pagina"
@@ -196,7 +211,10 @@ export const MetPopover = {
 					<nldd-rich-text>
 						<p>Kies hoe je deze pagina wilt delen met anderen.</p>
 					</nldd-rich-text>
-					<nldd-button variant="primary" text="Kopieer link"></nldd-button>
+					<nldd-button
+						variant="primary"
+						text="Kopieer link"
+					></nldd-button>
 				</nldd-container>
 			</nldd-popover>
 		</nldd-split-button>

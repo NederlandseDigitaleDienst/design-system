@@ -104,7 +104,10 @@ export const Standaard = {
 					?current=${args.current}
 					?disabled=${args.disabled}
 				>
-					<nldd-text-cell text="Segment" supporting-text="Het segment draagt zijn eigen inline padding, dus de vulling houdt vanzelf ruimte om de tekst"></nldd-text-cell>
+					<nldd-text-cell
+						text="Segment"
+						supporting-text="Het segment draagt zijn eigen inline padding, dus de vulling houdt vanzelf ruimte om de tekst"
+					></nldd-text-cell>
 				</nldd-list-item-segment>
 			</nldd-list-item>
 		</nldd-list>
@@ -132,20 +135,40 @@ export const Boomrij = {
 		const LEAF_CHEVRON_ZONE = '44';
 		const INDENT_STEP = '16';
 		const cells = (label: string, count: string) => html`
-			<nldd-list-item-segment checkbox width="full" accessible-label=${label}>
+			<nldd-list-item-segment
+				checkbox
+				width="full"
+				accessible-label=${label}
+			>
 				<nldd-cell>
-					<nldd-checkbox aria-hidden="true" tabindex="-1"></nldd-checkbox>
+					<nldd-checkbox
+						aria-hidden="true"
+						tabindex="-1"
+					></nldd-checkbox>
 				</nldd-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text=${label}></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
-				<nldd-text-cell width="fit-content" horizontal-alignment="right" color="secondary" text=${count}></nldd-text-cell>
+				<nldd-text-cell
+					width="fit-content"
+					horizontal-alignment="right"
+					color="secondary"
+					text=${count}
+				></nldd-text-cell>
 			</nldd-list-item-segment>
 		`;
 		const branch = (label: string, count: string, level: number, expanded: boolean, children: unknown) => html`
-			<nldd-list-item slot=${level ? 'children' : ''} ?expanded=${expanded} @click=${demoToggle}>
+			<nldd-list-item
+				slot=${level ? 'children' : ''}
+				?expanded=${expanded}
+				@click=${demoToggle}
+			>
 				${Array.from({ length: level }, () => html`<nldd-spacer-cell size=${INDENT_STEP}></nldd-spacer-cell>`)}
-				<nldd-list-item-segment button disclosure accessible-label="${label} in- of uitklappen">
+				<nldd-list-item-segment
+					button
+					disclosure
+					accessible-label="${label} in- of uitklappen"
+				>
 					<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 				</nldd-list-item-segment>
 				${cells(label, count)}
@@ -153,14 +176,20 @@ export const Boomrij = {
 			</nldd-list-item>
 		`;
 		const leaf = (label: string, count: string, level: number) => html`
-			<nldd-list-item slot="children" @click=${demoToggle}>
+			<nldd-list-item
+				slot="children"
+				@click=${demoToggle}
+			>
 				${Array.from({ length: level }, () => html`<nldd-spacer-cell size=${INDENT_STEP}></nldd-spacer-cell>`)}
 				<nldd-spacer-cell size=${LEAF_CHEVRON_ZONE}></nldd-spacer-cell>
 				${cells(label, count)}
 			</nldd-list-item>
 		`;
 		return html`
-			<nldd-list type="tree" accessible-label="Opdrachtgevers">
+			<nldd-list
+				type="tree"
+				accessible-label="Opdrachtgevers"
+			>
 				${branch('Agentschappen', '15', 0, false, leaf('Rijkswaterstaat', '15', 1))}
 				${branch('Ministeries', '14', 0, true, html`
 					${leaf('Ministerie van Algemene Zaken', '1', 1)}
@@ -181,10 +210,19 @@ export const LinkMetSegmentAchteraan = {
 		<nldd-list accessible-label="Opdrachten">
 			${['Modernisering Inkoop', 'Open Data Architectuur'].map(name => html`
 				<nldd-list-item>
-					<nldd-list-item-segment href="#${name}" width="full">
-						<nldd-text-cell text=${name} supporting-text="Rijkswaterstaat"></nldd-text-cell>
+					<nldd-list-item-segment
+						href="#${name}"
+						width="full"
+					>
+						<nldd-text-cell
+							text=${name}
+							supporting-text="Rijkswaterstaat"
+						></nldd-text-cell>
 					</nldd-list-item-segment>
-					<nldd-list-item-segment button accessible-label="Bewerk ${name}">
+					<nldd-list-item-segment
+						button
+						accessible-label="Bewerk ${name}"
+					>
 						<nldd-icon-cell size="20"><nldd-icon icon="edit"></nldd-icon></nldd-icon-cell>
 					</nldd-list-item-segment>
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
@@ -209,10 +247,20 @@ export const MetMenu = {
 		<nldd-list accessible-label="Kabels">
 			${['NL-00001', 'NL-00002'].map(name => html`
 				<nldd-list-item>
-					<nldd-list-item-segment button width="full">
-						<nldd-text-cell text=${name} supporting-text="NIC 1 · Network Interface"></nldd-text-cell>
+					<nldd-list-item-segment
+						button
+						width="full"
+					>
+						<nldd-text-cell
+							text=${name}
+							supporting-text="NIC 1 · Network Interface"
+						></nldd-text-cell>
 					</nldd-list-item-segment>
-					<nldd-list-item-segment button id="menu-anchor-${name}" accessible-label="Acties voor ${name}">
+					<nldd-list-item-segment
+						button
+						id="menu-anchor-${name}"
+						accessible-label="Acties voor ${name}"
+					>
 						<nldd-icon-cell size="20"><nldd-icon icon="ellipsis"></nldd-icon></nldd-icon-cell>
 					</nldd-list-item-segment>
 					<nldd-spacer-cell size="12"></nldd-spacer-cell>
@@ -220,9 +268,18 @@ export const MetMenu = {
 			`)}
 		</nldd-list>
 		${['NL-00001', 'NL-00002'].map(name => html`
-			<nldd-menu anchor="menu-anchor-${name}" placement="bottom-end">
-				<nldd-menu-item text="Bewerken" icon="edit"></nldd-menu-item>
-				<nldd-menu-item text="Verwijderen" icon="trash"></nldd-menu-item>
+			<nldd-menu
+				anchor="menu-anchor-${name}"
+				placement="bottom-end"
+			>
+				<nldd-menu-item
+					text="Bewerken"
+					icon="edit"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Verwijderen"
+					icon="trash"
+				></nldd-menu-item>
 			</nldd-menu>
 		`)}
 	`,
@@ -237,9 +294,15 @@ export const MetMenu = {
 export const InEenListbox = {
 	name: 'In een listbox (degradeert)',
 	render: () => html`
-		<nldd-list type="listbox" accessible-label="Opties">
+		<nldd-list
+			type="listbox"
+			accessible-label="Opties"
+		>
 			<nldd-list-item>
-				<nldd-list-item-segment checkbox width="full">
+				<nldd-list-item-segment
+					checkbox
+					width="full"
+				>
 					<nldd-text-cell text="Deze rij is een option, dus niet segmenteerbaar"></nldd-text-cell>
 				</nldd-list-item-segment>
 			</nldd-list-item>
@@ -257,50 +320,107 @@ export const InEenListbox = {
 export const InEenBoxedList = {
 	name: 'In een boxed list',
 	render: () => html`
-		<nldd-list variant="box-tinted" type="tree" accessible-label="Opdrachtgevers">
+		<nldd-list
+			variant="box-tinted"
+			type="tree"
+			accessible-label="Opdrachtgevers"
+		>
 			<nldd-list-item @click=${demoToggle}>
-				<nldd-list-item-segment button disclosure accessible-label="Agentschappen in- of uitklappen">
+				<nldd-list-item-segment
+					button
+					disclosure
+					accessible-label="Agentschappen in- of uitklappen"
+				>
 					<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 				</nldd-list-item-segment>
-				<nldd-list-item-segment checkbox width="full" accessible-label="Agentschappen">
+				<nldd-list-item-segment
+					checkbox
+					width="full"
+					accessible-label="Agentschappen"
+				>
 					<nldd-cell><nldd-checkbox aria-hidden="true" tabindex="-1"></nldd-checkbox></nldd-cell>
 					<nldd-spacer-cell size="8"></nldd-spacer-cell>
 					<nldd-text-cell text="Agentschappen"></nldd-text-cell>
 					<nldd-spacer-cell size="8"></nldd-spacer-cell>
-					<nldd-text-cell width="fit-content" horizontal-alignment="right" color="secondary" text="15"></nldd-text-cell>
+					<nldd-text-cell
+						width="fit-content"
+						horizontal-alignment="right"
+						color="secondary"
+						text="15"
+					></nldd-text-cell>
 				</nldd-list-item-segment>
-				<nldd-list-item slot="children" @click=${demoToggle}>
+				<nldd-list-item
+					slot="children"
+					@click=${demoToggle}
+				>
 					<nldd-spacer-cell size="16"></nldd-spacer-cell>
 					<nldd-spacer-cell size="44"></nldd-spacer-cell>
-					<nldd-list-item-segment checkbox width="full" accessible-label="Rijkswaterstaat">
+					<nldd-list-item-segment
+						checkbox
+						width="full"
+						accessible-label="Rijkswaterstaat"
+					>
 						<nldd-cell><nldd-checkbox aria-hidden="true" tabindex="-1"></nldd-checkbox></nldd-cell>
 						<nldd-spacer-cell size="8"></nldd-spacer-cell>
 						<nldd-text-cell text="Rijkswaterstaat"></nldd-text-cell>
 						<nldd-spacer-cell size="8"></nldd-spacer-cell>
-						<nldd-text-cell width="fit-content" horizontal-alignment="right" color="secondary" text="15"></nldd-text-cell>
+						<nldd-text-cell
+							width="fit-content"
+							horizontal-alignment="right"
+							color="secondary"
+							text="15"
+						></nldd-text-cell>
 					</nldd-list-item-segment>
 				</nldd-list-item>
 			</nldd-list-item>
-			<nldd-list-item expanded @click=${demoToggle}>
-				<nldd-list-item-segment button disclosure accessible-label="Ministeries in- of uitklappen">
+			<nldd-list-item
+				expanded
+				@click=${demoToggle}
+			>
+				<nldd-list-item-segment
+					button
+					disclosure
+					accessible-label="Ministeries in- of uitklappen"
+				>
 					<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 				</nldd-list-item-segment>
-				<nldd-list-item-segment checkbox width="full" accessible-label="Ministeries">
+				<nldd-list-item-segment
+					checkbox
+					width="full"
+					accessible-label="Ministeries"
+				>
 					<nldd-cell><nldd-checkbox aria-hidden="true" tabindex="-1"></nldd-checkbox></nldd-cell>
 					<nldd-spacer-cell size="8"></nldd-spacer-cell>
 					<nldd-text-cell text="Ministeries"></nldd-text-cell>
 					<nldd-spacer-cell size="8"></nldd-spacer-cell>
-					<nldd-text-cell width="fit-content" horizontal-alignment="right" color="secondary" text="14"></nldd-text-cell>
+					<nldd-text-cell
+						width="fit-content"
+						horizontal-alignment="right"
+						color="secondary"
+						text="14"
+					></nldd-text-cell>
 				</nldd-list-item-segment>
-				<nldd-list-item slot="children" @click=${demoToggle}>
+				<nldd-list-item
+					slot="children"
+					@click=${demoToggle}
+				>
 					<nldd-spacer-cell size="16"></nldd-spacer-cell>
 					<nldd-spacer-cell size="44"></nldd-spacer-cell>
-					<nldd-list-item-segment checkbox width="full" accessible-label="Ministerie van Algemene Zaken">
+					<nldd-list-item-segment
+						checkbox
+						width="full"
+						accessible-label="Ministerie van Algemene Zaken"
+					>
 						<nldd-cell><nldd-checkbox aria-hidden="true" tabindex="-1"></nldd-checkbox></nldd-cell>
 						<nldd-spacer-cell size="8"></nldd-spacer-cell>
 						<nldd-text-cell text="Ministerie van Algemene Zaken"></nldd-text-cell>
 						<nldd-spacer-cell size="8"></nldd-spacer-cell>
-						<nldd-text-cell width="fit-content" horizontal-alignment="right" color="secondary" text="1"></nldd-text-cell>
+						<nldd-text-cell
+							width="fit-content"
+							horizontal-alignment="right"
+							color="secondary"
+							text="1"
+						></nldd-text-cell>
 					</nldd-list-item-segment>
 				</nldd-list-item>
 			</nldd-list-item>
@@ -321,12 +441,24 @@ export const GenesteBoom = {
 	name: 'Geneste boom (type="tree")',
 	render: () => {
 		const branch = (label: string, level: number, expanded: boolean, children: unknown) => html`
-			<nldd-list-item slot=${level ? 'children' : ''} ?expanded=${expanded} @click=${demoToggle}>
+			<nldd-list-item
+				slot=${level ? 'children' : ''}
+				?expanded=${expanded}
+				@click=${demoToggle}
+			>
 				${Array.from({ length: level }, () => html`<nldd-spacer-cell size="16"></nldd-spacer-cell>`)}
-				<nldd-list-item-segment button disclosure accessible-label="${label} in- of uitklappen">
+				<nldd-list-item-segment
+					button
+					disclosure
+					accessible-label="${label} in- of uitklappen"
+				>
 					<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 				</nldd-list-item-segment>
-				<nldd-list-item-segment checkbox width="full" accessible-label=${label}>
+				<nldd-list-item-segment
+					checkbox
+					width="full"
+					accessible-label=${label}
+				>
 					<nldd-cell><nldd-checkbox aria-hidden="true" tabindex="-1"></nldd-checkbox></nldd-cell>
 					<nldd-spacer-cell size="8"></nldd-spacer-cell>
 					<nldd-text-cell text=${label}></nldd-text-cell>
@@ -336,10 +468,17 @@ export const GenesteBoom = {
 			</nldd-list-item>
 		`;
 		const leaf = (label: string, level: number) => html`
-			<nldd-list-item slot="children" @click=${demoToggle}>
+			<nldd-list-item
+				slot="children"
+				@click=${demoToggle}
+			>
 				${Array.from({ length: level }, () => html`<nldd-spacer-cell size="16"></nldd-spacer-cell>`)}
 				<nldd-spacer-cell size="44"></nldd-spacer-cell>
-				<nldd-list-item-segment checkbox width="full" accessible-label=${label}>
+				<nldd-list-item-segment
+					checkbox
+					width="full"
+					accessible-label=${label}
+				>
 					<nldd-cell><nldd-checkbox aria-hidden="true" tabindex="-1"></nldd-checkbox></nldd-cell>
 					<nldd-spacer-cell size="8"></nldd-spacer-cell>
 					<nldd-text-cell text=${label}></nldd-text-cell>
@@ -348,7 +487,10 @@ export const GenesteBoom = {
 			</nldd-list-item>
 		`;
 		return html`
-			<nldd-list type="tree" accessible-label="Opdrachtgevers">
+			<nldd-list
+				type="tree"
+				accessible-label="Opdrachtgevers"
+			>
 				${branch('Agentschappen', 0, false, leaf('Rijkswaterstaat', 1))}
 				${branch('Ministeries', 0, true, html`
 					${leaf('Ministerie van Algemene Zaken', 1)}

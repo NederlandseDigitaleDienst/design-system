@@ -133,7 +133,13 @@ export const AlleToestanden = {
 		</div>
 		<div style="display: flex; gap: 1rem; align-items: center;">
 			<span style="font: var(--primitives-font-body-md-regular-snug); min-width: 2ch;">5</span>
-			<nldd-stepper value="5" min="0" max="10" size="md" disabled></nldd-stepper>
+			<nldd-stepper
+				value="5"
+				min="0"
+				max="10"
+				size="md"
+				disabled
+			></nldd-stepper>
 		</div>
 	</div>
 `,

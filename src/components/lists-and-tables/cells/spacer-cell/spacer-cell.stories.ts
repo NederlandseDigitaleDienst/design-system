@@ -51,7 +51,10 @@ export const Flexibel = {
 	render: () => html`
 		<div style="${containerStyle} width: 400px;">
 			<span>Links</span>
-			<nldd-spacer-cell size="flexible" style=${debugStyle}></nldd-spacer-cell>
+			<nldd-spacer-cell
+				size="flexible"
+				style=${debugStyle}
+			></nldd-spacer-cell>
 			<span>Rechts</span>
 		</div>
 	`,
@@ -65,7 +68,10 @@ export const AlleVasteGrootten = {
 					<span style="width: 40px; font-size: 12px; color: var(--semantics-content-color);">${size}px</span>
 					<div style=${containerStyle}>
 						<span>|</span>
-						<nldd-spacer-cell size=${size} style=${debugStyle}></nldd-spacer-cell>
+						<nldd-spacer-cell
+							size=${size}
+							style=${debugStyle}
+						></nldd-spacer-cell>
 						<span>|</span>
 					</div>
 				</div>

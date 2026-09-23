@@ -122,8 +122,14 @@ const itemContent = (i: any) => html`
 	</nldd-rich-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-button-group orientation="horizontal">
-		<nldd-button variant="primary" text="Bekijk"></nldd-button>
-		<nldd-button variant="secondary" text="Meer info"></nldd-button>
+		<nldd-button
+			variant="primary"
+			text="Bekijk"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Meer info"
+		></nldd-button>
 	</nldd-button-group>
 `;
 
@@ -196,7 +202,11 @@ export const Standaard = ({ layout, itemWidth, gap, smGap, mdGap, lgGap, maxItem
 
 export const Grid = {
 	render: () => html`
-	<nldd-collection layout="grid" show-load-more max-items="6">
+	<nldd-collection
+		layout="grid"
+		show-load-more
+		max-items="6"
+	>
 		${gridItems}
 	</nldd-collection>
 `,
@@ -206,7 +216,12 @@ export const Grid = {
 export const GridMetLazyLoad = {
 	name: 'Grid met lazy-load',
 	render: () => html`
-	<nldd-collection layout="grid" show-load-more max-items="6" lazy-load>
+	<nldd-collection
+		layout="grid"
+		show-load-more
+		max-items="6"
+		lazy-load
+	>
 		${gridItems}
 	</nldd-collection>
 `,
@@ -215,7 +230,11 @@ export const GridMetLazyLoad = {
 
 export const Stapel = {
 	render: () => html`
-	<nldd-collection layout="stack" show-load-more max-items="6">
+	<nldd-collection
+		layout="stack"
+		show-load-more
+		max-items="6"
+	>
 		${listItems}
 	</nldd-collection>
 `,
@@ -224,7 +243,11 @@ export const Stapel = {
 
 export const Banen = {
 	render: () => html`
-	<nldd-collection layout="lanes" show-load-more max-items="6">
+	<nldd-collection
+		layout="lanes"
+		show-load-more
+		max-items="6"
+	>
 		${laneItems}
 	</nldd-collection>
 `,
@@ -273,8 +296,14 @@ export const InSimpleSectie = {
 				text="Sectietitel"
 				heading-level="2"
 			></nldd-title>
-			<nldd-spacer slot="header" size="4"></nldd-spacer>
-			<nldd-rich-text slot="header" spacing="flat">
+			<nldd-spacer
+				slot="header"
+				size="4"
+			></nldd-spacer>
+			<nldd-rich-text
+				slot="header"
+				spacing="flat"
+			>
 				<p>Tekst boven de collectie om de uitlijning te zien.</p>
 			</nldd-rich-text>
 			<nldd-collection layout="horizontal-scroll">

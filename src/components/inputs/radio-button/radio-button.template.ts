@@ -7,7 +7,9 @@ export function radioButtonTemplate(component: NLDDRadioButton): TemplateResult 
 	// would be a second control inside it.
 	if (component.decorative) {
 		return html`
-			<div class="radio-button__outer-shape" aria-hidden="true">
+			<div class="radio-button__outer-shape"
+				aria-hidden="true"
+			>
 				<div class="radio-button__inner-shape"></div>
 			</div>
 		`;

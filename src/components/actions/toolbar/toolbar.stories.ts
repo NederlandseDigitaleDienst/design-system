@@ -59,9 +59,15 @@ export const Standaard = {
 				label="Vorige/Volgende"
 			>
 				<nldd-button-bar>
-					<nldd-icon-button text="Vorige" icon="chevron-left"></nldd-icon-button>
+					<nldd-icon-button
+						text="Vorige"
+						icon="chevron-left"
+					></nldd-icon-button>
 					<nldd-button-bar-divider></nldd-button-bar-divider>
-					<nldd-icon-button text="Volgende" icon="chevron-right"></nldd-icon-button>
+					<nldd-icon-button
+						text="Volgende"
+						icon="chevron-right"
+					></nldd-icon-button>
 				</nldd-button-bar>
 				<nldd-menu-item
 					slot="overflow"
@@ -78,7 +84,10 @@ export const Standaard = {
 				slot="end"
 				label="Sla op"
 			>
-				<nldd-button variant="primary" text="Sla op"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Sla op"
+				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
 					text="Sla op"
@@ -101,7 +110,10 @@ export const MetTitelgroep = {
 					slot="start"
 					label="Terug"
 				>
-					<nldd-icon-button text="Terug" icon="chevron-left"></nldd-icon-button>
+					<nldd-icon-button
+						text="Terug"
+						icon="chevron-left"
+					></nldd-icon-button>
 					<nldd-menu-item
 						slot="overflow"
 						text="Terug"
@@ -128,7 +140,10 @@ export const MetTitelgroep = {
 					slot="end"
 					label="Sla op"
 				>
-					<nldd-button variant="primary" text="Sla op"></nldd-button>
+					<nldd-button
+						variant="primary"
+						text="Sla op"
+					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
 						text="Sla op"
@@ -144,7 +159,10 @@ export const MetTitelgroep = {
 					slot="start"
 					label="Terug"
 				>
-					<nldd-icon-button text="Terug" icon="chevron-left"></nldd-icon-button>
+					<nldd-icon-button
+						text="Terug"
+						icon="chevron-left"
+					></nldd-icon-button>
 					<nldd-menu-item
 						slot="overflow"
 						text="Terug"
@@ -161,7 +179,10 @@ export const MetTitelgroep = {
 					slot="end"
 					label="Sla op"
 				>
-					<nldd-button variant="primary" text="Sla op"></nldd-button>
+					<nldd-button
+						variant="primary"
+						text="Sla op"
+					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
 						text="Sla op"
@@ -207,9 +228,19 @@ export const TitelMetMedia = {
 						color="secondary-content"
 					></nldd-icon>
 				</nldd-toolbar-title>
-				<nldd-toolbar-item slot="end" label="Opslaan">
-					<nldd-button variant="primary" text="Opslaan"></nldd-button>
-					<nldd-menu-item slot="overflow" text="Opslaan" icon="save"></nldd-menu-item>
+				<nldd-toolbar-item
+					slot="end"
+					label="Opslaan"
+				>
+					<nldd-button
+						variant="primary"
+						text="Opslaan"
+					></nldd-button>
+					<nldd-menu-item
+						slot="overflow"
+						text="Opslaan"
+						icon="save"
+					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
 			<!-- No text: the mark stands alone and is the only thing naming this
@@ -227,9 +258,19 @@ export const TitelMetMedia = {
 						height="28"
 					>
 				</nldd-toolbar-title>
-				<nldd-toolbar-item slot="end" label="Opslaan">
-					<nldd-button variant="primary" text="Opslaan"></nldd-button>
-					<nldd-menu-item slot="overflow" text="Opslaan" icon="save"></nldd-menu-item>
+				<nldd-toolbar-item
+					slot="end"
+					label="Opslaan"
+				>
+					<nldd-button
+						variant="primary"
+						text="Opslaan"
+					></nldd-button>
+					<nldd-menu-item
+						slot="overflow"
+						text="Opslaan"
+						icon="save"
+					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
 		</div>
@@ -258,15 +299,32 @@ export const TitelMetActie = {
 						tooltip-timing="never"
 					>
 						<nldd-menu slot="popup">
-							<nldd-menu-item text="Naam wijzigen" icon="edit"></nldd-menu-item>
+							<nldd-menu-item
+								text="Naam wijzigen"
+								icon="edit"
+							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item text="Verwijderen" icon="delete" destructive></nldd-menu-item>
+							<nldd-menu-item
+								text="Verwijderen"
+								icon="delete"
+								destructive
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-icon-button>
 				</nldd-toolbar-title>
-				<nldd-toolbar-item slot="end" label="Opslaan">
-					<nldd-button variant="primary" text="Opslaan"></nldd-button>
-					<nldd-menu-item slot="overflow" text="Opslaan" icon="save"></nldd-menu-item>
+				<nldd-toolbar-item
+					slot="end"
+					label="Opslaan"
+				>
+					<nldd-button
+						variant="primary"
+						text="Opslaan"
+					></nldd-button>
+					<nldd-menu-item
+						slot="overflow"
+						text="Opslaan"
+						icon="save"
+					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
 			<!-- Long name: the title text truncates at the 240px default max-width;
@@ -287,15 +345,32 @@ export const TitelMetActie = {
 						tooltip-timing="never"
 					>
 						<nldd-menu slot="popup">
-							<nldd-menu-item text="Naam wijzigen" icon="edit"></nldd-menu-item>
+							<nldd-menu-item
+								text="Naam wijzigen"
+								icon="edit"
+							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item text="Verwijderen" icon="delete" destructive></nldd-menu-item>
+							<nldd-menu-item
+								text="Verwijderen"
+								icon="delete"
+								destructive
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-icon-button>
 				</nldd-toolbar-title>
-				<nldd-toolbar-item slot="end" label="Opslaan">
-					<nldd-button variant="primary" text="Opslaan"></nldd-button>
-					<nldd-menu-item slot="overflow" text="Opslaan" icon="save"></nldd-menu-item>
+				<nldd-toolbar-item
+					slot="end"
+					label="Opslaan"
+				>
+					<nldd-button
+						variant="primary"
+						text="Opslaan"
+					></nldd-button>
+					<nldd-menu-item
+						slot="overflow"
+						text="Opslaan"
+						icon="save"
+					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
 		</div>
@@ -335,7 +410,10 @@ export const Grootten = {
 							slot="end"
 							label="Sla op"
 						>
-							<nldd-button variant="primary" text="Sla op"></nldd-button>
+							<nldd-button
+								variant="primary"
+								text="Sla op"
+							></nldd-button>
 							<nldd-menu-item
 								slot="overflow"
 								text="Sla op"
@@ -375,7 +453,10 @@ export const Grootten = {
 							slot="end"
 							label="Sla op"
 						>
-							<nldd-button variant="primary" text="Sla op"></nldd-button>
+							<nldd-button
+								variant="primary"
+								text="Sla op"
+							></nldd-button>
 							<nldd-menu-item
 								slot="overflow"
 								text="Sla op"
@@ -406,11 +487,26 @@ export const LabelsAanUit = {
 								variant="icon"
 								accessible-label="Tekststijl"
 							>
-								<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-								<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-								<nldd-segmented-control-item value="onderstrepen" text="Onderstrepen" icon="underlined"></nldd-segmented-control-item>
+								<nldd-segmented-control-item
+									value="bold"
+									text="Vet"
+									icon="bold"
+								></nldd-segmented-control-item>
+								<nldd-segmented-control-item
+									value="italic"
+									text="Cursief"
+									icon="italic"
+								></nldd-segmented-control-item>
+								<nldd-segmented-control-item
+									value="onderstrepen"
+									text="Onderstrepen"
+									icon="underlined"
+								></nldd-segmented-control-item>
 							</nldd-segmented-control>
-							<nldd-menu-group slot="overflow" text="Tekststijl">
+							<nldd-menu-group
+								slot="overflow"
+								text="Tekststijl"
+							>
 								<nldd-menu-item
 									text="Vet"
 									icon="bold"
@@ -447,11 +543,26 @@ export const LabelsAanUit = {
 								variant="icon"
 								accessible-label="Tekststijl"
 							>
-								<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-								<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-								<nldd-segmented-control-item value="onderstrepen" text="Onderstrepen" icon="underlined"></nldd-segmented-control-item>
+								<nldd-segmented-control-item
+									value="bold"
+									text="Vet"
+									icon="bold"
+								></nldd-segmented-control-item>
+								<nldd-segmented-control-item
+									value="italic"
+									text="Cursief"
+									icon="italic"
+								></nldd-segmented-control-item>
+								<nldd-segmented-control-item
+									value="onderstrepen"
+									text="Onderstrepen"
+									icon="underlined"
+								></nldd-segmented-control-item>
 							</nldd-segmented-control>
-							<nldd-menu-group slot="overflow" text="Tekststijl">
+							<nldd-menu-group
+								slot="overflow"
+								text="Tekststijl"
+							>
 								<nldd-menu-item
 									text="Vet"
 									icon="bold"
@@ -488,11 +599,26 @@ export const Overloop = {
 					variant="icon"
 					accessible-label="Tekststijl"
 				>
-					<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="onderstrepen" text="Onderstrepen" icon="underlined"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bold"
+						text="Vet"
+						icon="bold"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="italic"
+						text="Cursief"
+						icon="italic"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="onderstrepen"
+						text="Onderstrepen"
+						icon="underlined"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
-				<nldd-menu-group slot="overflow" text="Tekststijl">
+				<nldd-menu-group
+					slot="overflow"
+					text="Tekststijl"
+				>
 					<nldd-menu-item
 						text="Vet"
 						icon="bold"
@@ -519,11 +645,26 @@ export const Overloop = {
 					variant="icon"
 					accessible-label="Lijsttype"
 				>
-					<nldd-segmented-control-item value="none" text="Geen" icon="minus-small"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="bullet" text="Opsomming" icon="bullet-list"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="numbered" text="Genummerd" icon="numbered-list"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="none"
+						text="Geen"
+						icon="minus-small"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bullet"
+						text="Opsomming"
+						icon="bullet-list"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="numbered"
+						text="Genummerd"
+						icon="numbered-list"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
-				<nldd-menu-group slot="overflow" text="Lijst">
+				<nldd-menu-group
+					slot="overflow"
+					text="Lijst"
+				>
 					<nldd-menu-item
 						text="Geen"
 						icon="minus-small"
@@ -556,7 +697,10 @@ export const Overloop = {
 				slot="end"
 				label="Sla op"
 			>
-				<nldd-button variant="primary" text="Sla op"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Sla op"
+				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
 					text="Sla op"
@@ -580,11 +724,26 @@ export const OverloopMetPrioriteit = {
 					variant="icon"
 					accessible-label="Tekststijl"
 				>
-					<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="onderstrepen" text="Onderstrepen" icon="underlined"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bold"
+						text="Vet"
+						icon="bold"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="italic"
+						text="Cursief"
+						icon="italic"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="onderstrepen"
+						text="Onderstrepen"
+						icon="underlined"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
-				<nldd-menu-group slot="overflow" text="Tekststijl">
+				<nldd-menu-group
+					slot="overflow"
+					text="Tekststijl"
+				>
 					<nldd-menu-item
 						text="Vet"
 						icon="bold"
@@ -612,11 +771,26 @@ export const OverloopMetPrioriteit = {
 					variant="icon"
 					accessible-label="Lijsttype"
 				>
-					<nldd-segmented-control-item value="none" text="Geen" icon="minus-small"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="bullet" text="Opsomming" icon="bullet-list"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="numbered" text="Genummerd" icon="numbered-list"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="none"
+						text="Geen"
+						icon="minus-small"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bullet"
+						text="Opsomming"
+						icon="bullet-list"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="numbered"
+						text="Genummerd"
+						icon="numbered-list"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
-				<nldd-menu-group slot="overflow" text="Lijst">
+				<nldd-menu-group
+					slot="overflow"
+					text="Lijst"
+				>
 					<nldd-menu-item
 						text="Geen"
 						icon="minus-small"
@@ -657,7 +831,10 @@ export const OverloopMetPrioriteit = {
 				label="Sla op"
 				priority="10"
 			>
-				<nldd-button variant="primary" text="Sla op"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Sla op"
+				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
 					text="Sla op"
@@ -676,7 +853,10 @@ export const MetMeegroeiendItem = {
 				label="Terug"
 				priority="1"
 			>
-				<nldd-icon-button text="Terug" icon="chevron-left"></nldd-icon-button>
+				<nldd-icon-button
+					text="Terug"
+					icon="chevron-left"
+				></nldd-icon-button>
 				<nldd-menu-item
 					slot="overflow"
 					text="Terug"
@@ -713,7 +893,10 @@ export const MetMeegroeiendItem = {
 				label="Sla op"
 				priority="2"
 			>
-				<nldd-button variant="primary" text="Sla op"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Sla op"
+				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
 					text="Sla op"
@@ -737,10 +920,21 @@ export const MetVasteOverloopitems = {
 					variant="icon"
 					accessible-label="Tekststijl"
 				>
-					<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bold"
+						text="Vet"
+						icon="bold"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="italic"
+						text="Cursief"
+						icon="italic"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
-				<nldd-menu-group slot="overflow" text="Tekststijl">
+				<nldd-menu-group
+					slot="overflow"
+					text="Tekststijl"
+				>
 					<nldd-menu-item
 						text="Vet"
 						icon="bold"
@@ -757,7 +951,10 @@ export const MetVasteOverloopitems = {
 				slot="end"
 				label="Sla op"
 			>
-				<nldd-button variant="primary" text="Sla op"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Sla op"
+				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
 					text="Sla op"
@@ -793,11 +990,26 @@ export const VasteEnDynamischeOverloop = {
 					variant="icon"
 					accessible-label="Tekststijl"
 				>
-					<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="onderstrepen" text="Onderstrepen" icon="underlined"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bold"
+						text="Vet"
+						icon="bold"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="italic"
+						text="Cursief"
+						icon="italic"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="onderstrepen"
+						text="Onderstrepen"
+						icon="underlined"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
-				<nldd-menu-group slot="overflow" text="Tekststijl">
+				<nldd-menu-group
+					slot="overflow"
+					text="Tekststijl"
+				>
 					<nldd-menu-item
 						text="Vet"
 						icon="bold"
@@ -825,11 +1037,26 @@ export const VasteEnDynamischeOverloop = {
 					variant="icon"
 					accessible-label="Lijsttype"
 				>
-					<nldd-segmented-control-item value="none" text="Geen" icon="minus-small"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="bullet" text="Opsomming" icon="bullet-list"></nldd-segmented-control-item>
-					<nldd-segmented-control-item value="numbered" text="Genummerd" icon="numbered-list"></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="none"
+						text="Geen"
+						icon="minus-small"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="bullet"
+						text="Opsomming"
+						icon="bullet-list"
+					></nldd-segmented-control-item>
+					<nldd-segmented-control-item
+						value="numbered"
+						text="Genummerd"
+						icon="numbered-list"
+					></nldd-segmented-control-item>
 				</nldd-segmented-control>
-				<nldd-menu-group slot="overflow" text="Lijst">
+				<nldd-menu-group
+					slot="overflow"
+					text="Lijst"
+				>
 					<nldd-menu-item
 						text="Geen"
 						icon="minus-small"
@@ -852,7 +1079,10 @@ export const VasteEnDynamischeOverloop = {
 				label="Sla op"
 				priority="10"
 			>
-				<nldd-button variant="primary" text="Sla op"></nldd-button>
+				<nldd-button
+					variant="primary"
+					text="Sla op"
+				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
 					text="Sla op"
@@ -884,30 +1114,92 @@ export const VasteEnDynamischeOverloop = {
 export const MobieleActiebalk = {
 	name: 'Mobiele actiebalk (lg)',
 	render: () => resizable(html`
-		<nldd-toolbar size="lg" label="Acties">
-			<nldd-toolbar-item slot="start" priority="10">
+		<nldd-toolbar
+			size="lg"
+			label="Acties"
+		>
+			<nldd-toolbar-item
+				slot="start"
+				priority="10"
+			>
 				<nldd-tab-bar accessible-label="Hoofdnavigatie">
-					<nldd-tab-bar-item current text="Home" icon="home"></nldd-tab-bar-item>
-					<nldd-tab-bar-item text="Profiel" icon="profile"></nldd-tab-bar-item>
-					<nldd-tab-bar-item text="Zoeken" icon="search"></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						current
+						text="Home"
+						icon="home"
+					></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						text="Profiel"
+						icon="profile"
+					></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						text="Zoeken"
+						icon="search"
+					></nldd-tab-bar-item>
 				</nldd-tab-bar>
-				<nldd-menu-group slot="overflow" text="Hoofdnavigatie">
-					<nldd-menu-item type="radio" selected text="Home" icon="home"></nldd-menu-item>
-					<nldd-menu-item type="radio" text="Profiel" icon="profile"></nldd-menu-item>
-					<nldd-menu-item type="radio" text="Zoeken" icon="search"></nldd-menu-item>
+				<nldd-menu-group
+					slot="overflow"
+					text="Hoofdnavigatie"
+				>
+					<nldd-menu-item
+						type="radio"
+						selected
+						text="Home"
+						icon="home"
+					></nldd-menu-item>
+					<nldd-menu-item
+						type="radio"
+						text="Profiel"
+						icon="profile"
+					></nldd-menu-item>
+					<nldd-menu-item
+						type="radio"
+						text="Zoeken"
+						icon="search"
+					></nldd-menu-item>
 				</nldd-menu-group>
 			</nldd-toolbar-item>
-			<nldd-toolbar-item slot="end" label="Zoeken">
-				<nldd-icon-button text="Zoeken" icon="search"></nldd-icon-button>
-				<nldd-menu-item slot="overflow" text="Zoeken" icon="search"></nldd-menu-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Zoeken"
+			>
+				<nldd-icon-button
+					text="Zoeken"
+					icon="search"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Zoeken"
+					icon="search"
+				></nldd-menu-item>
 			</nldd-toolbar-item>
-			<nldd-toolbar-item slot="end" label="Downloaden">
-				<nldd-icon-button text="Downloaden" icon="download"></nldd-icon-button>
-				<nldd-menu-item slot="overflow" text="Downloaden" icon="download"></nldd-menu-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Downloaden"
+			>
+				<nldd-icon-button
+					text="Downloaden"
+					icon="download"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Downloaden"
+					icon="download"
+				></nldd-menu-item>
 			</nldd-toolbar-item>
-			<nldd-toolbar-item slot="end" label="Profiel">
-				<nldd-icon-button text="Profiel" icon="profile"></nldd-icon-button>
-				<nldd-menu-item slot="overflow" text="Profiel" icon="profile"></nldd-menu-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Profiel"
+			>
+				<nldd-icon-button
+					text="Profiel"
+					icon="profile"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Profiel"
+					icon="profile"
+				></nldd-menu-item>
 			</nldd-toolbar-item>
 		</nldd-toolbar>
 	`),
@@ -924,20 +1216,57 @@ export const LosseGecentreerdeTitel = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 420px;">
 			<div style="outline: 1px dashed var(--semantics-dividers-color);">
-				<nldd-toolbar size="md" label="Zonder start of end">
-					<nldd-toolbar-title slot="center" align="center" text="boodschappen">
-						<nldd-icon-button slot="action" size="xs" icon="chevron-down" text="Acties" tooltip-timing="never"></nldd-icon-button>
+				<nldd-toolbar
+					size="md"
+					label="Zonder start of end"
+				>
+					<nldd-toolbar-title
+						slot="center"
+						align="center"
+						text="boodschappen"
+					>
+						<nldd-icon-button
+							slot="action"
+							size="xs"
+							icon="chevron-down"
+							text="Acties"
+							tooltip-timing="never"
+						></nldd-icon-button>
 					</nldd-toolbar-title>
 				</nldd-toolbar>
 			</div>
 			<div style="outline: 1px dashed var(--semantics-dividers-color);">
-				<nldd-toolbar size="md" label="Met verborgen back-knop">
-					<nldd-toolbar-item slot="start" style="display: none">
-						<nldd-icon-button icon="chevron-left" text="Terug" tooltip-timing="never"></nldd-icon-button>
-						<nldd-menu-item slot="overflow" text="Terug" icon="chevron-left"></nldd-menu-item>
+				<nldd-toolbar
+					size="md"
+					label="Met verborgen back-knop"
+				>
+					<nldd-toolbar-item
+						slot="start"
+						style="display: none"
+					>
+						<nldd-icon-button
+							icon="chevron-left"
+							text="Terug"
+							tooltip-timing="never"
+						></nldd-icon-button>
+						<nldd-menu-item
+							slot="overflow"
+							text="Terug"
+							icon="chevron-left"
+						></nldd-menu-item>
 					</nldd-toolbar-item>
-					<nldd-toolbar-title slot="center" align="center" text="boodschappen">
-						<nldd-icon-button slot="action" size="xs" icon="chevron-down" text="Acties" tooltip-timing="never"></nldd-icon-button>
+					<nldd-toolbar-title
+						slot="center"
+						align="center"
+						text="boodschappen"
+					>
+						<nldd-icon-button
+							slot="action"
+							size="xs"
+							icon="chevron-down"
+							text="Acties"
+							tooltip-timing="never"
+						></nldd-icon-button>
 					</nldd-toolbar-title>
 				</nldd-toolbar>
 			</div>

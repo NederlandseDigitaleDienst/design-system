@@ -113,31 +113,49 @@ export const Standaard = {
 
 export const MetOverline = {
 	render: () => html`
-		<nldd-text-cell overline="Overline" text="Tekstcel"></nldd-text-cell>
+		<nldd-text-cell
+			overline="Overline"
+			text="Tekstcel"
+		></nldd-text-cell>
 	`,
 };
 
 export const MetSupportingText = {
 	render: () => html`
-		<nldd-text-cell text="Tekstcel" supporting-text="Ondersteunende tekst"></nldd-text-cell>
+		<nldd-text-cell
+			text="Tekstcel"
+			supporting-text="Ondersteunende tekst"
+		></nldd-text-cell>
 	`,
 };
 
 export const MetOverlineEnSupportingText = {
 	render: () => html`
-		<nldd-text-cell overline="Overline" text="Tekstcel" supporting-text="Ondersteunende tekst"></nldd-text-cell>
+		<nldd-text-cell
+			overline="Overline"
+			text="Tekstcel"
+			supporting-text="Ondersteunende tekst"
+		></nldd-text-cell>
 	`,
 };
 
 export const Secundair = {
 	render: () => html`
-		<nldd-text-cell color="secondary" text="Tekstcel (secondary)"></nldd-text-cell>
+		<nldd-text-cell
+			color="secondary"
+			text="Tekstcel (secondary)"
+		></nldd-text-cell>
 	`,
 };
 
 export const Accent = {
 	render: () => html`
-		<nldd-text-cell color="accent" overline="Overline" text="Tekstcel (accent)" supporting-text="Ondersteunende tekst"></nldd-text-cell>
+		<nldd-text-cell
+			color="accent"
+			overline="Overline"
+			text="Tekstcel (accent)"
+			supporting-text="Ondersteunende tekst"
+		></nldd-text-cell>
 	`,
 	parameters: {
 		docs: {
@@ -151,9 +169,24 @@ export const Accent = {
 export const Statuskleuren = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px;">
-			<nldd-text-cell color="success" overline="Status" text="Goedgekeurd" supporting-text="Verwerkt op 9 mei 2026"></nldd-text-cell>
-			<nldd-text-cell color="warning" overline="Status" text="Wacht op actie" supporting-text="Reactie binnen 5 werkdagen"></nldd-text-cell>
-			<nldd-text-cell color="critical" overline="Status" text="Afgewezen" supporting-text="Bekijk de toelichting"></nldd-text-cell>
+			<nldd-text-cell
+				color="success"
+				overline="Status"
+				text="Goedgekeurd"
+				supporting-text="Verwerkt op 9 mei 2026"
+			></nldd-text-cell>
+			<nldd-text-cell
+				color="warning"
+				overline="Status"
+				text="Wacht op actie"
+				supporting-text="Reactie binnen 5 werkdagen"
+			></nldd-text-cell>
+			<nldd-text-cell
+				color="critical"
+				overline="Status"
+				text="Afgewezen"
+				supporting-text="Bekijk de toelichting"
+			></nldd-text-cell>
 		</div>
 	`,
 	parameters: {
@@ -169,8 +202,18 @@ export const Statuskleuren = {
 export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px;">
-			<nldd-text-cell size="md" overline="Overline" text="Tekstcel (md)" supporting-text="Ondersteunende tekst"></nldd-text-cell>
-			<nldd-text-cell size="sm" overline="Overline" text="Tekstcel (sm)" supporting-text="Ondersteunende tekst"></nldd-text-cell>
+			<nldd-text-cell
+				size="md"
+				overline="Overline"
+				text="Tekstcel (md)"
+				supporting-text="Ondersteunende tekst"
+			></nldd-text-cell>
+			<nldd-text-cell
+				size="sm"
+				overline="Overline"
+				text="Tekstcel (sm)"
+				supporting-text="Ondersteunende tekst"
+			></nldd-text-cell>
 		</div>
 	`,
 };
@@ -178,9 +221,18 @@ export const Grootten = {
 export const Breedte = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px; width: 300px; border: 1px dashed var(--primitives-color-neutral-150); padding: 8px;">
-			<nldd-text-cell width="full" text="Volledig (default)"></nldd-text-cell>
-			<nldd-text-cell width="fit-content" text="Past zich aan"></nldd-text-cell>
-			<nldd-text-cell width="120px" text="120px vast"></nldd-text-cell>
+			<nldd-text-cell
+				width="full"
+				text="Volledig (default)"
+			></nldd-text-cell>
+			<nldd-text-cell
+				width="fit-content"
+				text="Past zich aan"
+			></nldd-text-cell>
+			<nldd-text-cell
+				width="120px"
+				text="120px vast"
+			></nldd-text-cell>
 		</div>
 	`,
 };
@@ -188,8 +240,19 @@ export const Breedte = {
 export const MinimaleHoogte = {
 	render: () => html`
 		<div style="display: flex; gap: 8px; align-items: flex-start;">
-			<nldd-text-cell vertical-alignment="top" min-height="44px" style="border: 1px dashed var(--primitives-color-neutral-150);" text="Min-hoogte 44px"></nldd-text-cell>
-			<nldd-text-cell vertical-alignment="top" min-height="44px" style="border: 1px dashed var(--primitives-color-neutral-150);" text="Met ondersteunende tekst" supporting-text="Ondersteunende tekst"></nldd-text-cell>
+			<nldd-text-cell
+				vertical-alignment="top"
+				min-height="44px"
+				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				text="Min-hoogte 44px"
+			></nldd-text-cell>
+			<nldd-text-cell
+				vertical-alignment="top"
+				min-height="44px"
+				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				text="Met ondersteunende tekst"
+				supporting-text="Ondersteunende tekst"
+			></nldd-text-cell>
 		</div>
 	`,
 };
@@ -197,8 +260,20 @@ export const MinimaleHoogte = {
 export const HorizontaleUitlijning = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px;">
-			<nldd-text-cell horizontal-alignment="left" style="border: 1px dashed var(--primitives-color-neutral-150);" overline="Overline" text="Tekstcel (links)" supporting-text="Ondersteunende tekst"></nldd-text-cell>
-			<nldd-text-cell horizontal-alignment="right" style="border: 1px dashed var(--primitives-color-neutral-150);" overline="Overline" text="Tekstcel (rechts)" supporting-text="Ondersteunende tekst"></nldd-text-cell>
+			<nldd-text-cell
+				horizontal-alignment="left"
+				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				overline="Overline"
+				text="Tekstcel (links)"
+				supporting-text="Ondersteunende tekst"
+			></nldd-text-cell>
+			<nldd-text-cell
+				horizontal-alignment="right"
+				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				overline="Overline"
+				text="Tekstcel (rechts)"
+				supporting-text="Ondersteunende tekst"
+			></nldd-text-cell>
 		</div>
 	`,
 };
@@ -206,9 +281,21 @@ export const HorizontaleUitlijning = {
 export const VerticaleUitlijning = {
 	render: () => html`
 		<div style="display: flex; gap: 8px; height: 80px;">
-			<nldd-text-cell vertical-alignment="top" style="border: 1px dashed var(--primitives-color-neutral-150);" text="Boven"></nldd-text-cell>
-			<nldd-text-cell vertical-alignment="center" style="border: 1px dashed var(--primitives-color-neutral-150);" text="Midden"></nldd-text-cell>
-			<nldd-text-cell vertical-alignment="bottom" style="border: 1px dashed var(--primitives-color-neutral-150);" text="Onder"></nldd-text-cell>
+			<nldd-text-cell
+				vertical-alignment="top"
+				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				text="Boven"
+			></nldd-text-cell>
+			<nldd-text-cell
+				vertical-alignment="center"
+				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				text="Midden"
+			></nldd-text-cell>
+			<nldd-text-cell
+				vertical-alignment="bottom"
+				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				text="Onder"
+			></nldd-text-cell>
 		</div>
 	`,
 };
@@ -218,14 +305,25 @@ export const TagInDeSlot = {
 		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 480px;">
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Default slot — inline tag tussen tekst.</p>
-				<nldd-text-cell overline="Aanvraag" supporting-text="Laatst bijgewerkt vandaag">
+				<nldd-text-cell
+					overline="Aanvraag"
+					supporting-text="Laatst bijgewerkt vandaag"
+				>
 					Status: <nldd-tag color="success" size="sm" text="Goedgekeurd"></nldd-tag>
 				</nldd-text-cell>
 			</div>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Overline slot — tag als label.</p>
-				<nldd-text-cell text="Aardappelen kweken in de zomer" supporting-text="Tuinieren · 4 min lezen">
-					<nldd-tag slot="overline" color="accent" size="sm" text="Nieuw"></nldd-tag>
+				<nldd-text-cell
+					text="Aardappelen kweken in de zomer"
+					supporting-text="Tuinieren · 4 min lezen"
+				>
+					<nldd-tag
+						slot="overline"
+						color="accent"
+						size="sm"
+						text="Nieuw"
+					></nldd-tag>
 				</nldd-text-cell>
 			</div>
 		</div>
@@ -251,15 +349,27 @@ export const ZoektermMarkeren = {
 		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 480px;">
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">predictive (default) — vet de niet-gematchte rest. Geschikt voor korte labels in combobox-lijsten.</p>
-				<nldd-text-cell text="Aardappelen" query="aa"></nldd-text-cell>
+				<nldd-text-cell
+					text="Aardappelen"
+					query="aa"
+				></nldd-text-cell>
 			</div>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">match — vet de gematchte query. Geschikt voor lange inhoud in zoekresultaten.</p>
-				<nldd-text-cell text="De aardappel is een knolgewas en een belangrijk voedingsmiddel in de Nederlandse keuken." query="aardappel" query-mark-mode="match"></nldd-text-cell>
+				<nldd-text-cell
+					text="De aardappel is een knolgewas en een belangrijk voedingsmiddel in de Nederlandse keuken."
+					query="aardappel"
+					query-mark-mode="match"
+				></nldd-text-cell>
 			</div>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Werkt op text, overline en supporting-text.</p>
-				<nldd-text-cell overline="Groente" text="Aardappelen" supporting-text="Ook: pieper, knol" query="ap"></nldd-text-cell>
+				<nldd-text-cell
+					overline="Groente"
+					text="Aardappelen"
+					supporting-text="Ook: pieper, knol"
+					query="ap"
+				></nldd-text-cell>
 			</div>
 		</div>
 	`,

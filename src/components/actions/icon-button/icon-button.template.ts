@@ -126,7 +126,10 @@ export function template(this: NLDDIconButton) {
 	// of any interactive ancestor.
 	const control = tooltipText && this.tooltipTiming !== 'never'
 		? html`
-			<nldd-tooltip text=${tooltipText} timing=${this.tooltipTiming}>
+			<nldd-tooltip
+				text=${tooltipText}
+				timing=${this.tooltipTiming}
+			>
 				${renderButton()}
 			</nldd-tooltip>
 		`

@@ -48,12 +48,21 @@ export default {
 // ondersteund.
 const Template = ({ text, supportingText }: Record<string, any>) => html`
 	<nldd-form novalidate>
-		<nldd-form-section text=${text} supporting-text=${supportingText}>
+		<nldd-form-section
+			text=${text}
+			supporting-text=${supportingText}
+		>
 			<nldd-form-field label="Voornaam">
-				<nldd-text-field name="given-name" autocomplete="given-name"></nldd-text-field>
+				<nldd-text-field
+					name="given-name"
+					autocomplete="given-name"
+				></nldd-text-field>
 			</nldd-form-field>
 			<nldd-form-field label="Achternaam">
-				<nldd-text-field name="family-name" autocomplete="family-name"></nldd-text-field>
+				<nldd-text-field
+					name="family-name"
+					autocomplete="family-name"
+				></nldd-text-field>
 			</nldd-form-field>
 		</nldd-form-section>
 	</nldd-form>
@@ -65,34 +74,63 @@ export const Standaard = {
 
 export const InEenFormulier = {
 	render: () => html`
-		<nldd-form label-alignment="right" novalidate>
-			<nldd-form-section text="Persoonsgegevens" supporting-text="Vul je naam en contactgegevens in.">
+		<nldd-form
+			label-alignment="right"
+			novalidate
+		>
+			<nldd-form-section
+				text="Persoonsgegevens"
+				supporting-text="Vul je naam en contactgegevens in."
+			>
 				<nldd-form-field label="Voornaam">
-					<nldd-text-field name="given-name" autocomplete="given-name"></nldd-text-field>
+					<nldd-text-field
+						name="given-name"
+						autocomplete="given-name"
+					></nldd-text-field>
 				</nldd-form-field>
 				<nldd-form-field label="Achternaam">
-					<nldd-text-field name="family-name" autocomplete="family-name"></nldd-text-field>
+					<nldd-text-field
+						name="family-name"
+						autocomplete="family-name"
+					></nldd-text-field>
 				</nldd-form-field>
 				<nldd-form-field label="E-mail">
-					<nldd-text-field name="email" type="email" autocomplete="email"></nldd-text-field>
+					<nldd-text-field
+						name="email"
+						type="email"
+						autocomplete="email"
+					></nldd-text-field>
 				</nldd-form-field>
 			</nldd-form-section>
 
 			<nldd-form-section text="Adres">
 				<nldd-form-field label="Straat en huisnummer">
-					<nldd-text-field name="street-address" autocomplete="street-address"></nldd-text-field>
+					<nldd-text-field
+						name="street-address"
+						autocomplete="street-address"
+					></nldd-text-field>
 				</nldd-form-field>
 				<nldd-form-field label="Postcode">
-					<nldd-text-field name="postal-code" autocomplete="postal-code"></nldd-text-field>
+					<nldd-text-field
+						name="postal-code"
+						autocomplete="postal-code"
+					></nldd-text-field>
 				</nldd-form-field>
 				<nldd-form-field label="Plaats">
-					<nldd-text-field name="address-level2" autocomplete="address-level2"></nldd-text-field>
+					<nldd-text-field
+						name="address-level2"
+						autocomplete="address-level2"
+					></nldd-text-field>
 				</nldd-form-field>
 			</nldd-form-section>
 
 			<nldd-form-actions>
 				<nldd-button-group>
-					<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+					<nldd-button
+						variant="primary"
+						type="submit"
+						text="Opslaan"
+					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>
 		</nldd-form>

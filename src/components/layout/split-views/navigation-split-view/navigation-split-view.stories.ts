@@ -98,7 +98,10 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 			?primary-sidebar-as-sheet=${primarySidebarAsSheet}
 		>
 			<nldd-split-view-pane slot="primary-sidebar">
-				<nldd-page sticky-header accessible-label="Navigatie">
+				<nldd-page
+					sticky-header
+					accessible-label="Navigatie"
+				>
 					<nldd-top-title-bar
 						slot="header"
 						text="Zijbalk"
@@ -124,8 +127,14 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 				</nldd-page>
 			</nldd-split-view-pane>
 
-			<nldd-split-view-pane slot="secondary-sidebar" has-content>
-				<nldd-page sticky-header accessible-label="Tweede navigatie">
+			<nldd-split-view-pane
+				slot="secondary-sidebar"
+				has-content
+			>
+				<nldd-page
+					sticky-header
+					accessible-label="Tweede navigatie"
+				>
 					<nldd-top-title-bar
 						slot="header"
 						text="Secundaire zijbalk"
@@ -150,8 +159,14 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 				</nldd-page>
 			</nldd-split-view-pane>
 
-			<nldd-split-view-pane slot="main" has-content>
-				<nldd-page sticky-header landmarks="page">
+			<nldd-split-view-pane
+				slot="main"
+				has-content
+			>
+				<nldd-page
+					sticky-header
+					landmarks="page"
+				>
 					<nldd-top-title-bar
 						slot="header"
 						text="Inhoud"
@@ -182,7 +197,10 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 			</nldd-split-view-pane>
 
 			<nldd-split-view-pane slot="inspector">
-				<nldd-page sticky-header accessible-label="Details">
+				<nldd-page
+					sticky-header
+					accessible-label="Details"
+				>
 					<nldd-top-title-bar
 						slot="header"
 						text="Inspecteur"
@@ -237,10 +255,16 @@ export const GenestdeSplitView = {
 			</nldd-page>
 		</nldd-split-view-pane>
 
-		<nldd-split-view-pane slot="main" has-content>
+		<nldd-split-view-pane
+			slot="main"
+			has-content
+		>
 			<nldd-bar-split-view>
 				<nldd-split-view-pane slot="main">
-					<nldd-page sticky-header landmarks="page">
+					<nldd-page
+						sticky-header
+						landmarks="page"
+					>
 						<nldd-top-title-bar
 							slot="header"
 							text="Inhoud"
@@ -257,7 +281,11 @@ export const GenestdeSplitView = {
 				</nldd-split-view-pane>
 				<nldd-split-view-pane slot="secondary-bar">
 					<nldd-container padding="16">
-						<nldd-button variant="primary" width="full" text="Secondaire balk"></nldd-button>
+						<nldd-button
+							variant="primary"
+							width="full"
+							text="Secondaire balk"
+						></nldd-button>
 					</nldd-container>
 				</nldd-split-view-pane>
 			</nldd-bar-split-view>

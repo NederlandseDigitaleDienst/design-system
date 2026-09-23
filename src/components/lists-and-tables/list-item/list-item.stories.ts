@@ -92,7 +92,10 @@ export const Standaard = {
 				?current=${args.current}
 				?disabled=${args.disabled}
 			>
-				<nldd-text-cell text="Text cell" supporting-text="Supporting text"></nldd-text-cell>
+				<nldd-text-cell
+					text="Text cell"
+					supporting-text="Supporting text"
+				></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -114,7 +117,10 @@ export const GrootteSm = {
 	render: () => html`
 		<nldd-list variant="simple">
 			<nldd-list-item size="sm">
-				<nldd-text-cell size="sm" text="Small size item"></nldd-text-cell>
+				<nldd-text-cell
+					size="sm"
+					text="Small size item"
+				></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -157,29 +163,52 @@ export const ToestandSelected = {
  */
 export const AlleToestanden = {
 	render: () => html`
-		<nldd-list type="navigation" aria-label="Staten">
+		<nldd-list
+			type="navigation"
+			aria-label="Staten"
+		>
 			<nldd-list-item button>
 				<nldd-text-cell text="Interactief: rust, hover, ingedrukt"></nldd-text-cell>
 			</nldd-list-item>
-			<nldd-list-item button selected>
+			<nldd-list-item
+				button
+				selected
+			>
 				<nldd-text-cell text="Selected: rust, hover, ingedrukt (nooit accent)"></nldd-text-cell>
 			</nldd-list-item>
-			<nldd-list-item button current>
+			<nldd-list-item
+				button
+				current
+			>
 				<nldd-text-cell text="Current: grijs tot de focus erin staat, dan accent"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item current>
-				<nldd-list-item-segment button disclosure accessible-label="Uitklappen">
+				<nldd-list-item-segment
+					button
+					disclosure
+					accessible-label="Uitklappen"
+				>
 					<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 				</nldd-list-item-segment>
-				<nldd-list-item-segment button width="full">
+				<nldd-list-item-segment
+					button
+					width="full"
+				>
 					<nldd-text-cell text="Current met segmenten: focus in een segment kleurt de rij accent"></nldd-text-cell>
 				</nldd-list-item-segment>
 			</nldd-list-item>
 			<nldd-list-item selected>
-				<nldd-list-item-segment button disclosure accessible-label="Uitklappen">
+				<nldd-list-item-segment
+					button
+					disclosure
+					accessible-label="Uitklappen"
+				>
 					<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 				</nldd-list-item-segment>
-				<nldd-list-item-segment button width="full">
+				<nldd-list-item-segment
+					button
+					width="full"
+				>
 					<nldd-text-cell text="Selected met segmenten: blijft grijs, ook met de focus erin"></nldd-text-cell>
 				</nldd-list-item-segment>
 			</nldd-list-item>
@@ -230,7 +259,10 @@ export const MetCellenVooraanEnAchteraan = {
 	render: () => html`
 		<nldd-list variant="box-tinted">
 			<nldd-list-item>
-				<nldd-icon-cell icon="document" size="32"></nldd-icon-cell>
+				<nldd-icon-cell
+					icon="document"
+					size="32"
+				></nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text="Item with start icon"></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
@@ -239,7 +271,10 @@ export const MetCellenVooraanEnAchteraan = {
 				</nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-				<nldd-icon-cell icon="document" size="32"></nldd-icon-cell>
+				<nldd-icon-cell
+					icon="document"
+					size="32"
+				></nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text="Another item"></nldd-text-cell>
 			</nldd-list-item>
@@ -289,15 +324,31 @@ export const MetSleepgreep = {
 
 		const el = document.createElement('div');
 		render(html`
-			<nldd-list variant="box-tinted" reorderable @nldd-reorder=${onReorder}>
+			<nldd-list
+				variant="box-tinted"
+				reorderable
+				@nldd-reorder=${onReorder}
+			>
 				<nldd-list-item>
-					<nldd-drag-handle-cell size="sm" reorderable-only></nldd-drag-handle-cell>
-					<nldd-spacer-cell reorderable-only size="8"></nldd-spacer-cell>
+					<nldd-drag-handle-cell
+						size="sm"
+						reorderable-only
+					></nldd-drag-handle-cell>
+					<nldd-spacer-cell
+						reorderable-only
+						size="8"
+					></nldd-spacer-cell>
 					<nldd-text-cell text="Versleepbaar item"></nldd-text-cell>
 				</nldd-list-item>
 				<nldd-list-item>
-					<nldd-drag-handle-cell size="sm" reorderable-only></nldd-drag-handle-cell>
-					<nldd-spacer-cell reorderable-only size="8"></nldd-spacer-cell>
+					<nldd-drag-handle-cell
+						size="sm"
+						reorderable-only
+					></nldd-drag-handle-cell>
+					<nldd-spacer-cell
+						reorderable-only
+						size="8"
+					></nldd-spacer-cell>
 					<nldd-text-cell text="Nog een item"></nldd-text-cell>
 				</nldd-list-item>
 			</nldd-list>
@@ -321,8 +372,16 @@ export const ResponsieveCellen = {
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell text="Begroting 2026"></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
-				<nldd-text-cell width="fit-content" color="secondary" text="Gewijzigd 2 uur geleden" hide-below="480px"></nldd-text-cell>
-				<nldd-spacer-cell size="8" hide-below="280px"></nldd-spacer-cell>
+				<nldd-text-cell
+					width="fit-content"
+					color="secondary"
+					text="Gewijzigd 2 uur geleden"
+					hide-below="480px"
+				></nldd-text-cell>
+				<nldd-spacer-cell
+					size="8"
+					hide-below="280px"
+				></nldd-spacer-cell>
 				<nldd-icon-cell hide-below="280px"><nldd-icon icon="chevron-right-small"></nldd-icon></nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item>
@@ -330,8 +389,16 @@ export const ResponsieveCellen = {
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell text="Projecten"></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
-				<nldd-text-cell width="fit-content" color="secondary" text="Gisteren" hide-below="480px"></nldd-text-cell>
-				<nldd-spacer-cell size="8" hide-below="280px"></nldd-spacer-cell>
+				<nldd-text-cell
+					width="fit-content"
+					color="secondary"
+					text="Gisteren"
+					hide-below="480px"
+				></nldd-text-cell>
+				<nldd-spacer-cell
+					size="8"
+					hide-below="280px"
+				></nldd-spacer-cell>
 				<nldd-icon-cell hide-below="280px"><nldd-icon icon="chevron-right-small"></nldd-icon></nldd-icon-cell>
 			</nldd-list-item>
 		</nldd-list>

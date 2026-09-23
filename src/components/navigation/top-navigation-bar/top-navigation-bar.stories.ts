@@ -77,7 +77,10 @@ const Template = ({
 		>
 			${noGlobalMenu ? nothing : html`
 				<nldd-menu-bar slot="global">
-					<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						text="Home"
+						current
+					></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Aan de slag"></nldd-menu-bar-item>
@@ -85,20 +88,52 @@ const Template = ({
 				</nldd-menu-bar>
 			`}
 			<nldd-menu-bar slot="utility">
-				<nldd-menu-bar-item text="NL" expandable content-priority="icon">
+				<nldd-menu-bar-item
+					text="NL"
+					expandable
+					content-priority="icon"
+				>
 					<nldd-menu>
-						<nldd-menu-item text="Nederlands" type="radio" selected></nldd-menu-item>
-						<nldd-menu-item text="English" type="radio"></nldd-menu-item>
-						<nldd-menu-item text="Papiamentu" type="radio"></nldd-menu-item>
+						<nldd-menu-item
+							text="Nederlands"
+							type="radio"
+							selected
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="English"
+							type="radio"
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="Papiamentu"
+							type="radio"
+						></nldd-menu-item>
 					</nldd-menu>
 				</nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Mijn account" icon="profile" expandable content-priority="text">
+				<nldd-menu-bar-item
+					text="Zoeken"
+					icon="magnifier"
+					content-priority="icon"
+				></nldd-menu-bar-item>
+				<nldd-menu-bar-item
+					text="Mijn account"
+					icon="profile"
+					expandable
+					content-priority="text"
+				>
 					<nldd-menu>
-						<nldd-menu-item text="Mijn gegevens" icon="contact-card"></nldd-menu-item>
-						<nldd-menu-item text="Instellingen" icon="settings"></nldd-menu-item>
+						<nldd-menu-item
+							text="Mijn gegevens"
+							icon="contact-card"
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="Instellingen"
+							icon="settings"
+						></nldd-menu-item>
 						<nldd-menu-divider></nldd-menu-divider>
-						<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+						<nldd-menu-item
+							text="Log uit"
+							icon="logout"
+						></nldd-menu-item>
 					</nldd-menu>
 				</nldd-menu-bar-item>
 			</nldd-menu-bar>
@@ -136,20 +171,40 @@ export const MijnOverheidZakelijk = {
 		<div style=${layoutArea}>
 			<nldd-top-navigation-bar logo-title="Mijn overheid zakelijk">
 				<nldd-menu-bar slot="global">
-					<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						text="Home"
+						current
+					></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Over MOZa"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Actueel"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Onderwerpen"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Contact"></nldd-menu-bar-item>
 				</nldd-menu-bar>
 				<nldd-menu-bar slot="utility">
-					<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Bloom B.V." icon="profile" expandable>
+					<nldd-menu-bar-item
+						text="Zoeken"
+						icon="magnifier"
+						content-priority="icon"
+					></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						text="Bloom B.V."
+						icon="profile"
+						expandable
+					>
 						<nldd-menu>
-							<nldd-menu-item text="Bedrijfsprofiel" icon="company"></nldd-menu-item>
-							<nldd-menu-item text="Instellingen" icon="settings"></nldd-menu-item>
+							<nldd-menu-item
+								text="Bedrijfsprofiel"
+								icon="company"
+							></nldd-menu-item>
+							<nldd-menu-item
+								text="Instellingen"
+								icon="settings"
+							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+							<nldd-menu-item
+								text="Log uit"
+								icon="logout"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-menu-bar-item>
 				</nldd-menu-bar>
@@ -168,11 +223,21 @@ export const RegelRecht = {
 				back-text="Bibliotheek"
 			>
 				<nldd-menu-bar slot="utility">
-					<nldd-menu-bar-item text="J. Jansen" icon="profile" expandable>
+					<nldd-menu-bar-item
+						text="J. Jansen"
+						icon="profile"
+						expandable
+					>
 						<nldd-menu>
-							<nldd-menu-item text="Mijn profiel" icon="contact-card"></nldd-menu-item>
+							<nldd-menu-item
+								text="Mijn profiel"
+								icon="contact-card"
+							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+							<nldd-menu-item
+								text="Log uit"
+								icon="logout"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-menu-bar-item>
 				</nldd-menu-bar>
@@ -187,25 +252,60 @@ export const SmalScherm = {
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-top-navigation-bar website-title="Ontwerpsysteem">
 				<nldd-menu-bar slot="global">
-					<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						text="Home"
+						current
+					></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
 				</nldd-menu-bar>
 				<nldd-menu-bar slot="utility">
-					<nldd-menu-bar-item text="NL" expandable content-priority="icon">
+					<nldd-menu-bar-item
+						text="NL"
+						expandable
+						content-priority="icon"
+					>
 						<nldd-menu>
-							<nldd-menu-item text="Nederlands" type="radio" selected></nldd-menu-item>
-							<nldd-menu-item text="English" type="radio"></nldd-menu-item>
-							<nldd-menu-item text="Papiamentu" type="radio"></nldd-menu-item>
+							<nldd-menu-item
+								text="Nederlands"
+								type="radio"
+								selected
+							></nldd-menu-item>
+							<nldd-menu-item
+								text="English"
+								type="radio"
+							></nldd-menu-item>
+							<nldd-menu-item
+								text="Papiamentu"
+								type="radio"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Mijn account" icon="profile" expandable content-priority="text">
+					<nldd-menu-bar-item
+						text="Zoeken"
+						icon="magnifier"
+						content-priority="icon"
+					></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						text="Mijn account"
+						icon="profile"
+						expandable
+						content-priority="text"
+					>
 						<nldd-menu>
-							<nldd-menu-item text="Mijn gegevens" icon="contact-card"></nldd-menu-item>
-							<nldd-menu-item text="Instellingen" icon="settings"></nldd-menu-item>
+							<nldd-menu-item
+								text="Mijn gegevens"
+								icon="contact-card"
+							></nldd-menu-item>
+							<nldd-menu-item
+								text="Instellingen"
+								icon="settings"
+							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+							<nldd-menu-item
+								text="Log uit"
+								icon="logout"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-menu-bar-item>
 				</nldd-menu-bar>
@@ -228,8 +328,14 @@ export const MeerlaagsMenu = {
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-top-navigation-bar website-title="Ontwerpsysteem">
 				<nldd-menu-bar slot="global">
-					<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Componenten" expandable>
+					<nldd-menu-bar-item
+						text="Home"
+						current
+					></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						text="Componenten"
+						expandable
+					>
 						<nldd-menu>
 							<nldd-menu-item text="Acties"></nldd-menu-item>
 							<nldd-menu-item text="Formulieren">
@@ -254,9 +360,15 @@ export const MeerlaagsMenu = {
 export const VeelGlobaleItems = {
 	render: () => html`
 		<div style=${layoutArea}>
-			<nldd-top-navigation-bar logo-title="Nederlandse Digitale Dienst" logo-subtitle="Ministerie van Economische Zaken en Klimaat">
+			<nldd-top-navigation-bar
+				logo-title="Nederlandse Digitale Dienst"
+				logo-subtitle="Ministerie van Economische Zaken en Klimaat"
+			>
 				<nldd-menu-bar slot="global">
-					<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						text="Home"
+						current
+					></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Patronen"></nldd-menu-bar-item>
@@ -266,20 +378,52 @@ export const VeelGlobaleItems = {
 					<nldd-menu-bar-item text="Over ons"></nldd-menu-bar-item>
 				</nldd-menu-bar>
 				<nldd-menu-bar slot="utility">
-					<nldd-menu-bar-item text="NL" expandable content-priority="icon">
+					<nldd-menu-bar-item
+						text="NL"
+						expandable
+						content-priority="icon"
+					>
 						<nldd-menu>
-							<nldd-menu-item text="Nederlands" type="radio" selected></nldd-menu-item>
-							<nldd-menu-item text="English" type="radio"></nldd-menu-item>
-							<nldd-menu-item text="Papiamentu" type="radio"></nldd-menu-item>
+							<nldd-menu-item
+								text="Nederlands"
+								type="radio"
+								selected
+							></nldd-menu-item>
+							<nldd-menu-item
+								text="English"
+								type="radio"
+							></nldd-menu-item>
+							<nldd-menu-item
+								text="Papiamentu"
+								type="radio"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Mijn account" icon="profile" expandable content-priority="text">
+					<nldd-menu-bar-item
+						text="Zoeken"
+						icon="magnifier"
+						content-priority="icon"
+					></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						text="Mijn account"
+						icon="profile"
+						expandable
+						content-priority="text"
+					>
 						<nldd-menu>
-							<nldd-menu-item text="Mijn gegevens" icon="contact-card"></nldd-menu-item>
-							<nldd-menu-item text="Instellingen" icon="settings"></nldd-menu-item>
+							<nldd-menu-item
+								text="Mijn gegevens"
+								icon="contact-card"
+							></nldd-menu-item>
+							<nldd-menu-item
+								text="Instellingen"
+								icon="settings"
+							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+							<nldd-menu-item
+								text="Log uit"
+								icon="logout"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-menu-bar-item>
 				</nldd-menu-bar>
@@ -304,25 +448,54 @@ export const AlleToestanden = {
 			<div style=${layoutArea}>
 				<nldd-top-navigation-bar website-title="Ontwerpsysteem (Full width)">
 					<nldd-menu-bar slot="global">
-						<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+						<nldd-menu-bar-item
+							text="Home"
+							current
+						></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Aan de slag"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Over ons"></nldd-menu-bar-item>
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
-						<nldd-menu-bar-item text="NL" expandable content-priority="icon">
+						<nldd-menu-bar-item
+							text="NL"
+							expandable
+							content-priority="icon"
+						>
 							<nldd-menu>
-								<nldd-menu-item text="Nederlands" type="radio" selected></nldd-menu-item>
-								<nldd-menu-item text="English" type="radio"></nldd-menu-item>
+								<nldd-menu-item
+									text="Nederlands"
+									type="radio"
+									selected
+								></nldd-menu-item>
+								<nldd-menu-item
+									text="English"
+									type="radio"
+								></nldd-menu-item>
 							</nldd-menu>
 						</nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Mijn account" icon="profile" expandable content-priority="text">
+						<nldd-menu-bar-item
+							text="Zoeken"
+							icon="magnifier"
+							content-priority="icon"
+						></nldd-menu-bar-item>
+						<nldd-menu-bar-item
+							text="Mijn account"
+							icon="profile"
+							expandable
+							content-priority="text"
+						>
 							<nldd-menu>
-								<nldd-menu-item text="Mijn gegevens" icon="contact-card"></nldd-menu-item>
+								<nldd-menu-item
+									text="Mijn gegevens"
+									icon="contact-card"
+								></nldd-menu-item>
 								<nldd-menu-divider></nldd-menu-divider>
-								<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+								<nldd-menu-item
+									text="Log uit"
+									icon="logout"
+								></nldd-menu-item>
 							</nldd-menu>
 						</nldd-menu-bar-item>
 					</nldd-menu-bar>
@@ -331,23 +504,52 @@ export const AlleToestanden = {
 			<div style="${layoutArea} max-width: 400px;">
 				<nldd-top-navigation-bar website-title="Ontwerpsysteem (Small viewport)">
 					<nldd-menu-bar slot="global">
-						<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+						<nldd-menu-bar-item
+							text="Home"
+							current
+						></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
-						<nldd-menu-bar-item text="NL" expandable content-priority="icon">
+						<nldd-menu-bar-item
+							text="NL"
+							expandable
+							content-priority="icon"
+						>
 							<nldd-menu>
-								<nldd-menu-item text="Nederlands" type="radio" selected></nldd-menu-item>
-								<nldd-menu-item text="English" type="radio"></nldd-menu-item>
+								<nldd-menu-item
+									text="Nederlands"
+									type="radio"
+									selected
+								></nldd-menu-item>
+								<nldd-menu-item
+									text="English"
+									type="radio"
+								></nldd-menu-item>
 							</nldd-menu>
 						</nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Mijn account" icon="profile" expandable content-priority="text">
+						<nldd-menu-bar-item
+							text="Zoeken"
+							icon="magnifier"
+							content-priority="icon"
+						></nldd-menu-bar-item>
+						<nldd-menu-bar-item
+							text="Mijn account"
+							icon="profile"
+							expandable
+							content-priority="text"
+						>
 							<nldd-menu>
-								<nldd-menu-item text="Mijn gegevens" icon="contact-card"></nldd-menu-item>
+								<nldd-menu-item
+									text="Mijn gegevens"
+									icon="contact-card"
+								></nldd-menu-item>
 								<nldd-menu-divider></nldd-menu-divider>
-								<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+								<nldd-menu-item
+									text="Log uit"
+									icon="logout"
+								></nldd-menu-item>
 							</nldd-menu>
 						</nldd-menu-bar-item>
 					</nldd-menu-bar>
@@ -356,19 +558,36 @@ export const AlleToestanden = {
 			<div style=${layoutArea}>
 				<nldd-top-navigation-bar logo-title="Mijn overheid zakelijk">
 					<nldd-menu-bar slot="global">
-						<nldd-menu-bar-item text="Home" current></nldd-menu-bar-item>
+						<nldd-menu-bar-item
+							text="Home"
+							current
+						></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Over MOZa"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Actueel"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Onderwerpen"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Contact"></nldd-menu-bar-item>
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
-						<nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="icon"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Bloom B.V." icon="profile" expandable>
+						<nldd-menu-bar-item
+							text="Zoeken"
+							icon="magnifier"
+							content-priority="icon"
+						></nldd-menu-bar-item>
+						<nldd-menu-bar-item
+							text="Bloom B.V."
+							icon="profile"
+							expandable
+						>
 							<nldd-menu>
-								<nldd-menu-item text="Bedrijfsprofiel" icon="company"></nldd-menu-item>
+								<nldd-menu-item
+									text="Bedrijfsprofiel"
+									icon="company"
+								></nldd-menu-item>
 								<nldd-menu-divider></nldd-menu-divider>
-								<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+								<nldd-menu-item
+									text="Log uit"
+									icon="logout"
+								></nldd-menu-item>
 							</nldd-menu>
 						</nldd-menu-bar-item>
 					</nldd-menu-bar>
@@ -381,11 +600,21 @@ export const AlleToestanden = {
 					back-text="Bibliotheek"
 				>
 					<nldd-menu-bar slot="utility">
-						<nldd-menu-bar-item text="J. Jansen" icon="profile" expandable>
+						<nldd-menu-bar-item
+							text="J. Jansen"
+							icon="profile"
+							expandable
+						>
 							<nldd-menu>
-								<nldd-menu-item text="Mijn profiel" icon="contact-card"></nldd-menu-item>
+								<nldd-menu-item
+									text="Mijn profiel"
+									icon="contact-card"
+								></nldd-menu-item>
 								<nldd-menu-divider></nldd-menu-divider>
-								<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+								<nldd-menu-item
+									text="Log uit"
+									icon="logout"
+								></nldd-menu-item>
 							</nldd-menu>
 						</nldd-menu-bar-item>
 					</nldd-menu-bar>

@@ -124,7 +124,9 @@ export function tokenFieldTemplate(component: NLDDTokenField): TemplateResult {
 			data-valid=${component.valid && !component.invalid ? '' : nothing}
 			@click=${component._handleFieldClick}
 		>
-			<div class="token-field__list" role="list">
+			<div class="token-field__list"
+				role="list"
+			>
 				${repeat(
 					component.values,
 					(value) => value,

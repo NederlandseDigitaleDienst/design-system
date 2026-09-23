@@ -26,11 +26,17 @@ export function titleTemplate(component: NLDDTitle): TemplateResult {
 		<div class="title">
 			<div class="title__title-group">
 				${component.overline && !component._hasOverlineSlotted ? html`<p class="title__overline">${component.overline}</p>` : nothing}
-				<slot name="overline" @slotchange=${component._onSlotChange}></slot>
+				<slot
+					name="overline"
+					@slotchange=${component._onSlotChange}
+				></slot>
 				${renderText(component)}
 				<slot @slotchange=${component._onSlotChange}></slot>
 				${component.supportingText && !component._hasSupportingTextSlotted ? html`<p class="title__supporting-text">${component.supportingText}</p>` : nothing}
-				<slot name="supporting-text" @slotchange=${component._onSlotChange}></slot>
+				<slot
+					name="supporting-text"
+					@slotchange=${component._onSlotChange}
+				></slot>
 			</div>
 			<div class="title__end">
 				<slot name="end"></slot>

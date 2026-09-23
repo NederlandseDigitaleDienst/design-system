@@ -93,7 +93,10 @@ export const AchtergrondCritical = {
 					<p>Een cluster verwijderen is definitief en kan niet ongedaan worden gemaakt.</p>
 				</nldd-rich-text>
 				<nldd-spacer size="16"></nldd-spacer>
-				<nldd-button variant="destructive" text="Verwijder dit cluster"></nldd-button>
+				<nldd-button
+					variant="destructive"
+					text="Verwijder dit cluster"
+				></nldd-button>
 
 		</nldd-container>
 	</nldd-box>

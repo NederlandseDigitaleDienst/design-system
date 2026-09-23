@@ -40,7 +40,10 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: 'menu' |
 				<div class="menu__header"
 					?hidden=${!this._hasHeader}
 				>
-					<slot name="header" @slotchange=${this._onHeaderSlotChange}></slot>
+					<slot
+						name="header"
+						@slotchange=${this._onHeaderSlotChange}
+					></slot>
 				</div>
 			` : nothing}
 			<div class="menu__main">
@@ -85,7 +88,10 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: 'menu' |
 				<div class="menu__footer"
 					?hidden=${!this._hasFooter}
 				>
-					<slot name="footer" @slotchange=${this._onFooterSlotChange}></slot>
+					<slot
+						name="footer"
+						@slotchange=${this._onFooterSlotChange}
+					></slot>
 				</div>
 			` : nothing}
 		</div>

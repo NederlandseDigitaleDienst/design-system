@@ -61,7 +61,10 @@ const paneContent = (title: any, slot: any) => html`
 			landmarks=${slot === 'pane-1' ? 'page' : nothing}
 			accessible-label=${slot === 'pane-1' ? nothing : title}
 		>
-			<nldd-container slot="header" padding="16">
+			<nldd-container
+				slot="header"
+				padding="16"
+			>
 				<nldd-rich-text>
 					<strong>${title}</strong>
 				</nldd-rich-text>
@@ -81,14 +84,21 @@ const paneContent = (title: any, slot: any) => html`
 `;
 
 export const Standaard = ({ background, panes }: Record<string, any>) => html`
-	<nldd-side-by-side-split-view panes=${panes} background=${background} style="height: 500px;">
+	<nldd-side-by-side-split-view
+		panes=${panes}
+		background=${background}
+		style="height: 500px;"
+	>
 		${Array.from({ length: panes }, (_, i) => paneContent(`Paneel ${i + 1}`, `pane-${i + 1}`))}
 	</nldd-side-by-side-split-view>
 `;
 
 export const DrieKolommen = {
 	render: () => html`
-	<nldd-side-by-side-split-view panes="3" style="height: 500px;">
+	<nldd-side-by-side-split-view
+		panes="3"
+		style="height: 500px;"
+	>
 		${[1, 2, 3].map(n => paneContent(`Paneel ${n}`, `pane-${n}`))}
 	</nldd-side-by-side-split-view>
 `,

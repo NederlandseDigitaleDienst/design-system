@@ -98,7 +98,10 @@ const Template = ({ size, text, showText, timing, noBackdrop, complete }: Record
 				?no-backdrop=${noBackdrop as boolean}
 				?complete=${complete as boolean}
 			>
-				<nldd-container padding="20" gap="12">
+				<nldd-container
+					padding="20"
+					gap="12"
+				>
 					<nldd-rich-text>
 						<p><strong>Voorbeeldcontent</strong></p>
 						<p>
@@ -125,10 +128,22 @@ export const MetLabel = {
 export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center; height: 120px;">
-			<nldd-activity-indicator size="20" timing="instant"></nldd-activity-indicator>
-			<nldd-activity-indicator size="28" timing="instant"></nldd-activity-indicator>
-			<nldd-activity-indicator size="40" timing="instant"></nldd-activity-indicator>
-			<nldd-activity-indicator size="64" timing="instant"></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="20"
+				timing="instant"
+			></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="28"
+				timing="instant"
+			></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="40"
+				timing="instant"
+			></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="64"
+				timing="instant"
+			></nldd-activity-indicator>
 		</div>
 	`,
 	parameters: {
@@ -141,10 +156,16 @@ export const ErftCurrentColor = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center; height: 120px;">
 			<span style="color: var(--semantics-content-accent-color); display: inline-flex;">
-				<nldd-activity-indicator size="32" timing="instant"></nldd-activity-indicator>
+				<nldd-activity-indicator
+					size="32"
+					timing="instant"
+				></nldd-activity-indicator>
 			</span>
 			<span style="color: var(--semantics-content-critical-color); display: inline-flex;">
-				<nldd-activity-indicator size="32" timing="instant"></nldd-activity-indicator>
+				<nldd-activity-indicator
+					size="32"
+					timing="instant"
+				></nldd-activity-indicator>
 			</span>
 		</div>
 	`,
@@ -157,7 +178,10 @@ export const VertraagdTonen = {
 	name: 'Vertraagd tonen (timing="delay")',
 	render: () => html`
 		<div style="height: 240px; display: flex;">
-			<nldd-activity-indicator show-text text="Laden"></nldd-activity-indicator>
+			<nldd-activity-indicator
+				show-text
+				text="Laden"
+			></nldd-activity-indicator>
 		</div>
 	`,
 	parameters: {
@@ -170,7 +194,11 @@ export const ProgressBarInDeSlot = {
 	render: () => html`
 		<div style="height: 240px; display: flex;">
 			<nldd-activity-indicator timing="instant">
-				<nldd-progress-bar slot="indicator" indeterminate text="Uploaden"></nldd-progress-bar>
+				<nldd-progress-bar
+					slot="indicator"
+					indeterminate
+					text="Uploaden"
+				></nldd-progress-bar>
 			</nldd-activity-indicator>
 		</div>
 	`,
@@ -184,7 +212,13 @@ export const EigenProgressCircleInDeSlot = {
 	render: () => html`
 		<div style="height: 240px; display: flex;">
 			<nldd-activity-indicator timing="instant">
-				<nldd-progress-circle slot="indicator" size="64" color="success" indeterminate text="Verwerken"></nldd-progress-circle>
+				<nldd-progress-circle
+					slot="indicator"
+					size="64"
+					color="success"
+					indeterminate
+					text="Verwerken"
+				></nldd-progress-circle>
 			</nldd-activity-indicator>
 		</div>
 	`,
@@ -204,8 +238,16 @@ export const Backdrop = {
 	render: ({ noBackdrop }: Record<string, unknown>) => html`
 		<div style="width: 320px;">
 			<nldd-card accessible-label="Aanvraag indienen">
-				<nldd-activity-indicator ?no-backdrop=${noBackdrop as boolean} show-text text="Bezig met verwerken…" timing="instant">
-					<nldd-container padding="20" gap="8">
+				<nldd-activity-indicator
+					?no-backdrop=${noBackdrop as boolean}
+					show-text
+					text="Bezig met verwerken…"
+					timing="instant"
+				>
+					<nldd-container
+						padding="20"
+						gap="8"
+					>
 						<nldd-rich-text>
 							<p><strong>Aanvraag indienen</strong></p>
 							<p>

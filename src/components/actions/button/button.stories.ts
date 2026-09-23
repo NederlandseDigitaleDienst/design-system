@@ -14,7 +14,10 @@ import { ICONS } from './../../content/icon/icon.js';
  * ## Gebruik
  * ```html
  * <nldd-button text="Titel"></nldd-button>
- * <nldd-button text="Download" start-icon="download"></nldd-button>
+ * <nldd-button
+ * 	text="Download"
+ * 	start-icon="download"
+ * ></nldd-button>
  * ```
  */
 export default {
@@ -233,9 +236,24 @@ export const HorizontaleUitlijning = {
 	name: 'Horizontale uitlijning (volle breedte)',
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; width: 320px;">
-			<nldd-button width="full" horizontal-alignment="left" text="Links" start-icon="download"></nldd-button>
-			<nldd-button width="full" horizontal-alignment="center" text="Midden" start-icon="download"></nldd-button>
-			<nldd-button width="full" horizontal-alignment="right" text="Rechts" start-icon="download"></nldd-button>
+			<nldd-button
+				width="full"
+				horizontal-alignment="left"
+				text="Links"
+				start-icon="download"
+			></nldd-button>
+			<nldd-button
+				width="full"
+				horizontal-alignment="center"
+				text="Midden"
+				start-icon="download"
+			></nldd-button>
+			<nldd-button
+				width="full"
+				horizontal-alignment="right"
+				text="Rechts"
+				start-icon="download"
+			></nldd-button>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -244,10 +262,34 @@ export const HorizontaleUitlijning = {
 export const MetSupportingText = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
-			<nldd-button horizontal-alignment="left" size="lg" text="Opslaan" supporting-text="Alle wijzigingen" start-icon="download"></nldd-button>
-			<nldd-button horizontal-alignment="left" size="md" text="Opslaan" supporting-text="Alle wijzigingen" start-icon="download"></nldd-button>
-			<nldd-button horizontal-alignment="left" size="sm" text="Opslaan" supporting-text="3 items" start-icon="download"></nldd-button>
-			<nldd-button horizontal-alignment="left" size="xs" text="Opslaan" supporting-text="3 items" start-icon="download"></nldd-button>
+			<nldd-button
+				horizontal-alignment="left"
+				size="lg"
+				text="Opslaan"
+				supporting-text="Alle wijzigingen"
+				start-icon="download"
+			></nldd-button>
+			<nldd-button
+				horizontal-alignment="left"
+				size="md"
+				text="Opslaan"
+				supporting-text="Alle wijzigingen"
+				start-icon="download"
+			></nldd-button>
+			<nldd-button
+				horizontal-alignment="left"
+				size="sm"
+				text="Opslaan"
+				supporting-text="3 items"
+				start-icon="download"
+			></nldd-button>
+			<nldd-button
+				horizontal-alignment="left"
+				size="xs"
+				text="Opslaan"
+				supporting-text="3 items"
+				start-icon="download"
+			></nldd-button>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -256,9 +298,18 @@ export const MetSupportingText = {
 export const VariantenNaarRol = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button variant="primary" text="Primary"></nldd-button>
-		<nldd-button variant="secondary" text="Secondary"></nldd-button>
-		<nldd-button variant="destructive" text="Destructive"></nldd-button>
+		<nldd-button
+			variant="primary"
+			text="Primary"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Secondary"
+		></nldd-button>
+		<nldd-button
+			variant="destructive"
+			text="Destructive"
+		></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -274,13 +325,34 @@ export const VariantenNaarRol = {
 export const VariantenNaarUiterlijk = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button variant="accent-filled" text="Accent Filled"></nldd-button>
-		<nldd-button variant="accent-transparent" text="Accent Transparent"></nldd-button>
-		<nldd-button variant="neutral-tinted" text="Neutral Tinted"></nldd-button>
-		<nldd-button variant="neutral-base" text="Neutral Base"></nldd-button>
-		<nldd-button variant="neutral-transparent" text="Neutral Transparent"></nldd-button>
-		<nldd-button variant="critical-tinted" text="Critical Tinted"></nldd-button>
-		<nldd-button variant="critical-transparent" text="Critical Transparent"></nldd-button>
+		<nldd-button
+			variant="accent-filled"
+			text="Accent Filled"
+		></nldd-button>
+		<nldd-button
+			variant="accent-transparent"
+			text="Accent Transparent"
+		></nldd-button>
+		<nldd-button
+			variant="neutral-tinted"
+			text="Neutral Tinted"
+		></nldd-button>
+		<nldd-button
+			variant="neutral-base"
+			text="Neutral Base"
+		></nldd-button>
+		<nldd-button
+			variant="neutral-transparent"
+			text="Neutral Transparent"
+		></nldd-button>
+		<nldd-button
+			variant="critical-tinted"
+			text="Critical Tinted"
+		></nldd-button>
+		<nldd-button
+			variant="critical-transparent"
+			text="Critical Transparent"
+		></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -291,10 +363,22 @@ export const VariantenNaarUiterlijk = {
 export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button size="lg" text="Large"></nldd-button>
-		<nldd-button size="md" text="Medium"></nldd-button>
-		<nldd-button size="sm" text="Small"></nldd-button>
-		<nldd-button size="xs" text="Extra Small"></nldd-button>
+		<nldd-button
+			size="lg"
+			text="Large"
+		></nldd-button>
+		<nldd-button
+			size="md"
+			text="Medium"
+		></nldd-button>
+		<nldd-button
+			size="sm"
+			text="Small"
+		></nldd-button>
+		<nldd-button
+			size="xs"
+			text="Extra Small"
+		></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -305,10 +389,26 @@ export const Grootten = {
 export const MetStartIcon = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button size="lg" text="Download" start-icon="download"></nldd-button>
-		<nldd-button size="md" text="Download" start-icon="download"></nldd-button>
-		<nldd-button size="sm" text="Download" start-icon="download"></nldd-button>
-		<nldd-button size="xs" text="Download" start-icon="download"></nldd-button>
+		<nldd-button
+			size="lg"
+			text="Download"
+			start-icon="download"
+		></nldd-button>
+		<nldd-button
+			size="md"
+			text="Download"
+			start-icon="download"
+		></nldd-button>
+		<nldd-button
+			size="sm"
+			text="Download"
+			start-icon="download"
+		></nldd-button>
+		<nldd-button
+			size="xs"
+			text="Download"
+			start-icon="download"
+		></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -324,10 +424,26 @@ export const MetStartIcon = {
 export const MetEndIcon = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button size="lg" text="Volgende" end-icon="arrow-right"></nldd-button>
-		<nldd-button size="md" text="Volgende" end-icon="arrow-right"></nldd-button>
-		<nldd-button size="sm" text="Volgende" end-icon="arrow-right"></nldd-button>
-		<nldd-button size="xs" text="Volgende" end-icon="arrow-right"></nldd-button>
+		<nldd-button
+			size="lg"
+			text="Volgende"
+			end-icon="arrow-right"
+		></nldd-button>
+		<nldd-button
+			size="md"
+			text="Volgende"
+			end-icon="arrow-right"
+		></nldd-button>
+		<nldd-button
+			size="sm"
+			text="Volgende"
+			end-icon="arrow-right"
+		></nldd-button>
+		<nldd-button
+			size="xs"
+			text="Volgende"
+			end-icon="arrow-right"
+		></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -343,10 +459,30 @@ export const MetEndIcon = {
 export const MetBeideIconen = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button size="lg" text="Download bestand" start-icon="download" end-icon="arrow-right"></nldd-button>
-		<nldd-button size="md" text="Download bestand" start-icon="download" end-icon="arrow-right"></nldd-button>
-		<nldd-button size="sm" text="Download bestand" start-icon="download" end-icon="arrow-right"></nldd-button>
-		<nldd-button size="xs" text="Download bestand" start-icon="download" end-icon="arrow-right"></nldd-button>
+		<nldd-button
+			size="lg"
+			text="Download bestand"
+			start-icon="download"
+			end-icon="arrow-right"
+		></nldd-button>
+		<nldd-button
+			size="md"
+			text="Download bestand"
+			start-icon="download"
+			end-icon="arrow-right"
+		></nldd-button>
+		<nldd-button
+			size="sm"
+			text="Download bestand"
+			start-icon="download"
+			end-icon="arrow-right"
+		></nldd-button>
+		<nldd-button
+			size="xs"
+			text="Download bestand"
+			start-icon="download"
+			end-icon="arrow-right"
+		></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -362,10 +498,26 @@ export const MetBeideIconen = {
 export const MetExpandable = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button expandable size="lg" text="Opties"></nldd-button>
-		<nldd-button expandable size="md" text="Opties"></nldd-button>
-		<nldd-button expandable size="sm" text="Opties"></nldd-button>
-		<nldd-button expandable size="xs" text="Opties"></nldd-button>
+		<nldd-button
+			expandable
+			size="lg"
+			text="Opties"
+		></nldd-button>
+		<nldd-button
+			expandable
+			size="md"
+			text="Opties"
+		></nldd-button>
+		<nldd-button
+			expandable
+			size="sm"
+			text="Opties"
+		></nldd-button>
+		<nldd-button
+			expandable
+			size="xs"
+			text="Opties"
+		></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -389,18 +541,42 @@ export const MetExpandable = {
 export const MetMenu = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-			<nldd-button expandable text="Acties">
+			<nldd-button
+				expandable
+				text="Acties"
+			>
 				<nldd-menu slot="popup">
-					<nldd-menu-item text="Bewerken" icon="pencil"></nldd-menu-item>
-					<nldd-menu-item text="Dupliceren" icon="square-plus-on-square"></nldd-menu-item>
+					<nldd-menu-item
+						text="Bewerken"
+						icon="pencil"
+					></nldd-menu-item>
+					<nldd-menu-item
+						text="Dupliceren"
+						icon="square-plus-on-square"
+					></nldd-menu-item>
 					<nldd-menu-divider></nldd-menu-divider>
-					<nldd-menu-item text="Verwijderen" icon="trash" destructive></nldd-menu-item>
+					<nldd-menu-item
+						text="Verwijderen"
+						icon="trash"
+						destructive
+					></nldd-menu-item>
 				</nldd-menu>
 			</nldd-button>
-			<nldd-button expandable variant="primary" start-icon="plus" text="Nieuw">
+			<nldd-button
+				expandable
+				variant="primary"
+				start-icon="plus"
+				text="Nieuw"
+			>
 				<nldd-menu slot="popup">
-					<nldd-menu-item text="Document" icon="file"></nldd-menu-item>
-					<nldd-menu-item text="Map" icon="folder"></nldd-menu-item>
+					<nldd-menu-item
+						text="Document"
+						icon="file"
+					></nldd-menu-item>
+					<nldd-menu-item
+						text="Map"
+						icon="folder"
+					></nldd-menu-item>
 				</nldd-menu>
 			</nldd-button>
 		</div>
@@ -424,9 +600,19 @@ export const MetMenu = {
 export const MetPopover = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-			<nldd-button expandable text="Info">
-				<nldd-popover slot="popup" accessible-label="Toelichting" width="280px">
-					<nldd-container padding="16" gap="8">
+			<nldd-button
+				expandable
+				text="Info"
+			>
+				<nldd-popover
+					slot="popup"
+					accessible-label="Toelichting"
+					width="280px"
+				>
+					<nldd-container
+						padding="16"
+						gap="8"
+					>
 						<nldd-title
 							size="6"
 							text="Zorgtoeslag"
@@ -435,7 +621,10 @@ export const MetPopover = {
 						<nldd-rich-text>
 							<p>Een tegemoetkoming in de kosten van je zorgverzekering, afhankelijk van je inkomen.</p>
 						</nldd-rich-text>
-						<nldd-button variant="primary" text="Meer lezen"></nldd-button>
+						<nldd-button
+							variant="primary"
+							text="Meer lezen"
+						></nldd-button>
 					</nldd-container>
 				</nldd-popover>
 			</nldd-button>
@@ -455,12 +644,39 @@ export const ToestandLoading = {
 	name: 'Toestand loading',
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button loading size="lg" variant="primary" text="Opslaan" start-icon="download"></nldd-button>
-		<nldd-button loading variant="primary" text="Opslaan"></nldd-button>
-		<nldd-button loading variant="neutral-tinted" text="Opslaan" start-icon="download"></nldd-button>
-		<nldd-button loading variant="critical-tinted" text="Verwijderen"></nldd-button>
-		<nldd-button loading size="sm" text="Klein"></nldd-button>
-		<nldd-button loading size="xs" text="Mini"></nldd-button>
+		<nldd-button
+			loading
+			size="lg"
+			variant="primary"
+			text="Opslaan"
+			start-icon="download"
+		></nldd-button>
+		<nldd-button
+			loading
+			variant="primary"
+			text="Opslaan"
+		></nldd-button>
+		<nldd-button
+			loading
+			variant="neutral-tinted"
+			text="Opslaan"
+			start-icon="download"
+		></nldd-button>
+		<nldd-button
+			loading
+			variant="critical-tinted"
+			text="Verwijderen"
+		></nldd-button>
+		<nldd-button
+			loading
+			size="sm"
+			text="Klein"
+		></nldd-button>
+		<nldd-button
+			loading
+			size="xs"
+			text="Mini"
+		></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -477,12 +693,28 @@ export const EigenIcoonInDeSlot = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button text="Custom start">
-			<svg slot="start-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-				<circle cx="10" cy="10" r="8"/>
+			<svg
+				slot="start-icon"
+				width="20"
+				height="20"
+				viewBox="0 0 20 20"
+				fill="currentColor"
+			>
+				<circle
+					cx="10"
+					cy="10"
+					r="8"/
+				>
 			</svg>
 		</nldd-button>
 		<nldd-button text="Custom end">
-			<svg slot="end-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+			<svg
+				slot="end-icon"
+				width="20"
+				height="20"
+				viewBox="0 0 20 20"
+				fill="currentColor"
+			>
 				<polygon points="10,2 18,18 2,18"/>
 			</svg>
 		</nldd-button>
@@ -504,7 +736,10 @@ export const TekstInDeSlot = {
 		<nldd-button>
 			<span slot="text">Tekst met <strong>nadruk</strong></span>
 		</nldd-button>
-		<nldd-button variant="secondary" accessible-label="Prijs 15 euro, was 20 euro">
+		<nldd-button
+			variant="secondary"
+			accessible-label="Prijs 15 euro, was 20 euro"
+		>
 			<span slot="text">Prijs <span style="text-decoration: line-through;">€20</span> €15</span>
 		</nldd-button>
 	</div>

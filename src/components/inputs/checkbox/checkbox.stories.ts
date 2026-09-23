@@ -129,11 +129,28 @@ export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
 		<nldd-checkbox accessible-label="Niet aangevinkt"></nldd-checkbox>
-		<nldd-checkbox checked accessible-label="Aangevinkt"></nldd-checkbox>
-		<nldd-checkbox indeterminate accessible-label="Onbepaald"></nldd-checkbox>
-		<nldd-checkbox disabled accessible-label="Uitgeschakeld"></nldd-checkbox>
-		<nldd-checkbox checked disabled accessible-label="Aangevinkt en uitgeschakeld"></nldd-checkbox>
-		<nldd-checkbox indeterminate disabled accessible-label="Onbepaald en uitgeschakeld"></nldd-checkbox>
+		<nldd-checkbox
+			checked
+			accessible-label="Aangevinkt"
+		></nldd-checkbox>
+		<nldd-checkbox
+			indeterminate
+			accessible-label="Onbepaald"
+		></nldd-checkbox>
+		<nldd-checkbox
+			disabled
+			accessible-label="Uitgeschakeld"
+		></nldd-checkbox>
+		<nldd-checkbox
+			checked
+			disabled
+			accessible-label="Aangevinkt en uitgeschakeld"
+		></nldd-checkbox>
+		<nldd-checkbox
+			indeterminate
+			disabled
+			accessible-label="Onbepaald en uitgeschakeld"
+		></nldd-checkbox>
 	</div>
 `,
 	parameters: { controls: { disable: true } },

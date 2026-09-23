@@ -14,6 +14,7 @@
  * @attr {'none' | 'dismiss' | 'menu'} control - Control type (default: 'none')
  * @attr {string} dismiss-text - Accessible label for the dismiss button. Unset, it names the token: `Verwijder "{text}"`, so a row of tokens does not read as a row of identical buttons.
  * @attr {string} menu-text - Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`.
+ * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} roving - Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.
  * @attr {boolean} expanded - Reflects whether the token's menu is open (control="menu"); managed by the token.
  * @attr {boolean} disabled - Disabled state
@@ -28,6 +29,7 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tokenStyles } from './token.styles.js';
 import { tokenTemplate } from './token.template.js';
+import { nlddTokenTranslations, type NLDDTokenTranslations } from './token.i18n.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
 import './../../actions/icon-button/icon-button.js';
 
@@ -50,6 +52,9 @@ export class NLDDToken extends LitElement {
 
 	@property({ type: String, attribute: 'menu-text' })
 	menuText = '';
+
+	@property({ type: Object })
+	translations: Partial<NLDDTokenTranslations> = {};
 
 	/** Inside a roving-focus container (e.g. nldd-token-field): the host carries the
 	 *  single tab stop and manages focus itself, so the trailing control (dismiss or
@@ -79,14 +84,22 @@ export class NLDDToken extends LitElement {
 			.trim();
 	}
 
+	public _t(key: keyof NLDDTokenTranslations): string {
+		return this.translations[key] ?? nlddTokenTranslations[key];
+	}
+
 	get _dismissLabel(): string {
 		const label = this.text || this._slotText;
-		return this.dismissText || (label ? `Verwijder "${label}"` : 'Verwijder');
+		if (this.dismissText) return this.dismissText;
+		const action = this._t('components.token.dismiss-action');
+		return label ? `${action} "${label}"` : action;
 	}
 
 	get _menuLabel(): string {
 		const label = this.text || this._slotText;
-		return this.menuText || (label ? `Toon opties voor "${label}"` : 'Toon opties');
+		if (this.menuText) return this.menuText;
+		if (!label) return this._t('components.token.open-menu-action');
+		return `${this._t('components.token.open-token-menu-action')} "${label}"`;
 	}
 
 	_handleDismiss(e: Event): void {

@@ -139,16 +139,57 @@ export const MetZoekKnop = {
 export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-search-field size="md" placeholder="Zoeken"></nldd-search-field>
-		<nldd-search-field size="md" placeholder="Zoeken" value="Zoekterm"></nldd-search-field>
-		<nldd-search-field size="md" placeholder="Zoeken" show-search-button></nldd-search-field>
-		<nldd-search-field size="md" placeholder="Zoeken" value="Zoekterm" show-search-button></nldd-search-field>
-		<nldd-search-field size="sm" placeholder="Zoeken"></nldd-search-field>
-		<nldd-search-field size="sm" placeholder="Zoeken" value="Zoekterm"></nldd-search-field>
-		<nldd-search-field size="sm" placeholder="Zoeken" show-search-button></nldd-search-field>
-		<nldd-search-field size="sm" placeholder="Zoeken" value="Zoekterm" show-search-button></nldd-search-field>
-		<nldd-search-field size="md" placeholder="Zoeken" disabled></nldd-search-field>
-		<nldd-search-field size="md" placeholder="Zoeken" value="Zoekterm" disabled></nldd-search-field>
+		<nldd-search-field
+			size="md"
+			placeholder="Zoeken"
+		></nldd-search-field>
+		<nldd-search-field
+			size="md"
+			placeholder="Zoeken"
+			value="Zoekterm"
+		></nldd-search-field>
+		<nldd-search-field
+			size="md"
+			placeholder="Zoeken"
+			show-search-button
+		></nldd-search-field>
+		<nldd-search-field
+			size="md"
+			placeholder="Zoeken"
+			value="Zoekterm"
+			show-search-button
+		></nldd-search-field>
+		<nldd-search-field
+			size="sm"
+			placeholder="Zoeken"
+		></nldd-search-field>
+		<nldd-search-field
+			size="sm"
+			placeholder="Zoeken"
+			value="Zoekterm"
+		></nldd-search-field>
+		<nldd-search-field
+			size="sm"
+			placeholder="Zoeken"
+			show-search-button
+		></nldd-search-field>
+		<nldd-search-field
+			size="sm"
+			placeholder="Zoeken"
+			value="Zoekterm"
+			show-search-button
+		></nldd-search-field>
+		<nldd-search-field
+			size="md"
+			placeholder="Zoeken"
+			disabled
+		></nldd-search-field>
+		<nldd-search-field
+			size="md"
+			placeholder="Zoeken"
+			value="Zoekterm"
+			disabled
+		></nldd-search-field>
 	</div>
 `,
 	parameters: { controls: { disable: true } },

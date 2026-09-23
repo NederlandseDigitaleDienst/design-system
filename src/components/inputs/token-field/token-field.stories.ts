@@ -104,10 +104,22 @@ export default {
 
 const options = html`
 	<nldd-menu variant="listbox">
-		<nldd-menu-item value="nl" text="Nederland"></nldd-menu-item>
-		<nldd-menu-item value="be" text="België"></nldd-menu-item>
-		<nldd-menu-item value="de" text="Duitsland"></nldd-menu-item>
-		<nldd-menu-item value="fr" text="Frankrijk"></nldd-menu-item>
+		<nldd-menu-item
+			value="nl"
+			text="Nederland"
+		></nldd-menu-item>
+		<nldd-menu-item
+			value="be"
+			text="België"
+		></nldd-menu-item>
+		<nldd-menu-item
+			value="de"
+			text="Duitsland"
+		></nldd-menu-item>
+		<nldd-menu-item
+			value="fr"
+			text="Frankrijk"
+		></nldd-menu-item>
 	</nldd-menu>
 `;
 
@@ -203,26 +215,58 @@ export const TokensMetMenu = {
 				@token-action=${onTokenAction}
 			>
 				<nldd-menu variant="listbox">
-					<nldd-menu-item value="nl" text="Nederland"></nldd-menu-item>
-					<nldd-menu-item value="be" text="België"></nldd-menu-item>
-					<nldd-menu-item value="de" text="Duitsland"></nldd-menu-item>
-					<nldd-menu-item value="fr" text="Frankrijk"></nldd-menu-item>
+					<nldd-menu-item
+						value="nl"
+						text="Nederland"
+					></nldd-menu-item>
+					<nldd-menu-item
+						value="be"
+						text="België"
+					></nldd-menu-item>
+					<nldd-menu-item
+						value="de"
+						text="Duitsland"
+					></nldd-menu-item>
+					<nldd-menu-item
+						value="fr"
+						text="Frankrijk"
+					></nldd-menu-item>
 				</nldd-menu>
 
 				<!-- Gedeeld menu (geen key): geldt voor elke token zonder eigen prototype. -->
 				<nldd-token slot="template">
 					<nldd-menu slot="menu">
-						<nldd-menu-item value="to-start" text="Verplaats naar begin"></nldd-menu-item>
-						<nldd-menu-item value="remove" text="Verwijder" destructive></nldd-menu-item>
+						<nldd-menu-item
+							value="to-start"
+							text="Verplaats naar begin"
+						></nldd-menu-item>
+						<nldd-menu-item
+							value="remove"
+							text="Verwijder"
+							destructive
+						></nldd-menu-item>
 					</nldd-menu>
 				</nldd-token>
 
 				<!-- Uitzondering voor "nl": een extra actie bovenop het gedeelde menu. -->
-				<nldd-token slot="template" data-value="nl">
+				<nldd-token
+					slot="template"
+					data-value="nl"
+				>
 					<nldd-menu slot="menu">
-						<nldd-menu-item value="capital" text="Toon hoofdstad"></nldd-menu-item>
-						<nldd-menu-item value="to-start" text="Verplaats naar begin"></nldd-menu-item>
-						<nldd-menu-item value="remove" text="Verwijder" destructive></nldd-menu-item>
+						<nldd-menu-item
+							value="capital"
+							text="Toon hoofdstad"
+						></nldd-menu-item>
+						<nldd-menu-item
+							value="to-start"
+							text="Verplaats naar begin"
+						></nldd-menu-item>
+						<nldd-menu-item
+							value="remove"
+							text="Verwijder"
+							destructive
+						></nldd-menu-item>
 					</nldd-menu>
 				</nldd-token>
 			</nldd-token-field>

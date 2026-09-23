@@ -79,8 +79,14 @@ export const Grootten = {
 		<div style="display: flex; gap: 24px; align-items: center;">
 			${['24', '32', '40', '56'].map(size => html`
 				<nldd-avatar-group size=${size}>
-					<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
-					<nldd-avatar name="Fatima El Amrani" decorative></nldd-avatar>
+					<nldd-avatar
+						name="Jan Jansen"
+						decorative
+					></nldd-avatar>
+					<nldd-avatar
+						name="Fatima El Amrani"
+						decorative
+					></nldd-avatar>
 				</nldd-avatar-group>
 			`)}
 		</div>
@@ -97,7 +103,10 @@ export const Grootten = {
 
 export const MetMax = {
 	render: () => html`
-		<nldd-avatar-group max="3" accessible-label="Redactie">
+		<nldd-avatar-group
+			max="3"
+			accessible-label="Redactie"
+		>
 			<nldd-avatar name="Jan Jansen"></nldd-avatar>
 			<nldd-avatar name="Fatima El Amrani"></nldd-avatar>
 			<nldd-avatar name="Pieter de Vries"></nldd-avatar>
@@ -118,9 +127,18 @@ export const MetMax = {
 export const MetAfbeeldingen = {
 	render: () => html`
 		<nldd-avatar-group accessible-label="Redactie">
-			<nldd-avatar src="https://i.pravatar.cc/80?img=12" name="Jan Jansen"></nldd-avatar>
-			<nldd-avatar src="https://i.pravatar.cc/80?img=32" name="Fatima El Amrani"></nldd-avatar>
-			<nldd-avatar src="https://i.pravatar.cc/80?img=45" name="Pieter de Vries"></nldd-avatar>
+			<nldd-avatar
+				src="https://i.pravatar.cc/80?img=12"
+				name="Jan Jansen"
+			></nldd-avatar>
+			<nldd-avatar
+				src="https://i.pravatar.cc/80?img=32"
+				name="Fatima El Amrani"
+			></nldd-avatar>
+			<nldd-avatar
+				src="https://i.pravatar.cc/80?img=45"
+				name="Pieter de Vries"
+			></nldd-avatar>
 		</nldd-avatar-group>
 	`,
 	parameters: {

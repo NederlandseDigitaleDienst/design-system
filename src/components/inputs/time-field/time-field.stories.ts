@@ -200,16 +200,40 @@ export const InEenFormField = () => html`
 
 export const Grootten = () => html`
 	<div style="display: flex; gap: 16px; align-items: flex-start;">
-		<nldd-time-field size="sm" value="09:30" accessible-label="Klein"></nldd-time-field>
-		<nldd-time-field size="md" value="09:30" accessible-label="Middel"></nldd-time-field>
+		<nldd-time-field
+			size="sm"
+			value="09:30"
+			accessible-label="Klein"
+		></nldd-time-field>
+		<nldd-time-field
+			size="md"
+			value="09:30"
+			accessible-label="Middel"
+		></nldd-time-field>
 	</div>
 `;
 
 export const AlleToestanden = () => html`
 	<div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
-		<nldd-time-field value="09:30" valid accessible-label="Geldig"></nldd-time-field>
-		<nldd-time-field value="25:99" invalid accessible-label="Ongeldig"></nldd-time-field>
-		<nldd-time-field value="09:30" readonly accessible-label="Alleen lezen"></nldd-time-field>
-		<nldd-time-field value="09:30" disabled accessible-label="Uitgeschakeld"></nldd-time-field>
+		<nldd-time-field
+			value="09:30"
+			valid
+			accessible-label="Geldig"
+		></nldd-time-field>
+		<nldd-time-field
+			value="25:99"
+			invalid
+			accessible-label="Ongeldig"
+		></nldd-time-field>
+		<nldd-time-field
+			value="09:30"
+			readonly
+			accessible-label="Alleen lezen"
+		></nldd-time-field>
+		<nldd-time-field
+			value="09:30"
+			disabled
+			accessible-label="Uitgeschakeld"
+		></nldd-time-field>
 	</div>
 `;
