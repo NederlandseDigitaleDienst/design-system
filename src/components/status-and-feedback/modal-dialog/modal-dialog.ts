@@ -21,6 +21,7 @@
  *
  * @slot - Optional custom content, forwarded to nldd-inline-dialog
  * @slot actions - nldd-button elements, forwarded to nldd-inline-dialog
+ * @slot notifications - Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone.
  *
  * @fires open - When the dialog is opened
  * @fires close - When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened.

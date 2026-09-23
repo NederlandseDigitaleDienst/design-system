@@ -29,6 +29,7 @@
  * @attr {boolean} open - Whether the window is open. Set it to open or close the window, as an alternative to show() and hide(). The window clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event.
  *
  * @slot - Complete window content (e.g. nldd-page)
+ * @slot notifications - Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone.
  *
  * @fires open - When the window opens
  * @fires close - When the window has fully closed. Does not bubble: overlays can sit inside each other, and a listener on one window should not also hear the form that opened it.

@@ -28264,6 +28264,10 @@
             {
               "name": "",
               "description": "Sheet content"
+            },
+            {
+              "name": "notifications",
+              "description": "Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone."
             }
           ]
         }
@@ -29370,6 +29374,10 @@
             {
               "name": "",
               "description": "Complete window content (e.g. nldd-page)"
+            },
+            {
+              "name": "notifications",
+              "description": "Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone."
             }
           ]
         }
@@ -35828,6 +35836,10 @@
             {
               "name": "actions",
               "description": "nldd-button elements, forwarded to nldd-inline-dialog"
+            },
+            {
+              "name": "notifications",
+              "description": "Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone."
             }
           ]
         }
@@ -35853,76 +35865,11 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/status-and-feedback/notification/notification-region.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "joinRegion",
-          "return": {
-            "type": {
-              "text": "void"
-            }
-          },
-          "parameters": [
-            {
-              "name": "notification",
-              "type": {
-                "text": "NLDDNotification"
-              }
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              }
-            }
-          ],
-          "description": "Newest in front: what just happened is what you want to read, and the older\nones slide back and downwards behind it."
-        },
-        {
-          "kind": "function",
-          "name": "leaveRegion",
-          "return": {
-            "type": {
-              "text": "void"
-            }
-          },
-          "parameters": [
-            {
-              "name": "notification",
-              "type": {
-                "text": "NLDDNotification"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "joinRegion",
-          "declaration": {
-            "name": "joinRegion",
-            "module": "src/components/status-and-feedback/notification/notification-region.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "leaveRegion",
-          "declaration": {
-            "name": "leaveRegion",
-            "module": "src/components/status-and-feedback/notification/notification-region.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/status-and-feedback/notification/notification.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A short message that arrives over the interface and leaves on its own: a save that worked, a request that failed. Not a banner, which stands in the page and stays there — this one floats, stacks, and goes away. It places itself. Write it wherever it belongs in your code and it moves to one shared region: top right from md, full width across the top below that. Nothing about the position is settable, so notifications from anywhere in an application land in the same place and stack in the same order. A modal overlay is the one thing that moves it. An nldd-sheet, nldd-window or nldd-modal-dialog paints in the browser's top layer, above the whole page and out of reach of any z-index, and while one is open everything outside it is inert. So the region goes in: into the topmost overlay that is open, and back down as they close. A notification already on screen travels with it, and one raised from inside a sheet is readable and reachable where it is raised. More than one is a deck, not a list: the front one is readable and the older ones peek out below it, so a burst of messages takes the room of roughly one. The newest is in front. Behind it a notification is a bare surface, cut to the height of the one in front; dismiss the front and it slides up into the place that came free while its message fades in, because it was standing there all along. Under the front notification sits a strip as wide as the deck and as tall as the deck is when it fans out. Pointing at it fans the deck out to fill it, which is the only hint that there is more here than the message you can read; clicking it, or moving focus into the region, lays the whole deck out as a list. Clicking or tabbing away puts it back. The notification itself is not a button: a click on the message you are reading does nothing. Only the front of the deck counts down, and only while the deck is closed: open means someone is reading. The rest wait, so nothing disappears from under the one you are reading. `critical` never leaves on its own: a failure is worth reading, and the count-down would take it away while you were. That also keeps this within WCAG 2.2.1, which allows a time limit when what disappears is not essential. The clock pauses while a pointer moves over the notification and while focus is inside it, and resumes where it left off rather than starting over. A pointer that merely happens to rest where the notification appears does not count: it never moved, so nobody is reading. role follows the variant: `critical` becomes role=\"alert\", the rest role=\"status\". Focus never moves on its own. Escape dismisses the notification that focus is in.",
+          "description": "A short message that arrives over the interface and leaves on its own: a save that worked, a request that failed. Not a banner, which stands in the page and stays there — this one floats, stacks, and goes away. It places itself. Write it wherever it belongs in your code and it moves to one shared area: top right from md, full width across the top below that. Nothing about the position is settable, so notifications from anywhere in an application land in the same place and stack in the same order. A modal overlay is the one thing that moves it. An nldd-sheet, nldd-window or nldd-modal-dialog paints in the browser's top layer, above the whole page and out of reach of any z-index, and while one is open everything outside it is inert. So the area goes in: into the topmost overlay that is open, and back down as they close. A notification already on screen travels with it, and one raised from inside a sheet is readable and reachable where it is raised. More than one is a deck, not a list: the front one is readable and the older ones peek out below it, so a burst of messages takes the room of roughly one. The newest is in front. Behind it a notification is a bare surface, cut to the height of the one in front; dismiss the front and it slides up into the place that came free while its message fades in, because it was standing there all along. Under the front notification sits a strip as wide as the deck and as tall as the deck is when it fans out. Pointing at it fans the deck out to fill it, which is the only hint that there is more here than the message you can read; clicking it, or moving focus into the area, lays the whole deck out as a list. Clicking or tabbing away puts it back. The notification itself is not a button: a click on the message you are reading does nothing. Only the front of the deck counts down, and only while the deck is closed: open means someone is reading. The rest wait, so nothing disappears from under the one you are reading. `critical` never leaves on its own: a failure is worth reading, and the count-down would take it away while you were. That also keeps this within WCAG 2.2.1, which allows a time limit when what disappears is not essential. The clock pauses while a pointer moves over the notification and while focus is inside it, and resumes where it left off rather than starting over. A pointer that merely happens to rest where the notification appears does not count: it never moved, so nobody is reading. role follows the variant: `critical` becomes role=\"alert\", the rest role=\"status\". Focus never moves on its own. Escape dismisses the notification that focus is in.",
           "name": "NLDDNotification",
           "members": [
             {
@@ -36087,6 +36034,71 @@
           "declaration": {
             "name": "NLDDNotification",
             "module": "src/components/status-and-feedback/notification/notification.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/status-and-feedback/notification/notifications-area.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "joinArea",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "notification",
+              "type": {
+                "text": "NLDDNotification"
+              }
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Newest in front: what just happened is what you want to read, and the older\nones slide back and downwards behind it."
+        },
+        {
+          "kind": "function",
+          "name": "leaveArea",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "notification",
+              "type": {
+                "text": "NLDDNotification"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "joinArea",
+          "declaration": {
+            "name": "joinArea",
+            "module": "src/components/status-and-feedback/notification/notifications-area.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "leaveArea",
+          "declaration": {
+            "name": "leaveArea",
+            "module": "src/components/status-and-feedback/notification/notifications-area.ts"
           }
         }
       ]

@@ -76,7 +76,7 @@ const weg = (e: Event) => (e.currentTarget as HTMLElement).remove();
  * therefore does what a consumer does — clear what is there and make a new one.
  */
 const Template = ({ variant, icon, text, supportingText, duration }: Record<string, unknown>) => {
-	document.getElementById('nldd-notification-region')?.remove();
+	document.getElementById('nldd-notifications-area')?.remove();
 	const melding = document.createElement('nldd-notification');
 	melding.setAttribute('variant', String(variant));
 	if (icon) melding.setAttribute('icon', String(icon));
