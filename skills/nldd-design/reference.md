@@ -83,14 +83,14 @@ A vertical rule between groups of buttons in an `nldd-button-bar`. Purely presen
 
 ### `<nldd-button-group>`
 
-A container for grouping related buttons together, either horizontally or vertically.
+A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row on a container wide enough for one and a stack over the full width below the sm breakpoint, where two labels beside each other leave no room for either. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Button group size: 'sm' \| 'md' (default: 'md') |
-| `orientation` | `string` | Layout direction: 'horizontal' \| 'vertical' (default: 'vertical') |
+| `orientation` | `string` | Layout direction: 'auto' \| 'horizontal' \| 'vertical' (default: 'auto') |
 
 **Slots**
 
@@ -652,7 +652,7 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 
 ### `<nldd-form-actions>`
 
-A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment="right"` or `"left"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `<nldd-form>`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant. <nldd-form label-alignment="right"> <nldd-form-field>...</nldd-form-field> <nldd-form-actions> <nldd-button-group> <nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button> </nldd-button-group> </nldd-form-actions> </nldd-form>
+A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment="right"` or `"left"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `<nldd-form>`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant. <nldd-form label-alignment="right"> <nldd-form-field>...</nldd-form-field> <nldd-form-actions> <nldd-button-group> <nldd-button variant="primary" type="submit" text="Bewaar"></nldd-button> </nldd-button-group> </nldd-form-actions> </nldd-form>
 
 **Attributes**
 

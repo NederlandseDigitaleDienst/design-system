@@ -7,7 +7,9 @@ export default {
 
 export const Standaard = patternStory(markup, (root) => {
 	const sheet = root.querySelector('nldd-sheet')!;
-	root.querySelector('#aanvraag-bewerken')!.addEventListener('click', () => {
-		sheet.open = true;
+	root.querySelectorAll('nldd-list-item').forEach((row) => {
+		row.addEventListener('click', () => {
+			sheet.open = true;
+		});
 	});
-});
+}, 520);
