@@ -21,7 +21,7 @@ Wat je in de componentdocumentatie kunt opzoeken staat hier niet in; wat hier st
 
 ## Het uitgangspunt: dit systeem faalt stil
 
-Bijna elke fout die je kunt maken rendert niets, of iets dat er bijna goed uitziet. Zonder console-melding, zonder typefout, zonder falende test.
+Bijna elke fout die je kunt maken rendert niets, of iets dat er bijna goed uitziet. Zonder typefout en zonder falende test. Een deel schreeuwt wel: veel componenten waarschuwen in de console over een verkeerd samengestelde rij, een ontbrekend label of een icoonnaam die niet bestaat. Die waarschuwingen zitten alleen in een dev-build, dus draai je migratie in dev en houd de console open. Wat er niet in zit, is precies wat hieronder staat.
 
 Bij een gewone migratie vertelt je compiler het wanneer je iets breekt. Hier niet, en je testsuite evenmin. Dat ene gegeven bepaalt de hele aanpak: je kunt niet omzetten-en-doorgaan. Je moet checks bouwen die de stilte hoorbaar maken, en je moet meten in een echte browser.
 
@@ -30,7 +30,7 @@ Deze fouten compileren allemaal, komen langs `tsc` en eslint, en doen niets:
 | Fout | Wat je ziet |
 |---|---|
 | Component niet geregistreerd | Kinderen renderen ongestyled |
-| Onbekende icoonnaam | Niets |
+| Onbekende icoonnaam | Niets, al waarschuwt een dev-build in de console |
 | Niet-bestaande CSS-variabele | Niets |
 | Niet-bestaande variabele **met** hex-fallback | De fallback rendert; de token is versiering en donkere modus bevriest |
 | `className` in plaats van `class` op een rauw element | De klasse doet niets |
@@ -77,8 +77,7 @@ Zo'n meetlat is klein: 150 regels met alleen een HTML-parser en reguliere expres
 
 Toets tegen het artefact dat je uitlevert, niet tegen documentatie of een handgeschreven lijst. Eén project liet zijn iconentoets jarenlang een JSON-lijst lezen: de poort stond groen terwijl er 37 lege plekken in de interface stonden, omdat de lijst 327 namen kende en de bundel er 271 had.
 
-> Een poort die de verkeerde bron leest geeft je het gevoel dat het gedekt is.
-> Zonder poort had iemand die lege knoppen gevonden bij het kijken.
+> Een poort die de verkeerde bron leest geeft je het gevoel dat het gedekt is. Zonder poort had iemand die lege knoppen gevonden bij het kijken.
 
 Lees icoonnamen dus uit het pakket, en neem de aliassen mee: namen als `search` en `edit` verwijzen naar een echt icoon en renderen gewoon, dus een poort die alleen bestandsnamen kent noemt ze ten onrechte onbekend. Onder een statische poort hoort bovendien een browsermeting, want een lijst blijft een aanname over wat de browser doet.
 

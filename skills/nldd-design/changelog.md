@@ -64,7 +64,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **The patterns are live in Storybook.** Every pattern of `nldd-design-build` has a page under "Patronen", with its example running and a test on what the pattern promises: that the sheet closes once, that a confirmation puts the way out first, that a page has one `h1`. The pattern pages in the skill are generated from the same markup, so the example you copy from the skill is the one that is tested. Rules about a single component moved out of the patterns and into that component's documentation, and a design rule is stated once, in the design guidelines. The content page came along as a pattern of its own: it used to travel as a loose example, without a running example and without a test.
 
-- **Three design guidelines.** Work that needs its context belongs in a sheet, not a modal or a page of its own. Show which filters are on, not how many. And a sticky header only when the content asks for one.
+- **Three design guidelines.** Work that needs its context belongs in a sheet, not a modal or a page of its own, and a sheet buys you the full height of the screen. A filtered list is a mode as soon as you cannot see which filters are on. And avoid a sticky header: the content matters more than the bar above it, with the title bar that says what you are looking at as the one exception.
 
 - **`open` on `nldd-sheet`, `nldd-modal-dialog`, `nldd-window` and `nldd-popover`.** Bind it instead of calling `show()` and `hide()` from your own code, for example `<nldd-sheet :open="isOpen" @close="isOpen = false">` in Vue. The overlay clears it when it closes another way, by Escape, the backdrop or its close button. `show()` and `hide()` keep working and set it too. On `nldd-popover` it replaces the read-only `open` property, and opening still needs an anchor. The build skill, its Vue example and the patterns now bind `open` instead of calling `show()` and `hide()` from a watcher, and the migration skill tells a server-rendered app to put `open` in the markup, which needs no JavaScript at all.
 
@@ -95,6 +95,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - **`nldd-window` opens when `show()` comes before its first render.** Sheet and modal already waited for their dialog. The window did nothing and said nothing, so a window opened in the same tick it was created stayed shut.
+
+- **`nldd-validation-item` has a description in the reference.** The component reference takes the prose above the first `@element` in a file. Two components that share a file write their own prose under their own `@element`, and that was thrown away, so the item shipped as a bare table of attributes and the rule about giving it an id that names its field reached nobody. `nldd-navigation-split-view` lost a line the same way. Both are back, and `nldd-form` now says when it marks a field as invalid.
 
 - **`hidden` now hides every component.** Nine components stayed visible with `hidden` set, because their own `display` beat the browser's rule for the attribute. `nldd-list`, `nldd-sheet`, `nldd-navigation-split-view`, `nldd-menu`, `nldd-progress-bar-segment-indicator` and `nldd-form` never hid. `nldd-number-field` with `width="full"`, `nldd-pagination` with `centered` and an `nldd-activity-indicator` around content did not hide either.
 

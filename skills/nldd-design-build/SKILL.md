@@ -35,7 +35,7 @@ Wat je vormgeeft is daarmee geen keuze van deze skill. Wanneer een sticky header
 Gebruik componenten zoals ze zijn en stuur ze via hun attributen. Reik niet in de shadow DOM, override geen interne ARIA, plak geen klassen op childcomponenten.
 
 - **Stuur via attributen, niet via interne overrides.** Wil je een rustiger of nadrukkelijker component? Kies een ander component in plaats van de ARIA of de stijl van het huidige te verbouwen. De `nldd-banner` zegt het zelf in zijn documentatie: "if you need a quieter component, pick a different one rather than overriding the banner's ARIA."
-- **Reik alleen in de shadow DOM als het echt moet,** en doe het dan defensief (zie het patroon hieronder). Het is een ontsnappingsluik, geen route.
+- **Reik alleen in de shadow DOM als het echt moet.** Het is een ontsnappingsluik, geen route, en meestal is er een attribuut of een methode die hetzelfde doet. Zie "Focussen doe je op het component".
 
 ## Installeren en bootstrappen
 
@@ -75,7 +75,7 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
    }
    ```
 
-De eerste weg is de schoonste: dan zit het font niet eens in je CSS.
+De eerste weg is de schoonste: dan zit het font niet eens in je CSS. De tweede is een uitzondering op wat hieronder over variabelen staat, en hij staat hier omdat er geen attribuut voor is. Voor kleur, ruimte en typografie is dat er wel.
 
 Voor tree-shaking kun je ook per component importeren via de subpath-export (bijv. `@nldd/design-system/button`). Frameworks die templates compileren, moeten `nldd-*` als custom elements herkennen (in Vue: `isCustomElement`).
 
@@ -107,166 +107,34 @@ Houd je daarna nog eigen CSS over voor iets dat geen component is, dan is een `-
 
 ## Gebruikspatronen
 
-Elk patroon heeft een reden. De voorbeelden zijn gedestilleerd uit code die in productie draait, in Vue, Astro, Angular en server-gerenderde templates.
+Bouw je iets, begin dan bij [`patterns/`](patterns/). Daar staat elk patroon uitgewerkt met zijn compositie, werkende code en het waarom, en [`patterns/README.md`](patterns/README.md) zegt per taak welk patroon je nodig hebt.
 
-> **Bouw je iets, begin dan bij [`patterns/`](patterns/).** Daar staat elk patroon uitgewerkt met zijn compositie, werkende code en het waarom, en [`patterns/README.md`](patterns/README.md) zegt per taak welk patroon je nodig hebt. De secties hieronder geven de losse regels en de mechaniek eronder.
+Er zijn drie bronnen en ze overlappen niet:
 
-### Layout componeren
-
-`nldd-app-view` is altijd de buitenste schil: die zet de kleurschema-context. De documenttypografie komt uit de stylesheet, die de `body` het documentfont geeft zodra er een app-view in de pagina staat. Importeer je alleen componenten en geen `styles`, dan krijg je die dus niet. Wat binnen de app-view komt, hangt af van wat je bouwt. Er zijn twee compositievormen, kies bewust:
-
-| Vorm | Wanneer | Bouwstenen |
-|------|---------|------------|
-| **App-shell** | Applicaties met panelen: editors, dashboards, werkomgevingen. | `nldd-app-view` → split view → `nldd-split-view-pane` → `nldd-page` |
-| **Content-pagina** | Landings-, marketing- of informatiepagina's: een verticale stapel inhoud. | `nldd-app-view` → `nldd-page` → `*-section` blokken → `nldd-page-footer` |
-
-**App-shell** loopt van buiten naar binnen via split views:
-
-```html
-<nldd-app-view>
-  <nldd-side-by-side-split-view panes="2">
-    <div slot="pane-1"><!-- hoofdinhoud, hoogste prioriteit --></div>
-    <div slot="pane-2"><!-- inspector, verdwijnt eerst op smal scherm --></div>
-  </nldd-side-by-side-split-view>
-</nldd-app-view>
-```
-
-*Waarom:* de split view regelt de responsive auto-hide. Zet de prioriteit goed door de volgorde van de panelen.
-
-**Content-pagina** is een stapel page-sections, geen split views:
-
-```html
-<nldd-app-view>
-  <nldd-page>
-    <nldd-simple-section><!-- hero --></nldd-simple-section>
-    <nldd-simple-section>
-      <nldd-collection
-        layout="grid"
-        item-width="320px"
-      >
-        <nldd-card><!-- ... --></nldd-card>
-      </nldd-collection>
-    </nldd-simple-section>
-    <nldd-page-footer><!-- ... --></nldd-page-footer>
-  </nldd-page>
-</nldd-app-view>
-```
-
-*Waarom:* de `*-section` componenten (`nldd-simple-section`, `nldd-two-thirds-one-third-section`, en de andere page-sections) regelen responsive padding en kolom-wrapping zelf via container queries. Grids van gelijkwaardige items bouw je met `nldd-collection` + `nldd-card`, niet met eigen CSS-grid. Het volledige patroon staat in [`patterns/content-page.md`](patterns/content-page.md).
-
-### Sheet, modal of popover: kies bewust
-
-Dit zijn geen uitwisselbare overlays. Elk heeft een doel:
-
-| Surface | Gebruik voor | Niet voor |
-|---------|--------------|-----------|
-| **`nldd-sheet`** | Secundaire inhoud die context behoudt: formulieren, bewerk-oppervlakken, detail. Schuift in vanaf de zijkant (onderkant op mobiel). | Korte bevestigingen. |
-| **`nldd-modal-dialog`** | Het uiterste geval: een onomkeerbare actie waar geen veiliger weg omheen is. Onderbreekt bewust. | Data-invoer, complexe formulieren, of bevestigingen die ook met undo kunnen. |
-| **`nldd-popover`** | Lichte, niet-blokkerende panelen verankerd aan een trigger: filters, snelacties, zoekvelden. Sluit bij Esc en klik-buiten. | Ingevulde formulieren, want een klik ernaast sluit hem. En alles zonder trigger om aan te haken. |
-
-*Vuistregel:* secundaire inhoud op een smal scherm hoort in een **sheet**, niet in een modal. Een modal onderbreekt; reserveer dat voor momenten die een onderbreking verdienen.
-
-> Wanneer is een modal überhaupt gerechtvaardigd, en wat is het primary-label in
-> een bevestiging? Dat zijn ontwerpkeuzes, geen component-mechaniek. De voorkeur
-> is undo boven confirm en een contextueel-window (popover) boven een modal; zie
-> [`design-guidelines.md`](../nldd-design/design-guidelines.md) ("Feedback en state").
-
-### Overlays openen met `open` (sheets, windows, modals, popovers)
-
-Deze overlays hebben een attribuut `open`. Bind je toestand daaraan, en koppel het `close`-event aan diezelfde toestand. Sluit de gebruiker de overlay zelf, met Esc, een klik ernaast of de sluitknop in de titelbalk, dan zet de overlay `open` uit en vuurt hij `close`.
-
-```html
-<!-- Vue -->
-<nldd-sheet :open="isOpen" @close="isOpen = false">
-  <nldd-page>
-    <nldd-top-title-bar slot="header" text="Bewerken" dismiss-text="Sluiten"></nldd-top-title-bar>
-  </nldd-page>
-</nldd-sheet>
-```
-
-*Waarom:* laat het element staan en mount het niet pas bij het openen. Mounten en unmounten slaan de in- en uitanimatie over en verliezen DOM-toestand.
-
-`show()` en `hide()` bestaan nog en zetten `open` mee. Gebruik ze in code zonder binding. Een popover opent alleen bij zijn anker. Het complete Vue-component staat in [`examples/bootstrap-vue.md`](examples/bootstrap-vue.md).
-
-### Lijstrijen componeren uit cellen
-
-Bouw rijen op uit cellen binnen een `nldd-list-item`. Niet uit losse divs.
-
-```html
-<nldd-list variant="simple">
-  <nldd-list-item size="md" button>
-    <nldd-text-cell text="Titel" supporting-text="Ondertitel"></nldd-text-cell>
-  </nldd-list-item>
-</nldd-list>
-```
-
-Beschikbare cellen: `nldd-text-cell`, `nldd-icon-cell`, `nldd-title-cell`, `nldd-description-cell`, `nldd-spacer-cell`, `nldd-cell` voor eigen inhoud, en meer (zie `reference.md`).
-
-**Zet nooit kale tekst in een rij.** De cel bepaalt lettertype, grootte, kleur en uitlijning, en stemt die af op de rijhoogte. Tekst die je er los in hangt krijgt niets van dat alles mee: in een klikbare rij zit de slot in een `<button>` en erft je tekst de browserstijl van een knop, wat neerkomt op 13px Arial. Loopt je tekst over meerdere alinea's of bevat hij opmaak, gebruik dan `nldd-rich-text` in een `nldd-cell`.
-
-```html
-<!-- Fout: kale tekst in de rij -->
-<nldd-list-item button>Dossier 2024-001</nldd-list-item>
-
-<!-- Goed -->
-<nldd-list-item button>
-  <nldd-text-cell text="Dossier 2024-001"></nldd-text-cell>
-</nldd-list-item>
-
-<!-- Goed, met opmaak -->
-<nldd-list-item>
-  <nldd-cell>
-    <nldd-rich-text><p>Tekst met <strong>opmaak</strong>.</p></nldd-rich-text>
-  </nldd-cell>
-</nldd-list-item>
-```
-
-### Formulieren en validatiefouten
-
-`nldd-form-field` koppelt label en input automatisch (geen `for`/`id`-gedoe). Alles waar een waarde aan moet voldoen zet je in een `nldd-validation-list`. Een eis die je vooraf kunt noemen krijgt een regel en controleert zichzelf terwijl de gebruiker typt. Een eis die alleen je server kan vaststellen krijgt er geen, en die noem je in `unmet` op de input.
-
-```html
-<nldd-form-field label="Wachtwoord">
-  <nldd-password-field name="password" unmet="password-breach"></nldd-password-field>
-  <nldd-validation-list hint>
-    <nldd-validation-item id="password-length" minlength="8">
-      Minimaal 8 tekens
-    </nldd-validation-item>
-    <nldd-validation-item id="password-capital" match="[A-Z]">
-      Een hoofdletter
-    </nldd-validation-item>
-    <nldd-validation-item id="password-breach">
-      Dit wachtwoord staat in een bekend datalek
-    </nldd-validation-item>
-  </nldd-validation-list>
-</nldd-form-field>
-```
-
-Geef elk item een id die z'n veld noemt en niet alleen z'n regel. Een id moet uniek zijn in de hele pagina, en `length` is het eerste waar drie velden in hetzelfde formulier alle drie naar grijpen.
-
-**Wanneer een fout verschijnt** bepaalt `invalid` op de input. `nldd-form` zet dat attribuut zelf bij het versturen, op het moment dat de browser het formulier afkeurt, en haalt het weg zodra het klopt. Wil je het zelf zetten, in Vue `:invalid="hasError"` of in platte JS `field.toggleAttribute('invalid', hasError)`, doe dat dan bij verzending en niet terwijl iemand nog typt. Anders kleurt een veld rood over een waarde die nog niet af is.
-
-**De lijst heeft twee modi**, en `judging` op de lijst is de schakelaar. Vóór een oordeel toont hij z'n hints: de eisen van het veld. Erna toont hij wat de waarde niet haalt, en zijn de hints weg. Hij gaat vanzelf aan zodra de input op `invalid` staat, en blijft daarna aan: repareer je de waarde, dan verdwijnt het rood, maar de uitleg komt niet terug. Iemand die net te horen heeft gekregen wat er mis was, hoeft niet opnieuw uitgelegd te krijgen wat het veld wil. Zet je `judging` zelf, dan laat je de hints vallen zonder dat er iets is afgekeurd; haal je hem weg, dan staat het veld weer op af, wat een reset wil.
-
-Wat rood wordt volgt `invalid` en niets anders. Er staat dus nooit een rode regel onder een veld dat er goed uitziet.
-
-`match` is niet verankerd, anders dan het native `pattern`: `[A-Z]` betekent "bevat een hoofdletter". Wil je dat de héle waarde een vorm heeft, zet er dan zelf `^` en `$` omheen.
-
-**Schrijf een item als de eis, niet als de opdracht.** Een item is geen control: je klikt er niet op en je voert het niet uit. De gebiedende wijs bewaren we voor knoppen, waar die een handeling aankondigt die je zelf in gang zet.
-
-| in plaats van | schrijf |
+| Je vraag | Het antwoord staat in |
 |---|---|
-| "Vul een geldig KvK-nummer in (8 cijfers)" | "Een KvK-nummer van 8 cijfers" |
-| "Kies minimaal één optie" | "Minimaal één optie" |
-| "Gebruik minimaal 8 tekens" | "Minimaal 8 tekens" |
+| Hoe zet ik deze componenten samen tot een scherm? | [`patterns/`](patterns/) |
+| Wat doet dit component, en welke attributen, slots en events heeft het? | [`reference.md`](../nldd-design/reference.md) |
+| Welke van deze keuzes is de goede? | [`design-guidelines.md`](../nldd-design/design-guidelines.md) |
 
-Dezelfde regel doet namelijk twee dingen: vooraf staat hij er als eis, achteraf als wat er nog niet klopt. Een bevel leest vooraf als een standje voordat er iets aan de hand is.
+Wat hieronder staat, hoort in geen van de drie thuis: het gaat telkens over meer dan één component tegelijk.
 
-*Waarom dit patroon:* zo staat een eis één keer op de pagina in plaats van tweemaal, als uitleg vooraf en als foutmelding achteraf. Vinkjes zijn er niet: het veld toont zelf al een validatie-icoon, en dat per regel herhalen zegt hetzelfde drie keer.
+### Twee compositievormen, kies bewust
 
-Voor tekst die je niet tegenhoudt, zoals "We sturen een bevestigingsmail naar dit adres", gebruik je `nldd-form-field-help-text`.
+`nldd-app-view` is altijd de buitenste schil. Wat daarbinnen komt, hangt af van wat je bouwt:
 
-*Ontwerpkeuzes rond formulieren* (markeer optionele velden in plaats van verplichte, volg de gedachtegang van de gebruiker in de vraagvolgorde, één veld voor de volledige naam) staan in [`design-guidelines.md`](../nldd-design/design-guidelines.md) ("Invoer en formulieren"). Het `optional`-attribuut op `nldd-form-field` toont daarbij zelf de "Optioneel"-badge.
+| Vorm | Wanneer | Het patroon |
+|---|---|---|
+| **App-shell** | Een werkomgeving met panelen: editors, dashboards, beheerschermen. | [pagina met secties](patterns/page-with-sections.md), sectie "Panelen naast elkaar" |
+| **Contentpagina** | Een landings-, campagne- of informatiepagina: een verticale stapel inhoud. | [contentpagina](patterns/content-page.md) |
+
+Het verschil zit in de laag direct onder de app-view: een split view met een pagina per paneel, of één pagina met secties eronder. Die keuze maak je aan het begin en hij is achteraf duur, dus maak hem bewust.
+
+### Overlays: sheet, modal of popover
+
+Welke van de drie je pakt is een ontwerpkeuze, en die staat in [`design-guidelines.md`](../nldd-design/design-guidelines.md) ("Feedback en state"): werk dat zijn context nodig heeft in een sheet, de modal voor een beslissing zonder weg terug, de popover voor iets kleins dat aan één knop hangt. Hoe je ze samenstelt staat in [bewerken in een sheet](patterns/edit-in-a-sheet.md) en [bevestigen](patterns/confirm.md).
+
+Mechanisch werken ze alle vier hetzelfde, sheet, window, modal en popover, en dat is het enige wat je hier hoeft te weten: bind `open` aan je eigen toestand, luister naar `close`, en laat het element in de DOM staan. Mount je het pas op het moment dat het open moet, dan slaan de animaties over en verlies je wat er in het formulier stond. Het complete Vue-component staat in [`examples/bootstrap-vue.md`](examples/bootstrap-vue.md).
 
 ### Custom events lezen via `event.detail`
 
@@ -279,18 +147,15 @@ function onInput(event) {
 }
 ```
 
-### Defensieve shadow-DOM toegang
+### Focussen doe je op het component
 
-Moet je echt bij een native input (bijvoorbeeld om te focussen)? Zoek dan met een fallback, zodat je code blijft werken als de interne structuur verandert:
+Elk invoercomponent geeft de focus zelf door aan de control eronder, dus `field.focus()` is genoeg. Zoek niet zelf de native input op in de shadow root: dat werkt tot de interne structuur verandert, en dan is het stil kapot.
 
 ```js
-const field = root.querySelector('nldd-search-field');
-const native =
-  field?.shadowRoot?.querySelector('input') ?? field?.querySelector('input');
-native?.focus();
+root.querySelector('nldd-search-field')?.focus();
 ```
 
-Dit is een ontsnappingsluik. Gebruik het spaarzaam.
+Kan iets echt niet via de API, dan is de shadow root een ontsnappingsluik en geen route. Meld het ook, want dan mist er iets: zie [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md).
 
 ### Spacing: `nldd-spacer` versus `nldd-container`
 
@@ -334,10 +199,4 @@ Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan [`n
 
 Deze skill gaat over het *gebruiken* van het designsysteem: welke componenten, welke patronen, welke visie. Wat erbuiten valt en je zelf invult vanuit je applicatie- en frameworkkeuzes: state-management en validatieregels, server-side foutafhandeling, routing, en het testen van je eigen app. Voor SSR/hydratie geldt de algemene web-componentenpraktijk (de componenten upgraden client-side; render geen kritieke inhoud uitsluitend in hun shadow DOM). De componenten zelf zijn los getest binnen het designsysteem; jouw app-tests schrijf je met je eigen testopstelling.
 
-> Voor onderhouders: `reference.md`, `changelog.md` en `design-guidelines.md`
-> zijn gegenereerd (uit respectievelijk de JSDoc van de componenten, de
-> root-CHANGELOG en `src/docs/design-guidelines.mdx`). Draai
-> `npm run generate:skill-docs` na een API-wijziging, release of wijziging in de
-> ontwerprichtlijnen en commit het resultaat. Het zijn echte bestanden, geen
-> symlinks: een plugin wordt naar een geïsoleerde cache gekopieerd waarbij
-> symlinks buiten de plugin-map wegvallen.
+> Voor onderhouders: `reference.md`, `changelog.md` en `design-guidelines.md` zijn gegenereerd (uit respectievelijk de JSDoc van de componenten, de root-CHANGELOG en `src/docs/design-guidelines.mdx`). Draai `npm run generate:skill-docs` na een API-wijziging, release of wijziging in de ontwerprichtlijnen en commit het resultaat. Het zijn echte bestanden, geen symlinks: een plugin wordt naar een geïsoleerde cache gekopieerd waarbij symlinks buiten de plugin-map wegvallen.

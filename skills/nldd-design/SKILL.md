@@ -35,10 +35,4 @@ Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor (`/nldd
 
 **De levende documentatie staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/),** met visuele voorbeelden en controls per component. De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee voor detailvragen; deze skills leren je hoe je het systeem goed gebruikt.
 
-> Voor onderhouders: alle drie de bestanden hier zijn gegenereerd, uit
-> respectievelijk de JSDoc van de componenten, de root-CHANGELOG en
-> `src/docs/design-guidelines.mdx`. Draai `npm run generate:skill-docs` na een
-> API-wijziging, release of wijziging in de ontwerprichtlijnen en commit het
-> resultaat. Het zijn echte bestanden en geen symlinks: een plugin wordt naar
-> een geïsoleerde cache gekopieerd waarbij symlinks buiten de plugin-map
-> wegvallen.
+> Voor onderhouders: alle drie de bestanden hier zijn gegenereerd, uit respectievelijk de JSDoc van de componenten, de root-CHANGELOG en `src/docs/design-guidelines.mdx`. Draai `npm run generate:skill-docs` na een API-wijziging, release of wijziging in de ontwerprichtlijnen en commit het resultaat. Het zijn echte bestanden en geen symlinks: een plugin wordt naar een geïsoleerde cache gekopieerd waarbij symlinks buiten de plugin-map wegvallen.

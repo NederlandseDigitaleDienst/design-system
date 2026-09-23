@@ -2,7 +2,7 @@
 
 Een component beantwoordt "wat is dit ding". Een patroon beantwoordt "hoe zet ik deze dingen samen tot iets dat een taak van de gebruiker afhandelt".
 
-De set is expres klein. Een kleine set die klopt is nuttiger dan een complete catalogus die niet is bijgehouden. Staat jouw geval er niet bij, kijk dan of een van deze patronen de compositie al dekt; zo niet, dan is [`../reference.md`](../../nldd-design/reference.md) de volledige API en [Storybook](https://nederlandsedigitaledienst.github.io/design-system/) het levende voorbeeld.
+De set groeit met wat zich in productie bewijst, dus hij is niet compleet en wil dat ook niet zijn. Staat jouw geval er niet bij, kijk dan of een van deze patronen de compositie al dekt; zo niet, dan is [`../reference.md`](../../nldd-design/reference.md) de volledige API en [Storybook](https://nederlandsedigitaledienst.github.io/design-system/) het levende voorbeeld.
 
 **De opbouw van een scherm**
 

@@ -1,6 +1,6 @@
 ---
 name: nldd-design-contribute
-description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het designsysteem', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het designsysteem', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Binnen NLDD gaat het naar het designsysteem-kanaal op Mattermost, buiten NLDD naar een GitHub-issue. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het designsysteem zelf check je die uit."
+description: "Stel een wijziging voor aan @nldd/design-system: een ontbrekend component of variant, een patroon, een bug, of iets dat je nu omheen bouwt. Triggers: 'dit component mist iets', 'kan dit erbij in het designsysteem', 'een patroon voorstellen', 'bug melden in nldd', 'issue openen voor het designsysteem', 'waar meld ik dit', 'ik heb dit zelf nagebouwd'. Een GitHub-issue staat open voor iedereen; binnen NLDD kan het ook via het designsysteem-kanaal op Mattermost. Voor bouwen met het systeem: nldd-design-build. Voor een versie verhogen: nldd-design-upgrade. Zegt ook waar de onderhouderskennis zit: die zit niet in deze plugin maar als repo-locale skills in de repository zelf, dus voor het ontwikkelen van het designsysteem zelf check je die uit."
 metadata:
   type: reference
 ---
@@ -11,12 +11,12 @@ Je gebruikt deze skill als je met `@nldd/design-system` werkt en iets tegenkomt 
 
 ## Eerst: waar hoort het heen
 
-Dat hangt af van wie je bent, en het is de enige vraag die je vooraf moet beantwoorden.
+Er zijn twee plekken, en allebei werken ze.
 
-- **Werk je binnen NLDD**, dan gaat het naar het designsysteem-kanaal op Mattermost. Dat is de voorkeursroute voor intern: korter dan een issue, en de maintainer leest mee. Een gesprek daar is genoeg; je hoeft er geen issue bij te openen.
-- **Werk je buiten NLDD**, dan open je een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues). Die route staat open en werkt, en is voor jou de enige plek waar je gehoord wordt.
+- **Een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues)** staat open voor iedereen, binnen en buiten NLDD. Dat is de route die een spoor achterlaat: wie later hetzelfde tegenkomt, vindt hem terug.
+- **Het designsysteem-kanaal op Mattermost**, als je binnen NLDD werkt. Korter dan een issue en de maintainer leest mee, dus voor een vraag of een twijfelgeval is dat de snelste weg. Een gesprek daar is genoeg; je hoeft er geen issue bij te openen, en andersom hoef je voor een issue niet eerst langs het kanaal.
 
-Het gaat in beide gevallen om hetzelfde: een goed beschreven probleem. Wat hieronder staat geldt dus voor allebei, alleen de plek verschilt. En in geen van beide gevallen begin je met een pull request; daarover onderaan meer.
+Het gaat op beide plekken om hetzelfde: een goed beschreven probleem. Wat hieronder staat geldt dus voor allebei, alleen de plek verschilt. En in geen van beide gevallen begin je met een pull request; daarover onderaan meer.
 
 ## Beschrijf het probleem, niet alleen je oplossing
 
@@ -44,7 +44,7 @@ Controleer eerst of het in de [changelog](../nldd-design/changelog.md) al langsk
 
 ## Een patroon voorstellen
 
-Een patroon is iets anders dan een component: het beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt. De set staat in [`patterns/`](../nldd-design-build/patterns/) en blijft **expres klein**. Acht patronen die kloppen zijn nuttiger dan een catalogus die niemand bijhoudt; patroonbibliotheken gaan dood aan achterstallig onderhoud, niet aan een verkeerd formaat.
+Een patroon is iets anders dan een component: het beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt. De set staat in [`patterns/`](../nldd-design-build/patterns/) en groeit met wat zich in productie bewijst. Een patroon verdient zijn plek met bewijs, niet met een goed idee: het moet ergens draaien, en het moet een regel bij zich dragen die uitlegt waarom die compositie zo is.
 
 Begin daarom bij het probleem en het bewijs, niet bij de code:
 
@@ -58,9 +58,10 @@ Let op de grens met de ontwerprichtlijnen: compositie hoort in een patroon, een 
 
 Eerlijk over hoe dit project werkt, zodat je weet wat je krijgt:
 
-- **De maintainer beslist**, en wat afvalt krijgt een reden, in het issue of in het kanaal. Er is geen stemming en geen commissie; bij één maintainer zou dat een proces suggereren dat er niet is.
+- **De maintainer beslist**, en wat afvalt krijgt een reden, in het issue of in het kanaal.
 - **Ben je het oneens**, zeg dat op dezelfde plek. Komen jullie er niet uit, dan ligt de vraag bij het NLDD-team.
-- **Een afwijzing is geen oordeel over je probleem.** Een systeem dat elk verzoek inwilligt wordt onbruikbaar; "dit los je in je eigen app op" is een geldige uitkomst, en dan weet je waar je staat.
+- **Een afwijzing is geen oordeel over je probleem.** Een systeem dat elk verzoek inwilligt wordt onbruikbaar, dus "dit houd je dichter bij je eigen project" is een geldige uitkomst, en dan weet je waar je staat.
+- **Dichtbij houden is een keuze, geen troostprijs.** Een designsysteem is gelaagd: een core, daarboven soms een laag per organisatie, en daarnaast wat een project zelf bouwt. Hoe hoger in de boom, hoe duurzamer een component wordt, want meer teams geven er feedback op. Maar je hebt er ook minder invloed op, en het beweegt op een ander tempo dan het jouwe. Iets dat nog volop verandert houd je dus beter in je eigen project, tot het stil genoeg ligt om te delen.
 
 ## Als je zelf code schrijft
 

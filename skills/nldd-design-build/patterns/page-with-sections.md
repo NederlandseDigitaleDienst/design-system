@@ -88,7 +88,7 @@ nldd-app-view                  de buitenste schil
 
 **Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [title](../../nldd-design/reference.md#nldd-title) is hoe hij eruitziet, `heading-level` wat hij is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een overzichtspagina een `h2`, en laat de grootte los daarvan.
 
-**Een sticky header alleen als de inhoud erom vraagt.** Een [pagina](../../nldd-design/reference.md#nldd-page) kan zijn header laten meelopen, maar standaard doet hij dat niet: elke balk die blijft staan, kost ruimte die de inhoud nodig heeft. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
+**Laat de header meescrollen, tenzij hij zegt waar je naar kijkt.** Een [pagina](../../nldd-design/reference.md#nldd-page) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet: elke balk die blijft staan, kost ruimte die de inhoud nodig heeft. De uitzondering is de titelbalk die de context draagt, bij welk item deze inhoud hoort. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
 
 ## Panelen naast elkaar: begin met een split view
 

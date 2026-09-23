@@ -1,13 +1,13 @@
 ---
 name: nldd
-description: "VERVANGEN. Deze skill is opgesplitst. Gebruik nldd-design-build om een applicatie te bouwen met @nldd/design-system, nldd-design om een component, attribuut, slot, event of icoonnaam op te zoeken of te zien wat er in een versie veranderde, nldd-design-migrate om een bestaande frontend om te zetten, nldd-design-upgrade om een versie te verhogen, en nldd-design-contribute om een wijziging voor te stellen. Alle vijf zitten al in de nldd-plugin; je hoeft niets te installeren. Deze verwijzing verdwijnt na 1 maart 2027."
+description: "Wegwijzer naar de vijf nldd-skills, voor wie op de oude naam `nldd` uitkomt. Gebruik nldd-design-build om een applicatie te bouwen met @nldd/design-system, nldd-design om een component, attribuut, slot, event of icoonnaam op te zoeken of te zien wat er in een versie veranderde, nldd-design-migrate om een bestaande frontend om te zetten, nldd-design-upgrade om een versie te verhogen, en nldd-design-contribute om een wijziging voor te stellen. Alle vijf zitten al in de nldd-plugin; je hoeft niets te installeren. Deze wegwijzer verdwijnt na 1 maart 2027."
 metadata:
   type: reference
 ---
 
-# Deze skill is opgesplitst in vijf
+# Welke nldd-skill je nodig hebt
 
-`nldd` betekende vier dingen tegelijk: de organisatie, het npm-pakket, de plugin en deze skill. Hij is nu gesplitst in vijf skills die zeggen waar ze over gaan.
+`nldd` is de organisatie, het npm-pakket en de plugin, en daarmee geen naam die zegt wat een skill doet. De kennis zit daarom in vijf skills die dat wel doen. Deze pagina wijst je naar de juiste, en verder niets.
 
 ## Je hoeft niets te installeren
 
@@ -44,7 +44,7 @@ De korte vorm gaat naar een skill van je eigen project als die toevallig dezelfd
 
 ## Zoek `nldd` op in je eigen bestanden
 
-Dit is het echte werk, en de eerste twee breken zonder foutmelding. Deze skill vangt ze nu nog op, maar hij verdwijnt.
+Dit is het echte werk, en de eerste twee breken zonder foutmelding. Deze wegwijzer vangt ze nu nog op, maar hij verdwijnt.
 
 1. **Je instructiebestanden**: `CLAUDE.md`, `.claude/rules/*.md`, `AGENTS.md`, of de tekst van een eigen skill die zegt "gebruik de nldd skill". Vervang de naam door de skill die je daar bedoelt, meestal `nldd-design-build`.
 2. **Subagent-definities** (`.claude/agents/*.md`) **en hooks** die op de skillnaam matchen.
@@ -59,6 +59,6 @@ rg -n '\bnldd\b' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
 
 Laat `nldd@nldd-plugins` staan: dat is de pluginnaam en die klopt nog.
 
-## Deze skill gaat weg
+## Deze wegwijzer gaat weg
 
-Hij bestaat alleen om verwijzingen naar de oude naam op te vangen, en wordt **na 1 maart 2027 verwijderd**. Daarna is een verwijzing naar `nldd` weer stil kapot, dus pas hem nu aan in plaats van erop te leunen.
+Hij bestaat alleen om verwijzingen naar de losse naam `nldd` op te vangen, en wordt **na 1 maart 2027 verwijderd**. Daarna is zo'n verwijzing weer stil kapot, dus pas hem nu aan in plaats van erop te leunen.

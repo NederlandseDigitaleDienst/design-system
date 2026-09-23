@@ -1,6 +1,6 @@
 # Migreren vanaf een ander design system
 
-Aanvulling op [`SKILL.md`](SKILL.md) voor codebases die al op een design system draaiden: het NL Design System, ROOS van RVO, of een eigen componentbibliotheek. Lees eerst de hoofdskill; hieronder staat alleen wat specifiek is voor deze herkomst.
+Aanvulling op [`SKILL.md`](SKILL.md), de hoofdpagina van deze skill, voor codebases die al op een design system draaiden: het NL Design System, ROOS van RVO, of een eigen componentbibliotheek. Lees die eerst; hieronder staat alleen wat specifiek is voor deze herkomst.
 
 Dit is een andere uitgangspositie dan een migratie vanaf losse CSS. Je team kent componenten al, je markup is al gestructureerd, en dat voelt als een voorsprong. Dat is het ook, maar het levert twee valkuilen op die een Tailwind-migratie niet heeft: je raadt namen die plausibel klinken, en je neemt gewoontes mee die hier anders werken.
 

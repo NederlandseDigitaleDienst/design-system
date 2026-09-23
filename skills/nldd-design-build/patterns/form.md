@@ -95,7 +95,7 @@ nldd-form                              name, method, label-alignment
 
 **Markeer wat optioneel is, niet wat verplicht is.** `optional` op het veld toont zelf het label "Optioneel". Verplichte velden zijn de regel, dus die krijgen geen sterretje.
 
-**De eisen staan in een validation list, geschreven als eis.** Een [validation list](../../nldd-design/reference.md#nldd-validation-list) toont een eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld. Schrijf een item als de eis ("Een apenstaartje"), niet als de opdracht ("Vul een apenstaartje in").
+**De eisen staan in een validation list, geschreven als eis.** Een [validation list](../../nldd-design/reference.md#nldd-validation-list) toont een eis pas als de waarde er niet aan voldoet, en koppelt de fout aan het veld. Schrijf een item als de eis ("Een apenstaartje"), niet als de opdracht ("Vul een apenstaartje in"). Tekst die niemand tegenhoudt, zoals "We sturen een bevestigingsmail naar dit adres", is geen eis maar een `nldd-form-field-help-text`.
 
 **Importeer de globale stylesheet.** Het formulier en de form section hebben geen shadow DOM: autofill vindt een invoerveld alleen met een echte `<form>` erboven, en een `<legend>` in de shadow DOM wordt niet overal als groepsnaam voorgelezen. Hun opmaak zit daarom in `@nldd/design-system/styles`. Laat je die stylesheet weg, dan lijkt het formulier kapot.
 

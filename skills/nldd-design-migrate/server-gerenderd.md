@@ -1,11 +1,10 @@
 # Migreren in een server-gerenderde app
 
-Aanvulling op [`SKILL.md`](SKILL.md) voor codebases die HTML op de server renderen en fragmenten inwisselen: Django of Rails met htmx, Turbo, Unpoly, LiveView. Lees eerst de hoofdskill; hieronder staat alleen wat specifiek is voor deze herkomst.
+Aanvulling op [`SKILL.md`](SKILL.md), de hoofdpagina van deze skill, voor codebases die HTML op de server renderen en fragmenten inwisselen: Django of Rails met htmx, Turbo, Unpoly, LiveView. Lees die eerst; hieronder staat alleen wat specifiek is voor deze herkomst.
 
 Eén zin organiseert bijna alles wat hier misgaat:
 
-> **Een swap trapt de levenscyclus van een component niet af zoals een
-> paginalading dat doet.**
+> **Een swap trapt de levenscyclus van een component niet af zoals een paginalading dat doet.**
 
 De componenten zijn Lit-elementen met een shadow root. Bij een paginalading loopt de hele opstart: registratie, eerste render, observers. Bij een fragmentwissel komt er markup binnen in een document dat al draait, en dan gelden er andere regels.
 
@@ -53,7 +52,7 @@ Zoek oude klassenamen dus ook in je JavaScript, en houd er rekening mee dat ze d
 
 ## Zet er een test op die het oude systeem eruit houdt
 
-Dit is de check die de hoofdskill niet noemt, en hij is goedkoop. Definieer een lijst markers van het oude designsysteem, render een representatief formulier in een test, en assert dat geen marker in de uitvoer voorkomt. Doe dat voor de gewone render én voor de render met validatiefouten.
+Dit is de check die `SKILL.md` niet noemt, en hij is goedkoop. Definieer een lijst markers van het oude designsysteem, render een representatief formulier in een test, en assert dat geen marker in de uitvoer voorkomt. Doe dat voor de gewone render én voor de render met validatiefouten.
 
 Drie dingen maken het werkbaar:
 
@@ -69,8 +68,7 @@ Deze guards scannen de hele templateboom en lezen JavaScript-bestanden. Dat is t
 
 Haal je de gebouwde bundel binnen in je repo in plaats van via npm, dan geldt er iets dat je moet willen:
 
-> **Vendoring ruilt "stil kapot gaan op een moment dat je niet koos" in voor
-> "bewust achterlopen".**
+> **Vendoring ruilt "stil kapot gaan op een moment dat je niet koos" in voor "bewust achterlopen".**
 
 Niets werkt die bundel automatisch bij, dus een hernoeming in het designsysteem kan je app niet breken. Bij npm met een caret-range komt een nieuwe minor binnen bij de eerstvolgende installatie, en een attribuut dat stil is hernoemd laat dan al je meldingen verdwijnen zonder dat iemand iets wijzigde.
 

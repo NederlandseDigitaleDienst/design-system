@@ -14,6 +14,11 @@
  *   `dist/css/form.css` (or `global.css`), not in a component-specific shadow
  *   stylesheet. Import it as part of your app's global CSS bundle.
  *
+ * **When a field turns red:** on submit the form marks every control the
+ * browser rejects with `invalid`, and clears it again once the value passes.
+ * Setting `invalid` yourself is fine, but do it on submit, not while someone is
+ * still typing, or a field turns red over a value that is not finished yet.
+ *
  * **Two usage modes:**
  *
  * 1. **Auto-wrap** (default): write children directly. Component creates a
