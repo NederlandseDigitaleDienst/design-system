@@ -1,10 +1,9 @@
-<!--
-  GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/confirm/ (de .mdx-pagina en de .html-voorbeelden ernaast).
-  Hergenereren: npm run generate:skill-docs
--->
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './confirm.stories';
 
-# Patroon: bevestigen
+<Meta of={Stories} />
+
+# Bevestigen
 
 **Welk probleem dit oplost.** De gebruiker een keuze laten maken over iets dat
 niet terug te draaien is. Hetzelfde blok meldt ook een lege of mislukte
@@ -17,11 +16,11 @@ betaling, een verwijdering zonder herstel.
 dan en meld het achteraf met een herstelmogelijkheid: mensen klikken op de
 automatische piloot op "OK", dus een bevestiging vangt weinig fouten. Valt er
 niets te kiezen, dan hoeft er ook niet onderbroken te worden. Een melding zonder
-keuze is een [notification](../../nldd-design/reference.md#nldd-notification)
-of een [banner](../../nldd-design/reference.md#nldd-banner). En liever
-dan een modal: een [popover](../../nldd-design/reference.md#nldd-popover) die
+keuze is een [notification](?path=/docs/components-status-feedback-notification--docs)
+of een [banner](?path=/docs/components-status-feedback-banner--docs). En liever
+dan een modal: een [popover](?path=/docs/components-layout-popover--docs) die
 aan de actie vastzit en de pagina niet afdekt. De afwegingen staan in de
-[ontwerprichtlijnen](../../nldd-design/design-guidelines.md#feedback-en-state).
+[ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#feedback-en-state).
 
 ## Compositie
 
@@ -31,47 +30,15 @@ nldd-modal-dialog            open, variant, text, supporting-text
   └─ nldd-button             slot="actions", de actie, variant="destructive"
 ```
 
-```html
-<nldd-button id="document-verwijderen"
-  variant="destructive"
-  text="Verwijder document"
-></nldd-button>
-
-<nldd-modal-dialog variant="alert"
-  text="Document definitief verwijderen?"
-  supporting-text="Dit document en zijn versies worden verwijderd. Dit kan niet ongedaan worden gemaakt."
->
-  <nldd-button slot="actions"
-    variant="primary"
-    text="Behoud document"
-  ></nldd-button>
-  <nldd-button slot="actions"
-    variant="destructive"
-    text="Verwijder definitief"
-  ></nldd-button>
-</nldd-modal-dialog>
-```
+<Canvas of={Stories.Standaard} />
 
 Onder de modal zit een
-[inline dialog](../../nldd-design/reference.md#nldd-inline-dialog):
+[inline dialog](?path=/docs/components-status-feedback-inline-dialog--docs):
 hetzelfde blok zonder de onderbreking. Gebruik dat rechtstreeks in een sectie of
 een lijst, voor een lege toestand, een laadtoestand of een fout die de pagina
 niet hoeft te blokkeren.
 
-```html
-<nldd-simple-section>
-  <nldd-inline-dialog icon="search"
-    text="Geen resultaten"
-    supporting-text="Er is niets dat bij je filters past."
-    heading-level="2"
-  >
-    <nldd-button slot="actions"
-      variant="secondary"
-      text="Wis alle filters"
-    ></nldd-button>
-  </nldd-inline-dialog>
-</nldd-simple-section>
-```
+<Canvas of={Stories.LegeToestand} />
 
 ## Waarom zo
 
@@ -87,7 +54,7 @@ alinea juist goed: de dialoog heeft zijn eigen naam, de `text` of anders
 `accessible-label`.
 
 **Open de modal met `open`, net als een sheet.** De
-[modal dialog](../../nldd-design/reference.md#nldd-modal-dialog) zet
+[modal dialog](?path=/docs/components-status-feedback-modal-dialog--docs) zet
 `open` zelf uit als de gebruiker hem sluit met Esc of een klik ernaast. Bind
 `open` samen met `close` aan je toestand, en zet hem na een keuze zelf uit.
 

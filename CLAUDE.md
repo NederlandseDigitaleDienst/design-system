@@ -143,11 +143,22 @@ De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs
 
 ## Patronen
 
-Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. De acht basispatronen staan in `skills/nldd-design-build/patterns/` (pagina met secties, werkbalk, lijst, filteren, formulier, menu, bewerk-sheet, bevestigen) en reizen met de plugin mee naar consumenten. Ze zijn met de hand geschreven, niet gegenereerd.
+Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. Er zijn acht basispatronen (pagina met secties, werkbalk, lijst, filteren, formulier, menu, bewerk-sheet, bevestigen). Ze staan in Storybook onder "Patronen" en reizen als `skills/nldd-design-build/patterns/*.md` met de plugin mee naar consumenten.
+
+Een patroon woont in `src/patterns/<slug>/`, met vier bestanden:
+
+- `<slug>.html`: de voorbeeldmarkup, zonder framework. Dit is de enige bron: de live story rendert hem, het codeblok op de docs-pagina toont hem en de skill neemt hem over.
+- `<slug>.stories.ts`: rendert de markup via `patternStory()` uit `src/patterns/pattern-story.ts`, plus het beetje gedrag dat een consument zelf schrijft (een knop die een sheet opent).
+- `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet, de compositie en waarom zo.
+- `<slug>.test.ts`: test wat het patroon belooft, op dezelfde markup.
+
+`npm run generate:skill-patterns` (onderdeel van `generate:skill-docs`) maakt daar de skill-pagina van. De vertaling zit in `scripts/lib/skill-patterns.js` met tests ernaast: `<Canvas>` wordt het `.html`-bestand, en een link `?path=/docs/...` wordt een link naar het andere patroon, naar de component in `reference.md` of naar de ontwerprichtlijnen. `validate.yml` controleert dat de gegenereerde pagina's bij hun bron passen. Link in de MDX dus naar Storybook, en naar de voorbeelden in `examples/` via hun GitHub-URL. De titel en de bestandsnaam van elk patroon staan in `PATTERNS` in `scripts/generate-skill-patterns.js`.
+
+Een regel die over één component gaat, hoort niet in een patroon maar in de JSDoc van dat component. Een patroon houdt de compositie en de redenen die over meer componenten gaan.
 
 Houd de set klein: patroonbibliotheken gaan dood aan achterstallig onderhoud, niet aan een verkeerd formaat. Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
-Elk `nldd-*`-element in de hand-geschreven skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Onbekende tag, attribuut, slot of icoonnaam laat CI falen. De logica zit in `scripts/lib/skill-markup.js` met tests in `skill-markup.test.mjs`; die gebruikt dezelfde JSDoc-parser als de referentie, zodat de drie niet uiteen kunnen lopen. Twee dingen zijn expres toegestaan: framework-bindingen (`:text`, `[attr.x]`, `v-if`) en attributen die een ouder voor zijn kinderen documenteert (`above`/`below`/`only` op de split views).
+Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Onbekende tag, attribuut, slot of icoonnaam laat CI falen. De logica zit in `scripts/lib/skill-markup.js` met tests in `skill-markup.test.mjs`; die gebruikt dezelfde JSDoc-parser als de referentie, zodat de drie niet uiteen kunnen lopen. Twee dingen zijn expres toegestaan: framework-bindingen (`:text`, `[attr.x]`, `v-if`) en attributen die een ouder voor zijn kinderen documenteert (`above`/`below`/`only` op de split views).
 
 Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.mdx`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
 

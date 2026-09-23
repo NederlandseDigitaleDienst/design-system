@@ -60,6 +60,12 @@ herinneren. Twee bronnen wegen het zwaarst:
 Een patroon voorstellen doe je via een issue, met het probleem en het bewijs
 erbij: waar draait dit, en welke taak lost het op. Code mag later.
 
+Elk patroon staat ook in
+[Storybook](https://nederlandsedigitaledienst.github.io/design-system/), onder
+"Patronen", met de voorbeelden live en een test op wat het patroon belooft. De
+bestanden hier zijn uit die pagina's gegenereerd, uit dezelfde markup die daar
+draait: het voorbeeld dat je kopieert, is het voorbeeld dat getest is.
+
 Elk `nldd-*`-element in deze bestanden wordt in CI gecontroleerd tegen de echte
 component-API (`npm run validate:skill-markup`), dus een tag, attribuut, slot of
 icoonnaam die niet bestaat laat de build falen.

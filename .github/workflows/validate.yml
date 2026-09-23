@@ -76,6 +76,17 @@ jobs:
           git diff --exit-code skills/nldd-design/reference.md \
             || (echo "::error::skills/nldd-design/reference.md is verouderd. Draai 'npm run generate:component-reference' en commit het resultaat." && exit 1)
 
+      # The pattern pages in the skill are generated from src/patterns/, the
+      # same markup the Storybook pages render, so an edit to a pattern that did
+      # not reach the skill is drift.
+      - name: Check skill patterns are in sync
+        shell: bash
+        run: |
+          set -e
+          npm run generate:skill-patterns
+          git diff --exit-code skills/nldd-design-build/patterns/ \
+            || (echo "::error::skills/nldd-design-build/patterns/ is verouderd. Draai 'npm run generate:skill-patterns' en commit het resultaat." && exit 1)
+
       # The manifest is committed rather than built on publish, so a change to a
       # component's public API is visible in the diff of a pull request.
       - name: Check custom elements manifest is in sync

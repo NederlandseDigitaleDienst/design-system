@@ -1,0 +1,101 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './page-with-sections.stories';
+
+<Meta of={Stories} />
+
+# Pagina met secties
+
+**Welk probleem dit oplost.** Een pagina opbouwen die op elke schermbreedte
+leesbaar blijft, met inhoud die niet te breed uitloopt en witruimte die overal
+hetzelfde is, zonder zelf een grid of mediaquery te schrijven.
+
+**Wanneer wel.** Vrijwel elke pagina, van een contentpagina tot een
+overzichtsscherm in een applicatie.
+
+**Wanneer niet.** Voor een werkomgeving met panelen naast elkaar (een lijst met
+een detail, een editor met een inspector) begin je met een split view, en zet je
+de pagina's daarbinnen. Zie hieronder.
+
+## Compositie
+
+```
+nldd-app-view                  de buitenste schil
+  └─ nldd-page
+       ├─ slot="header"        nldd-top-navigation-bar of nldd-top-title-bar
+       ├─ nldd-simple-section  één per inhoudsblok
+       │    ├─ nldd-title      slot="header", text en heading-level
+       │    └─ de inhoud       nldd-rich-text, nldd-list, nldd-collection, nldd-form, …
+       └─ slot="footer"        nldd-page-footer
+```
+
+<Canvas of={Stories.Standaard} />
+
+## Waarom zo
+
+**De app view is altijd de buitenste schil.** De
+[app view](?path=/docs/components-layout-app-view--docs) zet de achtergrond en
+bepaalt wie er scrollt: het document, of elk paneel apart. Het documentfont
+komt uit de stylesheet van het pakket, zodra er een app view op de pagina staat.
+
+**Eén sectie per inhoudsblok.** Een
+[simple section](?path=/docs/components-layout-page-sections-simple-section--docs)
+regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn
+`header`-slot de juiste afstand tot de inhoud. Herhaal de sectie in plaats van er
+zelf kolommen in te bouwen, en geef een blok een eigen vlak met `background` op
+de sectie, niet met een achtergrondkleur van jezelf.
+
+**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een
+[title](?path=/docs/components-content-title--docs) is hoe hij eruitziet,
+`heading-level` wat hij is. Dat maakt een herbruikbaar blok eenvoudig: geef het
+een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en
+op een overzichtspagina een `h2`, en laat de grootte los daarvan.
+
+**Een sticky header alleen als de inhoud erom vraagt.** Een
+[pagina](?path=/docs/components-layout-page--docs) kan zijn header laten
+meelopen, maar standaard doet hij dat niet: elke balk die blijft staan, kost
+ruimte die de inhoud nodig heeft. Zie de
+[ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#visueel-en-layout).
+
+## Panelen naast elkaar: begin met een split view
+
+Bouw je een werkomgeving in plaats van een pagina, dan is de split view de
+laag direct onder de app view, en staat in elk paneel een eigen pagina. De
+[side-by-side split view](?path=/docs/components-layout-split-views-side-by-side-split-view--docs)
+laat panelen van rechts naar links verdwijnen als het scherm smal wordt. Zet
+de hoofdinhoud dus in `pane-1` en het detail of de inspector rechts.
+
+<Canvas of={Stories.AppShell} />
+
+**Elk paneel heeft een titelbalk, maar de pagina heeft één `h1`.** Een
+[titelbalk](?path=/docs/components-navigation-top-title-bar--docs) rendert
+standaard een `h1`. Geef de titelbalk van een paneel naast de hoofdinhoud
+daarom `heading-level="2"`.
+
+**Zeg welk paneel de hoofdinhoud draagt, met `landmarks="page"`.** Een document
+heeft één `main`, één banner en één contentinfo, dus een
+[pagina](?path=/docs/components-layout-page--docs) in een paneel houdt die niet
+vanzelf: ze wordt een sectie zonder landmarks. Welk paneel de hoofdinhoud is,
+weet alleen de applicatie, dus dat zet je er zelf op. Geef de andere panelen een
+`accessible-label`, dan zijn het benoemde regio's waar een schermlezergebruiker
+naartoe kan springen, met een naam die zegt wat erin staat.
+
+Voor balken boven of onder de hoofdinhoud, zoals een werkbalk of een
+statusbalk, is er de
+[bar split view](?path=/docs/components-layout-split-views-bar-split-view--docs).
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: de leesbreedte, de responsieve witruimte, de achtergrond
+en het contrast dat daarbij hoort, en de koppen die de titels renderen.
+
+Wat jij nog moet doen: een `heading-level` op elke titel en titelbalk, zodat de
+koppenstructuur klopt, en een
+[skip link](?path=/docs/components-navigation-skip-link--docs) bovenaan als er
+navigatie boven de inhoud staat.
+
+## Gezien in
+
+`page > simple-section` en `simple-section > title` zijn de meest voorkomende
+composities op dit systeem, in elk onderzocht product. Een uitgewerkte content-
+en landingspagina met hero, kaartenraster en footer staat in
+[content-page](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/skills/nldd-design-build/examples/content-page.md).
