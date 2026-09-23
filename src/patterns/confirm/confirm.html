@@ -1,12 +1,29 @@
-<nldd-button
-  id="document-verwijderen"
-  variant="destructive"
-  text="Verwijder document"
-></nldd-button>
+<nldd-simple-section>
+  <nldd-box background="critical">
+    <nldd-container
+      padding="16"
+      gap="8"
+    >
+      <nldd-title
+        size="5"
+        text="Document verwijderen"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-rich-text>
+        <p>Het document en al zijn versies verdwijnen. Collega's die eraan werken raken hun kopie kwijt.</p>
+      </nldd-rich-text>
+      <nldd-button
+        id="document-verwijderen"
+        variant="destructive"
+        text="Verwijder document"
+      ></nldd-button>
+    </nldd-container>
+  </nldd-box>
+</nldd-simple-section>
 
 <nldd-modal-dialog
   variant="alert"
-  text="Document definitief verwijderen?"
+  text="Verwijder 'Jaarverslag 2025'?"
   supporting-text="Dit document en zijn versies worden verwijderd. Dit kan niet ongedaan worden gemaakt."
 >
   <nldd-button
@@ -17,6 +34,6 @@
   <nldd-button
     slot="actions"
     variant="destructive"
-    text="Verwijder definitief"
+    text="Verwijder document"
   ></nldd-button>
 </nldd-modal-dialog>

@@ -1,9 +1,8 @@
 import markup from './confirm.html?raw';
-import emptyState from './confirm.empty-state.html?raw';
 import { patternStory } from '../pattern-story.js';
 
 export default {
-	title: 'Patronen/Bevestigen',
+	title: 'Patronen/Onomkeerbare actie',
 };
 
 export const Standaard = patternStory(markup, (root) => {
@@ -17,5 +16,3 @@ export const Standaard = patternStory(markup, (root) => {
 		});
 	});
 });
-
-export const LegeToestand = patternStory(emptyState);

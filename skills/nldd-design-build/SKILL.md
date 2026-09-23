@@ -132,7 +132,7 @@ Het verschil zit in de laag direct onder de app-view: een split view met een pag
 
 ### Overlays: sheet, modal of popover
 
-Welke van de drie je pakt is een ontwerpkeuze, en die staat in [`design-guidelines.md`](../nldd-design/design-guidelines.md) ("Feedback en state"): werk dat zijn context nodig heeft in een sheet, de modal voor een beslissing zonder weg terug, de popover voor iets kleins dat aan één knop hangt. Hoe je ze samenstelt staat in [bewerken in een sheet](patterns/edit-in-a-sheet.md) en [bevestigen](patterns/confirm.md).
+Welke van de drie je pakt is een ontwerpkeuze, en die staat in [`design-guidelines.md`](../nldd-design/design-guidelines.md) ("Feedback en state"): werk dat zijn context nodig heeft in een sheet, de modal voor een beslissing zonder weg terug, de popover voor iets kleins dat aan één knop hangt. Hoe je ze samenstelt staat in [bewerken in een sheet](patterns/edit-in-a-sheet.md) en [onomkeerbare actie](patterns/confirm.md).
 
 Mechanisch werken ze alle vier hetzelfde, sheet, window, modal en popover, en dat is het enige wat je hier hoeft te weten: bind `open` aan je eigen toestand, luister naar `close`, en laat het element in de DOM staan. Mount je het pas op het moment dat het open moet, dan slaan de animaties over en verlies je wat er in het formulier stond. Het complete Vue-component staat in [`examples/bootstrap-vue.md`](examples/bootstrap-vue.md).
 

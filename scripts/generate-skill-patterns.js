@@ -35,7 +35,7 @@ const PATTERNS = {
 	'Patronen/Formulier': 'form',
 	'Patronen/Menu bij een knop': 'menu-from-a-button',
 	'Patronen/Bewerken in een sheet': 'edit-in-a-sheet',
-	'Patronen/Bevestigen': 'confirm',
+	'Patronen/Onomkeerbare actie': 'confirm',
 };
 
 const context = {

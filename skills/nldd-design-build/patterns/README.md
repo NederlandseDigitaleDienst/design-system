@@ -26,7 +26,7 @@ De set groeit met wat zich in productie bewijst, dus hij is niet compleet en wil
 | [Formulier](form.md) | Gegevens vragen, met labels, groepen en validatie |
 | [Menu bij een knop](menu-from-a-button.md) | Meer acties of keuzes aanbieden dan er knoppen passen |
 | [Bewerken in een sheet](edit-in-a-sheet.md) | Iets laten bewerken zonder de context weg te halen |
-| [Bevestigen](confirm.md) | Een keuze over iets onomkeerbaars, of een lege toestand melden |
+| [Onomkeerbare actie](confirm.md) | Een keuze over iets dat niet terug te draaien is |
 
 ## Waar patronen ophouden
 
