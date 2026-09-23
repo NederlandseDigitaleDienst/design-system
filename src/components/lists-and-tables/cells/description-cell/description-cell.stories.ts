@@ -6,6 +6,15 @@ export default {
 	title: 'Components/Lists & Tables/Cells/Description Cell',
 	component: 'nldd-description-cell',
 	tags: ['autodocs'],
+	args: {
+		verticalAlignment: 'center',
+		width: '',
+		minWidth: '',
+		maxWidth: '',
+		minHeight: '',
+		hideBelow: '',
+		hideAbove: '',
+	},
 	argTypes: {
 		width: {
 			control: 'text',
@@ -47,16 +56,7 @@ export default {
 	},
 };
 
-export const Default = {
-	args: {
-		verticalAlignment: 'center',
-		width: '',
-		minWidth: '',
-		maxWidth: '',
-		minHeight: '',
-		hideBelow: '',
-		hideAbove: '',
-	},
+export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-description-cell
 			width=${args.width || nothing}
@@ -70,7 +70,7 @@ export const Default = {
 	`,
 };
 
-export const WithRichText = {
+export const MetRichText = {
 	render: () => html`
 		<nldd-description-cell>
 			<p slot="title">Term</p>
@@ -81,7 +81,7 @@ export const WithRichText = {
 	`,
 };
 
-export const VerticalAlignment = {
+export const VerticaleUitlijning = {
 	render: () => html`
 		<div style="display: flex; gap: 8px; height: 80px;">
 			<nldd-description-cell vertical-alignment="top" style="border: 1px dashed var(--primitives-color-neutral-150);">

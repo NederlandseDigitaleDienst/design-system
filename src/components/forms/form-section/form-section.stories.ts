@@ -26,6 +26,10 @@ export default {
 		},
 		status: { type: 'experimental' },
 	},
+	args: {
+		text: 'Persoonsgegevens',
+		supportingText: 'Vul je gegevens in.',
+	},
 	argTypes: {
 		text: {
 			control: 'text',
@@ -36,10 +40,6 @@ export default {
 			control: 'text',
 			description: 'Korte beschrijving onder de heading',
 		},
-	},
-	args: {
-		text: 'Persoonsgegevens',
-		supportingText: 'Vul je gegevens in.',
 	},
 };
 
@@ -63,7 +63,7 @@ export const Standaard = {
 	render: Template,
 };
 
-export const InForm = {
+export const InEenFormulier = {
 	render: () => html`
 		<nldd-form label-alignment="right" novalidate>
 			<nldd-form-section text="Persoonsgegevens" supporting-text="Vul je naam en contactgegevens in.">

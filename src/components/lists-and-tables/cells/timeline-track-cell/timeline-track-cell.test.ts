@@ -45,12 +45,12 @@ describe('nldd-timeline-track-cell', () => {
 		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell size="md" text="2" icon="check-mark"></nldd-timeline-track-cell>');
 		await waitForUpdate(el);
 
-		expect(el.shadowRoot!.querySelector('nldd-icon')?.getAttribute('name')).toBe('check-mark');
+		expect(el.shadowRoot!.querySelector('nldd-icon')?.getAttribute('icon')).toBe('check-mark');
 		expect(el.shadowRoot!.querySelector('.timeline-track-cell__text')).toBeNull();
 	});
 
 	it('takes slotted content in the marker', async () => {
-		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell size="md"><nldd-icon name="check-mark"></nldd-icon></nldd-timeline-track-cell>');
+		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell size="md"><nldd-icon icon="check-mark"></nldd-icon></nldd-timeline-track-cell>');
 		await waitForUpdate(el);
 
 		expect(marker()!.querySelector('slot')).not.toBeNull();

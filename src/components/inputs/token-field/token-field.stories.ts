@@ -128,13 +128,13 @@ const render = (args: Record<string, unknown>) => html`
 	>${options}</nldd-token-field>
 `;
 
-export const Default = { render };
+export const Standaard = { render };
 
-export const Empty = { args: { placeholder: 'Land toevoegen…', values: [] }, render };
-export const WithTokens = { args: { values: ['nl', 'be', 'de'] }, render };
-export const Invalid = { args: { values: ['nl'], invalid: true }, render };
+export const Leeg = { args: { placeholder: 'Land toevoegen…', values: [] }, render };
+export const MetTokens = { args: { values: ['nl', 'be', 'de'] }, render };
+export const ToestandInvalid = { name: 'Toestand invalid', args: { values: ['nl'], invalid: true }, render };
 
-export const Readonly = { args: { values: ['nl', 'be'], readonly: true }, render };
+export const ToestandReadonly = { name: 'Toestand readonly', args: { values: ['nl', 'be'], readonly: true }, render };
 
 /**
  * Vrije invoer zonder opties-menu: `allow-custom` aan en geen slotted `nldd-menu`.
@@ -142,7 +142,7 @@ export const Readonly = { args: { values: ['nl', 'be'], readonly: true }, render
  * en bevestig met Enter of een komma; een komma splitst ook geplakte, kommagescheiden
  * invoer.
  */
-export const CustomValues = {
+export const EigenWaarden = {
 	args: {
 		placeholder: 'E-mailadres toevoegen…',
 		type: 'email',
@@ -176,7 +176,7 @@ export const CustomValues = {
  * Toetsenbord: focus een token en open het menu met Enter, Spatie of Pijl omlaag;
  * pijltjes roteren tussen de tokens, Backspace verwijdert er een.
  */
-export const MenuTokens = {
+export const TokensMetMenu = {
 	args: {
 		accessibleLabel: 'Landen',
 		placeholder: 'Land toevoegen…',

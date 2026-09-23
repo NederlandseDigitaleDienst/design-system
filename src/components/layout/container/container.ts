@@ -6,6 +6,11 @@
  * axis (inline/block), or per individual side. Specificity: per side >
  * per axis > all sides.
  *
+ * The container owns the space around and between its children; use
+ * `nldd-spacer` only for a one-off gap between two different things. A block
+ * that is placed in more than one context gets no padding of its own: whoever
+ * places it wraps it in a container, so the inset is not counted twice.
+ *
  * Responsive padding and gap have sm/md/lg variants. Each variant emits both
  * an @media (viewport) and @container (layout-container) query. When inside a
  * layout-container the @container query wins; otherwise the @media query
@@ -60,15 +65,13 @@
  * @attr {number} sm-column-count - Column count when this container is sm-wide
  * @attr {number} md-column-count - Column count when this container is md-wide
  * @attr {number} lg-column-count - Column count when this container is lg-wide
+ * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it.
+ * @attr {string} min-width - Minimum width as a CSS length (e.g. '280px')
+ * @attr {string} max-width - Maximum width as a CSS length (e.g. '480px')
  * @attr {string} gap - Gap between children
  * @attr {string} sm-gap - Gap at sm breakpoint
  * @attr {string} md-gap - Gap at md breakpoint
  * @attr {string} lg-gap - Gap at lg breakpoint
- * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it.
- * @attr {string} min-width - Minimum width as a CSS length (e.g. '280px')
- * @attr {string} max-width - Maximum width as a CSS length (e.g. '480px')
- * @attr {string} horizontal-alignment - 'left' | 'center' | 'right'
- * @attr {string} vertical-alignment - 'top' | 'center' | 'bottom'
  * @attr {string} padding - Padding for all sides
  * @attr {string} padding-inline - Padding for left and right
  * @attr {string} padding-block - Padding for top and bottom
@@ -103,6 +106,8 @@
  * @attr {string} lg-padding-right - Padding right at lg
  * @attr {string} lg-padding-bottom - Padding bottom at lg
  * @attr {string} lg-padding-left - Padding left at lg
+ * @attr {string} horizontal-alignment - 'left' | 'center' | 'right'
+ * @attr {string} vertical-alignment - 'top' | 'center' | 'bottom'
  *
  * @slot - Container content
  */
@@ -179,12 +184,6 @@ export class NLDDContainer extends LitElement {
 
 	@property({ type: String, reflect: true, attribute: 'max-width' })
 	maxWidth = '';
-
-	@property({ type: String, reflect: true, attribute: 'horizontal-alignment' })
-	horizontalAlignment: HorizontalAlignment | undefined = undefined;
-
-	@property({ type: String, reflect: true, attribute: 'vertical-alignment' })
-	verticalAlignment: VerticalAlignment | undefined = undefined;
 
 	@property({ type: String, reflect: true })
 	gap: PaddingSize | undefined = undefined;
@@ -281,6 +280,12 @@ export class NLDDContainer extends LitElement {
 
 	@property({ type: String, reflect: true, attribute: 'lg-padding-left' })
 	lgPaddingLeft: PaddingSize | undefined = undefined;
+
+	@property({ type: String, reflect: true, attribute: 'horizontal-alignment' })
+	horizontalAlignment: HorizontalAlignment | undefined = undefined;
+
+	@property({ type: String, reflect: true, attribute: 'vertical-alignment' })
+	verticalAlignment: VerticalAlignment | undefined = undefined;
 
 	override updated(_changed: PropertyValues): void {
 		this.writeCustomProperties();

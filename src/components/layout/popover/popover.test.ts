@@ -817,3 +817,61 @@ describe('nldd-popover slikt de eerste tik op klein scherm', () => {
 	});
 
 });
+
+describe('nldd-popover – open attribute', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const withAnchor = async (attrs = '') => {
+		el = await fixture(`
+			<div>
+				<button id="trigger-open-attr">Trigger</button>
+				<nldd-popover anchor="trigger-open-attr" accessible-label="Test" ${attrs}></nldd-popover>
+			</div>
+		`);
+		const popover = el.querySelector('nldd-popover') as NLDDPopover;
+		await waitForUpdate(popover);
+		return popover;
+	};
+
+	it('opens from the first render when open is set', async () => {
+		const popover = await withAnchor('open');
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(true);
+	});
+
+	it('opens and closes when open is set and cleared', async () => {
+		const popover = await withAnchor();
+		popover.open = true;
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(true);
+		popover.open = false;
+		await waitForUpdate(popover);
+		expect(popover.matches(':popover-open')).toBe(false);
+	});
+
+	it('clears open when it closes another way', async () => {
+		const popover = await withAnchor();
+		popover.show();
+		await waitForUpdate(popover);
+		expect(popover.hasAttribute('open')).toBe(true);
+		(popover as HTMLElement).hidePopover();
+		await waitForUpdate(popover);
+		expect(popover.open).toBe(false);
+		expect(popover.hasAttribute('open')).toBe(false);
+	});
+
+	it('does not keep open without an anchor to open against', async () => {
+		vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-popover accessible-label="Test"></nldd-popover>');
+		const popover = el as NLDDPopover;
+		popover.open = true;
+		await waitForUpdate(popover);
+		expect(popover.open).toBe(false);
+		expect(popover.hasAttribute('open')).toBe(false);
+	});
+});

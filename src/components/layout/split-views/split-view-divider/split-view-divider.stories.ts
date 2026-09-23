@@ -25,6 +25,10 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		orientation: 'vertical',
+		hasDragHandle: false,
+	},
 	argTypes: {
 		orientation: {
 			control: { type: 'select' },
@@ -38,10 +42,6 @@ export default {
 			description: 'Toon een sleephandvat',
 			table: { defaultValue: { summary: 'false' } },
 		},
-	},
-	args: {
-		orientation: 'vertical',
-		hasDragHandle: false,
 	},
 };
 

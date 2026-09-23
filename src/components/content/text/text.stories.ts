@@ -98,7 +98,7 @@ const Template = ({
 	>${text}</nldd-text>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
@@ -106,7 +106,7 @@ export const Default = {
  * Vijf maten, dezelfde schaal die de tokens dragen. Boven `lg` houdt het op: dat
  * is geen lopende tekst meer maar een kop, en daar is `nldd-title` voor.
  */
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<nldd-text size="lg">lg — een regel op de grootste bodymaat</nldd-text>
 		<nldd-text size="md">md — de standaard</nldd-text>
@@ -121,7 +121,7 @@ export const Sizes = {
  * bold-gewicht uit de schaal. Zet je het component zelf op `weight="bold"`, dan
  * valt die nadruk weg — bolder dan bold bestaat hier niet.
  */
-export const Weights = {
+export const Gewichten = {
 	render: () => html`
 		<nldd-text weight="regular">regular — met <strong>nadruk</strong> erin</nldd-text>
 		<nldd-text weight="medium">medium — met <strong>nadruk</strong> erin</nldd-text>
@@ -133,7 +133,7 @@ export const Weights = {
  * Vier regelhoogtes. `flat` en `tight` zijn voor een regel die alleen staat,
  * `snug` en `loose` voor tekst die over meerdere regels loopt.
  */
-export const LineHeights = {
+export const Regelhoogtes = {
 	render: () => html`
 		<div style="display: grid; gap: 16px; max-width: 320px;">
 			<nldd-text line-height="flat">flat — deze tekst loopt over meer dan één regel, zodat je ziet wat de regelhoogte doet.</nldd-text>
@@ -148,7 +148,7 @@ export const LineHeights = {
  * De semantische kleuren. `content` en `secondary` volgen het contentkanaal van
  * de omgeving, dus in een lijstrij kleuren ze mee als die rij oplicht.
  */
-export const Colors = {
+export const Kleuren = {
 	render: () => html`
 		<nldd-text color="content">content</nldd-text>
 		<nldd-text color="secondary">secondary</nldd-text>
@@ -163,7 +163,7 @@ export const Colors = {
  * Dit lijnt de woorden uit binnen het blok. Wil je het blok zelf verschuiven,
  * dan is dat `horizontal-alignment` op `nldd-container`.
  */
-export const Alignment = {
+export const HorizontaleUitlijning = {
 	render: () => html`
 		<div style="display: grid; gap: 8px; max-width: 320px;">
 			<nldd-text horizontal-alignment="left">left</nldd-text>

@@ -43,7 +43,7 @@ export default {
 		},
 	},
 	argTypes: {
-		name: {
+		icon: {
 			control: 'select',
 			options: allIconNames,
 			description: 'Naam van het icoon (inclusief aliassen).',
@@ -74,7 +74,7 @@ export default {
 		},
 	},
 	args: {
-		name: 'heart',
+		icon: 'heart',
 		size: '24',
 		color: '(inherit)',
 		box: false,
@@ -82,9 +82,9 @@ export default {
 	},
 };
 
-const Template = ({ name, size, box, color, customColor }: Record<string, any>) => html`
+const Template = ({ icon, size, box, color, customColor }: Record<string, any>) => html`
 	<nldd-icon
-		name=${name}
+		icon=${icon}
 		size=${size || nothing}
 		?box=${box}
 		color=${color || nothing}
@@ -96,10 +96,10 @@ export const Standaard = {
 	render: Template,
 };
 
-export const InheritFromParent = {
+export const ErftVanDeOuder = {
 	render: () => html`
 		<div style="width: 64px; height: 64px; color: #d52b1e;">
-			<nldd-icon name="heart"></nldd-icon>
+			<nldd-icon icon="heart"></nldd-icon>
 		</div>
 	`,
 	parameters: {
@@ -134,11 +134,11 @@ export const MeeMetDeTekst = {
 	render: () => {
 		const line = (font: string) => html`
 			<p style="font: ${font}; margin: 0;">
-				Deze aanvraag is <nldd-icon name="check-mark" size="inherit" color="success"></nldd-icon> goedgekeurd,
-				staat <nldd-icon name="lock-closed" size="inherit"></nldd-icon> vast sinds
-				<nldd-icon name="calendar-event" size="inherit"></nldd-icon> 12 maart, en loopt af over
-				<nldd-icon name="clock" size="inherit"></nldd-icon> 3 dagen.
-				<nldd-icon name="info-circle" size="inherit" color="accent"></nldd-icon> Verlengen kan tot die datum.
+				Deze aanvraag is <nldd-icon icon="check-mark" size="inherit" color="success"></nldd-icon> goedgekeurd,
+				staat <nldd-icon icon="lock-closed" size="inherit"></nldd-icon> vast sinds
+				<nldd-icon icon="calendar-event" size="inherit"></nldd-icon> 12 maart, en loopt af over
+				<nldd-icon icon="clock" size="inherit"></nldd-icon> 3 dagen.
+				<nldd-icon icon="info-circle" size="inherit" color="accent"></nldd-icon> Verlengen kan tot die datum.
 			</p>
 		`;
 		return html`
@@ -152,12 +152,12 @@ export const MeeMetDeTekst = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: end;">
 			${FIXED_SIZES.map(size => html`
 				<div style="text-align: center;">
-					<nldd-icon name="heart" size=${size}></nldd-icon>
+					<nldd-icon icon="heart" size=${size}></nldd-icon>
 					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${size}px</div>
 				</div>
 			`)}
@@ -166,12 +166,12 @@ export const Sizes = {
 	parameters: { controls: { disable: true } },
 };
 
-export const FunctionalColors = {
+export const FunctioneleKleuren = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
 			${FUNCTIONAL_COLORS.map(color => html`
 				<div style="text-align: center;">
-					<nldd-icon name="heart" size="40" color=${color}></nldd-icon>
+					<nldd-icon icon="heart" size="40" color=${color}></nldd-icon>
 					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${color}</div>
 				</div>
 			`)}
@@ -185,7 +185,7 @@ export const Rijkskleuren = {
 		<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 16px;">
 			${RIJKSKLEUREN.map(color => html`
 				<div style="text-align: center;">
-					<nldd-icon name="heart" size="40" color=${color}></nldd-icon>
+					<nldd-icon icon="heart" size="40" color=${color}></nldd-icon>
 					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${color}</div>
 				</div>
 			`)}
@@ -194,11 +194,12 @@ export const Rijkskleuren = {
 	parameters: { controls: { disable: true } },
 };
 
-export const OwnColor = {
+export const EigenKleur = {
+	name: 'Eigen kleur (custom-color)',
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center;">
 			${['#ef4444', '#f97316', '#22c55e', '#3b82f6', '#8b5cf6'].map(color => html`
-				<nldd-icon name="circle-filled" size="40" custom-color=${color}></nldd-icon>
+				<nldd-icon icon="circle-filled" size="40" custom-color=${color}></nldd-icon>
 			`)}
 		</div>
 	`,
@@ -212,18 +213,18 @@ export const OwnColor = {
 	},
 };
 
-export const Box = {
+export const MetBox = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-icon name="terminal" size="40" box color="accent"></nldd-icon>
-			<nldd-icon name="shield-check-mark" size="40" box color="success"></nldd-icon>
-			<nldd-icon name="cloud" size="40" box color="critical"></nldd-icon>
-			<nldd-icon name="puzzle-piece" size="40" box custom-color="#a90061"></nldd-icon>
-			<nldd-icon name="tulip" size="40" box custom-color="#f5c400"></nldd-icon>
+			<nldd-icon icon="terminal" size="40" box color="accent"></nldd-icon>
+			<nldd-icon icon="shield-check-mark" size="40" box color="success"></nldd-icon>
+			<nldd-icon icon="cloud" size="40" box color="critical"></nldd-icon>
+			<nldd-icon icon="puzzle-piece" size="40" box custom-color="#a90061"></nldd-icon>
+			<nldd-icon icon="tulip" size="40" box custom-color="#f5c400"></nldd-icon>
 		</div>
 		<nldd-spacer size="24"></nldd-spacer>
 		<div style="width: 120px; height: 200px; outline: 1px dashed #bbb;">
-			<nldd-icon name="heart" box color="accent"></nldd-icon>
+			<nldd-icon icon="heart" box color="accent"></nldd-icon>
 		</div>
 	`,
 	parameters: {
@@ -236,7 +237,7 @@ export const Box = {
 	},
 };
 
-export const IconGallery = {
+export const Icoongalerij = {
 	parameters: {
 		controls: { disable: true },
 		docs: {
@@ -306,7 +307,7 @@ export const IconGallery = {
 							<nldd-card data-search-tokens=${searchTokens} data-status=${status ?? nothing} style="position: relative;">
 								${statusTag}
 								<nldd-container padding="16" horizontal-alignment="center" style="text-align: center;">
-									<nldd-icon name=${iconName} size="32"></nldd-icon>
+									<nldd-icon icon=${iconName} size="32"></nldd-icon>
 									<nldd-spacer size="12" direction="vertical"></nldd-spacer>
 									<div style="font: var(--primitives-font-body-xs-regular-tight);">${iconName}</div>
 									${iconAliases.length > 0 ? html`

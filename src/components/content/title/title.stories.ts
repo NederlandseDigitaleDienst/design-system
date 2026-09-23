@@ -5,18 +5,27 @@ import '../../layout/spacer/spacer.js';
 
 /**
  * Gebruik een title bar om een paginatitel of sectietitel te tonen met
- * optionele overline, ondertitel en acties. Geef een h1–h6 element mee
- * voor de juiste semantische structuur.
+ * optionele overline, ondertitel en acties. De titel geef je mee met `text`,
+ * en `heading-level` bepaalt welke kop het is. `size` bepaalt alleen hoe groot
+ * hij eruitziet. Zonder `heading-level` wordt het een alinea, voor een titel
+ * die geen kop is.
  *
  * ## Gebruik
  * ```html
- * <nldd-title size="3">
- *   <p slot="overline">Overline</p>
- *   <h1>Paginatitel</h1>
- *   <p slot="subtitle">Ondertitel</p>
+ * <nldd-title
+ *   size="3"
+ *   text="Paginatitel"
+ *   supporting-text="Ondertitel"
+ *   overline="Overline"
+ *   heading-level="1"
+ * >
  *   <nldd-button slot="end" text="Actie"></nldd-button>
  * </nldd-title>
  * ```
+ *
+ * Is de titel meer dan tekst, zoals een link, zet hem dan in de standaardslot
+ * met een eigen h1–h6. Die neemt de plaats in van `text`. Voor `overline` en
+ * `supporting-text` werkt het net zo, met een slot van dezelfde naam.
  */
 export default {
 	title: 'Components/Content/Title',
@@ -31,6 +40,14 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		size: 3,
+		color: 'content',
+		text: 'Paginatitel',
+		supportingText: '',
+		overline: '',
+		headingLevel: 1,
+	},
 	argTypes: {
 		size: {
 			control: { type: 'select' },
@@ -44,19 +61,40 @@ export default {
 			description: '`content` neemt de eigen tekstkleuren van het systeem. `inherit` laat de titel de tekstkleur van de ondergrond volgen (voor gekleurde vlakken).',
 			table: { defaultValue: { summary: 'content' } },
 		},
-	},
-	args: {
-		size: 3,
-		color: 'content',
+		text: {
+			control: 'text',
+			description: 'Tekst van de titel. Inhoud in de standaardslot neemt de plaats in.',
+		},
+		supportingText: {
+			name: 'supporting-text',
+			control: 'text',
+			description: 'Tekst onder de titel. Inhoud in de slot `supporting-text` neemt de plaats in.',
+		},
+		overline: {
+			control: 'text',
+			description: 'Tekst boven de titel. Inhoud in de slot `overline` neemt de plaats in.',
+		},
+		headingLevel: {
+			name: 'heading-level',
+			control: 'select',
+			options: ['(geen)', 1, 2, 3, 4, 5, 6],
+			mapping: { '(geen)': undefined },
+			description: 'Kopniveau van de titel. Zonder niveau wordt het een alinea.',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
 	},
 };
 
-export const Standaard = ({ size, color }: Record<string, any>) => html`
+export const Standaard = ({ size, color, text, supportingText, overline, headingLevel }: Record<string, any>) => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title size=${size}
+		<nldd-title
+			size=${size}
 			color=${color || nothing}
+			text=${text || nothing}
+			supporting-text=${supportingText || nothing}
+			overline=${overline || nothing}
+			heading-level=${headingLevel ?? nothing}
 		>
-			<h1>Paginatitel</h1>
 			<nldd-button slot="end" variant="secondary" size="sm" text="Actie"></nldd-button>
 		</nldd-title>
 	</div>
@@ -65,35 +103,38 @@ export const Standaard = ({ size, color }: Record<string, any>) => html`
 export const MetOverline = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title>
-			<p slot="overline">Wet op de zorgtoeslag</p>
-			<h1>Artikel 1</h1>
-		</nldd-title>
+		<nldd-title
+			text="Artikel 1"
+			overline="Wet op de zorgtoeslag"
+			heading-level="1"
+		></nldd-title>
 	</div>
 `,
 	parameters: { controls: { disable: true } },
 };
 
-export const MetOndertitel = {
+export const MetSupportingText = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title>
-			<h1>Wet op de zorgtoeslag</h1>
-			<p slot="subtitle">Laatste wijziging: 1 januari 2024</p>
-		</nldd-title>
+		<nldd-title
+			text="Wet op de zorgtoeslag"
+			supporting-text="Laatste wijziging: 1 januari 2024"
+			heading-level="1"
+		></nldd-title>
 	</div>
 `,
 	parameters: { controls: { disable: true } },
 };
 
-export const MetOverlineEnOndertitel = {
+export const MetOverlineEnSupportingText = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title>
-			<p slot="overline">Hoofdstuk 1</p>
-			<h1>Begripsbepalingen</h1>
-			<p slot="subtitle">Ingangsdatum: 1 januari 2024</p>
-		</nldd-title>
+		<nldd-title
+			text="Begripsbepalingen"
+			supporting-text="Ingangsdatum: 1 januari 2024"
+			overline="Hoofdstuk 1"
+			heading-level="1"
+		></nldd-title>
 	</div>
 `,
 	parameters: { controls: { disable: true } },
@@ -102,8 +143,10 @@ export const MetOverlineEnOndertitel = {
 export const MetActies = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title>
-			<h1>Wet op de zorgtoeslag</h1>
+		<nldd-title
+			text="Wet op de zorgtoeslag"
+			heading-level="1"
+		>
 			<nldd-button slot="end" variant="secondary" size="sm" text="Bewerken"></nldd-button>
 			<nldd-spacer slot="end" size="8"></nldd-spacer>
 			<nldd-button slot="end" size="sm" text="Opslaan"></nldd-button>
@@ -117,9 +160,11 @@ export const AlleGrootten = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 24px; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		${[1, 2, 3, 4, 5, 6].map(s => html`
-			<nldd-title size=${s}>
-				<h1>Grootte ${s}</h1>
-			</nldd-title>
+			<nldd-title
+				size=${s}
+				text="Grootte ${s}"
+				heading-level="2"
+			></nldd-title>
 		`)}
 	</div>
 `,
@@ -129,31 +174,48 @@ export const AlleGrootten = {
 /**
  * Met `color="inherit"` volgt de titel de tekstkleur van de ondergrond —
  * voor gekleurde vlakken zoals de filled-categories, die een puur witte of
- * zwarte contentkleur meeleveren. De overline en subtitle krijgen dezelfde
+ * zwarte contentkleur meeleveren. De overline en supporting-text krijgen dezelfde
  * kleur op de systeembrede secundaire dekking.
  */
 export const OpKleurvlak = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px;">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-title color="inherit"
+				<nldd-title
+					color="inherit"
 					size="2"
-				>
-					<p slot="overline">Donker vlak</p>
-					<h2>Titel volgt de contentkleur</h2>
-					<p slot="subtitle">Subtitle op verlaagde dekking</p>
-				</nldd-title>
+					text="Titel volgt de contentkleur"
+					supporting-text="Ondersteunende tekst op verlaagde dekking"
+					overline="Donker vlak"
+					heading-level="2"
+				></nldd-title>
 			</div>
 			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-title color="inherit"
+				<nldd-title
+					color="inherit"
 					size="2"
-				>
-					<p slot="overline">Middenton</p>
-					<h2>Zwarte content op oranje</h2>
-					<p slot="subtitle">Subtitle op verlaagde dekking</p>
-				</nldd-title>
+					text="Zwarte content op oranje"
+					supporting-text="Ondersteunende tekst op verlaagde dekking"
+					overline="Middenton"
+					heading-level="2"
+				></nldd-title>
 			</div>
 		</div>
 	`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
+ * Is de titel meer dan tekst, zoals een link, zet hem dan in de standaardslot
+ * met een eigen h1–h6. Die neemt de plaats in van `text`.
+ */
+export const MetEigenInhoud = {
+	render: () => html`
+	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
+		<nldd-title supporting-text="Laatste wijziging: 1 januari 2024">
+			<h1><a href="https://wetten.overheid.nl/BWBR0018451">Wet op de zorgtoeslag</a></h1>
+		</nldd-title>
+	</div>
+`,
 	parameters: { controls: { disable: true } },
 };

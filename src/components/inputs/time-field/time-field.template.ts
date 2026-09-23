@@ -31,7 +31,7 @@ function renderValidationIcon(component: NLDDTimeField): TemplateResult | typeof
 		<div class="time-field__validation-icon-area">
 			<span class="time-field__validation-icon">
 				<nldd-icon
-					name=${name}
+					icon=${name}
 					aria-hidden="true"
 				></nldd-icon>
 			</span>
@@ -74,12 +74,14 @@ function renderPicker(component: NLDDTimeField): TemplateResult | typeof nothing
 					dismiss-text=${component._t('components.time-field.cancel-action')}
 					@dismiss=${component._handlePickerDismiss}
 				></nldd-top-title-bar>
-				<nldd-container padding="16"
+				<nldd-container
+					padding="16"
 					@keydown=${component._handlePickerKeydown}
 					@input=${component._handlePickerInput}
 					@change=${component._handlePickerChange}
 				>
-					<slot name="picker"
+					<slot
+						name="picker"
 						@slotchange=${component._handlePickerSlotChange}
 					></slot>
 					${component._hasSlottedPicker ? nothing : html`

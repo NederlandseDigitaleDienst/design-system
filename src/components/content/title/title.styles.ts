@@ -201,6 +201,13 @@ export const titleStyles = css`
 		flex-basis: 0;
 	}
 
+	.title__overline {
+		margin: 0;
+		color: var(--semantics-content-secondary-color);
+		font: var(--primitives-font-body-sm-regular-tight);
+		overflow-wrap: anywhere;
+	}
+
 	::slotted([slot="overline"]) {
 		${slottedReset}
 		${inheritedTextReset}
@@ -212,6 +219,15 @@ export const titleStyles = css`
 
 	/* The measure is in ch, so one value covers every size: ch scales with the
 	   font, and 40 characters stays 40 characters at 18px and at 52px. */
+	.title__text {
+		margin: 0;
+		max-width: 40ch;
+		color: var(--semantics-content-color);
+		font: var(--_font);
+		overflow-wrap: anywhere;
+		text-wrap: balance;
+	}
+
 	::slotted(:not([slot])) {
 		${slottedReset}
 		${inheritedTextReset}
@@ -223,7 +239,14 @@ export const titleStyles = css`
 		text-wrap: balance !important;
 	}
 
-	::slotted([slot="subtitle"]) {
+	.title__supporting-text {
+		margin: 0;
+		color: var(--semantics-content-secondary-color);
+		font: var(--primitives-font-body-md-regular-tight);
+		overflow-wrap: anywhere;
+	}
+
+	::slotted([slot="supporting-text"]) {
 		${slottedReset}
 		${inheritedTextReset}
 		margin: 0 !important;
@@ -232,9 +255,23 @@ export const titleStyles = css`
 		overflow-wrap: anywhere !important;
 	}
 
-	:host([size="5"]) ::slotted([slot="subtitle"]),
-	:host([size="6"]) ::slotted([slot="subtitle"]) {
+	:host([size="5"]) .title__supporting-text,
+	:host([size="6"]) .title__supporting-text {
+		font: var(--primitives-font-body-sm-regular-tight);
+	}
+
+	:host([size="5"]) ::slotted([slot="supporting-text"]),
+	:host([size="6"]) ::slotted([slot="supporting-text"]) {
 		font: var(--primitives-font-body-sm-regular-tight) !important;
+	}
+
+	:host([color="inherit"]) .title__text {
+		color: inherit;
+	}
+
+	:host([color="inherit"]) .title__overline,
+	:host([color="inherit"]) .title__supporting-text {
+		color: color-mix(in oklab, currentColor var(--semantics-content-secondary-opacity), transparent);
 	}
 
 	/* !important matches the hardened slotted rules above. */
@@ -244,7 +281,7 @@ export const titleStyles = css`
 	}
 
 	:host([color="inherit"]) ::slotted([slot="overline"]),
-	:host([color="inherit"]) ::slotted([slot="subtitle"]) {
+	:host([color="inherit"]) ::slotted([slot="supporting-text"]) {
 		color: color-mix(in oklab, currentColor var(--semantics-content-secondary-opacity), transparent) !important;
 	}
 

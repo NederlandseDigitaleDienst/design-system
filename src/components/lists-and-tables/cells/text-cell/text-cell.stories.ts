@@ -6,6 +6,21 @@ export default {
 	title: 'Components/Lists & Tables/Cells/Text Cell',
 	component: 'nldd-text-cell',
 	tags: ['autodocs'],
+	args: {
+		size: 'md',
+		color: 'content',
+		width: '',
+		minWidth: '',
+		maxWidth: '',
+		minHeight: '',
+		horizontalAlignment: 'left',
+		verticalAlignment: 'center',
+		text: 'Tekstcel',
+		supportingText: '',
+		overline: '',
+		hideBelow: '',
+		hideAbove: '',
+	},
 	argTypes: {
 		size: {
 			control: 'select',
@@ -79,22 +94,7 @@ export default {
 	},
 };
 
-export const Default = {
-	args: {
-		size: 'md',
-		color: 'content',
-		width: '',
-		minWidth: '',
-		maxWidth: '',
-		minHeight: '',
-		horizontalAlignment: 'left',
-		verticalAlignment: 'center',
-		text: 'Tekstcel',
-		supportingText: '',
-		overline: '',
-		hideBelow: '',
-		hideAbove: '',
-	},
+export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-text-cell
 			size=${args.size}
@@ -111,25 +111,25 @@ export const Default = {
 	`,
 };
 
-export const WithOverline = {
+export const MetOverline = {
 	render: () => html`
 		<nldd-text-cell overline="Overline" text="Tekstcel"></nldd-text-cell>
 	`,
 };
 
-export const WithSupportingText = {
+export const MetSupportingText = {
 	render: () => html`
 		<nldd-text-cell text="Tekstcel" supporting-text="Ondersteunende tekst"></nldd-text-cell>
 	`,
 };
 
-export const WithOverlineAndSupportingText = {
+export const MetOverlineEnSupportingText = {
 	render: () => html`
 		<nldd-text-cell overline="Overline" text="Tekstcel" supporting-text="Ondersteunende tekst"></nldd-text-cell>
 	`,
 };
 
-export const Secondary = {
+export const Secundair = {
 	render: () => html`
 		<nldd-text-cell color="secondary" text="Tekstcel (secondary)"></nldd-text-cell>
 	`,
@@ -148,7 +148,7 @@ export const Accent = {
 	},
 };
 
-export const StatusColors = {
+export const Statuskleuren = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px;">
 			<nldd-text-cell color="success" overline="Status" text="Goedgekeurd" supporting-text="Verwerkt op 9 mei 2026"></nldd-text-cell>
@@ -166,7 +166,7 @@ export const StatusColors = {
 	},
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px;">
 			<nldd-text-cell size="md" overline="Overline" text="Tekstcel (md)" supporting-text="Ondersteunende tekst"></nldd-text-cell>
@@ -175,7 +175,7 @@ export const Sizes = {
 	`,
 };
 
-export const Width = {
+export const Breedte = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px; width: 300px; border: 1px dashed var(--primitives-color-neutral-150); padding: 8px;">
 			<nldd-text-cell width="full" text="Volledig (default)"></nldd-text-cell>
@@ -185,7 +185,7 @@ export const Width = {
 	`,
 };
 
-export const MinHeight = {
+export const MinimaleHoogte = {
 	render: () => html`
 		<div style="display: flex; gap: 8px; align-items: flex-start;">
 			<nldd-text-cell vertical-alignment="top" min-height="44px" style="border: 1px dashed var(--primitives-color-neutral-150);" text="Min-hoogte 44px"></nldd-text-cell>
@@ -194,7 +194,7 @@ export const MinHeight = {
 	`,
 };
 
-export const HorizontalAlignment = {
+export const HorizontaleUitlijning = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px;">
 			<nldd-text-cell horizontal-alignment="left" style="border: 1px dashed var(--primitives-color-neutral-150);" overline="Overline" text="Tekstcel (links)" supporting-text="Ondersteunende tekst"></nldd-text-cell>
@@ -203,7 +203,7 @@ export const HorizontalAlignment = {
 	`,
 };
 
-export const VerticalAlignment = {
+export const VerticaleUitlijning = {
 	render: () => html`
 		<div style="display: flex; gap: 8px; height: 80px;">
 			<nldd-text-cell vertical-alignment="top" style="border: 1px dashed var(--primitives-color-neutral-150);" text="Boven"></nldd-text-cell>
@@ -213,7 +213,7 @@ export const VerticalAlignment = {
 	`,
 };
 
-export const SlotInlineTag = {
+export const TagInDeSlot = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 480px;">
 			<div>
@@ -246,7 +246,7 @@ Gebruik dit voor zelfdragende custom elementen zoals \`<nldd-tag>\`, \`<nldd-ico
 	},
 };
 
-export const QuerySearchHighlight = {
+export const ZoektermMarkeren = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 480px;">
 			<div>

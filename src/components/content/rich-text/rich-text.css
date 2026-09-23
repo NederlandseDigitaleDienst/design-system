@@ -94,16 +94,23 @@ nldd-rich-text[color="inherit"] figcaption {
    main-start, so `full` and `wide` read as rightward bleed there and as
    symmetric spans in [centered]. */
 
-nldd-rich-text > * {
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) {
+	display: contents;
+}
+
+nldd-rich-text > *,
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > * {
 	grid-column: full;
 	justify-self: start;
 }
 
-nldd-rich-text[centered] > * {
+nldd-rich-text[centered] > *,
+nldd-rich-text[centered] > div:only-child:not([class], [style], [role], [data-width]) > * {
 	justify-self: center;
 }
 
-nldd-rich-text > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote) {
+nldd-rich-text > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote),
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote) {
 	grid-column: main;
 	/* Fill the main column so short text blocks keep a shared left edge —
 	   justify-self: center would otherwise float a shrinkwrapped heading
@@ -115,33 +122,40 @@ nldd-rich-text > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockq
 
 /* nldd-table stays on the generic full default; use data-width to
    override per table. */
-nldd-rich-text > :is(img, figure, video, iframe, table) {
+nldd-rich-text > :is(img, figure, video, iframe, table),
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(img, figure, video, iframe, table) {
 	grid-column: wide;
 }
 
-nldd-rich-text > :is(pre, nldd-code-viewer) {
+nldd-rich-text > :is(pre, nldd-code-viewer),
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(pre, nldd-code-viewer) {
 	width: 100%;
 }
 
 /* Per-item override for editors; wins on specificity from every default
    above. */
-nldd-rich-text > [data-width="main"] {
+nldd-rich-text > [data-width="main"],
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > [data-width="main"] {
 	grid-column: main;
 }
 
-nldd-rich-text > [data-width="wide"] {
+nldd-rich-text > [data-width="wide"],
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > [data-width="wide"] {
 	grid-column: wide;
 }
 
-nldd-rich-text > [data-width="full"] {
+nldd-rich-text > [data-width="full"],
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > [data-width="full"] {
 	grid-column: full;
 }
 
-nldd-rich-text > :first-child {
+nldd-rich-text > :first-child,
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :first-child {
 	margin-top: 0;
 }
 
-nldd-rich-text > :last-child {
+nldd-rich-text > :last-child,
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :last-child {
 	margin-bottom: 0;
 }
 
@@ -305,7 +319,8 @@ nldd-rich-text ol {
 	list-style-type: decimal;
 }
 
-nldd-rich-text > :is(ul, ol) {
+nldd-rich-text > :is(ul, ol),
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(ul, ol) {
 	margin-block: calc(var(--_spacing) / -2);
 }
 

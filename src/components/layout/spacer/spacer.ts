@@ -4,6 +4,10 @@
  * Add explicit space between elements. Components here have no margins
  * of their own — all whitespace is set by a spacer.
  *
+ * A spacer is fixed space between two different things. For padding around an
+ * area, or the gaps between the children of one area, use `nldd-container`
+ * with `padding` and `gap` instead.
+ *
  * ### Sizing
  * Use a single `size` attribute for whitespace that's the same at every
  * viewport. Combine with `sm-size`, `md-size` and/or `lg-size` to override

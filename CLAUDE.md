@@ -87,10 +87,7 @@ Elk component MOET minimaal een **smoke test** hebben. Run tests met `npm test`.
 
 Versies worden **automatisch** verhoogd door semantic-release bij merge naar main.
 
-Leidend criterium: verandert de commit wat consumers krijgen (`dist/` of de
-meegeleverde `skills/nldd/*`)? Zo ja, dan hoort er een release uit te komen.
-`docs:` telt daarin mee, want de plugin-versie volgt de pakketversie: zonder
-release halen consumers de gewijzigde skill-docs nooit op (zie Plugin-versie).
+Leidend criterium: verandert de commit wat consumers krijgen (`dist/` of de meegeleverde `skills/*`)? Zo ja, dan hoort er een release uit te komen. `docs:` telt daarin mee, want de plugin-versie volgt de pakketversie: zonder release halen consumers de gewijzigde skill-docs nooit op (zie Plugin-versie).
 
 | Commit type | Versieverhoging |
 |-------------|-----------------|
@@ -106,9 +103,9 @@ release halen consumers de gewijzigde skill-docs nooit op (zie Plugin-versie).
 
 ## Changelog
 
-`CHANGELOG.md` wordt door semantic-release beheerd: bij elke merge naar main zet het een nieuw versieblok (`## <small>x.y.z (datum)</small>`) bovenaan, afgeleid van de conventionele commits.
+`CHANGELOG.md` wordt door semantic-release beheerd: bij elke merge naar main zet het een nieuw versieblok (`## [x.y.z](compare-link) (datum)`) bovenaan, afgeleid van de conventionele commits.
 
-**De leesbare inhoud schrijf je met de hand.** Dat is bewust: `nldd-avatar - nieuw component voor een persoon of organisatie` zegt een consument veel meer dan `refactor(avatar): rename css var`. Commit-titels schrijf je voor reviewers, changelog-entries voor consumers. Het gegenereerde deel is daarom expres niet meer dan een kale bullet per release (de PR-titel); de `### Highlights` / `### Added`-secties eronder zijn handwerk.
+**De leesbare inhoud schrijf je met de hand.** Dat is bewust: `nldd-avatar - nieuw component voor een persoon of organisatie` zegt een consument veel meer dan `refactor(avatar): rename css var`. Commit-titels schrijf je voor reviewers, changelog-entries voor consumers. Het gegenereerde deel is daarom expres niet meer dan het versiekopje; de `### Highlights` / `### Added`-secties eronder zijn handwerk.
 
 Laat daarom de regel `"preset": "conventionalcommits"` in `.releaserc.json` staan. Haal je die weg, dan valt de release-notes-generator terug op zijn eigen default en gaat hij de notes alsnog in `### Features` / `### Bug Fixes` opdelen, wat je juist niet wilt.
 
@@ -116,33 +113,43 @@ Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit d
 
 - Zet de entry **direct bovenaan**, boven het nieuwste versieblok. **Geen `## Unreleased`-kopje** — dat past niet in het door semantic-release gegenereerde format.
 - Gebruik de Keep-a-Changelog-secties (`### Added`, `### Fixed`, `### Breaking`, …), zoals de bestaande versieblokken.
-- Regenereer daarna de skill-kopie: `npm run generate:skill-changelog` (of `npm run generate:skill-docs`). `skills/nldd/changelog.md` is een gegenereerde kopie van de root-CHANGELOG en moet in sync blijven.
+- Regenereer daarna de skill-kopie: `npm run generate:skill-changelog` (of `npm run generate:skill-docs`). `skills/nldd-design/changelog.md` is een gegenereerde kopie van de root-CHANGELOG en moet in sync blijven.
 
 ## Iconen
 
-Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam
-is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een
-alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js`
-(`'brand': 'seal-star'`). Optimaliseer nieuwe bestanden naar de huisstijl:
-geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur,
-pad afgerond op twee decimalen, tabs, elk pad op een eigen regel.
+Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js` (`'brand': 'seal-star'`). Optimaliseer nieuwe bestanden naar de huisstijl: geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur, pad afgerond op twee decimalen, tabs, elk pad op een eigen regel.
 
-Nieuwe en hertekende iconen krijgen een "Nieuw"- of "Bijgewerkt"-label in de
-icon-gallery. Die twee lijsten staan in `icon-gallery-status.ts` en worden bij
-elke batch **vervangen**, afgeleid uit de git-historie; dat bestand legt in zijn
-kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet
-gebruiken).
+Nieuwe en hertekende iconen krijgen een "Nieuw"- of "Bijgewerkt"-label in de icon-gallery. Die twee lijsten staan in `icon-gallery-status.ts` en worden bij elke batch **vervangen**, afgeleid uit de git-historie; dat bestand legt in zijn kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet gebruiken).
 
-Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs`
-(de icoon- en aliaslijst in `skills/nldd/reference.md`), en zet een nieuw icoon
-in de changelog onder `### Highlights`.
+Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs` (de icoon- en aliaslijst in `skills/nldd-design/reference.md`), en zet een nieuw icoon in de changelog onder `### Highlights`.
 
 ## Ontwerprichtlijnen
 
-De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs/Ontwerprichtlijnen"): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes). Heb je de directory `.claude/skills/ontwerprichtlijnen/` lokaal nog staan (van de oude generator), verwijder die dan handmatig; hij is nu een ongetrackte overblijver.
+De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs/Ontwerprichtlijnen"): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes). Heb je de directory `.claude/skills/ontwerprichtlijnen/` lokaal nog staan (van de oude generator), verwijder die dan handmatig; hij is nu een ongetrackte overblijver.
+
+## Patronen
+
+Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. Er zijn acht basispatronen (pagina met secties, werkbalk, lijst, filteren, formulier, menu, bewerk-sheet, bevestigen). Ze staan in Storybook onder "Patronen" en reizen als `skills/nldd-design-build/patterns/*.md` met de plugin mee naar consumenten.
+
+Een patroon woont in `src/patterns/<slug>/`, met vier bestanden:
+
+- `<slug>.html`: de voorbeeldmarkup, zonder framework. Dit is de enige bron: de live story rendert hem, het codeblok op de docs-pagina toont hem en de skill neemt hem over.
+- `<slug>.stories.ts`: rendert de markup via `patternStory()` uit `src/patterns/pattern-story.ts`, plus het beetje gedrag dat een consument zelf schrijft (een knop die een sheet opent).
+- `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet, de compositie en waarom zo.
+- `<slug>.test.ts`: test wat het patroon belooft, op dezelfde markup.
+
+`npm run generate:skill-patterns` (onderdeel van `generate:skill-docs`) maakt daar de skill-pagina van. De vertaling zit in `scripts/lib/skill-patterns.js` met tests ernaast: `<Canvas>` wordt het `.html`-bestand, en een link `?path=/docs/...` wordt een link naar het andere patroon, naar de component in `reference.md` of naar de ontwerprichtlijnen. `validate.yml` controleert dat de gegenereerde pagina's bij hun bron passen. Link in de MDX dus naar Storybook, en naar de voorbeelden in `examples/` via hun GitHub-URL. De titel en de bestandsnaam van elk patroon staan in `PATTERNS` in `scripts/generate-skill-patterns.js`.
+
+Een regel die over één component gaat, hoort niet in een patroon maar in de JSDoc van dat component. Een patroon houdt de compositie en de redenen die over meer componenten gaan.
+
+Houd de set klein: patroonbibliotheken gaan dood aan achterstallig onderhoud, niet aan een verkeerd formaat. Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
+
+Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Onbekende tag, attribuut, slot of icoonnaam laat CI falen. De logica zit in `scripts/lib/skill-markup.js` met tests in `skill-markup.test.mjs`; die gebruikt dezelfde JSDoc-parser als de referentie, zodat de drie niet uiteen kunnen lopen. Twee dingen zijn expres toegestaan: framework-bindingen (`:text`, `[attr.x]`, `v-if`) en attributen die een ouder voor zijn kinderen documenteert (`above`/`below`/`only` op de split views).
+
+Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.mdx`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
 
 ## Plugin-versie
 
-De Claude Code plugin (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`) levert de nldd-consumer-skill via `source: "./"`. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skill nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
+De Claude Code plugin (`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`) levert de vijf consumentenskills (`nldd-design`, `nldd-design-build`, `nldd-design-migrate`, `nldd-design-upgrade`, `nldd-design-contribute`) via `source: "./"`. Daarnaast staat er een zesde, `skills/nldd/`, die alleen doorverwijst: die vangt verwijzingen naar de oude skillnaam op en **hoort na 1 maart 2027 verwijderd te worden**, samen met de regel erover in de changelog. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skills nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
 
 Daarom volgt de plugin-versie automatisch de pakketversie. `package.json` is de enige bron; `npm run generate:plugin-version` (onderdeel van `generate:skill-docs`) schrijft die versie naar beide plugin-manifesten. semantic-release draait dit in `prepareCmd` en commit de manifesten mee in de release-commit, zodat de plugin-versie meebeweegt met elke release die de skill-docs verandert. Bewerk de `version`-velden niet handmatig.

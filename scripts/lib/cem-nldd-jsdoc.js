@@ -9,7 +9,7 @@
  * dispatch call, which for a component emitting through a helper produced the
  * name of the variable rather than the event.
  *
- * It reuses the parser behind skills/nldd/reference.md, so the manifest and the
+ * It reuses the parser behind skills/nldd-design/reference.md, so the manifest and the
  * reference cannot describe the same component differently.
  */
 

@@ -1,6 +1,8 @@
 /**
  * A generic cell for wrapping arbitrary content in a list item.
  * Controls vertical alignment and sizing without imposing content opinions.
+ * For more than a line of text, such as paragraphs or markup, put an
+ * `nldd-rich-text` in it rather than loose text in the row.
  *
  * ### Vertical alignment
  * `vertical-alignment="center"` (default) stretches the cell to fill the full
@@ -13,8 +15,8 @@
  * @attr {string} min-width - Minimum width as CSS length (e.g. '80px', '5rem')
  * @attr {string} max-width - Maximum width as CSS length (e.g. '200px', '20rem')
  * @attr {string} min-height - Minimum height as CSS length (e.g. '44px', '3rem')
- * @attr {'top' | 'center' | 'bottom'} vertical-alignment - Vertical alignment of slotted content (default: 'center')
  * @attr {'left' | 'center' | 'right'} horizontal-alignment - Horizontal alignment of slotted content (default: 'left')
+ * @attr {'top' | 'center' | 'bottom'} vertical-alignment - Vertical alignment of slotted content (default: 'center')
  *
  * @slot - Default slot for any content (buttons, switches, icons, etc.)
  */
@@ -44,11 +46,11 @@ export class NLDDCell extends VisibilityMixin(LitElement, 'cells-container') {
 	@property({ type: String, reflect: true, attribute: 'min-height' })
 	minHeight?: string;
 
-	@property({ reflect: true, attribute: 'vertical-alignment', converter: reflectNonDefault<CellVerticalAlignment>('center') })
-	verticalAlignment: CellVerticalAlignment = 'center';
-
 	@property({ reflect: true, attribute: 'horizontal-alignment', converter: reflectNonDefault<CellHorizontalAlignment>('left') })
 	horizontalAlignment: CellHorizontalAlignment = 'left';
+
+	@property({ reflect: true, attribute: 'vertical-alignment', converter: reflectNonDefault<CellVerticalAlignment>('center') })
+	verticalAlignment: CellVerticalAlignment = 'center';
 
 	override updated(changed: Map<string, unknown>) {
 		super.updated(changed);

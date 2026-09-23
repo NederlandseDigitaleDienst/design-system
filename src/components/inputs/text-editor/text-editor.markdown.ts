@@ -305,7 +305,7 @@ class MentionWidget extends WidgetType {
 		// prefix that aligns cleanly with the name.
 		const at = document.createElement('nldd-icon');
 		at.className = 'cm-md-mention-token-icon';
-		at.setAttribute('name', 'at');
+		at.setAttribute('icon', 'at');
 		at.setAttribute('aria-hidden', 'true');
 		const name = document.createElement('span');
 		name.textContent = this.label;

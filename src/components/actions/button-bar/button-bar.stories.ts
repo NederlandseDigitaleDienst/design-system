@@ -29,7 +29,7 @@ export default {
 	},
 };
 
-export const Default = {
+export const Standaard = {
 	args: { variant: 'neutral-tinted', size: 'md', disabled: false },
 	render: (args: Record<string, any>) => html`
 		<nldd-button-bar size=${args.size} variant=${args.variant} ?disabled=${args.disabled}>
@@ -40,7 +40,7 @@ export const Default = {
 	`,
 };
 
-export const Variants = {
+export const Varianten = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 			<nldd-button-bar variant="primary">
@@ -62,7 +62,7 @@ export const Variants = {
 	`,
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 			<nldd-button-bar size="lg">
@@ -97,7 +97,7 @@ export const Sizes = {
 	`,
 };
 
-export const WithoutDivider = {
+export const ZonderScheidingslijn = {
 	args: { variant: 'neutral-tinted', size: 'md', disabled: false },
 	render: (args: Record<string, any>) => html`
 		<nldd-button-bar size=${args.size} variant=${args.variant} ?disabled=${args.disabled}>
@@ -108,7 +108,8 @@ export const WithoutDivider = {
 	`,
 };
 
-export const Disabled = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 			<nldd-button-bar size="md" disabled>

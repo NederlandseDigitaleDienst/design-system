@@ -20,7 +20,7 @@ describe('nldd-text-field', () => {
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.text-field__validation-icon-area nldd-icon');
 		expect(icon).not.toBeNull();
-		expect(icon!.getAttribute('name')).toBe('valid');
+		expect(icon!.getAttribute('icon')).toBe('valid');
 	});
 
 	it('renders invalid icon when invalid attribute is set', async () => {
@@ -28,7 +28,7 @@ describe('nldd-text-field', () => {
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.text-field__validation-icon-area nldd-icon');
 		expect(icon).not.toBeNull();
-		expect(icon!.getAttribute('name')).toBe('invalid');
+		expect(icon!.getAttribute('icon')).toBe('invalid');
 	});
 
 	it('does not render validation icon in neutral state', async () => {

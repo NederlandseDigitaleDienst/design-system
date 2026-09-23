@@ -15,11 +15,11 @@
  *
  * @attr {'base'|'tinted'} background - Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface
  * @attr {string} accessible-label - Accessible name of the card; with `href`/`button` it names the link or button, otherwise the card region
+ * @attr {object} translations - Override translation keys (e.g. the "Opent in nieuw tabblad" announcement)
  * @attr {string} href - Makes the whole card a link to this URL (empty = no link)
- * @attr {boolean} button - Makes the whole card a button; ignored when `href` is set
  * @attr {string} target - Link target for href (e.g. '_blank'); adjusts rel automatically and adds an "Opent in nieuw tabblad" announcement for '_blank'
  * @attr {string} rel - Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set
- * @attr {object} translations - Override translation keys (e.g. the "Opent in nieuw tabblad" announcement)
+ * @attr {boolean} button - Makes the whole card a button; ignored when `href` is set
  *
  * @slot header - Header content (e.g. nldd-title)
  * @slot - Body content
@@ -52,18 +52,18 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	@property({ type: String, reflect: true })
 	href = '';
 
+	@property({ type: String })
+	target = '';
+
+	@property({ type: String })
+	rel = '';
+
 	/** Makes the whole card a button via an overlay `<button>`: activation (click,
 	 *  Enter, Space) surfaces as a composed `click` on the host, so a listener or
 	 *  htmx attribute on the card just works. Ignored when `href` is set — a card
 	 *  is one action, and a link outranks a button. */
 	@property({ type: Boolean, reflect: true })
 	button = false;
-
-	@property({ type: String })
-	target = '';
-
-	@property({ type: String })
-	rel = '';
 
 	private _warnedLabel = false;
 

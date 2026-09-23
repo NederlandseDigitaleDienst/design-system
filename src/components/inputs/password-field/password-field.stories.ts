@@ -176,11 +176,12 @@ const Template = ({ size, name, value, placeholder, showButtonText, hideButtonTe
 	></nldd-password-field>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const Unmasked = {
+export const ZonderMasked = {
+	name: 'Zonder masked',
 	render: Template,
 	args: {
 		value: 'visible-password',
@@ -188,7 +189,8 @@ export const Unmasked = {
 	},
 };
 
-export const Valid = {
+export const ToestandValid = {
+	name: 'Toestand valid',
 	render: Template,
 	args: {
 		value: 'strong-password-123',
@@ -196,7 +198,8 @@ export const Valid = {
 	},
 };
 
-export const Invalid = {
+export const ToestandInvalid = {
+	name: 'Toestand invalid',
 	render: Template,
 	args: {
 		value: '123',
@@ -204,7 +207,8 @@ export const Invalid = {
 	},
 };
 
-export const Disabled = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: {
 		value: 'disabled-password',
@@ -212,7 +216,7 @@ export const Disabled = {
 	},
 };
 
-export const AllStates = {
+export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-password-field placeholder="Neutral"></nldd-password-field>
@@ -225,7 +229,7 @@ export const AllStates = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-password-field placeholder="Medium (md)"></nldd-password-field>

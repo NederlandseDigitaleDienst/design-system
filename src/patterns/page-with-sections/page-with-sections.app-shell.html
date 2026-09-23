@@ -1,0 +1,46 @@
+<nldd-app-view>
+  <nldd-side-by-side-split-view panes="2">
+    <nldd-split-view-pane slot="pane-1">
+      <nldd-page landmarks="page">
+        <nldd-top-title-bar
+          slot="header"
+          text="Dossiers"
+        ></nldd-top-title-bar>
+        <nldd-simple-section>
+          <nldd-list accessible-label="Dossiers">
+            <nldd-list-item href="#dossier-2024-001">
+              <nldd-text-cell
+                text="Dossier 2024-001"
+                supporting-text="In behandeling"
+              ></nldd-text-cell>
+            </nldd-list-item>
+            <nldd-list-item href="#dossier-2024-002">
+              <nldd-text-cell
+                text="Dossier 2024-002"
+                supporting-text="Afgerond"
+              ></nldd-text-cell>
+            </nldd-list-item>
+          </nldd-list>
+        </nldd-simple-section>
+      </nldd-page>
+    </nldd-split-view-pane>
+
+    <nldd-split-view-pane
+      slot="pane-2"
+      background="tinted"
+    >
+      <nldd-page accessible-label="Dossier 2024-001">
+        <nldd-top-title-bar
+          slot="header"
+          text="Dossier 2024-001"
+          heading-level="2"
+        ></nldd-top-title-bar>
+        <nldd-simple-section>
+          <nldd-rich-text>
+            <p>Het detail van het gekozen dossier. Dit paneel verdwijnt als eerste als het scherm smal wordt.</p>
+          </nldd-rich-text>
+        </nldd-simple-section>
+      </nldd-page>
+    </nldd-split-view-pane>
+  </nldd-side-by-side-split-view>
+</nldd-app-view>

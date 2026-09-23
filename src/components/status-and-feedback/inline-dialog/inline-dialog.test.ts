@@ -67,14 +67,14 @@ describe('nldd-inline-dialog', () => {
 		el = await fixture('<nldd-inline-dialog variant="alert"></nldd-inline-dialog>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('nldd-icon');
-		expect(icon?.getAttribute('name')).toBe('alert');
+		expect(icon?.getAttribute('icon')).toBe('alert');
 	});
 
 	it('variant="alert" always overrides explicit icon', async () => {
 		el = await fixture('<nldd-inline-dialog variant="alert" icon="info-circle"></nldd-inline-dialog>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('nldd-icon');
-		expect(icon?.getAttribute('name')).toBe('alert');
+		expect(icon?.getAttribute('icon')).toBe('alert');
 	});
 
 	it('reflects variant attribute', async () => {
@@ -132,7 +132,7 @@ describe('nldd-inline-dialog', () => {
 		el = await fixture('<nldd-inline-dialog variant="success"></nldd-inline-dialog>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('nldd-icon');
-		expect(icon?.getAttribute('name')).toBe('success');
+		expect(icon?.getAttribute('icon')).toBe('success');
 	});
 
 	it('reflects icon-color attribute', async () => {

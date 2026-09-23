@@ -83,8 +83,8 @@ export const Standaard = ({ background }: Record<string, unknown>) => html`
  * onderdeel van de pagina: de box krijgt daarom geen eigen ARIA-rol. De kop en
  * het knoplabel moeten het gevaar benoemen, de kleur bevestigt het alleen.
  */
-export const Critical = {
-	name: 'Critical variant',
+export const AchtergrondCritical = {
+	name: 'Achtergrond critical',
 	render: () => html`
 		<nldd-box background="critical">
 		<nldd-container padding="16">

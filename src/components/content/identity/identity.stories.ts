@@ -58,7 +58,8 @@ const Template = (args: Record<string, any>) => html`
 		text=${args.text || nothing}
 		supporting-text=${args.supportingText || nothing}
 	>
-		<nldd-avatar slot="avatars"
+		<nldd-avatar
+			slot="avatars"
 			name=${args.text || nothing}
 			decorative
 		></nldd-avatar>
@@ -72,7 +73,8 @@ export const Standaard = {
 export const ZonderSupportingText = {
 	render: () => html`
 		<nldd-identity text="Jan Jansen">
-			<nldd-avatar slot="avatars"
+			<nldd-avatar
+				slot="avatars"
 				name="Jan Jansen"
 				decorative
 			></nldd-avatar>
@@ -137,12 +139,14 @@ export const ZonderAvatar = {
 export const MetTimeEnLink = {
 	render: () => html`
 		<nldd-identity>
-			<nldd-avatar slot="avatars"
+			<nldd-avatar
+				slot="avatars"
 				name="Jan Jansen"
 				decorative
 			></nldd-avatar>
 			<span slot="text">Door <nldd-link href="#auteur" text="Jan Jansen"></nldd-link></span>
-			<time slot="supporting-text"
+			<time
+				slot="supporting-text"
 				datetime="2026-06-12"
 			>12 juni 2026</time>
 		</nldd-identity>

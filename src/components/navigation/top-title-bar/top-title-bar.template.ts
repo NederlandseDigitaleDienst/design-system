@@ -1,10 +1,23 @@
 import { html, nothing } from 'lit';
+import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
 import type { NLDDTopTitleBar } from './top-title-bar.js';
 import '../../actions/button/button.js';
 import '../../actions/icon-button/icon-button.js';
 
+// SAFETY: the only tags unsafeStatic ever sees. A heading-level outside the map
+// falls back to h1, so no tag name is derived from input.
+const HEADING_TAGS: Record<number, ReturnType<typeof unsafeStatic>> = {
+	1: unsafeStatic('h1'),
+	2: unsafeStatic('h2'),
+	3: unsafeStatic('h3'),
+	4: unsafeStatic('h4'),
+	5: unsafeStatic('h5'),
+	6: unsafeStatic('h6'),
+};
+
 export function topTitleBarTemplate(component: NLDDTopTitleBar) {
 	const showBack = !!component.backText;
+	const headingTag = HEADING_TAGS[component.headingLevel] ?? HEADING_TAGS[1];
 
 	return html`
 		<div class="top-title-bar">
@@ -37,9 +50,9 @@ export function topTitleBarTemplate(component: NLDDTopTitleBar) {
 				<div class="top-title-bar__title-group"
 					aria-hidden=${component._hasAnchor ? 'true' : nothing}
 				>
-					<h1 class="top-title-bar__title">${component.text}</h1>
+					${staticHtml`<${headingTag} class="top-title-bar__title">${component.text}</${headingTag}>`}
 					${component.supportingText ? html`
-						<p class="top-title-bar__subtitle">${component.supportingText}</p>
+						<p class="top-title-bar__supporting-text">${component.supportingText}</p>
 					` : nothing}
 				</div>
 			</div>

@@ -215,21 +215,21 @@ describe('nldd-tab-bar-item – content variant detection', () => {
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.tab-bar__item-icon nldd-icon');
 		expect(icon).not.toBeNull();
-		expect(icon!.getAttribute('name')).toBe('house');
+		expect(icon!.getAttribute('icon')).toBe('house');
 		expect(el.shadowRoot!.querySelector('.tab-bar__item-icon slot')).toBeNull();
 	});
 
 	it('variant="icon-and-text" with text but no icon shows the placeholder', async () => {
 		el = await fixture<NLDDTabBarItem>('<nldd-tab-bar-item variant="icon-and-text" text="Home"></nldd-tab-bar-item>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 		expect(el.shadowRoot!.querySelector('.tab-bar__item-text')!.textContent?.trim()).toBe('Home');
 	});
 
 	it('variant="text" without an icon shows no placeholder', async () => {
 		el = await fixture<NLDDTabBarItem>('<nldd-tab-bar-item variant="text" text="Home"></nldd-tab-bar-item>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).toBeNull();
 	});
 });
 

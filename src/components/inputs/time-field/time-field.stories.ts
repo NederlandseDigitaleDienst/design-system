@@ -198,14 +198,14 @@ export const InEenFormField = () => html`
 	</nldd-form-field>
 `;
 
-export const Maten = () => html`
+export const Grootten = () => html`
 	<div style="display: flex; gap: 16px; align-items: flex-start;">
 		<nldd-time-field size="sm" value="09:30" accessible-label="Klein"></nldd-time-field>
 		<nldd-time-field size="md" value="09:30" accessible-label="Middel"></nldd-time-field>
 	</div>
 `;
 
-export const Staten = () => html`
+export const AlleToestanden = () => html`
 	<div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
 		<nldd-time-field value="09:30" valid accessible-label="Geldig"></nldd-time-field>
 		<nldd-time-field value="25:99" invalid accessible-label="Ongeldig"></nldd-time-field>

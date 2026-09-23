@@ -40,6 +40,9 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		hasContent: true,
+	},
 	argTypes: {
 		hasContent: {
 			name: 'has-content',
@@ -47,9 +50,6 @@ export default {
 			description: 'Het paneel heeft inhoud',
 			table: { defaultValue: { summary: 'false' } },
 		},
-	},
-	args: {
-		hasContent: true,
 	},
 };
 

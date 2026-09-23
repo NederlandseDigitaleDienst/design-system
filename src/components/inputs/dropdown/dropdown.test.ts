@@ -57,14 +57,14 @@ describe('nldd-dropdown – validation', () => {
 		el = await fixture<NLDDDropdown>('<nldd-dropdown valid></nldd-dropdown>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.dropdown__validation-icon')!;
-		expect(icon.getAttribute('name')).toBe('valid');
+		expect(icon.getAttribute('icon')).toBe('valid');
 	});
 
 	it('renders an invalid icon when invalid', async () => {
 		el = await fixture<NLDDDropdown>('<nldd-dropdown invalid></nldd-dropdown>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.dropdown__validation-icon')!;
-		expect(icon.getAttribute('name')).toBe('invalid');
+		expect(icon.getAttribute('icon')).toBe('invalid');
 	});
 
 	it('forwards aria-invalid to the slotted select', async () => {

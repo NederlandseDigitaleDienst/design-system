@@ -7,7 +7,7 @@ export function notificationTemplate(component: NLDDNotification): TemplateResul
 			<div class="notification__icon"
 				aria-hidden="true"
 			>
-				<nldd-icon name=${component._resolvedIcon}></nldd-icon>
+				<nldd-icon icon=${component._resolvedIcon}></nldd-icon>
 			</div>
 			<div class="notification__main">
 				${component.text ? html`

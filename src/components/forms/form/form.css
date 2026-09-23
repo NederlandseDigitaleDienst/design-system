@@ -5,6 +5,10 @@ nldd-form {
 	display: block;
 }
 
+nldd-form[hidden] {
+	display: none;
+}
+
 nldd-form > form {
 	display: block;
 }

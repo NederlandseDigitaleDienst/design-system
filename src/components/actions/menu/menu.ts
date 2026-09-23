@@ -92,18 +92,18 @@ if (!customElements.get('nldd-menu-group')) {
  *
  * @element nldd-menu-item
  *
+ * @attr {boolean} destructive - Marks the item as destructive (red text; red highlight bg). Use for irreversible actions like "Delete". Color is the only built-in signal, so per WCAG 1.4.1 the item's own label must convey the destructive nature (e.g. "Verwijder") — don't rely on the red alone. Confirming the action (e.g. a follow-up dialog) is the consumer's responsibility.
  * @attr {string} text - Display text. Supports **bold** markdown syntax.
- * @attr {string} value - A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated.
- * @attr {string} href - Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled.
- * @attr {string} aliases - Space-separated alternative search terms.
  * @attr {string} details - Secondary label shown on the right side.
+ * @attr {string} icon - Icon name rendered before the text.
  * @attr {string} shortcut - Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
- * @attr {string} icon - Icon name rendered before the text (nldd-icon name).
+ * @attr {string} href - Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled.
  * @attr {string} type - Item type: 'button' | 'checkbox' | 'radio'. Default: 'button'.
  * @attr {boolean} selected - Selected state for checkbox and radio types.
- * @attr {boolean} destructive - Marks the item as destructive (red text; red highlight bg). Use for irreversible actions like "Delete". Color is the only built-in signal, so per WCAG 1.4.1 the item's own label must convey the destructive nature (e.g. "Verwijder") — don't rely on the red alone. Confirming the action (e.g. a follow-up dialog) is the consumer's responsibility.
  * @attr {boolean} disabled - Disabled state.
+ * @attr {string} value - A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated.
+ * @attr {string} aliases - Space-separated alternative search terms.
  * @attr {string} query - Query substring to bold-highlight in text. Set by menu's filter(); also settable by consumers.
  * @attr {string} query-mark-mode - 'match' | 'predictive' (default: 'predictive'). See text-cell for details.
  *
@@ -112,20 +112,17 @@ if (!customElements.get('nldd-menu-group')) {
 export class NLDDMenuItem extends LitElement {
 	static override styles = menuItemStyles;
 
+	@property({ type: Boolean, reflect: true })
+	destructive = false;
+
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	@property({ type: String, reflect: true })
-	value = '';
-
-	@property({ type: String, reflect: true })
-	href = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	aliases = '';
-
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	details = '';
+
+	@property({ type: String, reflect: true })
+	icon = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	shortcut = '';
@@ -140,7 +137,7 @@ export class NLDDMenuItem extends LitElement {
 	shortcutLinux = '';
 
 	@property({ type: String, reflect: true })
-	icon = '';
+	href = '';
 
 	@property({ type: String, reflect: true })
 	type: 'button' | 'checkbox' | 'radio' = 'button';
@@ -149,10 +146,13 @@ export class NLDDMenuItem extends LitElement {
 	selected = false;
 
 	@property({ type: Boolean, reflect: true })
-	destructive = false;
-
-	@property({ type: Boolean, reflect: true })
 	disabled = false;
+
+	@property({ type: String, reflect: true })
+	value = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	aliases = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	query = '';
@@ -340,12 +340,12 @@ const defaultFilterFn = (query: string, item: NLDDMenuItem): boolean => {
  *
  * @element nldd-menu
  *
+ * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
  * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a menu hung off a button. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.
  * @attr {string} placement - Floating UI placement. Default: 'bottom-start'.
+ * @attr {number} max-items - Maximum number of visible items before scrolling. Sets --_max-items internally. Default: 0 (no limit).
  * @attr {string} empty-text - Text of the default empty-state dialog. Falls back to Dutch i18n "Geen opties beschikbaar".
  * @attr {string} empty-supporting-text - Supporting text of the default empty-state dialog.
- * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
- * @attr {number} max-items - Maximum number of visible items before scrolling. Sets --_max-items internally. Default: 0 (no limit).
  * @attr {object} translations - Override one or more translation keys.
  * @attr {Function} filterFn - Custom filter function (query, item) => boolean.
  *
@@ -356,6 +356,23 @@ const defaultFilterFn = (query: string, item: NLDDMenuItem): boolean => {
  */
 export class NLDDMenu extends LitElement {
 	static override styles = menuStyles;
+
+	/**
+	 * Render variant. Use 'listbox' when the menu serves as a combobox popup —
+	 * this switches role to "listbox" and item roles to "option" per ARIA spec.
+	 * Default: 'menu'.
+	 */
+	@property({ reflect: true, converter: reflectNonDefault<'menu' | 'listbox'>('menu') })
+	variant: 'menu' | 'listbox' = 'menu';
+
+
+	/**
+	 * Explicit width, pinned exactly (sets --_width and clamps min/max to it).
+	 * Leave unset to let the menu size to its content between a minimum and a
+	 * viewport-aware maximum of min(100vw - inset, 640px).
+	 */
+	@property({ type: String, reflect: true })
+	width = '';
 
 	@property({ type: String, reflect: true })
 	anchor = '';
@@ -374,12 +391,11 @@ export class NLDDMenu extends LitElement {
 	placement: string = 'bottom-start';
 
 	/**
-	 * Render variant. Use 'listbox' when the menu serves as a combobox popup —
-	 * this switches role to "listbox" and item roles to "option" per ARIA spec.
-	 * Default: 'menu'.
+	 * Maximum number of visible items before the menu scrolls.
+	 * Sets --_max-items internally. Default: 0 (no limit).
 	 */
-	@property({ reflect: true, converter: reflectNonDefault<'menu' | 'listbox'>('menu') })
-	variant: 'menu' | 'listbox' = 'menu';
+	@property({ type: Number, attribute: 'max-items' })
+	maxItems = 0;
 
 	@property({ reflect: true, attribute: 'empty-text', converter: reflectNonDefault<string>('') })
 	emptyText = '';
@@ -387,28 +403,19 @@ export class NLDDMenu extends LitElement {
 	@property({ reflect: true, attribute: 'empty-supporting-text', converter: reflectNonDefault<string>('') })
 	emptySupportingText = '';
 
-
-	/**
-	 * Explicit width, pinned exactly (sets --_width and clamps min/max to it).
-	 * Leave unset to let the menu size to its content between a minimum and a
-	 * viewport-aware maximum of min(100vw - inset, 640px).
-	 */
-	@property({ type: String, reflect: true })
-	width = '';
-
-	/**
-	 * Maximum number of visible items before the menu scrolls.
-	 * Sets --_max-items internally. Default: 0 (no limit).
-	 */
-	@property({ type: Number, attribute: 'max-items' })
-	maxItems = 0;
-
 	/**
 	 * Override one or more translation keys.
 	 * Unset keys fall back to the Dutch default.
 	 */
 	@property({ type: Object })
 	translations: Partial<NLDDMenuTranslations> = {};
+
+	/**
+	 * Custom filter function. Defaults to case-insensitive substring match
+	 * on text, value, and aliases attributes.
+	 */
+	@property({ attribute: false })
+	filterFn: (query: string, item: NLDDMenuItem) => boolean = defaultFilterFn;
 
 	/**
 	 * @internal — development only.
@@ -421,13 +428,6 @@ export class NLDDMenu extends LitElement {
 	 */
 	@property({ type: Boolean, reflect: true, attribute: 'debug-safe-triangle' })
 	debugSafeTriangle = false;
-
-	/**
-	 * Custom filter function. Defaults to case-insensitive substring match
-	 * on text, value, and aliases attributes.
-	 */
-	@property({ attribute: false })
-	filterFn: (query: string, item: NLDDMenuItem) => boolean = defaultFilterFn;
 
 	@state()
 	private _isEmpty = false;

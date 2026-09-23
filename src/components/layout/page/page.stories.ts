@@ -40,6 +40,11 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		background: 'inherit',
+		stickyHeader: false,
+		stickyFooter: false,
+	},
 	argTypes: {
 		background: {
 			control: { type: 'select' },
@@ -59,11 +64,6 @@ export default {
 			description: 'Sticky footer',
 			table: { defaultValue: { summary: 'false' } },
 		},
-	},
-	args: {
-		background: 'inherit',
-		stickyHeader: false,
-		stickyFooter: false,
 	},
 };
 
@@ -87,9 +87,12 @@ const footer = html`
 
 const content = html`
 	<nldd-simple-section>
-		<nldd-title id="page-title" size="2">
-			<h1>Paginatitel</h1>
-		</nldd-title>
+		<nldd-title
+			id="page-title"
+			size="2"
+			text="Paginatitel"
+			heading-level="1"
+		></nldd-title>
 		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-rich-text>
 			<p>

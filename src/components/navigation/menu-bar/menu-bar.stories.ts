@@ -39,11 +39,11 @@ const Template = ({
 	</div>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const FewItems = {
+export const WeinigItems = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-menu-bar>
@@ -55,7 +55,7 @@ export const FewItems = {
 	parameters: { controls: { disable: true } },
 };
 
-export const ManyItems = {
+export const VeelItems = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-menu-bar>
@@ -73,7 +73,7 @@ export const ManyItems = {
 	parameters: { controls: { disable: true } },
 };
 
-export const NarrowContainer = {
+export const SmalleContainer = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-menu-bar>
@@ -88,7 +88,7 @@ export const NarrowContainer = {
 	parameters: { controls: { disable: true } },
 };
 
-export const WithExpandableItems = {
+export const MetExpandableItems = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-menu-bar>

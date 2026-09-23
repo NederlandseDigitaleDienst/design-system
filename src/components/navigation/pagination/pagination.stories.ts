@@ -79,7 +79,8 @@ export const WeinigPaginas = {
 	args: { current: 2, total: 3 },
 };
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: { current: 3, total: 10, disabled: true },
 };

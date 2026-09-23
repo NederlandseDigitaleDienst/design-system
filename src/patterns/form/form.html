@@ -1,0 +1,56 @@
+<nldd-form
+  name="aanvraag"
+  method="post"
+>
+  <nldd-form-section
+    text="Contactgegevens"
+    supporting-text="Zo kunnen we je bereiken."
+  >
+    <nldd-form-field label="E-mailadres">
+      <nldd-text-field
+        name="email"
+        type="email"
+        autocomplete="email"
+        required
+      ></nldd-text-field>
+      <nldd-validation-list>
+        <nldd-validation-item required>Vul je e-mailadres in</nldd-validation-item>
+        <nldd-validation-item match="@">Een apenstaartje</nldd-validation-item>
+      </nldd-validation-list>
+      <nldd-form-field-help-text>
+        We sturen een bevestiging naar dit adres.
+      </nldd-form-field-help-text>
+    </nldd-form-field>
+
+    <nldd-form-field
+      label="Telefoonnummer"
+      optional
+    >
+      <nldd-text-field
+        name="telefoon"
+        type="tel"
+        autocomplete="tel"
+      ></nldd-text-field>
+    </nldd-form-field>
+  </nldd-form-section>
+
+  <nldd-form-section text="Je vraag">
+    <nldd-form-field label="Waar gaat je vraag over?">
+      <nldd-multi-line-text-field
+        name="vraag"
+        required
+      ></nldd-multi-line-text-field>
+      <nldd-validation-list>
+        <nldd-validation-item required>Schrijf je vraag op</nldd-validation-item>
+      </nldd-validation-list>
+    </nldd-form-field>
+  </nldd-form-section>
+
+  <nldd-form-actions>
+    <nldd-button
+      variant="primary"
+      type="submit"
+      text="Verstuur aanvraag"
+    ></nldd-button>
+  </nldd-form-actions>
+</nldd-form>

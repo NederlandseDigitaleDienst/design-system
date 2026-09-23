@@ -30,6 +30,10 @@ export const sheetStyles = css`
 		display: contents;
 	}
 
+	:host([hidden]) {
+		display: none;
+	}
+
 
 	/* # Keyframes */
 

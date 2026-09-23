@@ -7,10 +7,6 @@
  *
  * @element nldd-full-bleed-section
  *
- * @slot header - Content above the main content
- * @slot - Main content
- * @slot footer - Content below the main content
- *
  * @attr {'inherit'|'base'|'tinted'} [background] - Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface).
  * @attr {'inherit'|'light'|'dark'|'inverted'} [scheme] - Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme).
  * @attr {string} [width] - Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.
@@ -19,6 +15,10 @@
  * @attr {string} [padding-top] - Top padding override.
  * @attr {string} [padding-bottom] - Bottom padding override.
  * @attr {string} [sm-padding-block] - Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}).
+ *
+ * @slot header - Content above the main content
+ * @slot - Main content
+ * @slot footer - Content below the main content
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';

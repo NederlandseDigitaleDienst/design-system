@@ -1,7 +1,8 @@
 import { html, svg } from 'lit';
 
 const gripMd = svg`
-	<svg aria-hidden="true" class="drag-handle-cell__control-grip"
+	<svg
+		aria-hidden="true" class="drag-handle-cell__control-grip"
 		width="10"
 		height="22"
 		viewBox="0 0 10 22"
@@ -19,7 +20,8 @@ const gripMd = svg`
 `;
 
 const gripSm = svg`
-	<svg aria-hidden="true" class="drag-handle-cell__control-grip"
+	<svg
+		aria-hidden="true" class="drag-handle-cell__control-grip"
 		width="10"
 		height="16"
 		viewBox="0 0 10 16"

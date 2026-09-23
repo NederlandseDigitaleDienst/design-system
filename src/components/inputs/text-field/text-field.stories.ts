@@ -179,11 +179,11 @@ const Template = ({ size, name, value, placeholder, type, keyboard, enterKey, au
 	></nldd-text-field>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const AllStates = {
+export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-text-field placeholder="Neutral"></nldd-text-field>
@@ -196,7 +196,7 @@ export const AllStates = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-text-field placeholder="Medium (md)"></nldd-text-field>
@@ -206,7 +206,7 @@ export const Sizes = {
 	parameters: { controls: { disable: true } },
 };
 
-export const InteractiveExample = {
+export const InteractiefVoorbeeld = {
 	render: () => html`
 	<nldd-form label-alignment="right" novalidate>
 		<nldd-form-field label="Volledige naam">

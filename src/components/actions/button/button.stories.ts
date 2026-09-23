@@ -222,15 +222,15 @@ const Template = ({ variant, size, horizontalAlignment, width, maxWidth, expanda
 	></nldd-button>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 	args: {
 		text: 'Button',
 	},
 };
 
-export const HorizontalAlignment = {
-	name: 'Horizontal align (full width)',
+export const HorizontaleUitlijning = {
+	name: 'Horizontale uitlijning (volle breedte)',
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; width: 320px;">
 			<nldd-button width="full" horizontal-alignment="left" text="Links" start-icon="download"></nldd-button>
@@ -241,8 +241,7 @@ export const HorizontalAlignment = {
 	parameters: { controls: { disable: true } },
 };
 
-export const WithSupportingText = {
-	name: 'Supporting text',
+export const MetSupportingText = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
 			<nldd-button horizontal-alignment="left" size="lg" text="Opslaan" supporting-text="Alle wijzigingen" start-icon="download"></nldd-button>
@@ -254,7 +253,7 @@ export const WithSupportingText = {
 	parameters: { controls: { disable: true } },
 };
 
-export const RoleBased = {
+export const VariantenNaarRol = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button variant="primary" text="Primary"></nldd-button>
@@ -272,7 +271,7 @@ export const RoleBased = {
 	},
 };
 
-export const AppearanceBased = {
+export const VariantenNaarUiterlijk = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button variant="accent-filled" text="Accent Filled"></nldd-button>
@@ -289,7 +288,7 @@ export const AppearanceBased = {
 	},
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button size="lg" text="Large"></nldd-button>
@@ -303,7 +302,7 @@ export const Sizes = {
 	},
 };
 
-export const WithStartIcon = {
+export const MetStartIcon = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button size="lg" text="Download" start-icon="download"></nldd-button>
@@ -322,7 +321,7 @@ export const WithStartIcon = {
 	},
 };
 
-export const WithEndIcon = {
+export const MetEndIcon = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button size="lg" text="Volgende" end-icon="arrow-right"></nldd-button>
@@ -341,7 +340,7 @@ export const WithEndIcon = {
 	},
 };
 
-export const WithBothIcons = {
+export const MetBeideIconen = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button size="lg" text="Download bestand" start-icon="download" end-icon="arrow-right"></nldd-button>
@@ -360,7 +359,7 @@ export const WithBothIcons = {
 	},
 };
 
-export const WithDisclosureIcon = {
+export const MetExpandable = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button expandable size="lg" text="Opties"></nldd-button>
@@ -387,7 +386,7 @@ export const WithDisclosureIcon = {
  * de chevron. Gespiegeld aan `nldd-split-button`. De bestaande
  * `anchor`/`popovertarget`-route blijft werken wanneer je géén overlay slot.
  */
-export const WithMenu = {
+export const MetMenu = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 			<nldd-button expandable text="Acties">
@@ -422,13 +421,17 @@ export const WithMenu = {
  * popover-content sluit 'm niet (in tegenstelling tot een menu-item). Geef de
  * popover altijd een `accessible-label`.
  */
-export const WithPopover = {
+export const MetPopover = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 			<nldd-button expandable text="Info">
 				<nldd-popover slot="popup" accessible-label="Toelichting" width="280px">
 					<nldd-container padding="16" gap="8">
-						<nldd-title size="6"><h2>Zorgtoeslag</h2></nldd-title>
+						<nldd-title
+							size="6"
+							text="Zorgtoeslag"
+							heading-level="2"
+						></nldd-title>
 						<nldd-rich-text>
 							<p>Een tegemoetkoming in de kosten van je zorgverzekering, afhankelijk van je inkomen.</p>
 						</nldd-rich-text>
@@ -448,7 +451,8 @@ export const WithPopover = {
 	},
 };
 
-export const Loading = {
+export const ToestandLoading = {
+	name: 'Toestand loading',
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button loading size="lg" variant="primary" text="Opslaan" start-icon="download"></nldd-button>
@@ -469,7 +473,7 @@ export const Loading = {
 	},
 };
 
-export const CustomIconSlot = {
+export const EigenIcoonInDeSlot = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button text="Custom start">
@@ -494,7 +498,7 @@ export const CustomIconSlot = {
 	},
 };
 
-export const TextSlot = {
+export const TekstInDeSlot = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button>
@@ -528,19 +532,23 @@ export const OpKleurvlak = {
 		<div style="display: flex; flex-direction: column; gap: 16px;">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-button-group orientation="horizontal">
-					<nldd-button variant="inherit-filled"
+					<nldd-button
+						variant="inherit-filled"
 						text="Inherit filled"
 						supporting-text="Met ondertekst"
 					></nldd-button>
-					<nldd-button variant="inherit-tinted"
+					<nldd-button
+						variant="inherit-tinted"
 						text="Inherit tinted"
 					></nldd-button>
-					<nldd-button variant="inherit-filled"
+					<nldd-button
+						variant="inherit-filled"
 						text="Open"
 						expandable
 						expanded
 					></nldd-button>
-					<nldd-button variant="inherit-tinted"
+					<nldd-button
+						variant="inherit-tinted"
 						text="Open"
 						expandable
 						expanded
@@ -549,20 +557,24 @@ export const OpKleurvlak = {
 			</div>
 			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-button-group orientation="horizontal">
-					<nldd-button variant="inherit-filled"
+					<nldd-button
+						variant="inherit-filled"
 						text="Inherit filled"
 					></nldd-button>
-					<nldd-button variant="inherit-tinted"
+					<nldd-button
+						variant="inherit-tinted"
 						text="Inherit tinted"
 					></nldd-button>
 				</nldd-button-group>
 			</div>
 			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-button-group orientation="horizontal">
-					<nldd-button variant="inherit-filled"
+					<nldd-button
+						variant="inherit-filled"
 						text="Zonder context (flip)"
 					></nldd-button>
-					<nldd-button variant="inherit-tinted"
+					<nldd-button
+						variant="inherit-tinted"
 						text="Inherit tinted"
 					></nldd-button>
 				</nldd-button-group>

@@ -74,11 +74,25 @@ function releaseTabbable(el: RovingControl): void {
 	authoredTabState.delete(el);
 }
 
+/** What counts as a control of its own inside a row that already is one. */
+const NESTED_CONTROLS = [
+	'nldd-list-item-segment', 'nldd-button', 'nldd-icon-button', 'nldd-link',
+	'nldd-checkbox', 'nldd-radio-button', 'nldd-switch',
+	'a[href]', 'button', 'input', 'select', 'textarea',
+].join(', ');
+
 /**
  * A row within an `nldd-list`. Renders as a link when `href` is set, as a
  * checkbox when `checkbox` is set, as a button when `button` is set, or as a
  * plain container otherwise. All cells and segments share one flat
  * slot, in source order.
+ *
+ * ## One action or several
+ * With one action, make the row itself the control (`href`, `button`,
+ * `checkbox` or `radio`): the whole row is then one hit area. With two or
+ * more, give each its own `nldd-list-item-segment` and leave the row without
+ * an action of its own. Both at once nests a control inside a control, and the
+ * item warns about that in development.
  *
  * ## Geometry
  * Two rules govern every row:
@@ -120,8 +134,8 @@ function releaseTabbable(el: RovingControl): void {
  *
  * `checkbox` makes the WHOLE row the control: the inner action becomes a
  * `role="checkbox"` button carrying `aria-checked`, it toggles `checked` on
- * activation and fires `change`. Slot a visual `nldd-checkbox` (or any glyph)
- * before the text and mark it `aria-hidden` + non-focusable — the row already
+ * activation and fires `change`. Slot an `nldd-checkbox decorative` (or any
+ * glyph) before the text: it only shows the state, since the row already
  * conveys role and state, and a second focusable control would double the tab
  * stops. Do NOT nest a real `<input type="checkbox">` in the action: interactive
  * content inside a `<button>` is invalid HTML and AT announces the button, not
@@ -145,20 +159,20 @@ function releaseTabbable(el: RovingControl): void {
  * @element nldd-list-item
  *
  * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
- * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current="page"` on the inner action, in a `listbox` parent it drives `aria-selected`.
- * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, and takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current="page"` on the inner action. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
- * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
- * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
- * @attr {boolean} radio - Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it.
- * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
- * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
- * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
  * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology.
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
+ * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
+ * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
+ * @attr {boolean} radio - Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it.
  * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
+ * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current="page"` on the inner action, in a `listbox` parent it drives `aria-selected`.
+ * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
+ * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
+ * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, and takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current="page"` on the inner action. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
+ * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
- * @slot - Cells and segments, in source order
+ * @slot - Cells and segments, in source order. Anything else, bare text included, gets none of a cell's typography, size and alignment, and warns in development.
  * @slot children - Child rows of a branch in an `nldd-list type="tree"`. Rendered as a `role="group"` below the row, hidden while `expanded` is false. The nesting IS the hierarchy, so aria-level / -posinset / -setsize are derived, not authored. The group has no styling of its own: repeat a spacer-cell per level to indent, or show depth some other way.
  *
  * @fires change - On a `checkbox` row after it toggles, and on a `radio` row when it becomes checked; detail: { checked: boolean }
@@ -169,58 +183,6 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 
 	@property({ reflect: true, converter: reflectNonDefault<ListItemSize>('md') })
 	size: ListItemSize = 'md';
-
-	@property({ type: Boolean, reflect: true })
-	selected = false;
-
-	/**
-	 * The row you are on, as opposed to the rows you picked (`selected`).
-	 *
-	 * Kept apart because the two say different things and a list can show both:
-	 * a checkbox list where three rows are ticked and one is open. At rest they
-	 * paint the same, so a menu reads the same as it always did; the difference
-	 * shows when focus is in the row.
-	 */
-	@property({ type: Boolean, reflect: true })
-	current = false;
-
-	/** When set, renders the item as a button; ignored when href is set. */
-	@property({ type: Boolean, reflect: true })
-	button = false;
-
-	/** When set, the whole row is the checkbox control. Ignored when href is set. */
-	@property({ type: Boolean, reflect: true })
-	checkbox = false;
-
-	/** When set, the whole row is one radio of a group. Ignored when href is set. */
-	@property({ type: Boolean, reflect: true })
-	radio = false;
-
-	/** Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on
-	 *  activation; a radio row only ever sets it, because picking the option you
-	 *  already have is not a way to unpick it. */
-	@property({ type: Boolean, reflect: true })
-	checked = false;
-
-	/**
-	 * Switches off the row's own control.
-	 *
-	 * Only the row's own: a row built out of segments has no control here, and
-	 * each segment carries its own `disabled`. A link cannot be disabled the way
-	 * a button can, so there it is `aria-disabled` plus a blocked click, the
-	 * same trade `nldd-button` makes.
-	 */
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	/**
-	 * Disclosure state of a row that opens something (a tree row's children, a
-	 * details panel). Reflected as `aria-expanded` on the row's own control —
-	 * `listitem` does not support the property, a `<button>` / `<a>` does. Leave
-	 * the attribute off entirely when the row discloses nothing.
-	 */
-	@property({ type: Boolean, reflect: true })
-	expanded?: boolean;
 
 	/** When set, renders the item as a link. */
 	@property({ reflect: true })
@@ -240,9 +202,61 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	@property({ reflect: true })
 	rel?: string;
 
+	/** When set, renders the item as a button; ignored when href is set. */
+	@property({ type: Boolean, reflect: true })
+	button = false;
+
+	/** When set, the whole row is the checkbox control. Ignored when href is set. */
+	@property({ type: Boolean, reflect: true })
+	checkbox = false;
+
+	/** When set, the whole row is one radio of a group. Ignored when href is set. */
+	@property({ type: Boolean, reflect: true })
+	radio = false;
+
 	/** Set by the parent nldd-list when reorderable is enabled. Used as a CSS hook for drag handle visibility. */
 	@property({ type: Boolean, reflect: true })
 	reorderable = false;
+
+	@property({ type: Boolean, reflect: true })
+	selected = false;
+
+	/** Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on
+	 *  activation; a radio row only ever sets it, because picking the option you
+	 *  already have is not a way to unpick it. */
+	@property({ type: Boolean, reflect: true })
+	checked = false;
+
+	/**
+	 * Disclosure state of a row that opens something (a tree row's children, a
+	 * details panel). Reflected as `aria-expanded` on the row's own control —
+	 * `listitem` does not support the property, a `<button>` / `<a>` does. Leave
+	 * the attribute off entirely when the row discloses nothing.
+	 */
+	@property({ type: Boolean, reflect: true })
+	expanded?: boolean;
+
+	/**
+	 * The row you are on, as opposed to the rows you picked (`selected`).
+	 *
+	 * Kept apart because the two say different things and a list can show both:
+	 * a checkbox list where three rows are ticked and one is open. At rest they
+	 * paint the same, so a menu reads the same as it always did; the difference
+	 * shows when focus is in the row.
+	 */
+	@property({ type: Boolean, reflect: true })
+	current = false;
+
+	/**
+	 * Switches off the row's own control.
+	 *
+	 * Only the row's own: a row built out of segments has no control here, and
+	 * each segment carries its own `disabled`. A link cannot be disabled the way
+	 * a button can, so there it is `aria-disabled` plus a blocked click, the
+	 * same trade `nldd-button` makes.
+	 */
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
 
 	@state()
 	private _showChildren = false;
@@ -293,6 +307,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	private _warnedDegenerateDivider = false;
 
 	private _warnedChildrenOutsideTree = false;
+	private _warnedStrayContent = false;
+	private _warnedNestedControl = false;
 
 	override connectedCallback() {
 		super.connectedCallback();
@@ -477,6 +493,9 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// classes and stamped attributes came along with cloneNode, so no sync.
 		if (this.hasAttribute('data-nldd-clone')) return;
 		this._observeChildrenSlot();
+		// On the shadow root, not on the slot: the default slot is re-rendered
+		// inside a different wrapper when the row becomes a link or a button.
+		this.renderRoot.addEventListener('slotchange', this._warnOnStrayContent);
 		// Read out of the row's own shadow DOM, so not before the first render,
 		// and deferred out of the update cycle: setting the state here would
 		// schedule a second update from inside the first.
@@ -546,6 +565,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		}
 		if (changed.has('button') || changed.has('checkbox') || changed.has('radio') || changed.has('href')) {
 			this._updateInteractive();
+			this._warnOnNestedControl();
 		}
 		if (changed.has('expanded')) {
 			this._relayExpanded();
@@ -592,6 +612,45 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		if (this.href || this.button || this.checkbox) return;
 		if (this._ownDescendants('nldd-list-item-segment[disclosure]').length > 0) return;
 		console.warn('nldd-list-item: `expanded` needs somewhere to live — make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.');
+	}
+
+	/** A row takes cells and segments. Anything else gets none of the typography,
+	 *  size and alignment a cell brings, and bare text in a clickable row falls
+	 *  back to the browser's button font. */
+	private _warnOnStrayContent = (e: Event): void => {
+		if (!import.meta.env?.DEV || this._warnedStrayContent) return;
+		const slot = e.target as HTMLSlotElement;
+		if (slot.name) return;
+		const stray = slot.assignedNodes({ flatten: true }).find((node) => {
+			if (node.nodeType === Node.TEXT_NODE) return (node.textContent ?? '').trim() !== '';
+			if (node.nodeType !== Node.ELEMENT_NODE) return false;
+			const tag = (node as Element).localName;
+			return tag !== 'nldd-list-item-segment' && !(tag.startsWith('nldd-') && tag.endsWith('-cell'));
+		});
+		this._warnOnNestedControl();
+		if (!stray) return;
+		this._warnedStrayContent = true;
+		const what = stray.nodeType === Node.TEXT_NODE
+			? `bare text ("${stray.textContent!.trim().slice(0, 40)}")`
+			: `<${(stray as Element).localName}>`;
+		console.warn(`nldd-list-item: ${what} sits directly in a row. A row takes cells and segments (nldd-text-cell, nldd-icon-cell, nldd-list-item-segment, …). Anything else gets none of their typography, size and alignment, and bare text in a clickable row falls back to the browser's button font. Wrap it in a cell.`);
+	};
+
+	/** A row that is its own control cannot hold another one: a control inside a
+	 *  link or button is invalid HTML, doubles the tab stop, and a press on it can
+	 *  set off the row as well. A glyph that only shows the row's state is fine:
+	 *  a `decorative` radio button, or a checkbox marked `aria-hidden`. */
+	private _warnOnNestedControl(): void {
+		if (!import.meta.env?.DEV || this._warnedNestedControl) return;
+		if (this.hasAttribute('data-nldd-clone')) return;
+		if (!(this.href || this.button || this.checkbox || this.radio)) return;
+		const nested = [...this.children]
+			.filter((child) => !child.slot)
+			.flatMap((child) => [child, ...child.querySelectorAll('*')])
+			.find((el) => el.matches(NESTED_CONTROLS) && !el.matches('[decorative]') && !el.closest('[aria-hidden="true"], [inert]'));
+		if (!nested) return;
+		this._warnedNestedControl = true;
+		console.warn(`nldd-list-item: <${nested.localName}> sits in a row that is its own control (href, button, checkbox or radio). A control inside a control is invalid HTML and doubles the tab stop. With more than one action, give each its own nldd-list-item-segment and leave the row without an action.`);
 	}
 
 	/** True when the item is an option in a `type="listbox"` parent. */

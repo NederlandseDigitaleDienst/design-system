@@ -72,6 +72,9 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 		@property({ type: String, reflect: true })
 		scheme: PageSectionScheme = 'inherit';
 
+		@property({ type: String, reflect: true })
+		height?: string;
+
 		@property({ type: String, reflect: true, attribute: 'padding-block' })
 		paddingBlock?: PageSectionPadding;
 		@property({ type: String, reflect: true, attribute: 'padding-top' })
@@ -99,9 +102,6 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 		lgPaddingTop?: PageSectionPadding;
 		@property({ type: String, reflect: true, attribute: 'lg-padding-bottom' })
 		lgPaddingBottom?: PageSectionPadding;
-
-		@property({ type: String, reflect: true })
-		height?: string;
 
 		private _unsubScheme?: () => void;
 

@@ -101,22 +101,26 @@ export const Standaard = {
 	args: {},
 };
 
-export const Aangevinkt = {
+export const ToestandChecked = {
+	name: 'Toestand checked',
 	render: Template,
 	args: { checked: true },
 };
 
-export const Onbepaald = {
+export const ToestandIndeterminate = {
+	name: 'Toestand indeterminate',
 	render: Template,
 	args: { indeterminate: true },
 };
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: { disabled: true },
 };
 
-export const AangevinktUitgeschakeld = {
+export const ToestandCheckedEnDisabled = {
+	name: 'Toestand checked en disabled',
 	render: Template,
 	args: { checked: true, disabled: true },
 };

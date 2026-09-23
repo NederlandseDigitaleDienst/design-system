@@ -141,7 +141,7 @@ describe('nldd-button – icon attributes', () => {
 		const endIcon = el.shadowRoot!.querySelector('.button__end-icon');
 
 		expect(startIcon).not.toBeNull();
-		expect(startIcon!.querySelector('nldd-icon')!.getAttribute('name')).toBe('heart');
+		expect(startIcon!.querySelector('nldd-icon')!.getAttribute('icon')).toBe('heart');
 		expect(endIcon).toBeNull();
 	});
 
@@ -154,7 +154,7 @@ describe('nldd-button – icon attributes', () => {
 
 		expect(startIcon).toBeNull();
 		expect(endIcon).not.toBeNull();
-		expect(endIcon!.querySelector('nldd-icon')!.getAttribute('name')).toBe('arrow-right');
+		expect(endIcon!.querySelector('nldd-icon')!.getAttribute('icon')).toBe('arrow-right');
 	});
 
 	it('renders both start and end icons', async () => {
@@ -165,9 +165,9 @@ describe('nldd-button – icon attributes', () => {
 		const endIcon = el.shadowRoot!.querySelector('.button__end-icon');
 
 		expect(startIcon).not.toBeNull();
-		expect(startIcon!.querySelector('nldd-icon')!.getAttribute('name')).toBe('heart');
+		expect(startIcon!.querySelector('nldd-icon')!.getAttribute('icon')).toBe('heart');
 		expect(endIcon).not.toBeNull();
-		expect(endIcon!.querySelector('nldd-icon')!.getAttribute('name')).toBe('chevron-down-small');
+		expect(endIcon!.querySelector('nldd-icon')!.getAttribute('icon')).toBe('chevron-down-small');
 	});
 
 	it('wraps the start/end icon in a container span (class on the container, not on nldd-icon)', async () => {

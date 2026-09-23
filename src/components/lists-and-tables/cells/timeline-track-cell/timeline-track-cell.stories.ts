@@ -23,7 +23,23 @@ export default {
 	component: 'nldd-timeline-track-cell',
 	tags: ['autodocs'],
 
+	args: {
+		variant: 'major',
+		status: 'current',
+		size: 'md',
+		direction: 'down',
+		position: 'between',
+		text: '2',
+		icon: '',
+		line: 'auto',
+	},
 	argTypes: {
+		variant: {
+			control: 'select',
+			options: ['major', 'minor', 'none'],
+			description: 'Wat er in de baan staat: een hele stip (major), een kleinere voor een rij die onder de vorige hoort (minor), of niets (none) voor een rij die draagt wat een stap bij zich heeft',
+			table: { defaultValue: { summary: 'major' } },
+		},
 		status: {
 			control: 'select',
 			options: ['past', 'current', 'future'],
@@ -35,12 +51,6 @@ export default {
 			options: ['sm', 'md'],
 			description: 'Hoe breed de baan is en dus hoe groot de stip: sm (16px) voor een tijdlijn van gebeurtenissen, md (24px) waar een cijfer of icoon in moet passen',
 			table: { defaultValue: { summary: 'sm' } },
-		},
-		variant: {
-			control: 'select',
-			options: ['major', 'minor', 'none'],
-			description: 'Wat er in de baan staat: een hele stip (major), een kleinere voor een rij die onder de vorige hoort (minor), of niets (none) voor een rij die draagt wat een stap bij zich heeft',
-			table: { defaultValue: { summary: 'major' } },
 		},
 		direction: {
 			control: 'select',
@@ -72,17 +82,7 @@ export default {
 	},
 };
 
-export const Default = {
-	args: {
-		status: 'current',
-		size: 'md',
-		variant: 'major',
-		direction: 'down',
-		position: 'between',
-		text: '2',
-		icon: '',
-		line: 'auto',
-	},
+export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-list dividers="never" accessible-label="Tijdlijn" style="max-width: 420px;">
 			<nldd-list-item>

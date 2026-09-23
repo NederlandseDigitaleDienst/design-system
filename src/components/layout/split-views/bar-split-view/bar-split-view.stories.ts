@@ -48,6 +48,9 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		background: 'inherit',
+	},
 	argTypes: {
 		background: {
 			control: { type: 'select' },
@@ -55,9 +58,6 @@ export default {
 			description: 'Achtergrondkleur — cascade van --context-parent-background-color naar alle afstammelingen inclusief nldd-page en de fade-overlays',
 			table: { defaultValue: { summary: 'inherit' } },
 		},
-	},
-	args: {
-		background: 'inherit',
 	},
 };
 

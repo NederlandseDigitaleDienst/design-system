@@ -198,11 +198,11 @@ const Template = ({ size, resize, rows, width, placeholder, valid, invalid, read
 	></nldd-multi-line-text-field>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const AllStates = {
+export const AlleToestanden = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
 			<nldd-multi-line-text-field placeholder="Neutral"></nldd-multi-line-text-field>
@@ -215,7 +215,7 @@ export const AllStates = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
 			<nldd-multi-line-text-field placeholder="Medium (md)"></nldd-multi-line-text-field>
@@ -232,7 +232,8 @@ export const Sizes = {
  * regels, maar groeit er wel voorbij. Hieronder een veld met `rows="2"` naast
  * één met `rows="5"` — beide groeien mee, maar starten op hun eigen minimum.
  */
-export const AutoResize = {
+export const Meegroeiend = {
+	name: 'Meegroeiend (resize="auto")',
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 1rem;">
 			<nldd-multi-line-text-field
@@ -252,7 +253,7 @@ export const AutoResize = {
 	parameters: { controls: { disable: true } },
 };
 
-export const InteractiveExample = {
+export const InteractiefVoorbeeld = {
 	render: () => html`
 		<nldd-form label-alignment="right" novalidate>
 			<nldd-form-field label="Toelichting">

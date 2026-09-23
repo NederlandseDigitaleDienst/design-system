@@ -92,7 +92,7 @@ const Template = ({ variant, icon, text, supportingText, duration }: Record<stri
  * hij verhuist zichzelf naar de gedeelde regio, net als in een applicatie.
  * Verander een control en er komt een nieuwe.
  */
-export const Default = {
+export const Standaard = {
 	render: Template,
 	// A story in a frame of its own never hears about a changed arg, so this one
 	// renders in the docs page itself. It leaves nothing behind in its own block,

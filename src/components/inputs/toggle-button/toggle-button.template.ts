@@ -41,12 +41,13 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 	 * so it costs nothing visually. */
 	const icon = component.icon
 		? html`<nldd-icon class="toggle-button__icon"
-				name=${component.icon}
+				icon=${component.icon}
 			></nldd-icon>`
-		: html`<slot name="icon"
+		: html`<slot
+				name="icon"
 				@slotchange=${component.requestUpdate}
 			>${showPlaceholder ? html`<nldd-icon class="toggle-button__icon"
-					name="icon-placeholder"
+					icon="icon-placeholder"
 				></nldd-icon>` : nothing}</slot>`;
 
 	const textContent = showText

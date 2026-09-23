@@ -1,0 +1,13 @@
+<script>
+	/* Set the theme before the first paint. The theme decorator only runs once a
+	   story renders, so on a machine whose OS scheme is the opposite every color
+	   changes right after load. Each transition then animates from the wrong
+	   scheme, which is a visible flash, and long enough for the a11y addon to
+	   measure a mid-transition color and report a contrast violation that is not
+	   there. */
+	(function () {
+		var globals = new URLSearchParams(location.search).get('globals') || '';
+		var chosen = globals.match(/(?:^|[;,])theme:([\w-]+)/);
+		document.documentElement.dataset.scheme = chosen ? chosen[1] : 'light';
+	})();
+</script>

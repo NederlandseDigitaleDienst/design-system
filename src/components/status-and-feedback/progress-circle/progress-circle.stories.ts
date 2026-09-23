@@ -128,7 +128,7 @@ export const Standaard = {
 	render: Template,
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center;">
 			<nldd-progress-circle size="24" value="60" text="24"></nldd-progress-circle>
@@ -142,7 +142,7 @@ export const Sizes = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Colors = {
+export const Kleuren = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center;">
 			${ALL_COLORS.map(c => html`
@@ -153,7 +153,8 @@ export const Colors = {
 	parameters: { controls: { disable: true } },
 };
 
-export const MultiSegmentProgress = {
+export const MeerdereSegmenten = {
+	name: 'Voortgang in meerdere segmenten',
 	render: () => html`
 		<nldd-progress-circle mode="progress" size="80" max="100" text="Verwerking">
 			<nldd-progress-circle-segment-indicator value="40" color="success" name="Geüpload"></nldd-progress-circle-segment-indicator>
@@ -170,7 +171,8 @@ export const MultiSegmentProgress = {
 	},
 };
 
-export const Distribution = {
+export const ModusDistribution = {
+	name: 'Modus distribution',
 	render: () => html`
 		<nldd-progress-circle mode="distribution" size="80" max="500" text="Opslag (500 GB)">
 			<nldd-progress-circle-segment-indicator value="200" color="hemelblauw" name="Foto's"></nldd-progress-circle-segment-indicator>
@@ -189,7 +191,8 @@ export const Distribution = {
 	},
 };
 
-export const Indeterminate = {
+export const ToestandIndeterminate = {
+	name: 'Toestand indeterminate',
 	render: () => html`
 		<nldd-progress-circle indeterminate color="accent" text="Bezig met laden"></nldd-progress-circle>
 	`,
@@ -203,7 +206,8 @@ export const Indeterminate = {
 	},
 };
 
-export const ValueFormats = {
+export const Waardeformaten = {
+	name: 'Waardeformaten (value-format)',
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: flex-start;">
 			<nldd-progress-circle size="56" value="60" max="100" text="Percentage" value-format="percentage" value-display="inline"></nldd-progress-circle>
@@ -215,7 +219,8 @@ export const ValueFormats = {
 	parameters: { controls: { disable: true } },
 };
 
-export const ValueDisplay = {
+export const Waardeweergave = {
+	name: 'Waardeweergave (value-display)',
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: flex-start;">
 			<nldd-progress-circle size="56" value="60" text="Inline (onder de label)" value-display="inline"></nldd-progress-circle>

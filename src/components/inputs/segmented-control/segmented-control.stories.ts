@@ -175,7 +175,7 @@ export const AlleToestanden = {
 	parameters: { controls: { disable: true } },
 };
 
-export const IconEnTekst = {
+export const IcoonEnTekst = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
 		<nldd-segmented-control value="bold" variant="icon-and-text" size="md" accessible-label="Tekststijl">
@@ -200,7 +200,8 @@ export const IconEnTekst = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Lg = {
+export const GrootteLg = {
+	name: 'Grootte lg',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
 		<nldd-segmented-control value="list" variant="text" size="lg" accessible-label="Weergave">

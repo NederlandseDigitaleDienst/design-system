@@ -43,19 +43,11 @@ Zoek in `src/components/` of het component al bestaat.
 
 **Naamconventies:**
 
-- **Primitives:** `--primitives-{property}-{variant}-{scale}`
-  bijv. `--primitives-color-accent-750`
-- **Semantics:** `--semantics-{group}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}`
-  bijv. `--semantics-buttons-neutral-tinted-is-hovered-background-color`
-- **Components:** `--components-{component}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}`
-  bijv. `--components-checkbox-md-check-icon-size`
-- **Context:** `--context-{context}-{property}`
-  Gedeelde variabelen voor communicatie tussen componenten. Niet gedefinieerd in variables.css.
-  bijv. `--context-parent-background-color`
-- **Lokaal:** `--_{variant}-{state}-{element}-{element-variant}-{element-state}-{property}`
-  Interne variabelen binnen een component. Definieer defaults in `:host`.
-  bijv. `--_background-color`
-  Het `{element}`-segment is de **volledige BEM-elementnaam**, niet afgekort: `--_disclosure-icon-margin-right`, niet `--_disclosure-margin-right`. Laat het element-segment weg voor het root-block (`--_background-color`). Gebruik één generieke naam als de var door meerdere elementen gedeeld wordt (bijv. `--_icon-size` voor `__start-icon` én `__end-icon`).
+- **Primitives:** `--primitives-{property}-{variant}-{scale}` bijv. `--primitives-color-accent-750`
+- **Semantics:** `--semantics-{group}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` bijv. `--semantics-buttons-neutral-tinted-is-hovered-background-color`
+- **Components:** `--components-{component}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` bijv. `--components-checkbox-md-check-icon-size`
+- **Context:** `--context-{context}-{property}` Gedeelde variabelen voor communicatie tussen componenten. Niet gedefinieerd in variables.css. bijv. `--context-parent-background-color`
+- **Lokaal:** `--_{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` Interne variabelen binnen een component. Definieer defaults in `:host`. bijv. `--_background-color` Het `{element}`-segment is de **volledige BEM-elementnaam**, niet afgekort: `--_disclosure-icon-margin-right`, niet `--_disclosure-margin-right`. Laat het element-segment weg voor het root-block (`--_background-color`). Gebruik één generieke naam als de var door meerdere elementen gedeeld wordt (bijv. `--_icon-size` voor `__start-icon` én `__end-icon`).
 
 Primitives zijn basiswaarden — gebruik ze niet direct in componenten. Semantics geven context voor een groep componenten. Component variabelen zijn specifiek voor één component.
 
@@ -80,14 +72,9 @@ src/components/{categorie}/{naam}/
 
 ### Stap 5: Registreer het component
 
-Zet een regel in `src/components/index.ts` en draai `npm run build:exports`.
-Die genereert de `exports`-map in `package.json` uit dat bestand.
+Zet een regel in `src/components/index.ts` en draai `npm run build:exports`. Die genereert de `exports`-map in `package.json` uit dat bestand.
 
-Sla je dit over, dan bouwt alles, slagen alle tests en staat het component
-netjes in `dist`, maar heeft `package.json` er geen subpad voor. Een consument
-die per component importeert, en dat doen ze, krijgt dan geen foutmelding maar
-een tag die nooit upgradet: het element staat in de DOM, z'n properties zijn
-`undefined` en er gebeurt niets.
+Sla je dit over, dan bouwt alles, slagen alle tests en staat het component netjes in `dist`, maar heeft `package.json` er geen subpad voor. Een consument die per component importeert, en dat doen ze, krijgt dan geen foutmelding maar een tag die nooit upgradet: het element staat in de DOM, z'n properties zijn `undefined` en er gebeurt niets.
 
 ---
 
@@ -140,17 +127,9 @@ declare global {
 **JSDoc-opmaak:**
 
 - Proza (de beschrijving bovenaan) wrapt op ~80 tekens.
-- Een tagregel (`@attr`, `@prop`, `@fires`, `@slot`, `@method`) blijft op één
-  regel, hoe lang die ook wordt. Dat leest slechter in de bron, maar wel goed in
-  de gegenereerde tabel — en geen enkele generator hoeft vervolgregels te
-  begrijpen.
-- Moet er toch gebroken worden, spring dan één niveau in. Niet uitlijnen op de
-  kolom van de beschrijving: dan houd je nog maar een handvol tekens per regel
-  over en lijkt de tekst afgekapt.
-- Eén spatie tussen `@attr`, het type, de naam en het streepje. Niet uitlijnen in
-  kolommen: dan dwingt één langere attribuutnaam je het hele blok opnieuw te
-  padden, wat een diff vol witruimte oplevert zonder dat de gegenereerde docs
-  veranderen.
+- Een tagregel (`@attr`, `@prop`, `@fires`, `@slot`, `@method`) blijft op één regel, hoe lang die ook wordt. Dat leest slechter in de bron, maar wel goed in de gegenereerde tabel — en geen enkele generator hoeft vervolgregels te begrijpen.
+- Moet er toch gebroken worden, spring dan één niveau in. Niet uitlijnen op de kolom van de beschrijving: dan houd je nog maar een handvol tekens per regel over en lijkt de tekst afgekapt.
+- Eén spatie tussen `@attr`, het type, de naam en het streepje. Niet uitlijnen in kolommen: dan dwingt één langere attribuutnaam je het hele blok opnieuw te padden, wat een diff vol witruimte oplevert zonder dat de gegenereerde docs veranderen.
 
 
 **`{naam}.styles.ts`:**
@@ -350,7 +329,7 @@ Zet het component ook in de tabellen in `form-field.test.ts`, die alle invoercom
   **Staat het woord al als echte waarde in dezelfde dropdown, dan is het label bezet.** Dat is de `0` bij `nldd-container` hierboven, en het gebeurt ook zonder dat de woorden gelijk zijn: `(auto)` naast een echte `inherit` leest als twee manieren om te zeggen "haal het ergens anders vandaan", ook al betekenen ze iets anders. Kies dan geen ander label maar geef de default een naam, dan staan er twee echte waardes en heb je er helemaal geen nodig. Zo werd `color` op `nldd-title` en `nldd-rich-text` `content` naast `inherit`.
 - **Volgorde consistent**: `args`, `argTypes`, template-destructuring en HTML-attributen in de template gebruiken dezelfde volgorde, volgens de canon hieronder.
 - **Twee dingen laten een control naar het eind van de tabel springen.** De docs-tabel volgt de volgorde van `argTypes`, en Storybook bouwt een key opnieuw op (en zet hem dus achteraan) zodra je hem naderhand aanraakt:
-  1. Een key die je in `Default.args` opnieuw zet. Zet een default die je in `Default` wilt tonen daarom in de bovenste `args`, en laat `Default` alleen `render` houden.
+  1. Een key die je in `Standaard.args` opnieuw zet. Zet een default die je in `Standaard` wilt tonen daarom in de bovenste `args`, en laat `Standaard` alleen `render` houden.
   2. Een `type`-override in een argType, zoals `type: { name: 'string' }`. Wil je een tekstveld voor een numerieke prop (leeg mogen laten), dan is `control: { type: 'text' }` genoeg; documenteer het echte type met `table: { type: { summary: 'number' } }`.
 
 ### Canonieke volgorde in de rest van het component
@@ -365,7 +344,27 @@ Dezelfde canon geldt buiten de stories, zodat je een component in elk bestand in
 
 ### Volgorde van de stories
 
-`Default` staat bovenaan. Daarna één story per as, in de volgorde van de canon, en helemaal onderaan de voorbeelden die het component in een situatie laten zien (een badge op een icoon, een veld in een formulier). Zo loopt de zijbalk gelijk met de controltabel: eerst wat het ding is, dan wat het toont, dan waar het staat.
+`Standaard` staat bovenaan. Daarna één story per as, in de volgorde van de canon, en helemaal onderaan de voorbeelden die het component in een situatie laten zien (een badge op een icoon, een veld in een formulier). Zo loopt de zijbalk gelijk met de controltabel: eerst wat het ding is, dan wat het toont, dan waar het staat.
+
+### Namen van de stories
+
+Story-namen zijn Nederlands, maar een attribuut vertaal je niet. Een ontwikkelaar zoekt op het woord dat hij in de markup typt: `indeterminate`, niet "Onbepaald". Een vertaling moet hij eerst terugvertalen, en ze is soms dubbelzinnig: "Uitgeschakeld" kan `disabled` zijn of `readonly`.
+
+1. **Een story over één toestand van het component** heet "Toestand" plus het letterlijke attribuut: "Toestand checked", "Toestand disabled", "Toestand checked en disabled". Dat geldt voor de toestanden uit groep 12 van de canon (`selected`, `checked`, `indeterminate`, `open`, `valid`, `invalid`, `masked`, `readonly`, `current`, `disabled`).
+2. **Zit de toestand op een kind**, dan noem je het kind: "Item disabled" in een menu, "Rij selected" in een tabel. "Toestand" zou suggereren dat het component zelf dat attribuut heeft.
+3. **Een story over één waarde van een as** heet naar de as plus de letterlijke waarde: "Grootte sm", "Variant alert", "Type radio".
+4. **Een story die alle waarden van een as toont** heet naar de as in het meervoud: "Grootten", "Varianten", "Kleuren". Schrijf "Grootten", niet "Maten" of "Sizes".
+5. **Een story over een situatie** blijft Nederlands proza: "Met hulptekst", "In een formulier", "Met een fout". Attribuut- en componentnamen vertaal je daarin niet: "Met Start Icon", niet "Met starticoon".
+
+Storybook zet elk woord van een exportnaam met een hoofdletter, dus `ToestandChecked` verschijnt als "Toestand Checked". Geef zo'n story daarom een expliciete `name`, zodat het attribuut klein en letterlijk blijft:
+
+```ts
+export const ToestandChecked = {
+	name: 'Toestand checked',
+	render: Template,
+	args: { checked: true },
+};
+```
 
 ### Canonieke control volgorde
 
@@ -498,7 +497,7 @@ const Template = ({
 	>Label</nldd-{naam}>
 `;
 
-export const Default = Template.bind({});
+export const Standaard = Template.bind({});
 ```
 
 ---
@@ -679,9 +678,16 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 <!-- GOED — één attribuut zonder class: op één regel -->
 <slot name="header"></slot>
 
+<!-- GOED — geen class, meerdere attributen: de tag staat alleen op de eerste regel -->
+<nldd-title
+	size="1"
+	text="Subsidieaanvraag"
+	heading-level="1"
+></nldd-title>
+
 <!-- GOED — child component in wrapper -->
 <span class="checkbox__icon">
-	<nldd-icon name="check-mark-small"></nldd-icon>
+	<nldd-icon icon="check-mark-small"></nldd-icon>
 </span>
 
 <!-- GOED — element-content op een eigen regel -->
@@ -696,7 +702,12 @@ ${component.hasBadge ? html`<span class="dialog__badge">${component.badge}</span
 <p class="dialog__supporting-text">${component.supportingText}</p>
 
 <!-- FOUT — class op child component -->
-<nldd-icon class="checkbox__icon" name="check-mark-small"></nldd-icon>
+<nldd-icon class="checkbox__icon" icon="check-mark-small"></nldd-icon>
+
+<!-- FOUT — eerste attribuut op de tag-regel zonder class -->
+<nldd-title size="1"
+	text="Subsidieaanvraag"
+></nldd-title>
 
 <!-- FOUT — class op aparte regel -->
 <input
@@ -814,6 +825,7 @@ Andere regels die hetzelfde slotted element raken (`:hover`, `@media`, een speci
 
 **Taal:**
 - [ ] Story namen, JSDoc en component docs in het Nederlands
+- [ ] Een toestandsstory heet "Toestand" plus het letterlijke attribuut (`name: 'Toestand disabled'`), zie Namen van de stories
 - [ ] Code comments in het Engels — **US English** (`color`, `behavior`, `center`, `gray`, `-ize`), niet Brits
 
 **Shadow DOM:**

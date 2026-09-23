@@ -110,7 +110,8 @@ export const AlleVarianten = {
 
 export const AlsLink = {
 	render: () => html`
-		<nldd-status-bar variant="critical"
+		<nldd-status-bar
+			variant="critical"
 			text="Storing: inloggen met DigiD is niet beschikbaar — bekijk de actuele status"
 			href="#status"
 		></nldd-status-bar>
@@ -118,9 +119,10 @@ export const AlsLink = {
 	parameters: { controls: { disable: true } },
 };
 
-export const AlsButton = {
+export const AlsKnop = {
 	render: () => html`
-		<nldd-status-bar variant="accent"
+		<nldd-status-bar
+			variant="accent"
 			text="U werkt in een testomgeving — terug naar de live-omgeving"
 			button
 		></nldd-status-bar>

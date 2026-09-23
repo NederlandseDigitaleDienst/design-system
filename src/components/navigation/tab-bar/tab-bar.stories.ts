@@ -77,8 +77,8 @@ export const Standaard = {
 	render: Template,
 };
 
-export const Uitgeschakeld = {
-	name: 'Uitgeschakeld (disabled)',
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: () => html`
 	<nldd-tab-bar disabled accessible-label="Uitgeschakeld">
 		${tabBarItems}

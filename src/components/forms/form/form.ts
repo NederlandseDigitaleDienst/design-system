@@ -44,14 +44,14 @@
  *
  * @element nldd-form
  *
- * @attr {string} name - Form name
- * @attr {string} action - URL endpoint for submission
- * @attr {string} method - HTTP method ('get' | 'post' | 'dialog')
- * @attr {boolean} novalidate - Skip native browser validation
- * @attr {string} enctype - Encoding type for submission
- * @attr {string} target - Submit target ('_self' | '_blank' | ...)
- * @attr {string} autocomplete - 'on' | 'off' (form-level autofill toggle)
  * @attr {string} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.
+ * @attr {string} name - Form name
+ * @attr {string} autocomplete - 'on' | 'off' (form-level autofill toggle)
+ * @attr {string} target - Submit target ('_self' | '_blank' | ...)
+ * @attr {string} method - HTTP method ('get' | 'post' | 'dialog')
+ * @attr {string} action - URL endpoint for submission
+ * @attr {string} enctype - Encoding type for submission
+ * @attr {boolean} novalidate - Skip native browser validation
  *
  * @prop {HTMLFormElement | null} form - The inner <form> element (read-only). Use it for `form.checkValidity()`, direct DOM manipulation, or as the target for framework-managed children.
  *

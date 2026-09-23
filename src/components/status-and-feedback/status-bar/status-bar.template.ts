@@ -10,7 +10,7 @@ export function statusBarTemplate(component: NLDDStatusBar) {
 			<span class="status-bar__action-icon"
 				aria-hidden="true"
 			>
-				<nldd-icon name="chevron-right-small"></nldd-icon>
+				<nldd-icon icon="chevron-right-small"></nldd-icon>
 			</span>
 		` : nothing}
 	`;

@@ -47,10 +47,10 @@ describe('nldd-form-section', () => {
 	it('rendert supporting-text als <span> binnen legend', async () => {
 		el = await fixture('<nldd-form-section text="Persoonsgegevens" supporting-text="Vul je gegevens in."></nldd-form-section>');
 		const legend = el.querySelector('legend.form-section__header')!;
-		const subtitle = legend.querySelector('.form-section__subtitle');
-		// The subtitle has to sit inside the legend so a screen reader reads it as part of the group label
-		expect(subtitle).not.toBeNull();
-		expect(subtitle?.textContent).toContain('Vul je gegevens in.');
+		const supportingText = legend.querySelector('.form-section__supporting-text');
+		// The supporting text has to sit inside the legend so a screen reader reads it as part of the group label
+		expect(supportingText).not.toBeNull();
+		expect(supportingText?.textContent).toContain('Vul je gegevens in.');
 	});
 
 	it('rendert legend met enkel supporting-text als text leeg is', async () => {
@@ -61,7 +61,7 @@ describe('nldd-form-section', () => {
 		expect(legend).not.toBeNull();
 		expect(legend.hidden).toBe(false);
 		expect(legend.querySelector('.form-section__title')).toBeNull();
-		expect(legend.querySelector('.form-section__subtitle')?.textContent).toContain('Beschrijving');
+		expect(legend.querySelector('.form-section__supporting-text')?.textContent).toContain('Beschrijving');
 	});
 
 	it('migreert children naar .form-section__main', async () => {
@@ -81,14 +81,14 @@ describe('nldd-form-section', () => {
 		expect(fieldset.firstElementChild).toBe(legend);
 	});
 
-	it('title én subtitle staan samen IN dezelfde legend', async () => {
+	it('title én supporting text staan samen IN dezelfde legend', async () => {
 		el = await fixture('<nldd-form-section text="Persoonsgegevens" supporting-text="Vul je gegevens in."></nldd-form-section>');
 		const legend = el.querySelector('legend.form-section__header')!;
 		const title = legend.querySelector('.form-section__title');
-		const subtitle = legend.querySelector('.form-section__subtitle');
+		const supportingText = legend.querySelector('.form-section__supporting-text');
 		// Both have to sit inside one legend so a screen reader reads them together as the group label
 		expect(title?.textContent).toContain('Persoonsgegevens');
-		expect(subtitle?.textContent).toContain('Vul je gegevens in.');
+		expect(supportingText?.textContent).toContain('Vul je gegevens in.');
 	});
 
 	it('attribute-wijziging re-rendert legend', async () => {

@@ -3,6 +3,11 @@
  *
  * A container for displaying collections of items.
  * Supports grid, stack, lanes and horizontal scroll layouts.
+ *
+ * Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS
+ * grid of your own: the collection sets the columns from `item-width` and the
+ * available width, and the gap per breakpoint.
+ *
  * In grid and stack modes, items are paginated via a load-more button. In
  * horizontal scroll, the prev/next controls and the edge fade appear only when
  * the items overflow the container.
@@ -12,15 +17,15 @@
  * @element nldd-collection
  *
  * @attr {string} layout - Layout mode: 'grid' | 'stack' | 'lanes' | 'horizontal-scroll' (default: 'grid')
- * @attr {boolean} show-load-more - Show load-more button in grid/stack (default: false)
- * @attr {number} max-items - Number of visible items per page (default: 24)
- * @attr {boolean} lazy-load - Automatically load more items when the button becomes visible
  * @attr {string} item-width - Preferred width for each item (e.g. '280px', '20rem'). In grid and lanes layouts used as the minimum column width (columns will be at least this wide; 1fr if container allows more). In horizontal scroll used as flex-basis. Never forces horizontal overflow — the value is clamped to container width.
  * @attr {string} gap - Gap between items, as a step of the spacing scale ('0', '2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'). Overrides the responsive default at every breakpoint; unset keeps the default.
  * @attr {string} sm-gap - Gap at sm, overriding `gap` there
  * @attr {string} md-gap - Gap at md, overriding `gap` there
  * @attr {string} lg-gap - Gap at lg, overriding `gap` there
+ * @attr {number} max-items - Number of visible items per page (default: 24)
  * @attr {object} translations - Translation overrides; unset keys fall back to Dutch. Available keys: 'components.collection.previous-action', 'components.collection.next-action', 'components.collection.load-more-action'
+ * @attr {boolean} show-load-more - Show load-more button in grid/stack (default: false)
+ * @attr {boolean} lazy-load - Automatically load more items when the button becomes visible
  *
  * @migration The `load-more-label` attribute has been removed.
  *            Use `translations` property instead: `.translations=${{ 'components.collection.load-more-action': 'Show more' }}`
@@ -52,15 +57,6 @@ export class NLDDCollection extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<Layout>('grid') })
 	layout: Layout = 'grid';
 
-	@property({ type: Boolean, reflect: true, attribute: 'show-load-more' })
-	showLoadMore = false;
-
-	@property({ type: Number, attribute: 'max-items' })
-	maxItems = 24;
-
-	@property({ type: Boolean, reflect: true, attribute: 'lazy-load' })
-	lazyLoad = false;
-
 	@property({ type: String, reflect: true, attribute: 'item-width' })
 	itemWidth: string | undefined;
 
@@ -78,8 +74,17 @@ export class NLDDCollection extends LitElement {
 	@property({ type: String, reflect: true, attribute: 'lg-gap' })
 	lgGap: SpacingSize | undefined;
 
+	@property({ type: Number, attribute: 'max-items' })
+	maxItems = 24;
+
 	@property({ type: Object })
 	translations: Partial<NLDDCollectionTranslations> = {};
+
+	@property({ type: Boolean, reflect: true, attribute: 'show-load-more' })
+	showLoadMore = false;
+
+	@property({ type: Boolean, reflect: true, attribute: 'lazy-load' })
+	lazyLoad = false;
 
 	// — i18n —————————————————————————————————————————————————————————————————
 

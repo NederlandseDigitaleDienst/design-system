@@ -2,7 +2,7 @@
  * Parses the JSDoc block that documents a component's public API.
  *
  * Shared on purpose: generate-component-reference.js turns this into
- * skills/nldd/reference.md, and validate-component-api.js checks it against the
+ * skills/nldd-design/reference.md, and validate-component-api.js checks it against the
  * @property decorators. Two parsers would let the check pass while the
  * reference says something else.
  */

@@ -109,6 +109,7 @@ export const Standaard = {
    ============================================================ */
 
 export const TypeButton = {
+	name: 'Type button',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
@@ -133,7 +134,8 @@ export const TypeButton = {
 },
 };
 
-export const MultiSelect = {
+export const TypeCheckbox = {
+	name: 'Type checkbox',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
@@ -157,7 +159,8 @@ export const MultiSelect = {
 },
 };
 
-export const SingleSelect = {
+export const TypeRadio = {
+	name: 'Type radio',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
@@ -211,7 +214,8 @@ export const Grootten = {
    Uitgeschakeld
    ============================================================ */
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-toggle-button-group type="checkbox" name="filter-uit" disabled aria-label="Filters (uitgeschakeld)">

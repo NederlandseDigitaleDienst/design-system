@@ -29,6 +29,14 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		variant: '',
+		color: 'neutral',
+		size: 'md',
+		text: 'Tag',
+		icon: '',
+		accessibleLabel: '',
+	},
 	argTypes: {
 		variant: {
 			control: 'select',
@@ -43,11 +51,12 @@ export default {
 				// Semantisch
 				'neutral', 'accent', 'success', 'warning', 'critical',
 				// Rijkskleuren
+				'lintblauw', 'donkerblauw', 'hemelblauw', 'lichtblauw',
 				'paars', 'violet', 'robijnrood', 'roze', 'rood',
 				'oranje', 'donkergeel', 'geel', 'donkerbruin', 'bruin',
 				'donkergroen', 'groen', 'mosgroen', 'mintgroen',
 			],
-			description: 'Kleurvariant — semantisch (neutral, accent, success, warning, critical) of een rijkskleur uit het palette',
+			description: 'Kleur: semantisch (neutral, accent, success, warning, critical) of een rijkskleur',
 			table: {
 				defaultValue: { summary: 'neutral' },
 			},
@@ -79,14 +88,6 @@ export default {
 			description: 'Toegankelijk label (vooral nuttig bij icon-only tags)',
 		},
 	},
-	args: {
-		variant: '',
-		color: 'neutral',
-		size: 'md',
-		text: 'Tag',
-		icon: '',
-		accessibleLabel: '',
-	},
 };
 
 const Template = ({ variant, color, size, text, icon, accessibleLabel }: Record<string, any>) => html`
@@ -100,14 +101,14 @@ const Template = ({ variant, color, size, text, icon, accessibleLabel }: Record<
 	></nldd-tag>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 	args: {
 		text: 'Tag',
 	},
 };
 
-export const Colors = {
+export const Kleuren = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
 			<nldd-tag color="neutral" text="neutral"></nldd-tag>
@@ -145,7 +146,7 @@ export const Colors = {
 	},
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
 			<nldd-tag size="md" text="Medium"></nldd-tag>
@@ -157,7 +158,7 @@ export const Sizes = {
 	},
 };
 
-export const WithIcon = {
+export const MetIcoon = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
 			<nldd-tag color="success" text="Goedgekeurd" icon="check-mark"></nldd-tag>

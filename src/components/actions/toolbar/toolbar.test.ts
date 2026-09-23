@@ -159,7 +159,7 @@ describe('nldd-toolbar', () => {
 		await waitForUpdate(el);
 		const title = el.querySelector('nldd-toolbar-title')!;
 		expect(title.shadowRoot?.querySelector('.toolbar__title')?.textContent).toBe('Titel');
-		expect(title.shadowRoot?.querySelector('.toolbar__subtitle')?.textContent).toBe('Subtitel');
+		expect(title.shadowRoot?.querySelector('.toolbar__supporting-text')?.textContent).toBe('Subtitel');
 	});
 
 	it('centers title text when align="center" (overriding the inherited-text reset)', async () => {

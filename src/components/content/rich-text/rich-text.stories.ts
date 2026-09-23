@@ -6,6 +6,7 @@ export default {
 	title: 'Components/Content/Rich Text',
 	component: 'nldd-rich-text',
 	tags: ['autodocs'],
+	args: { color: 'content', spacing: 'snug', centered: false, hyphens: false },
 	argTypes: {
 		color: {
 			control: 'select',
@@ -30,13 +31,11 @@ export default {
 			table: { defaultValue: { summary: false } },
 		},
 	},
-	args: { color: 'content', spacing: 'snug', centered: false, hyphens: false },
 };
 
-export const Default = {
-	args: { spacing: 'snug' },
+export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} ?hyphens=${args.hyphens} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered} ?hyphens=${args.hyphens}>
 				<h3>Artikel 1. Algemene begrippen</h3>
 				<p>In deze wet en de daarop berustende bepalingen wordt verstaan onder:</p>
 				<ul>
@@ -48,10 +47,9 @@ export const Default = {
 	`,
 };
 
-export const Headings = {
-	args: { spacing: 'snug' },
+export const Koppen = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h1>Heading 1 — Wet op de zorgtoeslag</h1>
 				<h2>Heading 2 — Hoofdstuk 1</h2>
 				<h3>Heading 3 — Artikel 1</h3>
@@ -62,10 +60,9 @@ export const Headings = {
 	`,
 };
 
-export const Paragraph = {
-	args: { spacing: 'snug' },
+export const Alinea = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} ?hyphens=${args.hyphens} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered} ?hyphens=${args.hyphens}>
 				<h3>Artikel 2. Zorgtoeslag</h3>
 				<p>De verzekerde die op de eerste dag van het berekeningsjaar de leeftijd van achttien jaar heeft bereikt, heeft aanspraak op een zorgtoeslag.</p>
 				<p>De zorgtoeslag wordt berekend op basis van het toetsingsinkomen van de verzekerde en, indien van toepassing, diens partner.</p>
@@ -82,7 +79,7 @@ export const Paragraph = {
  * `hyphenate-limit-chars: 6 3 3` voorkomt losse-letterafbrekingen. Links de
  * standaard (uit), rechts aan; let op de rechterrand van de tekst.
  */
-export const Hyphenation = {
+export const Afbreken = {
 	render: (args: Record<string, any>) => {
 		const content = html`
 			<h3>Zorgtoeslagverantwoordelijkheid</h3>
@@ -113,10 +110,9 @@ export const Hyphenation = {
 	name: 'Woordafbreking',
 };
 
-export const Lists = {
-	args: { spacing: 'snug' },
+export const Lijsten = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h3>Ongeordende lijst</h3>
 				<p>De volgende documenten zijn vereist:</p>
 				<ul>
@@ -168,8 +164,7 @@ export const Lists = {
 	`,
 };
 
-export const DefinitionList = {
-	args: { spacing: 'snug' },
+export const Definitielijst = {
 	render: (args: Record<string, any>) => {
 		const content = html`
 			<h3>Artikel 1. Begrippen</h3>
@@ -188,31 +183,29 @@ export const DefinitionList = {
 				<div>
 					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">sm (&lt; 641px) — gestapeld</p>
 					<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>${content}</nldd-rich-text>
+						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
 				</div>
 				<div>
 					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">md (≥ 641px) — term links (240px), definitie rechts</p>
 					<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>${content}</nldd-rich-text>
+						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
 				</div>
 				<div>
 					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">lg (≥ 1008px) — term links (240px), definitie rechts</p>
 					<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-						<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>${content}</nldd-rich-text>
+						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
 				</div>
 			</div>
 		`;
 	},
-	name: 'Definitielijst',
 };
 
-export const InlineElements = {
-	args: { spacing: 'snug' },
+export const InlineElementen = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h3>Inline elementen</h3>
 				<p>Dit is een paragraaf met <strong>vetgedrukte tekst</strong> en <em>schuingedrukte tekst</em>.</p>
 				<p>Hier staat een <a href="#">hyperlink naar een pagina</a> in de tekst.</p>
@@ -223,10 +216,9 @@ export const InlineElements = {
 	`,
 };
 
-export const Blockquote = {
-	args: { spacing: 'snug' },
+export const Citaat = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h3>Artikel 3. Citaat</h3>
 				<p>In de memorie van toelichting staat het volgende vermeld:</p>
 				<blockquote>
@@ -237,10 +229,9 @@ export const Blockquote = {
 	`,
 };
 
-export const Figure = {
-	args: { spacing: 'snug' },
+export const Figuur = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h3>Artikel 4. Toelichting met afbeelding</h3>
 				<p>Onderstaande afbeelding toont de verdeling van de zorgtoeslag over de verschillende inkomensgroepen.</p>
 				<figure>
@@ -252,10 +243,9 @@ export const Figure = {
 	`,
 };
 
-export const Table = {
-	args: { spacing: 'snug' },
+export const Tabel = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h3>Artikel 5. Overzicht toeslagbedragen</h3>
 				<p>De maximale zorgtoeslag per jaar is afhankelijk van de huishoudsamenstelling:</p>
 				<table>
@@ -285,10 +275,9 @@ export const Table = {
 };
 
 export const Codeblok = {
-	args: { spacing: 'snug' },
 	render: (args: Record<string, any>) => html`
 		<div style="max-width: 560px;">
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h3>Codeblok</h3>
 				<p>Een markdown-renderer levert een fenced block als <code>&lt;pre&gt;&lt;code&gt;</code> aan. Het kader zit op de <code>pre</code>, de chip blijft voor inline code.</p>
 				<pre><code>const toeslag = berekenZorgtoeslag(inkomen);
@@ -308,10 +297,9 @@ if (toeslag > 0) {
 
 export const CodeblokOpTinted = {
 	name: 'Codeblok op tinted vlak',
-	args: { spacing: 'snug' },
 	render: (args: Record<string, any>) => html`
 		<div style="max-width: 420px; padding: 16px; border-radius: 12px; background: var(--semantics-surfaces-tinted-background-color);">
-			<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+			<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<p>Het blok heeft dezelfde achtergrond als dit vlak, dus alleen de ring scheidt de twee.</p>
 				<pre><code>const a = 1;
 const b = 2;</code></pre>
@@ -320,10 +308,9 @@ const b = 2;</code></pre>
 	`,
 };
 
-export const Divider = {
-	args: { spacing: 'snug' },
+export const Scheidingslijn = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h3>Artikel 6. Eerste onderdeel</h3>
 				<p>De verzekerde heeft recht op zorgtoeslag indien het toetsingsinkomen niet hoger is dan de vastgestelde inkomensgrens.</p>
 				<hr>
@@ -333,7 +320,7 @@ export const Divider = {
 	`,
 };
 
-export const Spacing = {
+export const Witruimte = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 3rem;">
 			<div>
@@ -384,10 +371,9 @@ export const Spacing = {
 	`,
 };
 
-export const FullArticle = {
-	args: { spacing: 'snug' },
+export const VolledigArtikel = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 				<h1>Wet op de zorgtoeslag</h1>
 				<h2>Hoofdstuk 1. Algemene bepalingen</h2>
 				<h3>Artikel 1. Begrippen</h3>
@@ -438,14 +424,13 @@ export const FullArticle = {
 	`,
 };
 
-export const AllSizes = {
-	args: { spacing: 'snug' },
+export const AlleGrootten = {
 	render: (args: Record<string, any>) => html`
 		<div style="display: flex; flex-direction: column; gap: 2rem;">
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">sm (&lt; 641px) — beperkt tot 393px</p>
 				<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-					<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+					<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 						<h2>Artikel 1. Algemene begrippen</h2>
 						<p>In deze wet wordt verstaan onder:</p>
 						<ul>
@@ -458,7 +443,7 @@ export const AllSizes = {
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">md (≥ 641px) — beperkt tot 834px</p>
 				<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-					<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+					<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 						<h2>Artikel 1. Algemene begrippen</h2>
 						<p>In deze wet wordt verstaan onder:</p>
 						<ul>
@@ -471,7 +456,7 @@ export const AllSizes = {
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">lg (≥ 1008px) — beperkt tot 1200px</p>
 				<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
-					<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+					<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 						<h2>Artikel 1. Algemene begrippen</h2>
 						<p>In deze wet wordt verstaan onder:</p>
 						<ul>
@@ -496,7 +481,7 @@ export const AllSizes = {
  */
 export const Breedtezones = {
 	render: (args: Record<string, any>) => html`
-		<nldd-rich-text spacing=${args.spacing} ?centered=${args.centered} color=${args.color || nothing}>
+		<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>
 			<h2>Zorgtoeslag per huishoudtype</h2>
 			<p>De hoogte van de zorgtoeslag hangt af van het toetsingsinkomen en het huishoudtype. Onderstaande tabel toont de maximale bedragen per maand; de tabel krijgt het wide-accent.</p>
 			<table>
@@ -509,11 +494,13 @@ export const Breedtezones = {
 				</tbody>
 			</table>
 			<p>Afbeeldingen krijgen het wide-accent: iets breder dan de tekst, zonder de pagina te domineren.</p>
-			<img src="sample-images/butterfly-960.jpg"
+			<img
+				src="sample-images/butterfly-960.jpg"
 				alt="Vlinder op een bloem"
 			>
 			<p>Componenten zoals een banner vallen onder de full-default en vullen de beschikbare breedte met hun eigen gedrag.</p>
-			<nldd-banner variant="accent"
+			<nldd-banner
+				variant="accent"
 				text="Een component pakt automatisch de volle breedte"
 			></nldd-banner>
 			<p data-width="wide">Deze paragraaf staat bewust op <code>data-width="wide"</code> en leest dus iets breder dan de main-maat — de per-item override wint van elke default.</p>
@@ -537,7 +524,8 @@ export const OpKleurvlak = {
 					<h3>Op een donker vlak</h3>
 					<p>Alle tekst erft de contentkleur van het vlak, inclusief <a href="#">links met hun onderstreping</a> en <strong>nadruk</strong>.</p>
 					<figure>
-						<img src="sample-images/butterfly-480.jpg"
+						<img
+							src="sample-images/butterfly-480.jpg"
 							alt="Vlinder op een bloem"
 						>
 						<figcaption>Figuur 1 — de figcaption staat op verlaagde dekking</figcaption>

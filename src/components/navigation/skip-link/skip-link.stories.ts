@@ -34,7 +34,7 @@ export default {
 	},
 };
 
-export const Default = {
+export const Standaard = {
 	render: () => html`
 		<nldd-page>
 			<nldd-skip-link slot="header">
@@ -87,9 +87,11 @@ export const MetHref = {
 			</nldd-simple-section>
 			<nldd-simple-section id="contact-form" tabindex="-1">
 				<nldd-form novalidate label-alignment="right">
-					<nldd-title size="3">
-						<h2>Contactformulier</h2>
-					</nldd-title>
+					<nldd-title
+						size="3"
+						text="Contactformulier"
+						heading-level="2"
+					></nldd-title>
 					<nldd-form-field label="Naam">
 						<nldd-text-field name="name" autocomplete="name"></nldd-text-field>
 					</nldd-form-field>

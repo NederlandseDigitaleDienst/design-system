@@ -1,0 +1,47 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './list-with-rows.stories';
+
+<Meta of={Stories} />
+
+# Lijst met rijen
+
+**Welk probleem dit oplost.** Een verzameling records tonen die de gebruiker moet kunnen scannen, en waar hij per record iets mee kan doen: openen, aanvinken, een actie kiezen.
+
+**Wanneer wel.** Een reeks gelijkwaardige items met tekst en hoogstens een paar acties per rij.
+
+**Wanneer niet.** Vergelijkt de gebruiker kolommen met elkaar, dan is het een [tabel](?path=/docs/components-lists-tables-table--docs). Gaat het om een handvol gelijkwaardige blokken met een afbeelding of veel tekst, dan is het een [collection](?path=/docs/components-layout-collection--docs) met kaarten.
+
+## Compositie
+
+```
+nldd-list                      accessible-label, variant, type
+  └─ nldd-list-item            size, en hoogstens één van href, button, checkbox, radio
+       └─ cellen, in de volgorde waarin ze staan
+            nldd-icon-cell     een icoon vooraan
+            nldd-text-cell     text, overline, supporting-text; vult de rij
+            nldd-text-cell     width="fit-content", komt daardoor achteraan
+```
+
+<Canvas of={Stories.Standaard} />
+
+## Waarom zo
+
+**Alles in een rij staat in een cel.** De [cel](?path=/docs/components-lists-tables-cells-text-cell--docs) bepaalt lettertype, grootte, kleur en uitlijning, afgestemd op de rij. Kale tekst krijgt daar niets van mee, en de [rij](?path=/docs/components-lists-tables-list-item--docs) waarschuwt er in development voor. Opmaak stuur je via de attributen van de cel, zoals `color` en `**vet**` in `text`, niet met eigen CSS.
+
+**Eén actie maakt de rij zelf de control, twee of meer krijgen elk een segment.** Met één actie is de hele rij één groot klikvlak. Heeft een rij meer acties, geef dan elke actie een eigen [segment](?path=/docs/components-lists-tables-list-item-segment--docs) en laat de rij zelf zonder `href` of `button`. Beide tegelijk nest een control in een control: een dubbele tabstop, en de knop kan de link activeren. Ook daarvoor waarschuwt de rij.
+
+<Canvas of={Stories.MeerdereActies} />
+
+**De lijst toont zelf zijn lege toestand.** Vul `slot="empty"` en `slot="no-results"` in plaats van een eigen "Geen resultaten" naast de [lijst](?path=/docs/components-lists-tables-list--docs). Dat zijn twee verschillende zinnen: `empty` betekent dat er niets is, `no-results` dat je filter niets overlaat. Bij `no-results` blijven het zoekveld en de werkbalk staan, want dat is de weg terug. Verberg de lijst dus ook niet met `hidden` als er niets in staat, want dan verdwijnt de lege toestand mee.
+
+<Canvas of={Stories.Leeg} />
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: de rollen en de pijltjesnavigatie die bij het `type` van de lijst horen, één tabstop voor de hele lijst, en een waarschuwing in development bij kale tekst of een control in een control.
+
+Wat jij nog moet doen: een `accessible-label` op de lijst, het `type` dat past bij wat de rijen doen, en een `accessible-label` op een segment dat alleen een icoon bevat.
+
+## Gezien in
+
+De meest voorkomende compositie op dit systeem, in elk onderzocht product en in elk framework. De lege toestanden zijn de uitzondering: `slot="empty"` en `slot="no-results"` worden vrijwel nergens gebruikt, ook niet in apps die honderden rijen tonen. Ze doen precies wat je anders zelf nabouwt, en vrijwel niemand vindt ze.

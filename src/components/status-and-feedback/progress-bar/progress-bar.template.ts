@@ -26,7 +26,8 @@ export function segmentIndicatorTemplate(component: NLDDProgressBarSegmentIndica
 	// no extra handlers needed here.
 	return html`
 		<div class="progress-bar__segment-indicator">
-			<nldd-tooltip text=${text}
+			<nldd-tooltip
+				text=${text}
 				timing="instant"
 			>
 				<span class="progress-bar__segment-indicator-tooltip-area"

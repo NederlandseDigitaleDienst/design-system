@@ -16,13 +16,18 @@
  *
  * @element nldd-hero
  *
- * @attr {'top-left'|'top-right'|'bottom-left'|'bottom-right'|'left'|'right'} main-position -
- *   Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height
- * @attr {'1/2'|'2/3'|'3/4'|'full'} main-width - Width of the panel (default: '1/2');
- *   'full' makes a full top or bottom strip and is ignored with 'left'/'right'
+ * @attr {'inherit'|'base'|'tinted'} background - Surface behind the hero (section API)
+ * @attr {'inherit'|'light'|'dark'|'inverted'} scheme - Color scheme (section API)
+ * @attr {string} width - Body max-width; 'full' removes the bound (section API)
+ * @attr {string} height - Minimum height of the section (section API)
+ * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
  * @attr {string} main-background - Surface color of the panel: 'base' (the base surface)
  *   or a category color — 'accent' (default) or a Rijkshuisstijl color such as
  *   'lintblauw'|'donkerblauw'|'oranje'
+ * @attr {'1/2'|'2/3'|'3/4'|'full'} main-width - Width of the panel (default: '1/2');
+ *   'full' makes a full top or bottom strip and is ignored with 'left'/'right'
+ * @attr {'top-left'|'top-right'|'bottom-left'|'bottom-right'|'left'|'right'} main-position -
+ *   Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height
  * @attr {string} media-aspect-ratio - Aspect ratio of the media area (CSS form, '16/9' or '16:9');
  *   default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area
  * @attr {string} media-src - Source of the media area (an alternative to the media slot);
@@ -30,11 +35,6 @@
  * @attr {string} media-srcset - Responsive source set for media-src
  * @attr {string} media-sizes - Source sizes hint for media-src
  * @attr {string} media-alt - Alt text for media-src; empty means decorative
- * @attr {'inherit'|'base'|'tinted'} background - Surface behind the hero (section API)
- * @attr {'inherit'|'light'|'dark'|'inverted'} scheme - Color scheme (section API)
- * @attr {string} width - Body max-width; 'full' removes the bound (section API)
- * @attr {string} height - Minimum height of the section (section API)
- * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
  *
  * @slot media - Image or illustration (img or nldd-image); fills the area and is clipped.
  *   Takes precedence over the media-src attributes. Set `alt=""` when the image is decorative;
@@ -63,23 +63,23 @@ export type HeroMainBackground =
 export class NLDDHero extends PageSectionMixin(LitElement) {
 	static override styles = heroStyles;
 
-	@property({ reflect: true, attribute: 'main-position', converter: reflectNonDefault<HeroMainPosition>('bottom-left') })
-	mainPosition: HeroMainPosition = 'bottom-left';
+	/** Width mode: 'full' (removes body max-width) or any CSS length. */
+	@property({ type: String, reflect: true })
+	width = '';
+
+	@property({ reflect: true, attribute: 'main-background', converter: reflectNonDefault<HeroMainBackground>('accent') })
+	mainBackground: HeroMainBackground = 'accent';
 
 	@property({ reflect: true, attribute: 'main-width', converter: reflectNonDefault<HeroMainWidth>('1/2') })
 	mainWidth: HeroMainWidth = '1/2';
 
-	@property({ reflect: true, attribute: 'main-background', converter: reflectNonDefault<HeroMainBackground>('accent') })
-	mainBackground: HeroMainBackground = 'accent';
+	@property({ reflect: true, attribute: 'main-position', converter: reflectNonDefault<HeroMainPosition>('bottom-left') })
+	mainPosition: HeroMainPosition = 'bottom-left';
 
 	/** Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives
 	 *  the hero height on md/lg and the media strip height on sm. */
 	@property({ type: String, reflect: true, attribute: 'media-aspect-ratio' })
 	mediaAspectRatio = '';
-
-	/** Width mode: 'full' (removes body max-width) or any CSS length. */
-	@property({ type: String, reflect: true })
-	width = '';
 
 	/** Hybrid media source: media-src renders an internal <img>, but a slotted
 	 *  media element wins (mirrors nldd-image / nldd-identity). srcset/sizes/alt

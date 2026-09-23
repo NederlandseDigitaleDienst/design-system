@@ -1,4 +1,5 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
+import { useArgs } from 'storybook/preview-api';
 import './sheet.js';
 import '../../navigation/top-title-bar/top-title-bar.js';
 import '../../layout/page/page.js';
@@ -23,31 +24,49 @@ export default {
 		},
 		status: { type: 'stable' },
 	},
+	args: {
+		width: '',
+		height: '',
+		placement: 'right',
+		accessibleLabel: '',
+		open: false,
+	},
 	argTypes: {
-		placement: {
-			control: 'select',
-			options: ['left', 'right', 'bottom'],
-			description: 'Positie van de sheet',
-			table: { defaultValue: { summary: 'right' } },
-		},
 		width: {
 			control: 'text',
-			description: 'Breedte van side sheets (left/right) als CSS length, bv. `480px` of `32rem`. Genegeerd op sm en voor `placement="bottom"`. Geclamped op `100vw - 2 * inset`.',
+			description: 'Breedte van een zijsheet (`left`/`right`) als CSS-lengte, bijvoorbeeld `480px` of `32rem`. Geldt vanaf md, en niet bij `placement="bottom"`. Nooit breder dan het scherm min de marges.',
 		},
 		height: {
 			control: 'text',
-			description: 'Hoogte van bottom sheets (en van elke sheet op sm). `full` (default), `fit-content`, of een CSS length/percentage zoals `50dvh`, `480px`, `50%`. Geclamped op `100dvh - top-inset`. Genegeerd voor side sheets op md+.',
+			description: 'Hoogte van een bottom sheet, en van elke sheet op sm: `full`, `fit-content`, of een CSS-lengte zoals `50dvh`, `480px` of `50%`. Nooit hoger dan het scherm min de bovenmarge. Geldt niet voor een zijsheet vanaf md.',
+			table: { defaultValue: { summary: 'full' } },
+		},
+		placement: {
+			control: 'select',
+			options: ['left', 'right', 'bottom'],
+			description: 'Van welke kant de sheet inschuift. Op sm is elke sheet een bottom sheet.',
+			table: { defaultValue: { summary: 'right' } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
-			description: 'Toegankelijk label voor screen readers (aria-label van de dialog)',
+			description: 'Toegankelijke naam van de sheet. Zonder label neemt de sheet de tekst van zijn titelbalk over.',
+			table: { defaultValue: { summary: 'titelbalk, anders "Venster"' } },
+		},
+		open: {
+			control: 'boolean',
+			description: 'Of de sheet open is. Aanzetten opent de sheet; sluit de sheet zichzelf (Escape, de achtergrond, de sluitknop), dan gaat `open` vanzelf weer uit.',
+			table: { defaultValue: { summary: false } },
 		},
 	},
-	args: { placement: 'right', width: '', height: '', accessibleLabel: '' },
 };
 
 const openNext = (e: Record<string, any>) => e.currentTarget.nextElementSibling.show();
+
+// Sets the property rather than the arg: a story further down a docs page renders
+// with its initial args and does not redraw when they change. The open and close
+// events keep the control in step.
+const setNextOpen = (e: Record<string, any>) => { e.currentTarget.nextElementSibling.open = true; };
 
 const pageContent = html`
 	<nldd-simple-section>
@@ -62,28 +81,33 @@ const pageContent = html`
 	</nldd-simple-section>
 `;
 
-const Template = (args: Record<string, any>) => html`
-	<nldd-button text="Open sheet" @click=${openNext}></nldd-button>
-	<nldd-sheet
-		placement=${args.placement}
-		width=${args.width || ''}
-		height=${args.height || ''}
-		accessible-label=${args.accessibleLabel || ''}
-	>
-		<nldd-page sticky-header>
-			<nldd-top-title-bar
-				slot="header"
-				text="Sheet titel"
-				dismiss-text="Sluit"
-			></nldd-top-title-bar>
-			${pageContent}
-		</nldd-page>
-	</nldd-sheet>
-`;
+const Template = (args: Record<string, any>) => {
+	const [, updateArgs] = useArgs();
+	return html`
+		<nldd-button text="Open sheet" @click=${setNextOpen}></nldd-button>
+		<nldd-sheet
+			width=${args.width || nothing}
+			height=${args.height || nothing}
+			placement=${args.placement}
+			accessible-label=${args.accessibleLabel || nothing}
+			?open=${args.open}
+			@open=${() => updateArgs({ open: true })}
+			@close=${() => updateArgs({ open: false })}
+		>
+			<nldd-page sticky-header>
+				<nldd-top-title-bar
+					slot="header"
+					text="Sheet titel"
+					dismiss-text="Sluit"
+				></nldd-top-title-bar>
+				${pageContent}
+			</nldd-page>
+		</nldd-sheet>
+	`;
+};
 
 export const Standaard = {
 	render: Template,
-	args: { placement: 'right' },
 };
 
 export const Rechts = {

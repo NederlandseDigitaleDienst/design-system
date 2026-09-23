@@ -291,6 +291,7 @@ export const AlleenIcoon = {
    ============================================================ */
 
 export const TypeButton = {
+	name: 'Type button',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.75rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
@@ -320,6 +321,7 @@ export const TypeButton = {
    ============================================================ */
 
 export const TypeCheckbox = {
+	name: 'Type checkbox',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.75rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
@@ -349,6 +351,7 @@ export const TypeCheckbox = {
    ============================================================ */
 
 export const TypeRadio = {
+	name: 'Type radio',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.75rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">

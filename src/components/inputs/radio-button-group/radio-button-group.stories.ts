@@ -90,12 +90,14 @@ export const Standaard = {
 	args: {},
 };
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: { disabled: true },
 };
 
-export const MetUitgeschakeldVeld = {
+export const VeldDisabled = {
+	name: 'Veld disabled',
 	render: () => html`
 	<nldd-form label-alignment="right" novalidate>
 		<nldd-form-field label="Kies een optie">

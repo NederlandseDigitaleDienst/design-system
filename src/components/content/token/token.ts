@@ -12,11 +12,11 @@
  *
  * @attr {string} text - Token text; falls back to the default slot when unset.
  * @attr {'none' | 'dismiss' | 'menu'} control - Control type (default: 'none')
+ * @attr {string} dismiss-text - Accessible label for the dismiss button. Unset, it names the token: `Verwijder "{text}"`, so a row of tokens does not read as a row of identical buttons.
+ * @attr {string} menu-text - Accessible label for the menu button. Unset, it is `Toon opties voor "{text}"`.
+ * @attr {boolean} roving - Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.
  * @attr {boolean} expanded - Reflects whether the token's menu is open (control="menu"); managed by the token.
  * @attr {boolean} disabled - Disabled state
- * @attr {string} dismiss-text - Accessible label for the dismiss button (default: 'Verwijder')
- * @attr {string} menu-text - Accessible label for the menu button (default: 'Toon opties')
- * @attr {boolean} roving - Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.
  *
  * @slot - Token text
  * @slot menu - An nldd-menu that the token opens from its menu button (control="menu").
@@ -24,7 +24,7 @@
  * @fires dismiss - When the dismiss button is clicked
  */
 import { LitElement } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tokenStyles } from './token.styles.js';
 import { tokenTemplate } from './token.template.js';
@@ -45,17 +45,11 @@ export class NLDDToken extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<TokenControl>('none') })
 	control: TokenControl = 'none';
 
-	@property({ type: Boolean, reflect: true })
-	expanded = false;
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
 	@property({ type: String, attribute: 'dismiss-text' })
-	dismissText = 'Verwijder';
+	dismissText = '';
 
 	@property({ type: String, attribute: 'menu-text' })
-	menuText = 'Toon opties';
+	menuText = '';
 
 	/** Inside a roving-focus container (e.g. nldd-token-field): the host carries the
 	 *  single tab stop and manages focus itself, so the trailing control (dismiss or
@@ -63,6 +57,37 @@ export class NLDDToken extends LitElement {
 	 *  host's own key handlers. */
 	@property({ type: Boolean, reflect: true })
 	roving = false;
+
+	@property({ type: Boolean, reflect: true })
+	expanded = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	/** Text of the default slot, kept current for the control labels. */
+	@state()
+	private _slotText = '';
+
+	private _textObserver = new MutationObserver(() => this._readSlotText());
+
+	private _readSlotText(): void {
+		this._slotText = [...this.childNodes]
+			.filter((node) => !(node instanceof Element && node.hasAttribute('slot')))
+			.map((node) => node.textContent)
+			.join('')
+			.replace(/\s+/g, ' ')
+			.trim();
+	}
+
+	get _dismissLabel(): string {
+		const label = this.text || this._slotText;
+		return this.dismissText || (label ? `Verwijder "${label}"` : 'Verwijder');
+	}
+
+	get _menuLabel(): string {
+		const label = this.text || this._slotText;
+		return this.menuText || (label ? `Toon opties voor "${label}"` : 'Toon opties');
+	}
 
 	_handleDismiss(e: Event): void {
 		e.stopPropagation();
@@ -127,10 +152,13 @@ export class NLDDToken extends LitElement {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.addEventListener('keydown', this._handleHostKeydown);
+		this._readSlotText();
+		this._textObserver.observe(this, { childList: true, characterData: true, subtree: true });
 	}
 
 	override disconnectedCallback(): void {
 		this.removeEventListener('keydown', this._handleHostKeydown);
+		this._textObserver.disconnect();
 		super.disconnectedCallback();
 	}
 

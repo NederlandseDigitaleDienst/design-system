@@ -241,6 +241,10 @@ export const progressBarSegmentIndicatorStyles = css`
 		display: none;
 	}
 
+	:host([hidden]) {
+		display: none;
+	}
+
 
 	/* ## Grow / shrink
 	   Set by the parent (data-grow / data-shrink) on the transitions between

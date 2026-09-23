@@ -46,13 +46,13 @@ describe('nldd-icon-cell', () => {
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('nldd-icon');
 		expect(icon).not.toBeNull();
-		expect(icon!.getAttribute('name')).toBe('house');
+		expect(icon!.getAttribute('icon')).toBe('house');
 	});
 
 	it('falls back to the default slot when icon attribute is not set', async () => {
 		el = await fixture(`
 			<nldd-icon-cell>
-				<nldd-icon name="custom"></nldd-icon>
+				<nldd-icon icon="custom"></nldd-icon>
 			</nldd-icon-cell>
 		`);
 		await waitForUpdate(el);

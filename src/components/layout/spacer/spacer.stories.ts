@@ -68,6 +68,13 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		size: '16',
+		smSize: '',
+		mdSize: '',
+		lgSize: '',
+		direction: 'both',
+	},
 	argTypes: {
 		size: {
 			control: { type: 'select' },
@@ -109,13 +116,6 @@ export default {
 				defaultValue: { summary: 'both' },
 			},
 		},
-	},
-	args: {
-		size: '16',
-		smSize: '',
-		mdSize: '',
-		lgSize: '',
-		direction: 'both',
 	},
 };
 

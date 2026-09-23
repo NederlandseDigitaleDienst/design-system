@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './stacked-split-view.js';
 import '../../page/page.js';
 import '../../page-sections/simple-section/simple-section.js';
@@ -33,6 +33,10 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		background: 'inherit',
+		panes: 2,
+	},
 	argTypes: {
 		background: {
 			control: { type: 'select' },
@@ -46,15 +50,17 @@ export default {
 			table: { defaultValue: { summary: '2' } },
 		},
 	},
-	args: {
-		background: 'inherit',
-		panes: 2,
-	},
 };
 
+/* Het eerste paneel draagt de hoofdinhoud en houdt daarmee de landmarks van het
+   document; de andere panelen zijn benoemde regio's. */
 const paneContent = (title: any, slot: any) => html`
 	<nldd-split-view-pane slot=${slot}>
-		<nldd-page sticky-header>
+		<nldd-page
+			sticky-header
+			landmarks=${slot === 'pane-1' ? 'page' : nothing}
+			accessible-label=${slot === 'pane-1' ? nothing : title}
+		>
 			<nldd-container slot="header" padding="16">
 				<nldd-rich-text>
 					<strong>${title}</strong>

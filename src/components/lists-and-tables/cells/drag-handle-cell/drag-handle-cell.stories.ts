@@ -5,6 +5,9 @@ export default {
 	title: 'Components/Lists & Tables/Cells/Drag Handle Cell',
 	component: 'nldd-drag-handle-cell',
 	tags: ['autodocs'],
+	args: {
+		size: 'md',
+	},
 	argTypes: {
 		size: {
 			control: 'select',
@@ -17,16 +20,13 @@ export default {
 	},
 };
 
-export const Default = {
-	args: {
-		size: 'md',
-	},
+export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-drag-handle-cell size=${args.size}></nldd-drag-handle-cell>
 	`,
 };
 
-export const AllSizes = {
+export const AlleGrootten = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">

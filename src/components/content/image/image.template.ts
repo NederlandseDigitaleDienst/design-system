@@ -62,7 +62,7 @@ export function imageTemplate(component: NLDDImage) {
 		<div class="image__error"
 			aria-hidden=${component.decorative ? 'true' : nothing}
 		>
-			<nldd-icon name="broken-image" size="32" color="secondary-content"></nldd-icon>
+			<nldd-icon icon="broken-image" size="32" color="secondary-content"></nldd-icon>
 			${component.decorative ? nothing : html`<span class="image__error-text">${component.alt}</span>`}
 		</div>
 	` : nothing;
@@ -102,7 +102,8 @@ export function imageTemplate(component: NLDDImage) {
 		<figure class="image__figure">
 			${media}
 			<figcaption class="image__caption">
-				<slot name="caption" @slotchange=${component._onCaptionSlotChange}
+				<slot
+					name="caption" @slotchange=${component._onCaptionSlotChange}
 				>${component.caption}</slot>
 				${component.credit ? html`<span class="image__credit">${component.credit}</span>` : nothing}
 			</figcaption>

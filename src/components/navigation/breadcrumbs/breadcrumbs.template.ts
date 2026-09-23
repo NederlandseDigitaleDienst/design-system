@@ -25,7 +25,7 @@ export function breadcrumbsItemTemplate(component: NLDDBreadcrumbsItem): Templat
 	const label = component.text || html`<slot></slot>`;
 	const separator = html`<span class="breadcrumbs__separator"
 		aria-hidden="true"
-	><nldd-icon name="chevron-right-small"></nldd-icon></span>`;
+	><nldd-icon icon="chevron-right-small"></nldd-icon></span>`;
 	if (!component.current && component.href) {
 		return html`
 			<span class="breadcrumbs__item">
