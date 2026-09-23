@@ -15,11 +15,43 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The skills are split and renamed, so the name says the task.**
+  `nldd-design` holds the reference, the changelog and the design guidelines,
+  and `nldd-design-build`, `nldd-design-migrate`, `nldd-design-upgrade` and
+  `nldd-design-contribute` each cover one job. A skill named `nldd` stays
+  behind to catch the old name until 1 March 2027. Update the references in
+  your own instruction files first: a skill that is not found warns nobody, it
+  just makes the answer worse.
+
+- **Three things to change in your own code.** `nldd-icon` takes `icon`
+  instead of `name`, the `subtitle` slot of `nldd-title` is now
+  `supporting-text`, and a page in a split-view pane needs `landmarks="page"`
+  on the pane that holds the primary content. The first two say in development
+  what they need; the third is silent, so search your app for a split view.
+
+- **Overlays open with `open`.** Bind it to your own state on `nldd-sheet`,
+  `nldd-modal-dialog`, `nldd-window` and `nldd-popover` instead of calling
+  `show()` and `hide()` from a watcher.
+
+- **`nldd-title` says how big it looks and what it is.** `size` is the size and
+  `heading-level` the heading, and with `text`, `overline` and
+  `supporting-text` a title needs no slot at all.
+
+- **The patterns are live in Storybook**, with their examples running and a
+  test on what each one promises. The pages in the skill are generated from
+  that same markup.
+
+- **`hidden` hides every component**, where nine of them stayed on screen with
+  it set.
+
 ### Breaking
 
 - **The skills are now `nldd-design`, `nldd-design-build`,
-  `nldd-design-migrate` and `nldd-design-upgrade`.** `nldd` meant four things at
-  once: the organisation, the npm package, the plugin and the skill inside it,
+  `nldd-design-migrate`, `nldd-design-upgrade` and `nldd-design-contribute`.**
+  `nldd` meant four things at
+  once: the organization, the npm package, the plugin and the skill inside it,
   so the name said nothing about what the skill was for and its description had
   to carry an anti-trigger instead. The names now say the task. What is shared
   between them, the component reference, the changelog and the design
@@ -39,8 +71,9 @@ here; consult the commit history if you need that level of detail.
   there when it is not.
 
   **A skill named `nldd` stays behind to catch the old name**, and does
-  nothing but point at the four. It is deliberately findable by the model and
-  not just by `/nldd`, because the reference that breaks most quietly is a line
+  nothing but point at the ones that replaced it. It is deliberately findable by
+  the model and not just by `/nldd`, because the reference that breaks most
+  quietly is a line
   in your own `CLAUDE.md` saying "use the nldd skill": nobody types anything
   there, so a slash command would not catch it. **It is removed after 1 March
   2027**, so update your references rather than lean on it.
@@ -70,6 +103,44 @@ here; consult the commit history if you need that level of detail.
   Invoke a skill either way: `/nldd-design-build` is the short form, and
   `/nldd:nldd-design-build` always resolves to ours even when a skill of your
   own carries the same name.
+
+- **The `subtitle` slot of `nldd-title` is now `supporting-text`.** That is
+  what the text under a title is called in every other component, including
+  `nldd-top-title-bar`. Rename `slot="subtitle"` to `slot="supporting-text"`,
+  or use the new `supporting-text` attribute for plain text. Content still in
+  `slot="subtitle"` is not shown, and in development the console says once
+  which rename it needs.
+
+- **`nldd-form-section` calls its supporting text `supporting-text`
+  throughout.** The span in the legend is now `.form-section__supporting-text`
+  instead of `.form-section__subtitle`, and its token
+  `--semantics-forms-section-supporting-text-font` instead of
+  `--semantics-forms-section-subtitle-font`. The attribute already had that
+  name. Rename the class in your CSS and the token where you override it: the
+  old ones do nothing any more, without a warning.
+
+- **`nldd-page` in a split-view pane no longer carries the document's
+  landmarks.** A page carries them: its header is the banner, its content the
+  main landmark, its footer the contentinfo. A document has one of each, so two
+  pages beside each other were two of each, which is invalid HTML that nothing
+  on screen gives away. A page in a pane of a navigation, side-by-side or
+  stacked split view, or inside an overlay, now renders a section and a plain
+  div instead, which drops all three at once: a header inside sectioning
+  content is no longer a banner.
+
+  **Set `landmarks="page"` on the page in the pane that holds your primary
+  content**, because only the application knows which pane that is. Nothing
+  warns when you do not: the app shell simply has no main landmark, and a
+  screen reader user loses the jump to the content. Give the other panes an
+  `accessible-label` and they are named regions instead, which is a landmark
+  worth having. `landmarks` also takes `region` to step down anywhere else, and
+  a second page that still renders a main says so in development.
+
+- **`nldd-icon` takes `icon` instead of `name`.** Every other component that
+  renders an icon already called it `icon`, so you had to remember the one
+  exception. Rename `name="…"` to `icon="…"` on every `nldd-icon`. An icon that
+  still has `name` draws the dashed placeholder circle, and in development the
+  console says once which rename it needs.
 
 ### Added
 
@@ -101,6 +172,109 @@ here; consult the commit history if you need that level of detail.
   set small: a composition used by several teams is a pattern of the system, one
   that lives in a single app is that app's habit for now. `CONTRIBUTING.md` stays
   the source for maintainers; this is the consumer's half of it.
+
+- **The patterns are live in Storybook.** Each of the eight patterns of
+  `nldd-design-build` has a page under "Patronen", with its example running and
+  a test on what the pattern promises: that the sheet closes once, that a
+  confirmation puts the way out first, that a page has one `h1`. The pattern
+  pages in the skill are generated from the same markup, so the example you
+  copy from the skill is the one that is tested. Rules about a single component
+  moved out of the patterns and into that component's documentation.
+
+- **Three design guidelines.** Work that needs its context belongs in a sheet,
+  not a modal or a page of its own. Show which filters are on, not how many. And
+  a sticky header only when the content asks for one.
+
+- **`open` on `nldd-sheet`, `nldd-modal-dialog`, `nldd-window` and
+  `nldd-popover`.** Bind it instead of calling `show()` and `hide()` from your
+  own code, for example `<nldd-sheet :open="isOpen" @close="isOpen = false">`
+  in Vue. The overlay clears it when it closes another way, by Escape, the
+  backdrop or its close button. `show()` and `hide()` keep working and set it
+  too. On `nldd-popover` it replaces the read-only `open` property, and opening
+  still needs an anchor. The build skill, its Vue example and the patterns now
+  bind `open` instead of calling `show()` and `hide()` from a watcher, and the
+  migration skill tells a server-rendered app to put `open` in the markup, which
+  needs no JavaScript at all.
+
+- **`text`, `supporting-text`, `overline` and `heading-level` on
+  `nldd-title`.** `size` sets how big the title looks, `heading-level` which
+  heading it is, and you now see both side by side on the element. Without
+  `heading-level` the text is a paragraph, for a title that is not a heading.
+  Each text keeps a slot for content that is more than text, such as a link:
+  the default slot, `overline` and `supporting-text`. A filled slot takes the
+  place of its attribute.
+
+- **`heading-level` on `nldd-top-title-bar`.** The title was always an `h1`. It
+  still is by default, and you can lower it where the bar is not the top of the
+  page.
+
+### Changed
+
+- **`nldd-sheet` and `nldd-window` take their name from the title bar.** Without
+  `accessible-label`, a screen reader called them "Venster" unless you repeated
+  the title there. They now take the `text` of the `nldd-top-title-bar` inside
+  them, and follow it when it changes. `accessible-label` still wins, for a name
+  that has to differ from the title. The development warning only appears when
+  neither is there.
+
+- **`nldd-list-item` warns about anything in a row that is not a cell or a
+  segment.** Bare text or a loose element gets none of the typography, size and
+  alignment a cell brings, and in a clickable row bare text falls back to the
+  browser's button font. The row now says so once in development. Wrap the
+  content in a cell.
+
+- **`nldd-list-item` warns about a control inside a row that is its own
+  control.** An icon button or a segment in a row with `href`, `button`,
+  `checkbox` or `radio` nests a control inside a control: invalid HTML, and a
+  second tab stop. The documentation already said the row warned about this, but
+  it did not. A `decorative` checkbox or radio button, which only shows the
+  row's state, is fine.
+
+- **`nldd-toolbar-item` warns when it has nothing in `slot="overflow"`.** On a
+  narrow toolbar such an item moves into the overflow menu and its action is
+  gone, which you never see on a wide screen. The item now says so once at load
+  in development. A tab bar is no exception: its alternative is a menu group of
+  `type="radio"` items.
+
+- **`nldd-rich-text` looks through a single wrapper `div`.** The rhythm and the
+  width zones apply to the direct children, so content wrapped in one `div`
+  became a single block and its paragraphs sat against each other. A markdown
+  renderer or the root of a framework component produces exactly that wrapper,
+  and you cannot always remove it. A lone `div` without `class`, `style`,
+  `role` or `data-width` is now passed through, and its children are laid out
+  as if they were direct. A wrapper with any of those stays one block, since
+  you gave it something of its own.
+
+- **`nldd-token` names its buttons after itself.** The dismiss button was called
+  "Verwijder" on every token, so a row of filters read as a row of identical
+  buttons unless you composed a `dismiss-text` per token. Unset, it is now
+  `Verwijder "{text}"`, and the menu button `Toon opties voor "{text}"`, with
+  the token's own text in the quotes. A `dismiss-text` or `menu-text` you set
+  still replaces the whole label. Both properties now default to an empty
+  string instead of the bare word. `nldd-token-field` names its tokens the same
+  way, through its own translations, where
+  `components.token-field.token-menu-action` reads "Toon acties voor" so the
+  token's text can follow it.
+
+### Removed
+
+- **The `--components-title-*` tokens.** `--components-title-{sm,md,lg}-overline-font`
+  and `--components-title-{sm,md,lg}-subtitle-font` were never read by
+  `nldd-title`, so overriding them changed nothing. They are gone rather than
+  renamed.
+
+### Fixed
+
+- **`nldd-window` opens when `show()` comes before its first render.** Sheet
+  and modal already waited for their dialog. The window did nothing and said
+  nothing, so a window opened in the same tick it was created stayed shut.
+
+- **`hidden` now hides every component.** Nine components stayed visible with
+  `hidden` set, because their own `display` beat the browser's rule for the
+  attribute. `nldd-list`, `nldd-sheet`, `nldd-navigation-split-view`,
+  `nldd-menu`, `nldd-progress-bar-segment-indicator` and `nldd-form` never hid.
+  `nldd-number-field` with `width="full"`, `nldd-pagination` with `centered` and
+  an `nldd-activity-indicator` around content did not hide either.
 
 ## [0.8.92](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.91...v0.8.92) (2026-09-22)
 
