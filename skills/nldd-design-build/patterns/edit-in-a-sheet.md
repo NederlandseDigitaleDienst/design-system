@@ -45,12 +45,22 @@ nldd-sheet                     open, placement, width; in de document-root
           text="Aanvraag 2024-001"
           supporting-text="Dakisolatie, ingediend op 4 maart"
         ></nldd-text-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
       </nldd-list-item>
       <nldd-list-item button>
         <nldd-text-cell
           text="Aanvraag 2024-002"
           supporting-text="Warmtepomp, ingediend op 11 maart"
         ></nldd-text-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
       </nldd-list-item>
     </nldd-list>
   </nldd-simple-section>
