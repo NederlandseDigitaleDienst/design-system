@@ -29,6 +29,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `expandable` | `boolean` | Whether the button has a icon to indicate it opens a menu or popover |
 | `expanded` | `boolean` | Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state. |
 | `popup-type` | `string` | Type of popup container this button opens: 'menu' \| 'listbox' \| 'dialog' \| 'tree' \| 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup. |
+| `form` | `string` | Id of the form this button submits or resets, for a button that sits outside it. Takes an `nldd-form` as well as a plain `<form>`. Without it the button acts on the form it stands in. |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px') |
 | `max-width` | `string` | Caps the width at this CSS length (e.g. '320px'). Combines with `width="full"`: the button follows its container up to the cap. A label that doesn't fit is truncated with an ellipsis — a cap only means something if the content respects it. |
 | `text` | `string` | Button text |

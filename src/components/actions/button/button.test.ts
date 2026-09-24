@@ -4,6 +4,7 @@ import type { NLDDButton } from './button.js';
 import './button.js';
 import '../../../assets/styles/variables.css';
 import '../menu/menu.js';
+import '../../forms/form/form.js';
 import '../../layout/popover/popover.js';
 
 describe('nldd-button', () => {
@@ -11,6 +12,35 @@ describe('nldd-button', () => {
 
 	afterEach(() => {
 		if (el) cleanup(el);
+	});
+
+	it('verstuurt het formulier waar het `form`-attribuut naar wijst, ook een nldd-form', async () => {
+		el = await fixture(`
+			<div>
+				<nldd-form id="aanvraag">
+					<input name="titel">
+				</nldd-form>
+				<nldd-button
+					type="submit"
+					form="aanvraag"
+					text="Bewaar"
+				></nldd-button>
+			</div>
+		`);
+		const button = el.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(button);
+		const form = el.querySelector<HTMLElement & { form: HTMLFormElement }>('nldd-form')!.form;
+		let submits = 0;
+		form.addEventListener('submit', (e) => { e.preventDefault(); submits += 1; });
+		button.shadowRoot!.querySelector('button')!.click();
+		expect(submits).toBe(1);
+	});
+
+	it('doet niets als het `form`-attribuut nergens naar wijst', async () => {
+		el = await fixture<NLDDButton>('<nldd-button type="submit" form="bestaat-niet" text="Bewaar"></nldd-button>');
+		const button = el as NLDDButton;
+		await waitForUpdate(button);
+		expect(() => button.shadowRoot!.querySelector('button')!.click()).not.toThrow();
 	});
 
 	it('renders without error', async () => {

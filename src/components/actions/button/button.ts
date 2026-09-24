@@ -12,6 +12,7 @@
  * @attr {boolean} expandable - Whether the button has a icon to indicate it opens a menu or popover
  * @attr {boolean} expanded - Whether the popover/menu controlled by this button is currently open. Forwarded as aria-expanded on the inner button; toggles the is-expanded visual state.
  * @attr {string} popup-type - Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.
+ * @attr {string} form - Id of the form this button submits or resets, for a button that sits outside it. Takes an `nldd-form` as well as a plain `<form>`. Without it the button acts on the form it stands in.
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length (e.g. '240px')
  * @attr {string} max-width - Caps the width at this CSS length (e.g. '320px'). Combines with `width="full"`: the button follows its container up to the cap. A label that doesn't fit is truncated with an ellipsis — a cap only means something if the content respects it.
  * @attr {string} text - Button text
@@ -268,8 +269,30 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 		// Consumers that need to distinguish submitters should use a hidden field
 		// or separate forms.
 		if (this.href) return;
-		if (this.type === 'submit') this._internals.form?.requestSubmit();
-		else if (this.type === 'reset') this._internals.form?.reset();
+		const form = this._ownerForm();
+		if (this.type === 'submit') form?.requestSubmit();
+		else if (this.type === 'reset') form?.reset();
+	}
+
+	/**
+	 * The form this button acts on: the one it sits in, or the one its `form`
+	 * attribute names.
+	 *
+	 * The platform resolves that attribute itself, but only to a real `<form>`.
+	 * An `nldd-form` renders its form in the light DOM without handing it the id
+	 * the consumer wrote, so an id pointing at the component finds an element
+	 * that is not a form, and the button ends up with no form owner at all. That
+	 * is the whole reason a save button in a page footer, outside the form it
+	 * belongs to, used to do nothing.
+	 */
+	private _ownerForm(): HTMLFormElement | null {
+		const id = this.getAttribute('form');
+		if (!id) return this._internals.form;
+		const root = this.getRootNode() as Document | ShadowRoot;
+		const target = 'getElementById' in root ? root.getElementById(id) : null;
+		if (target instanceof HTMLFormElement) return target;
+		const rendered = (target as { form?: unknown } | null)?.form;
+		return rendered instanceof HTMLFormElement ? rendered : null;
 	}
 
 	/**

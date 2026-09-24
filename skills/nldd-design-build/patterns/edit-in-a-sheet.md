@@ -105,7 +105,7 @@ nldd-sheet                     open, placement, width; in de document-root
 
 **Zet de actie in een button group, ook als het er één is.** De [groep](../../nldd-design/reference.md#nldd-button-group) kijkt naar zijn eigen breedte: boven de sm-grens een rij, daaronder gestapeld over de volle breedte. In een sheet van 480px scheelt dat je een `width="full"` die je op een breder scherm weer niet wilt, en komt er later een tweede knop bij, dan hoeft er niets te veranderen.
 
-**De knop hoort in het formulier.** Binnen `nldd-form` verstuurt `type="submit"` het formulier zelf, met de validatie en de foutafhandeling die daarbij horen. Zet je hem erbuiten, bijvoorbeeld in de footer van de pagina, dan is hij een knop zonder formulier: hij moet dan zelf `requestSubmit()` aanroepen op de `form`-getter van [het formulier](../../nldd-design/reference.md#nldd-form).
+**De knop hoort in het formulier.** Binnen `nldd-form` verstuurt `type="submit"` het formulier zelf, met de validatie en de foutafhandeling die daarbij horen. Moet hij er toch buiten staan, bijvoorbeeld in een sticky footer, geef [het formulier](../../nldd-design/reference.md#nldd-form) dan een `id` en de knop een `form` die daarnaar wijst. Zonder een van die twee is het een knop zonder formulier, en die doet niets.
 
 **Noem waar de sheet over gaat.** "Aanvraag 2024-001 bewerken" in plaats van "Aanvraag bewerken": een sheet opent meestal vanaf een rij tussen rijen die op elkaar lijken, en de titelbalk blijft staan terwijl de inhoud scrolt. De ingevulde velden zeggen het ook, maar alleen zolang ze in beeld zijn.
 
