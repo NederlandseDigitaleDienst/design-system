@@ -10,7 +10,7 @@
 
 **Wanneer wel.** Secundaire inhoud die de context moet bewaren: een bewerkformulier, een detailweergave, een filterpaneel, instellingen.
 
-**Wanneer niet.** Voor een korte bevestiging is een sheet te zwaar, zie [onomkeerbare actie](confirm.md). Voor een licht paneel dat aan één knop hangt, zoals een snelle filter, gebruik je een [popover](../../nldd-design/reference.md#nldd-popover). En bekijken en bewerken zijn verschillende taken: pers ze niet in één scherm met inline bewerken.
+**Wanneer niet.** Voor een korte bevestiging is een sheet te zwaar. Voor een licht paneel dat aan één knop hangt, met invoer erin, zoals twee velden voor een datumbereik, gebruik je een [popover](../../nldd-design/reference.md#nldd-popover). Is het een lijst keuzes of acties, dan is het een [menu bij een knop](menu-from-a-button.md). En bekijken en bewerken zijn verschillende taken: pers ze niet in één scherm met inline bewerken.
 
 ## Compositie
 
