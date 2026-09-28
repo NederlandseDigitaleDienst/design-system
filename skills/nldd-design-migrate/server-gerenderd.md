@@ -18,23 +18,23 @@ De componenten zijn Lit-elementen met een shadow root. Bij een paginalading loop
 </nldd-sheet>
 ```
 
-`show()` wacht bij sheet, window en modal ook zelf. Bij een popover moet bovendien het anker er al staan, anders opent hij niet.
+`show()` wacht bij sheet, window en modal ook zelf. Bij een popover moet bovendien het anker er al staan, anders opent die niet.
 
 **`href` en een fragment-attribuut op hetzelfde element vechten.** Componenten die intern een `<a>` renderen (`nldd-list-item`, `nldd-card`, `nldd-menu-item`) laten die anchor winnen: de browser navigeert weg en gooit de respons weg. Kies er één, of onderschep de default click.
 
 **Een POST vanuit een shadow root kan niet via een formulier.** Uitloggen en verwijderen horen POST te zijn, maar een menu-item in een shadow root kun je niet in een `<form>` wikkelen. Doe de POST vanuit JavaScript met het CSRF-token uit de markup.
 
-**Zelfgerenderde formuliervelden koppelen zichzelf niet.** Render je de invoervelden zelf in plaats van via een component, dan moet je de validatie-attributen expliciet meerenderen. Doe je dat niet, dan krijgt de melding hoogte nul en is hij onzichtbaar, ook voor een schermlezer.
+**Zelfgerenderde formuliervelden koppelen zichzelf niet.** Render je de invoervelden zelf in plaats van via een component, dan moet je de validatie-attributen expliciet meerenderen. Doe je dat niet, dan krijgt de melding hoogte nul en is die onzichtbaar, ook voor een schermlezer.
 
 Dezelfde familie, breder: **een component doet eenmalig werk op een moment dat jouw stack nog niet klaar is, of doet het werk alleen op een trigger die niet terugkomt.** Verplaats je elementen in de DOM of verwissel je hun inhoud, controleer dan of het component dat werk opnieuw doet.
 
-## Zet de nieuwe stack ernaast, en sloop hem daarna expliciet
+## Zet de nieuwe stack ernaast, en sloop die daarna expliciet
 
 Bouw de nieuwe UI in een eigen namespace: eigen route-prefix, eigen templatemap, eigen CSS en JS. Zet er een test op die faalt als er nieuwe tags in oude templates staan of omgekeerd. Zet daarna de basistemplate om zodat alles overerft, en haal de parallelle laag weg als aparte, geplande commit.
 
 De reden om te isoleren is duur geleerd: een eerdere poging deelde templates, CSS en JavaScript met de oude versie en deed monkey-patches tijdens het draaien. Drie bestanden moesten terug omdat ze voor het nieuwe systeem waren herschreven, waardoor een pagina van het oude systeem brak.
 
-**De parallelle laag is geen gratis vangnet: hij verstopt bugs.** Bij het opruimen bleek die laag echte fouten te bevatten die de review pas toen zag, waaronder een 500 in een import en een ontbrekende permissiecontrole. Plan de sloop dus in, en controleer bij het verwijderen wat er meeverdwijnt: in datzelfde opruimen gingen twee decorators mee die teruggezet moesten worden.
+**De parallelle laag is geen gratis vangnet: die verstopt bugs.** Bij het opruimen bleek die laag echte fouten te bevatten die de review pas toen zag, waaronder een 500 in een import en een ontbrekende permissiecontrole. Plan de sloop dus in, en controleer bij het verwijderen wat er meeverdwijnt: in datzelfde opruimen gingen twee decorators mee die teruggezet moesten worden.
 
 Een volgorde die werkte:
 
@@ -52,7 +52,7 @@ Zoek oude klassenamen dus ook in je JavaScript, en houd er rekening mee dat ze d
 
 ## Zet er een test op die het oude systeem eruit houdt
 
-Dit is de check die `SKILL.md` niet noemt, en hij is goedkoop. Definieer een lijst markers van het oude designsysteem, render een representatief formulier in een test, en assert dat geen marker in de uitvoer voorkomt. Doe dat voor de gewone render én voor de render met validatiefouten.
+Dit is de check die `SKILL.md` niet noemt, en die is goedkoop. Definieer een lijst markers van het oude designsysteem, render een representatief formulier in een test, en assert dat geen marker in de uitvoer voorkomt. Doe dat voor de gewone render én voor de render met validatiefouten.
 
 Drie dingen maken het werkbaar:
 
@@ -72,7 +72,7 @@ Haal je de gebouwde bundel binnen in je repo in plaats van via npm, dan geldt er
 
 Niets werkt die bundel automatisch bij, dus een hernoeming in het designsysteem kan je app niet breken. Bij npm met een caret-range komt een nieuwe minor binnen bij de eerstvolgende installatie, en een attribuut dat stil is hernoemd laat dan al je meldingen verdwijnen zonder dat iemand iets wijzigde.
 
-De keerzijde: je loopt achter, en je weet niet hoeveel. Leg de versie daarom op één plek vast die je taakrunner en je bundel allebei gebruiken, en zet hem in de repo zodat een upgrade een zichtbare commit is.
+De keerzijde: je loopt achter, en je weet niet hoeveel. Leg de versie daarom op één plek vast die je taakrunner en je bundel allebei gebruiken, en zet die in de repo zodat een upgrade een zichtbare commit is.
 
 Twee dingen om bij zo'n upgrade te doen:
 

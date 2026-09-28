@@ -6,7 +6,7 @@
 
 # Patroon: onomkeerbare actie
 
-**Welk probleem dit oplost.** De gebruiker laten kiezen over iets dat niet terug te draaien is, op een plek waar hij er niet per ongeluk op klikt.
+**Welk probleem dit oplost.** De gebruiker laten kiezen over iets dat niet terug te draaien is, op een plek waar niemand er per ongeluk op klikt.
 
 **Wanneer wel.** Als er echt geen weg terug is: een definitieve indiening, een betaling, een verwijdering zonder herstel.
 
@@ -18,7 +18,7 @@
 nldd-box                     background="critical", de zone waar de actie woont
   └─ nldd-container          padding, gap
        ├─ nldd-title         heading-level, wat de zone is
-       ├─ nldd-rich-text     wat er gebeurt als je hem gebruikt
+       ├─ nldd-rich-text     wat er gebeurt als je de knop gebruikt
        └─ nldd-button        variant="destructive", opent de dialoog
 
 nldd-modal-dialog            open, variant="alert", text, supporting-text
@@ -76,13 +76,13 @@ nldd-modal-dialog            open, variant="alert", text, supporting-text
 
 **De uitweg is de primaire knop, en staat bovenaan.** De primaire knop is waar de gebruiker op de automatische piloot naartoe gaat, en dat hoort de uitweg te zijn, niet de onomkeerbare actie. De actie zelf komt eronder, als `destructive`. Een knoptekst als "OK" zegt niet wat er gebeurt: noem de actie.
 
-**Open de modal met `open`, net als een sheet.** De [modal dialog](../../nldd-design/reference.md#nldd-modal-dialog) zet `open` zelf uit als de gebruiker hem sluit met Esc of een klik ernaast. Bind `open` samen met `close` aan je toestand, en zet hem na een keuze zelf uit.
+**Open de modal met `open`, net als een sheet.** De [modal dialog](../../nldd-design/reference.md#nldd-modal-dialog) zet `open` zelf uit als de gebruiker de dialoog sluit met Esc of een klik ernaast. Bind `open` samen met `close` aan je toestand, en zet die na een keuze zelf uit.
 
 Hetzelfde blok zonder de onderbreking is de [inline dialog](../../nldd-design/reference.md#nldd-inline-dialog), voor een lege toestand, een laadtoestand of een fout die de pagina niet hoeft te blokkeren. Dat is een ander probleem en krijgt zijn eigen patroon.
 
 ## Toegankelijkheid
 
-Wat je gratis krijgt: de dialoogrol, sluiten met Esc, de focus die binnen de dialoog blijft en daarna terugkeert naar de knop die hem opende, de naam uit `text`, en bij `variant="alert"` het icoon en de kleur die erbij horen.
+Wat je gratis krijgt: de dialoogrol, sluiten met Esc, de focus die binnen de dialoog blijft en daarna terugkeert naar de knop die de dialoog opende, de naam uit `text`, en bij `variant="alert"` het icoon en de kleur die erbij horen.
 
 Wat jij nog moet doen: een `heading-level` op het kopje van de zone, zodat die meedoet in de koppenstructuur, en knopteksten die zeggen wat er gebeurt en waarmee.
 

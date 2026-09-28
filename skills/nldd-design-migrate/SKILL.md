@@ -49,13 +49,13 @@ Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die
 
 Hang de eerste vier in pre-commit **en** in CI. Zorg dat je lokale hook hetzelfde commando draait als CI: een hook op `tsc --noEmit` terwijl CI `tsc -b` draait laat kapotte commits er stelselmatig door.
 
-Bewijs bij elke check dat hij faalt. Zet er een opzettelijke fout in, kijk of hij niet-nul afsluit, haal hem weg. Een check die alleen ooit slaagt is geen check. Doe dat ook voor elk faalpad apart: een check met twee soorten bevindingen heeft twee uitgangen, en er is er altijd één die je nooit hebt zien afgaan.
+Bewijs bij elke check dat die faalt. Zet er een opzettelijke fout in, kijk of die niet-nul afsluit, haal die weg. Een check die alleen ooit slaagt is geen check. Doe dat ook voor elk faalpad apart: een check met twee soorten bevindingen heeft twee uitgangen, en er is er altijd één die je nooit hebt zien afgaan.
 
 Herhaal die proef nadat iemand aan de check zelf heeft gezeten. Een check die tijdens de migratie een overgangsstand kent ("waarschuw zolang het oude systeem er nog is") houdt na de omzetting een tak over die nooit meer bereikt wordt, en die tak kan de hele check stilzetten. Haal zulke takken weg zodra ze dood zijn, en meet daarna opnieuw dat er iets rood van wordt.
 
-## Meet wat een pagina DOET, niet hoe hij eruitziet
+## Meet wat een pagina DOET, niet hoe die eruitziet
 
-De vier checks hierboven vangen code die niet klopt. Ze vangen niet dat een keuzelijst weg is. Een omzetting mag een pagina er anders uit laten zien; wat hij niet mag is hem minder laten **doen**, en juist dat faalt stil. In één migratie verdwenen onderweg een keuzelijst, een knop die een venster opende en de invoervelden van een filter. Geen van drieën gaf een foutmelding.
+De vier checks hierboven vangen code die niet klopt. Ze vangen niet dat een keuzelijst weg is. Een omzetting mag een pagina er anders uit laten zien; wat niet mag is de pagina minder laten **doen**, en juist dat faalt stil. In één migratie verdwenen onderweg een keuzelijst, een knop die een venster opende en de invoervelden van een filter. Geen van drieën gaf een foutmelding.
 
 Haal daarom uit de gerenderde HTML wat een pagina kan, en leg dat per route vast in een bestand:
 
@@ -179,7 +179,7 @@ De hele rechtvaardiging voor dit systeem is WCAG 2.1 AA en EN 301 549. Een toega
 - **Dubbele `<h1>`**: de titelbalk van de app-shell rendert meestal de h1 van de pagina. Een detailpagina die er zelf een toevoegt levert twee concurrerende koppen van niveau 1.
 - **Selectie die alleen in kleur zit** faalt 1.4.1. Gebruik de eigen `current`/`checked` van het component, plus een tweede kanaal zoals een icoon.
 
-Is de kop een `nldd-title`, geef hem dan `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Voeg je elders een kop-tag puur voor de semantiek toe (met de stijl van het component erbinnen), zet dan een reset zodat de standaardgrootte en -marge van de browser niet vechten met het component:
+Is de kop een `nldd-title`, geef die dan `heading-level`: de titel rendert de kop zelf, zonder marge en in zijn eigen grootte. Voeg je elders een kop-tag puur voor de semantiek toe (met de stijl van het component erbinnen), zet dan een reset zodat de standaardgrootte en -marge van de browser niet vechten met het component:
 
 ```css
 h1:not(nldd-rich-text h1), h2:not(nldd-rich-text h2) /* … */ {
@@ -203,7 +203,7 @@ Vecht je met een component, dan is dat meestal verkeerd gebruik. Maar soms ligt 
 
 Meld het als een component niet doet wat zijn eigen documentatie zegt, als een attribuut in `custom-elements.json` staat en niets doet, als je in de shadow DOM moet reiken voor iets gewoons, of als iets breekt na een upgrade zonder dat de changelog het noemt. Zet er **de versie die je draait** bij: dat is het belangrijkste veld, want een groot deel van wat consumenten als tekortkoming rapporteren is in een latere release al opgelost.
 
-**Een workaround lost jouw geval op en houdt de oorzaak in stand.** Erger: hij wordt een fossiel. Wordt het onderliggende probleem gerepareerd, dan blijft jouw omweg staan, met een test eronder, en niemand durft hem nog weg te halen omdat niemand meer weet waarom hij er was.
+**Een workaround lost jouw geval op en houdt de oorzaak in stand.** Erger: die wordt een fossiel. Wordt het onderliggende probleem gerepareerd, dan blijft jouw omweg staan, met een test eronder, en niemand durft de omweg nog weg te halen omdat niemand meer weet waarom die er was.
 
 Dat is echt gebeurd. Een consument schreef een helper die een wegwerp-childnode toevoegde en meteen weghaalde, puur om een MutationObserver te porren, omdat een foutmelding verborgen bleef nadat een veld in de DOM was verplaatst. De schade was echt en stond in de docstring: *"the error text stays hidden forever."* Het component in kwestie is later vervangen, en in die herbouw is precies dit geval meegenomen. De helper draait nog steeds, en de test eronder ook.
 
@@ -212,7 +212,7 @@ Twee gewoonten die dat voorkomen:
 - **Schrijf boven elke workaround waaróm het component het zelf niet kan, plus de versie waarop je dat vaststelde.** Lukt die zin niet, dan is het geen workaround maar smaak.
 - **Loop bij elke upgrade je eigen omwegen langs.** De changelog vertelt wat er verandert, niet welke van jouw reparaties overbodig zijn geworden. Dat moet je zelf nagaan, en het is de enige manier waarop een fossiel weer verdwijnt.
 
-Houd je een lijst bij van wat het systeem niet kan, noteer dan per punt de versie waartegen je mat. Zonder dat wordt het een lijst die mensen blijven citeren nadat hij niet meer waar is.
+Houd je een lijst bij van wat het systeem niet kan, noteer dan per punt de versie waartegen je mat. Zonder dat wordt het een lijst die mensen blijven citeren nadat die niet meer waar is.
 
 ## Subagents inzetten
 
@@ -239,7 +239,7 @@ Doe dit als een bewuste ronde aan het eind. Het is meteen je laatste sweep op re
 ## Een volgorde die werkte
 
 1. Installeren, componenten registreren, stylesheet importeren.
-2. De vier checks bouwen. Van elk bewijzen dat hij faalt.
+2. De vier checks bouwen. Van elk bewijzen dat die faalt.
 3. Het gedragsoppervlak van je bestaande pagina's vastleggen, vóór je iets omzet. Daarna is de oude pagina weg en heb je niets om tegen te meten.
 4. De event-, value- en overlay-helpers schrijven, plus getypte JSX-bindings.
 5. Vormgeving uit de markup halen als **eigen stap**: inline stijlen en `<style>`-blokken naar klassen, met een afdruk vooraf en achteraf als bewijs dat er niets veranderde. Pas daarna vervangen door componenten. Andersom betaal je het terug: een migratie die de CSS-opruiming als laatste deed, moest padding herstellen die onder de weggehaalde regels bleek te zitten.

@@ -26,7 +26,7 @@ Het uitgangspunt van dit systeem is dat een ontwikkelaar de Rijkshuisstijl, de t
 
 Dat heeft één belangrijke consequentie voor jou: **als je tegen een component vecht, gebruik je het verkeerd.** De componenten dragen opzettelijk meningen. Werk ermee mee.
 
-Kan een component iets niet wat het zou moeten kunnen, of is het kapot, dan is dat geen gebruiksfout maar een melding waard. [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md) zegt waar die heen gaat en hoe je hem opbouwt: het probleem eerst, de oplossing later.
+Kan een component iets niet wat het zou moeten kunnen, of is het kapot, dan is dat geen gebruiksfout maar een melding waard. [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md) zegt waar zo'n melding heen gaat en hoe je die opbouwt: het probleem eerst, de oplossing later.
 
 Wat je vormgeeft is daarmee geen keuze van deze skill. Wanneer een sticky header mag, hoeveel chroom een scherm verdient, hoe je microcopy schrijft: dat staat in [`design-guidelines.md`](../nldd-design/design-guidelines.md), en dat is de enige bron. Lees die voordat je iets ontwerpt. Hier staat de mechaniek eronder.
 
@@ -63,7 +63,7 @@ Het pakket levert allebei: `@nldd/design-system/favicon.svg` voor de tab, en `@n
 
 Wil je een andere achtergrond, bijvoorbeeld je eigen huiskleur, kopieer de SVG dan en verander de `fill` van het eerste pad. Een favicon laadt de browser los van de pagina, dus CSS van je site komt er niet bij: een variabele of een class werkt hier niet.
 
-RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in haar opdracht werken. De voorwaarden staan in [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, dan kun je 2 kanten op:
+RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken. De voorwaarden staan in [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, dan kun je 2 kanten op:
 
 1. **Importeer `@nldd/design-system/styles/system-font`** in plaats van `/styles`. Dezelfde stylesheet zonder de `@font-face`-regels. Beide familie-stacks eindigen op een systeemfont, dus de browser valt er vanzelf doorheen en je hoeft niets te overschrijven.
 2. **Blijf bij `/styles` en overschrijf de 2 familievariabelen.** Een `@font-face` waar niets naar verwijst wordt niet gedownload, dus het font komt de pagina niet binnen.
@@ -75,7 +75,7 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
    }
    ```
 
-De eerste weg is de schoonste: dan zit het font niet eens in je CSS. De tweede is een uitzondering op wat hieronder over variabelen staat, en hij staat hier omdat er geen attribuut voor is. Voor kleur, ruimte en typografie is dat er wel.
+De eerste weg is de schoonste: dan zit het font niet eens in je CSS. De tweede is een uitzondering op wat hieronder over variabelen staat, en die staat hier omdat er geen attribuut voor is. Voor kleur, ruimte en typografie is dat er wel.
 
 Voor tree-shaking kun je ook per component importeren via de subpath-export (bijv. `@nldd/design-system/button`). Frameworks die templates compileren, moeten `nldd-*` als custom elements herkennen (in Vue: `isCustomElement`).
 
@@ -99,7 +99,7 @@ Wat je in de devtools ziet staan, is gelaagd:
 
 Houd je daarna nog eigen CSS over voor iets dat geen component is, dan is een `--primitives-*` de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
 
-**Zet geen `light-dark()` om een primitive heen.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Wikkel je hem in nog een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond. Eén verwijzing volstaat.
+**Zet geen `light-dark()` om een primitive heen.** Elke kleur-primitive is zelf al een `light-dark()`-paar, en de schaal kantelt mee: stap 700 is donkere tekst in lichte modus en lichte tekst in donkere modus. Wikkel je die in nog een `light-dark()` met de gespiegelde stap (700 om 300), dan draai je twee keer om en houd je in beide schema's dezelfde kleur over: donkere tekst op een donkere achtergrond. Eén verwijzing volstaat.
 
 `light-dark()` heb je alleen nodig voor kleuren die niet uit het palet komen, of wanneer je per schema bewust een ándere stap wilt (bijvoorbeeld 100 in licht en 150 in donker, voor iets meer contrast).
 
@@ -128,7 +128,7 @@ Wat hieronder staat, hoort in geen van de drie thuis: het gaat telkens over meer
 | **App-shell** | Een werkomgeving met panelen: editors, dashboards, beheerschermen. | [pagina met secties](patterns/page-with-sections.md), sectie "Panelen naast elkaar" |
 | **Contentpagina** | Een landings-, campagne- of informatiepagina: een verticale stapel inhoud. | [contentpagina](patterns/content-page.md) |
 
-Het verschil zit in de laag direct onder de app-view: een split view met een pagina per paneel, of één pagina met secties eronder. Die keuze maak je aan het begin en hij is achteraf duur, dus maak hem bewust.
+Het verschil zit in de laag direct onder de app-view: een split view met een pagina per paneel, of één pagina met secties eronder. Die keuze maak je aan het begin, en achteraf terugdraaien is duur. Maak die keuze dus bewust.
 
 ### Overlays: sheet, modal of popover
 

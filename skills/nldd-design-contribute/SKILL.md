@@ -13,7 +13,7 @@ Je gebruikt deze skill als je met `@nldd/design-system` werkt en iets tegenkomt 
 
 Er zijn twee plekken, en allebei werken ze.
 
-- **Een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues)** staat open voor iedereen, binnen en buiten NLDD. Dat is de route die een spoor achterlaat: wie later hetzelfde tegenkomt, vindt hem terug.
+- **Een [issue](https://github.com/NederlandseDigitaleDienst/design-system/issues)** staat open voor iedereen, binnen en buiten NLDD. Dat is de route die een spoor achterlaat: wie later hetzelfde tegenkomt, vindt de melding terug.
 - **Het designsysteem-kanaal op Mattermost**, als je binnen NLDD werkt. Korter dan een issue en de maintainer leest mee, dus voor een vraag of een twijfelgeval is dat de snelste weg. Een gesprek daar is genoeg; je hoeft er geen issue bij te openen, en andersom hoef je voor een issue niet eerst langs het kanaal.
 
 Het gaat op beide plekken om hetzelfde: een goed beschreven probleem. Wat hieronder staat geldt dus voor allebei, alleen de plek verschilt. En in geen van beide gevallen begin je met een pull request; daarover onderaan meer.
@@ -27,7 +27,7 @@ Twee redenen. Vaak kan een bestaand component het al, en dan is het antwoord een
 Concreet, voor een ontbrekend component of variant:
 
 - **Welke taak** van je gebruiker lukt nu niet, en wat heb je geprobeerd?
-- **Wat bouw je nu in plaats daarvan?** Een omweg is het sterkste bewijs dat er iets mist. Laat hem zien, ook als je hem niet mooi vindt.
+- **Wat bouw je nu in plaats daarvan?** Een omweg is het sterkste bewijs dat er iets mist. Laat de omweg zien, ook als die niet mooi is.
 - **Waar draait het?** Het product of scherm waar dit speelt.
 
 ## Wat je bij een bug meegeeft
@@ -69,7 +69,7 @@ Kan, maar meld het eerst, via het kanaal of een issue, en schrijf daarna de code
 
 ### Deze plugin helpt je niet bij het bouwen aan het systeem zelf
 
-Belangrijk om te weten, want het is een makkelijke aanname: de skills in deze plugin zijn er voor wie het pakket **gebruikt**. Ze leren je niet hoe je een component in dit systeem schrijft. Vraag je Claude met alleen deze plugin om een nieuw component te bouwen, dan mist hij de conventies en levert hij iets dat er van buiten goed uitziet en de interne regels overtreedt.
+Belangrijk om te weten, want het is een makkelijke aanname: de skills in deze plugin zijn er voor wie het pakket **gebruikt**. Ze leren je niet hoe je een component in dit systeem schrijft. Vraag je Claude met alleen deze plugin om een nieuw component te bouwen, dan mist het model de conventies en levert het iets dat er van buiten goed uitziet en de interne regels overtreedt.
 
 De kennis die je daarvoor nodig hebt zit in de **repository zelf**, als repo-locale skills onder `.claude/skills/`. Die reizen expres niet mee met de plugin: ze gaan over de binnenkant van dit systeem, veranderen met de codebase mee, en zouden bij een afnemer alleen in de weg zitten.
 

@@ -1,6 +1,6 @@
 # Bootstrap: platte HTML
 
-Web components werken overal. Voor een server-gerenderde app (FastAPI/Jinja, Django, een statische site) heb je geen framework nodig. Bundel de import of laad hem als module.
+Web components werken overal. Voor een server-gerenderde app (FastAPI/Jinja, Django, een statische site) heb je geen framework nodig. Bundel de import of laad die als module.
 
 ## Met een bundler (Vite, esbuild)
 
@@ -10,7 +10,7 @@ import '@nldd/design-system';        // registreert alle nldd-* componenten
 import '@nldd/design-system/styles'; // CSS-variabelen + Rijksoverheid-fonts
 ```
 
-RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in haar opdracht werken, zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, importeer dan `@nldd/design-system/styles/system-font`: dezelfde stylesheet zonder de `@font-face`-regels, waarna de familie-stacks vanzelf op een systeemfont uitkomen.
+RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken, zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, importeer dan `@nldd/design-system/styles/system-font`: dezelfde stylesheet zonder de `@font-face`-regels, waarna de familie-stacks vanzelf op een systeemfont uitkomen.
 
 ```html
 <script type="module" src="/main.js"></script>
@@ -18,7 +18,7 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
 
 ## Minimale pagina
 
-`nldd-app-view` is de app-shell: hij zet de kleurschema-context. De documenttypografie komt uit de stylesheet, die de `body` het documentfont geeft zodra er een app-view op de pagina staat. Plaats je inhoud erin.
+`nldd-app-view` is de app-shell: die zet de kleurschema-context. De documenttypografie komt uit de stylesheet, die de `body` het documentfont geeft zodra er een app-view op de pagina staat. Plaats je inhoud erin.
 
 ```html
 <nldd-app-view>

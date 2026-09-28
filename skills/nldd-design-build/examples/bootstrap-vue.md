@@ -10,7 +10,7 @@ import '@nldd/design-system';
 import '@nldd/design-system/styles';
 ```
 
-RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in haar opdracht werken, zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, importeer dan `@nldd/design-system/styles/system-font`: dezelfde stylesheet zonder de `@font-face`-regels, waarna de familie-stacks vanzelf op een systeemfont uitkomen.
+RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken, zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, importeer dan `@nldd/design-system/styles/system-font`: dezelfde stylesheet zonder de `@font-face`-regels, waarna de familie-stacks vanzelf op een systeemfont uitkomen.
 
 ## 2. Vue de custom elements laten herkennen
 

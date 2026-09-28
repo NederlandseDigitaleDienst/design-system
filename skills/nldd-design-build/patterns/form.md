@@ -89,7 +89,7 @@ nldd-form                              name, method, label-alignment
 
 **Groepeer met een form section, niet met een eigen kop en een div.** Een [form section](../../nldd-design/reference.md#nldd-form-section) rendert een echte fieldset, dus een schermlezer noemt de groep als je het eerste veld binnengaat. Een groepsnaam is geen kop: zet voor de paginastructuur een echte kop boven het formulier.
 
-**Zet `label-alignment` op het formulier, niet per veld.** Het [formulier](../../nldd-design/reference.md#nldd-form) geeft hem door aan elk veld en aan de acties, zodat de knoppen onder de velden uitkomen en niet onder de labels. Daarom staan de acties in een [form actions](../../nldd-design/reference.md#nldd-form-actions) en niet los onder het formulier.
+**Zet `label-alignment` op het formulier, niet per veld.** Het [formulier](../../nldd-design/reference.md#nldd-form) geeft die door aan elk veld en aan de acties, zodat de knoppen onder de velden uitkomen en niet onder de labels. Daarom staan de acties in een [form actions](../../nldd-design/reference.md#nldd-form-actions) en niet los onder het formulier.
 
 **Eén primaire actie, zonder "Annuleer" ernaast.** Een uitweg pal naast de knop die verstuurt kost bij een misklik alles wat er is ingevuld. Heeft het formulier een uitweg nodig, zet die dan op afstand, bijvoorbeeld in de titelbalk. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#invoer-en-formulieren).
 
@@ -107,4 +107,4 @@ Wat jij nog moet doen: `autocomplete` per veld, want de browser kan niet raden w
 
 ## Gezien in
 
-Een form field met een invoerveld erin is een van de meest voorkomende composities op dit systeem. De form section juist niet, terwijl apps de groepering wel met de hand nabouwen: daarom staat hij hier in de compositie.
+Een form field met een invoerveld erin is een van de meest voorkomende composities op dit systeem. De form section juist niet, terwijl apps de groepering wel met de hand nabouwen: daarom staat die hier in de compositie.

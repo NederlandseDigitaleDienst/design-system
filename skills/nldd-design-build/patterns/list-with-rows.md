@@ -6,7 +6,7 @@
 
 # Patroon: lijst met rijen
 
-**Welk probleem dit oplost.** Een verzameling records tonen die de gebruiker moet kunnen scannen, en waar hij per record iets mee kan doen: openen, aanvinken, een actie kiezen.
+**Welk probleem dit oplost.** Een verzameling records tonen die de gebruiker moet kunnen scannen, en waar per record iets mee te doen is: openen, aanvinken, een actie kiezen.
 
 **Wanneer wel.** Een reeks gelijkwaardige items met tekst en hoogstens een paar acties per rij.
 

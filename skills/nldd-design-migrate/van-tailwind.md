@@ -6,14 +6,14 @@ Aanvulling op [`SKILL.md`](SKILL.md), de hoofdpagina van deze skill, voor codeba
 
 Dit is het grootste gevaar van een migratie vanaf Tailwind, en het heeft geen tegenhanger bij CSS modules of handgeschreven CSS.
 
-**Zolang Tailwind geïnstalleerd is, verzint zijn compiler een regel voor elke klasse die hij herkent.** `flex`, `px-4` en `bg-amber-50` werken dus zonder in enige stylesheet van jou te bestaan. Haal je het pakket weg, dan blijven ze compileren, komen ze langs tsc en eslint, en doen ze niets meer.
+**Zolang Tailwind geïnstalleerd is, verzint zijn compiler een regel voor elke klasse die die herkent.** `flex`, `px-4` en `bg-amber-50` werken dus zonder in enige stylesheet van jou te bestaan. Haal je het pakket weg, dan blijven ze compileren, komen ze langs tsc en eslint, en doen ze niets meer.
 
 In één migratie stonden **158 van de 176 overgebleven klassen** in die staat, inclusief elke klasse die iemand bewust had laten staan als "gedocumenteerde uitzondering".
 
 Gevolgen voor je planning:
 
 - **Tailwind weghalen is geen laatste stap maar een diagnose.** Doe het vroeg genoeg om te kunnen repareren wat het blootlegt. "Voorlopig laten staan" verbergt de schade tot iemand anders het weghaalt.
-- Een comment dat uitlegt waarom een klasse blijft, houdt hem niet werkend.
+- Een comment dat uitlegt waarom een klasse blijft, houdt die niet werkend.
 - Na verwijdering moet je klassencheck **falen**, niet waarschuwen.
 
 ## Waar dode klassen zich verstoppen
@@ -43,7 +43,7 @@ Drie kanttekeningen, want dit wordt makkelijk oververkocht. Vooraf één: je wij
 
 1. **Klassen die het rauwe palet gebruiken** (`bg-gray-50`, `text-red-600`) schuiven niet mee, en die zitten juist op de semantisch geladen plekken: foutmeldingen, waarschuwingen, badge-varianten. Herleid ook de grijs-, rood-, amber-, emerald- en blauwschalen om een deel terug te winnen.
 2. **Alpha-modifiers** (`ring-primary-500/20`) compileren naar `color-mix()` over een waarde die zelf al een `light-dark()`-paar is. Reken die visueel na in plaats van de hele aanpak weg te gooien als er één misgaat.
-3. **De brug maskeert componentfouten.** Zolang hij er is, ziet een verkeerd opgezette container er acceptabel uit. Pas bij het weghalen van Tailwind komt de instorting tot nul breedte boven water. Reken daarop in je planning: het weghalen legt werk bloot, het rondt het niet af.
+3. **De brug maskeert componentfouten.** Zolang die er is, ziet een verkeerd opgezette container er acceptabel uit. Pas bij het weghalen van Tailwind komt de instorting tot nul breedte boven water. Reken daarop in je planning: het weghalen legt werk bloot, het rondt het niet af.
 
 ## Globale regels die botsen
 

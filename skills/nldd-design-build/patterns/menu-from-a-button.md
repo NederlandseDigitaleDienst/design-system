@@ -78,9 +78,9 @@ Een keuze uit een set is een groep items met `type="radio"`, iets dat aan of uit
 
 ## Waarom zo
 
-**Nest het menu in de `popup`-slot van de knop.** Dan hangt de [knop](../../nldd-design/reference.md#nldd-button) het menu zelf aan zich vast en opent en sluit hij het: geen id, geen `anchor`, geen eigen klikafhandeling. Het menu meldt `expanded` en `aria-haspopup` terug aan de knop, vanaf de eerste render. Een losse `anchor` is alleen nodig voor een trigger zonder `popup`-slot.
+**Nest het menu in de `popup`-slot van de knop.** Dan hangt de [knop](../../nldd-design/reference.md#nldd-button) het menu zelf aan zich vast en opent en sluit die het: geen id, geen `anchor`, geen eigen klikafhandeling. Het menu meldt `expanded` en `aria-haspopup` terug aan de knop, vanaf de eerste render. Een losse `anchor` is alleen nodig voor een trigger zonder `popup`-slot.
 
-**Een destructieve actie staat onderaan, achter een scheidingslijn.** Zo staat hij niet tussen de acties waar de gebruiker snel doorheen klikt. `destructive` kleurt het [item](../../nldd-design/reference.md#nldd-menu) rood, maar de tekst moet zelf zeggen wat er gebeurt. Is de actie onomkeerbaar, vraag dan om [bevestiging](confirm.md) of maak hem ongedaan te maken.
+**Een destructieve actie staat onderaan, achter een scheidingslijn.** Zo staat die niet tussen de acties waar de gebruiker snel doorheen klikt. `destructive` kleurt het [item](../../nldd-design/reference.md#nldd-menu) rood, maar de tekst moet zelf zeggen wat er gebeurt. Is de actie onomkeerbaar, vraag dan om [bevestiging](confirm.md) of maak die ongedaan te maken.
 
 **Een keuze is een radio-item, geen vinkje in de tekst.** Met `type="radio"` of `type="checkbox"` krijgt het item de juiste rol en de stand die een schermlezer voorleest. Een vinkje in de tekst zegt een schermlezer niets.
 

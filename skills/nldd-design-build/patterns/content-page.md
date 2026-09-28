@@ -241,4 +241,4 @@ Wat jij nog moet doen: een `heading-level` op elke titel, ook op die in de foote
 
 ## Gezien in
 
-Deze compositie komt van de publieke pagina's op dit systeem, waar hij naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test; dit is dezelfde pagina, nu getoetst.
+Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test; dit is dezelfde pagina, nu getoetst.

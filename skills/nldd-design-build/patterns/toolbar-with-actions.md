@@ -73,7 +73,7 @@ nldd-toolbar                       size, label
 
 **De primaire actie krijgt de hoogste `priority`.** Items met een lagere priority verhuizen als eerste. Wat altijd zichtbaar moet blijven, zet je hoger, en de plek in de HTML doet daarvoor niet ter zake.
 
-**Een tabbalk krijgt als alternatief een menugroep met radio-items.** Een keuze uit een set is in het menu precies wat een tab in de balk is: een `nldd-menu-group` met een `type="radio"`-item per tab, en de actieve tab `selected`. Beide volgen dezelfde toestand in je eigen code. Geef de tabbalk een hoge priority, zodat hij als laatste naar de overloop gaat.
+**Een tabbalk krijgt als alternatief een menugroep met radio-items.** Een keuze uit een set is in het menu precies wat een tab in de balk is: een `nldd-menu-group` met een `type="radio"`-item per tab, en de actieve tab `selected`. Beide volgen dezelfde toestand in je eigen code. Geef de tabbalk een hoge priority, zodat die als laatste naar de overloop gaat.
 
 ```html
 <nldd-toolbar>
@@ -124,7 +124,7 @@ nldd-toolbar                       size, label
 </nldd-toolbar>
 ```
 
-**Zet `size` op de werkbalk, niet op elke knop.** De werkbalk geeft hem door aan alle controls erin.
+**Zet `size` op de werkbalk, niet op elke knop.** De werkbalk geeft die door aan alle controls erin.
 
 ## Toegankelijkheid
 
@@ -134,4 +134,4 @@ Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `label` op de 
 
 ## Gezien in
 
-Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerdere producten los van elkaar tegengekomen: hij is op een breed scherm onzichtbaar en valt pas op als iemand het venster smal maakt.
+Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerdere producten los van elkaar tegengekomen: die is op een breed scherm onzichtbaar en valt pas op als iemand het venster smal maakt.

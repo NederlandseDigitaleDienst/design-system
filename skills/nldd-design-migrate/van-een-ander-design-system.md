@@ -6,7 +6,7 @@ Dit is een andere uitgangspositie dan een migratie vanaf losse CSS. Je team kent
 
 ## Verzin geen tokennaam, ook niet een plausibele
 
-Dit is de duurste fout vanuit deze herkomst, en hij voelt als kennis in plaats van als gokken.
+Dit is de duurste fout vanuit deze herkomst, en die voelt als kennis in plaats van als gokken.
 
 Onze variabelen hebben vier prefixen: `--primitives-`, `--semantics-`, `--components-` en `--context-`. Er is **geen** `--nldd-`-prefix. Wie van een ander systeem komt, schrijft toch iets als:
 
@@ -27,7 +27,7 @@ Hetzelfde geldt voor icoonnamen en voor attributen: een `variant`-waarde uit je 
 
 Zet de donkere weergave aan en loop de schermen langs. Alles wat zijn kleur uit een token haalt, beweegt mee; alles wat dat niet doet, valt op. Dat maakt van een donkere modus een gratis controle op je hele migratie, niet alleen op je kleurkeuzes.
 
-Twee vormen die je zoekt: een vaste hexwaarde, en de terugval hierboven. De tweede vind je alleen zo, want in de lichte weergave ziet hij er goed uit.
+Twee vormen die je zoekt: een vaste hexwaarde, en de terugval hierboven. De tweede vind je alleen zo, want in de lichte weergave ziet die er goed uit.
 
 ## Twee systemen naast elkaar: kies bewust
 
@@ -37,7 +37,7 @@ Een systeem vervangen dat er al zit, is wat anders dan CSS opruimen. Je hebt twe
 
 **Direct vervangen**, zonder schakelaar. Goedkoper in onderhoud, maar je hebt geen oude pagina meer om tegen te meten, dus je moet het gedragsoppervlak vooraf vastleggen (zie de hoofdskill).
 
-Kies je voor de schakelaar, ruim hem dan op als eerste wat er af kan. Eén project legde vooraf vast wanneer dat mocht: toen elk oud sjabloon een nieuwe tegenhanger had. Dat getal, nul sjablonen zonder tegenhanger, maakte van de sloop een taak die af kan in plaats van een migratie die blijft duren.
+Kies je voor de schakelaar, ruim die dan op als eerste wat er af kan. Eén project legde vooraf vast wanneer dat mocht: toen elk oud sjabloon een nieuwe tegenhanger had. Dat getal, nul sjablonen zonder tegenhanger, maakte van de sloop een taak die af kan in plaats van een migratie die blijft duren.
 
 ## De vergelijking die je alleen nú kunt maken
 
@@ -45,7 +45,7 @@ Zolang beide systemen dezelfde route kunnen renderen, kun je iets meten dat late
 
 Zo zijn in één omzetting een keuzelijst, een knop die een venster opende en de velden van een filter teruggevonden die stilzwijgend waren verdwenen. Geen van drieën gaf een foutmelding.
 
-Gooi die vergelijking niet zomaar weg als de oude pagina eruit gaat. Dan meet hij de ene helft van niets tegen de andere, maar dezelfde meetlat werkt verder met een vastgelegde lijst als bron in plaats van de oude pagina. Zie "Meet wat een pagina DOET" in de hoofdskill.
+Gooi die vergelijking niet zomaar weg als de oude pagina eruit gaat. Dan meet die de ene helft van niets tegen de andere, maar dezelfde meetlat werkt verder met een vastgelegde lijst als bron in plaats van de oude pagina. Zie "Meet wat een pagina DOET" in de hoofdskill.
 
 ## Wat je meeneemt zonder het te merken
 
@@ -53,7 +53,7 @@ Gooi die vergelijking niet zomaar weg als de oude pagina eruit gaat. Dan meet hi
 
 **Sjablonen zonder aanroeper.** Bij een omzetting ontstaan wezen: een bestand dat niemand meer rendert. Bij het opruimen haal je die weg zonder het te merken, wat prima is, maar controleer of er niets omheen hangt.
 
-**Dubbele bestanden per scherm.** Draai je met een schakelaar, dan krijgt elk scherm twee sjablonen. Reken erop dat die uit de pas lopen en dat een wijziging twee keer moet. Dat is de prijs van de vergelijkbaarheid hierboven, en hij is het waard zolang je de sloop plant.
+**Dubbele bestanden per scherm.** Draai je met een schakelaar, dan krijgt elk scherm twee sjablonen. Reken erop dat die uit de pas lopen en dat een wijziging twee keer moet. Dat is de prijs van de vergelijkbaarheid hierboven, en die is het waard zolang je de sloop plant.
 
 ## Volgorde bij het opruimen
 

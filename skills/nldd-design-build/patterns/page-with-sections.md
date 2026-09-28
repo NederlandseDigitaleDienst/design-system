@@ -86,9 +86,9 @@ nldd-app-view                  de buitenste schil
 
 **Eén sectie per inhoudsblok.** Een [simple section](../../nldd-design/reference.md#nldd-simple-section) regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Herhaal de sectie in plaats van er zelf kolommen in te bouwen, en geef een blok een eigen vlak met `background` op de sectie, niet met een achtergrondkleur van jezelf.
 
-**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [title](../../nldd-design/reference.md#nldd-title) is hoe hij eruitziet, `heading-level` wat hij is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een overzichtspagina een `h2`, en laat de grootte los daarvan.
+**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [title](../../nldd-design/reference.md#nldd-title) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een overzichtspagina een `h2`, en laat de grootte los daarvan.
 
-**Laat de header meescrollen, tenzij hij zegt waar je naar kijkt.** Een [pagina](../../nldd-design/reference.md#nldd-page) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet: elke balk die blijft staan, kost ruimte die de inhoud nodig heeft. De uitzondering is de titelbalk die de context draagt, bij welk item deze inhoud hoort. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
+**Laat de header meescrollen, tenzij die zegt waar je naar kijkt.** Een [pagina](../../nldd-design/reference.md#nldd-page) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet: elke balk die blijft staan, kost ruimte die de inhoud nodig heeft. De uitzondering is de titelbalk die de context draagt, bij welk item deze inhoud hoort. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
 
 ## Panelen naast elkaar: begin met een split view
 

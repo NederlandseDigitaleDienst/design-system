@@ -44,7 +44,7 @@ De korte vorm gaat naar een skill van je eigen project als die toevallig dezelfd
 
 ## Zoek `nldd` op in je eigen bestanden
 
-Dit is het echte werk, en de eerste twee breken zonder foutmelding. Deze wegwijzer vangt ze nu nog op, maar hij verdwijnt.
+Dit is het echte werk, en de eerste twee breken zonder foutmelding. Deze wegwijzer vangt ze nu nog op, maar die verdwijnt.
 
 1. **Je instructiebestanden**: `CLAUDE.md`, `.claude/rules/*.md`, `AGENTS.md`, of de tekst van een eigen skill die zegt "gebruik de nldd skill". Vervang de naam door de skill die je daar bedoelt, meestal `nldd-design-build`.
 2. **Subagent-definities** (`.claude/agents/*.md`) **en hooks** die op de skillnaam matchen.
@@ -61,4 +61,4 @@ Laat `nldd@nldd-plugins` staan: dat is de pluginnaam en die klopt nog.
 
 ## Deze wegwijzer gaat weg
 
-Hij bestaat alleen om verwijzingen naar de losse naam `nldd` op te vangen, en wordt **na 1 maart 2027 verwijderd**. Daarna is zo'n verwijzing weer stil kapot, dus pas hem nu aan in plaats van erop te leunen.
+Die bestaat alleen om verwijzingen naar de losse naam `nldd` op te vangen, en wordt **na 1 maart 2027 verwijderd**. Daarna is zo'n verwijzing weer stil kapot, dus pas die nu aan in plaats van erop te leunen.

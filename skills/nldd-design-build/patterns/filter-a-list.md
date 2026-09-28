@@ -6,7 +6,7 @@
 
 # Patroon: een lijst filteren
 
-**Welk probleem dit oplost.** Een lange lijst doorzoekbaar maken, met filters die zichtbaar blijven, zodat de gebruiker weet waarom hij niet alles ziet, en met een weg terug.
+**Welk probleem dit oplost.** Een lange lijst doorzoekbaar maken, met filters die zichtbaar blijven, zodat zichtbaar blijft waarom er iets ontbreekt, en met een weg terug.
 
 **Wanneer wel.** Elke lijst of tabel die langer wordt dan een scherm, of waar de gebruiker een deelverzameling zoekt.
 
@@ -157,7 +157,7 @@ nldd-sheet                     de filterkeuzes zelf
 
 **`layout="wrap"` op de strip.** De standaard van [container](../../nldd-design/reference.md#nldd-container) is `stack`, en dan staan de tokens onder elkaar. Met `wrap` lopen ze door op een volgende regel zodra er te veel filters aanstaan.
 
-**De filterkeuzes staan in een sheet die altijd in de pagina staat.** Een [sheet](../../nldd-design/reference.md#nldd-sheet) is verborgen tot je `open` zet, dus je hoeft hem niet pas op te halen als hij opent. Doe je dat wel, dan is het formulier er meestal niet op het moment dat een token wordt weggeklikt, en vindt je handler niets om bij te werken. Hoe de sheet verder in elkaar zit, staat in [bewerken in een sheet](edit-in-a-sheet.md).
+**De filterkeuzes staan in een sheet die altijd in de pagina staat.** Een [sheet](../../nldd-design/reference.md#nldd-sheet) is verborgen tot je `open` zet, dus je hoeft de sheet niet pas op te halen als die opent. Doe je dat wel, dan is het formulier er meestal niet op het moment dat een token wordt weggeklikt, en vindt je handler niets om bij te werken. Hoe de sheet verder in elkaar zit, staat in [bewerken in een sheet](edit-in-a-sheet.md).
 
 **De lijst toont zelf dat het filter niets overlaat.** Vul `slot="no-results"` met een eigen zin. Het zoekveld en de filters blijven dan staan als weg terug, zie [lijst met rijen](list-with-rows.md).
 

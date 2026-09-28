@@ -43,6 +43,15 @@ describe('patroon: bewerken in een sheet', () => {
 		expect(sheet.open).toBe(false);
 	});
 
+	it('laat de titelbalk naar de kop in de inhoud wijzen, met dezelfde woorden', async () => {
+		const sheet = await mount();
+		const bar = sheet.querySelector('nldd-top-title-bar')!;
+		const id = bar.getAttribute('collapse-anchor')!;
+		const heading = sheet.querySelector(`#${id}`)!;
+		expect(heading.tagName).toBe('NLDD-TITLE');
+		expect(heading.getAttribute('text')).toBe(bar.getAttribute('text'));
+	});
+
 	it('zet de primaire actie in het formulier, onder het laatste veld', async () => {
 		const sheet = await mount();
 		const form = sheet.querySelector('nldd-form')!;
