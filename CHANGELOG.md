@@ -100,6 +100,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **The validation icon of `nldd-token-field` stays in the top corner.** It was centered over the whole field, so the moment the tokens wrapped to a second row it drifted down the side, away from the row it belongs to. It now sits where `nldd-multi-line-text-field` puts its own: at the top, level with the first row.
 
+- **`nldd-bar-split-view` documents the order attributes of its panels.** The component reads `sm-order`, `md-order` and `lg-order` off its children to place a bar above or below the content per breakpoint, but only its prose said so, so the reference listed neither the attributes nor what they do. A bottom bar on a phone was there all along and nobody could find it.
+
 - **`nldd-validation-item` has a description in the reference.** The component reference takes the prose above the first `@element` in a file. Two components that share a file write their own prose under their own `@element`, and that was thrown away, so the item shipped as a bare table of attributes and the rule about giving it an id that names its field reached nobody. `nldd-navigation-split-view` lost a line the same way. Both are back, and `nldd-form` now says when it marks a field as invalid.
 
 - **`hidden` now hides every component.** Nine components stayed visible with `hidden` set, because their own `display` beat the browser's rule for the attribute. `nldd-list`, `nldd-sheet`, `nldd-navigation-split-view`, `nldd-menu`, `nldd-progress-bar-segment-indicator` and `nldd-form` never hid. `nldd-number-field` with `width="full"`, `nldd-pagination` with `centered` and an `nldd-activity-indicator` around content did not hide either.

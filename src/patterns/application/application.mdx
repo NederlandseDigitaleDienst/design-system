@@ -1,0 +1,85 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './application.stories';
+
+<Meta of={Stories} />
+
+# Applicatie
+
+**Welk probleem dit oplost.** Een werkomgeving die de ruimte gebruikt die het scherm biedt: navigatie, een lijst, het gekozen record, een inspector, zoveel ernaast als er past. Wordt het scherm smaller, dan vallen de panelen één voor één weg tot er één overblijft, zonder dat je zelf verbergt, herschikt of een tweede layout bouwt.
+
+**Wanneer wel.** Een scherm waarop je vaak tussen informatie beweegt: zoeken, vergelijken, kiezen, bewerken.
+
+**Wanneer niet.** Een landings-, informatie- of campagnepagina, of een scherm dat een verhaal vertelt. Dat is een [contentpagina](?path=/docs/patronen-contentpagina--docs).
+
+## Compositie
+
+```
+nldd-app-view                                 de buitenste schil
+  └─ nldd-bar-split-view                      balken boven of onder de inhoud
+       ├─ nldd-split-view-pane                slot="toolbar", above="md"
+       │    └─ nldd-container                 met padding
+       │         └─ nldd-toolbar              links de secties, rechts zoeken en account
+       ├─ nldd-split-view-pane                slot="main"
+       │    └─ nldd-navigation-split-view
+       │         └─ nldd-split-view-pane      slot="primary-sidebar", "main", "inspector"
+       │         └─ nldd-page                 landmarks, accessible-label
+       │              ├─ nldd-top-title-bar   slot="header", collapse-anchor
+       │              └─ nldd-simple-section
+       │                   ├─ nldd-title      slot="header", het anker van de balk
+       │                   ├─ nldd-toolbar    de acties van dit paneel
+       │                   └─ de inhoud       een lijst, een formulier, een detail
+       └─ nldd-split-view-pane                slot="mobile-bar", only="sm"
+            └─ nldd-container                 met padding
+                 └─ nldd-toolbar              size="lg", dezelfde acties als icoon met label
+
+nldd-sheet                                    het detail van een rij, in de document-root
+nldd-side-by-side-split-view                  panelen van gelijk gewicht, slot="pane-1", "pane-2", …
+```
+
+<Canvas of={Stories.Standaard} />
+
+Een rij opent het dossier in een sheet. Dat kan ook een derde paneel zijn, de inspector, maar die valt als eerste weg zodra de ruimte krap wordt. Een sheet werkt op elke breedte hetzelfde.
+
+## Waarom zo
+
+**Het verschil zit in het doel van het scherm.** Wie informatie verwerkt, leest, begrijpt en beslist, en heeft ruimte en rust nodig. Wie tussen informatie beweegt, zoekt, vergelijkt en kiest, en heeft dichtheid en overzicht nodig: meer tegelijk in beeld, minder stappen ertussen. Daar is dit patroon voor. Het zegt niets over wie er zit, dus dezelfde persoon krijgt hier een dicht lijstscherm en in het paneel ernaast een rustige pagina om een dossier te lezen. Zie de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#strategie-en-proces).
+
+**De app view is de buitenste schil, de split views zitten erin.** De [`nldd-app-view`](?path=/docs/components-layout-app-view--docs) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Daarbinnen komen de split views, en pas in een paneel begint een pagina.
+
+**De werkbalk die over het hele scherm gaat, staat buiten de panelen.** Die hangt in een [`nldd-bar-split-view`](?path=/docs/components-layout-split-views-bar-split-view--docs) om de rest heen: de balk in een eigen slot, de navigatie-split-view in `slot="main"`. Zet je die in een paneel, dan scrolt hij mee met de inhoud van dat ene paneel en geldt hij niet meer voor het scherm. Werkbalken die over de inhoud van één paneel gaan horen daar juist wel, zie verderop. Geef de balk een [`nldd-container`](?path=/docs/components-layout-container--docs) met padding, want de bar split view zet die zelf niet. Voor een statusbalk onderin geef je de bar split view gewoon een tweede balk.
+
+**Op een telefoon hoort die balk onderaan.** Bovenin ligt hij buiten het bereik van een duim. Geef de [`nldd-bar-split-view`](?path=/docs/components-layout-split-views-bar-split-view--docs) daarom twee balken: de bovenste krijgt `above="md"`, de onderste `only="sm"` en een plek ná `slot="main"` in de HTML. Dat zijn twee panelen en niet één verschoven paneel, want op een telefoon veranderen ook de knoppen.
+
+**En het worden andere knoppen.** De balk onderaan krijgt `size="lg"`, waarmee de [`nldd-tab-bar`](?path=/docs/components-navigation-tab-bar--docs) en de knoppen hun label onder het icoon zetten in plaats van ernaast. Een [`nldd-button`](?path=/docs/components-actions-button--docs) met tekst wordt daar een [`nldd-icon-button`](?path=/docs/components-actions-icon-button--docs) met dezelfde tekst als label: even groot om aan te raken, een stuk smaller, en je leest nog steeds wat de knop doet. Zo passen de secties en de acties naast elkaar op één rij.
+
+**Een paneel dat alleen komt te staan, heeft een terugknop nodig.** Geef de titelbalk van zo'n paneel een `back-text` met de naam van waar je vandaan komt. De split view bepaalt zelf wanneer die knop nodig is: staan de panelen naast elkaar, dan zet die `hide-back` op het paneel en is de knop weg. Blijft er één over, dan verschijnt hij.
+
+**Links de secties, rechts wat altijd bereikbaar moet zijn.** In de balk staat aan de ene kant een [`nldd-tab-bar`](?path=/docs/components-navigation-tab-bar--docs) met de secties van de applicatie, zodat je daartussen kunt wisselen hoe diep je ook in de structuur zit. Aan de andere kant staat zoeken en het account, met achter dat account een [menu bij een knop](?path=/docs/patronen-menu-bij-een-knop--docs): profiel, instellingen, uitloggen, en wat er verder over de applicatie zelf gaat. De zijbalk eronder toont dan de structuur binnen de gekozen sectie, niet nog een keer de secties zelf. Wat er verder in de balk hoort en hoe hij overloopt, staat in [werkbalk met acties](?path=/docs/patronen-werkbalk-met-acties--docs).
+
+**De naam van de applicatie hoeft niet in de balk.** Een titel of een logo bovenin kost de ruimte die de secties nodig hebben, en zegt wat de tab, de URL en de bookmark al zeggen tegen iemand die hier elke dag komt. Op een [contentpagina](?path=/docs/patronen-contentpagina--docs) ligt dat andersom: daar komt een bezoeker binnen via een zoekmachine en moet die zien van wie de pagina is, dus daar staat de naam wel in de bovenbalk en in de voettekst.
+
+**In elk paneel staat een gewone pagina met secties.** Wat daarin geldt, geldt hier ook: één sectie per inhoudsblok, een titel met `heading-level`, een vlak met `background`. Zie [contentpagina](?path=/docs/patronen-contentpagina--docs).
+
+**Navigatie, hoofdinhoud en inspector: dat is de [`nldd-navigation-split-view`](?path=/docs/components-layout-split-views-navigation-split-view--docs).** Die heeft benoemde slots in plaats van genummerde panelen, en weet daardoor wat er waar staat: als de ruimte krap wordt valt eerst de inspector weg, daarna klapt de primaire zijbalk in de secundaire, en op het smalst blijft één paneel over. Hij regelt ook de terugknop van een paneel dat alleen komt te staan, mits je `nldd-split-view-pane` als kind gebruikt.
+
+**Panelen van gelijk gewicht zijn een [`nldd-side-by-side-split-view`](?path=/docs/components-layout-split-views-side-by-side-split-view--docs).** Die nummert zijn panelen en laat ze van rechts naar links verdwijnen, dus de hoofdinhoud staat in `pane-1` en het detail rechts.
+
+**Twee werkbalken, twee bereiken.** De balk om alles heen draagt wat voor de hele applicatie geldt. Wat over de inhoud van één paneel gaat, zoals hier "Nieuw dossier" en het filter boven de lijst, krijgt een eigen [`nldd-toolbar`](?path=/docs/components-actions-toolbar--docs) in dat paneel. Zo blijft de bovenste balk hetzelfde terwijl je van scherm wisselt, en verhuist de onderste mee met wat je aan het doen bent.
+
+**De titelbalk van een paneel wijst naar de kop in de inhoud.** Met `collapse-anchor` op de [`nldd-top-title-bar`](?path=/docs/components-navigation-top-title-bar--docs) en dezelfde tekst op een [`nldd-title`](?path=/docs/components-content-title--docs) in de sectie blijft de balk stil zolang de kop in beeld staat, en neemt die de titel over zodra je eroverheen scrolt. De balk verbergt zijn eigen titel dan voor een schermlezer, dus de woorden moeten gelijk zijn.
+
+**Het detail van een rij mag een sheet zijn in plaats van een paneel.** Een derde paneel is de inspector, en die valt als eerste weg als het scherm smaller wordt, dus op een klein scherm is het detail er niet. Een [`nldd-sheet`](?path=/docs/components-layout-sheet--docs) schuift over de lijst en laat die staan, op elke breedte hetzelfde. Zet hem dan wel in de document-root en niet in een paneel, zie [bewerken in een sheet](?path=/docs/patronen-bewerken-in-een-sheet--docs).
+
+**Zeg welk paneel de hoofdinhoud draagt, met `landmarks="page"`.** Een document heeft één `main`, één banner en één contentinfo, dus een [`nldd-page`](?path=/docs/components-layout-page--docs) in een paneel houdt die niet vanzelf: die wordt een sectie zonder landmarks. Welk paneel de hoofdinhoud is, weet alleen de applicatie, dus dat zet je er zelf op. Geef de andere panelen een `accessible-label`, dan zijn het benoemde regio's waar een schermlezergebruiker naartoe kan springen, met een naam die zegt wat erin staat.
+
+**Elk paneel heeft een titelbalk, maar het scherm heeft één `h1`.** Een [`nldd-top-title-bar`](?path=/docs/components-navigation-top-title-bar--docs) rendert standaard een `h1`. Geef de titelbalk van een paneel naast de hoofdinhoud daarom `heading-level="2"`.
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: het verbergen van panelen die niet meer passen, de terugknop die een paneel krijgt zodra het alleen komt te staan, en de rollen en namen van de landmarks in de pagina die de hoofdinhoud draagt.
+
+Wat jij nog moet doen: `landmarks="page"` op dat ene paneel, een `accessible-label` op de andere, een `heading-level` op elke titelbalk naast de hoofdinhoud, en een [`nldd-skip-link`](?path=/docs/components-navigation-skip-link--docs) bovenaan als er navigatie voor de inhoud staat.
+
+## Gezien in
+
+Elke applicatie op dit systeem begint zo. De twee dingen die het vaakst ontbreken zijn `landmarks="page"`, waardoor een scherm twee keer `main` aanbiedt of geen enkele keer, en het kopniveau van de titelbalk in het tweede paneel.

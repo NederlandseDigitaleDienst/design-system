@@ -1,0 +1,384 @@
+<nldd-app-view>
+  <nldd-bar-split-view>
+    <nldd-split-view-pane
+      slot="toolbar"
+      above="md"
+    >
+      <nldd-container padding="8">
+        <nldd-toolbar label="Mijn Dienst">
+          <nldd-toolbar-item
+            slot="start"
+            priority="3"
+          >
+            <nldd-tab-bar
+              navigation
+              accessible-label="Secties"
+            >
+              <nldd-tab-bar-item
+                href="#dossiers"
+                text="Dossiers"
+                current
+              ></nldd-tab-bar-item>
+              <nldd-tab-bar-item
+                href="#aanvragen"
+                text="Aanvragen"
+              ></nldd-tab-bar-item>
+            </nldd-tab-bar>
+            <nldd-menu-group
+              slot="overflow"
+              text="Secties"
+            >
+              <nldd-menu-item
+                type="radio"
+                text="Dossiers"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                type="radio"
+                text="Aanvragen"
+              ></nldd-menu-item>
+            </nldd-menu-group>
+          </nldd-toolbar-item>
+
+          <nldd-toolbar-item
+            slot="end"
+            priority="2"
+          >
+            <nldd-button
+              variant="secondary"
+              start-icon="search"
+              text="Zoeken"
+            ></nldd-button>
+            <nldd-menu-item
+              slot="overflow"
+              icon="search"
+              text="Zoeken"
+            ></nldd-menu-item>
+          </nldd-toolbar-item>
+
+          <nldd-toolbar-item
+            slot="end"
+            priority="1"
+          >
+            <nldd-icon-button
+              icon="account"
+              text="Account"
+              expandable
+            >
+              <nldd-menu
+                slot="popup"
+                placement="bottom-end"
+              >
+                <nldd-menu-item
+                  icon="profile"
+                  text="Mijn profiel"
+                ></nldd-menu-item>
+                <nldd-menu-item
+                  icon="settings"
+                  text="Instellingen"
+                ></nldd-menu-item>
+                <nldd-menu-divider></nldd-menu-divider>
+                <nldd-menu-item
+                  icon="info"
+                  text="Over Mijn Dienst"
+                ></nldd-menu-item>
+                <nldd-menu-item
+                  icon="help"
+                  text="Help"
+                ></nldd-menu-item>
+                <nldd-menu-divider></nldd-menu-divider>
+                <nldd-menu-item
+                  icon="logout"
+                  text="Uitloggen"
+                ></nldd-menu-item>
+              </nldd-menu>
+            </nldd-icon-button>
+            <nldd-menu-group
+              slot="overflow"
+              text="Account"
+            >
+              <nldd-menu-item
+                icon="profile"
+                text="Mijn profiel"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="settings"
+                text="Instellingen"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="info"
+                text="Over Mijn Dienst"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="help"
+                text="Help"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="logout"
+                text="Uitloggen"
+              ></nldd-menu-item>
+            </nldd-menu-group>
+          </nldd-toolbar-item>
+        </nldd-toolbar>
+      </nldd-container>
+    </nldd-split-view-pane>
+
+    <nldd-split-view-pane slot="main">
+      <nldd-navigation-split-view>
+        <nldd-split-view-pane slot="primary-sidebar">
+          <nldd-page
+            accessible-label="Navigatie"
+            sticky-header
+          >
+            <nldd-top-title-bar
+              slot="header"
+              text="Dossiers"
+              heading-level="2"
+              collapse-anchor="zijbalk-titel"
+            ></nldd-top-title-bar>
+            <nldd-simple-section>
+              <nldd-title
+                id="zijbalk-titel"
+                slot="header"
+                size="4"
+                text="Dossiers"
+                heading-level="2"
+              ></nldd-title>
+              <nldd-list
+                type="navigation"
+                accessible-label="Dossiers filteren"
+              >
+                <nldd-list-item
+                  href="#alle-dossiers"
+                  current
+                >
+                  <nldd-text-cell text="Alle dossiers"></nldd-text-cell>
+                </nldd-list-item>
+                <nldd-list-item href="#team-uitvoering">
+                  <nldd-text-cell text="Team Uitvoering"></nldd-text-cell>
+                </nldd-list-item>
+                <nldd-list-item href="#gearchiveerd">
+                  <nldd-text-cell text="Gearchiveerd"></nldd-text-cell>
+                </nldd-list-item>
+              </nldd-list>
+            </nldd-simple-section>
+          </nldd-page>
+        </nldd-split-view-pane>
+
+        <nldd-split-view-pane
+          slot="main"
+          has-content
+        >
+          <nldd-page
+            landmarks="page"
+            sticky-header
+          >
+            <nldd-top-title-bar
+              slot="header"
+              text="Alle dossiers"
+              back-text="Dossiers"
+              collapse-anchor="dossiers-titel"
+            ></nldd-top-title-bar>
+            <nldd-simple-section>
+              <nldd-title
+                id="dossiers-titel"
+                slot="header"
+                size="2"
+                text="Alle dossiers"
+                heading-level="1"
+              ></nldd-title>
+              <nldd-toolbar label="Alle dossiers">
+                <nldd-toolbar-item
+                  slot="start"
+                  priority="2"
+                >
+                  <nldd-button
+                    variant="primary"
+                    start-icon="add"
+                    text="Nieuw dossier"
+                  ></nldd-button>
+                  <nldd-menu-item
+                    slot="overflow"
+                    text="Nieuw dossier"
+                  ></nldd-menu-item>
+                </nldd-toolbar-item>
+                <nldd-toolbar-item slot="end">
+                  <nldd-button
+                    variant="secondary"
+                    start-icon="filter"
+                    text="Filter"
+                  ></nldd-button>
+                  <nldd-menu-item
+                    slot="overflow"
+                    icon="filter"
+                    text="Filter"
+                  ></nldd-menu-item>
+                </nldd-toolbar-item>
+              </nldd-toolbar>
+              <nldd-spacer size="16"></nldd-spacer>
+              <nldd-list accessible-label="Alle dossiers">
+                <nldd-list-item href="#dossier-d-318">
+                  <nldd-text-cell
+                    text="Dossier D-318"
+                    supporting-text="In behandeling"
+                  ></nldd-text-cell>
+                  <nldd-icon-cell
+                    size="20"
+                    color="secondary"
+                    icon="chevron-right"
+                  ></nldd-icon-cell>
+                </nldd-list-item>
+                <nldd-list-item href="#dossier-d-319">
+                  <nldd-text-cell
+                    text="Dossier D-319"
+                    supporting-text="Afgerond"
+                  ></nldd-text-cell>
+                  <nldd-icon-cell
+                    size="20"
+                    color="secondary"
+                    icon="chevron-right"
+                  ></nldd-icon-cell>
+                </nldd-list-item>
+              </nldd-list>
+            </nldd-simple-section>
+          </nldd-page>
+        </nldd-split-view-pane>
+      </nldd-navigation-split-view>
+    </nldd-split-view-pane>
+    <nldd-split-view-pane
+      slot="mobile-bar"
+      only="sm"
+    >
+      <nldd-container padding="8">
+        <nldd-toolbar
+          size="lg"
+          label="Mijn Dienst"
+        >
+          <nldd-toolbar-item slot="start">
+            <nldd-tab-bar
+              navigation
+              accessible-label="Secties"
+            >
+              <nldd-tab-bar-item
+                icon="folder"
+                href="#dossiers"
+                text="Dossiers"
+                current
+              ></nldd-tab-bar-item>
+              <nldd-tab-bar-item
+                icon="text-document"
+                href="#aanvragen"
+                text="Aanvragen"
+              ></nldd-tab-bar-item>
+            </nldd-tab-bar>
+            <nldd-menu-group
+              slot="overflow"
+              text="Secties"
+            >
+              <nldd-menu-item
+                type="radio"
+                text="Dossiers"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                type="radio"
+                text="Aanvragen"
+              ></nldd-menu-item>
+            </nldd-menu-group>
+          </nldd-toolbar-item>
+
+          <nldd-toolbar-item slot="end">
+            <nldd-icon-button
+              icon="search"
+              text="Zoeken"
+            ></nldd-icon-button>
+            <nldd-menu-item
+              slot="overflow"
+              icon="search"
+              text="Zoeken"
+            ></nldd-menu-item>
+          </nldd-toolbar-item>
+
+          <nldd-toolbar-item slot="end">
+            <nldd-icon-button
+              icon="account"
+              text="Account"
+              expandable
+            >
+              <nldd-menu
+                slot="popup"
+                placement="top-end"
+              >
+                <nldd-menu-item
+                  icon="profile"
+                  text="Mijn profiel"
+                ></nldd-menu-item>
+                <nldd-menu-item
+                  icon="settings"
+                  text="Instellingen"
+                ></nldd-menu-item>
+                <nldd-menu-divider></nldd-menu-divider>
+                <nldd-menu-item
+                  icon="info"
+                  text="Over Mijn Dienst"
+                ></nldd-menu-item>
+                <nldd-menu-item
+                  icon="help"
+                  text="Help"
+                ></nldd-menu-item>
+                <nldd-menu-divider></nldd-menu-divider>
+                <nldd-menu-item
+                  icon="logout"
+                  text="Uitloggen"
+                ></nldd-menu-item>
+              </nldd-menu>
+            </nldd-icon-button>
+            <nldd-menu-group
+              slot="overflow"
+              text="Account"
+            >
+              <nldd-menu-item
+                icon="profile"
+                text="Mijn profiel"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="settings"
+                text="Instellingen"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="info"
+                text="Over Mijn Dienst"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="help"
+                text="Help"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="logout"
+                text="Uitloggen"
+              ></nldd-menu-item>
+            </nldd-menu-group>
+          </nldd-toolbar-item>
+        </nldd-toolbar>
+      </nldd-container>
+    </nldd-split-view-pane>
+  </nldd-bar-split-view>
+</nldd-app-view>
+
+<nldd-sheet
+  placement="right"
+  width="480px"
+>
+  <nldd-page>
+    <nldd-top-title-bar
+      slot="header"
+      text="Dossier D-318"
+      dismiss-text="Sluit"
+    ></nldd-top-title-bar>
+    <nldd-simple-section>
+      <nldd-rich-text>
+        <p>Het detail van het gekozen dossier. De lijst blijft ernaast staan, dus je ziet waar je vandaan komt.</p>
+      </nldd-rich-text>
+    </nldd-simple-section>
+  </nldd-page>
+</nldd-sheet>

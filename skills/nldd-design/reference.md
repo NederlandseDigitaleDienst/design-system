@@ -1597,6 +1597,9 @@ A vertical split view with a main area and an unlimited number of bar panels. Ea
 | `above` | `'sm'\|'md'\|'lg'` | Show this panel from this breakpoint and larger |
 | `below` | `'sm'\|'md'\|'lg'` | Show this panel up to and including this breakpoint |
 | `only` | `'sm'\|'md'\|'lg'` | Show this panel only at this breakpoint |
+| `sm-order` | `number` | Position of this panel at sm (lower comes first) |
+| `md-order` | `number` | Position of this panel at md (lower comes first) |
+| `lg-order` | `number` | Position of this panel at lg (lower comes first) |
 
 **Slots**
 

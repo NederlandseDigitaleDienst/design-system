@@ -27,8 +27,8 @@ const referencePath = resolve(__dirname, '../skills/nldd-design/reference.md');
 
 /** The set of patterns: Storybook title to the file name in the skill. */
 const PATTERNS = {
-	'Patronen/Pagina met secties': 'page-with-sections',
 	'Patronen/Contentpagina': 'content-page',
+	'Patronen/Applicatie': 'application',
 	'Patronen/Werkbalk met acties': 'toolbar-with-actions',
 	'Patronen/Lijst met rijen': 'list-with-rows',
 	'Patronen/Een lijst filteren': 'filter-a-list',

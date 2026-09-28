@@ -6,11 +6,11 @@
 
 # Patroon: contentpagina
 
-**Welk probleem dit oplost.** Een landings-, informatie- of campagnepagina bouwen: lopende tekst, een raster met kaarten, een uitgelicht vlak en een footer, zonder er een applicatieschil omheen te zetten.
+**Welk probleem dit oplost.** Een landings-, informatie- of campagnepagina bouwen: lopende tekst, een collectie kaarten, een uitgelicht vlak en een footer.
 
-**Wanneer wel.** Een pagina die iets uitlegt of aanprijst aan iemand die nog niet ingelogd is.
+**Wanneer wel.** Een pagina waarop je informatie verwerkt: lezen, begrijpen, beslissen.
 
-**Wanneer niet.** Werkt de gebruiker in de pagina, dan bouw je een scherm en geen contentpagina, zie [pagina met secties](page-with-sections.md). Panelen naast elkaar, een werkbalk of een inspector horen hier niet: dat is een applicatie, en die begint bij een split view.
+**Wanneer niet.** Een scherm waarop je vaak tussen informatie beweegt (zoeken, vergelijken, kiezen, bewerken) en waar onderdelen daarvoor naast elkaar staan: navigatie naast de inhoud, een lijst met het gekozen record ernaast, een inspector aan de zijkant. Dat is een [applicatie](application.md), en die begint bij een split view.
 
 ## Compositie
 
@@ -18,7 +18,7 @@
 nldd-app-view                            de buitenste schil
   └─ nldd-page
        ├─ slot="header"                  nldd-top-navigation-bar
-       ├─ nldd-simple-section            de hero, met een nldd-title size="1"
+       ├─ nldd-hero                      de opening, met main-background
        ├─ nldd-simple-section            background="tinted", een uitgelicht blok
        │    └─ nldd-collection           layout="grid", item-width
        │         └─ nldd-card            met een nldd-container voor de padding
@@ -37,18 +37,18 @@ nldd-app-view                            de buitenste schil
       website-title="Mijn Dienst"
     ></nldd-top-navigation-bar>
 
-    <nldd-simple-section>
+    <nldd-hero main-background="accent">
       <nldd-title
+        color="inherit"
         size="1"
-        overline="Mijn Dienst"
         text="Regel je aanvraag online"
         heading-level="1"
       ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
-      <nldd-rich-text>
-        <p>Dien een aanvraag in, volg de behandeling en vind je documenten terug, zonder dat je weet bij welke afdeling het ligt.</p>
+      <nldd-rich-text color="inherit">
+        <p>Dien een aanvraag in, volg de behandeling en vind je documenten terug, zonder dat je hoeft te weten bij welke afdeling het ligt.</p>
       </nldd-rich-text>
-    </nldd-simple-section>
+    </nldd-hero>
 
     <nldd-simple-section background="tinted">
       <nldd-title
@@ -216,7 +216,15 @@ nldd-app-view                            de buitenste schil
 
 ## Waarom zo
 
-**Een verticale stapel secties, geen panelen.** Een contentpagina is een [`nldd-page`](../../nldd-design/reference.md#nldd-page) met secties eronder, net als elk ander scherm. Het verschil zit in wat erin staat, niet in de constructie, dus de regels uit [pagina met secties](page-with-sections.md) gelden hier onverkort: één sectie per blok, één `h1`, en geen kopniveau overslaan.
+**De app view is altijd de buitenste schil.** De [`nldd-app-view`](../../nldd-design/reference.md#nldd-app-view) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Het documentfont komt uit de stylesheet van het pakket, zodra er een app view op de pagina staat.
+
+**De opening is een hero, geen sectie met een grote titel.** De [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) is de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop, en dat is een prima opening.
+
+**Eén sectie per inhoudsblok.** Een [`nldd-simple-section`](../../nldd-design/reference.md#nldd-simple-section) regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Herhaal de sectie in plaats van er zelf kolommen in te bouwen.
+
+**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [`nldd-title`](../../nldd-design/reference.md#nldd-title) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een overzichtspagina een `h2`, en laat de grootte los daarvan.
+
+**Laat de header meescrollen, tenzij die zegt waar je naar kijkt.** Een [`nldd-page`](../../nldd-design/reference.md#nldd-page) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet: elke balk die blijft staan, kost ruimte die de inhoud nodig heeft. De uitzondering is de titelbalk die de context draagt, bij welk item deze inhoud hoort. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
 
 **Een rij gelijkwaardige kaarten is een collection.** De [`nldd-collection`](../../nldd-design/reference.md#nldd-collection) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint. Een eigen CSS-grid doet hetzelfde werk over, en anders.
 
@@ -234,8 +242,8 @@ nldd-app-view                            de buitenste schil
 
 Wat je gratis krijgt: de leesbreedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, en de juridische rij als eigen navigatie met een naam.
 
-Wat jij nog moet doen: een `heading-level` op elke titel, ook op die in de footer, en een tekst in een kaart die een link is. Die kaart ontleent zijn naam aan wat erin staat, dus een kaart met alleen een afbeelding krijgt een `accessible-label`.
+Wat jij nog moet doen: een `heading-level` op elke titel, ook op die in de footer, een [`nldd-skip-link`](../../nldd-design/reference.md#nldd-skip-link) bovenaan als er navigatie voor de inhoud staat, en een tekst in een kaart die een link is. Die kaart ontleent zijn naam aan wat erin staat, dus een kaart met alleen een afbeelding krijgt een `accessible-label`.
 
 ## Gezien in
 
-Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test; dit is dezelfde pagina, nu getoetst.
+Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Dit is dezelfde pagina, nu getoetst.
