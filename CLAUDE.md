@@ -146,6 +146,10 @@ Een patroon woont in `src/patterns/<slug>/`, met vier bestanden:
 
 Een regel die over één component gaat, hoort niet in een patroon maar in de JSDoc van dat component. Een patroon houdt de compositie en de redenen die over meer componenten gaan.
 
+De voorbeelden gebruiken één vaste cast, zodat een nieuw patroon schrijven kopiëren is en niet verzinnen: een **aanvraag** (`Aanvraag A-1042`, Dakisolatie, in behandeling; `Aanvraag A-1043`, Warmtepomp, afgerond), een **dossier** (`Dossier D-318`, team Uitvoering; `Dossier D-319`, team Beleid) en als dienstnaam **Mijn Dienst**. Geen datums, jaartallen, product- of organisatienamen, want die verouderen of vragen om een discussie die niets met het patroon te maken heeft. Lopende tekst mag gevulde tekst zijn; labels, knoppen, titels en validatieteksten blijven echt, want juist daar zijn de betekenis en de lengte het punt.
+
+Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-top-title-bar`](?path=…)`, niet "titelbalk" of "title bar". Dat is de naam die ook in de markup en in `reference.md` staat, dus wie erop zoekt vindt hem. In de zin eromheen schrijf je gewoon Nederlands ("de balk", "de rij"), want dan is net gezegd waar het over gaat.
+
 Houd de set klein: patroonbibliotheken gaan dood aan achterstallig onderhoud, niet aan een verkeerd formaat. Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
 Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Onbekende tag, attribuut, slot of icoonnaam laat CI falen. De logica zit in `scripts/lib/skill-markup.js` met tests in `skill-markup.test.mjs`; die gebruikt dezelfde JSDoc-parser als de referentie, zodat de drie niet uiteen kunnen lopen. Twee dingen zijn expres toegestaan: framework-bindingen (`:text`, `[attr.x]`, `v-if`) en attributen die een ouder voor zijn kinderen documenteert (`above`/`below`/`only` op de split views).

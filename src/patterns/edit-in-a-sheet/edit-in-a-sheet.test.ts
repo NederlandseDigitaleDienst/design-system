@@ -22,7 +22,7 @@ describe('patroon: bewerken in een sheet', () => {
 	it('noemt de sheet naar de titel in de titelbalk', async () => {
 		const sheet = await mount();
 		await waitForUpdate(sheet);
-		expect(sheet.shadowRoot!.querySelector('dialog')!.getAttribute('aria-label')).toBe('Aanvraag 2024-001 bewerken');
+		expect(sheet.shadowRoot!.querySelector('dialog')!.getAttribute('aria-label')).toBe('Aanvraag A-1042 bewerken');
 	});
 
 	it('sluit via de sluitknop in de titelbalk, zet open uit en vuurt close één keer', async () => {

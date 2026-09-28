@@ -10,7 +10,7 @@
 
 **Wanneer wel.** Een reeks gelijkwaardige items met tekst en hoogstens een paar acties per rij.
 
-**Wanneer niet.** Vergelijkt de gebruiker kolommen met elkaar, dan is het een [tabel](../../nldd-design/reference.md#nldd-table). Gaat het om een handvol gelijkwaardige blokken met een afbeelding of veel tekst, dan is het een [collection](../../nldd-design/reference.md#nldd-collection) met kaarten.
+**Wanneer niet.** Vergelijkt de gebruiker kolommen met elkaar, dan is het een [`nldd-table`](../../nldd-design/reference.md#nldd-table). Gaat het om een handvol gelijkwaardige blokken met een afbeelding of veel tekst, dan is het een [`nldd-collection`](../../nldd-design/reference.md#nldd-collection) met kaarten.
 
 ## Compositie
 
@@ -25,11 +25,11 @@ nldd-list                      accessible-label, variant, type
 
 ```html
 <nldd-list accessible-label="Dossiers">
-  <nldd-list-item href="#dossier-2024-001">
+  <nldd-list-item href="#dossier-d-318">
     <nldd-icon-cell icon="document"></nldd-icon-cell>
     <nldd-text-cell
-      text="Dossier 2024-001"
-      supporting-text="Laatst gewijzigd op 3 maart"
+      text="Dossier D-318"
+      supporting-text="Team Uitvoering"
     ></nldd-text-cell>
     <nldd-text-cell
       width="fit-content"
@@ -38,11 +38,11 @@ nldd-list                      accessible-label, variant, type
     ></nldd-text-cell>
   </nldd-list-item>
 
-  <nldd-list-item href="#dossier-2024-002">
+  <nldd-list-item href="#dossier-d-319">
     <nldd-icon-cell icon="document"></nldd-icon-cell>
     <nldd-text-cell
-      text="Dossier 2024-002"
-      supporting-text="Laatst gewijzigd op 28 februari"
+      text="Dossier D-319"
+      supporting-text="Team Beleid"
     ></nldd-text-cell>
     <nldd-text-cell
       width="fit-content"
@@ -55,25 +55,25 @@ nldd-list                      accessible-label, variant, type
 
 ## Waarom zo
 
-**Alles in een rij staat in een cel.** De [cel](../../nldd-design/reference.md#nldd-text-cell) bepaalt lettertype, grootte, kleur en uitlijning, afgestemd op de rij. Kale tekst krijgt daar niets van mee, en de [rij](../../nldd-design/reference.md#nldd-list-item) waarschuwt er in development voor. Opmaak stuur je via de attributen van de cel, zoals `color` en `**vet**` in `text`, niet met eigen CSS.
+**Alles in een rij staat in een cel.** Een cel als [`nldd-text-cell`](../../nldd-design/reference.md#nldd-text-cell) bepaalt lettertype, grootte, kleur en uitlijning, afgestemd op de rij. Kale tekst krijgt daar niets van mee, en de [`nldd-list-item`](../../nldd-design/reference.md#nldd-list-item) waarschuwt er in development voor. Opmaak stuur je via de attributen van de cel, zoals `color` en `**vet**` in `text`, niet met eigen CSS.
 
-**Eén actie maakt de rij zelf de control, twee of meer krijgen elk een segment.** Met één actie is de hele rij één groot klikvlak. Heeft een rij meer acties, geef dan elke actie een eigen [segment](../../nldd-design/reference.md#nldd-list-item-segment) en laat de rij zelf zonder `href` of `button`. Beide tegelijk nest een control in een control: een dubbele tabstop, en de knop kan de link activeren. Ook daarvoor waarschuwt de rij.
+**Eén actie maakt de rij zelf de control, twee of meer krijgen elk een segment.** Met één actie is de hele rij één groot klikvlak. Heeft een rij meer acties, geef dan elke actie een eigen [`nldd-list-item-segment`](../../nldd-design/reference.md#nldd-list-item-segment) en laat de rij zelf zonder `href` of `button`. Beide tegelijk nest een control in een control: een dubbele tabstop, en de knop kan de link activeren. Ook daarvoor waarschuwt de rij.
 
 ```html
-<nldd-list accessible-label="Opdrachten">
+<nldd-list accessible-label="Aanvragen">
   <nldd-list-item>
     <nldd-list-item-segment
-      href="#modernisering-inkoop"
+      href="#aanvraag-a-1042"
       width="full"
     >
       <nldd-text-cell
-        text="Modernisering Inkoop"
-        supporting-text="Rijkswaterstaat"
+        text="Aanvraag A-1042"
+        supporting-text="Dakisolatie"
       ></nldd-text-cell>
     </nldd-list-item-segment>
     <nldd-list-item-segment
       button
-      accessible-label="Bewerk Modernisering Inkoop"
+      accessible-label="Bewerk aanvraag A-1042"
     >
       <nldd-icon-cell
         icon="edit"
@@ -84,17 +84,17 @@ nldd-list                      accessible-label, variant, type
 
   <nldd-list-item>
     <nldd-list-item-segment
-      href="#open-data-architectuur"
+      href="#aanvraag-a-1043"
       width="full"
     >
       <nldd-text-cell
-        text="Open Data Architectuur"
-        supporting-text="Kadaster"
+        text="Aanvraag A-1043"
+        supporting-text="Warmtepomp"
       ></nldd-text-cell>
     </nldd-list-item-segment>
     <nldd-list-item-segment
       button
-      accessible-label="Bewerk Open Data Architectuur"
+      accessible-label="Bewerk aanvraag A-1043"
     >
       <nldd-icon-cell
         icon="edit"
@@ -105,7 +105,7 @@ nldd-list                      accessible-label, variant, type
 </nldd-list>
 ```
 
-**De lijst toont zelf zijn lege toestand.** Vul `slot="empty"` en `slot="no-results"` in plaats van een eigen "Geen resultaten" naast de [lijst](../../nldd-design/reference.md#nldd-list). Dat zijn twee verschillende zinnen: `empty` betekent dat er niets is, `no-results` dat je filter niets overlaat. Bij `no-results` blijven het zoekveld en de werkbalk staan, want dat is de weg terug. Verberg de lijst dus ook niet met `hidden` als er niets in staat, want dan verdwijnt de lege toestand mee.
+**De lijst toont zelf zijn lege toestand.** Vul `slot="empty"` en `slot="no-results"` in plaats van een eigen "Geen resultaten" naast de [`nldd-list`](../../nldd-design/reference.md#nldd-list). Dat zijn twee verschillende zinnen: `empty` betekent dat er niets is, `no-results` dat je filter niets overlaat. Bij `no-results` blijven het zoekveld en de werkbalk staan, want dat is de weg terug. Verberg de lijst dus ook niet met `hidden` als er niets in staat, want dan verdwijnt de lege toestand mee.
 
 ```html
 <nldd-list accessible-label="Dossiers">

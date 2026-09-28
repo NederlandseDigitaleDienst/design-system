@@ -9,7 +9,7 @@ import * as Stories from './confirm.stories';
 
 **Wanneer wel.** Als er echt geen weg terug is: een definitieve indiening, een betaling, een verwijdering zonder herstel.
 
-**Wanneer niet.** Bijna altijd. Kan de actie ongedaan worden gemaakt, doe dat dan en meld het achteraf met een herstelmogelijkheid: mensen klikken op de automatische piloot op "OK", dus een bevestiging vangt weinig fouten. Valt er niets te kiezen, dan hoeft er ook niet onderbroken te worden. Een melding zonder keuze is een [notification](?path=/docs/components-status-feedback-notification--docs) of een [banner](?path=/docs/components-status-feedback-banner--docs). En liever dan een modal: een [popover](?path=/docs/components-layout-popover--docs) die aan de actie vastzit en de pagina niet afdekt. De afwegingen staan in de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#feedback-en-state).
+**Wanneer niet.** Bijna altijd. Kan de actie ongedaan worden gemaakt, doe dat dan en meld het achteraf met een herstelmogelijkheid: mensen klikken op de automatische piloot op "OK", dus een bevestiging vangt weinig fouten. Valt er niets te kiezen, dan hoeft er ook niet onderbroken te worden. Een melding zonder keuze is een [`nldd-notification`](?path=/docs/components-status-feedback-notification--docs) of een [`nldd-banner`](?path=/docs/components-status-feedback-banner--docs). En liever dan een modal: een [`nldd-popover`](?path=/docs/components-layout-popover--docs) die aan de actie vastzit en de pagina niet afdekt. De afwegingen staan in de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#feedback-en-state).
 
 ## Compositie
 
@@ -29,15 +29,13 @@ nldd-modal-dialog            open, variant="alert", text, supporting-text
 
 ## Waarom zo
 
-**De actie woont in een eigen vlak.** Een [box](?path=/docs/components-layout-box--docs) met `background="critical"` is de danger zone: getint en omlijnd in kritiek, met een eigen kopje en een zin die zegt wat er gebeurt. Zo staat een onomkeerbare knop niet tussen de gewone acties waar iemand op de automatische piloot doorheen klikt. De box draagt zelf geen ARIA, dus het kopje en de knoptekst moeten het werk doen.
+**De actie woont in een eigen vlak.** Een [`nldd-box`](?path=/docs/components-layout-box--docs) met `background="critical"` is de danger zone: getint en omlijnd in kritiek, met een eigen kopje en een zin die zegt wat er gebeurt. Zo staat een onomkeerbare knop niet tussen de gewone acties waar iemand op de automatische piloot doorheen klikt. De box draagt zelf geen ARIA, dus het kopje en de knoptekst moeten het werk doen.
 
-**Noem het ding dat verdwijnt.** De titel van de dialoog zegt welk document het betreft, niet alleen dat er iets definitief gebeurt. "Verwijder definitief" vertelt hoe onherroepelijk het is, maar niet wát je kwijtraakt, en dat is precies wat iemand op dat moment wil nagaan. Dezelfde actie heet in de pagina en in de dialoog hetzelfde.
+**Noem het ding dat verdwijnt.** De titel van de dialoog zegt welk dossier het betreft, niet alleen dat er iets definitief gebeurt. "Verwijder definitief" vertelt hoe onherroepelijk het is, maar niet wát je kwijtraakt, en dat is precies wat iemand op dat moment wil nagaan. Dezelfde actie heet in de pagina en in de dialoog hetzelfde.
 
 **De uitweg is de primaire knop, en staat bovenaan.** De primaire knop is waar de gebruiker op de automatische piloot naartoe gaat, en dat hoort de uitweg te zijn, niet de onomkeerbare actie. De actie zelf komt eronder, als `destructive`. Een knoptekst als "OK" zegt niet wat er gebeurt: noem de actie.
 
-**Open de modal met `open`, net als een sheet.** De [modal dialog](?path=/docs/components-status-feedback-modal-dialog--docs) zet `open` zelf uit als de gebruiker de dialoog sluit met Esc of een klik ernaast. Bind `open` samen met `close` aan je toestand, en zet die na een keuze zelf uit.
-
-Hetzelfde blok zonder de onderbreking is de [inline dialog](?path=/docs/components-status-feedback-inline-dialog--docs), voor een lege toestand, een laadtoestand of een fout die de pagina niet hoeft te blokkeren. Dat is een ander probleem en krijgt zijn eigen patroon.
+Hetzelfde blok zonder de onderbreking is de [`nldd-inline-dialog`](?path=/docs/components-status-feedback-inline-dialog--docs), voor een lege toestand, een laadtoestand of een fout die de pagina niet hoeft te blokkeren. Dat is een ander probleem en krijgt zijn eigen patroon.
 
 ## Toegankelijkheid
 

@@ -34,19 +34,19 @@ nldd-app-view                            de buitenste schil
   <nldd-page>
     <nldd-top-navigation-bar
       slot="header"
-      website-title="RegelRecht"
+      website-title="Mijn Dienst"
     ></nldd-top-navigation-bar>
 
     <nldd-simple-section>
       <nldd-title
         size="1"
-        overline="RegelRecht"
-        text="Van wet naar digitale werking"
+        overline="Mijn Dienst"
+        text="Regel je aanvraag online"
         heading-level="1"
       ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-rich-text>
-        <p>RegelRecht verkent of wetgeving als uitvoerbare code geschreven kan worden, zodat verschillende organisaties dezelfde wet ook hetzelfde toepassen.</p>
+        <p>Dien een aanvraag in, volg de behandeling en vind je documenten terug, zonder dat je weet bij welke afdeling het ligt.</p>
       </nldd-rich-text>
     </nldd-simple-section>
 
@@ -54,7 +54,7 @@ nldd-app-view                            de buitenste schil
       <nldd-title
         slot="header"
         size="2"
-        text="Wat is RegelRecht?"
+        text="Wat je hier kunt"
         heading-level="2"
       ></nldd-title>
       <nldd-collection
@@ -65,12 +65,12 @@ nldd-app-view                            de buitenste schil
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Van analoog recht naar code"
+              text="Een aanvraag indienen"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
-              <p>Kunnen we traditionele wetgeving omzetten naar machine-uitvoerbare specificaties?</p>
+              <p>Je vult in wat er nodig is en ziet meteen welke gegevens ontbreken.</p>
             </nldd-rich-text>
           </nldd-container>
         </nldd-card>
@@ -78,12 +78,12 @@ nldd-app-view                            de buitenste schil
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Eén bron voor alle uitvoerders"
+              text="De behandeling volgen"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
-              <p>Dezelfde regel, dezelfde uitkomst, bij elke organisatie die hem toepast.</p>
+              <p>Elke stap in de behandeling staat op je aanvraag, met wie er aan werkt.</p>
             </nldd-rich-text>
           </nldd-container>
         </nldd-card>
@@ -91,12 +91,12 @@ nldd-app-view                            de buitenste schil
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Te volgen voor wie het aangaat"
+              text="Documenten terugvinden"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
-              <p>Een besluit laat zien welke regel is toegepast, en op welke gegevens.</p>
+              <p>Alles wat je hebt ingestuurd of ontvangen staat bij het dossier.</p>
             </nldd-rich-text>
           </nldd-container>
         </nldd-card>
@@ -107,12 +107,12 @@ nldd-app-view                            de buitenste schil
       <nldd-title
         slot="header"
         size="2"
-        text="Hoe we het aanpakken"
+        text="Hoe het werkt"
         heading-level="2"
       ></nldd-title>
       <nldd-rich-text slot="left">
-        <p>We schrijven een wet uit als een set regels die een computer kan uitvoeren, en toetsen die aan echte zaken. Wat niet klopt, komt zo aan het licht voordat iemand er een besluit op baseert.</p>
-        <p>Het werk is open: de regels, de toetsen en de uitkomsten zijn na te lezen, zodat een uitvoerder kan controleren wat er gebeurt.</p>
+        <p>Een aanvraag gaat langs een vaste route: controleren, beoordelen, besluiten. Elke stap heeft een eigenaar, en je ziet waar de aanvraag ligt.</p>
+        <p>Duurt een stap langer dan gepland, dan lees je op het dossier waarom, en wat er nodig is om verder te kunnen.</p>
       </nldd-rich-text>
       <nldd-card
         slot="right"
@@ -126,12 +126,12 @@ nldd-app-view                            de buitenste schil
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-title
             size="4"
-            text="Werken aan RegelRecht"
+            text="Werken bij Mijn Dienst"
             heading-level="3"
           ></nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-rich-text>
-            <p>We zoeken een jurist die code durft te lezen.</p>
+            <p>We zoeken behandelaars die een aanvraag van begin tot eind volgen.</p>
           </nldd-rich-text>
         </nldd-container>
       </nldd-card>
@@ -143,14 +143,14 @@ nldd-app-view                            de buitenste schil
     >
       <nldd-title
         size="2"
-        text="Meedoen of meekijken"
-        supporting-text="Het werk staat open voor iedereen die wetten uitvoert."
+        text="Zelf een aanvraag doen"
+        supporting-text="Je hebt je DigiD nodig en tien minuten tijd."
         heading-level="2"
       ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-button
         variant="primary"
-        text="Lees de aanpak"
+        text="Start een aanvraag"
         href="#aanpak"
       ></nldd-button>
     </nldd-simple-section>
@@ -164,13 +164,13 @@ nldd-app-view                            de buitenste schil
         <nldd-container gap="8">
           <nldd-title
             size="5"
-            text="Over RegelRecht"
+            text="Over Mijn Dienst"
             heading-level="2"
           ></nldd-title>
           <nldd-link
             size="sm"
             href="#aanpak"
-            text="Onze aanpak"
+            text="Hoe het werkt"
           ></nldd-link>
           <nldd-link
             size="sm"
@@ -219,19 +219,19 @@ nldd-app-view                            de buitenste schil
 
 ## Waarom zo
 
-**Een verticale stapel secties, geen panelen.** Een contentpagina is een [pagina](../../nldd-design/reference.md#nldd-page) met secties eronder, net als elk ander scherm. Het verschil zit in wat erin staat, niet in de constructie, dus de regels uit [pagina met secties](page-with-sections.md) gelden hier onverkort: één sectie per blok, één `h1`, en geen kopniveau overslaan.
+**Een verticale stapel secties, geen panelen.** Een contentpagina is een [`nldd-page`](../../nldd-design/reference.md#nldd-page) met secties eronder, net als elk ander scherm. Het verschil zit in wat erin staat, niet in de constructie, dus de regels uit [pagina met secties](page-with-sections.md) gelden hier onverkort: één sectie per blok, één `h1`, en geen kopniveau overslaan.
 
-**Een rij gelijkwaardige kaarten is een collection.** De [collection](../../nldd-design/reference.md#nldd-collection) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint. Een eigen CSS-grid doet hetzelfde werk over, en anders.
+**Een rij gelijkwaardige kaarten is een collection.** De [`nldd-collection`](../../nldd-design/reference.md#nldd-collection) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint. Een eigen CSS-grid doet hetzelfde werk over, en anders.
 
-**Een kaart zet zelf geen padding.** De [kaart](../../nldd-design/reference.md#nldd-card) laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand.
+**Een kaart zet zelf geen padding.** De [`nldd-card`](../../nldd-design/reference.md#nldd-card) laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand.
 
-**Uitleg links, kaart rechts: pak de sectie die dat al is.** De [twee derde, een derde-sectie](../../nldd-design/reference.md#nldd-two-thirds-one-third-section) heeft een `left`- en een `right`-slot en laat de kolommen onder de 280px vanzelf onder elkaar vallen. Zelf twee kolommen maken kost een mediaquery die de sectie al voor je schrijft.
+**Uitleg links, kaart rechts: pak de sectie die dat al is.** De [`nldd-two-thirds-one-third-section`](../../nldd-design/reference.md#nldd-two-thirds-one-third-section) heeft een `left`- en een `right`-slot en laat de kolommen onder de 280px vanzelf onder elkaar vallen. Zelf twee kolommen maken kost een mediaquery die de sectie al voor je schrijft.
 
-**Een vlak maak je met `background` en `scheme`, niet met eigen CSS.** Elke page-section kent allebei, en ze cascaderen het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Ze horen bij elkaar. `scheme="inverted"` draait het kleurschema om, maar zonder `background` schildert de sectie niets, en dan staat lichte tekst op een lichte pagina. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer. Loopt het vlak van rand tot rand, bijvoorbeeld om een afbeelding, pak dan de [full bleed-sectie](../../nldd-design/reference.md#nldd-full-bleed-section): die heeft geen horizontale padding, dus zet er zelf een container omheen als er tekst in staat.
+**Een vlak maak je met `background` en `scheme`, niet met eigen CSS.** Elke page-section kent allebei, en ze cascaderen het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Ze horen bij elkaar. `scheme="inverted"` draait het kleurschema om, maar zonder `background` schildert de sectie niets, en dan staat lichte tekst op een lichte pagina. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer. Loopt het vlak van rand tot rand, bijvoorbeeld om een afbeelding, pak dan de [`nldd-full-bleed-section`](../../nldd-design/reference.md#nldd-full-bleed-section): die heeft geen horizontale padding, dus zet er zelf een container omheen als er tekst in staat.
 
-**Een label op een kaart is een tag.** Een [tag](../../nldd-design/reference.md#nldd-tag) is een eigenschap die iemand heeft toegekend, zoals "Vacature". Een badge is voor een aantal of voor een toestand die het systeem zelf bijhoudt, en een token is iets dat je kunt weghalen.
+**Een label op een kaart is een [`nldd-tag`](../../nldd-design/reference.md#nldd-tag).** Dat component legt uit wanneer het er juist een badge of een token is.
 
-**De footer is een component, geen eigen blok.** De [page footer](../../nldd-design/reference.md#nldd-page-footer) heeft een rij voor je eigen inhoud en een `legal-bar` eronder, trekt de scheidingslijnen tussen de gevulde rijen, en draagt het id waar een skip link naartoe kan springen.
+**De footer is een component, geen eigen blok.** De [`nldd-page-footer`](../../nldd-design/reference.md#nldd-page-footer) heeft een rij voor je eigen inhoud en een `legal-bar` eronder, trekt de scheidingslijnen tussen de gevulde rijen, en draagt het id waar een skip link naartoe kan springen.
 
 ## Toegankelijkheid
 

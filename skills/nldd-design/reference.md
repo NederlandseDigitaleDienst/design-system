@@ -246,6 +246,8 @@ A split button combines a primary action button with a dropdown trigger. The mai
 
 ### `<nldd-toolbar>`
 
+A row of controls that belong to a whole screen or pane, with an overflow menu for what does not fit. The toolbar measures itself: as the row runs out of room, items move into that menu, the lowest `priority` first, and items that share a priority move together. So the order in the HTML says where an item sits, and `priority` says how long it stays. Every item carries its own alternative for the menu, an nldd-menu-item in its `overflow` slot. Without one the action is simply gone once the item overflows, which on a wide screen you never see; the item warns about it in development. The toolbar's own `overflow` slot holds the actions that live in the menu at every width.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -2006,7 +2008,7 @@ An overlay component that slides in from the side or bottom of the screen. Based
 | Event | Description |
 | --- | --- |
 | `open` | Fired when the sheet is opened |
-| `close` | Fired when the sheet is fully closed. Does not bubble: overlays nest, and a listener on one sheet asking about that sheet should not also hear the form it opened. |
+| `close` | Fired when the sheet is fully closed. Does not bubble: overlays nest, and a listener on one sheet asking about that sheet should not also hear the form it opened. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice. |
 
 ### `<nldd-side-by-side-split-view>`
 
@@ -2210,7 +2212,7 @@ A floating window based on the native <dialog> element, positionable through CSS
 | Event | Description |
 | --- | --- |
 | `open` | When the window opens |
-| `close` | When the window has fully closed. Does not bubble: overlays can sit inside each other, and a listener on one window should not also hear the form that opened it. |
+| `close` | When the window has fully closed. Does not bubble: overlays can sit inside each other, and a listener on one window should not also hear the form that opened it. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice. |
 
 ## Navigation
 
@@ -2671,7 +2673,7 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 | Event | Description |
 | --- | --- |
 | `open` | When the dialog is opened |
-| `close` | When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened. |
+| `close` | When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice. |
 
 ### `<nldd-notification>`
 

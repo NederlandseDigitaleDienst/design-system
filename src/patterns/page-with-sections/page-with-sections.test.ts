@@ -60,7 +60,7 @@ describe('patroon: pagina met secties', () => {
 		const detail = root.querySelectorAll('nldd-page')[1];
 		const buitenste = detail.shadowRoot!.querySelector('.page')!;
 		expect(buitenste.localName).toBe('section');
-		expect(buitenste.getAttribute('aria-label')).toBe('Dossier 2024-001');
+		expect(buitenste.getAttribute('aria-label')).toBe('Dossier D-318');
 	});
 
 	it('zet in de app-shell de hoofdinhoud in het eerste paneel', async () => {

@@ -32,7 +32,7 @@
  * @slot notifications - Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone.
  *
  * @fires open - When the window opens
- * @fires close - When the window has fully closed. Does not bubble: overlays can sit inside each other, and a listener on one window should not also hear the form that opened it.
+ * @fires close - When the window has fully closed. Does not bubble: overlays can sit inside each other, and a listener on one window should not also hear the form that opened it. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice.
  *
  * @method show() - Opens the window
  * @method hide() - Closes the window

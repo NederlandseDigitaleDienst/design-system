@@ -37,7 +37,7 @@ nldd-app-view                  de buitenste schil
         slot="header"
         size="1"
         overline="Dossier"
-        text="Aanvraag 2024-001"
+        text="Aanvraag A-1042"
         heading-level="1"
       >
         <nldd-button
@@ -82,17 +82,17 @@ nldd-app-view                  de buitenste schil
 
 ## Waarom zo
 
-**De app view is altijd de buitenste schil.** De [app view](../../nldd-design/reference.md#nldd-app-view) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Het documentfont komt uit de stylesheet van het pakket, zodra er een app view op de pagina staat.
+**De app view is altijd de buitenste schil.** De [`nldd-app-view`](../../nldd-design/reference.md#nldd-app-view) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Het documentfont komt uit de stylesheet van het pakket, zodra er een app view op de pagina staat.
 
-**Eén sectie per inhoudsblok.** Een [simple section](../../nldd-design/reference.md#nldd-simple-section) regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Herhaal de sectie in plaats van er zelf kolommen in te bouwen, en geef een blok een eigen vlak met `background` op de sectie, niet met een achtergrondkleur van jezelf.
+**Eén sectie per inhoudsblok.** Een [`nldd-simple-section`](../../nldd-design/reference.md#nldd-simple-section) regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Herhaal de sectie in plaats van er zelf kolommen in te bouwen, en geef een blok een eigen vlak met `background` op de sectie, niet met een achtergrondkleur van jezelf.
 
-**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [title](../../nldd-design/reference.md#nldd-title) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een overzichtspagina een `h2`, en laat de grootte los daarvan.
+**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [`nldd-title`](../../nldd-design/reference.md#nldd-title) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een overzichtspagina een `h2`, en laat de grootte los daarvan.
 
-**Laat de header meescrollen, tenzij die zegt waar je naar kijkt.** Een [pagina](../../nldd-design/reference.md#nldd-page) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet: elke balk die blijft staan, kost ruimte die de inhoud nodig heeft. De uitzondering is de titelbalk die de context draagt, bij welk item deze inhoud hoort. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
+**Laat de header meescrollen, tenzij die zegt waar je naar kijkt.** Een [`nldd-page`](../../nldd-design/reference.md#nldd-page) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet: elke balk die blijft staan, kost ruimte die de inhoud nodig heeft. De uitzondering is de titelbalk die de context draagt, bij welk item deze inhoud hoort. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
 
 ## Panelen naast elkaar: begin met een split view
 
-Bouw je een werkomgeving in plaats van een pagina, dan is de split view de laag direct onder de app view, en staat in elk paneel een eigen pagina. De [side-by-side split view](../../nldd-design/reference.md#nldd-side-by-side-split-view) laat panelen van rechts naar links verdwijnen als het scherm smal wordt. Zet de hoofdinhoud dus in `pane-1` en het detail of de inspector rechts.
+Bouw je een werkomgeving in plaats van een pagina, dan is de split view de laag direct onder de app view, en staat in elk paneel een eigen pagina. De [`nldd-side-by-side-split-view`](../../nldd-design/reference.md#nldd-side-by-side-split-view) laat panelen van rechts naar links verdwijnen als het scherm smal wordt. Zet de hoofdinhoud dus in `pane-1` en het detail of de inspector rechts.
 
 ```html
 <nldd-app-view>
@@ -105,15 +105,15 @@ Bouw je een werkomgeving in plaats van een pagina, dan is de split view de laag 
         ></nldd-top-title-bar>
         <nldd-simple-section>
           <nldd-list accessible-label="Dossiers">
-            <nldd-list-item href="#dossier-2024-001">
+            <nldd-list-item href="#dossier-d-318">
               <nldd-text-cell
-                text="Dossier 2024-001"
+                text="Dossier D-318"
                 supporting-text="In behandeling"
               ></nldd-text-cell>
             </nldd-list-item>
-            <nldd-list-item href="#dossier-2024-002">
+            <nldd-list-item href="#dossier-d-319">
               <nldd-text-cell
-                text="Dossier 2024-002"
+                text="Dossier D-319"
                 supporting-text="Afgerond"
               ></nldd-text-cell>
             </nldd-list-item>
@@ -126,10 +126,10 @@ Bouw je een werkomgeving in plaats van een pagina, dan is de split view de laag 
       slot="pane-2"
       background="tinted"
     >
-      <nldd-page accessible-label="Dossier 2024-001">
+      <nldd-page accessible-label="Dossier D-318">
         <nldd-top-title-bar
           slot="header"
-          text="Dossier 2024-001"
+          text="Dossier D-318"
           heading-level="2"
         ></nldd-top-title-bar>
         <nldd-simple-section>
@@ -143,17 +143,17 @@ Bouw je een werkomgeving in plaats van een pagina, dan is de split view de laag 
 </nldd-app-view>
 ```
 
-**Elk paneel heeft een titelbalk, maar de pagina heeft één `h1`.** Een [titelbalk](../../nldd-design/reference.md#nldd-top-title-bar) rendert standaard een `h1`. Geef de titelbalk van een paneel naast de hoofdinhoud daarom `heading-level="2"`.
+**Elk paneel heeft een titelbalk, maar de pagina heeft één `h1`.** Een [`nldd-top-title-bar`](../../nldd-design/reference.md#nldd-top-title-bar) rendert standaard een `h1`. Geef de titelbalk van een paneel naast de hoofdinhoud daarom `heading-level="2"`.
 
-**Zeg welk paneel de hoofdinhoud draagt, met `landmarks="page"`.** Een document heeft één `main`, één banner en één contentinfo, dus een [pagina](../../nldd-design/reference.md#nldd-page) in een paneel houdt die niet vanzelf: ze wordt een sectie zonder landmarks. Welk paneel de hoofdinhoud is, weet alleen de applicatie, dus dat zet je er zelf op. Geef de andere panelen een `accessible-label`, dan zijn het benoemde regio's waar een schermlezergebruiker naartoe kan springen, met een naam die zegt wat erin staat.
+**Zeg welk paneel de hoofdinhoud draagt, met `landmarks="page"`.** Een document heeft één `main`, één banner en één contentinfo, dus een [`nldd-page`](../../nldd-design/reference.md#nldd-page) in een paneel houdt die niet vanzelf: ze wordt een sectie zonder landmarks. Welk paneel de hoofdinhoud is, weet alleen de applicatie, dus dat zet je er zelf op. Geef de andere panelen een `accessible-label`, dan zijn het benoemde regio's waar een schermlezergebruiker naartoe kan springen, met een naam die zegt wat erin staat.
 
-Voor balken boven of onder de hoofdinhoud, zoals een werkbalk of een statusbalk, is er de [bar split view](../../nldd-design/reference.md#nldd-bar-split-view).
+Voor balken boven of onder de hoofdinhoud, zoals een werkbalk of een statusbalk, is er de [`nldd-bar-split-view`](../../nldd-design/reference.md#nldd-bar-split-view).
 
 ## Toegankelijkheid
 
 Wat je gratis krijgt: de leesbreedte, de responsieve witruimte, de achtergrond en het contrast dat daarbij hoort, en de koppen die de titels renderen.
 
-Wat jij nog moet doen: een `heading-level` op elke titel en titelbalk, zodat de koppenstructuur klopt, en een [skip link](../../nldd-design/reference.md#nldd-skip-link) bovenaan als er navigatie boven de inhoud staat.
+Wat jij nog moet doen: een `heading-level` op elke titel en titelbalk, zodat de koppenstructuur klopt, en een [`nldd-skip-link`](../../nldd-design/reference.md#nldd-skip-link) bovenaan als er navigatie boven de inhoud staat.
 
 ## Gezien in
 

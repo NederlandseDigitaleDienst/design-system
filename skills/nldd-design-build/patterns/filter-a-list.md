@@ -10,7 +10,7 @@
 
 **Wanneer wel.** Elke lijst of tabel die langer wordt dan een scherm, of waar de gebruiker een deelverzameling zoekt.
 
-**Wanneer niet.** Bij een handvol rijen filtert niemand: laat het weg. Gaat het om één zoekterm zonder verdere criteria, dan is een [zoekveld](../../nldd-design/reference.md#nldd-search-field) boven de lijst genoeg, en heb je geen sheet nodig.
+**Wanneer niet.** Bij een handvol rijen filtert niemand: laat het weg. Gaat het om één zoekterm zonder verdere criteria, dan is een [`nldd-search-field`](../../nldd-design/reference.md#nldd-search-field) boven de lijst genoeg, en heb je geen sheet nodig.
 
 ## Compositie
 
@@ -77,15 +77,15 @@ nldd-sheet                     de filterkeuzes zelf
         text="Geen dossiers gevonden"
         supporting-text="Pas je zoekopdracht of filters aan."
       ></nldd-inline-dialog>
-      <nldd-list-item href="#dossier-2024-001">
+      <nldd-list-item href="#dossier-d-318">
         <nldd-text-cell
-          text="Dossier 2024-001"
+          text="Dossier D-318"
           supporting-text="In behandeling, team Uitvoering"
         ></nldd-text-cell>
       </nldd-list-item>
-      <nldd-list-item href="#dossier-2024-007">
+      <nldd-list-item href="#dossier-d-319">
         <nldd-text-cell
-          text="Dossier 2024-007"
+          text="Dossier D-319"
           supporting-text="In behandeling, team Uitvoering"
         ></nldd-text-cell>
       </nldd-list-item>
@@ -153,11 +153,11 @@ nldd-sheet                     de filterkeuzes zelf
 
 **Het zoekveld staat in de `header`-slot, niet boven de lijst.** Anders scrolt het mee en is het juist bij een lange lijst uit beeld, precies wanneer je het nodig hebt.
 
-**Toon wélke filters aanstaan, niet hoeveel.** Een strip met een [token](../../nldd-design/reference.md#nldd-token) per actieve waarde zegt precies wat er is weggefilterd, en elk token is zijn eigen weg terug. Een token en geen tag of badge: alleen een token kun je weghalen. Zijn verwijderknop noemt het token al (`Verwijder "Status: In behandeling"`), dus daar hoef je niets voor te schrijven. Houd er "Wis alle filters" naast: een waarde die nergens meer op uitkomt, krijgt geen eigen token, en dan is dat de enige uitweg.
+**Toon wélke filters aanstaan, niet hoeveel.** Een strip met een [`nldd-token`](../../nldd-design/reference.md#nldd-token) per actieve waarde zegt precies wat er is weggefilterd, en elk token is zijn eigen weg terug. Een token en geen tag of badge: alleen een token kun je weghalen. Zijn verwijderknop noemt het token al (`Verwijder "Status: In behandeling"`), dus daar hoef je niets voor te schrijven. Houd er "Wis alle filters" naast: een waarde die nergens meer op uitkomt, krijgt geen eigen token, en dan is dat de enige uitweg.
 
-**`layout="wrap"` op de strip.** De standaard van [container](../../nldd-design/reference.md#nldd-container) is `stack`, en dan staan de tokens onder elkaar. Met `wrap` lopen ze door op een volgende regel zodra er te veel filters aanstaan.
+**`layout="wrap"` op de strip.** De standaard van [`nldd-container`](../../nldd-design/reference.md#nldd-container) is `stack`, en dan staan de tokens onder elkaar. Met `wrap` lopen ze door op een volgende regel zodra er te veel filters aanstaan.
 
-**De filterkeuzes staan in een sheet die altijd in de pagina staat.** Een [sheet](../../nldd-design/reference.md#nldd-sheet) is verborgen tot je `open` zet, dus je hoeft de sheet niet pas op te halen als die opent. Doe je dat wel, dan is het formulier er meestal niet op het moment dat een token wordt weggeklikt, en vindt je handler niets om bij te werken. Hoe de sheet verder in elkaar zit, staat in [bewerken in een sheet](edit-in-a-sheet.md).
+**De filterkeuzes staan in een sheet die altijd in de pagina staat.** Een [`nldd-sheet`](../../nldd-design/reference.md#nldd-sheet) is verborgen tot je `open` zet, dus je hoeft de sheet niet pas op te halen als die opent. Doe je dat wel, dan is het formulier er meestal niet op het moment dat een token wordt weggeklikt, en vindt je handler niets om bij te werken. Hoe de sheet verder in elkaar zit, staat in [bewerken in een sheet](edit-in-a-sheet.md).
 
 **De lijst toont zelf dat het filter niets overlaat.** Vul `slot="no-results"` met een eigen zin. Het zoekveld en de filters blijven dan staan als weg terug, zie [lijst met rijen](list-with-rows.md).
 

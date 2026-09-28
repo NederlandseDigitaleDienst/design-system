@@ -10,7 +10,7 @@
 
 **Wanneer wel.** Een lijst acties of keuzes die bij één knop hoort.
 
-**Wanneer niet.** Voor de hoofdnavigatie van een site gebruik je een [menu bar](../../nldd-design/reference.md#nldd-menu-bar). Voor een keuze uit veel opties in een formulier gebruik je een [dropdown](../../nldd-design/reference.md#nldd-dropdown). En geen megamenu's, zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md).
+**Wanneer niet.** Voor de hoofdnavigatie van een site gebruik je een [`nldd-menu-bar`](../../nldd-design/reference.md#nldd-menu-bar). Voor een keuze uit veel opties in een formulier gebruik je een [`nldd-dropdown`](../../nldd-design/reference.md#nldd-dropdown). En geen megamenu's, zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md).
 
 ## Compositie
 
@@ -78,9 +78,9 @@ Een keuze uit een set is een groep items met `type="radio"`, iets dat aan of uit
 
 ## Waarom zo
 
-**Nest het menu in de `popup`-slot van de knop.** Dan hangt de [knop](../../nldd-design/reference.md#nldd-button) het menu zelf aan zich vast en opent en sluit die het: geen id, geen `anchor`, geen eigen klikafhandeling. Het menu meldt `expanded` en `aria-haspopup` terug aan de knop, vanaf de eerste render. Een losse `anchor` is alleen nodig voor een trigger zonder `popup`-slot.
+**Nest het menu in de `popup`-slot van de knop.** Dan hangt de [`nldd-button`](../../nldd-design/reference.md#nldd-button) het menu zelf aan zich vast en opent en sluit die het: geen id, geen `anchor`, geen eigen klikafhandeling. Het menu meldt `expanded` en `aria-haspopup` terug aan de knop, vanaf de eerste render. Een losse `anchor` is alleen nodig voor een trigger zonder `popup`-slot.
 
-**Een destructieve actie staat onderaan, achter een scheidingslijn.** Zo staat die niet tussen de acties waar de gebruiker snel doorheen klikt. `destructive` kleurt het [item](../../nldd-design/reference.md#nldd-menu) rood, maar de tekst moet zelf zeggen wat er gebeurt. Is de actie onomkeerbaar, vraag dan om [bevestiging](confirm.md) of maak die ongedaan te maken.
+**Een destructieve actie staat onderaan, achter een scheidingslijn.** Zo staat die niet tussen de acties waar de gebruiker snel doorheen klikt. `destructive` kleurt het menu-item rood, zie [`nldd-menu`](../../nldd-design/reference.md#nldd-menu), maar de tekst moet zelf zeggen wat er gebeurt. Is de actie onomkeerbaar, vraag dan om [bevestiging](confirm.md) of maak die ongedaan te maken.
 
 **Een keuze is een radio-item, geen vinkje in de tekst.** Met `type="radio"` of `type="checkbox"` krijgt het item de juiste rol en de stand die een schermlezer voorleest. Een vinkje in de tekst zegt een schermlezer niets.
 

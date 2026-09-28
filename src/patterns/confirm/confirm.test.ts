@@ -27,7 +27,7 @@ describe('patroon: onomkeerbare actie', () => {
 	it('noemt in de dialoog het ding dat verdwijnt', () => {
 		const dialog = root.querySelector('nldd-modal-dialog')!;
 		const name = dialog.shadowRoot!.querySelector('dialog')!.getAttribute('aria-label')!;
-		expect(name).toContain('Jaarverslag 2025');
+		expect(name).toContain('Dossier D-318');
 	});
 
 	it('zet de uitweg als primaire knop vóór de onomkeerbare actie', () => {

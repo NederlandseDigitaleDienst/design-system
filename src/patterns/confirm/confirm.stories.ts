@@ -7,7 +7,7 @@ export default {
 
 export const Standaard = patternStory(markup, (root) => {
 	const dialog = root.querySelector('nldd-modal-dialog')!;
-	root.querySelector('#document-verwijderen')!.addEventListener('click', () => {
+	root.querySelector('#dossier-verwijderen')!.addEventListener('click', () => {
 		dialog.open = true;
 	});
 	dialog.querySelectorAll('nldd-button').forEach((button) => {
