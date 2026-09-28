@@ -24106,20 +24106,6 @@
             },
             {
               "kind": "field",
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "attribute": "scheme",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "height",
               "type": {
                 "text": "string | undefined"
@@ -24310,19 +24296,6 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
-            },
-            {
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "fieldName": "scheme",
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              },
-              "description": "Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme)."
             },
             {
               "name": "height",
@@ -24634,20 +24607,6 @@
             },
             {
               "kind": "field",
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "attribute": "scheme",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "height",
               "type": {
                 "text": "string | undefined"
@@ -24912,19 +24871,6 @@
               "description": "Surface behind the hero (section API)"
             },
             {
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "fieldName": "scheme",
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              },
-              "description": "Color scheme (section API)"
-            },
-            {
               "name": "height",
               "type": {
                 "text": "string | undefined"
@@ -25149,20 +25095,6 @@
             },
             {
               "kind": "field",
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "attribute": "scheme",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "height",
               "type": {
                 "text": "string | undefined"
@@ -25353,19 +25285,6 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
-            },
-            {
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "fieldName": "scheme",
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              },
-              "description": "Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme)."
             },
             {
               "name": "height",
@@ -25607,20 +25526,6 @@
             },
             {
               "kind": "field",
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "attribute": "scheme",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "height",
               "type": {
                 "text": "string | undefined"
@@ -25811,19 +25716,6 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
-            },
-            {
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "fieldName": "scheme",
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              },
-              "description": "Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme)."
             },
             {
               "name": "height",
@@ -26039,8 +25931,8 @@
           "type": {
             "text": "object"
           },
-          "default": "{ background: 'inherit', scheme: 'inherit', width: '', height: '', paddingBlock: '', paddingTop: '', paddingBottom: '', smPaddingBlock: '', smPaddingTop: '', smPaddingBottom: '', mdPaddingBlock: '', mdPaddingTop: '', mdPaddingBottom: '', lgPaddingBlock: '', lgPaddingTop: '', lgPaddingBottom: '', }",
-          "description": "Shared Storybook controls for the PageSectionMixin surface API\n(background, scheme, width, height and the 12 block-padding overrides).\nSpread into a section story's `args` / `argTypes`, and bind onto the host\nelement in `render` with the `pageSectionAttrs` directive."
+          "default": "{ background: 'inherit', width: '', height: '', paddingBlock: '', paddingTop: '', paddingBottom: '', smPaddingBlock: '', smPaddingTop: '', smPaddingBottom: '', mdPaddingBlock: '', mdPaddingTop: '', mdPaddingBottom: '', lgPaddingBlock: '', lgPaddingTop: '', lgPaddingBottom: '', }",
+          "description": "Shared Storybook controls for the PageSectionMixin surface API\n(background, width, height and the 12 block-padding overrides).\nSpread into a section story's `args` / `argTypes`, and bind onto the host\nelement in `render` with the `pageSectionAttrs` directive."
         },
         {
           "kind": "variable",
@@ -26048,7 +25940,7 @@
           "type": {
             "text": "object"
           },
-          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\" en \"tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, scheme: { control: { type: 'select' }, options: ['inherit', 'light', 'dark', 'inverted'], description: 'Kleurschema: \"inherit\" volgt de pagina, \"inverted\" is het tegenovergestelde daarvan', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
+          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\" en \"tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
         },
         {
           "kind": "variable",
@@ -26199,20 +26091,6 @@
               },
               "default": "'inherit'",
               "attribute": "background",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "attribute": "scheme",
               "reflects": true,
               "inheritedFrom": {
                 "name": "PageSectionMixin",
@@ -26480,18 +26358,6 @@
               }
             },
             {
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "fieldName": "scheme",
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              }
-            },
-            {
               "name": "height",
               "type": {
                 "text": "string | undefined"
@@ -26747,20 +26613,6 @@
             },
             {
               "kind": "field",
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "attribute": "scheme",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "height",
               "type": {
                 "text": "string | undefined"
@@ -26969,19 +26821,6 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
-            },
-            {
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "fieldName": "scheme",
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              },
-              "description": "Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme)."
             },
             {
               "name": "height",
@@ -27215,20 +27054,6 @@
             },
             {
               "kind": "field",
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "attribute": "scheme",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "height",
               "type": {
                 "text": "string | undefined"
@@ -27419,19 +27244,6 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
-            },
-            {
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "fieldName": "scheme",
-              "inheritedFrom": {
-                "name": "PageSectionMixin",
-                "module": "src/utilities/page-section-mixin.ts"
-              },
-              "description": "Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme)."
             },
             {
               "name": "height",
@@ -38077,7 +37889,7 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for background or scheme — both\n`color-scheme` and custom properties inherit through the shadow boundary\ninto the section's block element and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted`. Setting\n  `base`/`tinted` also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **scheme**: `inherit` (default) | `light` | `dark` | `inverted`.\n  `inverted` resolves to the opposite of the surrounding page scheme and\n  re-resolves when `:root[data-scheme]` flips (via onColorSchemeChange).\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.",
+          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted`. Setting\n  `base`/`tinted` also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.",
           "name": "PageSectionMixin",
           "members": [
             {
@@ -38088,16 +37900,6 @@
               },
               "default": "'inherit'",
               "attribute": "background",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "attribute": "scheme",
               "reflects": true
             },
             {
@@ -38218,14 +38020,6 @@
               "reflects": true
             },
             {
-              "kind": "field",
-              "name": "_unsubScheme",
-              "type": {
-                "text": "() => void | undefined"
-              },
-              "privacy": "private"
-            },
-            {
               "kind": "method",
               "name": "_onSlotChange",
               "return": {
@@ -38251,27 +38045,6 @@
                   "text": "void"
                 }
               }
-            },
-            {
-              "kind": "method",
-              "name": "_applyScheme",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_resolveActiveScheme",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "'light' | 'dark'"
-                }
-              },
-              "description": "Best-effort detection of the *actively rendered* scheme around the\nsection, used to invert it.\n\n`getComputedStyle(parent).colorScheme` returns the *declared* value\n(`'light dark'` for \"supports both\"; `'normal'` for the initial\nvalue) — not the one the browser actually paints with. For\n`'inverted'` we want the painted scheme, so:\n  1. Prefer the app's explicit override on `:root[data-scheme]`\n     (the project's site-wide light/dark toggle).\n  2. Walk up to find an ancestor that pins a single scheme.\n  3. Otherwise fall back to `prefers-color-scheme` — that's what\n     `'light dark'` resolves to in practice.\n\nPerf: the per-call cost is `getComputedStyle()` for each ancestor\nup to one that pins a scheme. This only runs when the project\ndoes NOT set `:root[data-scheme]` (apps with a global theme\ntoggle, like regelrecht, hit the fast path and never enter the\nwalk). When the fallback is needed the walk is bounded by the\nDOM depth and only fires on `scheme` prop change or a\ncolor-scheme repaint event — not on every render.\n\nCross-shadow caveat: `parentElement` doesn't traverse shadow\nboundaries, so a `color-scheme` declared on an outer custom\nelement's host won't be picked up by the walk; we then fall\nthrough to `prefers-color-scheme`. For reliable `'inverted'`\nbehavior inside nested shadow trees, set `data-scheme` on\n`:root` so the fast path resolves the painted scheme directly."
             },
             {
               "kind": "method",
@@ -38326,14 +38099,6 @@
               },
               "default": "'inherit'",
               "fieldName": "background"
-            },
-            {
-              "name": "scheme",
-              "type": {
-                "text": "PageSectionScheme"
-              },
-              "default": "'inherit'",
-              "fieldName": "scheme"
             },
             {
               "name": "height",

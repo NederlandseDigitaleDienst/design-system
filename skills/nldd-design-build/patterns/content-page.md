@@ -25,7 +25,7 @@ nldd-app-view                            de buitenste schil
        ├─ nldd-two-thirds-one-third-section
        │    ├─ slot="left"               de lopende uitleg
        │    └─ slot="right"              een ondersteunende kaart
-       ├─ nldd-simple-section            scheme="inverted", de oproep
+       ├─ nldd-simple-section            background="tinted", de oproep
        └─ slot="footer"                  nldd-page-footer
 ```
 
@@ -137,10 +137,7 @@ nldd-app-view                            de buitenste schil
       </nldd-card>
     </nldd-two-thirds-one-third-section>
 
-    <nldd-simple-section
-      background="base"
-      scheme="inverted"
-    >
+    <nldd-simple-section background="tinted">
       <nldd-title
         size="2"
         text="Zelf een aanvraag doen"
@@ -227,7 +224,7 @@ nldd-app-view                            de buitenste schil
 
 **Uitleg links, kaart rechts: pak de sectie die dat al is.** De [`nldd-two-thirds-one-third-section`](../../nldd-design/reference.md#nldd-two-thirds-one-third-section) heeft een `left`- en een `right`-slot en laat de kolommen onder de 280px vanzelf onder elkaar vallen. Zelf twee kolommen maken kost een mediaquery die de sectie al voor je schrijft.
 
-**Een vlak maak je met `background` en `scheme`, niet met eigen CSS.** Elke page-section kent allebei, en ze cascaderen het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Ze horen bij elkaar. `scheme="inverted"` draait het kleurschema om, maar zonder `background` schildert de sectie niets, en dan staat lichte tekst op een lichte pagina. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer. Loopt het vlak van rand tot rand, bijvoorbeeld om een afbeelding, pak dan de [`nldd-full-bleed-section`](../../nldd-design/reference.md#nldd-full-bleed-section): die heeft geen horizontale padding, dus zet er zelf een container omheen als er tekst in staat.
+**Een vlak maak je met `background`, niet met eigen CSS.** Elke page-section kent het, en het cascadeert het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer. Loopt het vlak van rand tot rand, bijvoorbeeld om een afbeelding, pak dan de [`nldd-full-bleed-section`](../../nldd-design/reference.md#nldd-full-bleed-section): die heeft geen horizontale padding, dus zet er zelf een container omheen als er tekst in staat.
 
 **Een label op een kaart is een [`nldd-tag`](../../nldd-design/reference.md#nldd-tag).** Dat component legt uit wanneer het er juist een badge of een token is.
 

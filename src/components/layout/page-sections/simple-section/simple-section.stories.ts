@@ -82,22 +82,19 @@ export const Standaard = {
 
 /**
  * `background` tekent een oppervlak ("base" of "tinted") en cascadet
- * `--context-parent-background-color` naar afstammelingen. Combineer met
- * `scheme="dark"` voor een donkere band op een lichte pagina.
+ * `--context-parent-background-color` naar afstammelingen, zodat kaarten en
+ * geneste secties erin weten op welk oppervlak ze staan.
  */
 export const Oppervlak = {
 	render: () => html`
-		<nldd-simple-section
-			background="tinted"
-			scheme="dark"
-		>
+		<nldd-simple-section background="tinted">
 			<nldd-title
 				slot="header"
-				text="Donkere, getinte sectie"
+				text="Getinte sectie"
 				heading-level="2"
 			></nldd-title>
 			<nldd-rich-text>
-				<p>Deze sectie forceert <code>scheme="dark"</code> en een getint oppervlak — bruikbaar voor een hero-band.</p>
+				<p>Deze sectie tekent een getint oppervlak, bruikbaar om een blok van de pagina af te zetten.</p>
 			</nldd-rich-text>
 		</nldd-simple-section>
 	`,

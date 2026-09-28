@@ -17,7 +17,6 @@
  * @element nldd-hero
  *
  * @attr {'inherit'|'base'|'tinted'} background - Surface behind the hero (section API)
- * @attr {'inherit'|'light'|'dark'|'inverted'} scheme - Color scheme (section API)
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)
  * @attr {string} height - Minimum height of the section (section API)
  * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)

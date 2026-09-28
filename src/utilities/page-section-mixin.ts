@@ -1,11 +1,9 @@
 import { property } from 'lit/decorators.js';
 import { LitElement, type PropertyValues } from 'lit';
-import { onColorSchemeChange } from './color-scheme-repaint.js';
 
 type Constructor<T = LitElement> = new (...args: any[]) => T;
 
 export type PageSectionBackground = 'inherit' | 'base' | 'tinted';
-export type PageSectionScheme = 'inherit' | 'light' | 'dark' | 'inverted';
 export type PageSectionPadding =
 	| '0' | '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24'
 	| '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
@@ -36,17 +34,14 @@ const PADDING_KEYS = [
 /**
  * Shared surface controls for the page-section components. Adds three
  * orthogonal capabilities, all written as inline host styles / custom
- * properties (no per-component CSS needed for background or scheme — both
- * `color-scheme` and custom properties inherit through the shadow boundary
- * into the section's block element and slotted content):
+ * properties (no per-component CSS needed for the background — custom
+ * properties inherit through the shadow boundary into the section's block
+ * element and slotted content):
  *
  * - **background**: `inherit` (the default — transparent, shows the ancestor's
  *   surface) | `base` (the base surface color) | `tinted`. Setting
  *   `base`/`tinted` also cascades `--context-parent-background-color` so
  *   descendants (cards, nested sections) read the same surface.
- * - **scheme**: `inherit` (default) | `light` | `dark` | `inverted`.
- *   `inverted` resolves to the opposite of the surrounding page scheme and
- *   re-resolves when `:root[data-scheme]` flips (via onColorSchemeChange).
  * - **block padding**: `padding-block` (both edges) with `padding-top`
  *   / `padding-bottom` per-edge overrides, each with responsive `sm-` /
  *   `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips
@@ -68,9 +63,6 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 	class WithPageSection extends Base {
 		@property({ type: String, reflect: true })
 		background: PageSectionBackground = 'inherit';
-
-		@property({ type: String, reflect: true })
-		scheme: PageSectionScheme = 'inherit';
 
 		@property({ type: String, reflect: true })
 		height?: string;
@@ -103,26 +95,9 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 		@property({ type: String, reflect: true, attribute: 'lg-padding-bottom' })
 		lgPaddingBottom?: PageSectionPadding;
 
-		private _unsubScheme?: () => void;
-
-		override connectedCallback(): void {
-			super.connectedCallback();
-			// Re-resolve `inverted` whenever the page color-scheme flips.
-			this._unsubScheme = onColorSchemeChange(() => {
-				if (this.scheme === 'inverted') this._applyScheme();
-			});
-		}
-
-		override disconnectedCallback(): void {
-			super.disconnectedCallback();
-			this._unsubScheme?.();
-			this._unsubScheme = undefined;
-		}
-
 		override updated(changed: PropertyValues): void {
 			super.updated(changed);
 			if (changed.has('background')) this._applyBackground();
-			if (changed.has('scheme')) this._applyScheme();
 			if (PADDING_KEYS.some((k) => changed.has(k))) this._applyPadding();
 			if (changed.has('height')) this._applyHeight();
 		}
@@ -146,60 +121,6 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 				this.style.backgroundColor = '';
 				this.style.removeProperty('--context-parent-background-color');
 			}
-		}
-
-		private _applyScheme(): void {
-			if (this.scheme === 'light' || this.scheme === 'dark') {
-				this.style.colorScheme = this.scheme;
-			} else if (this.scheme === 'inverted') {
-				this.style.colorScheme = this._resolveActiveScheme() === 'dark' ? 'light' : 'dark';
-			} else {
-				this.style.removeProperty('color-scheme');
-			}
-		}
-
-		/**
-		 * Best-effort detection of the *actively rendered* scheme around the
-		 * section, used to invert it.
-		 *
-		 * `getComputedStyle(parent).colorScheme` returns the *declared* value
-		 * (`'light dark'` for "supports both"; `'normal'` for the initial
-		 * value) — not the one the browser actually paints with. For
-		 * `'inverted'` we want the painted scheme, so:
-		 *   1. Prefer the app's explicit override on `:root[data-scheme]`
-		 *      (the project's site-wide light/dark toggle).
-		 *   2. Walk up to find an ancestor that pins a single scheme.
-		 *   3. Otherwise fall back to `prefers-color-scheme` — that's what
-		 *      `'light dark'` resolves to in practice.
-		 *
-		 * Perf: the per-call cost is `getComputedStyle()` for each ancestor
-		 * up to one that pins a scheme. This only runs when the project
-		 * does NOT set `:root[data-scheme]` (apps with a global theme
-		 * toggle, like regelrecht, hit the fast path and never enter the
-		 * walk). When the fallback is needed the walk is bounded by the
-		 * DOM depth and only fires on `scheme` prop change or a
-		 * color-scheme repaint event — not on every render.
-		 *
-		 * Cross-shadow caveat: `parentElement` doesn't traverse shadow
-		 * boundaries, so a `color-scheme` declared on an outer custom
-		 * element's host won't be picked up by the walk; we then fall
-		 * through to `prefers-color-scheme`. For reliable `'inverted'`
-		 * behavior inside nested shadow trees, set `data-scheme` on
-		 * `:root` so the fast path resolves the painted scheme directly.
-		 */
-		private _resolveActiveScheme(): 'light' | 'dark' {
-			const root = document.documentElement.getAttribute('data-scheme');
-			if (root === 'light' || root === 'dark') return root;
-			let el: Element | null = this.parentElement;
-			while (el) {
-				const declared = getComputedStyle(el).colorScheme;
-				const hasLight = declared.includes('light');
-				const hasDark = declared.includes('dark');
-				if (hasDark && !hasLight) return 'dark';
-				if (hasLight && !hasDark) return 'light';
-				el = el.parentElement;
-			}
-			return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 		}
 
 		private _applyPadding(): void {
@@ -238,7 +159,6 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 		Constructor<
 			LitElement & {
 				background: PageSectionBackground;
-				scheme: PageSectionScheme;
 				paddingBlock?: PageSectionPadding;
 				paddingTop?: PageSectionPadding;
 				paddingBottom?: PageSectionPadding;

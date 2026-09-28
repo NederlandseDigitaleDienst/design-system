@@ -40,7 +40,7 @@ describe('patroon: contentpagina', () => {
 		const written = new DOMParser().parseFromString(markup, 'text/html');
 		expect(written.querySelectorAll('[style], [class]').length).toBe(0);
 		expect(written.querySelector('nldd-simple-section[background="tinted"]')).not.toBeNull();
-		expect(written.querySelector('nldd-simple-section[background][scheme="inverted"]')).not.toBeNull();
+		expect(written.querySelectorAll('nldd-simple-section[background]').length).toBeGreaterThan(1);
 	});
 
 	it('zet de kaarten in een collection, niet in een eigen raster', () => {

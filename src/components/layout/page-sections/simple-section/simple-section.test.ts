@@ -89,37 +89,6 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 		);
 	});
 
-	it('sets no color-scheme by default (inherit)', async () => {
-		el = await fixture('<nldd-simple-section></nldd-simple-section>');
-		await waitForUpdate(el);
-		expect(el.style.colorScheme).toBe('');
-	});
-
-	it('forces light and dark color-scheme', async () => {
-		el = await fixture('<nldd-simple-section scheme="dark"></nldd-simple-section>');
-		await waitForUpdate(el);
-		expect(el.style.colorScheme).toBe('dark');
-		(el as any).scheme = 'light';
-		await waitForUpdate(el);
-		expect(el.style.colorScheme).toBe('light');
-	});
-
-	it('resolves inverted to the opposite of the parent scheme', async () => {
-		el = await fixture('<nldd-simple-section></nldd-simple-section>');
-		el.parentElement!.style.colorScheme = 'dark';
-		(el as any).scheme = 'inverted';
-		await waitForUpdate(el);
-		expect(el.style.colorScheme).toBe('light');
-
-		// Flip the surrounding scheme and re-resolve.
-		el.parentElement!.style.colorScheme = 'light';
-		(el as any).scheme = 'inherit';
-		await waitForUpdate(el);
-		(el as any).scheme = 'inverted';
-		await waitForUpdate(el);
-		expect(el.style.colorScheme).toBe('dark');
-	});
-
 	it('strips block padding with padding-block="0"', async () => {
 		el = await fixture('<nldd-simple-section padding-block="0"></nldd-simple-section>');
 		await waitForUpdate(el);

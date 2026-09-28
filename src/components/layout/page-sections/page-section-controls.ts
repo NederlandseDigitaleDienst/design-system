@@ -23,13 +23,12 @@ const paddingControl = (name: string, description: string) => ({
 
 /**
  * Shared Storybook controls for the PageSectionMixin surface API
- * (background, scheme, width, height and the 12 block-padding overrides).
+ * (background, width, height and the 12 block-padding overrides).
  * Spread into a section story's `args` / `argTypes`, and bind onto the host
  * element in `render` with the `pageSectionAttrs` directive.
  */
 export const pageSectionArgs = {
 	background: 'inherit',
-	scheme: 'inherit',
 	width: '',
 	height: '',
 	paddingBlock: '',
@@ -51,12 +50,6 @@ export const pageSectionArgTypes = {
 		control: { type: 'select' },
 		options: ['inherit', 'base', 'tinted'],
 		description: 'Oppervlak: "inherit" laat het oppervlak van de ouder doorschijnen, "base" en "tinted" tekenen een eigen oppervlak dat naar de inhoud cascadeert',
-		table: { defaultValue: { summary: 'inherit' } },
-	},
-	scheme: {
-		control: { type: 'select' },
-		options: ['inherit', 'light', 'dark', 'inverted'],
-		description: 'Kleurschema: "inherit" volgt de pagina, "inverted" is het tegenovergestelde daarvan',
 		table: { defaultValue: { summary: 'inherit' } },
 	},
 	width: {

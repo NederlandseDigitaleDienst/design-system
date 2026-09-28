@@ -1747,7 +1747,6 @@ A section that spans the full width without horizontal padding. Useful for backg
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
-| `scheme` | `'inherit'\|'light'\|'dark'\|'inverted'` | Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
@@ -1772,7 +1771,6 @@ A page header with a media area and a text panel (the main) that can stand in si
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface behind the hero (section API) |
-| `scheme` | `'inherit'\|'light'\|'dark'\|'inverted'` | Color scheme (section API) |
 | `width` | `string` | Body max-width; 'full' removes the bound (section API) |
 | `height` | `string` | Minimum height of the section (section API) |
 | `padding-block` | `string` | Block padding override, also per edge and responsive (section API) |
@@ -1827,7 +1825,6 @@ A section with two equal columns side by side. The columns wrap automatically wh
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
-| `scheme` | `'inherit'\|'light'\|'dark'\|'inverted'` | Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
@@ -1854,7 +1851,6 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
-| `scheme` | `'inherit'\|'light'\|'dark'\|'inverted'` | Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
@@ -2072,7 +2068,6 @@ A basic section with responsive padding and gap based on container size. Contain
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
-| `scheme` | `'inherit'\|'light'\|'dark'\|'inverted'` | Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
@@ -2161,7 +2156,6 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
-| `scheme` | `'inherit'\|'light'\|'dark'\|'inverted'` | Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
