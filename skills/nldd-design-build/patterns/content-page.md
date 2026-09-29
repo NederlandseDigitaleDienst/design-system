@@ -17,7 +17,7 @@
 ```
 nldd-app-view                            de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                  nldd-top-navigation-bar
+       ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
        ├─ nldd-hero                      de opening, met main-background
        ├─ nldd-simple-section            background="tinted", een uitgelicht blok
        │    └─ nldd-collection           layout="grid", item-width
@@ -32,10 +32,9 @@ nldd-app-view                            de buitenste schil
 ```html
 <nldd-app-view>
   <nldd-page>
-    <nldd-top-navigation-bar
-      slot="header"
-      website-title="Mijn Dienst"
-    ></nldd-top-navigation-bar>
+    <nldd-skip-link slot="header">
+      <nldd-top-navigation-bar website-title="Mijn Dienst"></nldd-top-navigation-bar>
+    </nldd-skip-link>
 
     <nldd-hero main-background="accent">
       <nldd-title
@@ -114,20 +113,23 @@ nldd-app-view                            de buitenste schil
         <p>Een aanvraag gaat langs een vaste route: controleren, beoordelen, besluiten. Elke stap heeft een eigenaar, en je ziet waar de aanvraag ligt.</p>
         <p>Duurt een stap langer dan gepland, dan lees je op het dossier waarom, en wat er nodig is om verder te kunnen.</p>
       </nldd-rich-text>
-      <nldd-card
-        slot="right"
-        href="#contact"
-      >
+      <nldd-card slot="right">
         <nldd-container padding="16">
           <nldd-title
             size="4"
-            text="Loopt een stap vast?"
+            text="Loop je ergens vast?"
             heading-level="3"
           ></nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-rich-text>
             <p>De behandelaar van je aanvraag kan je vertellen wat er nodig is.</p>
           </nldd-rich-text>
+          <nldd-spacer size="16"></nldd-spacer>
+          <nldd-button
+            variant="secondary"
+            text="Neem contact op"
+            href="#contact"
+          ></nldd-button>
         </nldd-container>
       </nldd-card>
     </nldd-two-thirds-one-third-section>

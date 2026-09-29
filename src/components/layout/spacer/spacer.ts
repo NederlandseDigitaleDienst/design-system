@@ -8,6 +8,15 @@
  * area, or the gaps between the children of one area, use `nldd-container`
  * with `padding` and `gap` instead.
  *
+ * ### Spacer or gap
+ * A `gap` sets one distance for every child, which is right while the children
+ * are of one kind: a row of buttons, a set of cards, the fields of a form. Put
+ * different kinds under each other and the right distance differs per seam, so
+ * set each one where it happens with a spacer. A heading over a list is the
+ * common case: the space under the heading should be smaller than the space
+ * above it, which keeps the heading with what it labels. A gap cannot tell the
+ * two apart, and evening them out reads as a strip of loose lines.
+ *
  * ### Sizing
  * Use a single `size` attribute for whitespace that's the same at every
  * viewport. Combine with `sm-size`, `md-size` and/or `lg-size` to override

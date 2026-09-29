@@ -17,7 +17,7 @@ De set groeit met wat zich in productie bewijst, dus hij is niet compleet en wil
 | Patroon | Voor welke taak |
 |---|---|
 | [Lijst met rijen](list-with-rows.md) | Een reeks records tonen waar je per record iets mee doet |
-| [Een lijst filteren](filter-a-list.md) | Zoeken en filteren, met zichtbare filters en een weg terug |
+| [Filteren](filtering.md) | Zoeken en filteren, met de filters in beeld en een weg terug |
 
 **Iets van de gebruiker vragen**
 

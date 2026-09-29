@@ -1696,7 +1696,7 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 | `width` | `string` | 'full' (default, fills the parent) \| 'fit-content' \| a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. |
 | `min-width` | `string` | Minimum width as a CSS length (e.g. '280px') |
 | `max-width` | `string` | Maximum width as a CSS length (e.g. '480px') |
-| `gap` | `string` | Gap between children |
+| `gap` | `string` | Gap between children. One distance for all of them, so it fits children of one kind; for a stack of different kinds, space each seam with nldd-spacer instead. |
 | `sm-gap` | `string` | Gap at sm breakpoint |
 | `md-gap` | `string` | Gap at md breakpoint |
 | `lg-gap` | `string` | Gap at lg breakpoint |
@@ -2090,7 +2090,7 @@ A basic section with responsive padding and gap based on container size. Contain
 
 ### `<nldd-spacer>`
 
-Add explicit space between elements. Components here have no margins of their own — all whitespace is set by a spacer. A spacer is fixed space between two different things. For padding around an area, or the gaps between the children of one area, use `nldd-container` with `padding` and `gap` instead. Use a single `size` attribute for whitespace that's the same at every viewport. Combine with `sm-size`, `md-size` and/or `lg-size` to override the size at specific breakpoints (mobile-first cascade is intentionally avoided — each breakpoint that needs a different value declares it explicitly): - `size` applies at every breakpoint that has no per-viewport override. - `sm-size` overrides at sm (max-width: 640px). - `md-size` overrides at md (641px–1007px). - `lg-size` overrides at lg (min-width: 1008px). Use `flexible` (in any of the four attributes) to fill the remaining space in a flex container.
+Add explicit space between elements. Components here have no margins of their own — all whitespace is set by a spacer. A spacer is fixed space between two different things. For padding around an area, or the gaps between the children of one area, use `nldd-container` with `padding` and `gap` instead. A `gap` sets one distance for every child, which is right while the children are of one kind: a row of buttons, a set of cards, the fields of a form. Put different kinds under each other and the right distance differs per seam, so set each one where it happens with a spacer. A heading over a list is the common case: the space under the heading should be smaller than the space above it, which keeps the heading with what it labels. A gap cannot tell the two apart, and evening them out reads as a strip of loose lines. Use a single `size` attribute for whitespace that's the same at every viewport. Combine with `sm-size`, `md-size` and/or `lg-size` to override the size at specific breakpoints (mobile-first cascade is intentionally avoided — each breakpoint that needs a different value declares it explicitly): - `size` applies at every breakpoint that has no per-viewport override. - `sm-size` overrides at sm (max-width: 640px). - `md-size` overrides at md (641px–1007px). - `lg-size` overrides at lg (min-width: 1008px). Use `flexible` (in any of the four attributes) to fill the remaining space in a flex container.
 
 **Attributes**
 

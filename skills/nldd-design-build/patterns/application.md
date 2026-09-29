@@ -25,7 +25,7 @@ nldd-app-view                                 de buitenste schil
        │         └─ nldd-toolbar              dezelfde balk, met een zoekveld
        ├─ nldd-split-view-pane                slot="main"
        │    └─ nldd-navigation-split-view
-       │         └─ nldd-split-view-pane      slot="primary-sidebar", "main", "inspector"
+       │         └─ nldd-split-view-pane      slot="primary-sidebar", "secondary-sidebar", "main", "inspector"
        │         └─ nldd-page                 landmarks, accessible-label
        │              ├─ nldd-top-title-bar   slot="header", collapse-anchor
        │              └─ nldd-simple-section
@@ -561,13 +561,15 @@ Een rij opent het dossier in een sheet, want het detail hoeft hier niet altijd i
 
 **Op kleine schermen hoort de hoofdwerkbalk onderaan.** Dat is bijna altijd een telefoon, en daar ligt de bovenkant buiten het bereik van een duim. Geef de [`nldd-bar-split-view`](../../nldd-design/reference.md#nldd-bar-split-view) daarom een eigen balk met `only="sm"`, op een plek ná `slot="main"` in de HTML. Die onderste krijgt ook `size="lg"`, waarmee de [`nldd-tab-bar`](../../nldd-design/reference.md#nldd-tab-bar) en de knoppen hun label onder het icoon zetten in plaats van ernaast. Een [`nldd-button`](../../nldd-design/reference.md#nldd-button) met tekst wordt daar een [`nldd-icon-button`](../../nldd-design/reference.md#nldd-icon-button) met dezelfde tekst als label: even groot om aan te raken, een stuk smaller, en je leest nog steeds wat de knop doet. Zo passen de secties en de acties naast elkaar op één rij. Dat is meteen de reden voor een eigen balk en niet één verschoven paneel: op zo’n scherm veranderen ook de knoppen.
 
-**Een paneel dat alleen komt te staan, heeft een terugknop nodig.** Geef de titelbalk van zo'n paneel een `back-text` met de naam van waar je vandaan komt. De split view bepaalt zelf wanneer die knop nodig is: staan de panelen naast elkaar, dan zet die `hide-back` op het paneel en is de knop weg. Blijft er één over, dan verschijnt hij.
+**Wat verborgen wordt, blijft bereikbaar met een terugknop.** Op een kleiner scherm valt het paneel weg waar je vandaan kwam, en zonder weg terug zit je vast in het paneel dat overblijft. Geef de titelbalk van een paneel daarom een `back-text` met de naam van dat vorige paneel. De split view bepaalt zelf wanneer de knop nodig is en zet er anders `hide-back` op.
 
 **Links de secties, in het midden zoeken, rechts het account.** In de hoofdwerkbalk staat links een [`nldd-tab-bar`](../../nldd-design/reference.md#nldd-tab-bar) met de secties van de applicatie, zodat je daartussen kunt wisselen hoe diep je ook in de structuur zit. Rechts staat het account, met daarachter een [menu bij een knop](menu-from-a-button.md): profiel, instellingen, uitloggen, en wat er verder over de applicatie zelf gaat. De zijbalk eronder toont dan de structuur binnen de gekozen sectie, niet nog een keer de secties zelf. Wat er verder in de balk hoort en hoe hij overloopt, staat in [werkbalk met acties](toolbar-with-actions.md).
 
 **Zoeken is een veld zodra het scherm breed genoeg is.** Een [`nldd-search-field`](../../nldd-design/reference.md#nldd-search-field) in `slot="center"` zegt zelf wat je ermee kunt en scheelt een klik, waar een knop eerst nog iets moet openen. Geef het veld mee hoe het mag meebewegen, `min-width="240px" width="33%" max-width="480px"`, dan houdt het in een brede balk maat en schuift het in een smallere mee. Daaronder gaat die ruimte ten koste van de inhoud, dus op md staat er een knop en op een klein scherm een icoonknop. Dat zijn drie balken die elkaar per breekpunt aflossen, elk met `only` of `above`, en verder gelijk: de secties links, het account rechts.
 
 **De naam van de applicatie hoeft niet direct zichtbaar gemaakt te worden.** Een titel of een logo kost ruimte die continu in gebruik is, en zegt wat de tab, de URL en de bookmark al zeggen tegen iemand die hier elke dag komt. Wil je de naam toch tonen, dan kan dat zowel in de hoofdwerkbalk als in de zijbalk.
+
+**Twee lagen navigatie: een primaire en een secundaire zijbalk.** Heeft de structuur binnen een sectie zelf weer een niveau, zoals mappen met daarin lijsten, dan zet je het bovenste niveau in `slot="primary-sidebar"` en het niveau eronder in `slot="secondary-sidebar"`. De navigation split view geeft zelf de juiste van de twee als eerste op zodra de ruimte krap wordt. Eén niveau is genoeg voor de meeste schermen, en dan gebruik je alleen de primaire. Daarboven komt er geen derde zijbalk bij: zijn er meer niveaus, dan navigeer je verder in de hoofdinhoud zelf, met dezelfde terugknop in de titelbalk van dat paneel.
 
 **In elk paneel staat een gewone pagina met secties.** Wat daarin geldt, geldt hier ook: één sectie per inhoudsblok, een titel met `heading-level`.
 
@@ -581,7 +583,7 @@ Een rij opent het dossier in een sheet, want het detail hoeft hier niet altijd i
 
 ## Toegankelijkheid
 
-Wat je gratis krijgt: het verbergen van panelen die niet meer passen, de terugknop die een paneel krijgt zodra het alleen komt te staan, en de rollen en namen van de landmarks in de pagina die de hoofdinhoud draagt.
+Wat je gratis krijgt: het verbergen van panelen die niet meer passen, de terugknop naar het paneel dat daarbij verdween, en de rollen en namen van de landmarks in de pagina die de hoofdinhoud draagt.
 
 Wat jij nog moet doen: `landmarks="page"` op dat ene paneel, een `accessible-label` op de andere, een `heading-level` op elke titelbalk naast de hoofdinhoud, en een [`nldd-skip-link`](../../nldd-design/reference.md#nldd-skip-link) bovenaan als er navigatie voor de inhoud staat.
 

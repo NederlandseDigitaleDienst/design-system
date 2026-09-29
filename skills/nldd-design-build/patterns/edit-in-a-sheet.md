@@ -10,7 +10,7 @@
 
 **Wanneer wel.** Secundaire inhoud die de context moet bewaren: een bewerkformulier, een detailweergave, een filterpaneel, instellingen.
 
-**Wanneer niet.** Voor een korte en simpele bevestiging is een sheet vaak te zwaar. Voor een klein paneel dat aan één knop hangt gebruik je een [`nldd-popover`](../../nldd-design/reference.md#nldd-popover). Gebruik een [menu](menu-from-a-button.md) als het gaat om een lijst met keuzes of acties.
+**Wanneer niet.** Kom je na het bewerken niet terug op de pagina waar je begon, dan is de context die de sheet bewaart niets waard: maak er een eigen pagina van, of een flow van meerdere pagina’s. Een sheet is een zijstap. Voor een korte en simpele bevestiging is een sheet te zwaar. Voor een klein paneel dat aan één knop hangt gebruik je een [`nldd-popover`](../../nldd-design/reference.md#nldd-popover). Gebruik een [menu](menu-from-a-button.md) als het gaat om een lijst met keuzes of acties.
 
 ## Compositie
 

@@ -31,7 +31,7 @@ const PATTERNS = {
 	'Patronen/Applicatie': 'application',
 	'Patronen/Werkbalk met acties': 'toolbar-with-actions',
 	'Patronen/Lijst met rijen': 'list-with-rows',
-	'Patronen/Een lijst filteren': 'filter-a-list',
+	'Patronen/Filteren': 'filtering',
 	'Patronen/Formulier': 'form',
 	'Patronen/Menu bij een knop': 'menu-from-a-button',
 	'Patronen/Bewerken in een sheet': 'edit-in-a-sheet',
