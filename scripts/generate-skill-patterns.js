@@ -30,7 +30,7 @@ const PATTERNS = {
 	'Patronen/Contentpagina': 'content-page',
 	'Patronen/Applicatie': 'application',
 	'Patronen/Werkbalk met acties': 'toolbar-with-actions',
-	'Patronen/Lijst met rijen': 'list-with-rows',
+	'Patronen/Lijst': 'list',
 	'Patronen/Filteren': 'filtering',
 	'Patronen/Formulier': 'form',
 	'Patronen/Menu bij een knop': 'menu-from-a-button',

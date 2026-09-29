@@ -28,7 +28,12 @@ describe('patroon: formulier', () => {
 	it('groepeert de velden in een echte fieldset met een groepsnaam', async () => {
 		await mount();
 		const legends = [...root.querySelectorAll('fieldset > legend .form-section__title')].map((title) => title.textContent!.trim());
-		expect(legends).toEqual(['Contactgegevens', 'Je vraag']);
+		// Eén groep, en alleen waar de legend werk doet: de velden eronder delen
+		// een uitleg. De vraag erboven is één veld en staat los in het formulier.
+		expect(legends).toEqual(['Hoe kunnen we je bereiken?']);
+		const vraag = root.querySelector('nldd-form-field')!;
+		expect(vraag.getAttribute('label')).toBe('Je vraag');
+		expect(vraag.closest('nldd-form-section')).toBeNull();
 	});
 
 	it('heeft één primaire actie en geen uitweg ernaast', async () => {
@@ -41,6 +46,8 @@ describe('patroon: formulier', () => {
 	it('markeert het optionele veld, niet de verplichte', async () => {
 		await mount();
 		const optional = [...root.querySelectorAll('nldd-form-field[optional]')].map((field) => field.getAttribute('label'));
-		expect(optional).toEqual(['Telefoonnummer']);
+		expect(optional).toEqual(['Naam']);
+		// Een optioneel veld heeft geen eis, dus ook geen lijst eronder.
+		expect(root.querySelector('nldd-form-field[optional] nldd-validation-list')).toBeNull();
 	});
 });

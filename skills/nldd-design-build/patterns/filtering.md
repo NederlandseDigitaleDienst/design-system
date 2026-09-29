@@ -334,11 +334,11 @@ Het voorbeeld is smal, dus de filters zitten hier achter de knop. Is de sectie b
 
 **Zoeken en filteren horen in dezelfde werkbalk.** Het zoekveld is de grofste filter, dus het staat naast de rest en niet ergens anders op de pagina. Geef het toolbar-item een `min-width` en een `max-width`, dan krimpt het veld mee zonder onleesbaar te worden. Hoe de werkbalk overloopt, staat in [werkbalk met acties](toolbar-with-actions.md).
 
-**Op een klein scherm schuift de status naar de linkerkolom.** Een eigen kolom voor de status kost daar te veel van de breedte die de naam nodig heeft. Elke cel kent `hide-below` en `hide-above`, dus je zet twee versies naast elkaar in dezelfde rij: vanaf md de naam met het team eronder plus de status rechts, en op sm dezelfde cel met de status als [`nldd-badge`](../../nldd-design/reference.md#nldd-badge) achter de naam. Daar draagt de badge zijn tekst, want naast de naam heeft een losse dot niets om op te leunen. Wat verborgen is, is `display: none`, dus een schermlezer hoort de rij één keer. De chevron blijft op elke breedte staan.
+**Op een klein scherm schuift de status naar de naam.** Een eigen kolom voor de status kost daar te veel van de breedte die de naam nodig heeft. Hoe je een rij per breedte anders indeelt, staat in [lijst](list.md).
 
 **Zet het aantal resultaten onder de filters, met `aria-live="polite"`.** Dat is het enige dat de uitkomst hoorbaar maakt: de [`nldd-list`](../../nldd-design/reference.md#nldd-list) heeft wel live regions, maar gebruikt die voor herordenen, dus filteren verloopt verder stil. Het beantwoordt ook de vraag die een filter oproept (deed dat vinkje iets, en hoeveel), en bij een lijst die pagineert zegt het hoeveel er niet in beeld staat. Houd het kort ("2 dossiers"), klein en secundair: het is een uitkomst en geen kop, dus een [`nldd-text`](../../nldd-design/reference.md#nldd-text) met `size="sm" color="secondary"`. Laat het weg zolang er niets gefilterd is, want dan telt het niets. Dat de lijst leeg is, zegt `no-results` al.
 
-**De lijst toont zelf dat het filter niets overlaat.** Vul `slot="no-results"` met een eigen zin. Het zoekveld en de filters blijven dan staan als weg terug, zie [lijst met rijen](list-with-rows.md).
+**De lijst toont zelf dat het filter niets overlaat.** Vul `slot="no-results"` met een eigen zin. Het zoekveld en de filters blijven dan staan als weg terug, zie [lijst met rijen](list.md).
 
 ## Toegankelijkheid
 

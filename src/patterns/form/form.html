@@ -2,10 +2,30 @@
   name="aanvraag"
   method="post"
 >
+  <nldd-form-field label="Je vraag">
+    <nldd-multi-line-text-field
+      name="vraag"
+      required
+    ></nldd-multi-line-text-field>
+    <nldd-validation-list>
+      <nldd-validation-item required>Je vraag is nodig om te kunnen versturen.</nldd-validation-item>
+    </nldd-validation-list>
+  </nldd-form-field>
+
   <nldd-form-section
-    text="Contactgegevens"
-    supporting-text="Zo kunnen we je bereiken."
+    text="Hoe kunnen we je bereiken?"
+    supporting-text="We gebruiken je gegevens alleen om je vraag te beantwoorden."
   >
+    <nldd-form-field
+      label="Naam"
+      optional
+    >
+      <nldd-text-field
+        name="naam"
+        autocomplete="name"
+      ></nldd-text-field>
+    </nldd-form-field>
+
     <nldd-form-field label="E-mailadres">
       <nldd-text-field
         name="email"
@@ -14,36 +34,11 @@
         required
       ></nldd-text-field>
       <nldd-validation-list>
-        <nldd-validation-item required>Vul je e-mailadres in</nldd-validation-item>
-        <nldd-validation-item match="@">Een apenstaartje</nldd-validation-item>
-      </nldd-validation-list>
-      <nldd-form-field-help-text>
-        We sturen een bevestiging naar dit adres.
-      </nldd-form-field-help-text>
-    </nldd-form-field>
-
-    <nldd-form-field
-      label="Telefoonnummer"
-      optional
-    >
-      <nldd-text-field
-        name="telefoon"
-        type="tel"
-        autocomplete="tel"
-      ></nldd-text-field>
-    </nldd-form-field>
-  </nldd-form-section>
-
-  <nldd-form-section text="Je vraag">
-    <nldd-form-field label="Waar gaat je vraag over?">
-      <nldd-multi-line-text-field
-        name="vraag"
-        required
-      ></nldd-multi-line-text-field>
-      <nldd-validation-list>
-        <nldd-validation-item required>Schrijf je vraag op</nldd-validation-item>
+        <nldd-validation-item required>Een e-mailadres is nodig om te kunnen antwoorden.</nldd-validation-item>
+        <nldd-validation-item match="@">Een e-mailadres bevat een apenstaartje.</nldd-validation-item>
       </nldd-validation-list>
     </nldd-form-field>
+
   </nldd-form-section>
 
   <nldd-form-actions>

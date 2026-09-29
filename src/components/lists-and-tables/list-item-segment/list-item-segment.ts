@@ -45,8 +45,14 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {string} accessible-label - Accessible name for the control. Set it when the segment holds only an icon, or when the cell text does not describe the action.
  * @attr {boolean} checked - Checked state of a `checkbox` segment; it toggles on activation
  * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded.
+ * @attr {string} popup-type - Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render.
+ * @attr {string} popovertarget - ID of a popover this segment toggles; forwarded to the inner button. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.
  * @attr {boolean} current - Marks the segment as the current page (`aria-current="page"`). The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
  * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
+ *
+ * Divider markers, set on a CELL inside the segment rather than on the segment itself:
+ * @attr {boolean} divider-start - The row's divider starts at this cell instead of at its first text or title cell.
+ * @attr {boolean} divider-end - The row's divider stops after this cell.
  *
  * @slot - The cells that belong to this segment
  *
@@ -95,6 +101,33 @@ export class NLDDListItemSegment extends LitElement {
 	/** Undefined (attribute absent) means "discloses nothing" — no aria-expanded is emitted. */
 	@property({ type: Boolean, reflect: true })
 	expanded?: boolean;
+
+	/**
+	 * Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' |
+	 * 'grid'. Becomes aria-haspopup on the control and makes aria-expanded
+	 * permanent, so a row of identical "more" segments announces what it opens
+	 * before anything is open. An nldd-menu or nldd-popover anchored here sets it
+	 * itself from the first render.
+	 */
+	@property({ attribute: 'popup-type', reflect: true })
+	popupType?: string;
+
+	/** ID of a popover this segment toggles; forwarded to the inner button. */
+	@property({ reflect: true })
+	popovertarget?: string;
+
+	/**
+	 * Direct element reference to that popover, for one living in another tree
+	 * (an nldd-menu reparented to the body). IDL-only, like the counterpart on
+	 * nldd-icon-button, so the browser still treats this segment's button as the
+	 * popover's invoker.
+	 */
+	@property({ attribute: false })
+	popoverTargetElement: Element | null = null;
+
+	/** Action the browser performs on click, mirroring popovertargetaction. */
+	@property({ attribute: false })
+	popoverTargetAction: 'toggle' | 'show' | 'hide' = 'toggle';
 
 	@property({ type: Boolean, reflect: true })
 	current = false;
@@ -258,6 +291,10 @@ export class NLDDListItemSegment extends LitElement {
 			this.disabled,
 			this.accessibleLabel,
 			this._tabbable === undefined ? undefined : (this._tabbable ? '0' : '-1'),
+			this.popupType,
+			this.popovertarget,
+			this.popoverTargetElement,
+			this.popoverTargetAction,
 		);
 	}
 }

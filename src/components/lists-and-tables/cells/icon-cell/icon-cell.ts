@@ -12,6 +12,8 @@
  * @attr {string} icon - Icon name (renders `<nldd-icon>`). Takes precedence over the default slot.
  *
  * @slot - Fallback for custom icon content when `icon` is not set.
+ *
+ * @csspart icon - The glyph itself, whether it comes from `icon` or from the slot. Transform this rather than the cell: a transform on the host changes the box `getBoundingClientRect()` reports, and a row measures its cells to place the divider.
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';

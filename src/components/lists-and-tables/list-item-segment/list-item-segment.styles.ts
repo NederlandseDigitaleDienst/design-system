@@ -48,21 +48,11 @@ export const listItemSegmentStyles = css`
 		justify-content: flex-start;
 	}
 
-	/* The cell rotates, not the icon — ::slotted reaches a direct child only, and
-	   rotating the cell turns the glyph in place. */
-	:host([disclosure]) ::slotted(nldd-icon-cell) {
-		rotate: 0deg;
-		transition: rotate var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
-	}
-
+	/* The cell turns its own glyph from this, so the cell's box stays put: a
+	   rotated cell reports a turned box, and the row measures that box to place
+	   its divider. */
 	:host([disclosure].is-expanded) ::slotted(nldd-icon-cell) {
-		rotate: var(--_expanded-rotation);
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		:host([disclosure]) ::slotted(nldd-icon-cell) {
-			transition: none;
-		}
+		--context-cell-glyph-rotation: var(--_expanded-rotation);
 	}
 
 	/* The control owns its inline padding, fixed at the indicator inset. Do not

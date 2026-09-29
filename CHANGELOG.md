@@ -100,6 +100,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **The validation icon of `nldd-token-field` stays in the top corner.** It was centered over the whole field, so the moment the tokens wrapped to a second row it drifted down the side, away from the row it belongs to. It now sits where `nldd-multi-line-text-field` puts its own: at the top, level with the first row.
 
+- **`nldd-list-item-segment` can be the button that opens a menu.** It takes `popup-type`, `popovertarget` and the popover-invoker properties the buttons already had, so a row can carry a "more" action that looks like part of the row instead of a button dropped on top of it. An `nldd-menu` anchored to the segment seeds its own type and keeps `aria-expanded` in step, the same as with `nldd-icon-button`.
+
+- **A tree row's divider no longer jumps when the branch opens.** The chevron turned by rotating the whole `nldd-icon-cell`, and a rotated element reports a turned box to `getBoundingClientRect()`. That box is what the row measures to place its divider, so the same row drew its line 12px further left while it was expanded. The cell now turns its glyph instead, through the `icon` part it exposes, and keeps its own box where it was.
+
+- **`nldd-list-item` documents where a row's divider starts.** `divider-start` and `divider-end` go on a cell in the row and move the line off its default, the first text or title cell. The item has always read them, but only its prose said so, so neither the reference nor the markup validator knew they existed. An indented tree row could not get its line to start at the icon without guessing.
+
 - **`nldd-bar-split-view` documents the order attributes of its panels.** The component reads `sm-order`, `md-order` and `lg-order` off its children to place a bar above or below the content per breakpoint, but only its prose said so, so the reference listed neither the attributes nor what they do. A bottom bar on a phone was there all along and nobody could find it.
 
 - **`nldd-validation-item` has a description in the reference.** The component reference takes the prose above the first `@element` in a file. Two components that share a file write their own prose under their own `@element`, and that was thrown away, so the item shipped as a bare table of attributes and the rule about giving it an id that names its field reached nobody. `nldd-navigation-split-view` lost a line the same way. Both are back, and `nldd-form` now says when it marks a field as invalid.

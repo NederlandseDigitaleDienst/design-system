@@ -1026,12 +1026,16 @@ describe('nldd-list-item – row-wide disclosure', () => {
 		await waitForUpdate(el);
 		const row = el.querySelector<NLDDListItem>('nldd-list-item')!;
 		const chevron = row.querySelector('nldd-icon-cell[disclosure]')!;
-		// The whole row is the control here — no disclosure action in sight.
-		expect(getComputedStyle(chevron).rotate).toBe('90deg');
+		// The whole row is the control here — no disclosure action in sight. The
+		// GLYPH turns, not the cell: a rotated cell would report a turned box, and
+		// that box is what the divider measurement reads.
+		expect(getComputedStyle(chevron).rotate).toBe('none');
+		const glyph = chevron.shadowRoot!.querySelector('[part="icon"]')!;
+		expect(getComputedStyle(glyph).rotate).toBe('90deg');
 
 		row.expanded = false;
 		await waitForUpdate(row);
-		expect(getComputedStyle(chevron).rotate).toBe('0deg');
+		expect(getComputedStyle(glyph).rotate).toBe('0deg');
 	});
 });
 
