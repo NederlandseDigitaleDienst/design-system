@@ -116,22 +116,17 @@ nldd-app-view                            de buitenste schil
       </nldd-rich-text>
       <nldd-card
         slot="right"
-        href="#werken-bij"
+        href="#contact"
       >
         <nldd-container padding="16">
-          <nldd-tag
-            color="lintblauw"
-            text="Vacature"
-          ></nldd-tag>
-          <nldd-spacer size="8"></nldd-spacer>
           <nldd-title
             size="4"
-            text="Werken bij Mijn Dienst"
+            text="Loopt een stap vast?"
             heading-level="3"
           ></nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-rich-text>
-            <p>We zoeken behandelaars die een aanvraag van begin tot eind volgen.</p>
+            <p>De behandelaar van je aanvraag kan je vertellen wat er nodig is.</p>
           </nldd-rich-text>
         </nldd-container>
       </nldd-card>
@@ -218,25 +213,21 @@ nldd-app-view                            de buitenste schil
 
 **De app view is altijd de buitenste schil.** De [`nldd-app-view`](../../nldd-design/reference.md#nldd-app-view) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Het documentfont komt uit de stylesheet van het pakket, zodra er een app view op de pagina staat.
 
-**De opening is een hero, geen sectie met een grote titel.** De [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) is de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop, en dat is een prima opening.
+**Een hero is voor de pagina’s waar mensen binnenkomen.** De homepage, en verder elke pagina waar bezoekers vanaf een andere website op landen. Daar is de [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop. Op de meeste andere pagina’s opent een sectie met een grote titel, en dat is genoeg.
 
-**Eén sectie per inhoudsblok.** Een [`nldd-simple-section`](../../nldd-design/reference.md#nldd-simple-section) regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Herhaal de sectie in plaats van er zelf kolommen in te bouwen.
+**Eén sectie per inhoudsblok, en kies de soort die de indeling al heeft.** Een [`nldd-simple-section`](../../nldd-design/reference.md#nldd-simple-section) regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Moet een blok anders liggen, dan verwissel je de sectie in plaats van er zelf kolommen in te bouwen: [`nldd-two-thirds-one-third-section`](../../nldd-design/reference.md#nldd-two-thirds-one-third-section) en [`nldd-one-half-one-half-section`](../../nldd-design/reference.md#nldd-one-half-one-half-section) verdelen de breedte, [`nldd-sidebar-section`](../../nldd-design/reference.md#nldd-sidebar-section) zet een vast paneel naast de inhoud, en [`nldd-full-bleed-section`](../../nldd-design/reference.md#nldd-full-bleed-section) laat een vlak tot de rand lopen. Ze delen dezelfde marges en dezelfde `background`, dus afwisselen geeft ritme zonder dat de pagina uit het lood raakt.
 
 **Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [`nldd-title`](../../nldd-design/reference.md#nldd-title) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een overzichtspagina een `h2`, en laat de grootte los daarvan.
 
-**Laat de header meescrollen, tenzij die zegt waar je naar kijkt.** Een [`nldd-page`](../../nldd-design/reference.md#nldd-page) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet: elke balk die blijft staan, kost ruimte die de inhoud nodig heeft. De uitzondering is de titelbalk die de context draagt, bij welk item deze inhoud hoort. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
+**Laat de bovenbalk wegscrollen.** Een [`nldd-page`](../../nldd-design/reference.md#nldd-page) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet, en op een contentpagina houd je dat zo. Een [`nldd-top-navigation-bar`](../../nldd-design/reference.md#nldd-top-navigation-bar) is een flinke stapel UI, en wat daarvan blijft staan, staat de inhoud in de weg waarvoor iemand kwam. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#visueel-en-layout).
 
-**Een rij gelijkwaardige kaarten is een collection.** De [`nldd-collection`](../../nldd-design/reference.md#nldd-collection) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint. Een eigen CSS-grid doet hetzelfde werk over, en anders.
+**Een set gelijkwaardige kaarten is een collection.** De [`nldd-collection`](../../nldd-design/reference.md#nldd-collection) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint.
 
 **Een kaart zet zelf geen padding.** De [`nldd-card`](../../nldd-design/reference.md#nldd-card) laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand.
 
-**Uitleg links, kaart rechts: pak de sectie die dat al is.** De [`nldd-two-thirds-one-third-section`](../../nldd-design/reference.md#nldd-two-thirds-one-third-section) heeft een `left`- en een `right`-slot en laat de kolommen onder de 280px vanzelf onder elkaar vallen. Zelf twee kolommen maken kost een mediaquery die de sectie al voor je schrijft.
-
 **Een vlak maak je met `background`, niet met eigen CSS.** Elke page-section kent het, en het cascadeert het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer. Loopt het vlak van rand tot rand, bijvoorbeeld om een afbeelding, pak dan de [`nldd-full-bleed-section`](../../nldd-design/reference.md#nldd-full-bleed-section): die heeft geen horizontale padding, dus zet er zelf een container omheen als er tekst in staat.
 
-**Een label op een kaart is een [`nldd-tag`](../../nldd-design/reference.md#nldd-tag).** Dat component legt uit wanneer het er juist een badge of een token is.
-
-**De footer is een component, geen eigen blok.** De [`nldd-page-footer`](../../nldd-design/reference.md#nldd-page-footer) heeft een rij voor je eigen inhoud en een `legal-bar` eronder, trekt de scheidingslijnen tussen de gevulde rijen, en draagt het id waar een skip link naartoe kan springen.
+**De footer is een component en hoeft niet in een sectie.** De [`nldd-page-footer`](../../nldd-design/reference.md#nldd-page-footer) heeft een rij voor je eigen inhoud en een `legal-bar` eronder, trekt de scheidingslijnen tussen de gevulde rijen, en draagt het id waar een skip link naartoe kan springen.
 
 ## Toegankelijkheid
 

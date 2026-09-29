@@ -41,24 +41,33 @@ describe('patroon: applicatie', () => {
 		expect(appView.tagName).toBe('NLDD-APP-VIEW');
 		const bar = appView.firstElementChild!;
 		expect(bar.tagName).toBe('NLDD-BAR-SPLIT-VIEW');
-		// De balk van het scherm staat buiten de panelen, in een eigen pane: vanaf
-		// md bovenaan, op sm een tweede balk die ná de inhoud staat en dus onderaan.
-		const strip = bar.querySelector(':scope > nldd-split-view-pane[slot="toolbar"]')!;
-		expect(strip.getAttribute('above')).toBe('md');
+		// De balk van het scherm staat buiten de panelen, in een eigen pane per
+		// breekpunt: op md met een zoekknop, vanaf lg met een zoekveld, en op sm
+		// een balk die ná de inhoud staat en dus onderaan komt.
 		const panesInBar = [...bar.querySelectorAll(':scope > nldd-split-view-pane')];
-		expect(panesInBar.map((pane) => pane.getAttribute('slot'))).toEqual(['toolbar', 'main', 'mobile-bar']);
-		const phoneBar = panesInBar[2];
+		expect(panesInBar.map((pane) => pane.getAttribute('slot'))).toEqual(['toolbar-md', 'toolbar-lg', 'main', 'toolbar-sm']);
+		const [mdBar, lgBar, , phoneBar] = panesInBar;
+		expect(mdBar.getAttribute('only')).toBe('md');
+		expect(lgBar.getAttribute('above')).toBe('lg');
 		expect(phoneBar.getAttribute('only')).toBe('sm');
+		for (const strip of [mdBar, lgBar]) {
+			expect(strip.querySelector('nldd-container[padding]')).not.toBeNull();
+			expect(strip.querySelector('nldd-toolbar')).not.toBeNull();
+			expect(strip.querySelector('nldd-tab-bar')).not.toBeNull();
+		}
+		// Zoeken is een knop zolang de balk smal is, en een veld zodra het past.
+		expect(mdBar.querySelector('nldd-button[text="Zoeken"]')).not.toBeNull();
+		expect(mdBar.querySelector('nldd-search-field')).toBeNull();
+		const zoeken = lgBar.querySelector('nldd-toolbar-item[slot="center"]')!;
+		expect(zoeken.querySelector('nldd-search-field')).not.toBeNull();
+		expect(zoeken.getAttribute('min-width')).toBe('240px');
 		// Op een telefoon zetten de tab bar en de knoppen hun label onder het icoon.
 		expect(phoneBar.querySelector('nldd-toolbar[size="lg"]')).not.toBeNull();
 		expect(phoneBar.querySelector('nldd-button')).toBeNull();
 		expect(phoneBar.querySelectorAll('nldd-icon-button[text]').length).toBe(2);
 		expect([...phoneBar.querySelectorAll('nldd-tab-bar-item')].every((tab) => tab.hasAttribute('icon'))).toBe(true);
-		expect(strip.querySelector('nldd-container[padding]')).not.toBeNull();
-		expect(strip.querySelector('nldd-toolbar')).not.toBeNull();
-		expect(strip.querySelector('nldd-tab-bar')).not.toBeNull();
 		// Het account hangt aan een knop met een menu, niet aan een losse knop.
-		const account = strip.querySelector('[icon="account"]')!;
+		const account = lgBar.querySelector('[icon="account"]')!;
 		expect(account.hasAttribute('expandable')).toBe(true);
 		expect(account.querySelector('nldd-menu[slot="popup"]')).not.toBeNull();
 		const nav = bar.querySelector('nldd-split-view-pane[slot="main"] > nldd-navigation-split-view')!;

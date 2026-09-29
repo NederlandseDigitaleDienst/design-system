@@ -1,8 +1,8 @@
 <nldd-app-view>
   <nldd-bar-split-view>
     <nldd-split-view-pane
-      slot="toolbar"
-      above="md"
+      slot="toolbar-md"
+      only="md"
     >
       <nldd-container padding="8">
         <nldd-toolbar label="Mijn Dienst">
@@ -49,6 +49,131 @@
               start-icon="search"
               text="Zoeken"
             ></nldd-button>
+            <nldd-menu-item
+              slot="overflow"
+              icon="search"
+              text="Zoeken"
+            ></nldd-menu-item>
+          </nldd-toolbar-item>
+
+          <nldd-toolbar-item
+            slot="end"
+            priority="1"
+          >
+            <nldd-icon-button
+              icon="account"
+              text="Account"
+              expandable
+            >
+              <nldd-menu
+                slot="popup"
+                placement="bottom-end"
+              >
+                <nldd-menu-item
+                  icon="profile"
+                  text="Mijn profiel"
+                ></nldd-menu-item>
+                <nldd-menu-item
+                  icon="settings"
+                  text="Instellingen"
+                ></nldd-menu-item>
+                <nldd-menu-divider></nldd-menu-divider>
+                <nldd-menu-item
+                  icon="info"
+                  text="Over Mijn Dienst"
+                ></nldd-menu-item>
+                <nldd-menu-item
+                  icon="help"
+                  text="Help"
+                ></nldd-menu-item>
+                <nldd-menu-divider></nldd-menu-divider>
+                <nldd-menu-item
+                  icon="logout"
+                  text="Uitloggen"
+                ></nldd-menu-item>
+              </nldd-menu>
+            </nldd-icon-button>
+            <nldd-menu-group
+              slot="overflow"
+              text="Account"
+            >
+              <nldd-menu-item
+                icon="profile"
+                text="Mijn profiel"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="settings"
+                text="Instellingen"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="info"
+                text="Over Mijn Dienst"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="help"
+                text="Help"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="logout"
+                text="Uitloggen"
+              ></nldd-menu-item>
+            </nldd-menu-group>
+          </nldd-toolbar-item>
+        </nldd-toolbar>
+      </nldd-container>
+    </nldd-split-view-pane>
+
+    <nldd-split-view-pane
+      slot="toolbar-lg"
+      above="lg"
+    >
+      <nldd-container padding="8">
+        <nldd-toolbar label="Mijn Dienst">
+          <nldd-toolbar-item
+            slot="start"
+            priority="3"
+          >
+            <nldd-tab-bar
+              navigation
+              accessible-label="Secties"
+            >
+              <nldd-tab-bar-item
+                href="#dossiers"
+                text="Dossiers"
+                current
+              ></nldd-tab-bar-item>
+              <nldd-tab-bar-item
+                href="#aanvragen"
+                text="Aanvragen"
+              ></nldd-tab-bar-item>
+            </nldd-tab-bar>
+            <nldd-menu-group
+              slot="overflow"
+              text="Secties"
+            >
+              <nldd-menu-item
+                type="radio"
+                text="Dossiers"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                type="radio"
+                text="Aanvragen"
+              ></nldd-menu-item>
+            </nldd-menu-group>
+          </nldd-toolbar-item>
+
+          <nldd-toolbar-item
+            slot="center"
+            min-width="240px"
+            width="33%"
+            max-width="480px"
+            priority="2"
+          >
+            <nldd-search-field
+              placeholder="Zoek een dossier"
+              accessible-label="Zoeken"
+            ></nldd-search-field>
             <nldd-menu-item
               slot="overflow"
               icon="search"
@@ -246,7 +371,7 @@
       </nldd-navigation-split-view>
     </nldd-split-view-pane>
     <nldd-split-view-pane
-      slot="mobile-bar"
+      slot="toolbar-sm"
       only="sm"
     >
       <nldd-container padding="8">

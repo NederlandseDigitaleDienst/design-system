@@ -17,9 +17,12 @@
 ```
 nldd-app-view                                 de buitenste schil
   └─ nldd-bar-split-view                      balken boven of onder de inhoud
-       ├─ nldd-split-view-pane                slot="toolbar", above="md"
+       ├─ nldd-split-view-pane                slot="toolbar-md", only="md"
        │    └─ nldd-container                 met padding
-       │         └─ nldd-toolbar              links de secties, rechts zoeken en account
+       │         └─ nldd-toolbar              de hoofdwerkbalk, met een zoekknop
+       ├─ nldd-split-view-pane                slot="toolbar-lg", above="lg"
+       │    └─ nldd-container                 met padding
+       │         └─ nldd-toolbar              dezelfde balk, met een zoekveld
        ├─ nldd-split-view-pane                slot="main"
        │    └─ nldd-navigation-split-view
        │         └─ nldd-split-view-pane      slot="primary-sidebar", "main", "inspector"
@@ -29,20 +32,19 @@ nldd-app-view                                 de buitenste schil
        │                   ├─ nldd-title      slot="header", het anker van de balk
        │                   ├─ nldd-toolbar    de acties van dit paneel
        │                   └─ de inhoud       een lijst, een formulier, een detail
-       └─ nldd-split-view-pane                slot="mobile-bar", only="sm"
+       └─ nldd-split-view-pane                slot="toolbar-sm", only="sm"
             └─ nldd-container                 met padding
                  └─ nldd-toolbar              size="lg", dezelfde acties als icoon met label
 
 nldd-sheet                                    het detail van een rij, in de document-root
-nldd-side-by-side-split-view                  panelen van gelijk gewicht, slot="pane-1", "pane-2", …
 ```
 
 ```html
 <nldd-app-view>
   <nldd-bar-split-view>
     <nldd-split-view-pane
-      slot="toolbar"
-      above="md"
+      slot="toolbar-md"
+      only="md"
     >
       <nldd-container padding="8">
         <nldd-toolbar label="Mijn Dienst">
@@ -89,6 +91,131 @@ nldd-side-by-side-split-view                  panelen van gelijk gewicht, slot="
               start-icon="search"
               text="Zoeken"
             ></nldd-button>
+            <nldd-menu-item
+              slot="overflow"
+              icon="search"
+              text="Zoeken"
+            ></nldd-menu-item>
+          </nldd-toolbar-item>
+
+          <nldd-toolbar-item
+            slot="end"
+            priority="1"
+          >
+            <nldd-icon-button
+              icon="account"
+              text="Account"
+              expandable
+            >
+              <nldd-menu
+                slot="popup"
+                placement="bottom-end"
+              >
+                <nldd-menu-item
+                  icon="profile"
+                  text="Mijn profiel"
+                ></nldd-menu-item>
+                <nldd-menu-item
+                  icon="settings"
+                  text="Instellingen"
+                ></nldd-menu-item>
+                <nldd-menu-divider></nldd-menu-divider>
+                <nldd-menu-item
+                  icon="info"
+                  text="Over Mijn Dienst"
+                ></nldd-menu-item>
+                <nldd-menu-item
+                  icon="help"
+                  text="Help"
+                ></nldd-menu-item>
+                <nldd-menu-divider></nldd-menu-divider>
+                <nldd-menu-item
+                  icon="logout"
+                  text="Uitloggen"
+                ></nldd-menu-item>
+              </nldd-menu>
+            </nldd-icon-button>
+            <nldd-menu-group
+              slot="overflow"
+              text="Account"
+            >
+              <nldd-menu-item
+                icon="profile"
+                text="Mijn profiel"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="settings"
+                text="Instellingen"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="info"
+                text="Over Mijn Dienst"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="help"
+                text="Help"
+              ></nldd-menu-item>
+              <nldd-menu-item
+                icon="logout"
+                text="Uitloggen"
+              ></nldd-menu-item>
+            </nldd-menu-group>
+          </nldd-toolbar-item>
+        </nldd-toolbar>
+      </nldd-container>
+    </nldd-split-view-pane>
+
+    <nldd-split-view-pane
+      slot="toolbar-lg"
+      above="lg"
+    >
+      <nldd-container padding="8">
+        <nldd-toolbar label="Mijn Dienst">
+          <nldd-toolbar-item
+            slot="start"
+            priority="3"
+          >
+            <nldd-tab-bar
+              navigation
+              accessible-label="Secties"
+            >
+              <nldd-tab-bar-item
+                href="#dossiers"
+                text="Dossiers"
+                current
+              ></nldd-tab-bar-item>
+              <nldd-tab-bar-item
+                href="#aanvragen"
+                text="Aanvragen"
+              ></nldd-tab-bar-item>
+            </nldd-tab-bar>
+            <nldd-menu-group
+              slot="overflow"
+              text="Secties"
+            >
+              <nldd-menu-item
+                type="radio"
+                text="Dossiers"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                type="radio"
+                text="Aanvragen"
+              ></nldd-menu-item>
+            </nldd-menu-group>
+          </nldd-toolbar-item>
+
+          <nldd-toolbar-item
+            slot="center"
+            min-width="240px"
+            width="33%"
+            max-width="480px"
+            priority="2"
+          >
+            <nldd-search-field
+              placeholder="Zoek een dossier"
+              accessible-label="Zoeken"
+            ></nldd-search-field>
             <nldd-menu-item
               slot="overflow"
               icon="search"
@@ -286,7 +413,7 @@ nldd-side-by-side-split-view                  panelen van gelijk gewicht, slot="
       </nldd-navigation-split-view>
     </nldd-split-view-pane>
     <nldd-split-view-pane
-      slot="mobile-bar"
+      slot="toolbar-sm"
       only="sm"
     >
       <nldd-container padding="8">
@@ -424,37 +551,29 @@ nldd-side-by-side-split-view                  panelen van gelijk gewicht, slot="
 </nldd-sheet>
 ```
 
-Een rij opent het dossier in een sheet. Dat kan ook een derde paneel zijn, de inspector, maar die valt als eerste weg zodra de ruimte krap wordt. Een sheet werkt op elke breedte hetzelfde.
+Een rij opent het dossier in een sheet, want het detail hoeft hier niet altijd in beeld te staan. Zou dat wel zo zijn, dan was het een derde paneel: de inspector.
 
 ## Waarom zo
 
-**Het verschil zit in het doel van het scherm.** Wie informatie verwerkt, leest, begrijpt en beslist, en heeft ruimte en rust nodig. Wie tussen informatie beweegt, zoekt, vergelijkt en kiest, en heeft dichtheid en overzicht nodig: meer tegelijk in beeld, minder stappen ertussen. Daar is dit patroon voor. Het zegt niets over wie er zit, dus dezelfde persoon krijgt hier een dicht lijstscherm en in het paneel ernaast een rustige pagina om een dossier te lezen. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#strategie-en-proces).
-
 **De app view is de buitenste schil, de split views zitten erin.** De [`nldd-app-view`](../../nldd-design/reference.md#nldd-app-view) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Daarbinnen komen de split views, en pas in een paneel begint een pagina.
 
-**De werkbalk die over het hele scherm gaat, staat buiten de panelen.** Die hangt in een [`nldd-bar-split-view`](../../nldd-design/reference.md#nldd-bar-split-view) om de rest heen: de balk in een eigen slot, de navigatie-split-view in `slot="main"`. Zet je die in een paneel, dan scrolt hij mee met de inhoud van dat ene paneel en geldt hij niet meer voor het scherm. Werkbalken die over de inhoud van één paneel gaan horen daar juist wel, zie verderop. Geef de balk een [`nldd-container`](../../nldd-design/reference.md#nldd-container) met padding, want de bar split view zet die zelf niet. Voor een statusbalk onderin geef je de bar split view gewoon een tweede balk.
+**Twee werkbalken, twee bereiken.** Wat voor het hele scherm geldt, hangt in de hoofdwerkbalk, een balk om de panelen heen: een [`nldd-bar-split-view`](../../nldd-design/reference.md#nldd-bar-split-view) met die balk in een eigen slot en de split view in `slot="main"`. Zet je de hoofdwerkbalk in een paneel, dan scrolt hij mee met de inhoud van dat ene paneel en geldt hij niet meer voor het scherm. Wat over de inhoud van één paneel gaat, zoals hier "Nieuw dossier" en het filter boven de lijst, krijgt juist wel een eigen [`nldd-toolbar`](../../nldd-design/reference.md#nldd-toolbar) in dat paneel. Zo blijft de hoofdwerkbalk hetzelfde terwijl je van scherm wisselt, en verhuist de andere mee met wat je aan het doen bent. Geef de hoofdwerkbalk een [`nldd-container`](../../nldd-design/reference.md#nldd-container) met padding, want de bar split view zet die zelf niet.
 
-**Op een telefoon hoort die balk onderaan.** Bovenin ligt hij buiten het bereik van een duim. Geef de [`nldd-bar-split-view`](../../nldd-design/reference.md#nldd-bar-split-view) daarom twee balken: de bovenste krijgt `above="md"`, de onderste `only="sm"` en een plek ná `slot="main"` in de HTML. Dat zijn twee panelen en niet één verschoven paneel, want op een telefoon veranderen ook de knoppen.
-
-**En het worden andere knoppen.** De balk onderaan krijgt `size="lg"`, waarmee de [`nldd-tab-bar`](../../nldd-design/reference.md#nldd-tab-bar) en de knoppen hun label onder het icoon zetten in plaats van ernaast. Een [`nldd-button`](../../nldd-design/reference.md#nldd-button) met tekst wordt daar een [`nldd-icon-button`](../../nldd-design/reference.md#nldd-icon-button) met dezelfde tekst als label: even groot om aan te raken, een stuk smaller, en je leest nog steeds wat de knop doet. Zo passen de secties en de acties naast elkaar op één rij.
+**Op kleine schermen hoort de hoofdwerkbalk onderaan.** Dat is bijna altijd een telefoon, en daar ligt de bovenkant buiten het bereik van een duim. Geef de [`nldd-bar-split-view`](../../nldd-design/reference.md#nldd-bar-split-view) daarom een eigen balk met `only="sm"`, op een plek ná `slot="main"` in de HTML. Die onderste krijgt ook `size="lg"`, waarmee de [`nldd-tab-bar`](../../nldd-design/reference.md#nldd-tab-bar) en de knoppen hun label onder het icoon zetten in plaats van ernaast. Een [`nldd-button`](../../nldd-design/reference.md#nldd-button) met tekst wordt daar een [`nldd-icon-button`](../../nldd-design/reference.md#nldd-icon-button) met dezelfde tekst als label: even groot om aan te raken, een stuk smaller, en je leest nog steeds wat de knop doet. Zo passen de secties en de acties naast elkaar op één rij. Dat is meteen de reden voor een eigen balk en niet één verschoven paneel: op zo’n scherm veranderen ook de knoppen.
 
 **Een paneel dat alleen komt te staan, heeft een terugknop nodig.** Geef de titelbalk van zo'n paneel een `back-text` met de naam van waar je vandaan komt. De split view bepaalt zelf wanneer die knop nodig is: staan de panelen naast elkaar, dan zet die `hide-back` op het paneel en is de knop weg. Blijft er één over, dan verschijnt hij.
 
-**Links de secties, rechts wat altijd bereikbaar moet zijn.** In de balk staat aan de ene kant een [`nldd-tab-bar`](../../nldd-design/reference.md#nldd-tab-bar) met de secties van de applicatie, zodat je daartussen kunt wisselen hoe diep je ook in de structuur zit. Aan de andere kant staat zoeken en het account, met achter dat account een [menu bij een knop](menu-from-a-button.md): profiel, instellingen, uitloggen, en wat er verder over de applicatie zelf gaat. De zijbalk eronder toont dan de structuur binnen de gekozen sectie, niet nog een keer de secties zelf. Wat er verder in de balk hoort en hoe hij overloopt, staat in [werkbalk met acties](toolbar-with-actions.md).
+**Links de secties, in het midden zoeken, rechts het account.** In de hoofdwerkbalk staat links een [`nldd-tab-bar`](../../nldd-design/reference.md#nldd-tab-bar) met de secties van de applicatie, zodat je daartussen kunt wisselen hoe diep je ook in de structuur zit. Rechts staat het account, met daarachter een [menu bij een knop](menu-from-a-button.md): profiel, instellingen, uitloggen, en wat er verder over de applicatie zelf gaat. De zijbalk eronder toont dan de structuur binnen de gekozen sectie, niet nog een keer de secties zelf. Wat er verder in de balk hoort en hoe hij overloopt, staat in [werkbalk met acties](toolbar-with-actions.md).
 
-**De naam van de applicatie hoeft niet in de balk.** Een titel of een logo bovenin kost de ruimte die de secties nodig hebben, en zegt wat de tab, de URL en de bookmark al zeggen tegen iemand die hier elke dag komt. Op een [contentpagina](content-page.md) ligt dat andersom: daar komt een bezoeker binnen via een zoekmachine en moet die zien van wie de pagina is, dus daar staat de naam wel in de bovenbalk en in de voettekst.
+**Zoeken is een veld zodra het scherm breed genoeg is.** Een [`nldd-search-field`](../../nldd-design/reference.md#nldd-search-field) in `slot="center"` zegt zelf wat je ermee kunt en scheelt een klik, waar een knop eerst nog iets moet openen. Geef het veld mee hoe het mag meebewegen, `min-width="240px" width="33%" max-width="480px"`, dan houdt het in een brede balk maat en schuift het in een smallere mee. Daaronder gaat die ruimte ten koste van de inhoud, dus op md staat er een knop en op een klein scherm een icoonknop. Dat zijn drie balken die elkaar per breekpunt aflossen, elk met `only` of `above`, en verder gelijk: de secties links, het account rechts.
 
-**In elk paneel staat een gewone pagina met secties.** Wat daarin geldt, geldt hier ook: één sectie per inhoudsblok, een titel met `heading-level`, een vlak met `background`. Zie [contentpagina](content-page.md).
+**De naam van de applicatie hoeft niet direct zichtbaar gemaakt te worden.** Een titel of een logo kost ruimte die continu in gebruik is, en zegt wat de tab, de URL en de bookmark al zeggen tegen iemand die hier elke dag komt. Wil je de naam toch tonen, dan kan dat zowel in de hoofdwerkbalk als in de zijbalk.
 
-**Navigatie, hoofdinhoud en inspector: dat is de [`nldd-navigation-split-view`](../../nldd-design/reference.md#nldd-navigation-split-view).** Die heeft benoemde slots in plaats van genummerde panelen, en weet daardoor wat er waar staat: als de ruimte krap wordt valt eerst de inspector weg, daarna klapt de primaire zijbalk in de secundaire, en op het smalst blijft één paneel over. Hij regelt ook de terugknop van een paneel dat alleen komt te staan, mits je `nldd-split-view-pane` als kind gebruikt.
-
-**Panelen van gelijk gewicht zijn een [`nldd-side-by-side-split-view`](../../nldd-design/reference.md#nldd-side-by-side-split-view).** Die nummert zijn panelen en laat ze van rechts naar links verdwijnen, dus de hoofdinhoud staat in `pane-1` en het detail rechts.
-
-**Twee werkbalken, twee bereiken.** De balk om alles heen draagt wat voor de hele applicatie geldt. Wat over de inhoud van één paneel gaat, zoals hier "Nieuw dossier" en het filter boven de lijst, krijgt een eigen [`nldd-toolbar`](../../nldd-design/reference.md#nldd-toolbar) in dat paneel. Zo blijft de bovenste balk hetzelfde terwijl je van scherm wisselt, en verhuist de onderste mee met wat je aan het doen bent.
+**In elk paneel staat een gewone pagina met secties.** Wat daarin geldt, geldt hier ook: één sectie per inhoudsblok, een titel met `heading-level`.
 
 **De titelbalk van een paneel wijst naar de kop in de inhoud.** Met `collapse-anchor` op de [`nldd-top-title-bar`](../../nldd-design/reference.md#nldd-top-title-bar) en dezelfde tekst op een [`nldd-title`](../../nldd-design/reference.md#nldd-title) in de sectie blijft de balk stil zolang de kop in beeld staat, en neemt die de titel over zodra je eroverheen scrolt. De balk verbergt zijn eigen titel dan voor een schermlezer, dus de woorden moeten gelijk zijn.
 
-**Het detail van een rij mag een sheet zijn in plaats van een paneel.** Een derde paneel is de inspector, en die valt als eerste weg als het scherm smaller wordt, dus op een klein scherm is het detail er niet. Een [`nldd-sheet`](../../nldd-design/reference.md#nldd-sheet) schuift over de lijst en laat die staan, op elke breedte hetzelfde. Zet hem dan wel in de document-root en niet in een paneel, zie [bewerken in een sheet](edit-in-a-sheet.md).
+**Een inspector staat er altijd, een sheet komt als je hem nodig hebt.** Hoort het detail bij het scherm en kijk je er de hele tijd naar, dan is dat een derde paneel, de inspector. Hoeft het er niet altijd te staan, zoals hier, dan open je het in een [`nldd-sheet`](../../nldd-design/reference.md#nldd-sheet): die schuift over de lijst en laat die staan. Zet hem in de document-root en niet in een paneel, zie [bewerken in een sheet](edit-in-a-sheet.md).
 
 **Zeg welk paneel de hoofdinhoud draagt, met `landmarks="page"`.** Een document heeft één `main`, één banner en één contentinfo, dus een [`nldd-page`](../../nldd-design/reference.md#nldd-page) in een paneel houdt die niet vanzelf: die wordt een sectie zonder landmarks. Welk paneel de hoofdinhoud is, weet alleen de applicatie, dus dat zet je er zelf op. Geef de andere panelen een `accessible-label`, dan zijn het benoemde regio's waar een schermlezergebruiker naartoe kan springen, met een naam die zegt wat erin staat.
 
