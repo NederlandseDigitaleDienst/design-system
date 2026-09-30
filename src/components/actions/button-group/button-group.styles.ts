@@ -95,6 +95,9 @@ export const buttonGroupStyles = css`
 		display: none;
 	}
 
+	/* The stacking rules above set display on every slotted child at a higher
+	   specificity than this selector, so without !important a hidden button in
+	   a stacked group stays in the row. */
 	::slotted([hidden]) {
 		display: none !important;
 	}

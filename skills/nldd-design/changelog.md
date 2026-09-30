@@ -52,6 +52,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **`nldd-icon` takes `icon` instead of `name`.** Every other component that renders an icon already called it `icon`, so you had to remember the one exception. Rename `name="…"` to `icon="…"` on every `nldd-icon`. An icon that still has `name` draws the dashed placeholder circle, and in development the console says once which rename it needs.
 
+- **The `--components-title-*` tokens are gone.** `--components-title-{sm,md,lg}-overline-font` and `--components-title-{sm,md,lg}-subtitle-font` stood in `variables.css`, but `nldd-title` never read them, so overriding one changed nothing. The overline and the supporting text take `--primitives-font-body-sm-regular-tight` and `--primitives-font-body-md-regular-tight`. The two names are removed rather than renamed, so a `var()` of your own that points at one resolves to nothing.
+
 ### Added
 
 - **`nldd-list-item-segment` can be the button that opens a menu.** It takes `popup-type`, `popovertarget` and the popover-invoker properties the buttons already had, so a row can carry a "more" action that looks like part of the row instead of a button dropped on top of it. An `nldd-menu` anchored to the segment seeds its own type and keeps `aria-expanded` in step, the same as with `nldd-icon-button`.
@@ -95,10 +97,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **The CSS variables are documented as internal.** They are the wiring of the components, not a public API: they get renamed, merged and removed whenever a component asks for it, and the changelog describes such a change from that component, not from your stylesheet. Steer a component through its attributes. Reach for a variable only for something that is not a component at all, and then at your own risk.
 
 - **`nldd-token` names its buttons after itself.** The dismiss button was called "Verwijder" on every token, so a row of filters read as a row of identical buttons unless you composed a `dismiss-text` per token. Unset, it is now `Verwijder "{text}"`, and the menu button `Toon opties voor "{text}"`, with the token's own text in the quotes. A `dismiss-text` or `menu-text` you set still replaces the whole label. Both properties now default to an empty string instead of the bare word. The words themselves come from `translations`, like every other user-facing string in the package: `components.token.dismiss-action`, `components.token.open-menu-action` and `components.token.open-token-menu-action`. `nldd-token-field` names its tokens the same way, through its own translations, where `components.token-field.token-menu-action` reads "Toon acties voor" so the token's text can follow it.
-
-### Removed
-
-- **The `--components-title-*` tokens.** `--components-title-{sm,md,lg}-overline-font` and `--components-title-{sm,md,lg}-subtitle-font` were never read by `nldd-title`, so overriding them changed nothing. They are gone rather than renamed.
 
 ### Fixed
 
