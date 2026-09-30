@@ -39,6 +39,7 @@ const preview = {
 		options: {
 			storySort: {
 				method: 'alphabetical',
+				order: ['Docs', ['Introductie', 'Ontwerprichtlijnen', '*'], '*'],
 			},
 		},
 	},

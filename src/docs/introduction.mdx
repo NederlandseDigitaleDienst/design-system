@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Introductie" />
+
+# NLDD Designsysteem
+
+Dit is het designsysteem van de Nederlandse Digitale Dienst: een set web components en CSS-tokens voor websites en applicaties van de Rijksoverheid. De componenten werken in elk framework, maar ook zonder framework. Het zijn gewone HTML-elementen met een `nldd-` prefix.
+
+## Aan de slag
+
+Installeer het pakket met:
+
+```bash
+npm install @nldd/design-system
+```
+
+Laad vervolgens de styles. Deze bevatten de CSS-variabelen en fonts die de componenten nodig hebben. Daarna kun je alle componenten laden, of alleen de componenten die je gebruikt.
+
+```js
+import '@nldd/design-system/styles';
+
+import '@nldd/design-system';
+// of
+import { NLDDButton, NLDDCheckbox } from '@nldd/design-system';
+```
+
+Je kunt de componenten daarna gebruiken als gewone HTML-elementen:
+
+```html
+<nldd-button variant="accent-filled" text="Opslaan"></nldd-button>
+<nldd-checkbox-field label="Akkoord met voorwaarden"></nldd-checkbox-field>
+```
+
+De [componenten](?path=/docs/components-actions-button--docs) vormen de basis van het designsysteem. Bij elk component vind je de beschikbare attributen, slots en events, samen met stories die laten zien hoe het component werkt en welke mogelijkheden het biedt. Vanuit de componenten en stories kun je in veel gevallen direct aan de slag.
+
+Voor grotere interfaces bieden de [patronen](?path=/docs/patronen-applicatie--docs) extra houvast. Ze laten zien hoe meerdere componenten samenkomen in bijvoorbeeld een applicatie, formulier, lijst, filter of sheet. De patronen zijn nog volop in ontwikkeling en worden steeds verder uitgebreid.
+
+De [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs) beschrijven de ontwerpkeuzes van het systeem en de redenen daarachter. Denk bijvoorbeeld aan geen disabled knoppen, optionele velden markeren in plaats van verplichte velden en geen wizards. De componenten zijn op deze richtlijnen gebaseerd, dus lees ze voordat je nieuwe interfaces ontwerpt.
+
+De [breakpoints](?path=/docs/docs-breakpoints--docs) beschrijven bij welke breedtes de layout verandert. In de [changelog](?path=/docs/docs-changelog--docs) zie je wat er per versie is veranderd.
+
+## Werken met Claude Code
+
+De repository is ook een Claude Code-marketplace. De `nldd`-plugin geeft Claude toegang tot de tags, attributen, tokens, componenten, patronen en ontwerprichtlijnen van het designsysteem. Zo kan Claude bouwen met het systeem in plaats van eromheen.
+
+```text
+/plugin marketplace add NederlandseDigitaleDienst/design-system
+/plugin install nldd@nldd-plugins
+```
+
+Een nieuwere versie van de plugin haal je binnen met:
+
+```text
+/plugin marketplace update nldd-plugins
+```
+
+## Bijdragen
+
+Mis je iets, klopt er iets niet of wil je een wijziging voorstellen? [Maak een issue aan](https://github.com/NederlandseDigitaleDienst/design-system/issues). De broncode staat in dezelfde [repository](https://github.com/NederlandseDigitaleDienst/design-system).
+
+## Licentie en font
+
+De broncode valt onder de EUPL-1.2. Het font Rijksoverheid Sans valt daar niet onder. Dit font is uitsluitend bedoeld voor publicaties van de Rijksoverheid en voor partijen die in opdracht van de Rijksoverheid werken. Voor ander gebruik is vooraf schriftelijke toestemming van de Rijksvoorlichtingsdienst nodig.

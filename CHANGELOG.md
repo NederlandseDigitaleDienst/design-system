@@ -9,13 +9,15 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Storybook opens on an introduction.** Docs/Introductie says what the system is, how to install it and load the styles, where the components, patterns and design guidelines are, and how to add the Claude Code plugin. It used to open on Button, the first story in alphabetical order. Docs now sits at the top of the sidebar, with the introduction and the design guidelines first.
+
+### Fixed
+
+- **The changelog no longer repeats its introduction** under 0.8.93.
+
 ## [0.8.93](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.92...v0.8.93) (2026-09-30)
-
-# Changelog
-
-All notable changes to the NLDD Designsysteem are documented here.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Versions are bumped automatically by semantic-release on merge to main — the type of conventional-commit determines the release. Conventional types `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
