@@ -104,6 +104,28 @@ describe('nldd-button-group – gestapeld', () => {
 		expect(getComputedStyle(icoonknop).alignSelf).toBe('flex-start');
 	});
 
+	it('waarschuwt ook als de groep pas later in beeld komt', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<HTMLElement>(
+			`<div style="display: none">
+				<div style="display: inline-flex">
+					<nldd-button-group>
+						<nldd-button text="Een"></nldd-button>
+						<nldd-button text="Twee"></nldd-button>
+					</nldd-button-group>
+				</div>
+			</div>`,
+		);
+		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		// Onzichtbaar is geen ingeklapte groep, dus daar zegt hij nog niets van.
+		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(false);
+
+		el.style.display = 'block';
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
+	});
+
 	it('waarschuwt als de groep geen breedte krijgt van zijn ouder', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<HTMLElement>(

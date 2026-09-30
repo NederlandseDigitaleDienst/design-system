@@ -50,6 +50,9 @@ export class NLDDButtonGroup extends LitElement {
 	@query('slot')
 	private _slot!: HTMLSlotElement;
 
+	/** DEV only: watches for the collapse below, then lets itself go. */
+	private _collapseObserver: ResizeObserver | null = null;
+
 	handleSlotChange() {
 		const assigned = this._slot
 			.assignedElements({ flatten: true })
@@ -70,7 +73,12 @@ export class NLDDButtonGroup extends LitElement {
 	}
 
 	override firstUpdated(): void {
-		this._warnWhenCollapsed();
+		this._watchForCollapse();
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this._stopWatchingForCollapse();
 	}
 
 	/**
@@ -80,21 +88,31 @@ export class NLDDButtonGroup extends LitElement {
 	 * cell, a flex item at `width: auto`) there is nothing to take, the group
 	 * measures zero and the buttons disappear without an error.
 	 *
-	 * A hint, not a guarantee: it looks once, on the first render, and says
-	 * nothing about a group that is not being displayed yet (`offsetParent` is
-	 * null inside a closed sheet or a `display: none` branch) or one whose parent
-	 * only gets its width later. Both would report zero for a reason that is not
-	 * this one.
+	 * Watched rather than sampled: a group can be in a closed sheet or behind
+	 * `display: none` on its first frame, and a parent can get its width a tick
+	 * later, so one look would call both of those a collapse or miss the real
+	 * one. The observer waits for the group to be displayed, says it once and
+	 * stops watching either way.
 	 */
-	private _warnWhenCollapsed(): void {
+	private _watchForCollapse(): void {
 		if (!import.meta.env?.DEV) return;
 		if (this.orientation !== 'auto') return;
-		requestAnimationFrame(() => {
+		this._collapseObserver = new ResizeObserver(() => {
+			// No box at all (display:none, a closed sheet): nothing to judge yet.
 			if (!this.isConnected || this.offsetParent === null) return;
-			if (this.getBoundingClientRect().width > 0) return;
 			if (!this._slot?.assignedElements({ flatten: true }).length) return;
-			console.warn('nldd-button-group: the group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.');
+			const collapsed = this.getBoundingClientRect().width === 0;
+			if (collapsed) {
+				console.warn('nldd-button-group: the group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query while orientation is auto), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.');
+			}
+			this._stopWatchingForCollapse();
 		});
+		this._collapseObserver.observe(this);
+	}
+
+	private _stopWatchingForCollapse(): void {
+		this._collapseObserver?.disconnect();
+		this._collapseObserver = null;
 	}
 
 	override render() {
