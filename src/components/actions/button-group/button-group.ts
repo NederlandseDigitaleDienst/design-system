@@ -74,14 +74,21 @@ export class NLDDButtonGroup extends LitElement {
 	}
 
 	/**
-	 * The group is an inline-size container, so its width has to come from its
-	 * parent: a container may not size itself from its own contents. In a parent
-	 * that shrink-wraps (inline-flex, a float, a table cell, a flex item at
-	 * `width: auto`) there is nothing to take, the group measures zero and the
-	 * buttons disappear without an error. Say so once, in development.
+	 * The group is an inline-size container while `orientation` is `auto`, so its
+	 * width has to come from its parent: a container may not size itself from its
+	 * own contents. In a parent that shrink-wraps (inline-flex, a float, a table
+	 * cell, a flex item at `width: auto`) there is nothing to take, the group
+	 * measures zero and the buttons disappear without an error.
+	 *
+	 * A hint, not a guarantee: it looks once, on the first render, and says
+	 * nothing about a group that is not being displayed yet (`offsetParent` is
+	 * null inside a closed sheet or a `display: none` branch) or one whose parent
+	 * only gets its width later. Both would report zero for a reason that is not
+	 * this one.
 	 */
 	private _warnWhenCollapsed(): void {
 		if (!import.meta.env?.DEV) return;
+		if (this.orientation !== 'auto') return;
 		requestAnimationFrame(() => {
 			if (!this.isConnected || this.offsetParent === null) return;
 			if (this.getBoundingClientRect().width > 0) return;

@@ -20,6 +20,14 @@ export const buttonGroupStyles = css`
 		display: flex;
 		width: 100%;
 		justify-content: flex-start;
+	}
+
+	/* Only auto asks its own width a question, so only auto becomes a container.
+	   A container may not size itself from its contents, and a group pinned to a
+	   row or a stack would then measure zero in a parent that shrink-wraps, for
+	   a query it never runs. */
+	:host([orientation="auto"]),
+	:host(:not([orientation])) {
 		container-type: inline-size;
 	}
 

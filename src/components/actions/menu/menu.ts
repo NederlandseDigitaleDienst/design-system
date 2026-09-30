@@ -365,7 +365,6 @@ export class NLDDMenu extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<'menu' | 'listbox'>('menu') })
 	variant: 'menu' | 'listbox' = 'menu';
 
-
 	/**
 	 * Explicit width, pinned exactly (sets --_width and clamps min/max to it).
 	 * Leave unset to let the menu size to its content between a minimum and a

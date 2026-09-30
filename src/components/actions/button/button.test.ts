@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDButton } from './button.js';
 import './button.js';
+import '../button-group/button-group.js';
 import '../../../assets/styles/variables.css';
 import '../menu/menu.js';
 import '../../forms/form/form.js';
@@ -41,6 +42,39 @@ describe('nldd-button', () => {
 		const button = el as NLDDButton;
 		await waitForUpdate(button);
 		expect(() => button.shadowRoot!.querySelector('button')!.click()).not.toThrow();
+	});
+
+	it('neemt de breedte over die een groep om hem heen doorgeeft', async () => {
+		// --context-button-width is hoe een gestapelde nldd-button-group zijn
+		// knoppen laat rekken: de groep zet de variabele en geeft de host de
+		// volle breedte. Zonder dit pad valt dat stil om, en zie je het pas in
+		// een story. Vertical, niet auto: dan hangt de test niet aan een
+		// container query die van de breedte van de testomgeving afhangt.
+		el = await fixture(`
+			<div style="width: 320px">
+				<nldd-button-group orientation="vertical">
+					<nldd-button text="Bewaar"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		const button = el.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
+		await waitForUpdate(button);
+		expect(getComputedStyle(button.shadowRoot!.querySelector('button')!).width).toBe('320px');
+	});
+
+	it('houdt zijn eigen breedte in een groep die naast elkaar zet', async () => {
+		el = await fixture(`
+			<div style="width: 320px">
+				<nldd-button-group orientation="horizontal">
+					<nldd-button text="Bewaar"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		const button = el.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
+		await waitForUpdate(button);
+		expect(getComputedStyle(button.shadowRoot!.querySelector('button')!).width).not.toBe('320px');
 	});
 
 	it('renders without error', async () => {
