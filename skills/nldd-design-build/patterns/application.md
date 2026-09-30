@@ -6,7 +6,7 @@
 
 # Patroon: applicatie
 
-**Welk probleem dit oplost.** Een werkomgeving die de ruimte gebruikt die het scherm biedt: navigatie, een lijst, het gekozen record, een inspector, zoveel ernaast als er past. Wordt het scherm smaller, dan vallen de panelen één voor één weg tot er één overblijft, zonder dat je zelf verbergt, herschikt of een tweede layout bouwt.
+**Welk probleem dit oplost.** Een scherm dat de ruimte gebruikt die er is: navigatie, een lijst, het gekozen record, een inspector, zoveel ernaast als er past. Wordt het scherm smaller, dan vallen de panelen één voor één weg tot er één overblijft, zonder dat je zelf verbergt, herschikt of een tweede layout bouwt.
 
 **Wanneer wel.** Een scherm waarop je vaak tussen informatie beweegt: zoeken, vergelijken, kiezen, bewerken.
 

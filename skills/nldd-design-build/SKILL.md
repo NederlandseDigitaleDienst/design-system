@@ -125,7 +125,7 @@ Wat hieronder staat, hoort in geen van de drie thuis: het gaat telkens over meer
 
 | Vorm | Wanneer | Het patroon |
 |---|---|---|
-| **Applicatie** | Een werkomgeving met panelen: editors, dashboards, beheerschermen. | [applicatie](patterns/application.md) |
+| **Applicatie** | Een scherm met panelen: editors, dashboards, beheerschermen. | [applicatie](patterns/application.md) |
 | **Contentpagina** | Een landings-, campagne- of informatiepagina: een verticale stapel inhoud. | [contentpagina](patterns/content-page.md) |
 
 Het verschil zit in de laag direct onder de app-view: een split view met een pagina per paneel, of één pagina met secties eronder. Die keuze maak je aan het begin, en achteraf terugdraaien is duur. Maak die keuze dus bewust.

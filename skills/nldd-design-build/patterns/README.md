@@ -9,7 +9,7 @@ De set groeit met wat zich in productie bewijst, dus hij is niet compleet en wil
 | Patroon | Voor welke taak |
 |---|---|
 | [Contentpagina](content-page.md) | Een pagina die iets uitlegt of aanprijst, met kaarten, een uitgelicht vlak en een footer |
-| [Applicatie](application.md) | Een werkomgeving met panelen naast elkaar, elk met een eigen pagina |
+| [Applicatie](application.md) | Een scherm met panelen naast elkaar, elk met een eigen pagina |
 | [Werkbalk met acties](toolbar-with-actions.md) | Acties boven een scherm die ook op smal bereikbaar blijven |
 
 **Inhoud tonen**
