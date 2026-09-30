@@ -76,6 +76,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- **A stacked `nldd-button-group` leaves an icon button at its own size.** Everything in a stack fills the width, which turned an `nldd-icon-button` into a full-width bar with one glyph in the middle: wider, not a bigger target. The group also says in development when it measures zero, which is what happens in a parent that sizes itself from its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`): the group is a container query, so its width has to come from that parent.
+
 - **The edge of a surface is the same grey as a line inside it again.** `--semantics-surfaces-base-border-color` and `--semantics-surfaces-tinted-border-color` go back to `neutral-75` in light mode and `neutral-200` in dark, the values `--semantics-dividers-color` carries, which undoes the lighter edge of 0.8.89. Everything that draws its outline from these tokens is a step more present: `nldd-table`, `nldd-list`, `nldd-code-viewer`, `nldd-rich-text` and the boxes that follow them. Override the two tokens to keep the lighter edge.
 
 - **`nldd-sheet` and `nldd-window` take their name from the title bar.** Without `accessible-label`, a screen reader called them "Venster" unless you repeated the title there. They now take the `text` of the `nldd-top-title-bar` inside them, and follow it when it changes. `accessible-label` still wins, for a name that has to differ from the title. The development warning only appears when neither is there.

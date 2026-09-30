@@ -9,6 +9,17 @@
  * the width it was given rather than the width of the window: the same group is
  * a row in a page and a stack in a sheet beside it.
  *
+ * Being a container has one consequence to know: the width has to come from the
+ * parent, since a container may not size itself from what is inside it. In a
+ * parent that shrink-wraps its content (an inline-flex box, a float, a table
+ * cell, a flex item at `width: auto`) the group measures zero and its buttons
+ * are invisible. It says so once in development. Give the group or that parent
+ * a width.
+ *
+ * A stack fills the width with its buttons, except an `nldd-icon-button`, which
+ * keeps its own size: a bar with a single glyph in the middle is not a bigger
+ * target, only a wider one.
+ *
  * @element nldd-button-group
  * @attr {string} size - Button group size: 'sm' | 'md' (default: 'md')
  * @attr {string} orientation - Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')
@@ -56,6 +67,27 @@ export class NLDDButtonGroup extends LitElement {
 
 	override updated(changedProperties: Map<string, unknown>) {
 		if (changedProperties.has('size')) this.handleSlotChange();
+	}
+
+	override firstUpdated(): void {
+		this._warnWhenCollapsed();
+	}
+
+	/**
+	 * The group is an inline-size container, so its width has to come from its
+	 * parent: a container may not size itself from its own contents. In a parent
+	 * that shrink-wraps (inline-flex, a float, a table cell, a flex item at
+	 * `width: auto`) there is nothing to take, the group measures zero and the
+	 * buttons disappear without an error. Say so once, in development.
+	 */
+	private _warnWhenCollapsed(): void {
+		if (!import.meta.env?.DEV) return;
+		requestAnimationFrame(() => {
+			if (!this.isConnected || this.offsetParent === null) return;
+			if (this.getBoundingClientRect().width > 0) return;
+			if (!this._slot?.assignedElements({ flatten: true }).length) return;
+			console.warn('nldd-button-group: the group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.');
+		});
 	}
 
 	override render() {

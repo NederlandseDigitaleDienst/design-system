@@ -84,7 +84,7 @@ A vertical rule between groups of buttons in an `nldd-button-bar`. Purely presen
 
 ### `<nldd-button-group>`
 
-A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row on a container wide enough for one and a stack over the full width below the sm breakpoint, where two labels beside each other leave no room for either. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it.
+A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row on a container wide enough for one and a stack over the full width below the sm breakpoint, where two labels beside each other leave no room for either. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one.
 
 **Attributes**
 

@@ -51,11 +51,22 @@ export const buttonGroupStyles = css`
 		}
 
 		/* display as well as width: a button host shrink-wraps as inline-flex, so
-		   width alone leaves the button itself content-sized in a stretched box. */
-		:host([orientation="auto"]) ::slotted(*),
-		:host(:not([orientation])) ::slotted(*) {
+		   width alone leaves the button itself content-sized in a stretched box.
+		   An icon-only control is the exception: its size is its icon, and a
+		   full-width bar with one glyph in the middle is not a bigger target for
+		   the thumb, just a wider one. */
+		:host([orientation="auto"]) ::slotted(:not(nldd-icon-button)),
+		:host(:not([orientation])) ::slotted(:not(nldd-icon-button)) {
 			display: block;
 			width: 100%;
+		}
+
+		/* align-self as well: a column stretches its items across the full width
+		   on its own, so without this the icon button is a wide bar regardless of
+		   the width rule above. */
+		:host([orientation="auto"]) ::slotted(nldd-icon-button),
+		:host(:not([orientation])) ::slotted(nldd-icon-button) {
+			align-self: flex-start;
 		}
 	}
 
@@ -63,9 +74,13 @@ export const buttonGroupStyles = css`
 		--context-button-width: 100%;
 	}
 
-	:host([orientation="vertical"]) ::slotted(*) {
+	:host([orientation="vertical"]) ::slotted(:not(nldd-icon-button)) {
 		display: block;
 		width: 100%;
+	}
+
+	:host([orientation="vertical"]) ::slotted(nldd-icon-button) {
+		align-self: flex-start;
 	}
 
 	:host([hidden]) {
