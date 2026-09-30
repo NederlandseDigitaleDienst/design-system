@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/confirm/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/irreversible-action/ (de .mdx-pagina en de .html-voorbeelden ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 

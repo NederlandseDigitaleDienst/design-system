@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { waitForUpdate } from '../../test-utils.js';
-import markup from './confirm.html?raw';
+import markup from './irreversible-action.html?raw';
 import '../../components/index.js';
 
 describe('patroon: onomkeerbare actie', () => {

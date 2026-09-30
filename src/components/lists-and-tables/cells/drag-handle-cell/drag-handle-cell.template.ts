@@ -12,50 +12,50 @@ const gripMd = svg`
 			cx="2"
 			cy="2"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="8"
 			cy="2"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="2"
 			cy="8"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="8"
 			cy="8"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="2"
 			cy="14"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="8"
 			cy="14"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="2"
 			cy="20"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="8"
 			cy="20"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 	</svg>
 `;
 
@@ -71,38 +71,38 @@ const gripSm = svg`
 			cx="2"
 			cy="2"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="8"
 			cy="2"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="2"
 			cy="8"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="8"
 			cy="8"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="2"
 			cy="14"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 		<circle
 			cx="8"
 			cy="14"
 			r="2"
-			fill="currentColor"/
-		>
+			fill="currentColor"
+		/>
 	</svg>
 `;
 

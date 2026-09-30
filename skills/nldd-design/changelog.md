@@ -12,17 +12,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Highlights
 
+- **The patterns are live in Storybook**, with their examples running and a test on what each one promises. The pages in the skill are generated from that same markup, so what you copy is what you saw.
+
 - **The skills are split and renamed, so the name says the task.** `nldd-design` holds the reference, the changelog and the design guidelines, and `nldd-design-build`, `nldd-design-migrate`, `nldd-design-upgrade` and `nldd-design-contribute` each cover one job. A skill named `nldd` stays behind to catch the old name until 1 March 2027. Update the references in your own instruction files first: a skill that is not found warns nobody, it just makes the answer worse.
 
-- **Three things to change in your own code.** `nldd-icon` takes `icon` instead of `name`, the `subtitle` slot of `nldd-title` is now `supporting-text`, and a page in a split-view pane needs `landmarks="page"` on the pane that holds the primary content. The first two say in development what they need; the third is silent, so search your app for a split view.
-
-- **Overlays open with `open`.** Bind it to your own state on `nldd-sheet`, `nldd-modal-dialog`, `nldd-window` and `nldd-popover` instead of calling `show()` and `hide()` from a watcher.
-
-- **`nldd-title` says how big it looks and what it is.** `size` is the size and `heading-level` the heading, and with `text`, `overline` and `supporting-text` a title needs no slot at all.
-
-- **The patterns are live in Storybook**, with their examples running and a test on what each one promises. The pages in the skill are generated from that same markup.
-
-- **`hidden` hides every component**, where nine of them stayed on screen with it set.
+- **Four design guidelines come with this release**, on where work that needs its context belongs, on a filtered list as a mode, on sticky headers, and on the two shapes a heading can take. They are in `nldd-design`, and Storybook has them under Docs.
 
 ### Breaking
 
@@ -60,6 +54,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- **`nldd-list-item-segment` can be the button that opens a menu.** It takes `popup-type`, `popovertarget` and the popover-invoker properties the buttons already had, so a row can carry a "more" action that looks like part of the row instead of a button dropped on top of it. An `nldd-menu` anchored to the segment seeds its own type and keeps `aria-expanded` in step, the same as with `nldd-icon-button`.
+
 - **`nldd-button` takes a `form` attribute.** A save button in a sticky footer sits outside the form it saves, and pointing it at that form did not work: the platform resolves `form` to a real `<form>` element, while `nldd-form` renders its own form without handing it the id you wrote. So the button found an element that was not a form, ended up with no form owner, and did nothing at all when clicked. It now resolves the id itself and takes the form an `nldd-form` renders, as well as a plain `<form>`.
 
 - **A skill for migrating an existing codebase** (`nldd-design-migrate`). What goes wrong when you convert an application that already exists, and how you notice before your users do. The system fails silently, so the skill is built around checks that make the silence audible: what to verify before you convert anything, how to measure what a page still *does* rather than how it looks, and what to do when the fault is ours rather than yours. Separate files cover coming from Tailwind and rendering HTML on the server with fragment swaps (htmx, Turbo, Unpoly, LiveView), where one rule explains most of the trouble: a swap does not run a component's lifecycle the way a page load does.
@@ -79,6 +75,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **`heading-level` on `nldd-top-title-bar`.** The title was always an `h1`. It still is by default, and you can lower it where the bar is not the top of the page.
 
 ### Changed
+
+- **The edge of a surface is the same grey as a line inside it again.** `--semantics-surfaces-base-border-color` and `--semantics-surfaces-tinted-border-color` go back to `neutral-75` in light mode and `neutral-200` in dark, the values `--semantics-dividers-color` carries, which undoes the lighter edge of 0.8.89. Everything that draws its outline from these tokens is a step more present: `nldd-table`, `nldd-list`, `nldd-code-viewer`, `nldd-rich-text` and the boxes that follow them. Override the two tokens to keep the lighter edge.
 
 - **`nldd-sheet` and `nldd-window` take their name from the title bar.** Without `accessible-label`, a screen reader called them "Venster" unless you repeated the title there. They now take the `text` of the `nldd-top-title-bar` inside them, and follow it when it changes. `accessible-label` still wins, for a name that has to differ from the title. The development warning only appears when neither is there.
 
@@ -105,8 +103,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **`nldd-window` opens when `show()` comes before its first render.** Sheet and modal already waited for their dialog. The window did nothing and said nothing, so a window opened in the same tick it was created stayed shut.
 
 - **The validation icon of `nldd-token-field` stays in the top corner.** It was centered over the whole field, so the moment the tokens wrapped to a second row it drifted down the side, away from the row it belongs to. It now sits where `nldd-multi-line-text-field` puts its own: at the top, level with the first row.
-
-- **`nldd-list-item-segment` can be the button that opens a menu.** It takes `popup-type`, `popovertarget` and the popover-invoker properties the buttons already had, so a row can carry a "more" action that looks like part of the row instead of a button dropped on top of it. An `nldd-menu` anchored to the segment seeds its own type and keeps `aria-expanded` in step, the same as with `nldd-icon-button`.
 
 - **A tree row's divider no longer jumps when the branch opens.** The chevron turned by rotating the whole `nldd-icon-cell`, and a rotated element reports a turned box to `getBoundingClientRect()`. That box is what the row measures to place its divider, so the same row drew its line 12px further left while it was expanded. The cell now turns its glyph instead, through the `icon` part it exposes, and keeps its own box where it was.
 

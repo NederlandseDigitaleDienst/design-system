@@ -11,9 +11,9 @@ De `nldd-design-build` skill leert je hoe de componenten werken. Deze skill gaat
 
 Alles hieronder geldt ongeacht waar je vandaan komt. Is je codebase specifiek, lees dan ook:
 
-- [`van-tailwind.md`](van-tailwind.md): de compilervalstrik, de tokenbrug, botsende globale regels, iconen.
-- [`van-een-ander-design-system.md`](van-een-ander-design-system.md): je draaide al op een componentbibliotheek (NL Design System, ROOS van RVO, of een eigen systeem). Verzonnen tokennamen, de donkere weergave als controle, en twee systemen naast elkaar.
-- [`server-gerenderd.md`](server-gerenderd.md): HTML op de server met fragmentwissels (htmx, Turbo, Unpoly, LiveView). Wat een swap anders doet dan een paginalading, de nieuwe stack ernaast zetten, en wat vendoren van de bundel je oplevert en kost.
+- [`from-tailwind.md`](from-tailwind.md): de compilervalstrik, de tokenbrug, botsende globale regels, iconen.
+- [`from-another-design-system.md`](from-another-design-system.md): je draaide al op een componentbibliotheek (NL Design System, ROOS van RVO, of een eigen systeem). Verzonnen tokennamen, de donkere weergave als controle, en twee systemen naast elkaar.
+- [`server-rendered.md`](server-rendered.md): HTML op de server met fragmentwissels (htmx, Turbo, Unpoly, LiveView). Wat een swap anders doet dan een paginalading, de nieuwe stack ernaast zetten, en wat vendoren van de bundel je oplevert en kost.
 
 De naslag die je bij een omzetting het hardst nodig hebt, staat in de skill `nldd-design`: de [componentreferentie](../nldd-design/reference.md) om te controleren of een attribuut of icoonnaam echt bestaat, en de [changelog](../nldd-design/changelog.md) om te zien wat er tussen jouw versie en de doelversie is veranderd.
 
@@ -109,7 +109,7 @@ Zoek daarbij verder dan het markup-attribuut. Klassen overleven het langst in lo
 
 En sluit nooit een heel bestand uit van de check. Een uitsluiting op bestandsnaam voor graph-views ("die klassen zijn van de graph-bibliotheek") verborg 112 dode klassen over zes bestanden, waaronder een datatabel die als kale HTML rendeerde. Sluit uit op klassenaam, en alleen voor de handvol namen die een externe bibliotheek echt bezit.
 
-Kom je van Tailwind, lees dan [`van-tailwind.md`](van-tailwind.md): daar zit een extra valstrik, omdat de compiler regels verzint voor klassen die nergens bestaan.
+Kom je van Tailwind, lees dan [`from-tailwind.md`](from-tailwind.md): daar zit een extra valstrik, omdat de compiler regels verzint voor klassen die nergens bestaan.
 
 ## Events: de regel die de meeste code breekt
 

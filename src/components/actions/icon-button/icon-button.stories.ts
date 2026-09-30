@@ -494,8 +494,8 @@ export const EigenIcoonInDeSlot = {
 				<circle
 					cx="10"
 					cy="10"
-					r="8"/
-				>
+					r="8"
+				/>
 			</svg>
 		</nldd-icon-button>
 	</div>

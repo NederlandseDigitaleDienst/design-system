@@ -1,4 +1,4 @@
-import markup from './confirm.html?raw';
+import markup from './irreversible-action.html?raw';
 import { patternStory } from '../pattern-story.js';
 
 export default {

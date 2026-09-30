@@ -284,6 +284,11 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	 * that is not a form, and the button ends up with no form owner at all. That
 	 * is the whole reason a save button in a page footer, outside the form it
 	 * belongs to, used to do nothing.
+	 *
+	 * The id is looked up in the button's own root, the same scope the platform
+	 * searches: a button inside a shadow tree reaches the forms in that tree, not
+	 * one in the document around it. Put the two in the same tree, or hand the
+	 * button its form another way.
 	 */
 	private _ownerForm(): HTMLFormElement | null {
 		const id = this.getAttribute('form');
