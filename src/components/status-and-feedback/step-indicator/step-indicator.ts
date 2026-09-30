@@ -33,7 +33,10 @@
  *
  * @example
  * ```html
- * <nldd-step-indicator current="2" accessible-label="Voortgang aanvraag">
+ * <nldd-step-indicator
+ * 	current="2"
+ * 	accessible-label="Voortgang aanvraag"
+ * >
  *   <nldd-step-indicator-item text="Gegevens"></nldd-step-indicator-item>
  *   <nldd-step-indicator-item text="Controle"></nldd-step-indicator-item>
  *   <nldd-step-indicator-item text="Bevestigen"></nldd-step-indicator-item>

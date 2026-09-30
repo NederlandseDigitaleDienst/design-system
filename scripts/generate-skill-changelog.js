@@ -8,7 +8,7 @@
  * break after a marketplace install. Hence a real copy, regenerated from the
  * single source of truth (the root CHANGELOG that semantic-release maintains).
  *
- * WARNING: overwrites skills/nldd/changelog.md in-place. Run
+ * WARNING: overwrites skills/nldd-design/changelog.md in-place. Run
  * `npm run generate:skill-docs` after a release and commit the result.
  *
  * Usage: node scripts/generate-skill-changelog.js
@@ -20,7 +20,7 @@ import { generatedHeader, readSource, writeGenerated } from './lib/skill-doc.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const sourcePath = resolve(__dirname, '../CHANGELOG.md');
-const outputPath = resolve(__dirname, '../skills/nldd/changelog.md');
+const outputPath = resolve(__dirname, '../skills/nldd-design/changelog.md');
 
 const header = generatedHeader('Kopie van de root CHANGELOG.md (onderhouden door semantic-release).');
 

@@ -1,5 +1,6 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './simple-section.js';
+import '../../../content/title/title.js';
 import '../../../content/rich-text/rich-text.js';
 import '../../container/container.js';
 import '../../box/box.js';
@@ -13,7 +14,7 @@ import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-
  * ## Gebruik
  * ```html
  * <nldd-simple-section>
- *   <nldd-rich-text slot="header"><h2>Sectietitel</h2></nldd-rich-text>
+ *   <nldd-title slot="header" text="Sectietitel" heading-level="2"></nldd-title>
  *   <nldd-rich-text><p>Inhoud van de sectie.</p></nldd-rich-text>
  *   <nldd-rich-text slot="footer"><p>Voetnoot of actie.</p></nldd-rich-text>
  * </nldd-simple-section>
@@ -32,16 +33,42 @@ export default {
 			type: 'stable',
 		},
 	},
-	argTypes: pageSectionArgTypes,
-	args: pageSectionArgs,
+	args: {
+		...pageSectionArgs,
+		horizontalAlignment: 'left',
+		verticalAlignment: 'top',
+	},
+	argTypes: {
+		...pageSectionArgTypes,
+		horizontalAlignment: {
+			name: 'horizontal-alignment',
+			control: { type: 'select' },
+			options: ['left', 'center', 'right'],
+			description: 'Waar de kinderen van de sectie horizontaal staan, voor iets dat smaller is dan de body',
+			table: { defaultValue: { summary: 'left' } },
+		},
+		verticalAlignment: {
+			name: 'vertical-alignment',
+			control: { type: 'select' },
+			options: ['top', 'center', 'bottom'],
+			description: 'Waar de kinderen verticaal staan; alleen zichtbaar als de sectie hoger is dan de inhoud',
+			table: { defaultValue: { summary: 'top' } },
+		},
+	},
 };
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-simple-section ${pageSectionAttrs(args)}>
-			<nldd-rich-text slot="header">
-				<h2>Sectietitel</h2>
-			</nldd-rich-text>
+		<nldd-simple-section
+			${pageSectionAttrs(args)}
+			horizontal-alignment=${args.horizontalAlignment === 'left' ? nothing : args.horizontalAlignment}
+			vertical-alignment=${args.verticalAlignment === 'top' ? nothing : args.verticalAlignment}
+		>
+			<nldd-title
+				slot="header"
+				text="Sectietitel"
+				heading-level="2"
+			></nldd-title>
 			<nldd-rich-text>
 				<p>Dit is de hoofdinhoud van de sectie. Voeg hier tekst, formulieren of andere componenten toe.</p>
 				<p>De ruimte tussen header, inhoud en footer wordt bepaald door de breedte van de sectie.</p>
@@ -55,17 +82,19 @@ export const Standaard = {
 
 /**
  * `background` tekent een oppervlak ("base" of "tinted") en cascadet
- * `--context-parent-background-color` naar afstammelingen. Combineer met
- * `scheme="dark"` voor een donkere band op een lichte pagina.
+ * `--context-parent-background-color` naar afstammelingen, zodat kaarten en
+ * geneste secties erin weten op welk oppervlak ze staan.
  */
 export const Oppervlak = {
 	render: () => html`
-		<nldd-simple-section background="tinted" scheme="dark">
-			<nldd-rich-text slot="header">
-				<h2>Donkere, getinte sectie</h2>
-			</nldd-rich-text>
+		<nldd-simple-section background="tinted">
+			<nldd-title
+				slot="header"
+				text="Getinte sectie"
+				heading-level="2"
+			></nldd-title>
 			<nldd-rich-text>
-				<p>Deze sectie forceert <code>scheme="dark"</code> en een getint oppervlak — bruikbaar voor een hero-band.</p>
+				<p>Deze sectie tekent een getint oppervlak, bruikbaar om een blok van de pagina af te zetten.</p>
 			</nldd-rich-text>
 		</nldd-simple-section>
 	`,
@@ -77,7 +106,10 @@ export const Oppervlak = {
  */
 export const MinimaleHoogte = {
 	render: () => html`
-		<nldd-simple-section background="tinted" height="320px">
+		<nldd-simple-section
+			background="tinted"
+			height="320px"
+		>
 			<nldd-rich-text>
 				<p>Deze sectie is minimaal 320px hoog, ook met weinig inhoud.</p>
 			</nldd-rich-text>
@@ -121,12 +153,18 @@ export const Uitlijning = {
  */
 export const BlockPadding = {
 	render: () => html`
-		<nldd-simple-section background="base" padding-bottom="0">
+		<nldd-simple-section
+			background="base"
+			padding-bottom="0"
+		>
 			<nldd-rich-text>
 				<p>Deze sectie laat de standaard bovenpadding staan maar verwijdert de onderpadding (<code>padding-bottom="0"</code>), zodat ze strak aansluit op de volgende sectie.</p>
 			</nldd-rich-text>
 		</nldd-simple-section>
-		<nldd-simple-section background="tinted" padding-top="0">
+		<nldd-simple-section
+			background="tinted"
+			padding-top="0"
+		>
 			<nldd-rich-text>
 				<p>De volgende sectie verwijdert juist haar bovenpadding (<code>padding-top="0"</code>).</p>
 			</nldd-rich-text>

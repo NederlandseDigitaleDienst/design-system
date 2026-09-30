@@ -34,14 +34,25 @@ export default {
 	},
 };
 
-export const Default = {
+export const Standaard = {
 	render: () => html`
 		<nldd-page>
 			<nldd-skip-link slot="header">
 				<nldd-top-navigation-bar website-title="DigID">
-					<nldd-menu-bar-item slot="global" text="Home" current></nldd-menu-bar-item>
-					<nldd-menu-bar-item slot="global" text="Contact"></nldd-menu-bar-item>
-					<nldd-menu-bar-item slot="utility" text="Zoeken" icon="magnifier"></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						slot="global"
+						text="Home"
+						current
+					></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						slot="global"
+						text="Contact"
+					></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						slot="utility"
+						text="Zoeken"
+						icon="magnifier"
+					></nldd-menu-bar-item>
 				</nldd-top-navigation-bar>
 			</nldd-skip-link>
 			<nldd-simple-section>
@@ -59,11 +70,25 @@ export const Default = {
 export const MetTekst = {
 	render: () => html`
 		<nldd-page>
-			<nldd-skip-link slot="header" text="Ga naar hoofdinhoud">
+			<nldd-skip-link
+				slot="header"
+				text="Ga naar hoofdinhoud"
+			>
 				<nldd-top-navigation-bar website-title="Rijksoverheid">
-					<nldd-menu-bar-item slot="global" text="Home" current></nldd-menu-bar-item>
-					<nldd-menu-bar-item slot="global" text="Onderwerpen"></nldd-menu-bar-item>
-					<nldd-menu-bar-item slot="utility" text="Zoeken" icon="magnifier"></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						slot="global"
+						text="Home"
+						current
+					></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						slot="global"
+						text="Onderwerpen"
+					></nldd-menu-bar-item>
+					<nldd-menu-bar-item
+						slot="utility"
+						text="Zoeken"
+						icon="magnifier"
+					></nldd-menu-bar-item>
 				</nldd-top-navigation-bar>
 			</nldd-skip-link>
 			<nldd-simple-section>
@@ -79,23 +104,42 @@ export const MetTekst = {
 export const MetHref = {
 	render: () => html`
 		<nldd-page>
-			<nldd-skip-link slot="header" text="Ga naar formulier" href="#contact-form"></nldd-skip-link>
+			<nldd-skip-link
+				slot="header"
+				text="Ga naar formulier"
+				href="#contact-form"
+			></nldd-skip-link>
 			<nldd-simple-section>
 				<nldd-rich-text>
 					<p>Content bovenaan de pagina...</p>
 				</nldd-rich-text>
 			</nldd-simple-section>
-			<nldd-simple-section id="contact-form" tabindex="-1">
-				<nldd-form novalidate label-alignment="right">
-					<nldd-title size="3">
-						<h2>Contactformulier</h2>
-					</nldd-title>
+			<nldd-simple-section
+				id="contact-form"
+				tabindex="-1"
+			>
+				<nldd-form
+					novalidate
+					label-alignment="right"
+				>
+					<nldd-title
+						size="3"
+						text="Contactformulier"
+						heading-level="2"
+					></nldd-title>
 					<nldd-form-field label="Naam">
-						<nldd-text-field name="name" autocomplete="name"></nldd-text-field>
+						<nldd-text-field
+							name="name"
+							autocomplete="name"
+						></nldd-text-field>
 					</nldd-form-field>
 					<nldd-form-actions>
 						<nldd-button-group orientation="horizontal">
-							<nldd-button variant="primary" type="submit" text="Verstuur"></nldd-button>
+							<nldd-button
+								variant="primary"
+								type="submit"
+								text="Verstuur"
+							></nldd-button>
 						</nldd-button-group>
 					</nldd-form-actions>
 				</nldd-form>

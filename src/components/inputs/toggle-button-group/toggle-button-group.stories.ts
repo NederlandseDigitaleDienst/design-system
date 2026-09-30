@@ -8,7 +8,10 @@ import '../toggle-button/toggle-button.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-toggle-button-group type="radio" name="view">
+ * <nldd-toggle-button-group
+ * 	type="radio"
+ * 	name="view"
+ * >
  *   <nldd-toggle-button value="list" text="Lijst"></nldd-toggle-button>
  *   <nldd-toggle-button value="card" text="Kaart" selected></nldd-toggle-button>
  * </nldd-toggle-button-group>
@@ -92,9 +95,22 @@ const Template = (args: Record<string, any>) => html`
 		?disabled=${args.disabled}
 		accessible-label=${args.accessibleLabel || nothing}
 	>
-		<nldd-toggle-button value="mijn-zaken" text="Mijn zaken" icon="person"></nldd-toggle-button>
-		<nldd-toggle-button value="inbox" text="Inbox" icon="inbox" selected></nldd-toggle-button>
-		<nldd-toggle-button value="agenda" text="Agenda" icon="calendar-event"></nldd-toggle-button>
+		<nldd-toggle-button
+			value="mijn-zaken"
+			text="Mijn zaken"
+			icon="person"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			value="inbox"
+			text="Inbox"
+			icon="inbox"
+			selected
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			value="agenda"
+			text="Agenda"
+			icon="calendar-event"
+		></nldd-toggle-button>
 	</nldd-toggle-button-group>
 `;
 
@@ -109,17 +125,42 @@ export const Standaard = {
    ============================================================ */
 
 export const TypeButton = {
+	name: 'Type button',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
 			Met <code>type="button"</code> beheert elke knop zijn eigen <code>aria-pressed</code> toestand onafhankelijk. Ideaal voor teksteditor-toolbars.
 		</p>
-		<nldd-toggle-button-group type="button" aria-label="Tekst opmaken">
-			<nldd-toggle-button value="bold" accessible-label="Vet" icon="bold"></nldd-toggle-button>
-			<nldd-toggle-button value="italic" accessible-label="Cursief" icon="italic" selected></nldd-toggle-button>
-			<nldd-toggle-button value="underlined" accessible-label="Onderstreept" icon="underlined"></nldd-toggle-button>
-			<nldd-toggle-button value="bullet-list" accessible-label="Opsomming" icon="bullet-list"></nldd-toggle-button>
-			<nldd-toggle-button value="numbered-list" accessible-label="Genummerde lijst" icon="numbered-list"></nldd-toggle-button>
+		<nldd-toggle-button-group
+			type="button"
+			aria-label="Tekst opmaken"
+		>
+			<nldd-toggle-button
+				value="bold"
+				accessible-label="Vet"
+				icon="bold"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="italic"
+				accessible-label="Cursief"
+				icon="italic"
+				selected
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="underlined"
+				accessible-label="Onderstreept"
+				icon="underlined"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="bullet-list"
+				accessible-label="Opsomming"
+				icon="bullet-list"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="numbered-list"
+				accessible-label="Genummerde lijst"
+				icon="numbered-list"
+			></nldd-toggle-button>
 		</nldd-toggle-button-group>
 	</div>
 `,
@@ -133,17 +174,40 @@ export const TypeButton = {
 },
 };
 
-export const MultiSelect = {
+export const TypeCheckbox = {
+	name: 'Type checkbox',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
 			Met <code>type="checkbox"</code> kunnen meerdere opties tegelijk geselecteerd zijn.
 		</p>
-		<nldd-toggle-button-group type="checkbox" name="filter" aria-label="Filters">
-			<nldd-toggle-button value="mijn-zaken" text="Mijn zaken" icon="person" selected></nldd-toggle-button>
-			<nldd-toggle-button value="inbox" text="Inbox" icon="inbox"></nldd-toggle-button>
-			<nldd-toggle-button value="agenda" text="Agenda" icon="calendar-event" selected></nldd-toggle-button>
-			<nldd-toggle-button value="documenten" text="Documenten" icon="file-text"></nldd-toggle-button>
+		<nldd-toggle-button-group
+			type="checkbox"
+			name="filter"
+			aria-label="Filters"
+		>
+			<nldd-toggle-button
+				value="mijn-zaken"
+				text="Mijn zaken"
+				icon="person"
+				selected
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="inbox"
+				text="Inbox"
+				icon="inbox"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="agenda"
+				text="Agenda"
+				icon="calendar-event"
+				selected
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="documenten"
+				text="Documenten"
+				icon="file-text"
+			></nldd-toggle-button>
 		</nldd-toggle-button-group>
 	</div>
 `,
@@ -157,17 +221,35 @@ export const MultiSelect = {
 },
 };
 
-export const SingleSelect = {
+export const TypeRadio = {
+	name: 'Type radio',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
 			Met <code>type="radio"</code> kan slechts één optie tegelijk geselecteerd zijn.
 			Navigeer met de pijltoetsen.
 		</p>
-		<nldd-toggle-button-group type="radio" name="sortering" aria-label="Sortering">
-			<nldd-toggle-button value="oplopend" text="Oplopend" icon="sort-ascending"></nldd-toggle-button>
-			<nldd-toggle-button value="aflopend" text="Aflopend" icon="sort-descending" selected></nldd-toggle-button>
-			<nldd-toggle-button value="relevant" text="Relevant" icon="sort"></nldd-toggle-button>
+		<nldd-toggle-button-group
+			type="radio"
+			name="sortering"
+			aria-label="Sortering"
+		>
+			<nldd-toggle-button
+				value="oplopend"
+				text="Oplopend"
+				icon="sort-ascending"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="aflopend"
+				text="Aflopend"
+				icon="sort-descending"
+				selected
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="relevant"
+				text="Relevant"
+				icon="sort"
+			></nldd-toggle-button>
 		</nldd-toggle-button-group>
 	</div>
 `,
@@ -189,17 +271,59 @@ export const SingleSelect = {
 export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-toggle-button-group type="radio" name="sortering-xs" size="xs" aria-label="Sortering (extra klein)">
-			<nldd-toggle-button value="oplopend" text="Oplopend" icon="sort-ascending"></nldd-toggle-button>
-			<nldd-toggle-button value="aflopend" text="Aflopend" icon="sort-descending" selected></nldd-toggle-button>
+		<nldd-toggle-button-group
+			type="radio"
+			name="sortering-xs"
+			size="xs"
+			aria-label="Sortering (extra klein)"
+		>
+			<nldd-toggle-button
+				value="oplopend"
+				text="Oplopend"
+				icon="sort-ascending"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="aflopend"
+				text="Aflopend"
+				icon="sort-descending"
+				selected
+			></nldd-toggle-button>
 		</nldd-toggle-button-group>
-		<nldd-toggle-button-group type="radio" name="sortering-sm" size="sm" aria-label="Sortering (klein)">
-			<nldd-toggle-button value="oplopend" text="Oplopend" icon="sort-ascending"></nldd-toggle-button>
-			<nldd-toggle-button value="aflopend" text="Aflopend" icon="sort-descending" selected></nldd-toggle-button>
+		<nldd-toggle-button-group
+			type="radio"
+			name="sortering-sm"
+			size="sm"
+			aria-label="Sortering (klein)"
+		>
+			<nldd-toggle-button
+				value="oplopend"
+				text="Oplopend"
+				icon="sort-ascending"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="aflopend"
+				text="Aflopend"
+				icon="sort-descending"
+				selected
+			></nldd-toggle-button>
 		</nldd-toggle-button-group>
-		<nldd-toggle-button-group type="radio" name="sortering-md" size="md" aria-label="Sortering (middel)">
-			<nldd-toggle-button value="oplopend" text="Oplopend" icon="sort-ascending"></nldd-toggle-button>
-			<nldd-toggle-button value="aflopend" text="Aflopend" icon="sort-descending" selected></nldd-toggle-button>
+		<nldd-toggle-button-group
+			type="radio"
+			name="sortering-md"
+			size="md"
+			aria-label="Sortering (middel)"
+		>
+			<nldd-toggle-button
+				value="oplopend"
+				text="Oplopend"
+				icon="sort-ascending"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="aflopend"
+				text="Aflopend"
+				icon="sort-descending"
+				selected
+			></nldd-toggle-button>
 		</nldd-toggle-button-group>
 	</div>
 `,
@@ -211,13 +335,32 @@ export const Grootten = {
    Uitgeschakeld
    ============================================================ */
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-toggle-button-group type="checkbox" name="filter-uit" disabled aria-label="Filters (uitgeschakeld)">
-			<nldd-toggle-button value="mijn-zaken" text="Mijn zaken" icon="person"></nldd-toggle-button>
-			<nldd-toggle-button value="inbox" text="Inbox" icon="inbox" selected></nldd-toggle-button>
-			<nldd-toggle-button value="agenda" text="Agenda" icon="calendar-event"></nldd-toggle-button>
+		<nldd-toggle-button-group
+			type="checkbox"
+			name="filter-uit"
+			disabled
+			aria-label="Filters (uitgeschakeld)"
+		>
+			<nldd-toggle-button
+				value="mijn-zaken"
+				text="Mijn zaken"
+				icon="person"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="inbox"
+				text="Inbox"
+				icon="inbox"
+				selected
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="agenda"
+				text="Agenda"
+				icon="calendar-event"
+			></nldd-toggle-button>
 		</nldd-toggle-button-group>
 	</div>
 `,
@@ -238,10 +381,27 @@ export const Uitgeschakeld = {
 
 export const MetIconen = {
 	render: () => html`
-	<nldd-toggle-button-group type="radio" name="view" aria-label="Weergave">
-		<nldd-toggle-button value="list" accessible-label="Lijstweergave" icon="list" selected></nldd-toggle-button>
-		<nldd-toggle-button value="compact" accessible-label="Compacte weergave" icon="list-decreasing-lines"></nldd-toggle-button>
-		<nldd-toggle-button value="uitgebreid" accessible-label="Uitgebreide weergave" icon="stack"></nldd-toggle-button>
+	<nldd-toggle-button-group
+		type="radio"
+		name="view"
+		aria-label="Weergave"
+	>
+		<nldd-toggle-button
+			value="list"
+			accessible-label="Lijstweergave"
+			icon="list"
+			selected
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			value="compact"
+			accessible-label="Compacte weergave"
+			icon="list-decreasing-lines"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			value="uitgebreid"
+			accessible-label="Uitgebreide weergave"
+			icon="stack"
+		></nldd-toggle-button>
 	</nldd-toggle-button-group>
 `,
 	parameters: {

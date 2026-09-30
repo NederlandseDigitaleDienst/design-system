@@ -11,7 +11,9 @@ export const buttonStyles = css`
 
 	:host {
 		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_width: auto;
+		/* A parent that stacks its buttons says so through the context variable;
+		   the button's own width attribute overrides it with an inline style. */
+		--_width: var(--context-button-width, auto);
 		--_min-size: var(--semantics-controls-md-min-size);
 		--_block-padding: var(--semantics-controls-md-block-padding);
 		--_inline-padding: var(--semantics-buttons-md-inline-padding);

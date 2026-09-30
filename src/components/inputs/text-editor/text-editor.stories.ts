@@ -237,9 +237,14 @@ const onToolbarState = (event: CustomEvent) => {
 };
 function toolbarEditor(editor: unknown) {
 	return html`
-		<div class="demo-editor" @nldd-text-editor-state=${onToolbarState}>
+		<div class="demo-editor"
+			@nldd-text-editor-state=${onToolbarState}
+		>
 			<nldd-toolbar size="md">
-				<nldd-toolbar-item slot="start" label="Nadruk">
+				<nldd-toolbar-item
+					slot="start"
+					label="Nadruk"
+				>
 					<nldd-segmented-control
 						data-group="inline"
 						type="checkbox"
@@ -247,17 +252,50 @@ function toolbarEditor(editor: unknown) {
 						accessible-label="Nadruk"
 						@change=${(event: CustomEvent) => reconcile(event.currentTarget as Element, ['bold', 'italic', 'strikethrough'], event.detail.values)}
 					>
-						<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-						<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-						<nldd-segmented-control-item value="strikethrough" text="Doorhalen" icon="strikethrough"></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="bold"
+							text="Vet"
+							icon="bold"
+						></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="italic"
+							text="Cursief"
+							icon="italic"
+						></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="strikethrough"
+							text="Doorhalen"
+							icon="strikethrough"
+						></nldd-segmented-control-item>
 					</nldd-segmented-control>
-					<nldd-menu-group slot="overflow" text="Nadruk">
-						<nldd-menu-item type="checkbox" value="bold" text="Vet" icon="bold"></nldd-menu-item>
-						<nldd-menu-item type="checkbox" value="italic" text="Cursief" icon="italic"></nldd-menu-item>
-						<nldd-menu-item type="checkbox" value="strikethrough" text="Doorhalen" icon="strikethrough"></nldd-menu-item>
+					<nldd-menu-group
+						slot="overflow"
+						text="Nadruk"
+					>
+						<nldd-menu-item
+							type="checkbox"
+							value="bold"
+							text="Vet"
+							icon="bold"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="checkbox"
+							value="italic"
+							text="Cursief"
+							icon="italic"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="checkbox"
+							value="strikethrough"
+							text="Doorhalen"
+							icon="strikethrough"
+						></nldd-menu-item>
 					</nldd-menu-group>
 				</nldd-toolbar-item>
-				<nldd-toolbar-item slot="start" label="Code">
+				<nldd-toolbar-item
+					slot="start"
+					label="Code"
+				>
 					<nldd-toggle-button
 						data-group="code"
 						variant="icon"
@@ -265,9 +303,18 @@ function toolbarEditor(editor: unknown) {
 						accessible-label="Code"
 						@change=${(event: CustomEvent) => editorOf(event.currentTarget as Element)?.runCommand('inlineCode')}
 					></nldd-toggle-button>
-					<nldd-menu-item slot="overflow" type="checkbox" value="inlineCode" text="Code" icon="code"></nldd-menu-item>
+					<nldd-menu-item
+						slot="overflow"
+						type="checkbox"
+						value="inlineCode"
+						text="Code"
+						icon="code"
+					></nldd-menu-item>
 				</nldd-toolbar-item>
-				<nldd-toolbar-item slot="start" label="Link">
+				<nldd-toolbar-item
+					slot="start"
+					label="Link"
+				>
 					<nldd-toggle-button
 						data-group="link"
 						variant="icon"
@@ -275,9 +322,18 @@ function toolbarEditor(editor: unknown) {
 						accessible-label="Link"
 						@change=${onLink}
 					></nldd-toggle-button>
-					<nldd-menu-item slot="overflow" type="checkbox" value="link" text="Link" icon="link"></nldd-menu-item>
+					<nldd-menu-item
+						slot="overflow"
+						type="checkbox"
+						value="link"
+						text="Link"
+						icon="link"
+					></nldd-menu-item>
 				</nldd-toolbar-item>
-				<nldd-toolbar-item slot="start" label="Citaat">
+				<nldd-toolbar-item
+					slot="start"
+					label="Citaat"
+				>
 					<nldd-toggle-button
 						data-group="quote"
 						variant="icon"
@@ -285,9 +341,18 @@ function toolbarEditor(editor: unknown) {
 						accessible-label="Citaat"
 						@change=${(event: CustomEvent) => editorOf(event.currentTarget as Element)?.runCommand('quote')}
 					></nldd-toggle-button>
-					<nldd-menu-item slot="overflow" type="checkbox" value="quote" text="Citaat" icon="text-quote"></nldd-menu-item>
+					<nldd-menu-item
+						slot="overflow"
+						type="checkbox"
+						value="quote"
+						text="Citaat"
+						icon="text-quote"
+					></nldd-menu-item>
 				</nldd-toolbar-item>
-				<nldd-toolbar-item slot="start" label="Lijst">
+				<nldd-toolbar-item
+					slot="start"
+					label="Lijst"
+				>
 					<nldd-segmented-control
 						data-group="list"
 						type="radio"
@@ -296,78 +361,270 @@ function toolbarEditor(editor: unknown) {
 						accessible-label="Lijst"
 						@change=${onListChange}
 					>
-						<nldd-segmented-control-item value="none" text="Geen lijst" icon="minus"></nldd-segmented-control-item>
-						<nldd-segmented-control-item value="bullet" text="Opsomming" icon="bullet-list"></nldd-segmented-control-item>
-						<nldd-segmented-control-item value="numbered" text="Genummerd" icon="numbered-list"></nldd-segmented-control-item>
-						<nldd-segmented-control-item value="task" text="Taken" icon="check-list"></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="none"
+							text="Geen lijst"
+							icon="minus"
+						></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="bullet"
+							text="Opsomming"
+							icon="bullet-list"
+						></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="numbered"
+							text="Genummerd"
+							icon="numbered-list"
+						></nldd-segmented-control-item>
+						<nldd-segmented-control-item
+							value="task"
+							text="Taken"
+							icon="check-list"
+						></nldd-segmented-control-item>
 					</nldd-segmented-control>
-					<nldd-menu-group slot="overflow" text="Lijst">
-						<nldd-menu-item type="radio" value="list:none" text="Geen lijst" icon="minus"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="list:bullet" text="Opsomming" icon="bullet-list"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="list:numbered" text="Genummerd" icon="numbered-list"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="list:task" text="Taken" icon="check-list"></nldd-menu-item>
+					<nldd-menu-group
+						slot="overflow"
+						text="Lijst"
+					>
+						<nldd-menu-item
+							type="radio"
+							value="list:none"
+							text="Geen lijst"
+							icon="minus"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="list:bullet"
+							text="Opsomming"
+							icon="bullet-list"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="list:numbered"
+							text="Genummerd"
+							icon="numbered-list"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="list:task"
+							text="Taken"
+							icon="check-list"
+						></nldd-menu-item>
 					</nldd-menu-group>
 				</nldd-toolbar-item>
-				<nldd-toolbar-item slot="start" label="Inspringen">
+				<nldd-toolbar-item
+					slot="start"
+					label="Inspringen"
+				>
 					<nldd-button-bar data-group="indent">
-						<nldd-icon-button icon="indent-increase" text="Meer inspringen" @click=${onIndent}></nldd-icon-button>
+						<nldd-icon-button
+							icon="indent-increase"
+							text="Meer inspringen"
+							@click=${onIndent}
+						></nldd-icon-button>
 						<nldd-button-bar-divider></nldd-button-bar-divider>
-						<nldd-icon-button icon="indent-decrease" text="Minder inspringen" @click=${onOutdent}></nldd-icon-button>
+						<nldd-icon-button
+							icon="indent-decrease"
+							text="Minder inspringen"
+							@click=${onOutdent}
+						></nldd-icon-button>
 					</nldd-button-bar>
-					<nldd-menu-group slot="overflow" text="Inspringen">
-						<nldd-menu-item value="indent" text="Meer inspringen" icon="indent-increase"></nldd-menu-item>
-						<nldd-menu-item value="outdent" text="Minder inspringen" icon="indent-decrease"></nldd-menu-item>
+					<nldd-menu-group
+						slot="overflow"
+						text="Inspringen"
+					>
+						<nldd-menu-item
+							value="indent"
+							text="Meer inspringen"
+							icon="indent-increase"
+						></nldd-menu-item>
+						<nldd-menu-item
+							value="outdent"
+							text="Minder inspringen"
+							icon="indent-decrease"
+						></nldd-menu-item>
 					</nldd-menu-group>
 				</nldd-toolbar-item>
-				<nldd-toolbar-item slot="start" label="Tekststijl">
-					<nldd-button data-group="heading" expandable text="Paragraaf">
-						<nldd-menu id="heading-menu" slot="popup" @select=${onHeadingSelect}>
-							<nldd-menu-item type="radio" value="0" text="Paragraaf" selected></nldd-menu-item>
+				<nldd-toolbar-item
+					slot="start"
+					label="Tekststijl"
+				>
+					<nldd-button
+						data-group="heading"
+						expandable
+						text="Paragraaf"
+					>
+						<nldd-menu
+							id="heading-menu"
+							slot="popup"
+							@select=${onHeadingSelect}
+						>
+							<nldd-menu-item
+								type="radio"
+								value="0"
+								text="Paragraaf"
+								selected
+							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item type="radio" value="1" text="Heading 1"></nldd-menu-item>
-							<nldd-menu-item type="radio" value="2" text="Heading 2"></nldd-menu-item>
-							<nldd-menu-item type="radio" value="3" text="Heading 3"></nldd-menu-item>
-							<nldd-menu-item type="radio" value="4" text="Heading 4"></nldd-menu-item>
-							<nldd-menu-item type="radio" value="5" text="Heading 5"></nldd-menu-item>
-							<nldd-menu-item type="radio" value="6" text="Heading 6"></nldd-menu-item>
+							<nldd-menu-item
+								type="radio"
+								value="1"
+								text="Heading 1"
+							></nldd-menu-item>
+							<nldd-menu-item
+								type="radio"
+								value="2"
+								text="Heading 2"
+							></nldd-menu-item>
+							<nldd-menu-item
+								type="radio"
+								value="3"
+								text="Heading 3"
+							></nldd-menu-item>
+							<nldd-menu-item
+								type="radio"
+								value="4"
+								text="Heading 4"
+							></nldd-menu-item>
+							<nldd-menu-item
+								type="radio"
+								value="5"
+								text="Heading 5"
+							></nldd-menu-item>
+							<nldd-menu-item
+								type="radio"
+								value="6"
+								text="Heading 6"
+							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
-							<nldd-menu-item type="radio" value="codeblock" text="Codeblok"></nldd-menu-item>
+							<nldd-menu-item
+								type="radio"
+								value="codeblock"
+								text="Codeblok"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-button>
-					<nldd-menu-group slot="overflow" text="Tekststijl">
-						<nldd-menu-item type="radio" value="heading:0" text="Paragraaf"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="heading:1" text="Heading 1"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="heading:2" text="Heading 2"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="heading:3" text="Heading 3"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="heading:4" text="Heading 4"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="heading:5" text="Heading 5"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="heading:6" text="Heading 6"></nldd-menu-item>
-						<nldd-menu-item type="radio" value="heading:codeblock" text="Codeblok"></nldd-menu-item>
+					<nldd-menu-group
+						slot="overflow"
+						text="Tekststijl"
+					>
+						<nldd-menu-item
+							type="radio"
+							value="heading:0"
+							text="Paragraaf"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="heading:1"
+							text="Heading 1"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="heading:2"
+							text="Heading 2"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="heading:3"
+							text="Heading 3"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="heading:4"
+							text="Heading 4"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="heading:5"
+							text="Heading 5"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="heading:6"
+							text="Heading 6"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							value="heading:codeblock"
+							text="Codeblok"
+						></nldd-menu-item>
 					</nldd-menu-group>
 				</nldd-toolbar-item>
-				<nldd-toolbar-item slot="end" label="Klembord">
+				<nldd-toolbar-item
+					slot="end"
+					label="Klembord"
+				>
 					<nldd-button-bar data-group="clipboard">
-						<nldd-icon-button icon="copy" text="Kopieer" @click=${onCopy}></nldd-icon-button>
+						<nldd-icon-button
+							icon="copy"
+							text="Kopieer"
+							@click=${onCopy}
+						></nldd-icon-button>
 						<nldd-button-bar-divider></nldd-button-bar-divider>
-						<nldd-icon-button icon="cut" text="Knip" @click=${onCut}></nldd-icon-button>
+						<nldd-icon-button
+							icon="cut"
+							text="Knip"
+							@click=${onCut}
+						></nldd-icon-button>
 						<nldd-button-bar-divider></nldd-button-bar-divider>
-						<nldd-icon-button icon="paste" text="Plak" @click=${onPaste}></nldd-icon-button>
+						<nldd-icon-button
+							icon="paste"
+							text="Plak"
+							@click=${onPaste}
+						></nldd-icon-button>
 					</nldd-button-bar>
-					<nldd-menu-group slot="overflow" text="Klembord">
-						<nldd-menu-item value="copy" text="Kopieer" icon="copy"></nldd-menu-item>
-						<nldd-menu-item value="cut" text="Knip" icon="cut"></nldd-menu-item>
-						<nldd-menu-item value="paste" text="Plak" icon="paste"></nldd-menu-item>
+					<nldd-menu-group
+						slot="overflow"
+						text="Klembord"
+					>
+						<nldd-menu-item
+							value="copy"
+							text="Kopieer"
+							icon="copy"
+						></nldd-menu-item>
+						<nldd-menu-item
+							value="cut"
+							text="Knip"
+							icon="cut"
+						></nldd-menu-item>
+						<nldd-menu-item
+							value="paste"
+							text="Plak"
+							icon="paste"
+						></nldd-menu-item>
 					</nldd-menu-group>
 				</nldd-toolbar-item>
-				<nldd-toolbar-item slot="end" label="Geschiedenis">
+				<nldd-toolbar-item
+					slot="end"
+					label="Geschiedenis"
+				>
 					<nldd-button-bar data-group="history">
-						<nldd-icon-button icon="undo" text="Maak ongedaan" @click=${onUndo}></nldd-icon-button>
+						<nldd-icon-button
+							icon="undo"
+							text="Maak ongedaan"
+							@click=${onUndo}
+						></nldd-icon-button>
 						<nldd-button-bar-divider></nldd-button-bar-divider>
-						<nldd-icon-button icon="redo" text="Voer opnieuw uit" @click=${onRedo}></nldd-icon-button>
+						<nldd-icon-button
+							icon="redo"
+							text="Voer opnieuw uit"
+							@click=${onRedo}
+						></nldd-icon-button>
 					</nldd-button-bar>
-					<nldd-menu-group slot="overflow" text="Geschiedenis">
-						<nldd-menu-item value="undo" text="Maak ongedaan" icon="undo"></nldd-menu-item>
-						<nldd-menu-item value="redo" text="Voer opnieuw uit" icon="redo"></nldd-menu-item>
+					<nldd-menu-group
+						slot="overflow"
+						text="Geschiedenis"
+					>
+						<nldd-menu-item
+							value="undo"
+							text="Maak ongedaan"
+							icon="undo"
+						></nldd-menu-item>
+						<nldd-menu-item
+							value="redo"
+							text="Voer opnieuw uit"
+							icon="redo"
+						></nldd-menu-item>
 					</nldd-menu-group>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
@@ -489,13 +746,19 @@ const Template = ({
 	></nldd-text-editor>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const InputField = {
+export const VariantInputField = {
+	name: 'Variant input-field',
 	render: () => html`
-		<nldd-text-editor variant="input-field" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>
+		<nldd-text-editor
+			variant="input-field"
+			rows="10"
+			.value=${SAMPLE}
+			accessible-label="Tekst"
+		></nldd-text-editor>
 	`,
 	parameters: {
 		docs: {
@@ -530,14 +793,18 @@ export const Links = {
 	},
 };
 
-export const Placeholder = {
+export const MetPlaceholder = {
 	render: () => html`
-		<nldd-text-editor rows="6" placeholder="Schrijf hier je toelichting in markdown…" accessible-label="Tekst"></nldd-text-editor>
+		<nldd-text-editor
+			rows="6"
+			placeholder="Schrijf hier je toelichting in markdown…"
+			accessible-label="Tekst"
+		></nldd-text-editor>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
-export const Mentions = {
+export const Vermeldingen = {
 	render: () => {
 		const users = [
 			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
@@ -569,7 +836,7 @@ export const Mentions = {
 	},
 };
 
-export const MentionsInEenOverlay = {
+export const VermeldingenInEenOverlay = {
 	render: () => {
 		const users = [
 			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
@@ -587,7 +854,11 @@ export const MentionsInEenOverlay = {
 		];
 		const open = (e: Record<string, any>) => e.currentTarget.nextElementSibling.show();
 		return html`
-			<nldd-button variant="primary" text="Open modal dialog" @click=${open}></nldd-button>
+			<nldd-button
+				variant="primary"
+				text="Open modal dialog"
+				@click=${open}
+			></nldd-button>
 			<nldd-modal-dialog accessible-label="Notitie">
 				<nldd-text-editor
 					rows="6"
@@ -596,10 +867,18 @@ export const MentionsInEenOverlay = {
 					.mentionSource=${source}
 					.typeaheads=${tags}
 				></nldd-text-editor>
-				<nldd-button slot="actions" variant="primary" text="Bewaar"></nldd-button>
+				<nldd-button
+					slot="actions"
+					variant="primary"
+					text="Bewaar"
+				></nldd-button>
 			</nldd-modal-dialog>
 
-			<nldd-button variant="secondary" text="Open sheet" @click=${open}></nldd-button>
+			<nldd-button
+				variant="secondary"
+				text="Open sheet"
+				@click=${open}
+			></nldd-button>
 			<nldd-sheet accessible-label="Notitie in een sheet">
 				<nldd-container padding="16">
 					<nldd-text-editor
@@ -668,7 +947,11 @@ export const Typeaheads = {
 					@nldd-text-editor-mention=${(event: CustomEvent) => action('nldd-text-editor-mention')(event.detail)}
 					@nldd-text-editor-typeahead=${(event: CustomEvent) => action('nldd-text-editor-typeahead')(event.detail)}
 				></nldd-text-editor>
-				<nldd-button variant="secondary" text="Datum invoegen" @click=${insertDate}></nldd-button>
+				<nldd-button
+					variant="secondary"
+					text="Datum invoegen"
+					@click=${insertDate}
+				></nldd-button>
 			</div>
 		`;
 	},
@@ -682,7 +965,7 @@ export const Typeaheads = {
 	},
 };
 
-export const Annotations = {
+export const Annotaties = {
 	render: () => {
 		const sample =
 			'De Rijksoverheid werkt aan een toegankelijk designsysteem. Componenten zijn herbruikbaar en consistent.\n\nFeedback is welkom op elk onderdeel.';
@@ -717,7 +1000,7 @@ export const Annotations = {
 	},
 };
 
-export const AnnotationAuthoring = {
+export const AnnotatiesMaken = {
 	render: () => {
 		const wrap = document.createElement('div');
 		wrap.style.display = 'grid';
@@ -783,7 +1066,7 @@ export const AnnotationAuthoring = {
 	},
 };
 
-export const Mixed = {
+export const Gemengd = {
 	render: () => {
 		const users = [
 			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
@@ -849,7 +1132,7 @@ export const Mixed = {
 	},
 };
 
-export const WithToolbar = {
+export const MetWerkbalk = {
 	render: () =>
 		toolbarEditor(
 			html`<nldd-text-editor variant="simple" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,

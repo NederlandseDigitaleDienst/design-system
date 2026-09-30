@@ -23,10 +23,17 @@ import '../../actions/button/button.js';
  * <nldd-spacer size="32"></nldd-spacer>
  *
  * <!-- Per breakpoint anders: 16 op sm, 24 op md+ -->
- * <nldd-spacer sm-size="16" md-size="24" lg-size="24"></nldd-spacer>
+ * <nldd-spacer
+ * 	sm-size="16"
+ * 	md-size="24"
+ * 	lg-size="24"
+ * ></nldd-spacer>
  *
  * <!-- Base + één override: 16 default, 32 op lg -->
- * <nldd-spacer size="16" lg-size="32"></nldd-spacer>
+ * <nldd-spacer
+ * 	size="16"
+ * 	lg-size="32"
+ * ></nldd-spacer>
  *
  * <!-- Vult beschikbare ruimte op -->
  * <nldd-spacer size="flexible"></nldd-spacer>
@@ -67,6 +74,13 @@ export default {
 		status: {
 			type: 'stable',
 		},
+	},
+	args: {
+		size: '16',
+		smSize: '',
+		mdSize: '',
+		lgSize: '',
+		direction: 'both',
 	},
 	argTypes: {
 		size: {
@@ -110,13 +124,6 @@ export default {
 			},
 		},
 	},
-	args: {
-		size: '16',
-		smSize: '',
-		mdSize: '',
-		lgSize: '',
-		direction: 'both',
-	},
 };
 
 export const Standaard = ({ size, smSize, mdSize, lgSize, direction }: Record<string, any>) => html`
@@ -155,7 +162,11 @@ export const PerBreakpoint = {
 			</p>
 			<div style="display: flex; flex-direction: column; align-items: flex-start; border: 1px dashed var(--primitives-color-neutral-150); padding: 8px;">
 				<nldd-button text="Knop"></nldd-button>
-				<nldd-spacer sm-size="16" md-size="24" lg-size="32"></nldd-spacer>
+				<nldd-spacer
+					sm-size="16"
+					md-size="24"
+					lg-size="32"
+				></nldd-spacer>
 				<nldd-button text="Knop"></nldd-button>
 			</div>
 		</div>
@@ -179,7 +190,10 @@ export const VasteGroottes = {
 			(size) => html`
 				<div style="display: flex; align-items: center;">
 					<nldd-button text="${size}"></nldd-button>
-					<nldd-spacer size=${size} direction="horizontal"></nldd-spacer>
+					<nldd-spacer
+						size=${size}
+						direction="horizontal"
+					></nldd-spacer>
 					<nldd-button text="${size}"></nldd-button>
 				</div>
 			`,

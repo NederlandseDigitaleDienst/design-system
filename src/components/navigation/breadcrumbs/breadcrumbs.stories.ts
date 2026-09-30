@@ -30,10 +30,22 @@ export const Standaard = {
 		<nldd-breadcrumbs
 			accessible-label=${args.accessibleLabel || nothing}
 		>
-			<nldd-breadcrumbs-item text="Home" href="/"></nldd-breadcrumbs-item>
-			<nldd-breadcrumbs-item text="Documentatie" href="/docs/"></nldd-breadcrumbs-item>
-			<nldd-breadcrumbs-item text="Architectuur" href="/docs/architecture"></nldd-breadcrumbs-item>
-			<nldd-breadcrumbs-item text="Detail" current></nldd-breadcrumbs-item>
+			<nldd-breadcrumbs-item
+				text="Home"
+				href="/"
+			></nldd-breadcrumbs-item>
+			<nldd-breadcrumbs-item
+				text="Documentatie"
+				href="/docs/"
+			></nldd-breadcrumbs-item>
+			<nldd-breadcrumbs-item
+				text="Architectuur"
+				href="/docs/architecture"
+			></nldd-breadcrumbs-item>
+			<nldd-breadcrumbs-item
+				text="Detail"
+				current
+			></nldd-breadcrumbs-item>
 		</nldd-breadcrumbs>
 	`,
 };
@@ -46,10 +58,22 @@ export const SmalleContainer = {
 	render: () => html`
 		<div style="max-width: 320px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 			<nldd-breadcrumbs>
-				<nldd-breadcrumbs-item text="Home" href="/"></nldd-breadcrumbs-item>
-				<nldd-breadcrumbs-item text="Documentatie" href="/docs/"></nldd-breadcrumbs-item>
-				<nldd-breadcrumbs-item text="Architectuur" href="/docs/architecture"></nldd-breadcrumbs-item>
-				<nldd-breadcrumbs-item text="Huidige pagina" current></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Home"
+					href="/"
+				></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Documentatie"
+					href="/docs/"
+				></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Architectuur"
+					href="/docs/architecture"
+				></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Huidige pagina"
+					current
+				></nldd-breadcrumbs-item>
 			</nldd-breadcrumbs>
 		</div>
 	`,

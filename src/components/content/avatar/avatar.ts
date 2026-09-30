@@ -46,11 +46,29 @@
  * @example
  * ```html
  * <nldd-avatar name="Bart van de Biezen"></nldd-avatar>
- * <nldd-avatar name="Jan Jansen" src="/avatars/jan.jpg" size="48"></nldd-avatar>
- * <nldd-avatar type="organization" name="Kamer van Koophandel" initials="KvK"></nldd-avatar>
- * <nldd-avatar name="Bart van de Biezen" color="inherit"></nldd-avatar>
- * <nldd-avatar name="Bart van de Biezen" href="/profiel/"></nldd-avatar>
- * <nldd-avatar name="Bart van de Biezen" button accessible-label="Profielmenu openen"></nldd-avatar>
+ * <nldd-avatar
+ * 	name="Jan Jansen"
+ * 	src="/avatars/jan.jpg"
+ * 	size="48"
+ * ></nldd-avatar>
+ * <nldd-avatar
+ * 	type="organization"
+ * 	name="Kamer van Koophandel"
+ * 	initials="KvK"
+ * ></nldd-avatar>
+ * <nldd-avatar
+ * 	name="Bart van de Biezen"
+ * 	color="inherit"
+ * ></nldd-avatar>
+ * <nldd-avatar
+ * 	name="Bart van de Biezen"
+ * 	href="/profiel/"
+ * ></nldd-avatar>
+ * <nldd-avatar
+ * 	name="Bart van de Biezen"
+ * 	button
+ * 	accessible-label="Profielmenu openen"
+ * ></nldd-avatar>
  * ```
  */
 import { LitElement, type PropertyValues } from 'lit';

@@ -181,7 +181,7 @@ describe('nldd-date-field', () => {
 		await waitForUpdate(el);
 		const glyph = el.shadowRoot!.querySelector('.date-field__validation-icon');
 		expect(glyph).not.toBeNull();
-		expect(glyph!.querySelector('nldd-icon')!.getAttribute('name')).toBe(state);
+		expect(glyph!.querySelector('nldd-icon')!.getAttribute('icon')).toBe(state);
 	});
 
 

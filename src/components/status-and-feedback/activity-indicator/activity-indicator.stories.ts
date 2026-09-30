@@ -90,14 +90,18 @@ export default {
 const Template = ({ size, text, showText, timing, noBackdrop, complete }: Record<string, unknown>) => html`
 	<div style="width: 360px;">
 		<nldd-card accessible-label="Voorbeeldkaart">
-			<nldd-activity-indicator size=${size as string}
+			<nldd-activity-indicator
+				size=${size as string}
 				text=${text as string}
 				?show-text=${showText as boolean}
 				timing=${timing as string}
 				?no-backdrop=${noBackdrop as boolean}
 				?complete=${complete as boolean}
 			>
-				<nldd-container padding="20" gap="12">
+				<nldd-container
+					padding="20"
+					gap="12"
+				>
 					<nldd-rich-text>
 						<p><strong>Voorbeeldcontent</strong></p>
 						<p>
@@ -112,23 +116,34 @@ const Template = ({ size, text, showText, timing, noBackdrop, complete }: Record
 	</div>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const WithLabel = {
-	name: 'With label',
+export const MetLabel = {
 	render: Template,
 	args: { showText: true, text: 'Bezig met opslaan' },
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center; height: 120px;">
-			<nldd-activity-indicator size="20" timing="instant"></nldd-activity-indicator>
-			<nldd-activity-indicator size="28" timing="instant"></nldd-activity-indicator>
-			<nldd-activity-indicator size="40" timing="instant"></nldd-activity-indicator>
-			<nldd-activity-indicator size="64" timing="instant"></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="20"
+				timing="instant"
+			></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="28"
+				timing="instant"
+			></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="40"
+				timing="instant"
+			></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="64"
+				timing="instant"
+			></nldd-activity-indicator>
 		</div>
 	`,
 	parameters: {
@@ -136,15 +151,21 @@ export const Sizes = {
 	},
 };
 
-export const InheritsColor = {
-	name: 'Inherits currentColor',
+export const ErftCurrentColor = {
+	name: 'Erft currentColor',
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center; height: 120px;">
 			<span style="color: var(--semantics-content-accent-color); display: inline-flex;">
-				<nldd-activity-indicator size="32" timing="instant"></nldd-activity-indicator>
+				<nldd-activity-indicator
+					size="32"
+					timing="instant"
+				></nldd-activity-indicator>
 			</span>
 			<span style="color: var(--semantics-content-critical-color); display: inline-flex;">
-				<nldd-activity-indicator size="32" timing="instant"></nldd-activity-indicator>
+				<nldd-activity-indicator
+					size="32"
+					timing="instant"
+				></nldd-activity-indicator>
 			</span>
 		</div>
 	`,
@@ -153,11 +174,14 @@ export const InheritsColor = {
 	},
 };
 
-export const AntiFlashDelay = {
-	name: 'Anti-flash delay (timing="delay")',
+export const VertraagdTonen = {
+	name: 'Vertraagd tonen (timing="delay")',
 	render: () => html`
 		<div style="height: 240px; display: flex;">
-			<nldd-activity-indicator show-text text="Laden"></nldd-activity-indicator>
+			<nldd-activity-indicator
+				show-text
+				text="Laden"
+			></nldd-activity-indicator>
 		</div>
 	`,
 	parameters: {
@@ -165,12 +189,16 @@ export const AntiFlashDelay = {
 	},
 };
 
-export const ProgressBarViaSlot = {
-	name: 'Progress bar via slot',
+export const ProgressBarInDeSlot = {
+	name: 'Progress bar in de slot',
 	render: () => html`
 		<div style="height: 240px; display: flex;">
 			<nldd-activity-indicator timing="instant">
-				<nldd-progress-bar slot="indicator" indeterminate text="Uploaden"></nldd-progress-bar>
+				<nldd-progress-bar
+					slot="indicator"
+					indeterminate
+					text="Uploaden"
+				></nldd-progress-bar>
 			</nldd-activity-indicator>
 		</div>
 	`,
@@ -179,12 +207,18 @@ export const ProgressBarViaSlot = {
 	},
 };
 
-export const CustomCircleViaSlot = {
-	name: 'Custom progress-circle via slot',
+export const EigenProgressCircleInDeSlot = {
+	name: 'Eigen progress-circle in de slot',
 	render: () => html`
 		<div style="height: 240px; display: flex;">
 			<nldd-activity-indicator timing="instant">
-				<nldd-progress-circle slot="indicator" size="64" color="success" indeterminate text="Verwerken"></nldd-progress-circle>
+				<nldd-progress-circle
+					slot="indicator"
+					size="64"
+					color="success"
+					indeterminate
+					text="Verwerken"
+				></nldd-progress-circle>
 			</nldd-activity-indicator>
 		</div>
 	`,
@@ -200,12 +234,20 @@ export const CustomCircleViaSlot = {
  * inactief tijdens het laden. Zet `no-backdrop` om alleen het paneel te tonen.
  */
 export const Backdrop = {
-	name: 'Backdrop over content',
+	name: 'Backdrop over de inhoud',
 	render: ({ noBackdrop }: Record<string, unknown>) => html`
 		<div style="width: 320px;">
 			<nldd-card accessible-label="Aanvraag indienen">
-				<nldd-activity-indicator ?no-backdrop=${noBackdrop as boolean} show-text text="Bezig met verwerken…" timing="instant">
-					<nldd-container padding="20" gap="8">
+				<nldd-activity-indicator
+					?no-backdrop=${noBackdrop as boolean}
+					show-text
+					text="Bezig met verwerken…"
+					timing="instant"
+				>
+					<nldd-container
+						padding="20"
+						gap="8"
+					>
 						<nldd-rich-text>
 							<p><strong>Aanvraag indienen</strong></p>
 							<p>

@@ -14,7 +14,10 @@ import './radio-button.js';
  *
  * ## Gebruik
  * ```html
- * <fieldset role="radiogroup" aria-labelledby="optie-label">
+ * <fieldset
+ * 	role="radiogroup"
+ * 	aria-labelledby="optie-label"
+ * >
  *   <legend id="optie-label">Kies een optie</legend>
  *   <nldd-radio-button name="option" value="1" accessible-label="Optie 1"></nldd-radio-button>
  *   <nldd-radio-button name="option" value="2" accessible-label="Optie 2"></nldd-radio-button>
@@ -109,30 +112,55 @@ export const Standaard = {
  * onder elkaar in één document, en radio buttons met dezelfde naam vormen daar
  * samen één groep: dan zou er van al deze demo's maar één aangevinkt kunnen
  * zijn en maar één te focussen met Tab. */
-export const Geselecteerd = {
+export const ToestandChecked = {
+	name: 'Toestand checked',
 	render: Template,
 	args: { checked: true, name: 'demo-geselecteerd' },
 };
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: { disabled: true, name: 'demo-uitgeschakeld' },
 };
 
-export const GeselecteerdUitgeschakeld = {
+export const ToestandCheckedEnDisabled = {
+	name: 'Toestand checked en disabled',
 	render: Template,
 	args: { checked: true, disabled: true, name: 'demo-geselecteerd-uitgeschakeld' },
 };
 
 export const RadioGroep = {
 	render: () => html`
-	<fieldset role="radiogroup" aria-labelledby="radio-groep-label" style="border: none; padding: 0; margin: 0;">
+	<fieldset
+		role="radiogroup"
+		aria-labelledby="radio-groep-label"
+		style="border: none; padding: 0; margin: 0;"
+	>
 		<legend id="radio-groep-label" style="font-size: 16px; font-weight: 550; margin-bottom: 12px;">Kies een optie</legend>
 		<div style="display: flex; flex-direction: column; gap: 12px;">
-			<nldd-radio-button name="groep" value="1" checked accessible-label="Optie 1"></nldd-radio-button>
-			<nldd-radio-button name="groep" value="2" accessible-label="Optie 2"></nldd-radio-button>
-			<nldd-radio-button name="groep" value="3" accessible-label="Optie 3"></nldd-radio-button>
-			<nldd-radio-button name="groep" value="4" disabled accessible-label="Optie 4 (uitgeschakeld)"></nldd-radio-button>
+			<nldd-radio-button
+				name="groep"
+				value="1"
+				checked
+				accessible-label="Optie 1"
+			></nldd-radio-button>
+			<nldd-radio-button
+				name="groep"
+				value="2"
+				accessible-label="Optie 2"
+			></nldd-radio-button>
+			<nldd-radio-button
+				name="groep"
+				value="3"
+				accessible-label="Optie 3"
+			></nldd-radio-button>
+			<nldd-radio-button
+				name="groep"
+				value="4"
+				disabled
+				accessible-label="Optie 4 (uitgeschakeld)"
+			></nldd-radio-button>
 		</div>
 	</fieldset>
 `,
@@ -143,9 +171,19 @@ export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; gap: 2rem; align-items: center;">
 		<nldd-radio-button accessible-label="Niet geselecteerd"></nldd-radio-button>
-		<nldd-radio-button checked accessible-label="Geselecteerd"></nldd-radio-button>
-		<nldd-radio-button disabled accessible-label="Uitgeschakeld"></nldd-radio-button>
-		<nldd-radio-button checked disabled accessible-label="Geselecteerd en uitgeschakeld"></nldd-radio-button>
+		<nldd-radio-button
+			checked
+			accessible-label="Geselecteerd"
+		></nldd-radio-button>
+		<nldd-radio-button
+			disabled
+			accessible-label="Uitgeschakeld"
+		></nldd-radio-button>
+		<nldd-radio-button
+			checked
+			disabled
+			accessible-label="Geselecteerd en uitgeschakeld"
+		></nldd-radio-button>
 	</div>
 `,
 	parameters: { controls: { disable: true } },

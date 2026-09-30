@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import './full-bleed-section.js';
+import '../../../content/title/title.js';
 import '../../../content/rich-text/rich-text.js';
 import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-section-controls.js';
 
@@ -13,7 +14,7 @@ import { pageSectionArgTypes, pageSectionArgs, pageSectionAttrs } from '../page-
  * ## Gebruik
  * ```html
  * <nldd-full-bleed-section>
- *   <nldd-rich-text slot="header"><h2>Sectietitel</h2></nldd-rich-text>
+ *   <nldd-title slot="header" text="Sectietitel" heading-level="2"></nldd-title>
  *   <nldd-rich-text><p>Inhoud van de sectie.</p></nldd-rich-text>
  * </nldd-full-bleed-section>
  * ```
@@ -31,16 +32,18 @@ export default {
 			type: 'stable',
 		},
 	},
-	argTypes: pageSectionArgTypes,
 	args: pageSectionArgs,
+	argTypes: pageSectionArgTypes,
 };
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-full-bleed-section ${pageSectionAttrs(args)}>
-			<nldd-rich-text slot="header">
-				<h2>Sectietitel</h2>
-			</nldd-rich-text>
+			<nldd-title
+				slot="header"
+				text="Sectietitel"
+				heading-level="2"
+			></nldd-title>
 			<nldd-rich-text>
 				<p>Dit is de hoofdinhoud van de sectie. De inhoud loopt van rand tot rand zonder horizontale padding.</p>
 				<p>Gebruik deze sectie voor achtergrondkleuren, afbeeldingen of andere inhoud die de volledige breedte beslaat.</p>

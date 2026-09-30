@@ -40,7 +40,7 @@ nldd-form-section > fieldset.form-section {
 
 
 /* # Header (rendered as <legend>, must be direct child of <fieldset>).
-   Title and subtitle are spans inside the legend so screen readers read
+   Title and supporting text are spans inside the legend so screen readers read
    them together as the group label. */
 
 nldd-form-section .form-section__header {
@@ -64,12 +64,12 @@ nldd-form-section .form-section__title {
 }
 
 
-/* # Subtitle */
+/* # Supporting text */
 
-nldd-form-section .form-section__subtitle {
+nldd-form-section .form-section__supporting-text {
 	display: block;
 	color: var(--semantics-content-secondary-color);
-	font: var(--semantics-forms-section-subtitle-font);
+	font: var(--semantics-forms-section-supporting-text-font);
 }
 
 

@@ -14,10 +14,13 @@ export default {
 	tags: ['autodocs'],
 };
 
-export const Default = {
+export const Standaard = {
 	tags: ['!autodocs'],
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
 				<nldd-menu-item text="Menu item"></nldd-menu-item>
 			</nldd-menu>
@@ -28,15 +31,27 @@ export const Default = {
 /**
  * `details` toont een secundair label rechts van het item — bijvoorbeeld de
  * huidige waarde of een aantal. Voor sneltoetsen is er het aparte
- * `shortcut`-attribuut (zie de KeyboardShortcuts-story).
+ * `shortcut`-attribuut (zie de story Sneltoetsen).
  */
-export const WithDetails = {
+export const MetDetails = {
 	render: () => html`
-		<nldd-button expandable text="Voorkeuren">
+		<nldd-button
+			expandable
+			text="Voorkeuren"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item text="Taal" details="Nederlands"></nldd-menu-item>
-				<nldd-menu-item text="Tijdzone" details="Amsterdam"></nldd-menu-item>
-				<nldd-menu-item text="Thema" details="Systeem"></nldd-menu-item>
+				<nldd-menu-item
+					text="Taal"
+					details="Nederlands"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Tijdzone"
+					details="Amsterdam"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Thema"
+					details="Systeem"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -50,27 +65,59 @@ export const WithDetails = {
  * platform-specifieke weergave. Op touch-only apparaten verdwijnt de hint, want
  * daar is hij niet aanroepbaar.
  */
-export const KeyboardShortcuts = {
+export const Sneltoetsen = {
 	render: () => html`
-		<nldd-button expandable text="Bewerken">
+		<nldd-button
+			expandable
+			text="Bewerken"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item text="Ongedaan maken" shortcut="Ctrl+Z" shortcut-mac="Cmd+Z"></nldd-menu-item>
-				<nldd-menu-item text="Knippen" shortcut="Ctrl+X" shortcut-mac="Cmd+X"></nldd-menu-item>
-				<nldd-menu-item text="Kopiëren" shortcut="Ctrl+C" shortcut-mac="Cmd+C"></nldd-menu-item>
-				<nldd-menu-item text="Plakken" shortcut="Ctrl+V" shortcut-mac="Cmd+V"></nldd-menu-item>
+				<nldd-menu-item
+					text="Ongedaan maken"
+					shortcut="Ctrl+Z"
+					shortcut-mac="Cmd+Z"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Knippen"
+					shortcut="Ctrl+X"
+					shortcut-mac="Cmd+X"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Kopiëren"
+					shortcut="Ctrl+C"
+					shortcut-mac="Cmd+C"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Plakken"
+					shortcut="Ctrl+V"
+					shortcut-mac="Cmd+V"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
 };
 
-export const WithIcons = {
+export const MetIconen = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item text="Bewerk" icon="pencil"></nldd-menu-item>
-				<nldd-menu-item text="Dupliceer" icon="square-plus-on-square"></nldd-menu-item>
+				<nldd-menu-item
+					text="Bewerk"
+					icon="pencil"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Dupliceer"
+					icon="square-plus-on-square"
+				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item destructive text="Verwijder" icon="trash"></nldd-menu-item>
+				<nldd-menu-item
+					destructive
+					text="Verwijder"
+					icon="trash"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -84,12 +131,27 @@ export const WithIcons = {
  */
 export const Links = {
 	render: () => html`
-		<nldd-button expandable text="Account">
+		<nldd-button
+			expandable
+			text="Account"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item text="Mijn profiel" href="#profiel" icon="user"></nldd-menu-item>
-				<nldd-menu-item text="Instellingen" href="#instellingen" icon="settings"></nldd-menu-item>
+				<nldd-menu-item
+					text="Mijn profiel"
+					href="#profiel"
+					icon="user"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Instellingen"
+					href="#instellingen"
+					icon="settings"
+				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item text="Log uit" href="#uitloggen" icon="logout"></nldd-menu-item>
+				<nldd-menu-item
+					text="Log uit"
+					href="#uitloggen"
+					icon="logout"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -102,7 +164,10 @@ export const Links = {
  */
 export const BredeInhoud = {
 	render: () => html`
-		<nldd-button expandable text="Acties">
+		<nldd-button
+			expandable
+			text="Acties"
+		>
 			<nldd-menu slot="popup">
 				<nldd-menu-item text="Document downloaden als ondertekende PDF"></nldd-menu-item>
 				<nldd-menu-item text="Deel met alle medewerkers van de afdeling"></nldd-menu-item>
@@ -119,11 +184,26 @@ export const BredeInhoud = {
  */
 export const Breedte = {
 	render: (args: Record<string, any>) => html`
-		<nldd-button expandable text="Open menu">
-			<nldd-menu slot="popup" width=${args.width || nothing}>
-				<nldd-menu-item text="Nederland" value="nl"></nldd-menu-item>
-				<nldd-menu-item text="België" value="be"></nldd-menu-item>
-				<nldd-menu-item text="Duitsland" value="de"></nldd-menu-item>
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
+			<nldd-menu
+				slot="popup"
+				width=${args.width || nothing}
+			>
+				<nldd-menu-item
+					text="Nederland"
+					value="nl"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="België"
+					value="be"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Duitsland"
+					value="de"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -136,14 +216,27 @@ export const Breedte = {
 	},
 };
 
-export const WithDivider = {
+export const MetScheidingslijn = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item text="Hernoemen" icon="write"></nldd-menu-item>
-				<nldd-menu-item text="Dupliceren" icon="duplicate"></nldd-menu-item>
+				<nldd-menu-item
+					text="Hernoemen"
+					icon="write"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Dupliceren"
+					icon="duplicate"
+				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item text="Verwijderen" icon="delete" destructive></nldd-menu-item>
+				<nldd-menu-item
+					text="Verwijderen"
+					icon="delete"
+					destructive
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -151,11 +244,24 @@ export const WithDivider = {
 
 export const Checkbox = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item type="checkbox" text="Optie 1" selected></nldd-menu-item>
-				<nldd-menu-item type="checkbox" text="Optie 2"></nldd-menu-item>
-				<nldd-menu-item type="checkbox" text="Optie 3"></nldd-menu-item>
+				<nldd-menu-item
+					type="checkbox"
+					text="Optie 1"
+					selected
+				></nldd-menu-item>
+				<nldd-menu-item
+					type="checkbox"
+					text="Optie 2"
+				></nldd-menu-item>
+				<nldd-menu-item
+					type="checkbox"
+					text="Optie 3"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -163,30 +269,75 @@ export const Checkbox = {
 
 export const Radio = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item type="radio" text="Optie A" selected></nldd-menu-item>
-				<nldd-menu-item type="radio" text="Optie B"></nldd-menu-item>
-				<nldd-menu-item type="radio" text="Optie C"></nldd-menu-item>
+				<nldd-menu-item
+					type="radio"
+					text="Optie A"
+					selected
+				></nldd-menu-item>
+				<nldd-menu-item
+					type="radio"
+					text="Optie B"
+				></nldd-menu-item>
+				<nldd-menu-item
+					type="radio"
+					text="Optie C"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
 };
 
-export const MixedIconsAndCheckable = {
+export const IconenEnVinkjes = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item type="checkbox" text="Vet" selected></nldd-menu-item>
-				<nldd-menu-item type="checkbox" text="Cursief"></nldd-menu-item>
-				<nldd-menu-item type="radio" text="Linksuitlijning" selected></nldd-menu-item>
-				<nldd-menu-item type="radio" text="Centreren"></nldd-menu-item>
+				<nldd-menu-item
+					type="checkbox"
+					text="Vet"
+					selected
+				></nldd-menu-item>
+				<nldd-menu-item
+					type="checkbox"
+					text="Cursief"
+				></nldd-menu-item>
+				<nldd-menu-item
+					type="radio"
+					text="Linksuitlijning"
+					selected
+				></nldd-menu-item>
+				<nldd-menu-item
+					type="radio"
+					text="Centreren"
+				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item text="Bewerk citaat" icon="text-quote"></nldd-menu-item>
-				<nldd-menu-item text="Voorbeeldweergave" icon="eye"></nldd-menu-item>
+				<nldd-menu-item
+					text="Bewerk citaat"
+					icon="text-quote"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Voorbeeldweergave"
+					icon="eye"
+				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item type="checkbox" text="Vet (met icoon)" icon="bold" selected></nldd-menu-item>
-				<nldd-menu-item type="checkbox" text="Cursief (met icoon)" icon="italic"></nldd-menu-item>
+				<nldd-menu-item
+					type="checkbox"
+					text="Vet (met icoon)"
+					icon="bold"
+					selected
+				></nldd-menu-item>
+				<nldd-menu-item
+					type="checkbox"
+					text="Cursief (met icoon)"
+					icon="italic"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -199,26 +350,46 @@ export const MixedIconsAndCheckable = {
 	},
 };
 
-export const Disabled = {
+export const ItemDisabled = {
+	name: 'Item disabled',
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
 				<nldd-menu-item text="Bewerk"></nldd-menu-item>
-				<nldd-menu-item text="Uitgeschakeld" disabled></nldd-menu-item>
+				<nldd-menu-item
+					text="Uitgeschakeld"
+					disabled
+				></nldd-menu-item>
 				<nldd-menu-item text="Kopieer"></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
 };
 
-export const Destructive = {
+export const Destructief = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item text="Bewerk" icon="pencil"></nldd-menu-item>
-				<nldd-menu-item text="Dupliceer" icon="square-plus-on-square"></nldd-menu-item>
+				<nldd-menu-item
+					text="Bewerk"
+					icon="pencil"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Dupliceer"
+					icon="square-plus-on-square"
+				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item destructive text="Verwijder" icon="trash"></nldd-menu-item>
+				<nldd-menu-item
+					destructive
+					text="Verwijder"
+					icon="trash"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -231,9 +402,12 @@ export const Destructive = {
 	},
 };
 
-export const WithGroups = {
+export const MetGroepen = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
 				<nldd-menu-group text="Bestand">
 					<nldd-menu-item text="Nieuw"></nldd-menu-item>
@@ -257,9 +431,12 @@ export const WithGroups = {
 	},
 };
 
-export const WithMultiLevelSubmenu = {
+export const MetSubmenuOpMeerdereNiveaus = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
 				<nldd-menu-item text="Bestand">
 					<nldd-menu>
@@ -287,9 +464,12 @@ export const WithMultiLevelSubmenu = {
 	},
 };
 
-export const WithSubmenu = {
+export const MetSubmenu = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
 				<nldd-menu-item text="Nieuw"></nldd-menu-item>
 				<nldd-menu-item text="Open recent">
@@ -320,10 +500,17 @@ export const WithSubmenu = {
 	},
 };
 
-export const DebugSafeTriangle = {
+export const DebugVeiligeDriehoek = {
+	name: 'Debug: veilige driehoek',
 	render: () => html`
-		<nldd-button expandable text="Open menu">
-			<nldd-menu slot="popup" debug-safe-triangle>
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
+			<nldd-menu
+				slot="popup"
+				debug-safe-triangle
+			>
 				<nldd-menu-item text="Nieuw"></nldd-menu-item>
 				<nldd-menu-item text="Open recent">
 					<nldd-menu debug-safe-triangle>
@@ -345,14 +532,23 @@ export const DebugSafeTriangle = {
 	},
 };
 
-export const MixedFlatAndGroups = {
+export const PlatEnGroepenGemengd = {
 	render: () => html`
-		<nldd-button expandable text="Open menu">
+		<nldd-button
+			expandable
+			text="Open menu"
+		>
 			<nldd-menu slot="popup">
 				<nldd-menu-item text="Recent geopend"></nldd-menu-item>
 				<nldd-menu-group text="Mappen">
-					<nldd-menu-item text="Documenten" icon="folder"></nldd-menu-item>
-					<nldd-menu-item text="Downloads" icon="folder"></nldd-menu-item>
+					<nldd-menu-item
+						text="Documenten"
+						icon="folder"
+					></nldd-menu-item>
+					<nldd-menu-item
+						text="Downloads"
+						icon="folder"
+					></nldd-menu-item>
 				</nldd-menu-group>
 				<nldd-menu-divider></nldd-menu-divider>
 				<nldd-menu-item text="Sluiten"></nldd-menu-item>
@@ -379,9 +575,15 @@ export const MixedFlatAndGroups = {
 export const MetHeaderEnFooter = {
 	name: 'Met header en footer (account)',
 	render: () => html`
-		<nldd-button expandable text="Account">
+		<nldd-button
+			expandable
+			text="Account"
+		>
 			<nldd-menu slot="popup">
-				<nldd-container slot="header" padding="16">
+				<nldd-container
+					slot="header"
+					padding="16"
+				>
 					<nldd-identity
 						text="Anouk de Vries"
 						supporting-text="anouk@rijksoverheid.nl"
@@ -390,13 +592,28 @@ export const MetHeaderEnFooter = {
 					></nldd-identity>
 				</nldd-container>
 
-				<nldd-menu-item text="Profiel" icon="person"></nldd-menu-item>
-				<nldd-menu-item text="Instellingen" icon="gear"></nldd-menu-item>
-				<nldd-menu-item text="Facturen" icon="file-text"></nldd-menu-item>
+				<nldd-menu-item
+					text="Profiel"
+					icon="person"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Instellingen"
+					icon="gear"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Facturen"
+					icon="file-text"
+				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item text="Log uit" icon="logout"></nldd-menu-item>
+				<nldd-menu-item
+					text="Log uit"
+					icon="logout"
+				></nldd-menu-item>
 
-				<nldd-container slot="footer" padding="16">
+				<nldd-container
+					slot="footer"
+					padding="16"
+				>
 					<nldd-rich-text spacing="flat">
 						<p style="font: var(--primitives-font-body-sm-regular-tight);">Je bent ingelogd als beheerder. <a href="#">Wissel van account</a>.</p>
 					</nldd-rich-text>
@@ -440,10 +657,20 @@ export const AnkerenViaId = {
 				anchor.getElementById?.('eigen-anker')?.setAttribute('aria-expanded', String(e.newState === 'open'));
 			}}
 		>
-			<nldd-menu-item text="Bewerken" icon="pencil"></nldd-menu-item>
-			<nldd-menu-item text="Dupliceren" icon="square-plus-on-square"></nldd-menu-item>
+			<nldd-menu-item
+				text="Bewerken"
+				icon="pencil"
+			></nldd-menu-item>
+			<nldd-menu-item
+				text="Dupliceren"
+				icon="square-plus-on-square"
+			></nldd-menu-item>
 			<nldd-menu-divider></nldd-menu-divider>
-			<nldd-menu-item destructive text="Verwijderen" icon="trash"></nldd-menu-item>
+			<nldd-menu-item
+				destructive
+				text="Verwijderen"
+				icon="trash"
+			></nldd-menu-item>
 		</nldd-menu>
 	`,
 	parameters: {

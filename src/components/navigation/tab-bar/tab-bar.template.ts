@@ -55,8 +55,8 @@ export function tabBarItemTemplate(component: NLDDTabBarItem): TemplateResult {
 			aria-hidden="true"
 		>
 			${component.icon
-				? html`<nldd-icon name=${component.icon}></nldd-icon>`
-				: html`<slot name="icon" @slotchange=${component._onIconSlotChange}>${showPlaceholder ? html`<nldd-icon name="icon-placeholder"></nldd-icon>` : nothing}</slot>`}
+				? html`<nldd-icon icon=${component.icon}></nldd-icon>`
+				: html`<slot name="icon" @slotchange=${component._onIconSlotChange}>${showPlaceholder ? html`<nldd-icon icon="icon-placeholder"></nldd-icon>` : nothing}</slot>`}
 		</span>
 		<span class="tab-bar__item-text">
 			${component.text}

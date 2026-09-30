@@ -42,6 +42,10 @@ export const listStyles = css`
 		isolation: isolate;
 	}
 
+	:host([hidden]) {
+		display: none;
+	}
+
 	:host([dividers="never"]),
 	:host([dividers="on-touch"]) {
 		--context-list-divider-display: none;

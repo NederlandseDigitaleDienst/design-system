@@ -199,7 +199,7 @@ function renderLead(completion: Completion): Node | null {
 	}
 	if (candidate.icon) {
 		const icon = document.createElement('nldd-icon');
-		icon.setAttribute('name', candidate.icon);
+		icon.setAttribute('icon', candidate.icon);
 		icon.setAttribute('size', '20');
 		icon.setAttribute('aria-hidden', 'true');
 		return icon;

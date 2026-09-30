@@ -7,20 +7,19 @@
  *
  * @element nldd-two-thirds-one-third-section
  *
- * @slot header - Content above the columns
- * @slot - Left column (2/3), alternative for slot="left"
- * @slot left - Left column (2/3)
- * @slot right - Right column (1/3)
- * @slot footer - Content below the columns
- *
  * @attr {'inherit'|'base'|'tinted'} [background] - Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface).
- * @attr {'inherit'|'light'|'dark'|'inverted'} [scheme] - Color scheme ('inherit' default; 'inverted' = opposite of the surrounding page scheme).
  * @attr {string} [width] - Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.
  * @attr {string} [height] - Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width).
  * @attr {string} [padding-block] - Block (top and bottom) padding override (token 0-96; '0' strips it).
  * @attr {string} [padding-top] - Top padding override.
  * @attr {string} [padding-bottom] - Bottom padding override.
  * @attr {string} [sm-padding-block] - Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}).
+ *
+ * @slot header - Content above the columns
+ * @slot - Left column (2/3), alternative for slot="left"
+ * @slot left - Left column (2/3)
+ * @slot right - Right column (1/3)
+ * @slot footer - Content below the columns
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';

@@ -50,7 +50,12 @@ const Template = ({ accessibleLabel }: Record<string, any>) => html`
 			short-text="Art. 3:2"
 			short-supporting-text="Awb"
 		></nldd-document-tab-bar-item>
-		<nldd-icon-button slot="end" variant="neutral-tinted" text="Nieuw tabblad" icon="plus"></nldd-icon-button>
+		<nldd-icon-button
+			slot="end"
+			variant="neutral-tinted"
+			text="Nieuw tabblad"
+			icon="plus"
+		></nldd-icon-button>
 	</nldd-document-tab-bar>
 `;
 
@@ -110,7 +115,12 @@ export const VeelTabbladen = {
 			short-text="Art. 4:3"
 			short-supporting-text="Awb"
 		></nldd-document-tab-bar-item>
-		<nldd-icon-button slot="end" variant="neutral-tinted" text="Nieuw tabblad" icon="plus"></nldd-icon-button>
+		<nldd-icon-button
+			slot="end"
+			variant="neutral-tinted"
+			text="Nieuw tabblad"
+			icon="plus"
+		></nldd-icon-button>
 	</nldd-document-tab-bar>
 `,
 	parameters: { controls: { disable: true } },
@@ -143,10 +153,31 @@ export const Herschikbaar = {
 		const el = document.createElement('div');
 		el.innerHTML = `
 			<nldd-document-tab-bar accessible-label="Documenten">
-				<nldd-document-tab-bar-item selected text="Artikel 2" supporting-text="Wet op de Zorgtoeslag" short-text="Art. 2" short-supporting-text="WZT"></nldd-document-tab-bar-item>
-				<nldd-document-tab-bar-item text="Artikel 1" supporting-text="Zorgverzekeringswet" short-text="Art. 1" short-supporting-text="Zvw"></nldd-document-tab-bar-item>
-				<nldd-document-tab-bar-item text="Artikel 3:2" supporting-text="Algemene wet bestuursrecht" short-text="Art. 3:2" short-supporting-text="Awb"></nldd-document-tab-bar-item>
-				<nldd-document-tab-bar-item text="Artikel 7" supporting-text="Algemene wet inkomensafhankelijke regelingen" short-text="Art. 7" short-supporting-text="Awir"></nldd-document-tab-bar-item>
+				<nldd-document-tab-bar-item
+					selected
+					text="Artikel 2"
+					supporting-text="Wet op de Zorgtoeslag"
+					short-text="Art. 2"
+					short-supporting-text="WZT"
+				></nldd-document-tab-bar-item>
+				<nldd-document-tab-bar-item
+					text="Artikel 1"
+					supporting-text="Zorgverzekeringswet"
+					short-text="Art. 1"
+					short-supporting-text="Zvw"
+				></nldd-document-tab-bar-item>
+				<nldd-document-tab-bar-item
+					text="Artikel 3:2"
+					supporting-text="Algemene wet bestuursrecht"
+					short-text="Art. 3:2"
+					short-supporting-text="Awb"
+				></nldd-document-tab-bar-item>
+				<nldd-document-tab-bar-item
+					text="Artikel 7"
+					supporting-text="Algemene wet inkomensafhankelijke regelingen"
+					short-text="Art. 7"
+					short-supporting-text="Awir"
+				></nldd-document-tab-bar-item>
 			</nldd-document-tab-bar>
 		`;
 		return el;
@@ -156,7 +187,10 @@ export const Herschikbaar = {
 
 export const Navigatie = {
 	render: () => html`
-	<nldd-document-tab-bar navigation accessible-label="Documenten">
+	<nldd-document-tab-bar
+		navigation
+		accessible-label="Documenten"
+	>
 		<nldd-document-tab-bar-item
 			selected
 			text="Artikel 2"

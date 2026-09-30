@@ -38,7 +38,7 @@ export function avatarTemplate(component: NLDDAvatar): TemplateResult {
 		` : nothing}
 		${showIcon ? html`
 			<nldd-icon class="avatar__icon"
-				name=${component.resolvedIcon}
+				icon=${component.resolvedIcon}
 			></nldd-icon>
 		` : nothing}
 	`;
@@ -73,7 +73,10 @@ export function avatarTemplate(component: NLDDAvatar): TemplateResult {
 
 	return tooltipText && component.tooltipTiming !== 'never'
 		? html`
-			<nldd-tooltip text=${tooltipText} timing=${component.tooltipTiming}>
+			<nldd-tooltip
+				text=${tooltipText}
+				timing=${component.tooltipTiming}
+			>
 				${shape}
 			</nldd-tooltip>
 		`

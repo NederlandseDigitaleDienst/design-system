@@ -17,8 +17,18 @@ import { ICONS } from './../../content/icon/icon.js';
  * ## Gebruik
  * ```html
  * <!-- Standalone met expliciete grootte -->
- * <nldd-link href="/pad" size="md" text="Bekijk meer"></nldd-link>
- * <nldd-link href="https://example.com" target="_blank" size="md" text="Externe" end-icon="arrow-up-right"></nldd-link>
+ * <nldd-link
+ * 	href="/pad"
+ * 	size="md"
+ * 	text="Bekijk meer"
+ * ></nldd-link>
+ * <nldd-link
+ * 	href="https://example.com"
+ * 	target="_blank"
+ * 	size="md"
+ * 	text="Externe"
+ * 	end-icon="arrow-up-right"
+ * ></nldd-link>
  *
  * <!-- Inline in tekst, erft van parent -->
  * <p>Lees meer over de <nldd-link href="/voorwaarden">voorwaarden</nldd-link> hier.</p>
@@ -118,17 +128,33 @@ const Template = ({ size, text, startIcon, endIcon, href, target, accessibleLabe
 	></nldd-link>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
-			<nldd-link href="#" size="lg" text="Large link"></nldd-link>
-			<nldd-link href="#" size="md" text="Medium link"></nldd-link>
-			<nldd-link href="#" size="sm" text="Small link"></nldd-link>
-			<nldd-link href="#" size="xs" text="Extra small link"></nldd-link>
+			<nldd-link
+				href="#"
+				size="lg"
+				text="Large link"
+			></nldd-link>
+			<nldd-link
+				href="#"
+				size="md"
+				text="Medium link"
+			></nldd-link>
+			<nldd-link
+				href="#"
+				size="sm"
+				text="Small link"
+			></nldd-link>
+			<nldd-link
+				href="#"
+				size="xs"
+				text="Extra small link"
+			></nldd-link>
 		</div>
 	`,
 	parameters: {
@@ -136,7 +162,7 @@ export const Sizes = {
 	},
 };
 
-export const Inline = {
+export const InLopendeTekst = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 24px; max-width: 560px;">
 			<div>
@@ -191,11 +217,19 @@ Icons werken ook in inherit mode: de natuurlijke whitespace tussen icon en tekst
 	},
 };
 
-export const WithStartIcon = {
+export const MetStartIcon = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
-			<nldd-link href="#" text="Download bestand" start-icon="download"></nldd-link>
-			<nldd-link href="#" text="Terug naar overzicht" start-icon="arrow-left"></nldd-link>
+			<nldd-link
+				href="#"
+				text="Download bestand"
+				start-icon="download"
+			></nldd-link>
+			<nldd-link
+				href="#"
+				text="Terug naar overzicht"
+				start-icon="arrow-left"
+			></nldd-link>
 		</div>
 	`,
 	parameters: {
@@ -203,11 +237,20 @@ export const WithStartIcon = {
 	},
 };
 
-export const WithEndIcon = {
+export const MetEndIcon = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
-			<nldd-link href="#" text="Verder lezen" end-icon="arrow-right"></nldd-link>
-			<nldd-link href="https://example.com" target="_blank" text="Externe website" end-icon="square-arrow-right-top"></nldd-link>
+			<nldd-link
+				href="#"
+				text="Verder lezen"
+				end-icon="arrow-right"
+			></nldd-link>
+			<nldd-link
+				href="https://example.com"
+				target="_blank"
+				text="Externe website"
+				end-icon="square-arrow-right-top"
+			></nldd-link>
 		</div>
 	`,
 	parameters: {
@@ -220,9 +263,14 @@ export const WithEndIcon = {
 	},
 };
 
-export const Disabled = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: () => html`
-		<nldd-link href="#" text="Uitgeschakelde link" disabled></nldd-link>
+		<nldd-link
+			href="#"
+			text="Uitgeschakelde link"
+			disabled
+		></nldd-link>
 	`,
 	parameters: {
 		controls: { disable: true },

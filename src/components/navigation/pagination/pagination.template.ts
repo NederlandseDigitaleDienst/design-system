@@ -88,7 +88,7 @@ export function paginationTemplate(component: NLDDPagination): TemplateResult {
 						`)}
 					</select>
 					<div class="pagination__select-picker-icon">
-						<nldd-icon name="chevron-up-chevron-down"></nldd-icon>
+						<nldd-icon icon="chevron-up-chevron-down"></nldd-icon>
 					</div>
 				</div>
 			</div>

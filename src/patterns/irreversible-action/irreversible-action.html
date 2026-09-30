@@ -1,0 +1,39 @@
+<nldd-simple-section>
+  <nldd-box background="critical">
+    <nldd-container
+      padding="16"
+      gap="8"
+    >
+      <nldd-title
+        size="5"
+        text="Dossier verwijderen"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-rich-text>
+        <p>Het dossier en alle documenten erin verdwijnen. Collega's die eraan werken raken hun kopie kwijt.</p>
+      </nldd-rich-text>
+      <nldd-button
+        id="dossier-verwijderen"
+        variant="destructive"
+        text="Verwijder dossier"
+      ></nldd-button>
+    </nldd-container>
+  </nldd-box>
+</nldd-simple-section>
+
+<nldd-modal-dialog
+  variant="alert"
+  text="Verwijder 'Dossier D-318'?"
+  supporting-text="Dit dossier en alle documenten erin worden verwijderd. Dit kan niet ongedaan worden gemaakt."
+>
+  <nldd-button
+    slot="actions"
+    variant="primary"
+    text="Behoud dossier"
+  ></nldd-button>
+  <nldd-button
+    slot="actions"
+    variant="destructive"
+    text="Verwijder dossier"
+  ></nldd-button>
+</nldd-modal-dialog>

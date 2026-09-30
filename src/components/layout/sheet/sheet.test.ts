@@ -706,3 +706,128 @@ describe('nldd-sheet inside a pane that hides back buttons', () => {
 		expect(getComputedStyle(bar).getPropertyValue('--context-back-button-display').trim()).toBe('none');
 	});
 });
+
+describe('nldd-sheet – accessible name', () => {
+	let el: NLDDSheet;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const label = (host: NLDDSheet) => host.shadowRoot!.querySelector('dialog')!.getAttribute('aria-label');
+	const withBar = (attrs: string, text: string) =>
+		`<nldd-sheet ${attrs}><nldd-page><nldd-top-title-bar slot="header" text="${text}"></nldd-top-title-bar></nldd-page></nldd-sheet>`;
+
+	it('takes the text of its title bar', async () => {
+		el = await fixture<NLDDSheet>(withBar('', 'Filters'));
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Filters');
+	});
+
+	it('an accessible-label wins over the title bar', async () => {
+		el = await fixture<NLDDSheet>(withBar('accessible-label="Zoekfilters"', 'Filters'));
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Zoekfilters');
+	});
+
+	it('follows a title that changes', async () => {
+		el = await fixture<NLDDSheet>(withBar('', 'Filters'));
+		const bar = el.querySelector('nldd-top-title-bar') as HTMLElement & { text: string };
+		bar.text = 'Sortering';
+		await waitForUpdate(bar);
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Sortering');
+	});
+
+	it('picks up a title bar that arrives later', async () => {
+		el = await fixture<NLDDSheet>('<nldd-sheet></nldd-sheet>');
+		el.insertAdjacentHTML('beforeend', '<nldd-top-title-bar text="Later"></nldd-top-title-bar>');
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Later');
+	});
+
+	it('is not named by the title bar of an overlay nested inside it', async () => {
+		el = await fixture<NLDDSheet>('<nldd-sheet><nldd-sheet><nldd-top-title-bar text="Binnen"></nldd-top-title-bar></nldd-sheet></nldd-sheet>');
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Venster');
+	});
+
+	it('is called Venster without either, and warns when it opens', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDSheet>('<nldd-sheet></nldd-sheet>');
+		await waitForUpdate(el);
+		el.show();
+		expect(label(el)).toBe('Venster');
+		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(true);
+	});
+
+	it('does not warn when its title bar names it', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDSheet>(withBar('', 'Filters'));
+		await waitForUpdate(el);
+		el.show();
+		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(false);
+	});
+});
+
+describe('nldd-sheet – open attribute', () => {
+	let el: NLDDSheet;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const dialog = () => el.shadowRoot!.querySelector('dialog')!;
+
+	it('opens from the first render when open is set', async () => {
+		el = await fixture<NLDDSheet>('<nldd-sheet accessible-label="Test" open></nldd-sheet>');
+		await waitForUpdate(el);
+		expect(dialog().open).toBe(true);
+	});
+
+	it('opens and closes when open is set and cleared', async () => {
+		el = await fixture<NLDDSheet>('<nldd-sheet accessible-label="Test"></nldd-sheet>');
+		el.open = true;
+		await waitForUpdate(el);
+		expect(dialog().open).toBe(true);
+
+		const closed = new Promise((resolve) => el.addEventListener('close', resolve, { once: true }));
+		el.open = false;
+		await closed;
+		expect(dialog().open).toBe(false);
+	});
+
+	it('reflects show() and hide() in the attribute', async () => {
+		el = await fixture<NLDDSheet>('<nldd-sheet accessible-label="Test"></nldd-sheet>');
+		el.show();
+		await waitForUpdate(el);
+		expect(el.hasAttribute('open')).toBe(true);
+		el.hide();
+		await waitForUpdate(el);
+		expect(el.hasAttribute('open')).toBe(false);
+	});
+
+	it('clears open when it closes another way', async () => {
+		el = await fixture<NLDDSheet>('<nldd-sheet accessible-label="Test" open></nldd-sheet>');
+		await waitForUpdate(el);
+		dialog().dispatchEvent(new Event('cancel', { cancelable: true }));
+		await waitForUpdate(el);
+		expect(el.open).toBe(false);
+		expect(el.hasAttribute('open')).toBe(false);
+	});
+
+	it('stays open when open is set again during the close animation', async () => {
+		el = await fixture<NLDDSheet>('<nldd-sheet accessible-label="Test" open></nldd-sheet>');
+		await waitForUpdate(el);
+		el.open = false;
+		await el.updateComplete;
+		expect(dialog().classList.contains('is-closing')).toBe(true);
+		el.open = true;
+		await el.updateComplete;
+		dialog().dispatchEvent(new Event('animationend'));
+		await waitForUpdate(el);
+		expect(dialog().open).toBe(true);
+		expect(dialog().classList.contains('is-closing')).toBe(false);
+	});
+});

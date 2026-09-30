@@ -19,7 +19,7 @@ export function inlineDialogTemplate(component: NLDDInlineDialog) {
 					</div>
 				` : component._resolvedIconName ? html`
 					<div class="inline-dialog__icon">
-						<nldd-icon name=${component._resolvedIconName}></nldd-icon>
+						<nldd-icon icon=${component._resolvedIconName}></nldd-icon>
 					</div>
 				` : nothing}
 				${component.text ? html`

@@ -14,6 +14,11 @@
  *   `dist/css/form.css` (or `global.css`), not in a component-specific shadow
  *   stylesheet. Import it as part of your app's global CSS bundle.
  *
+ * **When a field turns red:** on submit the form marks every control the
+ * browser rejects with `invalid`, and clears it again once the value passes.
+ * Setting `invalid` yourself is fine, but do it on submit, not while someone is
+ * still typing, or a field turns red over a value that is not finished yet.
+ *
  * **Two usage modes:**
  *
  * 1. **Auto-wrap** (default): write children directly. Component creates a
@@ -44,14 +49,14 @@
  *
  * @element nldd-form
  *
- * @attr {string} name - Form name
- * @attr {string} action - URL endpoint for submission
- * @attr {string} method - HTTP method ('get' | 'post' | 'dialog')
- * @attr {boolean} novalidate - Skip native browser validation
- * @attr {string} enctype - Encoding type for submission
- * @attr {string} target - Submit target ('_self' | '_blank' | ...)
- * @attr {string} autocomplete - 'on' | 'off' (form-level autofill toggle)
  * @attr {string} label-alignment - Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade.
+ * @attr {string} name - Form name
+ * @attr {string} autocomplete - 'on' | 'off' (form-level autofill toggle)
+ * @attr {string} target - Submit target ('_self' | '_blank' | ...)
+ * @attr {string} method - HTTP method ('get' | 'post' | 'dialog')
+ * @attr {string} action - URL endpoint for submission
+ * @attr {string} enctype - Encoding type for submission
+ * @attr {boolean} novalidate - Skip native browser validation
  *
  * @prop {HTMLFormElement | null} form - The inner <form> element (read-only). Use it for `form.checkValidity()`, direct DOM manipulation, or as the target for framework-managed children.
  *
@@ -67,7 +72,10 @@
  *
  * Auto-wrap mode:
  * ```html
- * <nldd-form name="profile" novalidate>
+ * <nldd-form
+ * 	name="profile"
+ * 	novalidate
+ * >
  *   <nldd-text-field name="email" autocomplete="email"></nldd-text-field>
  *   <nldd-button type="submit" text="Verstuur"></nldd-button>
  * </nldd-form>
@@ -75,7 +83,10 @@
  *
  * User-provided form mode (React/Vue/Angular):
  * ```html
- * <nldd-form name="profile" novalidate>
+ * <nldd-form
+ * 	name="profile"
+ * 	novalidate
+ * >
  *   <form>
  *     <nldd-text-field name="email" autocomplete="email"></nldd-text-field>
  *     <nldd-button type="submit" text="Verstuur"></nldd-button>

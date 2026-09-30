@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './stacked-split-view.js';
 import '../../page/page.js';
 import '../../page-sections/simple-section/simple-section.js';
@@ -33,6 +33,10 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		background: 'inherit',
+		panes: 2,
+	},
 	argTypes: {
 		background: {
 			control: { type: 'select' },
@@ -46,16 +50,21 @@ export default {
 			table: { defaultValue: { summary: '2' } },
 		},
 	},
-	args: {
-		background: 'inherit',
-		panes: 2,
-	},
 };
 
+/* Het eerste paneel draagt de hoofdinhoud en houdt daarmee de landmarks van het
+   document; de andere panelen zijn benoemde regio's. */
 const paneContent = (title: any, slot: any) => html`
 	<nldd-split-view-pane slot=${slot}>
-		<nldd-page sticky-header>
-			<nldd-container slot="header" padding="16">
+		<nldd-page
+			sticky-header
+			landmarks=${slot === 'pane-1' ? 'page' : nothing}
+			accessible-label=${slot === 'pane-1' ? nothing : title}
+		>
+			<nldd-container
+				slot="header"
+				padding="16"
+			>
 				<nldd-rich-text>
 					<strong>${title}</strong>
 				</nldd-rich-text>
@@ -75,14 +84,21 @@ const paneContent = (title: any, slot: any) => html`
 `;
 
 export const Standaard = ({ background, panes }: Record<string, any>) => html`
-	<nldd-stacked-split-view panes=${panes} background=${background} style="height: 640px;">
+	<nldd-stacked-split-view
+		panes=${panes}
+		background=${background}
+		style="height: 640px;"
+	>
 		${Array.from({ length: panes }, (_, i) => paneContent(`Paneel ${i + 1}`, `pane-${i + 1}`))}
 	</nldd-stacked-split-view>
 `;
 
 export const DrieRijen = {
 	render: () => html`
-	<nldd-stacked-split-view panes="3" style="height: 900px;">
+	<nldd-stacked-split-view
+		panes="3"
+		style="height: 900px;"
+	>
 		${[1, 2, 3].map(n => paneContent(`Paneel ${n}`, `pane-${n}`))}
 	</nldd-stacked-split-view>
 `,

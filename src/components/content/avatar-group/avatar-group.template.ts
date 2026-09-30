@@ -31,7 +31,10 @@ export function avatarGroupTemplate(component: NLDDAvatarGroup) {
 				placement="bottom-end"
 				accessible-label=${component._t('components.avatar-group.overflow-popover-label')}
 			>
-				<nldd-container padding-inline="16" padding-block="8">
+				<nldd-container
+					padding-inline="16"
+					padding-block="8"
+				>
 					<nldd-list dividers="never">
 						${overflow.map(entry => html`
 							<nldd-list-item size="sm">
@@ -39,7 +42,8 @@ export function avatarGroupTemplate(component: NLDDAvatarGroup) {
 									${entry.avatar}
 								</nldd-cell>
 								<nldd-spacer-cell size="8"></nldd-spacer-cell>
-								<nldd-text-cell width="full"
+								<nldd-text-cell
+									width="full"
 									text=${entry.name}
 								></nldd-text-cell>
 							</nldd-list-item>

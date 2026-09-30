@@ -15,26 +15,30 @@
  *         </nldd-container>
  *     </nldd-popover>
  *
+ * To open it from your own state instead, bind `open` together with the close
+ * event: the popover clears `open` itself on light dismiss, Escape or a click on
+ * its anchor. It needs that anchor to open against.
+ *
  * For a custom focus target inside the popover, put `autofocus` on the child you
  * want. Without it the popover host itself takes focus.
  *
  * @element nldd-popover
  *
+ * @attr {string} width - Width as a CSS length (default: 320px through --components-popover-default-width). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV.
+ * @attr {boolean} sm-full-height - On an sm viewport (where the popover renders as a bottom sheet) fills the whole available height instead of shrinking to its content. No effect on md and up (anchored mode). Opt-in for content-heavy cases such as search results or long detail views; content-sized is the default, following the Apple and Material convention.
  * @attr {string} anchor - ID of the trigger element, used for positioning
  * @attr {string} placement - Floating UI placement (default: 'bottom-start')
- * @attr {string} width - Width as a CSS length (default: 320px through --components-popover-default-width). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV.
  * @attr {string} top - CSS top position. When set (on its own, or together with other edge attributes or `centered`) Floating UI's anchor positioning is skipped and the popover stands free on the screen. The `anchor` is still needed for the ARIA link on the trigger. No effect on sm, where the bottom sheet wins.
- * @attr {string} left - CSS left position. See `top` for the semantics.
  * @attr {string} right - CSS right position. See `top` for the semantics.
  * @attr {string} bottom - CSS bottom position. See `top` for the semantics.
+ * @attr {string} left - CSS left position. See `top` for the semantics.
  * @attr {boolean} centered - Centers both axes on the viewport. Overridable per axis: `centered top="0"` is centered horizontally, aligned to the top. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides.
- * @attr {boolean} sm-full-height - On an sm viewport (where the popover renders as a bottom sheet) fills the whole available height instead of shrinking to its content. No effect on md and up (anchored mode). Opt-in for content-heavy cases such as search results or long detail views; content-sized is the default, following the Apple and Material convention.
  * @attr {string} accessible-label - (required) Accessible name (aria-label). Falls back to the i18n default ('Popover') when unset — always give a unique, describing name.
  * @attr {string} role - ARIA role (default: 'dialog'). For informational content (a tooltip callout, a rich-text help panel) without a dialog interaction pattern, set `role="region"`. For menu-style triggers, `role="menu"` plus `aria-haspopup="menu"` on the anchor. The popover never overwrites a role that was set explicitly.
  * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.
+ * @attr {boolean} open - Whether the popover is open. Set it to open or close the popover, as an alternative to show() and hide(); opening needs an anchor, and without one it stays unset. The popover clears it itself when it closes another way (Escape, a click outside), so bind it together with the close event.
  *
  * @prop {Element|null} anchorElement - Programmatic anchor (takes precedence over the anchor attribute)
- * @prop {boolean} open - (read-only) Whether the popover is open right now
  *
  * @slot - Free content (an nldd-container with a form or info, for instance)
  *
@@ -62,6 +66,12 @@ export class NLDDPopover extends LitElement {
 	static override styles = popoverStyles;
 
 	@property({ type: String, reflect: true })
+	width: string | undefined;
+
+	@property({ type: Boolean, reflect: true, attribute: 'sm-full-height' })
+	smFullHeight = false;
+
+	@property({ type: String, reflect: true })
 	anchor = '';
 
 	@property({ attribute: false })
@@ -69,9 +79,6 @@ export class NLDDPopover extends LitElement {
 
 	@property({ reflect: true, converter: reflectNonDefault<Placement>('bottom-start') })
 	placement: Placement = 'bottom-start';
-
-	@property({ type: String, reflect: true })
-	width: string | undefined;
 
 	// Default `undefined` (not '') so Lit doesn't reflect an empty value:
 	// `<nldd-popover>` would otherwise carry `top="" left="" right="" bottom=""`
@@ -81,19 +88,16 @@ export class NLDDPopover extends LitElement {
 	top: string | undefined = undefined;
 
 	@property({ type: String, reflect: true })
-	left: string | undefined = undefined;
-
-	@property({ type: String, reflect: true })
 	right: string | undefined = undefined;
 
 	@property({ type: String, reflect: true })
 	bottom: string | undefined = undefined;
 
+	@property({ type: String, reflect: true })
+	left: string | undefined = undefined;
+
 	@property({ type: Boolean, reflect: true })
 	centered = false;
-
-	@property({ type: Boolean, reflect: true, attribute: 'sm-full-height' })
-	smFullHeight = false;
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
@@ -105,6 +109,9 @@ export class NLDDPopover extends LitElement {
 	@property({ type: Object })
 	translations: Partial<NLDDPopoverTranslations> = {};
 
+	@property({ type: Boolean, reflect: true })
+	open = false;
+
 	private _isOpen = false;
 	private _hasWarnedLabel = false;
 	private _previousFocus: HTMLElement | null = null;
@@ -114,10 +121,6 @@ export class NLDDPopover extends LitElement {
 	private _smQuery: MediaQueryList | null = null;
 	private _wasOnSm = false;
 	private _previousAnchorEl: Element | null = null;
-
-	get open(): boolean {
-		return this._isOpen;
-	}
 
 	/** Widths that come from the content instead of from a length. The popover is
 	 *  an inline-size query container so slotted components can adapt to it, and
@@ -190,6 +193,18 @@ export class NLDDPopover extends LitElement {
 	}
 
 	override updated(changed: PropertyValues): void {
+		if (changed.has('open')) {
+			const showing = this.matches(':popover-open');
+			// _isOpen is what the last toggle reported: an `open` that only echoes
+			// that report is not a request to open.
+			if (this.open && !showing && !this._isOpen) {
+				this.show();
+				// No anchor to open against: say so in the attribute, too.
+				if (!this.matches(':popover-open')) this.open = false;
+			} else if (!this.open && showing) {
+				(this as HTMLElement).hidePopover();
+			}
+		}
 		// Set width via the CSS variable so media-query overrides (bottom
 		// sheet on sm) keep working. Inline `style.width` would beat them.
 		if (changed.has('width')) {
@@ -554,6 +569,7 @@ export class NLDDPopover extends LitElement {
 	private _handleToggle = async (event: Event): Promise<void> => {
 		const toggleEvent = event as ToggleEvent;
 		this._isOpen = toggleEvent.newState === 'open';
+		this.open = this._isOpen;
 
 		this._updateAnchorAria(this._isOpen);
 

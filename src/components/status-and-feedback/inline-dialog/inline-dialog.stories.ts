@@ -103,8 +103,16 @@ export const Standaard = (args: Record<string, any>) => html`
 		icon-color=${args.iconColor || nothing}
 		horizontal-alignment=${args.horizontalAlignment || nothing}
 	>
-		<nldd-button slot="actions" variant="primary" text="Bevestig"></nldd-button>
-		<nldd-button slot="actions" variant="neutral-tinted" text="Annuleer"></nldd-button>
+		<nldd-button
+			slot="actions"
+			variant="primary"
+			text="Bevestig"
+		></nldd-button>
+		<nldd-button
+			slot="actions"
+			variant="neutral-tinted"
+			text="Annuleer"
+		></nldd-button>
 	</nldd-inline-dialog>
 `;
 
@@ -114,8 +122,16 @@ export const ZonderIcoon = {
 		text="Bevestiging vereist"
 		supporting-text="Weet u zeker dat u door wilt gaan? Dit kan niet ongedaan worden gemaakt."
 	>
-		<nldd-button slot="actions" variant="primary" text="Bevestig"></nldd-button>
-		<nldd-button slot="actions" variant="neutral-tinted" text="Annuleer"></nldd-button>
+		<nldd-button
+			slot="actions"
+			variant="primary"
+			text="Bevestig"
+		></nldd-button>
+		<nldd-button
+			slot="actions"
+			variant="neutral-tinted"
+			text="Annuleer"
+		></nldd-button>
 	</nldd-inline-dialog>
 `,
 	parameters: { controls: { disable: true } },
@@ -128,7 +144,11 @@ export const MetIcoon = {
 		text="Instellingen vereist"
 		supporting-text="Configureer eerst uw voorkeuren voordat u verder gaat."
 	>
-		<nldd-button slot="actions" variant="primary" text="Naar instellingen"></nldd-button>
+		<nldd-button
+			slot="actions"
+			variant="primary"
+			text="Naar instellingen"
+		></nldd-button>
 	</nldd-inline-dialog>
 `,
 	parameters: { controls: { disable: true } },
@@ -157,28 +177,42 @@ export const IcoonKleur = {
 	},
 };
 
-export const Alert = {
+export const VariantAlert = {
+	name: 'Variant alert',
 	render: () => html`
 	<nldd-inline-dialog
 		variant="alert"
 		text="Niet opgeslagen"
 		supporting-text="Als u doorgaat gaan uw wijzigingen verloren."
 	>
-		<nldd-button slot="actions" variant="primary" text="Doorgaan"></nldd-button>
-		<nldd-button slot="actions" variant="neutral-tinted" text="Annuleer"></nldd-button>
+		<nldd-button
+			slot="actions"
+			variant="primary"
+			text="Doorgaan"
+		></nldd-button>
+		<nldd-button
+			slot="actions"
+			variant="neutral-tinted"
+			text="Annuleer"
+		></nldd-button>
 	</nldd-inline-dialog>
 `,
 	parameters: { controls: { disable: true } },
 };
 
-export const Success = {
+export const VariantSuccess = {
+	name: 'Variant success',
 	render: () => html`
 	<nldd-inline-dialog
 		variant="success"
 		text="Succesvol opgeslagen"
 		supporting-text="Uw wijzigingen zijn vastgelegd."
 	>
-		<nldd-button slot="actions" variant="primary" text="Sluiten"></nldd-button>
+		<nldd-button
+			slot="actions"
+			variant="primary"
+			text="Sluiten"
+		></nldd-button>
 	</nldd-inline-dialog>
 `,
 	parameters: { controls: { disable: true } },
@@ -191,7 +225,8 @@ export const Success = {
  * (`timing="instant"`, geen anti-flash-vertraging). Overrulet een expliciet
  * `icon`.
  */
-export const Loading = {
+export const VariantLoading = {
+	name: 'Variant loading',
 	render: () => html`
 	<nldd-inline-dialog
 		variant="loading"
@@ -215,7 +250,11 @@ export const Groot = {
 			text="Grotere dialog"
 			supporting-text="Met size=&quot;lg&quot; krijgt zowel de hoofdtekst als de supporting-text een stap grotere typografie."
 		>
-			<nldd-button slot="actions" variant="primary" text="Begrepen"></nldd-button>
+			<nldd-button
+				slot="actions"
+				variant="primary"
+				text="Begrepen"
+			></nldd-button>
 		</nldd-inline-dialog>
 	`,
 	parameters: { controls: { disable: true } },
@@ -235,7 +274,11 @@ export const LegeToestand = {
 				text="Geen resultaten"
 				supporting-text="Er zijn geen items gevonden die overeenkomen met uw zoekopdracht."
 			>
-				<nldd-button slot="actions" variant="neutral-tinted" text="Zoekopdracht wissen"></nldd-button>
+				<nldd-button
+					slot="actions"
+					variant="neutral-tinted"
+					text="Zoekopdracht wissen"
+				></nldd-button>
 			</nldd-inline-dialog>
 		</nldd-container>
 	</nldd-box>
@@ -263,8 +306,16 @@ export const MetFormulier = {
 			<nldd-form-field label="Naam">
 				<nldd-text-field value="Beleidsstukken 2026"></nldd-text-field>
 			</nldd-form-field>
-			<nldd-button slot="actions" variant="primary" text="Opslaan"></nldd-button>
-			<nldd-button slot="actions" variant="neutral-tinted" text="Annuleer"></nldd-button>
+			<nldd-button
+				slot="actions"
+				variant="primary"
+				text="Opslaan"
+			></nldd-button>
+			<nldd-button
+				slot="actions"
+				variant="neutral-tinted"
+				text="Annuleer"
+			></nldd-button>
 		</nldd-inline-dialog>
 	`,
 	parameters: { controls: { disable: true } },
@@ -286,7 +337,11 @@ export const UitlijningOverschrijven = {
 				text="Deze aanvraag verloopt over 3 dagen"
 				supporting-text="Na 12 maart vervalt de aanvraag en moet je opnieuw beginnen. Je ingevulde gegevens blijven tot die tijd bewaard."
 			>
-				<nldd-button slot="actions" variant="primary" text="Aanvraag afronden"></nldd-button>
+				<nldd-button
+					slot="actions"
+					variant="primary"
+					text="Aanvraag afronden"
+				></nldd-button>
 			</nldd-inline-dialog>
 
 			<nldd-inline-dialog
@@ -294,8 +349,17 @@ export const UitlijningOverschrijven = {
 				text="Bijna klaar"
 				supporting-text="Nog één stap te gaan."
 			>
-				<nldd-progress-circle value="80" max="100" size="64" value-display="inline"></nldd-progress-circle>
-				<nldd-button slot="actions" variant="primary" text="Afronden"></nldd-button>
+				<nldd-progress-circle
+					value="80"
+					max="100"
+					size="64"
+					value-display="inline"
+				></nldd-progress-circle>
+				<nldd-button
+					slot="actions"
+					variant="primary"
+					text="Afronden"
+				></nldd-button>
 			</nldd-inline-dialog>
 		</div>
 	`,

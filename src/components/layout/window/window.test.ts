@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDWindow } from './window.js';
 import './window.js';
+import '../../navigation/top-title-bar/top-title-bar.js';
 import { windowStyles } from './window.styles.js';
 
 describe('nldd-window', () => {
@@ -433,5 +434,155 @@ describe('nldd-window – backdrop click', () => {
 		d.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, clientX: 0, clientY: 0 }));
 		await waitForUpdate(el);
 		expect(d.open).toBe(false);
+	});
+});
+
+describe('nldd-window – accessible name', () => {
+	let el: NLDDWindow;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const label = (host: NLDDWindow) => host.shadowRoot!.querySelector('dialog')!.getAttribute('aria-label');
+	const withBar = (attrs: string, text: string) =>
+		`<nldd-window ${attrs}><nldd-page><nldd-top-title-bar slot="header" text="${text}"></nldd-top-title-bar></nldd-page></nldd-window>`;
+
+	it('takes the text of its title bar', async () => {
+		el = await fixture<NLDDWindow>(withBar('', 'Filters'));
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Filters');
+	});
+
+	it('an accessible-label wins over the title bar', async () => {
+		el = await fixture<NLDDWindow>(withBar('accessible-label="Zoekfilters"', 'Filters'));
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Zoekfilters');
+	});
+
+	it('follows a title that changes', async () => {
+		el = await fixture<NLDDWindow>(withBar('', 'Filters'));
+		const bar = el.querySelector('nldd-top-title-bar') as HTMLElement & { text: string };
+		bar.text = 'Sortering';
+		await waitForUpdate(bar);
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Sortering');
+	});
+
+	it('picks up a title bar that arrives later', async () => {
+		el = await fixture<NLDDWindow>('<nldd-window></nldd-window>');
+		el.insertAdjacentHTML('beforeend', '<nldd-top-title-bar text="Later"></nldd-top-title-bar>');
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Later');
+	});
+
+	it('is not named by the title bar of an overlay nested inside it', async () => {
+		el = await fixture<NLDDWindow>('<nldd-window><nldd-sheet><nldd-top-title-bar text="Binnen"></nldd-top-title-bar></nldd-sheet></nldd-window>');
+		await waitForUpdate(el);
+		expect(label(el)).toBe('Venster');
+	});
+
+	it('is called Venster without either, and warns when it opens', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDWindow>('<nldd-window></nldd-window>');
+		await waitForUpdate(el);
+		el.show();
+		expect(label(el)).toBe('Venster');
+		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(true);
+	});
+
+	it('does not warn when its title bar names it', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDWindow>(withBar('', 'Filters'));
+		await waitForUpdate(el);
+		el.show();
+		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(false);
+	});
+});
+
+describe('nldd-window – open attribute', () => {
+	let el: NLDDWindow;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const dialog = () => el.shadowRoot!.querySelector('dialog')!;
+
+	it('opens from the first render when open is set', async () => {
+		el = await fixture<NLDDWindow>('<nldd-window accessible-label="Test" open></nldd-window>');
+		await waitForUpdate(el);
+		expect(dialog().open).toBe(true);
+	});
+
+	it('opens and closes when open is set and cleared', async () => {
+		el = await fixture<NLDDWindow>('<nldd-window accessible-label="Test"></nldd-window>');
+		el.open = true;
+		await waitForUpdate(el);
+		expect(dialog().open).toBe(true);
+
+		const closed = new Promise((resolve) => el.addEventListener('close', resolve, { once: true }));
+		el.open = false;
+		await closed;
+		expect(dialog().open).toBe(false);
+	});
+
+	it('reflects show() and hide() in the attribute', async () => {
+		el = await fixture<NLDDWindow>('<nldd-window accessible-label="Test"></nldd-window>');
+		el.show();
+		await waitForUpdate(el);
+		expect(el.hasAttribute('open')).toBe(true);
+		el.hide();
+		await waitForUpdate(el);
+		expect(el.hasAttribute('open')).toBe(false);
+	});
+
+	it('clears open when it closes another way', async () => {
+		el = await fixture<NLDDWindow>('<nldd-window accessible-label="Test" open></nldd-window>');
+		await waitForUpdate(el);
+		const closed = new Promise((resolve) => el.addEventListener('close', resolve, { once: true }));
+		dialog().close();
+		await closed;
+		await waitForUpdate(el);
+		expect(el.open).toBe(false);
+		expect(el.hasAttribute('open')).toBe(false);
+	});
+});
+
+describe('nldd-window – show() before the first render', () => {
+	let el: NLDDWindow;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	/** Like `fixture`, but returns before the first render: these tests are about
+	 *  what happens when a consumer calls show() in that very window. */
+	const mountUnrendered = (): NLDDWindow => {
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = '<nldd-window accessible-label="Test"></nldd-window>';
+		document.body.appendChild(wrapper);
+		return wrapper.firstElementChild as NLDDWindow;
+	};
+
+	it('still opens when show() is called before the first render', async () => {
+		el = mountUnrendered();
+		expect(el.shadowRoot?.querySelector('dialog')).toBeFalsy();
+		el.show();
+
+		await waitForUpdate(el);
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('dialog')!.open).toBe(true);
+	});
+
+	it('lets a hide() before the first render cancel that pending open', async () => {
+		el = mountUnrendered();
+		el.show();
+		el.hide();
+
+		await waitForUpdate(el);
+		await el.updateComplete;
+		expect(el.shadowRoot!.querySelector('dialog')!.open).toBe(false);
 	});
 });

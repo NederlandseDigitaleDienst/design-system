@@ -101,22 +101,26 @@ export const Standaard = {
 	args: {},
 };
 
-export const Aangevinkt = {
+export const ToestandChecked = {
+	name: 'Toestand checked',
 	render: Template,
 	args: { checked: true },
 };
 
-export const Onbepaald = {
+export const ToestandIndeterminate = {
+	name: 'Toestand indeterminate',
 	render: Template,
 	args: { indeterminate: true },
 };
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: { disabled: true },
 };
 
-export const AangevinktUitgeschakeld = {
+export const ToestandCheckedEnDisabled = {
+	name: 'Toestand checked en disabled',
 	render: Template,
 	args: { checked: true, disabled: true },
 };
@@ -125,11 +129,28 @@ export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
 		<nldd-checkbox accessible-label="Niet aangevinkt"></nldd-checkbox>
-		<nldd-checkbox checked accessible-label="Aangevinkt"></nldd-checkbox>
-		<nldd-checkbox indeterminate accessible-label="Onbepaald"></nldd-checkbox>
-		<nldd-checkbox disabled accessible-label="Uitgeschakeld"></nldd-checkbox>
-		<nldd-checkbox checked disabled accessible-label="Aangevinkt en uitgeschakeld"></nldd-checkbox>
-		<nldd-checkbox indeterminate disabled accessible-label="Onbepaald en uitgeschakeld"></nldd-checkbox>
+		<nldd-checkbox
+			checked
+			accessible-label="Aangevinkt"
+		></nldd-checkbox>
+		<nldd-checkbox
+			indeterminate
+			accessible-label="Onbepaald"
+		></nldd-checkbox>
+		<nldd-checkbox
+			disabled
+			accessible-label="Uitgeschakeld"
+		></nldd-checkbox>
+		<nldd-checkbox
+			checked
+			disabled
+			accessible-label="Aangevinkt en uitgeschakeld"
+		></nldd-checkbox>
+		<nldd-checkbox
+			indeterminate
+			disabled
+			accessible-label="Onbepaald en uitgeschakeld"
+		></nldd-checkbox>
 	</div>
 `,
 	parameters: { controls: { disable: true } },

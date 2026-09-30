@@ -80,11 +80,11 @@ const Template = (args: Record<string, any>) => html`
 	>${args.content}</nldd-code-viewer>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const Trace = {
+export const Logregels = {
 	render: Template,
 	args: {
 		content: `[engine] resolved input: bsn=999993653
@@ -94,7 +94,7 @@ export const Trace = {
 	},
 };
 
-export const LongLines = {
+export const LangeRegels = {
 	render: Template,
 	args: {
 		content: `function deeplyNestedFunctionWithAVeryLongNameThatExceedsTheTypicalContainerWidth(parameterOne, parameterTwo, parameterThree) {
@@ -103,7 +103,7 @@ export const LongLines = {
 	},
 };
 
-export const Wrap = {
+export const MetWrap = {
 	render: Template,
 	args: {
 		wrap: true,
@@ -113,7 +113,8 @@ export const Wrap = {
 	},
 };
 
-export const HighlightYaml = {
+export const KleuringYaml = {
+	name: 'Kleuring YAML',
 	render: Template,
 	args: {
 		language: 'yaml',
@@ -130,7 +131,8 @@ articles:
 	},
 };
 
-export const HighlightJson = {
+export const KleuringJson = {
+	name: 'Kleuring JSON',
 	render: Template,
 	args: {
 		language: 'json',
@@ -143,7 +145,8 @@ export const HighlightJson = {
 	},
 };
 
-export const HighlightJavaScript = {
+export const KleuringJavaScript = {
+	name: 'Kleuring JavaScript',
 	render: Template,
 	args: {
 		language: 'javascript',
@@ -160,7 +163,8 @@ function isEligible(person, threshold = 32502) {
    Container
    ============================================================ */
 
-export const Simple = {
+export const VariantSimple = {
+	name: 'Variant simple',
 	render: Template,
 	args: {
 		variant: 'simple',
@@ -174,7 +178,8 @@ export const Simple = {
 	},
 };
 
-export const BoxBase = {
+export const VariantBoxBase = {
+	name: 'Variant box-base',
 	render: (args: Record<string, any>) => html`
 		<div style="padding: 24px; background-color: var(--semantics-surfaces-tinted-background-color); border-radius: var(--primitives-corner-radius-lg);">
 			${Template(args)}
@@ -202,7 +207,7 @@ export const BoxBase = {
    Copy
    ============================================================ */
 
-export const NoCopy = {
+export const ZonderKopieerknop = {
 	render: Template,
 	args: {
 		copy: false,

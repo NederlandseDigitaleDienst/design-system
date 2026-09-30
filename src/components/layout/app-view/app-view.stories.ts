@@ -31,6 +31,9 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		background: 'base',
+	},
 	argTypes: {
 		background: {
 			control: { type: 'select' },
@@ -39,16 +42,23 @@ export default {
 			table: { defaultValue: { summary: 'base' } },
 		},
 	},
-	args: {
-		background: 'base',
-	},
 };
 
 export const MetHorizontalSplitView = ({ background }: { background: string }) => html`
-	<nldd-app-view style="height: 600px;" background=${background}>
+	<nldd-app-view
+		style="height: 600px;"
+		background=${background}
+	>
 		<nldd-navigation-split-view>
-			<nldd-page sticky-header slot="primary-sidebar">
-				<nldd-container slot="header" padding="16">
+			<nldd-page
+				sticky-header
+				slot="primary-sidebar"
+				accessible-label="Navigatie"
+			>
+				<nldd-container
+					slot="header"
+					padding="16"
+				>
 					<nldd-rich-text>
 						<strong>Zijbalk</strong>
 					</nldd-rich-text>
@@ -61,8 +71,15 @@ export const MetHorizontalSplitView = ({ background }: { background: string }) =
 				</nldd-simple-section>
 			</nldd-page>
 
-			<nldd-page sticky-header slot="secondary-sidebar">
-				<nldd-container slot="header" padding="16">
+			<nldd-page
+				sticky-header
+				slot="secondary-sidebar"
+				accessible-label="Tweede navigatie"
+			>
+				<nldd-container
+					slot="header"
+					padding="16"
+				>
 					<nldd-rich-text>
 						<strong>Secundaire zijbalk</strong>
 					</nldd-rich-text>
@@ -75,8 +92,15 @@ export const MetHorizontalSplitView = ({ background }: { background: string }) =
 				</nldd-simple-section>
 			</nldd-page>
 
-			<nldd-page sticky-header slot="main">
-				<nldd-container slot="header" padding="16">
+			<nldd-page
+				sticky-header
+				slot="main"
+				landmarks="page"
+			>
+				<nldd-container
+					slot="header"
+					padding="16"
+				>
 					<nldd-rich-text>
 						<strong>Inhoud</strong>
 					</nldd-rich-text>
@@ -89,8 +113,15 @@ export const MetHorizontalSplitView = ({ background }: { background: string }) =
 				</nldd-simple-section>
 			</nldd-page>
 
-			<nldd-page sticky-header slot="inspector">
-				<nldd-container slot="header" padding="16">
+			<nldd-page
+				sticky-header
+				slot="inspector"
+				accessible-label="Details"
+			>
+				<nldd-container
+					slot="header"
+					padding="16"
+				>
 					<nldd-rich-text>
 						<strong>Inspecteur</strong>
 					</nldd-rich-text>
@@ -109,7 +140,10 @@ export const MetHorizontalSplitView = ({ background }: { background: string }) =
 export const MetPagina = () => html`
 	<nldd-app-view style="height: 600px;">
 		<nldd-page sticky-header>
-			<nldd-container slot="header" padding="16">
+			<nldd-container
+				slot="header"
+				padding="16"
+			>
 				<nldd-rich-text>
 					<strong>Pagina</strong>
 				</nldd-rich-text>
@@ -133,8 +167,16 @@ export const TintedPerPaneel = {
 	render: () => html`
 	<nldd-app-view style="height: 600px;">
 		<nldd-navigation-split-view>
-			<nldd-page sticky-header slot="primary-sidebar" background="tinted">
-				<nldd-container slot="header" padding="16">
+			<nldd-page
+				sticky-header
+				slot="primary-sidebar"
+				background="tinted"
+				accessible-label="Zijbalk"
+			>
+				<nldd-container
+					slot="header"
+					padding="16"
+				>
 					<nldd-rich-text>
 						<strong>Zijbalk (tinted)</strong>
 					</nldd-rich-text>
@@ -147,8 +189,15 @@ export const TintedPerPaneel = {
 				</nldd-simple-section>
 			</nldd-page>
 
-			<nldd-page sticky-header slot="main">
-				<nldd-container slot="header" padding="16">
+			<nldd-page
+				sticky-header
+				slot="main"
+				landmarks="page"
+			>
+				<nldd-container
+					slot="header"
+					padding="16"
+				>
 					<nldd-rich-text>
 						<strong>Inhoud (normaal)</strong>
 					</nldd-rich-text>

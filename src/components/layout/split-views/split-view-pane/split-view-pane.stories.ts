@@ -18,7 +18,10 @@ import '../../../navigation/top-title-bar/top-title-bar.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-split-view-pane slot="main" has-content>
+ * <nldd-split-view-pane
+ * 	slot="main"
+ * 	has-content
+ * >
  *   <nldd-page sticky-header>
  *     <nldd-top-title-bar slot="header" text="Inhoud" back-text="Terug"></nldd-top-title-bar>
  *     ...
@@ -40,6 +43,9 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		hasContent: true,
+	},
 	argTypes: {
 		hasContent: {
 			name: 'has-content',
@@ -47,9 +53,6 @@ export default {
 			description: 'Het paneel heeft inhoud',
 			table: { defaultValue: { summary: 'false' } },
 		},
-	},
-	args: {
-		hasContent: true,
 	},
 };
 

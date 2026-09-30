@@ -22,10 +22,6 @@ export const numberFieldStyles = css`
 		-webkit-tap-highlight-color: transparent;
 	}
 
-	:host([hidden]) {
-		display: none;
-	}
-
 	:host([size="sm"]) {
 		--_corner-radius: var(--semantics-controls-sm-corner-radius);
 		--_min-size: var(--semantics-controls-sm-min-size);
@@ -51,6 +47,10 @@ export const numberFieldStyles = css`
 	:host([width="full"]) {
 		display: block;
 		width: 100%;
+	}
+
+	:host([hidden]) {
+		display: none;
 	}
 
 

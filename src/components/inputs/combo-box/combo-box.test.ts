@@ -61,14 +61,14 @@ describe('nldd-combo-box – validation', () => {
 		el = await fixture<NLDDComboBox>('<nldd-combo-box valid></nldd-combo-box>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.combo-box__validation-icon')!;
-		expect(icon.getAttribute('name')).toBe('valid');
+		expect(icon.getAttribute('icon')).toBe('valid');
 	});
 
 	it('renders an invalid icon when invalid', async () => {
 		el = await fixture<NLDDComboBox>('<nldd-combo-box invalid></nldd-combo-box>');
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.combo-box__validation-icon')!;
-		expect(icon.getAttribute('name')).toBe('invalid');
+		expect(icon.getAttribute('icon')).toBe('invalid');
 	});
 
 	it('sets aria-invalid on the input when invalid', async () => {

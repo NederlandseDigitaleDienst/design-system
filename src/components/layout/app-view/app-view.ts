@@ -4,6 +4,14 @@
  * The required root shell of a Nederlandse Digitale Dienst application. Always contains
  * a split view or an nldd-page as direct content.
  *
+ * ## Typography
+ * The document font comes from the package stylesheet
+ * (`@nldd/design-system/styles`), not from this component: it gives `body` the
+ * body font and content color as soon as an app-view is on the page, inside
+ * `@layer reset` so any rule of your own wins. Import only the tokens
+ * (`/styles/tokens`) and text you write in the light DOM keeps the browser
+ * default.
+ *
  * ## Background color
  * Set background="tinted" to give the whole application a tinted background.
  * All descendants read --context-parent-background-color via --_background-color automatically.

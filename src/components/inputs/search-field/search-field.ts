@@ -5,21 +5,21 @@
  * and an optional search button.
  *
  * @element nldd-search-field
- * @attr {string} value - The search value
- * @attr {string} placeholder - Placeholder text for the input
- * @attr {string} accessible-label - Accessible label (aria-label) for the native input. Falls back to placeholder when not set. Set explicitly when a value is already present and the placeholder is no longer visible.
  * @attr {string} size - Field size: 'sm' | 'md' (default: 'md')
- * @attr {boolean} disabled - Disabled state
- * @attr {string} name - Input name for form submission
+ * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
+ * @attr {string} placeholder - Placeholder text for the input
+ * @attr {string} accessible-label - Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen').
  * @attr {boolean} show-search-button - When set, shows a search button on the right
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
- * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
- * @attr {string} width - Optional fixed width (any CSS length, e.g. "240px"). Default: stretches to fill container.
+ * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {boolean} disabled - Disabled state
+ * @attr {string} name - Input name for form submission
+ * @attr {string} value - The search value
  * @attr {boolean} required - Required state
- * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
- * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
+ * @attr {string} pattern - Regular expression the value has to match, as the native `pattern`.
+ * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
  *
  * @fires input - When the input value changes; detail: { value: string }
  * @fires change - When the input value is committed; detail: { value: string }
@@ -56,8 +56,15 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _initialValue = '';
 
-	@property({ type: String })
-	value = '';
+	@property({ reflect: true, converter: reflectNonDefault<SearchFieldSize>('md') })
+	size: SearchFieldSize = 'md';
+
+	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	width = '';
+
+	@query('.search-field__input')
+	_input!: HTMLInputElement;
 
 	@property({ type: String })
 	placeholder = 'Zoeken';
@@ -70,47 +77,12 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<SearchFieldSize>('md') })
-	size: SearchFieldSize = 'md';
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
 	@property({ type: Boolean, reflect: true, attribute: 'show-search-button' })
 	showSearchButton = false;
 
 	/** Override one or more translation keys. Unset keys fall back to Dutch. */
 	@property({ type: Object })
 	translations: Partial<NLDDSearchFieldTranslations> = {};
-
-	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
-	noSpellcheck = false;
-
-	/** Optional fixed width (any CSS length). When unset, the field stretches to fill its container. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	width = '';
-
-	@query('.search-field__input')
-	_input!: HTMLInputElement;
-
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
-
-	/** Regular expression the value has to match, as the native `pattern`. */
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	pattern = '';
-
-	/** Fewest characters the value may have, as the native `minlength`. */
-	@property({ type: Number, reflect: true })
-	minlength?: number;
-
-	/** Most characters the value may have, as the native `maxlength`. */
-	@property({ type: Number, reflect: true })
-	maxlength?: number;
 
 
 	/**
@@ -124,6 +96,34 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
+
+	@property({ type: Boolean, reflect: true })
+	disabled = false;
+
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	name = '';
+
+	@property({ type: String })
+	value = '';
+
+
+	@property({ type: Boolean, reflect: true })
+	required = false;
+
+	/** Fewest characters the value may have, as the native `minlength`. */
+	@property({ type: Number, reflect: true })
+	minlength?: number;
+
+	/** Most characters the value may have, as the native `maxlength`. */
+	@property({ type: Number, reflect: true })
+	maxlength?: number;
+
+	/** Regular expression the value has to match, as the native `pattern`. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	pattern = '';
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
+	noSpellcheck = false;
 
 	override firstUpdated(): void {
 		this._initialValue = this.value;

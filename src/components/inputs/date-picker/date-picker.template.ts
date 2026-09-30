@@ -33,7 +33,7 @@ function renderTitlePart(
 			${label}
 			<span class="date-picker__title-picker-icon">
 				<nldd-icon
-					name="chevron-down-small"
+					icon="chevron-down-small"
 					aria-hidden="true"
 				></nldd-icon>
 			</span>

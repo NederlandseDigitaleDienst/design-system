@@ -25,9 +25,9 @@
  *
  * @element nldd-split-view-pane
  *
- * @attr {boolean} has-content - The pane has content (default: false)
- * @attr {boolean} hide-back - Hide the back button (set automatically by the split view)
  * @attr {'inherit'|'base'|'tinted'} background - Use a tinted background color (cascades to descendants)
+ * @attr {boolean} hide-back - Hide the back button (set automatically by the split view)
+ * @attr {boolean} has-content - The pane has content (default: false)
  *
  * @slot - Pane content
  */
@@ -45,14 +45,14 @@ export class NLDDSplitViewPane extends LitElement {
 	// clip) in root-scroll mode, letting a slotted nldd-page stick to the document.
 	private _scrollMode = new ScrollModeController(this);
 
-	@property({ type: Boolean, reflect: true, attribute: 'has-content' })
-	hasContent = false;
+	@property({ type: String, reflect: true })
+	background: 'inherit' | 'base' | 'tinted' = 'inherit';
 
 	@property({ type: Boolean, reflect: true, attribute: 'hide-back' })
 	hideBack = false;
 
-	@property({ type: String, reflect: true })
-	background: 'inherit' | 'base' | 'tinted' = 'inherit';
+	@property({ type: Boolean, reflect: true, attribute: 'has-content' })
+	hasContent = false;
 
 	override connectedCallback() {
 		super.connectedCallback();

@@ -20,7 +20,7 @@ export function template(component: NLDDBadge) {
 			${component.pulse ? html`<span class="badge__pulse"></span>` : ''}
 			${component.icon ? html`
 				<span class="badge__icon">
-					<nldd-icon name=${component.icon}></nldd-icon>
+					<nldd-icon icon=${component.icon}></nldd-icon>
 				</span>
 			` : ''}
 			${component._hasText ? html`<span class="badge__text">${component._displayValue}</span>` : ''}

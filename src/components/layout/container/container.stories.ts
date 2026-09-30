@@ -35,7 +35,12 @@ const sizeControl = (description: string) => ({
  *
  * ## Gebruik
  * ```html
- * <nldd-container layout="wrap" gap="12" padding="16" sm-padding="8">
+ * <nldd-container
+ * 	layout="wrap"
+ * 	gap="12"
+ * 	padding="16"
+ * 	sm-padding="8"
+ * >
  *   <nldd-rich-text><p>Eerste item</p></nldd-rich-text>
  *   <nldd-rich-text><p>Tweede item</p></nldd-rich-text>
  * </nldd-container>
@@ -64,7 +69,7 @@ export default {
 		smGap: undefined,
 		mdGap: undefined,
 		lgGap: undefined,
-		padding: undefined,
+		padding: '16',
 		paddingInline: undefined,
 		paddingBlock: undefined,
 		paddingTop: undefined,
@@ -193,9 +198,6 @@ export default {
 };
 
 export const Standaard = {
-	args: {
-		padding: '16',
-	},
 	render: (args: Record<string, any>) => html`
 		<nldd-container
 			layout=${ifDefined(args.layout)}
@@ -247,29 +249,43 @@ export const Standaard = {
 
 export const LayoutStack = {
 	render: () => html`
-		<nldd-container gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Eerste</p></nldd-rich-text>
 			<nldd-rich-text><p>Tweede</p></nldd-rich-text>
 			<nldd-rich-text><p>Derde</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Layout — stack (default)',
+	name: 'Layout: stack (standaard)',
 };
 
 export const LayoutRow = {
 	render: () => html`
-		<nldd-container layout="row" gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="row"
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Eerste</p></nldd-rich-text>
 			<nldd-rich-text><p>Tweede</p></nldd-rich-text>
 			<nldd-rich-text><p>Derde</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Layout — row',
+	name: 'Layout: row',
 };
 
 export const LayoutWrap = {
 	render: () => html`
-		<nldd-container layout="wrap" gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150); max-width: 320px;">
+		<nldd-container
+			layout="wrap"
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150); max-width: 320px;"
+		>
 			<nldd-tag>Item één</nldd-tag>
 			<nldd-tag>Item twee</nldd-tag>
 			<nldd-tag>Item drie</nldd-tag>
@@ -277,12 +293,17 @@ export const LayoutWrap = {
 			<nldd-tag>Item vijf</nldd-tag>
 		</nldd-container>
 	`,
-	name: 'Layout — wrap',
+	name: 'Layout: wrap',
 };
 
 export const LayoutGrid = {
 	render: () => html`
-		<nldd-container layout="grid" gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="grid"
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Cell één</p></nldd-rich-text>
 			<nldd-rich-text><p>Cell twee</p></nldd-rich-text>
 			<nldd-rich-text><p>Cell drie</p></nldd-rich-text>
@@ -291,12 +312,17 @@ export const LayoutGrid = {
 			<nldd-rich-text><p>Cell zes</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Layout — grid (auto-fit, min 280px)',
+	name: 'Layout: grid (auto-fit, min 280px)',
 };
 
 export const LayoutColumns = {
 	render: () => html`
-		<nldd-container layout="columns" gap="24" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="columns"
+			gap="24"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Eerste link in de lijst</p></nldd-rich-text>
 			<nldd-rich-text><p>Tweede link</p></nldd-rich-text>
 			<nldd-rich-text><p>Derde link in de lijst</p></nldd-rich-text>
@@ -307,12 +333,17 @@ export const LayoutColumns = {
 			<nldd-rich-text><p>Achtste link</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Layout — columns (multicol, min 280px)',
+	name: 'Layout: columns (multicol, min 280px)',
 };
 
 export const LayoutLanes = {
 	render: () => html`
-		<nldd-container layout="lanes" gap="16" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="lanes"
+			gap="16"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-card>
 				<nldd-container padding="16">
 					<nldd-rich-text><h3>Kort</h3><p>Een blok met een enkele regel.</p></nldd-rich-text>
@@ -345,24 +376,34 @@ export const LayoutLanes = {
 			</nldd-card>
 		</nldd-container>
 	`,
-	name: 'Layout — lanes (native grid-lanes, multicol fallback)',
+	name: 'Layout: lanes (grid-lanes, anders multicol)',
 };
 
 export const OrderRow = {
 	render: () => html`
-		<nldd-container layout="row" gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="row"
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text order="4"><p>1 (order=4)</p></nldd-rich-text>
 			<nldd-rich-text order="3"><p>2 (order=3)</p></nldd-rich-text>
 			<nldd-rich-text order="2"><p>3 (order=2)</p></nldd-rich-text>
 			<nldd-rich-text order="1"><p>4 (order=1)</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Order — row (omgekeerd via per-child order)',
+	name: 'Order: row (omgekeerd via per-child order)',
 };
 
 export const OrderGrid = {
 	render: () => html`
-		<nldd-container layout="grid" gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="grid"
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text order="3"><p>1 (order=3)</p></nldd-rich-text>
 			<nldd-rich-text order="1"><p>2 (order=1)</p></nldd-rich-text>
 			<nldd-rich-text order="2"><p>3 (order=2)</p></nldd-rich-text>
@@ -371,78 +412,114 @@ export const OrderGrid = {
 			<nldd-rich-text order="5"><p>6 (order=5)</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Order — grid (per-cell, grid-track blijft intact)',
+	name: 'Order: grid (per cel, de grid-tracks blijven intact)',
 };
 
 export const OrderResponsief = {
 	render: () => html`
-		<nldd-container layout="row" gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="row"
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text order="1" sm-order="3"><p>A (lg=1, sm=3)</p></nldd-rich-text>
 			<nldd-rich-text order="2" sm-order="1"><p>B (lg=2, sm=1)</p></nldd-rich-text>
 			<nldd-rich-text order="3" sm-order="2"><p>C (lg=3, sm=2)</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Order — responsief (sm-order valt terug op order)',
+	name: 'Order: responsief (sm-order valt terug op order)',
 };
 
 export const OrderNegatief = {
 	render: () => html`
-		<nldd-container layout="row" gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="row"
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Item</p></nldd-rich-text>
 			<nldd-rich-text><p>Item</p></nldd-rich-text>
 			<nldd-rich-text order="-1"><p>Eerste (order=-1)</p></nldd-rich-text>
 			<nldd-rich-text><p>Item</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Order — negatieve waarde duwt item naar voren',
+	name: 'Order: negatieve waarde duwt item naar voren',
 };
 
 export const ColumnCountFooter = {
 	render: () => html`
-		<nldd-container layout="grid" column-count="4" md-column-count="2" sm-column-count="1" gap="32" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="grid"
+			column-count="4"
+			md-column-count="2"
+			sm-column-count="1"
+			gap="32"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Kolom 1</p></nldd-rich-text>
 			<nldd-rich-text><p>Kolom 2</p></nldd-rich-text>
 			<nldd-rich-text><p>Kolom 3</p></nldd-rich-text>
 			<nldd-rich-text><p>Kolom 4</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Column-count — footer-pattern (4 / md=2 / sm=1)',
+	name: 'Column-count: footerpatroon (4 / md=2 / sm=1)',
 };
 
 export const ColumnCountGrid6 = {
 	render: () => html`
-		<nldd-container layout="grid" column-count="6" gap="12" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="grid"
+			column-count="6"
+			gap="12"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			${Array.from({ length: 12 }).map((_, i) => html`<nldd-rich-text><p>${i + 1}</p></nldd-rich-text>`)}
 		</nldd-container>
 	`,
-	name: 'Column-count — grid 6 kolommen',
+	name: 'Column-count: grid 6 kolommen',
 };
 
 export const ColumnCountColumns = {
 	render: () => html`
-		<nldd-container layout="columns" column-count="3" gap="24" padding="16" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			layout="columns"
+			column-count="3"
+			gap="24"
+			padding="16"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			${Array.from({ length: 9 }).map((_, i) => html`<nldd-rich-text><p>Item ${i + 1}</p></nldd-rich-text>`)}
 		</nldd-container>
 	`,
-	name: 'Column-count — multicol 3 kolommen',
+	name: 'Column-count: multicol 3 kolommen',
 };
 
 export const PaddingAlleZijden = {
 	render: () => html`
-		<nldd-container padding="24" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			padding="24"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Padding aan alle zijden.</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Padding — alle zijden',
+	name: 'Padding: alle zijden',
 };
 
 export const PaddingInline = {
 	render: () => html`
-		<nldd-container padding-inline="32" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			padding-inline="32"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Padding links en rechts.</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Padding — inline (links/rechts)',
+	name: 'Padding: inline (links/rechts)',
 };
 
 export const PaddingIndividueel = {
@@ -457,7 +534,7 @@ export const PaddingIndividueel = {
 			<nldd-rich-text><p>Individuele padding: top=8 right=32 bottom=16 left=64.</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Padding — individuele zijden',
+	name: 'Padding: individuele zijden',
 };
 
 export const PaddingResponsief = {
@@ -472,19 +549,22 @@ export const PaddingResponsief = {
 			<nldd-rich-text><p>Padding: 8 (default) → 16 (sm) → 24 (md) → 32 (lg).</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Padding — responsief',
+	name: 'Padding: responsief',
 };
 
 export const GeenPadding = {
 	render: () => html`
-		<nldd-container padding="0" style="outline: 1px dashed var(--primitives-color-neutral-150);">
+		<nldd-container
+			padding="0"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
+		>
 			<nldd-rich-text><p>Geen padding.</p></nldd-rich-text>
 		</nldd-container>
 	`,
 	name: 'Geen padding',
 };
 
-export const Alignment = {
+export const Uitlijning = {
 	render: () => html`
 		<nldd-container
 			layout="row"
@@ -498,5 +578,5 @@ export const Alignment = {
 			<nldd-rich-text><p>Op beide assen</p></nldd-rich-text>
 		</nldd-container>
 	`,
-	name: 'Alignment — center op beide assen',
+	name: 'Uitlijning: center op beide assen',
 };

@@ -6,14 +6,14 @@
  * page and stays there — this one floats, stacks, and goes away.
  *
  * It places itself. Write it wherever it belongs in your code and it moves to
- * one shared region: top right from md, full width across the top below that.
+ * one shared area: top right from md, full width across the top below that.
  * Nothing about the position is settable, so notifications from anywhere in an
  * application land in the same place and stack in the same order.
  *
  * A modal overlay is the one thing that moves it. An nldd-sheet, nldd-window or
  * nldd-modal-dialog paints in the browser's top layer, above the whole page and
  * out of reach of any z-index, and while one is open everything outside it is
- * inert. So the region goes in: into the topmost overlay that is open, and back
+ * inert. So the area goes in: into the topmost overlay that is open, and back
  * down as they close. A notification already on screen travels with it, and one
  * raised from inside a sheet is readable and reachable where it is raised.
  *
@@ -28,7 +28,7 @@
  * Under the front notification sits a strip as wide as the deck and as tall as
  * the deck is when it fans out. Pointing at it fans the deck out to fill it,
  * which is the only hint that there is more here than the message you can read;
- * clicking it, or moving focus into the region, lays the whole deck out as a
+ * clicking it, or moving focus into the area, lays the whole deck out as a
  * list. Clicking or tabbing away puts it back. The notification itself is not a
  * button: a click on the message you are reading does nothing.
  *
@@ -69,7 +69,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { notificationStyles } from './notification.styles.js';
 import { notificationTemplate } from './notification.template.js';
-import { joinRegion, leaveRegion } from './notification-region.js';
+import { joinArea, leaveArea } from './notifications-area.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddNotificationTranslations } from './notification.i18n.js';
 import '../../content/icon/icon.js';
@@ -109,7 +109,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 	@state()
 	_hasActions = false;
 
-	/** Set by the region: true for the front of the deck, the only one that runs
+	/** Set by the area: true for the front of the deck, the only one that runs
 	 *  its clock. */
 	@state()
 	private _isFront = false;
@@ -127,8 +127,8 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 
 	private _focusInside = false;
 
-	/** Moving into the region disconnects and reconnects this element. Without
-	 *  this the leave-handler would tear down the very region we are joining. */
+	/** Moving into the area disconnects and reconnects this element. Without
+	 *  this the leave-handler would tear down the very area we are joining. */
 	private _moving = false;
 
 	/** What is left of `duration`, so a pause resumes rather than restarts. */
@@ -158,10 +158,10 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 		// the very thing that will later remove it.
 		queueMicrotask(() => {
 			if (!this.isConnected || this._moving) return;
-			const region = document.getElementById('nldd-notification-region');
-			if (this.parentElement === region) return;
+			const area = document.getElementById('nldd-notifications-area');
+			if (this.parentElement === area) return;
 			this._moving = true;
-			joinRegion(this, this._t('components.notification.region-label'));
+			joinArea(this, this._t('components.notification.region-label'));
 			this._moving = false;
 		});
 	}
@@ -178,7 +178,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 		this.removeEventListener('animationend', this._onAnimationEnd);
 		// Put back on a page later, it arrives again.
 		this.removeAttribute('data-arrived');
-		leaveRegion(this);
+		leaveArea(this);
 	}
 
 	override willUpdate(changed: PropertyValues): void {
@@ -189,7 +189,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 		if (changed.has('duration')) this._remainingDuration = this.duration;
 	}
 
-	/** Called by the region while it carries this notification to another
+	/** Called by the area while it carries this notification to another
 	 *  parent. A move disconnects the element, and without this the
 	 *  notification would read its own disconnect as having been dismissed.
 	 *  It also counts as having arrived: the browser starts a CSS animation over
@@ -200,7 +200,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 		if (moving) this.toggleAttribute('data-arrived', true);
 	}
 
-	/** Called by the region. Starting the clock here rather than on connect is
+	/** Called by the area. Starting the clock here rather than on connect is
 	 *  the whole point: a notification three deep in the deck is not counting. */
 	_setFront(isFront: boolean): void {
 		if (this._isFront === isFront) return;

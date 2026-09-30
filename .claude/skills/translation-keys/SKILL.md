@@ -47,9 +47,7 @@ Elk key eindigt met een type dat aangeeft hoe de tekst geschreven moet worden.
 
 ### `-lowercase`, `-capitalize`
 
-Voor exacte vertalingen van een enkel woord of vaste woordcombinatie: een woord
-uit het woordenboek, los van waar het gebruikt wordt. Hier is de kapitalisatie
-zelf het type en volgt er niets meer.
+Voor exacte vertalingen van een enkel woord of vaste woordcombinatie: een woord uit het woordenboek, los van waar het gebruikt wordt. Hier is de kapitalisatie zelf het type en volgt er niets meer.
 
 ```
 general.amount-capitalize: Bedrag
@@ -58,20 +56,14 @@ components.date-picker.january-lowercase: januari
 components.date-picker.january-capitalize: Januari
 ```
 
-Is de tekst geen woordenboekwoord maar een voor deze interface geschreven
-beschrijving die tóch een vaste kapitalisatie nodig heeft, zet de kapitalisatie
-dan als modifier vóór het type. Dat gebeurt wanneer de tekst achter een langere
-string wordt geplakt en dus nooit met een hoofdletter kan beginnen.
+Is de tekst geen woordenboekwoord maar een voor deze interface geschreven beschrijving die tóch een vaste kapitalisatie nodig heeft, zet de kapitalisatie dan als modifier vóór het type. Dat gebeurt wanneer de tekst achter een langere string wordt geplakt en dus nooit met een hoofdletter kan beginnen.
 
 ```
 components.date-picker.in-range-lowercase-label: in de periode
 components.date-picker.unavailable-lowercase-label: niet beschikbaar
 ```
 
-Voor uppercase weergave: gebruik CSS `text-transform`. Maak geen `-uppercase` keys.
-Voor kapitalisatie juist niet: die hoort in de vertaling, want per taal verschilt
-waar een hoofdletter hoort, en met CSS of `charAt(0).toUpperCase()` kan een
-vertaler hem niet uitzetten.
+Voor uppercase weergave: gebruik CSS `text-transform`. Maak geen `-uppercase` keys. Voor kapitalisatie juist niet: die hoort in de vertaling, want per taal verschilt waar een hoofdletter hoort, en met CSS of `charAt(0).toUpperCase()` kan een vertaler hem niet uitzetten.
 
 ### `-title`
 
@@ -91,13 +83,9 @@ components.list.drag-grabbed-text: Item opgepakt. Gebruik de pijltjestoetsen om 
 
 ### `-label`
 
-Korte tekst die iets beschrijft of aanduidt, zoals een form label, aria label of
-andere aanduiding. Kort als een titel, sentence case, geen punt.
+Korte tekst die iets beschrijft of aanduidt, zoals een form label, aria label of andere aanduiding. Kort als een titel, sentence case, geen punt.
 
-Een aria label eindigt dus op `-label` en niet op `-label-text`: het type zegt al
-dat het een aanduiding is. Is het de toegankelijke naam van het component zelf
-(of van een benoemd onderdeel), gebruik dan `accessible-label` respectievelijk
-`{onderdeel}-accessible-label`.
+Een aria label eindigt dus op `-label` en niet op `-label-text`: het type zegt al dat het een aanduiding is. Is het de toegankelijke naam van het component zelf (of van een benoemd onderdeel), gebruik dan `accessible-label` respectievelijk `{onderdeel}-accessible-label`.
 
 ```
 general.email-label: E-mailadres
@@ -130,11 +118,7 @@ my-website.my-form.email-help-text: U ontvangt een bevestiging per e-mail. Lees 
 
 ### `-action`
 
-Voor knoppen, links en andere acties. De sleutelnaam bevat een werkwoord dat
-zegt wat de actie doet. Een kaal zelfstandig naamwoord leest als een keuze:
-`today-action` klinkt alsof je vandaag kiest, terwijl de knop alleen naar de
-weergave van vandaag navigeert. Zet dat werkwoord er dan in (`view-today-action`),
-zodat een copywriter de tekst schrijft die bij de handeling past.
+Voor knoppen, links en andere acties. De sleutelnaam bevat een werkwoord dat zegt wat de actie doet. Een kaal zelfstandig naamwoord leest als een keuze: `today-action` klinkt alsof je vandaag kiest, terwijl de knop alleen naar de weergave van vandaag navigeert. Zet dat werkwoord er dan in (`view-today-action`), zodat een copywriter de tekst schrijft die bij de handeling past.
 
 **Directe acties:** gebruik de gebiedende wijs (imperatief).
 ```
@@ -143,8 +127,7 @@ general.delete-action: Verwijder
 components.pagination.previous-action: Vorige pagina
 ```
 
-**Indirecte acties** (verwijzing naar een pagina/formulier): gebruik de infinitief
-in het Nederlands, met de `to-` prefix vóór het werkwoord.
+**Indirecte acties** (verwijzing naar een pagina/formulier): gebruik de infinitief in het Nederlands, met de `to-` prefix vóór het werkwoord.
 ```
 general.to-save-action: Bewaren
 general.to-login-action: Inloggen

@@ -6,10 +6,17 @@ import './pagination.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-pagination current="1" total="10"></nldd-pagination>
+ * <nldd-pagination
+ * 	current="1"
+ * 	total="10"
+ * ></nldd-pagination>
  *
  * <!-- Met links in plaats van buttons -->
- * <nldd-pagination current="1" total="10" href-pattern="/resultaten?pagina={page}"></nldd-pagination>
+ * <nldd-pagination
+ * 	current="1"
+ * 	total="10"
+ * 	href-pattern="/resultaten?pagina={page}"
+ * ></nldd-pagination>
  * ```
  */
 export default {
@@ -79,14 +86,19 @@ export const WeinigPaginas = {
 	args: { current: 2, total: 3 },
 };
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: { current: 3, total: 10, disabled: true },
 };
 
 export const MetLinks = {
 	render: () => html`
-	<nldd-pagination current="3" total="10" href-pattern="/resultaten?pagina={page}"></nldd-pagination>
+	<nldd-pagination
+		current="3"
+		total="10"
+		href-pattern="/resultaten?pagina={page}"
+	></nldd-pagination>
 `,
 	parameters: {
 		controls: { disable: true },

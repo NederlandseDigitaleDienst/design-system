@@ -30,8 +30,8 @@
  * @attr {string} vertical-alignment - Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')
  *
  * @attr {string} text - Main text content. Supports **bold** syntax for inline bold segments. Falls back to default slot.
- * @attr {string} overline - Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot.
  * @attr {string} supporting-text - Optional supporting text displayed below the main content. Supports **bold**. Falls back to `supporting-text` slot.
+ * @attr {string} overline - Optional overline text displayed above the main content. Supports **bold**. Falls back to `overline` slot.
  *
  * @slot overline - Rich content for the overline region. Overrides the `overline` attribute when content is assigned.
  * @slot - (default) Rich content for the main text region. Overrides the `text` attribute when content is assigned.
@@ -96,11 +96,11 @@ export class NLDDTextCell extends VisibilityMixin(LitElement, 'cells-container')
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	overline = '';
-
 	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
 	supportingText = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	overline = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	query = '';

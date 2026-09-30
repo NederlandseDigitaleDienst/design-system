@@ -179,36 +179,54 @@ const Template = ({ size, name, value, placeholder, type, keyboard, enterKey, au
 	></nldd-text-field>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const AllStates = {
+export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-text-field placeholder="Neutral"></nldd-text-field>
-		<nldd-text-field .value=${'Valid input'} valid></nldd-text-field>
-		<nldd-text-field .value=${'Invalid input'} invalid></nldd-text-field>
-		<nldd-text-field .value=${'Disabled'} disabled></nldd-text-field>
-		<nldd-text-field .value=${'Readonly'} readonly></nldd-text-field>
+		<nldd-text-field
+			.value=${'Valid input'}
+			valid
+		></nldd-text-field>
+		<nldd-text-field
+			.value=${'Invalid input'}
+			invalid
+		></nldd-text-field>
+		<nldd-text-field
+			.value=${'Disabled'}
+			disabled
+		></nldd-text-field>
+		<nldd-text-field
+			.value=${'Readonly'}
+			readonly
+		></nldd-text-field>
 	</div>
 `,
 	parameters: { controls: { disable: true } },
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<nldd-text-field placeholder="Medium (md)"></nldd-text-field>
-		<nldd-text-field placeholder="Small (sm)" size="sm"></nldd-text-field>
+		<nldd-text-field
+			placeholder="Small (sm)"
+			size="sm"
+		></nldd-text-field>
 	</div>
 `,
 	parameters: { controls: { disable: true } },
 };
 
-export const InteractiveExample = {
+export const InteractiefVoorbeeld = {
 	render: () => html`
-	<nldd-form label-alignment="right" novalidate>
+	<nldd-form
+		label-alignment="right"
+		novalidate
+	>
 		<nldd-form-field label="Volledige naam">
 			<nldd-text-field
 				name="name"
@@ -234,7 +252,11 @@ export const InteractiveExample = {
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button-group>
-				<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+				<nldd-button
+					variant="primary"
+					type="submit"
+					text="Opslaan"
+				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>

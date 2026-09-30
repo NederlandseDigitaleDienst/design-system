@@ -48,12 +48,39 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		layout: 'grid',
+		itemWidth: '',
+		gap: '',
+		smGap: '',
+		mdGap: '',
+		lgGap: '',
+		maxItems: 6,
+		showLoadMore: false,
+		lazyLoad: false,
+	},
 	argTypes: {
 		layout: {
 			control: { type: 'select' },
 			options: ['grid', 'stack', 'lanes', 'horizontal-scroll'],
 			description: 'Lay-outmodus',
 			table: { defaultValue: { summary: 'grid' } },
+		},
+		itemWidth: {
+			name: 'item-width',
+			control: 'text',
+			description: 'Gewenste breedte per item (bv. "280px", "20rem"). Bij grid wordt deze breedte geclamped op de container-breedte om horizontale overflow te voorkomen.',
+			table: { defaultValue: { summary: '280px' } },
+		},
+		gap: gapControl('Ruimte tussen items, als stap op de spacing-schaal'),
+		smGap: { name: 'sm-gap', ...gapControl('Ruimte tussen items bij sm') },
+		mdGap: { name: 'md-gap', ...gapControl('Ruimte tussen items bij md') },
+		lgGap: { name: 'lg-gap', ...gapControl('Ruimte tussen items bij lg') },
+		maxItems: {
+			name: 'max-items',
+			control: { type: 'number' },
+			description: 'Aantal items per pagina',
+			table: { defaultValue: { summary: '24' } },
 		},
 		showLoadMore: {
 			name: 'show-load-more',
@@ -67,33 +94,6 @@ export default {
 			description: 'Laad automatisch meer wanneer de knop zichtbaar wordt',
 			table: { defaultValue: { summary: 'false' } },
 		},
-		maxItems: {
-			name: 'max-items',
-			control: { type: 'number' },
-			description: 'Aantal items per pagina',
-			table: { defaultValue: { summary: '24' } },
-		},
-		gap: gapControl('Ruimte tussen items, als stap op de spacing-schaal'),
-		smGap: { name: 'sm-gap', ...gapControl('Ruimte tussen items bij sm') },
-		mdGap: { name: 'md-gap', ...gapControl('Ruimte tussen items bij md') },
-		lgGap: { name: 'lg-gap', ...gapControl('Ruimte tussen items bij lg') },
-		itemWidth: {
-			name: 'item-width',
-			control: 'text',
-			description: 'Gewenste breedte per item (bv. "280px", "20rem"). Bij grid wordt deze breedte geclamped op de container-breedte om horizontale overflow te voorkomen.',
-			table: { defaultValue: { summary: '280px' } },
-		},
-	},
-	args: {
-		layout: 'grid',
-		showLoadMore: false,
-		lazyLoad: false,
-		maxItems: 6,
-		gap: '',
-		smGap: '',
-		mdGap: '',
-		lgGap: '',
-		itemWidth: '',
 	},
 };
 
@@ -111,15 +111,25 @@ const descriptions = [
 const descriptionOrder = [0, 2, 3, 1, 2, 0, 1, 3, 3, 1, 0, 2];
 
 const itemContent = (i: any) => html`
-	<nldd-title size="4"><h3>Item ${i + 1}</h3></nldd-title>
+	<nldd-title
+		size="4"
+		text="Item ${i + 1}"
+		heading-level="3"
+	></nldd-title>
 	<nldd-spacer size="4"></nldd-spacer>
 	<nldd-rich-text spacing="flat">
 		<p>${descriptions[descriptionOrder[i % descriptionOrder.length]]}</p>
 	</nldd-rich-text>
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-button-group orientation="horizontal">
-		<nldd-button variant="primary" text="Bekijk"></nldd-button>
-		<nldd-button variant="secondary" text="Meer info"></nldd-button>
+		<nldd-button
+			variant="primary"
+			text="Bekijk"
+		></nldd-button>
+		<nldd-button
+			variant="secondary"
+			text="Meer info"
+		></nldd-button>
 	</nldd-button-group>
 `;
 
@@ -174,17 +184,17 @@ const scrollItems = Array.from({ length: 12 }, (_, i) => html`
 	</nldd-card>
 `);
 
-export const Standaard = ({ layout, showLoadMore, lazyLoad, maxItems, itemWidth, gap, smGap, mdGap, lgGap }: Record<string, any>) => html`
+export const Standaard = ({ layout, itemWidth, gap, smGap, mdGap, lgGap, maxItems, showLoadMore, lazyLoad }: Record<string, any>) => html`
 	<nldd-collection
 		layout=${layout}
-		?show-load-more=${showLoadMore}
-		max-items=${maxItems}
-		?lazy-load=${lazyLoad}
 		item-width=${itemWidth || nothing}
 		gap=${gap || nothing}
 		sm-gap=${smGap || nothing}
 		md-gap=${mdGap || nothing}
 		lg-gap=${lgGap || nothing}
+		max-items=${maxItems}
+		?show-load-more=${showLoadMore}
+		?lazy-load=${lazyLoad}
 	>
 		${listItems}
 	</nldd-collection>
@@ -192,16 +202,26 @@ export const Standaard = ({ layout, showLoadMore, lazyLoad, maxItems, itemWidth,
 
 export const Grid = {
 	render: () => html`
-	<nldd-collection layout="grid" show-load-more max-items="6">
+	<nldd-collection
+		layout="grid"
+		show-load-more
+		max-items="6"
+	>
 		${gridItems}
 	</nldd-collection>
 `,
 	parameters: { controls: { disable: true } },
 };
 
-export const GridLazyLoad = {
+export const GridMetLazyLoad = {
+	name: 'Grid met lazy-load',
 	render: () => html`
-	<nldd-collection layout="grid" show-load-more max-items="6" lazy-load>
+	<nldd-collection
+		layout="grid"
+		show-load-more
+		max-items="6"
+		lazy-load
+	>
 		${gridItems}
 	</nldd-collection>
 `,
@@ -210,7 +230,11 @@ export const GridLazyLoad = {
 
 export const Stapel = {
 	render: () => html`
-	<nldd-collection layout="stack" show-load-more max-items="6">
+	<nldd-collection
+		layout="stack"
+		show-load-more
+		max-items="6"
+	>
 		${listItems}
 	</nldd-collection>
 `,
@@ -219,7 +243,11 @@ export const Stapel = {
 
 export const Banen = {
 	render: () => html`
-	<nldd-collection layout="lanes" show-load-more max-items="6">
+	<nldd-collection
+		layout="lanes"
+		show-load-more
+		max-items="6"
+	>
 		${laneItems}
 	</nldd-collection>
 `,
@@ -262,9 +290,20 @@ export const InSimpleSectie = {
 	render: () => html`
 	<nldd-page background="tinted">
 		<nldd-simple-section>
-			<nldd-title slot="header" size="2"><h2>Sectietitel</h2></nldd-title>
-			<nldd-spacer slot="header" size="4"></nldd-spacer>
-			<nldd-rich-text slot="header" spacing="flat">
+			<nldd-title
+				slot="header"
+				size="2"
+				text="Sectietitel"
+				heading-level="2"
+			></nldd-title>
+			<nldd-spacer
+				slot="header"
+				size="4"
+			></nldd-spacer>
+			<nldd-rich-text
+				slot="header"
+				spacing="flat"
+			>
 				<p>Tekst boven de collectie om de uitlijning te zien.</p>
 			</nldd-rich-text>
 			<nldd-collection layout="horizontal-scroll">

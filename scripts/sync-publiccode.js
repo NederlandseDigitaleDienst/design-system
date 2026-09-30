@@ -17,35 +17,61 @@ import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const version = JSON.parse(readFileSync(join(root, 'package.json'), 'utf-8')).version;
-if (!version) {
-	console.error('No version found in package.json.');
-	process.exit(1);
+/**
+ * Reads the release date out of the newest version block of a changelog.
+ *
+ * The changelog header semantic-release writes:
+ * ## [0.8.90](https://github.com/.../compare/v0.8.89...v0.8.90) (2026-09-19)
+ *
+ * Only the newest block is checked: matching the first dated header anywhere
+ * in the file would silently return an older release's date if the format
+ * changes. Throws instead of falling back, because a stale date that looks
+ * plausible is worse than a failed release step.
+ */
+export function parseReleaseDate(changelog) {
+	const newestHeader = changelog.match(/^## .*$/m)?.[0] ?? '';
+	const dateMatch = newestHeader.match(/^## \[[\d.]+\]\([^)]*\) \((\d{4}-\d{2}-\d{2})\)$/);
+	if (!dateMatch) {
+		throw new Error(`No date found in the newest version block of CHANGELOG.md: ${newestHeader}`);
+	}
+	return dateMatch[1];
 }
 
-// The changelog header semantic-release writes: ## <small>0.8.73 (2026-07-30)</small>
-const changelog = readFileSync(join(root, 'CHANGELOG.md'), 'utf-8');
-const dateMatch = changelog.match(/^## <small>[\d.]+ \((\d{4}-\d{2}-\d{2})\)<\/small>/m);
-if (!dateMatch) {
-	console.error('No dated version block found in CHANGELOG.md.');
-	process.exit(1);
+function main() {
+	const version = JSON.parse(readFileSync(join(root, 'package.json'), 'utf-8')).version;
+	if (!version) {
+		console.error('No version found in package.json.');
+		process.exit(1);
+	}
+
+	let releaseDate;
+	try {
+		releaseDate = parseReleaseDate(readFileSync(join(root, 'CHANGELOG.md'), 'utf-8'));
+	} catch (error) {
+		console.error(error.message);
+		process.exit(1);
+	}
+
+	const path = join(root, 'publiccode.yml');
+	const before = readFileSync(path, 'utf-8');
+	const after = before
+		.replace(/^softwareVersion: .*$/m, `softwareVersion: "${version}"`)
+		.replace(/^releaseDate: .*$/m, `releaseDate: "${releaseDate}"`);
+
+	if (!/^softwareVersion: "/m.test(after) || !/^releaseDate: "/m.test(after)) {
+		console.error('publiccode.yml has no softwareVersion or releaseDate to fill.');
+		process.exit(1);
+	}
+
+	if (after === before) {
+		console.log(`publiccode.yml already at ${version} (${releaseDate})`);
+	} else {
+		writeFileSync(path, after);
+		console.log(`publiccode.yml -> ${version} (${releaseDate})`);
+	}
 }
-const releaseDate = dateMatch[1];
 
-const path = join(root, 'publiccode.yml');
-const before = readFileSync(path, 'utf-8');
-const after = before
-	.replace(/^softwareVersion: .*$/m, `softwareVersion: "${version}"`)
-	.replace(/^releaseDate: .*$/m, `releaseDate: "${releaseDate}"`);
-
-if (!/^softwareVersion: "/m.test(after) || !/^releaseDate: "/m.test(after)) {
-	console.error('publiccode.yml has no softwareVersion or releaseDate to fill.');
-	process.exit(1);
-}
-
-if (after === before) {
-	console.log(`publiccode.yml already at ${version} (${releaseDate})`);
-} else {
-	writeFileSync(path, after);
-	console.log(`publiccode.yml -> ${version} (${releaseDate})`);
+// Run the sync only when executed directly, not when imported for tests.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+	main();
 }

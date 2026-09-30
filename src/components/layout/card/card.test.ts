@@ -132,7 +132,8 @@ describe('nldd-card', () => {
 
 	it('background="tinted" pakt de tinted vlakkleur', async () => {
 		el = await fixture<NLDDCard>(`
-			<nldd-card background="tinted"
+			<nldd-card
+				background="tinted"
 				style="--components-card-tinted-background-color: rgb(1, 2, 3);"
 			></nldd-card>
 		`);

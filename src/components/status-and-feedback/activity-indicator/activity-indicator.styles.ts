@@ -38,10 +38,6 @@ export const activityIndicatorStyles = css`
 		justify-content: center;
 	}
 
-	:host([hidden]) {
-		display: none;
-	}
-
 	/* Overlay mode (content in the default slot): the host wraps the content and
 	   is the containing block for the absolutely-positioned indicator + backdrop,
 	   so it sizes to the content instead of filling its parent. */
@@ -49,6 +45,10 @@ export const activityIndicatorStyles = css`
 		display: block;
 		position: relative;
 		height: auto;
+	}
+
+	:host([hidden]) {
+		display: none;
 	}
 
 

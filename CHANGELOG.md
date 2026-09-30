@@ -2,12 +2,111 @@
 
 All notable changes to the NLDD Designsysteem are documented here.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Versions are bumped automatically by semantic-release on merge to main —
-the type of conventional-commit determines the release. Conventional types
-`chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
-here; consult the commit history if you need that level of detail.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Versions are bumped automatically by semantic-release on merge to main — the type of conventional-commit determines the release. Conventional types `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted here; consult the commit history if you need that level of detail.
+
+### Highlights
+
+- **The patterns are live in Storybook**, with their examples running and a test on what each one promises. The pages in the skill are generated from that same markup, so what you copy is what you saw.
+
+- **The skills are split and renamed, so the name says the task.** `nldd-design` holds the reference, the changelog and the design guidelines, and `nldd-design-build`, `nldd-design-migrate`, `nldd-design-upgrade` and `nldd-design-contribute` each cover one job. A skill named `nldd` stays behind to catch the old name until 1 March 2027. Update the references in your own instruction files first: a skill that is not found warns nobody, it just makes the answer worse.
+
+- **Four design guidelines come with this release**, on where work that needs its context belongs, on a filtered list as a mode, on sticky headers, and on the two shapes a heading can take. They are in `nldd-design`, and Storybook has them under Docs.
+
+### Breaking
+
+- **The page sections no longer take `scheme`.** `nldd-simple-section`, `nldd-full-bleed-section`, `nldd-hero`, `nldd-sidebar-section` and the two- and three-column sections could pin `light`, `dark` or `inverted` on a band, which made one section decide the color scheme for everything inside it. A section still draws its surface with `background`, which is what the components inside read; light and dark stay a choice for the page, through `color-scheme` on a root element. `nldd-window` keeps its own `scheme`.
+
+- **`nldd-button-group` follows its own width, and that is its default.** `orientation` was `horizontal` or `vertical`, with `vertical` as the default, so every group that did not say otherwise stacked its buttons at every width. It now takes `auto` as well, and that is the new default: a row, and stacked over the full width once the group itself is narrower than the sm breakpoint. The group is its own container query, so the same group is a row in a page and a stack in a sheet beside it, without a media query of yours. A group that wants to keep stacking everywhere says `orientation="vertical"`. A stacked group stretches the buttons through `--context-button-width`, which `nldd-button` now reads, so a button follows the parent that stacks it without anyone setting `width="full"`. The group used to write that attribute onto its children and take it off again; it no longer touches them, so CSS or a test of yours that keys on `[width="full"]` inside a group stops matching.
+
+- **The skills are now `nldd-design`, `nldd-design-build`, `nldd-design-migrate`, `nldd-design-upgrade` and `nldd-design-contribute`.** `nldd` meant four things at once: the organization, the npm package, the plugin and the skill inside it, so the name said nothing about what the skill was for and its description had to carry an anti-trigger instead. The names now say the task. What is shared between them, the component reference, the changelog and the design guidelines, moves to `nldd-design`: that is reference material whether you are building something new or converting something old, and a migration needs it as much as a new app does.
+
+  **Raising the version of an app that already runs on this system is its own skill**, `nldd-design-upgrade`. It sat as a section inside the build skill, which is the wrong place twice over: an upgrade is not building something new, and it is not a migration either, so whichever of the two you reached for, the guidance was in the other one. It matters here more than in most systems because this project releases everything as a patch, including a breaking change, so the version number tells you nothing about whether a jump is safe. That is a deliberate choice in `.releaserc.json`, not how semantic-release behaves by default, which makes it easy to assume the usual semver signal is there when it is not.
+
+  **A skill named `nldd` stays behind to catch the old name**, and does nothing but point at the ones that replaced it. It is deliberately findable by the model and not just by `/nldd`, because the reference that breaks most quietly is a line in your own `CLAUDE.md` saying "use the nldd skill": nobody types anything there, so a slash command would not catch it. **It is removed after 1 March 2027**, so update your references rather than lean on it.
+
+  **The plugin is still called `nldd`.** Installing it does not change, and `enabledPlugins` and `extraKnownMarketplaces` point at `nldd@nldd-plugins`, the plugin, so leave those alone.
+
+  What to check, quietest first, because the first two give you no error at all:
+
+  1. **The skill name in your own instruction files**: `CLAUDE.md`, `.claude/rules/*.md`, `AGENTS.md`, or the body of a skill of your own that says "use the nldd skill". Claude reads the instruction, does not find the skill, and carries on without it. Nothing warns; the output is just worse.
+  2. **The skill name in subagent definitions** (`.claude/agents/*.md`) **and in hooks that match on it.** Equally silent.
+  3. **`Skill(nldd)` in permission rules.** It stops matching, so you get a permission prompt where you had none.
+  4. **Scripts or CI that call `claude -p "/nldd ..."`.** Since Claude Code 2.1.273 an unknown slash command is no longer a free deterministic rejection but a model call that answers with a "did you mean" text, so a script checking the exit code still sees 0 and now gets billed, variable output instead of a fixed error.
+  5. **Typing `/nldd` interactively.** The loudest and least harmful.
+
+  Invoke a skill either way: `/nldd-design-build` is the short form, and `/nldd:nldd-design-build` always resolves to ours even when a skill of your own carries the same name.
+
+- **The `subtitle` slot of `nldd-title` is now `supporting-text`.** That is what the text under a title is called in every other component, including `nldd-top-title-bar`. Rename `slot="subtitle"` to `slot="supporting-text"`, or use the new `supporting-text` attribute for plain text. Content still in `slot="subtitle"` is not shown, and in development the console says once which rename it needs.
+
+- **`nldd-form-section` calls its supporting text `supporting-text` throughout.** The span in the legend is now `.form-section__supporting-text` instead of `.form-section__subtitle`, and its token `--semantics-forms-section-supporting-text-font` instead of `--semantics-forms-section-subtitle-font`. The attribute already had that name. Rename the class in your CSS and the token where you override it: the old ones do nothing any more, without a warning.
+
+- **`nldd-page` in a split-view pane no longer carries the document's landmarks.** A page carries them: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so two pages beside each other were two of each, which is invalid HTML that nothing on screen gives away. A page in a pane of a navigation, side-by-side or stacked split view, or inside an overlay, now renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner.
+
+  **Set `landmarks="page"` on the page in the pane that holds your primary content**, because only the application knows which pane that is. Nothing warns when you do not: the app shell simply has no main landmark, and a screen reader user loses the jump to the content. Give the other panes an `accessible-label` and they are named regions instead, which is a landmark worth having. `landmarks` also takes `region` to step down anywhere else, and a second page that still renders a main says so in development.
+
+- **`nldd-icon` takes `icon` instead of `name`.** Every other component that renders an icon already called it `icon`, so you had to remember the one exception. Rename `name="…"` to `icon="…"` on every `nldd-icon`. An icon that still has `name` draws the dashed placeholder circle, and in development the console says once which rename it needs.
+
+- **The `--components-title-*` tokens are gone.** `--components-title-{sm,md,lg}-overline-font` and `--components-title-{sm,md,lg}-subtitle-font` stood in `variables.css`, but `nldd-title` never read them, so overriding one changed nothing. The overline and the supporting text take `--primitives-font-body-sm-regular-tight` and `--primitives-font-body-md-regular-tight`. The two names are removed rather than renamed, so a `var()` of your own that points at one resolves to nothing.
+
+### Added
+
+- **`nldd-list-item-segment` can be the button that opens a menu.** It takes `popup-type`, `popovertarget` and the popover-invoker properties the buttons already had, so a row can carry a "more" action that looks like part of the row instead of a button dropped on top of it. An `nldd-menu` anchored to the segment seeds its own type and keeps `aria-expanded` in step, the same as with `nldd-icon-button`.
+
+- **`nldd-button` takes a `form` attribute.** A save button in a sticky footer sits outside the form it saves, and pointing it at that form did not work: the platform resolves `form` to a real `<form>` element, while `nldd-form` renders its own form without handing it the id you wrote. So the button found an element that was not a form, ended up with no form owner, and did nothing at all when clicked. It now resolves the id itself and takes the form an `nldd-form` renders, as well as a plain `<form>`. An id that finds nothing, or an `nldd-form` that has not rendered its form yet, says so in development instead of letting the click do nothing.
+
+- **A skill for migrating an existing codebase** (`nldd-design-migrate`). What goes wrong when you convert an application that already exists, and how you notice before your users do. The system fails silently, so the skill is built around checks that make the silence audible: what to verify before you convert anything, how to measure what a page still *does* rather than how it looks, and what to do when the fault is ours rather than yours. Separate files cover coming from Tailwind and rendering HTML on the server with fragment swaps (htmx, Turbo, Unpoly, LiveView), where one rule explains most of the trouble: a swap does not run a component's lifecycle the way a page load does.
+
+- **A skill for raising the version** (`nldd-design-upgrade`). Reading the changelog as an upgrade path: which entries to read first, what to search your own code for, and why renamed CSS variables are the trap that catches most people. Your own theme overrides then point at a name that no longer exists, with no error and no visible break, just a silent fall back to the default.
+
+- **A skill for proposing a change** (`nldd-design-contribute`). Where a report goes first, which depends on who you are: inside NLDD it goes to the design system channel on Mattermost, which is shorter than an issue and where the maintainer reads along, and from outside NLDD it goes to a GitHub issue. Then how to write it so it gets somewhere: describe the problem in your interface rather than only the component you have in mind, because often something existing already does it, and when it does not, your context shapes the design. It also states plainly what to expect, that the maintainer decides and a rejection comes with a reason, and it carries the rule that keeps the pattern set small: a composition used by several teams is a pattern of the system, one that lives in a single app is that app's habit for now. `CONTRIBUTING.md` stays the source for maintainers; this is the consumer's half of it.
+
+- **The patterns are live in Storybook.** Every pattern of `nldd-design-build` has a page under "Patronen", with its example running and a test on what the pattern promises: that the sheet closes once, that a confirmation puts the way out first, that a page has one `h1`. The pattern pages in the skill are generated from the same markup, so the example you copy from the skill is the one that is tested. Rules about a single component moved out of the patterns and into that component's documentation, and a design rule is stated once, in the design guidelines. The content page came along as a pattern of its own: it used to travel as a loose example, without a running example and without a test.
+
+- **Four design guidelines, and a section that says what it holds.** Work that needs its context belongs in a sheet, not a modal or a page of its own, and a sheet buys you the full height of the screen. A filtered list is a mode as soon as you cannot see which filters are on. Avoid a sticky header: the content matters more than the bar above it, with the title bar that says what you are looking at as the one exception. And a heading is either a short summary written as a sentence or a label kept as short as it goes, which is a choice about what the reader is doing rather than about the kind of page. "Microcopy en toon" is now "Copywriting", because it covers headings as well as the small print.
+
+- **`open` on `nldd-sheet`, `nldd-modal-dialog`, `nldd-window` and `nldd-popover`.** Bind it instead of calling `show()` and `hide()` from your own code, for example `<nldd-sheet :open="isOpen" @close="isOpen = false">` in Vue. The overlay clears it when it closes another way, by Escape, the backdrop or its close button. `show()` and `hide()` keep working and set it too. On `nldd-popover` it replaces the read-only `open` property, and opening still needs an anchor. The build skill, its Vue example and the patterns now bind `open` instead of calling `show()` and `hide()` from a watcher, and the migration skill tells a server-rendered app to put `open` in the markup, which needs no JavaScript at all.
+
+- **`text`, `supporting-text`, `overline` and `heading-level` on `nldd-title`.** `size` sets how big the title looks, `heading-level` which heading it is, and you now see both side by side on the element. Without `heading-level` the text is a paragraph, for a title that is not a heading. Each text keeps a slot for content that is more than text, such as a link: the default slot, `overline` and `supporting-text`. A filled slot takes the place of its attribute.
+
+- **`heading-level` on `nldd-top-title-bar`.** The title was always an `h1`. It still is by default, and you can lower it where the bar is not the top of the page.
+
+### Changed
+
+- **A stacked `nldd-button-group` leaves an icon button at its own size.** Everything in a stack fills the width, which turned an `nldd-icon-button` into a full-width bar with one glyph in the middle: wider, not a bigger target. Only `auto` is a container query now, so only `auto` has to take its width from its parent: a group pinned to `horizontal` or `vertical` sizes itself again, which it could not do in a parent that shrink-wraps (an inline-flex box, a float, a table cell, a flex item at `width: auto`). An `auto` group that ends up in such a parent measures zero and says so in development.
+
+- **The edge of a surface is the same grey as a line inside it again.** `--semantics-surfaces-base-border-color` and `--semantics-surfaces-tinted-border-color` go back to `neutral-75` in light mode and `neutral-200` in dark, the values `--semantics-dividers-color` carries, which undoes the lighter edge of 0.8.89. Everything that draws its outline from these tokens is a step more present: `nldd-table`, `nldd-list`, `nldd-code-viewer`, `nldd-rich-text` and the boxes that follow them. Override the two tokens to keep the lighter edge.
+
+- **`nldd-sheet` and `nldd-window` take their name from the title bar.** Without `accessible-label`, a screen reader called them "Venster" unless you repeated the title there. They now take the `text` of the `nldd-top-title-bar` inside them, and follow it when it changes. `accessible-label` still wins, for a name that has to differ from the title. The development warning only appears when neither is there.
+
+- **`nldd-list-item` warns about anything in a row that is not a cell or a segment.** Bare text or a loose element gets none of the typography, size and alignment a cell brings, and in a clickable row bare text falls back to the browser's button font. The row now says so once in development. Wrap the content in a cell.
+
+- **`nldd-list-item` warns about a control inside a row that is its own control.** An icon button or a segment in a row with `href`, `button`, `checkbox` or `radio` nests a control inside a control: invalid HTML, and a second tab stop. The documentation already said the row warned about this, but it did not. A `decorative` checkbox or radio button, which only shows the row's state, is fine.
+
+- **`nldd-toolbar-item` warns when it has nothing in `slot="overflow"`.** On a narrow toolbar such an item moves into the overflow menu and its action is gone, which you never see on a wide screen. The item now says so once at load in development. A tab bar is no exception: its alternative is a menu group of `type="radio"` items.
+
+- **`nldd-rich-text` looks through a single wrapper `div`.** The rhythm and the width zones apply to the direct children, so content wrapped in one `div` became a single block and its paragraphs sat against each other. A markdown renderer or the root of a framework component produces exactly that wrapper, and you cannot always remove it. A lone `div` without `class`, `style`, `role` or `data-width` is now passed through, and its children are laid out as if they were direct. A wrapper with any of those stays one block, since you gave it something of its own.
+
+- **The element that holds the notifications is `nldd-notifications-area`.** It was `nldd-notification-region`, a singular name for the thing that owns every notification at once, and "region" named its ARIA role rather than its job. The id is the only part of it you can see, in the DOM; nothing about the notifications themselves changed. The three overlays that take it in, `nldd-sheet`, `nldd-window` and `nldd-modal-dialog`, now document their `notifications` slot, which the package fills itself.
+
+- **The CSS variables are documented as internal.** They are the wiring of the components, not a public API: they get renamed, merged and removed whenever a component asks for it, and the changelog describes such a change from that component, not from your stylesheet. Steer a component through its attributes. Reach for a variable only for something that is not a component at all, and then at your own risk.
+
+- **`nldd-token` names its buttons after itself.** The dismiss button was called "Verwijder" on every token, so a row of filters read as a row of identical buttons unless you composed a `dismiss-text` per token. Unset, it is now `Verwijder "{text}"`, and the menu button `Toon opties voor "{text}"`, with the token's own text in the quotes. A `dismiss-text` or `menu-text` you set still replaces the whole label. Both properties now default to an empty string instead of the bare word. The words themselves come from `translations`, like every other user-facing string in the package: `components.token.dismiss-action`, `components.token.open-menu-action` and `components.token.open-token-menu-action`. `nldd-token-field` names its tokens the same way, through its own translations, where `components.token-field.token-menu-action` reads "Toon acties voor" so the token's text can follow it.
+
+### Fixed
+
+- **`nldd-window` opens when `show()` comes before its first render.** Sheet and modal already waited for their dialog. The window did nothing and said nothing, so a window opened in the same tick it was created stayed shut.
+
+- **The validation icon of `nldd-token-field` stays in the top corner.** It was centered over the whole field, so the moment the tokens wrapped to a second row it drifted down the side, away from the row it belongs to. It now sits where `nldd-multi-line-text-field` puts its own: at the top, level with the first row.
+
+- **A tree row's divider no longer jumps when the branch opens.** The chevron turned by rotating the whole `nldd-icon-cell`, and a rotated element reports a turned box to `getBoundingClientRect()`. That box is what the row measures to place its divider, so the same row drew its line 12px further left while it was expanded. The cell now turns its glyph instead, through the `icon` part it exposes, and keeps its own box where it was.
+
+- **`nldd-list-item` documents where a row's divider starts.** `divider-start` and `divider-end` go on a cell in the row and move the line off its default, the first text or title cell. The item has always read them, but only its prose said so, so neither the reference nor the markup validator knew they existed. An indented tree row could not get its line to start at the icon without guessing.
+
+- **`nldd-bar-split-view` documents the order attributes of its panels.** The component reads `sm-order`, `md-order` and `lg-order` off its children to place a bar above or below the content per breakpoint, but only its prose said so, so the reference listed neither the attributes nor what they do. A bottom bar on a phone was there all along and nobody could find it.
+
+- **`nldd-validation-item` has a description in the reference.** The component reference takes the prose above the first `@element` in a file. Two components that share a file write their own prose under their own `@element`, and that was thrown away, so the item shipped as a bare table of attributes and the rule about giving it an id that names its field reached nobody. `nldd-navigation-split-view` lost a line the same way. Both are back, and `nldd-form` now says when it marks a field as invalid.
+
+- **`hidden` now hides every component.** Nine components stayed visible with `hidden` set, because their own `display` beat the browser's rule for the attribute. `nldd-list`, `nldd-sheet`, `nldd-navigation-split-view`, `nldd-menu`, `nldd-progress-bar-segment-indicator` and `nldd-form` never hid. `nldd-number-field` with `width="full"`, `nldd-pagination` with `centered` and an `nldd-activity-indicator` around content did not hide either.
 
 ## [0.8.92](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.91...v0.8.92) (2026-09-22)
 
@@ -1422,9 +1521,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- Buttons doen nu echt mee in formulieren: `nldd-button` en `nldd-icon-button`
-  zijn form-associated, dus `type="submit"` en `type="reset"` werken nu ook
-  binnen een `<form>` (voorheen deed een klik niets over de shadow-grens).
+- Buttons doen nu echt mee in formulieren: `nldd-button` en `nldd-icon-button` zijn form-associated, dus `type="submit"` en `type="reset"` werken nu ook binnen een `<form>` (voorheen deed een klik niets over de shadow-grens).
 - Consistente "pressed" (active) feedback op alle neutral-tinted controls.
 
 * feat(actions): form-associated buttons, text slot, and consistent active states ([a99a1c5](https://github.com/MinBZK/storybook/commit/a99a1c5))

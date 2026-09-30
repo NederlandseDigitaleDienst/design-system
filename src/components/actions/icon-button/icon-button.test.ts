@@ -577,7 +577,7 @@ describe('nldd-icon-button – loading', () => {
 	it('renders the icon-placeholder fallback and keeps _hasIcon false when no icon is provided', async () => {
 		el = await fixture<NLDDIconButton>('<nldd-icon-button accessible-label="X"></nldd-icon-button>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 		expect((el as unknown as { _hasIcon: boolean })._hasIcon).toBe(false);
 	});
 

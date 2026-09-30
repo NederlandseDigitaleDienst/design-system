@@ -8,9 +8,15 @@ export function checkboxTemplate(component: NLDDCheckbox): TemplateResult {
 	// would be a second control inside it.
 	if (component.decorative) {
 		return html`
-			<div class="checkbox__box" aria-hidden="true">
-				<nldd-icon class="checkbox__check-icon" name="check-mark-small"></nldd-icon>
-				<nldd-icon class="checkbox__indeterminate-icon" name="minus-extra-small"></nldd-icon>
+			<div class="checkbox__box"
+				aria-hidden="true"
+			>
+				<nldd-icon class="checkbox__check-icon"
+					icon="check-mark-small"
+				></nldd-icon>
+				<nldd-icon class="checkbox__indeterminate-icon"
+					icon="minus-extra-small"
+				></nldd-icon>
 			</div>
 		`;
 	}
@@ -31,10 +37,10 @@ export function checkboxTemplate(component: NLDDCheckbox): TemplateResult {
 			aria-hidden="true"
 		>
 			<nldd-icon class="checkbox__check-icon"
-				name="check-mark-small"
+				icon="check-mark-small"
 			></nldd-icon>
 			<nldd-icon class="checkbox__indeterminate-icon"
-				name="minus-extra-small"
+				icon="minus-extra-small"
 			></nldd-icon>
 		</div>
 	`;

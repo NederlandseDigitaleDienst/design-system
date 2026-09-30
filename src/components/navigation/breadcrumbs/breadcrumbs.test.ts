@@ -102,6 +102,6 @@ describe('nldd-breadcrumbs-item', () => {
 		await waitForUpdate(el);
 		const sep = el.shadowRoot!.querySelector('.breadcrumbs__separator');
 		expect(sep).not.toBeNull();
-		expect(sep?.querySelector('nldd-icon')?.getAttribute('name')).toBe('chevron-right-small');
+		expect(sep?.querySelector('nldd-icon')?.getAttribute('icon')).toBe('chevron-right-small');
 	});
 });

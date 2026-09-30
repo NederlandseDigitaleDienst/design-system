@@ -38,7 +38,10 @@ export function documentTabBarTemplate(component: NLDDDocumentTabBar): TemplateR
 		<div class="document-tab-bar__end"
 			hidden
 		>
-			<slot name="end" @slotchange=${component._onEndSlotChange}></slot>
+			<slot
+				name="end"
+				@slotchange=${component._onEndSlotChange}
+			></slot>
 		</div>
 	`;
 
@@ -110,7 +113,10 @@ export function documentTabBarItemTemplate(component: NLDDDocumentTabBarItem): T
 			>${tabContent}</button>`;
 
 	return html`
-		<nldd-tooltip text=${tooltipText} timing=${component._isShort ? 'delay' : 'never'}>
+		<nldd-tooltip
+			text=${tooltipText}
+			timing=${component._isShort ? 'delay' : 'never'}
+		>
 			<div class="document-tab-bar__item">
 				${tab}
 				<button class="document-tab-bar__item-dismiss-button"
@@ -119,7 +125,7 @@ export function documentTabBarItemTemplate(component: NLDDDocumentTabBarItem): T
 					@click=${component._handleDismiss}
 				>
 					<span class="document-tab-bar__item-dismiss-icon">
-						<nldd-icon name="dismiss"></nldd-icon>
+						<nldd-icon icon="dismiss"></nldd-icon>
 					</span>
 				</button>
 			</div>

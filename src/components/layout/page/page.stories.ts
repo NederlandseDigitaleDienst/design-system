@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './page.js';
 import '../container/container.js';
 import '../page-sections/simple-section/simple-section.js';
@@ -19,7 +19,10 @@ import '../../content/title/title.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-page sticky-header sticky-footer>
+ * <nldd-page
+ * 	sticky-header
+ * 	sticky-footer
+ * >
  *   <nav slot="header">...</nav>
  *   <nldd-rich-text>...</nldd-rich-text>
  *   <div slot="footer">...</div>
@@ -40,12 +43,24 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		background: 'inherit',
+		accessibleLabel: '',
+		stickyHeader: false,
+		stickyFooter: false,
+		landmarks: 'auto',
+	},
 	argTypes: {
 		background: {
 			control: { type: 'select' },
 			options: ['inherit', 'base', 'tinted'],
 			description: 'Grijze achtergrond',
 			table: { defaultValue: { summary: 'false' } },
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Naam van het landmark dat deze pagina is: de regio die hij wordt naast een andere pagina, of zijn main.',
 		},
 		stickyHeader: {
 			name: 'sticky-header',
@@ -59,11 +74,12 @@ export default {
 			description: 'Sticky footer',
 			table: { defaultValue: { summary: 'false' } },
 		},
-	},
-	args: {
-		background: 'inherit',
-		stickyHeader: false,
-		stickyFooter: false,
+		landmarks: {
+			control: 'select',
+			options: ['auto', 'page', 'region'],
+			description: 'Of deze pagina de landmarks van het document draagt: `auto` leidt het af uit waar de pagina staat, `page` houdt banner, main en contentinfo, `region` laat ze alle drie vallen.',
+			table: { defaultValue: { summary: 'auto' } },
+		},
 	},
 };
 
@@ -79,17 +95,26 @@ const header = html`
 const footer = html`
 	<nldd-container padding="16">
 		<nldd-button-group orientation="horizontal">
-			<nldd-button variant="primary" text="Opslaan"></nldd-button>
-			<nldd-button variant="secondary" text="Annuleren"></nldd-button>
+			<nldd-button
+				variant="primary"
+				text="Opslaan"
+			></nldd-button>
+			<nldd-button
+				variant="secondary"
+				text="Annuleren"
+			></nldd-button>
 		</nldd-button-group>
 	</nldd-container>
 `;
 
 const content = html`
 	<nldd-simple-section>
-		<nldd-title id="page-title" size="2">
-			<h1>Paginatitel</h1>
-		</nldd-title>
+		<nldd-title
+			id="page-title"
+			size="2"
+			text="Paginatitel"
+			heading-level="1"
+		></nldd-title>
 		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-rich-text>
 			<p>
@@ -110,11 +135,13 @@ const content = html`
 	</nldd-simple-section>
 `;
 
-export const Standaard = ({ background, stickyHeader, stickyFooter }: Record<string, any>) => html`
+export const Standaard = ({ background, accessibleLabel, stickyHeader, stickyFooter, landmarks }: Record<string, any>) => html`
 	<nldd-page
+		background=${background}
+		accessible-label=${accessibleLabel || nothing}
 		?sticky-header=${stickyHeader}
 		?sticky-footer=${stickyFooter}
-		background=${background}
+		landmarks=${landmarks}
 		style="height: 400px;"
 	>
 		${header}
@@ -125,7 +152,10 @@ export const Standaard = ({ background, stickyHeader, stickyFooter }: Record<str
 
 export const StickyHeader = {
 	render: () => html`
-	<nldd-page sticky-header style="height: 400px;">
+	<nldd-page
+		sticky-header
+		style="height: 400px;"
+	>
 		${header}
 		${content}
 		<div slot="footer">${footer}</div>
@@ -136,7 +166,10 @@ export const StickyHeader = {
 
 export const StickyFooter = {
 	render: () => html`
-	<nldd-page sticky-footer style="height: 400px;">
+	<nldd-page
+		sticky-footer
+		style="height: 400px;"
+	>
 		${header}
 		${content}
 		<div slot="footer">${footer}</div>
@@ -147,7 +180,11 @@ export const StickyFooter = {
 
 export const StickyBeide = {
 	render: () => html`
-	<nldd-page sticky-header sticky-footer style="height: 400px;">
+	<nldd-page
+		sticky-header
+		sticky-footer
+		style="height: 400px;"
+	>
 		${header}
 		${content}
 		<div slot="footer">${footer}</div>
@@ -158,7 +195,12 @@ export const StickyBeide = {
 
 export const Tinted = {
 	render: () => html`
-	<nldd-page sticky-header sticky-footer background="tinted" style="height: 400px;">
+	<nldd-page
+		sticky-header
+		sticky-footer
+		background="tinted"
+		style="height: 400px;"
+	>
 		${header}
 		${content}
 		<div slot="footer">${footer}</div>
@@ -169,7 +211,11 @@ export const Tinted = {
 
 export const GecentreerdeDialoog = {
 	render: () => html`
-	<nldd-page sticky-header sticky-footer style="height: 400px;">
+	<nldd-page
+		sticky-header
+		sticky-footer
+		style="height: 400px;"
+	>
 		${header}
 		<nldd-simple-section>
 			<nldd-inline-dialog

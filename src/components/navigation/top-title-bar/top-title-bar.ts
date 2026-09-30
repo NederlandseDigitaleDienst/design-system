@@ -27,8 +27,9 @@
  *
  * @element nldd-top-title-bar
  *
- * @attr {string} text - Title of the bar, rendered as the h1 in the title group.
- * @attr {string} supporting-text - Subtitle under the title.
+ * @attr {string} text - Title of the bar, rendered as the heading in the title group.
+ * @attr {string} supporting-text - Text under the title.
+ * @attr {1|2|3|4|5|6} heading-level - Heading level of the title: 1–6 (default: 1). Lower it where the bar is not the top of the page, such as a pane beside content that already has its h1.
  * @attr {string} collapse-anchor - Id of the element whose top edge triggers the compact state on scroll. Without it the state is static (see above).
  * @attr {string} back-text - Text of the back button and its accessible name. Empty hides the back button (and the divider).
  * @attr {string} back-href - URL for the back button; renders a link and suppresses the `back` event.
@@ -47,6 +48,8 @@ import { topTitleBarStyles } from './top-title-bar.styles.js';
 import { topTitleBarTemplate } from './top-title-bar.template.js';
 import type { NLDDPage } from '../../layout/page/page.js';
 
+type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
 @customElement('nldd-top-title-bar')
 export class NLDDTopTitleBar extends LitElement {
 	static override styles = topTitleBarStyles;
@@ -56,6 +59,9 @@ export class NLDDTopTitleBar extends LitElement {
 
 	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
 	supportingText = '';
+
+	@property({ reflect: true, attribute: 'heading-level', converter: reflectNonDefault<HeadingLevel>(1) })
+	headingLevel: HeadingLevel = 1;
 
 	@property({ type: String, attribute: 'collapse-anchor' })
 	collapseAnchor = '';

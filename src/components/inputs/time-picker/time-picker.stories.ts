@@ -123,15 +123,29 @@ export const MinderRijen = () => html`
 	<div style="display: flex; gap: 48px; align-items: flex-start;">
 		<div>
 			<p><code>rows="5"</code>, hele rijen</p>
-			<nldd-time-picker rows="5" value="09:30" step="15" accessible-label="Vijf rijen"></nldd-time-picker>
+			<nldd-time-picker
+				rows="5"
+				value="09:30"
+				step="15"
+				accessible-label="Vijf rijen"
+			></nldd-time-picker>
 		</div>
 		<div>
 			<p><code>rows="6"</code>, halve rij aan de randen</p>
-			<nldd-time-picker rows="6" value="09:30" step="15" accessible-label="Zes rijen"></nldd-time-picker>
+			<nldd-time-picker
+				rows="6"
+				value="09:30"
+				step="15"
+				accessible-label="Zes rijen"
+			></nldd-time-picker>
 		</div>
 		<div>
 			<p><code>rows="7"</code> (standaard)</p>
-			<nldd-time-picker value="09:30" step="15" accessible-label="Zeven rijen"></nldd-time-picker>
+			<nldd-time-picker
+				value="09:30"
+				step="15"
+				accessible-label="Zeven rijen"
+			></nldd-time-picker>
 		</div>
 	</div>
 `;

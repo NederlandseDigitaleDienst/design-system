@@ -8,7 +8,10 @@ export function fullBleedSectionTemplate(component: NLDDFullBleedSection): Templ
 				<header class="full-bleed-section__header"
 					hidden
 				>
-					<slot name="header" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="header"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</header>
 				<div class="full-bleed-section__main">
 					<slot></slot>
@@ -16,7 +19,10 @@ export function fullBleedSectionTemplate(component: NLDDFullBleedSection): Templ
 				<footer class="full-bleed-section__footer"
 					hidden
 				>
-					<slot name="footer" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="footer"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</footer>
 			</div>
 		</section>

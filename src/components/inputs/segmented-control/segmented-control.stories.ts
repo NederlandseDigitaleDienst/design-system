@@ -94,9 +94,21 @@ const Template = ({ variant, size, width, value, type, accessibleLabel, invalid,
 		width=${width || nothing}
 		accessible-label=${accessibleLabel || nothing}
 	>
-		<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-		<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-		<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control-item
+			value="bold"
+			text="Vet"
+			icon="bold"
+		></nldd-segmented-control-item>
+		<nldd-segmented-control-item
+			value="italic"
+			text="Cursief"
+			icon="italic"
+		></nldd-segmented-control-item>
+		<nldd-segmented-control-item
+			value="underline"
+			text="Onderstreept"
+			icon="underlined"
+		></nldd-segmented-control-item>
 	</nldd-segmented-control>
 `;
 
@@ -108,66 +120,260 @@ export const Standaard = {
 export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
-		<nldd-segmented-control value="bold" size="md">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="bold"
+			size="md"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<nldd-segmented-control value="bold" size="sm">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="bold"
+			size="sm"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<nldd-segmented-control .values=${["bold", "italic"]} type="checkbox" size="md">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			.values=${["bold", "italic"]}
+			type="checkbox"
+			size="md"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<nldd-segmented-control value="bold" disabled size="md">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="bold"
+			disabled
+			size="md"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<nldd-segmented-control value="bold" variant="icon" size="md">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="bold"
+			variant="icon"
+			size="md"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<nldd-segmented-control value="bold" variant="icon" size="sm">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="bold"
+			variant="icon"
+			size="sm"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
 		<div style="width: 400px; display: flex; flex-direction: column; gap: 1rem;">
-			<nldd-segmented-control value="bold" width="full" size="md">
-				<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+			<nldd-segmented-control
+				value="bold"
+				width="full"
+				size="md"
+			>
+				<nldd-segmented-control-item
+					value="bold"
+					text="Vet"
+					icon="bold"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="italic"
+					text="Cursief"
+					icon="italic"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="underline"
+					text="Onderstreept"
+					icon="underlined"
+				></nldd-segmented-control-item>
 			</nldd-segmented-control>
-			<nldd-segmented-control value="bold" width="full" size="sm">
-				<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+			<nldd-segmented-control
+				value="bold"
+				width="full"
+				size="sm"
+			>
+				<nldd-segmented-control-item
+					value="bold"
+					text="Vet"
+					icon="bold"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="italic"
+					text="Cursief"
+					icon="italic"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="underline"
+					text="Onderstreept"
+					icon="underlined"
+				></nldd-segmented-control-item>
 			</nldd-segmented-control>
-			<nldd-segmented-control .values=${["bold", "italic"]} type="checkbox" width="full" size="md">
-				<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+			<nldd-segmented-control
+				.values=${["bold", "italic"]}
+				type="checkbox"
+				width="full"
+				size="md"
+			>
+				<nldd-segmented-control-item
+					value="bold"
+					text="Vet"
+					icon="bold"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="italic"
+					text="Cursief"
+					icon="italic"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="underline"
+					text="Onderstreept"
+					icon="underlined"
+				></nldd-segmented-control-item>
 			</nldd-segmented-control>
-			<nldd-segmented-control value="bold" disabled width="full" size="md">
-				<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+			<nldd-segmented-control
+				value="bold"
+				disabled
+				width="full"
+				size="md"
+			>
+				<nldd-segmented-control-item
+					value="bold"
+					text="Vet"
+					icon="bold"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="italic"
+					text="Cursief"
+					icon="italic"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="underline"
+					text="Onderstreept"
+					icon="underlined"
+				></nldd-segmented-control-item>
 			</nldd-segmented-control>
-			<nldd-segmented-control value="bold" variant="icon" width="full" size="md">
-				<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+			<nldd-segmented-control
+				value="bold"
+				variant="icon"
+				width="full"
+				size="md"
+			>
+				<nldd-segmented-control-item
+					value="bold"
+					text="Vet"
+					icon="bold"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="italic"
+					text="Cursief"
+					icon="italic"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="underline"
+					text="Onderstreept"
+					icon="underlined"
+				></nldd-segmented-control-item>
 			</nldd-segmented-control>
-			<nldd-segmented-control value="bold" variant="icon" width="full" size="sm">
-				<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+			<nldd-segmented-control
+				value="bold"
+				variant="icon"
+				width="full"
+				size="sm"
+			>
+				<nldd-segmented-control-item
+					value="bold"
+					text="Vet"
+					icon="bold"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="italic"
+					text="Cursief"
+					icon="italic"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="underline"
+					text="Onderstreept"
+					icon="underlined"
+				></nldd-segmented-control-item>
 			</nldd-segmented-control>
 		</div>
 	</div>
@@ -175,24 +381,76 @@ export const AlleToestanden = {
 	parameters: { controls: { disable: true } },
 };
 
-export const IconEnTekst = {
+export const IcoonEnTekst = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
-		<nldd-segmented-control value="bold" variant="icon-and-text" size="md" accessible-label="Tekststijl">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="bold"
+			variant="icon-and-text"
+			size="md"
+			accessible-label="Tekststijl"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<nldd-segmented-control value="bold" variant="icon-and-text" size="sm" accessible-label="Tekststijl">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="bold"
+			variant="icon-and-text"
+			size="sm"
+			accessible-label="Tekststijl"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
 		<div style="width: 400px;">
-			<nldd-segmented-control value="bold" variant="icon-and-text" width="full" size="md" accessible-label="Tekststijl">
-				<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-				<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+			<nldd-segmented-control
+				value="bold"
+				variant="icon-and-text"
+				width="full"
+				size="md"
+				accessible-label="Tekststijl"
+			>
+				<nldd-segmented-control-item
+					value="bold"
+					text="Vet"
+					icon="bold"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="italic"
+					text="Cursief"
+					icon="italic"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="underline"
+					text="Onderstreept"
+					icon="underlined"
+				></nldd-segmented-control-item>
 			</nldd-segmented-control>
 		</div>
 	</div>
@@ -200,23 +458,72 @@ export const IconEnTekst = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Lg = {
+export const GrootteLg = {
+	name: 'Grootte lg',
 	render: () => html`
 	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
-		<nldd-segmented-control value="list" variant="text" size="lg" accessible-label="Weergave">
-			<nldd-segmented-control-item value="list" text="Lijst"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="grid" text="Raster"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="card" text="Kaart"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="list"
+			variant="text"
+			size="lg"
+			accessible-label="Weergave"
+		>
+			<nldd-segmented-control-item
+				value="list"
+				text="Lijst"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="grid"
+				text="Raster"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="card"
+				text="Kaart"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<nldd-segmented-control value="bold" variant="icon" size="lg" accessible-label="Tekststijl">
-			<nldd-segmented-control-item value="bold" text="Vet" icon="bold"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="italic" text="Cursief" icon="italic"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="underline" text="Onderstreept" icon="underlined"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="bold"
+			variant="icon"
+			size="lg"
+			accessible-label="Tekststijl"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="underline"
+				text="Onderstreept"
+				icon="underlined"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<nldd-segmented-control value="list" variant="icon-and-text" size="lg" accessible-label="Weergave">
-			<nldd-segmented-control-item value="list" text="Lijst" icon="list"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="kaarten" text="Kaarten" icon="rectangle-stack"></nldd-segmented-control-item>
-			<nldd-segmented-control-item value="agenda" text="Agenda" icon="calendar-event"></nldd-segmented-control-item>
+		<nldd-segmented-control
+			value="list"
+			variant="icon-and-text"
+			size="lg"
+			accessible-label="Weergave"
+		>
+			<nldd-segmented-control-item
+				value="list"
+				text="Lijst"
+				icon="list"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="kaarten"
+				text="Kaarten"
+				icon="rectangle-stack"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="agenda"
+				text="Agenda"
+				icon="calendar-event"
+			></nldd-segmented-control-item>
 		</nldd-segmented-control>
 	</div>
 `,

@@ -81,16 +81,48 @@ export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
 		<div style="display: flex; gap: 2rem; align-items: center;">
-			<nldd-switch accessible-label="Niet aan" size="sm"></nldd-switch>
-			<nldd-switch accessible-label="Aan" size="sm" checked></nldd-switch>
-			<nldd-switch accessible-label="Uitgeschakeld" size="sm" disabled></nldd-switch>
-			<nldd-switch accessible-label="Aan en uitgeschakeld" size="sm" checked disabled></nldd-switch>
+			<nldd-switch
+				accessible-label="Niet aan"
+				size="sm"
+			></nldd-switch>
+			<nldd-switch
+				accessible-label="Aan"
+				size="sm"
+				checked
+			></nldd-switch>
+			<nldd-switch
+				accessible-label="Uitgeschakeld"
+				size="sm"
+				disabled
+			></nldd-switch>
+			<nldd-switch
+				accessible-label="Aan en uitgeschakeld"
+				size="sm"
+				checked
+				disabled
+			></nldd-switch>
 		</div>
 		<div style="display: flex; gap: 2rem; align-items: center;">
-			<nldd-switch accessible-label="Niet aan klein" size="xs"></nldd-switch>
-			<nldd-switch accessible-label="Aan klein" size="xs" checked></nldd-switch>
-			<nldd-switch accessible-label="Uitgeschakeld klein" size="xs" disabled></nldd-switch>
-			<nldd-switch accessible-label="Aan en uitgeschakeld klein" size="xs" checked disabled></nldd-switch>
+			<nldd-switch
+				accessible-label="Niet aan klein"
+				size="xs"
+			></nldd-switch>
+			<nldd-switch
+				accessible-label="Aan klein"
+				size="xs"
+				checked
+			></nldd-switch>
+			<nldd-switch
+				accessible-label="Uitgeschakeld klein"
+				size="xs"
+				disabled
+			></nldd-switch>
+			<nldd-switch
+				accessible-label="Aan en uitgeschakeld klein"
+				size="xs"
+				checked
+				disabled
+			></nldd-switch>
 		</div>
 	</div>
 `,

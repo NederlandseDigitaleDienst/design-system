@@ -36,11 +36,11 @@ export function template(this: NLDDLink, helpers: TemplateHelpers) {
 			@click=${helpers.handleClick}
 		>
 			${this.startIcon ? html`
-				<span class="link__start-icon"><nldd-icon name=${this.startIcon}></nldd-icon></span>
+				<span class="link__start-icon"><nldd-icon icon=${this.startIcon}></nldd-icon></span>
 			` : html`<slot name="start-icon"></slot>`}
 			<span class="link__label">${this.text ? this.text : html`<slot></slot>`}</span>
 			${this.endIcon ? html`
-				<span class="link__end-icon"><nldd-icon name=${this.endIcon}></nldd-icon></span>
+				<span class="link__end-icon"><nldd-icon icon=${this.endIcon}></nldd-icon></span>
 			` : html`<slot name="end-icon"></slot>`}
 			${renderOpensInNewTabHint ? html`<span class="link__opens-in-new-tab-hint">${opensInNewTabHint}</span>` : nothing}
 		</a>

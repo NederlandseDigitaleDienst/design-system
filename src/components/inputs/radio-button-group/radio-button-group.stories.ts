@@ -64,7 +64,10 @@ export default {
 };
 
 const Template = ({ name, required, invalid, disabled }: Record<string, any>) => html`
-	<nldd-form label-alignment="right" novalidate>
+	<nldd-form
+		label-alignment="right"
+		novalidate
+	>
 		<nldd-form-field label="Kies een optie">
 			<nldd-radio-button-group
 				name=${name}
@@ -72,14 +75,28 @@ const Template = ({ name, required, invalid, disabled }: Record<string, any>) =>
 				?required=${required}
 				?disabled=${disabled}
 			>
-				<nldd-radio-button-field value="1" checked label="Optie 1"></nldd-radio-button-field>
-				<nldd-radio-button-field value="2" label="Optie 2"></nldd-radio-button-field>
-				<nldd-radio-button-field value="3" label="Optie 3"></nldd-radio-button-field>
+				<nldd-radio-button-field
+					value="1"
+					checked
+					label="Optie 1"
+				></nldd-radio-button-field>
+				<nldd-radio-button-field
+					value="2"
+					label="Optie 2"
+				></nldd-radio-button-field>
+				<nldd-radio-button-field
+					value="3"
+					label="Optie 3"
+				></nldd-radio-button-field>
 			</nldd-radio-button-group>
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button-group orientation="horizontal">
-				<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+				<nldd-button
+					variant="primary"
+					type="submit"
+					text="Opslaan"
+				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>
@@ -90,24 +107,44 @@ export const Standaard = {
 	args: {},
 };
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: Template,
 	args: { disabled: true },
 };
 
-export const MetUitgeschakeldVeld = {
+export const VeldDisabled = {
+	name: 'Veld disabled',
 	render: () => html`
-	<nldd-form label-alignment="right" novalidate>
+	<nldd-form
+		label-alignment="right"
+		novalidate
+	>
 		<nldd-form-field label="Kies een optie">
 			<nldd-radio-button-group name="demo">
-				<nldd-radio-button-field value="1" checked label="Optie 1"></nldd-radio-button-field>
-				<nldd-radio-button-field value="2" label="Optie 2"></nldd-radio-button-field>
-				<nldd-radio-button-field value="3" label="Optie 3 (uitgeschakeld)" disabled></nldd-radio-button-field>
+				<nldd-radio-button-field
+					value="1"
+					checked
+					label="Optie 1"
+				></nldd-radio-button-field>
+				<nldd-radio-button-field
+					value="2"
+					label="Optie 2"
+				></nldd-radio-button-field>
+				<nldd-radio-button-field
+					value="3"
+					label="Optie 3 (uitgeschakeld)"
+					disabled
+				></nldd-radio-button-field>
 			</nldd-radio-button-group>
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button-group orientation="horizontal">
-				<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+				<nldd-button
+					variant="primary"
+					type="submit"
+					text="Opslaan"
+				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>

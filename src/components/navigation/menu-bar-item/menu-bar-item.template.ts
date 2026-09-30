@@ -24,7 +24,7 @@ export function template(component: NLDDMenuBarItem) {
 			>
 				${component.icon ? html`
 					<span class="menu-bar-item__icon">
-						<nldd-icon name=${component.icon}></nldd-icon>
+						<nldd-icon icon=${component.icon}></nldd-icon>
 					</span>
 				` : nothing}
 				<span class="menu-bar-item__text">
@@ -32,7 +32,7 @@ export function template(component: NLDDMenuBarItem) {
 				</span>
 				${component.expandable ? html`
 					<span class="menu-bar-item__disclosure-icon">
-						<nldd-icon name="chevron-down-small"></nldd-icon>
+						<nldd-icon icon="chevron-down-small"></nldd-icon>
 					</span>
 				` : nothing}
 			</a>
@@ -53,7 +53,7 @@ export function template(component: NLDDMenuBarItem) {
 		>
 			${component.icon ? html`
 				<span class="menu-bar-item__icon">
-					<nldd-icon name=${component.icon}></nldd-icon>
+					<nldd-icon icon=${component.icon}></nldd-icon>
 				</span>
 			` : nothing}
 			<span class="menu-bar-item__text">
@@ -61,7 +61,7 @@ export function template(component: NLDDMenuBarItem) {
 			</span>
 			${component.expandable ? html`
 				<span class="menu-bar-item__disclosure-icon">
-					<nldd-icon name="chevron-down-small"></nldd-icon>
+					<nldd-icon icon="chevron-down-small"></nldd-icon>
 				</span>
 			` : nothing}
 		</button>

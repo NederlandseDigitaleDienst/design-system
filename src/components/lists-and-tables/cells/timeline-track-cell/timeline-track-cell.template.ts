@@ -23,7 +23,7 @@ export function timelineTrackCellTemplate(component: NLDDTimelineTrackCell): Tem
 	const marker = !component.showsContent
 		? nothing
 		: component.icon
-			? html`<nldd-icon class="timeline-track-cell__icon" name=${component.icon}></nldd-icon>`
+			? html`<nldd-icon class="timeline-track-cell__icon" icon=${component.icon}></nldd-icon>`
 			: component.text
 				? html`<span class="timeline-track-cell__text">${component.text}</span>`
 				: nothing;

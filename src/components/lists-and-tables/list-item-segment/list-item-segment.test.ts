@@ -7,6 +7,7 @@ import '../list/list.js';
 import '../cells/text-cell/text-cell.js';
 import '../cells/icon-cell/icon-cell.js';
 import '../cells/spacer-cell/spacer-cell.js';
+import '../../actions/menu/menu.js';
 
 describe('nldd-list-item-segment', () => {
 	let root: HTMLElement;
@@ -150,6 +151,61 @@ describe('nldd-list-item-segment', () => {
 	});
 });
 
+describe('nldd-list-item-segment – popup', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('kondigt met popup-type aan wat er opengaat, ook voordat er iets open is', async () => {
+		el = await fixture<HTMLElement>(
+			`<nldd-list accessible-label="X">
+				<nldd-list-item>
+					<nldd-list-item-segment href="#a" width="full"><nldd-text-cell text="Rij"></nldd-text-cell></nldd-list-item-segment>
+					<nldd-list-item-segment button popup-type="menu" accessible-label="Acties voor Rij">
+						<nldd-icon-cell size="20" icon="ellipsis"></nldd-icon-cell>
+					</nldd-list-item-segment>
+				</nldd-list-item>
+			</nldd-list>`,
+		);
+		await waitForUpdate(el);
+		const seg = el.querySelectorAll('nldd-list-item-segment')[1];
+		await waitForUpdate(seg as HTMLElement);
+		const knop = seg.shadowRoot!.querySelector('button')!;
+		expect(knop.getAttribute('aria-haspopup')).toBe('menu');
+		// Altijd aanwezig: zonder aria-expanded hoort een schermlezer een gewone
+		// knop en weet die niet dat er iets te openen valt.
+		expect(knop.getAttribute('aria-expanded')).toBe('false');
+	});
+
+	it('opent het menu dat hier ankert en meldt dat op de knop', async () => {
+		el = await fixture<HTMLElement>(
+			`<div>
+				<nldd-list accessible-label="X">
+					<nldd-list-item>
+						<nldd-list-item-segment button popup-type="menu" id="acties-rij" accessible-label="Acties voor Rij">
+							<nldd-icon-cell size="20" icon="ellipsis"></nldd-icon-cell>
+						</nldd-list-item-segment>
+					</nldd-list-item>
+				</nldd-list>
+				<nldd-menu anchor="acties-rij"><nldd-menu-item text="Bewerken"></nldd-menu-item></nldd-menu>
+			</div>`,
+		);
+		await waitForUpdate(el);
+		const seg = el.querySelector('nldd-list-item-segment')!;
+		const menu = el.querySelector('nldd-menu')!;
+		// Het menu koppelt zich een microtask ná zijn eerste render aan het anker,
+		// zodat een anker dat later verschijnt ook nog aan de beurt komt.
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		seg.shadowRoot!.querySelector('button')!.click();
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		expect(menu.matches(':popover-open')).toBe(true);
+		expect(seg.hasAttribute('expanded')).toBe(true);
+		expect(seg.shadowRoot!.querySelector('button')!.getAttribute('aria-expanded')).toBe('true');
+	});
+});
+
 describe('nldd-list-item – expanded', () => {
 	let el: HTMLElement;
 
@@ -246,7 +302,7 @@ describe('nldd-list-item – expanded', () => {
 			`<nldd-list type="tree" accessible-label="X">
 				<nldd-list-item>
 					<nldd-list-item-segment button disclosure accessible-label="Uitklappen">
-						<nldd-icon-cell size="20"><nldd-icon name="chevron-right"></nldd-icon></nldd-icon-cell>
+						<nldd-icon-cell size="20"><nldd-icon icon="chevron-right"></nldd-icon></nldd-icon-cell>
 					</nldd-list-item-segment>
 					<nldd-text-cell text="Tak"></nldd-text-cell>
 					<nldd-list-item slot="children"><nldd-text-cell text="Blad"></nldd-text-cell></nldd-list-item>
@@ -258,13 +314,14 @@ describe('nldd-list-item – expanded', () => {
 		const seg = el.querySelector('nldd-list-item-segment')!;
 		const iconCell = el.querySelector('nldd-icon-cell')!;
 		await waitForUpdate(seg);
-		expect(getComputedStyle(iconCell).rotate).toBe('0deg');
+		const glyph = iconCell.shadowRoot!.querySelector('[part="icon"]')!;
+		expect(getComputedStyle(glyph).rotate).toBe('0deg');
 
 		item.setAttribute('expanded', '');
 		await waitForUpdate(item);
 		await waitForUpdate(seg);
 		expect(seg.classList.contains('is-expanded')).toBe(true);
-		expect(getComputedStyle(iconCell).rotate).toBe('90deg');
+		expect(getComputedStyle(glyph).rotate).toBe('90deg');
 	});
 });
 

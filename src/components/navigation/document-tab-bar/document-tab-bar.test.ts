@@ -51,15 +51,15 @@ describe('nldd-document-tab-bar-item', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('renders subtitle when provided', async () => {
+	it('renders supporting text when provided', async () => {
 		el = await fixture('<nldd-document-tab-bar-item text="Artikel 1" supporting-text="Wet A"></nldd-document-tab-bar-item>');
 		await waitForUpdate(el);
-		const subtitle = el.shadowRoot!.querySelector('.document-tab-bar__item-supporting-text');
-		expect(subtitle).not.toBeNull();
-		expect(subtitle!.textContent?.trim()).toBe('Wet A');
+		const supportingText = el.shadowRoot!.querySelector('.document-tab-bar__item-supporting-text');
+		expect(supportingText).not.toBeNull();
+		expect(supportingText!.textContent?.trim()).toBe('Wet A');
 	});
 
-	it('does not render subtitle when not provided', async () => {
+	it('does not render supporting text when not provided', async () => {
 		el = await fixture('<nldd-document-tab-bar-item text="Artikel 1"></nldd-document-tab-bar-item>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.document-tab-bar__item-supporting-text')).toBeNull();
@@ -77,7 +77,7 @@ describe('nldd-document-tab-bar-item', () => {
 		expect(el.shadowRoot!.querySelector('.document-tab-bar__item-short-text')!.textContent?.trim()).toBe('Artikel 1');
 	});
 
-	it('falls back to subtitle in short subtitle slot when short-subtitle not provided', async () => {
+	it('falls back to supporting-text when short-supporting-text is not provided', async () => {
 		el = await fixture('<nldd-document-tab-bar-item text="Artikel 1" supporting-text="Wet A"></nldd-document-tab-bar-item>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.document-tab-bar__item-short-supporting-text')!.textContent?.trim()).toBe('Wet A');

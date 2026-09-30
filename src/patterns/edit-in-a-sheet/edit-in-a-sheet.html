@@ -1,0 +1,87 @@
+<nldd-page>
+  <nldd-simple-section>
+    <nldd-title
+      slot="header"
+      size="2"
+      text="Aanvragen"
+      heading-level="1"
+    ></nldd-title>
+    <nldd-list
+      variant="box-base"
+      accessible-label="Aanvragen"
+    >
+      <nldd-list-item button>
+        <nldd-text-cell
+          text="Aanvraag A-1042"
+          supporting-text="Dakisolatie, in behandeling"
+        ></nldd-text-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
+      </nldd-list-item>
+      <nldd-list-item button>
+        <nldd-text-cell
+          text="Aanvraag A-1043"
+          supporting-text="Warmtepomp, afgerond"
+        ></nldd-text-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
+      </nldd-list-item>
+    </nldd-list>
+  </nldd-simple-section>
+</nldd-page>
+
+<nldd-sheet
+  placement="right"
+  width="480px"
+>
+  <nldd-page>
+    <nldd-top-title-bar
+      slot="header"
+      text="Aanvraag A-1042 bewerken"
+      dismiss-text="Annuleer"
+      collapse-anchor="aanvraag-titel"
+    ></nldd-top-title-bar>
+
+    <nldd-simple-section>
+      <nldd-title
+        id="aanvraag-titel"
+        slot="header"
+        size="2"
+        text="Aanvraag A-1042 bewerken"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-form name="aanvraag">
+        <nldd-form-field label="Titel">
+          <nldd-text-field
+            name="titel"
+            value="Dakisolatie"
+          ></nldd-text-field>
+        </nldd-form-field>
+        <nldd-form-field
+          label="Toelichting"
+          optional
+        >
+          <nldd-multi-line-text-field
+            name="toelichting"
+            value="De isolatie wordt aan de binnenzijde aangebracht."
+          ></nldd-multi-line-text-field>
+        </nldd-form-field>
+        <nldd-form-actions>
+          <nldd-button-group>
+            <nldd-button
+              variant="primary"
+              type="submit"
+              text="Bewaar"
+            ></nldd-button>
+          </nldd-button-group>
+        </nldd-form-actions>
+      </nldd-form>
+    </nldd-simple-section>
+  </nldd-page>
+</nldd-sheet>

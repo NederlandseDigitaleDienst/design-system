@@ -14,8 +14,14 @@ import '../../actions/menu/menu.js';
  * ## Gebruik
  * ```html
  * <nldd-token text="Label"></nldd-token>
- * <nldd-token control="dismiss" text="Verwijderbaar"></nldd-token>
- * <nldd-token control="menu" text="Kies optie"></nldd-token>
+ * <nldd-token
+ * 	control="dismiss"
+ * 	text="Verwijderbaar"
+ * ></nldd-token>
+ * <nldd-token
+ * 	control="menu"
+ * 	text="Kies optie"
+ * ></nldd-token>
  * ```
  */
 export default {
@@ -31,6 +37,13 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		text: 'Token',
+		control: 'none',
+		dismissText: '',
+		menuText: '',
+		disabled: false,
+	},
 	argTypes: {
 		text: {
 			control: 'text',
@@ -39,26 +52,26 @@ export default {
 		control: {
 			control: 'select',
 			options: ['none', 'dismiss', 'menu'],
-			description: 'Control type',
+			description: 'Welke knop het token heeft: geen, verwijderen of een menu',
 			table: { defaultValue: { summary: 'none' } },
 		},
 		dismissText: {
 			name: 'dismiss-text',
 			control: 'text',
-			description: 'Tekst van de dismiss-knop',
-			table: { defaultValue: { summary: 'Verwijder' } },
+			description: 'Toegankelijke naam van de verwijderknop (control="dismiss")',
+			table: { defaultValue: { summary: 'Verwijder "{text}"' } },
+		},
+		menuText: {
+			name: 'menu-text',
+			control: 'text',
+			description: 'Toegankelijke naam van de menuknop (control="menu")',
+			table: { defaultValue: { summary: 'Toon opties voor "{text}"' } },
 		},
 		disabled: {
 			control: 'boolean',
 			description: 'Uitgeschakelde toestand',
 			table: { defaultValue: { summary: false } },
 		},
-	},
-	args: {
-		text: 'Token',
-		control: 'none',
-		dismissText: '',
-		disabled: false,
 	},
 };
 
@@ -67,6 +80,7 @@ const Template = (args: Record<string, any>) => html`
 		text=${args.text}
 		control=${args.control}
 		dismiss-text=${args.dismissText || nothing}
+		menu-text=${args.menuText || nothing}
 		?disabled=${args.disabled}
 		@dismiss=${action('dismiss')}
 	></nldd-token>
@@ -85,11 +99,24 @@ export const AlleControls = {
 	render: () => html`
 	<div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
 		<nldd-token text="Geen control"></nldd-token>
-		<nldd-token control="dismiss" text="Met dismiss"></nldd-token>
-		<nldd-token control="menu" text="Met menu">
+		<nldd-token
+			control="dismiss"
+			text="Met dismiss"
+		></nldd-token>
+		<nldd-token
+			control="menu"
+			text="Met menu"
+		>
 			<nldd-menu slot="menu">
-				<nldd-menu-item text="Bewerken" @select=${action('select')}></nldd-menu-item>
-				<nldd-menu-item text="Verwijder" destructive @select=${action('select')}></nldd-menu-item>
+				<nldd-menu-item
+					text="Bewerken"
+					@select=${action('select')}
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Verwijder"
+					destructive
+					@select=${action('select')}
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-token>
 	</div>
@@ -106,13 +133,29 @@ export const AlleControls = {
 
 export const MetMenu = {
 	render: () => html`
-		<nldd-token control="menu" text="jan.devries@example.nl">
+		<nldd-token
+			control="menu"
+			text="jan.devries@example.nl"
+		>
 			<nldd-menu slot="menu">
-				<nldd-menu-item text="Stuur een e-mail" @select=${action('select: e-mail')}></nldd-menu-item>
-				<nldd-menu-item text="Toon contactgegevens" @select=${action('select: contactgegevens')}></nldd-menu-item>
-				<nldd-menu-item text="Kopieer e-mailadres" @select=${action('select: kopieer')}></nldd-menu-item>
+				<nldd-menu-item
+					text="Stuur een e-mail"
+					@select=${action('select: e-mail')}
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Toon contactgegevens"
+					@select=${action('select: contactgegevens')}
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Kopieer e-mailadres"
+					@select=${action('select: kopieer')}
+				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item text="Verwijder" destructive @select=${action('select: verwijder')}></nldd-menu-item>
+				<nldd-menu-item
+					text="Verwijder"
+					destructive
+					@select=${action('select: verwijder')}
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-token>
 	`,
@@ -131,12 +174,24 @@ export const MetMenu = {
    Toestanden
    ============================================================ */
 
-export const Uitgeschakeld = {
+export const ToestandDisabled = {
+	name: 'Toestand disabled',
 	render: () => html`
 	<div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-		<nldd-token disabled text="Geen control"></nldd-token>
-		<nldd-token control="dismiss" disabled text="Met dismiss"></nldd-token>
-		<nldd-token control="menu" disabled text="Met menu"></nldd-token>
+		<nldd-token
+			disabled
+			text="Geen control"
+		></nldd-token>
+		<nldd-token
+			control="dismiss"
+			disabled
+			text="Met dismiss"
+		></nldd-token>
+		<nldd-token
+			control="menu"
+			disabled
+			text="Met menu"
+		></nldd-token>
 	</div>
 `,
 	parameters: { controls: { disable: true } },
@@ -159,10 +214,26 @@ export const FilterVoorbeeld = {
 				Actieve tokens — klik op × om een waarde te verwijderen:
 			</p>
 			<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-				<nldd-token control="dismiss" text="Status: Actief" @dismiss=${handleDismiss}></nldd-token>
-				<nldd-token control="dismiss" text="Type: Document" @dismiss=${handleDismiss}></nldd-token>
-				<nldd-token control="dismiss" text="Datum: Vandaag" @dismiss=${handleDismiss}></nldd-token>
-				<nldd-token control="dismiss" text="Auteur: Jan de Vries" @dismiss=${handleDismiss}></nldd-token>
+				<nldd-token
+					control="dismiss"
+					text="Status: Actief"
+					@dismiss=${handleDismiss}
+				></nldd-token>
+				<nldd-token
+					control="dismiss"
+					text="Type: Document"
+					@dismiss=${handleDismiss}
+				></nldd-token>
+				<nldd-token
+					control="dismiss"
+					text="Datum: Vandaag"
+					@dismiss=${handleDismiss}
+				></nldd-token>
+				<nldd-token
+					control="dismiss"
+					text="Auteur: Jan de Vries"
+					@dismiss=${handleDismiss}
+				></nldd-token>
 			</div>
 		</div>
 	`;

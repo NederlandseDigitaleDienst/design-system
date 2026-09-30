@@ -78,7 +78,7 @@ describe('nldd-step-indicator', () => {
 		el = await fixture<NLDDStepIndicator>(THREE_STEPS);
 		await waitForUpdate(el);
 		const [first, second] = items();
-		expect(first.shadowRoot!.querySelector('nldd-icon')?.getAttribute('name')).toBe('check-mark');
+		expect(first.shadowRoot!.querySelector('nldd-icon')?.getAttribute('icon')).toBe('check-mark');
 		expect(second.shadowRoot!.querySelector('.step-indicator__item-number')?.textContent?.trim()).toBe('2');
 	});
 
@@ -89,7 +89,7 @@ describe('nldd-step-indicator', () => {
 			</nldd-step-indicator>
 		`);
 		await waitForUpdate(el);
-		expect(items()[0].shadowRoot!.querySelector('nldd-icon')?.getAttribute('name')).toBe('star');
+		expect(items()[0].shadowRoot!.querySelector('nldd-icon')?.getAttribute('icon')).toBe('star');
 	});
 
 	it('zet de statustekst voor hulpsoftware bij elke stap', async () => {

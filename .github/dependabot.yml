@@ -49,7 +49,24 @@ updates:
       prefix: build
       prefix-development: chore
       include: scope
+    # Packages that pin each other as peers only install at matching versions,
+    # so a PR that bumps one of them fails `npm ci` and can never go green.
+    # @vitest/browser-playwright and @vitest/coverage-v8 require vitest at
+    # exactly their own version; the @storybook/* addons require storybook at
+    # ^their own version. npm-minor-patch already keeps minor and patch
+    # together, but a major falls outside it and splits into one PR per
+    # package: that is how #236-#238 got stuck. These groups take every
+    # update type, and sit above npm-minor-patch because a dependency joins
+    # the first group it matches.
     groups:
+      vitest:
+        patterns:
+          - vitest
+          - "@vitest/*"
+      storybook:
+        patterns:
+          - storybook
+          - "@storybook/*"
       npm-minor-patch:
         update-types:
           - minor

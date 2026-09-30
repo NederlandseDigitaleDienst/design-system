@@ -5,6 +5,11 @@ export default {
 	title: 'Components/Lists & Tables/Cells/Spacer Cell',
 	component: 'nldd-spacer-cell',
 	tags: ['autodocs'],
+	args: {
+		size: '16',
+		hideBelow: '',
+		hideAbove: '',
+	},
 	argTypes: {
 		size: {
 			control: 'select',
@@ -27,12 +32,7 @@ export default {
 const debugStyle = 'background: rgba(255, 36, 189, 0.2); outline: 1px dashed #ff24bd;';
 const containerStyle = 'display: flex; align-items: center; background: #f0f0f0; padding: 8px;';
 
-export const Default = {
-	args: {
-		size: '16',
-		hideBelow: '',
-		hideAbove: '',
-	},
+export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<div style=${containerStyle}>
 			<span>Voor</span>
@@ -47,17 +47,20 @@ export const Default = {
 	`,
 };
 
-export const Flexible = {
+export const Flexibel = {
 	render: () => html`
 		<div style="${containerStyle} width: 400px;">
 			<span>Links</span>
-			<nldd-spacer-cell size="flexible" style=${debugStyle}></nldd-spacer-cell>
+			<nldd-spacer-cell
+				size="flexible"
+				style=${debugStyle}
+			></nldd-spacer-cell>
 			<span>Rechts</span>
 		</div>
 	`,
 };
 
-export const AllFixedSizes = {
+export const AlleVasteGrootten = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
 			${['2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'].map(size => html`
@@ -65,7 +68,10 @@ export const AllFixedSizes = {
 					<span style="width: 40px; font-size: 12px; color: var(--semantics-content-color);">${size}px</span>
 					<div style=${containerStyle}>
 						<span>|</span>
-						<nldd-spacer-cell size=${size} style=${debugStyle}></nldd-spacer-cell>
+						<nldd-spacer-cell
+							size=${size}
+							style=${debugStyle}
+						></nldd-spacer-cell>
 						<span>|</span>
 					</div>
 				</div>

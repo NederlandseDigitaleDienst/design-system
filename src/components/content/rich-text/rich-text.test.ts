@@ -108,6 +108,29 @@ describe('nldd-rich-text width zones', () => {
 		expect(await place('<p id="x" data-width="full">tekst</p>', 'x')).toBe('full');
 		expect(await place('<table id="x" data-width="main"><tr><td>x</td></tr></table>', 'x')).toBe('main');
 	});
+
+	it('passes a sole plain wrapper div through, so its children keep zones and rhythm', async () => {
+		expect(await place('<div id="w"><p id="a">een</p><p id="b">twee</p><table id="t"><tr><td>x</td></tr></table></div>', 'a')).toBe('main');
+		expect(getComputedStyle(wrap.querySelector('#w')!).display).toBe('contents');
+		expect(getComputedStyle(wrap.querySelector('#t')!).gridColumn).toBe('wide');
+		const a = wrap.querySelector('#a')!.getBoundingClientRect();
+		const b = wrap.querySelector('#b')!.getBoundingClientRect();
+		expect(b.top - a.bottom).toBeGreaterThan(0);
+	});
+
+	it('keeps a wrapper that is styled, has a role or has siblings as one block', async () => {
+		for (const markup of [
+			'<div id="w" class="kader"><p>tekst</p></div>',
+			'<div id="w" style="padding: 8px"><p>tekst</p></div>',
+			'<div id="w" role="note"><p>tekst</p></div>',
+			'<div id="w" data-width="wide"><p>tekst</p></div>',
+			'<div id="w"><p>tekst</p></div><p>daarna</p>',
+		]) {
+			await place(markup, 'w');
+			expect(getComputedStyle(wrap.querySelector('#w')!).display, markup).toBe('block');
+			wrap.remove();
+		}
+	});
 });
 
 describe('nldd-rich-text color="inherit"', () => {

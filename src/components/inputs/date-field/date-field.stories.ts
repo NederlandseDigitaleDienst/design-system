@@ -168,7 +168,7 @@ const Template = ({
 	></nldd-date-field>
 `;
 
-export const Default = Template.bind({});
+export const Standaard = Template.bind({});
 
 export const InEenFormulierveld = () => html`
 	<nldd-form-field

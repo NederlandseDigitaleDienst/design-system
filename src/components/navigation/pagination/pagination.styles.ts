@@ -22,13 +22,13 @@ export const paginationStyles = css`
 		-webkit-tap-highlight-color: transparent;
 	}
 
-	:host([hidden]) {
-		display: none;
-	}
-
 	:host([centered]) {
 		display: flex;
 		justify-content: center;
+	}
+
+	:host([hidden]) {
+		display: none;
 	}
 
 	:host([disabled]) {

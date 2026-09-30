@@ -46,19 +46,19 @@ import { nlddPageFooterTranslations, type NLDDPageFooterTranslations } from './p
  *
  * @element nldd-page-footer-legal-bar-item
  *
- * @attr {string} href - Link target. When omitted, the item renders as plain text.
  * @attr {string} text - Item label. Falls back to the default slot.
+ * @attr {string} href - Link target. When omitted, the item renders as plain text.
  *
  * @slot - Item label (alternative to `text`).
  */
 export class NLDDPageFooterLegalBarItem extends LitElement {
 	static override styles = pageFooterLegalBarItemStyles;
 
-	@property({ type: String, reflect: true })
-	href?: string;
-
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
+
+	@property({ type: String, reflect: true })
+	href?: string;
 
 	override render() {
 		return pageFooterLegalBarItemTemplate(this);

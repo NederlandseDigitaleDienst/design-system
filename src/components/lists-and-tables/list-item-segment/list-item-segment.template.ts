@@ -14,9 +14,18 @@ export function template(
 	disabled: boolean,
 	accessibleLabel: string,
 	actionTabindex?: string,
+	popupType?: string,
+	popovertarget?: string,
+	popoverTargetElement?: Element | null,
+	popoverTargetAction?: 'toggle' | 'show' | 'hide',
 ) {
 	const content = html`<slot></slot>`;
-	const ariaExpanded = expanded === undefined ? nothing : String(expanded);
+	// A control that opens a popup always carries aria-expanded, open or not:
+	// without it a screen reader hears a plain button and cannot tell there is
+	// anything to open. Elsewhere an absent attribute means "discloses nothing".
+	const ariaExpanded = expanded === undefined
+		? (popupType ? 'false' : nothing)
+		: String(expanded);
 	const ariaCurrent = current ? 'page' : nothing;
 	const label = accessibleLabel || nothing;
 
@@ -36,6 +45,10 @@ export function template(
 	if (control === 'checkbox' || control === 'button') {
 		return html`<button class="list-item-segment"
 			type="button"
+			aria-haspopup=${popupType || nothing}
+			popovertarget=${popovertarget ?? nothing}
+			.popoverTargetElement=${popoverTargetElement ?? null}
+			.popoverTargetAction=${popoverTargetAction ?? 'toggle'}
 			role=${control === 'checkbox' ? 'checkbox' : nothing}
 			aria-checked=${control === 'checkbox' ? String(checked) : nothing}
 			aria-expanded=${ariaExpanded}

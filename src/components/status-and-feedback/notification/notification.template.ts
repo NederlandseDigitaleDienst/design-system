@@ -7,7 +7,7 @@ export function notificationTemplate(component: NLDDNotification): TemplateResul
 			<div class="notification__icon"
 				aria-hidden="true"
 			>
-				<nldd-icon name=${component._resolvedIcon}></nldd-icon>
+				<nldd-icon icon=${component._resolvedIcon}></nldd-icon>
 			</div>
 			<div class="notification__main">
 				${component.text ? html`
@@ -23,7 +23,10 @@ export function notificationTemplate(component: NLDDNotification): TemplateResul
 				<div class="notification__actions"
 					?hidden=${!component._hasActions}
 				>
-					<slot name="actions" @slotchange=${component._onActionsSlotChange}></slot>
+					<slot
+						name="actions"
+						@slotchange=${component._onActionsSlotChange}
+					></slot>
 				</div>
 			</div>
 			<div class="notification__dismiss-button">

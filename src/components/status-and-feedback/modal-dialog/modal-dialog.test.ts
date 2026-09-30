@@ -337,3 +337,64 @@ describe('nldd-modal-dialog – close fallback', () => {
 		expect(dialog.open).toBe(false);
 	}, 5000);
 });
+
+describe('nldd-modal-dialog – open attribute', () => {
+	let el: NLDDModalDialog;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const dialog = () => el.shadowRoot!.querySelector('dialog')!;
+
+	it('opens from the first render when open is set', async () => {
+		el = await fixture<NLDDModalDialog>('<nldd-modal-dialog accessible-label="Test" open></nldd-modal-dialog>');
+		await waitForUpdate(el);
+		expect(dialog().open).toBe(true);
+	});
+
+	it('opens and closes when open is set and cleared', async () => {
+		el = await fixture<NLDDModalDialog>('<nldd-modal-dialog accessible-label="Test"></nldd-modal-dialog>');
+		el.open = true;
+		await waitForUpdate(el);
+		expect(dialog().open).toBe(true);
+
+		const closed = new Promise((resolve) => el.addEventListener('close', resolve, { once: true }));
+		el.open = false;
+		await closed;
+		expect(dialog().open).toBe(false);
+	});
+
+	it('reflects show() and hide() in the attribute', async () => {
+		el = await fixture<NLDDModalDialog>('<nldd-modal-dialog accessible-label="Test"></nldd-modal-dialog>');
+		el.show();
+		await waitForUpdate(el);
+		expect(el.hasAttribute('open')).toBe(true);
+		el.hide();
+		await waitForUpdate(el);
+		expect(el.hasAttribute('open')).toBe(false);
+	});
+
+	it('clears open when it closes another way', async () => {
+		el = await fixture<NLDDModalDialog>('<nldd-modal-dialog accessible-label="Test" open></nldd-modal-dialog>');
+		await waitForUpdate(el);
+		dialog().dispatchEvent(new Event('cancel', { cancelable: true }));
+		await waitForUpdate(el);
+		expect(el.open).toBe(false);
+		expect(el.hasAttribute('open')).toBe(false);
+	});
+
+	it('stays open when open is set again during the close animation', async () => {
+		el = await fixture<NLDDModalDialog>('<nldd-modal-dialog accessible-label="Test" open></nldd-modal-dialog>');
+		await waitForUpdate(el);
+		el.open = false;
+		await el.updateComplete;
+		expect(dialog().classList.contains('is-closing')).toBe(true);
+		el.open = true;
+		await el.updateComplete;
+		dialog().dispatchEvent(new Event('animationend'));
+		await waitForUpdate(el);
+		expect(dialog().open).toBe(true);
+		expect(dialog().classList.contains('is-closing')).toBe(false);
+	});
+});

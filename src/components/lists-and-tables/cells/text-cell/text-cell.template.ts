@@ -17,7 +17,10 @@ export function template(this: NLDDTextCell) {
 			${this.overline && !this._hasOverlineSlotted
 				? renderQueryMark(this.overline, this.query, this.queryMarkMode)
 				: nothing}
-			<slot name="overline" @slotchange=${this._onSlotChange}></slot>
+			<slot
+				name="overline"
+				@slotchange=${this._onSlotChange}
+			></slot>
 		</p>
 		<p
 			class="text-cell__text"
@@ -35,7 +38,10 @@ export function template(this: NLDDTextCell) {
 			${this.supportingText && !this._hasSupportingTextSlotted
 				? renderQueryMark(this.supportingText, this.query, this.queryMarkMode)
 				: nothing}
-			<slot name="supporting-text" @slotchange=${this._onSlotChange}></slot>
+			<slot
+				name="supporting-text"
+				@slotchange=${this._onSlotChange}
+			></slot>
 		</p>
 	`;
 }

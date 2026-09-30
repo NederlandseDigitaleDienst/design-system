@@ -89,4 +89,27 @@ export const iconCellStyles = css`
 		display: block;
 		flex-shrink: 0;
 	}
+
+	/* A disclosure chevron turns on command of the row or the segment, which set
+	   --context-cell-glyph-rotation. The glyph turns, never the cell: a transform
+	   on the cell changes the box getBoundingClientRect() reports, and that box is
+	   what a row measures to place its divider. */
+	.icon-cell__glyph {
+		/* Flex, not block: a block box adds the line-height leading around the
+		   glyph, which made the cell measure taller than the icon it holds. The
+		   centering lives here too — the glyph sits in this box, so the host can
+		   no longer place it. */
+		display: flex;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		rotate: var(--context-cell-glyph-rotation, 0deg);
+		transition: rotate var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.icon-cell__glyph {
+			transition: none;
+		}
+	}
 `;

@@ -13,8 +13,8 @@ export function tokenTemplate(component: NLDDToken): TemplateResult {
 						size="sm"
 						variant="neutral-tinted"
 						icon="dismiss-small"
-						text=${component.dismissText}
-						accessible-label=${component.dismissText}
+						text=${component._dismissLabel}
+						accessible-label=${component._dismissLabel}
 						tooltip-timing="never"
 						?no-tab=${component.roving}
 						?disabled=${component.disabled}
@@ -28,8 +28,8 @@ export function tokenTemplate(component: NLDDToken): TemplateResult {
 						size="sm"
 						variant="neutral-tinted"
 						icon="chevron-down-small"
-						text=${component.menuText}
-						accessible-label=${component.menuText}
+						text=${component._menuLabel}
+						accessible-label=${component._menuLabel}
 						tooltip-timing="never"
 						popup-type="menu"
 						?no-tab=${component.roving}

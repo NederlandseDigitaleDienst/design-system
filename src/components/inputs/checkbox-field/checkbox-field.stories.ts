@@ -91,12 +91,37 @@ export const Standaard = {
 export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
-		<nldd-checkbox-field label="Niet aangevinkt" value="1"></nldd-checkbox-field>
-		<nldd-checkbox-field label="Aangevinkt" value="2" checked></nldd-checkbox-field>
-		<nldd-checkbox-field label="Onbepaald" value="3" indeterminate></nldd-checkbox-field>
-		<nldd-checkbox-field label="Uitgeschakeld" value="4" disabled></nldd-checkbox-field>
-		<nldd-checkbox-field label="Aangevinkt en uitgeschakeld" value="5" checked disabled></nldd-checkbox-field>
-		<nldd-checkbox-field label="Onbepaald en uitgeschakeld" value="6" indeterminate disabled></nldd-checkbox-field>
+		<nldd-checkbox-field
+			label="Niet aangevinkt"
+			value="1"
+		></nldd-checkbox-field>
+		<nldd-checkbox-field
+			label="Aangevinkt"
+			value="2"
+			checked
+		></nldd-checkbox-field>
+		<nldd-checkbox-field
+			label="Onbepaald"
+			value="3"
+			indeterminate
+		></nldd-checkbox-field>
+		<nldd-checkbox-field
+			label="Uitgeschakeld"
+			value="4"
+			disabled
+		></nldd-checkbox-field>
+		<nldd-checkbox-field
+			label="Aangevinkt en uitgeschakeld"
+			value="5"
+			checked
+			disabled
+		></nldd-checkbox-field>
+		<nldd-checkbox-field
+			label="Onbepaald en uitgeschakeld"
+			value="6"
+			indeterminate
+			disabled
+		></nldd-checkbox-field>
 	</div>
 `,
 	parameters: { controls: { disable: true } },

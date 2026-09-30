@@ -1,7 +1,7 @@
 /**
  * Nederlandse Digitale Dienst Title Cell Component (Lit + TypeScript)
  *
- * A cell component for displaying a title with optional overline and subtitle in lists.
+ * A cell component for displaying a title with optional overline and supporting text in lists.
  *
  * ### Vertical alignment
  * `vertical-alignment="center"` (default) stretches the cell to fill the full
@@ -29,8 +29,8 @@
  * @attr {'top' | 'center' | 'bottom'} vertical-alignment - Vertical alignment (default: 'center')
  *
  * @attr {string} text - Title text content. Supports **bold** syntax for inline bold segments. Falls back to default slot.
- * @attr {string} overline - Optional overline text displayed above the title. Supports **bold**. Falls back to `overline` slot.
  * @attr {string} supporting-text - Optional supporting text displayed below the title. Supports **bold**. Falls back to `supporting-text` slot.
+ * @attr {string} overline - Optional overline text displayed above the title. Supports **bold**. Falls back to `overline` slot.
  * @attr {number} heading-level - Heading level for the title element: 1–6 (default: none, renders a <p>)
  *
  * @slot overline - Rich content for the overline region. Overrides the `overline` attribute when content is assigned.
@@ -96,11 +96,11 @@ export class NLDDTitleCell extends VisibilityMixin(LitElement, 'cells-container'
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	overline = '';
-
 	@property({ reflect: true, attribute: 'supporting-text', converter: reflectNonDefault<string>('') })
 	supportingText = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	overline = '';
 
 	/** Heading level for the title element (1–6). When not set, renders a <p>. */
 	@property({ type: Number, attribute: 'heading-level' })

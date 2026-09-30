@@ -15,7 +15,7 @@ function renderValidationIcon(component: NLDDTokenField): TemplateResult | typeo
 	return html`
 		<div class="token-field__validation-icon-area">
 			<nldd-icon class="token-field__validation-icon"
-				name=${name}
+				icon=${name}
 				aria-hidden="true"
 			></nldd-icon>
 		</div>
@@ -89,7 +89,7 @@ function renderToken(component: NLDDTokenField, value: string, index: number): T
 				control="menu"
 				tabindex=${tabindex}
 				?roving=${!component.readonly}
-				menu-text=${component._t('components.token-field.token-menu-action')}
+				menu-text=${`${component._t('components.token-field.token-menu-action')} "${label}"`}
 				?disabled=${component.disabled}
 				data-value=${value}
 				@keydown=${(e: KeyboardEvent) => component._handleTokenKeydown(e, index)}
@@ -108,7 +108,7 @@ function renderToken(component: NLDDTokenField, value: string, index: number): T
 			control=${component.readonly ? nothing : 'dismiss'}
 			tabindex=${tabindex}
 			?roving=${!component.readonly}
-			dismiss-text=${component._t('components.token-field.dismiss-action')}
+			dismiss-text=${`${component._t('components.token-field.dismiss-action')} "${label}"`}
 			?disabled=${component.disabled}
 			data-value=${value}
 			@dismiss=${() => component._handleTokenDismiss(value, index)}
@@ -124,7 +124,9 @@ export function tokenFieldTemplate(component: NLDDTokenField): TemplateResult {
 			data-valid=${component.valid && !component.invalid ? '' : nothing}
 			@click=${component._handleFieldClick}
 		>
-			<div class="token-field__list" role="list">
+			<div class="token-field__list"
+				role="list"
+			>
 				${repeat(
 					component.values,
 					(value) => value,

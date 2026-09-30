@@ -39,7 +39,7 @@ class LinkOpenWidget extends WidgetType {
 		anchor.rel = 'noopener noreferrer';
 		anchor.setAttribute('aria-label', this.label(this.href));
 		const icon = document.createElement('nldd-icon');
-		icon.setAttribute('name', 'external-link');
+		icon.setAttribute('icon', 'external-link');
 		icon.setAttribute('aria-hidden', 'true');
 		anchor.append(icon);
 		// The editor steals mousedown to place the caret; keep the click ours.

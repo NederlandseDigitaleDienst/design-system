@@ -76,7 +76,7 @@ const weg = (e: Event) => (e.currentTarget as HTMLElement).remove();
  * therefore does what a consumer does — clear what is there and make a new one.
  */
 const Template = ({ variant, icon, text, supportingText, duration }: Record<string, unknown>) => {
-	document.getElementById('nldd-notification-region')?.remove();
+	document.getElementById('nldd-notifications-area')?.remove();
 	const melding = document.createElement('nldd-notification');
 	melding.setAttribute('variant', String(variant));
 	if (icon) melding.setAttribute('icon', String(icon));
@@ -92,7 +92,7 @@ const Template = ({ variant, icon, text, supportingText, duration }: Record<stri
  * hij verhuist zichzelf naar de gedeelde regio, net als in een applicatie.
  * Verander een control en er komt een nieuwe.
  */
-export const Default = {
+export const Standaard = {
 	render: Template,
 	// A story in a frame of its own never hears about a changed arg, so this one
 	// renders in the docs page itself. It leaves nothing behind in its own block,
@@ -107,28 +107,47 @@ export const Default = {
  */
 export const Neutraal = {
 	render: () => html`
-		<nldd-notification text="Sync requested" duration="0" @dismiss=${weg}></nldd-notification>
+		<nldd-notification
+			text="Sync requested"
+			duration="0"
+			@dismiss=${weg}
+		></nldd-notification>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const Accent = {
 	render: () => html`
-		<nldd-notification variant="accent" text="Sync requested" duration="0" @dismiss=${weg}></nldd-notification>
+		<nldd-notification
+			variant="accent"
+			text="Sync requested"
+			duration="0"
+			@dismiss=${weg}
+		></nldd-notification>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const Succes = {
 	render: () => html`
-		<nldd-notification variant="success" text="Namespace created" duration="0" @dismiss=${weg}></nldd-notification>
+		<nldd-notification
+			variant="success"
+			text="Namespace created"
+			duration="0"
+			@dismiss=${weg}
+		></nldd-notification>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const Waarschuwing = {
 	render: () => html`
-		<nldd-notification variant="warning" text="Node pool is scaling down" duration="0" @dismiss=${weg}></nldd-notification>
+		<nldd-notification
+			variant="warning"
+			text="Node pool is scaling down"
+			duration="0"
+			@dismiss=${weg}
+		></nldd-notification>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -162,8 +181,16 @@ export const MetActies = {
 			supporting-text="The cluster is there, the pool is not."
 			@dismiss=${weg}
 		>
-			<nldd-button slot="actions" size="sm" text="Try again"></nldd-button>
-			<nldd-button slot="actions" size="sm" text="View cluster"></nldd-button>
+			<nldd-button
+				slot="actions"
+				size="sm"
+				text="Try again"
+			></nldd-button>
+			<nldd-button
+				slot="actions"
+				size="sm"
+				text="View cluster"
+			></nldd-button>
 		</nldd-notification>
 	`,
 	parameters: { controls: { disable: true } },
@@ -180,9 +207,20 @@ export const MetActies = {
  */
 export const Stapel = {
 	render: () => html`
-		<nldd-notification text="Sync requested" @dismiss=${weg}></nldd-notification>
-		<nldd-notification variant="success" text="Namespace created" @dismiss=${weg}></nldd-notification>
-		<nldd-notification variant="critical" text="Cluster could not be created" @dismiss=${weg}></nldd-notification>
+		<nldd-notification
+			text="Sync requested"
+			@dismiss=${weg}
+		></nldd-notification>
+		<nldd-notification
+			variant="success"
+			text="Namespace created"
+			@dismiss=${weg}
+		></nldd-notification>
+		<nldd-notification
+			variant="critical"
+			text="Cluster could not be created"
+			@dismiss=${weg}
+		></nldd-notification>
 	`,
 	// Hoog genoeg voor de uitgeklapte lijst, anders klapt hij open buiten zijn
 	// eigen frame.
@@ -223,7 +261,12 @@ const meldFout = () => {
 			supporting-text="De server gaf geen antwoord."
 			@dismiss=${weg}
 		>
-			<nldd-button slot="actions" size="sm" text="Probeer opnieuw" @click=${probeerOpnieuw}></nldd-button>
+			<nldd-button
+				slot="actions"
+				size="sm"
+				text="Probeer opnieuw"
+				@click=${probeerOpnieuw}
+			></nldd-button>
 		</nldd-notification>
 	`, houder);
 	const melding = houder.querySelector('nldd-notification');
@@ -245,17 +288,37 @@ export const BovenEenOverlay = {
 			gap="8"
 			horizontal-alignment="left"
 		>
-			<nldd-button text="Meld een fout" @click=${meldFout}></nldd-button>
-			<nldd-button text="Open modal dialog" @click=${openOverlay('nldd-modal-dialog')}></nldd-button>
-			<nldd-button text="Open sheet" @click=${openOverlay('nldd-sheet')}></nldd-button>
-			<nldd-button text="Open venster" @click=${openOverlay('nldd-window')}></nldd-button>
+			<nldd-button
+				text="Meld een fout"
+				@click=${meldFout}
+			></nldd-button>
+			<nldd-button
+				text="Open modal dialog"
+				@click=${openOverlay('nldd-modal-dialog')}
+			></nldd-button>
+			<nldd-button
+				text="Open sheet"
+				@click=${openOverlay('nldd-sheet')}
+			></nldd-button>
+			<nldd-button
+				text="Open venster"
+				@click=${openOverlay('nldd-window')}
+			></nldd-button>
 		</nldd-container>
 		<nldd-modal-dialog
 			text="Modal dialog"
 			supporting-text="Meld een fout terwijl deze dialog openstaat."
 		>
-			<nldd-button slot="actions" text="Meld een fout" @click=${meldFout}></nldd-button>
-			<nldd-button slot="actions" text="Sluit" @click=${sluitDialog}></nldd-button>
+			<nldd-button
+				slot="actions"
+				text="Meld een fout"
+				@click=${meldFout}
+			></nldd-button>
+			<nldd-button
+				slot="actions"
+				text="Sluit"
+				@click=${sluitDialog}
+			></nldd-button>
 		</nldd-modal-dialog>
 		<nldd-sheet accessible-label="Sheet">
 			<nldd-page sticky-header>
@@ -269,7 +332,10 @@ export const BovenEenOverlay = {
 						<nldd-rich-text>
 							<p>Meld een fout terwijl deze sheet openstaat.</p>
 						</nldd-rich-text>
-						<nldd-button text="Meld een fout" @click=${meldFout}></nldd-button>
+						<nldd-button
+							text="Meld een fout"
+							@click=${meldFout}
+						></nldd-button>
 					</nldd-container>
 				</nldd-simple-section>
 			</nldd-page>
@@ -286,7 +352,10 @@ export const BovenEenOverlay = {
 						<nldd-rich-text>
 							<p>Meld een fout terwijl dit venster openstaat.</p>
 						</nldd-rich-text>
-						<nldd-button text="Meld een fout" @click=${meldFout}></nldd-button>
+						<nldd-button
+							text="Meld een fout"
+							@click=${meldFout}
+						></nldd-button>
 					</nldd-container>
 				</nldd-simple-section>
 			</nldd-page>

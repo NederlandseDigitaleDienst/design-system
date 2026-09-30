@@ -2,8 +2,10 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDButton } from './button.js';
 import './button.js';
+import '../button-group/button-group.js';
 import '../../../assets/styles/variables.css';
 import '../menu/menu.js';
+import '../../forms/form/form.js';
 import '../../layout/popover/popover.js';
 
 describe('nldd-button', () => {
@@ -11,6 +13,85 @@ describe('nldd-button', () => {
 
 	afterEach(() => {
 		if (el) cleanup(el);
+	});
+
+	it('verstuurt het formulier waar het `form`-attribuut naar wijst, ook een nldd-form', async () => {
+		el = await fixture(`
+			<div>
+				<nldd-form id="aanvraag">
+					<input name="titel">
+				</nldd-form>
+				<nldd-button
+					type="submit"
+					form="aanvraag"
+					text="Bewaar"
+				></nldd-button>
+			</div>
+		`);
+		const button = el.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(button);
+		const form = el.querySelector<HTMLElement & { form: HTMLFormElement }>('nldd-form')!.form;
+		let submits = 0;
+		form.addEventListener('submit', (e) => { e.preventDefault(); submits += 1; });
+		button.shadowRoot!.querySelector('button')!.click();
+		expect(submits).toBe(1);
+	});
+
+	it('doet niets als het `form`-attribuut nergens naar wijst, en zegt dat', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDButton>('<nldd-button type="submit" form="bestaat-niet" text="Bewaar"></nldd-button>');
+		const button = el as NLDDButton;
+		await waitForUpdate(button);
+		expect(() => button.shadowRoot!.querySelector('button')!.click()).not.toThrow();
+		// Een klik die niets doet zonder een woord is precies wat dit attribuut
+		// kwam oplossen, dus daar hoort een melding bij.
+		expect(warn.mock.calls.some(([m]) => String(m).includes('form="bestaat-niet"'))).toBe(true);
+	});
+
+	it('neemt de breedte over die een groep om hem heen doorgeeft', async () => {
+		// --context-button-width is hoe een gestapelde nldd-button-group zijn
+		// knoppen laat rekken: de groep zet de variabele en geeft de host de
+		// volle breedte. Zonder dit pad valt dat stil om, en zie je het pas in
+		// een story. Vertical, niet auto: dan hangt de test niet aan een
+		// container query die van de breedte van de testomgeving afhangt.
+		el = await fixture(`
+			<div style="width: 320px">
+				<nldd-button-group orientation="vertical">
+					<nldd-button text="Bewaar"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		const button = el.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
+		await waitForUpdate(button);
+		expect(getComputedStyle(button.shadowRoot!.querySelector('button')!).width).toBe('320px');
+	});
+
+	it('houdt zijn eigen breedte in een groep die naast elkaar zet', async () => {
+		el = await fixture(`
+			<div style="width: 320px">
+				<nldd-button-group orientation="horizontal">
+					<nldd-button text="Bewaar"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		const button = el.querySelector<NLDDButton>('nldd-button')!;
+		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
+		await waitForUpdate(button);
+		expect(getComputedStyle(button.shadowRoot!.querySelector('button')!).width).not.toBe('320px');
+	});
+
+	it('waarschuwt opnieuw als er een andere verkeerde id staat', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDButton>('<nldd-button type="submit" form="eerste-typefout" text="Bewaar"></nldd-button>');
+		const button = el as NLDDButton;
+		await waitForUpdate(button);
+		button.shadowRoot!.querySelector('button')!.click();
+		button.setAttribute('form', 'tweede-typefout');
+		await waitForUpdate(button);
+		button.shadowRoot!.querySelector('button')!.click();
+		const ids = warn.mock.calls.map(([m]) => String(m).match(/form="([^"]+)"/)?.[1]).filter(Boolean);
+		expect(ids).toEqual(['eerste-typefout', 'tweede-typefout']);
 	});
 
 	it('renders without error', async () => {
@@ -141,7 +222,7 @@ describe('nldd-button – icon attributes', () => {
 		const endIcon = el.shadowRoot!.querySelector('.button__end-icon');
 
 		expect(startIcon).not.toBeNull();
-		expect(startIcon!.querySelector('nldd-icon')!.getAttribute('name')).toBe('heart');
+		expect(startIcon!.querySelector('nldd-icon')!.getAttribute('icon')).toBe('heart');
 		expect(endIcon).toBeNull();
 	});
 
@@ -154,7 +235,7 @@ describe('nldd-button – icon attributes', () => {
 
 		expect(startIcon).toBeNull();
 		expect(endIcon).not.toBeNull();
-		expect(endIcon!.querySelector('nldd-icon')!.getAttribute('name')).toBe('arrow-right');
+		expect(endIcon!.querySelector('nldd-icon')!.getAttribute('icon')).toBe('arrow-right');
 	});
 
 	it('renders both start and end icons', async () => {
@@ -165,9 +246,9 @@ describe('nldd-button – icon attributes', () => {
 		const endIcon = el.shadowRoot!.querySelector('.button__end-icon');
 
 		expect(startIcon).not.toBeNull();
-		expect(startIcon!.querySelector('nldd-icon')!.getAttribute('name')).toBe('heart');
+		expect(startIcon!.querySelector('nldd-icon')!.getAttribute('icon')).toBe('heart');
 		expect(endIcon).not.toBeNull();
-		expect(endIcon!.querySelector('nldd-icon')!.getAttribute('name')).toBe('chevron-down-small');
+		expect(endIcon!.querySelector('nldd-icon')!.getAttribute('icon')).toBe('chevron-down-small');
 	});
 
 	it('wraps the start/end icon in a container span (class on the container, not on nldd-icon)', async () => {

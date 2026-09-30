@@ -163,8 +163,25 @@ describe('nldd-token – dismiss', () => {
 		expect(fired).toBe(false);
 	});
 
-	it('dismiss button has default accessible-label', async () => {
-		el = await fixture<NLDDToken>('<nldd-token control="dismiss">Label</nldd-token>');
+	it('names the dismiss button after the token text', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="dismiss" text="Spoed"></nldd-token>');
+		await waitForUpdate(el);
+		const dismiss = el.shadowRoot!.querySelector('.token__dismiss-action nldd-icon-button')!;
+		expect(dismiss.getAttribute('accessible-label')).toBe('Verwijder "Spoed"');
+	});
+
+	it('names the dismiss button after slotted text and follows it', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="dismiss">Spoed</nldd-token>');
+		await waitForUpdate(el);
+		const dismiss = el.shadowRoot!.querySelector('.token__dismiss-action nldd-icon-button')!;
+		expect(dismiss.getAttribute('accessible-label')).toBe('Verwijder "Spoed"');
+		el.firstChild!.textContent = 'Normaal';
+		await waitForUpdate(el);
+		expect(dismiss.getAttribute('accessible-label')).toBe('Verwijder "Normaal"');
+	});
+
+	it('falls back to a bare label on a token without text', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="dismiss"></nldd-token>');
 		await waitForUpdate(el);
 		const dismiss = el.shadowRoot!.querySelector('.token__dismiss-action nldd-icon-button')!;
 		expect(dismiss.getAttribute('accessible-label')).toBe('Verwijder');
@@ -175,6 +192,22 @@ describe('nldd-token – dismiss', () => {
 		await waitForUpdate(el);
 		const dismiss = el.shadowRoot!.querySelector('.token__dismiss-action nldd-icon-button')!;
 		expect(dismiss.getAttribute('accessible-label')).toBe('Remove filter');
+	});
+
+	it('takes the words of both labels from the translations', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="dismiss">Spoed</nldd-token>');
+		el.translations = {
+			'components.token.dismiss-action': 'Remove',
+			'components.token.open-token-menu-action': 'Show options for',
+		};
+		await waitForUpdate(el);
+		const dismiss = el.shadowRoot!.querySelector('.token__dismiss-action nldd-icon-button')!;
+		expect(dismiss.getAttribute('accessible-label')).toBe('Remove "Spoed"');
+
+		el.control = 'menu';
+		await waitForUpdate(el);
+		const menu = el.shadowRoot!.querySelector('.token__menu-action nldd-icon-button')!;
+		expect(menu.getAttribute('accessible-label')).toBe('Show options for "Spoed"');
 	});
 });
 
@@ -188,6 +221,20 @@ describe('nldd-token – menu', () => {
 
 	afterEach(() => {
 		if (el) cleanup(el);
+	});
+
+	it('names the menu button after the token text, not after the menu', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="menu">Spoed<nldd-menu slot="menu"><nldd-menu-item text="Bewerk"></nldd-menu-item></nldd-menu></nldd-token>');
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('.token__menu-action nldd-icon-button')!;
+		expect(button.getAttribute('accessible-label')).toBe('Toon opties voor "Spoed"');
+	});
+
+	it('lets menu-text replace the whole label', async () => {
+		el = await fixture<NLDDToken>('<nldd-token control="menu" text="Spoed" menu-text="Acties"></nldd-token>');
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('.token__menu-action nldd-icon-button')!;
+		expect(button.getAttribute('accessible-label')).toBe('Acties');
 	});
 
 	it('wires a slotted menu, anchored to the chevron button (menu variant)', async () => {

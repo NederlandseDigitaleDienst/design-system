@@ -18,7 +18,7 @@ export function bannerTemplate(component: NLDDBanner) {
 			<div class="banner__icon"
 				aria-hidden="true"
 			>
-				<nldd-icon name=${component._resolvedIcon}></nldd-icon>
+				<nldd-icon icon=${component._resolvedIcon}></nldd-icon>
 			</div>
 			<div class="banner__main">
 				${component.text || component.supportingText ? html`

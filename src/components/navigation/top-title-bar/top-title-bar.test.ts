@@ -28,16 +28,35 @@ describe('nldd-top-title-bar', () => {
 		expect(el.shadowRoot!.querySelector('.top-title-bar__title')?.textContent?.trim()).toBe('Overzicht');
 	});
 
+	it('renders the title as an h1 by default, without a heading-level attribute', async () => {
+		el = await fixture('<nldd-top-title-bar text="Overzicht"></nldd-top-title-bar>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.top-title-bar__title')?.localName).toBe('h1');
+		expect(el.hasAttribute('heading-level')).toBe(false);
+	});
+
+	it('renders the heading heading-level names', async () => {
+		el = await fixture('<nldd-top-title-bar text="Details" heading-level="2"></nldd-top-title-bar>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.top-title-bar__title')?.localName).toBe('h2');
+	});
+
+	it('falls back to an h1 for a heading-level outside 1–6', async () => {
+		el = await fixture('<nldd-top-title-bar text="Details" heading-level="9"></nldd-top-title-bar>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.top-title-bar__title')?.localName).toBe('h1');
+	});
+
 	it('renders the supporting text when set', async () => {
 		el = await fixture('<nldd-top-title-bar text="Titel" supporting-text="Subtitel"></nldd-top-title-bar>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.top-title-bar__subtitle')?.textContent?.trim()).toBe('Subtitel');
+		expect(el.shadowRoot!.querySelector('.top-title-bar__supporting-text')?.textContent?.trim()).toBe('Subtitel');
 	});
 
 	it('omits the supporting text when not set', async () => {
 		el = await fixture('<nldd-top-title-bar text="Titel"></nldd-top-title-bar>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.top-title-bar__subtitle')).toBeNull();
+		expect(el.shadowRoot!.querySelector('.top-title-bar__supporting-text')).toBeNull();
 	});
 
 	it('has is-compact class by default when no collapse-anchor is set', async () => {

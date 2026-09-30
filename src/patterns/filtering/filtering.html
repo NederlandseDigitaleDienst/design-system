@@ -1,0 +1,276 @@
+<style>
+  /* The section owns the switch; this reveals the trigger only when there is
+     a sheet to open. :not([hidden]) keeps the toolbar's own overflow working. */
+  #filters-openen {
+    display: none;
+  }
+
+  nldd-sidebar-section[collapsed] #filters-openen:not([hidden]) {
+    display: inline-flex;
+  }
+</style>
+
+<nldd-page>
+  <nldd-sidebar-section
+    sidebar-label="Filters"
+    translations='{"components.sidebar-section.sheet-dismiss-action": "Klaar"}'
+  >
+    <nldd-title
+      slot="header"
+      size="2"
+      text="Dossiers"
+      heading-level="1"
+    ></nldd-title>
+
+    <nldd-container
+      slot="sidebar"
+      padding="16"
+    >
+      <nldd-title
+        size="5"
+        text="Status"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-list
+        variant="simple"
+        dividers="never"
+        accessible-label="Status"
+      >
+        <nldd-list-item
+          checkbox
+          checked
+        >
+          <nldd-cell>
+            <nldd-checkbox decorative checked></nldd-checkbox>
+          </nldd-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-text-cell text="In behandeling"></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-text-cell
+            width="fit-content"
+            horizontal-alignment="right"
+            color="secondary"
+            text="12"
+          ></nldd-text-cell>
+        </nldd-list-item>
+        <nldd-list-item
+          checkbox
+          checked
+        >
+          <nldd-cell>
+            <nldd-checkbox decorative checked></nldd-checkbox>
+          </nldd-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-text-cell text="Afgerond"></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-text-cell
+            width="fit-content"
+            horizontal-alignment="right"
+            color="secondary"
+            text="4"
+          ></nldd-text-cell>
+        </nldd-list-item>
+      </nldd-list>
+      <nldd-spacer size="24"></nldd-spacer>
+      <nldd-title
+        size="5"
+        text="Team"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-list
+        variant="simple"
+        dividers="never"
+        accessible-label="Team"
+      >
+        <nldd-list-item
+          checkbox
+        >
+          <nldd-cell>
+            <nldd-checkbox decorative></nldd-checkbox>
+          </nldd-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-text-cell text="Uitvoering"></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-text-cell
+            width="fit-content"
+            horizontal-alignment="right"
+            color="secondary"
+            text="9"
+          ></nldd-text-cell>
+        </nldd-list-item>
+        <nldd-list-item
+          checkbox
+        >
+          <nldd-cell>
+            <nldd-checkbox decorative></nldd-checkbox>
+          </nldd-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-text-cell text="Beleid"></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-text-cell
+            width="fit-content"
+            horizontal-alignment="right"
+            color="secondary"
+            text="7"
+          ></nldd-text-cell>
+        </nldd-list-item>
+      </nldd-list>
+    </nldd-container>
+
+    <nldd-toolbar label="Zoeken en filteren">
+      <nldd-toolbar-item
+        slot="start"
+        min-width="240px"
+        width="100%"
+        max-width="560px"
+      >
+        <nldd-search-field placeholder="Zoeken"></nldd-search-field>
+        <nldd-menu-item
+          slot="overflow"
+          icon="search"
+          text="Zoeken"
+        ></nldd-menu-item>
+      </nldd-toolbar-item>
+
+      <nldd-toolbar-item
+        id="filters-openen"
+        slot="end"
+      >
+        <nldd-button
+          variant="secondary"
+          start-icon="filter"
+          text="Filters"
+        ></nldd-button>
+        <nldd-menu-item
+          slot="overflow"
+          icon="filter"
+          text="Filters"
+        ></nldd-menu-item>
+      </nldd-toolbar-item>
+    </nldd-toolbar>
+
+    <nldd-spacer size="16"></nldd-spacer>
+
+    <nldd-container
+      layout="wrap"
+      gap="8"
+      vertical-alignment="center"
+    >
+      <nldd-token
+        text="Status: In behandeling"
+        control="dismiss"
+      ></nldd-token>
+      <nldd-token
+        text="Status: Afgerond"
+        control="dismiss"
+      ></nldd-token>
+    </nldd-container>
+
+    <nldd-spacer size="16"></nldd-spacer>
+
+    <nldd-text
+      size="sm"
+      color="secondary"
+      aria-live="polite"
+    >2 dossiers</nldd-text>
+
+    <nldd-spacer size="4"></nldd-spacer>
+
+    <nldd-list accessible-label="Dossiers">
+      <nldd-inline-dialog
+        slot="no-results"
+        icon="magnifier"
+        text="Geen dossiers gevonden"
+        supporting-text="Pas je zoekopdracht of filters aan."
+      ></nldd-inline-dialog>
+      <nldd-list-item href="#dossier-d-318">
+        <nldd-text-cell
+          hide-below="md"
+          text="Dossier D-318"
+          supporting-text="Team Uitvoering"
+        ></nldd-text-cell>
+        <nldd-text-cell
+          hide-above="sm"
+          supporting-text="Team Uitvoering"
+        >
+          Dossier D-318
+          <nldd-badge
+            size="sm"
+            color="neutral"
+            text="In behandeling"
+          ></nldd-badge>
+        </nldd-text-cell>
+        <nldd-spacer-cell
+          size="8"
+          hide-below="md"
+        ></nldd-spacer-cell>
+        <nldd-cell hide-below="md">
+          <nldd-badge
+            color="neutral"
+            decorative
+          ></nldd-badge>
+        </nldd-cell>
+        <nldd-spacer-cell
+          size="8"
+          hide-below="md"
+        ></nldd-spacer-cell>
+        <nldd-text-cell
+          hide-below="md"
+          width="fit-content"
+          text="In behandeling"
+        ></nldd-text-cell>
+        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
+      </nldd-list-item>
+      <nldd-list-item href="#dossier-d-319">
+        <nldd-text-cell
+          hide-below="md"
+          text="Dossier D-319"
+          supporting-text="Team Beleid"
+        ></nldd-text-cell>
+        <nldd-text-cell
+          hide-above="sm"
+          supporting-text="Team Beleid"
+        >
+          Dossier D-319
+          <nldd-badge
+            size="sm"
+            color="success"
+            text="Afgerond"
+          ></nldd-badge>
+        </nldd-text-cell>
+        <nldd-spacer-cell
+          size="8"
+          hide-below="md"
+        ></nldd-spacer-cell>
+        <nldd-cell hide-below="md">
+          <nldd-badge
+            color="success"
+            decorative
+          ></nldd-badge>
+        </nldd-cell>
+        <nldd-spacer-cell
+          size="8"
+          hide-below="md"
+        ></nldd-spacer-cell>
+        <nldd-text-cell
+          hide-below="md"
+          width="fit-content"
+          text="Afgerond"
+        ></nldd-text-cell>
+        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-icon-cell
+          size="20"
+          color="secondary"
+          icon="chevron-right"
+        ></nldd-icon-cell>
+      </nldd-list-item>
+    </nldd-list>
+  </nldd-sidebar-section>
+</nldd-page>

@@ -5,13 +5,13 @@ import './notification.js';
 import '../../actions/button/button.js';
 import '../../layout/sheet/sheet.js';
 import '../modal-dialog/modal-dialog.js';
-import { _resetOverlayWatchForTesting } from './notification-region.js';
+import { _resetOverlayWatchForTesting } from './notifications-area.js';
 import type { NLDDNotification } from './notification.js';
 
 /** The component moves itself out of the fixture and into the shared region, so
  *  the usual cleanup cannot reach it. */
 function clearRegion(): void {
-	document.getElementById('nldd-notification-region')?.remove();
+	document.getElementById('nldd-notifications-area')?.remove();
 }
 
 /** Real timers with a short duration rather than fake ones: the notification
@@ -24,7 +24,7 @@ function wacht(ms: number): Promise<void> {
 async function maak(html: string): Promise<NLDDNotification> {
 	const el = await fixture<NLDDNotification>(html);
 	await waitForUpdate(el);
-	// joinRegion runs in a microtask, so wait one turn for the move.
+	// joinArea runs in a microtask, so wait one turn for the move.
 	await Promise.resolve();
 	await waitForUpdate(el);
 	return el;
@@ -46,7 +46,7 @@ describe('nldd-notification', () => {
 
 	it('verhuist zichzelf naar de gedeelde regio', async () => {
 		el = await maak('<nldd-notification text="Opgeslagen"></nldd-notification>');
-		const region = document.getElementById('nldd-notification-region');
+		const region = document.getElementById('nldd-notifications-area');
 		expect(region).not.toBeNull();
 		expect(el.parentElement).toBe(region);
 	});
@@ -159,7 +159,7 @@ describe('nldd-notification', () => {
 		await Promise.resolve();
 		await Promise.resolve();
 
-		const region = document.getElementById('nldd-notification-region')!;
+		const region = document.getElementById('nldd-notifications-area')!;
 		const stapel = Array.from(region.querySelectorAll('nldd-notification'));
 		expect(stapel.map((item) => item.getAttribute('text'))).toEqual(['Tweede', 'Eerste']);
 		expect((stapel[0] as HTMLElement).style.getPropertyValue('--_stack-depth')).toBe('0');
@@ -178,7 +178,7 @@ describe('nldd-notification', () => {
 		await Promise.resolve();
 		await Promise.resolve();
 
-		const region = document.getElementById('nldd-notification-region')!;
+		const region = document.getElementById('nldd-notifications-area')!;
 		const strook = region.querySelector<HTMLElement>('[data-expander]')!;
 		expect(strook.style.display).toBe('block');
 
@@ -219,7 +219,7 @@ describe('nldd-notification', () => {
 });
 
 describe('nldd-notification in a modal overlay', () => {
-	const REGION = 'nldd-notification-region';
+	const REGION = 'nldd-notifications-area';
 	let sheet: HTMLElement;
 	// Overlays a test opens besides the sheet. Cleaned up here rather than at the
 	// end of the test, because one left open would draw the region of the next.

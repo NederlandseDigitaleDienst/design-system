@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './form-field.js';
 import '../validation-list/validation-list.js';
 import '../form/form.js';
@@ -63,57 +63,70 @@ export default {
 	title: 'Components/Forms/Form Field',
 	component: 'nldd-form-field',
 	tags: ['autodocs'],
-	argTypes: {
-		labelAlignment: {
-			name: 'label-alignment',
-			control: 'select',
-			options: ['top', 'right', 'left'],
-			table: { order: 1, defaultValue: { summary: 'top' } },
-		},
-		label: {
-			control: 'text',
-			table: { order: 2 },
-		},
-		supportingLabel: {
-			name: 'supporting-label',
-			control: 'text',
-			table: { order: 3 },
-		},
-		optional: {
-			control: 'boolean',
-			table: { order: 4, defaultValue: { summary: 'false' } },
-		},
-	},
 	args: {
 		labelAlignment: 'top',
 		label: 'Label',
 		supportingLabel: '',
 		optional: false,
+		optionalLabel: '',
+	},
+	argTypes: {
+		labelAlignment: {
+			name: 'label-alignment',
+			control: 'select',
+			options: ['top', 'right', 'left'],
+			description: 'Plaats van het label: boven de invoer, of in een kolom ernaast (rechts of links uitgelijnd). Op een smalle container altijd boven. Een eigen waarde wint van die van het formulier.',
+			table: { defaultValue: { summary: 'top' } },
+		},
+		label: {
+			control: 'text',
+			description: 'Label van het veld. Het veld geeft het ook als toegankelijke naam aan de invoer.',
+		},
+		supportingLabel: {
+			name: 'supporting-label',
+			control: 'text',
+			description: 'Korte ondersteunende tekst onder het label. Voor een langere uitleg is er `nldd-form-field-help-text`.',
+		},
+		optional: {
+			control: 'boolean',
+			description: 'Markeert het veld als optioneel. Markeer de optionele velden, niet de verplichte.',
+			table: { defaultValue: { summary: false } },
+		},
+		optionalLabel: {
+			name: 'optional-label',
+			control: 'text',
+			description: 'Tekst van het optioneel-label.',
+			table: { defaultValue: { summary: 'Optioneel' } },
+		},
 	},
 };
 
-const Template = ({ labelAlignment, label, supportingLabel, optional }: Record<string, any>) => html`
+const Template = ({ labelAlignment, label, supportingLabel, optional, optionalLabel }: Record<string, any>) => html`
 	<nldd-form-field
 		label-alignment=${labelAlignment}
 		label=${label}
 		supporting-label=${supportingLabel}
 		?optional=${optional}
+		optional-label=${optionalLabel || nothing}
 	>
 		<nldd-text-field></nldd-text-field>
 	</nldd-form-field>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const WithSupportingLabel = () => html`
-	<nldd-form-field label="Geboortedatum" supporting-label="DD-MM-JJJJ">
+export const MetSupportingLabel = () => html`
+	<nldd-form-field
+		label="Geboortedatum"
+		supporting-label="DD-MM-JJJJ"
+	>
 		<nldd-text-field></nldd-text-field>
 	</nldd-form-field>
 `;
 
-export const WithHelpText = () => html`
+export const MetHulptekst = () => html`
 	<nldd-form-field label="E-mailadres">
 		<nldd-form-field-help-text>
 			Wij delen uw e-mailadres nooit. <a href="/privacy">Privacybeleid</a>.
@@ -122,13 +135,17 @@ export const WithHelpText = () => html`
 	</nldd-form-field>
 `;
 
-export const Optional = () => html`
-	<nldd-form-field label="Telefoonnummer" optional supporting-label="Alleen gebruikt voor tweestapsverificatie.">
+export const Optioneel = () => html`
+	<nldd-form-field
+		label="Telefoonnummer"
+		optional
+		supporting-label="Alleen gebruikt voor tweestapsverificatie."
+	>
 		<nldd-text-field type="tel"></nldd-text-field>
 	</nldd-form-field>
 `;
 
-export const Invalid = () => html`
+export const MetEenFout = () => html`
 	<nldd-form-field label="E-mailadres">
 		<nldd-text-field invalid></nldd-text-field>
 		<nldd-validation-list>
@@ -137,7 +154,7 @@ export const Invalid = () => html`
 	</nldd-form-field>
 `;
 
-export const MultipleErrors = () => html`
+export const MeerdereFouten = () => html`
 	<nldd-form-field label="Wachtwoord">
 		<nldd-text-field invalid></nldd-text-field>
 		<nldd-validation-list>
@@ -150,27 +167,45 @@ export const MultipleErrors = () => html`
 	</nldd-form-field>
 `;
 
-export const LabelAlignmentRight = () => html`
-	<nldd-form-field label="Volledige naam" label-alignment="right" supporting-label="Zoals vermeld in uw paspoort.">
+export const LabelRechts = () => html`
+	<nldd-form-field
+		label="Volledige naam"
+		label-alignment="right"
+		supporting-label="Zoals vermeld in uw paspoort."
+	>
 		<nldd-text-field></nldd-text-field>
 	</nldd-form-field>
 `;
 
-export const LabelAlignmentLeft = () => html`
-	<nldd-form-field label="Volledige naam" label-alignment="left" supporting-label="Zoals vermeld in uw paspoort.">
+export const LabelLinks = () => html`
+	<nldd-form-field
+		label="Volledige naam"
+		label-alignment="left"
+		supporting-label="Zoals vermeld in uw paspoort."
+	>
 		<nldd-text-field></nldd-text-field>
 	</nldd-form-field>
 `;
 
-export const CompleteFormTop = () => html`
+export const VolledigFormulierLabelBoven = () => html`
 	<nldd-form novalidate>
 		<nldd-form-field label="Volledige naam">
 			<nldd-text-field input-id="top-volledige-naam"></nldd-text-field>
 		</nldd-form-field>
-		<nldd-form-field label="E-mailadres" supporting-label="We sturen een bevestigingsmail.">
-			<nldd-text-field type="email" input-id="top-email"></nldd-text-field>
+		<nldd-form-field
+			label="E-mailadres"
+			supporting-label="We sturen een bevestigingsmail."
+		>
+			<nldd-text-field
+				type="email"
+				input-id="top-email"
+			></nldd-text-field>
 		</nldd-form-field>
-		<nldd-form-field label="Telefoonnummer" optional supporting-label="Alleen gebruikt voor tweestapsverificatie.">
+		<nldd-form-field
+			label="Telefoonnummer"
+			optional
+			supporting-label="Alleen gebruikt voor tweestapsverificatie."
+		>
 			<nldd-text-field
 				type="tel"
 				input-id="top-telefoon"
@@ -180,27 +215,50 @@ export const CompleteFormTop = () => html`
 				<nldd-validation-item id="top-telefoon-formaat" match="^[0-9 +-]+$">Alleen cijfers, spaties, + en -</nldd-validation-item>
 			</nldd-validation-list>
 		</nldd-form-field>
-		<nldd-form-field label="Opmerkingen" optional supporting-label="Eventuele aanvullende opmerkingen.">
+		<nldd-form-field
+			label="Opmerkingen"
+			optional
+			supporting-label="Eventuele aanvullende opmerkingen."
+		>
 			<nldd-text-field input-id="top-opmerkingen"></nldd-text-field>
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button-group>
-				<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+				<nldd-button
+					variant="primary"
+					type="submit"
+					text="Opslaan"
+				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>
 `;
 
-export const CompleteFormRight = () => html`
+export const VolledigFormulierLabelRechts = () => html`
 	<div style="container-type: inline-size;">
-		<nldd-form label-alignment="right" novalidate>
-			<nldd-form-field label="Volledige naam" supporting-label="Zoals vermeld in uw paspoort.">
+		<nldd-form
+			label-alignment="right"
+			novalidate
+		>
+			<nldd-form-field
+				label="Volledige naam"
+				supporting-label="Zoals vermeld in uw paspoort."
+			>
 				<nldd-text-field input-id="right-full-name"></nldd-text-field>
 			</nldd-form-field>
-			<nldd-form-field label="E-mailadres" supporting-label="We sturen een bevestigingsmail.">
-				<nldd-text-field type="email" input-id="rechts-email"></nldd-text-field>
+			<nldd-form-field
+				label="E-mailadres"
+				supporting-label="We sturen een bevestigingsmail."
+			>
+				<nldd-text-field
+					type="email"
+					input-id="rechts-email"
+				></nldd-text-field>
 			</nldd-form-field>
-			<nldd-form-field label="Telefoonnummer" optional>
+			<nldd-form-field
+				label="Telefoonnummer"
+				optional
+			>
 				<nldd-text-field
 					type="tel"
 					input-id="right-phone"
@@ -210,12 +268,20 @@ export const CompleteFormRight = () => html`
 					<nldd-validation-item id="rechts-telefoon-formaat" match="^[0-9 +-]+$">Alleen cijfers, spaties, + en -</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
-			<nldd-form-field label="Opmerkingen" optional supporting-label="Eventuele aanvullende opmerkingen.">
+			<nldd-form-field
+				label="Opmerkingen"
+				optional
+				supporting-label="Eventuele aanvullende opmerkingen."
+			>
 				<nldd-text-field input-id="right-comments"></nldd-text-field>
 			</nldd-form-field>
 			<nldd-form-actions>
 				<nldd-button-group>
-					<nldd-button variant="primary" type="submit" text="Opslaan"></nldd-button>
+					<nldd-button
+						variant="primary"
+						type="submit"
+						text="Opslaan"
+					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>
 		</nldd-form>

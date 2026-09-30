@@ -453,7 +453,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		const threshold = parseFloat(getComputedStyle(item).getPropertyValue('--_short-text-threshold'));
 		const useShort = rect.width < threshold;
 		const displayTitle = useShort ? (item.shortText || item.text) : item.text;
-		const displaySubtitle = useShort ? (item.shortSupportingText || item.supportingText) : item.supportingText;
+		const displaySupportingText = useShort ? (item.shortSupportingText || item.supportingText) : item.supportingText;
 
 		const cloneInner = document.createElement('div');
 		cloneInner.className = 'document-tab-bar__item';
@@ -466,11 +466,11 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		titleEl.textContent = displayTitle;
 		cloneTab.appendChild(titleEl);
 
-		if (displaySubtitle) {
-			const subtitleEl = document.createElement('span');
-			subtitleEl.className = 'document-tab-bar__item-supporting-text';
-			subtitleEl.textContent = displaySubtitle;
-			cloneTab.appendChild(subtitleEl);
+		if (displaySupportingText) {
+			const supportingTextEl = document.createElement('span');
+			supportingTextEl.className = 'document-tab-bar__item-supporting-text';
+			supportingTextEl.textContent = displaySupportingText;
+			cloneTab.appendChild(supportingTextEl);
 		}
 
 		cloneInner.appendChild(cloneTab);

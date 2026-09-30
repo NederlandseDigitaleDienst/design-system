@@ -23,7 +23,10 @@ export function collectionTemplate(component: NLDDCollection): TemplateResult {
 		<footer class="collection__footer"
 			?hidden=${!showFooter}
 		>
-			<slot name="footer" @slotchange=${component._onFooterSlotChange}>
+			<slot
+				name="footer"
+				@slotchange=${component._onFooterSlotChange}
+			>
 				${scrollable ? html`
 					<nldd-button-bar>
 						<nldd-icon-button

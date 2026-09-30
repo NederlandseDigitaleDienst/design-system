@@ -30,6 +30,13 @@
  *
  * @element nldd-validation-item
  *
+ * One requirement of a value, with the rule that checks it. Give every item an
+ * id that names its field as well as its rule: an id has to be unique in the
+ * whole document, and `length` is the first thing three fields in one form will
+ * all reach for. Write the text as the requirement ("Minimaal 8 tekens"), not as
+ * the command ("Gebruik minimaal 8 tekens"): before a verdict it stands there as
+ * what the field wants, after one as what the value does not meet.
+ *
  * @attr {string} match - Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it".
  * @attr {number} minlength - Fewest characters the value may have.
  * @attr {number} maxlength - Most characters the value may have.
@@ -41,10 +48,6 @@
  * @slot - The text of the requirement.
  *
  * ─────────────────────────────────────────────────────────────────────────
- *
- * Give every item an id that names its field as well as its rule. An id has to
- * be unique in the whole document, and `length` is the first thing three fields
- * in one form will all reach for.
  *
  * @example
  * <nldd-form-field label="Wachtwoord">

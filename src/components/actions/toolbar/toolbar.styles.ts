@@ -226,7 +226,7 @@ export const toolbarTitleStyles = css`
 		--_title-group-height: var(--semantics-controls-md-min-size);
 		--_content-gap: var(--primitives-space-6);
 		--_title-font: var(--primitives-font-body-lg-semi-bold-flat);
-		--_subtitle-font: var(--primitives-font-body-xs-regular-flat);
+		--_supporting-text-font: var(--primitives-font-body-xs-regular-flat);
 
 		${inheritedTextReset}
 		display: inline-flex;
@@ -242,7 +242,7 @@ export const toolbarTitleStyles = css`
 	:host([size="sm"]) {
 		--_title-group-height: var(--semantics-controls-sm-min-size);
 		--_title-font: var(--primitives-font-body-sm-semi-bold-flat);
-		--_subtitle-font: var(--primitives-font-body-xxs-regular-flat);
+		--_supporting-text-font: var(--primitives-font-body-xxs-regular-flat);
 	}
 
 	:host([size="lg"]) {
@@ -282,7 +282,7 @@ export const toolbarTitleStyles = css`
 
 	/* # Elements */
 
-	/* The title + subtitle column: the fit-content-capped, clipping part. The
+	/* The title + supporting text column: the fit-content-capped, clipping part. The
 	   action slot sits outside this cap so the control is never truncated. */
 	.toolbar__title-group {
 		display: flex;
@@ -337,7 +337,7 @@ export const toolbarTitleStyles = css`
 
 	/* text-align lives on the text elements, not :host: the inheritedTextReset on
 	   :host locks text-align to start, so a host-level override would need
-	   !important. The title/subtitle are shadow elements outside that reset. */
+	   !important. The title and supporting text are shadow elements outside that reset. */
 	.toolbar__title {
 		margin: 0;
 		max-width: 100%;
@@ -353,18 +353,18 @@ export const toolbarTitleStyles = css`
 		text-align: center;
 	}
 
-	.toolbar__subtitle {
+	.toolbar__supporting-text {
 		margin: 0;
 		max-width: 100%;
 		overflow: hidden;
 		color: var(--semantics-content-secondary-color);
-		font: var(--_subtitle-font);
+		font: var(--_supporting-text-font);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		text-align: left;
 	}
 
-	:host([align="center"]) .toolbar__subtitle {
+	:host([align="center"]) .toolbar__supporting-text {
 		text-align: center;
 	}
 `;

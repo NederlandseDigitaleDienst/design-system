@@ -2,7 +2,7 @@
  * Parses the JSDoc block that documents a component's public API.
  *
  * Shared on purpose: generate-component-reference.js turns this into
- * skills/nldd/reference.md, and validate-component-api.js checks it against the
+ * skills/nldd-design/reference.md, and validate-component-api.js checks it against the
  * @property decorators. Two parsers would let the check pass while the
  * reference says something else.
  */
@@ -102,6 +102,9 @@ function parseNamedTag(rest) {
  * with its own @element. attrs/slots/events are assigned to the @element that
  * precedes them. The fallbackTag (from @customElement) is used only when the
  * JSDoc has no @element at all. Returns an array of components. */
+/** A drawn line between two elements in a shared file, not prose. */
+const SEPARATOR = /^[\s\u2500-\u257F\-=_]+$/;
+
 function parseComponent(block, filePath, fallbackTag) {
 	const lines = block.split('\n');
 	// Derived from the path itself rather than from a base directory, so the
@@ -130,6 +133,9 @@ function parseComponent(block, filePath, fallbackTag) {
 	// The most recent description-bearing entry (attr/slot/event), so a
 	// multi-line JSDoc tag's continuation lines append to it instead of dropping.
 	let lastEntry = null;
+	// Whether prose still counts as the current element's description: true
+	// from its @element until its first tag of its own.
+	let collecting = false;
 
 	for (const line of lines) {
 		const tagMatch = line.match(/^@(\w+)\s*([\s\S]*)$/);
@@ -142,18 +148,24 @@ function parseComponent(block, filePath, fallbackTag) {
 				lastEntry.description = `${lastEntry.description} ${line.trim()}`.trim();
 				continue;
 			}
-			// Prose before the first @element is the shared summary.
-			if (!current && !line.startsWith('#')) {
-				summaryLines.push(line.trim());
-			}
+			if (line.startsWith('#')) continue;
+			// Prose before the first @element is the shared summary. Prose
+			// directly after an @element belongs to that element, which is how a
+			// second element in a shared file gets a description at all. Once a
+			// tag of its own has followed, prose is part of that tag's block
+			// (an @example for instance) and not a description.
+			if (!current) summaryLines.push(line.trim());
+			else if (collecting && !SEPARATOR.test(line)) current.summary = `${current.summary} ${line.trim()}`.trim();
 			continue;
 		}
 		lastEntry = null;
 		const [, tag, rest] = tagMatch;
+		if (tag !== 'element') collecting = false;
 		switch (tag) {
 			case 'element':
 				current = newComponent(rest.trim());
 				components.push(current);
+				collecting = true;
 				break;
 			case 'attr': {
 				if (!current) break;
@@ -194,7 +206,9 @@ function parseComponent(block, filePath, fallbackTag) {
 		.join(' ')
 		.replace(/\s+/g, ' ')
 		.trim();
-	if (components[0]) components[0].summary = summary;
+	// Joined, not assigned: the first element may also carry prose of its own,
+	// written under its @element, and that would be overwritten here.
+	if (components[0]) components[0].summary = [summary, components[0].summary].filter(Boolean).join(' ');
 
 	return components;
 }

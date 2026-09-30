@@ -76,10 +76,18 @@ regel herhalen zegt hetzelfde drie keer.
  * genoemd. De control loopt hier mee met de schakelaar, want zo staat het in een
  * echte app: het formulier keurt af, en de lijst volgt.
  */
-export const Default = ({ hint, judging, for: control }: Record<string, unknown>) => html`
+export const Standaard = ({ hint, judging, for: control }: Record<string, unknown>) => html`
 	<nldd-form-field label="Wachtwoord">
-		<nldd-password-field id="password" name="password" ?invalid=${judging}></nldd-password-field>
-		<nldd-validation-list ?hint=${hint} ?judging=${judging} for=${control || nothing}>
+		<nldd-password-field
+			id="password"
+			name="password"
+			?invalid=${judging}
+		></nldd-password-field>
+		<nldd-validation-list
+			?hint=${hint}
+			?judging=${judging}
+			for=${control || nothing}
+		>
 			<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 			<nldd-validation-item id="password-capital" match="[A-Z]">Een hoofdletter</nldd-validation-item>
 			<nldd-validation-item id="password-digit" match="[0-9]">Een cijfer</nldd-validation-item>
@@ -90,7 +98,10 @@ export const Default = ({ hint, judging, for: control }: Record<string, unknown>
 /** Zonder `hint` blijft de lijst leeg tot er iets misgaat. Zo hoort een gewoon veld het te doen. */
 export const AlleenBijEenFout = () => html`
 	<nldd-form-field label="Telefoonnummer">
-		<nldd-text-field name="phone" invalid></nldd-text-field>
+		<nldd-text-field
+			name="phone"
+			invalid
+		></nldd-text-field>
 		<nldd-validation-list>
 			<nldd-validation-item id="phone-characters" match="^[0-9 +-]+$">Alleen cijfers, spaties, + en -</nldd-validation-item>
 			<nldd-validation-item id="phone-length" minlength="10">Minimaal 10 tekens</nldd-validation-item>
@@ -104,7 +115,10 @@ export const AlleenBijEenFout = () => html`
  */
 export const VerplichtVeld = () => html`
 	<nldd-form-field label="Nieuw wachtwoord">
-		<nldd-password-field name="new-password" invalid></nldd-password-field>
+		<nldd-password-field
+			name="new-password"
+			invalid
+		></nldd-password-field>
 		<nldd-validation-list>
 			<nldd-validation-item id="new-password-empty" required>Vul een wachtwoord in</nldd-validation-item>
 			<nldd-validation-item id="new-password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
@@ -116,7 +130,12 @@ export const VerplichtVeld = () => html`
 /** Een item zonder regel wacht op de app: die zet z'n id in `unmet` op de control. */
 export const DoorDeAppAangestuurd = () => html`
 	<nldd-form-field label="Gebruikersnaam">
-		<nldd-text-field name="username" value="jansen" invalid unmet="username-taken"></nldd-text-field>
+		<nldd-text-field
+			name="username"
+			value="jansen"
+			invalid
+			unmet="username-taken"
+		></nldd-text-field>
 		<nldd-validation-list>
 			<nldd-validation-item id="username-taken">Deze gebruikersnaam is al in gebruik</nldd-validation-item>
 		</nldd-validation-list>
@@ -126,7 +145,12 @@ export const DoorDeAppAangestuurd = () => html`
 /** De twee soorten door elkaar: twee regels die zichzelf toetsen en één die van de server komt. */
 export const RegelsEnServer = () => html`
 	<nldd-form-field label="Wachtwoord wijzigen">
-		<nldd-password-field name="changed-password" value="geheim" invalid unmet="changed-password-breach"></nldd-password-field>
+		<nldd-password-field
+			name="changed-password"
+			value="geheim"
+			invalid
+			unmet="changed-password-breach"
+		></nldd-password-field>
 		<nldd-validation-list hint>
 			<nldd-validation-item id="changed-password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 			<nldd-validation-item id="changed-password-capital" match="[A-Z]">Een hoofdletter</nldd-validation-item>
@@ -145,8 +169,15 @@ export const RegelsEnServer = () => html`
  */
 export const AlsHetGoedIs = () => html`
 	<nldd-form-field label="Herhaal wachtwoord">
-		<nldd-password-field name="repeat-password" value="Geheim123" valid></nldd-password-field>
-		<nldd-validation-list hint judging>
+		<nldd-password-field
+			name="repeat-password"
+			value="Geheim123"
+			valid
+		></nldd-password-field>
+		<nldd-validation-list
+			hint
+			judging
+		>
 			<nldd-validation-item id="repeat-password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 			<nldd-validation-item id="repeat-password-capital" match="[A-Z]">Een hoofdletter</nldd-validation-item>
 		</nldd-validation-list>
@@ -169,17 +200,34 @@ export const AlsHetGoedIs = () => html`
 export const MetFor = () => html`
 	<nldd-form>
 		<nldd-form-field label="Waar heb je ons gevonden?">
-			<nldd-radio-button-group name="source" accessible-label="Waar heb je ons gevonden?">
-				<nldd-radio-button-field value="search-engine" label="Zoekmachine"></nldd-radio-button-field>
-				<nldd-radio-button-field value="other" label="Anders, namelijk"></nldd-radio-button-field>
+			<nldd-radio-button-group
+				name="source"
+				accessible-label="Waar heb je ons gevonden?"
+			>
+				<nldd-radio-button-field
+					value="search-engine"
+					label="Zoekmachine"
+				></nldd-radio-button-field>
+				<nldd-radio-button-field
+					value="other"
+					label="Anders, namelijk"
+				></nldd-radio-button-field>
 			</nldd-radio-button-group>
-			<nldd-text-field id="source-other" name="source-other" accessible-label="Anders, namelijk"></nldd-text-field>
+			<nldd-text-field
+				id="source-other"
+				name="source-other"
+				accessible-label="Anders, namelijk"
+			></nldd-text-field>
 			<nldd-validation-list for="source-other">
 				<nldd-validation-item id="source-explanation" minlength="3">Minimaal 3 tekens toelichting</nldd-validation-item>
 			</nldd-validation-list>
 		</nldd-form-field>
 		<nldd-form-actions>
-			<nldd-button variant="primary" type="submit" text="Versturen"></nldd-button>
+			<nldd-button
+				variant="primary"
+				type="submit"
+				text="Versturen"
+			></nldd-button>
 		</nldd-form-actions>
 	</nldd-form>
 `;
@@ -202,7 +250,11 @@ export const NaastHelpTekst = () => html`
 			<nldd-form-field-help-text>We sturen een bevestigingsmail naar dit adres.</nldd-form-field-help-text>
 		</nldd-form-field>
 		<nldd-form-actions>
-			<nldd-button variant="primary" type="submit" text="Versturen"></nldd-button>
+			<nldd-button
+				variant="primary"
+				type="submit"
+				text="Versturen"
+			></nldd-button>
 		</nldd-form-actions>
 	</nldd-form>
 `;
@@ -217,13 +269,20 @@ export const NaastHelpTekst = () => html`
 export const VerankerdPatroon = () => html`
 	<nldd-form>
 		<nldd-form-field label="Postcode">
-			<nldd-text-field name="postal-code" width="160px"></nldd-text-field>
+			<nldd-text-field
+				name="postal-code"
+				width="160px"
+			></nldd-text-field>
 			<nldd-validation-list>
 				<nldd-validation-item id="postal-code-format" match="^[0-9]{4} ?[A-Za-z]{2}$">Vier cijfers en dan twee letters, zoals 1234 AB</nldd-validation-item>
 			</nldd-validation-list>
 		</nldd-form-field>
 		<nldd-form-actions>
-			<nldd-button variant="primary" type="submit" text="Versturen"></nldd-button>
+			<nldd-button
+				variant="primary"
+				type="submit"
+				text="Versturen"
+			></nldd-button>
 		</nldd-form-actions>
 	</nldd-form>
 `;

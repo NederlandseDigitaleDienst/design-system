@@ -112,14 +112,14 @@ const Template = ({ size, variant, color, alwaysVisible, keys, macKeys, windowsK
 	></nldd-keyboard-shortcut>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 	args: {
 		keys: 'Ctrl+K',
 	},
 };
 
-export const CommonShortcuts = {
+export const VeelgebruikteSneltoetsen = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
 			<nldd-keyboard-shortcut keys="Cmd+K"></nldd-keyboard-shortcut>
@@ -134,11 +134,17 @@ export const CommonShortcuts = {
 	},
 };
 
-export const Sizes = {
+export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
-			<nldd-keyboard-shortcut size="md" keys="Cmd+K"></nldd-keyboard-shortcut>
-			<nldd-keyboard-shortcut size="sm" keys="Cmd+K"></nldd-keyboard-shortcut>
+			<nldd-keyboard-shortcut
+				size="md"
+				keys="Cmd+K"
+			></nldd-keyboard-shortcut>
+			<nldd-keyboard-shortcut
+				size="sm"
+				keys="Cmd+K"
+			></nldd-keyboard-shortcut>
 		</div>
 	`,
 	parameters: {
@@ -163,8 +169,14 @@ export const SchaaltMee = {
 export const Varianten = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center;">
-			<nldd-keyboard-shortcut variant="box" keys="Cmd+K"></nldd-keyboard-shortcut>
-			<nldd-keyboard-shortcut variant="simple" keys="Cmd+K"></nldd-keyboard-shortcut>
+			<nldd-keyboard-shortcut
+				variant="box"
+				keys="Cmd+K"
+			></nldd-keyboard-shortcut>
+			<nldd-keyboard-shortcut
+				variant="simple"
+				keys="Cmd+K"
+			></nldd-keyboard-shortcut>
 		</div>
 	`,
 	parameters: {
@@ -173,11 +185,17 @@ export const Varianten = {
 	},
 };
 
-export const Inherit = {
+export const KleurInherit = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 8px; background: var(--semantics-categories-donkerblauw-reference-background-color); color: var(--semantics-categories-donkerblauw-reference-content-color);">
-			<nldd-keyboard-shortcut color="inherit" keys="Cmd+K"></nldd-keyboard-shortcut>
-			<nldd-keyboard-shortcut color="inherit" keys="Ctrl+Shift+P"></nldd-keyboard-shortcut>
+			<nldd-keyboard-shortcut
+				color="inherit"
+				keys="Cmd+K"
+			></nldd-keyboard-shortcut>
+			<nldd-keyboard-shortcut
+				color="inherit"
+				keys="Ctrl+Shift+P"
+			></nldd-keyboard-shortcut>
 		</div>
 	`,
 	parameters: {

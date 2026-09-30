@@ -14,7 +14,10 @@ export function pageFooterTemplate(component: NLDDPageFooter): TemplateResult {
 				<div class="page-footer__breadcrumbs"
 					?hidden=${!component._hasBreadcrumbs}
 				>
-					<slot name="breadcrumbs" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="breadcrumbs"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</div>
 				<hr class="page-footer__divider"
 					?hidden=${!showDividerAboveMain}
@@ -30,7 +33,10 @@ export function pageFooterTemplate(component: NLDDPageFooter): TemplateResult {
 				<div class="page-footer__legal-bar"
 					?hidden=${!component._hasLegalBar}
 				>
-					<slot name="legal-bar" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="legal-bar"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</div>
 			</div>
 		</div>
@@ -47,12 +53,18 @@ export function pageFooterLegalBarTemplate(component: NLDDPageFooterLegalBar): T
 			<div class="page-footer__legal-bar-start"
 				?hidden=${!component._hasStart}
 			>
-				<slot name="start" @slotchange=${component._onSlotChange}></slot>
+				<slot
+					name="start"
+					@slotchange=${component._onSlotChange}
+				></slot>
 			</div>
 			<div class="page-footer__legal-bar-end"
 				?hidden=${!component._hasEnd}
 			>
-				<slot name="end" @slotchange=${component._onSlotChange}></slot>
+				<slot
+					name="end"
+					@slotchange=${component._onSlotChange}
+				></slot>
 			</div>
 		</nav>
 	`;

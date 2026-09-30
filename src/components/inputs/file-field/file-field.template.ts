@@ -11,7 +11,7 @@ function renderValidationIcon(component: NLDDFileField): TemplateResult | typeof
 	return html`
 		<div class="file-field__validation-icon-area">
 			<nldd-icon class="file-field__validation-icon"
-				name=${component.invalid ? 'invalid' : 'valid'}
+				icon=${component.invalid ? 'invalid' : 'valid'}
 				aria-hidden="true"
 			></nldd-icon>
 		</div>

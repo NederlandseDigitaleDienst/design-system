@@ -143,7 +143,7 @@ describe('nldd-text-editor typeaheads', () => {
 		el = await make('#al', [{ trigger: '#', source: byLabel(channels) }], byLabel(people));
 		const channelRows = await openList(el);
 		const icon = channelRows[0].querySelector('nldd-icon');
-		expect(icon?.getAttribute('name')).toBe('tag');
+		expect(icon?.getAttribute('icon')).toBe('tag');
 		// The size of an nldd-menu item's icon.
 		expect(icon?.getAttribute('size')).toBe('20');
 		expect(channelRows[0].classList.contains('cm-nldd-row-avatar')).toBe(false);

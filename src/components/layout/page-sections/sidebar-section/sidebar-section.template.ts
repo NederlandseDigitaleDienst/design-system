@@ -10,7 +10,10 @@ export function sidebarSectionTemplate(component: NLDDSidebarSection): TemplateR
 				<header class="sidebar-section__header"
 					hidden
 				>
-					<slot name="header" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="header"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</header>
 				<div class="sidebar-section__columns">
 					${!collapsed ? html`
@@ -29,7 +32,10 @@ export function sidebarSectionTemplate(component: NLDDSidebarSection): TemplateR
 				<footer class="sidebar-section__footer"
 					hidden
 				>
-					<slot name="footer" @slotchange=${component._onSlotChange}></slot>
+					<slot
+						name="footer"
+						@slotchange=${component._onSlotChange}
+					></slot>
 				</footer>
 			</div>
 		</section>

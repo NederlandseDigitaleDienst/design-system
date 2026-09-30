@@ -14,7 +14,7 @@ function renderContent(component: NLDDButton) {
 		<span class="button__content">
 			${component.startIcon ? html`
 				<span class="button__start-icon">
-					<nldd-icon name=${component.startIcon}></nldd-icon>
+					<nldd-icon icon=${component.startIcon}></nldd-icon>
 				</span>
 			` : html`<slot name="start-icon"></slot>`}
 			<span class="button__text-area">
@@ -23,13 +23,13 @@ function renderContent(component: NLDDButton) {
 			</span>
 			${component.endIcon ? html`
 				<span class="button__end-icon">
-					<nldd-icon name=${component.endIcon}></nldd-icon>
+					<nldd-icon icon=${component.endIcon}></nldd-icon>
 				</span>
 			` : html`<slot name="end-icon"></slot>`}
 		</span>
 		${component.expandable ? html`
 			<nldd-icon class="button__disclosure-icon"
-				name="chevron-down-small"
+				icon="chevron-down-small"
 			></nldd-icon>
 		` : nothing}
 	`;

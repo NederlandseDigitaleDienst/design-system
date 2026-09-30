@@ -33,7 +33,8 @@ export function cardTemplate(component: NLDDCard): TemplateResult {
 			<header class="card__header"
 				hidden
 			>
-				<slot name="header"
+				<slot
+					name="header"
 					@slotchange=${component._onSlotChange}
 				></slot>
 			</header>
@@ -43,7 +44,8 @@ export function cardTemplate(component: NLDDCard): TemplateResult {
 			<footer class="card__footer"
 				hidden
 			>
-				<slot name="footer"
+				<slot
+					name="footer"
 					@slotchange=${component._onSlotChange}
 				></slot>
 			</footer>

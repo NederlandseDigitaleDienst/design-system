@@ -31,19 +31,19 @@
  *
  * @element nldd-sidebar-section
  *
+ * @attr {string} [width] - Body max-width: 'full' removes the constraint; any CSS length overrides the default.
+ * @attr {string} [sidebar-label] - Accessible name for the sidebar (the aside landmark on lg and the sheet on sm/md). Default 'Zijbalk'.
+ * @attr {object} [translations] - Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch.
+ * @attr {boolean} [no-collapse] - Opt out of the sheet: a narrow section stacks the sidebar above the main instead of collapsing. `collapsed` then stays false.
+ * @attr {string} [sticky-top] - Sticky top inset on lg (CSS length; default = 16px).
+ * @attr {string} [sticky-bottom] - Sticky bottom inset on lg (CSS length; default = 16px).
+ * @attr {boolean} [collapsed] - Read-only, reflected: true while the sidebar is a sheet (the section is narrower than lg). Target it via CSS to reveal sheet-only chrome.
+ *
  * @slot - Main content
  * @slot sidebar - Sidebar content (sticky box when expanded, a left/bottom sheet when collapsed). The box and the sheet add no padding of their own — wrap the content in a padded container (e.g. nldd-container) for inset spacing.
  * @slot sheet-top-title-bar - Replaces the sheet's default title bar (when collapsed). Empty falls back to an `nldd-top-title-bar` with the `sidebar-label` as title and a "Sluit" button.
  * @slot header - Content above the columns
  * @slot footer - Content below the columns
- *
- * @attr {boolean} [collapsed] - Read-only, reflected: true while the sidebar is a sheet (the section is narrower than lg). Target it via CSS to reveal sheet-only chrome.
- * @attr {boolean} [no-collapse] - Opt out of the sheet: a narrow section stacks the sidebar above the main instead of collapsing. `collapsed` then stays false.
- * @attr {string} [width] - Body max-width: 'full' removes the constraint; any CSS length overrides the default.
- * @attr {string} [sticky-top] - Sticky top inset on lg (CSS length; default = 16px).
- * @attr {string} [sticky-bottom] - Sticky bottom inset on lg (CSS length; default = 16px).
- * @attr {string} [sidebar-label] - Accessible name for the sidebar (the aside landmark on lg and the sheet on sm/md). Default 'Zijbalk'.
- * @attr {object} [translations] - Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch.
  *
  * @fires open - The sidebar sheet opened.
  * @fires close - The sidebar sheet closed.
@@ -72,21 +72,21 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	@property({ type: String, reflect: true })
 	width = '';
 
+	@property({ type: String, attribute: 'sidebar-label' })
+	sidebarLabel = '';
+
+	/** Override translation keys (sheet title fallback and dismiss label); unset keys fall back to Dutch. */
+	@property({ type: Object })
+	translations: Partial<typeof nlddSidebarSectionTranslations> = {};
+
+	@property({ type: Boolean, reflect: true, attribute: 'no-collapse' })
+	noCollapse = false;
+
 	@property({ type: String, reflect: true, attribute: 'sticky-top' })
 	stickyTop = '';
 
 	@property({ type: String, reflect: true, attribute: 'sticky-bottom' })
 	stickyBottom = '';
-
-	@property({ type: String, attribute: 'sidebar-label' })
-	sidebarLabel = '';
-
-	@property({ type: Boolean, reflect: true, attribute: 'no-collapse' })
-	noCollapse = false;
-
-	/** Override translation keys (sheet title fallback and dismiss label); unset keys fall back to Dutch. */
-	@property({ type: Object })
-	translations: Partial<typeof nlddSidebarSectionTranslations> = {};
 
 	@property({ type: Boolean, reflect: true })
 	collapsed = false;

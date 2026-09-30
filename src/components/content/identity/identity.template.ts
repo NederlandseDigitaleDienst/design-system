@@ -26,7 +26,10 @@ export function identityTemplate(component: NLDDIdentity) {
 			<div class="identity__avatars"
 				?hidden=${!hasAvatars}
 			>
-				<slot name="avatars" @slotchange=${component._onSlotChange}></slot>
+				<slot
+					name="avatars"
+					@slotchange=${component._onSlotChange}
+				></slot>
 				${avatarImage}
 			</div>
 			<div class="identity__text-area"

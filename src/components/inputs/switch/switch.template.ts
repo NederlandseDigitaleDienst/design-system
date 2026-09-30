@@ -26,7 +26,7 @@ export function switchTemplate(component: NLDDSwitch): TemplateResult {
 		>
 			<div class="switch__thumb">
 				<div class="switch__check">
-					<nldd-icon name="check-mark-small"></nldd-icon>
+					<nldd-icon icon="check-mark-small"></nldd-icon>
 				</div>
 			</div>
 		</div>

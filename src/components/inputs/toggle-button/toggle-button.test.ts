@@ -64,7 +64,7 @@ describe('nldd-toggle-button', () => {
 		await waitForUpdate(el);
 		const icon = el.shadowRoot!.querySelector('.toggle-button__icon');
 		expect(icon).not.toBeNull();
-		expect(icon!.getAttribute('name')).toBe('heart');
+		expect(icon!.getAttribute('icon')).toBe('heart');
 	});
 
 	it('renders icon slot when icon attribute is not set', async () => {
@@ -214,20 +214,20 @@ describe('nldd-toggle-button – variant', () => {
 	it('variant="icon" without an icon shows the icon-placeholder', async () => {
 		el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon" accessible-label="Favoriet"></nldd-toggle-button>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 	});
 
 	it('variant="icon-and-text" with text but no icon shows the placeholder', async () => {
 		el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon-and-text" text="Label"></nldd-toggle-button>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 		expect(el.shadowRoot!.querySelector('.toggle-button__text')).not.toBeNull();
 	});
 
 	it('variant="icon-and-text" without icon or text shows the icon-placeholder', async () => {
 		el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon-and-text" accessible-label="Leeg"></nldd-toggle-button>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('nldd-icon[name="icon-placeholder"]')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
 	});
 
 	it('warns when neither text nor accessible-label is set', async () => {

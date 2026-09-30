@@ -18,6 +18,17 @@ async function openPicker(el: NLDDTimeField) {
 	await new Promise((r) => setTimeout(r, 200));
 }
 
+/**
+ * Fixes the clock for the tests that start from the current time. Only Date is
+ * faked: fake the timers too and the setTimeout inside waitForUpdate never
+ * fires, so the test hangs instead of failing.
+ */
+function atTime(time: string) {
+	const [hours, minutes] = time.split(':').map(Number);
+	vi.useFakeTimers({ toFake: ['Date'] });
+	vi.setSystemTime(new Date(2026, 6, 1, hours, minutes));
+}
+
 /** What the picker reports once scrolling comes to rest. */
 function scrollPickerTo(el: NLDDTimeField, value: string) {
 	el.shadowRoot!.querySelector('nldd-time-picker')!.dispatchEvent(new CustomEvent('input', {
@@ -110,7 +121,7 @@ describe('roundToStep', () => {
 describe('nldd-time-field', () => {
 	let el: NLDDTimeField;
 
-	afterEach(() => { if (el) cleanup(el); vi.restoreAllMocks(); });
+	afterEach(() => { if (el) cleanup(el); vi.restoreAllMocks(); vi.useRealTimers(); });
 
 	it('rendert zonder fouten', async () => {
 		el = await fixture<NLDDTimeField>('<nldd-time-field></nldd-time-field>');
@@ -291,19 +302,11 @@ describe('nldd-time-field – pijltjestoetsen', () => {
 	});
 
 	it('begint zonder min op de huidige tijd, afgerond op de stap', async () => {
-		// No fake timers: those also freeze the clock Lit schedules its update cycle
-		// on, and then waitForUpdate never returns. The real clock can tick over a
-		// minute during the test, so both outcomes are allowed.
-		const asTime = (d: Date) => roundToStep(
-			`${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`,
-			15,
-		);
+		atTime('09:07');
 		el = await fixture<NLDDTimeField>('<nldd-time-field step="15"></nldd-time-field>');
 		await waitForUpdate(el);
-		const before = asTime(new Date());
 		await arrow(el, 'ArrowUp');
-		const after = asTime(new Date());
-		expect([before, after]).toContain(el.value);
+		expect(el.value).toBe('09:00');
 	});
 
 	it('komt niet voorbij max', async () => {
@@ -559,8 +562,10 @@ describe('nldd-time-field – picker', () => {
 	});
 
 	// Only max, no min: the current time can lie past it, and a starting point
-	// outside the bounds leaves the wheels without a selection.
+	// outside the bounds leaves the wheels without a selection. The clock is fixed
+	// past max, because between midnight and 00:30 it is not.
 	it('houdt het beginpunt binnen max', async () => {
+		atTime('13:05');
 		el = await fixture<NLDDTimeField>('<nldd-time-field max="00:30" step="15"></nldd-time-field>');
 		await waitForUpdate(el);
 		await openPicker(el);

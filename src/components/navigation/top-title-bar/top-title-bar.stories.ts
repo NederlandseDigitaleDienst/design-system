@@ -82,7 +82,10 @@ export default {
 };
 
 const Template = (args: Record<string, any>) => html`
-	<nldd-page background="tinted" style="height: 120px;">
+	<nldd-page
+		background="tinted"
+		style="height: 120px;"
+	>
 		<nldd-top-title-bar
 			slot="header"
 			text=${args.text}
@@ -116,7 +119,10 @@ export const MetTerugknop = {
 
 export const Compact = {
 	render: () => html`
-	<nldd-page background="tinted" style="height: 120px;">
+	<nldd-page
+		background="tinted"
+		style="height: 120px;"
+	>
 		<nldd-top-title-bar
 			class="is-compact"
 			slot="header"
@@ -160,15 +166,28 @@ export const MetSubtitel = {
 
 export const MetWerkbalkActies = {
 	render: () => html`
-	<nldd-page background="tinted" style="height: 120px;">
+	<nldd-page
+		background="tinted"
+		style="height: 120px;"
+	>
 		<nldd-top-title-bar
 			slot="header"
 			text="Document"
 			back-text="Overzicht"
 			dismiss-text="Sluit"
 		>
-			<nldd-icon-button slot="toolbar" variant="accent-transparent" icon="share" text="Delen"></nldd-icon-button>
-			<nldd-icon-button slot="toolbar" variant="accent-transparent" icon="edit" text="Bewerken"></nldd-icon-button>
+			<nldd-icon-button
+				slot="toolbar"
+				variant="accent-transparent"
+				icon="share"
+				text="Delen"
+			></nldd-icon-button>
+			<nldd-icon-button
+				slot="toolbar"
+				variant="accent-transparent"
+				icon="edit"
+				text="Bewerken"
+			></nldd-icon-button>
 		</nldd-top-title-bar>
 	</nldd-page>
 `,
@@ -184,7 +203,11 @@ export const MetWerkbalkActies = {
 
 export const MetTitelAnker = {
 	render: () => html`
-	<nldd-page background="tinted" sticky-header style="height: 400px;">
+	<nldd-page
+		background="tinted"
+		sticky-header
+		style="height: 400px;"
+	>
 		<nldd-top-title-bar
 			slot="header"
 			text="Paginatitel"
@@ -195,10 +218,13 @@ export const MetTitelAnker = {
 			@dismiss=${action('dismiss')}
 		></nldd-top-title-bar>
 		<nldd-simple-section>
-			<nldd-title id="page-title-bar" size="2">
-				<h1>Paginatitel</h1>
-				<p slot="subtitle">Scroll omlaag om te zien hoe de compacte stand wordt geactiveerd.</p>
-			</nldd-title>
+			<nldd-title
+				id="page-title-bar"
+				size="2"
+				text="Paginatitel"
+				supporting-text="Scroll omlaag om te zien hoe de compacte stand wordt geactiveerd."
+				heading-level="1"
+			></nldd-title>
 			<div style="height: 600px;"></div>
 		</nldd-simple-section>
 	</nldd-page>
@@ -215,7 +241,11 @@ export const MetTitelAnker = {
 
 export const MetTitelAnkerZonderActies = {
 	render: () => html`
-	<nldd-page background="tinted" sticky-header style="height: 400px;">
+	<nldd-page
+		background="tinted"
+		sticky-header
+		style="height: 400px;"
+	>
 		<nldd-top-title-bar
 			slot="header"
 			text="Paginatitel"
@@ -224,10 +254,13 @@ export const MetTitelAnkerZonderActies = {
 			@dismiss=${action('dismiss')}
 		></nldd-top-title-bar>
 		<nldd-simple-section>
-			<nldd-title id="page-title-bar-2" size="2">
-				<h1>Paginatitel</h1>
-				<p slot="subtitle">Zonder terugknop of sluitknop.</p>
-			</nldd-title>
+			<nldd-title
+				id="page-title-bar-2"
+				size="2"
+				text="Paginatitel"
+				supporting-text="Zonder terugknop of sluitknop."
+				heading-level="1"
+			></nldd-title>
 			<div style="height: 600px;"></div>
 		</nldd-simple-section>
 	</nldd-page>

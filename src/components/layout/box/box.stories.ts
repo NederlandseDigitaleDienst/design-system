@@ -83,8 +83,8 @@ export const Standaard = ({ background }: Record<string, unknown>) => html`
  * onderdeel van de pagina: de box krijgt daarom geen eigen ARIA-rol. De kop en
  * het knoplabel moeten het gevaar benoemen, de kleur bevestigt het alleen.
  */
-export const Critical = {
-	name: 'Critical variant',
+export const AchtergrondCritical = {
+	name: 'Achtergrond critical',
 	render: () => html`
 		<nldd-box background="critical">
 		<nldd-container padding="16">
@@ -93,7 +93,10 @@ export const Critical = {
 					<p>Een cluster verwijderen is definitief en kan niet ongedaan worden gemaakt.</p>
 				</nldd-rich-text>
 				<nldd-spacer size="16"></nldd-spacer>
-				<nldd-button variant="destructive" text="Verwijder dit cluster"></nldd-button>
+				<nldd-button
+					variant="destructive"
+					text="Verwijder dit cluster"
+				></nldd-button>
 
 		</nldd-container>
 	</nldd-box>

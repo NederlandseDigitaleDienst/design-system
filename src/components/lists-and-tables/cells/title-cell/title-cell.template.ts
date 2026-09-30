@@ -50,7 +50,10 @@ export const template = function (this: NLDDTitleCell) {
 			${this.overline && !this._hasOverlineSlotted
 				? renderQueryMark(this.overline, this.query, this.queryMarkMode)
 				: nothing}
-			<slot name="overline" @slotchange=${this._onSlotChange}></slot>
+			<slot
+				name="overline"
+				@slotchange=${this._onSlotChange}
+			></slot>
 		</p>
 		${renderTitle(this)}
 		<p
@@ -60,7 +63,10 @@ export const template = function (this: NLDDTitleCell) {
 			${this.supportingText && !this._hasSupportingTextSlotted
 				? renderQueryMark(this.supportingText, this.query, this.queryMarkMode)
 				: nothing}
-			<slot name="supporting-text" @slotchange=${this._onSlotChange}></slot>
+			<slot
+				name="supporting-text"
+				@slotchange=${this._onSlotChange}
+			></slot>
 		</p>
 	`;
 };

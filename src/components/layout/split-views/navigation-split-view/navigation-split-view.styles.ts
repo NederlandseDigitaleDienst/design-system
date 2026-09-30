@@ -28,6 +28,10 @@ export const navigationSplitViewStyles = css`
 		height: 100%;
 	}
 
+	:host([hidden]) {
+		display: none;
+	}
+
 	:host([background="base"]) {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
 		--_background-color: var(--context-parent-background-color);

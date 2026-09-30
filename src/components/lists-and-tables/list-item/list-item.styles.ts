@@ -345,21 +345,11 @@ export const listItemStyles = css`
 		outline: none;
 	}
 
-	/* The cell rotates, not the icon: ::slotted reaches a direct child only, and
-	   rotating the cell turns the glyph in place. */
-	::slotted(nldd-icon-cell[disclosure]) {
-		rotate: 0deg;
-		transition: rotate var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
-	}
-
+	/* The cell turns its own glyph from this, so the cell's box stays put: a
+	   rotated cell reports a turned box, and that box is what the divider
+	   measurement below reads. */
 	:host([expanded]) ::slotted(nldd-icon-cell[disclosure]) {
-		rotate: 90deg;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		::slotted(nldd-icon-cell[disclosure]) {
-			transition: none;
-		}
+		--context-cell-glyph-rotation: 90deg;
 	}
 
 

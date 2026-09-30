@@ -25,6 +25,10 @@ export default {
 			type: 'stable',
 		},
 	},
+	args: {
+		orientation: 'vertical',
+		hasDragHandle: false,
+	},
 	argTypes: {
 		orientation: {
 			control: { type: 'select' },
@@ -38,10 +42,6 @@ export default {
 			description: 'Toon een sleephandvat',
 			table: { defaultValue: { summary: 'false' } },
 		},
-	},
-	args: {
-		orientation: 'vertical',
-		hasDragHandle: false,
 	},
 };
 
@@ -76,7 +76,10 @@ export const MetSleepHandvat = {
 	<div style="display: flex; flex-direction: row; height: 200px;">
 		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color);">
 		</div>
-		<nldd-split-view-divider orientation="vertical" has-drag-handle></nldd-split-view-divider>
+		<nldd-split-view-divider
+			orientation="vertical"
+			has-drag-handle
+		></nldd-split-view-divider>
 		<div style="flex-grow: 1; flex-shrink: 1; flex-basis: 0; background: var(--semantics-surfaces-tinted-background-color);">
 		</div>
 	</div>

@@ -49,6 +49,7 @@ export default {
 		mdColumns: '',
 		lgColumns: '',
 		accessibleLabel: 'Gebruikers',
+		selectable: false,
 	},
 	argTypes: {
 		background: {
@@ -82,10 +83,15 @@ export default {
 			description: 'Toegankelijke naam voor de tabel.',
 			table: { defaultValue: { summary: 'Tabel' } },
 		},
+		selectable: {
+			control: 'boolean',
+			description: 'Rijen kunnen geselecteerd worden: elke rij krijgt dan `aria-selected`. Zonder `selectable` meldt een schermlezer de tabel ook niet als selecteerbaar. De tint van een `selected` rij werkt in beide gevallen.',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
-const Template = ({ background, columns, smColumns, mdColumns, lgColumns, accessibleLabel }: Record<string, any>) => html`
+const Template = ({ background, columns, smColumns, mdColumns, lgColumns, accessibleLabel, selectable }: Record<string, any>) => html`
 	<nldd-table
 		background=${background}
 		columns=${columns}
@@ -93,6 +99,7 @@ const Template = ({ background, columns, smColumns, mdColumns, lgColumns, access
 		md-columns=${mdColumns || nothing}
 		lg-columns=${lgColumns || nothing}
 		accessible-label=${accessibleLabel}
+		?selectable=${selectable}
 	>
 		<nldd-table-row slot="header">
 			<nldd-text-cell text="**Naam**"></nldd-text-cell>
@@ -117,12 +124,12 @@ const Template = ({ background, columns, smColumns, mdColumns, lgColumns, access
 	</nldd-table>
 `;
 
-export const Default = {
+export const Standaard = {
 	render: Template,
 };
 
-export const Tinted = {
-	name: 'Tinted background',
+export const Getint = {
+	name: 'Getinte achtergrond',
 	render: Template,
 	args: { background: 'tinted' },
 	parameters: {
@@ -134,10 +141,13 @@ export const Tinted = {
 	},
 };
 
-export const WithoutHeader = {
-	name: 'Without header',
+export const ZonderKop = {
+	name: 'Zonder kop',
 	render: () => html`
-	<nldd-table columns="minmax(160px, 1fr) 140px" accessible-label="Instellingen">
+	<nldd-table
+		columns="minmax(160px, 1fr) 140px"
+		accessible-label="Instellingen"
+	>
 		<nldd-table-row>
 			<nldd-text-cell text="Tweefactor-authenticatie"></nldd-text-cell>
 			<nldd-text-cell text="Aan"></nldd-text-cell>
@@ -162,24 +172,36 @@ export const WithoutHeader = {
 	},
 };
 
-export const Alignment = {
-	name: 'Column alignment',
+export const Uitlijning = {
+	name: 'Uitlijning per kolom',
 	render: () => html`
-	<nldd-table columns="minmax(160px, 1fr) 120px 100px" accessible-label="Bestellingen">
+	<nldd-table
+		columns="minmax(160px, 1fr) 120px 100px"
+		accessible-label="Bestellingen"
+	>
 		<nldd-table-row slot="header">
 			<nldd-text-cell text="**Product**"></nldd-text-cell>
 			<nldd-text-cell text="**Status**"></nldd-text-cell>
-			<nldd-text-cell text="**Bedrag**" horizontal-alignment="right"></nldd-text-cell>
+			<nldd-text-cell
+				text="**Bedrag**"
+				horizontal-alignment="right"
+			></nldd-text-cell>
 		</nldd-table-row>
 		<nldd-table-row>
 			<nldd-text-cell text="Paspoort"></nldd-text-cell>
 			<nldd-text-cell text="Betaald"></nldd-text-cell>
-			<nldd-text-cell text="€ 75,80" horizontal-alignment="right"></nldd-text-cell>
+			<nldd-text-cell
+				text="€ 75,80"
+				horizontal-alignment="right"
+			></nldd-text-cell>
 		</nldd-table-row>
 		<nldd-table-row>
 			<nldd-text-cell text="Rijbewijs"></nldd-text-cell>
 			<nldd-text-cell text="Open"></nldd-text-cell>
-			<nldd-text-cell text="€ 41,60" horizontal-alignment="right"></nldd-text-cell>
+			<nldd-text-cell
+				text="€ 41,60"
+				horizontal-alignment="right"
+			></nldd-text-cell>
 		</nldd-table-row>
 	</nldd-table>
 `,
@@ -193,10 +215,13 @@ export const Alignment = {
 	},
 };
 
-export const WithSelectionColumn = {
-	name: 'Selection column (checkbox)',
+export const MetSelectiekolom = {
+	name: 'Selectiekolom (checkbox)',
 	render: () => html`
-	<nldd-table columns="40px minmax(160px, 1fr) 120px" accessible-label="Gebruikers met selectie">
+	<nldd-table
+		columns="40px minmax(160px, 1fr) 120px"
+		accessible-label="Gebruikers met selectie"
+	>
 		<nldd-table-row slot="header">
 			<nldd-cell horizontal-alignment="center"><nldd-checkbox accessible-label="Selecteer alles"></nldd-checkbox></nldd-cell>
 			<nldd-text-cell text="**Naam**"></nldd-text-cell>
@@ -224,10 +249,13 @@ export const WithSelectionColumn = {
 	},
 };
 
-export const SelectedRow = {
-	name: 'Selected row',
+export const RijSelected = {
+	name: 'Rij selected',
 	render: () => html`
-	<nldd-table columns="minmax(160px, 1fr) 120px" accessible-label="Gebruikers met selectie">
+	<nldd-table
+		columns="minmax(160px, 1fr) 120px"
+		accessible-label="Gebruikers met selectie"
+	>
 		<nldd-table-row slot="header">
 			<nldd-text-cell text="**Naam**"></nldd-text-cell>
 			<nldd-text-cell text="**Rol**"></nldd-text-cell>
@@ -256,10 +284,13 @@ export const SelectedRow = {
 	},
 };
 
-export const WithActionsColumn = {
-	name: 'Actions column',
+export const MetActiekolom = {
+	name: 'Actiekolom',
 	render: () => html`
-	<nldd-table columns="minmax(160px, 1fr) minmax(200px, 1fr) 56px" accessible-label="Documenten">
+	<nldd-table
+		columns="minmax(160px, 1fr) minmax(200px, 1fr) 56px"
+		accessible-label="Documenten"
+	>
 		<nldd-table-row slot="header">
 			<nldd-text-cell text="**Titel**"></nldd-text-cell>
 			<nldd-text-cell text="**Eigenaar**"></nldd-text-cell>
@@ -287,8 +318,8 @@ export const WithActionsColumn = {
 	},
 };
 
-export const HorizontalScroll = {
-	name: 'Responsive: horizontal scroll',
+export const HorizontaalScrollen = {
+	name: 'Responsief: horizontaal scrollen',
 	render: () => {
 		const rows = () => html`
 			<nldd-table-row slot="header">
@@ -314,7 +345,10 @@ export const HorizontalScroll = {
 			</nldd-table-row>`;
 		return html`
 			<div style="max-width: 460px;">
-				<nldd-table columns="180px 220px 140px 160px 120px" accessible-label="Brede tabel die horizontaal scrollt">
+				<nldd-table
+					columns="180px 220px 140px 160px 120px"
+					accessible-label="Brede tabel die horizontaal scrollt"
+				>
 					${rows()}
 				</nldd-table>
 			</div>
@@ -330,27 +364,45 @@ export const HorizontalScroll = {
 	},
 };
 
-export const ResponsiveColumns = {
-	name: 'Responsive: drop columns at breakpoints',
+export const ResponsieveKolommen = {
+	name: 'Responsief: kolommen weglaten per breakpoint',
 	render: () => {
 		const header = () => html`
 			<nldd-table-row slot="header">
 				<nldd-text-cell text="**Naam**"></nldd-text-cell>
-				<nldd-text-cell text="**E-mail**" hide-below="lg"></nldd-text-cell>
-				<nldd-text-cell text="**Rol**" hide-below="md"></nldd-text-cell>
+				<nldd-text-cell
+					text="**E-mail**"
+					hide-below="lg"
+				></nldd-text-cell>
+				<nldd-text-cell
+					text="**Rol**"
+					hide-below="md"
+				></nldd-text-cell>
 				<nldd-text-cell text="**Status**"></nldd-text-cell>
 			</nldd-table-row>`;
 		const body = () => html`
 			<nldd-table-row>
 				<nldd-text-cell text="Eva de Vries"></nldd-text-cell>
-				<nldd-text-cell text="eva@example.nl" hide-below="lg"></nldd-text-cell>
-				<nldd-text-cell text="Beheerder" hide-below="md"></nldd-text-cell>
+				<nldd-text-cell
+					text="eva@example.nl"
+					hide-below="lg"
+				></nldd-text-cell>
+				<nldd-text-cell
+					text="Beheerder"
+					hide-below="md"
+				></nldd-text-cell>
 				<nldd-text-cell text="Actief"></nldd-text-cell>
 			</nldd-table-row>
 			<nldd-table-row>
 				<nldd-text-cell text="Daan Jansen"></nldd-text-cell>
-				<nldd-text-cell text="daan@example.nl" hide-below="lg"></nldd-text-cell>
-				<nldd-text-cell text="Redacteur" hide-below="md"></nldd-text-cell>
+				<nldd-text-cell
+					text="daan@example.nl"
+					hide-below="lg"
+				></nldd-text-cell>
+				<nldd-text-cell
+					text="Redacteur"
+					hide-below="md"
+				></nldd-text-cell>
 				<nldd-text-cell text="Actief"></nldd-text-cell>
 			</nldd-table-row>`;
 		const table = (width: string, label: string) => html`
@@ -392,9 +444,12 @@ const emptyHeader = () => html`
 		<nldd-text-cell text="**Rol**"></nldd-text-cell>
 	</nldd-table-row>`;
 
-export const Empty = {
+export const Leeg = {
 	render: () => html`
-		<nldd-table columns="minmax(160px, 1fr) minmax(200px, 1fr) 120px" accessible-label="Gebruikers">
+		<nldd-table
+			columns="minmax(160px, 1fr) minmax(200px, 1fr) 120px"
+			accessible-label="Gebruikers"
+		>
 			${emptyHeader()}
 			<nldd-inline-dialog
 				slot="empty"
@@ -402,7 +457,11 @@ export const Empty = {
 				text="Geen resultaten"
 				supporting-text="Pas de filters aan of probeer een andere zoekterm."
 			>
-				<nldd-button slot="actions" variant="neutral-tinted" text="Filters wissen"></nldd-button>
+				<nldd-button
+					slot="actions"
+					variant="neutral-tinted"
+					text="Filters wissen"
+				></nldd-button>
 			</nldd-inline-dialog>
 		</nldd-table>
 	`,
@@ -416,10 +475,13 @@ export const Empty = {
 	},
 };
 
-export const EmptyWithoutSlot = {
-	name: 'Empty: slot niet gevuld',
+export const LeegZonderSlot = {
+	name: 'Leeg: slot niet gevuld',
 	render: () => html`
-		<nldd-table columns="minmax(160px, 1fr) minmax(200px, 1fr) 120px" accessible-label="Gebruikers">
+		<nldd-table
+			columns="minmax(160px, 1fr) minmax(200px, 1fr) 120px"
+			accessible-label="Gebruikers"
+		>
 			${emptyHeader()}
 		</nldd-table>
 	`,

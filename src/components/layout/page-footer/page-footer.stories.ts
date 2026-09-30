@@ -30,9 +30,18 @@ export const Standaard = {
 	render: (args: Record<string, string>) => html`
 		<nldd-page-footer width=${args.width || nothing}>
 			<nldd-breadcrumbs slot="breadcrumbs">
-				<nldd-breadcrumbs-item text="Home" href="/"></nldd-breadcrumbs-item>
-				<nldd-breadcrumbs-item text="Documentatie" href="/docs/"></nldd-breadcrumbs-item>
-				<nldd-breadcrumbs-item text="Architectuur" current></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Home"
+					href="/"
+				></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Documentatie"
+					href="/docs/"
+				></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Architectuur"
+					current
+				></nldd-breadcrumbs-item>
 			</nldd-breadcrumbs>
 
 			<nldd-container>
@@ -44,10 +53,25 @@ export const Standaard = {
 			</nldd-container>
 
 			<nldd-page-footer-legal-bar slot="legal-bar">
-				<nldd-page-footer-legal-bar-item slot="start" text="© 2026 Ministerie van Binnenlandse Zaken en Koninkrijksrelaties"></nldd-page-footer-legal-bar-item>
-				<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
-				<nldd-page-footer-legal-bar-item slot="end" text="Cookies" href="/cookies/"></nldd-page-footer-legal-bar-item>
-				<nldd-page-footer-legal-bar-item slot="end" text="Toegankelijkheid" href="/toegankelijkheid/"></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="start"
+					text="© 2026 Ministerie van Binnenlandse Zaken en Koninkrijksrelaties"
+				></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="end"
+					text="Privacy"
+					href="/privacy/"
+				></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="end"
+					text="Cookies"
+					href="/cookies/"
+				></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="end"
+					text="Toegankelijkheid"
+					href="/toegankelijkheid/"
+				></nldd-page-footer-legal-bar-item>
 			</nldd-page-footer-legal-bar>
 		</nldd-page-footer>
 	`,
@@ -61,9 +85,20 @@ export const AlleenLegalBar = {
 	render: () => html`
 		<nldd-page-footer>
 			<nldd-page-footer-legal-bar slot="legal-bar">
-				<nldd-page-footer-legal-bar-item slot="start" text="© 2026 Rijksoverheid"></nldd-page-footer-legal-bar-item>
-				<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
-				<nldd-page-footer-legal-bar-item slot="end" text="Toegankelijkheid" href="/toegankelijkheid/"></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="start"
+					text="© 2026 Rijksoverheid"
+				></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="end"
+					text="Privacy"
+					href="/privacy/"
+				></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item
+					slot="end"
+					text="Toegankelijkheid"
+					href="/toegankelijkheid/"
+				></nldd-page-footer-legal-bar-item>
 			</nldd-page-footer-legal-bar>
 		</nldd-page-footer>
 	`,
@@ -89,8 +124,14 @@ export const ZonderLegalBar = {
 	render: () => html`
 		<nldd-page-footer>
 			<nldd-breadcrumbs slot="breadcrumbs">
-				<nldd-breadcrumbs-item text="Home" href="/"></nldd-breadcrumbs-item>
-				<nldd-breadcrumbs-item text="Documenten" current></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Home"
+					href="/"
+				></nldd-breadcrumbs-item>
+				<nldd-breadcrumbs-item
+					text="Documenten"
+					current
+				></nldd-breadcrumbs-item>
 			</nldd-breadcrumbs>
 			<nldd-container>
 				<nldd-rich-text>
@@ -111,9 +152,18 @@ export const Smal = {
 		<div style="max-width: 360px; border: 1px dashed var(--semantics-dividers-color);">
 			<nldd-page-footer>
 				<nldd-breadcrumbs slot="breadcrumbs">
-					<nldd-breadcrumbs-item text="Home" href="/"></nldd-breadcrumbs-item>
-					<nldd-breadcrumbs-item text="Documentatie" href="/docs/"></nldd-breadcrumbs-item>
-					<nldd-breadcrumbs-item text="Architectuur" current></nldd-breadcrumbs-item>
+					<nldd-breadcrumbs-item
+						text="Home"
+						href="/"
+					></nldd-breadcrumbs-item>
+					<nldd-breadcrumbs-item
+						text="Documentatie"
+						href="/docs/"
+					></nldd-breadcrumbs-item>
+					<nldd-breadcrumbs-item
+						text="Architectuur"
+						current
+					></nldd-breadcrumbs-item>
 				</nldd-breadcrumbs>
 				<nldd-container>
 					<nldd-rich-text>
@@ -122,9 +172,20 @@ export const Smal = {
 					</nldd-rich-text>
 				</nldd-container>
 				<nldd-page-footer-legal-bar slot="legal-bar">
-					<nldd-page-footer-legal-bar-item slot="start" text="© 2026 Rijksoverheid"></nldd-page-footer-legal-bar-item>
-					<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
-					<nldd-page-footer-legal-bar-item slot="end" text="Toegankelijkheid" href="/toegankelijkheid/"></nldd-page-footer-legal-bar-item>
+					<nldd-page-footer-legal-bar-item
+						slot="start"
+						text="© 2026 Rijksoverheid"
+					></nldd-page-footer-legal-bar-item>
+					<nldd-page-footer-legal-bar-item
+						slot="end"
+						text="Privacy"
+						href="/privacy/"
+					></nldd-page-footer-legal-bar-item>
+					<nldd-page-footer-legal-bar-item
+						slot="end"
+						text="Toegankelijkheid"
+						href="/toegankelijkheid/"
+					></nldd-page-footer-legal-bar-item>
 				</nldd-page-footer-legal-bar>
 			</nldd-page-footer>
 		</div>

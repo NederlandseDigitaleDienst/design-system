@@ -1,4 +1,5 @@
 import { html, nothing } from 'lit';
+import { useArgs } from 'storybook/preview-api';
 import './modal-dialog.js';
 import '../../actions/button/button.js';
 import '../../inputs/text-field/text-field.js';
@@ -31,13 +32,30 @@ export default {
 		},
 		status: { type: 'stable' },
 	},
+	args: {
+		variant: '',
+		horizontalAlignment: '',
+		text: 'Dialog titel',
+		supportingText: 'Ondersteunende tekst voor aanvullende context.',
+		icon: '',
+		accessibleLabel: '',
+		open: false,
+	},
 	argTypes: {
 		variant: {
 			control: 'select',
 			options: ['(geen)', 'alert'],
 			mapping: { '(geen)': '' },
-			description: 'Semantische variant — dwingt een icoon en kleur af',
+			description: 'Semantische variant. `alert` dwingt een icoon en kleur af.',
 			table: { defaultValue: { summary: '(geen)' } },
+		},
+		horizontalAlignment: {
+			name: 'horizontal-alignment',
+			control: 'select',
+			options: ['(auto)', 'left', 'center'],
+			mapping: { '(auto)': '' },
+			description: 'Uitlijning van tekst, icoon en acties. Zonder waarde leidt de dialoog hem af: eigen inhoud in de slot lijnt links uit, een kale melding blijft gecentreerd.',
+			table: { defaultValue: { summary: '(auto)' } },
 		},
 		text: {
 			control: 'text',
@@ -52,53 +70,65 @@ export default {
 			control: 'select',
 			options: ['(geen)', ...ICONS],
 			mapping: { '(geen)': '' },
-			description: 'Naam van het nldd-icon icoon; afwezig wanneer niet ingesteld',
+			description: 'Icoon boven de tekst.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
-			description: 'Toegankelijk label voor screen readers',
+			description: 'Toegankelijke naam van de dialoog. Zonder label neemt de dialoog de hoofdtekst over.',
+			table: { defaultValue: { summary: 'hoofdtekst' } },
 		},
-	},
-	args: {
-		variant: '',
-		text: 'Dialog titel',
-		supportingText: 'Ondersteunende tekst voor aanvullende context.',
-		icon: '',
-		accessibleLabel: '',
+		open: {
+			control: 'boolean',
+			description: 'Of de dialoog open is. Aanzetten opent de dialoog; sluit de dialoog zichzelf (Escape, de achtergrond), dan gaat `open` vanzelf weer uit.',
+			table: { defaultValue: { summary: false } },
+		},
 	},
 };
 
 const openNext = (e: Record<string, any>) => e.currentTarget.nextElementSibling.show();
 
-export const Standaard = (args: Record<string, any>) => html`
-	<nldd-button
-		variant="primary"
-		text="Open modal dialog"
-		@click=${openNext}
-	></nldd-button>
-	<nldd-modal-dialog
-		variant=${args.variant || nothing}
-		text=${args.text}
-		supporting-text=${args.supportingText}
-		icon=${args.icon || nothing}
-		accessible-label=${args.accessibleLabel || nothing}
-	>
+// Set the property rather than the arg: a story further down a docs page renders
+// with its initial args and does not redraw when they change. The open and close
+// events keep the control in step.
+const setNextOpen = (e: Record<string, any>) => { e.currentTarget.nextElementSibling.open = true; };
+const setClosed = (e: Record<string, any>) => { e.target.closest('nldd-modal-dialog').open = false; };
+
+export const Standaard = (args: Record<string, any>) => {
+	const [, updateArgs] = useArgs();
+	return html`
 		<nldd-button
-			slot="actions"
 			variant="primary"
-			text="Bevestig"
-			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
+			text="Open modal dialog"
+			@click=${setNextOpen}
 		></nldd-button>
-		<nldd-button
-			slot="actions"
-			variant="neutral-tinted"
-			text="Annuleer"
-			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
-		></nldd-button>
-	</nldd-modal-dialog>
-`;
+		<nldd-modal-dialog
+			variant=${args.variant || nothing}
+			horizontal-alignment=${args.horizontalAlignment || nothing}
+			text=${args.text}
+			supporting-text=${args.supportingText}
+			icon=${args.icon || nothing}
+			accessible-label=${args.accessibleLabel || nothing}
+			?open=${args.open}
+			@open=${() => updateArgs({ open: true })}
+			@close=${() => updateArgs({ open: false })}
+		>
+			<nldd-button
+				slot="actions"
+				variant="primary"
+				text="Bevestig"
+				@click=${setClosed}
+			></nldd-button>
+			<nldd-button
+				slot="actions"
+				variant="neutral-tinted"
+				text="Annuleer"
+				@click=${setClosed}
+			></nldd-button>
+		</nldd-modal-dialog>
+	`;
+};
 
 export const ZonderIcoon = {
 	render: () => html`
@@ -151,7 +181,8 @@ export const MetIcoon = {
 	parameters: { controls: { disable: true } },
 };
 
-export const Alert = {
+export const VariantAlert = {
+	name: 'Variant alert',
 	render: () => html`
 	<nldd-button
 		variant="primary"
