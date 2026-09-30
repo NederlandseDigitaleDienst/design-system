@@ -104,6 +104,22 @@ describe('nldd-button-group – gestapeld', () => {
 		expect(getComputedStyle(icoonknop).alignSelf).toBe('flex-start');
 	});
 
+	it('zwijgt als de ouder zijn breedte een tel later alsnog doorgeeft', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<HTMLElement>(
+			`<div style="width: 0">
+				<nldd-button-group>
+					<nldd-button text="Een"></nldd-button>
+				</nldd-button-group>
+			</div>`,
+		);
+		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
+		await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+		el.style.width = '320px';
+		await new Promise((resolve) => setTimeout(resolve, 400));
+		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(false);
+	});
+
 	it('kijkt opnieuw zodra de oriëntatie op auto komt', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<HTMLElement>(
@@ -121,7 +137,7 @@ describe('nldd-button-group – gestapeld', () => {
 
 		groep.orientation = 'auto';
 		await waitForUpdate(groep);
-		await new Promise((resolve) => setTimeout(resolve, 100));
+		await new Promise((resolve) => setTimeout(resolve, 400));
 		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
 	});
 
@@ -143,7 +159,7 @@ describe('nldd-button-group – gestapeld', () => {
 		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(false);
 
 		el.style.display = 'block';
-		await new Promise((resolve) => setTimeout(resolve, 100));
+		await new Promise((resolve) => setTimeout(resolve, 400));
 		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
 	});
 
@@ -158,8 +174,9 @@ describe('nldd-button-group – gestapeld', () => {
 			</div>`,
 		);
 		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
-		await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
-		await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+		// De waarschuwing houdt een nulmeting even vast, voor het geval de ouder
+		// zijn breedte een frame later alsnog doorgeeft.
+		await new Promise((resolve) => setTimeout(resolve, 400));
 		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
 	});
 });

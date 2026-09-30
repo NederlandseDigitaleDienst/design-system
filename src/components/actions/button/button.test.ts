@@ -81,6 +81,19 @@ describe('nldd-button', () => {
 		expect(getComputedStyle(button.shadowRoot!.querySelector('button')!).width).not.toBe('320px');
 	});
 
+	it('waarschuwt opnieuw als er een andere verkeerde id staat', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDButton>('<nldd-button type="submit" form="eerste-typefout" text="Bewaar"></nldd-button>');
+		const button = el as NLDDButton;
+		await waitForUpdate(button);
+		button.shadowRoot!.querySelector('button')!.click();
+		button.setAttribute('form', 'tweede-typefout');
+		await waitForUpdate(button);
+		button.shadowRoot!.querySelector('button')!.click();
+		const ids = warn.mock.calls.map(([m]) => String(m).match(/form="([^"]+)"/)?.[1]).filter(Boolean);
+		expect(ids).toEqual(['eerste-typefout', 'tweede-typefout']);
+	});
+
 	it('renders without error', async () => {
 		el = await fixture('<nldd-button></nldd-button>');
 		await waitForUpdate(el);

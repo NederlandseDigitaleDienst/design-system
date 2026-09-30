@@ -52,6 +52,8 @@ export class NLDDButtonGroup extends LitElement {
 
 	/** DEV only: watches for the collapse below, then lets itself go. */
 	private _collapseObserver: ResizeObserver | null = null;
+	/** Timer holding a zero-width reading before it counts as a verdict. */
+	private _collapseVerdict = 0;
 
 	handleSlotChange() {
 		const assigned = this._slot
@@ -101,6 +103,11 @@ export class NLDDButtonGroup extends LitElement {
 	 * stops watching either way. It starts again when the group is reconnected
 	 * somewhere else or when `orientation` turns to `auto`, since both change
 	 * the answer.
+	 *
+	 * A zero reading waits before it counts: a parent can hand over its width a
+	 * frame or two after the first paint, and that looks exactly like a collapse
+	 * until it does. Only a zero that is still zero when the timer runs out gets
+	 * said out loud.
 	 */
 	private _watchForCollapse(): void {
 		if (!import.meta.env?.DEV) return;
@@ -115,11 +122,21 @@ export class NLDDButtonGroup extends LitElement {
 			// element too, and a fixed group can collapse like any other.
 			if (!this.isConnected || this.getClientRects().length === 0) return;
 			if (!this._slot?.assignedElements({ flatten: true }).length) return;
-			const collapsed = this.getBoundingClientRect().width === 0;
-			if (collapsed) {
-				console.warn('nldd-button-group: the group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query while orientation is auto), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.');
+			if (this.getBoundingClientRect().width > 0) {
+				// It got a width, from the start or a tick late. Nothing to say.
+				this._stopWatchingForCollapse();
+				return;
 			}
-			this._stopWatchingForCollapse();
+			// Zero, but not yet a verdict: a parent can hand over its width a
+			// frame or two later, and that is the same zero. Give it a moment and
+			// keep watching, so a width that arrives cancels this.
+			if (this._collapseVerdict !== 0) return;
+			this._collapseVerdict = window.setTimeout(() => {
+				if (!this.isConnected || this.getClientRects().length === 0) return;
+				if (this.getBoundingClientRect().width > 0) return;
+				console.warn('nldd-button-group: the group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query while orientation is auto), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.');
+				this._stopWatchingForCollapse();
+			}, 250);
 		});
 		this._collapseObserver.observe(this);
 	}
@@ -127,6 +144,8 @@ export class NLDDButtonGroup extends LitElement {
 	private _stopWatchingForCollapse(): void {
 		this._collapseObserver?.disconnect();
 		this._collapseObserver = null;
+		if (this._collapseVerdict) clearTimeout(this._collapseVerdict);
+		this._collapseVerdict = 0;
 	}
 
 	override render() {

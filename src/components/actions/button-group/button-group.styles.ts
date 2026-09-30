@@ -26,8 +26,7 @@ export const buttonGroupStyles = css`
 	   A container may not size itself from its contents, and a group pinned to a
 	   row or a stack would then measure zero in a parent that shrink-wraps, for
 	   a query it never runs. */
-	:host([orientation="auto"]),
-	:host(:not([orientation])) {
+	:host(:not([orientation="horizontal"], [orientation="vertical"])) {
 		container-type: inline-size;
 	}
 
@@ -41,8 +40,7 @@ export const buttonGroupStyles = css`
 	   the row. */
 
 	:host([orientation="horizontal"]),
-	:host([orientation="auto"]),
-	:host(:not([orientation])) {
+	:host(:not([orientation="horizontal"], [orientation="vertical"])) {
 		--_flex-direction: row;
 		--_flex-wrap: wrap;
 	}
@@ -51,13 +49,13 @@ export const buttonGroupStyles = css`
 	   Auto is the default: a row, and stacked over the full width on a narrow
 	   container, where two labels beside each other leave no room for either.
 
-	   The two selectors below are one state. orientation reflects only when it
-	   is not the default, so auto is either written out or absent, and every rule
-	   for it needs both. Change one, change the other. */
+	   Auto is matched as "neither of the other two" rather than as itself: the
+	   attribute reflects only when it is not the default, so auto is written out
+	   OR absent, and a rule that named it would have needed a second selector
+	   beside it everywhere. */
 
 	@container (max-width: ${smMax}) {
-		:host([orientation="auto"]) .button-group,
-		:host(:not([orientation])) .button-group {
+		:host(:not([orientation="horizontal"], [orientation="vertical"])) .button-group {
 			flex-direction: column;
 			--context-button-width: 100%;
 		}
@@ -67,8 +65,7 @@ export const buttonGroupStyles = css`
 		   An icon-only control is the exception: its size is its icon, and a
 		   full-width bar with one glyph in the middle is not a bigger target for
 		   the thumb, just a wider one. */
-		:host([orientation="auto"]) ::slotted(:not(nldd-icon-button)),
-		:host(:not([orientation])) ::slotted(:not(nldd-icon-button)) {
+		:host(:not([orientation="horizontal"], [orientation="vertical"])) ::slotted(:not(nldd-icon-button)) {
 			display: block;
 			width: 100%;
 		}
@@ -76,8 +73,7 @@ export const buttonGroupStyles = css`
 		/* align-self as well: a column stretches its items across the full width
 		   on its own, so without this the icon button is a wide bar regardless of
 		   the width rule above. */
-		:host([orientation="auto"]) ::slotted(nldd-icon-button),
-		:host(:not([orientation])) ::slotted(nldd-icon-button) {
+		:host(:not([orientation="horizontal"], [orientation="vertical"])) ::slotted(nldd-icon-button) {
 			align-self: flex-start;
 		}
 	}

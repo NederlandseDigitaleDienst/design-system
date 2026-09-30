@@ -201,7 +201,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	rel: string | undefined = undefined;
 
 	private _warnedA11y = false;
-	private _warnedForm = false;
+	private _warnedFormId: string | null = null;
 
 	/** Shared wiring for an overlay slotted into `popup`: anchors it to this
 	 * button and turns clicks into open/close. Not private: the template module
@@ -303,8 +303,10 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 		// the click does nothing and no error says why. Say it once per button,
 		// naming what the id found, since a typo and an nldd-form that has not
 		// rendered yet look identical from the outside.
-		if (import.meta.env?.DEV && !this._warnedForm) {
-			this._warnedForm = true;
+		// Keyed on the id, not a flag: fix a typo and point at another form that
+		// does not exist either, and that one has to be said as well.
+		if (import.meta.env?.DEV && this._warnedFormId !== id) {
+			this._warnedFormId = id;
 			console.warn(target
 				? `<nldd-button form="${id}">: that id is an <${target.tagName.toLowerCase()}> without a form, so this button submits nothing. An nldd-form only has one once it has rendered.`
 				: `<nldd-button form="${id}">: nothing in this root has that id, so this button submits nothing.`);
