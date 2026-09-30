@@ -37,11 +37,15 @@ describe('nldd-button', () => {
 		expect(submits).toBe(1);
 	});
 
-	it('doet niets als het `form`-attribuut nergens naar wijst', async () => {
+	it('doet niets als het `form`-attribuut nergens naar wijst, en zegt dat', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<NLDDButton>('<nldd-button type="submit" form="bestaat-niet" text="Bewaar"></nldd-button>');
 		const button = el as NLDDButton;
 		await waitForUpdate(button);
 		expect(() => button.shadowRoot!.querySelector('button')!.click()).not.toThrow();
+		// Een klik die niets doet zonder een woord is precies wat dit attribuut
+		// kwam oplossen, dus daar hoort een melding bij.
+		expect(warn.mock.calls.some(([m]) => String(m).includes('form="bestaat-niet"'))).toBe(true);
 	});
 
 	it('neemt de breedte over die een groep om hem heen doorgeeft', async () => {

@@ -49,7 +49,11 @@ export const buttonGroupStyles = css`
 
 	/* ## Auto
 	   Auto is the default: a row, and stacked over the full width on a narrow
-	   container, where two labels beside each other leave no room for either. */
+	   container, where two labels beside each other leave no room for either.
+
+	   The two selectors below are one state. orientation reflects only when it
+	   is not the default, so auto is either written out or absent, and every rule
+	   for it needs both. Change one, change the other. */
 
 	@container (max-width: ${smMax}) {
 		:host([orientation="auto"]) .button-group,

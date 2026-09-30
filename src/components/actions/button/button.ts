@@ -201,6 +201,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	rel: string | undefined = undefined;
 
 	private _warnedA11y = false;
+	private _warnedForm = false;
 
 	/** Shared wiring for an overlay slotted into `popup`: anchors it to this
 	 * button and turns clicks into open/close. Not private: the template module
@@ -297,7 +298,18 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 		const target = 'getElementById' in root ? root.getElementById(id) : null;
 		if (target instanceof HTMLFormElement) return target;
 		const rendered = (target as { form?: unknown } | null)?.form;
-		return rendered instanceof HTMLFormElement ? rendered : null;
+		if (rendered instanceof HTMLFormElement) return rendered;
+		// Nothing to submit is the silent failure this attribute exists to end:
+		// the click does nothing and no error says why. Say it once per button,
+		// naming what the id found, since a typo and an nldd-form that has not
+		// rendered yet look identical from the outside.
+		if (import.meta.env?.DEV && !this._warnedForm) {
+			this._warnedForm = true;
+			console.warn(target
+				? `<nldd-button form="${id}">: that id is an <${target.tagName.toLowerCase()}> without a form, so this button submits nothing. An nldd-form only has one once it has rendered.`
+				: `<nldd-button form="${id}">: nothing in this root has that id, so this button submits nothing.`);
+		}
+		return null;
 	}
 
 	/**

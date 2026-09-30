@@ -99,7 +99,9 @@ export class NLDDButtonGroup extends LitElement {
 		if (this.orientation !== 'auto') return;
 		this._collapseObserver = new ResizeObserver(() => {
 			// No box at all (display:none, a closed sheet): nothing to judge yet.
-			if (!this.isConnected || this.offsetParent === null) return;
+			// Client rects rather than offsetParent: that is null for a fixed
+			// element too, and a fixed group can collapse like any other.
+			if (!this.isConnected || this.getClientRects().length === 0) return;
 			if (!this._slot?.assignedElements({ flatten: true }).length) return;
 			const collapsed = this.getBoundingClientRect().width === 0;
 			if (collapsed) {
