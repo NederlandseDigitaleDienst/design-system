@@ -68,20 +68,11 @@ describe('shadow-resets: host CSS cannot bleed into slotted content', () => {
 		);
 	});
 
-	it('dropdown — slotted native select stays the invisible overlay', async () => {
-		await assertUnaffected(
-			'<nldd-dropdown><select><option>A</option></select></nldd-dropdown>',
-			'select',
-			['opacity', 'position', 'appearance'],
-		);
-	});
-
-	it('dropdown — shadow value text blocks inherited typography leaks', async () => {
+	it('dropdown — slotted native select keeps its overlay and blocks inherited typography leaks', async () => {
 		await assertUnaffected(
 			'<nldd-dropdown><select><option>Optie</option></select></nldd-dropdown>',
-			'.dropdown__value',
-			['letterSpacing', 'textTransform'],
-			{ shadow: true },
+			'select',
+			['opacity', 'position', 'appearance', 'fontSize', 'letterSpacing', 'textTransform'],
 		);
 	});
 
