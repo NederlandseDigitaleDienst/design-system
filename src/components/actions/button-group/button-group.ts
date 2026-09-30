@@ -70,9 +70,15 @@ export class NLDDButtonGroup extends LitElement {
 
 	override updated(changedProperties: Map<string, unknown>) {
 		if (changedProperties.has('size')) this.handleSlotChange();
+		// Switching to auto makes the group a container after the fact, so the
+		// question it can then fail is only worth asking from here on.
+		if (changedProperties.has('orientation')) this._watchForCollapse();
 	}
 
-	override firstUpdated(): void {
+	override connectedCallback(): void {
+		super.connectedCallback();
+		// Also on reconnect: a group that moves takes a new parent with it, and
+		// that parent decides whether there is a width to take.
 		this._watchForCollapse();
 	}
 
@@ -92,11 +98,17 @@ export class NLDDButtonGroup extends LitElement {
 	 * `display: none` on its first frame, and a parent can get its width a tick
 	 * later, so one look would call both of those a collapse or miss the real
 	 * one. The observer waits for the group to be displayed, says it once and
-	 * stops watching either way.
+	 * stops watching either way. It starts again when the group is reconnected
+	 * somewhere else or when `orientation` turns to `auto`, since both change
+	 * the answer.
 	 */
 	private _watchForCollapse(): void {
 		if (!import.meta.env?.DEV) return;
-		if (this.orientation !== 'auto') return;
+		if (this.orientation !== 'auto') {
+			this._stopWatchingForCollapse();
+			return;
+		}
+		if (this._collapseObserver) return;
 		this._collapseObserver = new ResizeObserver(() => {
 			// No box at all (display:none, a closed sheet): nothing to judge yet.
 			// Client rects rather than offsetParent: that is null for a fixed

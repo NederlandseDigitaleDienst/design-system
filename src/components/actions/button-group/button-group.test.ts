@@ -104,6 +104,27 @@ describe('nldd-button-group – gestapeld', () => {
 		expect(getComputedStyle(icoonknop).alignSelf).toBe('flex-start');
 	});
 
+	it('kijkt opnieuw zodra de oriëntatie op auto komt', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<HTMLElement>(
+			`<div style="display: inline-flex">
+				<nldd-button-group orientation="horizontal">
+					<nldd-button text="Een"></nldd-button>
+				</nldd-button-group>
+			</div>`,
+		);
+		const groep = el.querySelector('nldd-button-group') as HTMLElement & { orientation: string };
+		await waitForUpdate(groep);
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		// Vastgezet op een rij is de groep geen container, dus valt er niets in te klappen.
+		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(false);
+
+		groep.orientation = 'auto';
+		await waitForUpdate(groep);
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
+	});
+
 	it('waarschuwt ook als de groep pas later in beeld komt', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<HTMLElement>(

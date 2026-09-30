@@ -132,7 +132,16 @@ export class NLDDToolbarItem extends LitElement {
 		// Without an alternative the action is simply gone once the toolbar runs
 		// out of room, and that only happens on a narrow screen. Say it at load,
 		// where a wide screen sees it too, not at the moment the item overflows.
-		if (!import.meta.env?.DEV || this.querySelector(':scope > [slot="overflow"]')) return;
+		//
+		// A frame later, not now: a framework can append the overflow child right
+		// after the element upgrades (Vue, React with async children), and asking
+		// on the first render would call that a missing fallback.
+		if (!import.meta.env?.DEV) return;
+		requestAnimationFrame(() => this._warnWithoutOverflow());
+	}
+
+	private _warnWithoutOverflow(): void {
+		if (!this.isConnected || this.querySelector(':scope > [slot="overflow"]')) return;
 		const control = this.querySelector(':scope > :not([slot])');
 		const name = control?.getAttribute('accessible-label') || control?.getAttribute('text') || this.label;
 		console.warn(`nldd-toolbar-item${name ? ` ("${name}")` : ''}: nothing in slot="overflow". On a narrow toolbar this item moves into the overflow menu, and without an nldd-menu-item there its action is gone. Add one in slot="overflow".`);

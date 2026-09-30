@@ -3,6 +3,10 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './toolbar.js';
 import '../menu/menu.js';
 
+/** De waarschuwing komt een frame na de eerste render, zodat een framework
+ *  zijn overflow-kind nog kan aanleveren. */
+const volgendeFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+
 describe('nldd-toolbar-item', () => {
 	let el: HTMLElement;
 
@@ -183,6 +187,7 @@ describe('nldd-toolbar-item – overflow alternative', () => {
 			</nldd-toolbar>
 		`);
 		await waitForUpdate(el.querySelector('nldd-toolbar-item') as HTMLElement);
+		await volgendeFrame();
 		expect(overflowWarnings(warn)).toHaveLength(1);
 		expect(String(overflowWarnings(warn)[0][0])).toContain('("Zoeken")');
 	});
@@ -198,6 +203,7 @@ describe('nldd-toolbar-item – overflow alternative', () => {
 			</nldd-toolbar>
 		`);
 		await waitForUpdate(el.querySelector('nldd-toolbar-item') as HTMLElement);
+		await volgendeFrame();
 		expect(overflowWarnings(warn)).toHaveLength(0);
 	});
 
@@ -213,6 +219,7 @@ describe('nldd-toolbar-item – overflow alternative', () => {
 		await Promise.all(items.map((item) => waitForUpdate(item)));
 		(items[0] as HTMLElement & { priority: number }).priority = 3;
 		await waitForUpdate(items[0]);
+		await volgendeFrame();
 		expect(overflowWarnings(warn).map(([message]) => String(message).match(/\("(\w+)"\)/)?.[1])).toEqual(['Een', 'Twee']);
 	});
 });
