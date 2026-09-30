@@ -6,11 +6,11 @@
 
 # Patroon: menu bij een knop
 
-**Welk probleem dit oplost.** Meer acties aanbieden dan er knoppen passen, of een keuze laten maken die niet de hele aandacht verdient: een rijmenu, een sorteermenu, een profielmenu.
+**Welk probleem dit oplost.** Meer acties aanbieden dan er knoppen passen, of een keuze laten maken die niet de hele aandacht verdient: een more-menu in een rij, een sorteermenu, een profielmenu.
 
 **Wanneer wel.** Een lijst acties of keuzes die bij één knop hoort.
 
-**Wanneer niet.** Voor de hoofdnavigatie van een site gebruik je een [`nldd-menu-bar`](../../nldd-design/reference.md#nldd-menu-bar). Voor een keuze uit veel opties in een formulier gebruik je een [`nldd-dropdown`](../../nldd-design/reference.md#nldd-dropdown). En geen megamenu's, zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md).
+**Wanneer niet.** Voor de hoofdnavigatie van een site gebruik je een [`nldd-menu-bar`](../../nldd-design/reference.md#nldd-menu-bar). Voor een keuze in een formulier gebruik je geen menu: bij een handvol opties een [`nldd-segmented-control`](../../nldd-design/reference.md#nldd-segmented-control) of [`nldd-toggle-button-group`](../../nldd-design/reference.md#nldd-toggle-button-group), bij veel opties een [`nldd-combo-box`](../../nldd-design/reference.md#nldd-combo-box) waarin je typt, en pas als laatste een [`nldd-dropdown`](../../nldd-design/reference.md#nldd-dropdown), zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#invoer-en-formulieren). En geen megamenu's, zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md).
 
 ## Compositie
 
@@ -47,30 +47,27 @@ nldd-button (of nldd-icon-button)   expandable
 </nldd-button>
 ```
 
-Een keuze uit een set is een groep items met `type="radio"`, iets dat aan of uit staat een item met `type="checkbox"`. Beide houden hun stand bij met `selected`.
+Een keuze uit een set zijn items met `type="radio"`, iets dat aan of uit staat een item met `type="checkbox"`. Beide houden hun stand bij met `selected`.
 
 ```html
 <nldd-button
-  text="Sorteer"
+  text="Nieuwste eerst"
   start-icon="sort"
   expandable
 >
   <nldd-menu slot="popup">
-    <nldd-menu-group text="Sorteer op">
-      <nldd-menu-item
-        type="radio"
-        text="Datum"
-        selected
-      ></nldd-menu-item>
-      <nldd-menu-item
-        type="radio"
-        text="Naam"
-      ></nldd-menu-item>
-    </nldd-menu-group>
-    <nldd-menu-divider></nldd-menu-divider>
     <nldd-menu-item
-      type="checkbox"
-      text="Toon afgesloten zaken"
+      type="radio"
+      text="Nieuwste eerst"
+      selected
+    ></nldd-menu-item>
+    <nldd-menu-item
+      type="radio"
+      text="Oudste eerst"
+    ></nldd-menu-item>
+    <nldd-menu-item
+      type="radio"
+      text="Naam (A-Z)"
     ></nldd-menu-item>
   </nldd-menu>
 </nldd-button>

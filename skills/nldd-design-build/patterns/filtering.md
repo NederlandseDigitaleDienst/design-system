@@ -338,7 +338,7 @@ Het voorbeeld is smal, dus de filters zitten hier achter de knop. Is de sectie b
 
 **Zet het aantal resultaten onder de filters, met `aria-live="polite"`.** Dat is het enige dat de uitkomst hoorbaar maakt: de [`nldd-list`](../../nldd-design/reference.md#nldd-list) heeft wel live regions, maar gebruikt die voor herordenen, dus filteren verloopt verder stil. Het beantwoordt ook de vraag die een filter oproept (deed dat vinkje iets, en hoeveel), en bij een lijst die pagineert zegt het hoeveel er niet in beeld staat. Houd het kort ("2 dossiers"), klein en secundair: het is een uitkomst en geen kop, dus een [`nldd-text`](../../nldd-design/reference.md#nldd-text) met `size="sm" color="secondary"`. Laat het weg zolang er niets gefilterd is, want dan telt het niets. Dat de lijst leeg is, zegt `no-results` al.
 
-**De lijst toont zelf dat het filter niets overlaat.** Vul `slot="no-results"` met een eigen zin. Het zoekveld en de filters blijven dan staan als weg terug, zie [lijst met rijen](list.md).
+**De lijst toont zelf dat het filter niets overlaat.** Vul `slot="no-results"` met een eigen zin. Het zoekveld en de filters blijven dan staan als weg terug, zie [lijst](list.md).
 
 ## Toegankelijkheid
 

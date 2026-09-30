@@ -45,12 +45,17 @@ describe('patroon: menu bij een knop', () => {
 
 	it('laat een keuze voorlezen als keuze, met zijn stand', async () => {
 		const button = await mount(choice);
-		const [datum, naam] = button.querySelectorAll('nldd-menu-item[type="radio"]');
-		await waitForUpdate(datum as HTMLElement);
-		await waitForUpdate(naam as HTMLElement);
+		const [gekozen, ander] = button.querySelectorAll('nldd-menu-item[type="radio"]');
+		await waitForUpdate(gekozen as HTMLElement);
+		await waitForUpdate(ander as HTMLElement);
 		const role = (item: Element) => item.shadowRoot!.querySelector('button')!;
-		expect(role(datum).getAttribute('role')).toBe('menuitemradio');
-		expect(role(datum).getAttribute('aria-checked')).toBe('true');
-		expect(role(naam).getAttribute('aria-checked')).toBe('false');
+		expect(role(gekozen).getAttribute('role')).toBe('menuitemradio');
+		expect(role(gekozen).getAttribute('aria-checked')).toBe('true');
+		expect(role(ander).getAttribute('aria-checked')).toBe('false');
+		// De knop draagt de gekozen volgorde, dus je hoeft het menu niet te openen
+		// om te zien waarop de lijst staat. Niets anders in dit menu: een sorteer-
+		// keuze is geen plek voor een filter.
+		expect(button.getAttribute('text')).toBe(gekozen.getAttribute('text'));
+		expect(button.querySelectorAll('nldd-menu > *').length).toBe(3);
 	});
 });

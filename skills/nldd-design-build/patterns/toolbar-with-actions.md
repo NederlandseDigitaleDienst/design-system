@@ -10,7 +10,7 @@
 
 **Wanneer wel.** Een werkomgeving of paneel met meer dan twee acties die bij de hele weergave horen.
 
-**Wanneer niet.** Horen de acties bij één rij, dan horen ze in die rij, zie [lijst met rijen](list.md). Is er maar één actie, zet dan een knop neer. En voeg geen werkbalk toe omdat het er professioneel uitziet: elke balk kost ruimte die de inhoud nodig heeft.
+**Wanneer niet.** Horen de acties bij één rij, dan horen ze in die rij, zie [lijst](list.md). Is er maar één actie, zet dan een knop neer.
 
 ## Compositie
 
