@@ -53,7 +53,8 @@ jobs:
       # The drift check below compares generated output against generated
       # output, so it cannot see a property that never reached the JSDoc. This
       # one compares the other way round: from the @property decorators to the
-      # @attr lines, so a new attribute cannot stay undocumented.
+      # @attr lines, so a new attribute cannot stay undocumented. Named slots
+      # go the same way, from the render template to the @slot lines.
       - name: Validate component API documentation
         run: npm run validate:component-api
 

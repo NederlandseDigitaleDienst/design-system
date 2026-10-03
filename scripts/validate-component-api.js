@@ -1,5 +1,6 @@
 /**
- * Checks that every attribute a component actually has is documented.
+ * Checks that every attribute and every named slot a component actually has is
+ * documented.
  *
  * The JSDoc `@attr` block is hand-written and feeds skills/nldd-design/reference.md,
  * the plugin skill and anything generated from it. The existing drift check
@@ -20,14 +21,23 @@
  * error: some are plain attributes a parent sets on the host, without a
  * property behind them.
  *
+ * Slots get the same treatment, from the `<slot name>` in the render template
+ * to the `@slot` lines. nldd-top-navigation-bar shipped its `global` and
+ * `utility` slots without either line, so the reference and the manifest listed
+ * no slots for it and a consumer validating markup against them was told that
+ * correct usage was wrong. The comparison is per file rather than per element:
+ * a file with several elements shares one template file, and which template
+ * belongs to which element is not something a regex should guess.
+ *
  * Usage: node scripts/validate-component-api.js
  */
 
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { extractLeadingBlock, parseComponent } from './lib/component-jsdoc.js';
+import { extractComponentBlocks, extractLeadingBlock, parseComponent } from './lib/component-jsdoc.js';
 import { declaredAttributes } from './lib/declared-attributes.js';
+import { templateSlots } from './lib/template-slots.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
@@ -37,6 +47,13 @@ const SKIP_SUFFIXES = ['.styles.ts', '.template.ts', '.test.ts', '.stories.ts', 
 
 /** Ships a custom element but is not consumer-facing; the reference skips it too. */
 const INTERNAL_TAGS = new Set(['nldd-lqip-encoder']);
+
+/**
+ * Named slots a consumer never fills by name, keyed by the file's first element.
+ * nldd-form-field-help-text assigns itself to `help`, so documenting that slot
+ * would invite a `slot="help"` that the component overwrites anyway.
+ */
+const INTERNAL_SLOTS = new Map([['nldd-form-field', new Set(['help'])]]);
 
 /**
  * Attributes the shared mixins bring in, read from the mixins themselves so the
@@ -80,6 +97,7 @@ function bodiesByTag(source) {
 const MIXIN_ATTRIBUTES = mixinAttributes();
 
 const problems = [];
+const slotProblems = [];
 const warnings = [];
 let componentCount = 0;
 
@@ -110,6 +128,19 @@ for (const file of collectFiles(componentsDir)) {
 		const absent = [...documented].filter((name) => !declared.has(name) && !MIXIN_ATTRIBUTES.has(name));
 		if (absent.length > 0) warnings.push({ tag, attributes: absent });
 	}
+
+	const firstTag = [...bodies.keys()][0];
+	if (INTERNAL_TAGS.has(firstTag)) continue;
+	const templateFile = file.replace(/\.ts$/, '.template.ts');
+	const rendered = templateSlots(source + (existsSync(templateFile) ? readFileSync(templateFile, 'utf8') : ''));
+	const documentedSlots = new Set(
+		extractComponentBlocks(source).flatMap((b) => parseComponent(b, file, firstTag).flatMap((c) => c.slots.map((slot) => slot.name))),
+	);
+	const internal = INTERNAL_SLOTS.get(firstTag) ?? new Set();
+	const undocumentedSlots = [...rendered].filter((name) => !documentedSlots.has(name) && !internal.has(name));
+	if (undocumentedSlots.length > 0) {
+		slotProblems.push({ tag: [...bodies.keys()].join(', '), file: file.replace(`${repoRoot}/`, ''), slots: undocumentedSlots });
+	}
 }
 
 console.log(`🔍 ${componentCount} componenten gecontroleerd\n`);
@@ -120,17 +151,32 @@ if (warnings.length > 0) {
 	console.log('');
 }
 
-if (problems.length === 0) {
-	console.log('✅ Elk attribuut heeft een @attr-regel.');
+if (problems.length === 0 && slotProblems.length === 0) {
+	console.log('✅ Elk attribuut heeft een @attr-regel en elk benoemd slot een @slot-regel.');
 	process.exit(0);
 }
 
-const total = problems.reduce((sum, p) => sum + p.attributes.length, 0);
-console.error(`❌ ${total} attributen in ${problems.length} componenten hebben geen @attr-regel:\n`);
-for (const { tag, file, attributes } of problems) {
-	console.error(`   ${tag}  (${file})`);
-	for (const name of attributes) console.error(`      @attr ${name}`);
+if (problems.length > 0) {
+	const total = problems.reduce((sum, p) => sum + p.attributes.length, 0);
+	console.error(`❌ ${total} attributen in ${problems.length} componenten hebben geen @attr-regel:\n`);
+	for (const { tag, file, attributes } of problems) {
+		console.error(`   ${tag}  (${file})`);
+		for (const name of attributes) console.error(`      @attr ${name}`);
+	}
+	console.error('');
 }
-console.error('\nVoeg ze toe aan het JSDoc-blok van het component. Zonder @attr-regel');
-console.error('ontbreken ze in skills/nldd-design/reference.md en in alles wat daaruit volgt.');
+
+if (slotProblems.length > 0) {
+	const total = slotProblems.reduce((sum, p) => sum + p.slots.length, 0);
+	console.error(`❌ ${total} benoemde slots in ${slotProblems.length} bestanden hebben geen @slot-regel:\n`);
+	for (const { tag, file, slots } of slotProblems) {
+		console.error(`   ${tag}  (${file})`);
+		for (const name of slots) console.error(`      @slot ${name}`);
+	}
+	console.error('');
+}
+
+console.error('Voeg ze toe aan het JSDoc-blok van het component. Zonder die regel');
+console.error('ontbreken ze in skills/nldd-design/reference.md, in custom-elements.json');
+console.error('en in alles wat daaruit volgt.');
 process.exit(1);

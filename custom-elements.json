@@ -34258,7 +34258,17 @@
             "package": "lit"
           },
           "tagName": "nldd-top-navigation-bar",
-          "customElement": true
+          "customElement": true,
+          "slots": [
+            {
+              "name": "global",
+              "description": "The global navigation: an nldd-menu-bar with nldd-menu-bar-item elements. On narrow widths these items move into the menu sheet behind the menu button."
+            },
+            {
+              "name": "utility",
+              "description": "The utility navigation, such as search and language: an nldd-menu-bar with nldd-menu-bar-item elements. Stays in the bar on every width."
+            }
+          ]
         }
       ],
       "exports": [
@@ -36720,7 +36730,13 @@
             "package": "lit"
           },
           "tagName": "nldd-progress-circle",
-          "customElement": true
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "Place for nldd-progress-circle-segment-indicator elements"
+            }
+          ]
         }
       ],
       "exports": [
