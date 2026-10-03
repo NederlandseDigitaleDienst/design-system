@@ -17,6 +17,22 @@ test('leest een naam die niet het eerste attribuut is', () => {
 	assert.deepEqual([...templateSlots('<slot class="x" name="footer"></slot>')], ['footer']);
 });
 
+// The > of the arrow function is not the end of the tag.
+test('leest een naam die na een binding met een > erin staat', () => {
+	const source = '<slot @slotchange=${() => component._sync()} name="footer"></slot>';
+	assert.deepEqual([...templateSlots(source)], ['footer']);
+});
+
+test('leest een binding met geneste accolades als één geheel', () => {
+	const source = '<slot @slotchange=${(e) => { if (e.target) { sync(); } }} name="header"></slot>';
+	assert.deepEqual([...templateSlots(source)], ['header']);
+});
+
+test('leest een slot in een geneste template', () => {
+	const source = '${show ? html`<div><slot name="start"></slot></div>` : nothing}';
+	assert.deepEqual([...templateSlots(source)], ['start']);
+});
+
 test('slaat het default slot over', () => {
 	assert.deepEqual([...templateSlots('<slot></slot><slot @slotchange=${x}></slot>')], []);
 });

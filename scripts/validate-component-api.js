@@ -27,7 +27,10 @@
  * no slots for it and a consumer validating markup against them was told that
  * correct usage was wrong. The comparison is per file rather than per element:
  * a file with several elements shares one template file, and which template
- * belongs to which element is not something a regex should guess.
+ * belongs to which element is not something a regex should guess. The template
+ * is read from the component file itself and from its `{name}.template.ts`
+ * sibling, the structure every component follows. A component that renders from
+ * a file named differently gets no slot check.
  *
  * Usage: node scripts/validate-component-api.js
  */
@@ -52,6 +55,10 @@ const INTERNAL_TAGS = new Set(['nldd-lqip-encoder']);
  * Named slots a consumer never fills by name, keyed by the file's first element.
  * nldd-form-field-help-text assigns itself to `help`, so documenting that slot
  * would invite a `slot="help"` that the component overwrites anyway.
+ *
+ * The key is the first element because the comparison is per file. An internal
+ * slot of a later element in a shared file is therefore listed under the first
+ * element of that file, not under its own tag.
  */
 const INTERNAL_SLOTS = new Map([['nldd-form-field', new Set(['help'])]]);
 
