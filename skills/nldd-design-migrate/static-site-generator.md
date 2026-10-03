@@ -35,7 +35,7 @@ Zet in die lijst wat je in Markdown gebruikt. Je merkt het gat aan een `p > nldd
 
 Een sitegenerator heeft meestal geen npm-stap. Haal de tarball van het pakket dan tijdens de build van de registry, en neem er `dist/nldd.min.js`, `dist/css/` en `dist/fonts/` uit. `custom-elements.json` zit in dezelfde tarball, dus je markupcheck leest de manifest van precies de versie die je uitlevert.
 
-Leg de versie en de integriteitshash (`dist.integrity` uit de registry) samen in één bestand vast, en laat de build falen als de hash niet klopt. Een upgrade is dan een zichtbare commit van twee regels. Wat dat je oplevert en kost staat in [`server-rendered.md`](server-rendered.md) onder vendoren; het geldt hier onverkort.
+Leg de versie en de integriteitshash (`dist.integrity` uit de registry) samen in één bestand vast, en laat de build falen als de hash niet klopt. Een upgrade is dan een zichtbare commit van twee regels. De hash staat alleen hier beschreven. Wat een vastgezette versie je oplevert en kost staat in [`server-rendered.md`](server-rendered.md) onder vendoren, en geldt hier net zo.
 
 ## Twee dingen om vooraf te beslissen
 
