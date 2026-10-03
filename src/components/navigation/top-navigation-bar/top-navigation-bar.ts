@@ -19,6 +19,9 @@
  * @attr {string} back-href - URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself.
  * @attr {string} back-text - Text of the back button. The button appears as soon as back-text or back-href is set; without text it falls back to the translation ("Terug").
  * @attr {string} width - Limits the bar content to a max-width so it lines up with the page sections. 'full' fills the entire width, or pass your own CSS length.
+ *
+ * @slot global - The global navigation: an nldd-menu-bar with nldd-menu-bar-item elements. On narrow widths these items move into the menu sheet behind the menu button.
+ * @slot utility - The utility navigation, such as search and language: an nldd-menu-bar with nldd-menu-bar-item elements. Stays in the bar on every width.
  */
 
 import { LitElement, type PropertyValues } from 'lit';

@@ -9,6 +9,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Fixed
+
+- **The `global` and `utility` slots of `nldd-top-navigation-bar` are documented.** The component has always rendered both, each taking an `nldd-menu-bar`, but neither had an `@slot` line. `custom-elements.json` and the reference in `nldd-design` therefore listed no slots for it, and a check that validates markup against the manifest rejected `<nldd-menu-bar slot="global">`. The default slot of `nldd-progress-circle`, where its segment indicators go, was missing the same way.
+
 ## [0.8.93](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.92...v0.8.93) (2026-09-30)
 
 # Changelog
