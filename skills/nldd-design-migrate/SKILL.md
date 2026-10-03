@@ -1,6 +1,6 @@
 ---
 name: nldd-design-migrate
-description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit systeem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het designsysteem zelf: die kennis zit in de repository, niet in deze plugin, zie nldd-design-contribute."
+description: "Zet een bestaande frontend om naar @nldd/design-system: vanaf Tailwind, CSS modules, handgeschreven componenten, een statische sitegenerator (MkDocs), of een ander design system (NL Design System, ROOS van RVO). Triggers: 'migreren naar het design system', 'omzetten naar nldd', 'Tailwind eruit', 'van ROOS naar NLDD', 'converteren naar de Rijkshuisstijl-componenten'. Voor het bouwen van een nieuwe app: nldd-design-build. Voor een app die al op dit systeem draait en alleen een hogere versie nodig heeft: nldd-design-upgrade. Voor het ontwikkelen van het designsysteem zelf: die kennis zit in de repository, niet in deze plugin, zie nldd-design-contribute."
 metadata:
   type: reference
 ---
@@ -14,6 +14,7 @@ Alles hieronder geldt ongeacht waar je vandaan komt. Is je codebase specifiek, l
 - [`from-tailwind.md`](from-tailwind.md): de compilervalstrik, de tokenbrug, botsende globale regels, iconen.
 - [`from-another-design-system.md`](from-another-design-system.md): je draaide al op een componentbibliotheek (NL Design System, ROOS van RVO, of een eigen systeem). Verzonnen tokennamen, de donkere weergave als controle, en twee systemen naast elkaar.
 - [`server-rendered.md`](server-rendered.md): HTML op de server met fragmentwissels (htmx, Turbo, Unpoly, LiveView). Wat een swap anders doet dan een paginalading, de nieuwe stack ernaast zetten, en wat vendoren van de bundel je oplevert en kost.
+- [`static-site-generator.md`](static-site-generator.md): een site die uit Markdown wordt gebouwd (MkDocs, Hugo, Eleventy). De HTML omzetten in een build-hook, de bundel zonder bundler, en wat er zonder JavaScript overblijft.
 
 De naslag die je bij een omzetting het hardst nodig hebt, staat in de skill `nldd-design`: de [componentreferentie](../nldd-design/reference.md) om te controleren of een attribuut of icoonnaam echt bestaat, en de [changelog](../nldd-design/changelog.md) om te zien wat er tussen jouw versie en de doelversie is veranderd.
 
@@ -69,7 +70,9 @@ Twee ontwerpkeuzes maken het verschil tussen een poort die werkt en een die niem
 
 **Faal alleen op wat verdwijnt.** Iets erbij is nieuw werk; iets dat weg is, is bijna altijd een ongeluk. Die asymmetrie is wat de poort bruikbaar houdt tijdens een migratie, waarin pagina's per definitie veranderen.
 
-**Negeer alles wat vormgeving is.** Tagnamen, klassen, teksten en stylesheets tellen niet mee: dat is precies wat mag veranderen. Normaliseer daarnaast wat per verzoek verschilt (CSRF-waarden, cache-brekers, UUID's in paden) en laat id's vallen die op `-label`, `-help` of `-error` eindigen: die maakt `nldd-form-field` zelf bij om een veld aan zijn label te knopen. Ze zijn interne bedrading, geen gedrag. Zonder die twee filters piept de poort altijd, en een poort die altijd piept houdt niemand in de gaten.
+**Negeer alles wat vormgeving is.** Tagnamen, klassen, teksten en stylesheets tellen niet mee: dat is precies wat mag veranderen. Normaliseer daarnaast wat per verzoek of per omgeving verschilt (CSRF-waarden, cache-brekers, UUID's in paden, het basispad waaronder de site draait) en laat id's vallen die op `-label`, `-help` of `-error` eindigen: die maakt `nldd-form-field` zelf bij om een veld aan zijn label te knopen. Ze zijn interne bedrading, geen gedrag. Zonder die twee filters piept de poort altijd, en een poort die altijd piept houdt niemand in de gaten.
+
+Het basispad is de variant die je pas in CI ziet. Absolute links bevatten het pad van de omgeving, en een preview van een pull request draait onder een ander pad dan productie: de poort is lokaal groen en faalt op elke preview.
 
 Zo'n meetlat is klein: 150 regels met alleen een HTML-parser en reguliere expressies, zonder afhankelijkheden.
 
@@ -145,10 +148,11 @@ Spoor dit op in de browser, niet door te lezen. Loop na elke pagina de DOM langs
 
 Code lezen vertelt je wat je bedoelde. Alleen de DOM vertelt wat er gebeurde.
 
-Twee meetvalstrikken:
+Drie meetvalstrikken:
 
 - **"Niets rendert op nul pixels" is niet hetzelfde als "alles werkt."** Een kruistabel rendeerde op volle grootte met `border-collapse: separate`, een sticky header op `position: static` en nul randen: zichtbaar, met afmetingen, en volledig ongestyled. De nulbreedte-sweep was al die tijd schoon. Vermoed je verlies van styling, controleer dan *computed styles* (`borderCollapse`, `position`, `backgroundColor`), geen afmetingen.
 - **Gesloten dialogs vervuilen elke query.** `document.querySelectorAll('h1')` gaf op één pagina veertien resultaten, waarvan dertien uit ongeopende modals en datumkiezers in shadow roots. Filter op een niet-lege bounding box voordat je iets concludeert over koppen, focusbare elementen of duplicaten.
+- **Een tab die niet tekent, meet een pagina die niet af is.** Gedrag dat op `requestAnimationFrame` wacht draait niet in een verborgen tab of een venster op de achtergrond. `nldd-top-navigation-bar` schakelt zo naar zijn compacte vorm op smalle breedtes, dus een breedte-sweep in zo'n tab meldt overloop die een echte browser niet heeft. Controleer `document.visibilityState` voordat je een meting gelooft, en wacht in je meetscript niet zelf op een frame: dat komt daar nooit.
 
 Bruikbare sweep, per pagina:
 
@@ -173,6 +177,7 @@ Tel ook het aantal tab-stops per pagina, voor en na. Zakt een pagina van 150 naa
 De hele rechtvaardiging voor dit systeem is WCAG 2.1 AA en EN 301 549. Een toegankelijkheids*regressie* is daarmee de pijnlijkste uitkomst, en die maak je makkelijk:
 
 - **Een kaart met een pointer-cursor is geen knop.** Een `hoverable`-prop die alleen `cursor: pointer` zet geeft muisgebruikers een affordance en toetsenbordgebruikers niets: geen tab-stop, geen rol, niets aangekondigd. Gebruik het echte `button`-attribuut van het component plus een `accessible-label`. Let op: de activatie gebeurt dan op een knop in de shadow root en komt binnen als *composed* click, die React's `onClick` niet levert. Bind die listener zelf.
+- **Een kaart met `href` haalt zijn naam niet uit zijn inhoud.** De link is een leeg anker dat over de kaart ligt, dus een `nldd-title` erin benoemt hem niet. Zonder `accessible-label` meldt axe `link-name` (serious), één keer per kaart. Het component waarschuwt hiervoor in de console, maar alleen in een dev-build; laad je `nldd.min.js`, dan zie je niets (vastgesteld op 0.8.93).
 - **Een kaart met eigen knoppen erin kan geen knop worden.** Een control in een knop is ongeldige HTML. Maak dan de titel het bedienbare element.
 - **`aria-disabled` op een element dat geen `disabled` kent** is inert: de knop blijft volledig bedienbaar terwijl een schermlezer "uitgeschakeld" meldt. Bewaak de handler zelf.
 - **Koppen vervangen door gestylede tekst** (`nldd-text weight="medium"` waar een `<h3>` stond) ziet er identiek uit en haalt de sectie volledig uit de schermlezer-navigatie. Grep je diff op verwijderde `<h2>`–`<h4>`.
@@ -194,7 +199,7 @@ h1:not(nldd-rich-text h1), h2:not(nldd-rich-text h2) /* … */ {
 Drie gewoonten die steeds tijd scheelden of kostten:
 
 1. **Verzin nooit een token- of icoonnaam.** Grep het pakket. Een eerste gok als `--semantics-colors-success-graphic-base` bestond niet; de echte schaal is **Nederlands**: `--primitives-color-groen-500`, `-oranje-`, `-rood-`, `-lintblauw-`, `-paars-`, `-hemelblauw-`.
-2. **Lees `custom-elements.json` voordat je aanneemt dat een attribuut bestaat.** Het is de bron van waarheid voor slots en attributen, en het documenteert gedrag dat je anders per ongeluk ontdekt (dat `disclosure` zijn `aria-expanded` van de ouderrij overneemt, dat `button` genegeerd wordt als `href` gezet is).
+2. **Lees `custom-elements.json` voordat je aanneemt dat een attribuut bestaat.** Het is de bron van waarheid voor slots en attributen, en het documenteert gedrag dat je anders per ongeluk ontdekt (dat `disclosure` zijn `aria-expanded` van de ouderrij overneemt, dat `button` genegeerd wordt als `href` gezet is). De manifest volgt de documentatie van het component en kan achterlopen op wat het rendert: in 0.8.93 ontbraken de slots `global` en `utility` van `nldd-top-navigation-bar`. Keurt je markupcheck iets af dat in Storybook gewoon zo staat, dan beslist het template in `dist/components/`, en is het gat een melding waard.
 3. **Lees de dev-waarschuwingen van de componenten.** Die vertellen precies wat je verkeerd doet, in een `console.warn` die je in een testrun nooit ziet. Grep de dist-bestanden op `console.warn` als iets zich niet gedraagt.
 
 ## Ligt het aan het systeem, meld het dan
