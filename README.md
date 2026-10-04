@@ -34,7 +34,7 @@ Bekijk de live component documentatie: **https://nederlandsedigitaledienst.githu
 
 ## Plugin voor AI-assistenten
 
-De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/design-system` te werken: de juiste tags, attributen, CSS-tokens en patronen. Hij staat in de NLDD-marketplace, [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins), en werkt in Claude Code en in Cursor. Hij levert vijf skills:
+De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/design-system` te werken: de juiste tags, attributen, CSS-tokens en patronen. Hij staat in de NLDD-marketplace, [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins), met een manifest voor Claude Code en een voor Cursor. Hij levert vijf skills:
 
 | Skill | Waarvoor |
 |-------|----------|
@@ -58,6 +58,8 @@ Bijwerken naar een nieuwere versie doe je met `/plugin marketplace update nldd`.
 ### Cursor
 
 Importeer de marketplace via **Dashboard → Settings → Plugins → Import** met de repository `NederlandseDigitaleDienst/ai-plugins`, en zet daarna `nldd-design-system` aan.
+
+Deze route is in Claude Code gemeten en in Cursor nog niet. Loopt hij bij jou anders, meld het dan in een [issue](https://github.com/NederlandseDigitaleDienst/ai-plugins/issues).
 
 ### Heb je de plugin al als `nldd@nldd-plugins`?
 
@@ -87,7 +89,7 @@ Staat de plugin in de `.claude/settings.json` van een project, vervang dan daar 
 
 Een tijd lang de oude en de nieuwe tegelijk aan hebben kan geen kwaad: de skills verschijnen één keer.
 
-Eén ding verandert ook als je niet overstapt. De plugin zelf heet nu `nldd-design-system`, dus de lange vorm van een skillnaam is `/nldd-design-system:nldd-design` en niet meer `/nldd:nldd-design`. De korte vorm (`/nldd-design`) blijft gelijk.
+Eén ding verandert ook als je niet overstapt. De plugin zelf heet nu `nldd-design-system`, dus de lange vorm van een skillnaam is `/nldd-design-system:nldd-design` en niet meer `/nldd:nldd-design`. De korte vorm (`/nldd-design`) blijft gelijk. Heb je de lange vorm ergens vastgelegd, bijvoorbeeld als `Skill(nldd:nldd-design-build)` in een permissieregel of in een hook, pas die dan aan: de zoekopdracht hieronder vindt ze.
 
 ### Kom je van een versie met één `nldd`-skill?
 
@@ -101,8 +103,10 @@ Waar er één skill `nldd` was, zijn er nu vijf met een naam die zegt waar ze ov
 Eén zoekopdracht vindt ze:
 
 ```
-rg -n '\bnldd\b' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
+rg -n '(^|[^-\w@])nldd([^-\w/]|$)' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
 ```
+
+Hij slaat `@nldd/design-system` en de `nldd-*`-tags over. Wat hij ook vindt zijn `nldd:` (de oude lange vorm) en `nldd@nldd-plugins` (de oude installatie); voor beide staat hierboven wat je ermee doet.
 
 Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwijzen.
 
