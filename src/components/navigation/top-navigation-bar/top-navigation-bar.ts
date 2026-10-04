@@ -226,11 +226,15 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.addEventListener('select', this._handleItemSelect);
+		window.addEventListener('scroll', this._syncLogoOffset, { passive: true });
+		window.addEventListener('resize', this._syncLogoOffset, { passive: true });
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this.removeEventListener('select', this._handleItemSelect);
+		window.removeEventListener('scroll', this._syncLogoOffset);
+		window.removeEventListener('resize', this._syncLogoOffset);
 		this._cleanupCompactDetection();
 		// remove() detaches the sheet from DOM; browser GC handles remaining references
 		this._globalMenuSheet?.remove();
@@ -244,7 +248,21 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		// Sync has-global-items immediately to prevent layout flash
 		this._syncHasGlobalItems();
 		this._setupCompactDetection();
+		this._syncLogoOffset();
 	}
+
+	/**
+	 * How far the logo sits below the top of the page, so the ribbon drawn above
+	 * it starts at the top of the page and not over a bar above this one. Only
+	 * read while the page is at the top, which is the only time it shows.
+	 */
+	private _syncLogoOffset = (): void => {
+		if (window.scrollY > 0) return;
+		const logo = this.shadowRoot?.querySelector('.top-navigation-bar__logo');
+		if (!logo) return;
+		const offset = Math.max(0, Math.round(logo.getBoundingClientRect().top + window.scrollY));
+		this.style.setProperty('--_logo-offset', `${offset}px`);
+	};
 
 	/**
 	 * Handles selection of global menu items.

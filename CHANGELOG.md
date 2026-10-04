@@ -13,6 +13,10 @@ here; consult the commit history if you need that level of detail.
 
 - **Storybook opens on an introduction.** Docs/Introductie says what the system is, how to install it and load the styles, where the components, patterns and design guidelines are, and how to add the Claude Code plugin. It used to open on Button, the first story in alphabetical order. Docs now sits at the top of the sidebar, with the introduction and the design guidelines first.
 
+### Added
+
+- **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down.** Pulling a page past its top used to open a white gap above the ribbon; the ribbon now carries on into it and only grows longer. A bar above the navigation bar, such as `nldd-status-bar`, stays clear: the ribbon starts at the top of the page, not right above the logo. It works in browsers that support scroll-driven animations; elsewhere the gap stays as it was.
+
 ### Changed
 
 - **`nldd-dropdown` fades a long option out instead of ending it with an ellipsis.** The field now shows its choice through the native `<select>`, and WebKit neither keeps that text out of the end padding nor draws an ellipsis there, so every browser fades the text before the icons. Two side effects: desktop Safari draws the options in its popup at the field's text size, 18px at `md` instead of 16px, and an `xs` dropdown shows 16px text on touch devices, because iOS zooms in on a smaller select when you tap it.
