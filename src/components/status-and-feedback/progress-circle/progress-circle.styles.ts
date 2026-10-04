@@ -93,16 +93,16 @@ export const progressCircleStyles = css`
 		opacity: 0;
 	}
 
-	/* Progress mode: rounded caps for friendly segment ends. The JS gap
+	/* Progress variant: rounded caps for friendly segment ends. The JS gap
 	   calculation compensates for the half-stroke-width extension so the
 	   visible gap between segments stays consistent.
-	   Distribution mode: butt caps keep the segment boundaries crisp. */
+	   Distribution variant: butt caps keep the segment boundaries crisp. */
 
 	.progress-circle__segment-indicator {
 		stroke-linecap: round;
 	}
 
-	:host([mode="distribution"]) .progress-circle__segment-indicator {
+	:host([variant="distribution"]) .progress-circle__segment-indicator {
 		stroke-linecap: butt;
 	}
 

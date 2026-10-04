@@ -17,7 +17,7 @@ const ALL_COLORS = [...SEMANTIC_COLORS, ...RIJKSLEUREN];
 /**
  * Een circulaire progress indicator met dezelfde mogelijkheden als de
  * progress-bar: single-value of multi-segment, progress en distribution
- * modes, 24 kleur-varianten, indeterminate, en transitions tussen
+ * varianten, 24 kleuren, indeterminate, en transitions tussen
  * determinate/indeterminate. Label staat onder de cirkel.
  */
 export default {
@@ -32,7 +32,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	argTypes: {
-		mode: {
+		variant: {
 			control: 'select',
 			options: ['progress', 'distribution'],
 			description: 'Semantiek voor ARIA en visualisatie',
@@ -94,7 +94,7 @@ export default {
 		},
 	},
 	args: {
-		mode: 'progress',
+		variant: 'progress',
 		indeterminate: false,
 		color: 'accent',
 		size: '28',
@@ -110,7 +110,7 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-progress-circle
-		mode=${args.mode}
+		variant=${args.variant}
 		?indeterminate=${args.indeterminate}
 		color=${args.color}
 		size=${args.size}
@@ -186,7 +186,7 @@ export const MeerdereSegmenten = {
 	name: 'Voortgang in meerdere segmenten',
 	render: () => html`
 		<nldd-progress-circle
-			mode="progress"
+			variant="progress"
 			size="80"
 			max="100"
 			text="Verwerking"
@@ -207,17 +207,17 @@ export const MeerdereSegmenten = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'In `progress` mode tellen segmenten op naar `max`. De resterende ruimte blijft het lege track-deel. De tooltip combineert alle segmenten plus de totale voortgang.',
+				story: 'In de `progress`-variant tellen segmenten op naar `max`. De resterende ruimte blijft het lege track-deel. De tooltip combineert alle segmenten plus de totale voortgang.',
 			},
 		},
 	},
 };
 
-export const ModusDistribution = {
-	name: 'Modus distribution',
+export const VariantDistribution = {
+	name: 'Variant distribution',
 	render: () => html`
 		<nldd-progress-circle
-			mode="distribution"
+			variant="distribution"
 			size="80"
 			max="500"
 			text="Opslag (500 GB)"
@@ -248,7 +248,7 @@ export const ModusDistribution = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'In `distribution` mode zijn de segmenten categorieën binnen een totaal, geen voortgang. Net als progress meten ze tegen `max`; hier vult de `Vrij`-categorie (150) het restant aan tot 500, zodat de cirkel helemaal gevuld is. Gaps tussen segmenten zijn 2px. Tooltip toont alle categorieën met percentages.',
+				story: 'In de `distribution`-variant zijn de segmenten categorieën binnen een totaal, geen voortgang. Net als progress meten ze tegen `max`; hier vult de `Vrij`-categorie (150) het restant aan tot 500, zodat de cirkel helemaal gevuld is. Gaps tussen segmenten zijn 2px. Tooltip toont alle categorieën met percentages.',
 			},
 		},
 	},

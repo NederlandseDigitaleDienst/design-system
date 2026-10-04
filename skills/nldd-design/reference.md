@@ -2701,13 +2701,13 @@ A short message that arrives over the interface and leaves on its own: a save th
 
 ### `<nldd-progress-bar>`
 
-Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar that supports a single value (loading-style) or multiple segments (multi-stage progress, or distribution like storage usage). The consumer provides raw values; the component computes percentages from `max`. Two modes: - `progress` (default): segments sum toward `max`; remaining space is empty track. ARIA reads "X% voltooid". - `distribution`: segments fill the bar; ARIA enumerates segments. If the sum of segment values exceeds `max`, segments are normalized proportionally to fit and a warning is logged.
+Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar that supports a single value (loading-style) or multiple segments (multi-stage progress, or distribution like storage usage). The consumer provides raw values; the component computes percentages from `max`. Two variants: - `progress` (default): segments sum toward `max`; remaining space is empty track. ARIA reads "X% voltooid". - `distribution`: segments fill the bar; ARIA enumerates segments. If the sum of segment values exceeds `max`, segments are normalized proportionally to fit and a warning is logged.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `mode` | `'progress'\|'distribution'` | Semantics for ARIA and visualization (default: 'progress') |
+| `variant` | `'progress'\|'distribution'` | Semantics for ARIA and visualization (default: 'progress') |
 | `max` | `number` | Total value (default: 100) |
 | `value` | `number` | Single-segment shorthand (ignored when segment children are present) |
 | `color` | `string` | Color for the single-segment shorthand (default: 'accent') |
@@ -2739,13 +2739,13 @@ Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar
 
 ### `<nldd-progress-circle>`
 
-Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circular progress indicator that mirrors the API of nldd-progress-bar: single-value or multi-segment, progress or distribution mode, 24 colors, fade transitions between determinate/indeterminate, indeterminate indicator. Visual differences vs the bar: - SVG arcs instead of rectangular bars. - Label below the circle (not above). - No center text; the consumer can wrap the circle if needed. - One combined tooltip on the whole circle showing all segment info (no per-segment tooltips). - Indeterminate uses a rotating elastic arc (Material-style) instead of the bar's Knight Rider scanner.
+Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circular progress indicator that mirrors the API of nldd-progress-bar: single-value or multi-segment, progress or distribution variant, 24 colors, fade transitions between determinate/indeterminate, indeterminate indicator. Visual differences vs the bar: - SVG arcs instead of rectangular bars. - Label below the circle (not above). - No center text; the consumer can wrap the circle if needed. - One combined tooltip on the whole circle showing all segment info (no per-segment tooltips). - Indeterminate uses a rotating elastic arc (Material-style) instead of the bar's Knight Rider scanner.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `mode` | `'progress'\|'distribution'` | Semantics for ARIA and gap behavior (default: 'progress') |
+| `variant` | `'progress'\|'distribution'` | Semantics for ARIA and gap behavior (default: 'progress') |
 | `max` | `number` | Total value (default: 100) |
 | `value` | `number` | Single-segment shorthand (ignored when segment children exist) |
 | `color` | `string` | Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. |

@@ -21,11 +21,11 @@ describe('nldd-progress-circle', () => {
 		expect(el.shadowRoot!.querySelector('svg')).not.toBeNull();
 	});
 
-	it('defaults to mode="progress", max=100, size="28", color="accent"', async () => {
+	it('defaults to variant="progress", max=100, size="28", color="accent"', async () => {
 		el = await fixture<NLDDProgressCircle>('<nldd-progress-circle></nldd-progress-circle>');
 		await waitForUpdate(el);
 		const bar = el as unknown as NLDDProgressCircle;
-		expect(bar.mode).toBe('progress');
+		expect(bar.variant).toBe('progress');
 		expect(bar.max).toBe(100);
 		expect(bar.size).toBe('28');
 		expect(bar.color).toBe('accent');
@@ -83,9 +83,9 @@ describe('nldd-progress-circle', () => {
 		expect(segments.length).toBe(2);
 	});
 
-	it('distribution mode reads aria-valuetext as enumerated percentages', async () => {
+	it('distribution variant reads aria-valuetext as enumerated percentages', async () => {
 		el = await fixture(`
-			<nldd-progress-circle mode="distribution" max="500">
+			<nldd-progress-circle variant="distribution" max="500">
 				<nldd-progress-circle-segment-indicator value="200" name="Foto's"></nldd-progress-circle-segment-indicator>
 				<nldd-progress-circle-segment-indicator value="150" name="Video's"></nldd-progress-circle-segment-indicator>
 			</nldd-progress-circle>
@@ -214,7 +214,7 @@ describe('nldd-progress-circle-segment-indicator', () => {
 
 	it('is included in the parent\'s _buildArcs output', async () => {
 		const parent = await fixture(`
-			<nldd-progress-circle mode="distribution" max="500">
+			<nldd-progress-circle variant="distribution" max="500">
 				<nldd-progress-circle-segment-indicator value="200" color="success" name="Foto's"></nldd-progress-circle-segment-indicator>
 				<nldd-progress-circle-segment-indicator value="150" color="accent" name="Video's"></nldd-progress-circle-segment-indicator>
 			</nldd-progress-circle>

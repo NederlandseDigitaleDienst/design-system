@@ -33,6 +33,8 @@ here; consult the commit history if you need that level of detail.
 
 - **`variant` on `nldd-timeline-track-cell` is now `level`.** `major`, `minor` and `none` say how far down the hierarchy a row sits: `minor` is a row that belongs under the one above it. The values stay the same, so `variant="minor"` becomes `level="minor"`.
 
+- **`mode` on `nldd-progress-bar` and `nldd-progress-circle` is now `variant`.** `progress` and `distribution` are two kinds of indicator, progress toward a goal and the parts of a whole, and the screen reader hears something different for each, which is what `variant` stands for in this system. The values stay the same, so `mode="distribution"` becomes `variant="distribution"`. The types `ProgressBarMode` and `ProgressCircleMode` are now `ProgressBarVariant` and `ProgressCircleVariant`.
+
 ### Fixed
 
 - **`nldd-dropdown` shows the value your app sets.** A value set with `select.value`, `selectedIndex` or `option.selected` kept the old label on screen until someone picked an option by hand, so a form that loaded saved data showed a different choice than it held. The label was a copy in the shadow DOM that only updated on `slotchange` and `change`. It is gone: the `<select>` now shows its own choice, so there is nothing left to go stale.

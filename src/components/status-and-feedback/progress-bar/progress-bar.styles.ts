@@ -42,7 +42,7 @@ export const progressBarStyles = css`
 	:host([size="sm"]) { --_height: var(--components-progress-bar-sm-height); }
 	:host([size="lg"]) { --_height: var(--components-progress-bar-lg-height); }
 
-	:host([mode="distribution"]) {
+	:host([variant="distribution"]) {
 		--_segment-indicator-gap: var(--components-progress-bar-distribution-segment-indicator-gap);
 		--_corner-radius: var(--components-progress-bar-distribution-corner-radius);
 	}
@@ -269,16 +269,16 @@ export const progressBarSegmentIndicatorStyles = css`
 	}
 
 
-	/* ## Rounding per mode
-	   Progress mode: every segment is its own capsule. Distribution mode:
+	/* ## Rounding per variant
+	   Progress variant: every segment is its own capsule. Distribution variant:
 	   segments use a small radius matching the track's outer corners.
-	   data-mode is set by the parent. */
+	   data-variant is set by the parent. */
 
-	:host([data-mode="progress"]) {
+	:host([data-variant="progress"]) {
 		border-radius: var(--components-progress-bar-corner-radius);
 	}
 
-	:host([data-mode="distribution"]) {
+	:host([data-variant="distribution"]) {
 		border-radius: var(--components-progress-bar-distribution-corner-radius);
 	}
 

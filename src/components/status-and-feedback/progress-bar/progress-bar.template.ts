@@ -51,7 +51,7 @@ export function progressBarTemplate(component: NLDDProgressBar, onSlotChange: ()
 	const showIndeterminateIndicator = (component.indeterminate || isExiting) && !component._hasSegmentIndicators;
 	// The internal segment-indicator renders while determinate, and during an
 	// enter-shrink (otherwise it can't shrink — it would unmount immediately).
-	// Its dynamic attributes (width, mode, tooltip-text, grow/shrink) are applied
+	// Its dynamic attributes (width, variant, tooltip-text, grow/shrink) are applied
 	// by _syncSegmentIndicators so the slotted and internal paths share one code path.
 	const showInternalSegmentIndicator = !component._hasSegmentIndicators
 		&& component.value !== null && component.value > 0

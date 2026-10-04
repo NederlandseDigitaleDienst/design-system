@@ -16,7 +16,7 @@ const ALL_COLORS = [...SEMANTIC_COLORS, ...RIJKSLEUREN];
 
 /**
  * Een progress bar toont voortgang of een verdeling. Eén waarde of meerdere
- * segmenten. Twee modes: `progress` (segmenten tellen op naar `max`, rest is
+ * segmenten. Twee varianten: `progress` (segmenten tellen op naar `max`, rest is
  * track) en `distribution` (segmenten verdelen het totaal, zoals
  * opslaggebruik). Geef ruwe getallen mee — wij berekenen percentages.
  */
@@ -32,7 +32,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	argTypes: {
-		mode: {
+		variant: {
 			control: 'select',
 			options: ['progress', 'distribution'],
 			description: 'Semantiek voor ARIA en visualisatie',
@@ -94,7 +94,7 @@ export default {
 		},
 	},
 	args: {
-		mode: 'progress',
+		variant: 'progress',
 		indeterminate: false,
 		color: 'accent',
 		size: 'md',
@@ -110,7 +110,7 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-progress-bar
-		mode=${args.mode}
+		variant=${args.variant}
 		?indeterminate=${args.indeterminate}
 		color=${args.color}
 		size=${args.size}
@@ -170,7 +170,7 @@ export const MeerdereSegmenten = {
 	name: 'Voortgang in meerdere segmenten',
 	render: () => html`
 		<nldd-progress-bar
-			mode="progress"
+			variant="progress"
 			max="100"
 			text="Verwerking"
 			value-text="2 van 3 stappen voltooid"
@@ -191,17 +191,17 @@ export const MeerdereSegmenten = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Meerdere segmenten in `progress` mode tellen op naar `max`. De resterende ruimte blijft track. Met `name` per segment genereren wij een leesbare aria-valuetext.',
+				story: 'Meerdere segmenten in `progress` variant tellen op naar `max`. De resterende ruimte blijft track. Met `name` per segment genereren wij een leesbare aria-valuetext.',
 			},
 		},
 	},
 };
 
-export const ModusDistribution = {
-	name: 'Modus distribution',
+export const VariantDistribution = {
+	name: 'Variant distribution',
 	render: () => html`
 		<nldd-progress-bar
-			mode="distribution"
+			variant="distribution"
 			size="lg"
 			max="500"
 			text="Opslag"
@@ -231,7 +231,7 @@ export const ModusDistribution = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'In `distribution` mode zijn de segmenten categorieën die samen een totaal vormen (bijv. opslaggebruik), geen opeenvolgende voortgang. Ze meten tegen `max` — hier 350 van 500 GB, dus de rest blijft lege track. Gebruik Rijksleuren om segmenten visueel te onderscheiden. Tooltips zijn per segment expliciet ingesteld om eenheden te tonen (GB) — zonder `tooltip-text` zou auto-tekst alleen `Foto\'s: 40%` tonen.',
+				story: 'In de `distribution`-variant zijn de segmenten categorieën die samen een totaal vormen (bijv. opslaggebruik), geen opeenvolgende voortgang. Ze meten tegen `max` — hier 350 van 500 GB, dus de rest blijft lege track. Gebruik Rijksleuren om segmenten visueel te onderscheiden. Tooltips zijn per segment expliciet ingesteld om eenheden te tonen (GB) — zonder `tooltip-text` zou auto-tekst alleen `Foto\'s: 40%` tonen.',
 			},
 		},
 	},
