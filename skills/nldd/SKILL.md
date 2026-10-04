@@ -64,10 +64,13 @@ Dit is het echte werk, en de eerste twee breken zonder foutmelding. Deze wegwijz
 Eén zoekopdracht vindt ze allemaal:
 
 ```
-rg -n '\bnldd\b' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
+rg -n '(^|[^-\w@])nldd([^-\w/]|$)' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
 ```
 
-De zoekopdracht vindt ook `nldd@nldd-plugins`. Dat is geen skillnaam maar de oude naam van de installatie; zie hierboven hoe je die omzet.
+De zoekopdracht slaat `@nldd/design-system` en de `nldd-*`-tags over. Twee dingen vindt hij wel die geen skillnaam zijn:
+
+- `nldd:`, de oude lange vorm (`/nldd:nldd-design-build`, of `Skill(nldd:nldd-design-build)` in een permissieregel). Maak er `nldd-design-system:` van.
+- `nldd@nldd-plugins`, de oude naam van de installatie. Zie hierboven hoe je die omzet.
 
 ## Deze wegwijzer gaat weg
 
