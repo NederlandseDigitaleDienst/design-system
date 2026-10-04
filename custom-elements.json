@@ -372,6 +372,16 @@
             },
             {
               "kind": "field",
+              "name": "loadingText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "What the screen reader announces while loading. Empty falls back to the activity indicator's \"Laden\".",
+              "attribute": "loading-text"
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -653,6 +663,15 @@
               "fieldName": "loading"
             },
             {
+              "name": "loading-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "What the screen reader announces while `loading` is on, for a button that does more than load: \"Aan het bewaren\". Leave it out and the activity indicator says its translated \"Laden\".",
+              "fieldName": "loadingText"
+            },
+            {
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -885,6 +904,16 @@
               "description": "Loading state. Shows an activity indicator centered over the (visually\nhidden) icon, marks the inner control `aria-busy=\"true\"` and blocks\nactivation — without dropping the control from the tab order (unlike\n`disabled`).\n\nActivation is blocked by stopping the click (as `disabled` does), so a\n`click` listener delegated on an ancestor receives nothing while loading.",
               "attribute": "loading",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loadingText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "What the screen reader announces while loading. Empty falls back to the activity indicator's \"Laden\".",
+              "attribute": "loading-text"
             },
             {
               "kind": "field",
@@ -1138,6 +1167,15 @@
               "default": "false",
               "description": "Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled).",
               "fieldName": "loading"
+            },
+            {
+              "name": "loading-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "What the screen reader announces while `loading` is on, for a button that does more than load: \"Aan het bewaren\". Leave it out and the activity indicator says its translated \"Laden\".",
+              "fieldName": "loadingText"
             },
             {
               "name": "disabled",
@@ -7171,6 +7209,14 @@
           "declaration": {
             "name": "NLDDJustInTimeEducation",
             "module": "./status-and-feedback/just-in-time-education/just-in-time-education.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setTranslations",
+          "declaration": {
+            "name": "setTranslations",
+            "module": "../utilities/translations.js"
           }
         }
       ]
@@ -39210,6 +39256,103 @@
           "declaration": {
             "name": "TitleBarLabelController",
             "module": "src/utilities/title-bar-label-controller.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/translations.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "setTranslations",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "translations",
+              "type": {
+                "text": "Translations"
+              }
+            }
+          ],
+          "description": "Sets the texts for the whole package, replacing what was set before. Keys you\nleave out fall back to Dutch. To start from the shipped English and change a\nfew texts, spread them: `setTranslations({ ...enUS, 'key': 'Mine' })`.\n\nCall it before the components render. Calling it again re-renders the\ncomponents on the page, so a language switch at runtime works too."
+        },
+        {
+          "kind": "function",
+          "name": "getTranslations",
+          "return": {
+            "type": {
+              "text": "Readonly<Translations>"
+            }
+          },
+          "description": "What the app set with `setTranslations()`, for tests and debugging."
+        },
+        {
+          "kind": "function",
+          "name": "translate",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "own",
+              "type": {
+                "text": "Partial<T> | undefined"
+              }
+            },
+            {
+              "name": "defaults",
+              "type": {
+                "text": "T"
+              }
+            },
+            {
+              "name": "key",
+              "type": {
+                "text": "keyof T"
+              }
+            },
+            {
+              "name": "vars",
+              "optional": true,
+              "type": {
+                "text": "Record<string, string | number>"
+              }
+            }
+          ],
+          "description": "Looks a key up through the three layers and fills in `{placeholders}`. Every\ncomponent's `_t()` goes through here, so none of them skips the package-wide\nlayer."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "setTranslations",
+          "declaration": {
+            "name": "setTranslations",
+            "module": "src/utilities/translations.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getTranslations",
+          "declaration": {
+            "name": "getTranslations",
+            "module": "src/utilities/translations.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "translate",
+          "declaration": {
+            "name": "translate",
+            "module": "src/utilities/translations.ts"
           }
         }
       ]

@@ -46,6 +46,7 @@ import './../button/button.js';
 import './../icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** A floating overlay the split-button chevron anchors and toggles. */
 
@@ -104,7 +105,7 @@ export class NLDDSplitButton extends LitElement {
 	// — i18n —————————————————————————————————————————————————————————————————
 
 	public _t(key: keyof NLDDSplitButtonTranslations): string {
-		return this.translations[key] ?? nlddSplitButtonTranslations[key];
+		return translate(this.translations, nlddSplitButtonTranslations, key);
 	}
 
 	// — Lifecycle ————————————————————————————————————————————————————————————

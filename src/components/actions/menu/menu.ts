@@ -15,6 +15,7 @@ import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { isKeyboardMode, isTouchMode } from '../../../utilities/input-modality.js';
 import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { translate } from '../../../utilities/translations.js';
 
 
 // # nldd-menu-divider
@@ -497,13 +498,7 @@ export class NLDDMenu extends LitElement {
 	// — i18n ——————————————————————————————————————————————————————————————————
 
 	private _t(key: keyof NLDDMenuTranslations, vars?: Record<string, string | number>): string {
-		let str = this.translations[key] ?? nlddMenuTranslations[key];
-		if (vars) {
-			for (const [k, v] of Object.entries(vars)) {
-				str = str.replace(`{${k}}`, String(v));
-			}
-		}
-		return str;
+		return translate(this.translations, nlddMenuTranslations, key, vars);
 	}
 
 	/** Resolved empty text: emptyText attribute takes precedence, then i18n fallback. */

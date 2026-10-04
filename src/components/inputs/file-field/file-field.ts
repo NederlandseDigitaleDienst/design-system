@@ -48,6 +48,7 @@ import { fileFieldStyles } from './file-field.styles.js';
 import { fileFieldTemplate } from './file-field.template.js';
 import { nlddFileFieldTranslations, type NLDDFileFieldTranslations } from './file-field.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 @customElement('nldd-file-field')
 export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
@@ -108,13 +109,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** @internal */
 	public _t(key: keyof NLDDFileFieldTranslations, vars?: Record<string, string | number>): string {
-		let text: string = this.translations[key] ?? nlddFileFieldTranslations[key];
-		if (vars) {
-			for (const [name, value] of Object.entries(vars)) {
-				text = text.split(`{${name}}`).join(String(value));
-			}
-		}
-		return text;
+		return translate(this.translations, nlddFileFieldTranslations, key, vars);
 	}
 
 	/** @internal */

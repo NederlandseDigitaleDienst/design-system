@@ -51,6 +51,7 @@ import type { NLDDPopover } from './../../layout/popover/popover.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 /**
  * Read a typed date generously. Deliberately not a mask: reformatting per
@@ -347,7 +348,7 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	// — i18n —————————————————————————————————————————————————————————————————
 
 	public _t(key: keyof NLDDDateFieldTranslations): string {
-		return this.translations[key] ?? nlddDateFieldTranslations[key];
+		return translate(this.translations, nlddDateFieldTranslations, key);
 	}
 
 	/**

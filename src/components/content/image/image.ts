@@ -66,6 +66,7 @@ import { imageTemplate } from './image.template.js';
 import { nlddImageTranslations } from './image.i18n.js';
 import type { NLDDImageTranslations } from './image.i18n.js';
 import '../icon/icon.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type ImageShape = 'square' | 'rounded' | 'circle';
 export type ImageObjectFit = 'cover' | 'contain' | 'fill' | 'scale-down' | 'none';
@@ -165,7 +166,7 @@ export class NLDDImage extends LitElement {
 	translations: Partial<NLDDImageTranslations> = {};
 
 	public _t(key: keyof NLDDImageTranslations): string {
-		return this.translations[key] ?? nlddImageTranslations[key];
+		return translate(this.translations, nlddImageTranslations, key);
 	}
 
 	/** Cache key — the raw lqip attribute string at the time of the last

@@ -81,6 +81,21 @@ Voor tree-shaking kun je ook per component importeren via de subpath-export (bij
 
 De complete setups, inclusief de Vue-config en het per-component importeren, staan in [`examples/bootstrap-html.md`](examples/bootstrap-html.md) en [`examples/bootstrap-vue.md`](examples/bootstrap-vue.md).
 
+### Een andere taal
+
+De componenten zijn standaard Nederlands. Een interface in een andere taal zet de teksten één keer bij het opstarten, voor het hele pakket. Het pakket levert Amerikaans Engels mee:
+
+```js
+import { setTranslations } from '@nldd/design-system/translations';
+import enUS from '@nldd/design-system/translations/en-US';
+
+setTranslations(enUS);
+```
+
+Dat bereikt ook de componenten die een ander component zelf bouwt, zoals de laadindicator in een knop of de kalender in een datumveld. Een andere taal: kopieer `@nldd/design-system/translations/nl` en vertaal de teksten. Zet geen `translations`-property op elk element om de taal te wisselen; die property is voor een uitzondering op één plek.
+
+Een key is taal, geen inhoud. Moet één knop iets anders zeggen dan een andere ("Aan het bewaren" in plaats van "Laden"), dan is dat een attribuut op dat element, zoals `loading-text`.
+
 ## CSS-variabelen
 
 Alle visuele waarden in de componenten komen uit CSS-variabelen en niets is hardcoded. Zo werkt licht en donker, en zo blijft de huisstijl erin zitten. Voor jou is het vooral iets om van af te blijven: de variabelen zijn de bedrading van het systeem, geen publieke API. Ze worden hernoemd, samengevoegd en verwijderd wanneer een component daarom vraagt, en de changelog beschrijft zo'n wijziging vanuit dat component, niet vanuit jouw stylesheet. Gebruik je ze toch, dan is dat op eigen risico.

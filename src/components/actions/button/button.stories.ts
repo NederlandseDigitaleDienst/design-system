@@ -170,6 +170,12 @@ export default {
 				defaultValue: { summary: false },
 			},
 		},
+		loadingText: {
+			name: 'loading-text',
+			control: 'text',
+			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
+			table: { defaultValue: { summary: 'Laden' } },
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Uitgeschakelde toestand',
@@ -197,11 +203,12 @@ export default {
 		target: '',
 		accessibleLabel: '',
 		loading: false,
+		loadingText: '',
 		disabled: false,
 	},
 };
 
-const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, type, href, target, accessibleLabel, loading, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, type, href, target, accessibleLabel, loading, loadingText, disabled }: Record<string, any>) => html`
 	<nldd-button
 		appearance=${appearance}
 		size=${size}
@@ -221,6 +228,7 @@ const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expa
 		?expanded=${expanded}
 		?single-line=${singleLine}
 		?loading=${loading}
+		loading-text=${loadingText || nothing}
 		?disabled=${disabled}
 	></nldd-button>
 `;

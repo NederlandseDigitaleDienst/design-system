@@ -48,6 +48,7 @@ import { progressBarTemplate, segmentIndicatorTemplate } from './progress-bar.te
 import { nlddProgressBarTranslations } from './progress-bar.i18n.js';
 import type { NLDDProgressBarTranslations } from './progress-bar.i18n.js';
 import '../../content/tooltip/tooltip.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** Indeterminate ↔ determinate crossfade duration. Must stay in sync with
  *  --primitives-transition-duration-slow used by the matching CSS animations
@@ -166,7 +167,7 @@ export class NLDDProgressBar extends LitElement {
 	private _enterTimeout?: ReturnType<typeof setTimeout>;
 
 	public _t(key: keyof NLDDProgressBarTranslations): string {
-		return this.translations[key] ?? nlddProgressBarTranslations[key];
+		return translate(this.translations, nlddProgressBarTranslations, key);
 	}
 
 	/** Returns true when the user has provided segment children. */

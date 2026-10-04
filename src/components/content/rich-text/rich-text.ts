@@ -47,6 +47,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { nlddRichTextTranslations } from './rich-text.i18n.js';
 import type { NLDDRichTextTranslations } from './rich-text.i18n.js';
+import { translate } from '../../../utilities/translations.js';
 
 type Spacing = 'flat' | 'tight' | 'snug' | 'loose';
 
@@ -70,7 +71,7 @@ export class NLDDRichText extends LitElement {
 	hyphens = false;
 
 	public _t(key: keyof NLDDRichTextTranslations): string {
-		return this.translations[key] ?? nlddRichTextTranslations[key];
+		return translate(this.translations, nlddRichTextTranslations, key);
 	}
 
 	private _mutationObserver?: MutationObserver;

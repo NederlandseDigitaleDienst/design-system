@@ -21,6 +21,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { breadcrumbsStyles, breadcrumbsItemStyles } from './breadcrumbs.styles.js';
 import { breadcrumbsTemplate, breadcrumbsItemTemplate } from './breadcrumbs.template.js';
 import { nlddBreadcrumbsTranslations, type NLDDBreadcrumbsTranslations } from './breadcrumbs.i18n.js';
+import { translate } from '../../../utilities/translations.js';
 
 
 // # nldd-breadcrumbs-item
@@ -103,29 +104,11 @@ export class NLDDBreadcrumbs extends LitElement {
 	@property({ type: Object })
 	translations: Partial<NLDDBreadcrumbsTranslations> = {};
 
-	private _mergedTranslations: NLDDBreadcrumbsTranslations = { ...nlddBreadcrumbsTranslations };
-
-	override willUpdate(changed: PropertyValues): void {
-		if (changed.has('translations') || changed.has('accessibleLabel')) {
-			this._mergedTranslations = {
-				...nlddBreadcrumbsTranslations,
-				...this.translations,
-			};
-			if (this.accessibleLabel) {
-				this._mergedTranslations['components.breadcrumbs.accessible-label'] = this.accessibleLabel;
-			}
-		}
-	}
-
 	_t(key: keyof NLDDBreadcrumbsTranslations): string {
-		// Return '' (not the key) for missing translations so callers can do
-		// `value || nothing` to suppress aria-label / text rather than
-		// announcing the raw key string. Warn in DEV.
-		const value = this._mergedTranslations[key];
-		if (value === undefined && import.meta.env?.DEV) {
-			console.warn(`<nldd-breadcrumbs>: missing translation for "${key}"`);
+		if (key === 'components.breadcrumbs.accessible-label' && this.accessibleLabel) {
+			return this.accessibleLabel;
 		}
-		return value ?? '';
+		return translate(this.translations, nlddBreadcrumbsTranslations, key);
 	}
 
 	override render() {

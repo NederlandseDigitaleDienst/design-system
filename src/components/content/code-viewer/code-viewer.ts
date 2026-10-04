@@ -44,6 +44,7 @@ import type { NLDDCodeViewerTranslations } from './code-viewer.i18n.js';
 import { onColorSchemeChange, forceScrollLayerRepaint } from '../../../utilities/color-scheme-repaint.js';
 import '../../actions/icon-button/icon-button.js';
 import '../tooltip/tooltip.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 
@@ -265,7 +266,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	}
 
 	public _t(key: keyof NLDDCodeViewerTranslations): string {
-		return this.translations[key] ?? nlddCodeViewerTranslations[key];
+		return translate(this.translations, nlddCodeViewerTranslations, key);
 	}
 
 	/* Lazy grammar loading is async; surface the in-flight load through

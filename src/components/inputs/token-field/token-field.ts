@@ -42,6 +42,7 @@ import type { NLDDMenu, NLDDMenuItem } from '../../actions/menu/menu.js';
 import '../../actions/menu/menu.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** Trailing control rendered on each token. */
 export type TokenFieldControl = 'dismiss' | 'menu';
@@ -179,7 +180,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	private _pickerPointerdownWhileOpen = false;
 
 	public _t(key: keyof NLDDTokenFieldTranslations): string {
-		return this.translations[key] ?? nlddTokenFieldTranslations[key];
+		return translate(this.translations, nlddTokenFieldTranslations, key);
 	}
 
 	// — Lifecycle ————————————————————————————————————————————————————————————

@@ -32,6 +32,7 @@ import { tokenTemplate } from './token.template.js';
 import { nlddTokenTranslations, type NLDDTokenTranslations } from './token.i18n.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
 import './../../actions/icon-button/icon-button.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type TokenControl = 'none' | 'dismiss' | 'menu';
 
@@ -85,7 +86,7 @@ export class NLDDToken extends LitElement {
 	}
 
 	public _t(key: keyof NLDDTokenTranslations): string {
-		return this.translations[key] ?? nlddTokenTranslations[key];
+		return translate(this.translations, nlddTokenTranslations, key);
 	}
 
 	get _dismissLabel(): string {

@@ -87,6 +87,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 				<nldd-activity-indicator
 					timing="instant"
 					size=${this.size === 'xs' ? '16' : this.size === 'sm' ? '20' : this.size === 'lg' ? '28' : '24'}
+					text=${this.loadingText || nothing}
 				></nldd-activity-indicator>
 			</div>
 		`

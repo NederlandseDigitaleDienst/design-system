@@ -6,6 +6,7 @@
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). 'lg' uses larger text and 24px start/end icons.
  * @attr {string} horizontal-alignment - Horizontal alignment of the button content: 'left' | 'center' | 'right' (default: unset, centered). Most visible with width="full" or a fixed width.
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width.
+ * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {boolean} disabled - Disabled state
  * @attr {string} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
  * @attr {string} popovertarget - ID of a popover element this button invokes; forwarded to the inner button. Use the popoverTargetElement property instead when the popover lives in another tree.
@@ -154,6 +155,10 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	 */
 	@property({ type: Boolean, reflect: true })
 	loading = false;
+
+	/** What the screen reader announces while loading. Empty falls back to the activity indicator's "Laden". */
+	@property({ attribute: 'loading-text' })
+	loadingText = '';
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;

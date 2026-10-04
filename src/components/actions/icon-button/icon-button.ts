@@ -7,6 +7,7 @@
  * @attr {boolean} hide-lg-text - In lg size, hides the text label and enlarges the icon by one step (28px)
  * @attr {boolean} no-highlight-border - Removes the per-appearance highlight border (e.g. when a control group draws a single border instead).
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled).
+ * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {boolean} disabled - Disabled state
  * @attr {boolean} no-tab - Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable.
  * @attr {string} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
@@ -96,6 +97,10 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	 */
 	@property({ type: Boolean, reflect: true })
 	loading = false;
+
+	/** What the screen reader announces while loading. Empty falls back to the activity indicator's "Laden". */
+	@property({ attribute: 'loading-text' })
+	loadingText = '';
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;

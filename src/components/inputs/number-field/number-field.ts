@@ -32,6 +32,7 @@ import type { NLDDNumberFieldTranslations } from './number-field.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type NumberFieldSize = 'sm' | 'md';
 
@@ -147,7 +148,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	// — i18n —————————————————————————————————————————————————————————————————
 
 	public _t(key: keyof NLDDNumberFieldTranslations): string {
-		return this.translations[key] ?? nlddNumberFieldTranslations[key];
+		return translate(this.translations, nlddNumberFieldTranslations, key);
 	}
 
 	// — Actions ——————————————————————————————————————————————————————————————

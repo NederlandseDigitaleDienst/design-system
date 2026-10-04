@@ -70,6 +70,7 @@ import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
@@ -192,7 +193,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	maxlength?: number;
 
 	public _t(key: keyof NLDDComboBoxTranslations): string {
-		return this.translations[key] ?? nlddComboBoxTranslations[key];
+		return translate(this.translations, nlddComboBoxTranslations, key);
 	}
 
 	// — Lifecycle ————————————————————————————————————————————————————————————

@@ -159,4 +159,8 @@ export { NLDDActivityIndicator } from './status-and-feedback/activity-indicator/
 export { NLDDStatusBar } from './status-and-feedback/status-bar/status-bar.js';
 export { NLDDJustInTimeEducation } from './status-and-feedback/just-in-time-education/just-in-time-education.js';
 
+// # Translations
+
+export { setTranslations } from '../utilities/translations.js';
+
 // Auto-register happens on import of individual component files

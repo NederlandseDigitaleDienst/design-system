@@ -9,6 +9,7 @@ import type { NLDDListTranslations } from './list.i18n.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';
 
@@ -223,7 +224,6 @@ export class NLDDList extends LitElement {
 	reorderable = false;
 
 	@state()
-	private _mergedTranslations = { ...nlddListTranslations };
 
 	@state()
 	private _hasToolbar = false;
@@ -299,13 +299,7 @@ export class NLDDList extends LitElement {
 	 * from the children instead. The slotchange listeners below keep them true
 	 * afterwards, and by then a second render is what you actually want.
 	 */
-	override willUpdate(changed: Map<string, unknown>) {
-		// Derived state belongs before the render that reads it. In `updated` the
-		// merge lands after the first render has finished, and asks for a second
-		// one on the spot.
-		if (changed.has('translations') || !this.hasUpdated) {
-			this._mergedTranslations = { ...nlddListTranslations, ...this.translations };
-		}
+	override willUpdate(_changed: Map<string, unknown>) {
 		if (this.hasUpdated) return;
 		this._updateEmpty();
 		this._hasToolbar = this.querySelector(':scope > [slot="toolbar"]') !== null;
@@ -1449,13 +1443,7 @@ export class NLDDList extends LitElement {
 	// — i18n ————————————————————————————————————————————————————————————————
 
 	private _t(key: keyof NLDDListTranslations, vars?: Record<string, string | number>): string {
-		let str = this._mergedTranslations[key];
-		if (vars) {
-			for (const [k, v] of Object.entries(vars)) {
-				str = str.replace(`{${k}}`, String(v));
-			}
-		}
-		return str;
+		return translate(this.translations, nlddListTranslations, key, vars);
 	}
 
 

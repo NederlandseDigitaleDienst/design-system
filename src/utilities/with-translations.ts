@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
-import type { PropertyValues } from 'lit';
+import { translate } from './translations.js';
 
 type Constructor<T = object> = abstract new (...args: any[]) => T;
 
@@ -32,24 +32,8 @@ export function withTranslations<T extends Record<string, string>>(
 		translations: Partial<T> = {};
 
 		/** @internal */
-		_mergedTranslations: T = { ...defaults };
-
-		/** @internal */
 		_t(key: keyof T, vars?: Record<string, string | number>): string {
-			let str: string = this._mergedTranslations[key] ?? String(key);
-			if (vars) {
-				for (const [k, v] of Object.entries(vars)) {
-					str = str.split(`{${k}}`).join(String(v));
-				}
-			}
-			return str;
-		}
-
-		override willUpdate(changed: PropertyValues): void {
-			super.willUpdate(changed);
-			if (changed.has('translations' as keyof this)) {
-				this._mergedTranslations = { ...defaults, ...this.translations };
-			}
+			return translate(this.translations, defaults, key, vars);
 		}
 	}
 

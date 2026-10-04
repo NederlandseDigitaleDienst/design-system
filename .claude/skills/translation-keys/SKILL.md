@@ -182,11 +182,35 @@ export class NLDD{PascalName} extends withTranslations(LitElement, nldd{PascalNa
 
 Gebruik in templates `component._t('key', { var: value })` voor lookups met optionele `{var}`-placeholder-vervanging.
 
+### Elke lookup gaat via `translate()`
+
+Een component zoekt een tekst in vier lagen: een attribuut op het element, de `translations`-property op het element, wat de app met `setTranslations()` voor het hele pakket zette, en de Nederlandse standaard. De mixin regelt de laatste drie via `translate()` uit `src/utilities/translations.ts`.
+
+Kan het component de mixin niet gebruiken, laat zijn `_t()` dan ook via `translate()` lopen:
+
+```typescript
+_t(key: keyof NLDD{PascalName}Translations, vars?: Record<string, string | number>): string {
+	return translate(this.translations, nldd{PascalName}Translations, key, vars);
+}
+```
+
+Lees nooit zelf `this.translations[key] ?? defaults[key]`. Dat slaat `setTranslations()` over, en dan blijft juist dit component Nederlands in een Engelse app. Dat is ook het gat dat een component had zolang een ander component het in zijn shadow root bouwde: van buitenaf kon niemand er `translations` op zetten.
+
+### Een key is taal, een attribuut is inhoud
+
+Een key betekent overal hetzelfde. Maak dus geen tweede key in een ouder component voor een tekst die het kind al heeft (`components.button.loading-label` naast `components.activity-indicator.loading-label`). Moet één exemplaar iets anders zeggen, zoals "Aan het bewaren" op één knop, dan krijgt het component een attribuut (`loading-text`).
+
+### Na een nieuwe of gewijzigde key
+
+1. Draai `npm run generate:translations`. Dat schrijft `src/translations/nl.generated.ts`, het overzicht van alle keys.
+2. Zet de key ook in `src/translations/en-US.ts`, in Amerikaans Engels. Dat bestand is getypeerd op alle keys, dus de typecheck faalt tot hij erin staat, en een test vergelijkt de twee sets.
+
 ## Checklist
 
 - [ ] Keys volgen de `components.{naam}.*` conventie
 - [ ] Elk key eindigt met het juiste type suffix
 - [ ] Directe acties in gebiedende wijs, indirecte acties in infinitief met `to-` prefix
 - [ ] Placeholders met `{naam}` syntax
-- [ ] Component gebruikt `withTranslations` mixin
+- [ ] Component gebruikt `withTranslations` mixin, of een `_t()` die via `translate()` loopt
+- [ ] `npm run generate:translations` gedraaid en de key in `src/translations/en-US.ts` gezet
 - [ ] Consumer kan overschrijven via `translations` property

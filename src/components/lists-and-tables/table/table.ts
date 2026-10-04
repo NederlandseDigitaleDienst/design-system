@@ -58,6 +58,7 @@ import { nlddTableTranslations } from './table.i18n.js';
 import type { NLDDTableTranslations } from './table.i18n.js';
 import { breakpoints } from '../../../assets/styles/breakpoints.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type TableBackground = 'base' | 'tinted';
 
@@ -113,7 +114,7 @@ export class NLDDTable extends LitElement {
 	private _width = 0;
 
 	public _t(key: keyof NLDDTableTranslations): string {
-		return this.translations[key] ?? nlddTableTranslations[key];
+		return translate(this.translations, nlddTableTranslations, key);
 	}
 
 	override connectedCallback(): void {

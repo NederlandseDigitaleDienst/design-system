@@ -47,6 +47,7 @@ import '../../actions/button-bar/button-bar.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import { spacingToValue, type SpacingSize } from '../../../utilities/spacing-scale.js';
+import { translate } from '../../../utilities/translations.js';
 
 type Layout = 'grid' | 'stack' | 'lanes' | 'horizontal-scroll';
 
@@ -89,7 +90,7 @@ export class NLDDCollection extends LitElement {
 	// — i18n —————————————————————————————————————————————————————————————————
 
 	public _t(key: keyof NLDDCollectionTranslations): string {
-		return this.translations[key] ?? nlddCollectionTranslations[key];
+		return translate(this.translations, nlddCollectionTranslations, key);
 	}
 
 	@state()

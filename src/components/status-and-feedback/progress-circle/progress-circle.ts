@@ -45,6 +45,7 @@ import { progressCircleTemplate, getCircumference, getStrokeWidthPx } from './pr
 import { nlddProgressCircleTranslations } from './progress-circle.i18n.js';
 import type { NLDDProgressCircleTranslations } from './progress-circle.i18n.js';
 import '../../content/tooltip/tooltip.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** Indeterminate ↔ determinate crossfade duration. Must stay in sync with
  *  --primitives-transition-duration-slow used by the matching CSS animations
@@ -166,7 +167,7 @@ export class NLDDProgressCircle extends LitElement {
 	readonly _uid = `pc-${NLDDProgressCircle._idCounter++}`;
 
 	public _t(key: keyof NLDDProgressCircleTranslations): string {
-		return this.translations[key] ?? nlddProgressCircleTranslations[key];
+		return translate(this.translations, nlddProgressCircleTranslations, key);
 	}
 
 	get _hasSegmentIndicators(): boolean {

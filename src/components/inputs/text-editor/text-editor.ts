@@ -117,6 +117,7 @@ import { textEditorTemplate } from './text-editor.template.js';
 import { stripSentinels, docToClean, cleanToDoc, sentinelPositions } from './text-editor.annotation-sentinels.js';
 import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './text-editor.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 export type TextEditorAppearance = 'input-field' | 'simple';
@@ -262,13 +263,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	 *  `vars`. Consumer overrides via `translations` win; unset keys fall back to the
 	 *  Dutch defaults. */
 	public _t(key: keyof NLDDTextEditorTranslations, vars?: Record<string, string | number>): string {
-		let str: string = this.translations[key] ?? nlddTextEditorTranslations[key];
-		if (vars) {
-			for (const [k, v] of Object.entries(vars)) {
-				str = str.split(`{${k}}`).join(String(v));
-			}
-		}
-		return str;
+		return translate(this.translations, nlddTextEditorTranslations, key, vars);
 	}
 
 	protected buildExtensions(): Extension[] {

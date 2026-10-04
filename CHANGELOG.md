@@ -11,9 +11,17 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
+- **One call translates the whole package, and US English ships with it.** `setTranslations(enUS)` at startup turns every component English, including the ones another component builds out of your reach, such as the activity indicator in a loading button and the calendar in a date field. Docs/Vertalingen in Storybook explains the layers.
+
 - **Storybook opens on an introduction.** Docs/Introductie says what the system is, how to install it and load the styles, where the components, patterns and design guidelines are, and how to add the Claude Code plugin. It used to open on Button, the first story in alphabetical order. Docs now sits at the top of the sidebar, with the introduction and the design guidelines first.
 
 ### Added
+
+- **`setTranslations()` sets the texts for the whole package.** Import it from `@nldd/design-system/translations` and call it once at startup. A component now looks a text up in four layers: an attribute on the element, its `translations` property, the package-wide layer, and the Dutch default. Calling it again re-renders the components on the page, so a language switch at runtime works too. In development it warns about a key no component knows, which is what an override does after a key is renamed.
+
+- **A complete US English set, `@nldd/design-system/translations/en-US`, and the Dutch defaults as a template, `@nldd/design-system/translations/nl`.** Spread the English set and add your own keys behind it to change a few texts: `setTranslations({ ...enUS, 'components.activity-indicator.loading-label': 'Please wait' })`.
+
+- **`loading-text` on `nldd-button` and `nldd-icon-button`** says what the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Without it the indicator says its translated "Laden".
 
 - **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down.** Pulling a page past its top used to open a white gap above the ribbon; the ribbon now carries on into it and only grows longer. A bar above the navigation bar, such as `nldd-status-bar`, stays clear: the ribbon starts at the top of the page, not right above the logo. It works in browsers that support scroll-driven animations; elsewhere the gap stays as it was.
 
@@ -32,6 +40,8 @@ here; consult the commit history if you need that level of detail.
 - **`mode` on `nldd-progress-bar` and `nldd-progress-circle` is now `variant`.** `progress` and `distribution` are two kinds of indicator, progress toward a goal and the parts of a whole, and the screen reader hears something different for each, which is what `variant` stands for in this system. The values stay the same, so `mode="distribution"` becomes `variant="distribution"`. The types `ProgressBarMode` and `ProgressCircleMode` are now `ProgressBarVariant` and `ProgressCircleVariant`.
 
 ### Fixed
+
+- **A component that another component builds can be translated.** The activity indicator in a loading `nldd-button`, `nldd-icon-button` and `nldd-inline-dialog`, the tokens of `nldd-token-field`, the overflow menus of `nldd-toolbar`, `nldd-menu-bar` and `nldd-document-tab-bar`, and the pickers of `nldd-date-field` and `nldd-time-field` sit in a shadow root, so the `translations` you set on the outer element never reached them and they stayed Dutch. They read `setTranslations()` now.
 
 - **`nldd-dropdown` shows the value your app sets.** A value set with `select.value`, `selectedIndex` or `option.selected` kept the old label on screen until someone picked an option by hand, so a form that loaded saved data showed a different choice than it held. The label was a copy in the shadow DOM that only updated on `slotchange` and `change`. It is gone: the `<select>` now shows its own choice, so there is nothing left to go stale.
 - **The changelog no longer repeats its introduction** under 0.8.93.
