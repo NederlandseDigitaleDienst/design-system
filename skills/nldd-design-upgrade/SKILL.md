@@ -25,7 +25,7 @@ Leun daarom nooit op het versienummer om te beoordelen of een sprong veilig is. 
 ## Werkwijze
 
 1. **Lees elke versie tussen jouw huidige en de doelversie.** De entries staan nieuwste eerst, met een kop per release (versienummer + datum). Sla niets over: een breaking change kan in een tussenliggende patch zitten.
-2. **Scan de `Breaking` / `Breaking Changes` secties eerst.** Die bevatten concrete migratie-instructies: een verwijderd attribuut met zijn vervanger, hernoemde variabelen, gewijzigd gedrag. Een echt voorbeeld uit de changelog: `variant="box-on-tinted"` op `nldd-list` is verwijderd, met als vervanger `<nldd-list variant="box" background="base">`.
+2. **Scan de `Breaking` / `Breaking Changes` secties eerst.** Die bevatten concrete migratie-instructies: een verwijderd attribuut met zijn vervanger, hernoemde variabelen, gewijzigd gedrag. Een echt voorbeeld uit de changelog: `variant` op `nldd-button` en acht andere componenten heet nu `appearance`, met dezelfde waarden, dus `variant="primary"` wordt `<nldd-button appearance="primary">`.
 3. **Pas de migraties toe in je code** voordat je de nieuwe versie in gebruik neemt. Zoek je app door op de verwijderde attributen, variabelenamen of componenten uit de breaking entries.
 4. **Lees `Highlights`, `Added` en `Changed`** voor nieuwe componenten of attributen die je oudere, omslachtigere code kunnen vervangen.
 5. **Verifieer tegen [`reference.md`](../nldd-design/reference.md)** of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij exact deze release.

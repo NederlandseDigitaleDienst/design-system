@@ -36,7 +36,7 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 			>
 			<div class="file-field__choose-button">
 				<nldd-button
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					size=${component.size}
 					text=${component._chooseLabel()}
 					accessible-label=${component._chooseAccessibleLabel() || nothing}
@@ -50,7 +50,7 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 			${hasFiles ? html`
 				<div class="file-field__clear-button">
 					<nldd-icon-button
-						variant="neutral-transparent"
+						appearance="neutral-transparent"
 						size=${buttonSize}
 						icon="dismiss"
 						text=${component._t('components.file-field.clear-action')}

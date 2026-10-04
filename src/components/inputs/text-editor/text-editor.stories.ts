@@ -646,7 +646,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		variant: 'simple',
+		appearance: 'simple',
 		value: SAMPLE,
 		placeholder: '',
 		rows: 8,
@@ -659,10 +659,10 @@ export default {
 		accessibleLabel: 'Tekst',
 	},
 	argTypes: {
-		variant: {
+		appearance: {
 			control: 'select',
 			options: ['simple', 'input-field'],
-			description: 'Visuele variant. "simple" is kaal zonder focusring; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
+			description: 'Visuele stijl. "simple" is kaal zonder focusring; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
 			table: { defaultValue: { summary: 'simple' } },
 		},
 		value: {
@@ -719,7 +719,7 @@ export default {
 };
 
 const Template = ({
-	variant,
+	appearance,
 	value,
 	placeholder,
 	rows,
@@ -732,7 +732,7 @@ const Template = ({
 	accessibleLabel,
 }: Record<string, any>) => html`
 	<nldd-text-editor
-		variant=${variant as string}
+		appearance=${appearance as string}
 		.value=${value || ''}
 		placeholder=${placeholder || nothing}
 		rows=${rows as number}
@@ -750,11 +750,11 @@ export const Standaard = {
 	render: Template,
 };
 
-export const VariantInputField = {
-	name: 'Variant input-field',
+export const AppearanceInputField = {
+	name: 'Appearance input-field',
 	render: () => html`
 		<nldd-text-editor
-			variant="input-field"
+			appearance="input-field"
 			rows="10"
 			.value=${SAMPLE}
 			accessible-label="Tekst"
@@ -763,7 +763,7 @@ export const VariantInputField = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'De `input-field`-variant: kader, vulling, padding, hoeken en focusring — een op zichzelf staand veld. De default is `simple` (kaal), bedoeld om in een eigen compositie te plaatsen die de chrome en focusbehandeling levert.',
+				story: 'De `input-field`-appearance: kader, vulling, padding, hoeken en focusring — een op zichzelf staand veld. De default is `simple` (kaal), bedoeld om in een eigen compositie te plaatsen die de chrome en focusbehandeling levert.',
 			},
 		},
 	},
@@ -855,7 +855,7 @@ export const VermeldingenInEenOverlay = {
 		const open = (e: Record<string, any>) => e.currentTarget.nextElementSibling.show();
 		return html`
 			<nldd-button
-				variant="primary"
+				appearance="primary"
 				text="Open modal dialog"
 				@click=${open}
 			></nldd-button>
@@ -869,13 +869,13 @@ export const VermeldingenInEenOverlay = {
 				></nldd-text-editor>
 				<nldd-button
 					slot="actions"
-					variant="primary"
+					appearance="primary"
 					text="Bewaar"
 				></nldd-button>
 			</nldd-modal-dialog>
 
 			<nldd-button
-				variant="secondary"
+				appearance="secondary"
 				text="Open sheet"
 				@click=${open}
 			></nldd-button>
@@ -948,7 +948,7 @@ export const Typeaheads = {
 					@nldd-text-editor-typeahead=${(event: CustomEvent) => action('nldd-text-editor-typeahead')(event.detail)}
 				></nldd-text-editor>
 				<nldd-button
-					variant="secondary"
+					appearance="secondary"
 					text="Datum invoegen"
 					@click=${insertDate}
 				></nldd-button>
@@ -1016,7 +1016,7 @@ export const AnnotatiesMaken = {
 		const commentBtn = document.createElement('nldd-icon-button');
 		commentBtn.setAttribute('icon', 'comment');
 		commentBtn.setAttribute('label', 'Reactie toevoegen');
-		commentBtn.setAttribute('variant', 'secondary');
+		commentBtn.setAttribute('appearance', 'secondary');
 		(commentBtn as unknown as { disabled: boolean }).disabled = true;
 
 		const status = document.createElement('span');
@@ -1111,7 +1111,7 @@ export const Gemengd = {
 		];
 		return toolbarEditor(html`
 			<nldd-text-editor
-				variant="simple"
+				appearance="simple"
 				rows="15"
 				annotatable
 				accessible-label="Tekst"
@@ -1135,7 +1135,7 @@ export const Gemengd = {
 export const MetWerkbalk = {
 	render: () =>
 		toolbarEditor(
-			html`<nldd-text-editor variant="simple" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
+			html`<nldd-text-editor appearance="simple" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
 		),
 	parameters: {
 		controls: { disable: true },

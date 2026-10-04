@@ -72,7 +72,7 @@ nldd-form                              name, method, label-alignment
   <nldd-form-actions>
     <nldd-button-group>
       <nldd-button
-        variant="primary"
+        appearance="primary"
         type="submit"
         text="Verstuur aanvraag"
       ></nldd-button>

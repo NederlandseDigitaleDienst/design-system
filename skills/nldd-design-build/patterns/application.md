@@ -87,7 +87,7 @@ nldd-sheet                                    het detail van een rij, in de docu
             priority="2"
           >
             <nldd-button
-              variant="secondary"
+              appearance="secondary"
               start-icon="search"
               text="Zoeken"
             ></nldd-button>
@@ -360,7 +360,7 @@ nldd-sheet                                    het detail van een rij, in de docu
                   priority="2"
                 >
                   <nldd-button
-                    variant="primary"
+                    appearance="primary"
                     start-icon="add"
                     text="Nieuw dossier"
                   ></nldd-button>
@@ -371,7 +371,7 @@ nldd-sheet                                    het detail van een rij, in de docu
                 </nldd-toolbar-item>
                 <nldd-toolbar-item slot="end">
                   <nldd-button
-                    variant="secondary"
+                    appearance="secondary"
                     start-icon="filter"
                     text="Filter"
                   ></nldd-button>

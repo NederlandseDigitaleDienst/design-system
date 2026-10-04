@@ -22,7 +22,7 @@ import '../../layout/container/container.js';
  *   </nldd-container>
  *   <nldd-container slot="footer" padding-inline="16" padding-bottom="16">
  *     <nldd-button-group orientation="horizontal">
- *       <nldd-button variant="primary" text="Actie"></nldd-button>
+ *       <nldd-button appearance="primary" text="Actie"></nldd-button>
  *     </nldd-button-group>
  *   </nldd-container>
  * </nldd-card>
@@ -105,11 +105,11 @@ export const Standaard = (args: Record<string, any>) => html`
 		>
 			<nldd-button-group orientation="horizontal">
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Bevestig"
 				></nldd-button>
 				<nldd-button
-					variant="secondary"
+					appearance="secondary"
 					text="Annuleer"
 				></nldd-button>
 			</nldd-button-group>
@@ -175,7 +175,7 @@ export const VasteHoogte = () => html`
 		>
 			<nldd-button-group orientation="horizontal">
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Actie"
 				></nldd-button>
 			</nldd-button-group>
@@ -237,7 +237,7 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 		>
 			<nldd-button-group orientation="horizontal">
 				<nldd-button
-					variant="secondary"
+					appearance="secondary"
 					text="Markeer"
 					style="position: relative; z-index: 1;"
 				></nldd-button>

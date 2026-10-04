@@ -459,7 +459,7 @@ export const Leeg = {
 			>
 				<nldd-button
 					slot="actions"
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Filters wissen"
 				></nldd-button>
 			</nldd-inline-dialog>

@@ -15,7 +15,7 @@
 ## Compositie
 
 ```
-nldd-list                      accessible-label, variant, type
+nldd-list                      accessible-label, appearance, type
   └─ nldd-list-item            size, en hoogstens één van href, button, checkbox, radio
        └─ cellen, in de volgorde waarin ze staan
             nldd-icon-cell     een icoon vooraan

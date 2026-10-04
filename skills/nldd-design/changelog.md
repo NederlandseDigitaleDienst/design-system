@@ -27,6 +27,12 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-dropdown` fades a long option out instead of ending it with an ellipsis.** The field now shows its choice through the native `<select>`, and WebKit neither keeps that text out of the end padding nor draws an ellipsis there, so every browser fades the text before the icons. Two side effects: desktop Safari draws the options in its popup at the field's text size, 18px at `md` instead of 16px, and an `xs` dropdown shows 16px text on touch devices, because iOS zooms in on a smaller select when you tap it.
 
+### Breaking
+
+- **`variant` is now `appearance` on `nldd-button`, `nldd-button-bar`, `nldd-icon-button`, `nldd-split-button`, `nldd-keyboard-shortcut`, `nldd-code-viewer`, `nldd-code-editor`, `nldd-text-editor` and `nldd-list`.** The values stay the same, so `variant="primary"` becomes `appearance="primary"`, and the property is `appearance` too. `variant` meant two different things across the system: how something is drawn, and what kind of thing it is. On these nine it was always the first, a designed style with its color included, so it now has a name of its own. `variant` stays on the components where it says what kind of thing it is and sets the icon and role with it, such as `nldd-banner`, `nldd-notification`, `nldd-status-bar` and `nldd-inline-dialog`. A `variant` left on one of the nine is ignored without a warning and the component falls back to its default style, so search your markup for it. The exported types follow: `CodeViewerVariant`, `CodeEditorVariant`, `TextEditorVariant`, `ListVariant` and the `Variant` of `nldd-icon-button` are now `CodeViewerAppearance`, `CodeEditorAppearance`, `TextEditorAppearance`, `ListAppearance` and `Appearance`.
+
+- **`variant` on `nldd-timeline-track-cell` is now `level`.** `major`, `minor` and `none` say how far down the hierarchy a row sits: `minor` is a row that belongs under the one above it. The values stay the same, so `variant="minor"` becomes `level="minor"`.
+
 ### Fixed
 
 - **`nldd-dropdown` shows the value your app sets.** A value set with `select.value`, `selectedIndex` or `option.selected` kept the old label on screen until someone picked an option by hand, so a form that loaded saved data showed a different choice than it held. The label was a copy in the shadow DOM that only updated on `slotchange` and `change`. It is gone: the `<select>` now shows its own choice, so there is nothing left to go stale.

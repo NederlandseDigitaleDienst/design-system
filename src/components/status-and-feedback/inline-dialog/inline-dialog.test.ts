@@ -121,7 +121,7 @@ describe('nldd-inline-dialog', () => {
 	it('renders actions slot wrapped in nldd-button-group', async () => {
 		el = await fixture(`
 			<nldd-inline-dialog>
-				<nldd-button slot="actions" variant="primary" text="Bevestig"></nldd-button>
+				<nldd-button slot="actions" appearance="primary" text="Bevestig"></nldd-button>
 			</nldd-inline-dialog>
 		`);
 		await waitForUpdate(el);

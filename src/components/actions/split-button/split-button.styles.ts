@@ -40,14 +40,14 @@ export const splitButtonStyles = css`
 
 	/* ## Accent Filled (Primary) */
 
-	:host([variant="accent-filled"]),
-	:host([variant="primary"]) {
+	:host([appearance="accent-filled"]),
+	:host([appearance="primary"]) {
 		--_background-color: var(--semantics-buttons-accent-filled-background-color);
 		--_divider-color: var(--semantics-buttons-accent-filled-divider-color);
 		--_highlight-border-color: var(--semantics-buttons-accent-filled-highlight-border-color);
 	}
 
-	:host([variant="neutral-base"]) {
+	:host([appearance="neutral-base"]) {
 		--_background-color: var(--semantics-buttons-neutral-base-background-color);
 		--_divider-color: var(--semantics-buttons-neutral-base-divider-color);
 		--_highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);

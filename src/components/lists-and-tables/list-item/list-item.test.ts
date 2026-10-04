@@ -108,7 +108,7 @@ describe('nldd-list-item', () => {
 
 	it('sets is-boxed class when inside a box list', async () => {
 		const wrapper = await fixture(`
-			<nldd-list variant="box-tinted">
+			<nldd-list appearance="box-tinted">
 				<nldd-list-item></nldd-list-item>
 			</nldd-list>
 		`);
@@ -120,7 +120,7 @@ describe('nldd-list-item', () => {
 
 	it('does not set is-boxed class when inside a simple list', async () => {
 		const wrapper = await fixture(`
-			<nldd-list variant="simple">
+			<nldd-list appearance="simple">
 				<nldd-list-item></nldd-list-item>
 			</nldd-list>
 		`);
@@ -132,7 +132,7 @@ describe('nldd-list-item', () => {
 
 	it('renders all content in one flat slot (start/end slots are gone)', async () => {
 		const wrapper = await fixture(`
-			<nldd-list variant="simple">
+			<nldd-list appearance="simple">
 				<nldd-list-item>
 					<nldd-text-cell text="Inhoud"></nldd-text-cell>
 				</nldd-list-item>

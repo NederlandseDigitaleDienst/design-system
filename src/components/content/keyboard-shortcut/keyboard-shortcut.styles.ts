@@ -44,16 +44,16 @@ export const keyboardShortcutStyles = css`
 		--_font-size: 0.75em;
 	}
 
-	:host([variant="simple"]) {
+	:host([appearance="simple"]) {
 		--_font-family: var(--primitives-font-family-body);
 		--_font-size: var(--primitives-font-size-100);
 	}
 
-	:host([variant="simple"][size="sm"]) {
+	:host([appearance="simple"][size="sm"]) {
 		--_font-size: var(--primitives-font-size-90);
 	}
 
-	:host([variant="simple"][size="inherit"]) {
+	:host([appearance="simple"][size="inherit"]) {
 		--_font-size: inherit;
 	}
 
@@ -81,7 +81,7 @@ export const keyboardShortcutStyles = css`
 		top: -0.05em;
 	}
 
-	:host([size="inherit"][variant="simple"]) .keyboard-shortcut {
+	:host([size="inherit"][appearance="simple"]) .keyboard-shortcut {
 		position: static;
 	}
 
@@ -107,11 +107,11 @@ export const keyboardShortcutStyles = css`
 		white-space: nowrap;
 	}
 
-	:host([variant="simple"]) .keyboard-shortcut {
+	:host([appearance="simple"]) .keyboard-shortcut {
 		gap: 0;
 	}
 
-	:host([variant="simple"]) .keyboard-shortcut__key {
+	:host([appearance="simple"]) .keyboard-shortcut__key {
 		box-shadow: none;
 		background-color: transparent;
 		border-radius: 0;
@@ -125,7 +125,7 @@ export const keyboardShortcutStyles = css`
 			color: CanvasText;
 		}
 
-		:host(:not([variant="simple"])) .keyboard-shortcut__key {
+		:host(:not([appearance="simple"])) .keyboard-shortcut__key {
 			border: var(--components-keyboard-shortcut-border-width) solid CanvasText;
 			background-color: Canvas;
 		}

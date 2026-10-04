@@ -126,7 +126,7 @@ nldd-app-view                            de buitenste schil
           </nldd-rich-text>
           <nldd-spacer size="16"></nldd-spacer>
           <nldd-button
-            variant="secondary"
+            appearance="secondary"
             text="Neem contact op"
             href="#contact"
           ></nldd-button>
@@ -143,7 +143,7 @@ nldd-app-view                            de buitenste schil
       ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-button
-        variant="primary"
+        appearance="primary"
         text="Start een aanvraag"
         href="#aanpak"
       ></nldd-button>

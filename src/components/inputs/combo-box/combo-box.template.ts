@@ -62,7 +62,7 @@ export function comboBoxTemplate(component: NLDDComboBox): TemplateResult {
 				${component.text && !component.readonly ? html`
 					<div class="combo-box__clear-button">
 						<nldd-icon-button
-							variant="neutral-transparent"
+							appearance="neutral-transparent"
 							size=${iconButtonSize}
 							icon="dismiss"
 							text=${component._t('components.combo-box.clear-action')}
@@ -76,7 +76,7 @@ export function comboBoxTemplate(component: NLDDComboBox): TemplateResult {
 				${component.readonly ? nothing : html`
 					<div class="combo-box__picker-button">
 						<nldd-icon-button
-							variant="neutral-tinted"
+							appearance="neutral-tinted"
 							size=${iconButtonSize}
 							icon="chevron-down"
 							text=${component._t('components.combo-box.open-menu-action')}

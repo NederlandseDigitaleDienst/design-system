@@ -29,7 +29,7 @@ nldd-toolbar                       size, label
     priority="1"
   >
     <nldd-button
-      variant="primary"
+      appearance="primary"
       text="Nieuw document"
       start-icon="add"
     ></nldd-button>
@@ -42,7 +42,7 @@ nldd-toolbar                       size, label
 
   <nldd-toolbar-item slot="start">
     <nldd-button
-      variant="secondary"
+      appearance="secondary"
       text="Filter"
       start-icon="filter"
     ></nldd-button>
@@ -111,7 +111,7 @@ nldd-toolbar                       size, label
 
   <nldd-toolbar-item slot="end">
     <nldd-button
-      variant="secondary"
+      appearance="secondary"
       text="Deel"
       start-icon="share"
     ></nldd-button>

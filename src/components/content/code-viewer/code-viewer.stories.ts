@@ -34,7 +34,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	argTypes: {
-		variant: {
+		appearance: {
 			control: 'select',
 			options: ['box-tinted', 'box-base', 'simple'],
 			description: 'De twee `box`-waarden zijn een framed card met afgeronde hoeken + border ring en verschillen in de surface die ze vullen; `box-base` staat op een al getinte parent (border ring krijgt +2 stappen voor extra contrast). `simple` = geen chrome (geen kader, padding of border), voor inbedding in een eigen wrapper.',
@@ -63,7 +63,7 @@ export default {
 		},
 	},
 	args: {
-		variant: 'box-tinted',
+		appearance: 'box-tinted',
 		content: DEFAULT_CONTENT,
 		language: '',
 		copy: true,
@@ -73,7 +73,7 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-code-viewer
-		variant=${args.variant}
+		appearance=${args.appearance}
 		language=${args.language || nothing}
 		?no-copy=${!args.copy}
 		?wrap=${args.wrap}
@@ -163,23 +163,23 @@ function isEligible(person, threshold = 32502) {
    Container
    ============================================================ */
 
-export const VariantSimple = {
-	name: 'Variant simple',
+export const AppearanceSimple = {
+	name: 'Appearance simple',
 	render: Template,
 	args: {
-		variant: 'simple',
+		appearance: 'simple',
 	},
 	parameters: {
 		docs: {
 			description: {
-				story: '`variant="simple"` haalt het frame weg (geen corners, padding, fill of border). Gebruik wanneer de code-viewer binnen een eigen wrapper zit die de surface en padding levert.',
+				story: '`appearance="simple"` haalt het frame weg (geen corners, padding, fill of border). Gebruik wanneer de code-viewer binnen een eigen wrapper zit die de surface en padding levert.',
 			},
 		},
 	},
 };
 
-export const VariantBoxBase = {
-	name: 'Variant box-base',
+export const AppearanceBoxBase = {
+	name: 'Appearance box-base',
 	render: (args: Record<string, any>) => html`
 		<div style="padding: 24px; background-color: var(--semantics-surfaces-tinted-background-color); border-radius: var(--primitives-corner-radius-lg);">
 			${Template(args)}
@@ -187,7 +187,7 @@ export const VariantBoxBase = {
 	`,
 	args: {
 		language: 'json',
-		variant: 'box-base',
+		appearance: 'box-base',
 		content: `{
   "lawId": "zorgtoeslagwet",
   "active": true
@@ -196,7 +196,7 @@ export const VariantBoxBase = {
 	parameters: {
 		docs: {
 			description: {
-				story: '`variant="box-base"` voor een code-viewer op een getinte parent. De code-viewer tekent zich af met de basis-surface in plaats van te versmelten met de getinte achtergrond; de border ring krijgt automatisch +2 stappen voor extra contrast.',
+				story: '`appearance="box-base"` voor een code-viewer op een getinte parent. De code-viewer tekent zich af met de basis-surface in plaats van te versmelten met de getinte achtergrond; de border ring krijgt automatisch +2 stappen voor extra contrast.',
 			},
 		},
 	},

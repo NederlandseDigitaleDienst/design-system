@@ -104,7 +104,7 @@ function renderPagination(component: NLDDDatePicker, size: string, variant: stri
 	return html`
 		<nldd-button-bar
 			size=${size}
-			variant=${variant}
+			appearance=${variant}
 		>
 			<nldd-icon-button
 				icon="chevron-left"
@@ -135,7 +135,7 @@ function renderFooter(component: NLDDDatePicker, withPagination: boolean): Templ
 				${component._todayReachable ? html`
 					<nldd-button
 						size=${withPagination ? 'md' : 'sm'}
-						variant="neutral-tinted"
+						appearance="neutral-tinted"
 						text=${component._t('components.date-picker.view-today-action')}
 						@click=${component._handleToday}
 					></nldd-button>

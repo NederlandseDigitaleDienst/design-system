@@ -7,9 +7,9 @@
  * stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree,
  * so the data stays portable.
  *
- * Default `variant="simple"` is bare (no frame, no focus ring) for use inside
+ * Default `appearance="simple"` is bare (no frame, no focus ring) for use inside
  * a composition (e.g. a message field) that owns its chrome and focus; the
- * caret is a prominent accent. `variant="input-field"` adds a framed surface + focus
+ * caret is a prominent accent. `appearance="input-field"` adds a framed surface + focus
  *
  * Headless: there is no built-in toolbar. A consumer drives formatting via the
  * command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/
@@ -42,7 +42,7 @@
  * @attr {boolean} wrap - Wrap long lines (default true; prose wraps)
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
- * @attr {string} variant - 'simple' (default, bare) | 'input-field' (framed surface)
+ * @attr {string} appearance - 'simple' (default, bare) | 'input-field' (framed surface)
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
  *
  * @prop {MentionSource} mentionSource - Consumer-supplied @-mention candidate source (property only). Without it, @-typeahead is inert.
@@ -119,7 +119,7 @@ import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './t
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
-export type TextEditorVariant = 'input-field' | 'simple';
+export type TextEditorAppearance = 'input-field' | 'simple';
 export type { HeadingLevel, ListType, TextEditorState, TextEditorActiveFormats } from './text-editor.commands.js';
 export type {
 	MentionCandidate,
@@ -180,8 +180,8 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
 	resize: ResizeMode = 'auto';
 
-	@property({ reflect: true, converter: reflectNonDefault<TextEditorVariant>('simple') })
-	variant: TextEditorVariant = 'simple';
+	@property({ reflect: true, converter: reflectNonDefault<TextEditorAppearance>('simple') })
+	appearance: TextEditorAppearance = 'simple';
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';

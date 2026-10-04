@@ -222,11 +222,11 @@ export const MetFooter = {
 				>
 					<nldd-button-group orientation="horizontal">
 						<nldd-button
-							variant="primary"
+							appearance="primary"
 							text="Opslaan"
 						></nldd-button>
 						<nldd-button
-							variant="secondary"
+							appearance="secondary"
 							text="Annuleer"
 						></nldd-button>
 					</nldd-button-group>

@@ -418,7 +418,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		const section = document.createElement('nldd-simple-section');
 
 		this._globalMenuSheetList = document.createElement('nldd-list');
-		this._globalMenuSheetList.setAttribute('variant', 'simple');
+		this._globalMenuSheetList.setAttribute('appearance', 'simple');
 		this._globalMenuSheetList.setAttribute('dividers', 'never');
 		section.appendChild(this._globalMenuSheetList);
 

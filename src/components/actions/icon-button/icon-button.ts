@@ -2,10 +2,10 @@
  * Nederlandse Digitale Dienst Icon Button Component (Lit + TypeScript)
  *
  * @element nldd-icon-button
- * @attr {string} variant - Button variant: 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted' | 'primary' | 'secondary' | 'destructive'. The inherit variants derive their colors from currentColor, for buttons on colored surfaces.
+ * @attr {string} appearance - Visual style, color included: 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted' | 'primary' | 'secondary' | 'destructive'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces.
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {boolean} hide-lg-text - In lg size, hides the text label and enlarges the icon by one step (28px)
- * @attr {boolean} no-highlight-border - Removes the per-variant highlight border (e.g. when a control group draws a single border instead).
+ * @attr {boolean} no-highlight-border - Removes the per-appearance highlight border (e.g. when a control group draws a single border instead).
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled).
  * @attr {boolean} disabled - Disabled state
  * @attr {boolean} no-tab - Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable.
@@ -49,7 +49,7 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
-export type Variant =
+export type Appearance =
 	| 'primary'
 	| 'secondary'
 	| 'destructive'
@@ -75,8 +75,8 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	static formAssociated = true;
 	private _internals = this.attachInternals();
 
-	@property({ reflect: true, converter: reflectNonDefault<Variant>('neutral-tinted') })
-	variant: Variant = 'neutral-tinted';
+	@property({ reflect: true, converter: reflectNonDefault<Appearance>('neutral-tinted') })
+	appearance: Appearance = 'neutral-tinted';
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
@@ -100,7 +100,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	/** Removes the per-variant highlight border (e.g. when nldd-button-bar draws a single group border instead). */
+	/** Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead). */
 	@property({ type: Boolean, reflect: true, attribute: 'no-highlight-border' })
 	noHighlightBorder = false;
 

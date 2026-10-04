@@ -200,42 +200,42 @@ describe('nldd-keyboard-shortcut color', () => {
 	});
 });
 
-describe('nldd-keyboard-shortcut variant', () => {
+describe('nldd-keyboard-shortcut appearance', () => {
 	let el: HTMLElement;
 
 	afterEach(() => {
 		if (el) cleanup(el);
 	});
 
-	it('defaults to variant="box"', async () => {
+	it('defaults to appearance="box"', async () => {
 		el = await fixture('<nldd-keyboard-shortcut keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
-		expect((el as unknown as { variant: string }).variant).toBe('box');
-		expect(el.hasAttribute('variant')).toBe(false);
+		expect((el as unknown as { appearance: string }).appearance).toBe('box');
+		expect(el.hasAttribute('appearance')).toBe(false);
 	});
 
-	it('reflects variant="simple"', async () => {
-		el = await fixture('<nldd-keyboard-shortcut variant="simple" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
+	it('reflects appearance="simple"', async () => {
+		el = await fixture('<nldd-keyboard-shortcut appearance="simple" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('variant')).toBe('simple');
+		expect(el.getAttribute('appearance')).toBe('simple');
 	});
 
-	it('simple variant strips the keycap box (no padding, no shadow)', async () => {
-		el = await fixture('<nldd-keyboard-shortcut variant="simple" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
+	it('simple appearance strips the keycap box (no padding, no shadow)', async () => {
+		el = await fixture('<nldd-keyboard-shortcut appearance="simple" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
 		const key = el.shadowRoot!.querySelector('.keyboard-shortcut__key')!;
 		expect(getComputedStyle(key).paddingLeft).toBe('0px');
 		expect(getComputedStyle(key).boxShadow).toBe('none');
 	});
 
-	it('simple variant has no gap between keys', async () => {
-		el = await fixture('<nldd-keyboard-shortcut variant="simple" keys="Ctrl+K" always-visible></nldd-keyboard-shortcut>');
+	it('simple appearance has no gap between keys', async () => {
+		el = await fixture('<nldd-keyboard-shortcut appearance="simple" keys="Ctrl+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
 		expect(getComputedStyle(el.shadowRoot!.querySelector('.keyboard-shortcut')!).gap).toBe('0px');
 	});
 
 	it('renders the "+" separator on macOS too (no OS exception)', async () => {
-		el = await fixture('<nldd-keyboard-shortcut variant="simple" debug-os="mac" keys="Ctrl+K" mac-keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
+		el = await fixture('<nldd-keyboard-shortcut appearance="simple" debug-os="mac" keys="Ctrl+K" mac-keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.keyboard-shortcut__separator')).not.toBeNull();
 		expect(el.hasAttribute('data-no-delimiter')).toBe(false);
@@ -258,8 +258,8 @@ describe('nldd-keyboard-shortcut size', () => {
 		expect(cs.getPropertyValue('--_font-size').trim()).toBe('0.75em');
 	});
 
-	it('size="inherit" on the simple variant takes the container font-size', async () => {
-		el = await fixture('<div style="font-size: 22px;"><nldd-keyboard-shortcut size="inherit" variant="simple" keys="Cmd+K" always-visible></nldd-keyboard-shortcut></div>');
+	it('size="inherit" on the simple appearance takes the container font-size', async () => {
+		el = await fixture('<div style="font-size: 22px;"><nldd-keyboard-shortcut size="inherit" appearance="simple" keys="Cmd+K" always-visible></nldd-keyboard-shortcut></div>');
 		const ks = el.querySelector('nldd-keyboard-shortcut')!;
 		await waitForUpdate(ks);
 		const key = ks.shadowRoot!.querySelector('.keyboard-shortcut__key')!;
@@ -273,8 +273,8 @@ describe('nldd-keyboard-shortcut size', () => {
 		expect(getComputedStyle(container).position).toBe('relative');
 	});
 
-	it('size="inherit" on the simple variant keeps the shortcut in normal flow (no nudge)', async () => {
-		el = await fixture('<nldd-keyboard-shortcut size="inherit" variant="simple" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
+	it('size="inherit" on the simple appearance keeps the shortcut in normal flow (no nudge)', async () => {
+		el = await fixture('<nldd-keyboard-shortcut size="inherit" appearance="simple" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
 		const container = el.shadowRoot!.querySelector('.keyboard-shortcut')!;
 		expect(getComputedStyle(container).position).toBe('static');

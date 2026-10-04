@@ -16,8 +16,8 @@ import { ICONS } from '../../content/icon/icon.js';
  *   text="Bevestiging vereist"
  *   supporting-text="Dit kan niet ongedaan worden gemaakt."
  * >
- *   <nldd-button slot="actions" variant="primary" text="Bevestig"></nldd-button>
- *   <nldd-button slot="actions" variant="neutral-tinted" text="Annuleer"></nldd-button>
+ *   <nldd-button slot="actions" appearance="primary" text="Bevestig"></nldd-button>
+ *   <nldd-button slot="actions" appearance="neutral-tinted" text="Annuleer"></nldd-button>
  * </nldd-modal-dialog>
  * ```
  */
@@ -99,7 +99,7 @@ export const Standaard = (args: Record<string, any>) => {
 	const [, updateArgs] = useArgs();
 	return html`
 		<nldd-button
-			variant="primary"
+			appearance="primary"
 			text="Open modal dialog"
 			@click=${setNextOpen}
 		></nldd-button>
@@ -116,13 +116,13 @@ export const Standaard = (args: Record<string, any>) => {
 		>
 			<nldd-button
 				slot="actions"
-				variant="primary"
+				appearance="primary"
 				text="Bevestig"
 				@click=${setClosed}
 			></nldd-button>
 			<nldd-button
 				slot="actions"
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				text="Annuleer"
 				@click=${setClosed}
 			></nldd-button>
@@ -133,7 +133,7 @@ export const Standaard = (args: Record<string, any>) => {
 export const ZonderIcoon = {
 	render: () => html`
 	<nldd-button
-		variant="primary"
+		appearance="primary"
 		text="Open modal dialog"
 		@click=${openNext}
 	></nldd-button>
@@ -143,13 +143,13 @@ export const ZonderIcoon = {
 	>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Bevestig"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			text="Annuleer"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
@@ -161,7 +161,7 @@ export const ZonderIcoon = {
 export const MetIcoon = {
 	render: () => html`
 	<nldd-button
-		variant="primary"
+		appearance="primary"
 		text="Open modal dialog"
 		@click=${openNext}
 	></nldd-button>
@@ -172,7 +172,7 @@ export const MetIcoon = {
 	>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Sluiten"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
@@ -185,7 +185,7 @@ export const VariantAlert = {
 	name: 'Variant alert',
 	render: () => html`
 	<nldd-button
-		variant="primary"
+		appearance="primary"
 		text="Open modal dialog"
 		@click=${openNext}
 	></nldd-button>
@@ -196,13 +196,13 @@ export const VariantAlert = {
 	>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Doorgaan"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			text="Annuleer"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
@@ -224,7 +224,7 @@ export const MetFormulier = {
 	name: 'Met formulier (links uitgelijnd)',
 	render: () => html`
 	<nldd-button
-		variant="primary"
+		appearance="primary"
 		text="Open modal dialog"
 		@click=${openNext}
 	></nldd-button>
@@ -238,13 +238,13 @@ export const MetFormulier = {
 			</nldd-form-field>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Opslaan"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			text="Annuleer"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>

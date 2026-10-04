@@ -21,7 +21,7 @@
  *
  * @element nldd-code-viewer
  *
- * @attr {'box-tinted'|'box-base'|'simple'} variant - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
+ * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.
  * @attr {boolean} no-copy - Hide the copy-to-clipboard button (shown by default).
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
@@ -59,7 +59,7 @@ function isClipboardAvailable(): boolean {
 		&& typeof navigator.clipboard?.writeText === 'function';
 }
 
-export type CodeViewerVariant = 'box-tinted' | 'box-base' | 'simple';
+export type CodeViewerAppearance = 'box-tinted' | 'box-base' | 'simple';
 
 @customElement('nldd-code-viewer')
 export class NLDDCodeViewer extends NLDDCodeMirrorElement {
@@ -67,8 +67,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 
 	/** Visual style. The `box` values are a framed card and name the surface they
 	 *  fill with; `simple` drops the frame. */
-	@property({ reflect: true, converter: reflectNonDefault<CodeViewerVariant>('box-tinted') })
-	variant: CodeViewerVariant = 'box-tinted';
+	@property({ reflect: true, converter: reflectNonDefault<CodeViewerAppearance>('box-tinted') })
+	appearance: CodeViewerAppearance = 'box-tinted';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	language = '';
@@ -246,12 +246,12 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			this.reconfigure(this._wrapCompartment, this.wrap ? EditorView.lineWrapping : []);
 			this._updateScrollable();
 		}
-		// variant/background/no-copy change the block's padding (→ clientWidth), so
+		// appearance/background/no-copy change the block's padding (→ clientWidth), so
 		// the scrollable state can go stale until the ResizeObserver happens to
 		// fire. Recompute directly. (_copyUnavailable mirrors no-copy's own effect
 		// on padding, so treat it the same.)
 		if (
-			changed.has('variant')
+			changed.has('appearance')
 			|| changed.has('noCopy')
 			|| changed.has('_copyUnavailable')
 		) {

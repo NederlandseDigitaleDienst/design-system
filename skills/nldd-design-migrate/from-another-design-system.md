@@ -21,7 +21,7 @@ De naam bestaat nergens, dus de browser neemt de terugval. In de lichte weergave
 
 De echte namen zijn beschrijvend en Nederlands waar het om kleur gaat: `--semantics-surfaces-base-background-color`, `--semantics-surfaces-tinted-background-color`, `--primitives-color-groen-500`, `-oranje-`, `-lintblauw-`. Zoek ze op in [`reference.md`](../nldd-design/reference.md) en in `node_modules/@nldd/design-system/dist/css/`, en grep het pakket voordat je een naam opschrijft.
 
-Hetzelfde geldt voor icoonnamen en voor attributen: een `variant`-waarde uit je vorige systeem is hier meestal geen bestaande waarde, en een onbekende variant valt stil terug op de standaard.
+Hetzelfde geldt voor icoonnamen en voor attributen: een `variant`- of `appearance`-waarde uit je vorige systeem is hier meestal geen bestaande waarde, en een onbekende waarde valt stil terug op de standaard.
 
 ## De donkere weergave legt bloot wat je hebt gemist
 

@@ -179,12 +179,12 @@ export const MetStickyFooter = {
 				>
 					<nldd-button-group orientation="vertical">
 						<nldd-button
-							variant="primary"
+							appearance="primary"
 							text="Opslaan"
 							width="full"
 						></nldd-button>
 						<nldd-button
-							variant="secondary"
+							appearance="secondary"
 							text="Annuleer"
 							width="full"
 						></nldd-button>

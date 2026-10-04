@@ -32,7 +32,7 @@ export default {
 		},
 	},
 	argTypes: {
-		variant: {
+		appearance: {
 			control: 'select',
 			options: [
 				'primary',
@@ -48,7 +48,7 @@ export default {
 				'inherit-filled',
 				'inherit-tinted',
 			],
-			description: 'Visuele stijlvariant',
+			description: 'Visuele stijl, inclusief kleur',
 			table: {
 				defaultValue: { summary: 'neutral-tinted' },
 			},
@@ -157,7 +157,7 @@ export default {
 		},
 	},
 	args: {
-		variant: 'neutral-tinted',
+		appearance: 'neutral-tinted',
 		size: 'md',
 		width: '',
 		hideLgText: false,
@@ -176,9 +176,9 @@ export default {
 	},
 };
 
-const Template = ({ variant, size, width, hideLgText, expandable, expanded, popupType, text, icon, type, href, target, accessibleLabel, tooltipTiming, loading, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, hideLgText, expandable, expanded, popupType, text, icon, type, href, target, accessibleLabel, tooltipTiming, loading, disabled }: Record<string, any>) => html`
 	<nldd-icon-button
-		variant=${variant}
+		appearance=${appearance}
 		size=${size}
 		width=${width || nothing}
 		?hide-lg-text=${hideLgText}
@@ -205,21 +205,22 @@ export const Standaard = {
 	},
 };
 
-export const VariantenNaarRol = {
+export const AppearancesNaarRol = {
+	name: 'Appearances naar rol',
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-icon-button
-			variant="primary"
+			appearance="primary"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="secondary"
+			appearance="secondary"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="destructive"
+			appearance="destructive"
 			icon="delete"
 			text="Verwijder"
 		></nldd-icon-button>
@@ -235,41 +236,42 @@ export const VariantenNaarRol = {
 },
 };
 
-export const VariantenNaarUiterlijk = {
+export const AppearancesNaarUiterlijk = {
+	name: 'Appearances naar uiterlijk',
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-icon-button
-			variant="accent-filled"
+			appearance="accent-filled"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="accent-transparent"
+			appearance="accent-transparent"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="neutral-base"
+			appearance="neutral-base"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="neutral-transparent"
+			appearance="neutral-transparent"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="critical-tinted"
+			appearance="critical-tinted"
 			icon="delete"
 			text="Verwijder"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="critical-transparent"
+			appearance="critical-transparent"
 			icon="delete"
 			text="Verwijder"
 		></nldd-icon-button>
@@ -411,19 +413,19 @@ export const ToestandDisabled = {
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-icon-button
 			disabled
-			variant="accent-filled"
+			appearance="accent-filled"
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
 		<nldd-icon-button
 			disabled
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
 		<nldd-icon-button
 			disabled
-			variant="critical-tinted"
+			appearance="critical-tinted"
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
@@ -440,13 +442,13 @@ export const ToestandLoading = {
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-icon-button
 			loading
-			variant="primary"
+			appearance="primary"
 			icon="download"
 			text="Opslaan"
 		></nldd-icon-button>
 		<nldd-icon-button
 			loading
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			icon="download"
 			text="Opslaan"
 		></nldd-icon-button>

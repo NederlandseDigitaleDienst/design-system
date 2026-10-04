@@ -33,7 +33,7 @@ export function notificationTemplate(component: NLDDNotification): TemplateResul
 				<nldd-icon-button
 					icon="dismiss-small"
 					size="sm"
-					variant="neutral-transparent"
+					appearance="neutral-transparent"
 					tooltip-timing="never"
 					accessible-label=${component._t('components.notification.dismiss-action')}
 					@click=${component._handleDismiss}

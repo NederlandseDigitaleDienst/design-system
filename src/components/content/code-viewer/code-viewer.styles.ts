@@ -40,12 +40,12 @@ export const codeViewerStyles = css`
 		display: none;
 	}
 
-	:host([variant="box-base"]) {
+	:host([appearance="box-base"]) {
 		--_background-color: var(--semantics-surfaces-base-background-color);
 		--_border-color: var(--semantics-surfaces-base-border-color);
 	}
 
-	:host([variant="simple"]) {
+	:host([appearance="simple"]) {
 		--_corner-radius: 0;
 		--_background-color: transparent;
 		--_border-color: transparent;
@@ -62,7 +62,7 @@ export const codeViewerStyles = css`
 		border-radius: var(--_corner-radius);
 		/* Inner box-shadow paints the border ring inside the radius
 		   without taking layout space — matches nldd-box / nldd-banner.
-		   variant="simple" suppresses the ring via --_border-color. The
+		   appearance="simple" suppresses the ring via --_border-color. The
 		   forced-colors fallback at the bottom restores a real border. */
 		box-shadow: var(--_border-shadow);
 		background-color: var(--_background-color);
@@ -84,11 +84,11 @@ export const codeViewerStyles = css`
 		padding-right: var(--_actions-area-size);
 	}
 
-	:host([variant="simple"]:not([no-copy]):not([copy-unavailable])) {
+	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) {
 		--_actions-area-padding: 0;
 	}
 
-	:host([variant="simple"]:not([no-copy]):not([copy-unavailable])) .code-viewer {
+	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) .code-viewer {
 		min-height: var(--_actions-area-size);
 		padding-right: 0;
 	}
@@ -142,7 +142,7 @@ export const codeViewerStyles = css`
 			border: var(--_border-width) solid CanvasText;
 		}
 
-		:host([variant="simple"]) .code-viewer {
+		:host([appearance="simple"]) .code-viewer {
 			border: none;
 		}
 	}

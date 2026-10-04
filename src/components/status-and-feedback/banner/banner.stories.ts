@@ -144,12 +144,12 @@ export const MetActies = {
 		>
 			<nldd-button
 				slot="actions"
-				variant="accent-filled"
+				appearance="accent-filled"
 				text="Ververs nu"
 			></nldd-button>
 			<nldd-button
 				slot="actions"
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				text="Later"
 			></nldd-button>
 		</nldd-banner>
@@ -174,7 +174,7 @@ export const MetRichContent = {
 			</nldd-rich-text>
 			<nldd-button
 				slot="actions"
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				text="Meer informatie"
 			></nldd-button>
 		</nldd-banner>

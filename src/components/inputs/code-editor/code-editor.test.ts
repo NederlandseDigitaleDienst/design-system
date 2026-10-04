@@ -54,11 +54,11 @@ describe('nldd-code-editor', () => {
 		expect(el.hasAttribute('wrap')).toBe(true);
 	});
 
-	it('default variant is simple', async () => {
+	it('default appearance is simple', async () => {
 		el = await fixture('<nldd-code-editor accessible-label="Code"></nldd-code-editor>');
 		await waitForUpdate(el);
-		expect((el as unknown as { variant: string }).variant).toBe('simple');
-		expect(el.hasAttribute('variant')).toBe(false);
+		expect((el as unknown as { appearance: string }).appearance).toBe('simple');
+		expect(el.hasAttribute('appearance')).toBe(false);
 	});
 
 	it('readonly blijft focusbaar (content editable, niet "false")', async () => {

@@ -19,8 +19,8 @@ import { ICONS } from '../../content/icon/icon.js';
  *   text="Bevestiging vereist"
  *   supporting-text="Dit kan niet ongedaan worden gemaakt."
  * >
- *   <nldd-button slot="actions" variant="primary" text="Bevestig"></nldd-button>
- *   <nldd-button slot="actions" variant="neutral-tinted" text="Annuleer"></nldd-button>
+ *   <nldd-button slot="actions" appearance="primary" text="Bevestig"></nldd-button>
+ *   <nldd-button slot="actions" appearance="neutral-tinted" text="Annuleer"></nldd-button>
  * </nldd-inline-dialog>
  * ```
  */
@@ -105,12 +105,12 @@ export const Standaard = (args: Record<string, any>) => html`
 	>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Bevestig"
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			text="Annuleer"
 		></nldd-button>
 	</nldd-inline-dialog>
@@ -124,12 +124,12 @@ export const ZonderIcoon = {
 	>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Bevestig"
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			text="Annuleer"
 		></nldd-button>
 	</nldd-inline-dialog>
@@ -146,7 +146,7 @@ export const MetIcoon = {
 	>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Naar instellingen"
 		></nldd-button>
 	</nldd-inline-dialog>
@@ -187,12 +187,12 @@ export const VariantAlert = {
 	>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Doorgaan"
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			text="Annuleer"
 		></nldd-button>
 	</nldd-inline-dialog>
@@ -210,7 +210,7 @@ export const VariantSuccess = {
 	>
 		<nldd-button
 			slot="actions"
-			variant="primary"
+			appearance="primary"
 			text="Sluiten"
 		></nldd-button>
 	</nldd-inline-dialog>
@@ -252,7 +252,7 @@ export const Groot = {
 		>
 			<nldd-button
 				slot="actions"
-				variant="primary"
+				appearance="primary"
 				text="Begrepen"
 			></nldd-button>
 		</nldd-inline-dialog>
@@ -276,7 +276,7 @@ export const LegeToestand = {
 			>
 				<nldd-button
 					slot="actions"
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Zoekopdracht wissen"
 				></nldd-button>
 			</nldd-inline-dialog>
@@ -308,12 +308,12 @@ export const MetFormulier = {
 			</nldd-form-field>
 			<nldd-button
 				slot="actions"
-				variant="primary"
+				appearance="primary"
 				text="Opslaan"
 			></nldd-button>
 			<nldd-button
 				slot="actions"
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				text="Annuleer"
 			></nldd-button>
 		</nldd-inline-dialog>
@@ -339,7 +339,7 @@ export const UitlijningOverschrijven = {
 			>
 				<nldd-button
 					slot="actions"
-					variant="primary"
+					appearance="primary"
 					text="Aanvraag afronden"
 				></nldd-button>
 			</nldd-inline-dialog>
@@ -357,7 +357,7 @@ export const UitlijningOverschrijven = {
 				></nldd-progress-circle>
 				<nldd-button
 					slot="actions"
-					variant="primary"
+					appearance="primary"
 					text="Afronden"
 				></nldd-button>
 			</nldd-inline-dialog>

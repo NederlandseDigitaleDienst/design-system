@@ -172,7 +172,7 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: 'menu' | 'listbox'
 			>
 				<nldd-keyboard-shortcut
 					size="inherit"
-					variant="simple"
+					appearance="simple"
 					color="inherit"
 					keys=${this.shortcut || nothing}
 					mac-keys=${this.shortcutMac || nothing}

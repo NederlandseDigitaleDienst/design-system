@@ -18,7 +18,7 @@ export function stepperTemplate(component: NLDDStepper): TemplateResult {
 			@keydown=${component._handleKeydown}
 		>
 			<nldd-icon-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				size=${component.size}
 				icon="minus"
 				text=${component._t('components.stepper.decrement-action')}
@@ -33,7 +33,7 @@ export function stepperTemplate(component: NLDDStepper): TemplateResult {
 				aria-hidden="true"
 			></div>
 			<nldd-icon-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				size=${component.size}
 				icon="plus"
 				text=${component._t('components.stepper.increment-action')}

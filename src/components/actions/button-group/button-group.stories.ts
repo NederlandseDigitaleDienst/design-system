@@ -34,11 +34,11 @@ export const Standaard = {
 		orientation=${args.orientation}
 	>
 		<nldd-button
-			variant="primary"
+			appearance="primary"
 			text="Bewaar"
 		></nldd-button>
 		<nldd-button
-			variant="secondary"
+			appearance="secondary"
 			text="Bewaar en maak nieuwe"
 		></nldd-button>
 	</nldd-button-group>
@@ -54,11 +54,11 @@ export const OrientatieHorizontal = {
 		orientation=${args.orientation}
 	>
 		<nldd-button
-			variant="primary"
+			appearance="primary"
 			text="Bewaar"
 		></nldd-button>
 		<nldd-button
-			variant="secondary"
+			appearance="secondary"
 			text="Bewaar en maak nieuwe"
 		></nldd-button>
 	</nldd-button-group>
@@ -74,11 +74,11 @@ export const GrootteSm = {
 		orientation=${args.orientation}
 	>
 		<nldd-button
-			variant="primary"
+			appearance="primary"
 			text="Bewaar"
 		></nldd-button>
 		<nldd-button
-			variant="secondary"
+			appearance="secondary"
 			text="Bewaar en maak nieuwe"
 		></nldd-button>
 	</nldd-button-group>
@@ -93,15 +93,15 @@ export const DrieKnoppen = {
 		orientation=${args.orientation}
 	>
 		<nldd-button
-			variant="primary"
+			appearance="primary"
 			text="Bewaar"
 		></nldd-button>
 		<nldd-button
-			variant="secondary"
+			appearance="secondary"
 			text="Bewaar en maak nieuwe"
 		></nldd-button>
 		<nldd-button
-			variant="destructive"
+			appearance="destructive"
 			text="Verwijder"
 		></nldd-button>
 	</nldd-button-group>
@@ -117,19 +117,19 @@ export const MaximaalDrieKnoppen = {
 		orientation=${args.orientation}
 	>
 		<nldd-button
-			variant="primary"
+			appearance="primary"
 			text="Bewaar"
 		></nldd-button>
 		<nldd-button
-			variant="secondary"
+			appearance="secondary"
 			text="Bewaar en maak nieuwe"
 		></nldd-button>
 		<nldd-button
-			variant="destructive"
+			appearance="destructive"
 			text="Verwijder"
 		></nldd-button>
 		<nldd-button
-			variant="secondary"
+			appearance="secondary"
 			text="Een knop te veel"
 		></nldd-button>
 	</nldd-button-group>
@@ -149,11 +149,11 @@ export const InEenSmalleContainer = {
 			orientation=${args.orientation}
 		>
 			<nldd-button
-				variant="primary"
+				appearance="primary"
 				text="Bewaar"
 			></nldd-button>
 			<nldd-button
-				variant="secondary"
+				appearance="secondary"
 				text="Annuleer"
 			></nldd-button>
 		</nldd-button-group>

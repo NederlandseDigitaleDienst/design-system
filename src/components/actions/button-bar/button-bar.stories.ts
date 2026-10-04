@@ -9,10 +9,10 @@ export default {
 	tags: ['autodocs'],
 
 	argTypes: {
-		variant: {
+		appearance: {
 			control: 'select',
 			options: ['neutral-tinted', 'neutral-base', 'secondary', 'accent-filled', 'primary'],
-			description: 'Button bar variant',
+			description: 'Visuele stijl van de knoppen, inclusief kleur',
 			table: { defaultValue: { summary: 'neutral-tinted' } },
 		},
 		size: {
@@ -30,11 +30,11 @@ export default {
 };
 
 export const Standaard = {
-	args: { variant: 'neutral-tinted', size: 'md', disabled: false },
+	args: { appearance: 'neutral-tinted', size: 'md', disabled: false },
 	render: (args: Record<string, any>) => html`
 		<nldd-button-bar
 			size=${args.size}
-			variant=${args.variant}
+			appearance=${args.appearance}
 			?disabled=${args.disabled}
 		>
 			<nldd-icon-button
@@ -50,10 +50,10 @@ export const Standaard = {
 	`,
 };
 
-export const Varianten = {
+export const Appearances = {
 	render: () => html`
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-			<nldd-button-bar variant="primary">
+			<nldd-button-bar appearance="primary">
 				<nldd-button text="Bewerk"></nldd-button>
 				<nldd-button-bar-divider></nldd-button-bar-divider>
 				<nldd-icon-button
@@ -61,7 +61,7 @@ export const Varianten = {
 					text="Verwijder"
 				></nldd-icon-button>
 			</nldd-button-bar>
-			<nldd-button-bar variant="secondary">
+			<nldd-button-bar appearance="secondary">
 				<nldd-button text="Bewerk"></nldd-button>
 				<nldd-button-bar-divider></nldd-button-bar-divider>
 				<nldd-icon-button
@@ -69,7 +69,7 @@ export const Varianten = {
 					text="Verwijder"
 				></nldd-icon-button>
 			</nldd-button-bar>
-			<nldd-button-bar variant="neutral-base">
+			<nldd-button-bar appearance="neutral-base">
 				<nldd-button text="Bewerk"></nldd-button>
 				<nldd-button-bar-divider></nldd-button-bar-divider>
 				<nldd-icon-button
@@ -130,11 +130,11 @@ export const Grootten = {
 };
 
 export const ZonderScheidingslijn = {
-	args: { variant: 'neutral-tinted', size: 'md', disabled: false },
+	args: { appearance: 'neutral-tinted', size: 'md', disabled: false },
 	render: (args: Record<string, any>) => html`
 		<nldd-button-bar
 			size=${args.size}
-			variant=${args.variant}
+			appearance=${args.appearance}
 			?disabled=${args.disabled}
 		>
 			<nldd-button text="Cut"></nldd-button>

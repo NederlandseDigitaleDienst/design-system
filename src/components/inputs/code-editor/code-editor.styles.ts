@@ -43,9 +43,9 @@ export const codeEditorStyles = css`
 	}
 
 
-	/* ## Variant — input-field adds the framed surface + a default content padding */
+	/* ## Appearance — input-field adds the framed surface + a default content padding */
 
-	:host([variant="input-field"]) {
+	:host([appearance="input-field"]) {
 		--_corner-radius: var(--primitives-corner-radius-lg);
 		/* Match the other input fields (text-field, textarea): the input-field
 		   surface + border + control padding, not the tinted surface. */
@@ -82,7 +82,7 @@ export const codeEditorStyles = css`
 
 	/* Focus ring only on the input-field variant. The simple variant relies on a
 	   prominent caret and lets a wrapping composition own its focus treatment. */
-	:host([variant="input-field"]) .code-editor:focus-within {
+	:host([appearance="input-field"]) .code-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_border-shadow);

@@ -224,7 +224,7 @@ export const MetFor = () => html`
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button
-				variant="primary"
+				appearance="primary"
 				type="submit"
 				text="Versturen"
 			></nldd-button>
@@ -251,7 +251,7 @@ export const NaastHelpTekst = () => html`
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button
-				variant="primary"
+				appearance="primary"
 				type="submit"
 				text="Versturen"
 			></nldd-button>
@@ -279,7 +279,7 @@ export const VerankerdPatroon = () => html`
 		</nldd-form-field>
 		<nldd-form-actions>
 			<nldd-button
-				variant="primary"
+				appearance="primary"
 				type="submit"
 				text="Versturen"
 			></nldd-button>

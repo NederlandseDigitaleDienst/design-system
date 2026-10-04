@@ -63,7 +63,7 @@ const reflectExpanded = (open: boolean) => (e: Event) =>
 
 const trigger = html`
 	<nldd-button class="sidebar-trigger"
-		variant="secondary"
+		appearance="secondary"
 		text="Toon filters"
 		aria-haspopup="dialog"
 		aria-expanded="false"
@@ -181,7 +181,7 @@ export const EigenSheetTitelbalk = {
 			>
 				<nldd-button
 					slot="toolbar"
-					variant="critical-transparent"
+					appearance="critical-transparent"
 					text="Reset"
 				></nldd-button>
 			</nldd-top-title-bar>

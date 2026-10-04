@@ -43,7 +43,7 @@ export default {
 				defaultValue: { summary: 'md' },
 			},
 		},
-		variant: {
+		appearance: {
 			control: 'select',
 			options: ['box', 'simple'],
 			description: "'box' (default) toont elke toets als keycap; 'simple' toont de toetsen als platte tekst — lichter, voor inline gebruik zoals in een menu",
@@ -89,7 +89,7 @@ export default {
 	},
 	args: {
 		size: 'md',
-		variant: 'box',
+		appearance: 'box',
 		color: 'neutral',
 		alwaysVisible: false,
 		keys: 'Ctrl+K',
@@ -99,10 +99,10 @@ export default {
 	},
 };
 
-const Template = ({ size, variant, color, alwaysVisible, keys, macKeys, windowsKeys, linuxKeys }: Record<string, any>) => html`
+const Template = ({ size, appearance, color, alwaysVisible, keys, macKeys, windowsKeys, linuxKeys }: Record<string, any>) => html`
 	<nldd-keyboard-shortcut
 		size=${size}
-		variant=${variant}
+		appearance=${appearance}
 		color=${color || nothing}
 		?always-visible=${alwaysVisible}
 		keys=${keys}
@@ -157,31 +157,31 @@ export const SchaaltMee = {
 		<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
 			<span style="font-size: 14px;">Druk <nldd-keyboard-shortcut size="inherit" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut> om te zoeken (14px).</span>
 			<span style="font-size: 20px;">Druk <nldd-keyboard-shortcut size="inherit" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut> om te zoeken (20px).</span>
-			<span style="font-size: 14px;">Of als tekst: <nldd-keyboard-shortcut size="inherit" variant="simple" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut>.</span>
+			<span style="font-size: 14px;">Of als tekst: <nldd-keyboard-shortcut size="inherit" appearance="simple" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut>.</span>
 		</div>
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: '`size="inherit"` schaalt mee met de font-size van de omringende tekst — de box-keycaps in em, de simple-variant als platte tekst.' } },
+		docs: { description: { story: '`size="inherit"` schaalt mee met de font-size van de omringende tekst — de box-keycaps in em, de simple-appearance als platte tekst.' } },
 	},
 };
 
-export const Varianten = {
+export const Appearances = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center;">
 			<nldd-keyboard-shortcut
-				variant="box"
+				appearance="box"
 				keys="Cmd+K"
 			></nldd-keyboard-shortcut>
 			<nldd-keyboard-shortcut
-				variant="simple"
+				appearance="simple"
 				keys="Cmd+K"
 			></nldd-keyboard-shortcut>
 		</div>
 	`,
 	parameters: {
 		controls: { disable: true },
-		docs: { description: { story: '`variant="box"` (default, keycaps) naast `variant="simple"` (platte tekst — lichter, voor inline gebruik zoals in een menu).' } },
+		docs: { description: { story: '`appearance="box"` (default, keycaps) naast `appearance="simple"` (platte tekst — lichter, voor inline gebruik zoals in een menu).' } },
 	},
 };
 

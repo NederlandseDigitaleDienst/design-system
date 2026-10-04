@@ -178,13 +178,13 @@ export const MetWerkbalkActies = {
 		>
 			<nldd-icon-button
 				slot="toolbar"
-				variant="accent-transparent"
+				appearance="accent-transparent"
 				icon="share"
 				text="Delen"
 			></nldd-icon-button>
 			<nldd-icon-button
 				slot="toolbar"
-				variant="accent-transparent"
+				appearance="accent-transparent"
 				icon="edit"
 				text="Bewerken"
 			></nldd-icon-button>

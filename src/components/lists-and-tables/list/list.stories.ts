@@ -27,7 +27,7 @@ export default {
 	component: 'nldd-list',
 	tags: ['autodocs'],
 	args: {
-		variant: 'simple',
+		appearance: 'simple',
 		type: 'list',
 		dividers: 'always',
 		height: '',
@@ -35,7 +35,7 @@ export default {
 		reorderable: false,
 	},
 	argTypes: {
-		variant: {
+		appearance: {
 			control: 'select',
 			options: ['simple', 'box-tinted', 'box-base'],
 			description: 'Visuele stijl: `simple` = platte strip, `box-tinted` = framed card met afgeronde hoeken en border ring, `box-base` dezelfde kaart maar op een al getinte parent',
@@ -91,7 +91,7 @@ Selectie-state wordt **altijd door de consumer beheerd**: de lijst muteert nooit
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
 		<nldd-list
-			variant=${args.variant}
+			appearance=${args.appearance}
 			type=${args.type}
 			dividers=${args.dividers}
 			height=${args.type === 'listbox' && args.height ? args.height : nothing}
@@ -113,12 +113,12 @@ export const Standaard = {
 
 export const Pijltjesnavigatie = {
 	args: {
-		variant: 'simple',
+		appearance: 'simple',
 		type: 'list',
 	},
 	render: (args: Record<string, any>) => html`
 		<nldd-list
-			variant=${args.variant}
+			appearance=${args.appearance}
 			type=${args.type}
 		>
 			<nldd-list-item button><nldd-text-cell text="Profiel"></nldd-text-cell></nldd-list-item>
@@ -140,12 +140,12 @@ export const Pijltjesnavigatie = {
 export const PijltjesnavigatieMetControls = {
 	name: 'Pijltjesnavigatie met controls',
 	args: {
-		variant: 'simple',
+		appearance: 'simple',
 		type: 'list',
 	},
 	render: (args: Record<string, any>) => html`
 		<nldd-list
-			variant=${args.variant}
+			appearance=${args.appearance}
 			type=${args.type}
 		>
 			${['NL-00001', 'NL-00002', 'NL-00003'].map((label) => html`
@@ -186,24 +186,24 @@ export const PijltjesnavigatieMetControls = {
 	},
 };
 
-export const Varianten = {
+export const Appearances = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 32px;">
-			<nldd-list variant="simple">
+			<nldd-list appearance="simple">
 				<nldd-list-item><nldd-text-cell text="Simple — item 1"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Simple — item 2"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Simple — item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
 
-			<nldd-list variant="box-tinted">
+			<nldd-list appearance="box-tinted">
 				<nldd-list-item><nldd-text-cell text="Box (default: tinted bg + border) — item 1"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Box — item 2"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Box — item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
 
 			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px;">
-				<nldd-list variant="box-base">
-					<nldd-list-item><nldd-text-cell text='variant="box-base" — item 1'></nldd-text-cell></nldd-list-item>
+				<nldd-list appearance="box-base">
+					<nldd-list-item><nldd-text-cell text='appearance="box-base" — item 1'></nldd-text-cell></nldd-list-item>
 					<nldd-list-item><nldd-text-cell text="op een al getinte pagina — item 2"></nldd-text-cell></nldd-list-item>
 					<nldd-list-item><nldd-text-cell text="item 3"></nldd-text-cell></nldd-list-item>
 				</nldd-list>
@@ -214,7 +214,7 @@ export const Varianten = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Drie varianten: `simple` (platte strip, geen chrome), `box-tinted` (framed card met afgeronde hoeken en border ring) en `box-base`, voor een lijst op een al getinte parent. Eén attribuut, omdat de drie elkaar uitsluiten.',
+				story: 'Drie appearances: `simple` (platte strip, geen chrome), `box-tinted` (framed card met afgeronde hoeken en border ring) en `box-base`, voor een lijst op een al getinte parent. Eén attribuut, omdat de drie elkaar uitsluiten.',
 			},
 		},
 	},
@@ -222,7 +222,7 @@ export const Varianten = {
 
 export const MetMeerdereKolommen = {
 	render: () => html`
-		<nldd-list variant="box-tinted">
+		<nldd-list appearance="box-tinted">
 			<nldd-list-item button>
 				<nldd-icon-cell
 					size="24"
@@ -283,7 +283,7 @@ export const MetMeerdereKolommen = {
 
 export const MetInteractieveRijen = {
 	render: () => html`
-		<nldd-list variant="box-tinted">
+		<nldd-list appearance="box-tinted">
 			<nldd-list-item button>
 				<nldd-text-cell text="Knop-item"></nldd-text-cell>
 			</nldd-list-item>
@@ -312,7 +312,7 @@ export const Navigatie = {
 		return html`
 			<nldd-list
 				type="navigation"
-				variant="box-tinted"
+				appearance="box-tinted"
 				aria-label="Hoofdmenu"
 				@click=${onClick}
 			>
@@ -338,9 +338,9 @@ export const Navigatie = {
 
 // Shared imperative builder for the listbox stories: the consumer's filter
 // handler toggles [hidden] on items in response to the list's `input` event
-// (a stateless Lit template cannot). Parameterised by variant so the box and
+// (a stateless Lit template cannot). Parameterised by appearance so the box and
 // simple stories share one implementation (search field, toolbar filter, scroll).
-const buildListbox = (variant: 'box' | 'simple') => {
+const buildListbox = (appearance: 'box' | 'simple') => {
 	// Consumer's own data: a searchable label plus a category the toolbar filters on.
 	const data = [
 		{ label: 'Aardappelen', category: 'groente' },
@@ -401,7 +401,7 @@ const buildListbox = (variant: 'box' | 'simple') => {
 	render(html`
 		<nldd-list
 			type="listbox"
-			variant=${variant}
+			appearance=${appearance}
 			height="280px"
 			@input=${onInput}
 			@click=${onClick}
@@ -462,7 +462,7 @@ export const ListboxEenvoudig = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Dezelfde filterbare listbox als `Listbox` (inclusief de toolbar-filter en scroll), maar met `variant="simple"`: een platte strip zonder box-kader. Handig om de highlight-indicator, de afgeronde hoeken en de uitlijning van de opties t.o.v. het zoekveld in de simple-variant te vergelijken met de box-variant.',
+				story: 'Dezelfde filterbare listbox als `Listbox` (inclusief de toolbar-filter en scroll), maar met `appearance="simple"`: een platte strip zonder box-kader. Handig om de highlight-indicator, de afgeronde hoeken en de uitlijning van de opties t.o.v. het zoekveld in de simple-variant te vergelijken met de box-variant.',
 			},
 		},
 	},
@@ -494,7 +494,7 @@ export const Herschikbaar = {
 		const el = document.createElement('div');
 		render(html`
 			<nldd-list
-				variant="box-tinted"
+				appearance="box-tinted"
 				reorderable
 				@nldd-reorder=${onReorder}
 			>
@@ -532,7 +532,7 @@ export const Herschikbaar = {
 
 export const Leeg = {
 	render: () => html`
-		<nldd-list variant="box-tinted">
+		<nldd-list appearance="box-tinted">
 			<nldd-inline-dialog
 				slot="empty"
 				icon="search"
@@ -541,7 +541,7 @@ export const Leeg = {
 			>
 				<nldd-button
 					slot="actions"
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Filters wissen"
 				></nldd-button>
 			</nldd-inline-dialog>
@@ -560,7 +560,7 @@ export const Leeg = {
 export const LeegZonderSlot = {
 	name: 'Leeg: slot niet gevuld',
 	render: () => html`
-		<nldd-list variant="box-tinted"></nldd-list>
+		<nldd-list appearance="box-tinted"></nldd-list>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -592,7 +592,7 @@ export const Radiogroep = {
 		return html`
 		<nldd-list
 			type="radiogroup"
-			variant="box-tinted"
+			appearance="box-tinted"
 			accessible-label="Niveau"
 			@change=${onChange}
 		>
@@ -665,7 +665,7 @@ export const Formulier = {
 	render: () => html`
 		<nldd-list
 			type="form"
-			variant="box-tinted"
+			appearance="box-tinted"
 			accessible-label="Eigenschappen"
 		>
 			<nldd-list-item>
@@ -714,7 +714,7 @@ export const Formulier = {
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-cell width="fit-content">
 					<nldd-button
-						variant="secondary"
+						appearance="secondary"
 						size="sm"
 						expandable
 						popup-type="menu"

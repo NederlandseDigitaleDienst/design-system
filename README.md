@@ -23,7 +23,7 @@ import { NLDDButton, NLDDCheckbox, NLDDSwitch } from '@nldd/design-system';
 
 ```html
 <!-- Gebruik in HTML -->
-<nldd-button variant="accent-filled" text="Opslaan"></nldd-button>
+<nldd-button appearance="accent-filled" text="Opslaan"></nldd-button>
 <nldd-checkbox-field label="Akkoord met voorwaarden"></nldd-checkbox-field>
 <nldd-switch-field label="Meldingen inschakelen"></nldd-switch-field>
 ```
@@ -93,7 +93,7 @@ npm run storybook
 | Attribuut          | Type    | Default          | Beschrijving                                                                                                                                             |
 | ------------------ | ------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `text`             | string  | `''`             | Tekst van de button                                                                                                                                      |
-| `variant`          | string  | `neutral-tinted` | `primary`, `secondary`, `destructive`, `accent-filled`, `accent-transparent`, `neutral-tinted`, `neutral-transparent`, `critical-tinted`, `critical-transparent` |
+| `appearance`       | string  | `neutral-tinted` | `primary`, `secondary`, `destructive`, `accent-filled`, `accent-transparent`, `neutral-tinted`, `neutral-base`, `neutral-transparent`, `critical-tinted`, `critical-transparent`, `inherit-filled`, `inherit-tinted` |
 | `size`             | string  | `md`             | `xs`, `sm`, `md`                                                                                                                                         |
 | `disabled`         | boolean | `false`          | Uitgeschakelde staat                                                                                                                                     |
 | `type`             | string  | `button`         | `button`, `submit`, `reset`                                                                                                                              |

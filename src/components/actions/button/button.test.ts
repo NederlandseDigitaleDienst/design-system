@@ -283,10 +283,10 @@ describe('nldd-button – icon attributes', () => {
 		expect(getComputedStyle(disclosure).display).not.toBe('none');
 	});
 
-	it('accepts the neutral-base variant', async () => {
-		el = await fixture<NLDDButton>('<nldd-button text="X" variant="neutral-base"></nldd-button>');
+	it('accepts the neutral-base appearance', async () => {
+		el = await fixture<NLDDButton>('<nldd-button text="X" appearance="neutral-base"></nldd-button>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('variant')).toBe('neutral-base');
+		expect(el.getAttribute('appearance')).toBe('neutral-base');
 	});
 
 	it('renders start-icon slot when start-icon attribute is not set', async () => {

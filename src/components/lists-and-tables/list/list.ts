@@ -12,7 +12,7 @@ import '../../actions/icon-button/icon-button.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';
 
-export type ListVariant = 'simple' | 'box-tinted' | 'box-base';
+export type ListAppearance = 'simple' | 'box-tinted' | 'box-base';
 export type ListType = 'list' | 'navigation' | 'listbox' | 'tree' | 'form' | 'radiogroup';
 
 export interface NLDDReorderEventDetail {
@@ -160,7 +160,7 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  *
  * @element nldd-list
  *
- * @attr {'simple'|'box-tinted'|'box-base'} variant - Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)
+ * @attr {'simple'|'box-tinted'|'box-base'} appearance - Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)
  * @attr {'list'|'navigation'|'listbox'|'tree'|'form'|'radiogroup'} type - A11y role and behavior (default 'list'). See the docblock above.
  * @attr {'always'|'on-touch'|'never'} dividers - When to draw the lines between the items (default 'always'). `on-touch` draws them only where the primary input is touch, under `(pointer: coarse)`: a pointer has the hover highlight to tell one row from the next and a finger has nothing, so the line earns its place in the one case and is clutter in the other. `never` hides them everywhere
  * @attr {string} height - Listbox only: caps the options' scroll region at this CSS length (e.g. '320px'). Unset means no cap.
@@ -184,8 +184,8 @@ export class NLDDList extends LitElement {
 	/** Visual style of the list. `simple` is a plain vertical strip with
 	 *  no chrome (no rounded corners, no fill, no border); `box` is a
 	 *  framed card with rounded corners, fill, and an inset border ring. */
-	@property({ reflect: true, converter: reflectNonDefault<ListVariant>('simple') })
-	variant: ListVariant = 'simple';
+	@property({ reflect: true, converter: reflectNonDefault<ListAppearance>('simple') })
+	appearance: ListAppearance = 'simple';
 
 	/** A11y semantics. See class docblock. */
 	@property({ reflect: true, converter: reflectNonDefault<ListType>('list') })
@@ -410,7 +410,7 @@ export class NLDDList extends LitElement {
 			this._updateItems();
 			this._warnArrowNav();
 		}
-		if (changed.has('variant')) {
+		if (changed.has('appearance')) {
 			this._updateItemContext();
 		}
 		if (changed.has('type')) {
@@ -518,7 +518,7 @@ export class NLDDList extends LitElement {
 
 	private _contextScheduled = false;
 
-	/** Push the list's variant + type onto every item, deferred to a microtask:
+	/** Push the list's appearance + type onto every item, deferred to a microtask:
 	 *  _updateItems runs inside the update lifecycle (firstUpdated/updated), and
 	 *  setting the items' reactive state there would trip Lit's change-in-update
 	 *  warning. Coalesced so repeated item updates schedule it only once. */
@@ -531,13 +531,13 @@ export class NLDDList extends LitElement {
 		});
 	}
 
-	/** The list owns variant + type; every item mirrors them (is-boxed styling and
+	/** The list owns appearance + type; every item mirrors them (is-boxed styling and
 	 *  the option/listitem role). Pushing from the list, not a per-item observer,
-	 *  means a runtime variant/type switch, or a freshly added item, always tracks
+	 *  means a runtime appearance/type switch, or a freshly added item, always tracks
 	 *  the list. */
 	private _applyItemContext() {
 		this._getItems().forEach((item) => {
-			item._applyVariant(this.variant);
+			item._applyAppearance(this.appearance);
 			item._applyParentType(this.type);
 		});
 	}
@@ -553,7 +553,7 @@ export class NLDDList extends LitElement {
 			: Array.from(this.querySelectorAll<NLDDListItem>(':scope > nldd-list-item'));
 		this._isEmpty = items.length === 0 || items.every(item => item.hasAttribute('hidden'));
 		// Nothing in it and nothing said about that is not a thing on the page.
-		// Drawing the surface anyway makes "nothing" look different per variant:
+		// Drawing the surface anyway makes "nothing" look different per appearance:
 		// invisible on a plain list, an empty tinted bar on a boxed one, which
 		// reads as a skeleton that never loaded.
 		this._hasItems = items.length > 0;

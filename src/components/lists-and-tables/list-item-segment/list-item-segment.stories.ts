@@ -321,7 +321,7 @@ export const InEenBoxedList = {
 	name: 'In een boxed list',
 	render: () => html`
 		<nldd-list
-			variant="box-tinted"
+			appearance="box-tinted"
 			type="tree"
 			accessible-label="Opdrachtgevers"
 		>

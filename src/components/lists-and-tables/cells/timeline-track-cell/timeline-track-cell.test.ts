@@ -82,19 +82,19 @@ describe('nldd-timeline-track-cell', () => {
 		expect(el.hasAttribute('direction')).toBe(false);
 	});
 
-	it('reflects variant so the styles can size the marker', async () => {
+	it('reflects level so the styles can size the marker', async () => {
 		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell></nldd-timeline-track-cell>');
 		await waitForUpdate(el);
-		expect(el.hasAttribute('variant')).toBe(false);
+		expect(el.hasAttribute('level')).toBe(false);
 
-		el.variant = 'minor';
+		el.level = 'minor';
 		await waitForUpdate(el);
 
-		expect(el.getAttribute('variant')).toBe('minor');
+		expect(el.getAttribute('level')).toBe('minor');
 	});
 
 	it('keeps a minor marker empty, whatever content it is given', async () => {
-		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell status="past" size="md" variant="minor" text="2" icon="check-mark">x</nldd-timeline-track-cell>');
+		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell status="past" size="md" level="minor" text="2" icon="check-mark">x</nldd-timeline-track-cell>');
 		await waitForUpdate(el);
 
 		expect(el.shadowRoot!.querySelector('.timeline-track-cell__text')).toBeNull();
@@ -124,7 +124,7 @@ describe('nldd-timeline-track-cell', () => {
 		const onder = el.shadowRoot!.querySelector('.timeline-track-cell__bottom-line')!;
 		expect(getComputedStyle(onder).bottom).toBe('-1px');
 
-		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell variant="none"></nldd-timeline-track-cell>');
+		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell level="none"></nldd-timeline-track-cell>');
 		el.style.setProperty('--semantics-dividers-thickness', '1px');
 		await waitForUpdate(el);
 		const vol = el.shadowRoot!.querySelector('.timeline-track-cell__full-line')!;
@@ -132,7 +132,7 @@ describe('nldd-timeline-track-cell', () => {
 	});
 
 	it('renders a full line for status=none', async () => {
-		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell variant="none"></nldd-timeline-track-cell>');
+		el = await fixture<NLDDTimelineTrackCell>('<nldd-timeline-track-cell level="none"></nldd-timeline-track-cell>');
 		await waitForUpdate(el);
 
 		expect(el.shadowRoot!.querySelector('.timeline-track-cell__full-line')).not.toBeNull();
@@ -266,25 +266,25 @@ describe('nldd-timeline-track-cell with only a line', () => {
 		getComputedStyle(cell.shadowRoot!.querySelector('.timeline-track-cell__full-line') as HTMLElement).backgroundColor;
 
 	it('draws the line as covered by default', async () => {
-		el = await fixture(`<nldd-timeline-track-cell variant="none" ${COLORS}></nldd-timeline-track-cell>`);
+		el = await fixture(`<nldd-timeline-track-cell level="none" ${COLORS}></nldd-timeline-track-cell>`);
 		await waitForUpdate(el);
 		expect(fullLine(el)).toBe('rgb(1, 2, 3)');
 	});
 
 	it('draws it as still ahead on `line="none"`', async () => {
-		el = await fixture(`<nldd-timeline-track-cell variant="none" line="none" ${COLORS}></nldd-timeline-track-cell>`);
+		el = await fixture(`<nldd-timeline-track-cell level="none" line="none" ${COLORS}></nldd-timeline-track-cell>`);
 		await waitForUpdate(el);
 		expect(fullLine(el)).toBe('rgb(4, 5, 6)');
 	});
 
 	it('draws nothing at all on `position="only"`, where the track has ended', async () => {
-		el = await fixture(`<nldd-timeline-track-cell variant="none" position="only" ${COLORS}></nldd-timeline-track-cell>`);
+		el = await fixture(`<nldd-timeline-track-cell level="none" position="only" ${COLORS}></nldd-timeline-track-cell>`);
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.timeline-track-cell__full-line')).toBeNull();
 	});
 
 	it('has no marker', async () => {
-		el = await fixture('<nldd-timeline-track-cell variant="none"></nldd-timeline-track-cell>');
+		el = await fixture('<nldd-timeline-track-cell level="none"></nldd-timeline-track-cell>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.timeline-track-cell__marker')).toBeNull();
 	});
@@ -303,13 +303,13 @@ describe('nldd-timeline-track-cell current without a dot', () => {
 		getComputedStyle(cell.shadowRoot!.querySelector('.timeline-track-cell__full-line') as HTMLElement).backgroundColor;
 
 	it('leans the way the timeline runs: still ahead going down', async () => {
-		el = await fixture(`<nldd-timeline-track-cell variant="none" status="current" ${COLORS}></nldd-timeline-track-cell>`);
+		el = await fixture(`<nldd-timeline-track-cell level="none" status="current" ${COLORS}></nldd-timeline-track-cell>`);
 		await waitForUpdate(el);
 		expect(fullLine(el)).toBe('rgb(4, 5, 6)');
 	});
 
 	it('and behind you going up', async () => {
-		el = await fixture(`<nldd-timeline-track-cell variant="none" status="current" direction="up" ${COLORS}></nldd-timeline-track-cell>`);
+		el = await fixture(`<nldd-timeline-track-cell level="none" status="current" direction="up" ${COLORS}></nldd-timeline-track-cell>`);
 		await waitForUpdate(el);
 		expect(fullLine(el)).toBe('rgb(1, 2, 3)');
 	});

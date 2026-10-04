@@ -18,11 +18,11 @@ nldd-box                     background="critical", de zone waar de actie woont
   └─ nldd-container          padding, gap
        ├─ nldd-title         heading-level, wat de zone is
        ├─ nldd-rich-text     wat er gebeurt als je de knop gebruikt
-       └─ nldd-button        variant="destructive", opent de dialoog
+       └─ nldd-button        appearance="destructive", opent de dialoog
 
 nldd-modal-dialog            open, variant="alert", text, supporting-text
-  ├─ nldd-button             slot="actions", de uitweg, variant="primary"
-  └─ nldd-button             slot="actions", de actie, variant="destructive"
+  ├─ nldd-button             slot="actions", de uitweg, appearance="primary"
+  └─ nldd-button             slot="actions", de actie, appearance="destructive"
 ```
 
 <Canvas of={Stories.Standaard} />

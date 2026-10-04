@@ -96,11 +96,11 @@ const footer = html`
 	<nldd-container padding="16">
 		<nldd-button-group orientation="horizontal">
 			<nldd-button
-				variant="primary"
+				appearance="primary"
 				text="Opslaan"
 			></nldd-button>
 			<nldd-button
-				variant="secondary"
+				appearance="secondary"
 				text="Annuleren"
 			></nldd-button>
 		</nldd-button-group>

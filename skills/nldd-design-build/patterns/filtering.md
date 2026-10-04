@@ -65,7 +65,7 @@ nldd-page
       ></nldd-title>
       <nldd-spacer size="4"></nldd-spacer>
       <nldd-list
-        variant="simple"
+        appearance="simple"
         dividers="never"
         accessible-label="Status"
       >
@@ -112,7 +112,7 @@ nldd-page
       ></nldd-title>
       <nldd-spacer size="4"></nldd-spacer>
       <nldd-list
-        variant="simple"
+        appearance="simple"
         dividers="never"
         accessible-label="Team"
       >
@@ -171,7 +171,7 @@ nldd-page
         slot="end"
       >
         <nldd-button
-          variant="secondary"
+          appearance="secondary"
           start-icon="filter"
           text="Filters"
         ></nldd-button>

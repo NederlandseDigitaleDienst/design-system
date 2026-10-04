@@ -42,7 +42,7 @@ export function searchFieldTemplate(component: NLDDSearchField): TemplateResult 
 					${component.value ? html`
 						<div class="search-field__clear-button">
 							<nldd-icon-button
-								variant="neutral-transparent"
+								appearance="neutral-transparent"
 								size=${buttonSize}
 								icon="dismiss"
 								text=${component._t('components.search-field.clear-action')}
@@ -53,7 +53,7 @@ export function searchFieldTemplate(component: NLDDSearchField): TemplateResult 
 					${component.showSearchButton ? html`
 						<div class="search-field__search-button">
 							<nldd-button
-								variant="neutral-tinted"
+								appearance="neutral-tinted"
 								size=${buttonSize}
 								text=${component._t('components.search-field.search-action')}
 								@click=${component._handleSearch}

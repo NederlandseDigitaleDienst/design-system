@@ -142,22 +142,22 @@ describe('nldd-button-bar – child building & attribute propagation', () => {
 		expect(el.querySelector('nldd-icon-button')!.hasAttribute('no-highlight-border')).toBe(true);
 	});
 
-	it('propagates initial variant to button children', async () => {
+	it('propagates initial appearance to button children', async () => {
 		el = await fixture<NLDDButtonBar>(`
-			<nldd-button-bar variant="accent-filled">
+			<nldd-button-bar appearance="accent-filled">
 				<nldd-button text="A"></nldd-button>
 				<nldd-icon-button icon="x" text="Close"></nldd-icon-button>
 			</nldd-button-bar>
 		`);
 		await waitForUpdate(el);
 
-		expect(el.querySelector('nldd-button')!.getAttribute('variant')).toBe('accent-filled');
-		expect(el.querySelector('nldd-icon-button')!.getAttribute('variant')).toBe('accent-filled');
+		expect(el.querySelector('nldd-button')!.getAttribute('appearance')).toBe('accent-filled');
+		expect(el.querySelector('nldd-icon-button')!.getAttribute('appearance')).toBe('accent-filled');
 	});
 
-	it('propagates variant change to children', async () => {
+	it('propagates appearance change to children', async () => {
 		el = await fixture<NLDDButtonBar>(`
-			<nldd-button-bar variant="neutral-tinted">
+			<nldd-button-bar appearance="neutral-tinted">
 				<nldd-button text="A"></nldd-button>
 			</nldd-button-bar>
 		`);
@@ -165,12 +165,12 @@ describe('nldd-button-bar – child building & attribute propagation', () => {
 
 		// neutral-tinted is the button's default, so it is kept out of the DOM;
 		// the propagated value is the source of truth on the property.
-		expect((el.querySelector('nldd-button') as unknown as { variant: string }).variant).toBe('neutral-tinted');
+		expect((el.querySelector('nldd-button') as unknown as { appearance: string }).appearance).toBe('neutral-tinted');
 
-		el.variant = 'accent-filled';
+		el.appearance = 'accent-filled';
 		await waitForUpdate(el);
 
-		expect(el.querySelector('nldd-button')!.getAttribute('variant')).toBe('accent-filled');
+		expect(el.querySelector('nldd-button')!.getAttribute('appearance')).toBe('accent-filled');
 	});
 
 	it('propagates size change to children', async () => {

@@ -19,7 +19,7 @@
         },
         {
           "kind": "class",
-          "description": "A horizontal container for grouping buttons with a neutral background. Automatically propagates its size and variant to all child nldd-button and nldd-icon-button elements. Renders nldd-button-bar-divider elements as internal dividers — no separate component needed.",
+          "description": "A horizontal container for grouping buttons with a neutral background. Automatically propagates its size and appearance to all child nldd-button and nldd-icon-button elements. Renders nldd-button-bar-divider elements as internal dividers — no separate component needed.",
           "name": "NLDDButtonBar",
           "members": [
             {
@@ -34,12 +34,12 @@
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
                 "text": "string"
               },
               "default": "'neutral-tinted'",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -64,13 +64,13 @@
               "description": "Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style)."
             },
             {
-              "name": "variant",
+              "name": "appearance",
               "type": {
                 "text": "string"
               },
               "default": "'neutral-tinted'",
-              "fieldName": "variant",
-              "description": "Button variant (default: 'neutral-tinted')"
+              "fieldName": "appearance",
+              "description": "Visual style of the buttons (default: 'neutral-tinted')"
             },
             {
               "name": "disabled",
@@ -230,12 +230,12 @@
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "Variant"
+                "text": "Appearance"
               },
               "default": "'neutral-tinted'",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -419,7 +419,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Removes the per-variant highlight border (e.g. when nldd-button-bar draws a single group border instead).",
+              "description": "Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead).",
               "attribute": "no-highlight-border",
               "reflects": true
             },
@@ -546,13 +546,13 @@
           ],
           "attributes": [
             {
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "Variant"
+                "text": "Appearance"
               },
               "default": "'neutral-tinted'",
-              "fieldName": "variant",
-              "description": "Button variant: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted'. The inherit variants derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-parent-background-color) as the label color, with a white/black contrast flip as a fallback."
+              "fieldName": "appearance",
+              "description": "Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-parent-background-color) as the label color, with a white/black contrast flip as a fallback."
             },
             {
               "name": "size",
@@ -694,7 +694,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Removes the per-variant highlight border (e.g. when nldd-button-bar draws a single group border instead).",
+              "description": "Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead).",
               "fieldName": "noHighlightBorder"
             },
             {
@@ -846,12 +846,12 @@
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "Variant"
+                "text": "Appearance"
               },
               "default": "'neutral-tinted'",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -903,7 +903,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Removes the per-variant highlight border (e.g. when nldd-button-bar draws a single group border instead).",
+              "description": "Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead).",
               "attribute": "no-highlight-border",
               "reflects": true
             },
@@ -1104,13 +1104,13 @@
           ],
           "attributes": [
             {
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "Variant"
+                "text": "Appearance"
               },
               "default": "'neutral-tinted'",
-              "fieldName": "variant",
-              "description": "Button variant: 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted' | 'primary' | 'secondary' | 'destructive'. The inherit variants derive their colors from currentColor, for buttons on colored surfaces."
+              "fieldName": "appearance",
+              "description": "Visual style, color included: 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted' | 'primary' | 'secondary' | 'destructive'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces."
             },
             {
               "name": "size",
@@ -1154,7 +1154,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Removes the per-variant highlight border (e.g. when a control group draws a single border instead).",
+              "description": "Removes the per-appearance highlight border (e.g. when a control group draws a single border instead).",
               "fieldName": "noHighlightBorder"
             },
             {
@@ -2167,12 +2167,12 @@
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
                 "text": "string"
               },
               "default": "'neutral-tinted'",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -2248,13 +2248,13 @@
               "description": "Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')"
             },
             {
-              "name": "variant",
+              "name": "appearance",
               "type": {
                 "text": "string"
               },
               "default": "'neutral-tinted'",
-              "fieldName": "variant",
-              "description": "Button variant (default: 'neutral-tinted')"
+              "fieldName": "appearance",
+              "description": "Visual style (default: 'neutral-tinted')"
             },
             {
               "name": "disabled",
@@ -3441,13 +3441,13 @@
           "members": [
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "CodeViewerVariant"
+                "text": "CodeViewerAppearance"
               },
               "default": "'box-tinted'",
               "description": "Visual style. The `box` values are a framed card and name the surface they\nfill with; `simple` drops the frame.",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -3521,13 +3521,13 @@
           ],
           "attributes": [
             {
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "CodeViewerVariant"
+                "text": "CodeViewerAppearance"
               },
               "default": "'box-tinted'",
               "description": "Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.",
-              "fieldName": "variant"
+              "fieldName": "appearance"
             },
             {
               "name": "language",
@@ -4464,13 +4464,13 @@
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "Variant"
+                "text": "Appearance"
               },
               "default": "'box'",
               "description": "'box' (default) renders each key as a keycap with a fill and highlight\nborder. 'simple' renders the keys as plain text with separators — lighter,\nfor inline use such as inside a menu item.",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -4542,13 +4542,13 @@
               "description": "Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; in the box variant the keycaps then scale along in em."
             },
             {
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "Variant"
+                "text": "Appearance"
               },
               "default": "'box'",
               "description": "'box' (default) shows each key as a keycap with a fill and a highlight edge. 'simple' shows the keys as plain text with separators: lighter, for inline use such as in a menu item.",
-              "fieldName": "variant"
+              "fieldName": "appearance"
             },
             {
               "name": "color",
@@ -5565,7 +5565,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment=\"right\"` or `\"left\"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `<nldd-form>`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant. <nldd-form label-alignment=\"right\"> <nldd-form-field>...</nldd-form-field> <nldd-form-actions> <nldd-button-group> <nldd-button variant=\"primary\" type=\"submit\" text=\"Bewaar\"></nldd-button> </nldd-button-group> </nldd-form-actions> </nldd-form>",
+          "description": "A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment=\"right\"` or `\"left\"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `<nldd-form>`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant. <nldd-form label-alignment=\"right\"> <nldd-form-field>...</nldd-form-field> <nldd-form-actions> <nldd-button-group> <nldd-button appearance=\"primary\" type=\"submit\" text=\"Bewaar\"></nldd-button> </nldd-button-group> </nldd-form-actions> </nldd-form>",
           "name": "NLDDFormActions",
           "members": [
             {
@@ -8105,7 +8105,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A monospace editor for code, YAML, JSON and other technical content, built on CodeMirror 6 (via NLDDCodeMirrorElement). Visually pairs with nldd-code-viewer for a matching read-only surface. Default `variant=\"simple\"` is a bare, flush editor (no frame, no focus ring) for use inside an nldd-form-field or a consumer composition that owns its own chrome and focus treatment; the caret is rendered as a prominent accent as the focus cue. `variant=\"input-field\"` adds the framed surface (border ring, tinted fill, inner padding, radius) and a focus ring for standalone use. The simple variant has no surrounding space of its own: let a layout container own the spacing and forward clicks with `focusFromPoint()` so clicking the padding still starts editing. Optional `language` enables lazy syntax highlighting; `line-numbers` adds a gutter (click a number to move the caret to that line).",
+          "description": "A monospace editor for code, YAML, JSON and other technical content, built on CodeMirror 6 (via NLDDCodeMirrorElement). Visually pairs with nldd-code-viewer for a matching read-only surface. Default `appearance=\"simple\"` is a bare, flush editor (no frame, no focus ring) for use inside an nldd-form-field or a consumer composition that owns its own chrome and focus treatment; the caret is rendered as a prominent accent as the focus cue. `appearance=\"input-field\"` adds the framed surface (border ring, tinted fill, inner padding, radius) and a focus ring for standalone use. The simple variant has no surrounding space of its own: let a layout container own the spacing and forward clicks with `focusFromPoint()` so clicking the padding still starts editing. Optional `language` enables lazy syntax highlighting; `line-numbers` adds a gutter (click a number to move the caret to that line).",
           "name": "NLDDCodeEditor",
           "members": [
             {
@@ -8226,12 +8226,12 @@
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "CodeEditorVariant"
+                "text": "CodeEditorAppearance"
               },
               "default": "'simple'",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -8579,12 +8579,12 @@
               "description": "'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)"
             },
             {
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "CodeEditorVariant"
+                "text": "CodeEditorAppearance"
               },
               "default": "'simple'",
-              "fieldName": "variant",
+              "fieldName": "appearance",
               "description": "'simple' (default, bare) | 'input-field' (framed surface)"
             },
             {
@@ -18282,7 +18282,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `variant=\"simple\"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `variant=\"input-field\"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a dashed underline, light tint and a count badge without touching the underlying text.",
+          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `appearance=\"simple\"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `appearance=\"input-field\"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a dashed underline, light tint and a count badge without touching the underlying text.",
           "name": "NLDDTextEditor",
           "members": [
             {
@@ -18403,12 +18403,12 @@
             },
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "TextEditorVariant"
+                "text": "TextEditorAppearance"
               },
               "default": "'simple'",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -19123,12 +19123,12 @@
               "description": "'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)"
             },
             {
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "TextEditorVariant"
+                "text": "TextEditorAppearance"
               },
               "default": "'simple'",
-              "fieldName": "variant",
+              "fieldName": "appearance",
               "description": "'simple' (default, bare) | 'input-field' (framed surface)"
             },
             {
@@ -30330,18 +30330,18 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A cell component for displaying timeline track indicators in lists. Shows a vertical line with a dot indicating timeline position and state. The row's block padding belongs to the cell itself (via `--context-cell-padding-block`), so the line spans the cell's own box edge to edge and consecutive steps connect without gaps. By default the cell is a bare track: a line with a dot per row, for a timeline of events. With `variant=\"step\"` the dot grows big enough for a number or an icon and you have a list of steps under each other, the vertical counterpart of `nldd-step-indicator`. The size belongs to the variant rather than to the content: every dot in a list is the same size, or the track would jump.",
+          "description": "A cell component for displaying timeline track indicators in lists. Shows a vertical line with a dot indicating timeline position and state. The row's block padding belongs to the cell itself (via `--context-cell-padding-block`), so the line spans the cell's own box edge to edge and consecutive steps connect without gaps. By default the cell is a bare track: a line with a dot per row, for a timeline of events. With `size=\"md\"` the dot grows big enough for a number or an icon and you have a list of steps under each other, the vertical counterpart of `nldd-step-indicator`. The size belongs to the lane rather than to the content: every dot in a list is the same size, or the track would jump.",
           "name": "NLDDTimelineTrackCell",
           "members": [
             {
               "kind": "field",
-              "name": "variant",
+              "name": "level",
               "type": {
-                "text": "Variant"
+                "text": "Level"
               },
               "default": "'major'",
               "description": "What stands in the lane: a whole dot, a smaller one, or nothing.\n\nA rank rather than a measurement — the cell picks the sizes, so the scale\ncan change later without every consumer following. `minor` is a row that\nbelongs under the one above it, and its dot stays empty: a number would not\nfit and would make the row a step of its own, so carry that hierarchy in\nthe row instead, with an `nldd-text-cell` rather than an `nldd-title-cell`.\n`none` is a row that carries what a step holds rather than being one.",
-              "attribute": "variant",
+              "attribute": "level",
               "reflects": true
             },
             {
@@ -30453,13 +30453,13 @@
           ],
           "attributes": [
             {
-              "name": "variant",
+              "name": "level",
               "type": {
-                "text": "Variant"
+                "text": "Level"
               },
               "default": "'major'",
               "description": "What stands in the lane: a whole dot (`major`, the default), a smaller one for a row that belongs under the one above it (`minor`), or nothing at all (`none`) for a row that carries what a step holds rather than being a step. A `none` row keeps its `size` and its `status`, so it stays in the same lane and the track runs on in the right color",
-              "fieldName": "variant"
+              "fieldName": "level"
             },
             {
               "name": "status",
@@ -30495,7 +30495,7 @@
               },
               "default": "'between'",
               "fieldName": "position",
-              "description": "Place in the series (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `variant=\"none\"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it"
+              "description": "Place in the series (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level=\"none\"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it"
             },
             {
               "name": "line",
@@ -30503,7 +30503,7 @@
                 "text": "Line"
               },
               "default": "'auto'",
-              "description": "Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line=\"both\"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `variant=\"none\"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you",
+              "description": "Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line=\"both\"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `level=\"none\"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you",
               "fieldName": "line"
             },
             {
@@ -31731,13 +31731,13 @@
           "members": [
             {
               "kind": "field",
-              "name": "variant",
+              "name": "appearance",
               "type": {
-                "text": "ListVariant"
+                "text": "ListAppearance"
               },
               "default": "'simple'",
               "description": "Visual style of the list. `simple` is a plain vertical strip with\nno chrome (no rounded corners, no fill, no border); `box` is a\nframed card with rounded corners, fill, and an inset border ring.",
-              "attribute": "variant",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -31818,12 +31818,12 @@
           "attributes": [
             {
               "type": {
-                "text": "ListVariant"
+                "text": "ListAppearance"
               },
               "description": "Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)",
-              "name": "variant",
+              "name": "appearance",
               "default": "'simple'",
-              "fieldName": "variant"
+              "fieldName": "appearance"
             },
             {
               "type": {

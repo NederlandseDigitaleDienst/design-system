@@ -26,7 +26,7 @@ export function topTitleBarTemplate(component: NLDDTopTitleBar) {
 					<div class="top-title-bar__back-button">
 						<div class="top-title-bar__text-back-button">
 							<nldd-button
-								variant="accent-transparent"
+								appearance="accent-transparent"
 								start-icon="chevron-left"
 								text=${component.backText}
 								href=${component.backHref || nothing}
@@ -36,7 +36,7 @@ export function topTitleBarTemplate(component: NLDDTopTitleBar) {
 						</div>
 						<div class="top-title-bar__icon-back-button">
 							<nldd-icon-button
-								variant="accent-transparent"
+								appearance="accent-transparent"
 								icon="chevron-left"
 								text=${component.backText}
 								accessible-label=${component.backText || nothing}
@@ -66,7 +66,7 @@ export function topTitleBarTemplate(component: NLDDTopTitleBar) {
 				${component.dismissText ? html`
 					<div class="top-title-bar__dismiss-button">
 						<nldd-button
-							variant="accent-transparent"
+							appearance="accent-transparent"
 							text=${component.dismissText}
 							@click=${component._handleDismiss}
 						></nldd-button>

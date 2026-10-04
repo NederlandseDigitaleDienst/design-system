@@ -124,11 +124,11 @@ const Template = (args: Record<string, any>) => html`
 		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-button-group orientation="horizontal">
 			<nldd-button
-				variant="inherit-filled"
+				appearance="inherit-filled"
 				text="Bekijk de regels"
 			></nldd-button>
 			<nldd-button
-				variant="inherit-tinted"
+				appearance="inherit-tinted"
 				text="Meer informatie"
 			></nldd-button>
 		</nldd-button-group>
