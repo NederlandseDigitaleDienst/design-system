@@ -64,4 +64,12 @@ describe('nldd-text', () => {
 		expect(Math.round(sm.getBoundingClientRect().width)).toBe(640);
 	});
 
+	// pretty keeps a single word off the last line. It is inherited, so the
+	// slotted text takes it from the host.
+	it('wraps the slotted text with text-wrap: pretty', async () => {
+		el = await fixture('<nldd-text><span>Toegewezen aan Yara</span></nldd-text>');
+		await waitForUpdate(el);
+		expect(getComputedStyle(el.querySelector('span')!).textWrapStyle).toBe('pretty');
+	});
+
 });

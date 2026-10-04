@@ -25,6 +25,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **Running text wraps with `text-wrap: pretty`, headings in `nldd-rich-text` with `balance`.** `nldd-text`, and the paragraphs, list items, definitions and quotes in `nldd-rich-text`, no longer end on a single word on their last line, as the cells and the status components already did. Headings in `nldd-rich-text` had `pretty` and now break into lines of even length, the way `nldd-title` does. Browsers without support, Firefox for now, break lines as before.
+
 - **`nldd-dropdown` fades a long option out instead of ending it with an ellipsis.** The field now shows its choice through the native `<select>`, and WebKit neither keeps that text out of the end padding nor draws an ellipsis there, so every browser fades the text before the icons. Two side effects: desktop Safari draws the options in its popup at the field's text size, 18px at `md` instead of 16px, and an `xs` dropdown shows 16px text on touch devices, because iOS zooms in on a smaller select when you tap it.
 
 ### Breaking
