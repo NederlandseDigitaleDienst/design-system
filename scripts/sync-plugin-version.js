@@ -1,10 +1,10 @@
 /**
- * Sync the Claude Code plugin version to the package version.
+ * Sync the plugin version to the package version.
  *
  * Claude Code caches a plugin by the version in `plugin.json`: if that version
  * does not change, consumers never re-fetch the bundled skill, no matter how
  * much its content changed. So the plugin version follows the package version
- * (the single source of truth), keeping both manifests in lockstep with every
+ * (the single source of truth), keeping every manifest in lockstep with every
  * release that touches the skill docs.
  */
 
@@ -42,6 +42,14 @@ function syncVersion(relPath, isSynced, setVersion) {
 
 syncVersion(
 	'.claude-plugin/plugin.json',
+	(d) => d.version === packageVersion,
+	(d) => {
+		d.version = packageVersion;
+	},
+);
+
+syncVersion(
+	'.cursor-plugin/plugin.json',
 	(d) => d.version === packageVersion,
 	(d) => {
 		d.version = packageVersion;

@@ -15,6 +15,14 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The plugin is now `nldd-design-system`, and it moved to the NLDD marketplace.** Install it from [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins) as `nldd-design-system@nldd`. That marketplace is tool-independent, and the plugin now ships a Cursor manifest next to the Claude Code one. An existing `nldd@nldd-plugins` install keeps working and keeps updating until 1 March 2027, when the marketplace in this repository goes away. The README has the four commands to move over.
+
+### Changed
+
+- **The long form of a skill name is `/nldd-design-system:nldd-design`**, no longer `/nldd:nldd-design`, because the prefix follows the plugin name. This holds for existing installs too. The short form (`/nldd-design`) is unchanged, and so is the skill an assistant picks by itself.
+
 ## [0.8.93](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.92...v0.8.93) (2026-09-30)
 
 # Changelog

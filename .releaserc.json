@@ -107,6 +107,7 @@
           "skills/nldd-design/design-guidelines.md",
           ".claude-plugin/plugin.json",
           ".claude-plugin/marketplace.json",
+          ".cursor-plugin/plugin.json",
           "publiccode.yml"
         ],
         "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"

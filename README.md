@@ -32,9 +32,9 @@ import { NLDDButton, NLDDCheckbox, NLDDSwitch } from '@nldd/design-system';
 
 Bekijk de live component documentatie: **https://nederlandsedigitaledienst.github.io/design-system/**
 
-## Claude Code plugin
+## Plugin voor AI-assistenten
 
-Deze repository is ook een Claude Code marketplace. De `nldd`-plugin geeft Claude de kennis om met `@nldd/design-system` te werken: de juiste tags, attributen, CSS-tokens en patronen. Hij levert vijf skills:
+De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/design-system` te werken: de juiste tags, attributen, CSS-tokens en patronen. Hij staat in de NLDD-marketplace, [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins), en werkt in Claude Code en in Cursor. Hij levert vijf skills:
 
 | Skill | Waarvoor |
 |-------|----------|
@@ -44,22 +44,54 @@ Deze repository is ook een Claude Code marketplace. De `nldd`-plugin geeft Claud
 | `nldd-design-upgrade` | Een applicatie die al op dit systeem draait naar een nieuwere versie brengen. |
 | `nldd-design-contribute` | Een wijziging voorstellen: een ontbrekend component, een patroon, of een bug. |
 
-Claude kiest zelf welke hij nodig heeft; aanroepen kan ook met `/nldd-design`, of met `/nldd:nldd-design` als een skill van je eigen project dezelfde naam draagt.
+De assistent kiest zelf welke hij nodig heeft. In Claude Code kun je er ook een aanroepen met `/nldd-design`, of met `/nldd-design-system:nldd-design` als een skill van je eigen project dezelfde naam draagt.
 
-Toevoegen en installeren:
+### Claude Code
 
 ```
-/plugin marketplace add NederlandseDigitaleDienst/design-system
-/plugin install nldd@nldd-plugins
+/plugin marketplace add NederlandseDigitaleDienst/ai-plugins
+/plugin install nldd-design-system@nldd
 ```
 
-Bijwerken naar een nieuwere versie doe je met `/plugin marketplace update nldd-plugins`.
+Bijwerken naar een nieuwere versie doe je met `/plugin marketplace update nldd`.
+
+### Cursor
+
+Importeer de marketplace via **Dashboard → Settings → Plugins → Import** met de repository `NederlandseDigitaleDienst/ai-plugins`, en zet daarna `nldd-design-system` aan.
+
+### Heb je de plugin al als `nldd@nldd-plugins`?
+
+Dan blijft hij werken. Deze repository is tot 1 maart 2027 ook zelf nog een Claude Code marketplace (`nldd-plugins`), en wie de plugin daaruit heeft krijgt dezelfde skills en dezelfde updates. Daarna verdwijnt die marketplace en krijg je geen updates meer, dus stap voor die tijd over:
+
+```
+/plugin marketplace add NederlandseDigitaleDienst/ai-plugins
+/plugin install nldd-design-system@nldd
+/plugin uninstall nldd@nldd-plugins
+/plugin marketplace remove nldd-plugins
+```
+
+Staat de plugin in de `.claude/settings.json` van een project, vervang dan daar de twee verwijzingen:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "nldd": {
+      "source": { "source": "github", "repo": "NederlandseDigitaleDienst/ai-plugins" }
+    }
+  },
+  "enabledPlugins": {
+    "nldd-design-system@nldd": true
+  }
+}
+```
+
+Een tijd lang de oude en de nieuwe tegelijk aan hebben kan geen kwaad: de skills verschijnen één keer.
+
+Eén ding verandert ook als je niet overstapt. De plugin zelf heet nu `nldd-design-system`, dus de lange vorm van een skillnaam is `/nldd-design-system:nldd-design` en niet meer `/nldd:nldd-design`. De korte vorm (`/nldd-design`) blijft gelijk.
 
 ### Kom je van een versie met één `nldd`-skill?
 
-De plugin heette altijd al `nldd` en blijft zo heten, dus je installatie en je `enabledPlugins` blijven werken. Wat veranderde zijn de **skills** erin: waar er één `nldd` was, zijn er nu vijf met een naam die zegt waar ze over gaan.
-
-Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee zonder foutmelding:
+Waar er één skill `nldd` was, zijn er nu vijf met een naam die zegt waar ze over gaan. Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee zonder foutmelding:
 
 1. in je eigen `CLAUDE.md`, `.claude/rules/*.md` of `AGENTS.md` ("gebruik de nldd skill"). Claude vindt hem niet en gaat verder zonder;
 2. in subagent-definities (`.claude/agents/*.md`) en hooks die op de naam matchen;
@@ -72,7 +104,7 @@ Eén zoekopdracht vindt ze:
 rg -n '\bnldd\b' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
 ```
 
-Laat `nldd@nldd-plugins` staan: dat is de pluginnaam en die klopt nog. Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwijzen.
+Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwijzen.
 
 ## Development setup
 
