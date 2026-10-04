@@ -25,7 +25,7 @@ Dit is de gedeelde naslag van het designsysteem. Hij hoort bij geen van beide we
 | iets voorstellen aan het systeem | `nldd-design-contribute`: hoe je een issue opbouwt |
 | het designsysteem zelf ontwikkelen | niet deze skills: die kennis zit als repo-locale skills in de repository, zie `nldd-design-contribute` |
 
-Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor (`/nldd:nldd-design`). Die tweede werkt altijd; de korte gaat naar een eigen skill van je project als die toevallig dezelfde naam draagt.
+Aanroepen kan met de korte naam (`/nldd-design`) of met de plugin ervoor (`/nldd-design-system:nldd-design`). Die tweede werkt altijd; de korte gaat naar een eigen skill van je project als die toevallig dezelfde naam draagt.
 
 ## Drie gewoonten die tijd schelen
 

@@ -15,9 +15,17 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The plugin is now `nldd-design-system`, and it moved to the NLDD marketplace.** Install it from [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins) as `nldd-design-system@nldd`. That marketplace is tool-independent, and the plugin now ships a Cursor manifest next to the Claude Code one. An existing `nldd@nldd-plugins` install keeps working and keeps updating until 1 March 2027, when the marketplace in this repository goes away. The README has the four commands to move over.
+
 ### Added
 
 - **`nldd-design-migrate` covers sites built by a static site generator** (MkDocs, Hugo, Eleventy). Leave the authors' Markdown alone and convert the rendered HTML in a build hook, take the bundle from the registry without a bundler and pin it with its integrity hash, and decide up front what is left without JavaScript and what loading the whole bundle on every page costs. The behavior check now also strips the base path a site runs under, because a pull request preview runs under a different one than production.
+
+### Changed
+
+- **The long form of a skill name is `/nldd-design-system:nldd-design`**, no longer `/nldd:nldd-design`, because the prefix follows the plugin name. This holds for existing installs too. The short form (`/nldd-design`) is unchanged, and so is the skill an assistant picks by itself.
 
 ### Fixed
 
