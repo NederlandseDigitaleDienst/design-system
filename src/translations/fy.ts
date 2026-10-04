@@ -1,9 +1,10 @@
 /**
  * Concept: the texts of the package in Frisian (Frysk), for `setTranslations()`.
  *
- * Not yet checked by a native speaker. A key that is missing here falls back
- * to Dutch, which reads better than a guess, so this set leaves out what it is
- * not sure of. Report a better wording at
+ * Not yet checked by a native speaker. Every key has a text, also where the
+ * wording is a guess, because correcting a text is easier than writing one.
+ * Typed as partial, so a key added to a component later falls back to Dutch
+ * until it is translated here. Report a better wording at
  * https://github.com/NederlandseDigitaleDienst/design-system/issues
  *
  * ```js
@@ -33,6 +34,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.code-viewer.copy-success-text': 'Kopiearre',
 	'components.code-viewer.copy-failure-text': 'Kopiearjen mislearre',
 	'components.image.error-text': 'Ofbylding is net laden',
+	'components.rich-text.table-scroll-label': 'Skowbere tabel',
 	'components.token.dismiss-action': 'Smyt fuort',
 	'components.token.open-menu-action': 'Opsjes sjen litte',
 	'components.token.open-token-menu-action': 'Opsjes sjen litte foar',
@@ -44,6 +46,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.date-field.cancel-action': 'Annulearje',
 	'components.date-field.range-from-lowercase-label': 'fan',
 	'components.date-field.range-to-lowercase-label': 'oant en mei',
+	'components.date-field.range-to-short-lowercase-label': 'o/m',
 	'components.date-picker.view-previous-month-action': 'Foarige moanne',
 	'components.date-picker.view-next-month-action': 'Folgjende moanne',
 	'components.date-picker.view-today-action': 'Hjoed',
@@ -87,14 +90,20 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.date-picker.thursday-short-lowercase': 'to',
 	'components.date-picker.friday-short-lowercase': 'fr',
 	'components.date-picker.saturday-short-lowercase': 'so',
+	'components.date-picker.week-number-column-label': 'Wiiknûmer',
+	'components.date-picker.week-number-column-short-label': 'wk',
 	'components.date-picker.week-number-label': 'Wike {week}',
+	'components.date-picker.date-label': '{weekday} {day} {month} {year}',
 	'components.date-picker.today-lowercase': 'hjoed',
 	'components.date-picker.unavailable-lowercase-label': 'net beskikber',
+	'components.date-picker.range-anchor-lowercase-label': 'keazen, perioade noch net folslein',
 	'components.date-picker.range-start-lowercase-label': 'begjin fan de perioade',
 	'components.date-picker.range-end-lowercase-label': 'ein fan de perioade',
 	'components.date-picker.in-range-lowercase-label': 'yn de perioade',
 	'components.date-picker.date-selected-text': 'Selektearre: {date}.',
+	'components.date-picker.range-anchor-text': 'Selektearre: {date}. Kies no in twadde datum, earder of letter.',
 	'components.date-picker.range-selected-text': 'Selektearre: {start} oant en mei {end}.',
+	'components.date-picker.range-blocked-text': 'Dy perioade befettet in datum dy\'t net beskikber is. Kies in oare.',
 	'components.file-field.to-choose-file-action': 'Bestân kieze',
 	'components.file-field.to-choose-files-action': 'Bestannen kieze',
 	'components.file-field.no-file-chosen-text': 'Gjin bestân keazen',
@@ -109,6 +118,10 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.stepper.decrement-action': 'Ferleegje',
 	'components.stepper.increment-action': 'Ferheegje',
 	'components.stepper.to-adjust-value-action': 'Oantal oanpasse',
+	'components.text-editor.open-in-new-tab-label': 'Keppeling iepenje yn in nij ljepblêd: {url}',
+	'components.text-editor.annotation-count-label': '{count} {noun} op \'{quote}\'',
+	'components.text-editor.annotation-singular-lowercase': 'annotaasje',
+	'components.text-editor.annotation-plural-lowercase': 'annotaasjes',
 	'components.time-field.default-label': 'Tiid',
 	'components.time-field.to-pick-time-action': 'Tiid kieze',
 	'components.time-field.cancel-action': 'Annulearje',
@@ -117,6 +130,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.time-picker.hours-label': 'Oere',
 	'components.time-picker.minutes-label': 'Minút',
 	'components.token-field.dismiss-action': 'Smyt fuort',
+	'components.token-field.removable-lowercase-label': 'fuort te smiten',
 	'components.token-field.open-menu-action': 'Opsjes sjen litte',
 	'components.token-field.token-menu-action': 'Aksjes sjen litte foar',
 	'components.token-field.required-error-text': 'Foegje op syn minst ien wearde ta',
@@ -125,9 +139,12 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.collection.next-action': 'Folgjende',
 	'components.collection.load-more-action': 'Mear sjen litte',
 	'components.collection.region-label': 'Kolleksje',
+	'components.page-footer.legal-bar-accessible-label': 'Juridyske keppelings',
 	'components.sidebar-section.sidebar-label': 'Sydbalke',
 	'components.sidebar-section.sheet-dismiss-action': 'Slút',
+	'components.popover.accessible-label': 'Popover',
 	'components.window.accessible-label': 'Finster',
+	'components.drag-handle-cell.accessible-label': 'Sleephandel, druk op spaasje of enter om te ferpleatsen',
 	'components.list-item.opens-in-new-tab-label': 'Iepenet yn in nij ljepblêd',
 	'components.list.items-accessible-label': 'List',
 	'components.list.navigation-accessible-label': 'Navigaasje',
@@ -147,6 +164,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.document-tab-bar.reorder-canceled-text': 'Slepen annulearre.',
 	'components.link.opens-in-new-tab-label': 'Iepenet yn in nij ljepblêd',
 	'components.menu-bar.overflow-action': 'Mear opsjes',
+	'components.pagination.accessible-label': 'Paginearring',
 	'components.pagination.previous-action': 'Gean nei de foarige side',
 	'components.pagination.next-action': 'Gean nei de folgjende side',
 	'components.pagination.page-action': 'Gean nei side {page}',
@@ -155,6 +173,8 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.top-navigation-bar.global-menu-bar-label': 'Haadnavigaasje',
 	'components.top-navigation-bar.back-action': 'Werom',
 	'components.top-navigation-bar.menu-action': 'Menu',
+	'components.top-navigation-bar.logo-label': 'Ryksweapen - Ryksoerheid',
+	'components.top-navigation-bar.utility-menu-bar-label': 'Helpkeppelings',
 	'components.top-navigation-bar.menu-sheet-dismiss-action': 'Slút',
 	'components.activity-indicator.loading-label': 'Oan it laden',
 	'components.badge.notification-label': 'Notifikaasje',
@@ -163,14 +183,17 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.just-in-time-education.dismiss-action': 'Ferbergje',
 	'components.notification.dismiss-action': 'Slút',
 	'components.notification.region-label': 'Meldings',
+	'components.progress-bar.completed-suffix-text': 'foltôge',
 	'components.progress-bar.total-prefix-text': 'Totaal',
 	'components.progress-bar.loading-label': 'Oan it laden',
 	'components.progress-bar.accessible-label': 'Fuortgong',
+	'components.progress-circle.completed-suffix-text': 'foltôge',
 	'components.progress-circle.total-prefix-text': 'Totaal',
 	'components.progress-circle.loading-label': 'Oan it laden',
 	'components.progress-circle.accessible-label': 'Fuortgong',
 	'components.step-indicator.accessible-label': 'Fuortgong',
 	'components.step-indicator.status-past-label': 'Ofrûn',
+	'components.step-indicator.status-current-label': 'Hjoeddeistige stap',
 	'components.step-indicator.status-future-label': 'Noch te dwaan',
 	'components.step-indicator.compact-text': 'Stap {current} fan {total}',
 };
