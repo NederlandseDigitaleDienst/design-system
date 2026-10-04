@@ -3,6 +3,9 @@ import { fixture, cleanup, waitForUpdate } from '../test-utils.js';
 import { setTranslations, getTranslations, translate } from './translations.js';
 import { nl } from '../translations/nl.generated.js';
 import { enUS } from '../translations/en-US.js';
+import { fy } from '../translations/fy.js';
+import { papAW } from '../translations/pap-AW.js';
+import { papCW } from '../translations/pap-CW.js';
 import '../components/actions/button/button.js';
 import '../components/inputs/date-field/date-field.js';
 
@@ -102,6 +105,19 @@ describe('the translation sets', () => {
 
 	it('ships US English for every key a component knows, and nothing else', () => {
 		expect(Object.keys(enUS).sort()).toEqual(Object.keys(nl).sort());
+	});
+
+	// The concept sets are partial on purpose: a missing key falls back to
+	// Dutch. A key no component knows, though, would do nothing at all.
+	it.each([['fy', fy], ['pap-AW', papAW], ['pap-CW', papCW]])('%s only uses keys a component knows', (_name, set) => {
+		expect(Object.keys(set).filter((key) => !(key in nl))).toEqual([]);
+	});
+
+	it.each([['en-US', enUS], ['fy', fy], ['pap-AW', papAW], ['pap-CW', papCW]])('%s keeps the placeholders of the Dutch text', (_name, set) => {
+		const placeholders = (text: string) => (text.match(/\{\w+\}/g) ?? []).sort();
+		for (const [key, text] of Object.entries(set)) {
+			expect(placeholders(text as string), key).toEqual(placeholders(nl[key as keyof typeof nl]));
+		}
 	});
 
 	// nl.generated.ts is built from the {name}.i18n.ts files. A component whose

@@ -27,6 +27,8 @@ here; consult the commit history if you need that level of detail.
 
 - **A complete US English set, `@nldd/design-system/translations/en-US`, and the Dutch defaults as a template, `@nldd/design-system/translations/nl`.** Spread the English set and add your own keys behind it to change a few texts: `setTranslations({ ...enUS, 'components.activity-indicator.loading-label': 'Please wait' })`.
 
+- **Concept translations in Frisian (`translations/fy`) and Papiamento as written on Curaçao and Bonaire (`translations/pap-CW`) and on Aruba (`translations/pap-AW`).** No native speaker has checked them yet, so they leave out what they were not sure of, and a missing key falls back to Dutch. Report a better wording as an issue and they improve with each release.
+
 - **`loading-text` on `nldd-button` and `nldd-icon-button`** says what the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Without it the indicator says its translated "Laden".
 
 - **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down.** Pulling a page past its top used to open a white gap above the ribbon; the ribbon now carries on into it and only grows longer. A bar above the navigation bar, such as `nldd-status-bar`, stays clear: the ribbon starts at the top of the page, not right above the logo. It works in browsers that support scroll-driven animations; elsewhere the gap stays as it was.

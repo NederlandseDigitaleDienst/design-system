@@ -28,6 +28,16 @@ setTranslations({
 
 Een andere taal maak je op dezelfde manier. Kopieer `@nldd/design-system/translations/nl`, dat alle keys met hun Nederlandse tekst bevat, en vertaal de rechterkant. Een key die je weglaat, valt terug op het Nederlands. Roep `setTranslations()` opnieuw aan om van taal te wisselen terwijl de app draait.
 
+## Fries en Papiamento zijn een concept
+
+Het pakket levert ook drie sets die nog niet door een moedertaalspreker zijn gecontroleerd:
+
+- `@nldd/design-system/translations/fy`: Fries;
+- `@nldd/design-system/translations/pap-CW`: Papiamentu, zoals op Curaçao en Bonaire geschreven;
+- `@nldd/design-system/translations/pap-AW`: Papiamento, zoals op Aruba geschreven.
+
+Ze zijn bewust niet compleet. Waar de vertaling niet zeker was, staat de key er niet in en valt hij terug op het Nederlands. Spreek je de taal en lees je iets dat beter kan, [meld het dan](https://github.com/NederlandseDigitaleDienst/design-system/issues). Zo worden ze beter.
+
 ## Een key is taal, een attribuut is inhoud
 
 Een key betekent overal hetzelfde. "Laden" is "Loading", op elke knop. Zegt één knop iets anders dan een andere, zoals "Aan het bewaren" naast "Aan het laden", dan is dat geen vertaling maar inhoud, en die zet je op het element zelf:
