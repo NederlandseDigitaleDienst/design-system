@@ -63,7 +63,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 
 ### `<nldd-button-bar>`
 
-A horizontal container for grouping buttons with a neutral background. Automatically propagates its size and appearance to all child nldd-button and nldd-icon-button elements. Renders nldd-button-bar-divider elements as internal dividers — no separate component needed.
+A horizontal container for grouping buttons with a neutral background. Automatically propagates its size and appearance to all child nldd-button and nldd-icon-button elements. Renders nldd-button-bar-divider elements as internal dividers — no separate component needed. The bar is one surface for actions; on/off buttons do not go in it. For a row of toggles use nldd-toggle-button-group, and for one choice out of a few options on one surface nldd-segmented-control. An nldd-toggle-button placed here is shown as it is, and a warning says so in development.
 
 **Attributes**
 

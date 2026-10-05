@@ -5,6 +5,11 @@
  * Automatically propagates its size and appearance to all child nldd-button and nldd-icon-button elements.
  * Renders nldd-button-bar-divider elements as internal dividers — no separate component needed.
  *
+ * The bar is one surface for actions; on/off buttons do not go in it. For a row
+ * of toggles use nldd-toggle-button-group, and for one choice out of a few
+ * options on one surface nldd-segmented-control. An nldd-toggle-button placed
+ * here is shown as it is, and a warning says so in development.
+ *
  * @element nldd-button-bar
  * @attr {string} size - Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style).
  * @attr {string} appearance - Visual style of the buttons (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)
@@ -153,6 +158,8 @@ export class NLDDButtonBar extends LitElement {
 				return { type: 'divider', id: this._idCounter++ } as BarChild;
 			}
 
+			if (tag === 'nldd-toggle-button') this._warnToggleButton();
+
 			if (BUTTON_TAGS.includes(tag)) {
 				el.setAttribute('size', this.size);
 				el.setAttribute('appearance', this.appearance);
@@ -169,6 +176,18 @@ export class NLDDButtonBar extends LitElement {
 		});
 
 		this._building = false;
+	}
+
+	private _warnedToggleButton = false;
+
+	private _warnToggleButton(): void {
+		if (!import.meta.env?.DEV || this._warnedToggleButton) return;
+		this._warnedToggleButton = true;
+		console.warn(
+			'<nldd-button-bar>: nldd-toggle-button is not supported here. The bar is one surface for actions, '
+			+ 'and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, '
+			+ 'or nldd-segmented-control for one choice out of a few options.',
+		);
 	}
 
 	override render() {

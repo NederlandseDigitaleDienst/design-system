@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import '../../../assets/styles/variables.css';
 import type { NLDDButtonBar } from './button-bar.js';
@@ -305,5 +305,27 @@ describe('nldd-button-bar – on a colored surface', () => {
 		await waitForUpdate(el);
 
 		expect(surface(el)).toBe('rgb(255, 255, 255)');
+	});
+});
+
+describe('nldd-button-bar – toggle buttons', () => {
+	let el: NLDDButtonBar;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	it('warns about an nldd-toggle-button and points to the components for toggles', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDButtonBar>(`
+			<nldd-button-bar>
+				<nldd-toggle-button text="Vet"></nldd-toggle-button>
+				<nldd-button text="Bewerk"></nldd-button>
+			</nldd-button-bar>
+		`);
+		await waitForUpdate(el);
+
+		expect(warn).toHaveBeenCalledWith(expect.stringMatching(/nldd-toggle-button-group.*nldd-segmented-control/));
 	});
 });
