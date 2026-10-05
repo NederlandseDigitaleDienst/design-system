@@ -1211,6 +1211,7 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `value` | `string` | Selected value for radio type |
+| `appearance` | `string` | Visual style, color included: 'neutral-tinted' \| 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type="radio" and a transparent appearance. |
 | `size` | `string` | Control size: 'sm' \| 'md' \| 'lg' (default: 'md') |
 | `type` | `string` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). |
 | `variant` | `string` | Content type for all items: 'text' \| 'icon' \| 'icon-and-text' (default: 'text') |

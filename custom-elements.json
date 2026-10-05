@@ -14770,6 +14770,17 @@
             },
             {
               "kind": "field",
+              "name": "appearance",
+              "type": {
+                "text": "SegmentedControlAppearance"
+              },
+              "default": "'neutral-tinted'",
+              "description": "Set by nldd-segmented-control. Not part of the public API.",
+              "attribute": "appearance",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "SegmentedControlSize"
@@ -14896,6 +14907,15 @@
               "description": "Disabled state"
             },
             {
+              "name": "appearance",
+              "type": {
+                "text": "SegmentedControlAppearance"
+              },
+              "default": "'neutral-tinted'",
+              "description": "Set by nldd-segmented-control. Not part of the public API.",
+              "fieldName": "appearance"
+            },
+            {
               "name": "size",
               "type": {
                 "text": "SegmentedControlSize"
@@ -15019,6 +15039,16 @@
               },
               "default": "[]",
               "description": "Selected values for checkbox type.\nUse property binding: .values=${['New York', 'Amsterdam']}\nDoes not reflect to an attribute — safe for values containing spaces or special characters."
+            },
+            {
+              "kind": "field",
+              "name": "appearance",
+              "type": {
+                "text": "SegmentedControlAppearance"
+              },
+              "default": "'neutral-tinted'",
+              "attribute": "appearance",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -15324,6 +15354,15 @@
               "default": "''",
               "description": "Selected value for radio type",
               "fieldName": "value"
+            },
+            {
+              "name": "appearance",
+              "type": {
+                "text": "SegmentedControlAppearance"
+              },
+              "default": "'neutral-tinted'",
+              "fieldName": "appearance",
+              "description": "Visual style, color included: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type=\"radio\" and a transparent appearance."
             },
             {
               "name": "size",

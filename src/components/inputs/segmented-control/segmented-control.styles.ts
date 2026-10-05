@@ -11,6 +11,8 @@ export const segmentedControlStyles = css`
 
 	:host {
 		--_corner-radius: var(--semantics-controls-md-corner-radius);
+		--_background-color: var(--semantics-buttons-neutral-tinted-background-color);
+		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
 		--_width: auto;
 		--_gap: var(--primitives-space-1);
 		--_selected-z-index: 1;
@@ -20,7 +22,7 @@ export const segmentedControlStyles = css`
 		display: inline-grid;
 		position: relative;
 		border-radius: var(--_corner-radius);
-		background-color: var(--semantics-buttons-neutral-tinted-background-color);
+		background-color: var(--_background-color);
 		width: var(--_width);
 		max-width: 100%;
 		grid-auto-columns: 1fr;
@@ -37,8 +39,13 @@ export const segmentedControlStyles = css`
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--semantics-buttons-neutral-tinted-highlight-border-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
 		pointer-events: none;
+	}
+
+	:host([appearance="neutral-base"]) {
+		--_background-color: var(--semantics-buttons-neutral-base-background-color);
+		--_highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);
 	}
 
 	:host([size="sm"]) {
@@ -96,12 +103,43 @@ export const segmentedControlItemStyles = css`
 		--_font: var(--semantics-buttons-md-primary-text-font);
 		--_icon-size: var(--semantics-buttons-md-icon-size);
 		--_highlight-border-color: transparent;
+		--_content-color: var(--semantics-buttons-neutral-tinted-content-color);
+		--_is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
+		--_is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
+		--_is-active-background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
+		--_is-active-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
+		--_is-selected-background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+		--_is-selected-content-color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+		--_is-selected-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
+		--_is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
+		--_is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
+		--_is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
+		--_is-selected-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
+		--_is-selected-is-active-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
+		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
 
 		${inheritedTextReset}
 		display: flex;
 		position: relative;
 		min-width: 0;
 		-webkit-tap-highlight-color: transparent;
+	}
+
+	:host([appearance="neutral-base"]) {
+		--_content-color: var(--semantics-buttons-neutral-base-content-color);
+		--_is-hovered-background-color: var(--semantics-buttons-neutral-base-is-hovered-background-color);
+		--_is-hovered-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-color);
+		--_is-active-background-color: var(--semantics-buttons-neutral-base-is-active-background-color);
+		--_is-active-content-color: var(--semantics-buttons-neutral-base-is-active-content-color);
+		--_is-selected-background-color: var(--semantics-buttons-neutral-base-is-selected-background-color);
+		--_is-selected-content-color: var(--semantics-buttons-neutral-base-is-selected-content-color);
+		--_is-selected-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-highlight-border-color);
+		--_is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-background-color);
+		--_is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-content-color);
+		--_is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-highlight-border-color);
+		--_is-selected-is-active-background-color: var(--semantics-buttons-neutral-base-is-selected-is-active-background-color);
+		--_is-selected-is-active-content-color: var(--semantics-buttons-neutral-base-is-selected-is-active-content-color);
+		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-active-highlight-border-color);
 	}
 
 	:host([hidden]) {
@@ -173,7 +211,7 @@ export const segmentedControlItemStyles = css`
 		gap: var(--_gap);
 		align-items: center;
 		justify-content: center;
-		color: var(--semantics-buttons-neutral-tinted-content-color);
+		color: var(--_content-color);
 		font: var(--_font);
 	}
 
@@ -183,37 +221,37 @@ export const segmentedControlItemStyles = css`
 
 	@media (hover: hover) {
 		:host(:not([selected])) .segmented-control__item:hover {
-			background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
-			color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
+			background-color: var(--_is-hovered-background-color);
+			color: var(--_is-hovered-content-color);
 		}
 	}
 
 	:host(:not([selected])) .segmented-control__item:active {
-		background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
-		color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
+		background-color: var(--_is-active-background-color);
+		color: var(--_is-active-content-color);
 	}
 
 	:host([selected]) .segmented-control__item {
-		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
+		--_highlight-border-color: var(--_is-selected-highlight-border-color);
 
-		background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
-		color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+		background-color: var(--_is-selected-background-color);
+		color: var(--_is-selected-content-color);
 	}
 
 	@media (hover: hover) {
 		:host([selected]) .segmented-control__item:hover {
-			--_highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
+			--_highlight-border-color: var(--_is-selected-is-hovered-highlight-border-color);
 
-			background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
-			color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
+			background-color: var(--_is-selected-is-hovered-background-color);
+			color: var(--_is-selected-is-hovered-content-color);
 		}
 	}
 
 	:host([selected]) .segmented-control__item:active {
-		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
+		--_highlight-border-color: var(--_is-selected-is-active-highlight-border-color);
 
-		background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
-		color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
+		background-color: var(--_is-selected-is-active-background-color);
+		color: var(--_is-selected-is-active-content-color);
 	}
 
 	@media (forced-colors: active) {

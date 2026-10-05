@@ -3,6 +3,7 @@ import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../tes
 import type { NLDDSegmentedControl, NLDDSegmentedControlItem } from './segmented-control.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import './segmented-control.js';
+import '../../../assets/styles/variables.css';
 
 function radioFixture(selectedValue = 'a'): string {
 	return `
@@ -674,5 +675,45 @@ describe('nldd-segmented-control – place in the group', () => {
 
 		expect(items.map((item) => getInput(item).hasAttribute('aria-setsize'))).toEqual([false, false]);
 		expect(items.map((item) => getInput(item).hasAttribute('tabindex'))).toEqual([false, false]);
+	});
+});
+
+describe('nldd-segmented-control – appearance', () => {
+	let el: NLDDSegmentedControl;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const markup = (appearance = '') => `
+		<nldd-segmented-control ${appearance ? `appearance="${appearance}"` : ''} value="lijst" accessible-label="Weergave">
+			<nldd-segmented-control-item value="lijst" text="Lijst"></nldd-segmented-control-item>
+			<nldd-segmented-control-item value="kaart" text="Kaart"></nldd-segmented-control-item>
+		</nldd-segmented-control>
+	`;
+	const selectedFill = (control: Element) => getComputedStyle(
+		control.querySelector('nldd-segmented-control-item[selected]')!.shadowRoot!.querySelector('.segmented-control__item')!,
+	).backgroundColor;
+
+	it('defaults to neutral-tinted without reflecting it', async () => {
+		el = await fixture<NLDDSegmentedControl>(markup());
+		expect(el.appearance).toBe('neutral-tinted');
+		expect(el.hasAttribute('appearance')).toBe(false);
+	});
+
+	it('gives neutral-base its own track and passes it to the items, with the same selected fill', async () => {
+		el = await fixture<NLDDSegmentedControl>(markup());
+		await waitForUpdate(el);
+		const tintedTrack = getComputedStyle(el).backgroundColor;
+		const tintedFill = selectedFill(el);
+
+		el.appearance = 'neutral-base';
+		await waitForUpdate(el);
+		const items = Array.from(el.querySelectorAll<NLDDSegmentedControlItem>('nldd-segmented-control-item'));
+		await Promise.all(items.map((item) => item.updateComplete));
+
+		expect(items.every((item) => item.appearance === 'neutral-base')).toBe(true);
+		expect(getComputedStyle(el).backgroundColor).not.toBe(tintedTrack);
+		expect(selectedFill(el)).toBe(tintedFill);
 	});
 });
