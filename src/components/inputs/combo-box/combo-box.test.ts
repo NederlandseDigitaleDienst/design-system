@@ -963,3 +963,83 @@ describe('nldd-combo-box Escape', () => {
 		expect(outer).toHaveBeenCalledTimes(1);
 	});
 });
+
+// A consumer that queries its server per keystroke slots the matches in after
+// the keystroke. With allow-custom the keystroke found nothing to show and kept
+// the menu shut; the options that arrive later have to open it.
+describe('nldd-combo-box options that arrive after the keystroke', () => {
+	let el: NLDDComboBox;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const setup = async () => {
+		el = await fixture<NLDDComboBox>(`
+			<nldd-combo-box allow-custom accessible-label="Naam">
+				<nldd-menu></nldd-menu>
+			</nldd-combo-box>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector('input')!;
+		input.focus();
+		return { input, menu: el.querySelector('nldd-menu')! };
+	};
+
+	const type = async (input: HTMLInputElement, text: string) => {
+		input.value = text;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+	};
+
+	const arrive = async (menu: Element) => {
+		const item = document.createElement('nldd-menu-item') as HTMLElement & { text: string; value: string };
+		item.text = 'Tim de Vries';
+		item.value = 't.devries@example.org';
+		menu.append(item);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await waitForUpdate(el);
+		return item;
+	};
+
+	it('opens when the options arrive after the keystroke', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		expect(menu.matches(':popover-open')).toBe(false);
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(true);
+	});
+
+	it('stays shut when the user pressed Escape before they arrived', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
+	it('stays shut when the user left the field before they arrived', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		input.blur();
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
+	it('does not open on its own when nothing was typed', async () => {
+		const { menu } = await setup();
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
+	it('closes again when the options it showed go away', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		const item = await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(true);
+		item.remove();
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await waitForUpdate(el);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+});

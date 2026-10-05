@@ -8,6 +8,11 @@
  * exactly like nldd-combo-box; the menu filters as you type, with a chevron picker
  * button, arrow-key roving across the tokens and ElementInternals form participation.
  *
+ * Options can arrive after the keystroke, from a server you query per
+ * keystroke. Slot them into the menu when they come in: if the user is still
+ * in the field and the keystroke found nothing to show, the menu opens then.
+ * After Escape, or once the user left the field, it stays shut.
+ *
  * @element nldd-token-field
  * @attr {string} values - Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas.
  * @attr {string} placeholder - Placeholder shown in the input
@@ -170,6 +175,10 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  change (e.g. a framework populating them asynchronously), so the field
 	 *  re-evaluates whether to show the input/picker and re-resolves token labels. */
 	private _menuObserver: MutationObserver | null = null;
+	/** A keystroke wanted the menu open but there was nothing to show yet.
+	 *  Options that arrive after it, from a server answering per keystroke,
+	 *  open it then. Escape, leaving the field or opening the menu clear it. */
+	private _openPending = false;
 	/** Watches the light-DOM `[slot="template"]` prototypes for changes (menu items,
 	 *  their attributes, or an added/removed prototype) and invalidates the cloned
 	 *  per-token menus so they re-clone. These components run on live sites, not just
@@ -467,6 +476,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 		this._syncMenuItems();
 		if (!this._isOpen) this._openMenu();
+		this._openPending = this._text !== '' && !this._menu?.matches(':popover-open');
 		this.dispatchEvent(
 			new CustomEvent('input', {
 				detail: { value: this._text },
@@ -505,6 +515,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Close the menu when focus leaves the field for anything but the menu. */
 	public _handleBlur(e: FocusEvent): void {
+		this._openPending = false;
 		const related = e.relatedTarget as Node | null;
 		if (related && this._menu?.contains(related)) return;
 		// Commit any free-typed text when focus leaves, so a value typed without
@@ -556,6 +567,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 				break;
 			}
 			case 'Escape':
+				// Whatever arrives after this does not open the menu: the user said stop.
+				this._openPending = false;
 				// See nldd-combo-box: the key closed this menu and goes no further,
 				// so a sheet behind it does not close on the same press.
 				if (!this._isOpen) return;
@@ -746,6 +759,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		this._menuObserver?.disconnect();
 		this._menuObserver = new MutationObserver(() => {
 			this._hideSelectedMenuItems();
+			this._handleMenuItemsChange();
 			this.requestUpdate();
 		});
 		this._menuObserver.observe(menu, { childList: true, subtree: true });
@@ -834,6 +848,24 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		this._menu.anchorElement = this._inputArea ?? this._input ?? this;
 		this._updateMenuWidth();
 		(this._menu as HTMLElement).showPopover();
+	}
+
+	/**
+	 * The menu decides whether to open on a keystroke. Options that arrive later
+	 * get the same decision: they open a menu the keystroke could not open, and a
+	 * menu whose options all went away closes again, as it would on typing. Only
+	 * while the user is still in the field.
+	 */
+	private _handleMenuItemsChange(): void {
+		if (!this._menu || this.shadowRoot?.activeElement !== this._input) return;
+		if (this._menu.matches(':popover-open')) {
+			if (this._visibleOptionCount === 0) this._closeMenu();
+			return;
+		}
+		if (this._openPending && this._visibleOptionCount > 0) {
+			this._openPending = false;
+			this._openMenu();
+		}
 	}
 
 	public _closeMenu(): void {

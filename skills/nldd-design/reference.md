@@ -1532,7 +1532,7 @@ Groups nldd-toggle-button elements and manages selection, keyboard navigation, a
 
 ### `<nldd-token-field>`
 
-A multi-select input that looks like a normal input field: chosen values show as dismissible tokens in a wrapping row, followed by an inline text input that stretches to fill the remaining space and wraps to a new line (growing the field) when it no longer fits. Options are supplied as a slotted nldd-menu, exactly like nldd-combo-box; the menu filters as you type, with a chevron picker button, arrow-key roving across the tokens and ElementInternals form participation.
+A multi-select input that looks like a normal input field: chosen values show as dismissible tokens in a wrapping row, followed by an inline text input that stretches to fill the remaining space and wraps to a new line (growing the field) when it no longer fits. Options are supplied as a slotted nldd-menu, exactly like nldd-combo-box; the menu filters as you type, with a chevron picker button, arrow-key roving across the tokens and ElementInternals form participation. Options can arrive after the keystroke, from a server you query per keystroke. Slot them into the menu when they come in: if the user is still in the field and the keystroke found nothing to show, the menu opens then. After Escape, or once the user left the field, it stays shut.
 
 **Attributes**
 

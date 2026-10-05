@@ -38,6 +38,11 @@
  *       (consumers validate emitted values). Without it, such a value is discarded and
  *       the input reverts to the current value.
  *
+ * Options can arrive after the keystroke, from a server you query per
+ * keystroke. Slot them into the menu when they come in: if the user is still
+ * in the field and the keystroke found nothing to show, the menu opens then.
+ * After Escape, or once the user left the field, it stays shut.
+ *
  * @slot - An nldd-menu element with nldd-menu-item and nldd-menu-divider children
  *
  * @fires input - When the input value changes; detail: { value: string }
@@ -170,6 +175,12 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _menu: NLDDMenu | null = null;
 	private _resizeObserver: ResizeObserver | null = null;
+	/** Watches the options in the menu, which a consumer can slot in at any time. */
+	private _menuObserver: MutationObserver | null = null;
+	/** A keystroke wanted the menu open but there was nothing to show yet.
+	 *  Options that arrive after it, from a server answering per keystroke,
+	 *  open it then. Escape, leaving the field or opening the menu clear it. */
+	private _openPending = false;
 
 	@query('.combo-box__input')
 	_input!: HTMLInputElement;
@@ -276,6 +287,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		this._resizeObserver = null;
 		window.removeEventListener('scroll', this._handleScrollOrResize, true);
 		window.removeEventListener('resize', this._handleScrollOrResize);
+		this._menuObserver?.disconnect();
+		this._menuObserver = null;
 		if (this._menu) {
 			this._menu.removeEventListener('toggle', this._handleMenuToggle);
 			this._menu.removeEventListener('select', this._handleMenuSelect);
@@ -303,6 +316,9 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		menu.addEventListener('toggle', this._handleMenuToggle);
 		menu.addEventListener('select', this._handleMenuSelect);
 		menu.addEventListener('keydown', this._handleMenuKeydown);
+		this._menuObserver?.disconnect();
+		this._menuObserver = new MutationObserver(this._handleMenuItemsChange);
+		this._menuObserver.observe(menu, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
 		this._updateMenuWidth();
 
 		// First time the menu is wired up, derive a missing text from the
@@ -415,6 +431,26 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		(this._menu as HTMLElement).showPopover();
 	}
 
+	/**
+	 * The menu decides whether to open on a keystroke. Options that arrive later
+	 * get the same decision: they open a menu the keystroke could not open, and
+	 * with allow-custom a menu whose options all went away closes again, as it
+	 * would on typing. Only while the user is still in the field.
+	 */
+	private _handleMenuItemsChange = (): void => {
+		if (!this._menu || this.shadowRoot?.activeElement !== this._input) return;
+		const open = this._menu.matches(':popover-open');
+		const hasItems = this._hasVisibleMenuItems();
+		if (open) {
+			if (this.allowCustom && !hasItems) this._closeMenu();
+			return;
+		}
+		if (this._openPending && hasItems) {
+			this._openPending = false;
+			this._openMenu();
+		}
+	};
+
 	/** Top-level menu items that survived the current filter. */
 	private _hasVisibleMenuItems(): boolean {
 		if (!this._menu) return false;
@@ -476,6 +512,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 			this._closeMenu();
 		}
 		if (!this._isOpen) this._openMenu();
+		this._openPending = this.text !== '' && !this._menu?.matches(':popover-open');
 		this.commitFormValue();
 		this.dispatchEvent(new CustomEvent('input', {
 			detail: { value: this.text },
@@ -511,6 +548,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// commit. Without this, leaving a read-only field that shows a label
 		// without a matching menu option wipes the label: the revert below reads
 		// the text back from the value, and finds nothing.
+		this._openPending = false;
 		if (this.readonly) return;
 		const relatedTarget = e.relatedTarget as Node | null;
 		const focusMovedIntoMenu = !!relatedTarget && !!this._menu?.contains(relatedTarget);
@@ -548,6 +586,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	public _handleKeydown(e: KeyboardEvent): void {
+		// Whatever arrives after Escape does not open the menu: the user said stop.
+		if (e.key === 'Escape') this._openPending = false;
 		// Read-only takes no keys of its own: no menu to open, nothing to commit.
 		// Enter still belongs to the form, the way it would from a read-only input.
 		if (this.readonly) {
