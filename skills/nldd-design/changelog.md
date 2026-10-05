@@ -17,11 +17,21 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **One call translates the whole package, and US English ships with it.** `setTranslations(enUS)` at startup turns every component English, including the ones another component builds out of your reach, such as the activity indicator in a loading button and the calendar in a date field. Docs/Vertalingen in Storybook explains the layers.
+- **The package speaks more languages.** One call, `setTranslations(enUS)` at startup, turns every component English, including the ones another component builds out of your reach, such as the activity indicator in a loading button and the calendar in a date field. US English ships complete, with concept sets in Frisian and in Papiamento as written on Curaçao and Bonaire and on Aruba. Docs/Vertalingen in Storybook explains the layers.
 
-- **Storybook opens on an introduction.** Docs/Introductie says what the system is, how to install it and load the styles, where the components, patterns and design guidelines are, and how to add the Claude Code plugin. It used to open on Button, the first story in alphabetical order. Docs now sits at the top of the sidebar, with the introduction and the design guidelines first.
+- **`nldd-text-editor` checks the spelling and handles typeaheads better.** It checks the running text and leaves code, addresses and mentions alone. A typeahead query takes accents and a `+`, a list can decide what may follow its trigger, and an empty list says why instead of closing without a word.
+
+- **`nldd-toggle-button` can be quiet.** It takes four appearances from `nldd-button`, the two transparent ones included, and with `selected-icon` a transparent toggle stays without a fill when on: a "Volgen" toggle goes from `plus` to `check-mark` and keeps its label.
+
+- **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down**, instead of opening a white gap above it.
+
+- **Menus line up, and use fewer icons.** One checkbox or radio item gives the whole `nldd-menu` its check-mark column, so the text of every group starts at one line. A new design guideline says when an icon in a menu adds something, and when it is only filler.
+
+- **Attributes say what they do.** `variant` is `appearance` on nine components where it was a designed style, `level` on `nldd-timeline-track-cell`, and `mode` is `variant` on `nldd-progress-bar` and `nldd-progress-circle`. The values stay the same; search your markup, since a leftover attribute is ignored without a warning. See Breaking.
 
 ### Added
+
+- **Storybook opens on an introduction.** Docs/Introductie says what the system is, how to install it and load the styles, where the components, patterns and design guidelines are, and how to add the Claude Code plugin. It used to open on Button, the first story in alphabetical order. Docs now sits at the top of the sidebar, with the introduction and the design guidelines first.
 
 - **`setTranslations()` sets the texts for the whole package.** Import it from `@nldd/design-system/translations` and call it once at startup. A component now looks a text up in four layers: an attribute on the element, its `translations` property, the package-wide layer, and the Dutch default. Calling it again re-renders the components on the page, so a language switch at runtime works too. In development it warns about a key no component knows, which is what an override does after a key is renamed.
 
@@ -39,7 +49,9 @@ here; consult the commit history if you need that level of detail.
 
 - **A design guideline on icons in menus.** Icons are often used as filler, but are usually not needed and then do not help: add one only where it recognizably belongs to the item and helps people find or understand it, use the same icon for the same action everywhere, and leave it out when no icon makes the action clear at a glance. See Docs/Ontwerprichtlijnen under "Visueel en layout".
 
-- **`appearance` on `nldd-toggle-button` and `nldd-toggle-button-group`: `neutral-tinted` (the default), `neutral-base`, `neutral-transparent` and `accent-transparent`.** A toggle among transparent buttons, such as in a row of light actions under a message, stood out as a gray block. `neutral-transparent` and `accent-transparent` are transparent at rest and fill only when they are on, so selected looks the same in every appearance: the fill is what says the button is on, not a color alone. The transparent ones have no surface to fill, so with the new `selected-icon` they stay quiet when on and the icon changes shape instead, such as `plus` to `check-mark` on a "Volgen" toggle whose label stays the same. On a surface, the surface fills as before. `neutral-base` is for a tinted surface. `nldd-toggle-button-group` forwards `appearance` to its buttons, as it does `size`. New tokens: `--semantics-buttons-neutral-transparent-is-selected-*` and `--semantics-buttons-accent-transparent-is-selected-*`.
+- **`appearance` on `nldd-toggle-button` and `nldd-toggle-button-group`: `neutral-tinted` (the default), `neutral-base`, `neutral-transparent` and `accent-transparent`.** A toggle among transparent buttons, such as in a row of light actions under a message, stood out as a gray block. The transparent appearances have no surface at rest; when on, the toggle fills, so the state does not rest on a color alone. `neutral-base` is for a tinted surface. `nldd-toggle-button-group` forwards `appearance` to its buttons, as it does `size`. New tokens: `--semantics-buttons-neutral-transparent-is-selected-*` and `--semantics-buttons-accent-transparent-is-selected-*`.
+
+- **`selected-icon` on `nldd-toggle-button`** shows another icon while the toggle is on, such as `plus` to `check-mark` on a "Volgen" toggle whose label stays the same. On the transparent appearances it replaces the fill: the toggle stays quiet when on, and the change of shape says it is on. On a surface, the surface fills as before.
 
 - **`appearance="neutral-base"` on `nldd-segmented-control`**, for a segmented control on a tinted surface, as `nldd-button-bar` has it. The selected segment keeps its fill. For a quiet row without a track, use `nldd-toggle-button-group` with `type="radio"` and a transparent appearance.
 
