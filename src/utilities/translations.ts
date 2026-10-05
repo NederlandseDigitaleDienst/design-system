@@ -33,6 +33,8 @@ const store: Store = ((globalThis as Record<symbol, unknown>)[STORE_KEY] ??= { t
  * Call it before the components render. Calling it again re-renders the
  * components on the page, so a language switch at runtime works too. Call it
  * when the language changes, not on every render: each call walks the page.
+ * A component inside a closed shadow root is out of its reach and keeps its old
+ * texts until it renders again; ask it to with `requestUpdate()`.
  */
 export function setTranslations(translations: Translations): void {
 	store.translations = { ...translations };

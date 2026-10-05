@@ -331,6 +331,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		menu.addEventListener('select', this._handleMenuSelect);
 		menu.addEventListener('keydown', this._handleMenuKeydown);
 		this._menuObserver?.disconnect();
+		// The menu's own filter() writes `hidden` on every keystroke, so this fires
+		// while typing too; the handler returns early unless there is something to decide.
 		this._menuObserver = new MutationObserver(this._handleMenuItemsChange);
 		this._menuObserver.observe(menu, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
 		this._updateMenuWidth();
