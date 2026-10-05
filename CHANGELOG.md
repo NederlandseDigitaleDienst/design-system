@@ -31,7 +31,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`inherit-tinted` and `inherit-filled` on `nldd-button-bar` and `nldd-split-button`**, for a group of buttons on a colored surface. The buttons inside already had them, but the bar kept its gray surface behind them. Like a loose button, the group now takes its colors from the text color around it, and `inherit-tinted` draws its see-through surface once for the whole group, so the tint does not stack.
 
-- **A design guideline on icons in menus.** An icon is not required and not filler: add one where it recognizably belongs to the item and helps people find or understand it, use the same icon for the same action everywhere, and leave it out when no icon makes the action clear at a glance. See Docs/Ontwerprichtlijnen under "Visueel en layout".
+- **A design guideline on icons in menus.** Icons are often used as filler, but are usually not needed and then do not help: add one only where it recognizably belongs to the item and helps people find or understand it, use the same icon for the same action everywhere, and leave it out when no icon makes the action clear at a glance. See Docs/Ontwerprichtlijnen under "Visueel en layout".
 
 - **`loading-text` on `nldd-button` and `nldd-icon-button`** says what the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Without it the indicator says its translated "Laden".
 
