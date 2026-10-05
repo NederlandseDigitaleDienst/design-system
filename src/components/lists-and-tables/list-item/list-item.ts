@@ -830,7 +830,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			// A start past the last end: authoring error, fall back to full width.
 			if (import.meta.env?.DEV && !this._warnedDegenerateDivider) {
 				this._warnedDegenerateDivider = true;
-				console.warn('nldd-list-item: divider-start ligt voorbij de laatste divider-end; de divider valt terug op de volle contentbreedte.');
+				console.warn('<nldd-list-item>: divider-start lies past the last divider-end, so the divider falls back to the full content width.');
 			}
 			this.style.removeProperty('--_divider-inset-start');
 			this.style.removeProperty('--_divider-inset-end');

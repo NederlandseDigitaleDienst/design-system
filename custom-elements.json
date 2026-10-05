@@ -39616,7 +39616,7 @@
               }
             }
           ],
-          "description": "Sets the texts for the whole package, replacing what was set before. Keys you\nleave out fall back to Dutch. To start from the shipped English and change a\nfew texts, spread them: `setTranslations({ ...enUS, 'key': 'Mine' })`.\n\nCall it before the components render. Calling it again re-renders the\ncomponents on the page, so a language switch at runtime works too."
+          "description": "Sets the texts for the whole package, replacing what was set before. Keys you\nleave out fall back to Dutch. To start from the shipped English and change a\nfew texts, spread them: `setTranslations({ ...enUS, 'key': 'Mine' })`.\n\nCall it before the components render. Calling it again re-renders the\ncomponents on the page, so a language switch at runtime works too. Call it\nwhen the language changes, not on every render: each call walks the page."
         },
         {
           "kind": "function",

@@ -2659,6 +2659,30 @@ describe('nldd-menu check-mark column', () => {
 		expect(checkCell(edit)).not.toBeNull();
 	});
 
+	// A known limit: items in an nldd-menu-group are not reached by the menu's
+	// slotchange, so a checkable item added there to an open menu takes effect
+	// on the next open. See _claimItems.
+	it('reserves the column for a checkbox added to a group of an open menu on the next open', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Bewerk"></nldd-menu-item>
+				<nldd-menu-group text="Weergave"></nldd-menu-group>
+			</nldd-menu>
+		`);
+		await open(el);
+		const edit = el.querySelector('nldd-menu-item')!;
+		const added = document.createElement('nldd-menu-item') as HTMLElement & { type: string; text: string };
+		added.type = 'checkbox';
+		added.text = 'Toon zijbalk';
+		el.querySelector('nldd-menu-group')!.append(added);
+		await waitForUpdate(el);
+		expect(checkCell(edit)).toBeNull();
+
+		(el as HTMLElement & { hidePopover(): void }).hidePopover();
+		await open(el);
+		expect(checkCell(edit)).not.toBeNull();
+	});
+
 	it('lets a submenu decide for its own items', async () => {
 		el = await fixture(`
 			<nldd-menu>

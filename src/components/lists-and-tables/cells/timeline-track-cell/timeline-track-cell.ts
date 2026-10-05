@@ -115,7 +115,7 @@ export class NLDDTimelineTrackCell extends VisibilityMixin(LitElement, 'cells-co
 		const ignored = !this.showsContent && Boolean(this.text || this.icon);
 		if (ignored && !this._warnedContent) {
 			this._warnedContent = true;
-			console.warn('<nldd-timeline-track-cell>: `text` en `icon` passen alleen in een hele stip in een brede baan (`size="md"` met `level="major"`); hier worden ze niet getoond.');
+			console.warn('<nldd-timeline-track-cell>: `text` and `icon` only fit in a full dot on a wide track (`size="md"` with `level="major"`); they are not shown here.');
 		}
 		else if (!ignored) {
 			this._warnedContent = false;

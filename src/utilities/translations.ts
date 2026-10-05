@@ -31,7 +31,8 @@ const store: Store = ((globalThis as Record<symbol, unknown>)[STORE_KEY] ??= { t
  * few texts, spread them: `setTranslations({ ...enUS, 'key': 'Mine' })`.
  *
  * Call it before the components render. Calling it again re-renders the
- * components on the page, so a language switch at runtime works too.
+ * components on the page, so a language switch at runtime works too. Call it
+ * when the language changes, not on every render: each call walks the page.
  */
 export function setTranslations(translations: Translations): void {
 	store.translations = { ...translations };
@@ -82,7 +83,7 @@ function warnUnknownKeys(translations: Translations): void {
 	import('../translations/nl.generated.js').then(({ nl }) => {
 		const unknown = Object.keys(translations).filter((key) => !(key in nl));
 		if (unknown.length) {
-			console.warn(`setTranslations: ${unknown.length === 1 ? 'deze key kent' : 'deze keys kent'} geen component, dus ${unknown.length === 1 ? 'hij doet' : 'ze doen'} niets: ${unknown.join(', ')}`);
+			console.warn(`setTranslations: no component knows ${unknown.length === 1 ? 'this key, so it does' : 'these keys, so they do'} nothing: ${unknown.join(', ')}`);
 		}
 	}).catch(() => {});
 }
