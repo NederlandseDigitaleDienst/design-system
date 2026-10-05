@@ -1081,3 +1081,91 @@ describe('nldd-combo-box no-filter', () => {
 		expect(item.hasAttribute('hidden')).toBe(false);
 	});
 });
+
+// With allow-custom, text differing from value is the normal state after a
+// choice ("Nederland" for "nl"). Only text the user typed is a custom value;
+// committing the label would send it to the server instead of the value.
+describe('nldd-combo-box allow-custom keeps a chosen value', () => {
+	let el: NLDDComboBox;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const setup = async (attrs = 'value="nl" text="Nederland"') => {
+		el = await fixture<NLDDComboBox>(`
+			<nldd-combo-box allow-custom ${attrs} accessible-label="Land">
+				<nldd-menu>
+					<nldd-menu-item text="Nederland" value="nl"></nldd-menu-item>
+					<nldd-menu-item text="België" value="be"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-combo-box>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector('input')!;
+		const changes: string[] = [];
+		el.addEventListener('change', (e) => changes.push((e as CustomEvent).detail.value));
+		return { input, changes };
+	};
+
+	const blur = async (input: HTMLInputElement) => {
+		input.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+		await waitForUpdate(el);
+	};
+
+	const type = async (input: HTMLInputElement, text: string) => {
+		input.value = text;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+	};
+
+	it('keeps the value when focus comes and goes', async () => {
+		const { input, changes } = await setup();
+		input.focus();
+		await blur(input);
+		expect(el.value).toBe('nl');
+		expect(changes).toEqual([]);
+	});
+
+	it('keeps the value of an option chosen from the menu when focus leaves', async () => {
+		const { input, changes } = await setup('');
+		(el.querySelector('nldd-menu-item[value="be"]') as HTMLElement & { select(): void }).select();
+		await waitForUpdate(el);
+		await blur(input);
+		expect(el.value).toBe('be');
+		expect(changes).toEqual(['be']);
+	});
+
+	it('does not commit the label on Enter after a choice', async () => {
+		const { input, changes } = await setup();
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+		await waitForUpdate(el);
+		expect(el.value).toBe('nl');
+		expect(changes).toEqual([]);
+	});
+
+	it('leaves a text the consumer set on its own alone', async () => {
+		const { input, changes } = await setup('value="nl" text="Nederland (NL)"');
+		input.focus();
+		await blur(input);
+		expect(el.value).toBe('nl');
+		expect(changes).toEqual([]);
+	});
+
+	it('still commits text the user typed', async () => {
+		const { input, changes } = await setup();
+		await type(input, 'Luxemburg');
+		await blur(input);
+		expect(el.value).toBe('Luxemburg');
+		expect(changes).toEqual(['Luxemburg']);
+	});
+
+	it('takes the value of an option whose label was typed in full', async () => {
+		const { input, changes } = await setup('');
+		await type(input, 'belgië');
+		await blur(input);
+		expect(el.value).toBe('be');
+		expect(el.text).toBe('België');
+		expect(changes).toEqual(['be']);
+	});
+});

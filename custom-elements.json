@@ -22372,7 +22372,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Allow free-typed values (not just menu options)",
+              "description": "Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value.",
               "fieldName": "allowCustom"
             },
             {

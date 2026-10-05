@@ -37,7 +37,9 @@
  * @note Free-text values: only when `allow-custom` is set. Then a typed value that
  *       matches no menu option is emitted as-is via the `change` event on Enter or blur
  *       (consumers validate emitted values). Without it, such a value is discarded and
- *       the input reverts to the current value.
+ *       the input reverts to the current value. Only text the user typed is committed:
+ *       the label of a chosen option stays a label, and typing an option's label in full
+ *       picks that option and its value.
  *
  * Options can arrive after the keystroke, from a server you query per
  * keystroke. Slot them into the menu when they come in: if the user is still
@@ -186,6 +188,10 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	 *  Options that arrive after it, from a server answering per keystroke,
 	 *  open it then. Escape, leaving the field or opening the menu clear it. */
 	private _openPending = false;
+	/** What the user typed since the last commit, or null when the text in the
+	 *  field came from somewhere else: a choice from the menu, a value set from
+	 *  outside, the label derived from it. Only typed text is a custom value. */
+	private _typedText: string | null = null;
 
 	@query('.combo-box__input')
 	_input!: HTMLInputElement;
@@ -229,6 +235,9 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		if (changedProperties.has('value') && !changedProperties.has('text')) {
 			this._deriveTextFromMenu();
 		}
+		// A new value, from a choice, a commit or the consumer, settles the text:
+		// whatever stands in the field now is not something left to commit.
+		if (changedProperties.has('value')) this._typedText = null;
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
@@ -397,6 +406,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _handleMenuSelect = (e: Event): void => {
 		const item = e.target as NLDDMenuItem;
+		this._typedText = null;
 		this.text = item.text;
 		this.value = item.value || item.text;
 		this._highlightedId = '';
@@ -508,6 +518,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleInput(e: Event): void {
 		const input = e.target as HTMLInputElement;
 		this.text = input.value;
+		this._typedText = input.value;
 		this._menu?.filter(this.text, { hide: !this.noFilter });
 		this._updateActiveDescendant();
 		// The reverse of the allow-custom guard in _openMenu: typing until
@@ -567,15 +578,36 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 			if (!focusMovedIntoMenu) this._revertTextToValue();
 			return;
 		}
-		if (this.text !== '' && this.text !== this.value) {
-			this.value = this.text;
-			this.commitFormValue();
-			this.dispatchEvent(new CustomEvent('change', {
-				detail: { value: this.value },
-				bubbles: true,
-				composed: true,
-			}));
-		}
+		if (this._hasTypedCustomText()) this._commitTypedText();
+	}
+
+	/**
+	 * With allow-custom, only text the user typed becomes the value. `text`
+	 * differing from `value` is not the sign of that: it is the normal state after
+	 * every choice from the menu ("Nederland" for "nl"), and committing it would
+	 * send the label to the server instead of the value.
+	 */
+	private _hasTypedCustomText(): boolean {
+		return this._typedText !== null && this.text === this._typedText && this.text !== '' && this.text !== this.value;
+	}
+
+	private _commitTypedText(): void {
+		// Typing an option's label in full means that option: its value goes to
+		// the form, not the label.
+		const option = Array.from(this._menu?.querySelectorAll<NLDDMenuItem>('nldd-menu-item') ?? [])
+			.find(item => item.closest('nldd-menu') === this._menu && item.text.trim().toLowerCase() === this.text.trim().toLowerCase());
+		if (option) this.text = option.text;
+		const value = option ? option.value || option.text : this.text;
+		this._typedText = null;
+		// The label of the option that was already chosen: nothing changed.
+		if (value === this.value) return;
+		this.value = value;
+		this.commitFormValue();
+		this.dispatchEvent(new CustomEvent('change', {
+			detail: { value: this.value },
+			bubbles: true,
+			composed: true,
+		}));
 	}
 
 	/** Restore the input text to the current value's display label, discarding any
@@ -603,7 +635,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 			if (e.key === 'ArrowDown') {
 				e.preventDefault();
 				this._openMenu();
-			} else if (e.key === 'Enter' && this.allowCustom && this.text !== '' && this.text !== this.value) {
+			} else if (e.key === 'Enter' && this.allowCustom && this._hasTypedCustomText()) {
 				// With allow-custom the menu closes as soon as nothing matches
 				// (see _handleInput), so the Enter-commit must also work while
 				// the menu is closed.
@@ -612,13 +644,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 				// this a combo box in a form submits the form on the same press
 				// that picks the option.
 				e.stopPropagation();
-				this.value = this.text;
-				this.commitFormValue();
-				this.dispatchEvent(new CustomEvent('change', {
-					detail: { value: this.value },
-					bubbles: true,
-					composed: true,
-				}));
+				this._commitTypedText();
 			} else if (e.key === 'Enter') {
 				// Nothing to commit: no menu open, and either free text is not allowed
 				// or there is none that differs from the value. This Enter is not ours,
@@ -649,14 +675,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 				if (highlighted) {
 					highlighted.select();
 				} else if (this.allowCustom) {
-					this.value = this.text;
 					this._closeMenu();
-					this.commitFormValue();
-					this.dispatchEvent(new CustomEvent('change', {
-						detail: { value: this.value },
-						bubbles: true,
-						composed: true,
-					}));
+					if (this._hasTypedCustomText()) this._commitTypedText();
 				} else {
 					// No option highlighted and free text not allowed: discard it.
 					this._closeMenu();

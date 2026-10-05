@@ -19,7 +19,7 @@
  * @attr {string} type - Input type forwarded to the inner input (e.g. 'email')
  * @attr {string} autocomplete - Autocomplete hint forwarded to the inner input
  * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input
- * @attr {boolean} allow-custom - Allow free-typed values (not just menu options)
+ * @attr {boolean} allow-custom - Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value.
  * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
  * @attr {boolean} valid - Marks the field valid (shows the valid icon)
  * @attr {boolean} invalid - Marks the field invalid (shows the invalid icon)
@@ -499,7 +499,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		const remainder = parts.pop() ?? '';
 		const next = [...this.values];
 		for (const part of parts) {
-			const value = part.trim();
+			const value = part.trim() ? this._valueForTypedText(part) : '';
 			if (value && !next.includes(value)) next.push(value);
 		}
 		if (next.length !== this.values.length) {
@@ -528,7 +528,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		// and joins the form value. Only with custom values allowed; commit without
 		// re-focusing so the focus move isn't fought. `_commitValue` closes the
 		// menu, so only close it ourselves when nothing was committed.
-		if (this.allowCustom && this._text.trim()) this._commitValue(this._text.trim(), false);
+		if (this.allowCustom && this._text.trim()) this._commitValue(this._valueForTypedText(this._text), false);
 		else this._closeMenu();
 	}
 
@@ -562,7 +562,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 					highlighted.select(); // routes through _handleMenuSelect
 				} else if (this.allowCustom && this._text.trim()) {
 					e.preventDefault();
-					this._commitValue(this._text.trim());
+					this._commitValue(this._valueForTypedText(this._text));
 				} else {
 					// Nothing here to act on, so this Enter is not ours. Hand it to the
 					// form, which is what the sentence above promises and what the
@@ -822,6 +822,18 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 * picker), so a focused empty field behaves the same whether it was just focused
 	 * or a value was just committed.
 	 */
+	/**
+	 * Typing an option's label in full means that option: its value becomes the
+	 * token, not the label, so the form sends what a choice from the menu would.
+	 * Anything else typed is a custom value as it stands.
+	 */
+	private _valueForTypedText(text: string): string {
+		const typed = text.trim();
+		const option = Array.from(this._menu?.querySelectorAll<NLDDMenuItem>('nldd-menu-item') ?? [])
+			.find((item) => item.closest('nldd-menu') === this._menu && item.text.trim().toLowerCase() === typed.toLowerCase());
+		return option ? option.value || option.text : typed;
+	}
+
 	private _commitValue(value: string, refocus = true): void {
 		this._addValue(value);
 		this._resetInputText();

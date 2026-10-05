@@ -45,6 +45,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **`nldd-combo-box` with `allow-custom` keeps a value chosen from the menu.** Leaving the field, or pressing Enter, committed the shown text as the value whenever it differed from the value. That is the normal state after every choice ("Nederland" for `nl`), so in a form the label went to the server instead of the value, usually on the click on the submit button. Only text the user typed is committed now, and typing an option's label in full picks that option. `nldd-token-field` did the same with a typed label: "België" became a token with the value "België" instead of `be`, on Enter, on a comma or when leaving the field. It now adds the option.
+
 - **`nldd-combo-box` and `nldd-token-field` open when the options arrive after the keystroke.** A field that queries its server per keystroke slots the matches in a moment later. With `allow-custom`, and on the token field always, the keystroke found nothing to show and kept the menu shut, and nothing looked again when the options came in, so the list only appeared on the next letter. The options that arrive now open it, as long as the user is still in the field and did not press Escape. A menu whose options all go away closes again.
 
 - **A component that another component builds can be translated.** The activity indicator in a loading `nldd-button`, `nldd-icon-button` and `nldd-inline-dialog`, the tokens of `nldd-token-field`, the overflow menus of `nldd-toolbar`, `nldd-menu-bar` and `nldd-document-tab-bar`, and the pickers of `nldd-date-field` and `nldd-time-field` sit in a shadow root, so the `translations` you set on the outer element never reached them and they stayed Dutch. They read `setTranslations()` now.

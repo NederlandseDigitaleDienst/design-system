@@ -773,3 +773,64 @@ describe('nldd-token-field no-filter', () => {
 		expect(item.hasAttribute('hidden')).toBe(false);
 	});
 });
+
+// Typing an option's label in full means that option. Its value becomes the
+// token, so the form sends "be" and not the label "België".
+describe('nldd-token-field typed option labels', () => {
+	let el: HTMLElement & { values: string[] };
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const setup = async (attrs = '') => {
+		el = await fixture(`
+			<nldd-token-field allow-custom accessible-label="Landen" ${attrs}>
+				<nldd-menu>
+					<nldd-menu-item text="Nederland" value="nl"></nldd-menu-item>
+					<nldd-menu-item text="België" value="be"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-token-field>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('.token-field__input')!;
+		input.focus();
+		return input;
+	};
+
+	const type = async (input: HTMLInputElement, text: string) => {
+		input.value = text;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+	};
+
+	it('takes the option value on Enter', async () => {
+		const input = await setup();
+		await type(input, 'belgië');
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+		await waitForUpdate(el);
+		expect(el.values).toEqual(['be']);
+	});
+
+	it('takes the option value when focus leaves', async () => {
+		const input = await setup();
+		await type(input, 'België');
+		input.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+		await waitForUpdate(el);
+		expect(el.values).toEqual(['be']);
+	});
+
+	it('takes the option value for a part before a comma', async () => {
+		const input = await setup();
+		await type(input, 'België, Luxemburg,');
+		expect(el.values).toEqual(['be', 'Luxemburg']);
+	});
+
+	it('adds no second token for an option already chosen', async () => {
+		const input = await setup('values="be"');
+		await type(input, 'België');
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+		await waitForUpdate(el);
+		expect(el.values).toEqual(['be']);
+	});
+});

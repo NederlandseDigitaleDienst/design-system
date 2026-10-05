@@ -1544,7 +1544,7 @@ A multi-select input that looks like a normal input field: chosen values show as
 | `type` | `string` | Input type forwarded to the inner input (e.g. 'email') |
 | `autocomplete` | `string` | Autocomplete hint forwarded to the inner input |
 | `accessible-label` | `string` | Accessible label forwarded as aria-label to the input |
-| `allow-custom` | `boolean` | Allow free-typed values (not just menu options) |
+| `allow-custom` | `boolean` | Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value. |
 | `no-filter` | `boolean` | Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address. |
 | `valid` | `boolean` | Marks the field valid (shows the valid icon) |
 | `invalid` | `boolean` | Marks the field invalid (shows the invalid icon) |
