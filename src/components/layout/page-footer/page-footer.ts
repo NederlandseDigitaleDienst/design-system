@@ -35,6 +35,7 @@ import {
 	pageFooterLegalBarItemTemplate,
 } from './page-footer.template.js';
 import { nlddPageFooterTranslations, type NLDDPageFooterTranslations } from './page-footer.i18n.js';
+import { translate } from '../../../utilities/translations.js';
 
 
 // # nldd-page-footer-legal-bar-item
@@ -106,29 +107,11 @@ export class NLDDPageFooterLegalBar extends LitElement {
 	@state()
 	_hasEnd = false;
 
-	private _mergedTranslations: NLDDPageFooterTranslations = { ...nlddPageFooterTranslations };
-
-	override willUpdate(changed: PropertyValues): void {
-		if (changed.has('translations') || changed.has('accessibleLabel')) {
-			this._mergedTranslations = {
-				...nlddPageFooterTranslations,
-				...this.translations,
-			};
-			if (this.accessibleLabel) {
-				this._mergedTranslations['components.page-footer.legal-bar-accessible-label'] = this.accessibleLabel;
-			}
-		}
-	}
-
 	_t(key: keyof NLDDPageFooterTranslations): string {
-		// Return '' (not the key) for missing translations so callers can do
-		// `value || nothing` to suppress aria-label / text rather than
-		// announcing the raw key string. Warn in DEV.
-		const value = this._mergedTranslations[key];
-		if (value === undefined && import.meta.env?.DEV) {
-			console.warn(`<nldd-page-footer-legal-bar>: missing translation for "${key}"`);
+		if (key === 'components.page-footer.legal-bar-accessible-label' && this.accessibleLabel) {
+			return this.accessibleLabel;
 		}
-		return value ?? '';
+		return translate(this.translations, nlddPageFooterTranslations, key);
 	}
 
 	_onSlotChange = (e: Event) => {

@@ -48,6 +48,7 @@ import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 
@@ -149,7 +150,7 @@ export class NLDDWindow extends LitElement {
 	// — i18n ——————————————————————————————————————————————————————————————————
 
 	private _t(key: keyof NLDDWindowTranslations): string {
-		return this.translations[key] ?? nlddWindowTranslations[key];
+		return translate(this.translations, nlddWindowTranslations, key);
 	}
 
 	get _resolvedAccessibleLabel(): string {

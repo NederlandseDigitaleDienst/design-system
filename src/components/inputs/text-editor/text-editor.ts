@@ -7,9 +7,9 @@
  * stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree,
  * so the data stays portable.
  *
- * Default `variant="simple"` is bare (no frame, no focus ring) for use inside
+ * Default `appearance="simple"` is bare (no frame, no focus ring) for use inside
  * a composition (e.g. a message field) that owns its chrome and focus; the
- * caret is a prominent accent. `variant="input-field"` adds a framed surface + focus
+ * caret is a prominent accent. `appearance="input-field"` adds a framed surface + focus
  *
  * Headless: there is no built-in toolbar. A consumer drives formatting via the
  * command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/
@@ -39,14 +39,17 @@
  * @attr {string} name - Field name for form submission
  * @attr {boolean} readonly - Readonly state (focusable and selectable, not editable)
  * @attr {boolean} required - Required state
+ * @attr {boolean} no-spellcheck - Turns spellchecking off. It is on by default, like the other text fields, and leaves out what is not running text: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens (the editor lives in a shadow root; Firefox only checks around the caret), and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on.
  * @attr {boolean} wrap - Wrap long lines (default true; prose wraps)
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
- * @attr {string} variant - 'simple' (default, bare) | 'input-field' (framed surface)
+ * @attr {string} appearance - 'simple' (default, bare) | 'input-field' (framed surface)
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
  *
  * @prop {MentionSource} mentionSource - Consumer-supplied @-mention candidate source (property only). Without it, @-typeahead is inert.
- * @prop {Typeahead[]} typeaheads - Your own typeahead lists next to the @-mention (property only): each a trigger character (`#`, `:`, `/`), a `source` that returns candidates for the text typed after it, and an optional `insert` that decides what a choice writes (by default the trigger, the text and a space). Lists on one trigger are merged in order. A candidate is `{ id, text, supportingText? }` and can carry an `avatar` (its row then takes two lines, the supporting text under the text), an `icon` or a `symbol` for its row.
+ * @prop {string} mentionQuery - What may follow the `@` of a mention, as a regular expression source (property only). Default: letters with any accent, digits, `_`, `.`, `+` and `-`. Allow one space to search on a full name, as in `@sam jansen`.
+ * @prop {Function} mentionEmptyText - What to say when the @-list has no candidates, called with the typed query (property only). Without it the list says "Typ om te zoeken" or "Niets gevonden", both translatable. Return null to close the list without a word.
+ * @prop {Typeahead[]} typeaheads - Your own typeahead lists next to the @-mention (property only): each a trigger character (`#`, `:`, `/`), a `source` that returns candidates for the text typed after it, an optional `query` (a regular expression for what may follow the trigger, such as a space in a full name), an optional `emptyText` (what to say when there are no candidates, instead of the translated default) and an optional `insert` that decides what a choice writes (by default the trigger, the text and a space). Lists on one trigger are merged in order. A candidate is `{ id, text, supportingText? }` and can carry an `avatar` (its row then takes two lines, the supporting text under the text), an `icon` or a `symbol` for its row.
  * @attr {boolean} annotatable - Enable the annotation overlay (off by default). Annotations only render when this is set.
  * @prop {Annotation[]} annotations - Consumer-supplied annotation overlay (property only). Anchored by offset and mapped through edits; the text stays clean. Requires `annotatable`. Assign a NEW array to apply changes (Lit dirty-checks by identity, so in-place mutation like `.push()` won't re-render): `editor.annotations = [...editor.annotations, next]`.
  * @attr {object} translations - Override the editor's assistive-tech strings (the open-in-new-tab link badge and the annotation count badge). Unset keys fall back to Dutch.
@@ -59,6 +62,7 @@
  * @fires nldd-text-editor-typeahead - When a candidate from one of the `typeaheads` is chosen (detail: TypeaheadChosenDetail with trigger, candidate, from, to; clean offsets)
  * @fires nldd-text-editor-annotation-click - When an annotation's count badge is clicked (detail: { ids: string[], rect: DOMRect }); rect is the badge's viewport box so a consumer can anchor its own note UI to it
  */
+import { relabel } from './text-editor.labels.js';
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
@@ -71,7 +75,7 @@ import {
 	placeholder as cmPlaceholder,
 } from '@codemirror/view';
 import { Compartment, EditorState, Prec, Transaction, type Extension } from '@codemirror/state';
-import { defaultKeymap, history, historyKeymap, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
+import { defaultKeymap, deleteCharBackward, deleteCharForward, history, historyKeymap, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
 import { NLDDCodeMirrorElement } from '../../../utilities/codemirror/codemirror-element.js';
 import { nlddCodeMirrorTheme } from '../../../utilities/codemirror/theme.js';
 import { markdownEditing, mentionRangeAt, mentionRangeEndingAt, mentionRangeStartingAt } from './text-editor.markdown.js';
@@ -85,6 +89,7 @@ import {
 	type TypeaheadChoice,
 } from './text-editor.mentions.js';
 import { repairHeldEmphasis } from './text-editor.emphasis.js';
+import { spellcheck, leaveDeletionToBrowser } from './text-editor.spellcheck.js';
 import { annotations as annotationExtension, setAnnotations, pasteAnnotations, currentAnnotations, type Annotation } from './text-editor.annotations.js';
 import { orderedListRenumber } from './text-editor.ordered-list.js';
 import { dragToMove, dragMovePlugin } from './text-editor.drag.js';
@@ -117,9 +122,10 @@ import { textEditorTemplate } from './text-editor.template.js';
 import { stripSentinels, docToClean, cleanToDoc, sentinelPositions } from './text-editor.annotation-sentinels.js';
 import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './text-editor.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
-export type TextEditorVariant = 'input-field' | 'simple';
+export type TextEditorAppearance = 'input-field' | 'simple';
 export type { HeadingLevel, ListType, TextEditorState, TextEditorActiveFormats } from './text-editor.commands.js';
 export type {
 	MentionCandidate,
@@ -129,7 +135,9 @@ export type {
 	TypeaheadCandidate,
 	TypeaheadSource,
 	TypeaheadChosenDetail,
+	TypeaheadTrigger,
 } from './text-editor.mentions.js';
+export { DEFAULT_TYPEAHEAD_QUERY } from './text-editor.mentions.js';
 export type { Annotation } from './text-editor.annotations.js';
 
 @customElement('nldd-text-editor')
@@ -171,6 +179,10 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
+	/** Turns spellchecking off. On by default, without code, URLs and mentions. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
+	noSpellcheck = false;
+
 	@property({ type: Boolean, reflect: true })
 	wrap = true;
 
@@ -180,8 +192,8 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
 	resize: ResizeMode = 'auto';
 
-	@property({ reflect: true, converter: reflectNonDefault<TextEditorVariant>('simple') })
-	variant: TextEditorVariant = 'simple';
+	@property({ reflect: true, converter: reflectNonDefault<TextEditorAppearance>('simple') })
+	appearance: TextEditorAppearance = 'simple';
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
@@ -192,6 +204,19 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@property({ attribute: false })
 	mentionSource?: MentionSource;
 
+	/** What may follow the `@` of a mention, as a regular expression without
+	 *  anchors or capturing groups. Property only. Without it: letters with any
+	 *  accent, digits, `_`, `.`, `+` and `-`. Allow one space to search on a full
+	 *  name: `'[\\p{L}\\p{M}\\p{N}_.+-]*(?: [\\p{L}\\p{M}\\p{N}_.+-]+)?'`. */
+	@property({ attribute: false })
+	mentionQuery?: string;
+
+	/** What to say when the @-list has no candidates. Without it: "Typ om te
+	 *  zoeken" or "Niets gevonden" (translatable). Called with the typed query;
+	 *  return null to close without a word. Property only. */
+	@property({ attribute: false })
+	mentionEmptyText?: (query: string) => string | null | undefined;
+
 	/** Your own typeahead lists next to the @-mention, each on its own trigger
 	 *  character. Property only. Read on every keystroke, so a new array takes
 	 *  effect at once. */
@@ -201,11 +226,17 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	/** The built-in mention as a typeahead: the `@` list fed by `mentionSource`,
 	 *  writing the token. One object, so a choice can be told apart from a
 	 *  consumer's own `@` list and fire the mention event. */
-	private readonly _mentionTypeahead: Typeahead = {
+	private readonly _mentionTypeahead: Typeahead = ((host: NLDDTextEditor): Typeahead => ({
 		trigger: '@',
-		source: (query) => this.mentionSource?.(query) ?? [],
+		source: (query) => host.mentionSource?.(query) ?? [],
 		insert: mentionInsert,
-	};
+		get query() {
+			return host.mentionQuery;
+		},
+		get emptyText() {
+			return host.mentionEmptyText;
+		},
+	}))(this);
 
 	/** Whether the annotation overlay is enabled. Off by default; set the
 	 *  `annotatable` attribute to turn it on (so the comment affordance and the
@@ -239,6 +270,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	private _wrapCompartment = new Compartment();
 	private _placeholderCompartment = new Compartment();
 	private _attrsCompartment = new Compartment();
+	private _spellcheckCompartment = new Compartment();
 	private _historyCompartment = new Compartment();
 
 
@@ -262,20 +294,30 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	 *  `vars`. Consumer overrides via `translations` win; unset keys fall back to the
 	 *  Dutch defaults. */
 	public _t(key: keyof NLDDTextEditorTranslations, vars?: Record<string, string | number>): string {
-		let str: string = this.translations[key] ?? nlddTextEditorTranslations[key];
-		if (vars) {
-			for (const [k, v] of Object.entries(vars)) {
-				str = str.split(`{${k}}`).join(String(v));
-			}
-		}
-		return str;
+		return translate(this.translations, nlddTextEditorTranslations, key, vars);
+	}
+
+	private _labels: string | null = null;
+
+	/** The translated texts the document's widgets draw, as one string. */
+	private _labelSignature(): string {
+		return [
+			'components.text-editor.open-in-new-tab-label',
+			'components.text-editor.annotation-count-label',
+			'components.text-editor.annotation-singular-lowercase',
+			'components.text-editor.annotation-plural-lowercase',
+		].map((key) => this._t(key as keyof NLDDTextEditorTranslations)).join('\n');
 	}
 
 	protected buildExtensions(): Extension[] {
 		return [
 			nlddCodeMirrorTheme,
 			markdownEditing,
-			typeaheadExtension(() => this._typeaheadLists(), (choice) => this._onTypeaheadChosen(choice)),
+			typeaheadExtension(
+				() => this._typeaheadLists(),
+				(choice) => this._onTypeaheadChosen(choice),
+				(query) => this._t(query ? 'components.text-editor.typeahead-no-results-text' : 'components.text-editor.typeahead-start-typing-text'),
+			),
 			// Prec.low so this transaction filter runs *before* the annotation filter
 			// (filters run low-precedence first), letting the annotation map through the
 			// renumber changes too — otherwise a marker growing from 1 to 11 drifts a
@@ -325,13 +367,18 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 				// they do nothing, which beats a code block nobody asked for.
 				{ key: 'Mod-]', run: (view) => { cmIndentListItems(view); return true; } },
 				{ key: 'Mod-[', run: (view) => { cmOutdentListItems(view); return true; } },
-				...defaultKeymap,
+				// The browser deletes where the editor has nothing to add, so the
+				// spelling marks on the line stay (see leaveDeletionToBrowser).
+				{ key: 'Backspace', run: (view) => !leaveDeletionToBrowser(view, 'Backspace') && deleteCharBackward(view), shift: deleteCharBackward },
+				{ key: 'Delete', run: (view) => !leaveDeletionToBrowser(view, 'Delete') && deleteCharForward(view) },
+				...defaultKeymap.filter((binding) => binding.key !== 'Backspace' && binding.key !== 'Delete'),
 				...historyKeymap,
 			]),
 			this._placeholderCompartment.of(this._placeholderExtension()),
 			this._wrapCompartment.of(this.wrap ? EditorView.lineWrapping : []),
 			this._editableCompartment.of(this._editableExtension()),
 			this._attrsCompartment.of(this._attrsExtension()),
+			this._spellcheckCompartment.of(this.noSpellcheck ? [] : spellcheck()),
 			EditorView.updateListener.of((u) => {
 				if (u.docChanged) this._onDocChanged();
 				if (u.docChanged || u.selectionSet) this._emitState();
@@ -392,8 +439,28 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		return this.placeholder ? cmPlaceholder(this.placeholder) : [];
 	}
 
+	/**
+	 * A browser checks text when it changes, not when `spellcheck` does: turned
+	 * off, the red underlines stayed until the text under them was edited, and
+	 * turned on, they only came with new words. Drawing the content anew makes
+	 * the browser look again. The state stays as it is, history and selection
+	 * included, so this is only the picture.
+	 */
+	private _redrawForSpellcheck(): void {
+		const view = this.view;
+		if (!view) return;
+		const focused = view.hasFocus;
+		view.setState(view.state);
+		if (focused) view.focus();
+	}
+
 	private _attrsExtension(): Extension {
-		const attrs: Record<string, string> = {};
+		// Autocorrect and autocapitalize follow the user's own settings, as on an
+		// <input> or a <textarea>, also with no-spellcheck: CodeMirror's "off" is
+		// not what a text field does. And with them off, CodeMirror turns the
+		// period macOS puts after a double space back into a space by writing the
+		// line anew, which cost the spelling marks on it.
+		const attrs: Record<string, string> = { autocorrect: 'on', autocapitalize: 'sentences' };
 		if (this.accessibleLabel) attrs['aria-label'] = this.accessibleLabel;
 		if (this.inputId) attrs['id'] = this.inputId;
 		return EditorView.contentAttributes.of(attrs);
@@ -435,6 +502,13 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			this.style.setProperty('--_rows', String(this.rows));
 		}
 		if (this.view) {
+			// A render after setTranslations() or a new `translations`: the labels
+			// drawn inside the document follow when their text changed.
+			const labels = this._labelSignature();
+			if (labels !== this._labels) {
+				if (this._labels !== null) this.view.dispatch({ effects: relabel.of(null) });
+				this._labels = labels;
+			}
 			if (changed.has('value')) {
 				// Only push an external value change into the document; a value that just
 				// mirrors the current (sentinel-stripped) doc must not trigger a rewrite,
@@ -453,6 +527,10 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			}
 			if (changed.has('accessibleLabel') || changed.has('inputId')) {
 				this.reconfigure(this._attrsCompartment, this._attrsExtension());
+			}
+			if (changed.has('noSpellcheck')) {
+				this.reconfigure(this._spellcheckCompartment, this.noSpellcheck ? [] : spellcheck());
+				this._redrawForSpellcheck();
 			}
 			if (changed.has('annotations') || changed.has('annotatable')) {
 				this._syncAnnotations();

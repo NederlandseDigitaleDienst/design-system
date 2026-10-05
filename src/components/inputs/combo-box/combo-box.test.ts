@@ -963,3 +963,220 @@ describe('nldd-combo-box Escape', () => {
 		expect(outer).toHaveBeenCalledTimes(1);
 	});
 });
+
+// A consumer that queries its server per keystroke slots the matches in after
+// the keystroke. With allow-custom the keystroke found nothing to show and kept
+// the menu shut; the options that arrive later have to open it.
+describe('nldd-combo-box options that arrive after the keystroke', () => {
+	let el: NLDDComboBox;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const setup = async () => {
+		el = await fixture<NLDDComboBox>(`
+			<nldd-combo-box allow-custom accessible-label="Naam">
+				<nldd-menu></nldd-menu>
+			</nldd-combo-box>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector('input')!;
+		input.focus();
+		return { input, menu: el.querySelector('nldd-menu')! };
+	};
+
+	const type = async (input: HTMLInputElement, text: string) => {
+		input.value = text;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+	};
+
+	const arrive = async (menu: Element) => {
+		const item = document.createElement('nldd-menu-item') as HTMLElement & { text: string; value: string };
+		item.text = 'Tim de Vries';
+		item.value = 't.devries@example.org';
+		menu.append(item);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await waitForUpdate(el);
+		return item;
+	};
+
+	it('opens when the options arrive after the keystroke', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		expect(menu.matches(':popover-open')).toBe(false);
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(true);
+	});
+
+	it('stays shut when the user pressed Escape before they arrived', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
+	it('stays shut when the user left the field before they arrived', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		input.blur();
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
+	it('does not open on its own when nothing was typed', async () => {
+		const { menu } = await setup();
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
+	it('closes again when the options it showed go away', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		const item = await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(true);
+		item.remove();
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await waitForUpdate(el);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+});
+
+// A server that searched on the e-mail address returns "Tim de Vries" for
+// "vries@". The field must not hide that match because the name does not
+// contain what was typed.
+describe('nldd-combo-box no-filter', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const typeServerQuery = async (attrs: string) => {
+		el = await fixture(`
+			<nldd-combo-box accessible-label="Ontvanger" ${attrs}>
+				<nldd-menu>
+					<nldd-menu-item text="Tim de Vries" value="t1"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-combo-box>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('input')!;
+		input.focus();
+		input.value = 'vries@';
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+		return el.querySelector('nldd-menu-item')!;
+	};
+
+	it('hides an option without the typed text by default', async () => {
+		const item = await typeServerQuery('');
+		expect(item.hasAttribute('hidden')).toBe(true);
+	});
+
+	it('leaves the option visible with no-filter', async () => {
+		const item = await typeServerQuery('no-filter');
+		expect(item.hasAttribute('hidden')).toBe(false);
+	});
+});
+
+// With allow-custom, text differing from value is the normal state after a
+// choice ("Nederland" for "nl"). Only text the user typed is a custom value;
+// committing the label would send it to the server instead of the value.
+describe('nldd-combo-box allow-custom keeps a chosen value', () => {
+	let el: NLDDComboBox;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const setup = async (attrs = 'value="nl" text="Nederland"') => {
+		el = await fixture<NLDDComboBox>(`
+			<nldd-combo-box allow-custom ${attrs} accessible-label="Land">
+				<nldd-menu>
+					<nldd-menu-item text="Nederland" value="nl"></nldd-menu-item>
+					<nldd-menu-item text="België" value="be"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-combo-box>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector('input')!;
+		const changes: string[] = [];
+		el.addEventListener('change', (e) => changes.push((e as CustomEvent).detail.value));
+		return { input, changes };
+	};
+
+	const blur = async (input: HTMLInputElement) => {
+		input.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+		await waitForUpdate(el);
+	};
+
+	const type = async (input: HTMLInputElement, text: string) => {
+		input.value = text;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+	};
+
+	it('keeps the value when focus comes and goes', async () => {
+		const { input, changes } = await setup();
+		input.focus();
+		await blur(input);
+		expect(el.value).toBe('nl');
+		expect(changes).toEqual([]);
+	});
+
+	it('keeps the value of an option chosen from the menu when focus leaves', async () => {
+		const { input, changes } = await setup('');
+		(el.querySelector('nldd-menu-item[value="be"]') as HTMLElement & { select(): void }).select();
+		await waitForUpdate(el);
+		await blur(input);
+		expect(el.value).toBe('be');
+		expect(changes).toEqual(['be']);
+	});
+
+	it('does not commit the label on Enter after a choice', async () => {
+		const { input, changes } = await setup();
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+		await waitForUpdate(el);
+		expect(el.value).toBe('nl');
+		expect(changes).toEqual([]);
+	});
+
+	it('leaves a text the consumer set on its own alone', async () => {
+		const { input, changes } = await setup('value="nl" text="Nederland (NL)"');
+		input.focus();
+		await blur(input);
+		expect(el.value).toBe('nl');
+		expect(changes).toEqual([]);
+	});
+
+	it('still commits text the user typed', async () => {
+		const { input, changes } = await setup();
+		await type(input, 'Luxemburg');
+		await blur(input);
+		expect(el.value).toBe('Luxemburg');
+		expect(changes).toEqual(['Luxemburg']);
+	});
+
+	it('takes the value of an option whose label was typed in full', async () => {
+		const { input, changes } = await setup('');
+		await type(input, 'belgië');
+		await blur(input);
+		expect(el.value).toBe('be');
+		expect(el.text).toBe('België');
+		expect(changes).toEqual(['be']);
+	});
+
+	it('leaves typed text uncommitted once the app sets a value while the user types', async () => {
+		const { input, changes } = await setup('');
+		input.focus();
+		await type(input, 'Utrecht');
+		el.value = 'nl';
+		await waitForUpdate(el);
+		await blur(input);
+		expect(el.value).toBe('nl');
+		expect(changes).toEqual([]);
+	});
+});

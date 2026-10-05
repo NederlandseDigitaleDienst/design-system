@@ -2,10 +2,11 @@
  * Nederlandse Digitale Dienst Button Component (Lit + TypeScript)
  *
  * @element nldd-button
- * @attr {string} variant - Button variant: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted'. The inherit variants derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-parent-background-color) as the label color, with a white/black contrast flip as a fallback.
+ * @attr {string} appearance - Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-parent-background-color) as the label color, with a white/black contrast flip as a fallback.
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). 'lg' uses larger text and 24px start/end icons.
  * @attr {string} horizontal-alignment - Horizontal alignment of the button content: 'left' | 'center' | 'right' (default: unset, centered). Most visible with width="full" or a fixed width.
  * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width.
+ * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
  * @attr {boolean} disabled - Disabled state
  * @attr {string} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
  * @attr {string} popovertarget - ID of a popover element this button invokes; forwarded to the inner button. Use the popoverTargetElement property instead when the popover lives in another tree.
@@ -18,7 +19,7 @@
  * @attr {string} text - Button text
  * @attr {string} supporting-text - Supporting text shown below the text (md/lg) or after it (sm/xs), in a secondary color. Part of the accessible name (unless `accessible-label` is set, which replaces the whole accessible name).
  * @attr {boolean} single-line - When true, truncates overflowing text with an ellipsis instead of letting it wrap. Requires the button (or an ancestor) to constrain the width.
- * @attr {boolean} no-highlight-border - Removes the per-variant highlight border (e.g. when nldd-button-bar draws a single group border instead).
+ * @attr {boolean} no-highlight-border - Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead).
  * @attr {boolean} no-tab - Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (e.g. a button in a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {string} start-icon - Icon name for the start icon (before text)
  * @attr {string} end-icon - Icon name for the end icon (after text)
@@ -48,7 +49,7 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 
-type Variant =
+type Appearance =
 	| 'primary'
 	| 'secondary'
 	| 'destructive'
@@ -75,8 +76,8 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	static formAssociated = true;
 	private _internals = this.attachInternals();
 
-	@property({ reflect: true, converter: reflectNonDefault<Variant>('neutral-tinted') })
-	variant: Variant = 'neutral-tinted';
+	@property({ reflect: true, converter: reflectNonDefault<Appearance>('neutral-tinted') })
+	appearance: Appearance = 'neutral-tinted';
 
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
@@ -155,6 +156,10 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: Boolean, reflect: true })
 	loading = false;
 
+	/** What the screen reader announces while loading. Empty falls back to the activity indicator's "Laden". */
+	@property({ attribute: 'loading-text' })
+	loadingText = '';
+
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
@@ -169,7 +174,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: Boolean, reflect: true, attribute: 'single-line' })
 	singleLine = false;
 
-	/** Removes the per-variant highlight border (e.g. when nldd-button-bar draws a single group border instead). */
+	/** Removes the per-appearance highlight border (e.g. when nldd-button-bar draws a single group border instead). */
 	@property({ type: Boolean, reflect: true, attribute: 'no-highlight-border' })
 	noHighlightBorder = false;
 

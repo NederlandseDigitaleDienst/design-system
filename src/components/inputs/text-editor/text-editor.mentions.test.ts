@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { EditorState } from '@codemirror/state';
 import { ensureSyntaxTree } from '@codemirror/language';
 import { markdown } from '@codemirror/lang-markdown';
@@ -89,5 +89,60 @@ describe('other triggers', () => {
 	it('een trigger die in een tekenklasse iets betekent wordt letterlijk genomen', () => {
 		const { state, pos } = at('zie ]x| en ^y en -z');
 		expect(typeaheadQueryAt(state, pos, [']', '^', '-'])).toEqual({ from: 4, to: 6, query: 'x', trigger: ']' });
+	});
+});
+
+// #262: what may follow a trigger. Accents and a `+` belong to every list; a
+// space ends the query unless a list asks for one.
+describe('wat er na een trigger mag staan', () => {
+	const NAME = '[\\p{L}\\p{M}\\p{N}_.+-]*(?: [\\p{L}\\p{M}\\p{N}_.+-]+)?';
+
+	it('neemt een naam met accenten heel mee', () => {
+		const { state, pos } = at('@józef|');
+		expect(typeaheadQueryAt(state, pos, ['@'])?.query).toBe('józef');
+	});
+
+	it('neemt een accent als los teken (e plus combining acute) mee', () => {
+		const { state, pos } = at('@rene\u0301|');
+		expect(typeaheadQueryAt(state, pos, ['@'])?.query).toBe('rene\u0301');
+	});
+
+	it('stopt standaard bij een spatie', () => {
+		const { state, pos } = at('@sam jansen|');
+		expect(typeaheadQueryAt(state, pos, ['@'])).toBeNull();
+	});
+
+	it('laat één binnenspatie toe als de lijst dat zegt', () => {
+		const { state, pos } = at('@sam jansen|');
+		expect(typeaheadQueryAt(state, pos, [{ trigger: '@', query: NAME }])?.query).toBe('sam jansen');
+	});
+
+	it('sluit na een spatie aan het eind, ook met een binnenspatie', () => {
+		const { state, pos } = at('@sam |');
+		expect(typeaheadQueryAt(state, pos, [{ trigger: '@', query: NAME }])).toBeNull();
+	});
+
+	it('neemt standaard een + mee, voor :+1: en voor @sam+anna', () => {
+		const emoji = at(':+1|');
+		expect(typeaheadQueryAt(emoji.state, emoji.pos, [':'])?.query).toBe('+1');
+		const names = at('@sam+anna|');
+		expect(typeaheadQueryAt(names.state, names.pos, ['@'])?.query).toBe('sam+anna');
+	});
+
+	it('geeft elke trigger zijn eigen query', () => {
+		const { state, pos } = at('@sam jansen|');
+		expect(typeaheadQueryAt(state, pos, ['#', { trigger: '@', query: NAME }])).toEqual({ from: 0, to: 11, query: 'sam jansen', trigger: '@' });
+	});
+
+	it('neemt de trigger die het dichtst bij de cursor staat', () => {
+		const { state, pos } = at('@sam jansen #alg|');
+		expect(typeaheadQueryAt(state, pos, [{ trigger: '@', query: NAME }, '#'])?.trigger).toBe('#');
+	});
+
+	it('valt bij een ongeldige expressie terug op de standaard', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const { state, pos } = at('@józef|');
+		expect(typeaheadQueryAt(state, pos, [{ trigger: '@', query: '[' }])?.query).toBe('józef');
+		warn.mockRestore();
 	});
 });

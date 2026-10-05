@@ -175,13 +175,13 @@ export const Standaard = ({ inspectorAsSheet, primarySidebarAsSheet }: Record<st
 						<nldd-button
 							id="sidebar-toggle"
 							slot="toolbar"
-							variant="accent-transparent"
+							appearance="accent-transparent"
 							text="Navigatie"
 						></nldd-button>
 						<nldd-button
 							id="inspector-toggle"
 							slot="toolbar"
-							variant="accent-transparent"
+							appearance="accent-transparent"
 							text="Inspecteur"
 						></nldd-button>
 					</nldd-top-title-bar>
@@ -282,7 +282,7 @@ export const GenestdeSplitView = {
 				<nldd-split-view-pane slot="secondary-bar">
 					<nldd-container padding="16">
 						<nldd-button
-							variant="primary"
+							appearance="primary"
 							width="full"
 							text="Secondaire balk"
 						></nldd-button>

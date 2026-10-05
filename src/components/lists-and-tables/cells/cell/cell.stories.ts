@@ -75,7 +75,7 @@ export const Standaard = {
 			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
 		>
 			<nldd-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				text="Knop"
 			></nldd-button>
 		</nldd-cell>
@@ -90,7 +90,7 @@ export const BreedteFull = {
 			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
 		>
 			<nldd-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				width="full"
 				text="Uitgerekte knop"
 			></nldd-button>
@@ -106,7 +106,7 @@ export const BreedteFitContent = {
 			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
 		>
 			<nldd-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				text="Past zich aan"
 			></nldd-button>
 		</nldd-cell>
@@ -120,7 +120,7 @@ export const BreedteVast = {
 			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
 		>
 			<nldd-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				width="full"
 				text="120px vast"
 			></nldd-button>
@@ -137,7 +137,7 @@ export const MetMinEnMaxBreedte = {
 			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
 		>
 			<nldd-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				width="full"
 				text="Min 80 / Max 200"
 			></nldd-button>
@@ -154,7 +154,7 @@ export const MetMinimaleHoogte = {
 				style="border: 1px dashed var(--primitives-color-neutral-150);"
 			>
 				<nldd-button
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Min-hoogte 44px"
 				></nldd-button>
 			</nldd-cell>
@@ -170,7 +170,7 @@ export const VerticaleUitlijning = {
 				style="border: 1px dashed var(--primitives-color-neutral-150);"
 			>
 				<nldd-button
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Boven"
 				></nldd-button>
 			</nldd-cell>
@@ -179,7 +179,7 @@ export const VerticaleUitlijning = {
 				style="border: 1px dashed var(--primitives-color-neutral-150);"
 			>
 				<nldd-button
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Midden"
 				></nldd-button>
 			</nldd-cell>
@@ -188,7 +188,7 @@ export const VerticaleUitlijning = {
 				style="border: 1px dashed var(--primitives-color-neutral-150);"
 			>
 				<nldd-button
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Onder"
 				></nldd-button>
 			</nldd-cell>
@@ -205,7 +205,7 @@ export const HorizontaleUitlijning = {
 				style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
 			>
 				<nldd-button
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Links (default)"
 				></nldd-button>
 			</nldd-cell>
@@ -215,7 +215,7 @@ export const HorizontaleUitlijning = {
 				style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
 			>
 				<nldd-button
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Midden"
 				></nldd-button>
 			</nldd-cell>
@@ -225,7 +225,7 @@ export const HorizontaleUitlijning = {
 				style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
 			>
 				<nldd-button
-					variant="neutral-tinted"
+					appearance="neutral-tinted"
 					text="Rechts"
 				></nldd-button>
 			</nldd-cell>

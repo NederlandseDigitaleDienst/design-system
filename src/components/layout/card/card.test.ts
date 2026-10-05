@@ -1,7 +1,9 @@
 import { describe, it, expect, afterEach } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDCard } from './card.js';
 import './card.js';
+import '../../../assets/styles/variables.css';
 import '../../lists-and-tables/cells/cell/cell.js';
 
 describe('nldd-card', () => {
@@ -158,5 +160,53 @@ describe('nldd-card in a cell', () => {
 		await waitForUpdate(el);
 		const card = el.querySelector('nldd-card') as HTMLElement;
 		expect(card.getBoundingClientRect().width).toBe(320);
+	});
+});
+
+describe('nldd-card – hover', () => {
+	let el: NLDDCard;
+
+	afterEach(async () => {
+		await userEvent.unhover(document.body);
+		if (el) cleanup(el);
+	});
+
+	const look = async () => {
+		const card = el.shadowRoot!.querySelector<HTMLElement>('.card')!;
+		await Promise.all(card.getAnimations().map((animation) => animation.finished));
+		return [getComputedStyle(card).backgroundColor, getComputedStyle(card, '::after').boxShadow];
+	};
+
+	for (const background of ['base', 'tinted']) {
+		it(`steps the ${background} surface and border up on hover when the card is a link`, async () => {
+			el = await fixture<NLDDCard>(`<nldd-card href="/aanvraag" accessible-label="Aanvraag A-1042" background="${background}"><p>Dakisolatie</p></nldd-card>`);
+			const [restBackground, restBorder] = await look();
+
+			await userEvent.hover(el.shadowRoot!.querySelector('.card__action')!);
+			const [hoverBackground, hoverBorder] = await look();
+
+			expect(hoverBackground).not.toBe(restBackground);
+			expect(hoverBorder).not.toBe(restBorder);
+		});
+	}
+
+	it('stays as it is on hover when the card is not a link or button', async () => {
+		el = await fixture<NLDDCard>('<nldd-card accessible-label="Aanvraag A-1042"><p>Dakisolatie</p></nldd-card>');
+		const rest = await look();
+
+		await userEvent.hover(el.shadowRoot!.querySelector('.card')!);
+		expect(await look()).toEqual(rest);
+	});
+
+	it('stays as it is while a button lifted above the overlay is hovered', async () => {
+		el = await fixture<NLDDCard>(`
+			<nldd-card href="/aanvraag" accessible-label="Aanvraag A-1042">
+				<button slot="footer" style="position: relative; z-index: 1;">Bewerk</button>
+			</nldd-card>
+		`);
+		const rest = await look();
+
+		await userEvent.hover(el.querySelector('button')!);
+		expect(await look()).toEqual(rest);
 	});
 });

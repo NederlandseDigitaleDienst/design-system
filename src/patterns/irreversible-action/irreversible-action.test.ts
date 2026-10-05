@@ -21,7 +21,7 @@ describe('patroon: onomkeerbare actie', () => {
 		const box = root.querySelector('nldd-box')!;
 		expect(box.getAttribute('background')).toBe('critical');
 		expect(box.querySelector('nldd-title')!.shadowRoot!.querySelector('h2')).not.toBeNull();
-		expect(box.querySelector('nldd-button[variant="destructive"]')).not.toBeNull();
+		expect(box.querySelector('nldd-button[appearance="destructive"]')).not.toBeNull();
 	});
 
 	it('noemt in de dialoog het ding dat verdwijnt', () => {
@@ -32,7 +32,7 @@ describe('patroon: onomkeerbare actie', () => {
 
 	it('zet de uitweg als primaire knop vóór de onomkeerbare actie', () => {
 		const [first, second] = root.querySelectorAll('nldd-modal-dialog nldd-button[slot="actions"]');
-		expect(first.getAttribute('variant')).toBe('primary');
-		expect(second.getAttribute('variant')).toBe('destructive');
+		expect(first.getAttribute('appearance')).toBe('primary');
+		expect(second.getAttribute('appearance')).toBe('destructive');
 	});
 });

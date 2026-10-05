@@ -175,7 +175,7 @@ const toolbar = html`
 				priority="10"
 			>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Sla op"
 				></nldd-button>
 				<nldd-menu-item
@@ -346,7 +346,7 @@ export const ResponsieveBalken = {
 						label="Sla op"
 					>
 						<nldd-button
-							variant="primary"
+							appearance="primary"
 							text="Sla op"
 						></nldd-button>
 						<nldd-menu-item

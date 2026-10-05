@@ -11,7 +11,7 @@ export function tokenTemplate(component: NLDDToken): TemplateResult {
 				<div class="token__dismiss-action">
 					<nldd-icon-button
 						size="sm"
-						variant="neutral-tinted"
+						appearance="neutral-tinted"
 						icon="dismiss-small"
 						text=${component._dismissLabel}
 						accessible-label=${component._dismissLabel}
@@ -26,7 +26,7 @@ export function tokenTemplate(component: NLDDToken): TemplateResult {
 				<div class="token__menu-action">
 					<nldd-icon-button
 						size="sm"
-						variant="neutral-tinted"
+						appearance="neutral-tinted"
 						icon="chevron-down-small"
 						text=${component._menuLabel}
 						accessible-label=${component._menuLabel}

@@ -58,7 +58,7 @@ function renderPicker(component: NLDDDateField): TemplateResult | typeof nothing
 	return html`
 		<div class="date-field__picker-button">
 			<nldd-icon-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				size=${buttonSize}
 				icon="calendar"
 				text=${component._t('components.date-field.to-pick-date-action')}

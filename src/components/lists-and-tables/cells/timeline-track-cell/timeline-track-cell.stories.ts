@@ -24,7 +24,7 @@ export default {
 	tags: ['autodocs'],
 
 	args: {
-		variant: 'major',
+		level: 'major',
 		status: 'current',
 		size: 'md',
 		direction: 'down',
@@ -34,7 +34,7 @@ export default {
 		line: 'auto',
 	},
 	argTypes: {
-		variant: {
+		level: {
 			control: 'select',
 			options: ['major', 'minor', 'none'],
 			description: 'Wat er in de baan staat: een hele stip (major), een kleinere voor een rij die onder de vorige hoort (minor), of niets (none) voor een rij die draagt wat een stap bij zich heeft',
@@ -93,7 +93,7 @@ export const Standaard = {
 			<nldd-timeline-track-cell
 				status=${args.status}
 				size=${args.size}
-				variant=${args.variant}
+				level=${args.level}
 				direction=${args.direction}
 				position=${args.position}
 				line=${args.line}
@@ -252,7 +252,7 @@ export const Stappenlijst = {
 };
 
 /**
- * `variant="minor"` zet een rij onder de vorige: dezelfde baan, een kleinere stip
+ * `level="minor"` zet een rij onder de vorige: dezelfde baan, een kleinere stip
  * (12px bij `size="md"`, 10px bij `sm`). Inspringen zou het spoor breken, en juist
  * dat spoor verbindt de rijen — de hiërarchie komt van de stipmaat en van gewone
  * tekst in plaats van een titel.
@@ -306,7 +306,7 @@ export const GenesteVoortgang = {
 			<nldd-timeline-track-cell
 				status="past"
 				size="md"
-				variant="minor"
+				level="minor"
 			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Apparaat spanningsloos maken"></nldd-text-cell>
@@ -315,7 +315,7 @@ export const GenesteVoortgang = {
 			<nldd-timeline-track-cell
 				status="current"
 				size="md"
-				variant="minor"
+				level="minor"
 			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Oude onderdeel verwijderen"></nldd-text-cell>
@@ -324,7 +324,7 @@ export const GenesteVoortgang = {
 			<nldd-timeline-track-cell
 				status="future"
 				size="md"
-				variant="minor"
+				level="minor"
 			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Nieuw onderdeel plaatsen"></nldd-text-cell>
@@ -352,7 +352,7 @@ export const GenesteVoortgang = {
  * aan te wijzen in plaats van naast de naam ervan. Zet de naam daarom in zijn
  * eigen rij met de stip, en de kaart in een rij eronder zonder stip.
  *
- * Die tweede rij houdt dezelfde `size` en `variant` als de rij erboven, anders
+ * Die tweede rij houdt dezelfde `size` en `level` als de rij erboven, anders
  * staat hij in een andere baan en knikt het spoor. Zijn `status` kleurt de hele
  * lijn: `past` als het verder naar beneden doorloopt, `current` als het werk
  * hier stopt.
@@ -379,7 +379,7 @@ export const KaartOnderEenStap = {
 			<nldd-timeline-track-cell
 				status="past"
 				size="md"
-				variant="none"
+				level="none"
 			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-cell width="full">
@@ -432,7 +432,7 @@ export const Substappen = {
 			<nldd-timeline-track-cell
 				status="past"
 				size="md"
-				variant="minor"
+				level="minor"
 			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Contactgegevens"></nldd-text-cell>
@@ -441,7 +441,7 @@ export const Substappen = {
 			<nldd-timeline-track-cell
 				status="past"
 				size="md"
-				variant="minor"
+				level="minor"
 			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Bankrekening"></nldd-text-cell>
@@ -478,7 +478,7 @@ export const Substappen = {
 
 /**
  * De standaard: een kaal spoor van gebeurtenissen, stippen van 16px. Een
- * `variant="minor"` is hier 10px, voor een gebeurtenis die bij de vorige hoort.
+ * `level="minor"` is hier 10px, voor een gebeurtenis die bij de vorige hoort.
  */
 export const Tussenstappen = {
 	render: () => html`
@@ -501,7 +501,7 @@ export const Tussenstappen = {
 			<nldd-list-item>
 			<nldd-timeline-track-cell
 				status="past"
-				variant="minor"
+				level="minor"
 			></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-text-cell text="Ontvangstbevestiging verstuurd"></nldd-text-cell>
@@ -531,7 +531,7 @@ export const Tussenstappen = {
 };
 
 /**
- * `variant="none"` laat de stip weg, voor een rij zonder eigen punt op de tijdlijn:
+ * `level="none"` laat de stip weg, voor een rij zonder eigen punt op de tijdlijn:
  * een tussenkop, een groep, of wat een stap bij zich draagt.
  *
  * De rij houdt zijn `size`, dus hij blijft in dezelfde baan staan en het spoor
@@ -558,7 +558,7 @@ export const ZonderStip = {
 			></nldd-title-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-			<nldd-timeline-track-cell variant="none"></nldd-timeline-track-cell>
+			<nldd-timeline-track-cell level="none"></nldd-timeline-track-cell>
 			<nldd-spacer-cell size="12"></nldd-spacer-cell>
 			<nldd-title-cell text="Maart"></nldd-title-cell>
 			</nldd-list-item>

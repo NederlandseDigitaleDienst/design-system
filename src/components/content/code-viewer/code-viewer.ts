@@ -21,7 +21,7 @@
  *
  * @element nldd-code-viewer
  *
- * @attr {'box-tinted'|'box-base'|'simple'} variant - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
+ * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.
  * @attr {boolean} no-copy - Hide the copy-to-clipboard button (shown by default).
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
@@ -44,6 +44,7 @@ import type { NLDDCodeViewerTranslations } from './code-viewer.i18n.js';
 import { onColorSchemeChange, forceScrollLayerRepaint } from '../../../utilities/color-scheme-repaint.js';
 import '../../actions/icon-button/icon-button.js';
 import '../tooltip/tooltip.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 
@@ -59,7 +60,7 @@ function isClipboardAvailable(): boolean {
 		&& typeof navigator.clipboard?.writeText === 'function';
 }
 
-export type CodeViewerVariant = 'box-tinted' | 'box-base' | 'simple';
+export type CodeViewerAppearance = 'box-tinted' | 'box-base' | 'simple';
 
 @customElement('nldd-code-viewer')
 export class NLDDCodeViewer extends NLDDCodeMirrorElement {
@@ -67,8 +68,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 
 	/** Visual style. The `box` values are a framed card and name the surface they
 	 *  fill with; `simple` drops the frame. */
-	@property({ reflect: true, converter: reflectNonDefault<CodeViewerVariant>('box-tinted') })
-	variant: CodeViewerVariant = 'box-tinted';
+	@property({ reflect: true, converter: reflectNonDefault<CodeViewerAppearance>('box-tinted') })
+	appearance: CodeViewerAppearance = 'box-tinted';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	language = '';
@@ -241,17 +242,19 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			this._copyUnavailable = !this.noCopy && !isClipboardAvailable();
 		}
 		if (!this.view) return;
+		// The region label follows a language switch, which re-renders without measuring.
+		if (this._isScrollable) this.view.scrollDOM.setAttribute('aria-label', this._t('components.code-viewer.region-label'));
 		if (changed.has('language')) this._applyLanguage();
 		if (changed.has('wrap')) {
 			this.reconfigure(this._wrapCompartment, this.wrap ? EditorView.lineWrapping : []);
 			this._updateScrollable();
 		}
-		// variant/background/no-copy change the block's padding (→ clientWidth), so
+		// appearance/background/no-copy change the block's padding (→ clientWidth), so
 		// the scrollable state can go stale until the ResizeObserver happens to
 		// fire. Recompute directly. (_copyUnavailable mirrors no-copy's own effect
 		// on padding, so treat it the same.)
 		if (
-			changed.has('variant')
+			changed.has('appearance')
 			|| changed.has('noCopy')
 			|| changed.has('_copyUnavailable')
 		) {
@@ -265,7 +268,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	}
 
 	public _t(key: keyof NLDDCodeViewerTranslations): string {
-		return this.translations[key] ?? nlddCodeViewerTranslations[key];
+		return translate(this.translations, nlddCodeViewerTranslations, key);
 	}
 
 	/* Lazy grammar loading is async; surface the in-flight load through

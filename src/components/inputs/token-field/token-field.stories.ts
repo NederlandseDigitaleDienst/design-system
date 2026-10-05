@@ -30,6 +30,7 @@ export default {
 		autocomplete: '',
 		accessibleLabel: 'Landen',
 		allowCustom: false,
+		noFilter: false,
 		valid: false,
 		invalid: false,
 		noSpellcheck: false,
@@ -67,6 +68,12 @@ export default {
 			control: 'boolean',
 			description: 'Sta vrij getypte waarden toe (naast de menu-opties).',
 			table: { defaultValue: { summary: 'false' } },
+		},
+		noFilter: {
+			name: 'no-filter',
+			control: 'boolean',
+			description: 'Laat de opties staan tijdens het typen, voor een lijst die de server al filterde',
+			table: { defaultValue: { summary: false } },
 		},
 		valid: {
 			control: 'boolean',
@@ -131,6 +138,7 @@ const render = (args: Record<string, unknown>) => html`
 		autocomplete=${(args.autocomplete as string) ?? ''}
 		accessible-label=${(args.accessibleLabel as string) ?? ''}
 		?allow-custom=${args.allowCustom}
+		?no-filter=${args.noFilter}
 		?valid=${args.valid}
 		?invalid=${args.invalid}
 		?no-spellcheck=${args.noSpellcheck}

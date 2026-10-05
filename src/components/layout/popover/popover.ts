@@ -60,6 +60,7 @@ import { popoverTemplate } from './popover.template.js';
 import { nlddPopoverTranslations, type NLDDPopoverTranslations } from './popover.i18n.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { translate } from '../../../utilities/translations.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -249,7 +250,7 @@ export class NLDDPopover extends LitElement {
 	// — i18n ——————————————————————————————————————————————————————————————————
 
 	private _t(key: keyof NLDDPopoverTranslations): string {
-		return this.translations[key] ?? nlddPopoverTranslations[key];
+		return translate(this.translations, nlddPopoverTranslations, key);
 	}
 
 	get _resolvedAccessibleLabel(): string {

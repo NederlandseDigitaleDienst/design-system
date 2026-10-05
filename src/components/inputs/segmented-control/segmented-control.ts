@@ -7,6 +7,7 @@
  * @element nldd-segmented-control
  * @attr {string} value - Selected value for radio type
  * @prop {string[]} values - Selected values for checkbox type (property binding only, not an attribute)
+ * @attr {string} appearance - Visual style, color included: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type="radio" and a transparent appearance.
  * @attr {string} size - Control size: 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {string} type - Selection mode: 'radio' | 'checkbox' (default: 'radio').
  * @attr {string} variant - Content type for all items: 'text' | 'icon' | 'icon-and-text' (default: 'text')
@@ -30,6 +31,7 @@
  * @attr {boolean} disabled - Disabled state
  * @attr {string} text - Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon")
  * @attr {string} icon - Icon name for nldd-icon
+ * @attr {string} appearance - Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.
  * @attr {string} size - Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.
  * @attr {string} variant - Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.
  * @attr {string} input-type - Selection mode: 'radio' | 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control.
@@ -58,6 +60,7 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 
+export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
 export type SegmentedControlType = 'radio' | 'checkbox';
 export type SegmentedControlVariant = 'text' | 'icon' | 'icon-and-text';
@@ -80,6 +83,10 @@ export class NLDDSegmentedControlItem extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
+
+	/** Set by nldd-segmented-control. Not part of the public API. */
+	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlAppearance>('neutral-tinted') })
+	appearance: SegmentedControlAppearance = 'neutral-tinted';
 
 	/** Control size: 'sm' | 'md' | 'lg'. Set by nldd-segmented-control. Not part of the public API. */
 	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlSize>('md') })
@@ -307,6 +314,9 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	@property({ type: Array, attribute: false })
 	values: string[] = [];
 
+	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlAppearance>('neutral-tinted') })
+	appearance: SegmentedControlAppearance = 'neutral-tinted';
+
 	@property({ reflect: true, converter: reflectNonDefault<SegmentedControlSize>('md') })
 	size: SegmentedControlSize = 'md';
 
@@ -418,6 +428,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		if (
 			changedProperties.has('value') ||
 			changedProperties.has('values') ||
+			changedProperties.has('appearance') ||
 			changedProperties.has('size') ||
 			changedProperties.has('disabled') ||
 			changedProperties.has('type') ||
@@ -500,6 +511,7 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		}
 
 		items.forEach(item => {
+			item.appearance = this.appearance;
 			item.size = this.size;
 			item.inputType = this.type;
 			item.variant = this.variant;

@@ -86,9 +86,9 @@ export const textEditorStyles = css`
 	}
 
 
-	/* ## Variant — input-field adds the framed surface + a default content padding */
+	/* ## Appearance — input-field adds the framed surface + a default content padding */
 
-	:host([variant="input-field"]) {
+	:host([appearance="input-field"]) {
 		--_corner-radius: var(--primitives-corner-radius-lg);
 		--_background-color: var(--semantics-input-fields-background-color);
 		--_highlight-border-color: var(--semantics-input-fields-border-color);
@@ -123,7 +123,7 @@ export const textEditorStyles = css`
 
 	/* Focus ring only on the input-field variant; simple relies on the accent caret and
 	   lets a wrapping composition own its focus treatment. */
-	:host([variant="input-field"]) .text-editor:focus-within {
+	:host([appearance="input-field"]) .text-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_highlight-border-shadow);
@@ -308,6 +308,12 @@ export const textEditorStyles = css`
 		height: var(--_mention-icon-size);
 		margin-inline-end: 0.1em;
 		vertical-align: -0.16em;
+	}
+
+	/* Generated content, not a text node: Safari spellchecks a name in the
+	   editor despite spellcheck="false", and it cannot see this. */
+	.cm-md-mention-token-name::after {
+		content: attr(data-label);
 	}
 
 	.cm-md-mention-token[data-selected] {

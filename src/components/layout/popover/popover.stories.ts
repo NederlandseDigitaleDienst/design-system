@@ -175,7 +175,7 @@ export const MetFormulier = {
 					<nldd-form-actions>
 						<nldd-button-group>
 							<nldd-button
-								variant="primary"
+								appearance="primary"
 								type="submit"
 								text="Pas toe"
 							></nldd-button>

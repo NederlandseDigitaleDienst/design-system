@@ -61,7 +61,7 @@ Het pakket levert het rijkswapen op een lintblauw vlak mee, als `@nldd/design-sy
 
 Het pakket levert allebei: `@nldd/design-system/favicon.svg` voor de tab, en `@nldd/design-system/touch-icon.png` voor het icoon op het beginscherm, want daar accepteert Safari geen SVG. Die PNG is 180 bij 180, de maat die Apple vraagt.
 
-Wil je een andere achtergrond, bijvoorbeeld je eigen huiskleur, kopieer de SVG dan en verander de `fill` van het eerste pad. Een favicon laadt de browser los van de pagina, dus CSS van je site komt er niet bij: een variabele of een class werkt hier niet.
+Het logo, het lint en de huisstijlkleuren vallen onder dezelfde voorwaarden als RijksSans: uitsluitend voor de Rijksoverheid en partijen die in haar opdracht werken. Het rijkswapen mag alleen samen met het lint worden gebruikt. Zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md).
 
 RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken. De voorwaarden staan in [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, dan kun je 2 kanten op:
 
@@ -75,11 +75,28 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
    }
    ```
 
+Serveer je de fonts zelf, bijvoorbeeld vanuit een statische site die alleen zijn eigen map publiceert, haal ze dan in je buildstap uit het pakket: `import.meta.resolve('@nldd/design-system/fonts/RijksSansWeb-Regular.woff2')` geeft het pad, en zo ook voor de andere bestanden in die map. Zet geen kopie in je eigen repository; dan blijft `NOTICES.md` de enige plek voor de voorwaarden.
+
 De eerste weg is de schoonste: dan zit het font niet eens in je CSS. De tweede is een uitzondering op wat hieronder over variabelen staat, en die staat hier omdat er geen attribuut voor is. Voor kleur, ruimte en typografie is dat er wel.
 
 Voor tree-shaking kun je ook per component importeren via de subpath-export (bijv. `@nldd/design-system/button`). Frameworks die templates compileren, moeten `nldd-*` als custom elements herkennen (in Vue: `isCustomElement`).
 
 De complete setups, inclusief de Vue-config en het per-component importeren, staan in [`examples/bootstrap-html.md`](examples/bootstrap-html.md) en [`examples/bootstrap-vue.md`](examples/bootstrap-vue.md).
+
+### Een andere taal
+
+De componenten zijn standaard Nederlands. Een interface in een andere taal zet de teksten één keer bij het opstarten, voor het hele pakket. Het pakket levert Amerikaans Engels mee:
+
+```js
+import { setTranslations } from '@nldd/design-system/translations';
+import enUS from '@nldd/design-system/translations/en-US';
+
+setTranslations(enUS);
+```
+
+Dat bereikt ook de componenten die een ander component zelf bouwt, zoals de laadindicator in een knop of de kalender in een datumveld. Een andere taal: kopieer `@nldd/design-system/translations/nl` en vertaal de teksten. Zet geen `translations`-property op elk element om de taal te wisselen; die property is voor een uitzondering op één plek.
+
+Een key is taal, geen inhoud. Moet één knop iets anders zeggen dan een andere ("Aan het bewaren" in plaats van "Laden"), dan is dat een attribuut op dat element, zoals `loading-text`.
 
 ## CSS-variabelen
 

@@ -97,7 +97,7 @@ export const Standaard = ({ size, color, text, supportingText, overline, heading
 		>
 			<nldd-button
 				slot="end"
-				variant="secondary"
+				appearance="secondary"
 				size="sm"
 				text="Actie"
 			></nldd-button>
@@ -154,7 +154,7 @@ export const MetActies = {
 		>
 			<nldd-button
 				slot="end"
-				variant="secondary"
+				appearance="secondary"
 				size="sm"
 				text="Bewerken"
 			></nldd-button>

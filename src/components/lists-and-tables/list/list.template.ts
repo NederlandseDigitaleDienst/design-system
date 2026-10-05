@@ -117,7 +117,7 @@ export const template = ({
 								<div class="list__search-field-end">
 									<div class="list__search-field-clear">
 										<nldd-icon-button
-											variant="neutral-transparent"
+											appearance="neutral-transparent"
 											size="sm"
 											icon="dismiss"
 											text=${listbox.searchClearLabel}

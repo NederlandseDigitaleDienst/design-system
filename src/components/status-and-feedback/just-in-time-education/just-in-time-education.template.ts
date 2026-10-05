@@ -37,7 +37,7 @@ export function justInTimeEducationTemplate(component: NLDDJustInTimeEducation):
 					<div class="just-in-time-education__dismiss-button">
 						<nldd-icon-button
 							icon="dismiss"
-							variant="neutral-transparent"
+							appearance="neutral-transparent"
 							size="md"
 							accessible-label=${component._t('components.just-in-time-education.dismiss-action')}
 							@click=${component._handleDismiss}

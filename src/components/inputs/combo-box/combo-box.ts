@@ -20,7 +20,8 @@
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} disabled - Disabled state
  * @attr {boolean} readonly - Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of.
- * @attr {boolean} allow-custom - Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted.
+ * @attr {boolean} allow-custom - Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. Typing an option's label in full picks that option, ignoring case and the spaces around it; with two such labels, the first one.
+ * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
  * @attr {string} name - Input name for form submission
  * @attr {string} autocomplete - Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired.
  * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input. Required for screen reader accessibility.
@@ -36,7 +37,14 @@
  * @note Free-text values: only when `allow-custom` is set. Then a typed value that
  *       matches no menu option is emitted as-is via the `change` event on Enter or blur
  *       (consumers validate emitted values). Without it, such a value is discarded and
- *       the input reverts to the current value.
+ *       the input reverts to the current value. Only text the user typed is committed:
+ *       the label of a chosen option stays a label, and typing an option's label in full
+ *       picks that option and its value.
+ *
+ * Options can arrive after the keystroke, from a server you query per
+ * keystroke. Slot them into the menu when they come in: if the user is still
+ * in the field and the keystroke found nothing to show, the menu opens then.
+ * After Escape, or once the user left the field, it stays shut.
  *
  * @slot - An nldd-menu element with nldd-menu-item and nldd-menu-divider children
  *
@@ -70,6 +78,7 @@ import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
@@ -131,6 +140,10 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true, attribute: 'allow-custom' })
 	allowCustom = false;
 
+	/** Leaves the options as they are while typing: the list was filtered already, by a server. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-filter' })
+	noFilter = false;
+
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
 
@@ -169,6 +182,16 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _menu: NLDDMenu | null = null;
 	private _resizeObserver: ResizeObserver | null = null;
+	/** Watches the options in the menu, which a consumer can slot in at any time. */
+	private _menuObserver: MutationObserver | null = null;
+	/** A keystroke wanted the menu open but there was nothing to show yet.
+	 *  Options that arrive after it, from a server answering per keystroke,
+	 *  open it then. Escape, leaving the field or opening the menu clear it. */
+	private _openPending = false;
+	/** What the user typed since the last commit, or null when the text in the
+	 *  field came from somewhere else: a choice from the menu, a value set from
+	 *  outside, the label derived from it. Only typed text is a custom value. */
+	private _typedText: string | null = null;
 
 	@query('.combo-box__input')
 	_input!: HTMLInputElement;
@@ -192,7 +215,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	maxlength?: number;
 
 	public _t(key: keyof NLDDComboBoxTranslations): string {
-		return this.translations[key] ?? nlddComboBoxTranslations[key];
+		return translate(this.translations, nlddComboBoxTranslations, key);
 	}
 
 	// — Lifecycle ————————————————————————————————————————————————————————————
@@ -212,6 +235,9 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		if (changedProperties.has('value') && !changedProperties.has('text')) {
 			this._deriveTextFromMenu();
 		}
+		// A new value, from a choice, a commit or the consumer, settles the text:
+		// whatever stands in the field now is not something left to commit.
+		if (changedProperties.has('value')) this._typedText = null;
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
@@ -275,6 +301,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		this._resizeObserver = null;
 		window.removeEventListener('scroll', this._handleScrollOrResize, true);
 		window.removeEventListener('resize', this._handleScrollOrResize);
+		this._menuObserver?.disconnect();
+		this._menuObserver = null;
 		if (this._menu) {
 			this._menu.removeEventListener('toggle', this._handleMenuToggle);
 			this._menu.removeEventListener('select', this._handleMenuSelect);
@@ -302,6 +330,11 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		menu.addEventListener('toggle', this._handleMenuToggle);
 		menu.addEventListener('select', this._handleMenuSelect);
 		menu.addEventListener('keydown', this._handleMenuKeydown);
+		this._menuObserver?.disconnect();
+		// The menu's own filter() writes `hidden` on every keystroke, so this fires
+		// while typing too; the handler returns early unless there is something to decide.
+		this._menuObserver = new MutationObserver(this._handleMenuItemsChange);
+		this._menuObserver.observe(menu, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
 		this._updateMenuWidth();
 
 		// First time the menu is wired up, derive a missing text from the
@@ -327,14 +360,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 			this.text = '';
 			return;
 		}
-		// Scope to items that belong directly to the wired menu — without the
-		// closest() filter, a nested nldd-menu submenu's items would match
-		// before the intended top-level item when value keys overlap. Today's
-		// combo-boxes are flat, but this keeps the derivation correct as the
-		// menu structure gains depth.
-		const items = Array.from(this._menu.querySelectorAll<NLDDMenuItem>('nldd-menu-item'))
-			.filter(item => item.closest('nldd-menu') === this._menu);
-		for (const item of items) {
+		for (const item of this._ownMenuItems()) {
 			if ((item.value || item.text) === this.value) {
 				this.text = item.text;
 				return;
@@ -363,6 +389,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		if (!this._isOpen) {
 			this._highlightedId = '';
 		} else {
+			// However it opened, there is nothing left to open later.
+			this._openPending = false;
 			// The menu clears its highlight on open; seat it on the first option by
 			// default so it's the active descendant and Enter picks it, unless
 			// something is already highlighted.
@@ -375,6 +403,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _handleMenuSelect = (e: Event): void => {
 		const item = e.target as NLDDMenuItem;
+		this._typedText = null;
 		this.text = item.text;
 		this.value = item.value || item.text;
 		this._highlightedId = '';
@@ -414,11 +443,38 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		(this._menu as HTMLElement).showPopover();
 	}
 
+	/**
+	 * The menu decides whether to open on a keystroke. Options that arrive later
+	 * get the same decision: they open a menu the keystroke could not open, and
+	 * with allow-custom a menu whose options all went away closes again, as it
+	 * would on typing. Only while the user is still in the field.
+	 */
+	private _handleMenuItemsChange = (): void => {
+		if (!this._menu || this.shadowRoot?.activeElement !== this._input) return;
+		if (this._menu.matches(':popover-open')) {
+			if (this.allowCustom && !this._hasVisibleMenuItems()) this._closeMenu();
+			return;
+		}
+		if (this._openPending && this._hasVisibleMenuItems()) {
+			this._openPending = false;
+			this._openMenu();
+		}
+	};
+
+	/**
+	 * The items that belong to the wired menu itself. A nested nldd-menu
+	 * submenu's items are left out, so they cannot match before the intended
+	 * top-level item when values or labels overlap.
+	 */
+	private _ownMenuItems(): NLDDMenuItem[] {
+		if (!this._menu) return [];
+		return Array.from(this._menu.querySelectorAll<NLDDMenuItem>('nldd-menu-item'))
+			.filter(item => item.closest('nldd-menu') === this._menu);
+	}
+
 	/** Top-level menu items that survived the current filter. */
 	private _hasVisibleMenuItems(): boolean {
-		if (!this._menu) return false;
-		return Array.from(this._menu.querySelectorAll<NLDDMenuItem>('nldd-menu-item:not([hidden])'))
-			.some(item => item.closest('nldd-menu') === this._menu);
+		return this._ownMenuItems().some(item => !item.hidden);
 	}
 
 	public _closeMenu(): void {
@@ -466,7 +522,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleInput(e: Event): void {
 		const input = e.target as HTMLInputElement;
 		this.text = input.value;
-		this._menu?.filter(this.text);
+		this._typedText = input.value;
+		this._menu?.filter(this.text, { hide: !this.noFilter });
 		this._updateActiveDescendant();
 		// The reverse of the allow-custom guard in _openMenu: typing until
 		// nothing matches closes an already-open menu instead of leaving the
@@ -475,6 +532,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 			this._closeMenu();
 		}
 		if (!this._isOpen) this._openMenu();
+		this._openPending = this.text !== '' && !this._menu?.matches(':popover-open');
 		this.commitFormValue();
 		this.dispatchEvent(new CustomEvent('input', {
 			detail: { value: this.text },
@@ -510,6 +568,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// commit. Without this, leaving a read-only field that shows a label
 		// without a matching menu option wipes the label: the revert below reads
 		// the text back from the value, and finds nothing.
+		this._openPending = false;
 		if (this.readonly) return;
 		const relatedTarget = e.relatedTarget as Node | null;
 		const focusMovedIntoMenu = !!relatedTarget && !!this._menu?.contains(relatedTarget);
@@ -523,15 +582,36 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 			if (!focusMovedIntoMenu) this._revertTextToValue();
 			return;
 		}
-		if (this.text !== '' && this.text !== this.value) {
-			this.value = this.text;
-			this.commitFormValue();
-			this.dispatchEvent(new CustomEvent('change', {
-				detail: { value: this.value },
-				bubbles: true,
-				composed: true,
-			}));
-		}
+		if (this._hasTypedCustomText()) this._commitTypedText();
+	}
+
+	/**
+	 * With allow-custom, only text the user typed becomes the value. `text`
+	 * differing from `value` is not the sign of that: it is the normal state after
+	 * every choice from the menu ("Nederland" for "nl"), and committing it would
+	 * send the label to the server instead of the value.
+	 */
+	private _hasTypedCustomText(): boolean {
+		return this._typedText !== null && this.text === this._typedText && this.text !== '' && this.text !== this.value;
+	}
+
+	private _commitTypedText(): void {
+		// Typing an option's label in full means that option: its value goes to
+		// the form, not the label.
+		const typed = this.text.trim().toLowerCase();
+		const option = this._ownMenuItems().find(item => item.text.trim().toLowerCase() === typed);
+		if (option) this.text = option.text;
+		const value = option ? option.value || option.text : this.text;
+		this._typedText = null;
+		// The label of the option that was already chosen: nothing changed.
+		if (value === this.value) return;
+		this.value = value;
+		this.commitFormValue();
+		this.dispatchEvent(new CustomEvent('change', {
+			detail: { value: this.value },
+			bubbles: true,
+			composed: true,
+		}));
 	}
 
 	/** Restore the input text to the current value's display label, discarding any
@@ -547,6 +627,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	public _handleKeydown(e: KeyboardEvent): void {
+		// Whatever arrives after Escape does not open the menu: the user said stop.
+		if (e.key === 'Escape') this._openPending = false;
 		// Read-only takes no keys of its own: no menu to open, nothing to commit.
 		// Enter still belongs to the form, the way it would from a read-only input.
 		if (this.readonly) {
@@ -557,7 +639,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 			if (e.key === 'ArrowDown') {
 				e.preventDefault();
 				this._openMenu();
-			} else if (e.key === 'Enter' && this.allowCustom && this.text !== '' && this.text !== this.value) {
+			} else if (e.key === 'Enter' && this.allowCustom && this._hasTypedCustomText()) {
 				// With allow-custom the menu closes as soon as nothing matches
 				// (see _handleInput), so the Enter-commit must also work while
 				// the menu is closed.
@@ -566,13 +648,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 				// this a combo box in a form submits the form on the same press
 				// that picks the option.
 				e.stopPropagation();
-				this.value = this.text;
-				this.commitFormValue();
-				this.dispatchEvent(new CustomEvent('change', {
-					detail: { value: this.value },
-					bubbles: true,
-					composed: true,
-				}));
+				this._commitTypedText();
 			} else if (e.key === 'Enter') {
 				// Nothing to commit: no menu open, and either free text is not allowed
 				// or there is none that differs from the value. This Enter is not ours,
@@ -603,14 +679,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 				if (highlighted) {
 					highlighted.select();
 				} else if (this.allowCustom) {
-					this.value = this.text;
 					this._closeMenu();
-					this.commitFormValue();
-					this.dispatchEvent(new CustomEvent('change', {
-						detail: { value: this.value },
-						bubbles: true,
-						composed: true,
-					}));
+					if (this._hasTypedCustomText()) this._commitTypedText();
 				} else {
 					// No option highlighted and free text not allowed: discard it.
 					this._closeMenu();

@@ -254,6 +254,23 @@ export function template(component: NLDD{PascalName}): TemplateResult {
 
 ---
 
+## STIJL-ATTRIBUTEN: `variant`, `appearance`, `color`, `background`
+
+Vier attributen gaan over hoe een component eruitziet, en ze lopen van breed naar smal. Elke stap omvat meer dan de volgende:
+
+1. **`variant`**: een soort van het component, en wat dat inhoudt bepaalt het component zelf. Bij `nldd-banner`, `nldd-notification` en `nldd-status-bar` volgen de stijl, het icoon en de rol eruit (`critical` zet een andere `role`), `nldd-inline-dialog` krijgt met `alert` een ander icoon, `nldd-progress-bar` leest met `distribution` de segmenten op in plaats van een percentage voltooid, en `nldd-toggle-button`, `nldd-tag`, `nldd-tab-bar` en `nldd-segmented-control` kiezen ermee wat er zichtbaar is (`text`, `icon`, `icon-and-text`). De JSDoc van het component zegt wat zijn varianten zijn.
+2. **`appearance`**: een ontworpen stijl uit een vaste lijst, met de kleur erbij. `nldd-button` heeft `accent-filled`, `neutral-tinted` en `critical-transparent`, plus de afkortingen `primary`, `secondary` en `destructive`.
+3. **`color`**: alleen de kleur van het component zelf, en elke waarde werkt. `nldd-badge`, `nldd-icon` en `nldd-progress-bar` nemen een semantische kleur of een Rijkskleur.
+4. **`background`**: het oppervlak waar het component op staat of dat het tekent. De kinderen erven het, dus dit gaat over de omgeving en niet over het component zelf.
+
+**Kies het smalste attribuut dat dekt wat er varieert.** Verandert alleen de kleur, dan is het `color`. Is het een set ontworpen stijlen, dan `appearance`. Verandert er meer dan het beeld, zoals het icoon, wat een schermlezer hoort of wat er getoond wordt, dan `variant`. Een toets: verandert alleen het beeld, dan is het een van de andere drie.
+
+`appearance` en `color` komen niet samen op één component voor, want `appearance` bevat de kleur al. Splits een `appearance` ook niet op in een kleur en een vorm: niet elke combinatie is ontworpen, en met één attribuut toon je precies de lijst die bestaat.
+
+Een hiërarchie van rijen, zoals `major` / `minor` / `none` op `nldd-timeline-track-cell`, is geen soort maar een niveau, en heet `level`.
+
+---
+
 ## INVOERCOMPONENTEN: `isFormInput`
 
 Bouw je iets dat in een `nldd-form-field` gaat staan, zet dan op de klasse:
@@ -378,7 +395,8 @@ Per component: pak alleen de keys die je gebruikt en zet ze in deze volgorde. De
 
 ```
 [1. Visueel dominant]
-variant, status, size, compact, minor, color, background, pulse, layout,
+variant, appearance, color, background, level, status, size, compact,
+minor, pulse, layout,
 panes, iconOnly, responsive, showItemLabels, inspectorAsSheet,
 sidebarAsSheet, noLogo
 

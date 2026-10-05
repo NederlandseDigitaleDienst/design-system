@@ -1,0 +1,60 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Vertalingen" />
+
+# Vertalingen
+
+Elk component heeft Nederlandse standaardteksten: een knop die laadt zegt "Laden", een datumveld toont "Vandaag". Een interface in een andere taal zet die teksten één keer, voor het hele pakket.
+
+## Zet de taal één keer, bij het opstarten
+
+```js
+import { setTranslations } from '@nldd/design-system/translations';
+import enUS from '@nldd/design-system/translations/en-US';
+
+setTranslations(enUS);
+```
+
+Het pakket levert een volledige Amerikaans-Engelse set mee. Vanaf dan is elk component Engels, ook de componenten die een ander component zelf bouwen: de laadindicator in een knop, de kalender in een datumveld, het overloopmenu van een werkbalk. Die kun je van buitenaf niet bereiken, maar ze lezen allemaal deze ene laag.
+
+Het `lang`-attribuut op `<html>` wisselt de taal niet vanzelf: zonder deze aanroep blijven de componenten Nederlands, ook op een pagina met `lang="en"`.
+
+Wil je een paar teksten anders, zet ze dan achter de Engelse set:
+
+```js
+setTranslations({
+	...enUS,
+	'components.activity-indicator.loading-label': 'Please wait',
+});
+```
+
+Een andere taal maak je op dezelfde manier. Kopieer `@nldd/design-system/translations/nl`, dat alle keys met hun Nederlandse tekst bevat, en vertaal de rechterkant. Een key die je weglaat, valt terug op het Nederlands. Roep `setTranslations()` opnieuw aan om van taal te wisselen terwijl de app draait.
+
+## Fries en Papiamento zijn een concept
+
+Het pakket levert ook drie sets die nog niet door een moedertaalspreker zijn gecontroleerd:
+
+- `@nldd/design-system/translations/fy`: Fries;
+- `@nldd/design-system/translations/pap-CW`: Papiamentu, zoals op Curaçao en Bonaire geschreven;
+- `@nldd/design-system/translations/pap-AW`: Papiamento, zoals op Aruba geschreven.
+
+Elke tekst is vertaald, ook waar de vertaling een gok is. Een tekst verbeteren is makkelijker dan hem bedenken. Spreek je de taal en lees je iets dat beter kan, [meld het dan](https://github.com/NederlandseDigitaleDienst/design-system/issues). Zo worden ze met elke versie beter.
+
+## Een key is taal, een attribuut is inhoud
+
+Een key betekent overal hetzelfde. "Laden" is "Loading", op elke knop. Zegt één knop iets anders dan een andere, zoals "Aan het bewaren" naast "Aan het laden", dan is dat geen vertaling maar inhoud, en die zet je op het element zelf:
+
+```html
+<nldd-button text="Opslaan" loading loading-text="Aan het bewaren"></nldd-button>
+```
+
+## Een tekst zoekt in vier lagen
+
+Een component kijkt in deze volgorde, en de eerste die iets heeft wint:
+
+1. **Een attribuut op het element**, zoals `loading-text` of `accessible-label`.
+2. **De `translations`-property op het element.** Voor de uitzondering op één plek.
+3. **`setTranslations()`**, voor het hele pakket.
+4. **De Nederlandse standaardtekst.**
+
+Typ je een key die geen component kent, bijvoorbeeld na een hernoeming in een nieuwe versie, dan waarschuwt `setTranslations()` daarvoor in de console tijdens het ontwikkelen. Anders zou je vertaling stil niets doen.

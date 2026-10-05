@@ -40,17 +40,32 @@ export const buttonBarStyles = css`
 
 	/* ## Accent Filled (Primary) */
 
-	:host([variant="accent-filled"]),
-	:host([variant="primary"]) {
+	:host([appearance="accent-filled"]),
+	:host([appearance="primary"]) {
 		--_background-color: var(--semantics-buttons-accent-filled-background-color);
 		--_divider-color: var(--semantics-buttons-accent-filled-divider-color);
 		--_highlight-border-color: var(--semantics-buttons-accent-filled-highlight-border-color);
 	}
 
-	:host([variant="neutral-base"]) {
+	:host([appearance="neutral-base"]) {
 		--_background-color: var(--semantics-buttons-neutral-base-background-color);
 		--_divider-color: var(--semantics-buttons-neutral-base-divider-color);
 		--_highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);
+	}
+
+	/* ## On-color */
+
+	:host([appearance="inherit-tinted"]) {
+		--_background-color: var(--semantics-buttons-inherit-tinted-background-color);
+		--_divider-color: var(--semantics-buttons-inherit-tinted-divider-color);
+		--_highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
+		--context-button-background-color: transparent;
+	}
+
+	:host([appearance="inherit-filled"]) {
+		--_background-color: var(--semantics-buttons-inherit-filled-background-color);
+		--_divider-color: var(--semantics-buttons-inherit-filled-divider-color);
+		--_highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
 	}
 
 	:host([hidden]) {

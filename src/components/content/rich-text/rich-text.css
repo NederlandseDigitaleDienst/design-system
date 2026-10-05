@@ -175,7 +175,7 @@ nldd-rich-text *:focus:not(:focus-visible) {
 nldd-rich-text :is(h1, h2, h3, h4, h5, h6) {
 	margin-top: var(--_spacing);
 	margin-bottom: 0;
-	text-wrap: pretty;
+	text-wrap: balance;
 }
 
 
@@ -290,6 +290,7 @@ nldd-rich-text p {
 	   at narrow (mobile) widths. break-word (not anywhere) leaves the grid
 	   min-content size alone, so the main column stays intact. */
 	overflow-wrap: break-word;
+	text-wrap: pretty;
 }
 
 
@@ -336,6 +337,7 @@ nldd-rich-text li {
 	padding: 0;
 	/* Zelfde vangnet als p: lange strings breken i.p.v. overlopen. */
 	overflow-wrap: break-word;
+	text-wrap: pretty;
 }
 
 nldd-rich-text li > * + * {
@@ -369,6 +371,7 @@ nldd-rich-text dt {
 
 nldd-rich-text dd {
 	margin-inline: 0;
+	text-wrap: pretty;
 
 	@container (min-width: 641px) {
 		grid-column: 2;
@@ -525,6 +528,7 @@ nldd-rich-text blockquote {
 	padding-inline: var(--semantics-blockquotes-md-spacing);
 	border-left: var(--semantics-blockquotes-border);
 	font: var(--semantics-blockquotes-md-quote-font);
+	text-wrap: pretty;
 
 	@container (max-width: 640px) {
 		gap: calc(var(--semantics-blockquotes-sm-spacing) / 2);

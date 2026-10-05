@@ -40,11 +40,11 @@ export const timelineTrackCellStyles = css`
 		--_marker-size: var(--primitives-space-24);
 	}
 
-	:host([variant="minor"]) {
+	:host([level="minor"]) {
 		--_marker-size: var(--primitives-space-10);
 	}
 
-	:host([size="md"][variant="minor"]) {
+	:host([size="md"][level="minor"]) {
 		--_marker-size: var(--primitives-space-12);
 	}
 
@@ -119,9 +119,9 @@ export const timelineTrackCellStyles = css`
 		background-color: var(--_track-color);
 	}
 
-	:host([variant="none"][status="future"]) .timeline-track-cell__full-line,
-	:host([variant="none"][status="current"]:not([direction="up"])) .timeline-track-cell__full-line,
-	:host([variant="none"][line="none"]) .timeline-track-cell__full-line {
+	:host([level="none"][status="future"]) .timeline-track-cell__full-line,
+	:host([level="none"][status="current"]:not([direction="up"])) .timeline-track-cell__full-line,
+	:host([level="none"][line="none"]) .timeline-track-cell__full-line {
 		background-color: var(--_future-fill-color);
 	}
 

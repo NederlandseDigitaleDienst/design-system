@@ -646,7 +646,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		variant: 'simple',
+		appearance: 'simple',
 		value: SAMPLE,
 		placeholder: '',
 		rows: 8,
@@ -655,14 +655,15 @@ export default {
 		invalid: false,
 		readonly: false,
 		required: false,
+		noSpellcheck: false,
 		disabled: false,
 		accessibleLabel: 'Tekst',
 	},
 	argTypes: {
-		variant: {
+		appearance: {
 			control: 'select',
 			options: ['simple', 'input-field'],
-			description: 'Visuele variant. "simple" is kaal zonder focusring; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
+			description: 'Visuele stijl. "simple" is kaal zonder focusring; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
 			table: { defaultValue: { summary: 'simple' } },
 		},
 		value: {
@@ -704,6 +705,12 @@ export default {
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
+		noSpellcheck: {
+			name: 'no-spellcheck',
+			control: 'boolean',
+			description: 'Zet de spellingscontrole uit. Standaard aan, zonder code, URL\'s en mentions.',
+			table: { defaultValue: { summary: false } },
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Uitgeschakelde staat',
@@ -719,7 +726,7 @@ export default {
 };
 
 const Template = ({
-	variant,
+	appearance,
 	value,
 	placeholder,
 	rows,
@@ -728,11 +735,12 @@ const Template = ({
 	invalid,
 	readonly,
 	required,
+	noSpellcheck,
 	disabled,
 	accessibleLabel,
 }: Record<string, any>) => html`
 	<nldd-text-editor
-		variant=${variant as string}
+		appearance=${appearance as string}
 		.value=${value || ''}
 		placeholder=${placeholder || nothing}
 		rows=${rows as number}
@@ -741,6 +749,7 @@ const Template = ({
 		?readonly=${readonly}
 		?invalid=${invalid}
 		?required=${required}
+		?no-spellcheck=${noSpellcheck}
 		?disabled=${disabled}
 		accessible-label=${accessibleLabel || nothing}
 	></nldd-text-editor>
@@ -750,11 +759,11 @@ export const Standaard = {
 	render: Template,
 };
 
-export const VariantInputField = {
-	name: 'Variant input-field',
+export const AppearanceInputField = {
+	name: 'Appearance input-field',
 	render: () => html`
 		<nldd-text-editor
-			variant="input-field"
+			appearance="input-field"
 			rows="10"
 			.value=${SAMPLE}
 			accessible-label="Tekst"
@@ -763,7 +772,7 @@ export const VariantInputField = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'De `input-field`-variant: kader, vulling, padding, hoeken en focusring — een op zichzelf staand veld. De default is `simple` (kaal), bedoeld om in een eigen compositie te plaatsen die de chrome en focusbehandeling levert.',
+				story: 'De `input-field`-appearance: kader, vulling, padding, hoeken en focusring — een op zichzelf staand veld. De default is `simple` (kaal), bedoeld om in een eigen compositie te plaatsen die de chrome en focusbehandeling levert.',
 			},
 		},
 	},
@@ -830,7 +839,7 @@ export const Vermeldingen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Typ `@` voor een typeahead. De editor kent zelf geen gebruikers: de consumer levert kandidaten via de `mentionSource`-property (aangeroepen met de tekst na `@`). Een keuze voegt een markdown-token `[@Naam](user:id)` in (als token gerenderd, degradeert tot een gewone link) en vuurt `nldd-text-editor-mention` met id + range.',
+				story: 'Typ `@` voor een typeahead. De editor kent zelf geen gebruikers: de consumer levert kandidaten via de `mentionSource`-property (aangeroepen met de tekst na `@`). Een keuze voegt een markdown-token `[@Naam](user:id)` in (als token gerenderd, degradeert tot een gewone link) en vuurt `nldd-text-editor-mention` met id + range. Vindt de bron niemand, dan zegt de lijst dat ("Niets gevonden"): typ `@xyz`. Een eigen tekst geef je met `mentionEmptyText`.',
 			},
 		},
 	},
@@ -855,7 +864,7 @@ export const VermeldingenInEenOverlay = {
 		const open = (e: Record<string, any>) => e.currentTarget.nextElementSibling.show();
 		return html`
 			<nldd-button
-				variant="primary"
+				appearance="primary"
 				text="Open modal dialog"
 				@click=${open}
 			></nldd-button>
@@ -869,13 +878,13 @@ export const VermeldingenInEenOverlay = {
 				></nldd-text-editor>
 				<nldd-button
 					slot="actions"
-					variant="primary"
+					appearance="primary"
 					text="Bewaar"
 				></nldd-button>
 			</nldd-modal-dialog>
 
 			<nldd-button
-				variant="secondary"
+				appearance="secondary"
 				text="Open sheet"
 				@click=${open}
 			></nldd-button>
@@ -928,7 +937,7 @@ export const Typeaheads = {
 		const filter = <T extends { text: string }>(items: T[]) => (query: string) =>
 			items.filter((item) => item.text.toLowerCase().includes(query.toLowerCase()));
 		const typeaheads = [
-			{ trigger: '#', source: filter(channels) },
+			{ trigger: '#', source: filter(channels), emptyText: (query: string) => (query ? `Geen kanaal met "${query}" in de naam` : undefined) },
 			{ trigger: ':', source: filter(emoji), insert: (candidate: { symbol?: string }) => `${candidate.symbol} ` },
 		];
 		const sample = 'Typ `@` voor een persoon, `#` voor een kanaal en `:` voor een emoji.';
@@ -948,7 +957,7 @@ export const Typeaheads = {
 					@nldd-text-editor-typeahead=${(event: CustomEvent) => action('nldd-text-editor-typeahead')(event.detail)}
 				></nldd-text-editor>
 				<nldd-button
-					variant="secondary"
+					appearance="secondary"
 					text="Datum invoegen"
 					@click=${insertDate}
 				></nldd-button>
@@ -959,7 +968,7 @@ export const Typeaheads = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Naast de ingebouwde `@`-mention geef je eigen lijsten op via de `typeaheads`-property: een trigger-teken, een `source` met kandidaten voor wat er na de trigger is getypt, en optioneel een `insert` die bepaalt wat een keuze schrijft. Standaard is dat de trigger, de `text` en een spatie: met `text: "smile:"` dus `:smile: `, de shortcode die Mattermost en Slack zelf renderen. Deze editor doet dat niet, dus hier schrijft `:` de emoji zelf. Meerdere lijsten op één trigger worden samengevoegd. Een kandidaat kan een `avatar` meekrijgen (persoon of organisatie, initialen of een afbeelding; de rij wordt dan tweeregelig met `supportingText` eronder), een `icon` (op de maat van een menu-item) of een `symbol` (een teken of emoji, de emoji zelf als beeld). Een keuze uit een eigen lijst vuurt `nldd-text-editor-typeahead` met de trigger, de kandidaat en de positie. De knop laat `insertAtCursor(tekst)` zien: tekst op de caret, in plaats van een selectie.',
+				story: 'Naast de ingebouwde `@`-mention geef je eigen lijsten op via de `typeaheads`-property: een trigger-teken, een `source` met kandidaten voor wat er na de trigger is getypt, en optioneel een `insert` die bepaalt wat een keuze schrijft. Standaard is dat de trigger, de `text` en een spatie: met `text: "smile:"` dus `:smile: `, de shortcode die Mattermost en Slack zelf renderen. Deze editor doet dat niet, dus hier schrijft `:` de emoji zelf. Meerdere lijsten op één trigger worden samengevoegd. Een kandidaat kan een `avatar` meekrijgen (persoon of organisatie, initialen of een afbeelding; de rij wordt dan tweeregelig met `supportingText` eronder), een `icon` (op de maat van een menu-item) of een `symbol` (een teken of emoji, de emoji zelf als beeld). Een keuze uit een eigen lijst vuurt `nldd-text-editor-typeahead` met de trigger, de kandidaat en de positie. Vindt een lijst niets, dan zegt hij "Typ om te zoeken" of "Niets gevonden"; met `emptyText` geeft een lijst een eigen tekst, zoals het kanaal hier (typ `#xyz`). De knop laat `insertAtCursor(tekst)` zien: tekst op de caret, in plaats van een selectie.',
 			},
 		},
 	},
@@ -1016,7 +1025,7 @@ export const AnnotatiesMaken = {
 		const commentBtn = document.createElement('nldd-icon-button');
 		commentBtn.setAttribute('icon', 'comment');
 		commentBtn.setAttribute('label', 'Reactie toevoegen');
-		commentBtn.setAttribute('variant', 'secondary');
+		commentBtn.setAttribute('appearance', 'secondary');
 		(commentBtn as unknown as { disabled: boolean }).disabled = true;
 
 		const status = document.createElement('span');
@@ -1111,7 +1120,7 @@ export const Gemengd = {
 		];
 		return toolbarEditor(html`
 			<nldd-text-editor
-				variant="simple"
+				appearance="simple"
 				rows="15"
 				annotatable
 				accessible-label="Tekst"
@@ -1135,7 +1144,7 @@ export const Gemengd = {
 export const MetWerkbalk = {
 	render: () =>
 		toolbarEditor(
-			html`<nldd-text-editor variant="simple" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
+			html`<nldd-text-editor appearance="simple" rows="10" .value=${SAMPLE} accessible-label="Tekst"></nldd-text-editor>`,
 		),
 	parameters: {
 		controls: { disable: true },

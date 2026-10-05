@@ -136,7 +136,7 @@ export const MetHref = {
 					<nldd-form-actions>
 						<nldd-button-group orientation="horizontal">
 							<nldd-button
-								variant="primary"
+								appearance="primary"
 								type="submit"
 								text="Verstuur"
 							></nldd-button>

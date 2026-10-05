@@ -15,7 +15,7 @@ export function numberFieldTemplate(component: NLDDNumberField): TemplateResult 
 			${!component.hideSpinButtons ? html`
 				<div class="number-field__decrement-button">
 					<nldd-icon-button
-						variant="neutral-tinted"
+						appearance="neutral-tinted"
 						size=${iconButtonSize}
 						icon="minus"
 						text=${component._t('components.number-field.decrement-action')}
@@ -42,7 +42,7 @@ export function numberFieldTemplate(component: NLDDNumberField): TemplateResult 
 			${!component.hideSpinButtons ? html`
 				<div class="number-field__increment-button">
 					<nldd-icon-button
-						variant="neutral-tinted"
+						appearance="neutral-tinted"
 						size=${iconButtonSize}
 						icon="plus"
 						text=${component._t('components.number-field.increment-action')}

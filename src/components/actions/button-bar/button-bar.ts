@@ -2,12 +2,17 @@
  * Nederlandse Digitale Dienst Button Bar Component (Lit + TypeScript)
  *
  * A horizontal container for grouping buttons with a neutral background.
- * Automatically propagates its size and variant to all child nldd-button and nldd-icon-button elements.
+ * Automatically propagates its size and appearance to all child nldd-button and nldd-icon-button elements.
  * Renders nldd-button-bar-divider elements as internal dividers — no separate component needed.
+ *
+ * The bar is one surface for actions; on/off buttons do not go in it. For a row
+ * of toggles use nldd-toggle-button-group, and for one choice out of a few
+ * options on one surface nldd-segmented-control. An nldd-toggle-button placed
+ * here is shown as it is, and a warning says so in development.
  *
  * @element nldd-button-bar
  * @attr {string} size - Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style).
- * @attr {string} variant - Button variant (default: 'neutral-tinted')
+ * @attr {string} appearance - Visual style of the buttons (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)
  * @attr {boolean} disabled - Disabled state
  *
  * @slot - Default slot for nldd-button, nldd-icon-button and nldd-button-bar-divider elements
@@ -46,7 +51,7 @@ export class NLDDButtonBar extends LitElement {
 	size: Size = 'md';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('neutral-tinted') })
-	variant: string = 'neutral-tinted';
+	appearance: string = 'neutral-tinted';
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
@@ -80,8 +85,8 @@ export class NLDDButtonBar extends LitElement {
 		if (changedProperties.has('size') || changedProperties.has('_children')) {
 			this._propagateSize();
 		}
-		if (changedProperties.has('variant') || changedProperties.has('_children')) {
-			this._propagateVariant();
+		if (changedProperties.has('appearance') || changedProperties.has('_children')) {
+			this._propagateAppearance();
 		}
 		if (changedProperties.has('disabled')) {
 			this._propagateDisabled();
@@ -113,10 +118,10 @@ export class NLDDButtonBar extends LitElement {
 			.forEach(el => el.setAttribute('size', this.size));
 	}
 
-	private _propagateVariant(): void {
+	private _propagateAppearance(): void {
 		Array.from(this.children)
 			.filter(el => BUTTON_TAGS.includes(el.tagName.toLowerCase()))
-			.forEach(el => el.setAttribute('variant', this.variant));
+			.forEach(el => el.setAttribute('appearance', this.appearance));
 	}
 
 	private _propagateDisabled(): void {
@@ -153,9 +158,11 @@ export class NLDDButtonBar extends LitElement {
 				return { type: 'divider', id: this._idCounter++ } as BarChild;
 			}
 
+			if (tag === 'nldd-toggle-button') this._warnToggleButton();
+
 			if (BUTTON_TAGS.includes(tag)) {
 				el.setAttribute('size', this.size);
-				el.setAttribute('variant', this.variant);
+				el.setAttribute('appearance', this.appearance);
 				// The bar draws one group border (.button-bar::after); children drop theirs.
 				el.setAttribute('no-highlight-border', '');
 			}
@@ -169,6 +176,18 @@ export class NLDDButtonBar extends LitElement {
 		});
 
 		this._building = false;
+	}
+
+	private _warnedToggleButton = false;
+
+	private _warnToggleButton(): void {
+		if (!import.meta.env?.DEV || this._warnedToggleButton) return;
+		this._warnedToggleButton = true;
+		console.warn(
+			'<nldd-button-bar>: nldd-toggle-button is not supported here. The bar is one surface for actions, '
+			+ 'and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, '
+			+ 'or nldd-segmented-control for one choice out of a few options.',
+		);
 	}
 
 	override render() {

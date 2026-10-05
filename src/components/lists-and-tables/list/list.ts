@@ -9,10 +9,11 @@ import type { NLDDListTranslations } from './list.i18n.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';
 
-export type ListVariant = 'simple' | 'box-tinted' | 'box-base';
+export type ListAppearance = 'simple' | 'box-tinted' | 'box-base';
 export type ListType = 'list' | 'navigation' | 'listbox' | 'tree' | 'form' | 'radiogroup';
 
 export interface NLDDReorderEventDetail {
@@ -160,7 +161,7 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  *
  * @element nldd-list
  *
- * @attr {'simple'|'box-tinted'|'box-base'} variant - Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)
+ * @attr {'simple'|'box-tinted'|'box-base'} appearance - Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)
  * @attr {'list'|'navigation'|'listbox'|'tree'|'form'|'radiogroup'} type - A11y role and behavior (default 'list'). See the docblock above.
  * @attr {'always'|'on-touch'|'never'} dividers - When to draw the lines between the items (default 'always'). `on-touch` draws them only where the primary input is touch, under `(pointer: coarse)`: a pointer has the hover highlight to tell one row from the next and a finger has nothing, so the line earns its place in the one case and is clutter in the other. `never` hides them everywhere
  * @attr {string} height - Listbox only: caps the options' scroll region at this CSS length (e.g. '320px'). Unset means no cap.
@@ -184,8 +185,8 @@ export class NLDDList extends LitElement {
 	/** Visual style of the list. `simple` is a plain vertical strip with
 	 *  no chrome (no rounded corners, no fill, no border); `box` is a
 	 *  framed card with rounded corners, fill, and an inset border ring. */
-	@property({ reflect: true, converter: reflectNonDefault<ListVariant>('simple') })
-	variant: ListVariant = 'simple';
+	@property({ reflect: true, converter: reflectNonDefault<ListAppearance>('simple') })
+	appearance: ListAppearance = 'simple';
 
 	/** A11y semantics. See class docblock. */
 	@property({ reflect: true, converter: reflectNonDefault<ListType>('list') })
@@ -223,7 +224,6 @@ export class NLDDList extends LitElement {
 	reorderable = false;
 
 	@state()
-	private _mergedTranslations = { ...nlddListTranslations };
 
 	@state()
 	private _hasToolbar = false;
@@ -299,13 +299,7 @@ export class NLDDList extends LitElement {
 	 * from the children instead. The slotchange listeners below keep them true
 	 * afterwards, and by then a second render is what you actually want.
 	 */
-	override willUpdate(changed: Map<string, unknown>) {
-		// Derived state belongs before the render that reads it. In `updated` the
-		// merge lands after the first render has finished, and asks for a second
-		// one on the spot.
-		if (changed.has('translations') || !this.hasUpdated) {
-			this._mergedTranslations = { ...nlddListTranslations, ...this.translations };
-		}
+	override willUpdate(_changed: Map<string, unknown>) {
 		if (this.hasUpdated) return;
 		this._updateEmpty();
 		this._hasToolbar = this.querySelector(':scope > [slot="toolbar"]') !== null;
@@ -403,6 +397,7 @@ export class NLDDList extends LitElement {
 	}
 
 	override updated(changed: Map<string, unknown>) {
+		this._syncTranslatedTexts();
 		if (changed.has('reorderable') || changed.has('type')) {
 			if (this.reorderable && this.type !== 'list' && import.meta.env?.DEV) {
 				console.warn('nldd-list: `reorderable` is only valid when type="list". Ignoring.');
@@ -410,7 +405,7 @@ export class NLDDList extends LitElement {
 			this._updateItems();
 			this._warnArrowNav();
 		}
-		if (changed.has('variant')) {
+		if (changed.has('appearance')) {
 			this._updateItemContext();
 		}
 		if (changed.has('type')) {
@@ -436,6 +431,20 @@ export class NLDDList extends LitElement {
 
 	// — Host attribute routing ————————————————————————————————————————————————
 
+	/** The navigation label this list set itself, so a consumer's own is left alone. */
+	private _autoLabel: string | null = null;
+
+	/** On every render, so the texts this list sets itself follow a language switch. */
+	private _syncTranslatedTexts(): void {
+		if (this.hasAttribute('data-nldd-auto-label') && this.getAttribute('aria-label') === this._autoLabel) {
+			this._autoLabel = this._t('components.list.navigation-accessible-label');
+			this.setAttribute('aria-label', this._autoLabel);
+		}
+		if (this.hasAttribute('aria-keyshortcuts')) {
+			this.setAttribute('aria-description', this._t('components.list.arrow-navigation-description-text'));
+		}
+	}
+
 	private _applyHostType() {
 		// Only `navigation` puts a role on the host. `list` and `listbox` leave
 		// the host role-less: `list` carries role="list" on `.list__items`, and
@@ -444,7 +453,8 @@ export class NLDDList extends LitElement {
 		if (this.type === 'navigation') {
 			this.setAttribute('role', 'navigation');
 			if (!this.hasAttribute('aria-label') && !this.hasAttribute('aria-labelledby')) {
-				this.setAttribute('aria-label', this._t('components.list.navigation-accessible-label'));
+				this._autoLabel = this._t('components.list.navigation-accessible-label');
+				this.setAttribute('aria-label', this._autoLabel);
 				this.setAttribute('data-nldd-auto-label', '');
 			}
 		} else {
@@ -455,11 +465,11 @@ export class NLDDList extends LitElement {
 				// Only strip the label we set ourselves. If the consumer overrode
 				// `aria-label` after our auto-set, the value no longer matches and
 				// we leave it intact. Either way, clear the sentinel.
-				const autoLabel = this._t('components.list.navigation-accessible-label');
-				if (this.getAttribute('aria-label') === autoLabel) {
+				if (this.getAttribute('aria-label') === this._autoLabel) {
 					this.removeAttribute('aria-label');
 				}
 				this.removeAttribute('data-nldd-auto-label');
+				this._autoLabel = null;
 			}
 		}
 	}
@@ -518,7 +528,7 @@ export class NLDDList extends LitElement {
 
 	private _contextScheduled = false;
 
-	/** Push the list's variant + type onto every item, deferred to a microtask:
+	/** Push the list's appearance + type onto every item, deferred to a microtask:
 	 *  _updateItems runs inside the update lifecycle (firstUpdated/updated), and
 	 *  setting the items' reactive state there would trip Lit's change-in-update
 	 *  warning. Coalesced so repeated item updates schedule it only once. */
@@ -531,13 +541,13 @@ export class NLDDList extends LitElement {
 		});
 	}
 
-	/** The list owns variant + type; every item mirrors them (is-boxed styling and
+	/** The list owns appearance + type; every item mirrors them (is-boxed styling and
 	 *  the option/listitem role). Pushing from the list, not a per-item observer,
-	 *  means a runtime variant/type switch, or a freshly added item, always tracks
+	 *  means a runtime appearance/type switch, or a freshly added item, always tracks
 	 *  the list. */
 	private _applyItemContext() {
 		this._getItems().forEach((item) => {
-			item._applyVariant(this.variant);
+			item._applyAppearance(this.appearance);
 			item._applyParentType(this.type);
 		});
 	}
@@ -553,7 +563,7 @@ export class NLDDList extends LitElement {
 			: Array.from(this.querySelectorAll<NLDDListItem>(':scope > nldd-list-item'));
 		this._isEmpty = items.length === 0 || items.every(item => item.hasAttribute('hidden'));
 		// Nothing in it and nothing said about that is not a thing on the page.
-		// Drawing the surface anyway makes "nothing" look different per variant:
+		// Drawing the surface anyway makes "nothing" look different per appearance:
 		// invisible on a plain list, an empty tinted bar on a boxed one, which
 		// reads as a skeleton that never loaded.
 		this._hasItems = items.length > 0;
@@ -1449,13 +1459,7 @@ export class NLDDList extends LitElement {
 	// — i18n ————————————————————————————————————————————————————————————————
 
 	private _t(key: keyof NLDDListTranslations, vars?: Record<string, string | number>): string {
-		let str = this._mergedTranslations[key];
-		if (vars) {
-			for (const [k, v] of Object.entries(vars)) {
-				str = str.replace(`{${k}}`, String(v));
-			}
-		}
-		return str;
+		return translate(this.translations, nlddListTranslations, key, vars);
 	}
 
 

@@ -30,7 +30,6 @@ export function dropdownTemplate(component: NLDDDropdown): TemplateResult {
 	return html`
 		<div class="dropdown">
 			<slot @slotchange=${component._onSlotChange}></slot>
-			<span class="dropdown__value">${component._displayValue}</span>
 			${renderValidationIcon(component)}
 			<div class="dropdown__picker-icon">
 				<nldd-icon icon="chevron-up-chevron-down"></nldd-icon>

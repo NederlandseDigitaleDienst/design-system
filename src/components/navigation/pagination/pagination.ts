@@ -15,13 +15,13 @@
  */
 
 import { LitElement } from 'lit';
-import type { PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { paginationStyles } from './pagination.styles.js';
 import { paginationTemplate } from './pagination.template.js';
 import { nlddPaginationTranslations } from './pagination.i18n.js';
 import type { NLDDPaginationTranslations } from './pagination.i18n.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
+import { translate } from '../../../utilities/translations.js';
 
 @customElement('nldd-pagination')
 export class NLDDPagination extends LitElement {
@@ -46,22 +46,8 @@ export class NLDDPagination extends LitElement {
 	@property({ type: Object })
 	translations: Partial<NLDDPaginationTranslations> = {};
 
-	private _mergedTranslations = { ...nlddPaginationTranslations };
-
-	override willUpdate(changed: PropertyValues): void {
-		if (changed.has('translations')) {
-			this._mergedTranslations = { ...nlddPaginationTranslations, ...this.translations };
-		}
-	}
-
 	_t(key: keyof NLDDPaginationTranslations, params?: Record<string, string | number>): string {
-		let text = this._mergedTranslations[key] ?? key;
-		if (params) {
-			for (const [k, v] of Object.entries(params)) {
-				text = text.replace(`{${k}}`, String(v));
-			}
-		}
-		return text;
+		return translate(this.translations, nlddPaginationTranslations, key, params);
 	}
 
 	_getVisiblePages(): (number | 'ellipsis')[] {

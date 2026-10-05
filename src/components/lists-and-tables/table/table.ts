@@ -58,6 +58,7 @@ import { nlddTableTranslations } from './table.i18n.js';
 import type { NLDDTableTranslations } from './table.i18n.js';
 import { breakpoints } from '../../../assets/styles/breakpoints.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type TableBackground = 'base' | 'tinted';
 
@@ -113,7 +114,7 @@ export class NLDDTable extends LitElement {
 	private _width = 0;
 
 	public _t(key: keyof NLDDTableTranslations): string {
-		return this.translations[key] ?? nlddTableTranslations[key];
+		return translate(this.translations, nlddTableTranslations, key);
 	}
 
 	override connectedCallback(): void {
@@ -252,11 +253,12 @@ export class NLDDTable extends LitElement {
 		// nameless — and any focusable scroll region always has a name (SC 4.1.2).
 		// A missing label is still DEV-warned in updated() to prompt a meaningful
 		// one rather than rely on the fallback.
-		if (this.accessibleLabel) {
-			this.setAttribute('aria-label', this.accessibleLabel);
-		} else {
-			this.setAttribute('aria-label', this._t('components.table.accessible-label'));
-		}
+		this._syncLabel();
+	}
+
+	/** Also on every render, so the fallback follows a language switch. */
+	private _syncLabel(): void {
+		this.setAttribute('aria-label', this.accessibleLabel || this._t('components.table.accessible-label'));
 	}
 
 	override updated(changed: Map<string, unknown>): void {
@@ -268,6 +270,8 @@ export class NLDDTable extends LitElement {
 		}
 		if (changed.has('accessibleLabel')) {
 			this._syncHostA11y();
+		} else {
+			this._syncLabel();
 		}
 		if (changed.has('selectable')) {
 			// Selectability gates each body row's aria-selected; re-sync them.

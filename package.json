@@ -455,11 +455,36 @@
     "./styles/variables": "./dist/css/variables.css",
     "./styles/tokens": "./dist/css/tokens.css",
     "./styles/fouc": "./dist/css/fouc.css",
+    "./fonts/*": "./dist/fonts/*",
     "./favicon.svg": "./dist/favicon.svg",
     "./touch-icon.png": "./dist/touch-icon.png",
     "./breakpoints": {
       "types": "./dist/assets/styles/breakpoints.d.ts",
       "default": "./dist/assets/styles/breakpoints.js"
+    },
+    "./translations": {
+      "types": "./dist/utilities/translations.d.ts",
+      "default": "./dist/utilities/translations.js"
+    },
+    "./translations/nl": {
+      "types": "./dist/translations/nl.generated.d.ts",
+      "default": "./dist/translations/nl.generated.js"
+    },
+    "./translations/en-US": {
+      "types": "./dist/translations/en-US.d.ts",
+      "default": "./dist/translations/en-US.js"
+    },
+    "./translations/fy": {
+      "types": "./dist/translations/fy.d.ts",
+      "default": "./dist/translations/fy.js"
+    },
+    "./translations/pap-AW": {
+      "types": "./dist/translations/pap-AW.d.ts",
+      "default": "./dist/translations/pap-AW.js"
+    },
+    "./translations/pap-CW": {
+      "types": "./dist/translations/pap-CW.d.ts",
+      "default": "./dist/translations/pap-CW.js"
     },
     "./vue": {
       "types": "./dist/types/vue.d.ts"
@@ -497,7 +522,7 @@
     "validate:host-styles": "node scripts/validate-host-styles.js",
     "validate:component-api": "node scripts/validate-component-api.js",
     "validate:skill-markup": "node scripts/validate-skill-markup.js",
-    "build:components": "npm run clean:components && npm run build:icons && npm run build:components:modules && npm run build:components:bundle && npm run build:components:standalone && npm run build:exports && npm run generate:cem",
+    "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:bundle && npm run build:components:standalone && npm run build:exports && npm run generate:cem",
     "build:icons": "node scripts/generate-icon-registry.js && node scripts/generate-logo.js",
     "build:components:modules": "tsc -p tsconfig.build.json",
     "build:components:bundle": "vite build",
@@ -525,7 +550,8 @@
     "pretypecheck": "npm run build:icons",
     "typecheck": "tsc --noEmit",
     "test:vue-types": "vue-tsc --noEmit -p type-tests/vue/tsconfig.json",
-    "build:components:standalone": "vite build --config vite.bundle.config.ts"
+    "build:components:standalone": "vite build --config vite.bundle.config.ts",
+    "generate:translations": "node scripts/generate-translations.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",

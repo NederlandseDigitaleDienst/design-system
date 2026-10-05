@@ -18,6 +18,7 @@ export const textStyles = css`
 		color: var(--_color);
 		text-align: var(--_text-align);
 		font: var(--_font-weight) var(--_font-size) / var(--_line-height) var(--primitives-font-family-body);
+		text-wrap: pretty;
 	}
 
 	:host([hidden]) {

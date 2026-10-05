@@ -34,6 +34,7 @@ import { timePickerTemplate } from './time-picker.template.js';
 import { nlddTimePickerTranslations, type NLDDTimePickerTranslations } from './time-picker.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { translate } from '../../../utilities/translations.js';
 
 const LAST_MINUTE_OF_DAY = 23 * 60 + 59;
 
@@ -107,7 +108,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	invalid = false;
 
 	public _t(key: keyof NLDDTimePickerTranslations): string {
-		return this.translations[key] ?? nlddTimePickerTranslations[key];
+		return translate(this.translations, nlddTimePickerTranslations, key);
 	}
 
 	public get _label(): string {

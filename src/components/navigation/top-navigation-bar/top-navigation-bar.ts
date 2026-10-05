@@ -19,6 +19,9 @@
  * @attr {string} back-href - URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself.
  * @attr {string} back-text - Text of the back button. The button appears as soon as back-text or back-href is set; without text it falls back to the translation ("Terug").
  * @attr {string} width - Limits the bar content to a max-width so it lines up with the page sections. 'full' fills the entire width, or pass your own CSS length.
+ *
+ * @slot global - The global navigation: an nldd-menu-bar with nldd-menu-bar-item elements. On narrow widths these items move into the menu sheet behind the menu button.
+ * @slot utility - The utility navigation, such as search and language: an nldd-menu-bar with nldd-menu-bar-item elements. Stays in the bar on every width.
  */
 
 import { LitElement, type PropertyValues } from 'lit';
@@ -143,9 +146,24 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	// left untouched — including one set asynchronously after the first sync.
 	private _appliedMenuBarLabels = new WeakMap<NLDDMenuBar, string>();
 
+	private _appliedTexts: string | null = null;
+
+	/** The texts this bar puts on elements it does not render itself, as one string. */
+	private _translatedTexts(): string {
+		return [
+			this._menuText,
+			this._t('components.top-navigation-bar.menu-sheet-dismiss-action'),
+			this._t('components.top-navigation-bar.global-menu-bar-label'),
+			this._t('components.top-navigation-bar.utility-menu-bar-label'),
+		].join('\n');
+	}
+
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
-		if (changed.has('translations')) {
+		// Not only on `translations`: setTranslations() re-renders without it.
+		const texts = this._translatedTexts();
+		if (texts !== this._appliedTexts) {
+			this._appliedTexts = texts;
 			this._globalMenuSheet?.setAttribute('accessible-label', this._menuText);
 			this._globalMenuSheetTitleBar?.setAttribute('dismiss-text', this._t('components.top-navigation-bar.menu-sheet-dismiss-action'));
 			// Keep the sheet's root-level title in sync with the translated menu
@@ -226,11 +244,15 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.addEventListener('select', this._handleItemSelect);
+		window.addEventListener('scroll', this._syncLogoOffset, { passive: true });
+		window.addEventListener('resize', this._syncLogoOffset, { passive: true });
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this.removeEventListener('select', this._handleItemSelect);
+		window.removeEventListener('scroll', this._syncLogoOffset);
+		window.removeEventListener('resize', this._syncLogoOffset);
 		this._cleanupCompactDetection();
 		// remove() detaches the sheet from DOM; browser GC handles remaining references
 		this._globalMenuSheet?.remove();
@@ -244,7 +266,21 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		// Sync has-global-items immediately to prevent layout flash
 		this._syncHasGlobalItems();
 		this._setupCompactDetection();
+		this._syncLogoOffset();
 	}
+
+	/**
+	 * How far the logo sits below the top of the page, so the ribbon drawn above
+	 * it starts at the top of the page and not over a bar above this one. Only
+	 * read while the page is at the top, which is the only time it shows.
+	 */
+	private _syncLogoOffset = (): void => {
+		if (window.scrollY > 0) return;
+		const logo = this.shadowRoot?.querySelector('.top-navigation-bar__logo');
+		if (!logo) return;
+		const offset = Math.max(0, Math.round(logo.getBoundingClientRect().top + window.scrollY));
+		this.style.setProperty('--_logo-offset', `${offset}px`);
+	};
 
 	/**
 	 * Handles selection of global menu items.
@@ -400,7 +436,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		const section = document.createElement('nldd-simple-section');
 
 		this._globalMenuSheetList = document.createElement('nldd-list');
-		this._globalMenuSheetList.setAttribute('variant', 'simple');
+		this._globalMenuSheetList.setAttribute('appearance', 'simple');
 		this._globalMenuSheetList.setAttribute('dividers', 'never');
 		section.appendChild(this._globalMenuSheetList);
 

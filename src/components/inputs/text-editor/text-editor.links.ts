@@ -1,3 +1,4 @@
+import { relabel } from './text-editor.labels.js';
 import {
 	Decoration,
 	ViewPlugin,
@@ -23,12 +24,15 @@ import '../../content/icon/icon.js';
 export type OpenInNewTabLabel = (url: string) => string;
 
 class LinkOpenWidget extends WidgetType {
-	constructor(readonly href: string, readonly label: OpenInNewTabLabel) {
+	readonly ariaLabel: string;
+
+	constructor(readonly href: string, label: OpenInNewTabLabel) {
 		super();
+		this.ariaLabel = label(href);
 	}
 
 	eq(other: LinkOpenWidget): boolean {
-		return other.href === this.href;
+		return other.href === this.href && other.ariaLabel === this.ariaLabel;
 	}
 
 	toDOM(): HTMLElement {
@@ -37,7 +41,7 @@ class LinkOpenWidget extends WidgetType {
 		anchor.href = this.href;
 		anchor.target = '_blank';
 		anchor.rel = 'noopener noreferrer';
-		anchor.setAttribute('aria-label', this.label(this.href));
+		anchor.setAttribute('aria-label', this.ariaLabel);
 		const icon = document.createElement('nldd-icon');
 		icon.setAttribute('icon', 'external-link');
 		icon.setAttribute('aria-hidden', 'true');
@@ -208,7 +212,9 @@ export function linkOpenBadge(label: OpenInNewTabLabel): ViewPlugin<{ decoration
 			}
 
 			update(update: ViewUpdate): void {
-				if (update.docChanged || update.viewportChanged) this.decorations = buildBadges(update.view, label);
+				if (update.docChanged || update.viewportChanged || update.transactions.some((tr) => tr.effects.some((e) => e.is(relabel)))) {
+					this.decorations = buildBadges(update.view, label);
+				}
 			}
 		},
 		{ decorations: (plugin) => plugin.decorations }

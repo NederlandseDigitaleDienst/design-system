@@ -52,6 +52,7 @@ import { timeFieldStyles } from './time-field.styles.js';
 import { timeFieldTemplate } from './time-field.template.js';
 import { nlddTimeFieldTranslations, type NLDDTimeFieldTranslations } from './time-field.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** Minutes since midnight of the last time on a day. */
 const LAST_MINUTE_OF_DAY = 23 * 60 + 59;
@@ -246,7 +247,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	_display = '';
 
 	public _t(key: keyof NLDDTimeFieldTranslations): string {
-		return this.translations[key] ?? nlddTimeFieldTranslations[key];
+		return translate(this.translations, nlddTimeFieldTranslations, key);
 	}
 
 	public get _fieldLabel(): string {

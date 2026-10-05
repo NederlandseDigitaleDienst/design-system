@@ -42,27 +42,27 @@ describe('nldd-list', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('defaults to simple variant', async () => {
+	it('defaults to simple appearance', async () => {
 		el = await fixture('<nldd-list></nldd-list>');
 		await waitForUpdate(el);
-		expect((el as unknown as { variant: string }).variant).toBe('simple');
-		expect(el.hasAttribute('variant')).toBe(false);
+		expect((el as unknown as { appearance: string }).appearance).toBe('simple');
+		expect(el.hasAttribute('appearance')).toBe(false);
 	});
 
-	it('reflects variant attribute', async () => {
-		el = await fixture('<nldd-list variant="box-tinted"></nldd-list>');
+	it('reflects appearance attribute', async () => {
+		el = await fixture('<nldd-list appearance="box-tinted"></nldd-list>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('variant')).toBe('box-tinted');
+		expect(el.getAttribute('appearance')).toBe('box-tinted');
 	});
 
-	it('drops is-boxed on items when the list variant switches box -> simple', async () => {
-		el = await fixture('<nldd-list variant="box-tinted"><nldd-list-item>A</nldd-list-item></nldd-list>');
+	it('drops is-boxed on items when the list appearance switches box -> simple', async () => {
+		el = await fixture('<nldd-list appearance="box-tinted"><nldd-list-item>A</nldd-list-item></nldd-list>');
 		const item = el.querySelector('nldd-list-item')!;
 		await waitForUpdate(el);
 		await (item as { updateComplete: Promise<unknown> }).updateComplete;
 		expect(item.classList.contains('is-boxed')).toBe(true);
 
-		el.setAttribute('variant', 'simple');
+		el.setAttribute('appearance', 'simple');
 		await waitForUpdate(el);
 		expect(item.classList.contains('is-boxed')).toBe(false);
 	});
@@ -391,13 +391,13 @@ describe('nldd-list', () => {
 	});
 
 	it('empty: takes itself off the page when the slot is unfilled', async () => {
-		el = await fixture('<nldd-list variant="box-tinted"></nldd-list>');
+		el = await fixture('<nldd-list appearance="box-tinted"></nldd-list>');
 		await waitForUpdate(el);
 		expect(getComputedStyle(el).display).toBe('none');
 	});
 
 	it('empty: stays on the page once the slot says something', async () => {
-		el = await fixture('<nldd-list variant="box-tinted"><nldd-inline-dialog slot="empty" text="Niets gevonden"></nldd-inline-dialog></nldd-list>');
+		el = await fixture('<nldd-list appearance="box-tinted"><nldd-inline-dialog slot="empty" text="Niets gevonden"></nldd-inline-dialog></nldd-list>');
 		await waitForUpdate(el);
 		expect(getComputedStyle(el).display).not.toBe('none');
 	});
@@ -1564,7 +1564,7 @@ describe('nldd-list – empty and no-results', () => {
 	const noResults = '<nldd-inline-dialog slot="no-results" text="Niets gevonden"></nldd-inline-dialog>';
 
 	const mount = async (inner: string) => {
-		el = await fixture(`<nldd-list variant="box">${inner}</nldd-list>`);
+		el = await fixture(`<nldd-list appearance="box">${inner}</nldd-list>`);
 		await waitForUpdate(el);
 		return el;
 	};
@@ -1607,14 +1607,14 @@ describe('nldd-list – empty and no-results', () => {
 	});
 
 	it('keeps a listbox and its search field when no options arrived at all', async () => {
-		el = await fixture(`<nldd-list type="listbox" variant="box">${noResults}</nldd-list>`);
+		el = await fixture(`<nldd-list type="listbox" appearance="box">${noResults}</nldd-list>`);
 		await waitForUpdate(el);
 		expect(display(el)).not.toBe('none');
 		expect(shown(el.shadowRoot!.querySelector('.list__search-field-input'))).toBe(true);
 	});
 
 	it('says nothing in a listbox until a query asks the question', async () => {
-		el = await fixture(`<nldd-list type="listbox" variant="box">${emptyState}</nldd-list>`);
+		el = await fixture(`<nldd-list type="listbox" appearance="box">${emptyState}</nldd-list>`);
 		await waitForUpdate(el);
 		expect(shown(el.querySelector('[slot="empty"]'))).toBe(false);
 
@@ -1626,7 +1626,7 @@ describe('nldd-list – empty and no-results', () => {
 	});
 
 	it('keeps a listbox search field when a query matches nothing', async () => {
-		el = await fixture(`<nldd-list type="listbox" variant="box">${noResults}${row}</nldd-list>`);
+		el = await fixture(`<nldd-list type="listbox" appearance="box">${noResults}${row}</nldd-list>`);
 		await waitForUpdate(el);
 		const field = el.shadowRoot!.querySelector<HTMLInputElement>('.list__search-field-input')!;
 		field.value = 'zzz';

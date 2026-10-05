@@ -26,11 +26,11 @@ describe('nldd-progress-bar', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('defaults to mode="progress", max=100, size="md", color="accent"', async () => {
+	it('defaults to variant="progress", max=100, size="md", color="accent"', async () => {
 		el = await fixture<NLDDProgressBar>('<nldd-progress-bar></nldd-progress-bar>');
 		await waitForUpdate(el);
 		const bar = el as unknown as NLDDProgressBar;
-		expect(bar.mode).toBe('progress');
+		expect(bar.variant).toBe('progress');
 		expect(bar.max).toBe(100);
 		expect(bar.size).toBe('md');
 		expect(bar.color).toBe('accent');
@@ -152,9 +152,9 @@ describe('nldd-progress-bar', () => {
 		expect(track.getAttribute('aria-valuenow')).toBe('50');
 	});
 
-	it('progress mode without names: aria-valuetext is "X% voltooid"', async () => {
+	it('progress variant without names: aria-valuetext is "X% voltooid"', async () => {
 		el = await fixture(`
-			<nldd-progress-bar mode="progress" max="100">
+			<nldd-progress-bar variant="progress" max="100">
 				<nldd-progress-bar-segment-indicator value="30"></nldd-progress-bar-segment-indicator>
 				<nldd-progress-bar-segment-indicator value="20"></nldd-progress-bar-segment-indicator>
 			</nldd-progress-bar>
@@ -164,9 +164,9 @@ describe('nldd-progress-bar', () => {
 		expect(track.getAttribute('aria-valuetext')).toBe('50% voltooid');
 	});
 
-	it('progress mode with names: aria-valuetext enumerates + sums', async () => {
+	it('progress variant with names: aria-valuetext enumerates + sums', async () => {
 		el = await fixture(`
-			<nldd-progress-bar mode="progress" max="100">
+			<nldd-progress-bar variant="progress" max="100">
 				<nldd-progress-bar-segment-indicator value="30" name="Upload"></nldd-progress-bar-segment-indicator>
 				<nldd-progress-bar-segment-indicator value="20" name="Verwerken"></nldd-progress-bar-segment-indicator>
 			</nldd-progress-bar>
@@ -176,9 +176,9 @@ describe('nldd-progress-bar', () => {
 		expect(track.getAttribute('aria-valuetext')).toBe('Upload: 30%, Verwerken: 20%. Totaal 50% voltooid.');
 	});
 
-	it('distribution mode without names: aria-valuetext is plain percentages', async () => {
+	it('distribution variant without names: aria-valuetext is plain percentages', async () => {
 		el = await fixture(`
-			<nldd-progress-bar mode="distribution" max="100">
+			<nldd-progress-bar variant="distribution" max="100">
 				<nldd-progress-bar-segment-indicator value="40"></nldd-progress-bar-segment-indicator>
 				<nldd-progress-bar-segment-indicator value="30"></nldd-progress-bar-segment-indicator>
 				<nldd-progress-bar-segment-indicator value="30"></nldd-progress-bar-segment-indicator>
@@ -189,9 +189,9 @@ describe('nldd-progress-bar', () => {
 		expect(track.getAttribute('aria-valuetext')).toBe('40%, 30%, 30%');
 	});
 
-	it('distribution mode with names: aria-valuetext enumerates names', async () => {
+	it('distribution variant with names: aria-valuetext enumerates names', async () => {
 		el = await fixture(`
-			<nldd-progress-bar mode="distribution" max="500">
+			<nldd-progress-bar variant="distribution" max="500">
 				<nldd-progress-bar-segment-indicator value="200" name="Foto's"></nldd-progress-bar-segment-indicator>
 				<nldd-progress-bar-segment-indicator value="150" name="Video's"></nldd-progress-bar-segment-indicator>
 				<nldd-progress-bar-segment-indicator value="150" name="Vrij"></nldd-progress-bar-segment-indicator>

@@ -53,6 +53,7 @@ import type { NLDDBannerTranslations } from './banner.i18n.js';
 import '../../content/icon/icon.js';
 import '../../actions/button-group/button-group.js';
 import '../../actions/icon-button/icon-button.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type BannerVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 export type BannerSize = 'sm' | 'md';
@@ -108,7 +109,7 @@ export class NLDDBanner extends LitElement {
 
 
 	public _t(key: keyof NLDDBannerTranslations): string {
-		return this.translations[key] ?? nlddBannerTranslations[key];
+		return translate(this.translations, nlddBannerTranslations, key);
 	}
 
 	get _resolvedIcon(): string {

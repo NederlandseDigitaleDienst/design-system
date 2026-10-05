@@ -14,6 +14,7 @@
     "src/vite-env.d.ts",
     "src/components/**/*.ts",
     "src/utilities/**/*.ts",
+    "src/translations/**/*.ts",
     "src/assets/styles/**/*.ts"
   ],
   "exclude": [

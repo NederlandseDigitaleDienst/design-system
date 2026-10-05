@@ -300,6 +300,9 @@ class MentionWidget extends WidgetType {
 		const token = document.createElement('span');
 		token.className = 'cm-md-mention-token';
 		token.setAttribute('data-user', this.id);
+		// A name someone chose, not the writer's spelling to correct. Safari
+		// ignores this inside the editor, hence the name in CSS below.
+		token.setAttribute('spellcheck', 'false');
 		if (this.selected) token.setAttribute('data-selected', '');
 		// The @ is rendered as the DS 'at' icon — a separate, vertically-centered
 		// prefix that aligns cleanly with the name.
@@ -308,7 +311,8 @@ class MentionWidget extends WidgetType {
 		at.setAttribute('icon', 'at');
 		at.setAttribute('aria-hidden', 'true');
 		const name = document.createElement('span');
-		name.textContent = this.label;
+		name.className = 'cm-md-mention-token-name';
+		name.dataset.label = this.label;
 		token.append(at, name);
 		return token;
 	}

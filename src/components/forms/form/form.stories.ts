@@ -110,7 +110,7 @@ const Template = ({ labelAlignment, name, autocomplete, method, action, novalida
 		<nldd-form-actions>
 			<nldd-button-group>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					type="submit"
 					text="Log in"
 				></nldd-button>
@@ -148,7 +148,7 @@ export const Login = {
 			<nldd-form-actions>
 				<nldd-button-group>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						type="submit"
 						text="Log in"
 					></nldd-button>
@@ -222,7 +222,7 @@ export const Persoonsgegevens = {
 			<nldd-form-actions>
 				<nldd-button-group>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						type="submit"
 						text="Opslaan"
 					></nldd-button>
@@ -295,7 +295,7 @@ export const MetSecties = {
 			<nldd-form-actions>
 				<nldd-button-group>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						type="submit"
 						text="Versturen"
 					></nldd-button>

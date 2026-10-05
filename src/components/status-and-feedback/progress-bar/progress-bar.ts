@@ -8,7 +8,7 @@
  * storage usage). The consumer provides raw values; the component
  * computes percentages from `max`.
  *
- * Two modes:
+ * Two variants:
  * - `progress` (default): segments sum toward `max`; remaining space
  *   is empty track. ARIA reads "X% voltooid".
  * - `distribution`: segments fill the bar; ARIA enumerates segments.
@@ -18,7 +18,7 @@
  *
  * @element nldd-progress-bar
  *
- * @attr {'progress'|'distribution'} mode - Semantics for ARIA and visualization (default: 'progress')
+ * @attr {'progress'|'distribution'} variant - Semantics for ARIA and visualization (default: 'progress')
  * @attr {number} max - Total value (default: 100)
  * @attr {number} value - Single-segment shorthand (ignored when segment children are present)
  * @attr {string} color - Color for the single-segment shorthand (default: 'accent')
@@ -48,6 +48,7 @@ import { progressBarTemplate, segmentIndicatorTemplate } from './progress-bar.te
 import { nlddProgressBarTranslations } from './progress-bar.i18n.js';
 import type { NLDDProgressBarTranslations } from './progress-bar.i18n.js';
 import '../../content/tooltip/tooltip.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** Indeterminate ↔ determinate crossfade duration. Must stay in sync with
  *  --primitives-transition-duration-slow used by the matching CSS animations
@@ -55,7 +56,7 @@ import '../../content/tooltip/tooltip.js';
  *  test suite can cross-check this value against the resolved CSS token. */
 export const INDETERMINATE_TRANSITION_MS = 300;
 
-export type ProgressBarMode = 'progress' | 'distribution';
+export type ProgressBarVariant = 'progress' | 'distribution';
 export type ProgressBarSize = 'sm' | 'md' | 'lg';
 export type ProgressBarValueFormat = 'percentage' | 'absolute' | 'fraction';
 export type ProgressBarValueDisplay = 'inline' | 'tooltip' | 'none';
@@ -112,8 +113,8 @@ export class NLDDProgressBarSegmentIndicator extends LitElement {
 export class NLDDProgressBar extends LitElement {
 	static override styles = progressBarStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<ProgressBarMode>('progress') })
-	mode: ProgressBarMode = 'progress';
+	@property({ reflect: true, converter: reflectNonDefault<ProgressBarVariant>('progress') })
+	variant: ProgressBarVariant = 'progress';
 
 	@property({ type: Number, reflect: true })
 	max = 100;
@@ -166,7 +167,7 @@ export class NLDDProgressBar extends LitElement {
 	private _enterTimeout?: ReturnType<typeof setTimeout>;
 
 	public _t(key: keyof NLDDProgressBarTranslations): string {
-		return this.translations[key] ?? nlddProgressBarTranslations[key];
+		return translate(this.translations, nlddProgressBarTranslations, key);
 	}
 
 	/** Returns true when the user has provided segment children. */
@@ -224,11 +225,11 @@ export class NLDDProgressBar extends LitElement {
 				return s.name ? `${s.name}: ${pct}%` : `${pct}%`;
 			});
 
-		if (this.mode === 'distribution') {
+		if (this.variant === 'distribution') {
 			return segmentIndicatorDescriptions.join(', ');
 		}
 
-		// Progress mode
+		// Progress variant
 		const totalPct = Math.round(this._percentage);
 		if (allNamed) {
 			return `${segmentIndicatorDescriptions.join(', ')}. ${totalPrefix} ${totalPct}% ${completedSuffix}.`;
@@ -401,17 +402,17 @@ export class NLDDProgressBar extends LitElement {
 			const v = Math.max(0, seg.value);
 			if (v <= 0) {
 				seg.hidden = true;
-				seg.removeAttribute('data-mode');
+				seg.removeAttribute('data-variant');
 				seg._autoTooltipText = '';
 				continue;
 			}
 			seg.hidden = false;
 			const pct = denominator > 0 ? (v / denominator) * 100 : 0;
 			seg.style.setProperty('--context-progress-bar-segment-indicator-width', `${pct}%`);
-			// Progress mode: each segment a capsule. Distribution mode:
+			// Progress variant: each segment a capsule. Distribution variant:
 			// segments are rectangular, only the track's outer corners are
 			// rounded (via overflow:hidden + border-radius on the track).
-			seg.setAttribute('data-mode', this.mode);
+			seg.setAttribute('data-variant', this.variant);
 			seg._autoTooltipText = suppressAutoTooltip ? '' : this._formatSegmentIndicatorTooltip(seg);
 			seg.toggleAttribute('data-grow', isExiting);
 			seg.toggleAttribute('data-shrink', isEntering);

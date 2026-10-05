@@ -52,7 +52,7 @@ const Template = ({ accessibleLabel }: Record<string, any>) => html`
 		></nldd-document-tab-bar-item>
 		<nldd-icon-button
 			slot="end"
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			text="Nieuw tabblad"
 			icon="plus"
 		></nldd-icon-button>
@@ -117,7 +117,7 @@ export const VeelTabbladen = {
 		></nldd-document-tab-bar-item>
 		<nldd-icon-button
 			slot="end"
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			text="Nieuw tabblad"
 			icon="plus"
 		></nldd-icon-button>

@@ -8,13 +8,19 @@
  * exactly like nldd-combo-box; the menu filters as you type, with a chevron picker
  * button, arrow-key roving across the tokens and ElementInternals form participation.
  *
+ * Options can arrive after the keystroke, from a server you query per
+ * keystroke. Slot them into the menu when they come in: if the user is still
+ * in the field and the keystroke found nothing to show, the menu opens then.
+ * After Escape, or once the user left the field, it stays shut.
+ *
  * @element nldd-token-field
  * @attr {string} values - Initial token values as a comma-separated string (e.g. "nl, be, de"). Not reflected; the live value is the `.values` array property. Values can't contain commas.
  * @attr {string} placeholder - Placeholder shown in the input
  * @attr {string} type - Input type forwarded to the inner input (e.g. 'email')
  * @attr {string} autocomplete - Autocomplete hint forwarded to the inner input
  * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input
- * @attr {boolean} allow-custom - Allow free-typed values (not just menu options)
+ * @attr {boolean} allow-custom - Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value, ignoring case and the spaces around it; with two such labels, the first one.
+ * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
  * @attr {boolean} valid - Marks the field valid (shows the valid icon)
  * @attr {boolean} invalid - Marks the field invalid (shows the invalid icon)
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
@@ -42,6 +48,7 @@ import type { NLDDMenu, NLDDMenuItem } from '../../actions/menu/menu.js';
 import '../../actions/menu/menu.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** Trailing control rendered on each token. */
 export type TokenFieldControl = 'dismiss' | 'menu';
@@ -111,6 +118,10 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Boolean, reflect: true, attribute: 'allow-custom' })
 	allowCustom = false;
 
+	/** Leaves the options as they are while typing: the list was filtered already, by a server. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-filter' })
+	noFilter = false;
+
 	@property({ type: Boolean, reflect: true })
 	valid = false;
 
@@ -169,6 +180,10 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  change (e.g. a framework populating them asynchronously), so the field
 	 *  re-evaluates whether to show the input/picker and re-resolves token labels. */
 	private _menuObserver: MutationObserver | null = null;
+	/** A keystroke wanted the menu open but there was nothing to show yet.
+	 *  Options that arrive after it, from a server answering per keystroke,
+	 *  open it then. Escape, leaving the field or opening the menu clear it. */
+	private _openPending = false;
 	/** Watches the light-DOM `[slot="template"]` prototypes for changes (menu items,
 	 *  their attributes, or an added/removed prototype) and invalidates the cloned
 	 *  per-token menus so they re-clone. These components run on live sites, not just
@@ -179,7 +194,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	private _pickerPointerdownWhileOpen = false;
 
 	public _t(key: keyof NLDDTokenFieldTranslations): string {
-		return this.translations[key] ?? nlddTokenFieldTranslations[key];
+		return translate(this.translations, nlddTokenFieldTranslations, key);
 	}
 
 	// — Lifecycle ————————————————————————————————————————————————————————————
@@ -466,6 +481,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 		this._syncMenuItems();
 		if (!this._isOpen) this._openMenu();
+		this._openPending = this._text !== '' && !this._menu?.matches(':popover-open');
 		this.dispatchEvent(
 			new CustomEvent('input', {
 				detail: { value: this._text },
@@ -483,7 +499,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		const remainder = parts.pop() ?? '';
 		const next = [...this.values];
 		for (const part of parts) {
-			const value = part.trim();
+			const value = part.trim() ? this._valueForTypedText(part) : '';
 			if (value && !next.includes(value)) next.push(value);
 		}
 		if (next.length !== this.values.length) {
@@ -504,6 +520,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Close the menu when focus leaves the field for anything but the menu. */
 	public _handleBlur(e: FocusEvent): void {
+		this._openPending = false;
 		const related = e.relatedTarget as Node | null;
 		if (related && this._menu?.contains(related)) return;
 		// Commit any free-typed text when focus leaves, so a value typed without
@@ -511,7 +528,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		// and joins the form value. Only with custom values allowed; commit without
 		// re-focusing so the focus move isn't fought. `_commitValue` closes the
 		// menu, so only close it ourselves when nothing was committed.
-		if (this.allowCustom && this._text.trim()) this._commitValue(this._text.trim(), false);
+		if (this.allowCustom && this._text.trim()) this._commitValue(this._valueForTypedText(this._text), false);
 		else this._closeMenu();
 	}
 
@@ -545,7 +562,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 					highlighted.select(); // routes through _handleMenuSelect
 				} else if (this.allowCustom && this._text.trim()) {
 					e.preventDefault();
-					this._commitValue(this._text.trim());
+					this._commitValue(this._valueForTypedText(this._text));
 				} else {
 					// Nothing here to act on, so this Enter is not ours. Hand it to the
 					// form, which is what the sentence above promises and what the
@@ -555,6 +572,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 				break;
 			}
 			case 'Escape':
+				// Whatever arrives after this does not open the menu: the user said stop.
+				this._openPending = false;
 				// See nldd-combo-box: the key closed this menu and goes no further,
 				// so a sheet behind it does not close on the same press.
 				if (!this._isOpen) return;
@@ -745,6 +764,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		this._menuObserver?.disconnect();
 		this._menuObserver = new MutationObserver(() => {
 			this._hideSelectedMenuItems();
+			this._handleMenuItemsChange();
 			this.requestUpdate();
 		});
 		this._menuObserver.observe(menu, { childList: true, subtree: true });
@@ -769,6 +789,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		if (!this._isOpen) {
 			this._highlightedId = '';
 		} else {
+			// However it opened, there is nothing left to open later.
+			this._openPending = false;
 			requestAnimationFrame(() => {
 				// The menu clears its highlight on open; seat it on the first option
 				// by default so that option is the active descendant and Enter picks
@@ -795,6 +817,18 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		this._closeMenu();
 		this._input?.focus();
 	};
+
+	/**
+	 * Typing an option's label in full means that option: its value becomes the
+	 * token, not the label, so the form sends what a choice from the menu would.
+	 * Anything else typed is a custom value as it stands.
+	 */
+	private _valueForTypedText(text: string): string {
+		const typed = text.trim();
+		const option = Array.from(this._menu?.querySelectorAll<NLDDMenuItem>('nldd-menu-item') ?? [])
+			.find((item) => item.closest('nldd-menu') === this._menu && item.text.trim().toLowerCase() === typed.toLowerCase());
+		return option ? option.value || option.text : typed;
+	}
 
 	/**
 	 * Add a value, clear the input, and close the menu — focus returns to the empty
@@ -835,6 +869,24 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		(this._menu as HTMLElement).showPopover();
 	}
 
+	/**
+	 * The menu decides whether to open on a keystroke. Options that arrive later
+	 * get the same decision: they open a menu the keystroke could not open, and a
+	 * menu whose options all went away closes again, as it would on typing. Only
+	 * while the user is still in the field.
+	 */
+	private _handleMenuItemsChange(): void {
+		if (!this._menu || this.shadowRoot?.activeElement !== this._input) return;
+		if (this._menu.matches(':popover-open')) {
+			if (this._visibleOptionCount === 0) this._closeMenu();
+			return;
+		}
+		if (this._openPending && this._visibleOptionCount > 0) {
+			this._openPending = false;
+			this._openMenu();
+		}
+	}
+
 	public _closeMenu(): void {
 		if (!this._menu) return;
 		if (!(this._menu as HTMLElement).matches(':popover-open')) return;
@@ -861,7 +913,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  typing, selecting, and whenever `values` changes. */
 	private _syncMenuItems(): void {
 		if (!this._menu) return;
-		this._menu.filter(this._text);
+		this._menu.filter(this._text, { hide: !this.noFilter });
 		this._hideSelectedMenuItems();
 		this._updateActiveDescendant();
 		// Don't leave an empty menu open. Without options the empty-state dialog is

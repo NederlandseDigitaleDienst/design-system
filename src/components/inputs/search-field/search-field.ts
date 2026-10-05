@@ -37,6 +37,7 @@ import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type SearchFieldSize = 'sm' | 'md';
 
@@ -156,7 +157,7 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	// — i18n ——————————————————————————————————————————————————————————————————
 
 	public _t(key: keyof NLDDSearchFieldTranslations): string {
-		return this.translations[key] ?? nlddSearchFieldTranslations[key];
+		return translate(this.translations, nlddSearchFieldTranslations, key);
 	}
 
 	// — Handlers ————————————————————————————————————————————————————————————

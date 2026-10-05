@@ -5,10 +5,10 @@
  * on CodeMirror 6 (via NLDDCodeMirrorElement). Visually pairs with
  * nldd-code-viewer for a matching read-only surface.
  *
- * Default `variant="simple"` is a bare, flush editor (no frame, no focus ring)
+ * Default `appearance="simple"` is a bare, flush editor (no frame, no focus ring)
  * for use inside an nldd-form-field or a consumer composition that owns its own
  * chrome and focus treatment; the caret is rendered as a prominent accent as
- * the focus cue. `variant="input-field"` adds the framed surface (border ring, tinted
+ * the focus cue. `appearance="input-field"` adds the framed surface (border ring, tinted
  * fill, inner padding, radius) and a focus ring for standalone use.
  *
  * The simple variant has no surrounding space of its own: let a layout
@@ -30,7 +30,7 @@
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
- * @attr {string} variant - 'simple' (default, bare) | 'input-field' (framed surface)
+ * @attr {string} appearance - 'simple' (default, bare) | 'input-field' (framed surface)
  * @attr {string} language - Highlight grammar (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python). Empty disables highlighting.
  * @attr {boolean} line-numbers - Show a line-number gutter
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
@@ -60,7 +60,7 @@ import { codeEditorTemplate } from './code-editor.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
-export type CodeEditorVariant = 'input-field' | 'simple';
+export type CodeEditorAppearance = 'input-field' | 'simple';
 
 @customElement('nldd-code-editor')
 export class NLDDCodeEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorElement)) {
@@ -110,8 +110,8 @@ export class NLDDCodeEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
 	resize: ResizeMode = 'auto';
 
-	@property({ reflect: true, converter: reflectNonDefault<CodeEditorVariant>('simple') })
-	variant: CodeEditorVariant = 'simple';
+	@property({ reflect: true, converter: reflectNonDefault<CodeEditorAppearance>('simple') })
+	appearance: CodeEditorAppearance = 'simple';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	language = '';

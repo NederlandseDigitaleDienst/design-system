@@ -31,6 +31,7 @@ import { dragHandleCellStyles } from './drag-handle-cell.styles.js';
 import { template } from './drag-handle-cell.template.js';
 import { nlddDragHandleCellTranslations } from './drag-handle-cell.i18n.js';
 import type { NLDDDragHandleCellTranslations } from './drag-handle-cell.i18n.js';
+import { translate } from '../../../../utilities/translations.js';
 
 type Size = 'sm' | 'md';
 
@@ -48,7 +49,7 @@ export class NLDDDragHandleCell extends LitElement {
 	// — i18n ————————————————————————————————————————————————————————————————
 
 	private _t(key: keyof NLDDDragHandleCellTranslations): string {
-		return this.translations[key] ?? nlddDragHandleCellTranslations[key];
+		return translate(this.translations, nlddDragHandleCellTranslations, key);
 	}
 
 	override render() {

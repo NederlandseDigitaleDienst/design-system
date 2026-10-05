@@ -255,7 +255,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 				&& !(this.accessibleLabel || this.name).trim();
 			if (missing && !this._warnedLabel) {
 				this._warnedLabel = true;
-				console.warn('<nldd-avatar>: een avatar met `href` of `button` heeft `accessible-label` (of `name`) nodig, anders heeft de control geen toegankelijke naam.');
+				console.warn('<nldd-avatar>: an avatar with `href` or `button` needs `accessible-label` (or `name`), or the control has no accessible name.');
 			}
 			else if (!missing) {
 				this._warnedLabel = false;

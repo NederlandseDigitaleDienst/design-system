@@ -9,13 +9,97 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The package speaks more languages.** One call, `setTranslations(enUS)` at startup, turns every component English, including the ones another component builds out of your reach, such as the activity indicator in a loading button and the calendar in a date field. US English ships complete, with concept sets in Frisian and in Papiamento as written on Curaçao and Bonaire and on Aruba. Docs/Vertalingen in Storybook explains the layers.
+
+- **`nldd-text-editor` checks the spelling and handles typeaheads better.** It checks the running text and leaves code, addresses and mentions alone. A typeahead query takes accents and a `+`, a list can decide what may follow its trigger, and an empty list says why instead of closing without a word.
+
+- **`nldd-toggle-button` can be quiet.** It takes four appearances from `nldd-button`, the two transparent ones included, and with `selected-icon` a transparent toggle stays without a fill when on: a "Volgen" toggle goes from `plus` to `check-mark` and keeps its label.
+
+- **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down**, instead of opening a white gap above it.
+
+- **Menus line up, and use fewer icons.** One checkbox or radio item gives the whole `nldd-menu` its check-mark column, so the text of every group starts at one line. A new design guideline says when an icon in a menu adds something, and when it is only filler.
+
+- **Button bars and split buttons work on a colored surface.** `nldd-button-bar` and `nldd-split-button` take `inherit-tinted` and `inherit-filled`, like the buttons inside, instead of a gray block. The inherit buttons now keep one color through hover, press and expanded, so their label keeps the contrast the surface gives it.
+
+- **Attributes say what they do.** `variant` is `appearance` on nine components where it was a designed style, `level` on `nldd-timeline-track-cell`, and `mode` is `variant` on `nldd-progress-bar` and `nldd-progress-circle`. The values stay the same; search your markup, since a leftover attribute is ignored without a warning. See Breaking.
+
+### Added
+
+- **Storybook opens on an introduction.** Docs/Introductie says what the system is, how to install it and load the styles, where the components, patterns and design guidelines are, and how to add the Claude Code plugin. It used to open on Button, the first story in alphabetical order. Docs now sits at the top of the sidebar, with the introduction and the design guidelines first.
+
+- **`setTranslations()` sets the texts for the whole package.** Import it from `@nldd/design-system/translations` and call it once at startup. A component now looks a text up in four layers: an attribute on the element, its `translations` property, the package-wide layer, and the Dutch default. Calling it again re-renders the components on the page, so a language switch at runtime works too. In development it warns about a key no component knows, which is what an override does after a key is renamed.
+
+- **A complete US English set, `@nldd/design-system/translations/en-US`, and the Dutch defaults as a template, `@nldd/design-system/translations/nl`.** Spread the English set and add your own keys behind it to change a few texts: `setTranslations({ ...enUS, 'components.activity-indicator.loading-label': 'Please wait' })`.
+
+- **Concept translations in Frisian (`translations/fy`) and Papiamento as written on Curaçao and Bonaire (`translations/pap-CW`) and on Aruba (`translations/pap-AW`).** Every text is translated, also where the wording is a guess, since correcting a text is easier than writing one. No native speaker has checked them yet: report a better wording as an issue and they improve with each release.
+
+- **`no-filter` on `nldd-combo-box` and `nldd-token-field`** leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides every option that does not contain the typed text, which also hides a server match on, say, an e-mail address. The part of an option that matches the typed text is still marked.
+
+- **A typeahead in `nldd-text-editor` says why its list is empty.** It closed without a word, so whoever typed `@` could not tell "nobody matches" from "mentions do not work here". Where the list would be it now says "Typ om te zoeken" for an empty query and "Niets gevonden" for one without matches, both translatable. `emptyText` on a list, and `mentionEmptyText` for the built-in `@`, are called with the query and can say more, such as "Kies eerst een kanaal bij Aan"; return null to close without a word, as before. The message is a status a screen reader announces, not an option you can select.
+
+- **A typeahead list in `nldd-text-editor` decides what may follow its trigger.** `query` on a list, and `mentionQuery` for the built-in `@`, take a regular expression for the text after the trigger. A list of people can allow one space, so `@sam jansen` finds the right Sam. Lists on one trigger share the query of the first that sets one.
+
+- **`inherit-tinted` and `inherit-filled` on `nldd-button-bar` and `nldd-split-button`**, for a group of buttons on a colored surface. The buttons inside already had them, but the bar kept its gray surface behind them. Like a loose button, the group now takes its colors from the text color around it, and `inherit-tinted` draws its see-through surface once for the whole group, so the tint does not stack.
+
+- **A design guideline on icons in menus.** Icons are often used as filler, but are usually not needed and then do not help: add one only where it recognizably belongs to the item and helps people find or understand it, use the same icon for the same action everywhere, and leave it out when no icon makes the action clear at a glance. See Docs/Ontwerprichtlijnen under "Visueel en layout".
+
+- **`appearance` on `nldd-toggle-button` and `nldd-toggle-button-group`: `neutral-tinted` (the default), `neutral-base`, `neutral-transparent` and `accent-transparent`.** A toggle among transparent buttons, such as in a row of light actions under a message, stood out as a gray block. The transparent appearances have no surface at rest; when on, the toggle fills, so the state does not rest on a color alone. `neutral-base` is for a tinted surface. `nldd-toggle-button-group` forwards `appearance` to its buttons, as it does `size`. New tokens: `--semantics-buttons-neutral-transparent-is-selected-*` and `--semantics-buttons-accent-transparent-is-selected-*`.
+
+- **`selected-icon` on `nldd-toggle-button`** shows another icon while the toggle is on, such as `plus` to `check-mark` on a "Volgen" toggle whose label stays the same. On the transparent appearances it replaces the fill: the toggle stays quiet when on, and the change of shape says it is on. On a surface, the surface fills as before.
+
+- **`appearance="neutral-base"` on `nldd-segmented-control`**, for a segmented control on a tinted surface, as `nldd-button-bar` has it. The selected segment keeps its fill. For a quiet row without a track, use `nldd-toggle-button-group` with `type="radio"` and a transparent appearance.
+
+- **The font files are exported as `@nldd/design-system/fonts/*`.** A site that serves the fonts itself without a bundler, such as a static site that only publishes its own folder, had to copy the woff2 files from `node_modules` into its own repository. A build step can now take them from the package, with `import.meta.resolve('@nldd/design-system/fonts/RijksSansWeb-Regular.woff2')`, so the copies and their separate license notes can go. The terms in `NOTICES.md` do not change: the path is only reachable.
+
+- **A card that is one link or button reacts to hover and press.** With `href` or `button`, `nldd-card` steps its surface and its border one shade up on hover and one more while pressed, on `base` and `tinted` alike, as a `neutral-base` button does. A button lifted above the card in its footer does not set it off.
+
+- **`loading-text` on `nldd-button` and `nldd-icon-button`** says what the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Without it the indicator says its translated "Laden".
+
+- **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down.** Pulling a page past its top used to open a white gap above the ribbon; the ribbon now carries on into it and only grows longer. A bar above the navigation bar, such as `nldd-status-bar`, stays clear: the ribbon starts at the top of the page, not right above the logo. It works in browsers that support scroll-driven animations; elsewhere the gap stays as it was.
+
+### Changed
+
+- **`nldd-text-editor` checks the spelling, like the other text fields, and `no-spellcheck` turns it off.** It never did: CodeMirror switches spellchecking off. Now it is on for the running text and off for what the editor knows is not: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Deleting a character or a selected word keeps the underlines on the rest of the line, as it does in a plain text field. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens, and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on. An editor that should not be checked takes `no-spellcheck`.
+
+- **The `inherit-tinted` and `inherit-filled` buttons keep one color through hover, press and expanded.** The label on these buttons has only the contrast the colored surface around it gives, and every state color moved the background toward the label: on a surface that just met 4.5:1, a hovered or pressed button fell below it. In a button bar the states did not show at all, since the bar's own surface lay underneath. This applies to `nldd-button`, `nldd-icon-button`, `nldd-button-bar` and `nldd-split-button`; the focus ring stays. The forty `--semantics-buttons-inherit-*-is-*` tokens for those states are gone, as nothing uses them any more.
+
+- **One checkbox or radio item in an `nldd-menu` gives every item in that menu the check-mark column.** Only the checkable items had it, so a group of plain actions below a group of options started its text further left, and the menu could no longer be scanned from top to bottom. The text of the whole menu now starts at one line, as in a native menu. A plain item keeps the column empty and is announced as before. An icon gets no column of its own: it starts where the text of an item without an icon starts. A submenu decides for its own items.
+
+- **`nldd-button-bar` warns in development about an `nldd-toggle-button` inside it.** The bar is one surface for actions, and it showed a toggle button half: its own size and border, a selected fill under the bar's ring. Use `nldd-toggle-button-group` for a row of toggles, or `nldd-segmented-control` for one choice out of a few options.
+
+- **`NOTICES.md` covers the logo and the house style of the Rijksoverheid as well, not only the fonts.** The logo in `nldd-top-navigation-bar`, the favicon and the touch icon, the ribbon and the house style colors fall outside the EUPL: the Staat der Nederlanden reserved copyright on them, and they are for the Rijksoverheid and parties working on its behalf only. The coat of arms may only be used together with the ribbon. The README and the `nldd-design-build` skill point to it.
+
+- **Running text wraps with `text-wrap: pretty`, headings in `nldd-rich-text` with `balance`.** `nldd-text`, and the paragraphs, list items, definitions and quotes in `nldd-rich-text`, no longer end on a single word on their last line, as the cells and the status components already did. Headings in `nldd-rich-text` had `pretty` and now break into lines of even length, the way `nldd-title` does. Browsers without support, Firefox for now, break lines as before.
+
+- **`nldd-dropdown` fades a long option out instead of ending it with an ellipsis.** The field now shows its choice through the native `<select>`, and WebKit neither keeps that text out of the end padding nor draws an ellipsis there, so every browser fades the text before the icons. Two side effects: desktop Safari draws the options in its popup at the field's text size, 18px at `md` instead of 16px, and an `xs` dropdown shows 16px text on touch devices, because iOS zooms in on a smaller select when you tap it.
+
+### Breaking
+
+- **`variant` is now `appearance` on `nldd-button`, `nldd-button-bar`, `nldd-icon-button`, `nldd-split-button`, `nldd-keyboard-shortcut`, `nldd-code-viewer`, `nldd-code-editor`, `nldd-text-editor` and `nldd-list`.** The values stay the same, so `variant="primary"` becomes `appearance="primary"`, and the property is `appearance` too. `variant` meant two different things across the system: how something is drawn, and what kind of thing it is. On these nine it was always the first, a designed style with its color included, so it now has a name of its own. `variant` stays on the components where it says what kind of thing it is and sets the icon and role with it, such as `nldd-banner`, `nldd-notification`, `nldd-status-bar` and `nldd-inline-dialog`. A `variant` left on one of the nine is ignored without a warning and the component falls back to its default style, so search your markup for it. The exported types follow: `CodeViewerVariant`, `CodeEditorVariant`, `TextEditorVariant`, `ListVariant` and the `Variant` of `nldd-icon-button` are now `CodeViewerAppearance`, `CodeEditorAppearance`, `TextEditorAppearance`, `ListAppearance` and `Appearance`.
+
+- **`variant` on `nldd-timeline-track-cell` is now `level`.** `major`, `minor` and `none` say how far down the hierarchy a row sits: `minor` is a row that belongs under the one above it. The values stay the same, so `variant="minor"` becomes `level="minor"`.
+
+- **`mode` on `nldd-progress-bar` and `nldd-progress-circle` is now `variant`.** `progress` and `distribution` are two kinds of indicator, progress toward a goal and the parts of a whole, and the screen reader hears something different for each, which is what `variant` stands for in this system. The values stay the same, so `mode="distribution"` becomes `variant="distribution"`. The types `ProgressBarMode` and `ProgressCircleMode` are now `ProgressBarVariant` and `ProgressCircleVariant`.
+
+### Fixed
+
+- **A typeahead query in `nldd-text-editor` takes accents and a `+`.** `@józef` stopped at the `ó` and `:+1:` at the `+`, so the source never saw the rest. What may follow a trigger is now letters in any script and with any accent, digits, `_`, `.`, `+` and `-`, for every list. A space still ends the query, as it ends a mention in most systems.
+
+- **`nldd-combo-box` with `allow-custom` keeps a value chosen from the menu.** Leaving the field, or pressing Enter, committed the shown text as the value whenever it differed from the value. That is the normal state after every choice ("Nederland" for `nl`), so in a form the label went to the server instead of the value, usually on the click on the submit button. Only text the user typed is committed now, and typing an option's label in full picks that option. `nldd-token-field` did the same with a typed label: "België" became a token with the value "België" instead of `be`, on Enter, on a comma or when leaving the field. It now adds the option.
+
+- **`nldd-combo-box` and `nldd-token-field` open when the options arrive after the keystroke.** A field that queries its server per keystroke slots the matches in a moment later. With `allow-custom`, and on the token field always, the keystroke found nothing to show and kept the menu shut, and nothing looked again when the options came in, so the list only appeared on the next letter. The options that arrive now open it, as long as the user is still in the field and did not press Escape. A menu whose options all go away closes again.
+
+- **A component that another component builds can be translated.** The activity indicator in a loading `nldd-button`, `nldd-icon-button` and `nldd-inline-dialog`, the tokens of `nldd-token-field`, the overflow menus of `nldd-toolbar`, `nldd-menu-bar` and `nldd-document-tab-bar`, and the pickers of `nldd-date-field` and `nldd-time-field` sit in a shadow root, so the `translations` you set on the outer element never reached them and they stayed Dutch. They read `setTranslations()` now.
+
+- **`nldd-dropdown` shows the value your app sets.** A value set with `select.value`, `selectedIndex` or `option.selected` kept the old label on screen until someone picked an option by hand, so a form that loaded saved data showed a different choice than it held. The label was a copy in the shadow DOM that only updated on `slotchange` and `change`. It is gone: the `<select>` now shows its own choice, so there is nothing left to go stale.
+
+- **The changelog no longer repeats its introduction** under 0.8.93.
+
+- **The `global` and `utility` slots of `nldd-top-navigation-bar` are documented.** The component has always rendered both, each taking an `nldd-menu-bar`, but neither had an `@slot` line. `custom-elements.json` and the reference in `nldd-design` therefore listed no slots for it, and a check that validates markup against the manifest rejected `<nldd-menu-bar slot="global">`. The default slot of `nldd-progress-circle`, where its segment indicators go, was missing the same way.
+
 ## [0.8.93](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.92...v0.8.93) (2026-09-30)
-
-# Changelog
-
-All notable changes to the NLDD Designsysteem are documented here.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Versions are bumped automatically by semantic-release on merge to main — the type of conventional-commit determines the release. Conventional types `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted here; consult the commit history if you need that level of detail.
 
 ### Highlights
 

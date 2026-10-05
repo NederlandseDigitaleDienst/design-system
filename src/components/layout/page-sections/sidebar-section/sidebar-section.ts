@@ -64,6 +64,7 @@ import '../../sheet/sheet.js';
 import '../../page/page.js';
 import '../../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDSheet } from '../../sheet/sheet.js';
+import { translate } from '../../../../utilities/translations.js';
 
 @customElement('nldd-sidebar-section')
 export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
@@ -109,7 +110,7 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	}
 
 	private _t(key: keyof typeof nlddSidebarSectionTranslations): string {
-		return this.translations[key] ?? nlddSidebarSectionTranslations[key];
+		return translate(this.translations, nlddSidebarSectionTranslations, key);
 	}
 
 	override connectedCallback(): void {

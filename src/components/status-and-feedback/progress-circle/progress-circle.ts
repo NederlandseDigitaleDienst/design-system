@@ -4,7 +4,7 @@
  * Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator.
  *
  * A circular progress indicator that mirrors the API of nldd-progress-bar:
- * single-value or multi-segment, progress or distribution mode, 24 colors,
+ * single-value or multi-segment, progress or distribution variant, 24 colors,
  * fade transitions between determinate/indeterminate, indeterminate indicator.
  *
  * Visual differences vs the bar:
@@ -18,7 +18,7 @@
  *
  * @element nldd-progress-circle
  *
- * @attr {'progress'|'distribution'} mode - Semantics for ARIA and gap behavior (default: 'progress')
+ * @attr {'progress'|'distribution'} variant - Semantics for ARIA and gap behavior (default: 'progress')
  * @attr {number} max - Total value (default: 100)
  * @attr {number} value - Single-segment shorthand (ignored when segment children exist)
  * @attr {string} color - Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'.
@@ -30,6 +30,8 @@
  * @attr {string} accessible-label - Full override of aria-valuetext
  * @attr {boolean} indeterminate - Renders the rotating elastic arc animation
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
+ *
+ * @slot - Place for nldd-progress-circle-segment-indicator elements
  *
  * @element nldd-progress-circle-segment-indicator
  *
@@ -45,6 +47,7 @@ import { progressCircleTemplate, getCircumference, getStrokeWidthPx } from './pr
 import { nlddProgressCircleTranslations } from './progress-circle.i18n.js';
 import type { NLDDProgressCircleTranslations } from './progress-circle.i18n.js';
 import '../../content/tooltip/tooltip.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** Indeterminate ↔ determinate crossfade duration. Must stay in sync with
  *  --primitives-transition-duration-slow used by the matching CSS animations
@@ -52,7 +55,7 @@ import '../../content/tooltip/tooltip.js';
  *  suite can cross-check this value against the resolved CSS token. */
 export const INDETERMINATE_TRANSITION_MS = 300;
 
-export type ProgressCircleMode = 'progress' | 'distribution';
+export type ProgressCircleVariant = 'progress' | 'distribution';
 export type ProgressCircleSize = '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
 export type ProgressCircleValueFormat = 'percentage' | 'absolute' | 'fraction';
 export type ProgressCircleValueDisplay = 'inline' | 'tooltip' | 'none';
@@ -98,8 +101,8 @@ export class NLDDProgressCircleSegmentIndicator extends LitElement {
 export class NLDDProgressCircle extends LitElement {
 	static override styles = progressCircleStyles;
 
-	@property({ reflect: true, converter: reflectNonDefault<ProgressCircleMode>('progress') })
-	mode: ProgressCircleMode = 'progress';
+	@property({ reflect: true, converter: reflectNonDefault<ProgressCircleVariant>('progress') })
+	variant: ProgressCircleVariant = 'progress';
 
 	@property({ type: Number, reflect: true })
 	max = 100;
@@ -166,7 +169,7 @@ export class NLDDProgressCircle extends LitElement {
 	readonly _uid = `pc-${NLDDProgressCircle._idCounter++}`;
 
 	public _t(key: keyof NLDDProgressCircleTranslations): string {
-		return this.translations[key] ?? nlddProgressCircleTranslations[key];
+		return translate(this.translations, nlddProgressCircleTranslations, key);
 	}
 
 	get _hasSegmentIndicators(): boolean {
@@ -220,7 +223,7 @@ export class NLDDProgressCircle extends LitElement {
 				return s.name ? `${s.name}: ${valuePart}` : valuePart;
 			});
 
-		if (this.mode === 'distribution') {
+		if (this.variant === 'distribution') {
 			return segmentIndicatorDescriptions.join(', ');
 		}
 
@@ -256,7 +259,7 @@ export class NLDDProgressCircle extends LitElement {
 				return s.name ? `${s.name}: ${valuePart}` : valuePart;
 			});
 
-		if (this.mode === 'distribution') {
+		if (this.variant === 'distribution') {
 			return segmentIndicatorDescriptions.join(', ');
 		}
 
@@ -388,17 +391,17 @@ export class NLDDProgressCircle extends LitElement {
 		// Gap between adjacent segments, computed in user units so it stays a
 		// consistent number of CSS pixels regardless of the rendered size.
 		// viewBox is 100, so user_units = pixels × (100 / sizeInPixels).
-		// Progress mode uses rounded caps which extend half-stroke-width past
+		// Progress variant uses rounded caps which extend half-stroke-width past
 		// the path end on each side; we add the full stroke width (= two
-		// half-strokes) so the visible gap is 1px. Distribution mode uses butt
+		// half-strokes) so the visible gap is 1px. Distribution variant uses butt
 		// caps so a 2px gap is enough. Single-segment progress (just `value`,
 		// no children) has no neighbors so no gap.
 		const sizeInPixels = Number(this.size) || 28;
 		const strokeWidthPx = getStrokeWidthPx(sizeInPixels);
-		const isMultiSegmentIndicator = sourceSegmentIndicators.length > 1 || this.mode === 'distribution';
-		const isProgressMode = this.mode !== 'distribution';
-		const visibleGapPx = isMultiSegmentIndicator ? (isProgressMode ? 1 : 2) : 0;
-		const capCompensationPx = isProgressMode && isMultiSegmentIndicator ? strokeWidthPx : 0;
+		const isMultiSegmentIndicator = sourceSegmentIndicators.length > 1 || this.variant === 'distribution';
+		const isProgressVariant = this.variant !== 'distribution';
+		const visibleGapPx = isMultiSegmentIndicator ? (isProgressVariant ? 1 : 2) : 0;
+		const capCompensationPx = isProgressVariant && isMultiSegmentIndicator ? strokeWidthPx : 0;
 		const gapLength = (visibleGapPx + capCompensationPx) * (100 / sizeInPixels);
 
 		// Circumference depends on radius, which depends on size (so the stroke

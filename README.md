@@ -23,7 +23,7 @@ import { NLDDButton, NLDDCheckbox, NLDDSwitch } from '@nldd/design-system';
 
 ```html
 <!-- Gebruik in HTML -->
-<nldd-button variant="accent-filled" text="Opslaan"></nldd-button>
+<nldd-button appearance="accent-filled" text="Opslaan"></nldd-button>
 <nldd-checkbox-field label="Akkoord met voorwaarden"></nldd-checkbox-field>
 <nldd-switch-field label="Meldingen inschakelen"></nldd-switch-field>
 ```
@@ -93,7 +93,7 @@ npm run storybook
 | Attribuut          | Type    | Default          | Beschrijving                                                                                                                                             |
 | ------------------ | ------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `text`             | string  | `''`             | Tekst van de button                                                                                                                                      |
-| `variant`          | string  | `neutral-tinted` | `primary`, `secondary`, `destructive`, `accent-filled`, `accent-transparent`, `neutral-tinted`, `neutral-transparent`, `critical-tinted`, `critical-transparent` |
+| `appearance`       | string  | `neutral-tinted` | `primary`, `secondary`, `destructive`, `accent-filled`, `accent-transparent`, `neutral-tinted`, `neutral-base`, `neutral-transparent`, `critical-tinted`, `critical-transparent`, `inherit-filled`, `inherit-tinted` |
 | `size`             | string  | `md`             | `xs`, `sm`, `md`                                                                                                                                         |
 | `disabled`         | boolean | `false`          | Uitgeschakelde staat                                                                                                                                     |
 | `type`             | string  | `button`         | `button`, `submit`, `reset`                                                                                                                              |
@@ -163,6 +163,6 @@ Copyright © 2026 Staat der Nederlanden.
 
 De broncode van dit designsysteem valt onder de **EUPL-1.2**. De volledige licentietekst staat in [`LICENSE`](./LICENSE).
 
-De fontbestanden in `src/assets/fonts/` vallen daar niet onder; die hebben hun eigen licenties, zie [`NOTICES.md`](./NOTICES.md).
+De fontbestanden in `src/assets/fonts/`, het logo en de huisstijlelementen van de Rijksoverheid (zoals het lint en de huisstijlkleuren) vallen daar niet onder; die zijn uitsluitend bestemd voor de Rijksoverheid en partijen die in haar opdracht werken, zie [`NOTICES.md`](./NOTICES.md).
 
 Verder horen bij dit project een [gedragscode](./CODE_OF_CONDUCT.md), een [beveiligingsbeleid](./SECURITY.md), een [bijdragegids](./CONTRIBUTING.md), een [ondersteuningspagina](./SUPPORT.md) en een beschrijving van [wie waarover beslist](./PROJECT_GOVERNANCE.md).

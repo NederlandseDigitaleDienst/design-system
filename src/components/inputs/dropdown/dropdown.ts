@@ -33,7 +33,7 @@
  * ```
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { dropdownStyles } from './dropdown.styles.js';
 import { dropdownTemplate } from './dropdown.template.js';
@@ -78,9 +78,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 	 */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
-
-	@state()
-	_displayValue = '';
 
 	private _select: HTMLSelectElement | null = null;
 
@@ -137,7 +134,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		this._select = select;
 
 		if (!select) {
-			this._displayValue = '';
 			this.expanded = false;
 			return;
 		}
@@ -155,7 +151,6 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		this._syncAriaInvalid();
 		this._syncAccessibleLabel();
 		this._syncRequired();
-		this._syncDisplayValue();
 	}
 
 	// — Internal helpers ——————————————————————————————————————————————————————
@@ -211,14 +206,8 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		}
 	}
 
-	private _syncDisplayValue(): void {
-		if (!this._select) return;
-		this._displayValue = this._select.selectedOptions[0]?.text ?? '';
-	}
-
 	private _handleSelectChange = (e: Event): void => {
 		e.stopPropagation();
-		this._syncDisplayValue();
 		this.dispatchEvent(new CustomEvent('change', {
 			detail: { value: this._select?.value ?? '' },
 			bubbles: true,

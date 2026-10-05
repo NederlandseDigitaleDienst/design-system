@@ -140,7 +140,7 @@ describe('nldd-dropdown – state', () => {
 		expect(select.disabled).toBe(true);
 	});
 
-	it('displays the selected option text', async () => {
+	it('shows the choice through the select itself, not through a copy', async () => {
 		el = await fixture<NLDDDropdown>(`
 			<nldd-dropdown>
 				<select name="country" aria-label="Land">
@@ -150,20 +150,9 @@ describe('nldd-dropdown – state', () => {
 			</nldd-dropdown>
 		`);
 		await waitForUpdate(el);
-		expect(el._displayValue).toBe('Nederland');
-	});
-
-	it('supports a placeholder option', async () => {
-		el = await fixture<NLDDDropdown>(`
-			<nldd-dropdown>
-				<select name="country" aria-label="Land">
-					<option value="" disabled selected>Selecteer een land</option>
-					<option value="nl">Nederland</option>
-				</select>
-			</nldd-dropdown>
-		`);
-		await waitForUpdate(el);
-		expect(el._displayValue).toBe('Selecteer een land');
+		const select = el.querySelector('select')!;
+		expect(getComputedStyle(select).opacity).toBe('1');
+		expect(el.shadowRoot!.textContent).not.toContain('Nederland');
 	});
 
 	it('re-enables slotted select when disabled is removed', async () => {
@@ -268,14 +257,25 @@ describe('nldd-dropdown – change event', () => {
 		if (el) cleanup(el);
 	});
 
-	it('updates displayValue when slotted select changes', async () => {
+	it('has no label to go stale when the app sets the value itself', async () => {
 		el = await fixture<NLDDDropdown>(selectFixture());
 		await waitForUpdate(el);
 		const select = el.querySelector('select')!;
+		const shown = () => select.selectedOptions[0]?.text;
+
 		select.value = 'be';
-		select.dispatchEvent(new Event('change', { bubbles: true }));
 		await waitForUpdate(el);
-		expect(el._displayValue).toBe('België');
+		expect(shown()).toBe('België');
+
+		select.selectedIndex = 0;
+		await waitForUpdate(el);
+		expect(shown()).toBe(select.options[0].text);
+
+		select.options[2].selected = true;
+		await waitForUpdate(el);
+		expect(shown()).toBe('België');
+
+		expect(el.shadowRoot!.textContent).not.toContain('België');
 	});
 
 	it('dispatches a change event with value detail', async () => {

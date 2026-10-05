@@ -23,7 +23,7 @@
  *
  * @element nldd-split-button
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {string} variant - Button variant (default: 'neutral-tinted')
+ * @attr {string} appearance - Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)
  * @attr {boolean} disabled - Disabled state
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space
  * @attr {string} text - Button text for the primary action
@@ -46,6 +46,7 @@ import './../button/button.js';
 import './../icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** A floating overlay the split-button chevron anchors and toggles. */
 
@@ -60,7 +61,7 @@ export class NLDDSplitButton extends LitElement {
 	size: Size = 'md';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('neutral-tinted') })
-	variant: string = 'neutral-tinted';
+	appearance: string = 'neutral-tinted';
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
@@ -104,7 +105,7 @@ export class NLDDSplitButton extends LitElement {
 	// — i18n —————————————————————————————————————————————————————————————————
 
 	public _t(key: keyof NLDDSplitButtonTranslations): string {
-		return this.translations[key] ?? nlddSplitButtonTranslations[key];
+		return translate(this.translations, nlddSplitButtonTranslations, key);
 	}
 
 	// — Lifecycle ————————————————————————————————————————————————————————————

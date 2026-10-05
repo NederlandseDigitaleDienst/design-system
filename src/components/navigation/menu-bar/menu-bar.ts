@@ -100,7 +100,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 			// default label via slotchange have a chance to run first.
 			setTimeout(() => {
 				if (this.isConnected && !this.accessibleLabel && !this.hasAttribute('empty')) {
-					console.warn('nldd-menu-bar: accessible-label is niet gezet. Pagina\'s met meerdere nav landmarks moeten elke nav een uniek label geven (WCAG 1.3.1).');
+					console.warn('<nldd-menu-bar>: no accessible-label set. A page with more than one nav landmark needs a unique label on each (WCAG 1.3.1).');
 				}
 			}, 0);
 		}

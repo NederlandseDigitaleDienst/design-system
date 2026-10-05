@@ -5,7 +5,7 @@ export function timelineTrackCellTemplate(component: NLDDTimelineTrackCell): Tem
 	// No dot means no point where a fill could change over, so the row draws one
 	// line from edge to edge instead of two halves. `only` says the track runs
 	// neither above nor below, which here leaves nothing to draw.
-	if (component.variant === 'none') {
+	if (component.level === 'none') {
 		return html`
 			<div class="timeline-track-cell">
 				${component.position === 'only' ? nothing : html`<div class="timeline-track-cell__full-line"></div>`}

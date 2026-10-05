@@ -85,7 +85,7 @@ export const Standaard = {
 				label="Sla op"
 			>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Sla op"
 				></nldd-button>
 				<nldd-menu-item
@@ -141,7 +141,7 @@ export const MetTitelgroep = {
 					label="Sla op"
 				>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						text="Sla op"
 					></nldd-button>
 					<nldd-menu-item
@@ -180,7 +180,7 @@ export const MetTitelgroep = {
 					label="Sla op"
 				>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						text="Sla op"
 					></nldd-button>
 					<nldd-menu-item
@@ -233,7 +233,7 @@ export const TitelMetMedia = {
 					label="Opslaan"
 				>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						text="Opslaan"
 					></nldd-button>
 					<nldd-menu-item
@@ -263,7 +263,7 @@ export const TitelMetMedia = {
 					label="Opslaan"
 				>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						text="Opslaan"
 					></nldd-button>
 					<nldd-menu-item
@@ -317,7 +317,7 @@ export const TitelMetActie = {
 					label="Opslaan"
 				>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						text="Opslaan"
 					></nldd-button>
 					<nldd-menu-item
@@ -363,7 +363,7 @@ export const TitelMetActie = {
 					label="Opslaan"
 				>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						text="Opslaan"
 					></nldd-button>
 					<nldd-menu-item
@@ -411,7 +411,7 @@ export const Grootten = {
 							label="Sla op"
 						>
 							<nldd-button
-								variant="primary"
+								appearance="primary"
 								text="Sla op"
 							></nldd-button>
 							<nldd-menu-item
@@ -454,7 +454,7 @@ export const Grootten = {
 							label="Sla op"
 						>
 							<nldd-button
-								variant="primary"
+								appearance="primary"
 								text="Sla op"
 							></nldd-button>
 							<nldd-menu-item
@@ -698,7 +698,7 @@ export const Overloop = {
 				label="Sla op"
 			>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Sla op"
 				></nldd-button>
 				<nldd-menu-item
@@ -832,7 +832,7 @@ export const OverloopMetPrioriteit = {
 				priority="10"
 			>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Sla op"
 				></nldd-button>
 				<nldd-menu-item
@@ -894,7 +894,7 @@ export const MetMeegroeiendItem = {
 				priority="2"
 			>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Sla op"
 				></nldd-button>
 				<nldd-menu-item
@@ -952,7 +952,7 @@ export const MetVasteOverloopitems = {
 				label="Sla op"
 			>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Sla op"
 				></nldd-button>
 				<nldd-menu-item
@@ -1080,7 +1080,7 @@ export const VasteEnDynamischeOverloop = {
 				priority="10"
 			>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					text="Sla op"
 				></nldd-button>
 				<nldd-menu-item

@@ -37,7 +37,7 @@ describe('patroon: werkbalk met acties', () => {
 		await mount(markup);
 		const items = [...root.querySelectorAll('nldd-toolbar-item')];
 		const priority = (item: Element) => Number(item.getAttribute('priority') ?? 0);
-		const primary = items.find((item) => item.querySelector('nldd-button[variant="primary"]'))!;
+		const primary = items.find((item) => item.querySelector('nldd-button[appearance="primary"]'))!;
 		expect(Math.max(...items.map(priority))).toBe(priority(primary));
 	});
 

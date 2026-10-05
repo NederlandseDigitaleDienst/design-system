@@ -52,7 +52,7 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
 
         <nldd-form-actions>
           <nldd-button
-            variant="primary"
+            appearance="primary"
             type="submit"
             text="Aanvraag indienen"
           ></nldd-button>

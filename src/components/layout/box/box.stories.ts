@@ -94,7 +94,7 @@ export const AchtergrondCritical = {
 				</nldd-rich-text>
 				<nldd-spacer size="16"></nldd-spacer>
 				<nldd-button
-					variant="destructive"
+					appearance="destructive"
 					text="Verwijder dit cluster"
 				></nldd-button>
 

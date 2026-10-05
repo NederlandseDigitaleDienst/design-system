@@ -38,7 +38,7 @@ nldd-sheet                     open, placement, width; in de document-root
       heading-level="1"
     ></nldd-title>
     <nldd-list
-      variant="box-base"
+      appearance="box-base"
       accessible-label="Aanvragen"
     >
       <nldd-list-item button>
@@ -106,7 +106,7 @@ nldd-sheet                     open, placement, width; in de document-root
         <nldd-form-actions>
           <nldd-button-group>
             <nldd-button
-              variant="primary"
+              appearance="primary"
               type="submit"
               text="Bewaar"
             ></nldd-button>

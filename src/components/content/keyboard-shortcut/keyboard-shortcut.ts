@@ -22,7 +22,7 @@
  * @attr {string} linux-keys - Optional override for Linux/ChromeOS.
  * @attr {string} size - Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the
  *   font-size from the container; in the box variant the keycaps then scale along in em.
- * @attr {string} variant - 'box' (default) shows each key as a keycap with a fill and a
+ * @attr {string} appearance - 'box' (default) shows each key as a keycap with a fill and a
  *   highlight edge. 'simple' shows the keys as plain text with separators: lighter, for
  *   inline use such as in a menu item.
  * @attr {boolean} always-visible - Show on touch-only devices too, where shortcuts cannot be invoked.
@@ -47,7 +47,7 @@ import { detectOS, type OS } from '../../../utilities/os.js';
 
 type Size = 'sm' | 'md' | 'inherit';
 type Color = 'neutral' | 'inherit';
-type Variant = 'box' | 'simple';
+type Appearance = 'box' | 'simple';
 
 @customElement('nldd-keyboard-shortcut')
 export class NLDDKeyboardShortcut extends LitElement {
@@ -73,8 +73,8 @@ export class NLDDKeyboardShortcut extends LitElement {
 	 * border. 'simple' renders the keys as plain text with separators — lighter,
 	 * for inline use such as inside a menu item.
 	 */
-	@property({ reflect: true, converter: reflectNonDefault<Variant>('box') })
-	variant: Variant = 'box';
+	@property({ reflect: true, converter: reflectNonDefault<Appearance>('box') })
+	appearance: Appearance = 'box';
 
 	/**
 	 * 'neutral' (default) uses the component's own palette. 'inherit' makes the

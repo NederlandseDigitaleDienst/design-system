@@ -11,7 +11,7 @@ const onChange = (event: CustomEvent) => void event.detail;
 </script>
 
 <template>
-	<nldd-button text="Opslaan" variant="primary" />
+	<nldd-button text="Opslaan" appearance="primary" />
 
 	<nldd-date-field
 		:value="periode"

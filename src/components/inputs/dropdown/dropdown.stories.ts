@@ -185,3 +185,33 @@ export const AlleToestanden = {
 `,
 	parameters: { controls: { disable: true } },
 };
+
+const longOptions = html`
+	<option value="a-1042" selected>Aanvraag A-1042, Dakisolatie, in behandeling bij team Uitvoering</option>
+	<option value="a-1043">Aanvraag A-1043, Warmtepomp, afgerond</option>
+`;
+
+/**
+ * Past de gekozen optie niet, dan vervaagt de tekst vlak voor de iconen.
+ */
+export const LangeOptie = {
+	render: () => html`
+	<div style="display: flex; flex-direction: column; gap: 1rem; max-width: 20rem;">
+		${['xs', 'sm', 'md'].map((size) => html`
+			<nldd-dropdown size=${size}>
+				<select
+					name="aanvraag-${size}"
+					aria-label="Aanvraag"
+				>${longOptions}</select>
+			</nldd-dropdown>
+		`)}
+		<nldd-dropdown invalid>
+			<select
+				name="aanvraag-invalid"
+				aria-label="Aanvraag"
+			>${longOptions}</select>
+		</nldd-dropdown>
+	</div>
+`,
+	parameters: { controls: { disable: true } },
+};

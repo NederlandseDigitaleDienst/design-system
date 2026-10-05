@@ -67,6 +67,7 @@ import { template, toolbarItemTemplate, toolbarTitleTemplate, type ToolbarChild 
 import { nlddToolbarTranslations } from './toolbar.i18n.js';
 import type { NLDDToolbarTranslations } from './toolbar.i18n.js';
 import { NLDDMenu } from '../../actions/menu/menu.js';
+import { translate } from '../../../utilities/translations.js';
 
 // # Types
 type Size = 'sm' | 'md' | 'lg';
@@ -191,7 +192,7 @@ export class NLDDToolbarTitle extends LitElement {
 	size: Size = 'md';
 
 	public _t(key: keyof NLDDToolbarTranslations): string {
-		return this.translations[key] ?? nlddToolbarTranslations[key];
+		return translate(this.translations, nlddToolbarTranslations, key);
 	}
 
 	// Layout state — `solo-fluid` and `hidden` — is owned by nldd-toolbar and
@@ -241,7 +242,7 @@ export class NLDDToolbar extends LitElement {
 	// — i18n —————————————————————————————————————————————————————————————————
 
 	public _t(key: keyof NLDDToolbarTranslations): string {
-		return this.translations[key] ?? nlddToolbarTranslations[key];
+		return translate(this.translations, nlddToolbarTranslations, key);
 	}
 
 	@state()

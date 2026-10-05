@@ -18,6 +18,9 @@ export const dropdownStyles = css`
 		--_validation-icon-area-padding-right: var(--primitives-space-4);
 		--_validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 		--_picker-icon-size: var(--primitives-space-24);
+		--_picker-area: calc((var(--_min-size) + var(--_picker-icon-size)) / 2);
+		--_end-inset: var(--_picker-area);
+		--_fade-size: var(--primitives-space-24);
 		--_background-color: var(--semantics-buttons-neutral-tinted-background-color);
 		--_content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		--_is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
@@ -40,6 +43,11 @@ export const dropdownStyles = css`
 
 	:host([hidden]) {
 		display: none;
+	}
+
+	:host([valid]),
+	:host([invalid]) {
+		--_end-inset: calc(var(--_picker-area) + var(--_validation-icon-size) + var(--_validation-icon-area-padding-right));
 	}
 
 	:host([size="xs"]) {
@@ -91,6 +99,7 @@ export const dropdownStyles = css`
 		min-height: var(--_min-size);
 		flex-direction: row;
 		align-items: center;
+		justify-content: flex-end;
 		color: var(--_content-color);
 		transition:
 			background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default),
@@ -139,30 +148,33 @@ export const dropdownStyles = css`
 
 	::slotted(select) {
 		${slottedReset}
+		${inheritedTextReset}
 		box-sizing: border-box !important;
 		position: absolute !important;
 		inset: 0 !important;
-		opacity: 0 !important;
+		overflow: hidden !important;
 		margin: 0 !important;
 		outline: none !important;
 		border: none !important;
 		background: transparent !important;
 		width: 100% !important;
 		height: 100% !important;
-		padding: 0 !important;
-		font: var(--semantics-input-fields-native-select-font) !important;
+		padding-block: 0 !important;
+		padding-inline: var(--_inline-padding) var(--_end-inset) !important;
+		color: inherit !important;
+		font: var(--_text-font) !important;
+		white-space: nowrap !important;
 		appearance: none !important;
+		/* WebKit lets select text run through its end padding and has no ellipsis
+		   there, so every browser fades the text out before the icons instead. */
+		mask-image: linear-gradient(to left, transparent var(--_end-inset), black calc(var(--_end-inset) + var(--_fade-size))) !important;
 	}
 
-	.dropdown__value {
-		min-width: 0;
-		overflow: hidden;
-		padding: 0 var(--_inline-padding);
-		flex-grow: 1;
-		color: inherit;
-		font: var(--_text-font);
-		white-space: nowrap;
-		text-overflow: ellipsis;
+	:host([size="xs"]) ::slotted(select) {
+		/* iOS Safari zooms in on a select below 16px when it gets focus. */
+		@media (pointer: coarse) {
+			font: var(--semantics-input-fields-native-select-font) !important;
+		}
 	}
 
 	.dropdown__validation-icon-area {

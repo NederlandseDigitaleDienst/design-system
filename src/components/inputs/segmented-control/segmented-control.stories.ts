@@ -27,6 +27,12 @@ export default {
 			description: 'Inhoudstype van alle items: tekst, icoon, of icoon en tekst.',
 			table: { defaultValue: { summary: 'text' } },
 		},
+		appearance: {
+			control: 'select',
+			options: ['neutral-tinted', 'neutral-base'],
+			description: 'Visuele stijl, inclusief kleur. <code>neutral-base</code> staat op een getint vlak.',
+			table: { defaultValue: { summary: 'neutral-tinted' } },
+		},
 		size: {
 			control: 'select',
 			options: ['sm', 'md', 'lg'],
@@ -71,6 +77,7 @@ export default {
 	},
 	args: {
 		variant: 'text',
+		appearance: 'neutral-tinted',
 		size: 'md',
 		width: '',
 		value: 'bold',
@@ -82,9 +89,10 @@ export default {
 	},
 };
 
-const Template = ({ variant, size, width, value, type, accessibleLabel, invalid, disabled, required }: Record<string, any>) => html`
+const Template = ({ variant, appearance, size, width, value, type, accessibleLabel, invalid, disabled, required }: Record<string, any>) => html`
 	<nldd-segmented-control
 		value=${value}
+		appearance=${appearance}
 		size=${size}
 		type=${type}
 		variant=${variant}
@@ -115,6 +123,53 @@ const Template = ({ variant, size, width, value, type, accessibleLabel, invalid,
 export const Standaard = {
 	render: Template,
 	args: { value: 'bold' },
+};
+
+export const Appearances = {
+	render: () => html`
+	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
+		<div style="padding: 16px; border-radius: var(--primitives-corner-radius-md); background: var(--semantics-surfaces-base-background-color);">
+			<nldd-segmented-control
+				appearance="neutral-tinted"
+				value="lijst"
+				accessible-label="Weergave (neutral-tinted)"
+			>
+				<nldd-segmented-control-item
+					value="lijst"
+					text="Lijst"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="kaart"
+					text="Kaart"
+				></nldd-segmented-control-item>
+			</nldd-segmented-control>
+		</div>
+		<div style="padding: 16px; border-radius: var(--primitives-corner-radius-md); background: var(--semantics-surfaces-tinted-background-color);">
+			<nldd-segmented-control
+				appearance="neutral-base"
+				value="lijst"
+				accessible-label="Weergave (neutral-base)"
+			>
+				<nldd-segmented-control-item
+					value="lijst"
+					text="Lijst"
+				></nldd-segmented-control-item>
+				<nldd-segmented-control-item
+					value="kaart"
+					text="Kaart"
+				></nldd-segmented-control-item>
+			</nldd-segmented-control>
+		</div>
+	</div>
+`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: '<code>neutral-base</code> is voor een getint vlak. Wil je hem zonder strook, gebruik dan <code>nldd-toggle-button-group</code> met <code>type="radio"</code> en een transparante appearance.',
+			},
+		},
+	},
 };
 
 export const AlleToestanden = {

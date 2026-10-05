@@ -74,6 +74,10 @@ Elk component MOET minimaal een **smoke test** hebben. Run tests met `npm test`.
 - `cleanup(el)` — verwijdert fixture wrapper uit DOM (gebruik in afterEach)
 - `waitForUpdate(el)` — wacht op MutationObserver + Lit re-render cycle
 
+## Taal
+
+- Console-meldingen (`console.warn`/`console.error`), JSDoc en code-commentaar zijn US English: ze zijn voor de developer die het pakket gebruikt. UI-teksten en de vertaalde defaults blijven Nederlands.
+
 ## Git
 
 - **NOOIT pushen zonder expliciete toestemming van de gebruiker.** Alleen pushen als de gebruiker letterlijk zegt dat je mag pushen. Commit maken mag wel, pushen niet.

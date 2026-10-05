@@ -3,6 +3,7 @@ import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../tes
 import type { NLDDToggleButton } from './toggle-button.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import './toggle-button.js';
+import '../../../assets/styles/variables.css';
 
 
 /* ============================================================
@@ -553,5 +554,99 @@ describe('nldd-toggle-button no-tab', () => {
 		el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="X"></nldd-toggle-button>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('button.toggle-button')!.hasAttribute('tabindex')).toBe(false);
+	});
+});
+
+describe('nldd-toggle-button – appearance', () => {
+	let el: NLDDToggleButton;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	// Read after the background transition, if any, so it shows where it ends.
+	const surface = async () => {
+		const inner = el.shadowRoot!.querySelector<HTMLElement>('.toggle-button')!;
+		await Promise.all(inner.getAnimations().map((animation) => animation.finished));
+		return getComputedStyle(inner).backgroundColor;
+	};
+
+	it('defaults to neutral-tinted without reflecting it', async () => {
+		el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Favoriet"></nldd-toggle-button>');
+		expect(el.appearance).toBe('neutral-tinted');
+		expect(el.hasAttribute('appearance')).toBe(false);
+	});
+
+	for (const appearance of ['neutral-transparent', 'accent-transparent']) {
+		it(`is transparent at rest as ${appearance} and filled once selected`, async () => {
+			el = await fixture<NLDDToggleButton>(`<nldd-toggle-button appearance="${appearance}" text="Favoriet"></nldd-toggle-button>`);
+			expect(await surface()).toBe('rgba(0, 0, 0, 0)');
+
+			el.selected = true;
+			await waitForUpdate(el);
+			const selected = await surface();
+			expect(selected).not.toBe('rgba(0, 0, 0, 0)');
+
+			// The same fill as the default appearance: selected looks the same everywhere.
+			el.appearance = 'neutral-tinted';
+			await waitForUpdate(el);
+			expect(await surface()).toBe(selected);
+		});
+	}
+
+	it('draws neutral-base differently from neutral-tinted at rest', async () => {
+		el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Favoriet"></nldd-toggle-button>');
+		const tinted = await surface();
+		el.appearance = 'neutral-base';
+		await waitForUpdate(el);
+		expect(await surface()).not.toBe(tinted);
+	});
+});
+
+describe('nldd-toggle-button – selected-icon', () => {
+	let el: NLDDToggleButton;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const surface = async () => {
+		const inner = el.shadowRoot!.querySelector<HTMLElement>('.toggle-button')!;
+		await Promise.all(inner.getAnimations().map((animation) => animation.finished));
+		return getComputedStyle(inner).backgroundColor;
+	};
+	const iconName = () => el.shadowRoot!.querySelector('nldd-icon')!.getAttribute('icon');
+
+	it('shows the selected icon while selected, and the icon otherwise', async () => {
+		el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Volgen" icon="plus" selected-icon="check-mark"></nldd-toggle-button>');
+		expect(iconName()).toBe('plus');
+
+		el.selected = true;
+		await waitForUpdate(el);
+		expect(iconName()).toBe('check-mark');
+	});
+
+	for (const appearance of ['neutral-transparent', 'accent-transparent']) {
+		it(`keeps ${appearance} without a fill when on, the icon carrying the state`, async () => {
+			el = await fixture<NLDDToggleButton>(`<nldd-toggle-button appearance="${appearance}" text="Volgen" icon="plus" selected-icon="check-mark" selected></nldd-toggle-button>`);
+			expect(await surface()).toBe('rgba(0, 0, 0, 0)');
+			expect(el.shadowRoot!.querySelector('[aria-pressed]')!.getAttribute('aria-pressed')).toBe('true');
+		});
+	}
+
+	for (const appearance of ['neutral-tinted', 'neutral-base']) {
+		it(`fills the ${appearance} surface when on, with a selected-icon as well`, async () => {
+			el = await fixture<NLDDToggleButton>(`<nldd-toggle-button appearance="${appearance}" text="Favoriet" icon="heart" selected-icon="heart-filled"></nldd-toggle-button>`);
+			const resting = await surface();
+
+			el.selected = true;
+			await waitForUpdate(el);
+			expect(await surface()).not.toBe(resting);
+		});
+	}
+
+	it('fills when on without a selected-icon', async () => {
+		el = await fixture<NLDDToggleButton>('<nldd-toggle-button appearance="neutral-transparent" text="Vet" icon="bold" selected></nldd-toggle-button>');
+		expect(await surface()).not.toBe('rgba(0, 0, 0, 0)');
 	});
 });

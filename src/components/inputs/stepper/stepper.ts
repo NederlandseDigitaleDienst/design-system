@@ -28,6 +28,7 @@ import type { NLDDStepperTranslations } from './stepper.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { translate } from '../../../utilities/translations.js';
 
 export type StepperSize = 'xs' | 'sm' | 'md';
 
@@ -112,7 +113,7 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 	// — i18n —————————————————————————————————————————————————————————————————
 
 	public _t(key: keyof NLDDStepperTranslations): string {
-		return this.translations[key] ?? nlddStepperTranslations[key];
+		return translate(this.translations, nlddStepperTranslations, key);
 	}
 
 	// — Actions ——————————————————————————————————————————————————————————————

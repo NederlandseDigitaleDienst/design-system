@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import '../../../assets/styles/variables.css';
 import './split-button.js';
 import '../../actions/menu/menu.js';
 
@@ -158,5 +159,31 @@ describe('nldd-split-button – slotted popup overlay', () => {
 		);
 		await waitForUpdate(el);
 		expect(menu.matches(':popover-open')).toBe(true);
+	});
+});
+
+describe('nldd-split-button – on a colored surface', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('draws the inherit-tinted surface once: the split-button has it, its action button is clear', async () => {
+		el = await fixture('<nldd-split-button text="Opslaan" appearance="inherit-tinted" style="color: rgb(255, 255, 255)"></nldd-split-button>');
+		await waitForUpdate(el);
+
+		const root = el.shadowRoot!;
+		expect(getComputedStyle(root.querySelector('.split-button')!).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+		const action = root.querySelector('nldd-button')!;
+		await (action as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+		expect(getComputedStyle(action.shadowRoot!.querySelector('.button')!).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+	});
+
+	it('gives the inherit-filled split-button a surface of its own', async () => {
+		el = await fixture('<nldd-split-button text="Opslaan" appearance="inherit-filled" style="color: rgb(255, 255, 255)"></nldd-split-button>');
+		await waitForUpdate(el);
+
+		expect(getComputedStyle(el.shadowRoot!.querySelector('.split-button')!).backgroundColor).toBe('rgb(255, 255, 255)');
 	});
 });

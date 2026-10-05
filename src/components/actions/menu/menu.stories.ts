@@ -344,7 +344,7 @@ export const IconenEnVinkjes = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Mix van items met checkbox/radio en items met alleen een icoon: hun teksten lijnen uit doordat het check-cel-blok en het icoon-cel-blok dezelfde leading-breedte hebben. Items die zowel een checkbox/radio als een icoon hebben zijn extra ingesprongen — dat is bewust.',
+				story: 'Eén checkbox- of radio-item geeft het hele menu de vinkjeskolom, zoals in een native menu: de tekst van elk item zonder icoon begint op dezelfde lijn. Een icoon krijgt geen eigen kolom maar staat waar de tekst van een item zonder icoon begint.',
 			},
 		},
 	},

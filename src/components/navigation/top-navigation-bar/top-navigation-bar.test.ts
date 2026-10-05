@@ -607,3 +607,31 @@ describe('nldd-top-navigation-bar – wordmark beside the ribbon', () => {
 		expect(logo.height).toBe('96px');
 	});
 });
+
+// Pulling the page down shows the ribbon carrying on above it. It has to end
+// at the top of the page: ending right above the logo put it over a status bar
+// that sits above the navigation bar.
+describe('nldd-top-navigation-bar ribbon above the page', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('ends at the top of the page, also with a bar above it', async () => {
+		window.scrollTo(0, 0);
+		el = await fixture(`
+			<div>
+				<div style="height: 24px;"></div>
+				<nldd-top-navigation-bar></nldd-top-navigation-bar>
+			</div>
+		`);
+		const bar = el.querySelector('nldd-top-navigation-bar')!;
+		await waitForUpdate(bar);
+		const logo = bar.shadowRoot!.querySelector('.top-navigation-bar__logo')!;
+		const rect = logo.getBoundingClientRect();
+		const ribbonBottom = rect.top + window.scrollY + rect.height - parseFloat(getComputedStyle(logo, '::before').bottom);
+		expect(rect.top + window.scrollY).toBeGreaterThanOrEqual(24);
+		expect(ribbonBottom).toBe(0);
+	});
+});

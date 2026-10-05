@@ -1,3 +1,4 @@
+import { relabel } from './text-editor.labels.js';
 import { Decoration, type DecorationSet, EditorView, WidgetType } from '@codemirror/view';
 import { EditorState, Prec, StateEffect, StateField, type Extension, type Range } from '@codemirror/state';
 import { invertedEffects } from '@codemirror/commands';
@@ -129,15 +130,19 @@ function truncateQuote(text: string): string {
 export type AnnotationCountLabel = (count: number, quote: string) => string;
 
 class AnnotationBadge extends WidgetType {
-	constructor(readonly ids: string[], readonly quote: string, readonly label: AnnotationCountLabel) {
+	readonly ariaLabel: string;
+
+	constructor(readonly ids: string[], readonly quote: string, label: AnnotationCountLabel) {
 		super();
+		this.ariaLabel = label(ids.length, truncateQuote(quote));
 	}
 
 	eq(other: AnnotationBadge): boolean {
 		return (
 			other.quote === this.quote &&
 			other.ids.length === this.ids.length &&
-			other.ids.every((id, i) => id === this.ids[i])
+			other.ids.every((id, i) => id === this.ids[i]) &&
+			other.ariaLabel === this.ariaLabel
 		);
 	}
 
@@ -147,7 +152,7 @@ class AnnotationBadge extends WidgetType {
 		badge.type = 'button';
 		badge.dataset.annotations = this.ids.join(' ');
 		badge.textContent = String(this.ids.length);
-		badge.setAttribute('aria-label', this.label(this.ids.length, truncateQuote(this.quote)));
+		badge.setAttribute('aria-label', this.ariaLabel);
 		return badge;
 	}
 
@@ -312,7 +317,7 @@ function makeAnnotationRender(label: AnnotationCountLabel): StateField<Built> {
 			// Nothing drawn and nothing to draw: skip the rebuild entirely, so an
 			// editor without annotations pays nothing per keystroke.
 			if (value === NOTHING && !tr.state.field(annotationField).length) return value;
-			if (tr.docChanged || !tr.startState.selection.eq(tr.state.selection) || tr.effects.some((e) => e.is(setAnnotations))) {
+			if (tr.docChanged || !tr.startState.selection.eq(tr.state.selection) || tr.effects.some((e) => e.is(setAnnotations) || e.is(relabel))) {
 				return buildAll(tr.state, label);
 			}
 			return value;

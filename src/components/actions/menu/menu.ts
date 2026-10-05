@@ -15,6 +15,7 @@ import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { isKeyboardMode, isTouchMode } from '../../../utilities/input-modality.js';
 import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { translate } from '../../../utilities/translations.js';
 
 
 // # nldd-menu-divider
@@ -99,7 +100,7 @@ if (!customElements.get('nldd-menu-group')) {
  * @attr {string} shortcut - Keyboard shortcut hint shown on the right, e.g. 'Cmd+E'. Display only (rendered via nldd-keyboard-shortcut) — it does not bind the key; wire up the handling in your app. Hidden on touch-only devices, where it isn't invokable.
  * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {string} href - Optional link target. A plain button item with an href renders as an `<a>` so it is a real link (middle-click, open in new tab, copy link). Ignored for submenu openers, checkbox/radio items, and while disabled.
- * @attr {string} type - Item type: 'button' | 'checkbox' | 'radio'. Default: 'button'.
+ * @attr {string} type - Item type: 'button' | 'checkbox' | 'radio'. Default: 'button'. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.
  * @attr {boolean} selected - Selected state for checkbox and radio types.
  * @attr {boolean} disabled - Disabled state.
  * @attr {string} value - A value of the item's own, read off the item in a `select` handler. The default filter matches on it as well as on `text` and `aliases`. Not a form value: this component is not form-associated.
@@ -173,6 +174,12 @@ export class NLDDMenuItem extends LitElement {
 	@state()
 	menuVariant: 'menu' | 'listbox' | null = null;
 
+	/** Whether this item keeps the check-mark column free without being
+	 *  checkable, because another item in its menu is. Set by that nldd-menu.
+	 *  Not part of the public API. */
+	@state()
+	checkColumn = false;
+
 	/** Tracks whether this item's submenu (if any) is currently open. Set by
 	 * the parent nldd-menu via the `submenu-open`/`submenu-close` lifecycle. */
 	@state()
@@ -235,6 +242,14 @@ export class NLDDMenuItem extends LitElement {
 		// attributes are right the first time. Resolving it in `firstUpdated` asks
 		// for a second render from inside the first.
 		this._cachedSubmenuEl = this.querySelector(':scope > nldd-menu');
+	}
+
+	override updated(changedProperties: Map<string, unknown>): void {
+		// An item that becomes checkable, or stops being so, changes whether its
+		// menu reserves the check-mark column, also while the menu is open.
+		if (changedProperties.has('type') && changedProperties.get('type') !== undefined && this.menuVariant) {
+			(this.closest('nldd-menu') as NLDDMenu | null)?._claimItems();
+		}
 	}
 
 	override firstUpdated(): void {
@@ -497,13 +512,7 @@ export class NLDDMenu extends LitElement {
 	// — i18n ——————————————————————————————————————————————————————————————————
 
 	private _t(key: keyof NLDDMenuTranslations, vars?: Record<string, string | number>): string {
-		let str = this.translations[key] ?? nlddMenuTranslations[key];
-		if (vars) {
-			for (const [k, v] of Object.entries(vars)) {
-				str = str.replace(`{${k}}`, String(v));
-			}
-		}
-		return str;
+		return translate(this.translations, nlddMenuTranslations, key, vars);
 	}
 
 	/** Resolved empty text: emptyText attribute takes precedence, then i18n fallback. */
@@ -1879,11 +1888,15 @@ export class NLDDMenu extends LitElement {
 	 * remainder (predictive completion — the ARIA APG pattern for combobox).
 	 *
 	 * When the query is empty, all items are shown and `query` is cleared.
+	 *
+	 * With `hide: false` nothing is hidden and every item gets the `query`, for
+	 * a list someone else already filtered, such as a server answering per
+	 * keystroke. Text without the query in it is shown as it is.
 	 */
-	public filter(query: string): void {
+	public filter(query: string, { hide = true }: { hide?: boolean } = {}): void {
 		const allItems = Array.from(this.querySelectorAll('nldd-menu-item')) as NLDDMenuItem[];
 		allItems.forEach(item => {
-			const matches = !query || this.filterFn(query, item);
+			const matches = !hide || !query || this.filterFn(query, item);
 			item.toggleAttribute('hidden', !matches);
 			item.query = (matches && query) ? query : '';
 		});
@@ -2185,10 +2198,20 @@ export class NLDDMenu extends LitElement {
 	 * Items nested in an `nldd-menu-group` are reached by the query but not by
 	 * that slotchange, since they are assigned to the group's slot. They are
 	 * claimed on the next open.
+	 *
+	 * The same pass gives the menu's own items one check-mark column when any of
+	 * them is a checkbox or radio, so the text of every group starts at the same
+	 * place. A submenu's items are its own and are left to it.
 	 */
 	public _claimItems = (): void => {
-		Array.from(this.querySelectorAll('nldd-menu-item')).forEach(item => {
-			(item as NLDDMenuItem).menuVariant = this.variant;
+		const items = Array.from(this.querySelectorAll('nldd-menu-item')) as NLDDMenuItem[];
+		items.forEach(item => {
+			item.menuVariant = this.variant;
+		});
+		const own = items.filter(item => item.closest('nldd-menu') === this);
+		const checkColumn = this.variant === 'menu' && own.some(item => item.type !== 'button');
+		own.forEach(item => {
+			item.checkColumn = checkColumn;
 		});
 	};
 

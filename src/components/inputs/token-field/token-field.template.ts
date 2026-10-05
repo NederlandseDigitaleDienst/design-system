@@ -50,7 +50,7 @@ function renderPicker(component: NLDDTokenField): TemplateResult {
 	return html`
 		<div class="token-field__picker">
 			<nldd-icon-button
-				variant="neutral-tinted"
+				appearance="neutral-tinted"
 				size="sm"
 				icon="chevron-down"
 				text=${component._t('components.token-field.open-menu-action')}

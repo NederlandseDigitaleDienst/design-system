@@ -19,11 +19,11 @@ nldd-box                     background="critical", de zone waar de actie woont
   └─ nldd-container          padding, gap
        ├─ nldd-title         heading-level, wat de zone is
        ├─ nldd-rich-text     wat er gebeurt als je de knop gebruikt
-       └─ nldd-button        variant="destructive", opent de dialoog
+       └─ nldd-button        appearance="destructive", opent de dialoog
 
 nldd-modal-dialog            open, variant="alert", text, supporting-text
-  ├─ nldd-button             slot="actions", de uitweg, variant="primary"
-  └─ nldd-button             slot="actions", de actie, variant="destructive"
+  ├─ nldd-button             slot="actions", de uitweg, appearance="primary"
+  └─ nldd-button             slot="actions", de actie, appearance="destructive"
 ```
 
 ```html
@@ -43,7 +43,7 @@ nldd-modal-dialog            open, variant="alert", text, supporting-text
       </nldd-rich-text>
       <nldd-button
         id="dossier-verwijderen"
-        variant="destructive"
+        appearance="destructive"
         text="Verwijder dossier"
       ></nldd-button>
     </nldd-container>
@@ -57,12 +57,12 @@ nldd-modal-dialog            open, variant="alert", text, supporting-text
 >
   <nldd-button
     slot="actions"
-    variant="primary"
+    appearance="primary"
     text="Behoud dossier"
   ></nldd-button>
   <nldd-button
     slot="actions"
-    variant="destructive"
+    appearance="destructive"
     text="Verwijder dossier"
   ></nldd-button>
 </nldd-modal-dialog>

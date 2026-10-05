@@ -79,7 +79,7 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-list variant="simple">
+		<nldd-list appearance="simple">
 			<nldd-list-item
 				size=${args.size}
 				href=${args.href || nothing}
@@ -104,7 +104,7 @@ export const Standaard = {
 export const GrootteMd = {
 	name: 'Grootte md',
 	render: () => html`
-		<nldd-list variant="simple">
+		<nldd-list appearance="simple">
 			<nldd-list-item size="md">
 				<nldd-text-cell text="Medium size item"></nldd-text-cell>
 			</nldd-list-item>
@@ -115,7 +115,7 @@ export const GrootteMd = {
 export const GrootteSm = {
 	name: 'Grootte sm',
 	render: () => html`
-		<nldd-list variant="simple">
+		<nldd-list appearance="simple">
 			<nldd-list-item size="sm">
 				<nldd-text-cell
 					size="sm"
@@ -129,7 +129,7 @@ export const GrootteSm = {
 export const ToestandSelected = {
 	name: 'Toestand selected',
 	render: () => html`
-		<nldd-list variant="simple">
+		<nldd-list appearance="simple">
 			<nldd-list-item>
 				<nldd-text-cell text="Not selected"></nldd-text-cell>
 			</nldd-list-item>
@@ -218,7 +218,7 @@ export const AlleToestanden = {
 
 export const AlsKnop = {
 	render: () => html`
-		<nldd-list variant="simple">
+		<nldd-list appearance="simple">
 			<nldd-list-item button>
 				<nldd-text-cell text="Clickable button item"></nldd-text-cell>
 			</nldd-list-item>
@@ -231,7 +231,7 @@ export const AlsKnop = {
 
 export const AlsLink = {
 	render: () => html`
-		<nldd-list variant="simple">
+		<nldd-list appearance="simple">
 			<nldd-list-item href="/settings">
 				<nldd-text-cell text="Settings"></nldd-text-cell>
 			</nldd-list-item>
@@ -244,7 +244,7 @@ export const AlsLink = {
 
 export const BoxMetMarges = {
 	render: () => html`
-		<nldd-list variant="box-tinted">
+		<nldd-list appearance="box-tinted">
 			<nldd-list-item>
 				<nldd-text-cell text="Gutters visible (spacer)"></nldd-text-cell>
 			</nldd-list-item>
@@ -257,7 +257,7 @@ export const BoxMetMarges = {
 
 export const MetCellenVooraanEnAchteraan = {
 	render: () => html`
-		<nldd-list variant="box-tinted">
+		<nldd-list appearance="box-tinted">
 			<nldd-list-item>
 				<nldd-icon-cell
 					icon="document"
@@ -284,7 +284,7 @@ export const MetCellenVooraanEnAchteraan = {
 
 export const SimpelMetCellenAchteraan = {
 	render: () => html`
-		<nldd-list variant="simple">
+		<nldd-list appearance="simple">
 			<nldd-list-item>
 				<nldd-text-cell text="Trailing cells"></nldd-text-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
@@ -325,7 +325,7 @@ export const MetSleepgreep = {
 		const el = document.createElement('div');
 		render(html`
 			<nldd-list
-				variant="box-tinted"
+				appearance="box-tinted"
 				reorderable
 				@nldd-reorder=${onReorder}
 			>
@@ -366,7 +366,7 @@ export const MetSleepgreep = {
  */
 export const ResponsieveCellen = {
 	render: () => html`
-		<nldd-list variant="box-tinted">
+		<nldd-list appearance="box-tinted">
 			<nldd-list-item>
 				<nldd-icon-cell><nldd-icon icon="file-text"></nldd-icon></nldd-icon-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>

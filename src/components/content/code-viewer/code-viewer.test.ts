@@ -114,26 +114,26 @@ describe('nldd-code-viewer', () => {
 
 
 	/* ============================================================
-	   Container (variant)
+	   Container (appearance)
 	   ============================================================ */
 
-	it('defaults to variant="box-tinted"', async () => {
+	it('defaults to appearance="box-tinted"', async () => {
 		el = await fixture('<nldd-code-viewer>x</nldd-code-viewer>');
 		await waitForUpdate(el);
 		// Both defaults are kept out of the DOM; the properties are the source of truth.
-		expect((el as unknown as { variant: string }).variant).toBe('box-tinted');
-		expect(el.hasAttribute('variant')).toBe(false);
+		expect((el as unknown as { appearance: string }).appearance).toBe('box-tinted');
+		expect(el.hasAttribute('appearance')).toBe(false);
 	});
 
-	it('reflects variant attribute', async () => {
-		el = await fixture('<nldd-code-viewer variant="simple">x</nldd-code-viewer>');
+	it('reflects appearance attribute', async () => {
+		el = await fixture('<nldd-code-viewer appearance="simple">x</nldd-code-viewer>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('variant')).toBe('simple');
-		expect((el as { variant?: string }).variant).toBe('simple');
+		expect(el.getAttribute('appearance')).toBe('simple');
+		expect((el as { appearance?: string }).appearance).toBe('simple');
 	});
 
-	it('variant="simple" zeroes the box CSS — corner-radius and padding', async () => {
-		el = await fixture('<nldd-code-viewer variant="simple">x</nldd-code-viewer>');
+	it('appearance="simple" zeroes the box CSS — corner-radius and padding', async () => {
+		el = await fixture('<nldd-code-viewer appearance="simple">x</nldd-code-viewer>');
 		await waitForUpdate(el);
 		const block = el.shadowRoot!.querySelector<HTMLElement>('.code-viewer')!;
 		const cs = getComputedStyle(block);
@@ -143,12 +143,12 @@ describe('nldd-code-viewer', () => {
 		expect(cs.backgroundColor).toBe('rgba(0, 0, 0, 0)');
 	});
 
-	it('reflects a non-default variant value', async () => {
+	it('reflects a non-default appearance value', async () => {
 		// 'box-tinted' is the default and is kept out of the DOM (covered above);
 		// the other two must reflect, since the styles select on them.
-		el = await fixture('<nldd-code-viewer variant="box-base">x</nldd-code-viewer>');
+		el = await fixture('<nldd-code-viewer appearance="box-base">x</nldd-code-viewer>');
 		await waitForUpdate(el);
-		expect(el.getAttribute('variant')).toBe('box-base');
+		expect(el.getAttribute('appearance')).toBe('box-base');
 	});
 
 

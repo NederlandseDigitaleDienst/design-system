@@ -18,7 +18,7 @@
  *         <nldd-form-field>...</nldd-form-field>
  *         <nldd-form-actions>
  *             <nldd-button-group>
- *                 <nldd-button variant="primary" type="submit" text="Bewaar"></nldd-button>
+ *                 <nldd-button appearance="primary" type="submit" text="Bewaar"></nldd-button>
  *             </nldd-button-group>
  *         </nldd-form-actions>
  *     </nldd-form>

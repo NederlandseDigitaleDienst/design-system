@@ -664,3 +664,173 @@ describe('nldd-token-field', () => {
 	});
 
 });
+
+// Same as nldd-combo-box: options a server slots in after the keystroke open
+// the menu that the keystroke, with nothing to show yet, left shut.
+describe('nldd-token-field options that arrive after the keystroke', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const setup = async () => {
+		el = await fixture(`
+			<nldd-token-field allow-custom accessible-label="Ontvangers">
+				<nldd-menu></nldd-menu>
+			</nldd-token-field>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('.token-field__input')!;
+		input.focus();
+		return { input, menu: el.querySelector('nldd-menu')! };
+	};
+
+	const type = async (input: HTMLInputElement, text: string) => {
+		input.value = text;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+	};
+
+	const arrive = async (menu: Element) => {
+		const item = document.createElement('nldd-menu-item') as HTMLElement & { text: string; value: string };
+		item.text = 'Tim de Vries';
+		item.value = 't.devries@example.org';
+		menu.append(item);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await waitForUpdate(el);
+		return item;
+	};
+
+	it('opens when the options arrive after the keystroke', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		expect(menu.matches(':popover-open')).toBe(false);
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(true);
+	});
+
+	it('stays shut when the user pressed Escape before they arrived', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
+	it('does not open on its own when nothing was typed', async () => {
+		const { menu } = await setup();
+		await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+
+	it('closes again when the options it showed go away', async () => {
+		const { input, menu } = await setup();
+		await type(input, 'ti');
+		const item = await arrive(menu);
+		expect(menu.matches(':popover-open')).toBe(true);
+		item.remove();
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await waitForUpdate(el);
+		expect(menu.matches(':popover-open')).toBe(false);
+	});
+});
+
+// A server that searched on the e-mail address returns "Tim de Vries" for
+// "vries@". The field must not hide that match because the name does not
+// contain what was typed.
+describe('nldd-token-field no-filter', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const typeServerQuery = async (attrs: string) => {
+		el = await fixture(`
+			<nldd-token-field accessible-label="Ontvanger" ${attrs}>
+				<nldd-menu>
+					<nldd-menu-item text="Tim de Vries" value="t1"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-token-field>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('.token-field__input')!;
+		input.focus();
+		input.value = 'vries@';
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+		return el.querySelector('nldd-menu-item')!;
+	};
+
+	it('hides an option without the typed text by default', async () => {
+		const item = await typeServerQuery('');
+		expect(item.hasAttribute('hidden')).toBe(true);
+	});
+
+	it('leaves the option visible with no-filter', async () => {
+		const item = await typeServerQuery('no-filter');
+		expect(item.hasAttribute('hidden')).toBe(false);
+	});
+});
+
+// Typing an option's label in full means that option. Its value becomes the
+// token, so the form sends "be" and not the label "België".
+describe('nldd-token-field typed option labels', () => {
+	let el: HTMLElement & { values: string[] };
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const setup = async (attrs = '') => {
+		el = await fixture(`
+			<nldd-token-field allow-custom accessible-label="Landen" ${attrs}>
+				<nldd-menu>
+					<nldd-menu-item text="Nederland" value="nl"></nldd-menu-item>
+					<nldd-menu-item text="België" value="be"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-token-field>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('.token-field__input')!;
+		input.focus();
+		return input;
+	};
+
+	const type = async (input: HTMLInputElement, text: string) => {
+		input.value = text;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+	};
+
+	it('takes the option value on Enter', async () => {
+		const input = await setup();
+		await type(input, 'belgië');
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+		await waitForUpdate(el);
+		expect(el.values).toEqual(['be']);
+	});
+
+	it('takes the option value when focus leaves', async () => {
+		const input = await setup();
+		await type(input, 'België');
+		input.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+		await waitForUpdate(el);
+		expect(el.values).toEqual(['be']);
+	});
+
+	it('takes the option value for a part before a comma', async () => {
+		const input = await setup();
+		await type(input, 'België, Luxemburg,');
+		expect(el.values).toEqual(['be', 'Luxemburg']);
+	});
+
+	it('adds no second token for an option already chosen', async () => {
+		const input = await setup('values="be"');
+		await type(input, 'België');
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+		await waitForUpdate(el);
+		expect(el.values).toEqual(['be']);
+	});
+});

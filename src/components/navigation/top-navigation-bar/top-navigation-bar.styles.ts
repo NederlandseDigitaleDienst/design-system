@@ -17,6 +17,8 @@ export const topNavigationBarStyles = css`
 
 	:host {
 		--_logo-width: var(--semantics-brand-ribbon-sm-width);
+		--_logo-offset: 0px;
+		--_logo-background-color: #154273;
 		--_wordmark-content-color: light-dark(var(--primitives-color-reference-lintblauw), var(--primitives-color-neutral-1000));
 		--_wordmark-max-width: 280px;
 		--_max-width: var(--semantics-page-sections-body-max-width);
@@ -38,6 +40,8 @@ export const topNavigationBarStyles = css`
 		/* The ribbon's width, and with it everything measured against the ribbon:
 		   its own height and the wordmark beside it. Here rather than on :host,
 		   because a container query cannot measure the container it sits on. */
+		--_logo-height: calc(var(--_logo-width) * 2);
+
 		@container (max-width: ${smMax}) {
 			--_logo-width: var(--semantics-brand-ribbon-sm-width);
 		}
@@ -93,11 +97,52 @@ export const topNavigationBarStyles = css`
 	.top-navigation-bar__logo {
 		display: flex;
 		width: var(--_logo-width);
-		height: calc(var(--_logo-width) * 2);
+		height: var(--_logo-height);
 		grid-column: 2;
 		align-self: start;
 		align-items: center;
 		justify-content: center;
+	}
+
+	@supports (animation-timeline: scroll()) {
+		.top-navigation-bar__logo {
+			position: relative;
+		}
+
+		/* The ribbon carries on above the page, seen when it is pulled down.
+		   No z-index: Safari does not paint it above the page with one. */
+		.top-navigation-bar__logo::before {
+			content: '';
+			position: absolute;
+			bottom: calc(100% + var(--_logo-offset));
+			left: 0;
+			width: 100%;
+			height: 100lvh;
+			background-color: var(--_logo-background-color);
+			pointer-events: none;
+		}
+
+		/* Safari only paints above the page while something fixed touches the
+		   top edge. This sits behind the logo, gone as soon as the page scrolls. */
+		.top-navigation-bar__logo::after {
+			content: '';
+			position: fixed;
+			top: 0;
+			z-index: -1;
+			width: var(--_logo-width);
+			height: var(--_logo-height);
+			background-color: var(--_logo-background-color);
+			pointer-events: none;
+			animation: top-navigation-bar-ribbon-at-top linear both;
+			animation-timeline: scroll(root);
+			animation-range: 0 1px;
+		}
+	}
+
+	@keyframes top-navigation-bar-ribbon-at-top {
+		to {
+			visibility: hidden;
+		}
 	}
 
 	.top-navigation-bar__logo svg {
@@ -157,7 +202,7 @@ export const topNavigationBarStyles = css`
 		   ribbon centred. One unbreakable name would push the ribbon off centre
 		   and the page past the screen. */
 		min-width: 0;
-		min-height: calc(var(--_logo-width) * 2);
+		min-height: var(--_logo-height);
 		grid-column: 3;
 		flex-direction: column;
 		color: var(--_wordmark-content-color);
@@ -168,7 +213,7 @@ export const topNavigationBarStyles = css`
 		   on the middle of the ribbon rather than 6px below it. */
 		@container (max-width: ${smMax}) {
 			align-self: start;
-			min-height: calc(var(--_logo-width) * 2 - var(--primitives-space-12));
+			min-height: calc(var(--_logo-height) - var(--primitives-space-12));
 			padding-block-start: var(--primitives-space-12);
 		}
 	}

@@ -473,6 +473,23 @@ describe('nldd-menu filter', () => {
 			expect(i.hasAttribute('hidden')).toBe(false);
 		});
 	});
+
+	// For a list a server already filtered: hiding what does not contain the
+	// typed text would throw away a match the server made on something else.
+	it('hides nothing with hide: false, and still marks the query', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Aardappelen"></nldd-menu-item>
+				<nldd-menu-item text="Broccoli"></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await waitForUpdate(el);
+		(el as unknown as { filter(q: string, o: { hide: boolean }): void }).filter('aa', { hide: false });
+		await waitForUpdate(el);
+		const items = el.querySelectorAll('nldd-menu-item');
+		items.forEach(i => expect(i.hasAttribute('hidden')).toBe(false));
+		expect(items[0].getAttribute('query')).toBe('aa');
+	});
 });
 
 describe('nldd-menu empty state', () => {
@@ -2570,5 +2587,118 @@ describe('nldd-menu anchor popup semantics', () => {
 		expect(anchor.popoverTargetAction).toBe('show');
 		expect(anchor.expanded).toBe(false);
 		cleanup(el);
+	});
+});
+
+describe('nldd-menu check-mark column', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const open = async (menu: HTMLElement) => {
+		(menu as HTMLElement & { showPopover(): void }).showPopover();
+		await waitForUpdate(menu);
+		await Promise.all(Array.from(menu.querySelectorAll('nldd-menu-item'), (item) => (item as unknown as { updateComplete: Promise<unknown> }).updateComplete));
+	};
+	const checkCell = (item: Element) => item.shadowRoot!.querySelector('nldd-icon-cell[size="24"]');
+	const textLeft = (item: Element) => item.shadowRoot!.querySelector('nldd-text-cell')!.getBoundingClientRect().left;
+
+	it('gives every item the column when one is a radio, so the text lines up', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-group text="Taal">
+					<nldd-menu-item type="radio" text="Nederlands" selected></nldd-menu-item>
+					<nldd-menu-item type="radio" text="English"></nldd-menu-item>
+				</nldd-menu-group>
+				<nldd-menu-group text="Demo">
+					<nldd-menu-item text="Demo resetten"></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-menu>
+		`);
+		await open(el);
+		const [nl, en, reset] = Array.from(el.querySelectorAll('nldd-menu-item'));
+
+		expect(checkCell(reset)).not.toBeNull();
+		expect(checkCell(reset)!.getAttribute('icon') || null).toBeNull();
+		expect(checkCell(nl)!.getAttribute('icon')).toBe('check-mark');
+		expect(textLeft(reset)).toBe(textLeft(en));
+		// A plain item stays a plain item: no checked state is announced.
+		expect(reset.shadowRoot!.querySelector('[aria-checked]')).toBeNull();
+	});
+
+	it('leaves the column out of a menu without checkable items', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Bewerk"></nldd-menu-item>
+				<nldd-menu-item text="Verwijder"></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await open(el);
+
+		for (const item of el.querySelectorAll('nldd-menu-item')) {
+			expect(checkCell(item)).toBeNull();
+		}
+	});
+
+	it('adds the column when an item becomes a checkbox while the menu is open', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Bewerk"></nldd-menu-item>
+				<nldd-menu-item text="Toon zijbalk"></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await open(el);
+		const [edit, sidebar] = Array.from(el.querySelectorAll('nldd-menu-item')) as Array<HTMLElement & { type: string; updateComplete: Promise<unknown> }>;
+		expect(checkCell(edit)).toBeNull();
+
+		sidebar.type = 'checkbox';
+		await sidebar.updateComplete;
+		await (edit as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+		expect(checkCell(edit)).not.toBeNull();
+	});
+
+	// A known limit: items in an nldd-menu-group are not reached by the menu's
+	// slotchange, so a checkable item added there to an open menu takes effect
+	// on the next open. See _claimItems.
+	it('reserves the column for a checkbox added to a group of an open menu on the next open', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Bewerk"></nldd-menu-item>
+				<nldd-menu-group text="Weergave"></nldd-menu-group>
+			</nldd-menu>
+		`);
+		await open(el);
+		const edit = el.querySelector('nldd-menu-item')!;
+		const added = document.createElement('nldd-menu-item') as HTMLElement & { type: string; text: string };
+		added.type = 'checkbox';
+		added.text = 'Toon zijbalk';
+		el.querySelector('nldd-menu-group')!.append(added);
+		await waitForUpdate(el);
+		expect(checkCell(edit)).toBeNull();
+
+		(el as HTMLElement & { hidePopover(): void }).hidePopover();
+		await open(el);
+		expect(checkCell(edit)).not.toBeNull();
+	});
+
+	it('lets a submenu decide for its own items', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item type="checkbox" text="Toon zijbalk"></nldd-menu-item>
+				<nldd-menu-item text="Exporteer">
+					<nldd-menu>
+						<nldd-menu-item text="Als PDF"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+			</nldd-menu>
+		`);
+		await open(el);
+		const opener = el.querySelectorAll(':scope > nldd-menu-item')[1];
+		const nested = el.querySelector('nldd-menu nldd-menu nldd-menu-item')!;
+
+		expect(checkCell(opener)).not.toBeNull();
+		expect(checkCell(nested)).toBeNull();
 	});
 });

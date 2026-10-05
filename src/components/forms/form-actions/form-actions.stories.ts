@@ -53,7 +53,7 @@ const Template = ({ labelAlignment }: Record<string, any>) => html`
 		<nldd-form-actions label-alignment=${labelAlignment}>
 			<nldd-button-group>
 				<nldd-button
-					variant="primary"
+					appearance="primary"
 					type="submit"
 					text="Opslaan"
 				></nldd-button>

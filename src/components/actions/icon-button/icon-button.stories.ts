@@ -32,7 +32,7 @@ export default {
 		},
 	},
 	argTypes: {
-		variant: {
+		appearance: {
 			control: 'select',
 			options: [
 				'primary',
@@ -48,7 +48,7 @@ export default {
 				'inherit-filled',
 				'inherit-tinted',
 			],
-			description: 'Visuele stijlvariant',
+			description: 'Visuele stijl, inclusief kleur',
 			table: {
 				defaultValue: { summary: 'neutral-tinted' },
 			},
@@ -148,6 +148,12 @@ export default {
 				defaultValue: { summary: false },
 			},
 		},
+		loadingText: {
+			name: 'loading-text',
+			control: 'text',
+			description: 'Wat de schermlezer aankondigt tijdens loading, zoals "Aan het bewaren"',
+			table: { defaultValue: { summary: 'Laden' } },
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Uitgeschakelde toestand',
@@ -157,7 +163,7 @@ export default {
 		},
 	},
 	args: {
-		variant: 'neutral-tinted',
+		appearance: 'neutral-tinted',
 		size: 'md',
 		width: '',
 		hideLgText: false,
@@ -172,13 +178,14 @@ export default {
 		accessibleLabel: '',
 		tooltipTiming: 'delay',
 		loading: false,
+		loadingText: '',
 		disabled: false,
 	},
 };
 
-const Template = ({ variant, size, width, hideLgText, expandable, expanded, popupType, text, icon, type, href, target, accessibleLabel, tooltipTiming, loading, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, hideLgText, expandable, expanded, popupType, text, icon, type, href, target, accessibleLabel, tooltipTiming, loading, loadingText, disabled }: Record<string, any>) => html`
 	<nldd-icon-button
-		variant=${variant}
+		appearance=${appearance}
 		size=${size}
 		width=${width || nothing}
 		?hide-lg-text=${hideLgText}
@@ -191,6 +198,7 @@ const Template = ({ variant, size, width, hideLgText, expandable, expanded, popu
 		href=${href || nothing}
 		target=${target || nothing}
 		?loading=${loading}
+		loading-text=${loadingText || nothing}
 		?disabled=${disabled}
 		accessible-label=${accessibleLabel || nothing}
 		tooltip-timing=${tooltipTiming || nothing}
@@ -205,21 +213,22 @@ export const Standaard = {
 	},
 };
 
-export const VariantenNaarRol = {
+export const AppearancesNaarRol = {
+	name: 'Appearances naar rol',
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-icon-button
-			variant="primary"
+			appearance="primary"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="secondary"
+			appearance="secondary"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="destructive"
+			appearance="destructive"
 			icon="delete"
 			text="Verwijder"
 		></nldd-icon-button>
@@ -235,41 +244,42 @@ export const VariantenNaarRol = {
 },
 };
 
-export const VariantenNaarUiterlijk = {
+export const AppearancesNaarUiterlijk = {
+	name: 'Appearances naar uiterlijk',
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-icon-button
-			variant="accent-filled"
+			appearance="accent-filled"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="accent-transparent"
+			appearance="accent-transparent"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="neutral-base"
+			appearance="neutral-base"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="neutral-transparent"
+			appearance="neutral-transparent"
 			icon="add"
 			text="Voeg toe"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="critical-tinted"
+			appearance="critical-tinted"
 			icon="delete"
 			text="Verwijder"
 		></nldd-icon-button>
 		<nldd-icon-button
-			variant="critical-transparent"
+			appearance="critical-transparent"
 			icon="delete"
 			text="Verwijder"
 		></nldd-icon-button>
@@ -411,19 +421,19 @@ export const ToestandDisabled = {
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-icon-button
 			disabled
-			variant="accent-filled"
+			appearance="accent-filled"
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
 		<nldd-icon-button
 			disabled
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
 		<nldd-icon-button
 			disabled
-			variant="critical-tinted"
+			appearance="critical-tinted"
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
@@ -440,13 +450,13 @@ export const ToestandLoading = {
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-icon-button
 			loading
-			variant="primary"
+			appearance="primary"
 			icon="download"
 			text="Opslaan"
 		></nldd-icon-button>
 		<nldd-icon-button
 			loading
-			variant="neutral-tinted"
+			appearance="neutral-tinted"
 			icon="download"
 			text="Opslaan"
 		></nldd-icon-button>
@@ -526,7 +536,7 @@ export const MetMenu = {
 				<nldd-menu slot="popup">
 					<nldd-menu-item
 						text="Bewerken"
-						icon="pencil"
+						icon="edit"
 					></nldd-menu-item>
 					<nldd-menu-item
 						text="Dupliceren"
@@ -594,4 +604,71 @@ export const MetPopover = {
 			},
 		},
 	},
+};
+
+/**
+ * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
+ * bedoeld voor gekleurde vlakken (zoals de hero-main of filled-categories).
+ * `inherit-filled` gebruikt de vlakkleur als icoonkleur wanneer het vlak
+ * `--context-parent-background-color` cascadet; zonder die context valt het
+ * terug op een wit/zwart-contrastflip, zie het derde vlak. Hover, active en
+ * expanded veranderen de kleur niet, zodat het contrast blijft wat het vlak
+ * eromheen geeft.
+ */
+export const OpKleurvlak = {
+	render: () => html`
+		<div style="display: flex; flex-direction: column; gap: 16px;">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+				<nldd-icon-button
+					appearance="inherit-filled"
+					icon="edit"
+					text="Bewerk"
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-tinted"
+					icon="trash"
+					text="Verwijder"
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-filled"
+					icon="global-settings"
+					text="Instellingen"
+					expandable
+					expanded
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-tinted"
+					icon="global-settings"
+					text="Instellingen"
+					expandable
+					expanded
+				></nldd-icon-button>
+			</div>
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+				<nldd-icon-button
+					appearance="inherit-filled"
+					icon="edit"
+					text="Bewerk"
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-tinted"
+					icon="trash"
+					text="Verwijder"
+				></nldd-icon-button>
+			</div>
+			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+				<nldd-icon-button
+					appearance="inherit-filled"
+					icon="edit"
+					text="Zonder context (flip)"
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-tinted"
+					icon="trash"
+					text="Verwijder"
+				></nldd-icon-button>
+			</div>
+		</div>
+	`,
+	parameters: { controls: { disable: true } },
 };

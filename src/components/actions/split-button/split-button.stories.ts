@@ -30,10 +30,10 @@ export default {
 		},
 	},
 	argTypes: {
-		variant: {
+		appearance: {
 			control: 'select',
-			options: ['neutral-tinted', 'neutral-base', 'secondary', 'accent-filled', 'primary'],
-			description: 'Button variant',
+			options: ['neutral-tinted', 'neutral-base', 'secondary', 'accent-filled', 'primary', 'inherit-filled', 'inherit-tinted'],
+			description: 'Visuele stijl, inclusief kleur',
 			table: {
 				defaultValue: { summary: 'neutral-tinted' },
 			},
@@ -68,7 +68,7 @@ export default {
 		},
 	},
 	args: {
-		variant: 'neutral-tinted',
+		appearance: 'neutral-tinted',
 		size: 'md',
 		width: '',
 		text: 'Opslaan',
@@ -95,9 +95,9 @@ const menu = html`
 	</nldd-menu>
 `;
 
-const Template = ({ variant, size, width, text, icon, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, text, icon, disabled }: Record<string, any>) => html`
 	<nldd-split-button
-		variant=${variant}
+		appearance=${appearance}
 		size=${size}
 		width=${width || nothing}
 		text=${text}
@@ -113,13 +113,34 @@ export const Standaard = {
 	args: {},
 };
 
-// All variants overview
-export const Varianten = {
+// All appearances overview
+export const Appearances = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-split-button text="Opslaan" variant="primary">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" variant="secondary">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" variant="neutral-base">${menu}</nldd-split-button>
+		<nldd-split-button text="Opslaan" appearance="primary">${menu}</nldd-split-button>
+		<nldd-split-button text="Opslaan" appearance="secondary">${menu}</nldd-split-button>
+		<nldd-split-button text="Opslaan" appearance="neutral-base">${menu}</nldd-split-button>
+	</div>
+`,
+	parameters: {
+		controls: { disable: true },
+	},
+};
+
+/**
+ * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
+ * bedoeld voor gekleurde vlakken. Bij `inherit-tinted` tekent de split-button het
+ * doorschijnende vlak één keer; de knoppen erin laten het weg, zodat
+ * het niet dubbel over elkaar valt.
+ * Hover, active en expanded veranderen de kleur niet, zodat het contrast met
+ * het label blijft wat het vlak eromheen geeft.
+ */
+export const OpKleurvlak = {
+	render: () => html`
+	<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-split-button text="Opslaan" appearance="inherit-filled">${menu}</nldd-split-button>
+		<nldd-split-button text="Opslaan" appearance="inherit-tinted">${menu}</nldd-split-button>
+		<nldd-button appearance="inherit-tinted" text="Losse knop"></nldd-button>
 	</div>
 `,
 	parameters: {
@@ -131,9 +152,9 @@ export const Varianten = {
 export const MetStartIcon = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-split-button text="Opslaan" icon="check-mark" variant="primary">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" icon="check-mark" variant="secondary">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" icon="check-mark" variant="neutral-base">${menu}</nldd-split-button>
+		<nldd-split-button text="Opslaan" icon="check-mark" appearance="primary">${menu}</nldd-split-button>
+		<nldd-split-button text="Opslaan" icon="check-mark" appearance="secondary">${menu}</nldd-split-button>
+		<nldd-split-button text="Opslaan" icon="check-mark" appearance="neutral-base">${menu}</nldd-split-button>
 	</div>
 `,
 	parameters: {
@@ -212,7 +233,7 @@ export const MetPopover = {
 						<p>Kies hoe je deze pagina wilt delen met anderen.</p>
 					</nldd-rich-text>
 					<nldd-button
-						variant="primary"
+						appearance="primary"
 						text="Kopieer link"
 					></nldd-button>
 				</nldd-container>

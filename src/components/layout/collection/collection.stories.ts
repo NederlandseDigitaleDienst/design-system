@@ -123,11 +123,11 @@ const itemContent = (i: any) => html`
 	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-button-group orientation="horizontal">
 		<nldd-button
-			variant="primary"
+			appearance="primary"
 			text="Bekijk"
 		></nldd-button>
 		<nldd-button
-			variant="secondary"
+			appearance="secondary"
 			text="Meer info"
 		></nldd-button>
 	</nldd-button-group>

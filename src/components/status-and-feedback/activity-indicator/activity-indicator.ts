@@ -70,6 +70,7 @@ import { activityIndicatorStyles } from './activity-indicator.styles.js';
 import { activityIndicatorTemplate } from './activity-indicator.template.js';
 import { nlddActivityIndicatorTranslations } from './activity-indicator.i18n.js';
 import type { NLDDActivityIndicatorTranslations } from './activity-indicator.i18n.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** Delay before the indicator fades in. Brief loading states finish within
  *  this window and the indicator is never shown — avoids a jarring flash. */
@@ -135,7 +136,7 @@ export class NLDDActivityIndicator extends LitElement {
 	};
 
 	public _t(key: keyof NLDDActivityIndicatorTranslations): string {
-		return this.translations[key] ?? nlddActivityIndicatorTranslations[key];
+		return translate(this.translations, nlddActivityIndicatorTranslations, key);
 	}
 
 	/** Accessible name announced while loading. */

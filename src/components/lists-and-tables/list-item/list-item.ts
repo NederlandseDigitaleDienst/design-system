@@ -485,7 +485,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 
 	override willUpdate(changed: PropertyValues) {
 		super.willUpdate(changed);
-		// Before the first render, so the row is painted with the list's variant and
+		// Before the first render, so the row is painted with the list's appearance and
 		// type right away. Setting them in `firstUpdated` asks for a second render
 		// from inside the first.
 		if (this.hasUpdated || this.hasAttribute('data-nldd-clone')) return;
@@ -663,11 +663,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/**
-	 * Reads the initial variant + type from the closest parent nldd-list, before
+	 * Reads the initial appearance + type from the closest parent nldd-list, before
 	 * the first render, so the item is styled correctly on first paint. Later changes
-	 * are PUSHED by the list: its `updated` / `_updateItems` calls `_applyVariant`
+	 * are PUSHED by the list: its `updated` / `_updateItems` calls `_applyAppearance`
 	 * and `_applyParentType` on every item, so the list is the single source of
-	 * truth and a runtime variant/type switch (or an item moved to another list)
+	 * truth and a runtime appearance/type switch (or an item moved to another list)
 	 * always tracks its current parent.
 	 */
 	private _syncWithList() {
@@ -678,13 +678,13 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			}
 			return;
 		}
-		this._applyVariant(list.variant);
+		this._applyAppearance(list.appearance);
 		this._applyParentType(list.type);
 	}
 
-	_applyVariant(variant: string) {
-		this._isBoxed = variant.startsWith('box');
-		this._relayToChildren(item => item._applyVariant(variant));
+	_applyAppearance(appearance: string) {
+		this._isBoxed = appearance.startsWith('box');
+		this._relayToChildren(item => item._applyAppearance(appearance));
 		this.classList.toggle('is-boxed', this._isBoxed);
 	}
 
@@ -830,7 +830,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			// A start past the last end: authoring error, fall back to full width.
 			if (import.meta.env?.DEV && !this._warnedDegenerateDivider) {
 				this._warnedDegenerateDivider = true;
-				console.warn('nldd-list-item: divider-start ligt voorbij de laatste divider-end; de divider valt terug op de volle contentbreedte.');
+				console.warn('<nldd-list-item>: divider-start lies past the last divider-end, so the divider falls back to the full content width.');
 			}
 			this.style.removeProperty('--_divider-inset-start');
 			this.style.removeProperty('--_divider-inset-end');
@@ -860,7 +860,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			// reach them. Relay what we were given, and they relay it downwards.
 			rows.forEach(row => {
 				const item = row as NLDDListItem;
-				item._applyVariant?.(this._isBoxed ? 'box-tinted' : 'simple');
+				item._applyAppearance?.(this._isBoxed ? 'box-tinted' : 'simple');
 				item._applyParentType?.(this._parentType);
 			});
 		}
