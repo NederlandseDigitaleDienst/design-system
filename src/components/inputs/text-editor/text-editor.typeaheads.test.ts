@@ -16,6 +16,7 @@ type El = HTMLElement & {
 	shadowRoot: ShadowRoot;
 	view: EditorView;
 	mentionSource?: MentionSource;
+	mentionQuery?: string;
 	typeaheads: Typeahead[];
 	insertAtCursor(text: string): void;
 };
@@ -212,5 +213,40 @@ describe('nldd-text-editor typeaheads', () => {
 		el.insertAtCursor('zin');
 		await waitForUpdate(el);
 		expect(el.value).toBe('een woord');
+	});
+});
+
+// #262: a list decides what may follow its trigger. Without that a name with
+// a space, or the + of :+1:, closed the list before the source saw it.
+describe('nldd-text-editor typeahead queries', () => {
+	let el: El;
+	afterEach(() => cleanup(el));
+
+	const NAME = '[\\p{L}\\p{M}\\p{N}_.-]*(?: [\\p{L}\\p{M}\\p{N}_.-]+)?';
+	const team: TypeaheadCandidate[] = [
+		{ id: '1', text: 'Sam Jansen' },
+		{ id: '2', text: 'Sam de Wit' },
+	];
+
+	it('hands a name with an accent to the source whole', async () => {
+		const asked: string[] = [];
+		el = await make('hoi @józ', [], (query) => { asked.push(query); return [{ id: 'j', text: 'Józef' }]; });
+		await openList(el);
+		expect(asked[asked.length - 1]).toBe('józ');
+	});
+
+	it('searches on a full name with mentionQuery', async () => {
+		el = await make('hoi @sam j', [], byLabel(team));
+		el.mentionQuery = NAME;
+		await el.updateComplete;
+		const rows = await openList(el);
+		expect(labels(rows)).toEqual(['@Sam Jansen']);
+	});
+
+	it('opens an emoji list on :+ with its own query', async () => {
+		const thumbs: TypeaheadCandidate[] = [{ id: '+1', text: '+1:', symbol: '👍' }];
+		el = await make('top :+', [{ trigger: ':', source: byLabel(thumbs), query: '[\\p{L}\\p{N}_+-]*' }]);
+		const rows = await openList(el);
+		expect(labels(rows)).toEqual([':+1:']);
 	});
 });

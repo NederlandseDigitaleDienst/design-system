@@ -18013,6 +18013,15 @@
       "path": "src/components/inputs/text-editor/text-editor.mentions.ts",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "DEFAULT_TYPEAHEAD_QUERY",
+          "type": {
+            "text": "string"
+          },
+          "default": "'[\\\\p{L}\\\\p{M}\\\\p{N}_.-]*'",
+          "description": "What may follow a trigger when a list says nothing else: letters in any\nscript and with any accent, digits, `_`, `.` and `-`. A name like `józef`\nreaches the source whole."
+        },
+        {
           "kind": "function",
           "name": "typeaheadQueryAt",
           "return": {
@@ -18036,7 +18045,7 @@
             {
               "name": "triggers",
               "type": {
-                "text": "readonly string[]"
+                "text": "readonly TypeaheadTrigger[]"
               }
             }
           ],
@@ -18149,6 +18158,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "DEFAULT_TYPEAHEAD_QUERY",
+          "declaration": {
+            "name": "DEFAULT_TYPEAHEAD_QUERY",
+            "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "typeaheadQueryAt",
@@ -18500,6 +18517,14 @@
                 "text": "MentionSource | undefined"
               },
               "description": "Consumer-supplied"
+            },
+            {
+              "kind": "field",
+              "name": "mentionQuery",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "What may follow the `@` of a mention, as a regular expression without\nanchors or capturing groups. Property only. Without it: letters with any\naccent, digits, `_`, `.` and `-`. Allow one space to search on a full name:\n`'[\\\\p{L}\\\\p{M}\\\\p{N}_.-]*(?: [\\\\p{L}\\\\p{M}\\\\p{N}_.-]+)?'`."
             },
             {
               "kind": "field",
@@ -19345,6 +19370,22 @@
           "name": "TypeaheadChosenDetail",
           "declaration": {
             "name": "TypeaheadChosenDetail",
+            "module": "./text-editor.mentions.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TypeaheadTrigger",
+          "declaration": {
+            "name": "TypeaheadTrigger",
+            "module": "./text-editor.mentions.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DEFAULT_TYPEAHEAD_QUERY",
+          "declaration": {
+            "name": "DEFAULT_TYPEAHEAD_QUERY",
             "module": "./text-editor.mentions.js"
           }
         },

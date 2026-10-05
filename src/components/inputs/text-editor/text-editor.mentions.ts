@@ -22,21 +22,45 @@ import '../../content/icon/icon.js';
  * that degrades to a plain link outside the editor, and the token rendering
  * lives in the markdown decoration layer. */
 
+/** What may follow a trigger when a list says nothing else: letters in any
+ *  script and with any accent, digits, `_`, `.` and `-`. A name like `józef`
+ *  reaches the source whole. */
+export const DEFAULT_TYPEAHEAD_QUERY = '[\\p{L}\\p{M}\\p{N}_.-]*';
+
+/** A trigger and what may follow it. A plain string is a trigger with the
+ *  default query. */
+export type TypeaheadTrigger = string | { trigger: string; query?: string };
+
 /** The query being typed: a trigger at the start of the line or after
- *  whitespace, followed by name characters, up to the caret. Anchored that way
- *  so a trigger inside a word (an e-mail address, `piet@sam`) stays a plain
- *  character. The name class is ASCII for now; widening it changes what a
- *  source receives and is its own change. */
-const queryPatterns = new Map<string, RegExp>();
-function queryPattern(triggers: readonly string[]): RegExp | null {
-	const chars = Array.from(new Set(triggers.filter((t) => t.length === 1 && !/[\s\w]/.test(t)))).sort().join('');
-	if (!chars) return null;
-	let pattern = queryPatterns.get(chars);
-	if (!pattern) {
-		pattern = new RegExp(`(^|\\s)([${chars.replace(/[\\\]^-]/g, '\\$&')}])([\\w.-]*)$`);
-		queryPatterns.set(chars, pattern);
+ *  whitespace, followed by what the list allows, up to the caret. Anchored that
+ *  way so a trigger inside a word (an e-mail address, `piet@sam`) stays a plain
+ *  character. */
+const queryPatterns = new Map<string, RegExp | null>();
+function queryPattern(trigger: string, query: string): RegExp | null {
+	if (trigger.length !== 1 || /[\s\p{L}\p{N}_]/u.test(trigger)) return null;
+	const key = `${trigger}\u0000${query}`;
+	if (queryPatterns.has(key)) return queryPatterns.get(key)!;
+	let pattern: RegExp | null;
+	try {
+		pattern = new RegExp(`(^|\\s)(${trigger.replace(/[\\^$.*+?()[\]{}|/]/g, '\\$&')})(${query})$`, 'u');
+	} catch {
+		if (import.meta.env?.DEV) console.warn(`<nldd-text-editor>: the query of the "${trigger}" typeahead is not a valid regular expression; the default is used.`, query);
+		pattern = query === DEFAULT_TYPEAHEAD_QUERY ? null : queryPattern(trigger, DEFAULT_TYPEAHEAD_QUERY);
 	}
+	queryPatterns.set(key, pattern);
 	return pattern;
+}
+
+/** One pattern per trigger. Lists on one trigger share it: the first list that
+ *  sets a `query` decides, since they all answer the same typed text. */
+function patternsFor(triggers: readonly TypeaheadTrigger[]): RegExp[] {
+	const queries = new Map<string, string | undefined>();
+	for (const entry of triggers) {
+		const { trigger, query } = typeof entry === 'string' ? { trigger: entry, query: undefined } : entry;
+		if (!queries.has(trigger) || (queries.get(trigger) === undefined && query !== undefined)) queries.set(trigger, query);
+	}
+	return Array.from(queries, ([trigger, query]) => queryPattern(trigger, query ?? DEFAULT_TYPEAHEAD_QUERY))
+		.filter((pattern): pattern is RegExp => pattern !== null);
 }
 
 /** Code is quoted verbatim, so a trigger in a fenced block, an indented block
@@ -54,16 +78,20 @@ function inCode(state: EditorState, pos: number): boolean {
 export function typeaheadQueryAt(
 	state: EditorState,
 	pos: number,
-	triggers: readonly string[],
+	triggers: readonly TypeaheadTrigger[],
 ): { from: number; to: number; query: string; trigger: string } | null {
-	const pattern = queryPattern(triggers);
-	if (!pattern) return null;
 	const line = state.doc.lineAt(pos);
-	const match = pattern.exec(state.sliceDoc(line.from, pos));
-	if (!match) return null;
-	const from = line.from + match.index + match[1].length;
+	const text = state.sliceDoc(line.from, pos);
+	// When more than one trigger matches, the one nearest the caret is being typed.
+	let best: RegExpExecArray | null = null;
+	for (const pattern of patternsFor(triggers)) {
+		const match = pattern.exec(text);
+		if (match && (!best || match.index + match[1].length > best.index + best[1].length)) best = match;
+	}
+	if (!best) return null;
+	const from = line.from + best.index + best[1].length;
 	if (inCode(state, from)) return null;
-	return { from, to: pos, query: match[3], trigger: match[2] };
+	return { from, to: pos, query: best[3], trigger: best[2] };
 }
 
 export interface TypeaheadCandidate {
@@ -95,6 +123,13 @@ export interface Typeahead {
 	 *  `#`, `:`, `/`. Not a letter, digit or whitespace. */
 	trigger: string;
 	source: TypeaheadSource;
+	/** What may follow the trigger, as a regular expression without anchors or
+	 *  capturing groups, matched with the `u` flag. Without it: letters with any
+	 *  accent, digits, `_`, `.` and `-`. A list of names that allows one space
+	 *  between first and last name: `'[\\p{L}\\p{M}\\p{N}_.-]*(?: [\\p{L}\\p{M}\\p{N}_.-]+)?'`.
+	 *  Emoji shortcodes that use `+`: `'[\\p{L}\\p{N}_+-]*'`. Lists on one trigger
+	 *  share the query of the first that sets one. */
+	query?: string;
 	/** What choosing a candidate writes in place of the trigger and the query.
 	 *  Without it: the trigger, the text and a space, so `#kanaal ` stays what
 	 *  was typed. Return the symbol for an emoji, or `@username ` for a system
@@ -226,7 +261,7 @@ function completionSource(
 ) {
 	return async (context: CompletionContext): Promise<CompletionResult | null> => {
 		const lists = getTypeaheads();
-		const match = typeaheadQueryAt(context.state, context.pos, lists.map((t) => t.trigger));
+		const match = typeaheadQueryAt(context.state, context.pos, lists);
 		if (!match) return null;
 		// Every list on this trigger contributes, in the order they were given.
 		const onTrigger = lists.filter((t) => t.trigger === match.trigger);
@@ -459,8 +494,7 @@ export function typeaheads(
 	const reopenOnDelete = EditorView.updateListener.of((update) => {
 		if (!update.docChanged || completionStatus(update.state) !== null) return;
 		if (!update.transactions.some((tr) => tr.isUserEvent('delete'))) return;
-		const triggers = getTypeaheads().map((t) => t.trigger);
-		if (typeaheadQueryAt(update.state, update.state.selection.main.head, triggers)) startCompletion(update.view);
+		if (typeaheadQueryAt(update.state, update.state.selection.main.head, getTypeaheads())) startCompletion(update.view);
 	});
 	return [
 		topLayerPopups(),

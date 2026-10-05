@@ -25,6 +25,8 @@ here; consult the commit history if you need that level of detail.
 
 - **`no-filter` on `nldd-combo-box` and `nldd-token-field`** leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides every option that does not contain the typed text, which also hides a server match on, say, an e-mail address. The part of an option that matches the typed text is still marked.
 
+- **A typeahead list in `nldd-text-editor` decides what may follow its trigger.** `query` on a list, and `mentionQuery` for the built-in `@`, take a regular expression for the text after the trigger. A list of people can allow one space, so `@sam jansen` finds the right Sam, and an emoji list can allow the `+` of `:+1:`. Lists on one trigger share the query of the first that sets one.
+
 - **`loading-text` on `nldd-button` and `nldd-icon-button`** says what the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Without it the indicator says its translated "Laden".
 
 - **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down.** Pulling a page past its top used to open a white gap above the ribbon; the ribbon now carries on into it and only grows longer. A bar above the navigation bar, such as `nldd-status-bar`, stays clear: the ribbon starts at the top of the page, not right above the logo. It works in browsers that support scroll-driven animations; elsewhere the gap stays as it was.
@@ -44,6 +46,8 @@ here; consult the commit history if you need that level of detail.
 - **`mode` on `nldd-progress-bar` and `nldd-progress-circle` is now `variant`.** `progress` and `distribution` are two kinds of indicator, progress toward a goal and the parts of a whole, and the screen reader hears something different for each, which is what `variant` stands for in this system. The values stay the same, so `mode="distribution"` becomes `variant="distribution"`. The types `ProgressBarMode` and `ProgressCircleMode` are now `ProgressBarVariant` and `ProgressCircleVariant`.
 
 ### Fixed
+
+- **A typeahead query in `nldd-text-editor` takes accents.** `@józef` stopped at the `ó`, so the source never saw the rest of the name. What may follow a trigger is now letters in any script and with any accent, digits, `_`, `.` and `-`, for every list.
 
 - **`nldd-combo-box` with `allow-custom` keeps a value chosen from the menu.** Leaving the field, or pressing Enter, committed the shown text as the value whenever it differed from the value. That is the normal state after every choice ("Nederland" for `nl`), so in a form the label went to the server instead of the value, usually on the click on the submit button. Only text the user typed is committed now, and typing an option's label in full picks that option. `nldd-token-field` did the same with a typed label: "België" became a token with the value "België" instead of `be`, on Enter, on a comma or when leaving the field. It now adds the option.
 
