@@ -1614,6 +1614,15 @@
               "description": "Which menu owns this item, set by that nldd-menu. Not part of the public API.\n\n`null` until one claims it, and an unclaimed item carries no menu role.\nA menu role is a promise about what is around you, so an item cannot make\nit on its own. `nldd-toolbar-item` holds exactly such an item: the\ndeclaration of what belongs in the overflow menu, which the toolbar clones\ninto the real menu when it collapses. The clone is claimed there and the\ndeclaration stays what it is."
             },
             {
+              "kind": "field",
+              "name": "checkColumn",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether this item keeps the check-mark column free without being\ncheckable, because another item in its menu is. Set by that nldd-menu.\nNot part of the public API."
+            },
+            {
               "kind": "method",
               "name": "focus",
               "return": {
@@ -1731,7 +1740,7 @@
               "type": {
                 "text": "'button' | 'checkbox' | 'radio'"
               },
-              "description": "Item type: 'button' | 'checkbox' | 'radio'. Default: 'button'.",
+              "description": "Item type: 'button' | 'checkbox' | 'radio'. Default: 'button'. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.",
               "name": "type",
               "default": "'button'",
               "fieldName": "type"

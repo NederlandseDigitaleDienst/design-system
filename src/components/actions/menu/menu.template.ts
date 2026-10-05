@@ -108,6 +108,8 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: 'menu' |
 
 export function menuItemTemplate(this: NLDDMenuItem, variant: 'menu' | 'listbox' | null = null) {
 	const hasCheckState = this.type !== 'button' && variant === 'menu';
+	// A plain item keeps the column empty when its menu has checkable items.
+	const hasCheckColumn = hasCheckState || (this.checkColumn && variant === 'menu');
 	// No role until a menu claims this item. `menuitem` says there is a menu
 	// around you, and an item sitting on its own cannot make that true: it is
 	// then a button, and says so. aria-checked and aria-selected fall away with
@@ -124,11 +126,11 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: 'menu' | 'listbox'
 	const asLink = !!safeHref && this.type === 'button' && !hasSubmenu && !this.disabled;
 
 	const content = html`
-		${hasCheckState ? html`
+		${hasCheckColumn ? html`
 			<nldd-icon-cell
 				size="24"
 				horizontal-alignment="center"
-				icon=${this.selected ? 'check-mark' : nothing}
+				icon=${hasCheckState && this.selected ? 'check-mark' : nothing}
 			></nldd-icon-cell>
 			<nldd-spacer-cell size="4"></nldd-spacer-cell>
 		` : nothing}

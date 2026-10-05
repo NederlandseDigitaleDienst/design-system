@@ -2589,3 +2589,75 @@ describe('nldd-menu anchor popup semantics', () => {
 		cleanup(el);
 	});
 });
+
+describe('nldd-menu check-mark column', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const open = async (menu: HTMLElement) => {
+		(menu as HTMLElement & { showPopover(): void }).showPopover();
+		await waitForUpdate(menu);
+		await Promise.all(Array.from(menu.querySelectorAll('nldd-menu-item'), (item) => (item as unknown as { updateComplete: Promise<unknown> }).updateComplete));
+	};
+	const checkCell = (item: Element) => item.shadowRoot!.querySelector('nldd-icon-cell[size="24"]');
+	const textLeft = (item: Element) => item.shadowRoot!.querySelector('nldd-text-cell')!.getBoundingClientRect().left;
+
+	it('gives every item the column when one is a radio, so the text lines up', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-group text="Taal">
+					<nldd-menu-item type="radio" text="Nederlands" selected></nldd-menu-item>
+					<nldd-menu-item type="radio" text="English"></nldd-menu-item>
+				</nldd-menu-group>
+				<nldd-menu-group text="Demo">
+					<nldd-menu-item text="Demo resetten"></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-menu>
+		`);
+		await open(el);
+		const [nl, en, reset] = Array.from(el.querySelectorAll('nldd-menu-item'));
+
+		expect(checkCell(reset)).not.toBeNull();
+		expect(checkCell(reset)!.getAttribute('icon') || null).toBeNull();
+		expect(checkCell(nl)!.getAttribute('icon')).toBe('check-mark');
+		expect(textLeft(reset)).toBe(textLeft(en));
+		// A plain item stays a plain item: no checked state is announced.
+		expect(reset.shadowRoot!.querySelector('[aria-checked]')).toBeNull();
+	});
+
+	it('leaves the column out of a menu without checkable items', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Bewerk"></nldd-menu-item>
+				<nldd-menu-item text="Verwijder"></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await open(el);
+
+		for (const item of el.querySelectorAll('nldd-menu-item')) {
+			expect(checkCell(item)).toBeNull();
+		}
+	});
+
+	it('lets a submenu decide for its own items', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item type="checkbox" text="Toon zijbalk"></nldd-menu-item>
+				<nldd-menu-item text="Exporteer">
+					<nldd-menu>
+						<nldd-menu-item text="Als PDF"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+			</nldd-menu>
+		`);
+		await open(el);
+		const opener = el.querySelectorAll(':scope > nldd-menu-item')[1];
+		const nested = el.querySelector('nldd-menu nldd-menu nldd-menu-item')!;
+
+		expect(checkCell(opener)).not.toBeNull();
+		expect(checkCell(nested)).toBeNull();
+	});
+});
