@@ -1509,6 +1509,15 @@
 	--semantics-buttons-neutral-transparent-is-hovered-content-secondary-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 	--semantics-buttons-neutral-transparent-is-active-content-color: var(--primitives-color-neutral-1000);
 	--semantics-buttons-neutral-transparent-is-active-content-secondary-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
+	--semantics-buttons-neutral-transparent-is-selected-background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+	--semantics-buttons-neutral-transparent-is-selected-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
+	--semantics-buttons-neutral-transparent-is-selected-content-color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+	--semantics-buttons-neutral-transparent-is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
+	--semantics-buttons-neutral-transparent-is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
+	--semantics-buttons-neutral-transparent-is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
+	--semantics-buttons-neutral-transparent-is-selected-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
+	--semantics-buttons-neutral-transparent-is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
+	--semantics-buttons-neutral-transparent-is-selected-is-active-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
 
 	--semantics-buttons-accent-filled-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
 	--semantics-buttons-accent-filled-content-color: var(--primitives-color-accent-0);
@@ -1542,6 +1551,15 @@
 	--semantics-buttons-accent-transparent-is-hovered-content-secondary-color: light-dark(var(--primitives-color-accent-550), var(--primitives-color-accent-650));
 	--semantics-buttons-accent-transparent-is-active-content-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-750));
 	--semantics-buttons-accent-transparent-is-active-content-secondary-color: light-dark(var(--primitives-color-accent-550), var(--primitives-color-accent-650));
+	--semantics-buttons-accent-transparent-is-selected-background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+	--semantics-buttons-accent-transparent-is-selected-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
+	--semantics-buttons-accent-transparent-is-selected-content-color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+	--semantics-buttons-accent-transparent-is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
+	--semantics-buttons-accent-transparent-is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
+	--semantics-buttons-accent-transparent-is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
+	--semantics-buttons-accent-transparent-is-selected-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
+	--semantics-buttons-accent-transparent-is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
+	--semantics-buttons-accent-transparent-is-selected-is-active-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
 
 	--semantics-buttons-critical-tinted-background-color: light-dark(var(--primitives-color-critical-75), var(--primitives-color-critical-150));
 	--semantics-buttons-critical-tinted-content-color: light-dark(var(--primitives-color-critical-600), var(--primitives-color-critical-700));

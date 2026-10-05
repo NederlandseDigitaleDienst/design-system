@@ -124,6 +124,22 @@ describe('nldd-toggle-button-group – synchronisatie', () => {
 		expect(button.size).toBe('sm');
 	});
 
+	it('syncs appearance to child buttons', async () => {
+		el = await fixture<NLDDToggleButtonGroup>(`
+			<nldd-toggle-button-group appearance="neutral-transparent">
+				<nldd-toggle-button value="a" text="A"></nldd-toggle-button>
+			</nldd-toggle-button-group>
+		`);
+		await waitForUpdate(el);
+
+		const button = el.querySelector<NLDDToggleButton>('nldd-toggle-button')!;
+		expect(button.appearance).toBe('neutral-transparent');
+
+		el.appearance = 'neutral-base';
+		await waitForUpdate(el);
+		expect(button.appearance).toBe('neutral-base');
+	});
+
 	it('disables child buttons when group is disabled', async () => {
 		el = await fixture<NLDDToggleButtonGroup>(`
 			<nldd-toggle-button-group disabled>

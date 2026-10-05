@@ -18,11 +18,23 @@ export const toggleButtonStyles = css`
 		--_font: var(--semantics-buttons-md-primary-text-font);
 		--_icon-size: var(--semantics-buttons-md-icon-size);
 		--_icon-only-icon-size: var(--semantics-buttons-md-is-icon-only-icon-size);
+		--_background-color: var(--semantics-buttons-neutral-tinted-background-color);
+		--_content-color: var(--semantics-buttons-neutral-tinted-content-color);
 		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
+		--_is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
+		--_is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
 		--_is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-hovered-highlight-border-color);
+		--_is-active-background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
+		--_is-active-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
 		--_is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-active-highlight-border-color);
+		--_is-selected-background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+		--_is-selected-content-color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
 		--_is-selected-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
+		--_is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
+		--_is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
 		--_is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
+		--_is-selected-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
+		--_is-selected-is-active-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
 		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
 
 		${inheritedTextReset}
@@ -75,6 +87,85 @@ export const toggleButtonStyles = css`
 		--_stacked-text-font: var(--primitives-font-body-xxs-medium-flat);
 	}
 
+	:host([appearance="neutral-base"]) {
+		--_background-color: var(--semantics-buttons-neutral-base-background-color);
+		--_content-color: var(--semantics-buttons-neutral-base-content-color);
+		--_highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);
+		--_is-hovered-background-color: var(--semantics-buttons-neutral-base-is-hovered-background-color);
+		--_is-hovered-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-color);
+		--_is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-hovered-highlight-border-color);
+		--_is-active-background-color: var(--semantics-buttons-neutral-base-is-active-background-color);
+		--_is-active-content-color: var(--semantics-buttons-neutral-base-is-active-content-color);
+		--_is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-active-highlight-border-color);
+		--_is-selected-background-color: var(--semantics-buttons-neutral-base-is-selected-background-color);
+		--_is-selected-content-color: var(--semantics-buttons-neutral-base-is-selected-content-color);
+		--_is-selected-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-highlight-border-color);
+		--_is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-background-color);
+		--_is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-content-color);
+		--_is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-highlight-border-color);
+		--_is-selected-is-active-background-color: var(--semantics-buttons-neutral-base-is-selected-is-active-background-color);
+		--_is-selected-is-active-content-color: var(--semantics-buttons-neutral-base-is-selected-is-active-content-color);
+		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-active-highlight-border-color);
+	}
+
+	/* The transparent appearances fill only when selected: the fill is what says it is on. */
+	:host([appearance="neutral-transparent"]) {
+		--_background-color: transparent;
+		--_content-color: var(--semantics-buttons-neutral-transparent-content-color);
+		--_highlight-border-color: transparent;
+		--_is-hovered-background-color: transparent;
+		--_is-hovered-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-color);
+		--_is-hovered-highlight-border-color: transparent;
+		--_is-active-background-color: transparent;
+		--_is-active-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-color);
+		--_is-active-highlight-border-color: transparent;
+		--_is-selected-background-color: var(--semantics-buttons-neutral-transparent-is-selected-background-color);
+		--_is-selected-content-color: var(--semantics-buttons-neutral-transparent-is-selected-content-color);
+		--_is-selected-highlight-border-color: var(--semantics-buttons-neutral-transparent-is-selected-highlight-border-color);
+		--_is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-transparent-is-selected-is-hovered-background-color);
+		--_is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-transparent-is-selected-is-hovered-content-color);
+		--_is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-transparent-is-selected-is-hovered-highlight-border-color);
+		--_is-selected-is-active-background-color: var(--semantics-buttons-neutral-transparent-is-selected-is-active-background-color);
+		--_is-selected-is-active-content-color: var(--semantics-buttons-neutral-transparent-is-selected-is-active-content-color);
+		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-transparent-is-selected-is-active-highlight-border-color);
+	}
+
+	:host([appearance="accent-transparent"]) {
+		--_background-color: transparent;
+		--_content-color: var(--semantics-buttons-accent-transparent-content-color);
+		--_highlight-border-color: transparent;
+		--_is-hovered-background-color: transparent;
+		--_is-hovered-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-color);
+		--_is-hovered-highlight-border-color: transparent;
+		--_is-active-background-color: transparent;
+		--_is-active-content-color: var(--semantics-buttons-accent-transparent-is-active-content-color);
+		--_is-active-highlight-border-color: transparent;
+		--_is-selected-background-color: var(--semantics-buttons-accent-transparent-is-selected-background-color);
+		--_is-selected-content-color: var(--semantics-buttons-accent-transparent-is-selected-content-color);
+		--_is-selected-highlight-border-color: var(--semantics-buttons-accent-transparent-is-selected-highlight-border-color);
+		--_is-selected-is-hovered-background-color: var(--semantics-buttons-accent-transparent-is-selected-is-hovered-background-color);
+		--_is-selected-is-hovered-content-color: var(--semantics-buttons-accent-transparent-is-selected-is-hovered-content-color);
+		--_is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-accent-transparent-is-selected-is-hovered-highlight-border-color);
+		--_is-selected-is-active-background-color: var(--semantics-buttons-accent-transparent-is-selected-is-active-background-color);
+		--_is-selected-is-active-content-color: var(--semantics-buttons-accent-transparent-is-selected-is-active-content-color);
+		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-accent-transparent-is-selected-is-active-highlight-border-color);
+	}
+
+	/* Without a surface, a selected-icon carries the state instead of a fill:
+	   the transparent appearances stay quiet when on. With a surface, the
+	   surface fills as usual. */
+	:host([selected-icon]:is([appearance="neutral-transparent"], [appearance="accent-transparent"])) {
+		--_is-selected-background-color: var(--_background-color);
+		--_is-selected-content-color: var(--_content-color);
+		--_is-selected-highlight-border-color: var(--_highlight-border-color);
+		--_is-selected-is-hovered-background-color: var(--_is-hovered-background-color);
+		--_is-selected-is-hovered-content-color: var(--_is-hovered-content-color);
+		--_is-selected-is-hovered-highlight-border-color: var(--_is-hovered-highlight-border-color);
+		--_is-selected-is-active-background-color: var(--_is-active-background-color);
+		--_is-selected-is-active-content-color: var(--_is-active-content-color);
+		--_is-selected-is-active-highlight-border-color: var(--_is-active-highlight-border-color);
+	}
+
 	:host([disabled]) {
 		opacity: var(--primitives-opacity-disabled);
 		pointer-events: none;
@@ -91,7 +182,7 @@ export const toggleButtonStyles = css`
 		border: none;
 		border-radius: var(--_corner-radius);
 		background: none;
-		background-color: var(--semantics-buttons-neutral-tinted-background-color);
+		background-color: var(--_background-color);
 		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
 		width: var(--_min-size);
 		min-height: var(--_min-size);
@@ -99,7 +190,7 @@ export const toggleButtonStyles = css`
 		gap: var(--_gap);
 		align-items: center;
 		justify-content: center;
-		color: var(--semantics-buttons-neutral-tinted-content-color);
+		color: var(--_content-color);
 		font: var(--_font);
 		white-space: nowrap;
 		text-decoration: none;
@@ -115,38 +206,38 @@ export const toggleButtonStyles = css`
 		.toggle-button:hover,
 		.toggle-button:has(.toggle-button__input:hover) {
 			--_highlight-border-color: var(--_is-hovered-highlight-border-color);
-			background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
-			color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
+			background-color: var(--_is-hovered-background-color);
+			color: var(--_is-hovered-content-color);
 		}
 	}
 
 	.toggle-button:active,
 	.toggle-button:has(.toggle-button__input:active) {
 		--_highlight-border-color: var(--_is-active-highlight-border-color);
-		background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
-		color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
+		background-color: var(--_is-active-background-color);
+		color: var(--_is-active-content-color);
 	}
 
 	:host([selected]) .toggle-button {
 		--_highlight-border-color: var(--_is-selected-highlight-border-color);
-		background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
-		color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+		background-color: var(--_is-selected-background-color);
+		color: var(--_is-selected-content-color);
 	}
 
 	@media (hover: hover) {
 		:host([selected]) .toggle-button:hover,
 		:host([selected]) .toggle-button:has(.toggle-button__input:hover) {
 			--_highlight-border-color: var(--_is-selected-is-hovered-highlight-border-color);
-			background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
-			color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
+			background-color: var(--_is-selected-is-hovered-background-color);
+			color: var(--_is-selected-is-hovered-content-color);
 		}
 	}
 
 	:host([selected]) .toggle-button:active,
 	:host([selected]) .toggle-button:has(.toggle-button__input:active) {
 		--_highlight-border-color: var(--_is-selected-is-active-highlight-border-color);
-		background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
-		color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
+		background-color: var(--_is-selected-is-active-background-color);
+		color: var(--_is-selected-is-active-content-color);
 	}
 
 	.toggle-button:focus-visible,

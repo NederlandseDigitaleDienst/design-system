@@ -39,9 +39,10 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 	 * subsequent variant change couldn't pick it up because no slotchange
 	 * would have fired. An empty slot collapses to 0×0 via display:contents,
 	 * so it costs nothing visually. */
-	const icon = component.icon
+	const iconName = component.selected && component.selectedIcon ? component.selectedIcon : component.icon;
+	const icon = iconName
 		? html`<nldd-icon class="toggle-button__icon"
-				icon=${component.icon}
+				icon=${iconName}
 			></nldd-icon>`
 		: html`<slot
 				name="icon"

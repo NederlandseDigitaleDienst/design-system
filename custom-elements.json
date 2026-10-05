@@ -21294,7 +21294,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Groups nldd-toggle-button elements and manages selection, keyboard navigation, and forwarding of type, name, size, and disabled state to all buttons. For type=\"radio\" (single-select), arrow keys navigate between buttons and automatically select the focused one. For type=\"checkbox\" (multi-select), multiple buttons can be selected simultaneously.",
+          "description": "Groups nldd-toggle-button elements and manages selection, keyboard navigation, and forwarding of type, name, appearance, size, and disabled state to all buttons. For type=\"radio\" (single-select), arrow keys navigate between buttons and automatically select the focused one. For type=\"checkbox\" (multi-select), multiple buttons can be selected simultaneously.",
           "name": "NLDDToggleButtonGroup",
           "members": [
             {
@@ -21336,6 +21336,16 @@
               },
               "default": "''",
               "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "appearance",
+              "type": {
+                "text": "ToggleButtonAppearance"
+              },
+              "default": "'neutral-tinted'",
+              "attribute": "appearance",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -21437,6 +21447,15 @@
               "description": "Forwarded to all buttons"
             },
             {
+              "name": "appearance",
+              "type": {
+                "text": "ToggleButtonAppearance"
+              },
+              "default": "'neutral-tinted'",
+              "fieldName": "appearance",
+              "description": "Forwarded to all buttons (default: 'neutral-tinted')"
+            },
+            {
               "name": "size",
               "type": {
                 "text": "ToggleButtonSize"
@@ -21527,7 +21546,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A selectable button that toggles between selected and unselected. Available as a button (aria-pressed), a checkbox, or a radio. In radio mode the button itself is the radio: it carries the role, the state and its place in the group. A native radio in a shadow root of its own would be a group of one, counted as \"1 of 1\" and stopped at by Tab.",
+          "description": "A selectable button that toggles between selected and unselected. Available as a button (aria-pressed), a checkbox, or a radio. The label stays the same in both states: the state is in aria-pressed (or checked) and in the fill, so a screen reader says \"Favoriet, pressed\". A label that changes with the state (\"Volgen\", then \"Ontvolgen\") says what the button does next; that is an nldd-button whose text you change, not a toggle. In radio mode the button itself is the radio: it carries the role, the state and its place in the group. A native radio in a shadow root of its own would be a group of one, counted as \"1 of 1\" and stopped at by Tab.",
           "name": "NLDDToggleButton",
           "members": [
             {
@@ -21558,6 +21577,16 @@
               },
               "default": "'button'",
               "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "appearance",
+              "type": {
+                "text": "ToggleButtonAppearance"
+              },
+              "default": "'neutral-tinted'",
+              "attribute": "appearance",
               "reflects": true
             },
             {
@@ -21640,6 +21669,17 @@
               "default": "''",
               "description": "Icon name for the nldd-icon element. When not set, the icon slot is used; the\nicon and icon-and-text variants show a placeholder icon when neither is provided.",
               "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "selectedIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Icon shown instead of `icon` while selected. On the transparent\nappearances it replaces the fill, so it is reflected for the styles.",
+              "attribute": "selected-icon",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -21929,6 +21969,15 @@
               "description": "What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button')"
             },
             {
+              "name": "appearance",
+              "type": {
+                "text": "ToggleButtonAppearance"
+              },
+              "default": "'neutral-tinted'",
+              "fieldName": "appearance",
+              "description": "Visual style, color included (default: 'neutral-tinted'). Selected is filled in each of them; the transparent ones are for a toggle among transparent buttons, and with a selected-icon they stay quiet when on."
+            },
+            {
               "name": "size",
               "type": {
                 "text": "ToggleButtonSize"
@@ -21999,6 +22048,15 @@
               "default": "''",
               "description": "Icon name for nldd-icon",
               "fieldName": "icon"
+            },
+            {
+              "name": "selected-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one they fill, so the state always shows.",
+              "fieldName": "selectedIcon"
             },
             {
               "name": "variant",

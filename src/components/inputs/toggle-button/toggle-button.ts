@@ -4,6 +4,11 @@
  * A selectable button that toggles between selected and unselected.
  * Available as a button (aria-pressed), a checkbox, or a radio.
  *
+ * The label stays the same in both states: the state is in aria-pressed (or
+ * checked) and in the fill, so a screen reader says "Favoriet, pressed". A label
+ * that changes with the state ("Volgen", then "Ontvolgen") says what the
+ * button does next; that is an nldd-button whose text you change, not a toggle.
+ *
  * In radio mode the button itself is the radio: it carries the role, the state
  * and its place in the group. A native radio in a shadow root of its own would
  * be a group of one, counted as "1 of 1" and stopped at by Tab.
@@ -11,6 +16,7 @@
  * @element nldd-toggle-button
  *
  * @attr {'button' | 'checkbox' | 'radio'} type - What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button')
+ * @attr {'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent'} appearance - Visual style, color included (default: 'neutral-tinted'). Selected is filled in each of them; the transparent ones are for a toggle among transparent buttons, and with a selected-icon they stay quiet when on.
  * @attr {'xs' | 'sm' | 'md' | 'lg'} size - Button size (default: 'md')
  * @attr {boolean} selected - Selected state
  * @attr {boolean} disabled - Disabled state
@@ -19,6 +25,7 @@
  * @attr {string} name - Name for form submission (checkbox/radio)
  * @attr {string} text - Button text
  * @attr {string} icon - Icon name for nldd-icon
+ * @attr {string} selected-icon - Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one they fill, so the state always shows.
  * @attr {'text' | 'icon' | 'icon-and-text'} variant - What renders: text, icon, or both. Unset → auto-detect from text/icon attributes.
  * @attr {string} accessible-label - Accessible label; required for icon-only usage
  * @attr {boolean} required - Required state. Set by nldd-toggle-button-group.
@@ -43,6 +50,7 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
+export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
 export type ToggleButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 export type ToggleButtonVariant = 'text' | 'icon' | 'icon-and-text';
 
@@ -63,6 +71,9 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: String, reflect: true })
 	type: ToggleButtonType = 'button';
+
+	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonAppearance>('neutral-tinted') })
+	appearance: ToggleButtonAppearance = 'neutral-tinted';
 
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonSize>('md') })
 	size: ToggleButtonSize = 'md';
@@ -94,6 +105,11 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	 *  icon and icon-and-text variants show a placeholder icon when neither is provided. */
 	@property({ type: String })
 	icon = '';
+
+	/** Icon shown instead of `icon` while selected. On the transparent
+	 *  appearances it replaces the fill, so it is reflected for the styles. */
+	@property({ reflect: true, attribute: 'selected-icon', converter: reflectNonDefault<string>('') })
+	selectedIcon = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonVariant | ''>('') })
 	variant: ToggleButtonVariant | '' = '';

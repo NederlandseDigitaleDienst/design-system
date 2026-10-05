@@ -1471,13 +1471,14 @@ Two columns, hours and minutes, that slide like a wheel past the selection in th
 
 ### `<nldd-toggle-button>`
 
-A selectable button that toggles between selected and unselected. Available as a button (aria-pressed), a checkbox, or a radio. In radio mode the button itself is the radio: it carries the role, the state and its place in the group. A native radio in a shadow root of its own would be a group of one, counted as "1 of 1" and stopped at by Tab.
+A selectable button that toggles between selected and unselected. Available as a button (aria-pressed), a checkbox, or a radio. The label stays the same in both states: the state is in aria-pressed (or checked) and in the fill, so a screen reader says "Favoriet, pressed". A label that changes with the state ("Volgen", then "Ontvolgen") says what the button does next; that is an nldd-button whose text you change, not a toggle. In radio mode the button itself is the radio: it carries the role, the state and its place in the group. A native radio in a shadow root of its own would be a group of one, counted as "1 of 1" and stopped at by Tab.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `type` | `'button' \| 'checkbox' \| 'radio'` | What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button') |
+| `appearance` | `'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'accent-transparent'` | Visual style, color included (default: 'neutral-tinted'). Selected is filled in each of them; the transparent ones are for a toggle among transparent buttons, and with a selected-icon they stay quiet when on. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg'` | Button size (default: 'md') |
 | `selected` | `boolean` | Selected state |
 | `disabled` | `boolean` | Disabled state |
@@ -1486,6 +1487,7 @@ A selectable button that toggles between selected and unselected. Available as a
 | `name` | `string` | Name for form submission (checkbox/radio) |
 | `text` | `string` | Button text |
 | `icon` | `string` | Icon name for nldd-icon |
+| `selected-icon` | `string` | Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one they fill, so the state always shows. |
 | `variant` | `'text' \| 'icon' \| 'icon-and-text'` | What renders: text, icon, or both. Unset → auto-detect from text/icon attributes. |
 | `accessible-label` | `string` | Accessible label; required for icon-only usage |
 | `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
@@ -1505,7 +1507,7 @@ A selectable button that toggles between selected and unselected. Available as a
 
 ### `<nldd-toggle-button-group>`
 
-Groups nldd-toggle-button elements and manages selection, keyboard navigation, and forwarding of type, name, size, and disabled state to all buttons. For type="radio" (single-select), arrow keys navigate between buttons and automatically select the focused one. For type="checkbox" (multi-select), multiple buttons can be selected simultaneously.
+Groups nldd-toggle-button elements and manages selection, keyboard navigation, and forwarding of type, name, appearance, size, and disabled state to all buttons. For type="radio" (single-select), arrow keys navigate between buttons and automatically select the focused one. For type="checkbox" (multi-select), multiple buttons can be selected simultaneously.
 
 **Attributes**
 
@@ -1513,6 +1515,7 @@ Groups nldd-toggle-button elements and manages selection, keyboard navigation, a
 | --- | --- | --- |
 | `type` | `'button' \| 'checkbox' \| 'radio'` | Selection mode (default: 'checkbox') |
 | `name` | `string` | Forwarded to all buttons |
+| `appearance` | `'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'accent-transparent'` | Forwarded to all buttons (default: 'neutral-tinted') |
 | `size` | `'xs' \| 'sm' \| 'md'` | Forwarded to all buttons (default: 'md') |
 | `disabled` | `boolean` | Disables all buttons |
 | `accessible-label` | `string` | Accessible name for the group (aria-label) |

@@ -11,8 +11,9 @@ import { ICONS } from './../../content/icon/icon.js';
  * ```html
  * <nldd-toggle-button text="Label"></nldd-toggle-button>
  * <nldd-toggle-button
- * 	text="Bewaren"
+ * 	text="Favoriet"
  * 	icon="heart"
+ * 	selected-icon="heart-filled"
  * ></nldd-toggle-button>
  * ```
  */
@@ -37,6 +38,12 @@ export default {
 			description: 'Wat zichtbaar is. Bij "(auto)" bepaalt de knop dat zelf op basis van text/icon.',
 			table: { defaultValue: { summary: '(auto)' } },
 		},
+		appearance: {
+			control: 'select',
+			options: ['neutral-tinted', 'neutral-base', 'neutral-transparent', 'accent-transparent'],
+			description: 'Visuele stijl, inclusief kleur. Geselecteerd is altijd gevuld.',
+			table: { defaultValue: { summary: 'neutral-tinted' } },
+		},
 		size: {
 			control: 'select',
 			options: ['xs', 'sm', 'md', 'lg'],
@@ -54,6 +61,14 @@ export default {
 			options: ['(geen)', ...ICONS],
 			mapping: { '(geen)': '' },
 			description: 'Icoon naam voor nldd-icon',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
+		selectedIcon: {
+			name: 'selected-icon',
+			control: 'select',
+			options: ['(geen)', ...ICONS],
+			mapping: { '(geen)': '' },
+			description: 'Icoon in plaats van <code>icon</code> zolang de knop aan staat. Met een vlak vult het vlak; bij de transparante appearances draagt alleen het icoon de toestand.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
 		type: {
@@ -96,9 +111,11 @@ export default {
 	},
 	args: {
 		variant: '',
+		appearance: 'neutral-tinted',
 		size: 'md',
 		text: 'Toggle',
 		icon: '',
+		selectedIcon: '',
 		type: 'button',
 		selected: false,
 		accessibleLabel: '',
@@ -111,6 +128,7 @@ export default {
 const Template = (args: Record<string, any>) => html`
 	<nldd-toggle-button
 		variant=${args.variant || nothing}
+		appearance=${args.appearance}
 		type=${args.type}
 		size=${args.size}
 		?selected=${args.selected}
@@ -119,6 +137,7 @@ const Template = (args: Record<string, any>) => html`
 		?disabled=${args.disabled}
 		text=${args.text}
 		icon=${args.icon}
+		selected-icon=${args.selectedIcon || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
 	></nldd-toggle-button>
 `;
@@ -157,8 +176,8 @@ export const AlleTypes = {
 				></nldd-toggle-button>
 				<nldd-toggle-button
 					type="button"
-					text="Bewerken"
-					icon="pencil"
+					text="Meldingen"
+					icon="notifications"
 					selected
 				></nldd-toggle-button>
 			</div>
@@ -246,22 +265,26 @@ export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
 		<nldd-toggle-button
-			text="Bewaren"
+			text="Favoriet"
 			icon="heart"
+			selected-icon="heart-filled"
 		></nldd-toggle-button>
 		<nldd-toggle-button
-			text="Bewaard"
-			icon="heart-filled"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
 			selected
 		></nldd-toggle-button>
 		<nldd-toggle-button
-			text="Bewaren"
+			text="Favoriet"
 			icon="heart"
+			selected-icon="heart-filled"
 			disabled
 		></nldd-toggle-button>
 		<nldd-toggle-button
-			text="Bewaard"
-			icon="heart-filled"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
 			selected
 			disabled
 		></nldd-toggle-button>
@@ -272,6 +295,145 @@ export const AlleToestanden = {
 
 
 /* ============================================================
+   Appearances
+   ============================================================ */
+
+export const Appearances = {
+	render: () => html`
+	<div style="display: grid; grid-template-columns: repeat(2, max-content); gap: 1rem; align-items: center;">
+		<nldd-toggle-button
+			appearance="neutral-tinted"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-tinted"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
+			selected
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-base"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-base"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
+			selected
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-transparent"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-transparent"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
+			selected
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="accent-transparent"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="accent-transparent"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
+			selected
+		></nldd-toggle-button>
+	</div>
+`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Met een vlak wordt het vlak gevuld als de knop aan staat. <code>neutral-transparent</code> en <code>accent-transparent</code> zijn de rustige, voor een toggle tussen transparante knoppen. Ze hebben geen vlak: met een <code>selected-icon</code>, hier het gevulde hartje, draagt het icoon de toestand, en zonder vullen ze als ze aan staan. <code>neutral-base</code> staat op een getint vlak.',
+			},
+		},
+	},
+};
+
+export const MetSelectedIcon = {
+	name: 'Met selected-icon',
+	render: () => html`
+	<div style="display: grid; grid-template-columns: repeat(2, max-content); gap: 1rem; align-items: center;">
+		<nldd-toggle-button
+			appearance="neutral-tinted"
+			text="Volgen"
+			icon="plus"
+			selected-icon="check-mark"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-tinted"
+			text="Volgen"
+			icon="plus"
+			selected-icon="check-mark"
+			selected
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-base"
+			text="Volgen"
+			icon="plus"
+			selected-icon="check-mark"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-base"
+			text="Volgen"
+			icon="plus"
+			selected-icon="check-mark"
+			selected
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-transparent"
+			text="Volgen"
+			icon="plus"
+			selected-icon="check-mark"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="neutral-transparent"
+			text="Volgen"
+			icon="plus"
+			selected-icon="check-mark"
+			selected
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="accent-transparent"
+			text="Volgen"
+			icon="plus"
+			selected-icon="check-mark"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			appearance="accent-transparent"
+			text="Volgen"
+			icon="plus"
+			selected-icon="check-mark"
+			selected
+		></nldd-toggle-button>
+	</div>
+`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Met een vlak wordt het vlak gevuld als de knop aan staat, en verandert het icoon mee. Zonder vlak, bij de transparante appearances, blijft de knop rustig en draagt alleen het icoon de toestand. Het label blijft gelijk, de toestand zit in <code>aria-pressed</code>.',
+			},
+		},
+	},
+};
+
+/* ============================================================
    Grootten
    ============================================================ */
 
@@ -280,23 +442,23 @@ export const AlleGrootten = {
 	<div style="display: flex; gap: 1rem; align-items: center;">
 		<nldd-toggle-button
 			size="xs"
-			text="Zoeken"
-			icon="search"
+			text="Meldingen"
+			icon="notifications"
 		></nldd-toggle-button>
 		<nldd-toggle-button
 			size="sm"
-			text="Zoeken"
-			icon="search"
+			text="Meldingen"
+			icon="notifications"
 		></nldd-toggle-button>
 		<nldd-toggle-button
 			size="md"
-			text="Zoeken"
-			icon="search"
+			text="Meldingen"
+			icon="notifications"
 		></nldd-toggle-button>
 		<nldd-toggle-button
 			size="lg"
-			text="Zoeken"
-			icon="search"
+			text="Meldingen"
+			icon="notifications"
 		></nldd-toggle-button>
 	</div>
 `,
@@ -314,19 +476,21 @@ export const Groot = {
 		<nldd-toggle-button
 			size="lg"
 			variant="text"
-			text="Bewaren"
+			text="Favoriet"
 		></nldd-toggle-button>
 		<nldd-toggle-button
 			size="lg"
 			variant="icon"
 			icon="heart"
-			accessible-label="Bewaren"
+			selected-icon="heart-filled"
+			accessible-label="Favoriet"
 		></nldd-toggle-button>
 		<nldd-toggle-button
 			size="lg"
 			variant="icon-and-text"
-			text="Bewaren"
+			text="Favoriet"
 			icon="heart"
+			selected-icon="heart-filled"
 		></nldd-toggle-button>
 	</div>
 `,
@@ -349,25 +513,24 @@ export const MetIcoon = {
 	render: () => html`
 	<div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
 		<nldd-toggle-button
-			text="Bewaren"
+			text="Favoriet"
 			icon="heart"
+			selected-icon="heart-filled"
 		></nldd-toggle-button>
 		<nldd-toggle-button
-			text="Bewaard"
-			icon="heart-filled"
+			text="Favoriet"
+			icon="heart"
+			selected-icon="heart-filled"
 			selected
 		></nldd-toggle-button>
 		<nldd-toggle-button
-			text="Delen"
-			icon="share"
+			text="Bladwijzer"
+			icon="bookmark"
+			selected-icon="bookmark-filled"
 		></nldd-toggle-button>
 		<nldd-toggle-button
-			text="Tonen"
-			icon="eye"
-		></nldd-toggle-button>
-		<nldd-toggle-button
-			text="Verborgen"
-			icon="eye-slash"
+			text="Meldingen"
+			icon="notifications"
 			selected
 		></nldd-toggle-button>
 	</div>
@@ -454,8 +617,8 @@ export const TypeButton = {
 			></nldd-toggle-button>
 			<nldd-toggle-button
 				type="button"
-				text="Bewerken"
-				icon="pencil"
+				text="Meldingen"
+				icon="notifications"
 				selected
 			></nldd-toggle-button>
 		</div>

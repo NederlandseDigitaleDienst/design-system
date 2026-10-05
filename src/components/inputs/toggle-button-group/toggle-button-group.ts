@@ -2,7 +2,7 @@
  * Nederlandse Digitale Dienst Toggle Button Group Component (Lit + TypeScript)
  *
  * Groups nldd-toggle-button elements and manages selection, keyboard navigation,
- * and forwarding of type, name, size, and disabled state to all buttons.
+ * and forwarding of type, name, appearance, size, and disabled state to all buttons.
  *
  * For type="radio" (single-select), arrow keys navigate between buttons and
  * automatically select the focused one.
@@ -12,6 +12,7 @@
  *
  * @attr {'button' | 'checkbox' | 'radio'} type - Selection mode (default: 'checkbox')
  * @attr {string} name - Forwarded to all buttons
+ * @attr {'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent'} appearance - Forwarded to all buttons (default: 'neutral-tinted')
  * @attr {'xs' | 'sm' | 'md'} size - Forwarded to all buttons (default: 'md')
  * @attr {boolean} disabled - Disables all buttons
  * @attr {string} accessible-label - Accessible name for the group (aria-label)
@@ -29,7 +30,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toggleButtonGroupStyles } from './toggle-button-group.styles.js';
 import { toggleButtonGroupTemplate } from './toggle-button-group.template.js';
-import type { NLDDToggleButton, ToggleButtonSize } from '../toggle-button/toggle-button.js';
+import type { NLDDToggleButton, ToggleButtonAppearance, ToggleButtonSize } from '../toggle-button/toggle-button.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { radioPositions } from '../../../utilities/radio-position.js';
 
@@ -66,6 +67,9 @@ export class NLDDToggleButtonGroup extends LitElement {
 
 	@property({ type: String })
 	name = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonAppearance>('neutral-tinted') })
+	appearance: ToggleButtonAppearance = 'neutral-tinted';
 
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonSize>('md') })
 	size: ToggleButtonSize = 'md';
@@ -120,7 +124,7 @@ export class NLDDToggleButtonGroup extends LitElement {
 	}
 
 	override updated(changed: Map<PropertyKey, unknown>): void {
-		if (changed.has('type') || changed.has('name') || changed.has('size') || changed.has('disabled')) {
+		if (changed.has('type') || changed.has('name') || changed.has('appearance') || changed.has('size') || changed.has('disabled')) {
 			this._syncButtons();
 		}
 		if (changed.has('type')) {
@@ -163,6 +167,7 @@ export class NLDDToggleButtonGroup extends LitElement {
 
 		this._getButtons().forEach(button => {
 			button.type = this.type;
+			button.appearance = this.appearance;
 			button.size = this.size;
 			button.required = this.required && this.type === 'radio';
 

@@ -4,7 +4,7 @@ import '../toggle-button/toggle-button.js';
 
 /**
  * De Toggle Button Group component groepeert `nldd-toggle-button` elementen en beheert
- * selectie, toetsenbordnavigatie en de synchronisatie van `type`, `name` en `size`.
+ * selectie, toetsenbordnavigatie en de synchronisatie van `type`, `name`, `appearance` en `size`.
  *
  * ## Gebruik
  * ```html
@@ -31,6 +31,12 @@ export default {
 		},
 	},
 	argTypes: {
+		appearance: {
+			control: 'select',
+			options: ['neutral-tinted', 'neutral-base', 'neutral-transparent', 'accent-transparent'],
+			description: 'Visuele stijl, doorgestuurd naar alle knoppen. Geselecteerd is altijd gevuld.',
+			table: { defaultValue: { summary: 'neutral-tinted' } },
+		},
 		size: {
 			control: 'select',
 			options: ['xs', 'sm', 'md'],
@@ -75,6 +81,7 @@ export default {
 		},
 	},
 	args: {
+		appearance: 'neutral-tinted',
 		size: 'md',
 		name: 'groep',
 		type: 'checkbox',
@@ -89,6 +96,7 @@ const Template = (args: Record<string, any>) => html`
 	<nldd-toggle-button-group
 		type=${args.type}
 		name=${args.name}
+		appearance=${args.appearance}
 		size=${args.size}
 		?invalid=${args.invalid}
 		?required=${args.required}
@@ -267,6 +275,86 @@ export const TypeRadio = {
 /* ============================================================
    Grootten
    ============================================================ */
+
+export const Appearances = {
+	render: () => html`
+	<div style="display: flex; flex-direction: column; gap: 1rem;">
+		<nldd-toggle-button-group
+			type="radio"
+			name="sortering-neutral-tinted"
+			appearance="neutral-tinted"
+			accessible-label="Sortering (neutral-tinted)"
+		>
+			<nldd-toggle-button
+				value="oplopend"
+				text="Oplopend"
+				icon="sort-ascending"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="aflopend"
+				text="Aflopend"
+				icon="sort-descending"
+				selected
+			></nldd-toggle-button>
+		</nldd-toggle-button-group>
+		<nldd-toggle-button-group
+			type="radio"
+			name="sortering-neutral-base"
+			appearance="neutral-base"
+			accessible-label="Sortering (neutral-base)"
+		>
+			<nldd-toggle-button
+				value="oplopend"
+				text="Oplopend"
+				icon="sort-ascending"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="aflopend"
+				text="Aflopend"
+				icon="sort-descending"
+				selected
+			></nldd-toggle-button>
+		</nldd-toggle-button-group>
+		<nldd-toggle-button-group
+			type="radio"
+			name="sortering-neutral-transparent"
+			appearance="neutral-transparent"
+			accessible-label="Sortering (neutral-transparent)"
+		>
+			<nldd-toggle-button
+				value="oplopend"
+				text="Oplopend"
+				icon="sort-ascending"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="aflopend"
+				text="Aflopend"
+				icon="sort-descending"
+				selected
+			></nldd-toggle-button>
+		</nldd-toggle-button-group>
+		<nldd-toggle-button-group
+			type="radio"
+			name="sortering-accent-transparent"
+			appearance="accent-transparent"
+			accessible-label="Sortering (accent-transparent)"
+		>
+			<nldd-toggle-button
+				value="oplopend"
+				text="Oplopend"
+				icon="sort-ascending"
+			></nldd-toggle-button>
+			<nldd-toggle-button
+				value="aflopend"
+				text="Aflopend"
+				icon="sort-descending"
+				selected
+			></nldd-toggle-button>
+		</nldd-toggle-button-group>
+	</div>
+`,
+	parameters: { controls: { disable: true } },
+};
 
 export const Grootten = {
 	render: () => html`
