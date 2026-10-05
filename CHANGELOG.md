@@ -25,6 +25,8 @@ here; consult the commit history if you need that level of detail.
 
 - **`no-filter` on `nldd-combo-box` and `nldd-token-field`** leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides every option that does not contain the typed text, which also hides a server match on, say, an e-mail address. The part of an option that matches the typed text is still marked.
 
+- **A typeahead in `nldd-text-editor` says why its list is empty.** It closed without a word, so whoever typed `@` could not tell "nobody matches" from "mentions do not work here". Where the list would be it now says "Typ om te zoeken" for an empty query and "Niets gevonden" for one without matches, both translatable. `emptyText` on a list, and `mentionEmptyText` for the built-in `@`, are called with the query and can say more, such as "Kies eerst een kanaal bij Aan"; return null to close without a word, as before. The message is a status a screen reader announces, not an option you can select.
+
 - **A typeahead list in `nldd-text-editor` decides what may follow its trigger.** `query` on a list, and `mentionQuery` for the built-in `@`, take a regular expression for the text after the trigger. A list of people can allow one space, so `@sam jansen` finds the right Sam. Lists on one trigger share the query of the first that sets one.
 
 - **`loading-text` on `nldd-button` and `nldd-icon-button`** says what the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Without it the indicator says its translated "Laden".

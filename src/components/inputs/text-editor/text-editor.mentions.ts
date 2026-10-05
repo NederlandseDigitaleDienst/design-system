@@ -6,8 +6,8 @@ import {
 	type CompletionContext,
 	type CompletionResult,
 } from '@codemirror/autocomplete';
-import { EditorView, ViewPlugin, tooltips } from '@codemirror/view';
-import type { EditorState, Extension } from '@codemirror/state';
+import { EditorView, ViewPlugin, keymap, showTooltip, tooltips, type Tooltip } from '@codemirror/view';
+import { Prec, StateEffect, StateField, type EditorState, type Extension } from '@codemirror/state';
 import { enclosingNamed } from './text-editor.syntax.js';
 import '../../content/avatar/avatar.js';
 import '../../content/icon/icon.js';
@@ -130,6 +130,13 @@ export interface Typeahead {
 	 *  space between first and last name: `'[\\p{L}\\p{M}\\p{N}_.+-]*(?: [\\p{L}\\p{M}\\p{N}_.+-]+)?'`.
 	 *  Lists on one trigger share the query of the first that sets one. */
 	query?: string;
+	/** What to say when the list has no candidates for the typed text. Without
+	 *  it the editor says "Typ om te zoeken" for an empty query and "Niets
+	 *  gevonden" for one without matches (both translatable). Called with the
+	 *  query, so a list that knows more can say it: "Kies eerst een kanaal bij
+	 *  Aan". Return null to close without a word, undefined for the default.
+	 *  Lists on one trigger: the first that returns something decides. */
+	emptyText?: (query: string) => string | null | undefined;
 	/** What choosing a candidate writes in place of the trigger and the query.
 	 *  Without it: the trigger, the text and a space, so `#kanaal ` stays what
 	 *  was typed. Return the symbol for an emoji, or `@username ` for a system
@@ -255,9 +262,18 @@ function rowClass(completion: Completion): string {
 	return (completion as CandidateCompletion).candidate.avatar ? 'cm-nldd-row-avatar' : '';
 }
 
+/** The message shown instead of an empty list, and the trigger it belongs to. */
+interface EmptyMessage {
+	from: number;
+	text: string;
+}
+
+const setEmptyMessage = StateEffect.define<EmptyMessage | null>();
+
 function completionSource(
 	getTypeaheads: () => readonly Typeahead[],
 	onChoose: (choice: TypeaheadChoice) => void,
+	defaultEmptyText: (query: string) => string | null,
 ) {
 	return async (context: CompletionContext): Promise<CompletionResult | null> => {
 		const lists = getTypeaheads();
@@ -287,6 +303,15 @@ function completionSource(
 				});
 			}
 		});
+		// Nothing to choose: say why, if a list knows, rather than close in silence.
+		// The answer may come after the text moved on; then it is no longer ours.
+		const message = options.length ? null : emptyMessageFor(onTrigger, match.query, defaultEmptyText);
+		const view = context.view;
+		if (view && !context.aborted && view.state.doc === context.state.doc) {
+			const current = view.state.field(emptyMessageField, false);
+			const next = message === null ? null : { from: match.from, text: message };
+			if (current?.text !== next?.text || current?.from !== next?.from) view.dispatch({ effects: setEmptyMessage.of(next) });
+		}
 		if (!options.length) return null;
 		return {
 			from: match.from,
@@ -296,6 +321,70 @@ function completionSource(
 		};
 	};
 }
+
+function emptyMessageFor(
+	lists: readonly Typeahead[],
+	query: string,
+	defaultEmptyText: (query: string) => string | null,
+): string | null {
+	for (const list of lists) {
+		const text = list.emptyText?.(query);
+		if (text !== undefined) return text || null;
+	}
+	return defaultEmptyText(query);
+}
+
+/**
+ * The message in place of an empty list. It sits where the list would, in the
+ * same top-layer frame and with the same surface, but it is not an option:
+ * nothing to select or apply, so it is a status that a screen reader announces
+ * rather than a row in the listbox. It goes when there are candidates again,
+ * when the caret leaves the query, on Escape and when the editor loses focus.
+ */
+const emptyMessageField = StateField.define<EmptyMessage | null>({
+	create: () => null,
+	update(value, tr) {
+		for (const effect of tr.effects) if (effect.is(setEmptyMessage)) return effect.value;
+		if (!value) return null;
+		if (tr.docChanged) value = { ...value, from: tr.changes.mapPos(value.from) };
+		if (tr.docChanged || tr.selection) {
+			// The caret must still be in a query that starts at this trigger.
+			const head = tr.state.selection.main.head;
+			const line = tr.state.doc.lineAt(head);
+			if (value.from < line.from || value.from >= head) return null;
+		}
+		return value;
+	},
+	provide: (field) => showTooltip.from(field, (value): Tooltip | null => value && {
+		pos: value.from,
+		above: false,
+		create: () => {
+			const dom = document.createElement('div');
+			dom.className = 'cm-nldd-typeahead-empty';
+			dom.setAttribute('role', 'status');
+			dom.textContent = value.text;
+			return { dom };
+		},
+	}),
+});
+
+const emptyMessageClose = [
+	Prec.high(keymap.of([{
+		key: 'Escape',
+		run: (view) => {
+			if (!view.state.field(emptyMessageField, false)) return false;
+			view.dispatch({ effects: setEmptyMessage.of(null) });
+			return true;
+		},
+	}])),
+	EditorView.focusChangeEffect.of((state, focusing) => (!focusing && state.field(emptyMessageField, false) ? setEmptyMessage.of(null) : null)),
+	// Candidates came back: the list takes the place, the message goes.
+	EditorView.updateListener.of((update) => {
+		if (completionStatus(update.state) === 'active' && update.state.field(emptyMessageField, false)) {
+			queueMicrotask(() => update.view.dispatch({ effects: setEmptyMessage.of(null) }));
+		}
+	}),
+];
 
 /**
  * A frame for the list in the top layer, the way an nldd-menu opens.
@@ -471,6 +560,21 @@ const popupTheme = EditorView.theme({
 	'.cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected] .cm-completionDetail': {
 		color: 'inherit',
 	},
+	// The message in place of an empty list: the list's surface, and the
+	// secondary color, since it says something about the list rather than offering.
+	'.cm-tooltip.cm-nldd-typeahead-empty': {
+		border: 'none',
+		borderRadius: 'var(--semantics-overlays-corner-radius)',
+		backgroundColor: 'var(--semantics-surfaces-base-background-color)',
+		boxShadow: 'var(--components-menu-box-shadow)',
+		minWidth: 'var(--primitives-area-280)',
+		maxWidth: 'var(--primitives-area-400)',
+		boxSizing: 'border-box',
+		padding: 'var(--primitives-space-12) var(--primitives-space-16)',
+		color: 'var(--semantics-content-secondary-color)',
+		fontFamily: 'var(--primitives-font-family-body)',
+		fontSize: 'var(--primitives-font-size-100)',
+	},
 	// Larger touch targets on coarse pointers (control size md height).
 	'@media (pointer: coarse)': {
 		'.cm-tooltip.cm-tooltip-autocomplete > ul > li': {
@@ -487,6 +591,7 @@ const popupTheme = EditorView.theme({
 export function typeaheads(
 	getTypeaheads: () => readonly Typeahead[],
 	onChoose: (choice: TypeaheadChoice) => void,
+	defaultEmptyText: (query: string) => string | null = () => null,
 ): Extension {
 	// CodeMirror only opens completion while typing, not on deletion. When a
 	// backspace brings the query back into a matching state ("@anb" → "@an"),
@@ -499,13 +604,15 @@ export function typeaheads(
 	return [
 		topLayerPopups(),
 		autocompletion({
-			override: [completionSource(getTypeaheads, onChoose)],
+			override: [completionSource(getTypeaheads, onChoose, defaultEmptyText)],
 			icons: false,
 			// Before the row's text (50): its avatar, icon or symbol.
 			addToOptions: [{ position: 20, render: renderLead }],
 			optionClass: rowClass,
 		}),
 		reopenOnDelete,
+		emptyMessageField,
+		emptyMessageClose,
 		popupTheme,
 	];
 }

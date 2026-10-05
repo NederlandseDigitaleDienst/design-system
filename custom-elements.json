@@ -18152,6 +18152,13 @@
               "type": {
                 "text": "(choice: TypeaheadChoice) => void"
               }
+            },
+            {
+              "name": "defaultEmptyText",
+              "default": "() => null",
+              "type": {
+                "text": "(query: string) => string | null"
+              }
             }
           ],
           "description": "The typeaheads. `getTypeaheads` is read on every keystroke, so the editor can\nhand over its current lists; choosing a candidate writes what the list's\n`insert` says and calls `onChoose`. Without lists it is inert."
@@ -18525,6 +18532,14 @@
                 "text": "string | undefined"
               },
               "description": "What may follow the `@` of a mention, as a regular expression without\nanchors or capturing groups. Property only. Without it: letters with any\naccent, digits, `_`, `.`, `+` and `-`. Allow one space to search on a full\nname: `'[\\\\p{L}\\\\p{M}\\\\p{N}_.+-]*(?: [\\\\p{L}\\\\p{M}\\\\p{N}_.+-]+)?'`."
+            },
+            {
+              "kind": "field",
+              "name": "mentionEmptyText",
+              "type": {
+                "text": "(query: string) => string | null | undefined | undefined"
+              },
+              "description": "What to say when the"
             },
             {
               "kind": "field",

@@ -124,6 +124,8 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.text-editor.annotation-count-label': '{count} {noun} riba \'{quote}\'',
 	'components.text-editor.annotation-singular-lowercase': 'anotashon',
 	'components.text-editor.annotation-plural-lowercase': 'anotashonnan',
+	'components.text-editor.typeahead-start-typing-text': 'Tek pa buska',
+	'components.text-editor.typeahead-no-results-text': 'No a haña nada',
 	'components.time-field.default-label': 'Ora',
 	'components.time-field.to-pick-time-action': 'Skohe un ora',
 	'components.time-field.cancel-action': 'Kanselá',

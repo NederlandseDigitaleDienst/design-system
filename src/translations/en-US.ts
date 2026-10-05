@@ -119,6 +119,8 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.text-editor.annotation-count-label': '{count} {noun} on \'{quote}\'',
 	'components.text-editor.annotation-singular-lowercase': 'annotation',
 	'components.text-editor.annotation-plural-lowercase': 'annotations',
+	'components.text-editor.typeahead-start-typing-text': 'Type to search',
+	'components.text-editor.typeahead-no-results-text': 'Nothing found',
 	'components.time-field.default-label': 'Time',
 	'components.time-field.to-pick-time-action': 'Choose time',
 	'components.time-field.cancel-action': 'Cancel',

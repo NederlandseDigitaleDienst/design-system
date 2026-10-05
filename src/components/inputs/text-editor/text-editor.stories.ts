@@ -830,7 +830,7 @@ export const Vermeldingen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Typ `@` voor een typeahead. De editor kent zelf geen gebruikers: de consumer levert kandidaten via de `mentionSource`-property (aangeroepen met de tekst na `@`). Een keuze voegt een markdown-token `[@Naam](user:id)` in (als token gerenderd, degradeert tot een gewone link) en vuurt `nldd-text-editor-mention` met id + range.',
+				story: 'Typ `@` voor een typeahead. De editor kent zelf geen gebruikers: de consumer levert kandidaten via de `mentionSource`-property (aangeroepen met de tekst na `@`). Een keuze voegt een markdown-token `[@Naam](user:id)` in (als token gerenderd, degradeert tot een gewone link) en vuurt `nldd-text-editor-mention` met id + range. Vindt de bron niemand, dan zegt de lijst dat ("Niets gevonden"): typ `@xyz`. Een eigen tekst geef je met `mentionEmptyText`.',
 			},
 		},
 	},
@@ -928,7 +928,7 @@ export const Typeaheads = {
 		const filter = <T extends { text: string }>(items: T[]) => (query: string) =>
 			items.filter((item) => item.text.toLowerCase().includes(query.toLowerCase()));
 		const typeaheads = [
-			{ trigger: '#', source: filter(channels) },
+			{ trigger: '#', source: filter(channels), emptyText: (query: string) => (query ? `Geen kanaal met "${query}" in de naam` : undefined) },
 			{ trigger: ':', source: filter(emoji), insert: (candidate: { symbol?: string }) => `${candidate.symbol} ` },
 		];
 		const sample = 'Typ `@` voor een persoon, `#` voor een kanaal en `:` voor een emoji.';
@@ -959,7 +959,7 @@ export const Typeaheads = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Naast de ingebouwde `@`-mention geef je eigen lijsten op via de `typeaheads`-property: een trigger-teken, een `source` met kandidaten voor wat er na de trigger is getypt, en optioneel een `insert` die bepaalt wat een keuze schrijft. Standaard is dat de trigger, de `text` en een spatie: met `text: "smile:"` dus `:smile: `, de shortcode die Mattermost en Slack zelf renderen. Deze editor doet dat niet, dus hier schrijft `:` de emoji zelf. Meerdere lijsten op één trigger worden samengevoegd. Een kandidaat kan een `avatar` meekrijgen (persoon of organisatie, initialen of een afbeelding; de rij wordt dan tweeregelig met `supportingText` eronder), een `icon` (op de maat van een menu-item) of een `symbol` (een teken of emoji, de emoji zelf als beeld). Een keuze uit een eigen lijst vuurt `nldd-text-editor-typeahead` met de trigger, de kandidaat en de positie. De knop laat `insertAtCursor(tekst)` zien: tekst op de caret, in plaats van een selectie.',
+				story: 'Naast de ingebouwde `@`-mention geef je eigen lijsten op via de `typeaheads`-property: een trigger-teken, een `source` met kandidaten voor wat er na de trigger is getypt, en optioneel een `insert` die bepaalt wat een keuze schrijft. Standaard is dat de trigger, de `text` en een spatie: met `text: "smile:"` dus `:smile: `, de shortcode die Mattermost en Slack zelf renderen. Deze editor doet dat niet, dus hier schrijft `:` de emoji zelf. Meerdere lijsten op één trigger worden samengevoegd. Een kandidaat kan een `avatar` meekrijgen (persoon of organisatie, initialen of een afbeelding; de rij wordt dan tweeregelig met `supportingText` eronder), een `icon` (op de maat van een menu-item) of een `symbol` (een teken of emoji, de emoji zelf als beeld). Een keuze uit een eigen lijst vuurt `nldd-text-editor-typeahead` met de trigger, de kandidaat en de positie. Vindt een lijst niets, dan zegt hij "Typ om te zoeken" of "Niets gevonden"; met `emptyText` geeft een lijst een eigen tekst, zoals het kanaal hier (typ `#xyz`). De knop laat `insertAtCursor(tekst)` zien: tekst op de caret, in plaats van een selectie.',
 			},
 		},
 	},

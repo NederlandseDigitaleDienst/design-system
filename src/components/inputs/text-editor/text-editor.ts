@@ -47,7 +47,8 @@
  *
  * @prop {MentionSource} mentionSource - Consumer-supplied @-mention candidate source (property only). Without it, @-typeahead is inert.
  * @prop {string} mentionQuery - What may follow the `@` of a mention, as a regular expression source (property only). Default: letters with any accent, digits, `_`, `.`, `+` and `-`. Allow one space to search on a full name, as in `@sam jansen`.
- * @prop {Typeahead[]} typeaheads - Your own typeahead lists next to the @-mention (property only): each a trigger character (`#`, `:`, `/`), a `source` that returns candidates for the text typed after it, an optional `query` (a regular expression for what may follow the trigger, such as a space in a full name) and an optional `insert` that decides what a choice writes (by default the trigger, the text and a space). Lists on one trigger are merged in order. A candidate is `{ id, text, supportingText? }` and can carry an `avatar` (its row then takes two lines, the supporting text under the text), an `icon` or a `symbol` for its row.
+ * @prop {Function} mentionEmptyText - What to say when the @-list has no candidates, called with the typed query (property only). Without it the list says "Typ om te zoeken" or "Niets gevonden", both translatable. Return null to close the list without a word.
+ * @prop {Typeahead[]} typeaheads - Your own typeahead lists next to the @-mention (property only): each a trigger character (`#`, `:`, `/`), a `source` that returns candidates for the text typed after it, an optional `query` (a regular expression for what may follow the trigger, such as a space in a full name), an optional `emptyText` (what to say when there are no candidates, instead of the translated default) and an optional `insert` that decides what a choice writes (by default the trigger, the text and a space). Lists on one trigger are merged in order. A candidate is `{ id, text, supportingText? }` and can carry an `avatar` (its row then takes two lines, the supporting text under the text), an `icon` or a `symbol` for its row.
  * @attr {boolean} annotatable - Enable the annotation overlay (off by default). Annotations only render when this is set.
  * @prop {Annotation[]} annotations - Consumer-supplied annotation overlay (property only). Anchored by offset and mapped through edits; the text stays clean. Requires `annotatable`. Assign a NEW array to apply changes (Lit dirty-checks by identity, so in-place mutation like `.push()` won't re-render): `editor.annotations = [...editor.annotations, next]`.
  * @attr {object} translations - Override the editor's assistive-tech strings (the open-in-new-tab link badge and the annotation count badge). Unset keys fall back to Dutch.
@@ -203,6 +204,12 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@property({ attribute: false })
 	mentionQuery?: string;
 
+	/** What to say when the @-list has no candidates. Without it: "Typ om te
+	 *  zoeken" or "Niets gevonden" (translatable). Called with the typed query;
+	 *  return null to close without a word. Property only. */
+	@property({ attribute: false })
+	mentionEmptyText?: (query: string) => string | null | undefined;
+
 	/** Your own typeahead lists next to the @-mention, each on its own trigger
 	 *  character. Property only. Read on every keystroke, so a new array takes
 	 *  effect at once. */
@@ -218,6 +225,9 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		insert: mentionInsert,
 		get query() {
 			return host.mentionQuery;
+		},
+		get emptyText() {
+			return host.mentionEmptyText;
 		},
 	}))(this);
 
@@ -283,7 +293,11 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		return [
 			nlddCodeMirrorTheme,
 			markdownEditing,
-			typeaheadExtension(() => this._typeaheadLists(), (choice) => this._onTypeaheadChosen(choice)),
+			typeaheadExtension(
+				() => this._typeaheadLists(),
+				(choice) => this._onTypeaheadChosen(choice),
+				(query) => this._t(query ? 'components.text-editor.typeahead-no-results-text' : 'components.text-editor.typeahead-start-typing-text'),
+			),
 			// Prec.low so this transaction filter runs *before* the annotation filter
 			// (filters run low-precedence first), letting the annotation map through the
 			// renumber changes too — otherwise a marker growing from 1 to 11 drifts a

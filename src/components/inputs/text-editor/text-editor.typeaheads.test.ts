@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import type { EditorView } from '@codemirror/view';
 import { acceptCompletion, completionStatus, moveCompletionSelection, startCompletion } from '@codemirror/autocomplete';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { setTranslations } from '../../../utilities/translations.js';
 import './text-editor.js';
 import type { Typeahead, TypeaheadCandidate, MentionSource } from './text-editor.js';
 
@@ -17,6 +18,7 @@ type El = HTMLElement & {
 	view: EditorView;
 	mentionSource?: MentionSource;
 	mentionQuery?: string;
+	mentionEmptyText?: (query: string) => string | null;
 	typeaheads: Typeahead[];
 	insertAtCursor(text: string): void;
 };
@@ -248,5 +250,103 @@ describe('nldd-text-editor typeahead queries', () => {
 		el = await make('top :+', [{ trigger: ':', source: byLabel(thumbs) }]);
 		const rows = await openList(el);
 		expect(labels(rows)).toEqual([':+1:']);
+	});
+});
+
+// #263: a list without candidates said nothing and closed, so whoever typed @
+// could not tell "nobody matches" from "mentions do not work here".
+describe('nldd-text-editor typeahead without candidates', () => {
+	let el: El;
+	afterEach(() => cleanup(el));
+
+	const message = () => el.shadowRoot.querySelector<HTMLElement>('.cm-nldd-typeahead-empty');
+
+	async function waitForMessage(): Promise<HTMLElement> {
+		for (let i = 0; i < 40; i++) {
+			const found = message();
+			if (found) return found;
+			await new Promise((resolve) => setTimeout(resolve, 25));
+		}
+		throw new Error('no message appeared');
+	}
+
+	const say = (query: string) => (query ? 'Niemand gevonden' : 'Begin met typen om iemand te vinden');
+
+	it('says why the list is empty, as a status a screen reader announces', async () => {
+		el = await make('hoi @xyz', [], () => []);
+		el.mentionEmptyText = say;
+		startCompletion(el.view);
+		const shown = await waitForMessage();
+		expect(shown.textContent).toBe('Niemand gevonden');
+		expect(shown.getAttribute('role')).toBe('status');
+		// In the same top-layer frame as the list, so a dialog around it does not clip it.
+		expect(shown.closest('.cm-nldd-popups')?.matches(':popover-open')).toBe(true);
+		expect(completionStatus(el.view.state)).not.toBe('active');
+	});
+
+	it('asks to start typing when nothing was typed yet', async () => {
+		el = await make('hoi @', [], () => []);
+		el.mentionEmptyText = say;
+		startCompletion(el.view);
+		expect((await waitForMessage()).textContent).toBe('Begin met typen om iemand te vinden');
+	});
+
+	it('gives way to the list once there are candidates', async () => {
+		el = await make('hoi @xyz', [], byLabel(people));
+		el.mentionEmptyText = say;
+		startCompletion(el.view);
+		await waitForMessage();
+		el.view.dispatch({ changes: { from: 5, to: 8, insert: 'an' }, selection: { anchor: 7 }, userEvent: 'input.type' });
+		const rows = await openList(el);
+		expect(rows.length).toBeGreaterThan(0);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		expect(message()).toBeNull();
+	});
+
+	it('goes on Escape', async () => {
+		el = await make('hoi @xyz', [], () => []);
+		el.mentionEmptyText = say;
+		startCompletion(el.view);
+		await waitForMessage();
+		el.view.contentDOM.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		expect(message()).toBeNull();
+	});
+
+	it('works for your own lists too', async () => {
+		el = await make('zie #xyz', [{ trigger: '#', source: () => [], emptyText: () => 'Kies eerst een kanaal bij Aan' }]);
+		startCompletion(el.view);
+		expect((await waitForMessage()).textContent).toBe('Kies eerst een kanaal bij Aan');
+	});
+
+	it('says "Niets gevonden" on its own when a list has no text of its own', async () => {
+		el = await make('hoi @xyz', [], () => []);
+		startCompletion(el.view);
+		expect((await waitForMessage()).textContent).toBe('Niets gevonden');
+	});
+
+	it('asks to type on its own when nothing was typed yet', async () => {
+		el = await make('zie #', [{ trigger: '#', source: () => [] }]);
+		startCompletion(el.view);
+		expect((await waitForMessage()).textContent).toBe('Typ om te zoeken');
+	});
+
+	it('follows setTranslations for its own texts', async () => {
+		setTranslations({ 'components.text-editor.typeahead-no-results-text': 'Nothing found' });
+		try {
+			el = await make('hoi @xyz', [], () => []);
+			startCompletion(el.view);
+			expect((await waitForMessage()).textContent).toBe('Nothing found');
+		} finally {
+			setTranslations({});
+		}
+	});
+
+	it('closes without a word when a list returns null', async () => {
+		el = await make('hoi @xyz', [], () => []);
+		el.mentionEmptyText = () => null;
+		startCompletion(el.view);
+		await new Promise((resolve) => setTimeout(resolve, 200));
+		expect(message()).toBeNull();
 	});
 });

@@ -122,6 +122,8 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.text-editor.annotation-count-label': '{count} {noun} op \'{quote}\'',
 	'components.text-editor.annotation-singular-lowercase': 'annotaasje',
 	'components.text-editor.annotation-plural-lowercase': 'annotaasjes',
+	'components.text-editor.typeahead-start-typing-text': 'Typ om te sykjen',
+	'components.text-editor.typeahead-no-results-text': 'Neat fûn',
 	'components.time-field.default-label': 'Tiid',
 	'components.time-field.to-pick-time-action': 'Tiid kieze',
 	'components.time-field.cancel-action': 'Annulearje',

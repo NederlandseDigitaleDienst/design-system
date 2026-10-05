@@ -124,6 +124,8 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.text-editor.annotation-count-label': '{count} {noun} riba \'{quote}\'',
 	'components.text-editor.annotation-singular-lowercase': 'anotacion',
 	'components.text-editor.annotation-plural-lowercase': 'anotacionnan',
+	'components.text-editor.typeahead-start-typing-text': 'Tecla pa busca',
+	'components.text-editor.typeahead-no-results-text': 'No a haya nada',
 	'components.time-field.default-label': 'Ora',
 	'components.time-field.to-pick-time-action': 'Scoge un ora',
 	'components.time-field.cancel-action': 'Cancela',

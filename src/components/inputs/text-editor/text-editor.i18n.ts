@@ -9,6 +9,11 @@ export const nlddTextEditorTranslations = {
 	// The noun used in annotation-count-label: singular for one annotation, plural for more.
 	'components.text-editor.annotation-singular-lowercase': 'annotatie',
 	'components.text-editor.annotation-plural-lowercase': 'annotaties',
+	// Shown where a typeahead list would be when it has no candidates. The first
+	// while nothing has been typed after the trigger, the second for a query
+	// without matches. A list's own emptyText overrides both.
+	'components.text-editor.typeahead-start-typing-text': 'Typ om te zoeken',
+	'components.text-editor.typeahead-no-results-text': 'Niets gevonden',
 };
 
 export type NLDDTextEditorTranslations = typeof nlddTextEditorTranslations;
