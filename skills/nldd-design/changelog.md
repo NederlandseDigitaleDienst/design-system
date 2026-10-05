@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.8.94](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.93...v0.8.94) (2026-10-05)
+
 ### Highlights
 
 - **The package speaks more languages.** One call, `setTranslations(enUS)` at startup, turns every component English, including the ones another component builds out of your reach, such as the activity indicator in a loading button and the calendar in a date field. US English ships complete, with concept sets in Frisian and in Papiamento as written on Curaçao and Bonaire and on Aruba. Docs/Vertalingen in Storybook explains the layers.
