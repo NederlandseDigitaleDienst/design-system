@@ -216,13 +216,13 @@ describe('nldd-text-editor typeaheads', () => {
 	});
 });
 
-// #262: a list decides what may follow its trigger. Without that a name with
-// a space, or the + of :+1:, closed the list before the source saw it.
+// #262: what may follow a trigger. An accent or the + of :+1: closed the list
+// before the source saw it; a list of people decides whether a space may.
 describe('nldd-text-editor typeahead queries', () => {
 	let el: El;
 	afterEach(() => cleanup(el));
 
-	const NAME = '[\\p{L}\\p{M}\\p{N}_.-]*(?: [\\p{L}\\p{M}\\p{N}_.-]+)?';
+	const NAME = '[\\p{L}\\p{M}\\p{N}_.+-]*(?: [\\p{L}\\p{M}\\p{N}_.+-]+)?';
 	const team: TypeaheadCandidate[] = [
 		{ id: '1', text: 'Sam Jansen' },
 		{ id: '2', text: 'Sam de Wit' },
@@ -243,9 +243,9 @@ describe('nldd-text-editor typeahead queries', () => {
 		expect(labels(rows)).toEqual(['@Sam Jansen']);
 	});
 
-	it('opens an emoji list on :+ with its own query', async () => {
+	it('opens an emoji list on :+ without a query of its own', async () => {
 		const thumbs: TypeaheadCandidate[] = [{ id: '+1', text: '+1:', symbol: '👍' }];
-		el = await make('top :+', [{ trigger: ':', source: byLabel(thumbs), query: '[\\p{L}\\p{N}_+-]*' }]);
+		el = await make('top :+', [{ trigger: ':', source: byLabel(thumbs) }]);
 		const rows = await openList(el);
 		expect(labels(rows)).toEqual([':+1:']);
 	});

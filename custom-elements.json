@@ -18018,8 +18018,8 @@
           "type": {
             "text": "string"
           },
-          "default": "'[\\\\p{L}\\\\p{M}\\\\p{N}_.-]*'",
-          "description": "What may follow a trigger when a list says nothing else: letters in any\nscript and with any accent, digits, `_`, `.` and `-`. A name like `józef`\nreaches the source whole."
+          "default": "'[\\\\p{L}\\\\p{M}\\\\p{N}_.+-]*'",
+          "description": "What may follow a trigger when a list says nothing else: letters in any\nscript and with any accent, digits, `_`, `.`, `+` and `-`. A name like\n`józef` reaches the source whole, and so does the `+1` of `:+1:`. A space\nends the query, as it ends a mention in most systems."
         },
         {
           "kind": "function",
@@ -18524,7 +18524,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "What may follow the `@` of a mention, as a regular expression without\nanchors or capturing groups. Property only. Without it: letters with any\naccent, digits, `_`, `.` and `-`. Allow one space to search on a full name:\n`'[\\\\p{L}\\\\p{M}\\\\p{N}_.-]*(?: [\\\\p{L}\\\\p{M}\\\\p{N}_.-]+)?'`."
+              "description": "What may follow the `@` of a mention, as a regular expression without\nanchors or capturing groups. Property only. Without it: letters with any\naccent, digits, `_`, `.`, `+` and `-`. Allow one space to search on a full\nname: `'[\\\\p{L}\\\\p{M}\\\\p{N}_.+-]*(?: [\\\\p{L}\\\\p{M}\\\\p{N}_.+-]+)?'`."
             },
             {
               "kind": "field",

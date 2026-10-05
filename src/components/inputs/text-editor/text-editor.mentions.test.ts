@@ -92,11 +92,10 @@ describe('other triggers', () => {
 	});
 });
 
-// #262: what may follow a trigger. Accents are letters for every list; a space
-// or a `+` only where a list asks for it.
+// #262: what may follow a trigger. Accents and a `+` belong to every list; a
+// space ends the query unless a list asks for one.
 describe('wat er na een trigger mag staan', () => {
-	const NAME = '[\\p{L}\\p{M}\\p{N}_.-]*(?: [\\p{L}\\p{M}\\p{N}_.-]+)?';
-	const EMOJI = '[\\p{L}\\p{N}_+-]*';
+	const NAME = '[\\p{L}\\p{M}\\p{N}_.+-]*(?: [\\p{L}\\p{M}\\p{N}_.+-]+)?';
 
 	it('neemt een naam met accenten heel mee', () => {
 		const { state, pos } = at('@józef|');
@@ -123,15 +122,16 @@ describe('wat er na een trigger mag staan', () => {
 		expect(typeaheadQueryAt(state, pos, [{ trigger: '@', query: NAME }])).toBeNull();
 	});
 
-	it('kent standaard geen +, maar een emojilijst wel', () => {
-		const { state, pos } = at(':+1|');
-		expect(typeaheadQueryAt(state, pos, [':'])).toBeNull();
-		expect(typeaheadQueryAt(state, pos, [{ trigger: ':', query: EMOJI }])?.query).toBe('+1');
+	it('neemt standaard een + mee, voor :+1: en voor @sam+anna', () => {
+		const emoji = at(':+1|');
+		expect(typeaheadQueryAt(emoji.state, emoji.pos, [':'])?.query).toBe('+1');
+		const names = at('@sam+anna|');
+		expect(typeaheadQueryAt(names.state, names.pos, ['@'])?.query).toBe('sam+anna');
 	});
 
 	it('geeft elke trigger zijn eigen query', () => {
-		const { state, pos } = at('#kanaal :+1|');
-		expect(typeaheadQueryAt(state, pos, ['#', { trigger: ':', query: EMOJI }])).toEqual({ from: 8, to: 11, query: '+1', trigger: ':' });
+		const { state, pos } = at('@sam jansen|');
+		expect(typeaheadQueryAt(state, pos, ['#', { trigger: '@', query: NAME }])).toEqual({ from: 0, to: 11, query: 'sam jansen', trigger: '@' });
 	});
 
 	it('neemt de trigger die het dichtst bij de cursor staat', () => {

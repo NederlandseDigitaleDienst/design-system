@@ -23,9 +23,10 @@ import '../../content/icon/icon.js';
  * lives in the markdown decoration layer. */
 
 /** What may follow a trigger when a list says nothing else: letters in any
- *  script and with any accent, digits, `_`, `.` and `-`. A name like `józef`
- *  reaches the source whole. */
-export const DEFAULT_TYPEAHEAD_QUERY = '[\\p{L}\\p{M}\\p{N}_.-]*';
+ *  script and with any accent, digits, `_`, `.`, `+` and `-`. A name like
+ *  `józef` reaches the source whole, and so does the `+1` of `:+1:`. A space
+ *  ends the query, as it ends a mention in most systems. */
+export const DEFAULT_TYPEAHEAD_QUERY = '[\\p{L}\\p{M}\\p{N}_.+-]*';
 
 /** A trigger and what may follow it. A plain string is a trigger with the
  *  default query. */
@@ -125,10 +126,9 @@ export interface Typeahead {
 	source: TypeaheadSource;
 	/** What may follow the trigger, as a regular expression without anchors or
 	 *  capturing groups, matched with the `u` flag. Without it: letters with any
-	 *  accent, digits, `_`, `.` and `-`. A list of names that allows one space
-	 *  between first and last name: `'[\\p{L}\\p{M}\\p{N}_.-]*(?: [\\p{L}\\p{M}\\p{N}_.-]+)?'`.
-	 *  Emoji shortcodes that use `+`: `'[\\p{L}\\p{N}_+-]*'`. Lists on one trigger
-	 *  share the query of the first that sets one. */
+	 *  accent, digits, `_`, `.`, `+` and `-`. A list of names that allows one
+	 *  space between first and last name: `'[\\p{L}\\p{M}\\p{N}_.+-]*(?: [\\p{L}\\p{M}\\p{N}_.+-]+)?'`.
+	 *  Lists on one trigger share the query of the first that sets one. */
 	query?: string;
 	/** What choosing a candidate writes in place of the trigger and the query.
 	 *  Without it: the trigger, the text and a space, so `#kanaal ` stays what
