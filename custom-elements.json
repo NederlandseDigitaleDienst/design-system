@@ -14912,7 +14912,7 @@
                 "text": "SegmentedControlAppearance"
               },
               "default": "'neutral-tinted'",
-              "description": "Set by nldd-segmented-control. Not part of the public API.",
+              "description": "Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.",
               "fieldName": "appearance"
             },
             {

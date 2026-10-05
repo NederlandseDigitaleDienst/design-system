@@ -1246,6 +1246,7 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 | `disabled` | `boolean` | Disabled state |
 | `text` | `string` | Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon") |
 | `icon` | `string` | Icon name for nldd-icon |
+| `appearance` | `string` | Visual style: 'neutral-tinted' \| 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control. |
 | `size` | `string` | Control size: 'sm' \| 'md' \| 'lg' (default: 'md'). Set by nldd-segmented-control. |
 | `variant` | `string` | Content type: 'text' \| 'icon' \| 'icon-and-text' (default: 'text'). Set by nldd-segmented-control. |
 | `input-type` | `string` | Selection mode: 'radio' \| 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control. |

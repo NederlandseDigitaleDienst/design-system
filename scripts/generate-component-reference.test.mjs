@@ -179,10 +179,10 @@ test('integration: parses a real component file end to end', () => {
 	const [c] = parseComponent(block, file, ce ? ce[1] : null);
 	assert.equal(c.tag, 'nldd-button');
 	assert.equal(c.category, 'actions');
-	// These two intentionally pin button's stable public API (variant + click):
+	// These two intentionally pin button's stable public API (appearance + click):
 	// if a refactor accidentally stops parsing attrs/events, this fails loudly.
 	// If button's JSDoc legitimately drops them, update this test alongside it.
-	assert.ok(c.attrs.some((a) => a.name === 'variant'), 'button should document a variant attr');
+	assert.ok(c.attrs.some((a) => a.name === 'appearance'), 'button should document an appearance attr');
 	assert.ok(c.events.some((e) => e.name === 'click'), 'button should document a click event');
 	// Every attribute must have a non-empty name (no parse drift to empty rows).
 	assert.ok(c.attrs.every((a) => a.name.length > 0));
