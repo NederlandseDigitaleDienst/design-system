@@ -1349,6 +1349,7 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 | `name` | `string` | Field name for form submission |
 | `readonly` | `boolean` | Readonly state (focusable and selectable, not editable) |
 | `required` | `boolean` | Required state |
+| `no-spellcheck` | `boolean` | Turns spellchecking off. It is on by default, like the other text fields, and leaves out what is not running text: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens (the editor lives in a shadow root; Firefox only checks around the caret), and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on. |
 | `wrap` | `boolean` | Wrap long lines (default true; prose wraps) |
 | `rows` | `number` | Minimum visible rows (the floor in every resize mode). Default: 6. |
 | `resize` | `string` | 'none' (fixed) \| 'vertical' (drag) \| 'auto' (grow, default) |

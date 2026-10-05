@@ -655,6 +655,7 @@ export default {
 		invalid: false,
 		readonly: false,
 		required: false,
+		noSpellcheck: false,
 		disabled: false,
 		accessibleLabel: 'Tekst',
 	},
@@ -704,6 +705,12 @@ export default {
 			description: 'Verplichte staat.',
 			table: { defaultValue: { summary: false } },
 		},
+		noSpellcheck: {
+			name: 'no-spellcheck',
+			control: 'boolean',
+			description: 'Zet de spellingscontrole uit. Standaard aan, zonder code, URL\'s en mentions.',
+			table: { defaultValue: { summary: false } },
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Uitgeschakelde staat',
@@ -728,6 +735,7 @@ const Template = ({
 	invalid,
 	readonly,
 	required,
+	noSpellcheck,
 	disabled,
 	accessibleLabel,
 }: Record<string, any>) => html`
@@ -741,6 +749,7 @@ const Template = ({
 		?readonly=${readonly}
 		?invalid=${invalid}
 		?required=${required}
+		?no-spellcheck=${noSpellcheck}
 		?disabled=${disabled}
 		accessible-label=${accessibleLabel || nothing}
 	></nldd-text-editor>

@@ -300,6 +300,8 @@ class MentionWidget extends WidgetType {
 		const token = document.createElement('span');
 		token.className = 'cm-md-mention-token';
 		token.setAttribute('data-user', this.id);
+		// A name someone chose, not the writer's spelling to correct.
+		token.setAttribute('spellcheck', 'false');
 		if (this.selected) token.setAttribute('data-selected', '');
 		// The @ is rendered as the DS 'at' icon — a separate, vertically-centered
 		// prefix that aligns cleanly with the name.

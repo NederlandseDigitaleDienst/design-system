@@ -18279,6 +18279,76 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.spellcheck.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "spellcheckExclusions",
+          "description": "Says whether a syntax node is left out of spellchecking, and with it all it\ncontains. A plugin that renders something of its own adds a test here, so\nits syntax does not get a red underline in every consumer's editor."
+        },
+        {
+          "kind": "function",
+          "name": "leaveDeletionToBrowser",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "view",
+              "type": {
+                "text": "EditorView"
+              }
+            },
+            {
+              "name": "key",
+              "type": {
+                "text": "'Backspace' | 'Delete'"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "spellcheck",
+          "return": {
+            "type": {
+              "text": "Extension"
+            }
+          },
+          "description": "Spellchecking on the content, without the parts that are not running text."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "spellcheckExclusions",
+          "declaration": {
+            "name": "spellcheckExclusions",
+            "module": "src/components/inputs/text-editor/text-editor.spellcheck.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "leaveDeletionToBrowser",
+          "declaration": {
+            "name": "leaveDeletionToBrowser",
+            "module": "src/components/inputs/text-editor/text-editor.spellcheck.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "spellcheck",
+          "declaration": {
+            "name": "spellcheck",
+            "module": "src/components/inputs/text-editor/text-editor.spellcheck.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.syntax.ts",
       "declarations": [
         {
@@ -18467,6 +18537,17 @@
               },
               "default": "false",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "noSpellcheck",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Turns spellchecking off. On by default, without code, URLs and mentions.",
+              "attribute": "no-spellcheck",
               "reflects": true
             },
             {
@@ -19207,6 +19288,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state"
+            },
+            {
+              "name": "no-spellcheck",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Turns spellchecking off. It is on by default, like the other text fields, and leaves out what is not running text: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens (the editor lives in a shadow root; Firefox only checks around the caret), and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on.",
+              "fieldName": "noSpellcheck"
             },
             {
               "name": "wrap",

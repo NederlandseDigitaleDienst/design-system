@@ -39,6 +39,7 @@
  * @attr {string} name - Field name for form submission
  * @attr {boolean} readonly - Readonly state (focusable and selectable, not editable)
  * @attr {boolean} required - Required state
+ * @attr {boolean} no-spellcheck - Turns spellchecking off. It is on by default, like the other text fields, and leaves out what is not running text: inline code and code blocks, the address of a link and a bare URL (the link text is checked), and mentions. Autocorrect and autocapitalize follow the user's own settings, as in the other fields, also with `no-spellcheck`. Two limits come from the browser: text that was already there is checked once you edit near it, not when the editor opens (the editor lives in a shadow root; Firefox only checks around the caret), and markup that changes how a line is built, such as starting a list item, hides the underlines on that line until you type on.
  * @attr {boolean} wrap - Wrap long lines (default true; prose wraps)
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
@@ -73,7 +74,7 @@ import {
 	placeholder as cmPlaceholder,
 } from '@codemirror/view';
 import { Compartment, EditorState, Prec, Transaction, type Extension } from '@codemirror/state';
-import { defaultKeymap, history, historyKeymap, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
+import { defaultKeymap, deleteCharBackward, deleteCharForward, history, historyKeymap, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
 import { NLDDCodeMirrorElement } from '../../../utilities/codemirror/codemirror-element.js';
 import { nlddCodeMirrorTheme } from '../../../utilities/codemirror/theme.js';
 import { markdownEditing, mentionRangeAt, mentionRangeEndingAt, mentionRangeStartingAt } from './text-editor.markdown.js';
@@ -87,6 +88,7 @@ import {
 	type TypeaheadChoice,
 } from './text-editor.mentions.js';
 import { repairHeldEmphasis } from './text-editor.emphasis.js';
+import { spellcheck, leaveDeletionToBrowser } from './text-editor.spellcheck.js';
 import { annotations as annotationExtension, setAnnotations, pasteAnnotations, currentAnnotations, type Annotation } from './text-editor.annotations.js';
 import { orderedListRenumber } from './text-editor.ordered-list.js';
 import { dragToMove, dragMovePlugin } from './text-editor.drag.js';
@@ -176,6 +178,10 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
+	/** Turns spellchecking off. On by default, without code, URLs and mentions. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
+	noSpellcheck = false;
+
 	@property({ type: Boolean, reflect: true })
 	wrap = true;
 
@@ -263,6 +269,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	private _wrapCompartment = new Compartment();
 	private _placeholderCompartment = new Compartment();
 	private _attrsCompartment = new Compartment();
+	private _spellcheckCompartment = new Compartment();
 	private _historyCompartment = new Compartment();
 
 
@@ -347,13 +354,18 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 				// they do nothing, which beats a code block nobody asked for.
 				{ key: 'Mod-]', run: (view) => { cmIndentListItems(view); return true; } },
 				{ key: 'Mod-[', run: (view) => { cmOutdentListItems(view); return true; } },
-				...defaultKeymap,
+				// The browser deletes where the editor has nothing to add, so the
+				// spelling marks on the line stay (see leaveDeletionToBrowser).
+				{ key: 'Backspace', run: (view) => !leaveDeletionToBrowser(view, 'Backspace') && deleteCharBackward(view), shift: deleteCharBackward },
+				{ key: 'Delete', run: (view) => !leaveDeletionToBrowser(view, 'Delete') && deleteCharForward(view) },
+				...defaultKeymap.filter((binding) => binding.key !== 'Backspace' && binding.key !== 'Delete'),
 				...historyKeymap,
 			]),
 			this._placeholderCompartment.of(this._placeholderExtension()),
 			this._wrapCompartment.of(this.wrap ? EditorView.lineWrapping : []),
 			this._editableCompartment.of(this._editableExtension()),
 			this._attrsCompartment.of(this._attrsExtension()),
+			this._spellcheckCompartment.of(this.noSpellcheck ? [] : spellcheck()),
 			EditorView.updateListener.of((u) => {
 				if (u.docChanged) this._onDocChanged();
 				if (u.docChanged || u.selectionSet) this._emitState();
@@ -414,8 +426,28 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		return this.placeholder ? cmPlaceholder(this.placeholder) : [];
 	}
 
+	/**
+	 * A browser checks text when it changes, not when `spellcheck` does: turned
+	 * off, the red underlines stayed until the text under them was edited, and
+	 * turned on, they only came with new words. Drawing the content anew makes
+	 * the browser look again. The state stays as it is, history and selection
+	 * included, so this is only the picture.
+	 */
+	private _redrawForSpellcheck(): void {
+		const view = this.view;
+		if (!view) return;
+		const focused = view.hasFocus;
+		view.setState(view.state);
+		if (focused) view.focus();
+	}
+
 	private _attrsExtension(): Extension {
-		const attrs: Record<string, string> = {};
+		// Autocorrect and autocapitalize follow the user's own settings, as on an
+		// <input> or a <textarea>, also with no-spellcheck: CodeMirror's "off" is
+		// not what a text field does. And with them off, CodeMirror turns the
+		// period macOS puts after a double space back into a space by writing the
+		// line anew, which cost the spelling marks on it.
+		const attrs: Record<string, string> = { autocorrect: 'on', autocapitalize: 'sentences' };
 		if (this.accessibleLabel) attrs['aria-label'] = this.accessibleLabel;
 		if (this.inputId) attrs['id'] = this.inputId;
 		return EditorView.contentAttributes.of(attrs);
@@ -475,6 +507,10 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			}
 			if (changed.has('accessibleLabel') || changed.has('inputId')) {
 				this.reconfigure(this._attrsCompartment, this._attrsExtension());
+			}
+			if (changed.has('noSpellcheck')) {
+				this.reconfigure(this._spellcheckCompartment, this.noSpellcheck ? [] : spellcheck());
+				this._redrawForSpellcheck();
 			}
 			if (changed.has('annotations') || changed.has('annotatable')) {
 				this._syncAnnotations();
