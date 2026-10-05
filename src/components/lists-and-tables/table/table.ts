@@ -253,11 +253,12 @@ export class NLDDTable extends LitElement {
 		// nameless — and any focusable scroll region always has a name (SC 4.1.2).
 		// A missing label is still DEV-warned in updated() to prompt a meaningful
 		// one rather than rely on the fallback.
-		if (this.accessibleLabel) {
-			this.setAttribute('aria-label', this.accessibleLabel);
-		} else {
-			this.setAttribute('aria-label', this._t('components.table.accessible-label'));
-		}
+		this._syncLabel();
+	}
+
+	/** Also on every render, so the fallback follows a language switch. */
+	private _syncLabel(): void {
+		this.setAttribute('aria-label', this.accessibleLabel || this._t('components.table.accessible-label'));
 	}
 
 	override updated(changed: Map<string, unknown>): void {
@@ -269,6 +270,8 @@ export class NLDDTable extends LitElement {
 		}
 		if (changed.has('accessibleLabel')) {
 			this._syncHostA11y();
+		} else {
+			this._syncLabel();
 		}
 		if (changed.has('selectable')) {
 			// Selectability gates each body row's aria-selected; re-sync them.

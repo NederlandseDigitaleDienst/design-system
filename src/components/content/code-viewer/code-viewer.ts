@@ -242,6 +242,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			this._copyUnavailable = !this.noCopy && !isClipboardAvailable();
 		}
 		if (!this.view) return;
+		// The region label follows a language switch, which re-renders without measuring.
+		if (this._isScrollable) this.view.scrollDOM.setAttribute('aria-label', this._t('components.code-viewer.region-label'));
 		if (changed.has('language')) this._applyLanguage();
 		if (changed.has('wrap')) {
 			this.reconfigure(this._wrapCompartment, this.wrap ? EditorView.lineWrapping : []);

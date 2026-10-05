@@ -146,9 +146,24 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	// left untouched — including one set asynchronously after the first sync.
 	private _appliedMenuBarLabels = new WeakMap<NLDDMenuBar, string>();
 
+	private _appliedTexts: string | null = null;
+
+	/** The texts this bar puts on elements it does not render itself, as one string. */
+	private _translatedTexts(): string {
+		return [
+			this._menuText,
+			this._t('components.top-navigation-bar.menu-sheet-dismiss-action'),
+			this._t('components.top-navigation-bar.global-menu-bar-label'),
+			this._t('components.top-navigation-bar.utility-menu-bar-label'),
+		].join('\n');
+	}
+
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
-		if (changed.has('translations')) {
+		// Not only on `translations`: setTranslations() re-renders without it.
+		const texts = this._translatedTexts();
+		if (texts !== this._appliedTexts) {
+			this._appliedTexts = texts;
 			this._globalMenuSheet?.setAttribute('accessible-label', this._menuText);
 			this._globalMenuSheetTitleBar?.setAttribute('dismiss-text', this._t('components.top-navigation-bar.menu-sheet-dismiss-action'));
 			// Keep the sheet's root-level title in sync with the translated menu

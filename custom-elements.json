@@ -9274,7 +9274,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted.",
+              "description": "Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. Typing an option's label in full picks that option, ignoring case and the spaces around it; with two such labels, the first one.",
               "fieldName": "allowCustom"
             },
             {
@@ -17787,6 +17787,27 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.labels.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "relabel",
+          "description": "Says the editor's labels changed, such as after a language switch: the\nwidgets that draw a translated label rebuild with the new text."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "relabel",
+          "declaration": {
+            "name": "relabel",
+            "module": "src/components/inputs/text-editor/text-editor.labels.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.links.ts",
       "declarations": [
         {
@@ -22624,7 +22645,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value.",
+              "description": "Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value, ignoring case and the spaces around it; with two such labels, the first one.",
               "fieldName": "allowCustom"
             },
             {

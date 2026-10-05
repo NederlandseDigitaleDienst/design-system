@@ -847,7 +847,7 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 | `invalid` | `boolean` | Marks the field as invalid |
 | `disabled` | `boolean` | Disabled state |
 | `readonly` | `boolean` | Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of. |
-| `allow-custom` | `boolean` | Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. |
+| `allow-custom` | `boolean` | Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. Typing an option's label in full picks that option, ignoring case and the spaces around it; with two such labels, the first one. |
 | `no-filter` | `boolean` | Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address. |
 | `name` | `string` | Input name for form submission |
 | `autocomplete` | `string` | Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired. |
@@ -1550,7 +1550,7 @@ A multi-select input that looks like a normal input field: chosen values show as
 | `type` | `string` | Input type forwarded to the inner input (e.g. 'email') |
 | `autocomplete` | `string` | Autocomplete hint forwarded to the inner input |
 | `accessible-label` | `string` | Accessible label forwarded as aria-label to the input |
-| `allow-custom` | `boolean` | Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value. |
+| `allow-custom` | `boolean` | Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value, ignoring case and the spaces around it; with two such labels, the first one. |
 | `no-filter` | `boolean` | Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address. |
 | `valid` | `boolean` | Marks the field valid (shows the valid icon) |
 | `invalid` | `boolean` | Marks the field invalid (shows the invalid icon) |

@@ -397,6 +397,7 @@ export class NLDDList extends LitElement {
 	}
 
 	override updated(changed: Map<string, unknown>) {
+		this._syncTranslatedTexts();
 		if (changed.has('reorderable') || changed.has('type')) {
 			if (this.reorderable && this.type !== 'list' && import.meta.env?.DEV) {
 				console.warn('nldd-list: `reorderable` is only valid when type="list". Ignoring.');
@@ -430,6 +431,20 @@ export class NLDDList extends LitElement {
 
 	// — Host attribute routing ————————————————————————————————————————————————
 
+	/** The navigation label this list set itself, so a consumer's own is left alone. */
+	private _autoLabel: string | null = null;
+
+	/** On every render, so the texts this list sets itself follow a language switch. */
+	private _syncTranslatedTexts(): void {
+		if (this.hasAttribute('data-nldd-auto-label') && this.getAttribute('aria-label') === this._autoLabel) {
+			this._autoLabel = this._t('components.list.navigation-accessible-label');
+			this.setAttribute('aria-label', this._autoLabel);
+		}
+		if (this.hasAttribute('aria-keyshortcuts')) {
+			this.setAttribute('aria-description', this._t('components.list.arrow-navigation-description-text'));
+		}
+	}
+
 	private _applyHostType() {
 		// Only `navigation` puts a role on the host. `list` and `listbox` leave
 		// the host role-less: `list` carries role="list" on `.list__items`, and
@@ -438,7 +453,8 @@ export class NLDDList extends LitElement {
 		if (this.type === 'navigation') {
 			this.setAttribute('role', 'navigation');
 			if (!this.hasAttribute('aria-label') && !this.hasAttribute('aria-labelledby')) {
-				this.setAttribute('aria-label', this._t('components.list.navigation-accessible-label'));
+				this._autoLabel = this._t('components.list.navigation-accessible-label');
+				this.setAttribute('aria-label', this._autoLabel);
 				this.setAttribute('data-nldd-auto-label', '');
 			}
 		} else {
@@ -449,11 +465,11 @@ export class NLDDList extends LitElement {
 				// Only strip the label we set ourselves. If the consumer overrode
 				// `aria-label` after our auto-set, the value no longer matches and
 				// we leave it intact. Either way, clear the sentinel.
-				const autoLabel = this._t('components.list.navigation-accessible-label');
-				if (this.getAttribute('aria-label') === autoLabel) {
+				if (this.getAttribute('aria-label') === this._autoLabel) {
 					this.removeAttribute('aria-label');
 				}
 				this.removeAttribute('data-nldd-auto-label');
+				this._autoLabel = null;
 			}
 		}
 	}

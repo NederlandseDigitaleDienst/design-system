@@ -19,7 +19,7 @@
  * @attr {string} type - Input type forwarded to the inner input (e.g. 'email')
  * @attr {string} autocomplete - Autocomplete hint forwarded to the inner input
  * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input
- * @attr {boolean} allow-custom - Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value.
+ * @attr {boolean} allow-custom - Allow free-typed values (not just menu options). Typing an option's label in full adds that option, with its value, ignoring case and the spaces around it; with two such labels, the first one.
  * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
  * @attr {boolean} valid - Marks the field valid (shows the valid icon)
  * @attr {boolean} invalid - Marks the field invalid (shows the invalid icon)
@@ -819,12 +819,6 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	};
 
 	/**
-	 * Add a value, clear the input, and close the menu — focus returns to the empty
-	 * input. The menu only reopens on a deliberate action (typing, ArrowDown, or the
-	 * picker), so a focused empty field behaves the same whether it was just focused
-	 * or a value was just committed.
-	 */
-	/**
 	 * Typing an option's label in full means that option: its value becomes the
 	 * token, not the label, so the form sends what a choice from the menu would.
 	 * Anything else typed is a custom value as it stands.
@@ -836,6 +830,12 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		return option ? option.value || option.text : typed;
 	}
 
+	/**
+	 * Add a value, clear the input, and close the menu — focus returns to the empty
+	 * input. The menu only reopens on a deliberate action (typing, ArrowDown, or the
+	 * picker), so a focused empty field behaves the same whether it was just focused
+	 * or a value was just committed.
+	 */
 	private _commitValue(value: string, refocus = true): void {
 		this._addValue(value);
 		this._resetInputText();

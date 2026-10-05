@@ -62,6 +62,7 @@
  * @fires nldd-text-editor-typeahead - When a candidate from one of the `typeaheads` is chosen (detail: TypeaheadChosenDetail with trigger, candidate, from, to; clean offsets)
  * @fires nldd-text-editor-annotation-click - When an annotation's count badge is clicked (detail: { ids: string[], rect: DOMRect }); rect is the badge's viewport box so a consumer can anchor its own note UI to it
  */
+import { relabel } from './text-editor.labels.js';
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
@@ -296,6 +297,18 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		return translate(this.translations, nlddTextEditorTranslations, key, vars);
 	}
 
+	private _labels: string | null = null;
+
+	/** The translated texts the document's widgets draw, as one string. */
+	private _labelSignature(): string {
+		return [
+			'components.text-editor.open-in-new-tab-label',
+			'components.text-editor.annotation-count-label',
+			'components.text-editor.annotation-singular-lowercase',
+			'components.text-editor.annotation-plural-lowercase',
+		].map((key) => this._t(key as keyof NLDDTextEditorTranslations)).join('\n');
+	}
+
 	protected buildExtensions(): Extension[] {
 		return [
 			nlddCodeMirrorTheme,
@@ -489,6 +502,13 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			this.style.setProperty('--_rows', String(this.rows));
 		}
 		if (this.view) {
+			// A render after setTranslations() or a new `translations`: the labels
+			// drawn inside the document follow when their text changed.
+			const labels = this._labelSignature();
+			if (labels !== this._labels) {
+				if (this._labels !== null) this.view.dispatch({ effects: relabel.of(null) });
+				this._labels = labels;
+			}
 			if (changed.has('value')) {
 				// Only push an external value change into the document; a value that just
 				// mirrors the current (sentinel-stripped) doc must not trigger a rewrite,

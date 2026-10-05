@@ -20,7 +20,7 @@
  * @attr {boolean} invalid - Marks the field as invalid
  * @attr {boolean} disabled - Disabled state
  * @attr {boolean} readonly - Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of.
- * @attr {boolean} allow-custom - Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted.
+ * @attr {boolean} allow-custom - Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted. Typing an option's label in full picks that option, ignoring case and the spaces around it; with two such labels, the first one.
  * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
  * @attr {string} name - Input name for form submission
  * @attr {string} autocomplete - Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired.

@@ -104,6 +104,13 @@ export class NLDDRichText extends LitElement {
 		this._resizeObserver = undefined;
 	}
 
+	/** The labels this component set itself follow a language switch. */
+	override updated(): void {
+		for (const table of this.querySelectorAll(`table[${MANAGED_LABEL_ATTR}]`)) {
+			table.setAttribute('aria-label', this._t('components.rich-text.table-scroll-label'));
+		}
+	}
+
 	private _syncTables(): void {
 		for (const table of this.querySelectorAll('table')) {
 			if (table.scrollWidth > table.clientWidth) {
