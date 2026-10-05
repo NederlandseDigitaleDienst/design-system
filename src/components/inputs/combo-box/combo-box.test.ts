@@ -1168,4 +1168,15 @@ describe('nldd-combo-box allow-custom keeps a chosen value', () => {
 		expect(el.text).toBe('België');
 		expect(changes).toEqual(['be']);
 	});
+
+	it('leaves typed text uncommitted once the app sets a value while the user types', async () => {
+		const { input, changes } = await setup('');
+		input.focus();
+		await type(input, 'Utrecht');
+		el.value = 'nl';
+		await waitForUpdate(el);
+		await blur(input);
+		expect(el.value).toBe('nl');
+		expect(changes).toEqual([]);
+	});
 });
