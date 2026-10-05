@@ -258,16 +258,16 @@ export function template(component: NLDD{PascalName}): TemplateResult {
 
 Vier attributen gaan over hoe een component eruitziet, en ze lopen van breed naar smal. Elke stap omvat meer dan de volgende:
 
-1. **`variant`**: wat voor soort ding het is. De stijl, het icoon en de rol volgen eruit. `nldd-banner`, `nldd-notification` en `nldd-status-bar` zetten met `critical` een andere `role`, `nldd-inline-dialog` met `alert` een ander icoon, en `nldd-progress-bar` leest met `distribution` de segmenten op in plaats van een percentage voltooid.
+1. **`variant`**: een soort van het component, en wat dat inhoudt bepaalt het component zelf. Bij `nldd-banner`, `nldd-notification` en `nldd-status-bar` volgen de stijl, het icoon en de rol eruit (`critical` zet een andere `role`), `nldd-inline-dialog` krijgt met `alert` een ander icoon, `nldd-progress-bar` leest met `distribution` de segmenten op in plaats van een percentage voltooid, en `nldd-toggle-button`, `nldd-tag`, `nldd-tab-bar` en `nldd-segmented-control` kiezen ermee wat er zichtbaar is (`text`, `icon`, `icon-and-text`). De JSDoc van het component zegt wat zijn varianten zijn.
 2. **`appearance`**: een ontworpen stijl uit een vaste lijst, met de kleur erbij. `nldd-button` heeft `accent-filled`, `neutral-tinted` en `critical-transparent`, plus de afkortingen `primary`, `secondary` en `destructive`.
 3. **`color`**: alleen de kleur van het component zelf, en elke waarde werkt. `nldd-badge`, `nldd-icon` en `nldd-progress-bar` nemen een semantische kleur of een Rijkskleur.
 4. **`background`**: het oppervlak waar het component op staat of dat het tekent. De kinderen erven het, dus dit gaat over de omgeving en niet over het component zelf.
 
-**Kies het smalste attribuut dat dekt wat er varieert.** Verandert alleen de kleur, dan is het `color`. Is het een set ontworpen stijlen, dan `appearance`. Verandert ook de betekenis, dus het icoon of wat een schermlezer hoort, dan `variant`. Een toets: verandert de schermlezer of het icoon mee, dan is het `variant`. Verandert alleen het beeld, dan is het een van de andere drie.
+**Kies het smalste attribuut dat dekt wat er varieert.** Verandert alleen de kleur, dan is het `color`. Is het een set ontworpen stijlen, dan `appearance`. Verandert er meer dan het beeld, zoals het icoon, wat een schermlezer hoort of wat er getoond wordt, dan `variant`. Een toets: verandert alleen het beeld, dan is het een van de andere drie.
 
 `appearance` en `color` komen niet samen op één component voor, want `appearance` bevat de kleur al. Splits een `appearance` ook niet op in een kleur en een vorm: niet elke combinatie is ontworpen, en met één attribuut toon je precies de lijst die bestaat.
 
-Gebruik `variant` niet voor iets anders. Wat er zichtbaar is (`text`, `icon`, `icon-and-text`) heet bij `nldd-tab-bar`, `nldd-tag`, `nldd-segmented-control` en `nldd-toggle-button` nog `variant`, maar past niet op deze schaal. Krijgt een nieuw component zo'n as, geef hem dan een eigen naam. Een hiërarchie van rijen, zoals `major` / `minor` / `none` op `nldd-timeline-track-cell`, is `level`.
+Een hiërarchie van rijen, zoals `major` / `minor` / `none` op `nldd-timeline-track-cell`, is geen soort maar een niveau, en heet `level`.
 
 ---
 
