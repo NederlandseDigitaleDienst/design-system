@@ -536,7 +536,7 @@ export const MetMenu = {
 				<nldd-menu slot="popup">
 					<nldd-menu-item
 						text="Bewerken"
-						icon="pencil"
+						icon="edit"
 					></nldd-menu-item>
 					<nldd-menu-item
 						text="Dupliceren"
@@ -604,4 +604,71 @@ export const MetPopover = {
 			},
 		},
 	},
+};
+
+/**
+ * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
+ * bedoeld voor gekleurde vlakken (zoals de hero-main of filled-categories).
+ * `inherit-filled` gebruikt de vlakkleur als icoonkleur wanneer het vlak
+ * `--context-parent-background-color` cascadet; zonder die context valt het
+ * terug op een wit/zwart-contrastflip, zie het derde vlak. Hover, active en
+ * expanded veranderen de kleur niet, zodat het contrast blijft wat het vlak
+ * eromheen geeft.
+ */
+export const OpKleurvlak = {
+	render: () => html`
+		<div style="display: flex; flex-direction: column; gap: 16px;">
+			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+				<nldd-icon-button
+					appearance="inherit-filled"
+					icon="edit"
+					text="Bewerk"
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-tinted"
+					icon="trash"
+					text="Verwijder"
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-filled"
+					icon="global-settings"
+					text="Instellingen"
+					expandable
+					expanded
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-tinted"
+					icon="global-settings"
+					text="Instellingen"
+					expandable
+					expanded
+				></nldd-icon-button>
+			</div>
+			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+				<nldd-icon-button
+					appearance="inherit-filled"
+					icon="edit"
+					text="Bewerk"
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-tinted"
+					icon="trash"
+					text="Verwijder"
+				></nldd-icon-button>
+			</div>
+			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+				<nldd-icon-button
+					appearance="inherit-filled"
+					icon="edit"
+					text="Zonder context (flip)"
+				></nldd-icon-button>
+				<nldd-icon-button
+					appearance="inherit-tinted"
+					icon="trash"
+					text="Verwijder"
+				></nldd-icon-button>
+			</div>
+		</div>
+	`,
+	parameters: { controls: { disable: true } },
 };

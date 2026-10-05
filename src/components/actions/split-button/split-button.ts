@@ -23,7 +23,7 @@
  *
  * @element nldd-split-button
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
- * @attr {string} appearance - Visual style (default: 'neutral-tinted')
+ * @attr {string} appearance - Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)
  * @attr {boolean} disabled - Disabled state
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space
  * @attr {string} text - Button text for the primary action

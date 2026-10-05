@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import '../../../assets/styles/variables.css';
 import type { NLDDButtonBar } from './button-bar.js';
 import './button-bar.js';
 import '../button/button.js';
@@ -256,5 +257,53 @@ describe('nldd-button-bar – child building & attribute propagation', () => {
 		// Remaining button should be re-slotted as child-0
 		const remaining = el.querySelector('nldd-button')!;
 		expect(remaining.getAttribute('slot')).toBe('child-0');
+	});
+});
+
+describe('nldd-button-bar – on a colored surface', () => {
+	let el: NLDDButtonBar;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const surface = (bar: HTMLElement) => getComputedStyle(bar.shadowRoot!.querySelector('.button-bar')!).backgroundColor;
+	const resting = (button: Element) => getComputedStyle(button.shadowRoot!.querySelector('.button, .icon-button')!).backgroundColor;
+
+	it('draws the inherit-tinted surface once: the bar has it, its buttons are clear', async () => {
+		el = await fixture<NLDDButtonBar>(`
+			<nldd-button-bar appearance="inherit-tinted" style="color: rgb(255, 255, 255)">
+				<nldd-button text="Bewerk"></nldd-button>
+				<nldd-icon-button icon="trash" text="Verwijder"></nldd-icon-button>
+			</nldd-button-bar>
+		`);
+		await waitForUpdate(el);
+
+		expect(surface(el)).not.toBe('rgba(0, 0, 0, 0)');
+		for (const child of el.querySelectorAll('nldd-button, nldd-icon-button')) {
+			expect(resting(child)).toBe('rgba(0, 0, 0, 0)');
+		}
+	});
+
+	it('keeps an expanded button in an inherit-tinted bar clear as well: inherit has no state colors', async () => {
+		el = await fixture<NLDDButtonBar>(`
+			<nldd-button-bar appearance="inherit-tinted" style="color: rgb(255, 255, 255)">
+				<nldd-button text="Open" expandable expanded></nldd-button>
+			</nldd-button-bar>
+		`);
+		await waitForUpdate(el);
+
+		expect(resting(el.querySelector('nldd-button')!)).toBe('rgba(0, 0, 0, 0)');
+	});
+
+	it('gives the inherit-filled bar a surface of its own', async () => {
+		el = await fixture<NLDDButtonBar>(`
+			<nldd-button-bar appearance="inherit-filled" style="color: rgb(255, 255, 255)">
+				<nldd-button text="Bewerk"></nldd-button>
+			</nldd-button-bar>
+		`);
+		await waitForUpdate(el);
+
+		expect(surface(el)).toBe('rgb(255, 255, 255)');
 	});
 });

@@ -7,7 +7,7 @@
  *
  * @element nldd-button-bar
  * @attr {string} size - Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style).
- * @attr {string} appearance - Visual style of the buttons (default: 'neutral-tinted')
+ * @attr {string} appearance - Visual style of the buttons (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)
  * @attr {boolean} disabled - Disabled state
  *
  * @slot - Default slot for nldd-button, nldd-icon-button and nldd-button-bar-divider elements

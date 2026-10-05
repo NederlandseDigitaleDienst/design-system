@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDButton } from './button.js';
 import './button.js';
@@ -997,4 +998,38 @@ describe('nldd-button no-tab', () => {
 
 		expect(content.getBoundingClientRect().width).toBeCloseTo(text.getBoundingClientRect().width, 1);
 	});
+});
+
+describe('nldd-button – on a colored surface', () => {
+	let el: NLDDButton;
+
+	afterEach(async () => {
+		await userEvent.unhover(document.body);
+		if (el) cleanup(el);
+	});
+
+	// Read after the background transition, which would otherwise still show the
+	// color it starts from.
+	const surface = async () => {
+		const inner = el.shadowRoot!.querySelector<HTMLElement>('.button')!;
+		await Promise.all(inner.getAnimations().map((animation) => animation.finished));
+		return getComputedStyle(inner).backgroundColor;
+	};
+
+	// The label only has the contrast the colored surface gives it, so no state
+	// may move the background toward it.
+	for (const appearance of ['inherit-tinted', 'inherit-filled']) {
+		it(`keeps one ${appearance} color through hover and expanded`, async () => {
+			el = await fixture<NLDDButton>(`<nldd-button appearance="${appearance}" text="Open" expandable style="color: rgb(255, 255, 255)"></nldd-button>`);
+			await waitForUpdate(el);
+			const resting = await surface();
+
+			await userEvent.hover(el.shadowRoot!.querySelector('.button')!);
+			expect(await surface()).toBe(resting);
+
+			el.expanded = true;
+			await waitForUpdate(el);
+			expect(await surface()).toBe(resting);
+		});
+	}
 });

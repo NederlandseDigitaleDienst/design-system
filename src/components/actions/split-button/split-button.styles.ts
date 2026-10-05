@@ -53,6 +53,22 @@ export const splitButtonStyles = css`
 		--_highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);
 	}
 
+	/* ## On-color: derived from currentColor, like the buttons inside. */
+
+	:host([appearance="inherit-tinted"]) {
+		--_background-color: var(--semantics-buttons-inherit-tinted-background-color);
+		--_divider-color: var(--semantics-buttons-inherit-tinted-divider-color);
+		--_highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
+		/* The surface is see-through: drawn once here, not again under each button. */
+		--context-button-background-color: transparent;
+	}
+
+	:host([appearance="inherit-filled"]) {
+		--_background-color: var(--semantics-buttons-inherit-filled-background-color);
+		--_divider-color: var(--semantics-buttons-inherit-filled-divider-color);
+		--_highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
+	}
+
 	:host([width="full"]) {
 		display: block;
 		width: 100%;

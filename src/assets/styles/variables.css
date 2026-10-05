@@ -1587,51 +1587,13 @@
 	--semantics-buttons-inherit-tinted-content-color: currentColor;
 	--semantics-buttons-inherit-tinted-content-secondary-color: var(--semantics-buttons-inherit-tinted-content-color);
 	--semantics-buttons-inherit-tinted-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
-	--semantics-buttons-inherit-tinted-is-hovered-background-color: color-mix(in oklab, var(--semantics-content-contrast-color) 25%, transparent);
-	--semantics-buttons-inherit-tinted-is-hovered-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-	--semantics-buttons-inherit-tinted-is-hovered-content-secondary-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
-	--semantics-buttons-inherit-tinted-is-hovered-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
-	--semantics-buttons-inherit-tinted-is-active-background-color: color-mix(in oklab, var(--semantics-content-contrast-color) 30%, transparent);
-	--semantics-buttons-inherit-tinted-is-active-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-	--semantics-buttons-inherit-tinted-is-active-content-secondary-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
-	--semantics-buttons-inherit-tinted-is-active-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
-	--semantics-buttons-inherit-tinted-is-expanded-background-color: color-mix(in oklab, var(--semantics-content-contrast-color) 30%, transparent);
-	--semantics-buttons-inherit-tinted-is-expanded-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-	--semantics-buttons-inherit-tinted-is-expanded-content-secondary-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
-	--semantics-buttons-inherit-tinted-is-expanded-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
-	--semantics-buttons-inherit-tinted-is-expanded-is-hovered-background-color: color-mix(in oklab, var(--semantics-content-contrast-color) 35%, transparent);
-	--semantics-buttons-inherit-tinted-is-expanded-is-hovered-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-	--semantics-buttons-inherit-tinted-is-expanded-is-hovered-content-secondary-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
-	--semantics-buttons-inherit-tinted-is-expanded-is-hovered-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
-	--semantics-buttons-inherit-tinted-is-expanded-is-active-background-color: color-mix(in oklab, var(--semantics-content-contrast-color) 40%, transparent);
-	--semantics-buttons-inherit-tinted-is-expanded-is-active-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-	--semantics-buttons-inherit-tinted-is-expanded-is-active-content-secondary-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
-	--semantics-buttons-inherit-tinted-is-expanded-is-active-highlight-border-color: color-mix(in oklab, var(--semantics-content-contrast-color) 10%, transparent);
+	--semantics-buttons-inherit-tinted-divider-color: color-mix(in oklab, currentColor 35%, transparent);
 
 	--semantics-buttons-inherit-filled-background-color: currentColor;
 	--semantics-buttons-inherit-filled-content-color: var(--semantics-content-contrast-color);
 	--semantics-buttons-inherit-filled-content-secondary-color: currentColor;
 	--semantics-buttons-inherit-filled-highlight-border-color: currentColor;
-	--semantics-buttons-inherit-filled-is-hovered-background-color: color-mix(in oklab, currentColor 92%, transparent);
-	--semantics-buttons-inherit-filled-is-hovered-highlight-border-color: currentColor;
-	--semantics-buttons-inherit-filled-is-hovered-content-color: var(--semantics-buttons-inherit-filled-content-color);
-	--semantics-buttons-inherit-filled-is-hovered-content-secondary-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
-	--semantics-buttons-inherit-filled-is-active-background-color: color-mix(in oklab, currentColor 85%, transparent);
-	--semantics-buttons-inherit-filled-is-active-highlight-border-color: currentColor;
-	--semantics-buttons-inherit-filled-is-active-content-color: var(--semantics-buttons-inherit-filled-content-color);
-	--semantics-buttons-inherit-filled-is-active-content-secondary-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
-	--semantics-buttons-inherit-filled-is-expanded-background-color: color-mix(in oklab, currentColor 85%, transparent);
-	--semantics-buttons-inherit-filled-is-expanded-highlight-border-color: currentColor;
-	--semantics-buttons-inherit-filled-is-expanded-content-color: var(--semantics-buttons-inherit-filled-content-color);
-	--semantics-buttons-inherit-filled-is-expanded-content-secondary-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
-	--semantics-buttons-inherit-filled-is-expanded-is-hovered-background-color: color-mix(in oklab, currentColor 80%, transparent);
-	--semantics-buttons-inherit-filled-is-expanded-is-hovered-highlight-border-color: currentColor;
-	--semantics-buttons-inherit-filled-is-expanded-is-hovered-content-color: var(--semantics-buttons-inherit-filled-content-color);
-	--semantics-buttons-inherit-filled-is-expanded-is-hovered-content-secondary-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
-	--semantics-buttons-inherit-filled-is-expanded-is-active-background-color: color-mix(in oklab, currentColor 75%, transparent);
-	--semantics-buttons-inherit-filled-is-expanded-is-active-highlight-border-color: currentColor;
-	--semantics-buttons-inherit-filled-is-expanded-is-active-content-color: var(--semantics-buttons-inherit-filled-content-color);
-	--semantics-buttons-inherit-filled-is-expanded-is-active-content-secondary-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
+	--semantics-buttons-inherit-filled-divider-color: color-mix(in oklab, var(--semantics-content-contrast-color) 25%, transparent);
 
 	/* ## Input fields */
 

@@ -70,7 +70,7 @@ A horizontal container for grouping buttons with a neutral background. Automatic
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Bar size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style). |
-| `appearance` | `string` | Visual style of the buttons (default: 'neutral-tinted') |
+| `appearance` | `string` | Visual style of the buttons (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface) |
 | `disabled` | `boolean` | Disabled state |
 
 **Slots**
@@ -226,7 +226,7 @@ A split button combines a primary action button with a dropdown trigger. The mai
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
-| `appearance` | `string` | Visual style (default: 'neutral-tinted') |
+| `appearance` | `string` | Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface) |
 | `disabled` | `boolean` | Disabled state |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space |
 | `text` | `string` | Button text for the primary action |

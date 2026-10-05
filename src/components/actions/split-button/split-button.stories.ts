@@ -32,7 +32,7 @@ export default {
 	argTypes: {
 		appearance: {
 			control: 'select',
-			options: ['neutral-tinted', 'neutral-base', 'secondary', 'accent-filled', 'primary'],
+			options: ['neutral-tinted', 'neutral-base', 'secondary', 'accent-filled', 'primary', 'inherit-filled', 'inherit-tinted'],
 			description: 'Visuele stijl, inclusief kleur',
 			table: {
 				defaultValue: { summary: 'neutral-tinted' },
@@ -120,6 +120,27 @@ export const Appearances = {
 		<nldd-split-button text="Opslaan" appearance="primary">${menu}</nldd-split-button>
 		<nldd-split-button text="Opslaan" appearance="secondary">${menu}</nldd-split-button>
 		<nldd-split-button text="Opslaan" appearance="neutral-base">${menu}</nldd-split-button>
+	</div>
+`,
+	parameters: {
+		controls: { disable: true },
+	},
+};
+
+/**
+ * De inherit-appearances leiden hun kleuren af van `currentColor` en zijn
+ * bedoeld voor gekleurde vlakken. Bij `inherit-tinted` tekent de split-button het
+ * doorschijnende vlak één keer; de knoppen erin laten het weg, zodat
+ * het niet dubbel over elkaar valt.
+ * Hover, active en expanded veranderen de kleur niet, zodat het contrast met
+ * het label blijft wat het vlak eromheen geeft.
+ */
+export const OpKleurvlak = {
+	render: () => html`
+	<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-split-button text="Opslaan" appearance="inherit-filled">${menu}</nldd-split-button>
+		<nldd-split-button text="Opslaan" appearance="inherit-tinted">${menu}</nldd-split-button>
+		<nldd-button appearance="inherit-tinted" text="Losse knop"></nldd-button>
 	</div>
 `,
 	parameters: {

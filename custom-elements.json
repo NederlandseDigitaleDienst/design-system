@@ -70,7 +70,7 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
-              "description": "Visual style of the buttons (default: 'neutral-tinted')"
+              "description": "Visual style of the buttons (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)"
             },
             {
               "name": "disabled",
@@ -2299,7 +2299,7 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
-              "description": "Visual style (default: 'neutral-tinted')"
+              "description": "Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)"
             },
             {
               "name": "disabled",

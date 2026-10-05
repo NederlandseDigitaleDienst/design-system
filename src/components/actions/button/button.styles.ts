@@ -185,36 +185,43 @@ export const buttonStyles = css`
 	   unresolved inside the tokens). The filled label prefers the surface
 	   color from --context-parent-background-color; that var() must resolve
 	   here on the host — inside a :root token it would freeze — with the
-	   tokens' white/black contrast flip as fallback. */
+	   tokens' white/black contrast flip as fallback.
+	   They keep one color through hover, active and expanded: any change to
+	   the surface can bring it closer to the label, and the contrast between
+	   the two is only what the colored surface around them guarantees. */
 
-	:host([appearance="inherit-tinted"]) {
-		--_background-color: var(--semantics-buttons-inherit-tinted-background-color);
+	:host([appearance="inherit-tinted"]),
+	:host([expanded][appearance="inherit-tinted"]) {
+		/* A group that draws the see-through surface once for all its buttons,
+		   such as an inherit-tinted button bar, clears theirs so the two do not stack. */
+		--_background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
 		--_primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
 		--_secondary-content-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
 		--_highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-inherit-tinted-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-inherit-tinted-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-inherit-tinted-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-inherit-tinted-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-inherit-tinted-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-inherit-tinted-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-inherit-tinted-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-inherit-tinted-is-active-highlight-border-color);
+		--_is-hovered-background-color: var(--_background-color);
+		--_is-hovered-primary-content-color: var(--_primary-content-color);
+		--_is-hovered-secondary-content-color: var(--_secondary-content-color);
+		--_is-hovered-highlight-border-color: var(--_highlight-border-color);
+		--_is-active-background-color: var(--_background-color);
+		--_is-active-primary-content-color: var(--_primary-content-color);
+		--_is-active-secondary-content-color: var(--_secondary-content-color);
+		--_is-active-highlight-border-color: var(--_highlight-border-color);
 	}
 
-	:host([appearance="inherit-filled"]) {
+	:host([appearance="inherit-filled"]),
+	:host([expanded][appearance="inherit-filled"]) {
 		--_background-color: var(--semantics-buttons-inherit-filled-background-color);
 		--_primary-content-color: var(--context-parent-background-color, var(--semantics-buttons-inherit-filled-content-color));
 		--_secondary-content-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
 		--_highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-inherit-filled-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-inherit-filled-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-inherit-filled-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-inherit-filled-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-inherit-filled-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-inherit-filled-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-inherit-filled-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-inherit-filled-is-active-highlight-border-color);
+		--_is-hovered-background-color: var(--_background-color);
+		--_is-hovered-primary-content-color: var(--_primary-content-color);
+		--_is-hovered-secondary-content-color: var(--_secondary-content-color);
+		--_is-hovered-highlight-border-color: var(--_highlight-border-color);
+		--_is-active-background-color: var(--_background-color);
+		--_is-active-primary-content-color: var(--_primary-content-color);
+		--_is-active-secondary-content-color: var(--_secondary-content-color);
+		--_is-active-highlight-border-color: var(--_highlight-border-color);
 	}
 
 	/* For inherit-filled the inner button keeps the inherited on-color:
@@ -337,40 +344,6 @@ export const buttonStyles = css`
 		--_is-active-primary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-color);
 		--_is-active-secondary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-secondary-color);
 		--_is-active-highlight-border-color: transparent;
-	}
-
-	/* The on-color variants keep their currentColor-derived content; expanded
-	   only deepens the background. Content is restated (not inherited from the
-	   resting block) because the default [expanded] block has equal
-	   specificity and later source order, so it would otherwise win. */
-	:host([expanded][appearance="inherit-tinted"]) {
-		--_background-color: var(--semantics-buttons-inherit-tinted-is-expanded-background-color);
-		--_primary-content-color: var(--semantics-buttons-inherit-tinted-is-expanded-content-color);
-		--_secondary-content-color: var(--semantics-buttons-inherit-tinted-is-expanded-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-inherit-tinted-is-expanded-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-inherit-tinted-is-expanded-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-inherit-tinted-is-expanded-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-inherit-tinted-is-expanded-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-inherit-tinted-is-expanded-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-inherit-tinted-is-expanded-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-inherit-tinted-is-expanded-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-inherit-tinted-is-expanded-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-inherit-tinted-is-expanded-is-active-highlight-border-color);
-	}
-
-	:host([expanded][appearance="inherit-filled"]) {
-		--_background-color: var(--semantics-buttons-inherit-filled-is-expanded-background-color);
-		--_primary-content-color: var(--context-parent-background-color, var(--semantics-buttons-inherit-filled-is-expanded-content-color));
-		--_secondary-content-color: var(--semantics-buttons-inherit-filled-is-expanded-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-inherit-filled-is-expanded-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-inherit-filled-is-expanded-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-inherit-filled-is-expanded-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-inherit-filled-is-expanded-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-inherit-filled-is-expanded-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-inherit-filled-is-expanded-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-inherit-filled-is-expanded-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-inherit-filled-is-expanded-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-inherit-filled-is-expanded-is-active-highlight-border-color);
 	}
 
 	:host([width="full"]) {
