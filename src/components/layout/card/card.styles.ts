@@ -55,9 +55,6 @@ export const cardStyles = css`
 		transition: background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
 	}
 
-	/* A card that is one link or button reacts like a button: one step up on
-	   hover, one more while pressed. Only the overlay counts, so a button lifted
-	   above it in the footer does not light up the whole card. */
 	@media (hover: hover) {
 		.card:has(> .card__action:hover) {
 			--_border-color: var(--_is-hovered-border-color);

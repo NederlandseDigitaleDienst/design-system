@@ -185,15 +185,10 @@ export const buttonStyles = css`
 	   unresolved inside the tokens). The filled label prefers the surface
 	   color from --context-parent-background-color; that var() must resolve
 	   here on the host — inside a :root token it would freeze — with the
-	   tokens' white/black contrast flip as fallback.
-	   They keep one color through hover, active and expanded: any change to
-	   the surface can bring it closer to the label, and the contrast between
-	   the two is only what the colored surface around them guarantees. */
+	   tokens' white/black contrast flip as fallback. */
 
 	:host([appearance="inherit-tinted"]),
 	:host([expanded][appearance="inherit-tinted"]) {
-		/* A group that draws the see-through surface once for all its buttons,
-		   such as an inherit-tinted button bar, clears theirs so the two do not stack. */
 		--_background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
 		--_primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
 		--_secondary-content-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);

@@ -151,13 +151,10 @@ export const iconButtonStyles = css`
 
 	/* The on-color variants derive from currentColor; see nldd-button for
 	   the full rationale. The filled label resolves the context var here on
-	   the host, with the tokens' white/black contrast flip as fallback. They
-	   keep one color through hover, active and expanded, as in nldd-button. */
+	   the host, with the tokens' white/black contrast flip as fallback. */
 
 	:host([appearance="inherit-tinted"]),
 	:host([expanded][appearance="inherit-tinted"]) {
-		/* A group that draws the see-through surface once for all its buttons,
-		   such as an inherit-tinted button bar, clears theirs so the two do not stack. */
 		--_background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
 		--_primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
 		--_highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);

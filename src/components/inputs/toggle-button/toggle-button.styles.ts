@@ -108,7 +108,6 @@ export const toggleButtonStyles = css`
 		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-active-highlight-border-color);
 	}
 
-	/* The transparent appearances fill only when selected: the fill is what says it is on. */
 	:host([appearance="neutral-transparent"]) {
 		--_background-color: transparent;
 		--_content-color: var(--semantics-buttons-neutral-transparent-content-color);
@@ -151,9 +150,6 @@ export const toggleButtonStyles = css`
 		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-accent-transparent-is-selected-is-active-highlight-border-color);
 	}
 
-	/* Without a surface, a selected-icon carries the state instead of a fill:
-	   the transparent appearances stay quiet when on. With a surface, the
-	   surface fills as usual. */
 	:host([selected-icon]:is([appearance="neutral-transparent"], [appearance="accent-transparent"])) {
 		--_is-selected-background-color: var(--_background-color);
 		--_is-selected-content-color: var(--_content-color);
