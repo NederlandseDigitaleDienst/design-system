@@ -31,6 +31,8 @@
  * @attr {boolean} indeterminate - Renders the rotating elastic arc animation
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
+ * @slot - Place for nldd-progress-circle-segment-indicator elements
+ *
  * @element nldd-progress-circle-segment-indicator
  *
  * @attr {number} value - Share of the parent's total (default 0; <=0 hides segment)

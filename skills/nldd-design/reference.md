@@ -2495,6 +2495,13 @@ The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, a
 | `back-text` | `string` | Text of the back button. The button appears as soon as back-text or back-href is set; without text it falls back to the translation ("Terug"). |
 | `width` | `string` | Limits the bar content to a max-width so it lines up with the page sections. 'full' fills the entire width, or pass your own CSS length. |
 
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `global` | The global navigation: an nldd-menu-bar with nldd-menu-bar-item elements. On narrow widths these items move into the menu sheet behind the menu button. |
+| `utility` | The utility navigation, such as search and language: an nldd-menu-bar with nldd-menu-bar-item elements. Stays in the bar on every width. |
+
 ### `<nldd-top-title-bar>`
 
 A toolbar for page and container headings with optional navigation and action buttons. The component has two states: - Default: the back button shows the previous page title as a text button - Compact (class `is-compact`): the back button is an icon button, a divider and the toolbar title are visible When `collapse-anchor` is set, the `is-compact` class is automatically applied as soon as the top of the anchor element reaches this bar's own top edge (the sticky header line). Measuring the bar rather than the page keeps it correct in both nested and root scroll modes; it also re-points at the live scroll target when the page switches mode. Without `collapse-anchor` the bar takes a static state: compact when `text` is set (so the title shows in the title-group), non-compact otherwise (so the `back-text` button stays visible). An anchored bar hides its own title from assistive technology. The anchor is the heading the title swaps in for, so both carry the same words: once you scroll past the heading, a screen reader would otherwise find the same title twice. Sighted readers see one at a time, and this makes that true for everyone. Anchor at the heading, then, and not at some other element that happens to sit at the right height: the bar hands its title over to it.
@@ -2766,6 +2773,12 @@ Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circul
 | `accessible-label` | `string` | Full override of aria-valuetext |
 | `indeterminate` | `boolean` | Renders the rotating elastic arc animation |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | Place for nldd-progress-circle-segment-indicator elements |
 
 ### `<nldd-progress-circle-segment-indicator>`
 

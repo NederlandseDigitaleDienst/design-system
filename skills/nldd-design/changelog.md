@@ -86,7 +86,10 @@ here; consult the commit history if you need that level of detail.
 - **A component that another component builds can be translated.** The activity indicator in a loading `nldd-button`, `nldd-icon-button` and `nldd-inline-dialog`, the tokens of `nldd-token-field`, the overflow menus of `nldd-toolbar`, `nldd-menu-bar` and `nldd-document-tab-bar`, and the pickers of `nldd-date-field` and `nldd-time-field` sit in a shadow root, so the `translations` you set on the outer element never reached them and they stayed Dutch. They read `setTranslations()` now.
 
 - **`nldd-dropdown` shows the value your app sets.** A value set with `select.value`, `selectedIndex` or `option.selected` kept the old label on screen until someone picked an option by hand, so a form that loaded saved data showed a different choice than it held. The label was a copy in the shadow DOM that only updated on `slotchange` and `change`. It is gone: the `<select>` now shows its own choice, so there is nothing left to go stale.
+
 - **The changelog no longer repeats its introduction** under 0.8.93.
+
+- **The `global` and `utility` slots of `nldd-top-navigation-bar` are documented.** The component has always rendered both, each taking an `nldd-menu-bar`, but neither had an `@slot` line. `custom-elements.json` and the reference in `nldd-design` therefore listed no slots for it, and a check that validates markup against the manifest rejected `<nldd-menu-bar slot="global">`. The default slot of `nldd-progress-circle`, where its segment indicators go, was missing the same way.
 
 ## [0.8.93](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.92...v0.8.93) (2026-09-30)
 
