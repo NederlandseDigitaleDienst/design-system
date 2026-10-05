@@ -21,6 +21,8 @@ here; consult the commit history if you need that level of detail.
 
 - **Menus line up, and use fewer icons.** One checkbox or radio item gives the whole `nldd-menu` its check-mark column, so the text of every group starts at one line. A new design guideline says when an icon in a menu adds something, and when it is only filler.
 
+- **Button bars and split buttons work on a colored surface.** `nldd-button-bar` and `nldd-split-button` take `inherit-tinted` and `inherit-filled`, like the buttons inside, instead of a gray block. The inherit buttons now keep one color through hover, press and expanded, so their label keeps the contrast the surface gives it.
+
 - **Attributes say what they do.** `variant` is `appearance` on nine components where it was a designed style, `level` on `nldd-timeline-track-cell`, and `mode` is `variant` on `nldd-progress-bar` and `nldd-progress-circle`. The values stay the same; search your markup, since a leftover attribute is ignored without a warning. See Breaking.
 
 ### Added
