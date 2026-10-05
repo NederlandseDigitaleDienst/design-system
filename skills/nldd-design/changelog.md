@@ -29,6 +29,8 @@ here; consult the commit history if you need that level of detail.
 
 - **Concept translations in Frisian (`translations/fy`) and Papiamento as written on Curaçao and Bonaire (`translations/pap-CW`) and on Aruba (`translations/pap-AW`).** Every text is translated, also where the wording is a guess, since correcting a text is easier than writing one. No native speaker has checked them yet: report a better wording as an issue and they improve with each release.
 
+- **`no-filter` on `nldd-combo-box` and `nldd-token-field`** leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides every option that does not contain the typed text, which also hides a server match on, say, an e-mail address. The part of an option that matches the typed text is still marked.
+
 - **`loading-text` on `nldd-button` and `nldd-icon-button`** says what the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Without it the indicator says its translated "Laden".
 
 - **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down.** Pulling a page past its top used to open a white gap above the ribbon; the ribbon now carries on into it and only grows longer. A bar above the navigation bar, such as `nldd-status-bar`, stays clear: the ribbon starts at the top of the page, not right above the logo. It works in browsers that support scroll-driven animations; elsewhere the gap stays as it was.

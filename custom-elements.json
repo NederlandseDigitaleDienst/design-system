@@ -1952,9 +1952,16 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "{ hide = true }",
+                  "default": "{}",
+                  "type": {
+                    "text": "{ hide?: boolean }"
+                  }
                 }
               ],
-              "description": "Filter items based on a query string.\n\nMatching items are kept visible. Non-matching items are hidden. Matching\nitems receive `query=<query>` so their text-cell bolds the non-typed\nremainder (predictive completion — the ARIA APG pattern for combobox).\n\nWhen the query is empty, all items are shown and `query` is cleared."
+              "description": "Filter items based on a query string.\n\nMatching items are kept visible. Non-matching items are hidden. Matching\nitems receive `query=<query>` so their text-cell bolds the non-typed\nremainder (predictive completion — the ARIA APG pattern for combobox).\n\nWhen the query is empty, all items are shown and `query` is cleared.\n\nWith `hide: false` nothing is hidden and every item gets the `query`, for\na list someone else already filtered, such as a server answering per\nkeystroke. Text without the query in it is shown as it is."
             },
             {
               "kind": "method",
@@ -8828,6 +8835,17 @@
             },
             {
               "kind": "field",
+              "name": "noFilter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Leaves the options as they are while typing: the list was filtered already, by a server.",
+              "attribute": "no-filter",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -9249,6 +9267,15 @@
               "default": "false",
               "description": "Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted.",
               "fieldName": "allowCustom"
+            },
+            {
+              "name": "no-filter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.",
+              "fieldName": "noFilter"
             },
             {
               "name": "name",
@@ -21977,6 +22004,17 @@
             },
             {
               "kind": "field",
+              "name": "noFilter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Leaves the options as they are while typing: the list was filtered already, by a server.",
+              "attribute": "no-filter",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "valid",
               "type": {
                 "text": "boolean"
@@ -22336,6 +22374,15 @@
               "default": "false",
               "description": "Allow free-typed values (not just menu options)",
               "fieldName": "allowCustom"
+            },
+            {
+              "name": "no-filter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.",
+              "fieldName": "noFilter"
             },
             {
               "name": "valid",

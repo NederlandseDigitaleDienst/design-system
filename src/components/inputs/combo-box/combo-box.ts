@@ -21,6 +21,7 @@
  * @attr {boolean} disabled - Disabled state
  * @attr {boolean} readonly - Read-only state: the value stays readable, selectable and in the tab order, but the menu does not open and there is nothing to clear. The input drops its combobox role and the aria that goes with it, so assistive technology is not told about a list it cannot open. Use this where the value belongs to the record rather than to the form, e.g. the product an asset is an instance of.
  * @attr {boolean} allow-custom - Allow committing free-typed values that match no option (Enter/blur). Default false: only menu options are accepted.
+ * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
  * @attr {string} name - Input name for form submission
  * @attr {string} autocomplete - Browser autofill hint. Default 'off' to prevent the native autofill panel from competing with the menu dropdown. Set to a valid token (e.g. 'country', 'organization') when browser autofill is desired.
  * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input. Required for screen reader accessibility.
@@ -136,6 +137,10 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	 *  non-matching typed value is discarded (reverted to the current value). */
 	@property({ type: Boolean, reflect: true, attribute: 'allow-custom' })
 	allowCustom = false;
+
+	/** Leaves the options as they are while typing: the list was filtered already, by a server. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-filter' })
+	noFilter = false;
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
@@ -503,7 +508,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleInput(e: Event): void {
 		const input = e.target as HTMLInputElement;
 		this.text = input.value;
-		this._menu?.filter(this.text);
+		this._menu?.filter(this.text, { hide: !this.noFilter });
 		this._updateActiveDescendant();
 		// The reverse of the allow-custom guard in _openMenu: typing until
 		// nothing matches closes an already-open menu instead of leaving the

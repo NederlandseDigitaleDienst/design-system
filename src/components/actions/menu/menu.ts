@@ -1874,11 +1874,15 @@ export class NLDDMenu extends LitElement {
 	 * remainder (predictive completion — the ARIA APG pattern for combobox).
 	 *
 	 * When the query is empty, all items are shown and `query` is cleared.
+	 *
+	 * With `hide: false` nothing is hidden and every item gets the `query`, for
+	 * a list someone else already filtered, such as a server answering per
+	 * keystroke. Text without the query in it is shown as it is.
 	 */
-	public filter(query: string): void {
+	public filter(query: string, { hide = true }: { hide?: boolean } = {}): void {
 		const allItems = Array.from(this.querySelectorAll('nldd-menu-item')) as NLDDMenuItem[];
 		allItems.forEach(item => {
-			const matches = !query || this.filterFn(query, item);
+			const matches = !hide || !query || this.filterFn(query, item);
 			item.toggleAttribute('hidden', !matches);
 			item.query = (matches && query) ? query : '';
 		});

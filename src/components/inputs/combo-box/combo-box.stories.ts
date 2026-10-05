@@ -63,6 +63,12 @@ export default {
 			description: 'Sta vrij getypte waarden toe die geen menu-optie zijn (Enter/blur). Default false: alleen menu-opties.',
 			table: { defaultValue: { summary: false } },
 		},
+		noFilter: {
+			name: 'no-filter',
+			control: 'boolean',
+			description: 'Laat de opties staan tijdens het typen, voor een lijst die de server al filterde',
+			table: { defaultValue: { summary: false } },
+		},
 		name: {
 			control: 'text',
 			description: 'Naam voor formulierverwerking',
@@ -117,6 +123,7 @@ export default {
 		readonly: false,
 		disabled: false,
 		allowCustom: false,
+		noFilter: false,
 		name: '',
 		value: '',
 		minlength: null,
@@ -140,6 +147,7 @@ const Template = (args: Record<string, any>) => html`
 		?invalid=${args.invalid}
 		?disabled=${args.disabled}
 		?allow-custom=${args.allowCustom}
+		?no-filter=${args.noFilter}
 		name=${args.name}
 		value=${args.value}
 		minlength=${args.minlength ?? nothing}

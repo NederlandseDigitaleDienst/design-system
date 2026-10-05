@@ -1043,3 +1043,41 @@ describe('nldd-combo-box options that arrive after the keystroke', () => {
 		expect(menu.matches(':popover-open')).toBe(false);
 	});
 });
+
+// A server that searched on the e-mail address returns "Tim de Vries" for
+// "vries@". The field must not hide that match because the name does not
+// contain what was typed.
+describe('nldd-combo-box no-filter', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const typeServerQuery = async (attrs: string) => {
+		el = await fixture(`
+			<nldd-combo-box accessible-label="Ontvanger" ${attrs}>
+				<nldd-menu>
+					<nldd-menu-item text="Tim de Vries" value="t1"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-combo-box>
+		`);
+		await waitForUpdate(el);
+		const input = el.shadowRoot!.querySelector<HTMLInputElement>('input')!;
+		input.focus();
+		input.value = 'vries@';
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+		return el.querySelector('nldd-menu-item')!;
+	};
+
+	it('hides an option without the typed text by default', async () => {
+		const item = await typeServerQuery('');
+		expect(item.hasAttribute('hidden')).toBe(true);
+	});
+
+	it('leaves the option visible with no-filter', async () => {
+		const item = await typeServerQuery('no-filter');
+		expect(item.hasAttribute('hidden')).toBe(false);
+	});
+});

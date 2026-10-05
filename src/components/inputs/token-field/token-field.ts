@@ -20,6 +20,7 @@
  * @attr {string} autocomplete - Autocomplete hint forwarded to the inner input
  * @attr {string} accessible-label - Accessible label forwarded as aria-label to the input
  * @attr {boolean} allow-custom - Allow free-typed values (not just menu options)
+ * @attr {boolean} no-filter - Leaves the options as they are while typing, for a list your server already filtered per keystroke. Without it the field hides options that do not contain the typed text, which also hides a server match on, say, an e-mail address.
  * @attr {boolean} valid - Marks the field valid (shows the valid icon)
  * @attr {boolean} invalid - Marks the field invalid (shows the invalid icon)
  * @attr {boolean} no-spellcheck - Disables browser spellchecking on the inner input
@@ -116,6 +117,10 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  the input stays visible when no options remain. */
 	@property({ type: Boolean, reflect: true, attribute: 'allow-custom' })
 	allowCustom = false;
+
+	/** Leaves the options as they are while typing: the list was filtered already, by a server. */
+	@property({ type: Boolean, reflect: true, attribute: 'no-filter' })
+	noFilter = false;
 
 	@property({ type: Boolean, reflect: true })
 	valid = false;
@@ -894,7 +899,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  typing, selecting, and whenever `values` changes. */
 	private _syncMenuItems(): void {
 		if (!this._menu) return;
-		this._menu.filter(this._text);
+		this._menu.filter(this._text, { hide: !this.noFilter });
 		this._hideSelectedMenuItems();
 		this._updateActiveDescendant();
 		// Don't leave an empty menu open. Without options the empty-state dialog is

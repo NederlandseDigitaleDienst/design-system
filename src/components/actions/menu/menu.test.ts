@@ -473,6 +473,23 @@ describe('nldd-menu filter', () => {
 			expect(i.hasAttribute('hidden')).toBe(false);
 		});
 	});
+
+	// For a list a server already filtered: hiding what does not contain the
+	// typed text would throw away a match the server made on something else.
+	it('hides nothing with hide: false, and still marks the query', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Aardappelen"></nldd-menu-item>
+				<nldd-menu-item text="Broccoli"></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await waitForUpdate(el);
+		(el as unknown as { filter(q: string, o: { hide: boolean }): void }).filter('aa', { hide: false });
+		await waitForUpdate(el);
+		const items = el.querySelectorAll('nldd-menu-item');
+		items.forEach(i => expect(i.hasAttribute('hidden')).toBe(false));
+		expect(items[0].getAttribute('query')).toBe('aa');
+	});
 });
 
 describe('nldd-menu empty state', () => {
