@@ -566,7 +566,11 @@ describe('nldd-text-editor', () => {
 		expect(chip).not.toBeNull();
 		// the @ is the 'at' icon, followed by the name; raw syntax is replaced
 		expect(chip!.querySelector('.cm-md-mention-token-icon')).not.toBeNull();
-		expect(chip!.textContent).toContain('Anouk');
+		// The name is CSS content, so a spellchecker has no text to underline.
+		const name = chip!.querySelector('.cm-md-mention-token-name') as HTMLElement;
+		expect(name.dataset.label).toBe('Anouk');
+		expect(name.textContent).toBe('');
+		expect(getComputedStyle(name, '::after').content).toBe('"Anouk"');
 		expect(el2.shadowRoot!.querySelector('.cm-content')!.textContent).not.toContain('(user:1)');
 		cleanup(el2);
 	});

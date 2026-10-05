@@ -310,6 +310,12 @@ export const textEditorStyles = css`
 		vertical-align: -0.16em;
 	}
 
+	/* Generated content, not a text node: Safari spellchecks a name in the
+	   editor despite spellcheck="false", and it cannot see this. */
+	.cm-md-mention-token-name::after {
+		content: attr(data-label);
+	}
+
 	.cm-md-mention-token[data-selected] {
 		color: var(--_mention-token-is-selected-content-color);
 		background-color: var(--_mention-token-is-selected-background-color);
