@@ -244,6 +244,14 @@ export class NLDDMenuItem extends LitElement {
 		this._cachedSubmenuEl = this.querySelector(':scope > nldd-menu');
 	}
 
+	override updated(changedProperties: Map<string, unknown>): void {
+		// An item that becomes checkable, or stops being so, changes whether its
+		// menu reserves the check-mark column, also while the menu is open.
+		if (changedProperties.has('type') && changedProperties.get('type') !== undefined && this.menuVariant) {
+			(this.closest('nldd-menu') as NLDDMenu | null)?._claimItems();
+		}
+	}
+
 	override firstUpdated(): void {
 		// Submenu attachment is one-shot in v1 — a nldd-menu added after this
 		// point would silently miss aria-controls, the chevron indicator, the

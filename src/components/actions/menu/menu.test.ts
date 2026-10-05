@@ -2642,6 +2642,23 @@ describe('nldd-menu check-mark column', () => {
 		}
 	});
 
+	it('adds the column when an item becomes a checkbox while the menu is open', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Bewerk"></nldd-menu-item>
+				<nldd-menu-item text="Toon zijbalk"></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await open(el);
+		const [edit, sidebar] = Array.from(el.querySelectorAll('nldd-menu-item')) as Array<HTMLElement & { type: string; updateComplete: Promise<unknown> }>;
+		expect(checkCell(edit)).toBeNull();
+
+		sidebar.type = 'checkbox';
+		await sidebar.updateComplete;
+		await (edit as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+		expect(checkCell(edit)).not.toBeNull();
+	});
+
 	it('lets a submenu decide for its own items', async () => {
 		el = await fixture(`
 			<nldd-menu>

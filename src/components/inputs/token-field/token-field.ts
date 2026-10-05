@@ -789,6 +789,8 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 		if (!this._isOpen) {
 			this._highlightedId = '';
 		} else {
+			// However it opened, there is nothing left to open later.
+			this._openPending = false;
 			requestAnimationFrame(() => {
 				// The menu clears its highlight on open; seat it on the first option
 				// by default so that option is the active descendant and Enter picks

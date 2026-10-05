@@ -358,14 +358,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 			this.text = '';
 			return;
 		}
-		// Scope to items that belong directly to the wired menu — without the
-		// closest() filter, a nested nldd-menu submenu's items would match
-		// before the intended top-level item when value keys overlap. Today's
-		// combo-boxes are flat, but this keeps the derivation correct as the
-		// menu structure gains depth.
-		const items = Array.from(this._menu.querySelectorAll<NLDDMenuItem>('nldd-menu-item'))
-			.filter(item => item.closest('nldd-menu') === this._menu);
-		for (const item of items) {
+		for (const item of this._ownMenuItems()) {
 			if ((item.value || item.text) === this.value) {
 				this.text = item.text;
 				return;
@@ -394,6 +387,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		if (!this._isOpen) {
 			this._highlightedId = '';
 		} else {
+			// However it opened, there is nothing left to open later.
+			this._openPending = false;
 			// The menu clears its highlight on open; seat it on the first option by
 			// default so it's the active descendant and Enter picks it, unless
 			// something is already highlighted.
@@ -454,23 +449,30 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	private _handleMenuItemsChange = (): void => {
 		if (!this._menu || this.shadowRoot?.activeElement !== this._input) return;
-		const open = this._menu.matches(':popover-open');
-		const hasItems = this._hasVisibleMenuItems();
-		if (open) {
-			if (this.allowCustom && !hasItems) this._closeMenu();
+		if (this._menu.matches(':popover-open')) {
+			if (this.allowCustom && !this._hasVisibleMenuItems()) this._closeMenu();
 			return;
 		}
-		if (this._openPending && hasItems) {
+		if (this._openPending && this._hasVisibleMenuItems()) {
 			this._openPending = false;
 			this._openMenu();
 		}
 	};
 
+	/**
+	 * The items that belong to the wired menu itself. A nested nldd-menu
+	 * submenu's items are left out, so they cannot match before the intended
+	 * top-level item when values or labels overlap.
+	 */
+	private _ownMenuItems(): NLDDMenuItem[] {
+		if (!this._menu) return [];
+		return Array.from(this._menu.querySelectorAll<NLDDMenuItem>('nldd-menu-item'))
+			.filter(item => item.closest('nldd-menu') === this._menu);
+	}
+
 	/** Top-level menu items that survived the current filter. */
 	private _hasVisibleMenuItems(): boolean {
-		if (!this._menu) return false;
-		return Array.from(this._menu.querySelectorAll<NLDDMenuItem>('nldd-menu-item:not([hidden])'))
-			.some(item => item.closest('nldd-menu') === this._menu);
+		return this._ownMenuItems().some(item => !item.hidden);
 	}
 
 	public _closeMenu(): void {
@@ -594,8 +596,8 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	private _commitTypedText(): void {
 		// Typing an option's label in full means that option: its value goes to
 		// the form, not the label.
-		const option = Array.from(this._menu?.querySelectorAll<NLDDMenuItem>('nldd-menu-item') ?? [])
-			.find(item => item.closest('nldd-menu') === this._menu && item.text.trim().toLowerCase() === this.text.trim().toLowerCase());
+		const typed = this.text.trim().toLowerCase();
+		const option = this._ownMenuItems().find(item => item.text.trim().toLowerCase() === typed);
 		if (option) this.text = option.text;
 		const value = option ? option.value || option.text : this.text;
 		this._typedText = null;
