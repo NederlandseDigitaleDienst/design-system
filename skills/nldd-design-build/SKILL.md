@@ -61,7 +61,7 @@ Het pakket levert het rijkswapen op een lintblauw vlak mee, als `@nldd/design-sy
 
 Het pakket levert allebei: `@nldd/design-system/favicon.svg` voor de tab, en `@nldd/design-system/touch-icon.png` voor het icoon op het beginscherm, want daar accepteert Safari geen SVG. Die PNG is 180 bij 180, de maat die Apple vraagt.
 
-Wil je een andere achtergrond, bijvoorbeeld je eigen huiskleur, kopieer de SVG dan en verander de `fill` van het eerste pad. Een favicon laadt de browser los van de pagina, dus CSS van je site komt er niet bij: een variabele of een class werkt hier niet.
+Het logo, het lint en de huisstijlkleuren vallen onder dezelfde voorwaarden als RijksSans: uitsluitend voor de Rijksoverheid en partijen die in haar opdracht werken. Het rijkswapen mag alleen samen met het lint worden gebruikt. Zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md).
 
 RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken. De voorwaarden staan in [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, dan kun je 2 kanten op:
 
