@@ -70,6 +70,11 @@ const exports = {
 	// Opt-in FOUC guard — hides the page until custom elements upgrade. Kept out
 	// of ./styles because hiding the body is opinionated; import it explicitly.
 	'./styles/fouc': './dist/css/fouc.css',
+	// The font files themselves, for a site that serves them without a bundler
+	// (a static site that only publishes its own folder): a build step copies
+	// them from here instead of a copy living in every repository. Their terms
+	// stay in NOTICES.md; this only makes the path reachable.
+	'./fonts/*': './dist/fonts/*',
 	// The identity marks, for the tab strip and the home screen. Plain paths, so
 	// a bundler resolves them to a URL and a build step can copy them; an entry
 	// here is what makes that possible at all, since a package with an exports

@@ -455,6 +455,7 @@
     "./styles/variables": "./dist/css/variables.css",
     "./styles/tokens": "./dist/css/tokens.css",
     "./styles/fouc": "./dist/css/fouc.css",
+    "./fonts/*": "./dist/fonts/*",
     "./favicon.svg": "./dist/favicon.svg",
     "./touch-icon.png": "./dist/touch-icon.png",
     "./breakpoints": {

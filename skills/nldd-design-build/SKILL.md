@@ -75,6 +75,8 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
    }
    ```
 
+Serveer je de fonts zelf, bijvoorbeeld vanuit een statische site die alleen zijn eigen map publiceert, haal ze dan in je buildstap uit het pakket: `import.meta.resolve('@nldd/design-system/fonts/RijksSansWeb-Regular.woff2')` geeft het pad, en zo ook voor de andere bestanden in die map. Zet geen kopie in je eigen repository; dan blijft `NOTICES.md` de enige plek voor de voorwaarden.
+
 De eerste weg is de schoonste: dan zit het font niet eens in je CSS. De tweede is een uitzondering op wat hieronder over variabelen staat, en die staat hier omdat er geen attribuut voor is. Voor kleur, ruimte en typografie is dat er wel.
 
 Voor tree-shaking kun je ook per component importeren via de subpath-export (bijv. `@nldd/design-system/button`). Frameworks die templates compileren, moeten `nldd-*` als custom elements herkennen (in Vue: `isCustomElement`).

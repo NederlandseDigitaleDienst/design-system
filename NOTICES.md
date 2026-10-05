@@ -1,6 +1,6 @@
 ## Third-party notices
 
-Het NLDD Designsysteem (de broncode) is gelicentieerd onder **EUPL-1.2**, zie [`LICENSE`](./LICENSE) voor de volledige tekst. De fontbestanden in `src/assets/fonts/` vallen daar niet onder; die hebben hun eigen licenties:
+Het NLDD Designsysteem (de broncode) is gelicentieerd onder **EUPL-1.2**, zie [`LICENSE`](./LICENSE) voor de volledige tekst. De fontbestanden in `src/assets/fonts/` vallen daar niet onder; die hebben hun eigen licenties. In het npm-pakket staan ze in `dist/fonts/`, aanspreekbaar als `@nldd/design-system/fonts/<bestand>`; dat maakt het pad bereikbaar en verandert niets aan de voorwaarden hieronder.
 
 ---
 

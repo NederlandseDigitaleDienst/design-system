@@ -43,6 +43,8 @@ here; consult the commit history if you need that level of detail.
 
 - **`appearance="neutral-base"` on `nldd-segmented-control`**, for a segmented control on a tinted surface, as `nldd-button-bar` has it. The selected segment keeps its fill. For a quiet row without a track, use `nldd-toggle-button-group` with `type="radio"` and a transparent appearance.
 
+- **The font files are exported as `@nldd/design-system/fonts/*`.** A site that serves the fonts itself without a bundler, such as a static site that only publishes its own folder, had to copy the woff2 files from `node_modules` into its own repository. A build step can now take them from the package, with `import.meta.resolve('@nldd/design-system/fonts/RijksSansWeb-Regular.woff2')`, so the copies and their separate license notes can go. The terms in `NOTICES.md` do not change: the path is only reachable.
+
 - **`loading-text` on `nldd-button` and `nldd-icon-button`** says what the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Without it the indicator says its translated "Laden".
 
 - **The ribbon in `nldd-top-navigation-bar` stretches when the page is pulled down.** Pulling a page past its top used to open a white gap above the ribbon; the ribbon now carries on into it and only grows longer. A bar above the navigation bar, such as `nldd-status-bar`, stays clear: the ribbon starts at the top of the page, not right above the logo. It works in browsers that support scroll-driven animations; elsewhere the gap stays as it was.
