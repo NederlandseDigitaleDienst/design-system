@@ -11,7 +11,10 @@ export const cardStyles = css`
 	:host {
 		--_background-color: var(--components-card-background-color);
 		--_border-color: var(--components-card-highlight-border-color);
-		--_highlight-border: inset 0 0 0 var(--components-card-highlight-border-width) var(--_border-color);
+		--_is-hovered-background-color: var(--components-card-is-hovered-background-color);
+		--_is-hovered-border-color: var(--components-card-is-hovered-highlight-border-color);
+		--_is-active-background-color: var(--components-card-is-active-background-color);
+		--_is-active-border-color: var(--components-card-is-active-highlight-border-color);
 
 		display: flex;
 		/* Anchor for the focus ring, which hangs outside the card box. */
@@ -30,6 +33,10 @@ export const cardStyles = css`
 	:host([background="tinted"]) {
 		--_background-color: var(--components-card-tinted-background-color);
 		--_border-color: var(--components-card-tinted-highlight-border-color);
+		--_is-hovered-background-color: var(--components-card-tinted-is-hovered-background-color);
+		--_is-hovered-border-color: var(--components-card-tinted-is-hovered-highlight-border-color);
+		--_is-active-background-color: var(--components-card-tinted-is-active-background-color);
+		--_is-active-border-color: var(--components-card-tinted-is-active-highlight-border-color);
 	}
 
 
@@ -45,6 +52,22 @@ export const cardStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 		isolation: isolate;
+		transition: background-color var(--primitives-transition-duration-fast) var(--primitives-transition-easing-default);
+	}
+
+	/* A card that is one link or button reacts like a button: one step up on
+	   hover, one more while pressed. Only the overlay counts, so a button lifted
+	   above it in the footer does not light up the whole card. */
+	@media (hover: hover) {
+		.card:has(> .card__action:hover) {
+			--_border-color: var(--_is-hovered-border-color);
+			background-color: var(--_is-hovered-background-color);
+		}
+	}
+
+	.card:has(> .card__action:active) {
+		--_border-color: var(--_is-active-border-color);
+		background-color: var(--_is-active-background-color);
 	}
 
 	.card::after {
@@ -52,7 +75,7 @@ export const cardStyles = css`
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
-		box-shadow: var(--_highlight-border);
+		box-shadow: inset 0 0 0 var(--components-card-highlight-border-width) var(--_border-color);
 		pointer-events: none;
 	}
 

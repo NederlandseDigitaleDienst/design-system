@@ -1753,6 +1753,14 @@
 	--components-card-highlight-border-width: var(--semantics-surfaces-border-width);
 	--components-card-highlight-border-color: var(--semantics-surfaces-base-border-color);
 	--components-card-tinted-highlight-border-color: var(--semantics-surfaces-tinted-border-color);
+	--components-card-is-hovered-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-150));
+	--components-card-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+	--components-card-is-active-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
+	--components-card-is-active-highlight-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
+	--components-card-tinted-is-hovered-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-100));
+	--components-card-tinted-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+	--components-card-tinted-is-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-150));
+	--components-card-tinted-is-active-highlight-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
 
 	/* ## Checkbox */
 

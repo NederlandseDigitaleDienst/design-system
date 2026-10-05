@@ -10,6 +10,9 @@
  * directly, and Enter/Space work natively). `href` wins when both are set.
  * Nested interactive content, footer buttons for instance, has to be lifted
  * above it with `position: relative; z-index: 1` to stay clickable.
+ * A card that is a link or button steps its surface and border one shade up
+ * on hover and one more while pressed, as a neutral-base button does; content
+ * lifted above the overlay does not set it off.
  *
  * @element nldd-card
  *

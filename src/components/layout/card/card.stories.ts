@@ -256,27 +256,53 @@ KlikbareKaart.args = {
  * op `nldd-card` zelf werkt dus direct, en Enter/Space doen het native.
  */
 export const KaartAlsKnop = () => html`
-	<nldd-card
-		button
-		accessible-label="Dossier 2024-001 openen"
-		style="max-width: 360px;"
-		@click=${() => window.alert('Kaart geactiveerd')}
-	>
-		<nldd-container
-			slot="header"
-			padding-top="16"
-			padding-inline="16"
+	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: start;">
+		<nldd-card
+			button
+			accessible-label="Dossier 2024-001 openen"
+			style="max-width: 360px;"
+			@click=${() => window.alert('Kaart geactiveerd')}
 		>
-			<nldd-title
-				size="4"
-				text="Dossier 2024-001"
-				heading-level="3"
-			></nldd-title>
-		</nldd-container>
-		<nldd-container padding="16">
-			<nldd-rich-text>
-				<p>De hele kaart is een knop: klik, of Tab ernaartoe en druk Enter.</p>
-			</nldd-rich-text>
-		</nldd-container>
-	</nldd-card>
+			<nldd-container
+				slot="header"
+				padding-top="16"
+				padding-inline="16"
+			>
+				<nldd-title
+					size="4"
+					text="Dossier 2024-001"
+					heading-level="3"
+				></nldd-title>
+			</nldd-container>
+			<nldd-container padding="16">
+				<nldd-rich-text>
+					<p>De hele kaart is een knop: klik, of Tab ernaartoe en druk Enter.</p>
+				</nldd-rich-text>
+			</nldd-container>
+		</nldd-card>
+		<nldd-card
+			button
+			background="tinted"
+			accessible-label="Dossier 2024-002 openen"
+			style="max-width: 360px;"
+			@click=${() => window.alert('Kaart geactiveerd')}
+		>
+			<nldd-container
+				slot="header"
+				padding-top="16"
+				padding-inline="16"
+			>
+				<nldd-title
+					size="4"
+					text="Dossier 2024-002"
+					heading-level="3"
+				></nldd-title>
+			</nldd-container>
+			<nldd-container padding="16">
+				<nldd-rich-text>
+					<p>De hele kaart is een knop: klik, of Tab ernaartoe en druk Enter.</p>
+				</nldd-rich-text>
+			</nldd-container>
+		</nldd-card>
+	</div>
 `;
