@@ -166,3 +166,39 @@ De broncode van dit designsysteem valt onder de **EUPL-1.2**. De volledige licen
 De fontbestanden in `src/assets/fonts/`, het logo en de huisstijlelementen van de Rijksoverheid (zoals het lint en de huisstijlkleuren) vallen daar niet onder; die zijn uitsluitend bestemd voor de Rijksoverheid en partijen die in haar opdracht werken, zie [`NOTICES.md`](./NOTICES.md).
 
 Verder horen bij dit project een [gedragscode](./CODE_OF_CONDUCT.md), een [beveiligingsbeleid](./SECURITY.md), een [bijdragegids](./CONTRIBUTING.md), een [ondersteuningspagina](./SUPPORT.md) en een beschrijving van [wie waarover beslist](./PROJECT_GOVERNANCE.md).
+
+## Waar het designsysteem draait
+
+Publieke repositories van overheidsorganisaties die `@nldd/design-system` gebruiken, met de plek waar je het resultaat kunt bekijken. Ontbreekt jouw project? [Maak een issue aan](https://github.com/NederlandseDigitaleDienst/design-system/issues) of stuur een pull request op deze lijst.
+
+### RegelRecht
+
+Alle frontends staan in [MinBZK/regelrecht](https://github.com/MinBZK/regelrecht).
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Website en documentatie | [regelrecht.rijks.app](https://regelrecht.rijks.app) | [`docs/`](https://github.com/MinBZK/regelrecht/tree/main/docs) |
+| Editor voor regelgeving | [editor.regelrecht.rijks.app](https://editor.regelrecht.rijks.app) | [`frontend/`](https://github.com/MinBZK/regelrecht/tree/main/frontend) |
+| Demo-werkruimte | [demo.regelrecht.rijks.app](https://demo.regelrecht.rijks.app) | [`frontend-demo/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-demo) |
+| Wetgevingsproces | [lawmaking.regelrecht.rijks.app](https://lawmaking.regelrecht.rijks.app) | [`frontend-lawmaking/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-lawmaking) |
+| Proof-of-concepts | [poc.regelrecht.rijks.app](https://poc.regelrecht.rijks.app) | [`frontend-poc-portal/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-poc-portal) en de andere `frontend-poc-*`-mappen |
+
+### Nederlandse Digitale Dienst
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Website van de Nederlandse Digitale Dienst | [digitaledienst.overheid.nl](https://digitaledienst.overheid.nl) | |
+| NeRDS, de Nederlandse Richtlijn Digitale Systemen | [nederlandsedigitaledienst.github.io/NeRDS](https://nederlandsedigitaledienst.github.io/NeRDS/) | [NederlandseDigitaleDienst/NeRDS](https://github.com/NederlandseDigitaleDienst/NeRDS) |
+| Ruimte, een werkinstrument voor het samenstellen van een formatie | [nederlandsedigitaledienst.github.io/ruimte](https://nederlandsedigitaledienst.github.io/ruimte/) | [NederlandseDigitaleDienst/ruimte](https://github.com/NederlandseDigitaleDienst/ruimte) |
+
+### Elders bij de overheid
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Fundament, de soevereine overheidscloud: console, marketplace, DCIM en documentatie | [docs](https://docs.fundament.projects.digilab.network), [console](https://console.fundament.projects.digilab.network), [marketplace](https://marketplace.fundament.projects.digilab.network) | [fundament-oss/fundament](https://github.com/fundament-oss/fundament) |
+| Bouwmeester, beheer van het beleidscorpus van BZK | [bouwmeester.rijks.app](https://bouwmeester.rijks.app) | [BureauArchitectuurDigitaleOverheid/bouwmeester](https://github.com/BureauArchitectuurDigitaleOverheid/bouwmeester) |
+| MijnOverheid Zakelijk: kleuren, iconen en favicon van de site, en de presentaties | [mijnoverheidzakelijk.nl](https://mijnoverheidzakelijk.nl) | [MinBZK/moza-site](https://github.com/MinBZK/moza-site) |
+| ZAD, Zelfservice Applicatie Deployment | [zad.rijksapp.nl](https://zad.rijksapp.nl) | [RijksICTGilde/RIG-Cluster](https://github.com/RijksICTGilde/RIG-Cluster) |
+| Wies, een overzicht van wie waar aan werkt (achter een login) | [wies.rijksorganisatieodi.nl](https://wies.rijksorganisatieodi.nl) | [RijksICTGilde/wies](https://github.com/RijksICTGilde/wies) |
+| Lord of the Components, dat Jinja2-templates omzet naar NLDD-componenten | | [RijksICTGilde/lord-of-the-components](https://github.com/RijksICTGilde/lord-of-the-components) |
+| Invulhulp voor AI-compliance-formulieren (proof of concept) | | [MinFin-NL/invulhulp](https://github.com/MinFin-NL/invulhulp) |
