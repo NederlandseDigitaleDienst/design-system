@@ -661,7 +661,7 @@ describe('nldd-top-navigation-bar – clickable area of the logo link', () => {
 		const bar = el.querySelector('nldd-top-navigation-bar') as NLDDTopNavigationBar;
 		await waitForUpdate(bar);
 		const root = bar.shadowRoot!;
-		const link = root.querySelector('a.top-navigation-bar__logo-and-wordmark')!;
+		const link = root.querySelector<HTMLAnchorElement>('a.top-navigation-bar__logo-and-wordmark')!;
 		const inLink = (x: number, y: number) => !!root.elementFromPoint(x, y)?.closest('a');
 		const logo = root.querySelector('.top-navigation-bar__logo')!.getBoundingClientRect();
 		// The text itself, not its paragraph: a paragraph is as wide as its column.
