@@ -2,9 +2,9 @@ import { html } from 'lit';
 import './step-indicator.js';
 
 /**
- * Toont waar je staat in een proces van meerdere stappen. Je zet `current` op
- * de stap waar je bent, en de ouder leidt daaruit af wat ervoor `past` en erna
- * `future` is. Staat `current` nergens, dan is stap 1 de huidige.
+ * Toont waar je staat in een proces van meerdere stappen. Je zet
+ * `status="current"` op de stap waar je bent, en de ouder leidt daaruit af wat
+ * ervoor `past` en erna `future` is. Staat die nergens, dan is stap 1 de huidige.
  *
  * Alleen horizontaal. Stappen onder elkaar bouw je als `nldd-list` met per rij
  * een `nldd-timeline-track-cell` en een `nldd-title-cell` — verticale stappen
@@ -33,7 +33,7 @@ export const Standaard = {
 			<nldd-step-indicator-item text="Gegevens"></nldd-step-indicator-item>
 			<nldd-step-indicator-item
 				text="Controle"
-				current
+				status="current"
 			></nldd-step-indicator-item>
 			<nldd-step-indicator-item text="Bevestigen"></nldd-step-indicator-item>
 		</nldd-step-indicator>
@@ -53,7 +53,7 @@ export const Statussen = {
 			<nldd-step-indicator-item text="Gegevens"></nldd-step-indicator-item>
 			<nldd-step-indicator-item
 				text="Controle"
-				current
+				status="current"
 			></nldd-step-indicator-item>
 			<nldd-step-indicator-item text="Bevestigen"></nldd-step-indicator-item>
 			<nldd-step-indicator-item text="Klaar"></nldd-step-indicator-item>
@@ -82,7 +82,7 @@ export const Klikbaar = {
 				></nldd-step-indicator-item>
 				<nldd-step-indicator-item
 					text="Bevestigen"
-					current
+					status="current"
 				></nldd-step-indicator-item>
 			</nldd-step-indicator>
 			<nldd-step-indicator accessible-label="Voortgang met knoppen">
@@ -96,7 +96,7 @@ export const Klikbaar = {
 				></nldd-step-indicator-item>
 				<nldd-step-indicator-item
 					text="Bevestigen"
-					current
+					status="current"
 				></nldd-step-indicator-item>
 			</nldd-step-indicator>
 		</div>
@@ -117,7 +117,7 @@ export const MetIconen = {
 			<nldd-step-indicator-item
 				text="Opdracht"
 				icon="business-suitcase"
-				current
+				status="current"
 			></nldd-step-indicator-item>
 			<nldd-step-indicator-item
 				text="Bevestigen"
@@ -143,12 +143,9 @@ export const Compact = {
 				<nldd-step-indicator-item text="Gegevens"></nldd-step-indicator-item>
 				<nldd-step-indicator-item
 					text="Controle"
-					current
+					status="current"
 				></nldd-step-indicator-item>
-				<nldd-step-indicator-item
-					text="Bevestigen"
-					current
-				></nldd-step-indicator-item>
+				<nldd-step-indicator-item text="Bevestigen"></nldd-step-indicator-item>
 			</nldd-step-indicator>
 		</div>
 	`,
