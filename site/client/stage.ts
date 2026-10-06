@@ -174,7 +174,7 @@ export class SiteStage extends HTMLElement {
 		addEventListener('message', (event) => {
 			if (event.source !== frame.contentWindow || event.data?.site !== 'stage') return;
 			if (event.data.type === 'event') this.log(event.data.name, event.data.detail);
-			if (event.data.type === 'source') this.setSource(event.data.code);
+			if (event.data.type === 'source') void this.setSource(event.data.code);
 		});
 	}
 
@@ -273,10 +273,14 @@ export class SiteStage extends HTMLElement {
 		this.replaceChildren(bar, mat, this.events);
 	}
 
-	private setSource(code: string): void {
+	private async setSource(code: string): Promise<void> {
 		if (!this.story || !code) return;
 		const transform = this.story.parameters.docs?.source?.transform;
 		const text = transform ? transform(code) : code;
+		// The code viewer is loaded when the first example needs it, and is on
+		// the page only once it is defined: a page without examples does not pay
+		// for it, and an element that is not yet defined would hide the page.
+		await import('../../src/components/content/code-viewer/code-viewer.js');
 		if (!this.code) {
 			this.code = document.createElement('nldd-code-viewer');
 			this.code.setAttribute('language', this.story.parameters.docs?.source?.language ?? 'html');
@@ -298,14 +302,17 @@ export class SiteStage extends HTMLElement {
 	private showSource(): void {
 		if (!this.story) return;
 		const given = this.story.parameters.docs?.source?.code;
-		if (given) return this.setSource(given);
+		if (given) {
+			void this.setSource(given);
+			return;
+		}
 		if (this.frame) return;
 		const scratch = document.createElement('div');
 		const story = this.story;
 		const silent: StoryContext = { args: this.args, updateArgs: () => {}, log: () => {} };
 		mount(withContext(silent, () => story.render(mapArgs(this.args, story.argTypes))), scratch);
 		this.applyOverrides(scratch);
-		this.setSource(sourceOf(scratch));
+		void this.setSource(sourceOf(scratch));
 	}
 
 	private setOverride(name: string, value: string | boolean): void {

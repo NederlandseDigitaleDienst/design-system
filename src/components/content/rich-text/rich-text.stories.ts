@@ -570,7 +570,7 @@ export const Breedtezones = {
 			</table>
 			<p>Afbeeldingen krijgen het wide-accent: iets breder dan de tekst, zonder de pagina te domineren.</p>
 			<img
-				src="sample-images/butterfly-960.jpg"
+				src="${import.meta.env.BASE_URL}sample-images/butterfly-960.jpg"
 				alt="Vlinder op een bloem"
 			>
 			<p>Componenten zoals een banner vallen onder de full-default en vullen de beschikbare breedte met hun eigen gedrag.</p>
@@ -600,7 +600,7 @@ export const OpKleurvlak = {
 					<p>Alle tekst erft de contentkleur van het vlak, inclusief <a href="#">links met hun onderstreping</a> en <strong>nadruk</strong>.</p>
 					<figure>
 						<img
-							src="sample-images/butterfly-480.jpg"
+							src="${import.meta.env.BASE_URL}sample-images/butterfly-480.jpg"
 							alt="Vlinder op een bloem"
 						>
 						<figcaption>Figuur 1 — de figcaption staat op verlaagde dekking</figcaption>

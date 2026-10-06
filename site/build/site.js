@@ -244,6 +244,16 @@ ${rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`
 
 const inlineCode = (text) => `<code>${escapeHtml(text)}</code>`;
 
+/**
+ * A type, with each member of a union as a code span of its own. A span does
+ * not break, so a long union wraps between its values and never inside one.
+ */
+const typeCode = (text) =>
+	text
+		.split(/\s*\|\s*/)
+		.map((member) => inlineCode(member))
+		.join(' <span class="site-api__or">|</span> ');
+
 /** Inline Markdown in a description from the JSDoc: code spans only. */
 function describe(text = '') {
 	return escapeHtml(text.replace(/\s+/g, ' ').trim()).replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -252,7 +262,7 @@ function describe(text = '') {
 function elementApi(element) {
 	const attributes = (element.attributes ?? []).map((a) => [
 		inlineCode(a.name),
-		a.type?.text ? inlineCode(a.type.text) : '',
+		a.type?.text ? typeCode(a.type.text) : '',
 		a.default !== undefined ? inlineCode(a.default) : '',
 		describe(a.description),
 	]);
@@ -353,7 +363,7 @@ function landing(components, patterns, facts) {
 		repository: facts.repository,
 		installCommand: codeViewer('npm install @nldd/design-system', 'bash'),
 		installImports: codeViewer("import '@nldd/design-system/styles';\nimport '@nldd/design-system';", 'javascript'),
-		installMarkup: codeViewer(snippet, 'html', { wrap: true }),
+		installMarkup: codeViewer(snippet, 'html'),
 		installLive: `<site-stage name="Het resultaat" inline-markup>${snippet}</site-stage>`,
 		...HTML_INSERTS,
 	};

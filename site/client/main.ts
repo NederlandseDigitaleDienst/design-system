@@ -1,9 +1,11 @@
 /**
- * Entry of every page of the site: the package's styles, all components, and
- * the few things that belong to the site itself.
+ * What every page of the site runs: the stage, and the few things that belong
+ * to the site itself. The components are not loaded here. Each page has an
+ * entry of its own that loads the ones its markup uses, so a page does not
+ * wait for the hundred components it does not show.
  */
 
-import '../../src/components/index.js';
+import './autoload.js';
 import './stage.js';
 import './built-with.js';
 

@@ -10,7 +10,7 @@
  * The address is `/voorbeeld/?file=<story file>&story=<export>`.
  */
 
-import '../../src/components/index.js';
+import './autoload.js';
 import { loadStory, mapArgs, mount, sourceOf, type LoadedStory } from './stories.js';
 import { withContext, type StoryContext } from './runtime.js';
 import { keepInPlace } from './stage.js';

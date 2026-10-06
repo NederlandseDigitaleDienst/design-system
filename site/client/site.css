@@ -22,6 +22,33 @@ body.site-frame {
 	animation-delay: 3s;
 }
 
+/* ## Code in tables and lists */
+
+/* A name, a type or a value is one word to a reader and stays whole; a union
+   wraps between its members, which are spans of their own. Outside the layer
+   below, like the rule above: the stylesheet of nldd-rich-text is not in a
+   layer, so a rule in one would lose from it. */
+.site-api td code,
+.site-skills code,
+.site-prose nldd-rich-text td code {
+	white-space: nowrap;
+	word-break: normal;
+	overflow-wrap: normal;
+}
+
+.site-api th {
+	white-space: nowrap;
+}
+
+.site-api td:nth-child(2) {
+	min-width: 96px;
+	max-width: 280px;
+}
+
+.site-api__or {
+	opacity: 0.5;
+}
+
 @layer site {
 	/* ## Stage */
 
@@ -263,24 +290,6 @@ body.site-frame {
 	.site-api table {
 		display: block;
 		overflow-x: auto;
-	}
-
-	/* A name or a type is one word to a reader: it may wrap between the values
-	   of a union, never in the middle of one. */
-	.site-api td code {
-		word-break: normal;
-		overflow-wrap: normal;
-	}
-
-	.site-api td:first-child code,
-	.site-api th {
-		white-space: nowrap;
-	}
-
-	/* In a table in running text a code span is a name, and a name stays whole. */
-	.site-skills code,
-	.site-prose nldd-rich-text:not(.site-api) td code {
-		white-space: nowrap;
 	}
 
 	.site-filter-empty {

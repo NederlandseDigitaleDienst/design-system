@@ -10,7 +10,7 @@
 import { mkdirSync, writeFileSync, readFileSync, existsSync, copyFileSync, rmSync, readdirSync, statSync } from 'node:fs';
 import { resolve, dirname, join, relative } from 'node:path';
 import { buildPages } from './site.js';
-import { repoRoot } from './sources.js';
+import { readManifest, repoRoot } from './sources.js';
 
 export const generatedDir = resolve(repoRoot, 'site/.generated');
 
@@ -53,10 +53,39 @@ function htmlFiles(dir, found = []) {
 	return found;
 }
 
+/** The module that defines each element, by tag. */
+function componentModules() {
+	return Object.fromEntries(readManifest().map((element) => [element.tagName, resolve(repoRoot, element.module)]));
+}
+
+/**
+ * Gives a page an entry of its own: the components its markup uses, then the
+ * script every page runs. A page that shows a hero and four cards then loads
+ * those, and not the other hundred components.
+ */
+function withEntry(path, html, modules) {
+	const shared = path.startsWith('voorbeeld/') ? 'frame.ts' : 'main.ts';
+	const tags = [...new Set([...html.matchAll(/<(nldd-[a-z0-9-]+)/g)].map((match) => match[1]))].sort();
+	const dir = dirname(join(generatedDir, path));
+	const imports = tags.filter((tag) => modules[tag]).map((tag) => `import '${relative(dir, modules[tag])}';`);
+	const entry = `${[...imports, `import './${relative(dir, join(generatedDir, shared))}';`].join('\n')}\n`;
+	const name = `${dirname(path) === '.' ? '' : `${dirname(path)}/`}entry.ts`;
+	return { html: html.replace(`src="/${shared}"`, `src="/${name}"`), entryPath: name, entry };
+}
+
+function writePages(pages) {
+	const modules = componentModules();
+	for (const [path, source] of Object.entries(pages)) {
+		const { html, entryPath, entry } = withEntry(path, source, modules);
+		writeIfChanged(join(generatedDir, path), html);
+		writeIfChanged(join(generatedDir, entryPath), entry);
+	}
+}
+
 /** Writes every page and removes the ones whose source is gone. */
 export function generate({ base = '/' } = {}) {
 	const { pages, counts } = buildPages({ base });
-	for (const [path, html] of Object.entries(pages)) writeIfChanged(join(generatedDir, path), html);
+	writePages(pages);
 	for (const [name, content] of Object.entries(ENTRIES)) writeIfChanged(join(generatedDir, name), content);
 	for (const file of htmlFiles(generatedDir)) {
 		if (!(relative(generatedDir, file) in pages)) rmSync(file);
@@ -71,6 +100,16 @@ export function sitePages() {
 	let base = '/';
 	return {
 		name: 'nldd-site-pages',
+		// Every component by tag, for the loader that catches a tag nobody
+		// imported (site/client/autoload.ts).
+		resolveId(id) {
+			return id === 'virtual:site-components' ? '\0virtual:site-components' : null;
+		},
+		load(id) {
+			if (id !== '\0virtual:site-components') return null;
+			const entries = Object.entries(componentModules()).map(([tag, file]) => `\t'${tag}': () => import('${file}'),`);
+			return `export default {\n${entries.join('\n')}\n};\n`;
+		},
 		config(config) {
 			base = config.base ?? '/';
 			const { inputs } = generate({ base });
@@ -91,7 +130,7 @@ export function sitePages() {
 					// The templates are plain modules; a fresh import picks up an edit.
 					const fresh = await import(`./site.js?update=${Date.now()}`);
 					const { pages } = fresh.buildPages({ base });
-					for (const [path, html] of Object.entries(pages)) writeIfChanged(join(generatedDir, path), html);
+					writePages(pages);
 					server.ws.send({ type: 'full-reload' });
 				} catch (error) {
 					server.config.logger.error(`Site niet bijgewerkt: ${error.message}`);

@@ -63,7 +63,13 @@ function targets() {
 }
 
 async function check(browser, origin, { path, scheme }) {
-	const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: scheme });
+	// Reduced motion: a color measured halfway through a transition is not the
+	// color a reader sees, and would make the same page pass one run and fail the next.
+	const context = await browser.newContext({
+		viewport: { width: 1280, height: 900 },
+		colorScheme: scheme,
+		reducedMotion: 'reduce',
+	});
 	const page = await context.newPage();
 	try {
 		await page.goto(origin + path, { waitUntil: 'networkidle' });
@@ -84,7 +90,18 @@ async function check(browser, origin, { path, scheme }) {
 						return false;
 					}
 				});
-			return result.violations.flatMap((violation) =>
+			// A tag that never became a component shows as an empty element. Every
+			// page loads only the components it uses, so this is where a missing
+			// one would surface.
+			const missing = [...new Set([...document.querySelectorAll(':not(:defined)')].map((el) => el.localName))];
+			const notLoaded = missing.map((tag) => ({
+				rule: 'component-not-loaded',
+				help: `<${tag}> staat op de pagina maar is niet geladen`,
+				target: tag,
+				example: false,
+				summary: '',
+			}));
+			return notLoaded.concat(result.violations.flatMap((violation) =>
 				violation.nodes.map((node) => ({
 					rule: violation.id,
 					help: violation.help,
@@ -92,7 +109,7 @@ async function check(browser, origin, { path, scheme }) {
 					example: inExample(node.target),
 					summary: (node.failureSummary ?? '').split('\n').slice(1, 2).join(' ').trim(),
 				})),
-			);
+			));
 		}, TAGS);
 		return findings.map((finding) => ({ ...finding, path, scheme }));
 	} finally {
