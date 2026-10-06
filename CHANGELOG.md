@@ -23,6 +23,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Breaking
 
+- **`current` moved from `nldd-step-indicator` to the step.** It was a number on the parent (`current="2"`) and is now a boolean on the `nldd-step-indicator-item` you are on, the way `nldd-breadcrumbs-item`, `nldd-list-item` and `nldd-menu-bar-item` already mark the current one. A number pointed at the wrong step as soon as an app left one out; the attribute stays with the step it means. With no step marked, step 1 is current; with more than one, the last wins. Move the attribute: `<nldd-step-indicator current="2">` becomes `current` on the second item. A leftover `current` on the parent no longer does anything, and a dev build says so in the console.
+
 - **The long form of a skill name is `/nldd-design-system:nldd-design`**, no longer `/nldd:nldd-design`, because the prefix follows the plugin name. This holds for existing installs too, from their next update. A permission rule such as `Skill(nldd:nldd-design-build)` or a hook that matches on the long form stops matching, without an error. The short form (`/nldd-design`) is unchanged, and so is the skill an assistant picks by itself. The README has a search that finds the places to change.
 
 ### Fixed

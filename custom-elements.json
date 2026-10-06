@@ -37306,7 +37306,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One step in an `nldd-step-indicator`. The parent decides the status and the\nnumber; those live here as internal state rather than as public API, except\nfor `status`, which overrides what `current` derives.",
+          "description": "One step in an `nldd-step-indicator`. `current` marks the step you are on;\nthe parent derives the status of the others and the number of each, which\nlive here as internal state rather than as public API. `status` overrides\nwhat is derived.",
           "name": "NLDDStepIndicatorItem",
           "slots": [
             {
@@ -37342,6 +37342,16 @@
               },
               "default": "''",
               "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "current",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "current",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -37403,6 +37413,15 @@
             },
             {
               "type": {
+                "text": "boolean"
+              },
+              "description": "Marks the step you are on (`aria-current=\"step\"`). Set it on one step; with more than one the last wins, with none step 1 is current",
+              "name": "current",
+              "default": "false",
+              "fieldName": "current"
+            },
+            {
+              "type": {
                 "text": "string"
               },
               "description": "Makes the step a link (back to a completed step, for instance)",
@@ -37429,7 +37448,7 @@
         },
         {
           "kind": "class",
-          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. The parent holds the truth: `current` (1-based) derives the status of every child — `past` before it, `future` after. A child can override that with a `status` of its own, for flows that jump back or skip a step. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
+          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Mark the step you are on with `current`, the same boolean attribute `nldd-breadcrumbs-item`, `nldd-list-item` and `nldd-menu-bar-item` use. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A child can override what is derived with a `status` of its own, for flows that jump back or skip a step. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
           "name": "NLDDStepIndicator",
           "members": [
             {
@@ -37440,16 +37459,6 @@
               },
               "default": "''",
               "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "current",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "attribute": "current",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -37465,7 +37474,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "The current step, clamped to the number of steps: an out-of-range\n`current` would otherwise mark every step past (or none at all).",
+              "description": "1-based position of the last item marked `current`, or 1 when none is.",
               "readonly": true
             },
             {
@@ -37499,15 +37508,6 @@
               "default": "''",
               "fieldName": "accessibleLabel",
               "description": "Name of the nav; defaults to the i18n value (\"Voortgang\")"
-            },
-            {
-              "name": "current",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "current",
-              "description": "1-based number of the current step (default 1)"
             },
             {
               "name": "translations",

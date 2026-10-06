@@ -1,12 +1,12 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDStepIndicator, NLDDStepIndicatorItem } from './step-indicator.js';
 import './step-indicator.js';
 
 const THREE_STEPS = `
-	<nldd-step-indicator current="2">
+	<nldd-step-indicator>
 		<nldd-step-indicator-item text="Gegevens"></nldd-step-indicator-item>
-		<nldd-step-indicator-item text="Controle"></nldd-step-indicator-item>
+		<nldd-step-indicator-item text="Controle" current></nldd-step-indicator-item>
 		<nldd-step-indicator-item text="Bevestigen"></nldd-step-indicator-item>
 	</nldd-step-indicator>
 `;
@@ -31,26 +31,58 @@ describe('nldd-step-indicator', () => {
 		expect(items().map(item => item.resolvedStatus)).toEqual(['past', 'current', 'future']);
 	});
 
-	it('herberekent de statussen wanneer current verandert', async () => {
+	it('herberekent de statussen wanneer current naar een andere stap gaat', async () => {
 		el = await fixture<NLDDStepIndicator>(THREE_STEPS);
 		await waitForUpdate(el);
-		el.current = 3;
+		items()[1].removeAttribute('current');
+		items()[2].setAttribute('current', '');
 		await waitForUpdate(el);
 		expect(items().map(item => item.resolvedStatus)).toEqual(['past', 'past', 'current']);
 	});
 
-	it('klemt een current buiten bereik', async () => {
-		el = await fixture<NLDDStepIndicator>(THREE_STEPS);
+	it('maakt stap 1 de huidige als geen stap current heeft', async () => {
+		el = await fixture<NLDDStepIndicator>(`
+			<nldd-step-indicator>
+				<nldd-step-indicator-item text="Een"></nldd-step-indicator-item>
+				<nldd-step-indicator-item text="Twee"></nldd-step-indicator-item>
+			</nldd-step-indicator>
+		`);
 		await waitForUpdate(el);
-		el.current = 9;
+		expect(items().map(item => item.resolvedStatus)).toEqual(['current', 'future']);
+	});
+
+	it('laat de laatste stap met current winnen en waarschuwt', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDStepIndicator>(`
+			<nldd-step-indicator>
+				<nldd-step-indicator-item text="Een" current></nldd-step-indicator-item>
+				<nldd-step-indicator-item text="Twee" current></nldd-step-indicator-item>
+				<nldd-step-indicator-item text="Drie"></nldd-step-indicator-item>
+			</nldd-step-indicator>
+		`);
 		await waitForUpdate(el);
-		expect(el.resolvedCurrent).toBe(3);
-		expect(items().map(item => item.resolvedStatus)).toEqual(['past', 'past', 'current']);
+		expect(items().map(item => item.resolvedStatus)).toEqual(['past', 'current', 'future']);
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('the last one wins'));
+		warn.mockRestore();
+	});
+
+	it('waarschuwt als current nog op de ouder staat', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture<NLDDStepIndicator>(`
+			<nldd-step-indicator current="2">
+				<nldd-step-indicator-item text="Een"></nldd-step-indicator-item>
+				<nldd-step-indicator-item text="Twee"></nldd-step-indicator-item>
+			</nldd-step-indicator>
+		`);
+		await waitForUpdate(el);
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('moved to the step'));
+		expect(items().map(item => item.resolvedStatus)).toEqual(['current', 'future']);
+		warn.mockRestore();
 	});
 
 	it('laat een eigen status van een item winnen van de afleiding', async () => {
 		el = await fixture<NLDDStepIndicator>(`
-			<nldd-step-indicator current="1">
+			<nldd-step-indicator>
 				<nldd-step-indicator-item text="Een"></nldd-step-indicator-item>
 				<nldd-step-indicator-item text="Twee" status="past"></nldd-step-indicator-item>
 			</nldd-step-indicator>
@@ -84,7 +116,7 @@ describe('nldd-step-indicator', () => {
 
 	it('laat een eigen icoon voorgaan op cijfer en vinkje', async () => {
 		el = await fixture<NLDDStepIndicator>(`
-			<nldd-step-indicator current="1">
+			<nldd-step-indicator>
 				<nldd-step-indicator-item text="Een" icon="star"></nldd-step-indicator-item>
 			</nldd-step-indicator>
 		`);
@@ -111,9 +143,9 @@ describe('nldd-step-indicator', () => {
 
 	it('rendert een stap met href als link', async () => {
 		el = await fixture<NLDDStepIndicator>(`
-			<nldd-step-indicator current="2">
+			<nldd-step-indicator>
 				<nldd-step-indicator-item text="Gegevens" href="/stap-1/"></nldd-step-indicator-item>
-				<nldd-step-indicator-item text="Controle"></nldd-step-indicator-item>
+				<nldd-step-indicator-item text="Controle" current></nldd-step-indicator-item>
 			</nldd-step-indicator>
 		`);
 		await waitForUpdate(el);
@@ -124,9 +156,9 @@ describe('nldd-step-indicator', () => {
 
 	it('rendert een stap met button als knop', async () => {
 		el = await fixture<NLDDStepIndicator>(`
-			<nldd-step-indicator current="2">
+			<nldd-step-indicator>
 				<nldd-step-indicator-item text="Gegevens" button></nldd-step-indicator-item>
-				<nldd-step-indicator-item text="Controle"></nldd-step-indicator-item>
+				<nldd-step-indicator-item text="Controle" current></nldd-step-indicator-item>
 			</nldd-step-indicator>
 		`);
 		await waitForUpdate(el);
@@ -137,7 +169,7 @@ describe('nldd-step-indicator', () => {
 
 	it('laat href winnen van button', async () => {
 		el = await fixture<NLDDStepIndicator>(`
-			<nldd-step-indicator current="2">
+			<nldd-step-indicator>
 				<nldd-step-indicator-item text="Gegevens" href="/stap-1/" button></nldd-step-indicator-item>
 			</nldd-step-indicator>
 		`);
@@ -156,16 +188,16 @@ describe('nldd-step-indicator', () => {
 		expect(el.shadowRoot!.querySelector('nav')?.getAttribute('aria-label')).toBe('Voortgang aanvraag');
 	});
 
-	it('follows current in the compact view when it changes', async () => {
+	it('volgt current in de compacte weergave als die verandert', async () => {
 		el = await fixture<NLDDStepIndicator>(`
-			<nldd-step-indicator current="1" accessible-label="Voortgang">
+			<nldd-step-indicator accessible-label="Voortgang">
 				<nldd-step-indicator-item text="Welkom"></nldd-step-indicator-item>
 				<nldd-step-indicator-item text="Je profiel"></nldd-step-indicator-item>
 			</nldd-step-indicator>
 		`);
 		await waitForUpdate(el);
 
-		el.current = 2;
+		items()[1].current = true;
 		await waitForUpdate(el);
 
 		const compact = el.shadowRoot!.querySelector('.step-indicator__compact-text')!;
@@ -174,7 +206,7 @@ describe('nldd-step-indicator', () => {
 
 	it('past een translations-override toe op de compacte tekst', async () => {
 		const el = await fixture<NLDDStepIndicator>(`
-			<nldd-step-indicator current="1">
+			<nldd-step-indicator>
 				<nldd-step-indicator-item text="Een"></nldd-step-indicator-item>
 				<nldd-step-indicator-item text="Twee"></nldd-step-indicator-item>
 			</nldd-step-indicator>

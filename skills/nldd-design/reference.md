@@ -2808,7 +2808,7 @@ A narrow, page-wide status bar (24px) with a deep background color per variant. 
 
 ### `<nldd-step-indicator>`
 
-Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. The parent holds the truth: `current` (1-based) derives the status of every child — `past` before it, `future` after. A child can override that with a `status` of its own, for flows that jump back or skip a step. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
+Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Mark the step you are on with `current`, the same boolean attribute `nldd-breadcrumbs-item`, `nldd-list-item` and `nldd-menu-bar-item` use. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A child can override what is derived with a `status` of its own, for flows that jump back or skip a step. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
 
 **Attributes**
 
@@ -2816,7 +2816,6 @@ Shows where you are in a process of several steps: a row of discs with a number 
 | --- | --- | --- |
 | `accessible-label` | `string` | Name of the nav; defaults to the i18n value ("Voortgang") |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
-| `current` | `number` | 1-based number of the current step (default 1) |
 
 **Slots**
 
@@ -2826,7 +2825,7 @@ Shows where you are in a process of several steps: a row of discs with a number 
 
 ### `<nldd-step-indicator-item>`
 
-One step in an `nldd-step-indicator`. The parent decides the status and the number; those live here as internal state rather than as public API, except for `status`, which overrides what `current` derives.
+One step in an `nldd-step-indicator`. `current` marks the step you are on; the parent derives the status of the others and the number of each, which live here as internal state rather than as public API. `status` overrides what is derived.
 
 **Attributes**
 
@@ -2835,6 +2834,7 @@ One step in an `nldd-step-indicator`. The parent decides the status and the numb
 | `status` | `string` | `past` \| `current` \| `future`; overrides what the parent derives |
 | `text` | `string` | Label under the disc |
 | `icon` | `string` | Icon in the disc instead of the number or the check mark |
+| `current` | `boolean` | Marks the step you are on (`aria-current="step"`). Set it on one step; with more than one the last wins, with none step 1 is current |
 | `href` | `string` | Makes the step a link (back to a completed step, for instance) |
 | `button` | `boolean` | Makes the step a button, for flows without a URL per step; ignored when `href` is set |
 

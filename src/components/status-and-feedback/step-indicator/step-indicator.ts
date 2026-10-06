@@ -5,9 +5,14 @@
  * number (or a check mark on what is done), a label under each and a line
  * connecting them.
  *
- * The parent holds the truth: `current` (1-based) derives the status of every
- * child — `past` before it, `future` after. A child can override that with a
- * `status` of its own, for flows that jump back or skip a step.
+ * Mark the step you are on with `current`, the same boolean attribute
+ * `nldd-breadcrumbs-item`, `nldd-list-item` and `nldd-menu-bar-item` use. The
+ * parent derives the rest from its position: `past` before it, `future` after.
+ * With none marked, step 1 is current. With more than one, the last one wins
+ * and a warning goes to the console in a dev build: a flow that forgets to
+ * clear the previous step still points at the furthest one. A child can
+ * override what is derived with a `status` of its own, for flows that jump
+ * back or skip a step.
  *
  * Horizontal only. For steps under each other, build an `nldd-list` with an
  * `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps
@@ -27,18 +32,14 @@
  *
  * @attr {string} accessible-label - Name of the nav; defaults to the i18n value ("Voortgang")
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
- * @attr {number} current - 1-based number of the current step (default 1)
  *
  * @slot - `nldd-step-indicator-item` children
  *
  * @example
  * ```html
- * <nldd-step-indicator
- * 	current="2"
- * 	accessible-label="Voortgang aanvraag"
- * >
+ * <nldd-step-indicator accessible-label="Voortgang aanvraag">
  *   <nldd-step-indicator-item text="Gegevens"></nldd-step-indicator-item>
- *   <nldd-step-indicator-item text="Controle"></nldd-step-indicator-item>
+ *   <nldd-step-indicator-item text="Controle" current></nldd-step-indicator-item>
  *   <nldd-step-indicator-item text="Bevestigen"></nldd-step-indicator-item>
  * </nldd-step-indicator>
  * ```
@@ -60,16 +61,18 @@ export type StepIndicatorStatus = 'past' | 'current' | 'future';
 // # nldd-step-indicator-item
 
 /**
- * One step in an `nldd-step-indicator`. The parent decides the status and the
- * number; those live here as internal state rather than as public API, except
- * for `status`, which overrides what `current` derives.
+ * One step in an `nldd-step-indicator`. `current` marks the step you are on;
+ * the parent derives the status of the others and the number of each, which
+ * live here as internal state rather than as public API. `status` overrides
+ * what is derived.
  *
  * @element nldd-step-indicator-item
  *
  * @attr {string} status - `past` | `current` | `future`; overrides what the parent derives
- * @attr {string} text   - Label under the disc
- * @attr {string} icon   - Icon in the disc instead of the number or the check mark
- * @attr {string} href   - Makes the step a link (back to a completed step, for instance)
+ * @attr {string} text - Label under the disc
+ * @attr {string} icon - Icon in the disc instead of the number or the check mark
+ * @attr {boolean} current - Marks the step you are on (`aria-current="step"`). Set it on one step; with more than one the last wins, with none step 1 is current
+ * @attr {string} href - Makes the step a link (back to a completed step, for instance)
  * @attr {boolean} button - Makes the step a button, for flows without a URL per step; ignored when `href` is set
  *
  * @slot - Label (an alternative to `text`)
@@ -85,6 +88,9 @@ export class NLDDStepIndicatorItem extends LitElement {
 
 	@property({ type: String })
 	icon = '';
+
+	@property({ type: Boolean, reflect: true })
+	current = false;
 
 	@property({ type: String, reflect: true })
 	href = '';
@@ -151,9 +157,6 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	@property({ type: Number, reflect: true })
-	current = 1;
-
 	/** The steps, tracked so the compact view (text + bar) is driven by the same
 	 *  source as the row of markers. */
 	@state()
@@ -163,16 +166,34 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 		return this._items.length;
 	}
 
-	/** The current step, clamped to the number of steps: an out-of-range
-	 *  `current` would otherwise mark every step past (or none at all). */
+	/** 1-based position of the last item marked `current`, or 1 when none is. */
 	get resolvedCurrent(): number {
-		if (this.total === 0) return this.current;
-		return Math.min(Math.max(this.current, 1), this.total);
+		const index = this._items.map(item => item.current).lastIndexOf(true);
+		return index === -1 ? 1 : index + 1;
 	}
 
 	get currentItem(): NLDDStepIndicatorItem | undefined {
 		return this._items.find(item => item.resolvedStatus === 'current')
 			?? this._items[this.resolvedCurrent - 1];
+	}
+
+	/** `current` and `status` live on the children, so a change there has to
+	 *  reach this element: the derived statuses and the compact view follow it. */
+	private _observer = new MutationObserver(() => this.requestUpdate());
+
+	private _warnedMultipleCurrent = false;
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		this._observer.observe(this, { subtree: true, attributes: true, attributeFilter: ['current', 'status'] });
+		if (import.meta.env?.DEV && this.hasAttribute('current')) {
+			console.warn('<nldd-step-indicator>: `current` moved to the step. Set it on the current `nldd-step-indicator-item` instead.');
+		}
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this._observer.disconnect();
 	}
 
 	_onSlotChange = (e: Event): void => {
@@ -188,12 +209,21 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 		// withTranslations merges a consumer's `translations` override in its own
 		// willUpdate; without this call the override is silently ignored.
 		super.willUpdate(changed);
-		if (changed.has('current') || changed.has('_items')) this._syncItems();
+		this._syncItems();
+		this._warnOnMultipleCurrent();
+	}
+
+	private _warnOnMultipleCurrent(): void {
+		if (!import.meta.env?.DEV) return;
+		const multiple = this._items.filter(item => item.current).length > 1;
+		if (multiple && !this._warnedMultipleCurrent) {
+			console.warn('<nldd-step-indicator>: more than one step has `current`; the last one wins. Mark only the step you are on.');
+		}
+		this._warnedMultipleCurrent = multiple;
 	}
 
 	/** Push position, derived status and status text down to the children. Push
-	 *  rather than pull: a child reading its own parent has no way of knowing
-	 *  when `current` changes. */
+	 *  rather than pull: a child cannot see where the current step sits. */
 	private _syncItems(): void {
 		const current = this.resolvedCurrent;
 		this._items.forEach((item, index) => {
