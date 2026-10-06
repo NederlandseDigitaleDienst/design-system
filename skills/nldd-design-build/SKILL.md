@@ -110,9 +110,10 @@ Wat je in de devtools ziet staan, is gelaagd:
 |------|--------|------------|
 | **Primitives** | `--primitives-*` | Basiswaarden: kleur, spacing, typografie. Alle andere lagen komen hierop uit. |
 | **Semantics** | `--semantics-*` | Betekenisvolle rollen: knoppen, controls, oppervlakken. |
-| **Components** | `--components-*` | Component-specifiek. Zelden nodig in app-code. |
 | **Context** | `--context-*` | Communicatie tussen componenten (bijv. achtergrondkleur die doorcascadeert). |
-| **Lokaal** | `--_*` | **Intern aan een component. Raak deze niet aan.** |
+| **Lokaal** | `--_{component}-*` | **Intern aan een component, zoals `--_button-background-color`. Raak deze niet aan.** |
+
+Er is geen componentlaag om een component mee bij te stellen. Wil je er een anders, meld het dan; zie `nldd-design-contribute`.
 
 Houd je daarna nog eigen CSS over voor iets dat geen component is, dan is een `--primitives-*` de minst slechte keus: beter dan een hardcoded waarde, en nog steeds voor eigen rekening. Twee dingen gaan daarbij het vaakst mis.
 

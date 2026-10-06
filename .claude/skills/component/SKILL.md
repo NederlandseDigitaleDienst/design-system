@@ -37,19 +37,19 @@ Zoek in `src/components/` of het component al bestaat.
 ### Stap 3: CSS variabelen identificeren
 
 **Voorkeursvolgorde:**
-1. `--components-{name}-*` (component-specifiek)
-2. `--semantics-*` (betekenisvol)
-3. `--primitives-*` (alleen als backup)
+1. `--semantics-*` (betekenisvol)
+2. `--primitives-*` (als er geen semantics-token voor bestaat)
+
+Er is geen componentlaag. Elke waarde van een component komt als lokale variabele in zijn `:host` en wijst daar naar een semantics- of primitives-token. Delen meer componenten een waarde, dan hoort die als semantics-token in `variables.css`.
 
 **Naamconventies:**
 
 - **Primitives:** `--primitives-{property}-{variant}-{scale}` bijv. `--primitives-color-accent-750`
 - **Semantics:** `--semantics-{group}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` bijv. `--semantics-buttons-neutral-tinted-is-hovered-background-color`
-- **Components:** `--components-{component}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` bijv. `--components-checkbox-md-check-icon-size`
 - **Context:** `--context-{context}-{property}` Gedeelde variabelen voor communicatie tussen componenten. Niet gedefinieerd in variables.css. bijv. `--context-parent-background-color`
-- **Lokaal:** `--_{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` Interne variabelen binnen een component. Definieer defaults in `:host`. bijv. `--_background-color` Het `{element}`-segment is de **volledige BEM-elementnaam**, niet afgekort: `--_disclosure-icon-margin-right`, niet `--_disclosure-margin-right`. Laat het element-segment weg voor het root-block (`--_background-color`). Gebruik één generieke naam als de var door meerdere elementen gedeeld wordt (bijv. `--_icon-size` voor `__start-icon` én `__end-icon`).
+- **Lokaal:** `--_{component}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` Interne variabelen binnen een component. Definieer defaults in `:host`. bijv. `--_button-background-color`. `{component}` is de tag zonder `nldd-`, voor een subcomponent zijn eigen tag (`--_menu-item-…` in `nldd-menu-item`). Een custom property erft door shadow boundaries heen, ook naar de interne elementen van een ander component dat in jouw component geslot wordt; zonder componentnaam kwam de `--_background-color` van `nldd-tooltip` zo op de knop van een `nldd-icon-button` terecht. Leest of overschrijft een subcomponent een variabele van zijn ouder, gebruik dan de naam van de ouder (`--_step-indicator-ring-color` in `nldd-step-indicator-item`). Het `{element}`-segment is de **volledige BEM-elementnaam**, niet afgekort: `--_button-disclosure-icon-margin-right`, niet `--_button-disclosure-margin-right`. Laat het element-segment weg voor het root-block. Gebruik één generieke naam als de var door meerdere elementen gedeeld wordt (bijv. `--_button-icon-size` voor `__start-icon` én `__end-icon`). `npm run validate:styles` keurt een lokale variabele af waarvan het voorvoegsel niet van een component in dezelfde map is.
 
-Primitives zijn basiswaarden — gebruik ze niet direct in componenten. Semantics geven context voor een groep componenten. Component variabelen zijn specifiek voor één component.
+Primitives zijn basiswaarden. Een lokale variabele in `:host` mag naar een primitive wijzen, verderop in de stijlen gebruik je alleen lokale variabelen. Semantics geven context voor een groep componenten.
 
 Zoek in `src/assets/styles/variables.css`:
 ```bash
@@ -338,7 +338,7 @@ Zet het component ook in de tabellen in `form-field.test.ts`, die alle invoercom
 
   Kijk naar wat het component doet, niet naar hoe het attribuut heet. `gap` is in twee componenten hetzelfde woord met een ander label:
 
-  - **`nldd-container`** staat op `(geen)`. Leeg laten geeft daar echt `--_gap: 0`, dus het valt samen met de `0` die als optie in dezelfde dropdown staat.
+  - **`nldd-container`** staat op `(geen)`. Leeg laten geeft daar echt `--_container-gap: 0`, dus het valt samen met de `0` die als optie in dezelfde dropdown staat.
   - **`nldd-collection`** staat op `(auto)`. Leeg laten geeft daar 16px op sm en 24px daarboven, en dat is iets heel anders dan een gap van 0.
 
   Verzin geen vierde woord: `(default)`, `(standaard)` en `(afgeleid)` hebben allemaal bestaan en zijn allemaal teruggebracht naar deze drie.
@@ -610,8 +610,8 @@ Er is geen automatische formatter. Volg deze regels handmatig.
   11. gedrag/effect: `transition`, `transform`, `animation`, `appearance`, `isolation`, `-webkit-tap-highlight-color`
   Pseudo-elementen: `content: ''` mag bovenaan (vóór 1). Responsive breakpoint-`@container`/`@media` blijven genest, ná de properties van die rule.
 - **CSS nesting** voor *responsive* breakpoint-overrides (`@container` en `@media` met sm/md/lg) — genest in de element/`:host` rule. **State/toegankelijkheid-`@media`** (`forced-colors`, `prefers-reduced-motion`, `hover`) **niet nesten** — als los blok direct ná de element-rule die het wijzigt; géén aparte sectie ervoor
-- Declareer **alle** lokale CSS variabelen (`--_*`) **bovenin `:host`**, gevolgd door een lege regel die ze scheidt van de overige properties. Inclusief responsive overrides via `@container` nesting. Elementen gebruiken alleen `var(--_foo)`, nooit fallbacks: niet `var(--_foo, 100)`
-- **Naam van een `--_*` var: `{element}-{property}`** — het element eerst, de CSS-property achteraan (`--_marker-size`, `--_control-hover-background-color`, `--_marker-z-index`). Niet andersom: `--_z-index-marker` leest als een familie z-indexen terwijl het een eigenschap van de marker is.
+- Declareer **alle** lokale CSS variabelen (`--_*`) **bovenin `:host`**, gevolgd door een lege regel die ze scheidt van de overige properties. Inclusief responsive overrides via `@container` nesting. Elementen gebruiken alleen `var(--_button-foo)`, nooit fallbacks: niet `var(--_button-foo, 100)`
+- **Naam van een `--_*` var: `{component}-{element}-{property}`**: de component voorop, dan het element, de CSS-property achteraan (`--_timeline-track-cell-marker-size`, `--_step-indicator-control-hover-background-color`). Niet andersom: `--_timeline-track-cell-z-index-marker` leest als een familie z-indexen terwijl het een eigenschap van de marker is.
 - **Volgorde van de `--_*` vars: in volgorde van eerste gebruik** in de stylesheet (de rules staan zelf in Concentric volgorde, dus dit volgt daaruit). Niet concentric- of alfabetisch sorteren. Pas dezelfde canonieke volgorde toe in élk override-blok (`:host([size=…])`, `:host([variant=…])`, `:host([expanded]…)`): elk blok somt z'n subset in die volgorde op. Herordenen is risicoloos — declaratievolgorde heeft geen cascade-effect
 - Gebruik **nooit** flex shorthand (`flex: 1`), schrijf de losse properties
 - Level 1 headings (`/* # Section */`): 2 lege regels ervoor, 1 erna
@@ -621,53 +621,53 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 /* GOED — CSS nesting */
 .button {
 	display: inline-flex;
-	min-height: var(--_min-height);
+	min-height: var(--_button-min-height);
 
 	@container (min-width: 641px) {
-		padding: var(--_md-padding);
+		padding: var(--_button-md-padding);
 	}
 }
 
 /* FOUT — niet nesten */
 .button { display: inline-flex; }
 @container (min-width: 641px) {
-	.button { padding: var(--_md-padding); }
+	.button { padding: var(--_button-md-padding); }
 }
 ```
 
 ```css
 /* GOED — vars bovenin :host, lege regel, dan de rest */
 :host {
-	--_min-height: var(--semantics-controls-md-min-size);
-	--_logo-width: var(--primitives-space-40);
+	--_button-min-height: var(--semantics-controls-md-min-size);
+	--_top-navigation-bar-logo-width: var(--primitives-space-40);
 
 	@container layout-container (min-width: 641px) {
-		--_logo-width: var(--primitives-space-44);
+		--_top-navigation-bar-logo-width: var(--primitives-space-44);
 	}
 
 	display: inline-flex;
-	min-height: var(--_min-height);
+	min-height: var(--_button-min-height);
 }
 .logo {
-	width: var(--_logo-width);
-	height: calc(var(--_logo-width) * 2);
+	width: var(--_top-navigation-bar-logo-width);
+	height: calc(var(--_top-navigation-bar-logo-width) * 2);
 }
 
 /* FOUT — vars vermengd met properties zonder scheidingsregel */
 :host {
 	display: inline-flex;
-	--_min-height: var(--semantics-controls-md-min-size);
-	min-height: var(--_min-height);
+	--_button-min-height: var(--semantics-controls-md-min-size);
+	min-height: var(--_button-min-height);
 }
 
 /* FOUT — lokale var op element ipv :host */
 .logo {
-	--_logo-width: var(--primitives-space-40);
+	--_top-navigation-bar-logo-width: var(--primitives-space-40);
 }
 
 /* FOUT — fallback in var() */
 .button {
-	min-height: var(--_min-height, 44px);
+	min-height: var(--_button-min-height, 44px);
 }
 ```
 
@@ -675,7 +675,7 @@ Er is geen automatische formatter. Volg deze regels handmatig.
 - Elk attribuut op een **eigen regel**, met twee uitzonderingen:
   - `class` staat altijd op **dezelfde regel** als het element
   - Een element met **één enkel attribuut** mag op één regel
-- **Nooit een class op een child component** — wrap het in een container die positie en size bepaalt; het child vult die container (bijv. `--_size: 100%`)
+- **Nooit een class op een child component** — wrap het in een container die positie en size bepaalt; het child vult die container (bijv. `--_icon-size: 100%`)
 - Geen lege regels in templates
 - **Element-content op een eigen ingesprongen regel** — ook een enkele `${...}`-interpolatie; de open- en sluittag staan dan op hun eigen regel. Zo blijven regels kort en tonen diffs alleen de gewijzigde inhoud, niet de hele tag-regel. Geldt voor losstaande elementen in de template-body. Een kort inline `html`-fragment binnen een expressie of ternary mag op één regel blijven (zie het voorbeeld hieronder); dat opsplitsen levert juist lelijke fragmenten op.
 
@@ -781,7 +781,7 @@ import { slottedReset, inheritedTextReset } from '../../../assets/styles/slotted
 	${slottedReset}
 	${inheritedTextReset}
 	color: var(--semantics-content-color) !important;
-	font: var(--_font) !important;
+	font: var(--_title-font) !important;
 }
 ```
 
@@ -791,7 +791,7 @@ Andere regels die hetzelfde slotted element raken (`:hover`, `@media`, een speci
 
 ```css
 :host {
-	--_foo: …;
+	--_button-foo: …;
 
 	${inheritedTextReset}
 	display: …;
@@ -815,7 +815,7 @@ Andere regels die hetzelfde slotted element raken (`:hover`, `@media`, een speci
 ## CHECKLIST
 
 **CSS:**
-- [ ] Components → semantics → primitives volgorde
+- [ ] Semantics → primitives, alleen via een lokale `--_{component}-*` in `:host`
 - [ ] Concentric property-volgorde binnen elke rule
 - [ ] Geen fallback waarden
 - [ ] Geen hardcoded waarden; geen `!important` — behalve in de slotted-reset (`::slotted()`), de host-text-reset (`:host`) en host-layout die niet naar een wrapper kan (zie SLOTTED CONTENT & HOST-CSS ISOLATIE)

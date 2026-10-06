@@ -44,7 +44,7 @@ Doe dit in de eerste uren, niet aan het eind. Elk van deze ving echte schade die
 
 1. **Registratiecheck.** Vergelijk elk gebruikt `nldd-*` element met wat er werkelijk geïmporteerd is. Lees daarbij het *template*-bestand van de ouder, niet alleen het componentbestand: `token-field.js` importeert alleen `menu.js`, terwijl de import die `nldd-token` registreert in `token-field.template.js` zit.
 2. **Markupcheck.** Valideer elementen, attributen, slots en icoonnamen tegen `custom-elements.json` van het pakket. Icoonnamen zijn een gesloten set; een verzonnen naam rendert niets.
-3. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*|--components-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
+3. **Tokencheck.** Valideer elke `var(--primitives-*|--semantics-*)` tegen de echte tokens in `node_modules/@nldd/design-system/dist/css/*.css`. **Vlag ook letterlijke hex-kleuren**, en `var(--x, #aabbcc)` het hardst: de fallback maakt een verkeerde tokennaam onzichtbaar.
 4. **Klassencheck.** Elke klasse die de app rendert moet een regel achter zich hebben, én elke regel in je eigen utilities-bestand moet een gebruiker hebben. Beide richtingen.
 5. **Gedragscheck.** De vier hierboven toetsen of je *code* klopt. Geen van ze merkt dat er iets uit je interface verdwenen is. Zie de volgende sectie.
 

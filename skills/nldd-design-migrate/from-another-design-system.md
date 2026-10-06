@@ -8,7 +8,7 @@ Dit is een andere uitgangspositie dan een migratie vanaf losse CSS. Je team kent
 
 Dit is de duurste fout vanuit deze herkomst, en die voelt als kennis in plaats van als gokken.
 
-Onze variabelen hebben vier prefixen: `--primitives-`, `--semantics-`, `--components-` en `--context-`. Er is **geen** `--nldd-`-prefix. Wie van een ander systeem komt, schrijft toch iets als:
+Onze variabelen hebben drie prefixen: `--primitives-`, `--semantics-` en `--context-`, plus de lokale `--_{component}-` binnen een component. Er is **geen** `--nldd-`-prefix. Wie van een ander systeem komt, schrijft toch iets als:
 
 ```css
 /* Ziet eruit als een themawaarde. Bestaat niet. */
