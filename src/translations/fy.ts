@@ -193,11 +193,11 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.progress-circle.total-prefix-text': 'Totaal',
 	'components.progress-circle.loading-label': 'Oan it laden',
 	'components.progress-circle.accessible-label': 'Fuortgong',
-	'components.step-indicator.accessible-label': 'Fuortgong',
-	'components.step-indicator.status-past-label': 'Ofrûn',
-	'components.step-indicator.status-current-label': 'Hjoeddeistige stap',
-	'components.step-indicator.status-future-label': 'Noch te dwaan',
-	'components.step-indicator.compact-text': 'Stap {current} fan {total}',
+	'components.step-bar.accessible-label': 'Fuortgong',
+	'components.step-bar.status-past-label': 'Ofrûn',
+	'components.step-bar.status-current-label': 'Hjoeddeistige stap',
+	'components.step-bar.status-future-label': 'Noch te dwaan',
+	'components.step-bar.compact-text': 'Stap {current} fan {total}',
 };
 
 export default fy;

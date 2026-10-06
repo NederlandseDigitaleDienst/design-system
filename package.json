@@ -362,9 +362,9 @@
       "types": "./dist/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.d.ts",
       "default": "./dist/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js"
     },
-    "./timeline-track-cell": {
-      "types": "./dist/components/lists-and-tables/cells/timeline-track-cell/timeline-track-cell.d.ts",
-      "default": "./dist/components/lists-and-tables/cells/timeline-track-cell/timeline-track-cell.js"
+    "./step-cell": {
+      "types": "./dist/components/lists-and-tables/cells/step-cell/step-cell.d.ts",
+      "default": "./dist/components/lists-and-tables/cells/step-cell/step-cell.js"
     },
     "./breadcrumbs": {
       "types": "./dist/components/navigation/breadcrumbs/breadcrumbs.d.ts",
@@ -434,9 +434,9 @@
       "types": "./dist/components/status-and-feedback/progress-circle/progress-circle.d.ts",
       "default": "./dist/components/status-and-feedback/progress-circle/progress-circle.js"
     },
-    "./step-indicator": {
-      "types": "./dist/components/status-and-feedback/step-indicator/step-indicator.d.ts",
-      "default": "./dist/components/status-and-feedback/step-indicator/step-indicator.js"
+    "./step-bar": {
+      "types": "./dist/components/status-and-feedback/step-bar/step-bar.d.ts",
+      "default": "./dist/components/status-and-feedback/step-bar/step-bar.js"
     },
     "./activity-indicator": {
       "types": "./dist/components/status-and-feedback/activity-indicator/activity-indicator.d.ts",

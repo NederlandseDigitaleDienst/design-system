@@ -128,7 +128,7 @@ export { NLDDTextCell } from './lists-and-tables/cells/text-cell/text-cell.js';
 export { NLDDDescriptionCell } from './lists-and-tables/cells/description-cell/description-cell.js';
 
 export { NLDDDragHandleCell } from './lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js';
-export { NLDDTimelineTrackCell } from './lists-and-tables/cells/timeline-track-cell/timeline-track-cell.js';
+export { NLDDStepCell } from './lists-and-tables/cells/step-cell/step-cell.js';
 
 
 // # Navigation components
@@ -154,7 +154,7 @@ export { NLDDNotification } from './status-and-feedback/notification/notificatio
 export { NLDDBadge } from './status-and-feedback/badge/badge.js';
 export { NLDDProgressBar, NLDDProgressBarSegmentIndicator } from './status-and-feedback/progress-bar/progress-bar.js';
 export { NLDDProgressCircle, NLDDProgressCircleSegmentIndicator } from './status-and-feedback/progress-circle/progress-circle.js';
-export { NLDDStepIndicator, NLDDStepIndicatorItem } from './status-and-feedback/step-indicator/step-indicator.js';
+export { NLDDStepBar, NLDDStepBarItem } from './status-and-feedback/step-bar/step-bar.js';
 export { NLDDActivityIndicator } from './status-and-feedback/activity-indicator/activity-indicator.js';
 export { NLDDStatusBar } from './status-and-feedback/status-bar/status-bar.js';
 export { NLDDJustInTimeEducation } from './status-and-feedback/just-in-time-education/just-in-time-education.js';

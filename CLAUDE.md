@@ -51,7 +51,7 @@ src/components/{categorie}/{naam}/
 
 Er is geen componentlaag in `variables.css`. Wat één component nodig heeft, staat als lokale variabele in zijn eigen `:host`; wat meer componenten delen, is een semantics-token. Een lokale variabele mag naar een semantics- of een primitives-token wijzen, verderop in de stijlen gebruik je alleen de lokale variabele. Wil iemand een component anders, dan is dat een issue en geen override.
 
-Een custom property erft door shadow boundaries heen, naar alles wat in de flat tree onder de host hangt, ook de interne elementen van een ander component dat erin geslot wordt. Daarom draagt elke lokale variabele de naam van zijn component: een generieke `--_background-color` op `nldd-tooltip` kwam zo terecht op de knop van een `nldd-icon-button` erin. Een subcomponent dat een variabele van zijn ouder leest of overschrijft, gebruikt de naam van de ouder (`--_step-indicator-ring-color` in `nldd-step-indicator-item`).
+Een custom property erft door shadow boundaries heen, naar alles wat in de flat tree onder de host hangt, ook de interne elementen van een ander component dat erin geslot wordt. Daarom draagt elke lokale variabele de naam van zijn component: een generieke `--_background-color` op `nldd-tooltip` kwam zo terecht op de knop van een `nldd-icon-button` erin. Een subcomponent dat een variabele van zijn ouder leest of overschrijft, gebruikt de naam van de ouder (`--_step-bar-ring-color` in `nldd-step-bar-item`).
 
 ### Validatie
 

@@ -47,7 +47,7 @@ import { nlddJustInTimeEducationTranslations } from '../components/status-and-fe
 import { nlddNotificationTranslations } from '../components/status-and-feedback/notification/notification.i18n.js';
 import { nlddProgressBarTranslations } from '../components/status-and-feedback/progress-bar/progress-bar.i18n.js';
 import { nlddProgressCircleTranslations } from '../components/status-and-feedback/progress-circle/progress-circle.i18n.js';
-import { nlddStepIndicatorTranslations } from '../components/status-and-feedback/step-indicator/step-indicator.i18n.js';
+import { nlddStepBarTranslations } from '../components/status-and-feedback/step-bar/step-bar.i18n.js';
 
 /** Every text in the package with its Dutch default. */
 export const nl = {
@@ -97,7 +97,7 @@ export const nl = {
 	...nlddNotificationTranslations,
 	...nlddProgressBarTranslations,
 	...nlddProgressCircleTranslations,
-	...nlddStepIndicatorTranslations,
+	...nlddStepBarTranslations,
 };
 
 /** Every translation key a component knows. */

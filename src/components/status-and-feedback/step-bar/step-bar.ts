@@ -1,9 +1,9 @@
 /**
- * Nederlandse Digitale Dienst Step Indicator Component (Lit + TypeScript)
+ * Nederlandse Digitale Dienst Step Bar Component (Lit + TypeScript)
  *
  * Shows where you are in a process of several steps: a row of discs with a
  * number (or a check mark on what is done), a label under each and a line
- * connecting them.
+ * connecting them. Other systems call this a stepper or a progress indicator.
  *
  * Mark the step you are on with `status="current"`. The parent derives the
  * rest from its position: `past` before it, `future` after. With none marked,
@@ -12,11 +12,11 @@
  * step still points at the furthest one. A `status="past"` or
  * `status="future"` on another step overrides what is derived for that step,
  * for flows that jump back or skip a step. One attribute, the same three
- * values as `nldd-timeline-track-cell`, so a flow reads in one vocabulary
+ * values as `nldd-step-cell`, so a flow reads in one vocabulary
  * whether it runs across or down.
  *
  * Horizontal only. For steps under each other, build an `nldd-list` with an
- * `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps
+ * `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps
  * usually carry more than a title, and a list row already does that.
  *
  * Below the sm breakpoint (a container query, so measured on the component
@@ -29,45 +29,45 @@
  * only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as
  * ARIA tokens and travel along as visually hidden text instead.
  *
- * @element nldd-step-indicator
+ * @element nldd-step-bar
  *
  * @attr {string} accessible-label - Name of the nav; defaults to the i18n value ("Voortgang")
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
- * @slot - `nldd-step-indicator-item` children
+ * @slot - `nldd-step-bar-item` children
  *
  * @example
  * ```html
- * <nldd-step-indicator accessible-label="Voortgang aanvraag">
- *   <nldd-step-indicator-item text="Gegevens"></nldd-step-indicator-item>
- *   <nldd-step-indicator-item text="Controle" status="current"></nldd-step-indicator-item>
- *   <nldd-step-indicator-item text="Bevestigen"></nldd-step-indicator-item>
- * </nldd-step-indicator>
+ * <nldd-step-bar accessible-label="Voortgang aanvraag">
+ *   <nldd-step-bar-item text="Gegevens"></nldd-step-bar-item>
+ *   <nldd-step-bar-item text="Controle" status="current"></nldd-step-bar-item>
+ *   <nldd-step-bar-item text="Bevestigen"></nldd-step-bar-item>
+ * </nldd-step-bar>
  * ```
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
-import { nlddStepIndicatorTranslations, type NLDDStepIndicatorTranslations } from './step-indicator.i18n.js';
-import { stepIndicatorStyles, stepIndicatorItemStyles } from './step-indicator.styles.js';
-import { stepIndicatorTemplate, stepIndicatorItemTemplate } from './step-indicator.template.js';
+import { nlddStepBarTranslations, type NLDDStepBarTranslations } from './step-bar.i18n.js';
+import { stepBarStyles, stepBarItemStyles } from './step-bar.styles.js';
+import { stepBarTemplate, stepBarItemTemplate } from './step-bar.template.js';
 import '../../content/icon/icon.js';
 
-/** The same three names as nldd-timeline-track-cell, so one flow reads in a
+/** The same three names as nldd-step-cell, so one flow reads in a
  *  single vocabulary whether it runs horizontally or vertically. */
-export type StepIndicatorStatus = 'past' | 'current' | 'future';
+export type StepBarStatus = 'past' | 'current' | 'future';
 
 
-// # nldd-step-indicator-item
+// # nldd-step-bar-item
 
 /**
- * One step in an `nldd-step-indicator`. `status="current"` marks the step you
+ * One step in an `nldd-step-bar`. `status="current"` marks the step you
  * are on; the parent derives the status of the others and the number of each,
  * which live here as internal state rather than as public API. `past` and
  * `future` override what is derived for this step.
  *
- * @element nldd-step-indicator-item
+ * @element nldd-step-bar-item
  *
  * @attr {'past' | 'current' | 'future'} status - How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only
  * @attr {string} text - Label under the disc
@@ -77,11 +77,11 @@ export type StepIndicatorStatus = 'past' | 'current' | 'future';
  *
  * @slot - Label (an alternative to `text`)
  */
-export class NLDDStepIndicatorItem extends LitElement {
-	static override styles = stepIndicatorItemStyles;
+export class NLDDStepBarItem extends LitElement {
+	static override styles = stepBarItemStyles;
 
 	@property({ type: String, reflect: true })
-	status?: StepIndicatorStatus;
+	status?: StepBarStatus;
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
@@ -101,7 +101,7 @@ export class NLDDStepIndicatorItem extends LitElement {
 	/** Set by the parent: the derived status when the item has none of its own,
 	 *  the position number, and the status text for assistive tech. */
 	@state()
-	_derivedStatus: StepIndicatorStatus = 'future';
+	_derivedStatus: StepBarStatus = 'future';
 
 	@state()
 	_index = 1;
@@ -113,7 +113,7 @@ export class NLDDStepIndicatorItem extends LitElement {
 	 *  one. An own `current` is what the parent derives from, so the derived
 	 *  status already says it, and on a step that lost to a later one it does not
 	 *  hold. */
-	get resolvedStatus(): StepIndicatorStatus {
+	get resolvedStatus(): StepBarStatus {
 		return this.status && this.status !== 'current' ? this.status : this._derivedStatus;
 	}
 
@@ -133,26 +133,26 @@ export class NLDDStepIndicatorItem extends LitElement {
 	}
 
 	override render() {
-		return stepIndicatorItemTemplate(this);
+		return stepBarItemTemplate(this);
 	}
 }
 
-// Sub-component of nldd-step-indicator. The guard registration (like
+// Sub-component of nldd-step-bar. The guard registration (like
 // nldd-breadcrumbs-item's) keeps the first registration authoritative across HMR
 // and test re-imports.
-if (!customElements.get('nldd-step-indicator-item')) {
-	customElements.define('nldd-step-indicator-item', NLDDStepIndicatorItem);
+if (!customElements.get('nldd-step-bar-item')) {
+	customElements.define('nldd-step-bar-item', NLDDStepBarItem);
 }
 
 
-// # nldd-step-indicator
+// # nldd-step-bar
 
-@customElement('nldd-step-indicator')
-export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTranslations>(
+@customElement('nldd-step-bar')
+export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 	LitElement,
-	nlddStepIndicatorTranslations,
+	nlddStepBarTranslations,
 ) {
-	static override styles = stepIndicatorStyles;
+	static override styles = stepBarStyles;
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
@@ -160,7 +160,7 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 	/** The steps, tracked so the compact view (text + bar) is driven by the same
 	 *  source as the row of markers. */
 	@state()
-	_items: NLDDStepIndicatorItem[] = [];
+	_items: NLDDStepBarItem[] = [];
 
 	get total(): number {
 		return this._items.length;
@@ -172,7 +172,7 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 		return index === -1 ? 1 : index + 1;
 	}
 
-	get currentItem(): NLDDStepIndicatorItem | undefined {
+	get currentItem(): NLDDStepBarItem | undefined {
 		return this._items.find(item => item.resolvedStatus === 'current')
 			?? this._items[this.resolvedCurrent - 1];
 	}
@@ -198,7 +198,7 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 	override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
 		super.attributeChangedCallback(name, old, value);
 		if (import.meta.env?.DEV && name === 'current' && value !== null) {
-			console.warn('<nldd-step-indicator>: `current` moved to the step. Set `status="current"` on the current `nldd-step-indicator-item` instead.');
+			console.warn('<nldd-step-bar>: `current` moved to the step. Set `status="current"` on the current `nldd-step-bar-item` instead.');
 		}
 	}
 
@@ -210,7 +210,7 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 	_onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
 		this._items = slot.assignedElements({ flatten: true })
-			.filter((el): el is NLDDStepIndicatorItem => el.localName === 'nldd-step-indicator-item');
+			.filter((el): el is NLDDStepBarItem => el.localName === 'nldd-step-bar-item');
 	};
 
 	/** Before render, not after: the compact view reads the current item back out
@@ -228,7 +228,7 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 		if (!import.meta.env?.DEV) return;
 		const multiple = this._items.filter(item => item.status === 'current').length > 1;
 		if (multiple && !this._warnedMultipleCurrent) {
-			console.warn('<nldd-step-indicator>: more than one step has `status="current"`; the last one wins. Mark only the step you are on.');
+			console.warn('<nldd-step-bar>: more than one step has `status="current"`; the last one wins. Mark only the step you are on.');
 		}
 		this._warnedMultipleCurrent = multiple;
 	}
@@ -241,18 +241,18 @@ export class NLDDStepIndicator extends withTranslations<NLDDStepIndicatorTransla
 			const position = index + 1;
 			item._index = position;
 			item._derivedStatus = position < current ? 'past' : position === current ? 'current' : 'future';
-			item._statusText = this._t(`components.step-indicator.status-${item.resolvedStatus}-label`);
+			item._statusText = this._t(`components.step-bar.status-${item.resolvedStatus}-label`);
 		});
 	}
 
 	override render() {
-		return stepIndicatorTemplate(this);
+		return stepBarTemplate(this);
 	}
 }
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'nldd-step-indicator': NLDDStepIndicator;
-		'nldd-step-indicator-item': NLDDStepIndicatorItem;
+		'nldd-step-bar': NLDDStepBar;
+		'nldd-step-bar-item': NLDDStepBarItem;
 	}
 }

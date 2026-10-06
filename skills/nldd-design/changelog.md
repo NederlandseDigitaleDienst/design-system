@@ -17,9 +17,24 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
+- **`nldd-step-bar` and `nldd-step-cell`.** The step indicator and the timeline track cell are renamed after what they draw: steps, across and under each other. See Breaking.
+
 - **The `--components-*` layer is gone.** A component's values now sit as local variables in its own stylesheet, and what several components share became a semantics token. Restyling one component through a public token was a quiet way to make it differ from the rest. If you want a component to change, ask in an issue. See Breaking.
 
 ### Breaking
+
+- **`nldd-step-indicator` is now `nldd-step-bar`, and `nldd-timeline-track-cell` is now `nldd-step-cell`.** They are one family, the steps of a process across and under each other, as `nldd-progress-bar` and `nldd-progress-circle` are one family for how much is done. "Timeline" said less than the cell does: most of all it draws steps. Rename the tags, and the classes and imports if you use them:
+
+  | Was | Now |
+  |---|---|
+  | `nldd-step-indicator`, `NLDDStepIndicator` | `nldd-step-bar`, `NLDDStepBar` |
+  | `nldd-step-indicator-item`, `NLDDStepIndicatorItem` | `nldd-step-bar-item`, `NLDDStepBarItem` |
+  | `nldd-timeline-track-cell`, `NLDDTimelineTrackCell` | `nldd-step-cell`, `NLDDStepCell` |
+  | `@nldd/design-system/step-indicator` | `@nldd/design-system/step-bar` |
+  | `@nldd/design-system/timeline-track-cell` | `@nldd/design-system/step-cell` |
+  | translation keys `components.step-indicator.*` | `components.step-bar.*` |
+
+  The attributes stay the same. An old tag is an unknown element now and renders nothing, without a warning, so search your markup.
 
 - **The `--components-*` custom properties no longer exist.** If you set or read one, nothing happens now, without a warning. Most were never meant to be touched. The ones that more components share moved to semantics:
 
