@@ -66,24 +66,24 @@ export const iconStyles = css`
 
 	/* # Color — rijkskleuren */
 
-	:host([color="lintblauw"])   { --_color: var(--components-icon-color-lintblauw-color); }
-	:host([color="donkerblauw"]) { --_color: var(--components-icon-color-donkerblauw-color); }
-	:host([color="hemelblauw"])  { --_color: var(--components-icon-color-hemelblauw-color); }
-	:host([color="lichtblauw"])  { --_color: var(--components-icon-color-lichtblauw-color); }
-	:host([color="paars"])       { --_color: var(--components-icon-color-paars-color); }
-	:host([color="violet"])      { --_color: var(--components-icon-color-violet-color); }
-	:host([color="robijnrood"])  { --_color: var(--components-icon-color-robijnrood-color); }
-	:host([color="roze"])        { --_color: var(--components-icon-color-roze-color); }
-	:host([color="rood"])        { --_color: var(--components-icon-color-rood-color); }
-	:host([color="oranje"])      { --_color: var(--components-icon-color-oranje-color); }
-	:host([color="donkergeel"])  { --_color: var(--components-icon-color-donkergeel-color); }
-	:host([color="geel"])        { --_color: var(--components-icon-color-geel-color); }
-	:host([color="donkerbruin"]) { --_color: var(--components-icon-color-donkerbruin-color); }
-	:host([color="bruin"])       { --_color: var(--components-icon-color-bruin-color); }
-	:host([color="donkergroen"]) { --_color: var(--components-icon-color-donkergroen-color); }
-	:host([color="groen"])       { --_color: var(--components-icon-color-groen-color); }
-	:host([color="mosgroen"])    { --_color: var(--components-icon-color-mosgroen-color); }
-	:host([color="mintgroen"])   { --_color: var(--components-icon-color-mintgroen-color); }
+	:host([color="lintblauw"])   { --_color: light-dark(var(--primitives-color-lintblauw-750), var(--primitives-color-lintblauw-500)); }
+	:host([color="donkerblauw"]) { --_color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-500)); }
+	:host([color="hemelblauw"])  { --_color: var(--primitives-color-hemelblauw-500); }
+	:host([color="lichtblauw"])  { --_color: light-dark(var(--primitives-color-lichtblauw-450), var(--primitives-color-lichtblauw-800)); }
+	:host([color="paars"])       { --_color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-500)); }
+	:host([color="violet"])      { --_color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-500)); }
+	:host([color="robijnrood"])  { --_color: light-dark(var(--primitives-color-robijnrood-550), var(--primitives-color-robijnrood-500)); }
+	:host([color="roze"])        { --_color: light-dark(var(--primitives-color-roze-450), var(--primitives-color-roze-750)); }
+	:host([color="rood"])        { --_color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500)); }
+	:host([color="oranje"])      { --_color: light-dark(var(--primitives-color-oranje-450), var(--primitives-color-oranje-600)); }
+	:host([color="donkergeel"])  { --_color: light-dark(var(--primitives-color-donkergeel-450), var(--primitives-color-donkergeel-800)); }
+	:host([color="geel"])        { --_color: light-dark(var(--primitives-color-geel-450), var(--primitives-color-geel-900)); }
+	:host([color="donkerbruin"]) { --_color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-500)); }
+	:host([color="bruin"])       { --_color: var(--primitives-color-bruin-500); }
+	:host([color="donkergroen"]) { --_color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-500)); }
+	:host([color="groen"])       { --_color: var(--primitives-color-groen-500); }
+	:host([color="mosgroen"])    { --_color: var(--primitives-color-mosgroen-500); }
+	:host([color="mintgroen"])   { --_color: light-dark(var(--primitives-color-mintgroen-450), var(--primitives-color-mintgroen-800)); }
 
 
 	/* # Custom color — after every [color] rule, so it wins over one */

@@ -15,7 +15,7 @@ export const buttonGroupStyles = css`
 		--_width: 100%;
 		--_flex-direction: column;
 		--_flex-wrap: nowrap;
-		--_gap: var(--components-button-group-md-gap);
+		--_gap: var(--primitives-space-8);
 
 		display: flex;
 		width: 100%;
@@ -31,7 +31,7 @@ export const buttonGroupStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_gap: var(--components-button-group-sm-gap);
+		--_gap: var(--primitives-space-6);
 	}
 
 	/* ## In a row

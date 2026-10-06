@@ -11,8 +11,8 @@ export const timelineTrackCellStyles = css`
 		--_marker-corner-radius: var(--primitives-corner-radius-full);
 
 		--_line-width: var(--primitives-space-2);
-		--_track-color: var(--components-timeline-track-cell-color);
-		--_future-fill-color: var(--components-timeline-track-cell-future-background-color);
+		--_track-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
+		--_future-fill-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
 		--_marker-z-index: 1;
 		--_ring-thickness: var(--semantics-surfaces-ring-thickness);
 		--_ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));

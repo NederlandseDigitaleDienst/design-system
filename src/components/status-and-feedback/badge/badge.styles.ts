@@ -13,7 +13,7 @@ export const badgeStyles = css`
 		--_custom-color: transparent;
 		--_background-color: var(--semantics-categories-critical-filled-background-color);
 		--_border-color: var(--semantics-categories-critical-filled-highlight-border-color);
-		--_border-width: var(--components-badge-border-width);
+		--_border-width: var(--primitives-border-width-thin);
 		--_height: var(--primitives-space-20);
 		--_inline-padding: var(--primitives-space-6);
 		--_gap: var(--primitives-space-3);
@@ -26,6 +26,7 @@ export const badgeStyles = css`
 		--_ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		--_pulse-spread: var(--primitives-space-8);
 		--_pulse-duration: 1.5s;
+		--_badge-corner-radius: var(--primitives-corner-radius-full);
 
 		${inheritedTextReset}
 		display: inline-flex;
@@ -213,7 +214,7 @@ export const badgeStyles = css`
 		box-sizing: border-box;
 		display: inline-flex;
 		position: relative;
-		border-radius: var(--components-badge-corner-radius);
+		border-radius: var(--_badge-corner-radius);
 		box-shadow:
 			0 0 0 var(--_ring-thickness) var(--_ring-color),
 			inset 0 0 0 var(--_border-width) var(--_border-color);

@@ -202,6 +202,9 @@ export const menuItemStyles = css`
 	/* # Host */
 
 	:host {
+		--_menu-item-is-expanded-content-color: var(--primitives-color-neutral-1000);
+		--_menu-item-is-destructive-content-color: var(--semantics-content-critical-color);
+
 		${inheritedTextReset}
 		display: block;
 		-webkit-tap-highlight-color: transparent;
@@ -219,9 +222,9 @@ export const menuItemStyles = css`
 	 * the cursor returns to the opener. */
 
 	.menu__item[aria-expanded="true"] {
-		--_item-background-color: var(--components-menu-item-is-expanded-background-color);
-		--context-content-color: var(--components-menu-item-is-expanded-content-color);
-		--context-content-secondary-color: var(--components-menu-item-is-expanded-content-color);
+		--_item-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+		--context-content-color: var(--_menu-item-is-expanded-content-color);
+		--context-content-secondary-color: var(--_menu-item-is-expanded-content-color);
 	}
 
 	/* ## Highlighted or pressed
@@ -242,10 +245,10 @@ export const menuItemStyles = css`
 	/* ## Destructive */
 
 	:host([destructive]) {
-		--_item-is-highlighted-background-color: var(--components-menu-item-is-destructive-is-highlighted-background-color);
-		--_item-is-highlighted-content-color: var(--components-menu-item-is-destructive-is-highlighted-content-color);
-		--context-content-color: var(--components-menu-item-is-destructive-content-color);
-		--context-content-secondary-color: var(--components-menu-item-is-destructive-content-color);
+		--_item-is-highlighted-background-color: light-dark(var(--primitives-color-critical-600), var(--primitives-color-critical-650));
+		--_item-is-highlighted-content-color: var(--primitives-color-neutral-0);
+		--context-content-color: var(--_menu-item-is-destructive-content-color);
+		--context-content-secondary-color: var(--_menu-item-is-destructive-content-color);
 	}
 
 

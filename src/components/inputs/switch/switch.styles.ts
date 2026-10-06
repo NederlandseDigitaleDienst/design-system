@@ -13,7 +13,15 @@ export const switchStyles = css`
 		--_track-height: var(--semantics-controls-sm-min-size);
 		--_padding: var(--primitives-space-2);
 		--_transition-duration: var(--primitives-transition-duration-fast);
-		--_thumb-size: calc(var(--_track-height) - var(--_padding) * 2 - var(--components-switch-thumb-border-width) * 2);
+		--_thumb-size: calc(var(--_track-height) - var(--_padding) * 2 - var(--primitives-border-width-regular) * 2);
+		--_switch-border-width: var(--primitives-border-width-regular);
+		--_switch-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
+		--_switch-background-color: var(--semantics-surfaces-base-background-color);
+		--_switch-is-selected-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_switch-thumb-border-width: var(--primitives-border-width-regular);
+		--_switch-thumb-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
+		--_switch-thumb-background-color: var(--semantics-surfaces-base-background-color);
+		--_switch-is-selected-thumb-background-color: var(--semantics-controls-is-highlighted-contrast-color);
 
 		display: inline-block;
 		position: relative;
@@ -55,9 +63,9 @@ export const switchStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		position: relative;
-		border: var(--components-switch-border-width) solid var(--components-switch-border-color);
+		border: var(--_switch-border-width) solid var(--_switch-border-color);
 		border-radius: calc(var(--_track-height) / 2);
-		background-color: var(--components-switch-background-color);
+		background-color: var(--_switch-background-color);
 		width: 100%;
 		height: 100%;
 		padding: var(--_padding);
@@ -66,8 +74,8 @@ export const switchStyles = css`
 	}
 
 	.switch__input:checked ~ .switch__track {
-		border-color: var(--components-switch-is-selected-background-color);
-		background-color: var(--components-switch-is-selected-background-color);
+		border-color: var(--_switch-is-selected-background-color);
+		background-color: var(--_switch-is-selected-background-color);
 	}
 
 	.switch__input:focus-visible ~ .switch__track {
@@ -80,9 +88,9 @@ export const switchStyles = css`
 		box-sizing: border-box;
 		position: absolute;
 		left: var(--_padding);
-		border: var(--components-switch-thumb-border-width) solid var(--components-switch-thumb-border-color);
+		border: var(--_switch-thumb-border-width) solid var(--_switch-thumb-border-color);
 		border-radius: 50%;
-		background-color: var(--components-switch-thumb-background-color);
+		background-color: var(--_switch-thumb-background-color);
 		width: var(--_thumb-size);
 		height: var(--_thumb-size);
 		transition: width var(--_transition-duration) ease, height var(--_transition-duration) ease, left var(--_transition-duration) ease, background-color var(--_transition-duration) ease, border-color var(--_transition-duration) ease;
@@ -90,9 +98,9 @@ export const switchStyles = css`
 	}
 
 	.switch__input:checked ~ .switch__track .switch__thumb {
-		left: calc(var(--_track-width) - var(--components-switch-thumb-border-width) * 2 - var(--_thumb-size) - var(--_padding) * 2);
-		border-color: var(--components-switch-is-selected-thumb-background-color);
-		background-color: var(--components-switch-is-selected-thumb-background-color);
+		left: calc(var(--_track-width) - var(--_switch-thumb-border-width) * 2 - var(--_thumb-size) - var(--_padding) * 2);
+		border-color: var(--_switch-is-selected-thumb-background-color);
+		background-color: var(--_switch-is-selected-thumb-background-color);
 		width: calc(var(--_thumb-size) + var(--_padding) * 2);
 		height: calc(var(--_thumb-size) + var(--_padding) * 2);
 	}
@@ -104,11 +112,11 @@ export const switchStyles = css`
 		left: 50%;
 		opacity: 0;
 		pointer-events: none;
-		width: calc(100% + var(--components-switch-thumb-border-width) * 2);
-		height: calc(100% + var(--components-switch-thumb-border-width) * 2);
+		width: calc(100% + var(--_switch-thumb-border-width) * 2);
+		height: calc(100% + var(--_switch-thumb-border-width) * 2);
 		align-items: center;
 		justify-content: center;
-		color: var(--components-switch-is-selected-background-color);
+		color: var(--_switch-is-selected-background-color);
 		transform: translate(-50%, -50%);
 		transition: opacity var(--_transition-duration) ease;
 	}

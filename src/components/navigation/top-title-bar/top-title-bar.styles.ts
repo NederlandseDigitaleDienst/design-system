@@ -10,6 +10,8 @@ export const topTitleBarStyles = css`
 	/* # Host */
 
 	:host {
+		--_top-title-bar-divider-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-350));
+
 		${inheritedTextReset}
 		display: block;
 		width: 100%;
@@ -84,7 +86,7 @@ export const topTitleBarStyles = css`
 
 	.top-title-bar__divider {
 		display: none;
-		background-color: var(--components-top-title-bar-divider-color);
+		background-color: var(--_top-title-bar-divider-color);
 		width: var(--semantics-dividers-thickness);
 		height: var(--primitives-space-24);
 		flex-shrink: 0;

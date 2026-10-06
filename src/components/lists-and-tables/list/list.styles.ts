@@ -35,6 +35,7 @@ export const listStyles = css`
 		--_search-bar-gap: var(--primitives-space-8);
 		--_toolbar-gap: var(--primitives-space-8);
 		--_empty-padding: var(--primitives-space-16);
+		--_list-drag-placeholder-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
 
 		display: block;
 		position: relative;
@@ -252,7 +253,7 @@ export const listStyles = css`
 	::slotted(.nldd-list-drag-placeholder) {
 		box-sizing: border-box;
 		border-radius: var(--semantics-list-items-indicator-corner-radius);
-		background-color: var(--components-list-drag-placeholder-background-color);
+		background-color: var(--_list-drag-placeholder-background-color);
 		pointer-events: none;
 	}
 

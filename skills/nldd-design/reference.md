@@ -1964,7 +1964,7 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `width` | `string` | Width as a CSS length (default: 320px through --components-popover-default-width). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV. |
+| `width` | `string` | Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV. |
 | `sm-full-height` | `boolean` | On an sm viewport (where the popover renders as a bottom sheet) fills the whole available height instead of shrinking to its content. No effect on md and up (anchored mode). Opt-in for content-heavy cases such as search results or long detail views; content-sized is the default, following the Apple and Material convention. |
 | `anchor` | `string` | ID of the trigger element, used for positioning |
 | `placement` | `string` | Floating UI placement (default: 'bottom-start') |
@@ -2195,7 +2195,7 @@ A floating window based on the native <dialog> element, positionable through CSS
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `scheme` | `'inherit'\|'light'\|'dark'` | Color scheme (default 'inherit'). |
-| `width` | `string` | CSS width (default: var(--components-window-default-width)) |
+| `width` | `string` | CSS width (default: 640px) |
 | `height` | `string` | CSS height (default: content height) |
 | `top` | `string` | CSS top position of the top edge (e.g. '0', '100px') |
 | `right` | `string` | CSS right value |

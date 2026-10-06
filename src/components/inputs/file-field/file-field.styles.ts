@@ -14,11 +14,14 @@ export const fileFieldStyles = css`
 		--_corner-radius: var(--semantics-controls-md-corner-radius);
 		--_min-size: var(--semantics-controls-md-min-size);
 		--_inline-padding: var(--semantics-controls-md-inline-padding);
-		--_value-color: var(--components-file-field-value-color);
+		--_value-color: var(--semantics-content-color);
 		--_text-font: var(--semantics-input-fields-md-text-font);
 		--_clear-button-padding-right: calc((var(--_min-size) - var(--semantics-controls-sm-min-size)) / 2);
 		--_validation-icon-area-padding-right: var(--_inline-padding);
 		--_validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
+		--_file-field-highlight-border-width: var(--semantics-surfaces-border-width);
+		--_file-field-highlight-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_file-field-background-color: var(--semantics-surfaces-tinted-background-color);
 
 		${inheritedTextReset}
 		display: block;
@@ -53,8 +56,8 @@ export const fileFieldStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		border-radius: var(--_corner-radius);
-		box-shadow: inset 0 0 0 var(--components-file-field-highlight-border-width) var(--components-file-field-highlight-border-color);
-		background-color: var(--components-file-field-background-color);
+		box-shadow: inset 0 0 0 var(--_file-field-highlight-border-width) var(--_file-field-highlight-border-color);
+		background-color: var(--_file-field-background-color);
 		width: 100%;
 		min-width: 0;
 		min-height: var(--_min-size);
@@ -88,7 +91,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__value.is-empty {
-		--_value-color: var(--components-file-field-is-empty-value-color);
+		--_value-color: var(--semantics-content-secondary-color);
 	}
 
 	.file-field__clear-button {
@@ -128,7 +131,7 @@ export const fileFieldStyles = css`
 
 	@media (forced-colors: active) {
 		.file-field {
-			border: var(--components-file-field-highlight-border-width) solid CanvasText;
+			border: var(--_file-field-highlight-border-width) solid CanvasText;
 		}
 	}
 `;

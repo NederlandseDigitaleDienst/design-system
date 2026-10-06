@@ -23,6 +23,7 @@ export const documentTabBarStyles = css`
 		--_dismiss-button-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
 		--_dismiss-button-is-selected-is-hovered-background-color: light-dark(var(--primitives-color-accent-650), var(--primitives-color-accent-600));
 		--_dismiss-button-is-selected-is-active-background-color: light-dark(var(--primitives-color-accent-600), var(--primitives-color-accent-550));
+		--_document-tab-bar-tab-title-font: var(--primitives-font-body-sm-medium-flat);
 
 		${inheritedTextReset}
 		display: block;
@@ -176,7 +177,7 @@ export const documentTabBarStyles = css`
 
 	.document-tab-bar__drag-clone .document-tab-bar__item-text {
 		overflow: hidden;
-		font: var(--components-document-tab-bar-tab-title-font);
+		font: var(--_document-tab-bar-tab-title-font);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -231,6 +232,7 @@ export const documentTabBarItemStyles = css`
 		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
 
 		--_secondary-content-color: var(--semantics-buttons-neutral-tinted-content-secondary-color);
+		--_document-tab-bar-tab-title-font: var(--primitives-font-body-sm-medium-flat);
 
 		${inheritedTextReset}
 		container-type: inline-size;
@@ -346,7 +348,7 @@ export const documentTabBarItemStyles = css`
 	.document-tab-bar__item-text {
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
-		font: var(--components-document-tab-bar-tab-title-font);
+		font: var(--_document-tab-bar-tab-title-font);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -359,7 +361,7 @@ export const documentTabBarItemStyles = css`
 	.document-tab-bar__item-short-text {
 		overflow: hidden;
 		padding-inline-end: var(--primitives-space-6);
-		font: var(--components-document-tab-bar-tab-title-font);
+		font: var(--_document-tab-bar-tab-title-font);
 		color: var(--semantics-buttons-neutral-tinted-content-color);
 		text-overflow: ellipsis;
 		white-space: nowrap;

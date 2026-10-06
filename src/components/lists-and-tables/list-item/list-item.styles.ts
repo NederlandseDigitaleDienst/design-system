@@ -16,9 +16,11 @@ export const listItemStyles = css`
 		   them guaranteed-invalid so the var() fallbacks below apply. */
 		--_divider-inset-start: initial;
 		--_divider-inset-end: initial;
+		--_list-item-md-padding-block: var(--primitives-space-10);
+		--_list-item-sm-padding-block: var(--primitives-space-6);
 
 		--context-list-item-size: var(--semantics-controls-md-min-size);
-		--context-cell-padding-block: var(--components-list-item-md-padding-block);
+		--context-cell-padding-block: var(--_list-item-md-padding-block);
 		container-type: inline-size;
 		display: block;
 		width: 100%;
@@ -26,7 +28,7 @@ export const listItemStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--context-cell-padding-block: var(--components-list-item-sm-padding-block);
+		--context-cell-padding-block: var(--_list-item-sm-padding-block);
 		--context-list-item-size: var(--semantics-controls-sm-min-size);
 	}
 

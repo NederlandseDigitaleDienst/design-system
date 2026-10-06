@@ -21,10 +21,11 @@ export const collectionStyles = css`
 		/* Two sets, because a collection inside a layout-container follows that
 		   container and anywhere else the viewport. The bare --_gap is what
 		   stands when neither set matches. */
-		--_sm-gap: var(--components-collection-sm-gap);
-		--_md-gap: var(--components-collection-md-gap);
-		--_lg-gap: var(--components-collection-lg-gap);
+		--_sm-gap: var(--_collection-sm-gap);
+		--_md-gap: var(--primitives-space-24);
+		--_lg-gap: var(--primitives-space-24);
 		--_gap: var(--_sm-gap);
+		--_collection-sm-gap: var(--primitives-space-16);
 
 		@media (max-width: ${smMax}) { --_gap: var(--_sm-gap); }
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_gap: var(--_md-gap); }

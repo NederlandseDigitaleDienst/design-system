@@ -11,7 +11,7 @@ export const inlineDialogStyles = css`
 
 	:host {
 		--_icon-size: var(--primitives-space-40);
-		--_icon-color: var(--components-inline-dialog-icon-color);
+		--_icon-color: var(--semantics-content-color);
 		--_text-font: var(--primitives-font-body-md-bold-tight);
 		--_supporting-text-font: var(--primitives-font-body-sm-regular-tight);
 
@@ -29,31 +29,31 @@ export const inlineDialogStyles = css`
 	}
 
 	:host([variant="alert"]) {
-		--_icon-color: var(--components-inline-dialog-icon-warning-color);
+		--_icon-color: light-dark(var(--primitives-color-warning-350), var(--primitives-color-warning-650));
 	}
 
 	:host([variant="success"]) {
-		--_icon-color: var(--components-inline-dialog-icon-success-color);
+		--_icon-color: var(--primitives-color-success-500);
 	}
 
 	:host([icon-color="secondary"]) {
-		--_icon-color: var(--components-inline-dialog-icon-secondary-color);
+		--_icon-color: var(--semantics-content-secondary-color);
 	}
 
 	:host([icon-color="accent"]) {
-		--_icon-color: var(--components-inline-dialog-icon-accent-color);
+		--_icon-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
 	}
 
 	:host([icon-color="critical"]) {
-		--_icon-color: var(--components-inline-dialog-icon-critical-color);
+		--_icon-color: var(--primitives-color-critical-500);
 	}
 
 	:host([icon-color="warning"]) {
-		--_icon-color: var(--components-inline-dialog-icon-warning-color);
+		--_icon-color: light-dark(var(--primitives-color-warning-350), var(--primitives-color-warning-650));
 	}
 
 	:host([icon-color="success"]) {
-		--_icon-color: var(--components-inline-dialog-icon-success-color);
+		--_icon-color: var(--primitives-color-success-500);
 	}
 
 	:host([hidden]) {

@@ -1,14 +1,17 @@
 /* # Host */
 
 nldd-rich-text {
-	--_spacing: var(--components-rich-text-spacing-snug);
-	--_wide-max-width: var(--components-rich-text-wide-max-width);
+	--_rich-text-grid-size: calc(var(--primitives-font-size-100) * var(--primitives-line-height-snug));
+	--_rich-text-spacing-snug: calc(var(--_rich-text-grid-size) / 2);
+	--_spacing: var(--_rich-text-spacing-snug);
+	--_rich-text-main-max-width: var(--primitives-area-720);
+	--_wide-max-width: var(--primitives-area-800);
 	--_wide-bleed-width: calc(
-		(var(--_wide-max-width) - var(--components-rich-text-main-max-width)) / 2
+		(var(--_wide-max-width) - var(--_rich-text-main-max-width)) / 2
 	);
 	--_main-shortfall: max(
 		0px,
-		calc(100% - var(--components-rich-text-main-max-width))
+		calc(100% - var(--_rich-text-main-max-width))
 	);
 	--_dt-width: var(--primitives-area-200);
 	--_dl-column-gap: var(--primitives-space-16);
@@ -21,7 +24,7 @@ nldd-rich-text {
 	grid-template-columns:
 		[full-start]   0
 		[wide-start]   0
-		[main-start]   minmax(0, var(--components-rich-text-main-max-width))
+		[main-start]   minmax(0, var(--_rich-text-main-max-width))
 		[main-end]     min(calc(var(--_wide-bleed-width) * 2), var(--_main-shortfall))
 		[wide-end]     1fr
 		[full-end];
@@ -31,20 +34,20 @@ nldd-rich-text {
 }
 
 nldd-rich-text[centered] {
-	--_wide-max-width: var(--components-rich-text-centered-wide-max-width);
+	--_wide-max-width: var(--primitives-area-960);
 
 	grid-template-columns:
 		[full-start]   1fr
 		[wide-start]   min(var(--_wide-bleed-width), calc(var(--_main-shortfall) / 2))
-		[main-start]   minmax(0, var(--components-rich-text-main-max-width))
+		[main-start]   minmax(0, var(--_rich-text-main-max-width))
 		[main-end]     min(var(--_wide-bleed-width), calc(var(--_main-shortfall) / 2))
 		[wide-end]     1fr
 		[full-end];
 }
 
-nldd-rich-text[spacing="flat"]  { --_spacing: var(--components-rich-text-spacing-flat); }
-nldd-rich-text[spacing="tight"] { --_spacing: var(--components-rich-text-spacing-tight); }
-nldd-rich-text[spacing="loose"] { --_spacing: var(--components-rich-text-spacing-loose); }
+nldd-rich-text[spacing="flat"]  { --_spacing: var(--primitives-space-0); }
+nldd-rich-text[spacing="tight"] { --_spacing: calc(var(--_rich-text-grid-size) / 4); }
+nldd-rich-text[spacing="loose"] { --_spacing: var(--_rich-text-grid-size); }
 
 nldd-rich-text[hidden] {
 	display: none;
@@ -308,13 +311,13 @@ nldd-rich-text[hyphens] :is(p, li, dd) {
 
 nldd-rich-text ul {
 	margin: 0;
-	padding-left: var(--components-rich-text-grid-size);
+	padding-left: var(--_rich-text-grid-size);
 	list-style-type: disc;
 }
 
 nldd-rich-text ol {
 	margin: 0;
-	padding-left: var(--components-rich-text-grid-size);
+	padding-left: var(--_rich-text-grid-size);
 	list-style-type: decimal;
 }
 
@@ -592,7 +595,7 @@ nldd-rich-text table {
 	max-width: 100%;
 	margin-block: max(
 		0px,
-		calc(var(--components-rich-text-spacing-snug) - var(--_spacing))
+		calc(var(--_rich-text-spacing-snug) - var(--_spacing))
 	);
 	border-collapse: separate;
 	border-spacing: 0;

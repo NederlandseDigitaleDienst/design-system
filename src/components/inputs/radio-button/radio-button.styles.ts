@@ -9,6 +9,22 @@ export const radioButtonStyles = css`
 	/* # Host */
 
 	:host {
+		--_radio-button-border-width: var(--primitives-border-width-regular);
+		--_radio-button-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
+		--_radio-button-background-color: var(--semantics-surfaces-base-background-color);
+		--_radio-button-is-selected-inner-shape-border-width: var(--primitives-border-width-regular);
+		--_radio-button-is-selected-inner-shape-border-color: var(--semantics-controls-is-highlighted-contrast-color);
+		--_radio-button-is-selected-border-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_radio-button-is-selected-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_radio-button-is-hovered-border-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-700));
+		--_radio-button-is-selected-is-hovered-border-color: var(--semantics-controls-is-highlighted-is-hovered-indicator-color);
+		--_radio-button-is-selected-is-hovered-background-color: var(--semantics-controls-is-highlighted-is-hovered-indicator-color);
+		--_radio-button-is-selected-is-hovered-inner-shape-border-color: var(--semantics-controls-is-highlighted-is-hovered-contrast-color);
+		--_radio-button-is-active-border-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-750));
+		--_radio-button-is-selected-is-active-border-color: var(--semantics-controls-is-highlighted-is-active-indicator-color);
+		--_radio-button-is-selected-is-active-background-color: var(--semantics-controls-is-highlighted-is-active-indicator-color);
+		--_radio-button-is-selected-is-active-inner-shape-border-color: var(--semantics-controls-is-highlighted-is-active-contrast-color);
+
 		display: inline-flex;
 		position: relative;
 		width: var(--semantics-controls-xs-min-size);
@@ -30,9 +46,9 @@ export const radioButtonStyles = css`
 	.radio-button__outer-shape {
 		box-sizing: border-box;
 		position: relative;
-		border: var(--components-radio-button-border-width) solid var(--components-radio-button-border-color);
+		border: var(--_radio-button-border-width) solid var(--_radio-button-border-color);
 		border-radius: 50%;
-		background-color: var(--components-radio-button-background-color);
+		background-color: var(--_radio-button-background-color);
 		width: var(--semantics-controls-xs-min-size);
 		height: var(--semantics-controls-xs-min-size);
 	}
@@ -42,7 +58,7 @@ export const radioButtonStyles = css`
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		border: var(--components-radio-button-is-selected-inner-shape-border-width) solid var(--components-radio-button-is-selected-inner-shape-border-color);
+		border: var(--_radio-button-is-selected-inner-shape-border-width) solid var(--_radio-button-is-selected-inner-shape-border-color);
 		border-radius: 50%;
 		width: var(--primitives-space-20);
 		height: var(--primitives-space-20);
@@ -50,8 +66,8 @@ export const radioButtonStyles = css`
 	}
 
 	:host([checked]) .radio-button__outer-shape {
-		border-color: var(--components-radio-button-is-selected-border-color);
-		background-color: var(--components-radio-button-is-selected-background-color);
+		border-color: var(--_radio-button-is-selected-border-color);
+		background-color: var(--_radio-button-is-selected-background-color);
 	}
 
 	:host([checked]) .radio-button__inner-shape {
@@ -60,30 +76,30 @@ export const radioButtonStyles = css`
 
 	@media (hover: hover) {
 		:host(:hover:not([disabled])) .radio-button__outer-shape {
-			border-color: var(--components-radio-button-is-hovered-border-color);
+			border-color: var(--_radio-button-is-hovered-border-color);
 		}
 
 		:host([checked]:hover:not([disabled])) .radio-button__outer-shape {
-			border-color: var(--components-radio-button-is-selected-is-hovered-border-color);
-			background-color: var(--components-radio-button-is-selected-is-hovered-background-color);
+			border-color: var(--_radio-button-is-selected-is-hovered-border-color);
+			background-color: var(--_radio-button-is-selected-is-hovered-background-color);
 		}
 
 		:host([checked]:hover:not([disabled])) .radio-button__inner-shape {
-			border-color: var(--components-radio-button-is-selected-is-hovered-inner-shape-border-color);
+			border-color: var(--_radio-button-is-selected-is-hovered-inner-shape-border-color);
 		}
 	}
 
 	:host(:active:not([disabled])) .radio-button__outer-shape {
-		border-color: var(--components-radio-button-is-active-border-color);
+		border-color: var(--_radio-button-is-active-border-color);
 	}
 
 	:host([checked]:active:not([disabled])) .radio-button__outer-shape {
-		border-color: var(--components-radio-button-is-selected-is-active-border-color);
-		background-color: var(--components-radio-button-is-selected-is-active-background-color);
+		border-color: var(--_radio-button-is-selected-is-active-border-color);
+		background-color: var(--_radio-button-is-selected-is-active-background-color);
 	}
 
 	:host([checked]:active:not([disabled])) .radio-button__inner-shape {
-		border-color: var(--components-radio-button-is-selected-is-active-inner-shape-border-color);
+		border-color: var(--_radio-button-is-selected-is-active-inner-shape-border-color);
 	}
 
 	:host(:focus-visible) {

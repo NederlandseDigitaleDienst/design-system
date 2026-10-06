@@ -14,14 +14,14 @@ export const bannerStyles = css`
 	 * Scoping. The host only keeps the external contract. */
 
 	:host {
-		--_corner-radius: var(--components-banner-corner-radius);
-		--_padding: var(--components-banner-md-padding);
+		--_corner-radius: var(--semantics-surfaces-corner-radius);
+		--_padding: var(--primitives-space-12);
 		--_background-color: var(--semantics-categories-neutral-tinted-background-color);
 		--_border-color: var(--semantics-categories-neutral-tinted-highlight-border-color);
 		--_border-width: var(--primitives-border-width-thin);
 		--_icon-color: var(--semantics-categories-neutral-tinted-content-color);
-		--_icon-size: var(--components-banner-md-icon-size);
-		--_content-color: var(--components-banner-content-color);
+		--_icon-size: var(--primitives-space-32);
+		--_content-color: var(--semantics-content-color);
 		--_text-icon-offset: calc((var(--_icon-size) - var(--primitives-font-size-100) * var(--primitives-line-height-tight)) / 2);
 		--_column-gap: var(--primitives-space-8);
 		--_dismiss-inset: 0px;
@@ -48,8 +48,8 @@ export const bannerStyles = css`
 	   right gives the button equal air on both sides of its corner. */
 
 	:host([size="sm"]) {
-		--_padding: var(--components-banner-sm-padding);
-		--_icon-size: var(--components-banner-sm-icon-size);
+		--_padding: var(--primitives-space-8);
+		--_icon-size: var(--primitives-space-24);
 		--_column-gap: var(--primitives-space-4);
 		--_dismiss-inset: calc(var(--_padding) - (var(--semantics-controls-sm-min-size) - var(--_icon-size)) / 2);
 		--_dismissible-padding-right: calc(var(--_dismiss-inset) + var(--semantics-controls-sm-min-size));

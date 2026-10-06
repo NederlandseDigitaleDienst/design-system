@@ -22,6 +22,9 @@ export const topNavigationBarStyles = css`
 		--_wordmark-content-color: light-dark(var(--primitives-color-reference-lintblauw), var(--primitives-color-neutral-1000));
 		--_wordmark-max-width: 280px;
 		--_max-width: var(--semantics-page-sections-body-max-width);
+		--_top-navigation-bar-title-sm-font: var(--primitives-font-display-6-sm);
+		--_top-navigation-bar-title-md-font: var(--primitives-font-display-5-sm);
+		--_top-navigation-bar-title-lg-font: var(--primitives-font-display-4-sm);
 
 		${inheritedTextReset}
 		container-type: inline-size;
@@ -343,7 +346,7 @@ export const topNavigationBarStyles = css`
 		align-items: center;
 		min-width: var(--semantics-controls-xs-min-size);
 		min-height: var(--semantics-controls-xs-min-size);
-		font: var(--components-top-navigation-bar-title-sm-font);
+		font: var(--_top-navigation-bar-title-sm-font);
 		color: var(--semantics-content-color);
 		white-space: nowrap;
 
@@ -352,11 +355,11 @@ export const topNavigationBarStyles = css`
 		}
 
 		@container (min-width: ${mdMin}) {
-			font: var(--components-top-navigation-bar-title-md-font);
+			font: var(--_top-navigation-bar-title-md-font);
 		}
 
 		@container (min-width: ${lgMin}) {
-			font: var(--components-top-navigation-bar-title-lg-font);
+			font: var(--_top-navigation-bar-title-lg-font);
 		}
 	}
 

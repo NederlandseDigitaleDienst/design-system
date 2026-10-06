@@ -17,13 +17,13 @@ export const progressCircleStyles = css`
 		   grows with circle size — must match getStrokeWidthPx() in the
 		   template file. */
 		--_stroke-width: calc(4px * 100 / 28);
-		--_track-background-color: var(--components-progress-circle-track-background-color);
-		--_track-border-color: var(--components-progress-circle-track-border-color);
-		--_caption-gap: var(--components-progress-circle-caption-gap);
-		--_text-color: var(--components-progress-circle-text-color);
-		--_text-font: var(--components-progress-circle-text-font);
-		--_supporting-text-color: var(--components-progress-circle-supporting-text-color);
-		--_supporting-text-font: var(--components-progress-circle-supporting-text-font);
+		--_track-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+		--_track-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
+		--_caption-gap: var(--primitives-space-8);
+		--_text-color: var(--semantics-content-color);
+		--_text-font: var(--primitives-font-body-md-regular-tight);
+		--_supporting-text-color: var(--semantics-content-secondary-color);
+		--_supporting-text-font: var(--primitives-font-body-sm-regular-tight);
 
 		${inheritedTextReset}
 		box-sizing: border-box;

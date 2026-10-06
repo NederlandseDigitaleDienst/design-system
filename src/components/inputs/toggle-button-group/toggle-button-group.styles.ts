@@ -9,6 +9,10 @@ export const toggleButtonGroupStyles = css`
 	/* # Host */
 
 	:host {
+		--_toggle-button-group-md-gap: var(--primitives-space-8);
+		--_toggle-button-group-sm-gap: var(--primitives-space-6);
+		--_toggle-button-group-xs-gap: var(--primitives-space-4);
+
 		display: block;
 		isolation: isolate;
 	}
@@ -23,14 +27,14 @@ export const toggleButtonGroupStyles = css`
 	.toggle-button-group {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--components-toggle-button-group-md-gap);
+		gap: var(--_toggle-button-group-md-gap);
 	}
 
 	:host([size="sm"]) .toggle-button-group {
-		gap: var(--components-toggle-button-group-sm-gap);
+		gap: var(--_toggle-button-group-sm-gap);
 	}
 
 	:host([size="xs"]) .toggle-button-group {
-		gap: var(--components-toggle-button-group-xs-gap);
+		gap: var(--_toggle-button-group-xs-gap);
 	}
 `;

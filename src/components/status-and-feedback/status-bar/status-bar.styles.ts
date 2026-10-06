@@ -11,14 +11,14 @@ export const statusBarStyles = css`
 
 	:host {
 		--_corner-radius: var(--primitives-corner-radius-none);
-		--_background-color: var(--components-status-bar-neutral-background-color);
-		--_height: var(--components-status-bar-height);
+		--_background-color: var(--semantics-categories-neutral-filled-background-color);
+		--_height: var(--semantics-controls-xs-min-size);
 		--_inline-padding: var(--primitives-space-8);
 		--_gap: var(--primitives-space-2);
-		--_content-color: var(--components-status-bar-neutral-content-color);
+		--_content-color: var(--semantics-categories-neutral-filled-content-color);
 		--_font: var(--primitives-font-body-xs-medium-flat);
-		--_is-hovered-background-color: var(--components-status-bar-neutral-is-hovered-background-color);
-		--_is-active-background-color: var(--components-status-bar-neutral-is-active-background-color);
+		--_is-hovered-background-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-500));
+		--_is-active-background-color: light-dark(var(--primitives-color-neutral-700), var(--primitives-color-neutral-550));
 		--_action-icon-size: var(--primitives-space-16);
 
 		${inheritedTextReset}
@@ -30,31 +30,31 @@ export const statusBarStyles = css`
 	}
 
 	:host([variant="accent"]) {
-		--_background-color: var(--components-status-bar-accent-background-color);
-		--_content-color: var(--components-status-bar-accent-content-color);
-		--_is-hovered-background-color: var(--components-status-bar-accent-is-hovered-background-color);
-		--_is-active-background-color: var(--components-status-bar-accent-is-active-background-color);
+		--_background-color: var(--semantics-categories-accent-filled-background-color);
+		--_content-color: var(--semantics-categories-accent-filled-content-color);
+		--_is-hovered-background-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-450));
+		--_is-active-background-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-500));
 	}
 
 	:host([variant="success"]) {
-		--_background-color: var(--components-status-bar-success-background-color);
-		--_content-color: var(--components-status-bar-success-content-color);
-		--_is-hovered-background-color: var(--components-status-bar-success-is-hovered-background-color);
-		--_is-active-background-color: var(--components-status-bar-success-is-active-background-color);
+		--_background-color: var(--semantics-categories-success-filled-background-color);
+		--_content-color: var(--semantics-categories-success-filled-content-color);
+		--_is-hovered-background-color: var(--primitives-color-success-550);
+		--_is-active-background-color: var(--primitives-color-success-600);
 	}
 
 	:host([variant="warning"]) {
-		--_background-color: var(--components-status-bar-warning-background-color);
-		--_content-color: var(--components-status-bar-warning-content-color);
-		--_is-hovered-background-color: var(--components-status-bar-warning-is-hovered-background-color);
-		--_is-active-background-color: var(--components-status-bar-warning-is-active-background-color);
+		--_background-color: var(--semantics-categories-warning-filled-background-color);
+		--_content-color: var(--semantics-categories-warning-filled-content-color);
+		--_is-hovered-background-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
+		--_is-active-background-color: light-dark(var(--primitives-color-warning-500), var(--primitives-color-warning-700));
 	}
 
 	:host([variant="critical"]) {
-		--_background-color: var(--components-status-bar-critical-background-color);
-		--_content-color: var(--components-status-bar-critical-content-color);
-		--_is-hovered-background-color: var(--components-status-bar-critical-is-hovered-background-color);
-		--_is-active-background-color: var(--components-status-bar-critical-is-active-background-color);
+		--_background-color: var(--semantics-categories-critical-filled-background-color);
+		--_content-color: var(--semantics-categories-critical-filled-content-color);
+		--_is-hovered-background-color: light-dark(var(--primitives-color-critical-700), var(--primitives-color-critical-500));
+		--_is-active-background-color: light-dark(var(--primitives-color-critical-750), var(--primitives-color-critical-550));
 	}
 
 

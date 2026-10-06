@@ -28150,7 +28150,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "width",
-              "description": "Width as a CSS length (default: 320px through --components-popover-default-width). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV."
+              "description": "Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV."
             },
             {
               "name": "sm-full-height",
@@ -29454,7 +29454,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "width",
-              "description": "CSS width (default: var(--components-window-default-width))"
+              "description": "CSS width (default: 640px)"
             },
             {
               "name": "height",

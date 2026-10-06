@@ -1,7 +1,12 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDStatusBar } from './status-bar.js';
 import './status-bar.js';
+
+let removeTokens: () => void;
+beforeAll(() => { removeTokens = loadTokens(); });
+afterAll(() => removeTokens());
 
 describe('nldd-status-bar', () => {
 	let el: HTMLElement;
@@ -19,7 +24,7 @@ describe('nldd-status-bar', () => {
 		const eigen = root.style.fontSize;
 		root.style.fontSize = '32px'; // 200%
 		try {
-			el = await fixture('<nldd-status-bar variant="warning" text="Storing" style="--components-status-bar-height: 24px"></nldd-status-bar>');
+			el = await fixture('<nldd-status-bar variant="warning" text="Storing"></nldd-status-bar>');
 			await waitForUpdate(el);
 			const bar = el.shadowRoot!.querySelector('.status-bar') as HTMLElement;
 			const text = el.shadowRoot!.querySelector('.status-bar__text') as HTMLElement;

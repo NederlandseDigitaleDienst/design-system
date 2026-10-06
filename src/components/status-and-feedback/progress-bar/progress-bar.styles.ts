@@ -10,20 +10,20 @@ export const progressBarStyles = css`
 	/* # Host */
 
 	:host {
-		--_height: var(--components-progress-bar-md-height);
-		--_track-background-color: var(--components-progress-bar-track-background-color);
-		--_track-border-color: var(--components-progress-bar-track-border-color);
-		--_track-border-width: var(--components-progress-bar-track-border-width);
-		--_corner-radius: var(--components-progress-bar-corner-radius);
-		--_segment-indicator-gap: var(--components-progress-bar-progress-segment-indicator-gap);
-		--_caption-gap: var(--components-progress-bar-caption-gap);
-		--_text-color: var(--components-progress-bar-text-color);
-		--_supporting-text-color: var(--components-progress-bar-supporting-text-color);
-		--_text-font: var(--components-progress-bar-text-font);
-		--_supporting-text-font: var(--components-progress-bar-supporting-text-font);
+		--_height: var(--primitives-space-8);
+		--_track-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+		--_track-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
+		--_track-border-width: var(--primitives-border-width-thin);
+		--_corner-radius: var(--primitives-corner-radius-full);
+		--_segment-indicator-gap: var(--primitives-space-1);
+		--_caption-gap: var(--primitives-space-6);
+		--_text-color: var(--semantics-content-color);
+		--_supporting-text-color: var(--semantics-content-secondary-color);
+		--_text-font: var(--primitives-font-body-md-regular-tight);
+		--_supporting-text-font: var(--primitives-font-body-md-regular-tight);
 		--_indeterminate-background-color: var(--semantics-categories-accent-filled-background-color);
 		--_indeterminate-border-color: var(--semantics-categories-accent-filled-highlight-border-color);
-		--_indeterminate-border-width: var(--components-progress-bar-segment-indicator-border-width);
+		--_indeterminate-border-width: var(--primitives-border-width-thin);
 		--_indeterminate-bar-width: 20%;
 		--_indeterminate-duration: 800ms;
 
@@ -39,12 +39,12 @@ export const progressBarStyles = css`
 		display: none;
 	}
 
-	:host([size="sm"]) { --_height: var(--components-progress-bar-sm-height); }
-	:host([size="lg"]) { --_height: var(--components-progress-bar-lg-height); }
+	:host([size="sm"]) { --_height: var(--primitives-space-4); }
+	:host([size="lg"]) { --_height: var(--primitives-space-16); }
 
 	:host([variant="distribution"]) {
-		--_segment-indicator-gap: var(--components-progress-bar-distribution-segment-indicator-gap);
-		--_corner-radius: var(--components-progress-bar-distribution-corner-radius);
+		--_segment-indicator-gap: var(--primitives-space-2);
+		--_corner-radius: var(--primitives-corner-radius-xxs);
 	}
 
 
@@ -219,10 +219,12 @@ export const progressBarSegmentIndicatorStyles = css`
 
 	:host {
 		--_width: var(--context-progress-bar-segment-indicator-width, 0%);
-		--_min-width: var(--components-progress-bar-segment-indicator-min-width);
+		--_min-width: var(--primitives-space-2);
 		--_background-color: var(--semantics-categories-accent-filled-background-color);
 		--_border-color: var(--semantics-categories-accent-filled-highlight-border-color);
-		--_border-width: var(--components-progress-bar-segment-indicator-border-width);
+		--_border-width: var(--primitives-border-width-thin);
+		--_progress-bar-corner-radius: var(--primitives-corner-radius-full);
+		--_progress-bar-distribution-corner-radius: var(--primitives-corner-radius-xxs);
 
 		box-sizing: border-box;
 		display: block;
@@ -275,11 +277,11 @@ export const progressBarSegmentIndicatorStyles = css`
 	   data-variant is set by the parent. */
 
 	:host([data-variant="progress"]) {
-		border-radius: var(--components-progress-bar-corner-radius);
+		border-radius: var(--_progress-bar-corner-radius);
 	}
 
 	:host([data-variant="distribution"]) {
-		border-radius: var(--components-progress-bar-distribution-corner-radius);
+		border-radius: var(--_progress-bar-distribution-corner-radius);
 	}
 
 

@@ -17,18 +17,24 @@ export const notificationStyles = css`
 		--_stack-scale-step: 0.03;
 		--_padding: var(--primitives-space-12);
 		--_gap: var(--primitives-space-6);
-		--_icon-color: var(--components-notification-icon-neutral-color);
+		--_icon-color: var(--semantics-content-secondary-color);
 		--_icon-size: var(--primitives-space-32);
 		--_actions-margin-top: var(--primitives-space-4);
 		--_actions-gap: var(--primitives-space-6);
 		--_dismiss-inset: calc(var(--_padding) - (var(--semantics-controls-sm-min-size) - var(--_icon-size)) / 2);
 		--_dismiss-space: calc(var(--_dismiss-inset) + var(--semantics-controls-sm-min-size));
+		--_notification-corner-radius: var(--semantics-overlays-corner-radius);
+		--_notification-box-shadow: var(--semantics-overlays-box-shadow);
+		--_notification-background-color: var(--semantics-surfaces-base-background-color);
+		--_notification-text-font: var(--primitives-font-body-md-bold-tight);
+		--_notification-supporting-text-color: var(--semantics-content-secondary-color);
+		--_notification-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
 
 		box-sizing: border-box;
 		display: block;
-		border-radius: var(--components-notification-corner-radius);
-		box-shadow: var(--components-notification-box-shadow);
-		background-color: var(--components-notification-background-color);
+		border-radius: var(--_notification-corner-radius);
+		box-shadow: var(--_notification-box-shadow);
+		background-color: var(--_notification-background-color);
 		width: var(--_width);
 		max-width: 100%;
 		overflow: hidden;
@@ -43,19 +49,19 @@ export const notificationStyles = css`
 	}
 
 	:host([variant="accent"]) {
-		--_icon-color: var(--components-notification-icon-accent-color);
+		--_icon-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-350));
 	}
 
 	:host([variant="success"]) {
-		--_icon-color: var(--components-notification-icon-success-color);
+		--_icon-color: var(--primitives-color-success-500);
 	}
 
 	:host([variant="warning"]) {
-		--_icon-color: var(--components-notification-icon-warning-color);
+		--_icon-color: light-dark(var(--primitives-color-warning-350), var(--primitives-color-warning-250));
 	}
 
 	:host([variant="critical"]) {
-		--_icon-color: var(--components-notification-icon-critical-color);
+		--_icon-color: var(--primitives-color-critical-500);
 	}
 
 	:host([hidden]) {
@@ -125,15 +131,15 @@ export const notificationStyles = css`
 		margin: 0;
 		overflow-wrap: break-word;
 		color: var(--semantics-content-color);
-		font: var(--components-notification-text-font);
+		font: var(--_notification-text-font);
 		text-wrap: pretty;
 	}
 
 	.notification__supporting-text {
 		margin: 0;
 		overflow-wrap: break-word;
-		color: var(--components-notification-supporting-text-color);
-		font: var(--components-notification-supporting-text-font);
+		color: var(--_notification-supporting-text-color);
+		font: var(--_notification-supporting-text-font);
 		text-wrap: pretty;
 	}
 

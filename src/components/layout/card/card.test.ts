@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDCard } from './card.js';
 import './card.js';
 import '../../../assets/styles/variables.css';
@@ -133,15 +134,21 @@ describe('nldd-card', () => {
 	});
 
 	it('background="tinted" pakt de tinted vlakkleur', async () => {
-		el = await fixture<NLDDCard>(`
-			<nldd-card
-				background="tinted"
-				style="--components-card-tinted-background-color: rgb(1, 2, 3);"
-			></nldd-card>
-		`);
-		await waitForUpdate(el);
-		const card = el.shadowRoot!.querySelector('.card')!;
-		expect(getComputedStyle(card).backgroundColor).toBe('rgb(1, 2, 3)');
+		const removeTokens = loadTokens();
+		try {
+			el = await fixture<NLDDCard>('<nldd-card background="tinted"></nldd-card>');
+			await waitForUpdate(el);
+			const card = el.shadowRoot!.querySelector('.card')!;
+			const probe = document.createElement('div');
+			probe.style.backgroundColor = 'var(--semantics-surfaces-tinted-background-color)';
+			document.body.appendChild(probe);
+			const tinted = getComputedStyle(probe).backgroundColor;
+			probe.remove();
+			expect(tinted).not.toBe('rgba(0, 0, 0, 0)');
+			expect(getComputedStyle(card).backgroundColor).toBe(tinted);
+		} finally {
+			removeTokens();
+		}
 	});
 });
 

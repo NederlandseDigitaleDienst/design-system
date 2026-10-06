@@ -10,7 +10,7 @@ export const tagStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--components-tag-md-corner-radius);
+		--_corner-radius: var(--primitives-corner-radius-xs);
 		--_background-color: var(--semantics-categories-neutral-tinted-background-color);
 		--_min-height: var(--primitives-space-24);
 		--_inline-padding: var(--primitives-space-6);
@@ -28,7 +28,7 @@ export const tagStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--components-tag-sm-corner-radius);
+		--_corner-radius: var(--primitives-corner-radius-xxs);
 		--_min-height: var(--primitives-space-20);
 		--_inline-padding: var(--primitives-space-4);
 		--_gap: var(--primitives-space-2);

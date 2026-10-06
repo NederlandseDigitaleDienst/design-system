@@ -13,6 +13,12 @@ export const menuBarItemStyles = css`
 		--_indicator-z-index: 0;
 		--_content-z-index: 1;
 		--_focus-z-index: 1;
+		--_menu-bar-item-content-color: var(--primitives-color-accent-750);
+		--_menu-bar-item-font: var(--primitives-font-body-md-medium-flat);
+		--_menu-bar-item-is-hovered-indicator-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
+		--_menu-bar-item-is-expanded-indicator-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-250));
+		--_menu-bar-item-is-current-indicator-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_menu-bar-item-is-current-indicator-height: var(--primitives-space-4);
 
 		${inheritedTextReset}
 		display: inline-block;
@@ -47,8 +53,8 @@ export const menuBarItemStyles = css`
 		align-items: center;
 		justify-content: center;
 		text-align: center;
-		color: var(--components-menu-bar-item-content-color);
-		font: var(--components-menu-bar-item-font);
+		color: var(--_menu-bar-item-content-color);
+		font: var(--_menu-bar-item-font);
 		text-decoration: none;
 		white-space: nowrap;
 		appearance: none;
@@ -74,17 +80,17 @@ export const menuBarItemStyles = css`
 
 	@media (hover: hover) {
 		.menu-bar-item:hover::before {
-			background-color: var(--components-menu-bar-item-is-hovered-indicator-background-color);
+			background-color: var(--_menu-bar-item-is-hovered-indicator-background-color);
 		}
 	}
 
 	:host([expanded]) .menu-bar-item::before {
-		background-color: var(--components-menu-bar-item-is-expanded-indicator-background-color);
+		background-color: var(--_menu-bar-item-is-expanded-indicator-background-color);
 	}
 
 	@media (hover: hover) {
 		:host([expanded]) .menu-bar-item:hover::before {
-			background-color: var(--components-menu-bar-item-is-hovered-indicator-background-color);
+			background-color: var(--_menu-bar-item-is-hovered-indicator-background-color);
 		}
 	}
 
@@ -97,8 +103,8 @@ export const menuBarItemStyles = css`
 		bottom: 0;
 		left: var(--primitives-space-8);
 		z-index: var(--_indicator-z-index);
-		background-color: var(--components-menu-bar-item-is-current-indicator-background-color);
-		height: var(--components-menu-bar-item-is-current-indicator-height);
+		background-color: var(--_menu-bar-item-is-current-indicator-background-color);
+		height: var(--_menu-bar-item-is-current-indicator-height);
 		pointer-events: none;
 	}
 

@@ -10,16 +10,18 @@ export const keyboardShortcutStyles = css`
 	/* # Host */
 
 	:host {
-		--_size: var(--components-keyboard-shortcut-md-size);
+		--_size: var(--primitives-space-24);
 		--_inline-padding: var(--primitives-space-4);
 		--_font-family: var(--primitives-font-family-monospace);
 		--_font-size: var(--primitives-font-size-80);
 		--_font-weight: var(--primitives-font-weight-body-regular);
 		--_line-height: var(--primitives-line-height-flat);
-		--_content-color: var(--components-keyboard-shortcut-content-color);
-		--_separator-color: var(--components-keyboard-shortcut-separator-color);
-		--_highlight-border-color: var(--components-keyboard-shortcut-border-color);
-		--_background-color: var(--components-keyboard-shortcut-background-color);
+		--_content-color: var(--semantics-content-color);
+		--_separator-color: var(--semantics-content-secondary-color);
+		--_highlight-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-250));
+		--_background-color: var(--semantics-surfaces-tinted-background-color);
+		--_keyboard-shortcut-border-width: var(--primitives-border-width-thin);
+		--_keyboard-shortcut-corner-radius: var(--primitives-corner-radius-xs);
 
 		${inheritedTextReset}
 		display: inline-flex;
@@ -34,7 +36,7 @@ export const keyboardShortcutStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_size: var(--components-keyboard-shortcut-sm-size);
+		--_size: var(--primitives-space-20);
 		--_font-size: var(--primitives-font-size-70);
 	}
 
@@ -91,8 +93,8 @@ export const keyboardShortcutStyles = css`
 	.keyboard-shortcut__key {
 		box-sizing: border-box;
 		display: inline-flex;
-		box-shadow: inset 0 0 0 var(--components-keyboard-shortcut-border-width) var(--_highlight-border-color);
-		border-radius: var(--components-keyboard-shortcut-corner-radius);
+		box-shadow: inset 0 0 0 var(--_keyboard-shortcut-border-width) var(--_highlight-border-color);
+		border-radius: var(--_keyboard-shortcut-corner-radius);
 		background-color: var(--_background-color);
 		min-width: var(--_size);
 		height: var(--_size);
@@ -126,7 +128,7 @@ export const keyboardShortcutStyles = css`
 		}
 
 		:host(:not([appearance="simple"])) .keyboard-shortcut__key {
-			border: var(--components-keyboard-shortcut-border-width) solid CanvasText;
+			border: var(--_keyboard-shortcut-border-width) solid CanvasText;
 			background-color: Canvas;
 		}
 	}

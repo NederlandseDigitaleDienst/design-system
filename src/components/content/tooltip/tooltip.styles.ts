@@ -15,6 +15,9 @@ export const tooltipStyles = css`
 		--_max-width: var(--primitives-area-280);
 		--_z-index: 10000;
 		--_show-delay: 700ms;
+		--_tooltip-box-shadow: var(--primitives-box-shadows-level-2);
+		--_tooltip-background-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-750));
+		--_tooltip-content-color: var(--primitives-color-neutral-0);
 		--_hide-delay: 50; /* unitless ms, read by JavaScript */
 		--_offset: 4; /* px, unitless — read by JS */
 		--_shift-padding: 8; /* px, unitless — read by JS */
@@ -81,13 +84,13 @@ export const tooltipStyles = css`
 
 	.tooltip__body {
 		border-radius: var(--primitives-corner-radius-xs);
-		box-shadow: var(--components-tooltip-box-shadow);
-		background-color: var(--components-tooltip-background-color);
+		box-shadow: var(--_tooltip-box-shadow);
+		background-color: var(--_tooltip-background-color);
 		width: max-content;
 		max-width: var(--_max-width);
 		padding-block: var(--primitives-space-4);
 		padding-inline: var(--primitives-space-8);
-		color: var(--components-tooltip-content-color);
+		color: var(--_tooltip-content-color);
 		font: var(--primitives-font-body-xs-regular-tight);
 		overflow-wrap: break-word;
 	}

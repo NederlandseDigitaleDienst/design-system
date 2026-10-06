@@ -334,8 +334,8 @@ describe('nldd-list-item – padding on the cells', () => {
 
 	it('lets a action cover the full row height', async () => {
 		root = await fixture<HTMLElement>(
-			`<nldd-list style="--components-list-item-md-padding-block: 10px">
-				<nldd-list-item>
+			`<nldd-list>
+				<nldd-list-item style="--_list-item-md-padding-block: 10px">
 					<nldd-list-item-segment button width="full">
 						<nldd-text-cell text="Ministeries"></nldd-text-cell>
 					</nldd-list-item-segment>

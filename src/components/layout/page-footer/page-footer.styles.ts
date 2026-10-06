@@ -18,11 +18,13 @@ export const pageFooterStyles = css`
 		   intentionally lives outside the semantic token system. Local
 		   --_ var keeps the value discoverable in one place. */
 		--_lintje-color: #154273;
-		--context-parent-background-color: var(--components-page-footer-background-color);
+		--_page-footer-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-50));
+		--_page-footer-divider-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-150));
+		--context-parent-background-color: var(--_page-footer-background-color);
 
 		container-type: inline-size;
 		display: block;
-		background-color: var(--components-page-footer-background-color);
+		background-color: var(--_page-footer-background-color);
 		width: 100%;
 	}
 
@@ -144,7 +146,7 @@ export const pageFooterStyles = css`
 	.page-footer__divider {
 		margin: 0;
 		border: none;
-		background-color: var(--components-page-footer-divider-color);
+		background-color: var(--_page-footer-divider-color);
 		width: 100%;
 		height: var(--semantics-dividers-thickness);
 	}
@@ -203,6 +205,8 @@ export const pageFooterLegalBarStyles = css`
 
 export const pageFooterLegalBarItemStyles = css`
 	:host {
+		--_page-footer-legal-bar-item-color: var(--semantics-content-secondary-color);
+
 		${inheritedTextReset}
 		display: inline-flex;
 	}
@@ -213,12 +217,12 @@ export const pageFooterLegalBarItemStyles = css`
 
 	.page-footer__legal-bar-item {
 		display: inline-flex;
-		color: var(--components-page-footer-legal-bar-item-color);
+		color: var(--_page-footer-legal-bar-item-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 	}
 
 	.page-footer__legal-bar-item-link {
-		color: var(--components-page-footer-legal-bar-item-color);
+		color: var(--_page-footer-legal-bar-item-color);
 		text-decoration: underline;
 	}
 

@@ -168,9 +168,9 @@ describe('nldd-timeline-track-cell line', () => {
 		bottom: !!cell.shadowRoot!.querySelector('.timeline-track-cell__bottom-line'),
 	});
 
-	// The tokens do not load here, so the fixture carries the two colors itself:
-	// without them both halves resolve to nothing and every color is equal.
-	const COLORS = 'style="--components-timeline-track-cell-color: rgb(1, 2, 3); --components-timeline-track-cell-future-background-color: rgb(4, 5, 6)"';
+	// The tokens do not load here, so the fixture sets the two colors on the
+	// cell itself: without them both halves resolve to nothing and are equal.
+	const COLORS = 'style="--_track-color: rgb(1, 2, 3); --_future-fill-color: rgb(4, 5, 6)"';
 
 	const half = (cell: HTMLElement, which: 'top' | 'bottom') => {
 		const line = cell.shadowRoot!.querySelector(`.timeline-track-cell__${which}-line`) as HTMLElement;
@@ -260,7 +260,7 @@ describe('nldd-timeline-track-cell with only a line', () => {
 		if (el) cleanup(el);
 	});
 
-	const COLORS = 'style="--components-timeline-track-cell-color: rgb(1, 2, 3); --components-timeline-track-cell-future-background-color: rgb(4, 5, 6)"';
+	const COLORS = 'style="--_track-color: rgb(1, 2, 3); --_future-fill-color: rgb(4, 5, 6)"';
 
 	const fullLine = (cell: HTMLElement) =>
 		getComputedStyle(cell.shadowRoot!.querySelector('.timeline-track-cell__full-line') as HTMLElement).backgroundColor;
@@ -297,7 +297,7 @@ describe('nldd-timeline-track-cell current without a dot', () => {
 		if (el) cleanup(el);
 	});
 
-	const COLORS = 'style="--components-timeline-track-cell-color: rgb(1, 2, 3); --components-timeline-track-cell-future-background-color: rgb(4, 5, 6)"';
+	const COLORS = 'style="--_track-color: rgb(1, 2, 3); --_future-fill-color: rgb(4, 5, 6)"';
 
 	const fullLine = (cell: HTMLElement) =>
 		getComputedStyle(cell.shadowRoot!.querySelector('.timeline-track-cell__full-line') as HTMLElement).backgroundColor;

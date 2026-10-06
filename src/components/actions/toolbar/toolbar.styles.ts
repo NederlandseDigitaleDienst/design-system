@@ -10,7 +10,7 @@ export const toolbarStyles = css`
 	/* # Host */
 
 	:host {
-		--_gap: var(--components-toolbar-md-gap);
+		--_gap: var(--primitives-space-8);
 		/* --_width..--_overflow-button-width: measured + set by toolbar.ts; 0px is a valid pre-measurement placeholder */
 		--_width: 0px;
 		--_start-width: 0px;
@@ -30,11 +30,11 @@ export const toolbarStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_gap: var(--components-toolbar-sm-gap);
+		--_gap: var(--primitives-space-6);
 	}
 
 	:host([size="lg"]) {
-		--_gap: var(--components-toolbar-lg-gap);
+		--_gap: var(--primitives-space-8);
 	}
 
 	:host([hidden]) {

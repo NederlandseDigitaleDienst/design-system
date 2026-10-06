@@ -10,15 +10,15 @@ export const imageStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--components-image-corner-radius);
-		--_background-color: var(--components-image-background-color);
-		--_caption-gap: var(--components-image-caption-gap);
-		--_caption-color: var(--components-image-caption-color);
-		--_caption-font: var(--components-image-caption-font);
-		--_credit-color: var(--components-image-credit-color);
-		--_credit-font: var(--components-image-credit-font);
-		--_error-text-color: var(--components-image-error-text-color);
-		--_error-font: var(--components-image-error-font);
+		--_corner-radius: var(--primitives-corner-radius-none);
+		--_background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-50));
+		--_caption-gap: var(--primitives-space-4);
+		--_caption-color: var(--semantics-content-color);
+		--_caption-font: var(--primitives-font-body-sm-regular-tight);
+		--_credit-color: var(--semantics-content-secondary-color);
+		--_credit-font: var(--primitives-font-body-sm-regular-tight);
+		--_error-text-color: var(--semantics-content-color);
+		--_error-font: var(--primitives-font-body-sm-regular-snug);
 		--_error-padding: var(--primitives-space-8);
 		--_error-gap: var(--primitives-space-2);
 		--_caption-row-gap: var(--primitives-space-8);
@@ -57,7 +57,7 @@ export const imageStyles = css`
 
 	/* ## Shape variants */
 
-	:host([shape="rounded"]) { --_corner-radius: var(--components-image-rounded-corner-radius); }
+	:host([shape="rounded"]) { --_corner-radius: var(--semantics-controls-md-corner-radius); }
 	:host([shape="circle"]) { --_corner-radius: 50%; }
 
 
