@@ -114,14 +114,30 @@ Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwij
 
 ## Development setup
 
+Je hebt Node 18 of hoger nodig. De documentatiesite is ook de plek waar je een component bekijkt terwijl je eraan werkt.
+
 ```bash
-# Dependencies installeren
-npm install
+npm ci          # dependencies installeren
+npm run site    # de documentatiesite starten
+```
 
-# De documentatiesite starten
+Open daarna het adres dat in de terminal verschijnt, standaard http://localhost:5173. De site ververst zelf als je een component, een story of een pagina wijzigt.
+
+Wil je een branch van iemand anders bekijken, haal die dan eerst op:
+
+```bash
+git fetch origin
+git switch <branch>
+npm ci
 npm run site
+```
 
-# Open het adres dat Vite meldt (standaard http://localhost:5173)
+De overige commando's:
+
+```bash
+npm run build:site   # de site bouwen naar site-dist/
+npm run test:run     # de tests, in een echte browser (eenmalig: npx playwright install chromium)
+npm run test:a11y    # axe over elke pagina van de site en elk voorbeeld erop
 ```
 
 ## Componenten
