@@ -299,7 +299,7 @@ A row of controls that belong to a whole screen or pane, with an overflow menu f
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `width` | `string` | Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width. |
-| `min-width` | `string` | Minimum width as a CSS length (default: '0', so the title shrink-wraps its content and the next element sits against it). |
+| `min-width` | `string` | Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first. |
 | `max-width` | `string` | Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row). |
 | `align` | `string` | Text alignment: 'left' \| 'center' (default: 'left'). |
 | `text` | `string` | Title text. |

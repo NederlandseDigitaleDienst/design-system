@@ -2624,7 +2624,7 @@
               },
               "default": "''",
               "fieldName": "minWidth",
-              "description": "Minimum width as a CSS length (default: '0', so the title shrink-wraps its content and the next element sits against it)."
+              "description": "Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first."
             },
             {
               "name": "max-width",

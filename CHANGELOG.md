@@ -19,6 +19,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **A title in `nldd-toolbar` keeps its own width while items can still move into the overflow menu.** It used to shrink first: next to a few buttons a title like "Aanvraag A-1042" came down to "Aanvraag A-…", or to nothing at all, while every button stayed. Now the items go first, in `priority` order, and the title only truncates once none is left to move. `min-width` on `nldd-toolbar-title` defaults to the width of its text, up to `max-width`; set `min-width="0"` for the old behavior. A toolbar with a centered title no longer flips back and forth when its last item moves into the menu.
+
 - **`nldd-blockquote` wraps with `text-wrap: pretty`**, the quote as well as the attribution, so neither ends on a single word on its last line.
 
 ### Breaking

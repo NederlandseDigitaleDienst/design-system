@@ -220,7 +220,7 @@ export const toolbarTitleStyles = css`
 	/* # Host */
 
 	:host {
-		--_title-group-min-width: 0px;
+		--_title-group-min-width: min-content;
 		--_title-width: auto;
 		--_title-max-width: var(--primitives-area-240);
 		--_title-group-height: var(--semantics-controls-md-min-size);
@@ -271,7 +271,8 @@ export const toolbarTitleStyles = css`
 	   trailing action, as one unit) along the row's main axis instead. Scoped to
 	   solo-fluid so a title balanced by real start/end items keeps using the
 	   toolbar spacers. */
-	:host([solo-fluid][align="center"]) {
+	:host([solo-fluid][align="center"]),
+	:host([solo-fluid][slot="center"]) {
 		justify-content: center;
 	}
 
