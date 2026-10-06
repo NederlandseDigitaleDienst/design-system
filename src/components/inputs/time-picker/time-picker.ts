@@ -376,13 +376,13 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 			// an odd count you see whole rows and with an even one half a row runs off
 			// the top and bottom. At least 3, because with 1 you only see the chosen
 			// value and there is nothing to scroll.
-			this.style.setProperty('--_rows', String(Math.max(3, Math.round(this.rows))));
+			this.style.setProperty('--_time-picker-rows', String(Math.max(3, Math.round(this.rows))));
 		}
 		if (changed.has('width')) {
 			const w = this.width;
-			if (w === 'full') this.style.setProperty('--_width', '100%');
-			else if (w && CSS.supports('width', w)) this.style.setProperty('--_width', w);
-			else this.style.removeProperty('--_width');
+			if (w === 'full') this.style.setProperty('--_time-picker-width', '100%');
+			else if (w && CSS.supports('width', w)) this.style.setProperty('--_time-picker-width', w);
+			else this.style.removeProperty('--_time-picker-width');
 		}
 		if (changed.has('value') || changed.has('min') || changed.has('max') || changed.has('step')) {
 			// The selection follows the value again: it was just set from outside or

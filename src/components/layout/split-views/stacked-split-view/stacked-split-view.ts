@@ -56,7 +56,7 @@ export class NLDDStackedSplitView extends LitElement {
 
 	override firstUpdated() {
 		// Read pane min-height from CSS after first render — styles are guaranteed applied
-		this._paneMinHeight = parseFloat(getComputedStyle(this).getPropertyValue('--_pane-min-height'));
+		this._paneMinHeight = parseFloat(getComputedStyle(this).getPropertyValue('--_stacked-split-view-pane-min-height'));
 		this._updateVisiblePanes();
 	}
 

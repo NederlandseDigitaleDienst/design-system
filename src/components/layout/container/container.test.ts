@@ -70,12 +70,12 @@ describe('nldd-container', () => {
 		expect(getComputedStyle(child).breakInside).toBe('avoid');
 	});
 
-	it('column-count="4" sets the --_column-count var on the inner', async () => {
+	it('column-count="4" sets the --_container-column-count var on the inner', async () => {
 		el = await fixture('<nldd-container layout="grid" column-count="4"></nldd-container>');
 		await waitForUpdate(el);
 		const inner = el.shadowRoot!.querySelector('.container__inner') as HTMLElement;
-		expect(getComputedStyle(inner).getPropertyValue('--_column-count').trim()).toBe('4');
-		expect(getComputedStyle(inner).getPropertyValue('--_track-min').trim()).toBe('0');
+		expect(getComputedStyle(inner).getPropertyValue('--_container-column-count').trim()).toBe('4');
+		expect(getComputedStyle(inner).getPropertyValue('--_container-track-min').trim()).toBe('0');
 	});
 
 	it('reflects column-count + per-viewport variants as integer attributes', async () => {
@@ -87,29 +87,29 @@ describe('nldd-container', () => {
 		expect(el.getAttribute('lg-column-count')).toBe('4');
 	});
 
-	it('writes --_padding-* longhands from padding attr', async () => {
+	it('writes --_container-padding-* longhands from padding attr', async () => {
 		el = await fixture('<nldd-container padding="16"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_padding-top')).toBe('var(--primitives-space-16)');
-		expect(el.style.getPropertyValue('--_padding-right')).toBe('var(--primitives-space-16)');
-		expect(el.style.getPropertyValue('--_padding-bottom')).toBe('var(--primitives-space-16)');
-		expect(el.style.getPropertyValue('--_padding-left')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_container-padding-top')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_container-padding-right')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_container-padding-bottom')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_container-padding-left')).toBe('var(--primitives-space-16)');
 	});
 
 	it('per-side padding overrides axis and all', async () => {
 		el = await fixture('<nldd-container padding="16" padding-block="8" padding-top="32"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_padding-top')).toBe('var(--primitives-space-32)');
-		expect(el.style.getPropertyValue('--_padding-bottom')).toBe('var(--primitives-space-8)');
-		expect(el.style.getPropertyValue('--_padding-right')).toBe('var(--primitives-space-16)');
-		expect(el.style.getPropertyValue('--_padding-left')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_container-padding-top')).toBe('var(--primitives-space-32)');
+		expect(el.style.getPropertyValue('--_container-padding-bottom')).toBe('var(--primitives-space-8)');
+		expect(el.style.getPropertyValue('--_container-padding-right')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_container-padding-left')).toBe('var(--primitives-space-16)');
 	});
 
-	it('writes scoped --_sm-padding-* from sm-padding attr', async () => {
+	it('writes scoped --_container-sm-padding-* from sm-padding attr', async () => {
 		el = await fixture('<nldd-container sm-padding="8"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_sm-padding-top')).toBe('var(--primitives-space-8)');
-		expect(el.style.getPropertyValue('--_sm-padding-left')).toBe('var(--primitives-space-8)');
+		expect(el.style.getPropertyValue('--_container-sm-padding-top')).toBe('var(--primitives-space-8)');
+		expect(el.style.getPropertyValue('--_container-sm-padding-left')).toBe('var(--primitives-space-8)');
 	});
 
 	// The three breakpoint vars are what the styles read; a plain gap fills each
@@ -117,99 +117,99 @@ describe('nldd-container', () => {
 	it('writes the plain gap into every breakpoint var', async () => {
 		el = await fixture('<nldd-container gap="12"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_sm-gap')).toBe('var(--primitives-space-12)');
-		expect(el.style.getPropertyValue('--_md-gap')).toBe('var(--primitives-space-12)');
-		expect(el.style.getPropertyValue('--_lg-gap')).toBe('var(--primitives-space-12)');
+		expect(el.style.getPropertyValue('--_container-sm-gap')).toBe('var(--primitives-space-12)');
+		expect(el.style.getPropertyValue('--_container-md-gap')).toBe('var(--primitives-space-12)');
+		expect(el.style.getPropertyValue('--_container-lg-gap')).toBe('var(--primitives-space-12)');
 	});
 
 	it('keeps a breakpoint gap set beside a plain one', async () => {
 		el = await fixture('<nldd-container gap="12" md-gap="32"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_sm-gap')).toBe('var(--primitives-space-12)');
-		expect(el.style.getPropertyValue('--_md-gap')).toBe('var(--primitives-space-32)');
+		expect(el.style.getPropertyValue('--_container-sm-gap')).toBe('var(--primitives-space-12)');
+		expect(el.style.getPropertyValue('--_container-md-gap')).toBe('var(--primitives-space-32)');
 	});
 
-	it('writes responsive --_sm-gap', async () => {
+	it('writes responsive --_container-sm-gap', async () => {
 		el = await fixture('<nldd-container sm-gap="4"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_sm-gap')).toBe('var(--primitives-space-4)');
+		expect(el.style.getPropertyValue('--_container-sm-gap')).toBe('var(--primitives-space-4)');
 	});
 
 	it('maps horizontal-alignment to justify-content for layout=row', async () => {
 		el = await fixture('<nldd-container layout="row" horizontal-alignment="center"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_justify-content')).toBe('center');
-		expect(el.style.getPropertyValue('--_align-items')).toBe('');
+		expect(el.style.getPropertyValue('--_container-justify-content')).toBe('center');
+		expect(el.style.getPropertyValue('--_container-align-items')).toBe('');
 	});
 
 	it('maps horizontal-alignment to align-items for layout=stack (default)', async () => {
 		el = await fixture('<nldd-container horizontal-alignment="right"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_align-items')).toBe('flex-end');
-		expect(el.style.getPropertyValue('--_justify-content')).toBe('');
+		expect(el.style.getPropertyValue('--_container-align-items')).toBe('flex-end');
+		expect(el.style.getPropertyValue('--_container-justify-content')).toBe('');
 	});
 
 	it('maps vertical-alignment to align-items for layout=row', async () => {
 		el = await fixture('<nldd-container layout="row" vertical-alignment="bottom"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_align-items')).toBe('flex-end');
+		expect(el.style.getPropertyValue('--_container-align-items')).toBe('flex-end');
 	});
 
 	it('treats layout=wrap like layout=row for alignment-axis mapping', async () => {
 		el = await fixture('<nldd-container layout="wrap" horizontal-alignment="center"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_justify-content')).toBe('center');
+		expect(el.style.getPropertyValue('--_container-justify-content')).toBe('center');
 	});
 
 	it('maps grid vertical-alignment to align-items (per-cell), not justify-content', async () => {
 		el = await fixture('<nldd-container layout="grid" vertical-alignment="center"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_align-items')).toBe('center');
-		expect(el.style.getPropertyValue('--_justify-content')).toBe('');
+		expect(el.style.getPropertyValue('--_container-align-items')).toBe('center');
+		expect(el.style.getPropertyValue('--_container-justify-content')).toBe('');
 	});
 
 	it('maps grid horizontal-alignment to both justify-items and justify-content', async () => {
 		el = await fixture('<nldd-container layout="grid" horizontal-alignment="center"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_justify-items')).toBe('center');
-		expect(el.style.getPropertyValue('--_justify-content')).toBe('center');
+		expect(el.style.getPropertyValue('--_container-justify-items')).toBe('center');
+		expect(el.style.getPropertyValue('--_container-justify-content')).toBe('center');
 	});
 
-	it('bridges order attr on a slotted child to --_slot-order inline custom prop', async () => {
+	it('bridges order attr on a slotted child to --_container-slot-order inline custom prop', async () => {
 		el = await fixture('<nldd-container layout="row"><div order="3"></div></nldd-container>');
 		await waitForUpdate(el);
 		const child = el.querySelector('div') as HTMLElement;
-		expect(child.style.getPropertyValue('--_slot-order')).toBe('3');
+		expect(child.style.getPropertyValue('--_container-slot-order')).toBe('3');
 	});
 
 	it('bridges sm-order / md-order / lg-order independently', async () => {
 		el = await fixture('<nldd-container layout="row"><div order="1" sm-order="5" md-order="2" lg-order="9"></div></nldd-container>');
 		await waitForUpdate(el);
 		const child = el.querySelector('div') as HTMLElement;
-		expect(child.style.getPropertyValue('--_slot-order')).toBe('1');
-		expect(child.style.getPropertyValue('--_slot-sm-order')).toBe('5');
-		expect(child.style.getPropertyValue('--_slot-md-order')).toBe('2');
-		expect(child.style.getPropertyValue('--_slot-lg-order')).toBe('9');
+		expect(child.style.getPropertyValue('--_container-slot-order')).toBe('1');
+		expect(child.style.getPropertyValue('--_container-slot-sm-order')).toBe('5');
+		expect(child.style.getPropertyValue('--_container-slot-md-order')).toBe('2');
+		expect(child.style.getPropertyValue('--_container-slot-lg-order')).toBe('9');
 	});
 
 	it('accepts negative order values', async () => {
 		el = await fixture('<nldd-container layout="row"><div order="-1"></div></nldd-container>');
 		await waitForUpdate(el);
 		const child = el.querySelector('div') as HTMLElement;
-		expect(child.style.getPropertyValue('--_slot-order')).toBe('-1');
+		expect(child.style.getPropertyValue('--_container-slot-order')).toBe('-1');
 	});
 
 	it('puts a width length in a custom property and leaves the keywords to CSS', async () => {
 		el = await fixture('<nldd-container width="480px" min-width="280px" max-width="640px"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('480px');
-		expect(el.style.getPropertyValue('--_min-width')).toBe('280px');
-		expect(el.style.getPropertyValue('--_max-width')).toBe('640px');
+		expect(el.style.getPropertyValue('--_container-width')).toBe('480px');
+		expect(el.style.getPropertyValue('--_container-min-width')).toBe('280px');
+		expect(el.style.getPropertyValue('--_container-max-width')).toBe('640px');
 
 		el.setAttribute('width', 'fit-content');
 		await waitForUpdate(el);
 		// A keyword is a selector, not a value: nothing lands inline.
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_container-width')).toBe('');
 		expect(el.getAttribute('width')).toBe('fit-content');
 	});
 
@@ -218,7 +218,7 @@ describe('nldd-container', () => {
 		await waitForUpdate(el);
 		el.setAttribute('width', 'nogal breed');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_container-width')).toBe('');
 		expect(el.getAttribute('width')).toBe('');
 	});
 
@@ -227,7 +227,7 @@ describe('nldd-container', () => {
 		await waitForUpdate(el);
 		el.removeAttribute('max-width');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('');
+		expect(el.style.getPropertyValue('--_container-max-width')).toBe('');
 	});
 
 	it('removes the inline custom prop when the order attribute is cleared', async () => {
@@ -236,13 +236,13 @@ describe('nldd-container', () => {
 		const child = el.querySelector('div') as HTMLElement;
 		child.removeAttribute('order');
 		await new Promise(r => requestAnimationFrame(() => r(null)));
-		expect(child.style.getPropertyValue('--_slot-order')).toBe('');
+		expect(child.style.getPropertyValue('--_container-slot-order')).toBe('');
 	});
 
 	it('accepts 0 as padding value', async () => {
 		el = await fixture('<nldd-container padding="0"></nldd-container>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_padding-top')).toBe('0');
+		expect(el.style.getPropertyValue('--_container-padding-top')).toBe('0');
 	});
 });
 

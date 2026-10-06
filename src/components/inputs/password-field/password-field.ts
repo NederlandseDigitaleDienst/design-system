@@ -145,9 +145,9 @@ export class NLDDPasswordField extends DescribedBy(FormAssociated(LitElement)) {
 		if (changed.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {
-				this.style.setProperty('--_width', w);
+				this.style.setProperty('--_password-field-width', w);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_password-field-width');
 			}
 		}
 	}

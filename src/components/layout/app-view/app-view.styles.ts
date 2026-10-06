@@ -10,10 +10,10 @@ export const appViewStyles = css`
 
 	:host {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_app-view-background-color: var(--context-parent-background-color);
 
 		display: flex;
-		background-color: var(--_background-color);
+		background-color: var(--_app-view-background-color);
 		width: 100%;
 		height: 100%;
 	}
@@ -24,7 +24,7 @@ export const appViewStyles = css`
 
 	:host([background="tinted"]) {
 		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_background-color: var(--semantics-surfaces-tinted-background-color);
+		--_app-view-background-color: var(--semantics-surfaces-tinted-background-color);
 	}
 
 	/* Root-scroll mode — the DOCUMENT scrolls (see ScrollModeController +

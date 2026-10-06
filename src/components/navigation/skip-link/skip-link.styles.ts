@@ -11,10 +11,10 @@ export const skipLinkStyles = css`
 	/* # Host */
 
 	:host {
-		--_z-index: 1000;
-		--_box-shadow: var(--primitives-box-shadows-level-3);
-		--_focus-box-shadow: inset var(--semantics-focus-ring-box-shadow);
-		--_focus-outline-offset: -6px;
+		--_skip-link-z-index: 1000;
+		--_skip-link-box-shadow: var(--primitives-box-shadows-level-3);
+		--_skip-link-focus-box-shadow: inset var(--semantics-focus-ring-box-shadow);
+		--_skip-link-focus-outline-offset: -6px;
 
 		${inheritedTextReset}
 		display: block;
@@ -34,9 +34,9 @@ export const skipLinkStyles = css`
 		top: 0;
 		left: 0;
 		clip-path: inset(50%);
-		z-index: var(--_z-index);
+		z-index: var(--_skip-link-z-index);
 		border-radius: var(--semantics-controls-md-corner-radius);
-		box-shadow: var(--_box-shadow);
+		box-shadow: var(--_skip-link-box-shadow);
 		background-color: var(--semantics-surfaces-base-background-color);
 		width: 1px;
 		height: 1px;
@@ -74,7 +74,7 @@ export const skipLinkStyles = css`
 	.skip-link__control:focus-visible {
 		outline: var(--semantics-focus-ring-outline);
 		/* negative: keep the focus halo inside the small skip-link, not past the viewport */
-		outline-offset: var(--_focus-outline-offset);
-		box-shadow: var(--_focus-box-shadow);
+		outline-offset: var(--_skip-link-focus-outline-offset);
+		box-shadow: var(--_skip-link-focus-box-shadow);
 	}
 `;

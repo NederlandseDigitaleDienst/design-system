@@ -324,7 +324,7 @@ export class NLDDPopover extends LitElement {
 			this.style.removeProperty('right');
 			this.style.removeProperty('bottom');
 			this.style.removeProperty('transform');
-			this.style.removeProperty('--_max-height');
+			this.style.removeProperty('--_popover-max-height');
 			if (crossedBreakpoint) this._restoreTransition();
 			return;
 		}
@@ -387,7 +387,7 @@ export class NLDDPopover extends LitElement {
 				size({
 					padding: inset,
 					apply: ({ availableHeight }: { availableHeight: number }) => {
-						this.style.setProperty('--_max-height', `${availableHeight}px`);
+						this.style.setProperty('--_popover-max-height', `${availableHeight}px`);
 					},
 				}),
 			],

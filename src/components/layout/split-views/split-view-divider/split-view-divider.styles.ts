@@ -9,7 +9,7 @@ export const splitViewDividerStyles = css`
 	/* # Host */
 
 	:host {
-		--_thickness: var(--semantics-dividers-thickness);
+		--_split-view-divider-thickness: var(--semantics-dividers-thickness);
 
 		display: flex;
 		flex-shrink: 0;
@@ -21,7 +21,7 @@ export const splitViewDividerStyles = css`
 	}
 
 	:host([has-drag-handle]) {
-		--_thickness: var(--primitives-space-12);
+		--_split-view-divider-thickness: var(--primitives-space-12);
 	}
 
 
@@ -31,7 +31,7 @@ export const splitViewDividerStyles = css`
 		display: flex;
 		position: relative;
 		background-color: var(--semantics-dividers-color);
-		width: var(--_thickness);
+		width: var(--_split-view-divider-thickness);
 		height: 100%;
 		align-items: center;
 		justify-content: center;
@@ -39,7 +39,7 @@ export const splitViewDividerStyles = css`
 
 	:host([orientation="horizontal"]) .split-view-divider {
 		width: 100%;
-		height: var(--_thickness);
+		height: var(--_split-view-divider-thickness);
 	}
 
 	@media (forced-colors: active) {

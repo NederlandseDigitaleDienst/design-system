@@ -10,12 +10,12 @@ export const numberFieldStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: auto;
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_min-size: var(--semantics-controls-md-min-size);
-		--_spin-button-padding: calc((var(--_min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
-		--_text-font: var(--semantics-input-fields-md-text-font);
-		--_inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
+		--_number-field-width: auto;
+		--_number-field-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_number-field-min-size: var(--semantics-controls-md-min-size);
+		--_number-field-spin-button-padding: calc((var(--_number-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_number-field-text-font: var(--semantics-input-fields-md-text-font);
+		--_number-field-inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
 
 		${inheritedTextReset}
 		display: inline-block;
@@ -23,11 +23,11 @@ export const numberFieldStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_min-size: var(--semantics-controls-sm-min-size);
-		--_spin-button-padding: calc((var(--_min-size) - var(--semantics-controls-xs-min-size)) / 2 - var(--semantics-input-fields-border-width));
-		--_text-font: var(--semantics-input-fields-sm-text-font);
-		--_inline-padding: calc(var(--semantics-controls-sm-inline-padding) - var(--semantics-input-fields-border-width));
+		--_number-field-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_number-field-min-size: var(--semantics-controls-sm-min-size);
+		--_number-field-spin-button-padding: calc((var(--_number-field-min-size) - var(--semantics-controls-xs-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_number-field-text-font: var(--semantics-input-fields-sm-text-font);
+		--_number-field-inline-padding: calc(var(--semantics-controls-sm-inline-padding) - var(--semantics-input-fields-border-width));
 	}
 
 	:host([disabled]) {
@@ -40,7 +40,7 @@ export const numberFieldStyles = css`
 	}
 
 	:host {
-		width: var(--_width);
+		width: var(--_number-field-width);
 		max-width: 100%;
 	}
 
@@ -61,9 +61,9 @@ export const numberFieldStyles = css`
 		display: inline-flex;
 		width: 100%;
 		border: var(--semantics-input-fields-border);
-		border-radius: var(--_corner-radius);
+		border-radius: var(--_number-field-corner-radius);
 		background-color: var(--semantics-input-fields-background-color);
-		height: var(--_min-size);
+		height: var(--_number-field-min-size);
 		flex-direction: row;
 		align-items: center;
 	}
@@ -85,11 +85,11 @@ export const numberFieldStyles = css`
 	}
 
 	.number-field__decrement-button {
-		padding-left: var(--_spin-button-padding);
+		padding-left: var(--_number-field-spin-button-padding);
 	}
 
 	.number-field__increment-button {
-		padding-right: var(--_spin-button-padding);
+		padding-right: var(--_number-field-spin-button-padding);
 	}
 
 	.number-field__input {
@@ -104,7 +104,7 @@ export const numberFieldStyles = css`
 		flex-grow: 1;
 		text-align: center;
 		color: var(--semantics-content-color);
-		font: var(--_text-font);
+		font: var(--_number-field-text-font);
 		appearance: none;
 	}
 
@@ -120,7 +120,7 @@ export const numberFieldStyles = css`
 
 	:host([hide-spin-buttons]) .number-field__input {
 		min-width: var(--primitives-space-80);
-		padding-inline: var(--_inline-padding);
+		padding-inline: var(--_number-field-inline-padding);
 		text-align: left;
 	}
 

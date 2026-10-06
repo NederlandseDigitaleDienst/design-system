@@ -215,12 +215,12 @@ export class NLDDPageFooter extends LitElement {
 
 		if (changed.has('width')) {
 			// A CSS length feeds the body max-width; 'full' is handled by CSS
-			// (:host([width="full"]) sets --_max-width: none); default clears it.
+			// (:host([width="full"]) sets --_page-footer-max-width: none); default clears it.
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('max-width', w)) {
-				this.style.setProperty('--_max-width', w);
+				this.style.setProperty('--_page-footer-max-width', w);
 			} else {
-				this.style.removeProperty('--_max-width');
+				this.style.removeProperty('--_page-footer-max-width');
 			}
 		}
 	}

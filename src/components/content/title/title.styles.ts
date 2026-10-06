@@ -17,27 +17,27 @@ export const titleStyles = css`
 
 	:host {
 		@media (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-3-sm);
+			--_title-font: var(--primitives-font-display-3-sm);
 		}
 
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-3-md);
+			--_title-font: var(--primitives-font-display-3-md);
 		}
 
 		@media (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-3-lg);
+			--_title-font: var(--primitives-font-display-3-lg);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-3-sm);
+			--_title-font: var(--primitives-font-display-3-sm);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-3-md);
+			--_title-font: var(--primitives-font-display-3-md);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-3-lg);
+			--_title-font: var(--primitives-font-display-3-lg);
 		}
 
 		${inheritedTextReset}
@@ -46,131 +46,131 @@ export const titleStyles = css`
 
 	:host([size="1"]) {
 		@media (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-1-sm);
+			--_title-font: var(--primitives-font-display-1-sm);
 		}
 
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-1-md);
+			--_title-font: var(--primitives-font-display-1-md);
 		}
 
 		@media (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-1-lg);
+			--_title-font: var(--primitives-font-display-1-lg);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-1-sm);
+			--_title-font: var(--primitives-font-display-1-sm);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-1-md);
+			--_title-font: var(--primitives-font-display-1-md);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-1-lg);
+			--_title-font: var(--primitives-font-display-1-lg);
 		}
 	}
 
 	:host([size="2"]) {
 		@media (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-2-sm);
+			--_title-font: var(--primitives-font-display-2-sm);
 		}
 
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-2-md);
+			--_title-font: var(--primitives-font-display-2-md);
 		}
 
 		@media (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-2-lg);
+			--_title-font: var(--primitives-font-display-2-lg);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-2-sm);
+			--_title-font: var(--primitives-font-display-2-sm);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-2-md);
+			--_title-font: var(--primitives-font-display-2-md);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-2-lg);
+			--_title-font: var(--primitives-font-display-2-lg);
 		}
 	}
 
 	:host([size="4"]) {
 		@media (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-4-sm);
+			--_title-font: var(--primitives-font-display-4-sm);
 		}
 
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-4-md);
+			--_title-font: var(--primitives-font-display-4-md);
 		}
 
 		@media (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-4-lg);
+			--_title-font: var(--primitives-font-display-4-lg);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-4-sm);
+			--_title-font: var(--primitives-font-display-4-sm);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-4-md);
+			--_title-font: var(--primitives-font-display-4-md);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-4-lg);
+			--_title-font: var(--primitives-font-display-4-lg);
 		}
 	}
 
 	:host([size="5"]) {
 		@media (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-5-sm);
+			--_title-font: var(--primitives-font-display-5-sm);
 		}
 
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-5-md);
+			--_title-font: var(--primitives-font-display-5-md);
 		}
 
 		@media (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-5-lg);
+			--_title-font: var(--primitives-font-display-5-lg);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-5-sm);
+			--_title-font: var(--primitives-font-display-5-sm);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-5-md);
+			--_title-font: var(--primitives-font-display-5-md);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-5-lg);
+			--_title-font: var(--primitives-font-display-5-lg);
 		}
 	}
 
 	:host([size="6"]) {
 		@media (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-6-sm);
+			--_title-font: var(--primitives-font-display-6-sm);
 		}
 
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-6-md);
+			--_title-font: var(--primitives-font-display-6-md);
 		}
 
 		@media (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-6-lg);
+			--_title-font: var(--primitives-font-display-6-lg);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			--_font: var(--primitives-font-display-6-sm);
+			--_title-font: var(--primitives-font-display-6-sm);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_font: var(--primitives-font-display-6-md);
+			--_title-font: var(--primitives-font-display-6-md);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			--_font: var(--primitives-font-display-6-lg);
+			--_title-font: var(--primitives-font-display-6-lg);
 		}
 	}
 
@@ -223,7 +223,7 @@ export const titleStyles = css`
 		margin: 0;
 		max-width: 40ch;
 		color: var(--semantics-content-color);
-		font: var(--_font);
+		font: var(--_title-font);
 		overflow-wrap: anywhere;
 		text-wrap: balance;
 	}
@@ -234,7 +234,7 @@ export const titleStyles = css`
 		margin: 0 !important;
 		max-width: 40ch !important;
 		color: var(--semantics-content-color) !important;
-		font: var(--_font) !important;
+		font: var(--_title-font) !important;
 		overflow-wrap: anywhere !important;
 		text-wrap: balance !important;
 	}

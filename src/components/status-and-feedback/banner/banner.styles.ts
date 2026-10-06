@@ -14,25 +14,25 @@ export const bannerStyles = css`
 	 * Scoping. The host only keeps the external contract. */
 
 	:host {
-		--_corner-radius: var(--semantics-surfaces-corner-radius);
-		--_padding: var(--primitives-space-12);
-		--_background-color: var(--semantics-categories-neutral-tinted-background-color);
-		--_border-color: var(--semantics-categories-neutral-tinted-highlight-border-color);
-		--_border-width: var(--primitives-border-width-thin);
-		--_icon-color: var(--semantics-categories-neutral-tinted-content-color);
-		--_icon-size: var(--primitives-space-32);
-		--_content-color: var(--semantics-content-color);
-		--_text-icon-offset: calc((var(--_icon-size) - var(--primitives-font-size-100) * var(--primitives-line-height-tight)) / 2);
-		--_column-gap: var(--primitives-space-8);
-		--_dismiss-inset: 0px;
-		--_dismissible-padding-right: calc(var(--_dismiss-inset) + var(--semantics-controls-md-min-size));
-		--_main-gap: var(--primitives-space-8);
-		--_actions-gap: var(--primitives-space-4);
+		--_banner-corner-radius: var(--semantics-surfaces-corner-radius);
+		--_banner-padding: var(--primitives-space-12);
+		--_banner-background-color: var(--semantics-categories-neutral-tinted-background-color);
+		--_banner-border-color: var(--semantics-categories-neutral-tinted-highlight-border-color);
+		--_banner-border-width: var(--primitives-border-width-thin);
+		--_banner-icon-color: var(--semantics-categories-neutral-tinted-content-color);
+		--_banner-icon-size: var(--primitives-space-32);
+		--_banner-content-color: var(--semantics-content-color);
+		--_banner-text-icon-offset: calc((var(--_banner-icon-size) - var(--primitives-font-size-100) * var(--primitives-line-height-tight)) / 2);
+		--_banner-column-gap: var(--primitives-space-8);
+		--_banner-dismiss-inset: 0px;
+		--_banner-dismissible-padding-right: calc(var(--_banner-dismiss-inset) + var(--semantics-controls-md-min-size));
+		--_banner-main-gap: var(--primitives-space-8);
+		--_banner-actions-gap: var(--primitives-space-4);
 
 		${inheritedTextReset}
 		display: block;
 		width: 100%;
-		color: var(--_content-color);
+		color: var(--_banner-content-color);
 	}
 
 	:host([hidden]) {
@@ -41,42 +41,42 @@ export const bannerStyles = css`
 
 	/* The dismiss slot narrows with the icon-button the template swaps in, so
 	   the reserved right padding tracks the control size rather than a fixed
-	   value. --_text-icon-offset follows --_icon-size on its own.
+	   value. --_banner-text-icon-offset follows --_banner-icon-size on its own.
 
-	   --_dismiss-inset pulls the 32px button up until its center sits on the
+	   --_banner-dismiss-inset pulls the 32px button up until its center sits on the
 	   24px icon's center (8 - (32 - 24) / 2 = 4), and the same value on the
 	   right gives the button equal air on both sides of its corner. */
 
 	:host([size="sm"]) {
-		--_padding: var(--primitives-space-8);
-		--_icon-size: var(--primitives-space-24);
-		--_column-gap: var(--primitives-space-4);
-		--_dismiss-inset: calc(var(--_padding) - (var(--semantics-controls-sm-min-size) - var(--_icon-size)) / 2);
-		--_dismissible-padding-right: calc(var(--_dismiss-inset) + var(--semantics-controls-sm-min-size));
+		--_banner-padding: var(--primitives-space-8);
+		--_banner-icon-size: var(--primitives-space-24);
+		--_banner-column-gap: var(--primitives-space-4);
+		--_banner-dismiss-inset: calc(var(--_banner-padding) - (var(--semantics-controls-sm-min-size) - var(--_banner-icon-size)) / 2);
+		--_banner-dismissible-padding-right: calc(var(--_banner-dismiss-inset) + var(--semantics-controls-sm-min-size));
 	}
 
 	:host([variant="accent"]) {
-		--_background-color: var(--semantics-categories-accent-tinted-background-color);
-		--_border-color: var(--semantics-categories-accent-tinted-highlight-border-color);
-		--_icon-color: var(--semantics-categories-accent-tinted-content-color);
+		--_banner-background-color: var(--semantics-categories-accent-tinted-background-color);
+		--_banner-border-color: var(--semantics-categories-accent-tinted-highlight-border-color);
+		--_banner-icon-color: var(--semantics-categories-accent-tinted-content-color);
 	}
 
 	:host([variant="success"]) {
-		--_background-color: var(--semantics-categories-success-tinted-background-color);
-		--_border-color: var(--semantics-categories-success-tinted-highlight-border-color);
-		--_icon-color: var(--semantics-categories-success-tinted-content-color);
+		--_banner-background-color: var(--semantics-categories-success-tinted-background-color);
+		--_banner-border-color: var(--semantics-categories-success-tinted-highlight-border-color);
+		--_banner-icon-color: var(--semantics-categories-success-tinted-content-color);
 	}
 
 	:host([variant="warning"]) {
-		--_background-color: var(--semantics-categories-warning-tinted-background-color);
-		--_border-color: var(--semantics-categories-warning-tinted-highlight-border-color);
-		--_icon-color: var(--semantics-categories-warning-tinted-content-color);
+		--_banner-background-color: var(--semantics-categories-warning-tinted-background-color);
+		--_banner-border-color: var(--semantics-categories-warning-tinted-highlight-border-color);
+		--_banner-icon-color: var(--semantics-categories-warning-tinted-content-color);
 	}
 
 	:host([variant="critical"]) {
-		--_background-color: var(--semantics-categories-critical-tinted-background-color);
-		--_border-color: var(--semantics-categories-critical-tinted-highlight-border-color);
-		--_icon-color: var(--semantics-categories-critical-tinted-content-color);
+		--_banner-background-color: var(--semantics-categories-critical-tinted-background-color);
+		--_banner-border-color: var(--semantics-categories-critical-tinted-highlight-border-color);
+		--_banner-icon-color: var(--semantics-categories-critical-tinted-content-color);
 	}
 
 	/* # Block */
@@ -85,21 +85,21 @@ export const bannerStyles = css`
 		box-sizing: border-box;
 		display: grid;
 		position: relative;
-		border-radius: var(--_corner-radius);
-		box-shadow: inset 0 0 0 var(--_border-width) var(--_border-color);
-		background-color: var(--_background-color);
-		padding: var(--_padding);
+		border-radius: var(--_banner-corner-radius);
+		box-shadow: inset 0 0 0 var(--_banner-border-width) var(--_banner-border-color);
+		background-color: var(--_banner-background-color);
+		padding: var(--_banner-padding);
 		grid-template-columns: auto 1fr;
-		gap: var(--_column-gap);
+		gap: var(--_banner-column-gap);
 	}
 
 	:host([dismissible]) .banner {
-		padding-right: var(--_dismissible-padding-right);
+		padding-right: var(--_banner-dismissible-padding-right);
 	}
 
 	@media (forced-colors: active) {
 		.banner {
-			border: var(--_border-width) solid CanvasText;
+			border: var(--_banner-border-width) solid CanvasText;
 		}
 	}
 
@@ -110,9 +110,9 @@ export const bannerStyles = css`
 		display: flex;
 		grid-column: 1;
 		grid-row: 1;
-		width: var(--_icon-size);
+		width: var(--_banner-icon-size);
 		align-items: flex-start;
-		color: var(--_icon-color);
+		color: var(--_banner-icon-color);
 	}
 
 
@@ -124,17 +124,17 @@ export const bannerStyles = css`
 		grid-row: 1;
 		min-width: 0;
 		flex-direction: column;
-		gap: var(--_main-gap);
+		gap: var(--_banner-main-gap);
 	}
 
 	.banner__heading {
 		display: flex;
-		padding-top: var(--_text-icon-offset);
+		padding-top: var(--_banner-text-icon-offset);
 		flex-direction: column;
 	}
 
 	.banner__heading:has(.banner__supporting-text) {
-		padding-top: calc(var(--_text-icon-offset) - var(--primitives-space-2));
+		padding-top: calc(var(--_banner-text-icon-offset) - var(--primitives-space-2));
 	}
 
 	/* A banner carries text it did not write: a server message, an identifier, a
@@ -165,7 +165,7 @@ export const bannerStyles = css`
 
 	.banner__actions {
 		display: flex;
-		margin-top: var(--_actions-gap);
+		margin-top: var(--_banner-actions-gap);
 	}
 
 	.banner__actions[hidden] {
@@ -178,7 +178,7 @@ export const bannerStyles = css`
 	.banner__dismiss-button {
 		display: flex;
 		position: absolute;
-		top: var(--_dismiss-inset);
-		right: var(--_dismiss-inset);
+		top: var(--_banner-dismiss-inset);
+		right: var(--_banner-dismiss-inset);
 	}
 `;

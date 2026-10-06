@@ -10,19 +10,19 @@ export const descriptionCellStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: auto;
-		--_min-width: 0;
-		--_max-width: none;
-		--_min-height: 0;
+		--_description-cell-width: auto;
+		--_description-cell-min-width: 0;
+		--_description-cell-max-width: none;
+		--_description-cell-min-height: 0;
 
 		${inheritedTextReset}
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
 		padding-block: var(--context-cell-padding-block, 0px) !important;
 		display: flex;
-		width: var(--_width);
-		min-width: var(--_min-width);
-		max-width: var(--_max-width);
-		min-height: var(--_min-height);
+		width: var(--_description-cell-width);
+		min-width: var(--_description-cell-min-width);
+		max-width: var(--_description-cell-max-width);
+		min-height: var(--_description-cell-min-height);
 		flex-direction: column;
 		justify-content: center;
 	}
@@ -46,7 +46,7 @@ export const descriptionCellStyles = css`
 		/* min-content rather than 0 as the floor: the cell gives way as soon as
 		   the row is too narrow, but never past the width of its longest word,
 		   so the text stays readable instead of breaking mid-word. */
-		--_min-width: min-content;
+		--_description-cell-min-width: min-content;
 
 		width: fit-content;
 		flex-grow: 0;
@@ -62,7 +62,7 @@ export const descriptionCellStyles = css`
 	}
 
 	:host([max-width]) {
-		flex-basis: var(--_max-width);
+		flex-basis: var(--_description-cell-max-width);
 	}
 
 

@@ -265,15 +265,15 @@ export class NLDDImage extends LitElement {
 	override updated(changed: Map<string, unknown>): void {
 		// Apply the numeric `width` as a custom property the stylesheet picks
 		// up. Setting style.maxWidth directly would override any consumer CSS
-		// targeting the host's max-width; routing through --_max-width lets
+		// targeting the host's max-width; routing through --_image-max-width lets
 		// the consumer's cascade win for the rare case where they need a
 		// different cap. 'full' clears the constraint.
 		if (changed.has('width')) {
 			const n = this._numericWidth;
 			if (n !== undefined) {
-				this.style.setProperty('--_max-width', `${n}px`);
+				this.style.setProperty('--_image-max-width', `${n}px`);
 			} else {
-				this.style.removeProperty('--_max-width');
+				this.style.removeProperty('--_image-max-width');
 			}
 		}
 		this._warnMissingAlt();

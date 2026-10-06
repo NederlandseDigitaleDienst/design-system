@@ -236,7 +236,7 @@ const markDecorationPlugin = ViewPlugin.fromClass(
 /* Hanging indent: wrapped continuation lines of a list item or blockquote align
  * under the first line's text. The leading marker prefix is rendered in
  * monospace (cm-md-listprefix), so its width is exactly prefixLength × the mono
- * advance (--_marker-advance). The indent uses that same product, so the first
+ * advance (--_text-editor-marker-advance). The indent uses that same product, so the first
  * line's text and every wrapped line line up — no per-line measurement, and it
  * holds in both the sans and mono body fonts. Layout-affecting → a StateField. */
 const HANGING_RE = /^(\s*(?:[-*+]|\d+[.)])\s+|\s*>+\s?)/;
@@ -245,7 +245,7 @@ const hangingLineCache: Record<number, Decoration> = {};
 function hangingLineDeco(length: number): Decoration {
 	return (hangingLineCache[length] ??= Decoration.line({
 		attributes: {
-			style: `text-indent:calc(${length} * var(--_marker-advance) * -1);padding-left:calc(${length} * var(--_marker-advance))`,
+			style: `text-indent:calc(${length} * var(--_text-editor-marker-advance) * -1);padding-left:calc(${length} * var(--_text-editor-marker-advance))`,
 		},
 	}));
 }

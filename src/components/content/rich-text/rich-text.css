@@ -3,19 +3,19 @@
 nldd-rich-text {
 	--_rich-text-grid-size: calc(var(--primitives-font-size-100) * var(--primitives-line-height-snug));
 	--_rich-text-spacing-snug: calc(var(--_rich-text-grid-size) / 2);
-	--_spacing: var(--_rich-text-spacing-snug);
+	--_rich-text-spacing: var(--_rich-text-spacing-snug);
 	--_rich-text-main-max-width: var(--primitives-area-720);
-	--_wide-max-width: var(--primitives-area-800);
-	--_wide-bleed-width: calc(
-		(var(--_wide-max-width) - var(--_rich-text-main-max-width)) / 2
+	--_rich-text-wide-max-width: var(--primitives-area-800);
+	--_rich-text-wide-bleed-width: calc(
+		(var(--_rich-text-wide-max-width) - var(--_rich-text-main-max-width)) / 2
 	);
-	--_main-shortfall: max(
+	--_rich-text-main-shortfall: max(
 		0px,
 		calc(100% - var(--_rich-text-main-max-width))
 	);
-	--_dt-width: var(--primitives-area-200);
-	--_dl-column-gap: var(--primitives-space-16);
-	--_dl-gap: calc(var(--_spacing) / 2);
+	--_rich-text-dt-width: var(--primitives-area-200);
+	--_rich-text-dl-column-gap: var(--primitives-space-16);
+	--_rich-text-dl-gap: calc(var(--_rich-text-spacing) / 2);
 
 	container-type: inline-size;
 	box-sizing: border-box;
@@ -25,29 +25,29 @@ nldd-rich-text {
 		[full-start]   0
 		[wide-start]   0
 		[main-start]   minmax(0, var(--_rich-text-main-max-width))
-		[main-end]     min(calc(var(--_wide-bleed-width) * 2), var(--_main-shortfall))
+		[main-end]     min(calc(var(--_rich-text-wide-bleed-width) * 2), var(--_rich-text-main-shortfall))
 		[wide-end]     1fr
 		[full-end];
-	row-gap: var(--_spacing);
+	row-gap: var(--_rich-text-spacing);
 	color: var(--semantics-content-color);
 	font: var(--primitives-font-body-md-regular-snug);
 }
 
 nldd-rich-text[centered] {
-	--_wide-max-width: var(--primitives-area-960);
+	--_rich-text-wide-max-width: var(--primitives-area-960);
 
 	grid-template-columns:
 		[full-start]   1fr
-		[wide-start]   min(var(--_wide-bleed-width), calc(var(--_main-shortfall) / 2))
+		[wide-start]   min(var(--_rich-text-wide-bleed-width), calc(var(--_rich-text-main-shortfall) / 2))
 		[main-start]   minmax(0, var(--_rich-text-main-max-width))
-		[main-end]     min(var(--_wide-bleed-width), calc(var(--_main-shortfall) / 2))
+		[main-end]     min(var(--_rich-text-wide-bleed-width), calc(var(--_rich-text-main-shortfall) / 2))
 		[wide-end]     1fr
 		[full-end];
 }
 
-nldd-rich-text[spacing="flat"]  { --_spacing: var(--primitives-space-0); }
-nldd-rich-text[spacing="tight"] { --_spacing: calc(var(--_rich-text-grid-size) / 4); }
-nldd-rich-text[spacing="loose"] { --_spacing: var(--_rich-text-grid-size); }
+nldd-rich-text[spacing="flat"]  { --_rich-text-spacing: var(--primitives-space-0); }
+nldd-rich-text[spacing="tight"] { --_rich-text-spacing: calc(var(--_rich-text-grid-size) / 4); }
+nldd-rich-text[spacing="loose"] { --_rich-text-spacing: var(--_rich-text-grid-size); }
 
 nldd-rich-text[hidden] {
 	display: none;
@@ -174,7 +174,7 @@ nldd-rich-text *:focus:not(:focus-visible) {
 /* # Headings */
 
 nldd-rich-text :is(h1, h2, h3, h4, h5, h6) {
-	margin-top: var(--_spacing);
+	margin-top: var(--_rich-text-spacing);
 	margin-bottom: 0;
 	text-wrap: balance;
 }
@@ -323,7 +323,7 @@ nldd-rich-text ol {
 
 nldd-rich-text > :is(ul, ol),
 nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(ul, ol) {
-	margin-block: calc(var(--_spacing) / -2);
+	margin-block: calc(var(--_rich-text-spacing) / -2);
 }
 
 nldd-rich-text ol > li > ol {
@@ -334,7 +334,7 @@ nldd-rich-text ol > li > ol {
 /* # List Item */
 
 nldd-rich-text li {
-	margin: calc(var(--_spacing) / 2) 0;
+	margin: calc(var(--_rich-text-spacing) / 2) 0;
 	padding: 0;
 	/* Zelfde vangnet als p: lange strings breken i.p.v. overlopen. */
 	overflow-wrap: break-word;
@@ -342,7 +342,7 @@ nldd-rich-text li {
 }
 
 nldd-rich-text li > * + * {
-	margin-top: var(--_spacing);
+	margin-top: var(--_rich-text-spacing);
 }
 
 
@@ -351,14 +351,14 @@ nldd-rich-text li > * + * {
 nldd-rich-text dl {
 	margin: 0;
 	display: grid;
-	column-gap: var(--_dl-column-gap);
+	column-gap: var(--_rich-text-dl-column-gap);
 
 	@container (max-width: 640px) {
 		grid-template-columns: 1fr;
 	}
 
 	@container (min-width: 641px) {
-		grid-template-columns: var(--_dt-width) 1fr;
+		grid-template-columns: var(--_rich-text-dt-width) 1fr;
 	}
 }
 
@@ -383,7 +383,7 @@ nldd-rich-text dd {
    first dt after the previous group's dd. (The old dt:not(:first-child) also
    gapped a second, synonym dt within the same group.) */
 nldd-rich-text dd + dt {
-	margin-top: var(--_dl-gap);
+	margin-top: var(--_rich-text-dl-gap);
 }
 
 /* Wide-viewport companion: in the two-column grid the new group's dd shares
@@ -391,7 +391,7 @@ nldd-rich-text dd + dt {
    stay aligned. */
 nldd-rich-text dd + dt + dd {
 	@container (min-width: 641px) {
-		margin-top: var(--_dl-gap);
+		margin-top: var(--_rich-text-dl-gap);
 	}
 }
 
@@ -523,7 +523,7 @@ nldd-rich-text blockquote {
 	gap: calc(var(--semantics-blockquotes-md-spacing) / 2);
 	margin-block: max(
 		0px,
-		calc(var(--semantics-blockquotes-md-spacing) - var(--_spacing))
+		calc(var(--semantics-blockquotes-md-spacing) - var(--_rich-text-spacing))
 	);
 	margin-inline: 0;
 	padding-inline: var(--semantics-blockquotes-md-spacing);
@@ -535,7 +535,7 @@ nldd-rich-text blockquote {
 		gap: calc(var(--semantics-blockquotes-sm-spacing) / 2);
 		margin-block: max(
 			0px,
-			calc(var(--semantics-blockquotes-sm-spacing) - var(--_spacing))
+			calc(var(--semantics-blockquotes-sm-spacing) - var(--_rich-text-spacing))
 		);
 		padding-inline: var(--semantics-blockquotes-sm-spacing);
 		font: var(--semantics-blockquotes-sm-quote-font);
@@ -595,7 +595,7 @@ nldd-rich-text table {
 	max-width: 100%;
 	margin-block: max(
 		0px,
-		calc(var(--_rich-text-spacing-snug) - var(--_spacing))
+		calc(var(--_rich-text-spacing-snug) - var(--_rich-text-spacing))
 	);
 	border-collapse: separate;
 	border-spacing: 0;

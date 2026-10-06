@@ -12,14 +12,14 @@ export const splitViewPaneStyles = css`
 	/* # Host */
 
 	:host {
-		--_background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_split-view-pane-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 
 		display: flex;
 		width: 100%;
 		height: 100%;
 
 		@media (min-width: ${mdMin}) {
-			background-color: var(--_background-color);
+			background-color: var(--_split-view-pane-background-color);
 		}
 	}
 
@@ -29,12 +29,12 @@ export const splitViewPaneStyles = css`
 
 	:host([background="base"]) {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_split-view-pane-background-color: var(--context-parent-background-color);
 	}
 
 	:host([background="tinted"]) {
 		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_split-view-pane-background-color: var(--context-parent-background-color);
 	}
 
 	:host([hide-back]) {

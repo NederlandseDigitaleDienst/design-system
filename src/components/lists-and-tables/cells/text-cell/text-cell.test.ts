@@ -58,31 +58,31 @@ describe('nldd-text-cell', () => {
 	it('sets inline width style for explicit CSS length', async () => {
 		el = await fixture('<nldd-text-cell width="120px"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('120px');
+		expect(el.style.getPropertyValue('--_text-cell-width')).toBe('120px');
 	});
 
-	it('sets --_min-width custom property', async () => {
+	it('sets --_text-cell-min-width custom property', async () => {
 		el = await fixture('<nldd-text-cell min-width="80px"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_min-width')).toBe('80px');
+		expect(el.style.getPropertyValue('--_text-cell-min-width')).toBe('80px');
 	});
 
-	it('sets --_max-width custom property', async () => {
+	it('sets --_text-cell-max-width custom property', async () => {
 		el = await fixture('<nldd-text-cell max-width="200px"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('200px');
+		expect(el.style.getPropertyValue('--_text-cell-max-width')).toBe('200px');
 	});
 
-	it('sets --_min-height custom property', async () => {
+	it('sets --_text-cell-min-height custom property', async () => {
 		el = await fixture('<nldd-text-cell min-height="44px"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_min-height')).toBe('44px');
+		expect(el.style.getPropertyValue('--_text-cell-min-height')).toBe('44px');
 	});
 
 	it('accepts CSS length units other than px', async () => {
 		el = await fixture('<nldd-text-cell min-width="5rem"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_min-width')).toBe('5rem');
+		expect(el.style.getPropertyValue('--_text-cell-min-width')).toBe('5rem');
 	});
 
 	// A custom length is written at runtime, but into a stylesheet the shadow

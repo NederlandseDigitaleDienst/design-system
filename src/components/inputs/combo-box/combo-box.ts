@@ -247,9 +247,9 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		if (changedProperties.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {
-				this.style.setProperty('--_width', w);
+				this.style.setProperty('--_combo-box-width', w);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_combo-box-width');
 			}
 		}
 		if (changedProperties.has('value') || changedProperties.has('text')) {

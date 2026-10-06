@@ -10,30 +10,30 @@ export const timePickerStyles = css`
 	/* # Host */
 
 	:host {
-		--_control-min-size: var(--semantics-controls-md-min-size);
-		--_control-corner-radius: var(--semantics-controls-md-corner-radius);
-		--_list-item-font: var(--primitives-font-body-md-medium-flat);
-		--_list-item-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-150));
-		--_selection-background-color: var(--semantics-controls-is-highlighted-indicator-color);
-		--_selection-content-color: var(--semantics-controls-is-highlighted-contrast-color);
-		--_list-width: calc(var(--_control-min-size) * 1.5);
-		--_rows: 7;
-		--_list-height: calc(var(--_control-min-size) * var(--_rows));
-		--_list-gap: var(--primitives-space-4);
+		--_time-picker-control-min-size: var(--semantics-controls-md-min-size);
+		--_time-picker-control-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_time-picker-list-item-font: var(--primitives-font-body-md-medium-flat);
+		--_time-picker-list-item-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-150));
+		--_time-picker-selection-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_time-picker-selection-content-color: var(--semantics-controls-is-highlighted-contrast-color);
+		--_time-picker-list-width: calc(var(--_time-picker-control-min-size) * 1.5);
+		--_time-picker-rows: 7;
+		--_time-picker-list-height: calc(var(--_time-picker-control-min-size) * var(--_time-picker-rows));
+		--_time-picker-list-gap: var(--primitives-space-4);
 		/* initial keeps it guaranteed-invalid, so width lands on auto as long as
 		   the attribute sets nothing. */
-		--_width: initial;
+		--_time-picker-width: initial;
 
 		@media (pointer: fine) {
-			--_control-min-size: var(--semantics-controls-sm-min-size);
-			--_control-corner-radius: var(--semantics-controls-sm-corner-radius);
+			--_time-picker-control-min-size: var(--semantics-controls-sm-min-size);
+			--_time-picker-control-corner-radius: var(--semantics-controls-sm-corner-radius);
 		}
 
 		${inheritedTextReset}
 		display: inline-block;
-		width: var(--_width);
+		width: var(--_time-picker-width);
 		max-width: 100%;
-		font: var(--_list-item-font);
+		font: var(--_time-picker-list-item-font);
 	}
 
 	:host([hidden]) {
@@ -46,8 +46,8 @@ export const timePickerStyles = css`
 	.time-picker {
 		display: flex;
 		position: relative;
-		height: var(--_list-height);
-		gap: var(--_list-gap);
+		height: var(--_time-picker-list-height);
+		gap: var(--_time-picker-list-gap);
 		align-items: stretch;
 		justify-content: center;
 	}
@@ -57,7 +57,7 @@ export const timePickerStyles = css`
 
 	.time-picker__list {
 		display: flex;
-		width: var(--_list-width);
+		width: var(--_time-picker-list-width);
 		overflow-y: auto;
 		flex-direction: column;
 		flex-grow: 1;
@@ -84,19 +84,19 @@ export const timePickerStyles = css`
 		content: '';
 		display: block;
 		flex-shrink: 0;
-		height: calc((var(--_list-height) - var(--_control-min-size)) / 2);
+		height: calc((var(--_time-picker-list-height) - var(--_time-picker-control-min-size)) / 2);
 	}
 
 	.time-picker__list-item {
 		box-sizing: border-box;
 		display: flex;
-		border-radius: var(--_control-corner-radius);
-		min-height: var(--_control-min-size);
+		border-radius: var(--_time-picker-control-corner-radius);
+		min-height: var(--_time-picker-control-min-size);
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
 		color: var(--semantics-content-color);
-		font: var(--_list-item-font);
+		font: var(--_time-picker-list-item-font);
 		font-variant-numeric: tabular-nums;
 		scroll-snap-align: center;
 	}
@@ -106,7 +106,7 @@ export const timePickerStyles = css`
 	   the list lights whatever it passes. Only pointers that can really hover. */
 	@media (hover: hover) {
 		.time-picker__list-item:hover {
-			background-color: var(--_list-item-is-hovered-background-color);
+			background-color: var(--_time-picker-list-item-is-hovered-background-color);
 		}
 	}
 
@@ -142,15 +142,15 @@ export const timePickerStyles = css`
 		top: 50%;
 		right: 0;
 		left: 0;
-		border-radius: var(--_control-corner-radius);
-		background-color: var(--_selection-background-color);
+		border-radius: var(--_time-picker-control-corner-radius);
+		background-color: var(--_time-picker-selection-background-color);
 		/* Otherwise this surface catches the swipe meant to scroll the list beneath
 		   it, exactly where you put the mouse down. */
 		pointer-events: none;
-		height: var(--_control-min-size);
-		gap: var(--_list-gap);
+		height: var(--_time-picker-control-min-size);
+		gap: var(--_time-picker-list-gap);
 		align-items: center;
-		color: var(--_selection-content-color);
+		color: var(--_time-picker-selection-content-color);
 		font-variant-numeric: tabular-nums;
 		transform: translateY(-50%);
 	}
@@ -158,8 +158,8 @@ export const timePickerStyles = css`
 	.time-picker__value {
 		display: flex;
 		outline: none;
-		border-radius: var(--_control-corner-radius);
-		width: var(--_list-width);
+		border-radius: var(--_time-picker-control-corner-radius);
+		width: var(--_time-picker-list-width);
 		height: 100%;
 		flex-grow: 1;
 		flex-shrink: 1;

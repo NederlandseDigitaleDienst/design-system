@@ -152,7 +152,7 @@ describe('nldd-badge', () => {
 	it('geeft een eigen kleur door aan de styles', async () => {
 		el = await fixture('<nldd-badge custom-color="#3b82f6" number="3"></nldd-badge>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_custom-color')).toBe('#3b82f6');
+		expect(el.style.getPropertyValue('--_badge-custom-color')).toBe('#3b82f6');
 		expect(getComputedStyle(el).color).toBe('rgb(59, 130, 246)');
 	});
 
@@ -162,7 +162,7 @@ describe('nldd-badge', () => {
 		(el as HTMLElement & { customColor: string }).customColor = '';
 		await waitForUpdate(el);
 		expect(el.hasAttribute('custom-color')).toBe(false);
-		expect(el.style.getPropertyValue('--_custom-color')).toBe('');
+		expect(el.style.getPropertyValue('--_badge-custom-color')).toBe('');
 	});
 });
 

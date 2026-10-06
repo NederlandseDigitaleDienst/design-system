@@ -40,22 +40,22 @@ describe('nldd-top-navigation-bar', () => {
 		expect(el).toBeInstanceOf(customElements.get('nldd-top-navigation-bar'));
 	});
 
-	it('width="full" sets no --_max-width inline style', async () => {
+	it('width="full" sets no --_top-navigation-bar-max-width inline style', async () => {
 		el = await fixture('<nldd-top-navigation-bar width="full"></nldd-top-navigation-bar>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('');
+		expect(el.style.getPropertyValue('--_top-navigation-bar-max-width')).toBe('');
 	});
 
-	it('a CSS-length width feeds --_max-width inline', async () => {
+	it('a CSS-length width feeds --_top-navigation-bar-max-width inline', async () => {
 		el = await fixture('<nldd-top-navigation-bar width="800px"></nldd-top-navigation-bar>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('800px');
+		expect(el.style.getPropertyValue('--_top-navigation-bar-max-width')).toBe('800px');
 	});
 
-	it('an invalid width sets no --_max-width', async () => {
+	it('an invalid width sets no --_top-navigation-bar-max-width', async () => {
 		el = await fixture('<nldd-top-navigation-bar width="not-a-length"></nldd-top-navigation-bar>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('');
+		expect(el.style.getPropertyValue('--_top-navigation-bar-max-width')).toBe('');
 	});
 
 	it('caps each bar to the content width and never overflows (page-section layout)', async () => {
@@ -631,7 +631,7 @@ describe('nldd-top-navigation-bar ribbon above the page', () => {
 		const logo = bar.shadowRoot!.querySelector('.top-navigation-bar__logo')!;
 		const logoTop = logo.getBoundingClientRect().top + window.scrollY;
 		expect(logoTop).toBeGreaterThanOrEqual(24);
-		expect(bar.style.getPropertyValue('--_logo-offset')).toBe(`${Math.round(logoTop)}px`);
+		expect(bar.style.getPropertyValue('--_top-navigation-bar-logo-offset')).toBe(`${Math.round(logoTop)}px`);
 	});
 
 	// Chrome paints nothing above the page, so only the fixed piece would show

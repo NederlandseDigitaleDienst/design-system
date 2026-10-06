@@ -10,10 +10,10 @@ export const inlineDialogStyles = css`
 	/* # Host */
 
 	:host {
-		--_icon-size: var(--primitives-space-40);
-		--_icon-color: var(--semantics-content-color);
-		--_text-font: var(--primitives-font-body-md-bold-tight);
-		--_supporting-text-font: var(--primitives-font-body-sm-regular-tight);
+		--_inline-dialog-icon-size: var(--primitives-space-40);
+		--_inline-dialog-icon-color: var(--semantics-content-color);
+		--_inline-dialog-text-font: var(--primitives-font-body-md-bold-tight);
+		--_inline-dialog-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
 
 		${inheritedTextReset}
 		display: flex;
@@ -23,37 +23,37 @@ export const inlineDialogStyles = css`
 	}
 
 	:host([size="lg"]) {
-		--_icon-size: var(--primitives-space-48);
-		--_text-font: var(--primitives-font-body-lg-bold-tight);
-		--_supporting-text-font: var(--primitives-font-body-md-regular-tight);
+		--_inline-dialog-icon-size: var(--primitives-space-48);
+		--_inline-dialog-text-font: var(--primitives-font-body-lg-bold-tight);
+		--_inline-dialog-supporting-text-font: var(--primitives-font-body-md-regular-tight);
 	}
 
 	:host([variant="alert"]) {
-		--_icon-color: light-dark(var(--primitives-color-warning-350), var(--primitives-color-warning-650));
+		--_inline-dialog-icon-color: light-dark(var(--primitives-color-warning-350), var(--primitives-color-warning-650));
 	}
 
 	:host([variant="success"]) {
-		--_icon-color: var(--primitives-color-success-500);
+		--_inline-dialog-icon-color: var(--primitives-color-success-500);
 	}
 
 	:host([icon-color="secondary"]) {
-		--_icon-color: var(--semantics-content-secondary-color);
+		--_inline-dialog-icon-color: var(--semantics-content-secondary-color);
 	}
 
 	:host([icon-color="accent"]) {
-		--_icon-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
+		--_inline-dialog-icon-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
 	}
 
 	:host([icon-color="critical"]) {
-		--_icon-color: var(--primitives-color-critical-500);
+		--_inline-dialog-icon-color: var(--primitives-color-critical-500);
 	}
 
 	:host([icon-color="warning"]) {
-		--_icon-color: light-dark(var(--primitives-color-warning-350), var(--primitives-color-warning-650));
+		--_inline-dialog-icon-color: light-dark(var(--primitives-color-warning-350), var(--primitives-color-warning-650));
 	}
 
 	:host([icon-color="success"]) {
-		--_icon-color: var(--primitives-color-success-500);
+		--_inline-dialog-icon-color: var(--primitives-color-success-500);
 	}
 
 	:host([hidden]) {
@@ -90,19 +90,19 @@ export const inlineDialogStyles = css`
 
 	.inline-dialog__icon {
 		display: flex;
-		width: var(--_icon-size);
-		height: var(--_icon-size);
+		width: var(--_inline-dialog-icon-size);
+		height: var(--_inline-dialog-icon-size);
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
-		color: var(--_icon-color);
+		color: var(--_inline-dialog-icon-color);
 	}
 
 	.inline-dialog__text {
 		margin: 0;
 		text-align: center;
 		color: var(--semantics-content-color);
-		font: var(--_text-font);
+		font: var(--_inline-dialog-text-font);
 		text-wrap: pretty;
 	}
 
@@ -115,7 +115,7 @@ export const inlineDialogStyles = css`
 		margin: 0;
 		text-align: center;
 		color: var(--semantics-content-color);
-		font: var(--_supporting-text-font);
+		font: var(--_inline-dialog-supporting-text-font);
 		text-wrap: pretty;
 	}
 

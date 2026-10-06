@@ -10,19 +10,19 @@ export const cellStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: auto;
-		--_min-width: 0;
-		--_max-width: none;
-		--_min-height: 0;
+		--_cell-width: auto;
+		--_cell-min-width: 0;
+		--_cell-max-width: none;
+		--_cell-min-height: 0;
 
 		${inheritedTextReset}
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
 		padding-block: var(--context-cell-padding-block, 0px) !important;
 		display: flex;
-		width: var(--_width);
-		min-width: var(--_min-width);
-		max-width: var(--_max-width);
-		min-height: var(--_min-height);
+		width: var(--_cell-width);
+		min-width: var(--_cell-min-width);
+		max-width: var(--_cell-max-width);
+		min-height: var(--_cell-min-height);
 		flex-direction: column;
 		flex-shrink: 0;
 		align-items: flex-start;
@@ -55,7 +55,7 @@ export const cellStyles = css`
 	}
 
 	:host([max-width]) {
-		flex-basis: var(--_max-width);
+		flex-basis: var(--_cell-max-width);
 	}
 
 

@@ -83,7 +83,7 @@ export class NLDDDocumentTabBarItem extends LitElement {
 
 	/**
 	 * True when the parent bar has compressed the item below the
-	 * `--_short-text-threshold` (CSS), so only short-text is visible.
+	 * `--_document-tab-bar-short-text-threshold` (CSS), so only short-text is visible.
 	 * Used to gate the title-tooltip — in normal mode the full text +
 	 * supporting text is already inline so a tooltip would be redundant.
 	 */
@@ -108,12 +108,12 @@ export class NLDDDocumentTabBarItem extends LitElement {
 	private _updateIsShort(): void {
 		// Read threshold from CSS custom property — single source of truth
 		// shared with the @container query that toggles short-mode visuals.
-		// `--_short-text-threshold` is declared on nldd-document-tab-bar's
+		// `--_document-tab-bar-short-text-threshold` is declared on nldd-document-tab-bar's
 		// :host and cascades to slotted items.
 		// Guard against NaN: when the item is used outside a tab bar the
 		// custom property is unset and `width < NaN` would silently resolve to
 		// false (safe fallback, but the explicit guard makes intent clear).
-		const threshold = parseFloat(getComputedStyle(this).getPropertyValue('--_short-text-threshold'));
+		const threshold = parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-short-text-threshold'));
 		this._isShort = Number.isFinite(threshold) && this.getBoundingClientRect().width < threshold;
 	}
 
@@ -379,7 +379,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		if (this._clone) {
 			this._tabBarRect = this.getBoundingClientRect();
 			this._clone.style.setProperty(
-				'--_drag-clone-left',
+				'--_document-tab-bar-drag-clone-left',
 				`${event.clientX - this._tabBarRect.left - this._cloneOffsetX}px`
 			);
 		}
@@ -450,7 +450,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		document.documentElement.style.cursor = 'grabbing';
 
 		// Read threshold from CSS so there is one place to update it
-		const threshold = parseFloat(getComputedStyle(item).getPropertyValue('--_short-text-threshold'));
+		const threshold = parseFloat(getComputedStyle(item).getPropertyValue('--_document-tab-bar-short-text-threshold'));
 		const useShort = rect.width < threshold;
 		const displayTitle = useShort ? (item.shortText || item.text) : item.text;
 		const displaySupportingText = useShort ? (item.shortSupportingText || item.supportingText) : item.supportingText;
@@ -477,10 +477,10 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 		this._clone = document.createElement('div');
 		this._clone.className = `document-tab-bar__drag-clone${item.selected ? ' is-selected' : ''}`;
-		this._clone.style.setProperty('--_drag-clone-left', `${clientX - this._tabBarRect.left - this._cloneOffsetX}px`);
-		this._clone.style.setProperty('--_drag-clone-top', `${rect.top - this._tabBarRect.top}px`);
-		this._clone.style.setProperty('--_drag-clone-width', `${rect.width}px`);
-		this._clone.style.setProperty('--_drag-clone-height', `${rect.height}px`);
+		this._clone.style.setProperty('--_document-tab-bar-drag-clone-left', `${clientX - this._tabBarRect.left - this._cloneOffsetX}px`);
+		this._clone.style.setProperty('--_document-tab-bar-drag-clone-top', `${rect.top - this._tabBarRect.top}px`);
+		this._clone.style.setProperty('--_document-tab-bar-drag-clone-width', `${rect.width}px`);
+		this._clone.style.setProperty('--_document-tab-bar-drag-clone-height', `${rect.height}px`);
 		this._clone.appendChild(cloneInner);
 		this.renderRoot.appendChild(this._clone);
 	}
@@ -607,10 +607,10 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		const gap = parseFloat(getComputedStyle(container).gap) || 8;
 		const firstItem = this._getItems()[0];
 		const minItemWidth = firstItem
-			? parseFloat(getComputedStyle(firstItem).minWidth) || parseFloat(getComputedStyle(this).getPropertyValue('--_item-min-width'))
-			: parseFloat(getComputedStyle(this).getPropertyValue('--_item-min-width'));
+			? parseFloat(getComputedStyle(firstItem).minWidth) || parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-item-min-width'))
+			: parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-item-min-width'));
 
-		const overflowButtonReserve = parseFloat(getComputedStyle(this).getPropertyValue('--_overflow-button-reserve'));
+		const overflowButtonReserve = parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-overflow-button-reserve'));
 		// (containerWidth - overflowButtonWidth + gap) / (minItemWidth + gap)
 		const visible = Math.floor((containerWidth - overflowButtonReserve + gap) / (minItemWidth + gap));
 		const newOverflowCount = Math.max(0, totalItems - Math.max(1, visible));

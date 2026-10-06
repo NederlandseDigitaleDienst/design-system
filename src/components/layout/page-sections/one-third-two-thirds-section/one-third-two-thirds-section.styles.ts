@@ -18,15 +18,15 @@ export const oneThirdTwoThirdsSectionStyles = css`
 		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; 'initial' lets the
 		   block fall back to the responsive default until the mixin sets one. */
-		--_padding-top: initial;
-		--_padding-bottom: initial;
-		--_sm-padding-top: initial;
-		--_sm-padding-bottom: initial;
-		--_md-padding-top: initial;
-		--_md-padding-bottom: initial;
-		--_lg-padding-top: initial;
-		--_lg-padding-bottom: initial;
-		--_max-width: var(--semantics-page-sections-body-max-width);
+		--_one-third-two-thirds-section-padding-top: initial;
+		--_one-third-two-thirds-section-padding-bottom: initial;
+		--_one-third-two-thirds-section-sm-padding-top: initial;
+		--_one-third-two-thirds-section-sm-padding-bottom: initial;
+		--_one-third-two-thirds-section-md-padding-top: initial;
+		--_one-third-two-thirds-section-md-padding-bottom: initial;
+		--_one-third-two-thirds-section-lg-padding-top: initial;
+		--_one-third-two-thirds-section-lg-padding-bottom: initial;
+		--_one-third-two-thirds-section-max-width: var(--semantics-page-sections-body-max-width);
 
 		display: flex;
 		width: 100%;
@@ -39,7 +39,7 @@ export const oneThirdTwoThirdsSectionStyles = css`
 	}
 
 	:host([width="full"]) {
-		--_max-width: none;
+		--_one-third-two-thirds-section-max-width: none;
 	}
 
 
@@ -55,20 +55,20 @@ export const oneThirdTwoThirdsSectionStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			padding-top: var(--_sm-padding-top, var(--_padding-top, var(--semantics-page-sections-sm-margin-block)));
-			padding-bottom: var(--_sm-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-sm-margin-block)));
+			padding-top: var(--_one-third-two-thirds-section-sm-padding-top, var(--_one-third-two-thirds-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
+			padding-bottom: var(--_one-third-two-thirds-section-sm-padding-bottom, var(--_one-third-two-thirds-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
-			padding-top: var(--_md-padding-top, var(--_padding-top, var(--semantics-page-sections-md-margin-block)));
-			padding-bottom: var(--_md-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-md-margin-block)));
+			padding-top: var(--_one-third-two-thirds-section-md-padding-top, var(--_one-third-two-thirds-section-padding-top, var(--semantics-page-sections-md-margin-block)));
+			padding-bottom: var(--_one-third-two-thirds-section-md-padding-bottom, var(--_one-third-two-thirds-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
 		@container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
-			padding-top: var(--_lg-padding-top, var(--_padding-top, var(--semantics-page-sections-lg-margin-block)));
-			padding-bottom: var(--_lg-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-lg-margin-block)));
+			padding-top: var(--_one-third-two-thirds-section-lg-padding-top, var(--_one-third-two-thirds-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
+			padding-bottom: var(--_one-third-two-thirds-section-lg-padding-bottom, var(--_one-third-two-thirds-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
 		}
 	}
 
@@ -78,7 +78,7 @@ export const oneThirdTwoThirdsSectionStyles = css`
 	.one-third-two-thirds-section__body {
 		display: flex;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_one-third-two-thirds-section-max-width);
 		flex-direction: column;
 
 		@container (max-width: ${smMax}) {

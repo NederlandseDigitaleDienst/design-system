@@ -107,16 +107,16 @@ describe('nldd-page-footer', () => {
 	it('feeds a CSS-length width to the body max-width and clears it for full/default', async () => {
 		el = await fixture('<nldd-page-footer width="480px"></nldd-page-footer>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('480px');
+		expect(el.style.getPropertyValue('--_page-footer-max-width')).toBe('480px');
 		// 'full' is handled by CSS (:host([width="full"]) sets none) — inline var cleared.
 		(el as HTMLElement & { width: string }).width = 'full';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('');
+		expect(el.style.getPropertyValue('--_page-footer-max-width')).toBe('');
 		expect(el.getAttribute('width')).toBe('full');
 		// back to default: no override.
 		(el as HTMLElement & { width: string }).width = '';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('');
+		expect(el.style.getPropertyValue('--_page-footer-max-width')).toBe('');
 	});
 
 	it('sets single-slot when only the default (main) slot is populated', async () => {

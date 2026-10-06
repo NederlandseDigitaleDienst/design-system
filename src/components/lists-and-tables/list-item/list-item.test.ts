@@ -706,9 +706,9 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		expect(inset).toBeGreaterThanOrEqual(40);
-		expect(item.style.getPropertyValue('--_divider-inset-end')).toBe('');
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-end')).toBe('');
 	});
 
 	// A row that opens with an icon already lines the divider up with the text, so
@@ -728,7 +728,7 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		expect(inset).toBeGreaterThanOrEqual(40);
 	});
 
@@ -748,7 +748,7 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		expect(inset).toBeLessThan(40);
 	});
 
@@ -769,7 +769,7 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThan(0);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThan(0);
 	});
 
 	// Any single glyph-sized thing counts, not just an avatar.
@@ -788,7 +788,7 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThan(0);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThan(0);
 	});
 
 	// The text can sit inside a segment; the divider still starts there.
@@ -812,7 +812,7 @@ describe('nldd-list-item – divider markers', () => {
 		// At the text, not at the action's padding edge.
 		const block = item.shadowRoot!.querySelector('.list-item')!.getBoundingClientRect();
 		const text = item.querySelector('nldd-text-cell')!.getBoundingClientRect();
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		expect(inset).toBeCloseTo(text.left - block.left, 0);
 	});
 
@@ -838,7 +838,7 @@ describe('nldd-list-item – divider markers', () => {
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
 		const block = item.shadowRoot!.querySelector('.list-item')!.getBoundingClientRect();
 		const text = item.querySelector('nldd-text-cell')!.getBoundingClientRect();
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeCloseTo(
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeCloseTo(
 			text.left - block.left,
 			0,
 		);
@@ -863,7 +863,7 @@ describe('nldd-list-item – divider markers', () => {
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
 		// What comes before it does not matter: the line starts at the text.
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThan(0);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThan(0);
 	});
 
 	// The text opens the row, so the derived start coincides with the content edge:
@@ -882,7 +882,7 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBe(0);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBe(0);
 	});
 
 	// A tree indents with spacers, so the dividers indent along with it.
@@ -901,7 +901,7 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThanOrEqual(48);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThanOrEqual(48);
 	});
 
 	// De marker weghalen leidt opnieuw af in plaats van te wissen: dezelfde cel,
@@ -922,7 +922,7 @@ describe('nldd-list-item – divider markers', () => {
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
 		el.querySelector('[divider-start]')!.removeAttribute('divider-start');
 		await settle();
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThanOrEqual(40);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThanOrEqual(40);
 	});
 
 	// Nothing to derive it from, so the vars disappear.
@@ -942,7 +942,7 @@ describe('nldd-list-item – divider markers', () => {
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
 		el.querySelector('[divider-start]')!.removeAttribute('divider-start');
 		await settle();
-		expect(item.style.getPropertyValue('--_divider-inset-start')).toBe('');
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-start')).toBe('');
 	});
 
 	it('falls back to full width when start lies past the last end', async () => {
@@ -959,8 +959,8 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(item.style.getPropertyValue('--_divider-inset-start')).toBe('');
-		expect(item.style.getPropertyValue('--_divider-inset-end')).toBe('');
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-start')).toBe('');
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-end')).toBe('');
 	});
 });
 
@@ -1116,7 +1116,7 @@ describe('nldd-list-item divider met verborgen cellen', () => {
 		// single one only gets us to the measurement rather than past it.
 		await nextFrames();
 
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		const verwacht = zichtbaar.getBoundingClientRect().left - block.getBoundingClientRect().left;
 		expect(inset).toBeGreaterThan(0);
 		expect(Math.abs(inset - verwacht)).toBeLessThan(1);
@@ -1146,7 +1146,7 @@ describe('nldd-list-item divider zonder eigen marker', () => {
 		const block = item.shadowRoot!.querySelector('.list-item') as HTMLElement;
 		await nextFrames();
 
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		const verwacht = zichtbaar.getBoundingClientRect().left - block.getBoundingClientRect().left;
 		expect(inset).toBeGreaterThan(0);
 		expect(Math.abs(inset - verwacht)).toBeLessThan(1);
@@ -1207,7 +1207,7 @@ describe('nldd-list-item – een aangevinkte rij', () => {
 	});
 
 	const fill = (row: Element) =>
-		getComputedStyle(row).getPropertyValue('--_background-color').trim();
+		getComputedStyle(row).getPropertyValue('--_list-item-background-color').trim();
 
 	it('paints like a selected row', async () => {
 		el = await fixture(`

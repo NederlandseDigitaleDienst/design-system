@@ -10,20 +10,20 @@ export const tokenFieldStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: 100%;
-		--_background-color: var(--semantics-input-fields-background-color);
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_min-size: var(--semantics-controls-md-min-size);
-		--_inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
-		--_text-font: var(--semantics-input-fields-md-text-font);
-		--_validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
-		--_validation-icon-area-size: calc(var(--_min-size) - var(--semantics-input-fields-border-width) * 2);
-		--_gap: calc((var(--semantics-controls-md-min-size) - var(--semantics-controls-sm-min-size) - 2 * var(--semantics-input-fields-border-width)) / 2);
-		--_input-min-width: var(--primitives-area-200);
+		--_token-field-width: 100%;
+		--_token-field-background-color: var(--semantics-input-fields-background-color);
+		--_token-field-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_token-field-min-size: var(--semantics-controls-md-min-size);
+		--_token-field-inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
+		--_token-field-text-font: var(--semantics-input-fields-md-text-font);
+		--_token-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
+		--_token-field-validation-icon-area-size: calc(var(--_token-field-min-size) - var(--semantics-input-fields-border-width) * 2);
+		--_token-field-gap: calc((var(--semantics-controls-md-min-size) - var(--semantics-controls-sm-min-size) - 2 * var(--semantics-input-fields-border-width)) / 2);
+		--_token-field-input-min-width: var(--primitives-area-200);
 
 		${inheritedTextReset}
 		display: block;
-		width: var(--_width);
+		width: var(--_token-field-width);
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;
 	}
@@ -38,7 +38,7 @@ export const tokenFieldStyles = css`
 	}
 
 	:host([readonly]) .token-field {
-		--_background-color: var(--semantics-input-fields-is-read-only-background-color);
+		--_token-field-background-color: var(--semantics-input-fields-is-read-only-background-color);
 		border-color: var(--semantics-input-fields-is-read-only-border-color);
 		cursor: default;
 	}
@@ -53,14 +53,14 @@ export const tokenFieldStyles = css`
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--_gap);
+		gap: var(--_token-field-gap);
 		border: var(--semantics-input-fields-border);
-		border-radius: var(--_corner-radius);
-		background-color: var(--_background-color);
+		border-radius: var(--_token-field-corner-radius);
+		background-color: var(--_token-field-background-color);
 		width: 100%;
-		min-height: var(--_min-size);
-		padding-block: var(--_gap);
-		padding-inline: var(--_gap);
+		min-height: var(--_token-field-min-size);
+		padding-block: var(--_token-field-gap);
+		padding-inline: var(--_token-field-gap);
 	}
 
 	/* The role="list" wrapper carries token grouping for assistive tech without
@@ -95,7 +95,7 @@ export const tokenFieldStyles = css`
 	/* Reserve the validation icon's area so tokens/input stay clear of it. */
 	.token-field[data-invalid],
 	.token-field[data-valid] {
-		padding-inline-end: var(--_validation-icon-area-size);
+		padding-inline-end: var(--_token-field-validation-icon-area-size);
 	}
 
 
@@ -104,11 +104,11 @@ export const tokenFieldStyles = css`
 	.token-field__input-area {
 		display: flex;
 		align-items: center;
-		gap: var(--_gap);
+		gap: var(--_token-field-gap);
 		flex-grow: 1;
 		flex-shrink: 1;
-		flex-basis: var(--_input-min-width);
-		min-width: var(--_input-min-width);
+		flex-basis: var(--_token-field-input-min-width);
+		min-width: var(--_token-field-input-min-width);
 	}
 
 
@@ -125,14 +125,14 @@ export const tokenFieldStyles = css`
 		outline: none;
 		background: transparent;
 		color: inherit;
-		font: var(--_text-font);
+		font: var(--_token-field-text-font);
 		height: var(--semantics-controls-sm-min-size);
 		/* Rounds the autofill mask (below) like a token. */
 		border-radius: var(--semantics-controls-sm-corner-radius);
 		padding: 0;
 		/* The frame already adds the leading gap, so subtract it to land on the
 		   standard inline-padding. */
-		padding-inline-start: calc(var(--_inline-padding) - var(--_gap));
+		padding-inline-start: calc(var(--_token-field-inline-padding) - var(--_token-field-gap));
 		margin: 0;
 	}
 
@@ -174,15 +174,15 @@ export const tokenFieldStyles = css`
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: var(--_validation-icon-area-size);
-		height: var(--_validation-icon-area-size);
+		width: var(--_token-field-validation-icon-area-size);
+		height: var(--_token-field-validation-icon-area-size);
 		pointer-events: none;
 	}
 
 	/* nldd-icon fills its parent, so pin a size. */
 	.token-field__validation-icon {
-		width: var(--_validation-icon-size);
-		height: var(--_validation-icon-size);
+		width: var(--_token-field-validation-icon-size);
+		height: var(--_token-field-validation-icon-size);
 	}
 
 	:host([valid]) .token-field__validation-icon {

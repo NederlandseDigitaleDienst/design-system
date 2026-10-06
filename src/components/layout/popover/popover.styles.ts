@@ -13,7 +13,7 @@ export const popoverStyles = css`
 	/* # Host */
 
 	:host {
-		--_max-height: calc(100vh - var(--semantics-overlays-inset) * 2);
+		--_popover-max-height: calc(100vh - var(--semantics-overlays-inset) * 2);
 		--_popover-default-width: var(--primitives-area-320);
 
 		margin: 0;
@@ -45,7 +45,7 @@ export const popoverStyles = css`
 			border-radius: var(--semantics-overlays-corner-radius);
 			width: var(--_popover-default-width);
 			max-width: calc(100vw - var(--semantics-overlays-inset) * 2);
-			max-height: var(--_max-height);
+			max-height: var(--_popover-max-height);
 		}
 	}
 

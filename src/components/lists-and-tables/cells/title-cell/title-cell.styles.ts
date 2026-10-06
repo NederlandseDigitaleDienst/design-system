@@ -10,23 +10,23 @@ export const titleCellStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: auto;
-		--_min-width: 0;
-		--_max-width: none;
-		--_min-height: 0;
-		--_text-align: start;
-		--_secondary-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
-		--_title-color: var(--context-content-color, var(--semantics-content-color));
-		--_title-font: var(--primitives-font-display-5-sm);
+		--_title-cell-width: auto;
+		--_title-cell-min-width: 0;
+		--_title-cell-max-width: none;
+		--_title-cell-min-height: 0;
+		--_title-cell-text-align: start;
+		--_title-cell-secondary-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_title-cell-color: var(--context-content-color, var(--semantics-content-color));
+		--_title-cell-font: var(--primitives-font-display-5-sm);
 
 		${inheritedTextReset}
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
 		padding-block: var(--context-cell-padding-block, 0px) !important;
 		display: flex;
-		width: var(--_width);
-		min-width: var(--_min-width);
-		max-width: var(--_max-width);
-		min-height: var(--_min-height);
+		width: var(--_title-cell-width);
+		min-width: var(--_title-cell-min-width);
+		max-width: var(--_title-cell-max-width);
+		min-height: var(--_title-cell-min-height);
 		flex-direction: column;
 		justify-content: center;
 	}
@@ -50,7 +50,7 @@ export const titleCellStyles = css`
 		/* min-content rather than 0 as the floor: the cell gives way as soon as
 		   the row is too narrow, but never past the width of its longest word,
 		   so the text stays readable instead of breaking mid-word. */
-		--_min-width: min-content;
+		--_title-cell-min-width: min-content;
 
 		width: fit-content;
 		flex-grow: 0;
@@ -66,7 +66,7 @@ export const titleCellStyles = css`
 	}
 
 	:host([max-width]) {
-		flex-basis: var(--_max-width);
+		flex-basis: var(--_title-cell-max-width);
 	}
 
 
@@ -97,12 +97,12 @@ export const titleCellStyles = css`
 	}
 
 	:host([horizontal-alignment="center"]) {
-		--_text-align: center;
+		--_title-cell-text-align: center;
 		align-items: center;
 	}
 
 	:host([horizontal-alignment="right"]) {
-		--_text-align: right;
+		--_title-cell-text-align: right;
 		align-items: flex-end;
 	}
 
@@ -110,50 +110,50 @@ export const titleCellStyles = css`
 	/* # Size */
 
 	:host([size="1"]) {
-		--_title-font: var(--primitives-font-display-1-sm);
+		--_title-cell-font: var(--primitives-font-display-1-sm);
 	}
 
 	:host([size="2"]) {
-		--_title-font: var(--primitives-font-display-2-sm);
+		--_title-cell-font: var(--primitives-font-display-2-sm);
 	}
 
 	:host([size="3"]) {
-		--_title-font: var(--primitives-font-display-3-sm);
+		--_title-cell-font: var(--primitives-font-display-3-sm);
 	}
 
 	:host([size="4"]) {
-		--_title-font: var(--primitives-font-display-4-sm);
+		--_title-cell-font: var(--primitives-font-display-4-sm);
 	}
 
 	:host([size="6"]) {
-		--_title-font: var(--primitives-font-display-6-sm);
+		--_title-cell-font: var(--primitives-font-display-6-sm);
 	}
 
 
 	/* # Color */
 
 	:host([color="secondary"]) {
-		--_title-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_title-cell-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
 	}
 
 	:host([color="accent"]) {
-		--_secondary-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
-		--_title-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
+		--_title-cell-secondary-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
+		--_title-cell-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
 	}
 
 	:host([color="success"]) {
-		--_secondary-color: var(--context-content-success-color, var(--semantics-content-success-color));
-		--_title-color: var(--context-content-success-color, var(--semantics-content-success-color));
+		--_title-cell-secondary-color: var(--context-content-success-color, var(--semantics-content-success-color));
+		--_title-cell-color: var(--context-content-success-color, var(--semantics-content-success-color));
 	}
 
 	:host([color="warning"]) {
-		--_secondary-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
-		--_title-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
+		--_title-cell-secondary-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
+		--_title-cell-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
 	}
 
 	:host([color="critical"]) {
-		--_secondary-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
-		--_title-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
+		--_title-cell-secondary-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
+		--_title-cell-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
 	}
 
 
@@ -163,8 +163,8 @@ export const titleCellStyles = css`
 		margin: 0;
 		min-width: 0;
 		align-self: stretch;
-		text-align: var(--_text-align);
-		color: var(--_secondary-color);
+		text-align: var(--_title-cell-text-align);
+		color: var(--_title-cell-secondary-color);
 		font: var(--primitives-font-body-xs-regular-tight);
 		overflow-wrap: anywhere;
 	}
@@ -176,9 +176,9 @@ export const titleCellStyles = css`
 		margin: 0;
 		min-width: 0;
 		align-self: stretch;
-		text-align: var(--_text-align);
-		color: var(--_title-color);
-		font: var(--_title-font);
+		text-align: var(--_title-cell-text-align);
+		color: var(--_title-cell-color);
+		font: var(--_title-cell-font);
 		overflow-wrap: break-word;
 		text-wrap: balance;
 	}
@@ -193,8 +193,8 @@ export const titleCellStyles = css`
 		margin: 0;
 		min-width: 0;
 		align-self: stretch;
-		text-align: var(--_text-align);
-		color: var(--_secondary-color);
+		text-align: var(--_title-cell-text-align);
+		color: var(--_title-cell-secondary-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 		overflow-wrap: anywhere;
 	}

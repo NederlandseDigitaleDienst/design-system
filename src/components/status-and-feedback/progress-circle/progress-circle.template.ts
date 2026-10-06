@@ -11,7 +11,7 @@ import type { NLDDProgressCircle } from './progress-circle.js';
 //
 // Stroke width scales with circle size for visual harmony — thin strokes look
 // out of place on a huge ring and thick strokes overpower a tiny ring. Must
-// stay in sync with the per-size --_stroke-width rules in the stylesheet.
+// stay in sync with the per-size --_progress-circle-stroke-width rules in the stylesheet.
 export function getStrokeWidthPx(sizeInPixels: number): number {
 	if (sizeInPixels <= 16) return 3;
 	if (sizeInPixels <= 28) return 4;

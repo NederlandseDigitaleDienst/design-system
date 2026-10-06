@@ -16,12 +16,12 @@ export const topNavigationBarStyles = css`
 	/* # Host */
 
 	:host {
-		--_logo-width: var(--semantics-brand-ribbon-sm-width);
-		--_logo-offset: 0px;
-		--_logo-background-color: #154273;
-		--_wordmark-content-color: light-dark(var(--primitives-color-reference-lintblauw), var(--primitives-color-neutral-1000));
-		--_wordmark-max-width: 280px;
-		--_max-width: var(--semantics-page-sections-body-max-width);
+		--_top-navigation-bar-logo-width: var(--semantics-brand-ribbon-sm-width);
+		--_top-navigation-bar-logo-offset: 0px;
+		--_top-navigation-bar-logo-background-color: #154273;
+		--_top-navigation-bar-wordmark-content-color: light-dark(var(--primitives-color-reference-lintblauw), var(--primitives-color-neutral-1000));
+		--_top-navigation-bar-wordmark-max-width: 280px;
+		--_top-navigation-bar-max-width: var(--semantics-page-sections-body-max-width);
 		--_top-navigation-bar-title-sm-font: var(--primitives-font-display-6-sm);
 		--_top-navigation-bar-title-md-font: var(--primitives-font-display-5-sm);
 		--_top-navigation-bar-title-lg-font: var(--primitives-font-display-4-sm);
@@ -43,18 +43,18 @@ export const topNavigationBarStyles = css`
 		/* The ribbon's width, and with it everything measured against the ribbon:
 		   its own height and the wordmark beside it. Here rather than on :host,
 		   because a container query cannot measure the container it sits on. */
-		--_logo-height: calc(var(--_logo-width) * 2);
+		--_top-navigation-bar-logo-height: calc(var(--_top-navigation-bar-logo-width) * 2);
 
 		@container (max-width: ${smMax}) {
-			--_logo-width: var(--semantics-brand-ribbon-sm-width);
+			--_top-navigation-bar-logo-width: var(--semantics-brand-ribbon-sm-width);
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_logo-width: var(--semantics-brand-ribbon-md-width);
+			--_top-navigation-bar-logo-width: var(--semantics-brand-ribbon-md-width);
 		}
 
 		@container (min-width: ${lgMin}) {
-			--_logo-width: var(--semantics-brand-ribbon-lg-width);
+			--_top-navigation-bar-logo-width: var(--semantics-brand-ribbon-lg-width);
 		}
 
 		box-sizing: border-box;
@@ -80,7 +80,7 @@ export const topNavigationBarStyles = css`
 	}
 
 	:host([width="full"]) {
-		--_max-width: none;
+		--_top-navigation-bar-max-width: none;
 	}
 
 
@@ -92,15 +92,15 @@ export const topNavigationBarStyles = css`
 		gap: var(--primitives-space-8);
 		align-items: center;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_top-navigation-bar-max-width);
 	}
 
 	/* ## Logo */
 
 	.top-navigation-bar__logo {
 		display: flex;
-		width: var(--_logo-width);
-		height: var(--_logo-height);
+		width: var(--_top-navigation-bar-logo-width);
+		height: var(--_top-navigation-bar-logo-height);
 		grid-column: 2;
 		align-self: start;
 		align-items: center;
@@ -119,11 +119,11 @@ export const topNavigationBarStyles = css`
 		.top-navigation-bar__logo::before {
 			content: '';
 			position: absolute;
-			bottom: calc(100% + var(--_logo-offset));
+			bottom: calc(100% + var(--_top-navigation-bar-logo-offset));
 			left: 0;
 			width: 100%;
 			height: 100lvh;
-			background-color: var(--_logo-background-color);
+			background-color: var(--_top-navigation-bar-logo-background-color);
 			pointer-events: none;
 		}
 
@@ -134,9 +134,9 @@ export const topNavigationBarStyles = css`
 			position: fixed;
 			top: 0;
 			z-index: -1;
-			width: var(--_logo-width);
-			height: var(--_logo-height);
-			background-color: var(--_logo-background-color);
+			width: var(--_top-navigation-bar-logo-width);
+			height: var(--_top-navigation-bar-logo-height);
+			background-color: var(--_top-navigation-bar-logo-background-color);
 			pointer-events: none;
 			animation: top-navigation-bar-ribbon-at-top linear both;
 			animation-timeline: scroll(root);
@@ -219,10 +219,10 @@ export const topNavigationBarStyles = css`
 		   ribbon centred. One unbreakable name would push the ribbon off centre
 		   and the page past the screen. */
 		min-width: 0;
-		min-height: var(--_logo-height);
+		min-height: var(--_top-navigation-bar-logo-height);
 		grid-column: 3;
 		flex-direction: column;
-		color: var(--_wordmark-content-color);
+		color: var(--_top-navigation-bar-wordmark-content-color);
 
 		/* The distance the text keeps from the top edge once it outgrows the
 		   ribbon. Only at the top: space under it would raise the bar for
@@ -230,13 +230,13 @@ export const topNavigationBarStyles = css`
 		   on the middle of the ribbon rather than 6px below it. */
 		@container (max-width: ${smMax}) {
 			align-self: start;
-			min-height: calc(var(--_logo-height) - var(--primitives-space-12));
+			min-height: calc(var(--_top-navigation-bar-logo-height) - var(--primitives-space-12));
 			padding-block-start: var(--primitives-space-12);
 		}
 	}
 
 	.top-navigation-bar__wordmark-spacer {
-		height: var(--_logo-width);
+		height: var(--_top-navigation-bar-logo-width);
 		flex-grow: 0;
 		flex-shrink: 0;
 
@@ -251,7 +251,7 @@ export const topNavigationBarStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 50%;
-		max-width: var(--_wordmark-max-width);
+		max-width: var(--_top-navigation-bar-wordmark-max-width);
 		/* anywhere rather than break-word: only this one takes the break into
 		   the min-content width, which is what the track measures. A name that
 		   cannot break wraps mid-word here, because a name cut off by an
@@ -293,7 +293,7 @@ export const topNavigationBarStyles = css`
 	.top-navigation-bar__main-bar {
 		display: flex;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_top-navigation-bar-max-width);
 
 		@container (max-width: ${smMax}) {
 			flex-direction: column;

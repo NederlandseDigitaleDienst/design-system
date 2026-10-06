@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, installUniversalReset } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './menu.js';
 import '../button/button.js';
 
@@ -134,17 +135,17 @@ describe('nldd-menu', () => {
 		expect(spy).toHaveBeenCalled();
 	});
 
-	it('pins --_width, --_min-width and --_max-width to an explicit width, and clears all three when unset', async () => {
+	it('pins --_menu-width, --_menu-min-width and --_menu-max-width to an explicit width, and clears all three when unset', async () => {
 		el = await fixture('<nldd-menu width="320px"><nldd-menu-item text="Item"></nldd-menu-item></nldd-menu>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('320px');
-		expect(el.style.getPropertyValue('--_min-width')).toBe('320px');
-		expect(el.style.getPropertyValue('--_max-width')).toBe('320px');
+		expect(el.style.getPropertyValue('--_menu-width')).toBe('320px');
+		expect(el.style.getPropertyValue('--_menu-min-width')).toBe('320px');
+		expect(el.style.getPropertyValue('--_menu-max-width')).toBe('320px');
 		(el as unknown as { width: string }).width = '';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('');
-		expect(el.style.getPropertyValue('--_min-width')).toBe('');
-		expect(el.style.getPropertyValue('--_max-width')).toBe('');
+		expect(el.style.getPropertyValue('--_menu-width')).toBe('');
+		expect(el.style.getPropertyValue('--_menu-min-width')).toBe('');
+		expect(el.style.getPropertyValue('--_menu-max-width')).toBe('');
 	});
 });
 
@@ -2700,5 +2701,46 @@ describe('nldd-menu check-mark column', () => {
 
 		expect(checkCell(opener)).not.toBeNull();
 		expect(checkCell(nested)).toBeNull();
+	});
+});
+
+// A menu item takes its highlight from the menu around it, and only sets its
+// own when it is destructive. Neither a story at rest nor the other tests show
+// a highlight, so this checks the wiring directly.
+describe('nldd-menu-item – highlight from the menu', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+	});
+
+	const resolve = (value: string) => {
+		const probe = document.createElement('div');
+		probe.style.backgroundColor = value;
+		document.body.appendChild(probe);
+		const color = getComputedStyle(probe).backgroundColor;
+		probe.remove();
+		return color;
+	};
+
+	const fill = (item: Element) => getComputedStyle(item.shadowRoot!.querySelector('.menu__item')!).backgroundColor;
+
+	it('paints a highlighted item in the highlight color, and a destructive one in critical', async () => {
+		el = await fixture(`
+			<nldd-menu>
+				<nldd-menu-item text="Bewerken" highlighted></nldd-menu-item>
+				<nldd-menu-item text="Verwijderen" destructive highlighted></nldd-menu-item>
+			</nldd-menu>
+		`);
+		await waitForUpdate(el);
+		const [plain, destructive] = el.querySelectorAll('nldd-menu-item');
+		const highlight = resolve('var(--semantics-controls-is-highlighted-indicator-color)');
+		expect(highlight).not.toBe('rgba(0, 0, 0, 0)');
+		expect(fill(plain)).toBe(highlight);
+		expect(fill(destructive)).not.toBe(highlight);
+		expect(fill(destructive)).not.toBe('rgba(0, 0, 0, 0)');
 	});
 });

@@ -32,25 +32,25 @@ describe('nldd-description-cell', () => {
 	it('sets inline width style for explicit CSS length', async () => {
 		el = await fixture('<nldd-description-cell width="200px"></nldd-description-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('200px');
+		expect(el.style.getPropertyValue('--_description-cell-width')).toBe('200px');
 	});
 
-	it('sets --_min-width custom property', async () => {
+	it('sets --_description-cell-min-width custom property', async () => {
 		el = await fixture('<nldd-description-cell min-width="80px"></nldd-description-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_min-width')).toBe('80px');
+		expect(el.style.getPropertyValue('--_description-cell-min-width')).toBe('80px');
 	});
 
-	it('sets --_max-width custom property', async () => {
+	it('sets --_description-cell-max-width custom property', async () => {
 		el = await fixture('<nldd-description-cell max-width="300px"></nldd-description-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('300px');
+		expect(el.style.getPropertyValue('--_description-cell-max-width')).toBe('300px');
 	});
 
-	it('sets --_min-height custom property', async () => {
+	it('sets --_description-cell-min-height custom property', async () => {
 		el = await fixture('<nldd-description-cell min-height="44px"></nldd-description-cell>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_min-height')).toBe('44px');
+		expect(el.style.getPropertyValue('--_description-cell-min-height')).toBe('44px');
 	});
 
 	it('defaults to center vertical alignment', async () => {

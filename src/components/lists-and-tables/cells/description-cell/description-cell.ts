@@ -60,27 +60,27 @@ export class NLDDDescriptionCell extends VisibilityMixin(LitElement, 'cells-cont
 		const widthIsKeyword = w === 'full' || w === 'fit-content';
 		const widthIsValidLength = !!w && !widthIsKeyword && CSS.supports('width', w);
 		if (widthIsValidLength) {
-			this.style.setProperty('--_width', w);
+			this.style.setProperty('--_description-cell-width', w);
 		} else {
-			this.style.removeProperty('--_width');
+			this.style.removeProperty('--_description-cell-width');
 		}
 		if (w && !widthIsKeyword && !widthIsValidLength) {
 			this.width = '';
 		}
 		if (this.minWidth) {
-			this.style.setProperty('--_min-width', this.minWidth);
+			this.style.setProperty('--_description-cell-min-width', this.minWidth);
 		} else {
-			this.style.removeProperty('--_min-width');
+			this.style.removeProperty('--_description-cell-min-width');
 		}
 		if (this.maxWidth) {
-			this.style.setProperty('--_max-width', this.maxWidth);
+			this.style.setProperty('--_description-cell-max-width', this.maxWidth);
 		} else {
-			this.style.removeProperty('--_max-width');
+			this.style.removeProperty('--_description-cell-max-width');
 		}
 		if (this.minHeight) {
-			this.style.setProperty('--_min-height', this.minHeight);
+			this.style.setProperty('--_description-cell-min-height', this.minHeight);
 		} else {
-			this.style.removeProperty('--_min-height');
+			this.style.removeProperty('--_description-cell-min-height');
 		}
 	}
 

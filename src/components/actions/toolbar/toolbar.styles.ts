@@ -10,19 +10,19 @@ export const toolbarStyles = css`
 	/* # Host */
 
 	:host {
-		--_gap: var(--primitives-space-8);
-		/* --_width..--_overflow-button-width: measured + set by toolbar.ts; 0px is a valid pre-measurement placeholder */
-		--_width: 0px;
-		--_start-width: 0px;
-		--_center-width: 0px;
-		--_end-width: 0px;
-		--_overflow-button-width: 0px;
+		--_toolbar-gap: var(--primitives-space-8);
+		/* --_toolbar-width..--_toolbar-overflow-button-width: measured + set by toolbar.ts; 0px is a valid pre-measurement placeholder */
+		--_toolbar-width: 0px;
+		--_toolbar-start-width: 0px;
+		--_toolbar-center-width: 0px;
+		--_toolbar-end-width: 0px;
+		--_toolbar-overflow-button-width: 0px;
 		/* The gap between a side area and its spacer only exists when that area is
 		   non-empty; toolbar.ts drops these to 0px when start/end is empty so the
 		   spacer basis doesn't over-subtract and pull the center off-center. */
-		--_left-spacer-gap: var(--_gap);
-		--_right-spacer-gap: var(--_gap);
-		--_label-margin-top: var(--primitives-space-4);
+		--_toolbar-left-spacer-gap: var(--_toolbar-gap);
+		--_toolbar-right-spacer-gap: var(--_toolbar-gap);
+		--_toolbar-label-margin-top: var(--primitives-space-4);
 
 		${inheritedTextReset}
 		box-sizing: border-box;
@@ -30,11 +30,11 @@ export const toolbarStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_gap: var(--primitives-space-6);
+		--_toolbar-gap: var(--primitives-space-6);
 	}
 
 	:host([size="lg"]) {
-		--_gap: var(--primitives-space-8);
+		--_toolbar-gap: var(--primitives-space-8);
 	}
 
 	:host([hidden]) {
@@ -48,7 +48,7 @@ export const toolbarStyles = css`
 		display: flex;
 		width: 100%;
 		flex-direction: row;
-		gap: var(--_gap);
+		gap: var(--_toolbar-gap);
 		align-items: center;
 	}
 
@@ -62,7 +62,7 @@ export const toolbarStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
-		gap: var(--_gap);
+		gap: var(--_toolbar-gap);
 		align-items: flex-start;
 	}
 
@@ -70,7 +70,7 @@ export const toolbarStyles = css`
 	/* # Spacers */
 
 	.toolbar__flexible-spacer {
-		margin-left: calc(-1 * var(--_gap));
+		margin-left: calc(-1 * var(--_toolbar-gap));
 		flex-grow: 1;
 		flex-shrink: 1;
 	}
@@ -86,29 +86,29 @@ export const toolbarStyles = css`
 	}
 
 	.toolbar__left-spacer {
-		margin-right: calc(-1 * var(--_gap));
+		margin-right: calc(-1 * var(--_toolbar-gap));
 		min-width: 0;
 		flex-grow: 0;
 		flex-shrink: 1;
 		flex-basis: calc(
-			var(--_width) / 2
-			- var(--_start-width)
-			- var(--_center-width) / 2
-			- var(--_left-spacer-gap)
+			var(--_toolbar-width) / 2
+			- var(--_toolbar-start-width)
+			- var(--_toolbar-center-width) / 2
+			- var(--_toolbar-left-spacer-gap)
 		);
 	}
 
 	.toolbar__right-spacer {
-		margin-left: calc(-1 * var(--_gap));
+		margin-left: calc(-1 * var(--_toolbar-gap));
 		min-width: 0;
 		flex-grow: 0;
 		flex-shrink: 1;
 		flex-basis: calc(
-			var(--_width) / 2
-			- var(--_end-width)
-			- var(--_center-width) / 2
-			- var(--_right-spacer-gap)
-			- var(--_overflow-button-width)
+			var(--_toolbar-width) / 2
+			- var(--_toolbar-end-width)
+			- var(--_toolbar-center-width) / 2
+			- var(--_toolbar-right-spacer-gap)
+			- var(--_toolbar-overflow-button-width)
 		);
 	}
 
@@ -129,7 +129,7 @@ export const toolbarStyles = css`
 
 	.toolbar__overflow-button-label {
 		display: none;
-		margin-top: var(--_label-margin-top);
+		margin-top: var(--_toolbar-label-margin-top);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-xs-regular-flat);
 		white-space: nowrap;
@@ -146,13 +146,13 @@ export const toolbarItemStyles = css`
 	/* # Host */
 
 	:host {
-		--_item-max-width: none;
-		--_item-min-width: 0px;
-		--_item-width: auto;
-		--_label-margin-top: var(--primitives-space-4);
+		--_toolbar-item-item-max-width: none;
+		--_toolbar-item-item-min-width: 0px;
+		--_toolbar-item-item-width: auto;
+		--_toolbar-item-label-margin-top: var(--primitives-space-4);
 
 		display: inline-flex;
-		max-width: var(--_item-max-width);
+		max-width: var(--_toolbar-item-item-max-width);
 		flex-direction: column;
 		flex-grow: 0;
 		flex-shrink: 0;
@@ -160,9 +160,9 @@ export const toolbarItemStyles = css`
 	}
 
 	:host([fluid]) {
-		min-width: var(--_item-min-width);
+		min-width: var(--_toolbar-item-item-min-width);
 		flex-shrink: 1;
-		flex-basis: var(--_item-width);
+		flex-basis: var(--_toolbar-item-item-width);
 	}
 
 	:host([solo-fluid]) {
@@ -196,7 +196,7 @@ export const toolbarItemStyles = css`
 
 	.toolbar__item-label {
 		display: none;
-		margin-top: var(--_label-margin-top);
+		margin-top: var(--_toolbar-item-label-margin-top);
 		color: var(--semantics-content-color);
 		font: var(--primitives-font-body-xs-regular-flat);
 		white-space: nowrap;
@@ -220,33 +220,33 @@ export const toolbarTitleStyles = css`
 	/* # Host */
 
 	:host {
-		--_title-group-min-width: min-content;
-		--_title-width: auto;
-		--_title-max-width: var(--primitives-area-240);
-		--_title-group-height: var(--semantics-controls-md-min-size);
-		--_content-gap: var(--primitives-space-6);
-		--_title-font: var(--primitives-font-body-lg-semi-bold-flat);
-		--_supporting-text-font: var(--primitives-font-body-xs-regular-flat);
+		--_toolbar-title-title-group-min-width: min-content;
+		--_toolbar-title-title-width: auto;
+		--_toolbar-title-title-max-width: var(--primitives-area-240);
+		--_toolbar-title-title-group-height: var(--semantics-controls-md-min-size);
+		--_toolbar-title-content-gap: var(--primitives-space-6);
+		--_toolbar-title-title-font: var(--primitives-font-body-lg-semi-bold-flat);
+		--_toolbar-title-supporting-text-font: var(--primitives-font-body-xs-regular-flat);
 
 		${inheritedTextReset}
 		display: inline-flex;
-		min-width: var(--_title-group-min-width);
-		height: var(--_title-group-height);
+		min-width: var(--_toolbar-title-title-group-min-width);
+		height: var(--_toolbar-title-title-group-height);
 		flex-direction: row;
 		flex-shrink: 1;
-		flex-basis: var(--_title-width);
-		gap: var(--_content-gap);
+		flex-basis: var(--_toolbar-title-title-width);
+		gap: var(--_toolbar-title-content-gap);
 		align-items: center;
 	}
 
 	:host([size="sm"]) {
-		--_title-group-height: var(--semantics-controls-sm-min-size);
-		--_title-font: var(--primitives-font-body-sm-semi-bold-flat);
-		--_supporting-text-font: var(--primitives-font-body-xxs-regular-flat);
+		--_toolbar-title-title-group-height: var(--semantics-controls-sm-min-size);
+		--_toolbar-title-title-font: var(--primitives-font-body-sm-semi-bold-flat);
+		--_toolbar-title-supporting-text-font: var(--primitives-font-body-xxs-regular-flat);
 	}
 
 	:host([size="lg"]) {
-		--_title-group-height: var(--semantics-controls-lg-min-size);
+		--_toolbar-title-title-group-height: var(--semantics-controls-lg-min-size);
 	}
 
 	:host([solo-fluid]) {
@@ -257,7 +257,7 @@ export const toolbarTitleStyles = css`
 	}
 
 	/* Sole toolbar element: let the text fill the row instead of capping at
-	   --_title-max-width, matching the pre-fit-content stretch behavior. */
+	   --_toolbar-title-title-max-width, matching the pre-fit-content stretch behavior. */
 	:host([solo-fluid]) .toolbar__title-group {
 		max-width: none;
 	}
@@ -288,7 +288,7 @@ export const toolbarTitleStyles = css`
 	.toolbar__title-group {
 		display: flex;
 		min-width: 0;
-		max-width: var(--_title-max-width);
+		max-width: var(--_toolbar-title-title-max-width);
 		flex-direction: column;
 		justify-content: center;
 		align-items: flex-start;
@@ -300,7 +300,7 @@ export const toolbarTitleStyles = css`
 		border-radius: var(--semantics-controls-sm-corner-radius);
 		color: inherit;
 		min-width: 0;
-		gap: var(--_content-gap);
+		gap: var(--_toolbar-title-content-gap);
 		align-items: center;
 		text-decoration: none;
 	}
@@ -344,7 +344,7 @@ export const toolbarTitleStyles = css`
 		max-width: 100%;
 		overflow: hidden;
 		color: var(--semantics-content-color);
-		font: var(--_title-font);
+		font: var(--_toolbar-title-title-font);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		text-align: left;
@@ -359,7 +359,7 @@ export const toolbarTitleStyles = css`
 		max-width: 100%;
 		overflow: hidden;
 		color: var(--semantics-content-secondary-color);
-		font: var(--_supporting-text-font);
+		font: var(--_toolbar-title-supporting-text-font);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		text-align: left;

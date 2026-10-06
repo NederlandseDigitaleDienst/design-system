@@ -303,7 +303,7 @@ describe('nldd-dropdown – change event', () => {
 		`);
 		await waitForUpdate(el);
 		expect(el.getAttribute('width')).toBe('240px');
-		expect(el.style.getPropertyValue('--_width')).toBe('240px');
+		expect(el.style.getPropertyValue('--_dropdown-width')).toBe('240px');
 	});
 
 	it('focus() lands on the slotted select', async () => {

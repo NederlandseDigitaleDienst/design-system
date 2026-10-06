@@ -10,24 +10,24 @@ export const textCellStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: auto;
-		--_min-width: 0;
-		--_max-width: none;
-		--_min-height: 0;
-		--_secondary-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
-		--_secondary-font: var(--primitives-font-body-xs-regular-tight);
-		--_text-align: start;
-		--_text-color: var(--context-content-color, var(--semantics-content-color));
-		--_text-font: var(--primitives-font-body-md-regular-tight);
+		--_text-cell-width: auto;
+		--_text-cell-min-width: 0;
+		--_text-cell-max-width: none;
+		--_text-cell-min-height: 0;
+		--_text-cell-secondary-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_text-cell-secondary-font: var(--primitives-font-body-xs-regular-tight);
+		--_text-cell-align: start;
+		--_text-cell-color: var(--context-content-color, var(--semantics-content-color));
+		--_text-cell-font: var(--primitives-font-body-md-regular-tight);
 
 		${inheritedTextReset}
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
 		padding-block: var(--context-cell-padding-block, 0px) !important;
 		display: flex;
-		width: var(--_width);
-		min-width: var(--_min-width);
-		max-width: var(--_max-width);
-		min-height: var(--_min-height);
+		width: var(--_text-cell-width);
+		min-width: var(--_text-cell-min-width);
+		max-width: var(--_text-cell-max-width);
+		min-height: var(--_text-cell-min-height);
 		flex-direction: column;
 		justify-content: center;
 	}
@@ -51,7 +51,7 @@ export const textCellStyles = css`
 		/* min-content rather than 0 as the floor: the cell gives way as soon as
 		   the row is too narrow, but never past the width of its longest word,
 		   so the text stays readable instead of breaking mid-word. */
-		--_min-width: min-content;
+		--_text-cell-min-width: min-content;
 
 		width: fit-content;
 		flex-grow: 0;
@@ -67,7 +67,7 @@ export const textCellStyles = css`
 	}
 
 	:host([max-width]) {
-		flex-basis: var(--_max-width);
+		flex-basis: var(--_text-cell-max-width);
 	}
 
 
@@ -98,12 +98,12 @@ export const textCellStyles = css`
 	}
 
 	:host([horizontal-alignment="center"]) {
-		--_text-align: center;
+		--_text-cell-align: center;
 		align-items: center;
 	}
 
 	:host([horizontal-alignment="right"]) {
-		--_text-align: right;
+		--_text-cell-align: right;
 		align-items: flex-end;
 	}
 
@@ -111,35 +111,35 @@ export const textCellStyles = css`
 	/* # Size */
 
 	:host([size="sm"]) {
-		--_secondary-font: var(--primitives-font-body-xxs-regular-tight);
-		--_text-font: var(--primitives-font-body-sm-regular-tight);
+		--_text-cell-secondary-font: var(--primitives-font-body-xxs-regular-tight);
+		--_text-cell-font: var(--primitives-font-body-sm-regular-tight);
 	}
 
 
 	/* # Color */
 
 	:host([color="secondary"]) {
-		--_text-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
+		--_text-cell-color: var(--context-content-secondary-color, var(--semantics-content-secondary-color));
 	}
 
 	:host([color="accent"]) {
-		--_secondary-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
-		--_text-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
+		--_text-cell-secondary-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
+		--_text-cell-color: var(--context-content-accent-color, var(--semantics-content-accent-color));
 	}
 
 	:host([color="success"]) {
-		--_secondary-color: var(--context-content-success-color, var(--semantics-content-success-color));
-		--_text-color: var(--context-content-success-color, var(--semantics-content-success-color));
+		--_text-cell-secondary-color: var(--context-content-success-color, var(--semantics-content-success-color));
+		--_text-cell-color: var(--context-content-success-color, var(--semantics-content-success-color));
 	}
 
 	:host([color="warning"]) {
-		--_secondary-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
-		--_text-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
+		--_text-cell-secondary-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
+		--_text-cell-color: var(--context-content-warning-color, var(--semantics-content-warning-color));
 	}
 
 	:host([color="critical"]) {
-		--_secondary-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
-		--_text-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
+		--_text-cell-secondary-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
+		--_text-cell-color: var(--context-content-critical-color, var(--semantics-content-critical-color));
 	}
 
 
@@ -149,9 +149,9 @@ export const textCellStyles = css`
 		margin: 0;
 		min-width: 0;
 		align-self: stretch;
-		text-align: var(--_text-align);
-		color: var(--_secondary-color);
-		font: var(--_secondary-font);
+		text-align: var(--_text-cell-align);
+		color: var(--_text-cell-secondary-color);
+		font: var(--_text-cell-secondary-font);
 		overflow-wrap: anywhere;
 	}
 
@@ -159,9 +159,9 @@ export const textCellStyles = css`
 		margin: 0;
 		min-width: 0;
 		align-self: stretch;
-		text-align: var(--_text-align);
-		color: var(--_text-color);
-		font: var(--_text-font);
+		text-align: var(--_text-cell-align);
+		color: var(--_text-cell-color);
+		font: var(--_text-cell-font);
 		overflow-wrap: anywhere;
 		text-wrap: pretty;
 	}
@@ -176,9 +176,9 @@ export const textCellStyles = css`
 		margin: 0;
 		min-width: 0;
 		align-self: stretch;
-		text-align: var(--_text-align);
-		color: var(--_secondary-color);
-		font: var(--_secondary-font);
+		text-align: var(--_text-cell-align);
+		color: var(--_text-cell-secondary-color);
+		font: var(--_text-cell-secondary-font);
 		overflow-wrap: anywhere;
 	}
 `;

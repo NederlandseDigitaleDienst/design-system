@@ -741,7 +741,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	/**
-	 * Measures the divider markers and writes the result as `--_divider-inset-
+	 * Measures the divider markers and writes the result as `--_list-item-divider-inset-
 	 * start/-end` on the host. No markers → the vars are cleared and CSS falls
 	 * back to the content width. Union semantics: the divider runs from the
 	 * FIRST `divider-start` to the LAST `divider-end`; a side without markers
@@ -792,8 +792,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			}
 		}
 		if (targets.length === 0) {
-			this.style.removeProperty('--_divider-inset-start');
-			this.style.removeProperty('--_divider-inset-end');
+			this.style.removeProperty('--_list-item-divider-inset-start');
+			this.style.removeProperty('--_list-item-divider-inset-end');
 			return;
 		}
 
@@ -832,14 +832,14 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 				this._warnedDegenerateDivider = true;
 				console.warn('<nldd-list-item>: divider-start lies past the last divider-end, so the divider falls back to the full content width.');
 			}
-			this.style.removeProperty('--_divider-inset-start');
-			this.style.removeProperty('--_divider-inset-end');
+			this.style.removeProperty('--_list-item-divider-inset-start');
+			this.style.removeProperty('--_list-item-divider-inset-end');
 			return;
 		}
-		if (insetStart !== null) this.style.setProperty('--_divider-inset-start', `${insetStart}px`);
-		else this.style.removeProperty('--_divider-inset-start');
-		if (insetEnd !== null) this.style.setProperty('--_divider-inset-end', `${insetEnd}px`);
-		else this.style.removeProperty('--_divider-inset-end');
+		if (insetStart !== null) this.style.setProperty('--_list-item-divider-inset-start', `${insetStart}px`);
+		else this.style.removeProperty('--_list-item-divider-inset-start');
+		if (insetEnd !== null) this.style.setProperty('--_list-item-divider-inset-end', `${insetEnd}px`);
+		else this.style.removeProperty('--_list-item-divider-inset-end');
 	}
 
 	private _observeChildrenSlot() {

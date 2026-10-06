@@ -133,8 +133,8 @@ export class NLDDIcon extends LitElement {
 			this._iconSvg = this._loadIcon(this.icon);
 		}
 		if (changedProperties.has('customColor')) {
-			if (this.customColor) this.style.setProperty('--_custom-color', this.customColor);
-			else this.style.removeProperty('--_custom-color');
+			if (this.customColor) this.style.setProperty('--_icon-custom-color', this.customColor);
+			else this.style.removeProperty('--_icon-custom-color');
 		}
 	}
 

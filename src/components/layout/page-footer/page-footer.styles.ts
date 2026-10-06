@@ -12,12 +12,12 @@ export const pageFooterStyles = css`
 		box-sizing: border-box;
 	}
 	:host {
-		--_max-width: var(--semantics-page-sections-body-max-width);
+		--_page-footer-max-width: var(--semantics-page-sections-body-max-width);
 		/* Official Rijksoverheid lintje color — identical across all
 		   .rijks.app / .overheid.nl sites by visual-identity policy, so it
 		   intentionally lives outside the semantic token system. Local
 		   --_ var keeps the value discoverable in one place. */
-		--_lintje-color: #154273;
+		--_page-footer-lintje-color: #154273;
 		--_page-footer-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-50));
 		--_page-footer-divider-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-150));
 		--context-parent-background-color: var(--_page-footer-background-color);
@@ -37,11 +37,11 @@ export const pageFooterStyles = css`
 	}
 
 	:host([width="full"]) {
-		--_max-width: none;
+		--_page-footer-max-width: none;
 	}
 
 	.page-footer {
-		--_lintje-height: calc(var(--_lintje-width) / 2);
+		--_page-footer-lintje-height: calc(var(--_page-footer-lintje-width) / 2);
 
 		box-sizing: border-box;
 		display: flex;
@@ -52,17 +52,17 @@ export const pageFooterStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			--_lintje-width: var(--primitives-space-40);
+			--_page-footer-lintje-width: var(--primitives-space-40);
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
-			--_lintje-width: var(--primitives-space-44);
+			--_page-footer-lintje-width: var(--primitives-space-44);
 		}
 
 		@container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
-			--_lintje-width: var(--primitives-space-48);
+			--_page-footer-lintje-width: var(--primitives-space-48);
 		}
 	}
 
@@ -71,8 +71,8 @@ export const pageFooterStyles = css`
 	   transparent host) so a preceding tinted page section doesn't butt right up
 	   against the lintje. */
 	:host([empty]) .page-footer {
-		min-height: var(--_lintje-height);
-		margin-top: var(--_lintje-height);
+		min-height: var(--_page-footer-lintje-height);
+		margin-top: var(--_page-footer-lintje-height);
 	}
 
 	.page-footer::after {
@@ -80,9 +80,9 @@ export const pageFooterStyles = css`
 		position: absolute;
 		bottom: 0;
 		left: 50%;
-		background-color: var(--_lintje-color);
-		width: var(--_lintje-width);
-		height: var(--_lintje-height);
+		background-color: var(--_page-footer-lintje-color);
+		width: var(--_page-footer-lintje-width);
+		height: var(--_page-footer-lintje-height);
 		transform: translateX(-50%);
 	}
 
@@ -95,7 +95,7 @@ export const pageFooterStyles = css`
 	.page-footer__body {
 		display: flex;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_page-footer-max-width);
 		flex-direction: column;
 	}
 
@@ -129,11 +129,11 @@ export const pageFooterStyles = css`
 	}
 
 	.page-footer__body > div:not([hidden]):not(:has(~ div:not([hidden]))) {
-		padding-bottom: calc(var(--primitives-space-16) + var(--_lintje-height));
+		padding-bottom: calc(var(--primitives-space-16) + var(--_page-footer-lintje-height));
 	}
 
 	:host([single-slot]) .page-footer__body > div:not([hidden]) {
-		padding-top: calc(var(--primitives-space-16) + var(--_lintje-height));
+		padding-top: calc(var(--primitives-space-16) + var(--_page-footer-lintje-height));
 	}
 
 	.page-footer__breadcrumbs[hidden],

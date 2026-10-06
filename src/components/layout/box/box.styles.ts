@@ -9,11 +9,11 @@ export const boxStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--semantics-surfaces-corner-radius);
-		--_background-color: var(--semantics-surfaces-tinted-background-color);
-		--_border-width: var(--semantics-surfaces-border-width);
-		--_border-color: var(--semantics-surfaces-tinted-border-color);
-		--_highlight-border: inset 0 0 0 var(--_border-width) var(--_border-color);
+		--_box-corner-radius: var(--semantics-surfaces-corner-radius);
+		--_box-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_box-border-width: var(--semantics-surfaces-border-width);
+		--_box-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_box-highlight-border: inset 0 0 0 var(--_box-border-width) var(--_box-border-color);
 
 		display: block;
 		width: 100%;
@@ -27,13 +27,13 @@ export const boxStyles = css`
 	/* ## Backgrounds */
 
 	:host([background="base"]) {
-		--_background-color: var(--semantics-surfaces-base-background-color);
-		--_border-color: var(--semantics-surfaces-base-border-color);
+		--_box-background-color: var(--semantics-surfaces-base-background-color);
+		--_box-border-color: var(--semantics-surfaces-base-border-color);
 	}
 
 	:host([background="critical"]) {
-		--_background-color: var(--semantics-categories-critical-tinted-background-color);
-		--_border-color: var(--semantics-categories-critical-tinted-highlight-border-color);
+		--_box-background-color: var(--semantics-categories-critical-tinted-background-color);
+		--_box-border-color: var(--semantics-categories-critical-tinted-highlight-border-color);
 	}
 
 
@@ -41,9 +41,9 @@ export const boxStyles = css`
 
 	.box {
 		box-sizing: border-box;
-		border-radius: var(--_corner-radius);
-		box-shadow: var(--_highlight-border);
-		background-color: var(--_background-color);
+		border-radius: var(--_box-corner-radius);
+		box-shadow: var(--_box-highlight-border);
+		background-color: var(--_box-background-color);
 	}
 
 
@@ -51,7 +51,7 @@ export const boxStyles = css`
 
 	@media (forced-colors: active) {
 		.box {
-			border: var(--_border-width) solid CanvasText;
+			border: var(--_box-border-width) solid CanvasText;
 		}
 	}
 `;

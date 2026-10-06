@@ -25,18 +25,18 @@ describe('nldd-table', () => {
 		expect(el.getAttribute('role')).toBe('table');
 	});
 
-	it('applies the columns track list as the --_columns custom property', async () => {
+	it('applies the columns track list as the --_table-columns custom property', async () => {
 		el = await fixture('<nldd-table columns="minmax(200px, 1fr) 120px 80px"></nldd-table>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_columns')).toBe('minmax(200px, 1fr) 120px 80px');
+		expect(el.style.getPropertyValue('--_table-columns')).toBe('minmax(200px, 1fr) 120px 80px');
 	});
 
-	it('updates --_columns when the columns attribute changes', async () => {
+	it('updates --_table-columns when the columns attribute changes', async () => {
 		el = await fixture<NLDDTable>('<nldd-table columns="1fr"></nldd-table>');
 		await waitForUpdate(el);
 		(el as unknown as NLDDTable).columns = '1fr 2fr';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_columns')).toBe('1fr 2fr');
+		expect(el.style.getPropertyValue('--_table-columns')).toBe('1fr 2fr');
 	});
 
 	it('sets a cells-container so cells size against the table width', async () => {
@@ -86,7 +86,7 @@ describe('nldd-table', () => {
 		await waitForUpdate(table);
 		// wait for the ResizeObserver to fire with the laid-out width
 		await nextFrames();
-		expect(table.style.getPropertyValue('--_columns')).toBe('1fr');
+		expect(table.style.getPropertyValue('--_table-columns')).toBe('1fr');
 		cleanup(host);
 	});
 
@@ -96,7 +96,7 @@ describe('nldd-table', () => {
 		await waitForUpdate(table);
 		await nextFrames();
 		// sm-wide, no sm-columns → base columns
-		expect(table.style.getPropertyValue('--_columns')).toBe('1fr 1fr 1fr');
+		expect(table.style.getPropertyValue('--_table-columns')).toBe('1fr 1fr 1fr');
 		cleanup(host);
 	});
 
@@ -107,7 +107,7 @@ describe('nldd-table', () => {
 		const table = host.querySelector('nldd-table') as HTMLElement;
 		await waitForUpdate(table);
 		await nextFrames();
-		expect(table.style.getPropertyValue('--_columns')).toBe('1fr 1fr 1fr 1fr');
+		expect(table.style.getPropertyValue('--_table-columns')).toBe('1fr 1fr 1fr 1fr');
 		cleanup(host);
 	});
 

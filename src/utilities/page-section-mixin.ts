@@ -20,7 +20,7 @@ function paddingToValue(size: string | undefined): string | null {
 }
 
 // Block-padding override scopes: base ('') + the sm/md/lg breakpoints. Each
-// scope reads its own props and writes `--_{scope-}padding-top/bottom`, which
+// scope reads its own props and writes `--_{component}-{scope-}padding-top/bottom` (the component is its tag without `nldd-`), which
 // the section CSS resolves per breakpoint (scope override → base override →
 // responsive default). The CSS var prefix is `${scope}-` (empty for base).
 const PADDING_SCOPES = ['', 'sm', 'md', 'lg'] as const;
@@ -133,8 +133,8 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 				const top = self[prop('Top')];
 				const bottom = self[prop('Bottom')];
 				const prefix = scope ? `${scope}-` : '';
-				this._setVar(`--_${prefix}padding-top`, paddingToValue(top ?? block));
-				this._setVar(`--_${prefix}padding-bottom`, paddingToValue(bottom ?? block));
+				this._setVar(`--_${this.localName.slice(5)}-${prefix}padding-top`, paddingToValue(top ?? block));
+				this._setVar(`--_${this.localName.slice(5)}-${prefix}padding-bottom`, paddingToValue(bottom ?? block));
 			}
 		}
 

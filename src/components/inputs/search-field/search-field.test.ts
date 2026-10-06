@@ -243,7 +243,7 @@ describe('nldd-search-field – dismiss', () => {
 		el = await fixture('<nldd-search-field width="240px"></nldd-search-field>') as NLDDSearchField;
 		await waitForUpdate(el);
 		expect(el.getAttribute('width')).toBe('240px');
-		expect(el.style.getPropertyValue('--_width')).toBe('240px');
+		expect(el.style.getPropertyValue('--_search-field-width')).toBe('240px');
 	});
 
 	it('participates in FormData via form-associated API', async () => {

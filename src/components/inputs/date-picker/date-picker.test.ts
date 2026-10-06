@@ -1257,16 +1257,16 @@ describe('nldd-date-picker breedte en periode-indicatoren', () => {
 	it('width="full" en een CSS-lengte sturen de hostbreedte; ongeldig valt terug', async () => {
 		el = await fixture<NLDDDatePicker>('<nldd-date-picker width="full"></nldd-date-picker>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('100%');
+		expect(el.style.getPropertyValue('--_date-picker-width')).toBe('100%');
 
 		el.width = '560px';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('560px');
+		expect(el.style.getPropertyValue('--_date-picker-width')).toBe('560px');
 		expect(Math.round(el.getBoundingClientRect().width)).toBe(560);
 
 		el.width = 'kapot';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_date-picker-width')).toBe('');
 	});
 
 	// The endpoints are the same square as a single selection (as wide as it is

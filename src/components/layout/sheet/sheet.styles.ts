@@ -14,8 +14,8 @@ export const sheetStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: initial;
-		--_height: initial;
+		--_sheet-width: initial;
+		--_sheet-height: initial;
 
 		/* A pane hides the back button of the bar inside it, because the menu
 		   beside you is the way back. A sheet has no menu beside it, so a bar in
@@ -96,7 +96,7 @@ export const sheetStyles = css`
 			width: 100%;
 			max-width: 100%;
 			max-height: calc(100dvh - var(--semantics-sheets-bottom-top-inset));
-			height: var(--_height, calc(100dvh - var(--semantics-sheets-bottom-top-inset)));
+			height: var(--_sheet-height, calc(100dvh - var(--semantics-sheets-bottom-top-inset)));
 
 			&[open] {
 				animation: sheet-slide-in-bottom var(--semantics-sheets-bottom-animation-duration) var(--primitives-transition-easing-default) backwards;
@@ -110,7 +110,7 @@ export const sheetStyles = css`
 		@media (min-width: ${mdMin}) {
 			inset: var(--semantics-overlays-inset) var(--semantics-overlays-inset) var(--semantics-overlays-inset) auto;
 			border-radius: var(--semantics-overlays-corner-radius);
-			width: min(var(--_width, var(--semantics-sheets-side-md-width)), calc(100vw - var(--semantics-overlays-inset) * 2));
+			width: min(var(--_sheet-width, var(--semantics-sheets-side-md-width)), calc(100vw - var(--semantics-overlays-inset) * 2));
 			height: calc(100dvh - var(--semantics-overlays-inset) * 2);
 
 			&[open] {
@@ -123,7 +123,7 @@ export const sheetStyles = css`
 		}
 
 		@media (min-width: ${lgMin}) {
-			width: min(var(--_width, var(--semantics-sheets-side-lg-width)), calc(100vw - var(--semantics-overlays-inset) * 2));
+			width: min(var(--_sheet-width, var(--semantics-sheets-side-lg-width)), calc(100vw - var(--semantics-overlays-inset) * 2));
 		}
 	}
 
@@ -145,7 +145,7 @@ export const sheetStyles = css`
 		@media (min-width: ${mdMin}) {
 			inset: var(--semantics-overlays-inset) auto var(--semantics-overlays-inset) var(--semantics-overlays-inset);
 			border-radius: var(--semantics-overlays-corner-radius);
-			width: min(var(--_width, var(--semantics-sheets-side-md-width)), calc(100vw - var(--semantics-overlays-inset) * 2));
+			width: min(var(--_sheet-width, var(--semantics-sheets-side-md-width)), calc(100vw - var(--semantics-overlays-inset) * 2));
 			height: calc(100dvh - var(--semantics-overlays-inset) * 2);
 
 			&[open] {
@@ -158,7 +158,7 @@ export const sheetStyles = css`
 		}
 
 		@media (min-width: ${lgMin}) {
-			width: min(var(--_width, var(--semantics-sheets-side-lg-width)), calc(100vw - var(--semantics-overlays-inset) * 2));
+			width: min(var(--_sheet-width, var(--semantics-sheets-side-lg-width)), calc(100vw - var(--semantics-overlays-inset) * 2));
 		}
 	}
 
@@ -170,7 +170,7 @@ export const sheetStyles = css`
 			width: calc(100% - var(--semantics-sheets-bottom-md-inline-inset));
 			max-width: var(--semantics-page-sections-body-max-width);
 			max-height: calc(100dvh - var(--semantics-sheets-bottom-top-inset));
-			height: var(--_height, calc(100dvh - var(--semantics-sheets-bottom-top-inset)));
+			height: var(--_sheet-height, calc(100dvh - var(--semantics-sheets-bottom-top-inset)));
 
 			&[open] {
 				animation: sheet-slide-in-bottom var(--semantics-sheets-bottom-animation-duration) var(--primitives-transition-easing-default) backwards;

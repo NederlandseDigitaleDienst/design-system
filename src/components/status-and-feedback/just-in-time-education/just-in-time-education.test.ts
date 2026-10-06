@@ -63,15 +63,15 @@ describe('nldd-just-in-time-education', () => {
 		expect(el.getAttribute('data-arrow-side')).toBe('top');
 	});
 
-	it('zet arrow-length als CSS-lengte door op de --_arrow-length var', async () => {
+	it('zet arrow-length als CSS-lengte door op de --_just-in-time-education-arrow-length var', async () => {
 		el = await fixture<NLDDJustInTimeEducation>(MARKUP);
 		await waitForUpdate(el);
 		el.arrowLength = '120px';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_arrow-length')).toBe('120px');
+		expect(el.style.getPropertyValue('--_just-in-time-education-arrow-length')).toBe('120px');
 		el.arrowLength = '';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_arrow-length')).toBe('');
+		expect(el.style.getPropertyValue('--_just-in-time-education-arrow-length')).toBe('');
 	});
 
 	it('negeert een ongeldige arrow-length en valt terug op de standaard', async () => {
@@ -79,12 +79,12 @@ describe('nldd-just-in-time-education', () => {
 		await waitForUpdate(el);
 		el.arrowLength = '120px';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_arrow-length')).toBe('120px');
+		expect(el.style.getPropertyValue('--_just-in-time-education-arrow-length')).toBe('120px');
 		// An invalid value (e.g. "d") is rejected and the override removed, so the
 		// max()/calc() that consume the var stay valid (DS default applies).
 		el.arrowLength = 'd';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_arrow-length')).toBe('');
+		expect(el.style.getPropertyValue('--_just-in-time-education-arrow-length')).toBe('');
 	});
 
 	it('geeft niet-eigen attributen door aan de slotted control, eigen niet', async () => {

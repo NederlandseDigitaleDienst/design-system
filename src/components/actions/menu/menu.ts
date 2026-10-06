@@ -358,7 +358,7 @@ const defaultFilterFn = (query: string, item: NLDDMenuItem): boolean => {
  * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
  * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a menu hung off a button. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.
  * @attr {string} placement - Floating UI placement. Default: 'bottom-start'.
- * @attr {number} max-items - Maximum number of visible items before scrolling. Sets --_max-items internally. Default: 0 (no limit).
+ * @attr {number} max-items - Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit).
  * @attr {string} empty-text - Text of the default empty-state dialog. Falls back to Dutch i18n "Geen opties beschikbaar".
  * @attr {string} empty-supporting-text - Supporting text of the default empty-state dialog.
  * @attr {object} translations - Override one or more translation keys.
@@ -381,7 +381,7 @@ export class NLDDMenu extends LitElement {
 	variant: 'menu' | 'listbox' = 'menu';
 
 	/**
-	 * Explicit width, pinned exactly (sets --_width and clamps min/max to it).
+	 * Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).
 	 * Leave unset to let the menu size to its content between a minimum and a
 	 * viewport-aware maximum of min(100vw - inset, 640px).
 	 */
@@ -406,7 +406,7 @@ export class NLDDMenu extends LitElement {
 
 	/**
 	 * Maximum number of visible items before the menu scrolls.
-	 * Sets --_max-items internally. Default: 0 (no limit).
+	 * Sets --_menu-max-items internally. Default: 0 (no limit).
 	 */
 	@property({ type: Number, attribute: 'max-items' })
 	maxItems = 0;
@@ -585,20 +585,20 @@ export class NLDDMenu extends LitElement {
 				// content-driven min/max to it too, so callers that need an exact
 				// width (e.g. combo-box matching its input) aren't widened by the
 				// default minimum or capped by the default maximum.
-				this.style.setProperty('--_width', this.width);
-				this.style.setProperty('--_min-width', this.width);
-				this.style.setProperty('--_max-width', this.width);
+				this.style.setProperty('--_menu-width', this.width);
+				this.style.setProperty('--_menu-min-width', this.width);
+				this.style.setProperty('--_menu-max-width', this.width);
 			} else {
-				this.style.removeProperty('--_width');
-				this.style.removeProperty('--_min-width');
-				this.style.removeProperty('--_max-width');
+				this.style.removeProperty('--_menu-width');
+				this.style.removeProperty('--_menu-min-width');
+				this.style.removeProperty('--_menu-max-width');
 			}
 		}
 		if (changedProperties.has('maxItems')) {
 			if (this.maxItems > 0) {
-				this.style.setProperty('--_max-items', String(this.maxItems));
+				this.style.setProperty('--_menu-max-items', String(this.maxItems));
 			} else {
-				this.style.removeProperty('--_max-items');
+				this.style.removeProperty('--_menu-max-items');
 			}
 		}
 		if (changedProperties.has('variant')) {
@@ -637,7 +637,7 @@ export class NLDDMenu extends LitElement {
 		const base = this.placement || 'bottom-start';
 		const align = base.includes('-') ? base.slice(base.indexOf('-')) : '';
 		const rect = anchorEl.getBoundingClientRect();
-		const margin = this._cssPx('--_viewport-margin');
+		const margin = this._cssPx('--_menu-viewport-margin');
 		const spaceBelow = window.innerHeight - rect.bottom - margin;
 		const spaceAbove = rect.top - margin;
 		const side = spaceBelow >= spaceAbove ? 'bottom' : 'top';
@@ -1996,14 +1996,14 @@ export class NLDDMenu extends LitElement {
 		const anchorEl = this._getAnchorEl();
 		if (!anchorEl || !this._isOpen) return;
 
-		const viewportMargin = this._cssPx('--_viewport-margin');
+		const viewportMargin = this._cssPx('--_menu-viewport-margin');
 
 		// Cascade-mode submenus: shift up by the menu's own padding so the
 		// first submenu item lines up vertically with the parent opener item.
 		// Without this, the submenu's top edge aligns with the opener and the
 		// inner padding pushes the first item down, leaving a visible step.
 		const submenuPadding = (this._isSubmenu && !this._drillInMode)
-			? this._cssPx('--_padding')
+			? this._cssPx('--_menu-padding')
 			: 0;
 
 		// Drill-in: pick the side from the available space around the
@@ -2029,7 +2029,7 @@ export class NLDDMenu extends LitElement {
 				size({
 					padding: viewportMargin,
 					apply: ({ availableHeight }: { availableHeight: number }) => {
-						this.style.setProperty('--_max-height', `${availableHeight}px`);
+						this.style.setProperty('--_menu-max-height', `${availableHeight}px`);
 					},
 				}),
 			],

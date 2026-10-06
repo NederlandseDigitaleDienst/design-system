@@ -468,7 +468,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 
 	override firstUpdated(): void {
 		this._initialValue = this.value;
-		this.style.setProperty('--_rows', String(this.rows));
+		this.style.setProperty('--_text-editor-rows', String(this.rows));
 		// The sentinels are the overlay's own; a value that carries one (an editor
 		// whose text was round-tripped through another) hands it back stripped.
 		this.mountEditor(stripSentinels(this.value));
@@ -499,7 +499,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('rows')) {
-			this.style.setProperty('--_rows', String(this.rows));
+			this.style.setProperty('--_text-editor-rows', String(this.rows));
 		}
 		if (this.view) {
 			// A render after setTranslations() or a new `translations`: the labels

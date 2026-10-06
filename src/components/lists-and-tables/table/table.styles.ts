@@ -6,30 +6,30 @@ export const tableStyles = css`
 		box-sizing: border-box;
 	}
 	:host {
-		--_columns: none;
-		--_corner-radius: var(--semantics-tables-corner-radius);
-		--_column-gap: var(--semantics-tables-column-gap);
-		--_background-color: var(--semantics-surfaces-base-background-color);
-		--_border-color: var(--semantics-surfaces-base-border-color);
+		--_table-columns: none;
+		--_table-corner-radius: var(--semantics-tables-corner-radius);
+		--_table-column-gap: var(--semantics-tables-column-gap);
+		--_table-background-color: var(--semantics-surfaces-base-background-color);
+		--_table-border-color: var(--semantics-surfaces-base-border-color);
 		/* Shared so the focus-visible rule can compose the focus ring over the
 		   border ring with var(...) instead of repeating the inset literal. */
-		--_border-shadow: inset 0 0 0 var(--semantics-tables-border-width) var(--_border-color);
+		--_table-border-shadow: inset 0 0 0 var(--semantics-tables-border-width) var(--_table-border-color);
 
 		${inheritedTextReset}
 		box-sizing: border-box;
 		display: grid;
-		grid-template-columns: var(--_columns);
+		grid-template-columns: var(--_table-columns);
 		width: 100%;
 		/* The table is always a boxed surface and its own horizontal scroll
 		   container: the columns scroll when they don't fit and the table is made
 		   focusable in JS while it scrolls. overflow-y stays hidden so the rounded
 		   corners keep clipping the rows (and their full-bleed dividers). */
-		border-radius: var(--_corner-radius);
-		box-shadow: var(--_border-shadow);
-		background-color: var(--_background-color);
+		border-radius: var(--_table-corner-radius);
+		box-shadow: var(--_table-border-shadow);
+		background-color: var(--_table-background-color);
 		overflow-x: auto;
 		overflow-y: hidden;
-		column-gap: var(--_column-gap);
+		column-gap: var(--_table-column-gap);
 		row-gap: 0;
 	}
 
@@ -39,8 +39,8 @@ export const tableStyles = css`
 
 	/* Default surface is base; tinted is opt-in. */
 	:host([background="tinted"]) {
-		--_background-color: var(--semantics-surfaces-tinted-background-color);
-		--_border-color: var(--semantics-surfaces-tinted-border-color);
+		--_table-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_table-border-color: var(--semantics-surfaces-tinted-border-color);
 	}
 
 	/* Keyboard focus while the table scrolls (it gains tabindex in JS): the
@@ -49,7 +49,7 @@ export const tableStyles = css`
 	:host(:focus-visible) {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_border-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_table-border-shadow);
 	}
 
 	:host(:focus:not(:focus-visible)) {
@@ -93,27 +93,27 @@ export const tableStyles = css`
 
 export const tableRowStyles = css`
 	:host {
-		--_min-height: var(--semantics-tables-row-min-height);
+		--_table-row-min-height: var(--semantics-tables-row-min-height);
 		/* Block padding goes to the cells (same hook the list uses) so it belongs
 		   to the cell's box; inline padding stays here because it insets the row
 		   content from the frame without moving the full-bleed divider. */
 		--context-cell-padding-block: var(--semantics-tables-row-padding-block);
-		--_padding-inline: var(--semantics-tables-row-padding-inline);
-		--_divider-color: var(--semantics-tables-border-color);
-		--_divider-thickness: var(--semantics-tables-border-width);
+		--_table-row-padding-inline: var(--semantics-tables-row-padding-inline);
+		--_table-row-divider-color: var(--semantics-tables-border-color);
+		--_table-row-divider-thickness: var(--semantics-tables-border-width);
 
 		${inheritedTextReset}
 		box-sizing: border-box;
 		display: grid;
 		grid-column: 1 / -1;
 		grid-template-columns: subgrid;
-		min-height: var(--_min-height);
+		min-height: var(--_table-row-min-height);
 		/* !important: shields divider and inset from consumer universal resets,
 		   which beat normal :host declarations per CSS Scoping. They cannot move
 		   inward: the row is a subgrid participant, and a wrapper would break
 		   the parent-child column relation. */
-		border-bottom: var(--_divider-thickness) solid var(--_divider-color) !important;
-		padding-inline: var(--_padding-inline) !important;
+		border-bottom: var(--_table-row-divider-thickness) solid var(--_table-row-divider-color) !important;
+		padding-inline: var(--_table-row-padding-inline) !important;
 		align-items: center;
 	}
 

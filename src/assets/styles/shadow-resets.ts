@@ -24,7 +24,7 @@ import { css } from 'lit';
  *     ${slottedReset}
  *     ${inheritedTextReset}
  *     color: var(--semantics-content-color) !important;
- *     font: var(--_font) !important;
+ *     font: var(--_title-font) !important;
  *   }
  * `
  * ```

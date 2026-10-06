@@ -10,87 +10,87 @@ export const progressBarStyles = css`
 	/* # Host */
 
 	:host {
-		--_height: var(--primitives-space-8);
-		--_track-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
-		--_track-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
-		--_track-border-width: var(--primitives-border-width-thin);
-		--_corner-radius: var(--primitives-corner-radius-full);
-		--_segment-indicator-gap: var(--primitives-space-1);
-		--_caption-gap: var(--primitives-space-6);
-		--_text-color: var(--semantics-content-color);
-		--_supporting-text-color: var(--semantics-content-secondary-color);
-		--_text-font: var(--primitives-font-body-md-regular-tight);
-		--_supporting-text-font: var(--primitives-font-body-md-regular-tight);
-		--_indeterminate-background-color: var(--semantics-categories-accent-filled-background-color);
-		--_indeterminate-border-color: var(--semantics-categories-accent-filled-highlight-border-color);
-		--_indeterminate-border-width: var(--primitives-border-width-thin);
-		--_indeterminate-bar-width: 20%;
-		--_indeterminate-duration: 800ms;
+		--_progress-bar-height: var(--primitives-space-8);
+		--_progress-bar-track-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+		--_progress-bar-track-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
+		--_progress-bar-track-border-width: var(--primitives-border-width-thin);
+		--_progress-bar-corner-radius: var(--primitives-corner-radius-full);
+		--_progress-bar-segment-indicator-gap: var(--primitives-space-1);
+		--_progress-bar-caption-gap: var(--primitives-space-6);
+		--_progress-bar-text-color: var(--semantics-content-color);
+		--_progress-bar-supporting-text-color: var(--semantics-content-secondary-color);
+		--_progress-bar-text-font: var(--primitives-font-body-md-regular-tight);
+		--_progress-bar-supporting-text-font: var(--primitives-font-body-md-regular-tight);
+		--_progress-bar-indeterminate-background-color: var(--semantics-categories-accent-filled-background-color);
+		--_progress-bar-indeterminate-border-color: var(--semantics-categories-accent-filled-highlight-border-color);
+		--_progress-bar-indeterminate-border-width: var(--primitives-border-width-thin);
+		--_progress-bar-indeterminate-bar-width: 20%;
+		--_progress-bar-indeterminate-duration: 800ms;
 
 		${inheritedTextReset}
 		box-sizing: border-box;
 		display: flex;
 		width: 100%;
 		flex-direction: column;
-		gap: var(--_caption-gap);
+		gap: var(--_progress-bar-caption-gap);
 	}
 
 	:host([hidden]) {
 		display: none;
 	}
 
-	:host([size="sm"]) { --_height: var(--primitives-space-4); }
-	:host([size="lg"]) { --_height: var(--primitives-space-16); }
+	:host([size="sm"]) { --_progress-bar-height: var(--primitives-space-4); }
+	:host([size="lg"]) { --_progress-bar-height: var(--primitives-space-16); }
 
 	:host([variant="distribution"]) {
-		--_segment-indicator-gap: var(--primitives-space-2);
-		--_corner-radius: var(--primitives-corner-radius-xxs);
+		--_progress-bar-segment-indicator-gap: var(--primitives-space-2);
+		--_progress-bar-corner-radius: var(--primitives-corner-radius-xxs);
 	}
 
 
 	/* ## Indeterminate fill + border color follow the variant; default is accent (blue) */
 
-	:host([color="neutral"]) { --_indeterminate-background-color: var(--semantics-categories-neutral-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-neutral-filled-highlight-border-color); }
-	:host([color="success"]) { --_indeterminate-background-color: var(--semantics-categories-success-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-success-filled-highlight-border-color); }
-	:host([color="warning"]) { --_indeterminate-background-color: var(--semantics-categories-warning-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-warning-filled-highlight-border-color); }
-	:host([color="critical"]) { --_indeterminate-background-color: var(--semantics-categories-critical-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-critical-filled-highlight-border-color); }
-	:host([color="lintblauw"]) { --_indeterminate-background-color: var(--semantics-categories-lintblauw-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-lintblauw-filled-highlight-border-color); }
-	:host([color="donkerblauw"]) { --_indeterminate-background-color: var(--semantics-categories-donkerblauw-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-donkerblauw-filled-highlight-border-color); }
-	:host([color="hemelblauw"]) { --_indeterminate-background-color: var(--semantics-categories-hemelblauw-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-hemelblauw-filled-highlight-border-color); }
-	:host([color="lichtblauw"]) { --_indeterminate-background-color: var(--semantics-categories-lichtblauw-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-lichtblauw-filled-highlight-border-color); }
-	:host([color="paars"]) { --_indeterminate-background-color: var(--semantics-categories-paars-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-paars-filled-highlight-border-color); }
-	:host([color="violet"]) { --_indeterminate-background-color: var(--semantics-categories-violet-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-violet-filled-highlight-border-color); }
-	:host([color="robijnrood"]) { --_indeterminate-background-color: var(--semantics-categories-robijnrood-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-robijnrood-filled-highlight-border-color); }
-	:host([color="roze"]) { --_indeterminate-background-color: var(--semantics-categories-roze-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-roze-filled-highlight-border-color); }
-	:host([color="rood"]) { --_indeterminate-background-color: var(--semantics-categories-rood-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-rood-filled-highlight-border-color); }
-	:host([color="oranje"]) { --_indeterminate-background-color: var(--semantics-categories-oranje-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-oranje-filled-highlight-border-color); }
-	:host([color="donkergeel"]) { --_indeterminate-background-color: var(--semantics-categories-donkergeel-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-donkergeel-filled-highlight-border-color); }
-	:host([color="geel"]) { --_indeterminate-background-color: var(--semantics-categories-geel-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-geel-filled-highlight-border-color); }
-	:host([color="donkerbruin"]) { --_indeterminate-background-color: var(--semantics-categories-donkerbruin-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-donkerbruin-filled-highlight-border-color); }
-	:host([color="bruin"]) { --_indeterminate-background-color: var(--semantics-categories-bruin-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-bruin-filled-highlight-border-color); }
-	:host([color="donkergroen"]) { --_indeterminate-background-color: var(--semantics-categories-donkergroen-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-donkergroen-filled-highlight-border-color); }
-	:host([color="groen"]) { --_indeterminate-background-color: var(--semantics-categories-groen-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-groen-filled-highlight-border-color); }
-	:host([color="mosgroen"]) { --_indeterminate-background-color: var(--semantics-categories-mosgroen-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-mosgroen-filled-highlight-border-color); }
-	:host([color="mintgroen"]) { --_indeterminate-background-color: var(--semantics-categories-mintgroen-filled-background-color); --_indeterminate-border-color: var(--semantics-categories-mintgroen-filled-highlight-border-color); }
+	:host([color="neutral"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-neutral-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-neutral-filled-highlight-border-color); }
+	:host([color="success"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-success-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-success-filled-highlight-border-color); }
+	:host([color="warning"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-warning-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-warning-filled-highlight-border-color); }
+	:host([color="critical"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-critical-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-critical-filled-highlight-border-color); }
+	:host([color="lintblauw"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-lintblauw-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-lintblauw-filled-highlight-border-color); }
+	:host([color="donkerblauw"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-donkerblauw-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-donkerblauw-filled-highlight-border-color); }
+	:host([color="hemelblauw"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-hemelblauw-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-hemelblauw-filled-highlight-border-color); }
+	:host([color="lichtblauw"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-lichtblauw-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-lichtblauw-filled-highlight-border-color); }
+	:host([color="paars"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-paars-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-paars-filled-highlight-border-color); }
+	:host([color="violet"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-violet-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-violet-filled-highlight-border-color); }
+	:host([color="robijnrood"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-robijnrood-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-robijnrood-filled-highlight-border-color); }
+	:host([color="roze"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-roze-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-roze-filled-highlight-border-color); }
+	:host([color="rood"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-rood-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-rood-filled-highlight-border-color); }
+	:host([color="oranje"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-oranje-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-oranje-filled-highlight-border-color); }
+	:host([color="donkergeel"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-donkergeel-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-donkergeel-filled-highlight-border-color); }
+	:host([color="geel"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-geel-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-geel-filled-highlight-border-color); }
+	:host([color="donkerbruin"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-donkerbruin-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-donkerbruin-filled-highlight-border-color); }
+	:host([color="bruin"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-bruin-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-bruin-filled-highlight-border-color); }
+	:host([color="donkergroen"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-donkergroen-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-donkergroen-filled-highlight-border-color); }
+	:host([color="groen"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-groen-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-groen-filled-highlight-border-color); }
+	:host([color="mosgroen"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-mosgroen-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-mosgroen-filled-highlight-border-color); }
+	:host([color="mintgroen"]) { --_progress-bar-indeterminate-background-color: var(--semantics-categories-mintgroen-filled-background-color); --_progress-bar-indeterminate-border-color: var(--semantics-categories-mintgroen-filled-highlight-border-color); }
 
 
 	/* # Caption */
 
 	.progress-bar__caption {
 		display: flex;
-		gap: var(--_caption-gap);
+		gap: var(--_progress-bar-caption-gap);
 		justify-content: space-between;
 		align-items: baseline;
-		color: var(--_text-color);
+		color: var(--_progress-bar-text-color);
 	}
 
 	.progress-bar__text {
-		font: var(--_text-font);
+		font: var(--_progress-bar-text-font);
 	}
 
 	.progress-bar__supporting-text {
-		color: var(--_supporting-text-color);
-		font: var(--_supporting-text-font);
+		color: var(--_progress-bar-supporting-text-color);
+		font: var(--_progress-bar-supporting-text-font);
 		font-variant-numeric: tabular-nums;
 		text-align: right;
 	}
@@ -102,13 +102,13 @@ export const progressBarStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		position: relative;
-		border-radius: var(--_corner-radius);
-		box-shadow: inset 0 0 0 var(--_track-border-width) var(--_track-border-color);
-		background-color: var(--_track-background-color);
+		border-radius: var(--_progress-bar-corner-radius);
+		box-shadow: inset 0 0 0 var(--_progress-bar-track-border-width) var(--_progress-bar-track-border-color);
+		background-color: var(--_progress-bar-track-background-color);
 		width: 100%;
-		height: var(--_height);
+		height: var(--_progress-bar-height);
 		overflow: hidden;
-		gap: var(--_segment-indicator-gap);
+		gap: var(--_progress-bar-segment-indicator-gap);
 		container-type: inline-size;
 	}
 
@@ -154,27 +154,27 @@ export const progressBarStyles = css`
 		position: absolute;
 		inset-block: 0;
 		left: 0;
-		border-radius: var(--_corner-radius);
-		background: var(--_indeterminate-background-color);
-		box-shadow: inset 0 0 0 var(--_indeterminate-border-width) var(--_indeterminate-border-color);
-		width: var(--_indeterminate-bar-width);
+		border-radius: var(--_progress-bar-corner-radius);
+		background: var(--_progress-bar-indeterminate-background-color);
+		box-shadow: inset 0 0 0 var(--_progress-bar-indeterminate-border-width) var(--_progress-bar-indeterminate-border-color);
+		width: var(--_progress-bar-indeterminate-bar-width);
 		transform: translateX(0);
 		/* Duration scales with track width via the container queries below.
 		   Wider tracks need longer sweeps so the perceived velocity feels
 		   constant — a fast 800 ms cycle reads as frantic on a 1000 px bar
 		   and as too slow on a 200 px bar at the same wall-clock time. */
-		animation: progress-bar-indeterminate var(--_indeterminate-duration) ease-in-out infinite alternate;
+		animation: progress-bar-indeterminate var(--_progress-bar-indeterminate-duration) ease-in-out infinite alternate;
 	}
 
 	@container (min-width: 401px) and (max-width: 720px) {
 		.progress-bar__indeterminate-indicator::before {
-			--_indeterminate-duration: 1000ms;
+			--_progress-bar-indeterminate-duration: 1000ms;
 		}
 	}
 
 	@container (min-width: 721px) {
 		.progress-bar__indeterminate-indicator::before {
-			--_indeterminate-duration: 1200ms;
+			--_progress-bar-indeterminate-duration: 1200ms;
 		}
 	}
 
@@ -196,8 +196,8 @@ export const progressBarStyles = css`
 		}
 
 		@keyframes progress-bar-indeterminate-pulse {
-			0%, 100% { background-color: color-mix(in srgb, var(--_indeterminate-background-color) 20%, transparent); }
-			50% { background-color: color-mix(in srgb, var(--_indeterminate-background-color) 50%, transparent); }
+			0%, 100% { background-color: color-mix(in srgb, var(--_progress-bar-indeterminate-background-color) 20%, transparent); }
+			50% { background-color: color-mix(in srgb, var(--_progress-bar-indeterminate-background-color) 50%, transparent); }
 		}
 	}
 
@@ -218,21 +218,21 @@ export const progressBarSegmentIndicatorStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: var(--context-progress-bar-segment-indicator-width, 0%);
-		--_min-width: var(--primitives-space-2);
-		--_background-color: var(--semantics-categories-accent-filled-background-color);
-		--_border-color: var(--semantics-categories-accent-filled-highlight-border-color);
-		--_border-width: var(--primitives-border-width-thin);
-		--_progress-bar-corner-radius: var(--primitives-corner-radius-full);
-		--_progress-bar-distribution-corner-radius: var(--primitives-corner-radius-xxs);
+		--_progress-bar-segment-indicator-width: var(--context-progress-bar-segment-indicator-width, 0%);
+		--_progress-bar-segment-indicator-min-width: var(--primitives-space-2);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-accent-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-accent-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-border-width: var(--primitives-border-width-thin);
+		--_progress-bar-segment-indicator-corner-radius: var(--primitives-corner-radius-full);
+		--_progress-bar-segment-indicator-distribution-corner-radius: var(--primitives-corner-radius-xxs);
 
 		box-sizing: border-box;
 		display: block;
 		position: relative;
-		box-shadow: inset 0 0 0 var(--_border-width) var(--_border-color);
-		background-color: var(--_background-color);
-		width: var(--_width);
-		min-width: var(--_min-width);
+		box-shadow: inset 0 0 0 var(--_progress-bar-segment-indicator-border-width) var(--_progress-bar-segment-indicator-border-color);
+		background-color: var(--_progress-bar-segment-indicator-background-color);
+		width: var(--_progress-bar-segment-indicator-width);
+		min-width: var(--_progress-bar-segment-indicator-min-width);
 		height: 100%;
 		overflow: hidden;
 		transition: width var(--primitives-transition-duration-medium) ease-out;
@@ -262,11 +262,11 @@ export const progressBarSegmentIndicatorStyles = css`
 
 	@keyframes progress-bar-segment-indicator-grow {
 		from { width: 0%; }
-		to { width: var(--_width); }
+		to { width: var(--_progress-bar-segment-indicator-width); }
 	}
 
 	@keyframes progress-bar-segment-indicator-shrink {
-		from { width: var(--_width); opacity: 1; }
+		from { width: var(--_progress-bar-segment-indicator-width); opacity: 1; }
 		to { width: 0%; opacity: 0; }
 	}
 
@@ -277,106 +277,106 @@ export const progressBarSegmentIndicatorStyles = css`
 	   data-variant is set by the parent. */
 
 	:host([data-variant="progress"]) {
-		border-radius: var(--_progress-bar-corner-radius);
+		border-radius: var(--_progress-bar-segment-indicator-corner-radius);
 	}
 
 	:host([data-variant="distribution"]) {
-		border-radius: var(--_progress-bar-distribution-corner-radius);
+		border-radius: var(--_progress-bar-segment-indicator-distribution-corner-radius);
 	}
 
 
 	/* ## Variants — semantic */
 
 	:host([color="neutral"]) {
-		--_background-color: var(--semantics-categories-neutral-filled-background-color);
-		--_border-color: var(--semantics-categories-neutral-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-neutral-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-neutral-filled-highlight-border-color);
 	}
 	:host([color="success"]) {
-		--_background-color: var(--semantics-categories-success-filled-background-color);
-		--_border-color: var(--semantics-categories-success-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-success-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-success-filled-highlight-border-color);
 	}
 	:host([color="warning"]) {
-		--_background-color: var(--semantics-categories-warning-filled-background-color);
-		--_border-color: var(--semantics-categories-warning-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-warning-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-warning-filled-highlight-border-color);
 	}
 	:host([color="critical"]) {
-		--_background-color: var(--semantics-categories-critical-filled-background-color);
-		--_border-color: var(--semantics-categories-critical-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-critical-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-critical-filled-highlight-border-color);
 	}
 
 
 	/* ## Variants — Rijkskleuren */
 	:host([color="lintblauw"]) {
-		--_background-color: var(--semantics-categories-lintblauw-filled-background-color);
-		--_border-color: var(--semantics-categories-lintblauw-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-lintblauw-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-lintblauw-filled-highlight-border-color);
 	}
 	:host([color="donkerblauw"]) {
-		--_background-color: var(--semantics-categories-donkerblauw-filled-background-color);
-		--_border-color: var(--semantics-categories-donkerblauw-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-donkerblauw-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-donkerblauw-filled-highlight-border-color);
 	}
 	:host([color="hemelblauw"]) {
-		--_background-color: var(--semantics-categories-hemelblauw-filled-background-color);
-		--_border-color: var(--semantics-categories-hemelblauw-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-hemelblauw-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-hemelblauw-filled-highlight-border-color);
 	}
 	:host([color="lichtblauw"]) {
-		--_background-color: var(--semantics-categories-lichtblauw-filled-background-color);
-		--_border-color: var(--semantics-categories-lichtblauw-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-lichtblauw-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-lichtblauw-filled-highlight-border-color);
 	}
 	:host([color="paars"]) {
-		--_background-color: var(--semantics-categories-paars-filled-background-color);
-		--_border-color: var(--semantics-categories-paars-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-paars-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-paars-filled-highlight-border-color);
 	}
 	:host([color="violet"]) {
-		--_background-color: var(--semantics-categories-violet-filled-background-color);
-		--_border-color: var(--semantics-categories-violet-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-violet-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-violet-filled-highlight-border-color);
 	}
 	:host([color="robijnrood"]) {
-		--_background-color: var(--semantics-categories-robijnrood-filled-background-color);
-		--_border-color: var(--semantics-categories-robijnrood-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-robijnrood-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-robijnrood-filled-highlight-border-color);
 	}
 	:host([color="roze"]) {
-		--_background-color: var(--semantics-categories-roze-filled-background-color);
-		--_border-color: var(--semantics-categories-roze-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-roze-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-roze-filled-highlight-border-color);
 	}
 	:host([color="rood"]) {
-		--_background-color: var(--semantics-categories-rood-filled-background-color);
-		--_border-color: var(--semantics-categories-rood-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-rood-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-rood-filled-highlight-border-color);
 	}
 	:host([color="oranje"]) {
-		--_background-color: var(--semantics-categories-oranje-filled-background-color);
-		--_border-color: var(--semantics-categories-oranje-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-oranje-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-oranje-filled-highlight-border-color);
 	}
 	:host([color="donkergeel"]) {
-		--_background-color: var(--semantics-categories-donkergeel-filled-background-color);
-		--_border-color: var(--semantics-categories-donkergeel-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-donkergeel-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-donkergeel-filled-highlight-border-color);
 	}
 	:host([color="geel"]) {
-		--_background-color: var(--semantics-categories-geel-filled-background-color);
-		--_border-color: var(--semantics-categories-geel-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-geel-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-geel-filled-highlight-border-color);
 	}
 	:host([color="donkerbruin"]) {
-		--_background-color: var(--semantics-categories-donkerbruin-filled-background-color);
-		--_border-color: var(--semantics-categories-donkerbruin-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-donkerbruin-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-donkerbruin-filled-highlight-border-color);
 	}
 	:host([color="bruin"]) {
-		--_background-color: var(--semantics-categories-bruin-filled-background-color);
-		--_border-color: var(--semantics-categories-bruin-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-bruin-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-bruin-filled-highlight-border-color);
 	}
 	:host([color="donkergroen"]) {
-		--_background-color: var(--semantics-categories-donkergroen-filled-background-color);
-		--_border-color: var(--semantics-categories-donkergroen-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-donkergroen-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-donkergroen-filled-highlight-border-color);
 	}
 	:host([color="groen"]) {
-		--_background-color: var(--semantics-categories-groen-filled-background-color);
-		--_border-color: var(--semantics-categories-groen-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-groen-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-groen-filled-highlight-border-color);
 	}
 	:host([color="mosgroen"]) {
-		--_background-color: var(--semantics-categories-mosgroen-filled-background-color);
-		--_border-color: var(--semantics-categories-mosgroen-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-mosgroen-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-mosgroen-filled-highlight-border-color);
 	}
 	:host([color="mintgroen"]) {
-		--_background-color: var(--semantics-categories-mintgroen-filled-background-color);
-		--_border-color: var(--semantics-categories-mintgroen-filled-highlight-border-color);
+		--_progress-bar-segment-indicator-background-color: var(--semantics-categories-mintgroen-filled-background-color);
+		--_progress-bar-segment-indicator-border-color: var(--semantics-categories-mintgroen-filled-highlight-border-color);
 	}
 
 

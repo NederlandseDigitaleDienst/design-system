@@ -13,8 +13,8 @@ export const formFieldStyles = css`
 	/* # Host */
 
 	:host {
-		--_gap: var(--primitives-space-4);
-		--_description-gap: var(--primitives-space-4);
+		--_form-field-gap: var(--primitives-space-4);
+		--_form-field-description-gap: var(--primitives-space-4);
 
 		${inheritedTextReset}
 		display: block;
@@ -32,7 +32,7 @@ export const formFieldStyles = css`
 	.form-field {
 		display: flex;
 		flex-direction: column;
-		gap: var(--_gap);
+		gap: var(--_form-field-gap);
 		isolation: isolate;
 	}
 
@@ -54,7 +54,7 @@ export const formFieldStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		/* Paints above .form-field__main so a label descender stays readable where it
-		   overlaps the input focus ring — this is what lets the top-aligned --_gap stay
+		   overlaps the input focus ring — this is what lets the top-aligned --_form-field-gap stay
 		   tight. Reset to auto in the side-by-side layout below (no vertical overlap there). */
 		z-index: 1;
 		flex-direction: column;
@@ -170,7 +170,7 @@ export const formFieldStyles = css`
 	}
 
 	::slotted(nldd-validation-list) {
-		margin-block-start: var(--_description-gap);
+		margin-block-start: var(--_form-field-description-gap);
 	}
 
 

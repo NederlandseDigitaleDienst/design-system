@@ -128,7 +128,7 @@ describe('nldd-combo-box – size', () => {
 		el = await fixture<NLDDComboBox>('<nldd-combo-box width="240px"></nldd-combo-box>');
 		await waitForUpdate(el);
 		expect(el.getAttribute('width')).toBe('240px');
-		expect(el.style.getPropertyValue('--_width')).toBe('240px');
+		expect(el.style.getPropertyValue('--_combo-box-width')).toBe('240px');
 	});
 });
 

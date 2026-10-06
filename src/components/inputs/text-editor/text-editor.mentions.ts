@@ -402,7 +402,7 @@ const emptyMessageClose = [
  * from a mutation observer rather than on an update: CodeMirror measures the
  * tooltip right after it puts it there, and a closed popover has no size.
  */
-/** What an nldd-menu keeps free of the window's edge (--_viewport-margin). */
+/** What an nldd-menu keeps free of the window's edge (--_menu-viewport-margin). */
 const VIEWPORT_MARGIN = 16;
 
 function topLayerPopups(): Extension {

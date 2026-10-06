@@ -19,15 +19,15 @@ export const simpleSectionStyles = css`
 		/* Block-padding overrides from PageSectionMixin; 'initial' makes the
 		   var() in .simple-section fall back to the responsive default until the
 		   mixin sets a value inline on the host. */
-		--_padding-top: initial;
-		--_padding-bottom: initial;
-		--_sm-padding-top: initial;
-		--_sm-padding-bottom: initial;
-		--_md-padding-top: initial;
-		--_md-padding-bottom: initial;
-		--_lg-padding-top: initial;
-		--_lg-padding-bottom: initial;
-		--_max-width: var(--semantics-page-sections-body-max-width);
+		--_simple-section-padding-top: initial;
+		--_simple-section-padding-bottom: initial;
+		--_simple-section-sm-padding-top: initial;
+		--_simple-section-sm-padding-bottom: initial;
+		--_simple-section-md-padding-top: initial;
+		--_simple-section-md-padding-bottom: initial;
+		--_simple-section-lg-padding-top: initial;
+		--_simple-section-lg-padding-bottom: initial;
+		--_simple-section-max-width: var(--semantics-page-sections-body-max-width);
 
 		display: flex;
 		width: 100%;
@@ -45,7 +45,7 @@ export const simpleSectionStyles = css`
 	}
 
 	:host([width="full"]) {
-		--_max-width: none;
+		--_simple-section-max-width: none;
 	}
 
 	/* On the main rather than the body: the body also holds the header and the
@@ -81,20 +81,20 @@ export const simpleSectionStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			padding-top: var(--_sm-padding-top, var(--_padding-top, var(--semantics-page-sections-sm-margin-block)));
-			padding-bottom: var(--_sm-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-sm-margin-block)));
+			padding-top: var(--_simple-section-sm-padding-top, var(--_simple-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
+			padding-bottom: var(--_simple-section-sm-padding-bottom, var(--_simple-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
-			padding-top: var(--_md-padding-top, var(--_padding-top, var(--semantics-page-sections-md-margin-block)));
-			padding-bottom: var(--_md-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-md-margin-block)));
+			padding-top: var(--_simple-section-md-padding-top, var(--_simple-section-padding-top, var(--semantics-page-sections-md-margin-block)));
+			padding-bottom: var(--_simple-section-md-padding-bottom, var(--_simple-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
 		@container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
-			padding-top: var(--_lg-padding-top, var(--_padding-top, var(--semantics-page-sections-lg-margin-block)));
-			padding-bottom: var(--_lg-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-lg-margin-block)));
+			padding-top: var(--_simple-section-lg-padding-top, var(--_simple-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
+			padding-bottom: var(--_simple-section-lg-padding-bottom, var(--_simple-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
 		}
 	}
 
@@ -104,7 +104,7 @@ export const simpleSectionStyles = css`
 	.simple-section__body {
 		display: flex;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_simple-section-max-width);
 		flex-direction: column;
 		flex-grow: 1;
 

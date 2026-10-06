@@ -369,11 +369,11 @@ describe('nldd-sheet – height', () => {
 		if (el) cleanup(el);
 	});
 
-	it('defaults height to empty string and sets no --_height var (CSS default = full)', async () => {
+	it('defaults height to empty string and sets no --_sheet-height var (CSS default = full)', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet></nldd-sheet>');
 		await waitForUpdate(el);
 		expect(el.height).toBe('');
-		expect(el.style.getPropertyValue('--_height')).toBe('');
+		expect(el.style.getPropertyValue('--_sheet-height')).toBe('');
 	});
 
 	it('reflects height attribute when set in markup', async () => {
@@ -383,28 +383,28 @@ describe('nldd-sheet – height', () => {
 		expect(el.getAttribute('height')).toBe('fit-content');
 	});
 
-	it('sets --_height for fit-content', async () => {
+	it('sets --_sheet-height for fit-content', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet placement="bottom" height="fit-content"></nldd-sheet>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_height').trim()).toBe('fit-content');
+		expect(el.style.getPropertyValue('--_sheet-height').trim()).toBe('fit-content');
 	});
 
-	it('sets --_height for a CSS length', async () => {
+	it('sets --_sheet-height for a CSS length', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet placement="bottom" height="50dvh"></nldd-sheet>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_height').trim()).toBe('50dvh');
+		expect(el.style.getPropertyValue('--_sheet-height').trim()).toBe('50dvh');
 	});
 
-	it('does not set --_height for the "full" alias (uses CSS default)', async () => {
+	it('does not set --_sheet-height for the "full" alias (uses CSS default)', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet placement="bottom" height="full"></nldd-sheet>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_height')).toBe('');
+		expect(el.style.getPropertyValue('--_sheet-height')).toBe('');
 	});
 
-	it('ignores invalid CSS values (falls back, no --_height)', async () => {
+	it('ignores invalid CSS values (falls back, no --_sheet-height)', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet placement="bottom" height="not-a-length"></nldd-sheet>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_height')).toBe('');
+		expect(el.style.getPropertyValue('--_sheet-height')).toBe('');
 	});
 
 	// The warning is gated on import.meta.env.DEV; skip when the suite runs
@@ -422,14 +422,14 @@ describe('nldd-sheet – height', () => {
 		warnSpy.mockRestore();
 	});
 
-	it('clears --_height when property is reset to empty', async () => {
+	it('clears --_sheet-height when property is reset to empty', async () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet placement="bottom" height="50%"></nldd-sheet>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_height').trim()).toBe('50%');
+		expect(el.style.getPropertyValue('--_sheet-height').trim()).toBe('50%');
 
 		el.height = '';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_height')).toBe('');
+		expect(el.style.getPropertyValue('--_sheet-height')).toBe('');
 	});
 });
 

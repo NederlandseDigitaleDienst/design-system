@@ -113,15 +113,15 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 	override updated(changed: PropertyValues): void {
 		if (changed.has('arrowLength')) {
 			// The arrow-length attribute takes any CSS length and feeds the local
-			// --_arrow-length var; the CSS clamps it (min 40) into --_gap. Only
+			// --_just-in-time-education-arrow-length var; the CSS clamps it (min 40) into --_just-in-time-education-gap. Only
 			// a valid length is forwarded — an invalid value (e.g. "d") would poison
-			// the max()/calc() that consume it, making --_max-width and the arrow gap
+			// the max()/calc() that consume it, making --_just-in-time-education-max-width and the arrow gap
 			// invalid (the card would lose its width cap and the arrow misrender).
 			// Invalid or empty falls back to the DS default by removing the override.
 			if (this.arrowLength && CSS.supports('width', this.arrowLength)) {
-				this.style.setProperty('--_arrow-length', this.arrowLength);
+				this.style.setProperty('--_just-in-time-education-arrow-length', this.arrowLength);
 			} else {
-				this.style.removeProperty('--_arrow-length');
+				this.style.removeProperty('--_just-in-time-education-arrow-length');
 			}
 		}
 		if (changed.has('active')) {
@@ -273,8 +273,8 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 
 	private async _updatePosition(control: HTMLElement, container: HTMLElement): Promise<void> {
 		const styles = getComputedStyle(this);
-		const off = parseInt(styles.getPropertyValue('--_offset'), 10);
-		const pad = parseInt(styles.getPropertyValue('--_shift-padding'), 10);
+		const off = parseInt(styles.getPropertyValue('--_just-in-time-education-offset'), 10);
+		const pad = parseInt(styles.getPropertyValue('--_just-in-time-education-shift-padding'), 10);
 
 		// The side is chosen by available space, not by scrolling: horizontally
 		// against the viewport, vertically against the whole document. Re-decide
@@ -299,9 +299,9 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 		if (this.getAttribute('data-arrow-side') !== side) this.setAttribute('data-arrow-side', side);
 
 		// Keep the callout inside the room left as it nears an edge. Vertical
-		// (top/bottom): --_available-distance is the room for the arrow gap once the
+		// (top/bottom): --_just-in-time-education-available-distance is the room for the arrow gap once the
 		// card height is reserved, measured against the whole document; the CSS
-		// lets the gap fall to 0. Horizontal (left/right): --_available-distance is the
+		// lets the gap fall to 0. Horizontal (left/right): --_just-in-time-education-available-distance is the
 		// room to the viewport edge, and the CSS reserves the main width first — so
 		// the arrow gap shrinks to 0 first, then the container cap narrows the main.
 		// Set BEFORE the compute so the (smaller) padding is already in place.
@@ -317,7 +317,7 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 		} else if (side === 'right') {
 			availableDistance = `${Math.max(0, window.innerWidth - controlRect.right)}px`;
 		}
-		this.style.setProperty('--_available-distance', availableDistance);
+		this.style.setProperty('--_just-in-time-education-available-distance', availableDistance);
 
 		// Top/bottom: shift along the horizontal (main) axis so the card keeps its
 		// preferred width near a viewport edge, sliding toward the side with room
@@ -330,7 +330,7 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 		// gap below its minimum — uniformly for top/bottom and left/right. The gap
 		// room is what's left after reserving the card: its height for top/bottom
 		// (already folded into availableDistance) or the main's reserved width for
-		// left/right (--_main-width = --_text-width + an optional --_dismiss-width).
+		// left/right (--_just-in-time-education-main-width = --_just-in-time-education-text-width + an optional --_just-in-time-education-dismiss-width).
 		// Decided only from edge-room + fixed reserves, never the
 		// post-collapse layout, so it can't oscillate. The consumer's own no-arrow
 		// already hides it. Set the host hook BEFORE the compute (like
@@ -338,8 +338,8 @@ export class NLDDJustInTimeEducation extends withTranslations<NLDDJustInTimeEduc
 		const minArrow = parseFloat(styles.getPropertyValue('--primitives-space-40')) || 40;
 		let gapRoom = parseFloat(availableDistance);
 		if (!isVertical) {
-			const mainReserve = (parseFloat(styles.getPropertyValue('--_text-width')) || 320)
-				+ (this.dismissable ? (parseFloat(styles.getPropertyValue('--_dismiss-width')) || 44) : 0);
+			const mainReserve = (parseFloat(styles.getPropertyValue('--_just-in-time-education-text-width')) || 320)
+				+ (this.dismissable ? (parseFloat(styles.getPropertyValue('--_just-in-time-education-dismiss-width')) || 44) : 0);
 			gapRoom -= mainReserve;
 		}
 		const collapsed = !this.noArrow && gapRoom < minArrow;

@@ -178,9 +178,9 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		if (changed.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('max-width', w)) {
-				this.style.setProperty('--_max-width', w);
+				this.style.setProperty('--_top-navigation-bar-max-width', w);
 			} else {
-				this.style.removeProperty('--_max-width');
+				this.style.removeProperty('--_top-navigation-bar-max-width');
 			}
 		}
 	}
@@ -279,7 +279,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		const logo = this.shadowRoot?.querySelector('.top-navigation-bar__logo');
 		if (!logo) return;
 		const offset = Math.max(0, Math.round(logo.getBoundingClientRect().top + window.scrollY));
-		this.style.setProperty('--_logo-offset', `${offset}px`);
+		this.style.setProperty('--_top-navigation-bar-logo-offset', `${offset}px`);
 	};
 
 	/**

@@ -104,9 +104,9 @@ export class NLDDSheet extends LitElement {
 		}
 		if (changed.has('width')) {
 			if (this.width) {
-				this.style.setProperty('--_width', this.width);
+				this.style.setProperty('--_sheet-width', this.width);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_sheet-width');
 			}
 		}
 		if (changed.has('height')) {
@@ -116,7 +116,7 @@ export class NLDDSheet extends LitElement {
 			// through CSS.supports so typos and bogus values silently fall
 			// back to the default rather than producing a broken layout.
 			if (h && h !== 'full' && CSS.supports('height', h)) {
-				this.style.setProperty('--_height', h);
+				this.style.setProperty('--_sheet-height', h);
 			} else {
 				// One warning per instance for the element's lifetime (matches
 				// _hasWarnedLabel): a later distinct invalid value won't warn
@@ -126,7 +126,7 @@ export class NLDDSheet extends LitElement {
 					this._hasWarnedHeight = true;
 					console.warn(`<nldd-sheet>: Invalid height value "${h}". Falling back to full height. Use 'full', 'fit-content', or a valid CSS length (e.g. '50dvh', '480px').`);
 				}
-				this.style.removeProperty('--_height');
+				this.style.removeProperty('--_sheet-height');
 			}
 		}
 	}

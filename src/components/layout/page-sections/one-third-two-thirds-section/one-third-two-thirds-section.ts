@@ -41,11 +41,11 @@ export class NLDDOneThirdTwoThirdsSection extends PageSectionMixin(LitElement) {
 			const w = this.width;
 			// Sections constrain the body's max-width rather than the host's
 			// outer width. The keyword 'full' is handled by CSS (sets
-			// --_max-width: none); CSS lengths feed --_max-width here.
+			// --_one-third-two-thirds-section-max-width: none); CSS lengths feed --_one-third-two-thirds-section-max-width here.
 			if (w && w !== 'full' && CSS.supports('max-width', w)) {
-				this.style.setProperty('--_max-width', w);
+				this.style.setProperty('--_one-third-two-thirds-section-max-width', w);
 			} else {
-				this.style.removeProperty('--_max-width');
+				this.style.removeProperty('--_one-third-two-thirds-section-max-width');
 			}
 		}
 	}

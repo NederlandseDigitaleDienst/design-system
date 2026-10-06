@@ -24,20 +24,20 @@ export const sidebarSectionStyles = css`
 		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; resolved per breakpoint
 		   below (scope override -> base override -> responsive default). */
-		--_padding-top: initial;
-		--_padding-bottom: initial;
-		--_sm-padding-top: initial;
-		--_sm-padding-bottom: initial;
-		--_md-padding-top: initial;
-		--_md-padding-bottom: initial;
-		--_lg-padding-top: initial;
-		--_lg-padding-bottom: initial;
-		--_max-width: var(--semantics-page-sections-body-max-width);
+		--_sidebar-section-padding-top: initial;
+		--_sidebar-section-padding-bottom: initial;
+		--_sidebar-section-sm-padding-top: initial;
+		--_sidebar-section-sm-padding-bottom: initial;
+		--_sidebar-section-md-padding-top: initial;
+		--_sidebar-section-md-padding-bottom: initial;
+		--_sidebar-section-lg-padding-top: initial;
+		--_sidebar-section-lg-padding-bottom: initial;
+		--_sidebar-section-max-width: var(--semantics-page-sections-body-max-width);
 		/* 24px clear of the insets nldd-page publishes. 24 is the depth of a
 		   sticky header's fade, so the box starts where the fade ends. */
-		--_sticky-top: calc(var(--context-inset-top, 0px) + var(--primitives-space-24));
-		--_sticky-bottom: calc(var(--context-inset-bottom, 0px) + var(--primitives-space-24));
-		--_sidebar-width: var(--primitives-area-320);
+		--_sidebar-section-sticky-top: calc(var(--context-inset-top, 0px) + var(--primitives-space-24));
+		--_sidebar-section-sticky-bottom: calc(var(--context-inset-bottom, 0px) + var(--primitives-space-24));
+		--_sidebar-section-width: var(--primitives-area-320);
 		--_sidebar-section-sidebar-box-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_sidebar-section-sidebar-box-highlight-border-color: var(--semantics-surfaces-tinted-border-color);
 
@@ -52,7 +52,7 @@ export const sidebarSectionStyles = css`
 	}
 
 	:host([width="full"]) {
-		--_max-width: none;
+		--_sidebar-section-max-width: none;
 	}
 
 	/* # Growth — mirrors simple-section. The host only grows as the last
@@ -79,20 +79,20 @@ export const sidebarSectionStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			padding-top: var(--_sm-padding-top, var(--_padding-top, var(--semantics-page-sections-sm-margin-block)));
-			padding-bottom: var(--_sm-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-sm-margin-block)));
+			padding-top: var(--_sidebar-section-sm-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
+			padding-bottom: var(--_sidebar-section-sm-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
-			padding-top: var(--_md-padding-top, var(--_padding-top, var(--semantics-page-sections-md-margin-block)));
-			padding-bottom: var(--_md-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-md-margin-block)));
+			padding-top: var(--_sidebar-section-md-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-md-margin-block)));
+			padding-bottom: var(--_sidebar-section-md-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
 		@container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
-			padding-top: var(--_lg-padding-top, var(--_padding-top, var(--semantics-page-sections-lg-margin-block)));
-			padding-bottom: var(--_lg-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-lg-margin-block)));
+			padding-top: var(--_sidebar-section-lg-padding-top, var(--_sidebar-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
+			padding-bottom: var(--_sidebar-section-lg-padding-bottom, var(--_sidebar-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
 		}
 	}
 
@@ -102,7 +102,7 @@ export const sidebarSectionStyles = css`
 	.sidebar-section__body {
 		display: flex;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_sidebar-section-max-width);
 		flex-direction: column;
 		flex-grow: 1;
 
@@ -152,8 +152,8 @@ export const sidebarSectionStyles = css`
 		flex-shrink: 0;
 
 		@container (min-width: ${lgMin}) {
-			width: var(--_sidebar-width);
-			max-width: var(--_sidebar-width);
+			width: var(--_sidebar-section-width);
+			max-width: var(--_sidebar-section-width);
 		}
 	}
 
@@ -169,11 +169,11 @@ export const sidebarSectionStyles = css`
 
 		@container (min-width: ${lgMin}) {
 			position: sticky;
-			top: var(--_sticky-top);
-			bottom: var(--_sticky-bottom);
+			top: var(--_sidebar-section-sticky-top);
+			bottom: var(--_sidebar-section-sticky-bottom);
 			/* What the scroller shows, not what the window is: a viewport-tall cap
 			   hangs out the bottom by the height of the chrome around the page. */
-			max-height: calc(var(--context-scroller-height, 100dvh) - var(--_sticky-top) - var(--_sticky-bottom));
+			max-height: calc(var(--context-scroller-height, 100dvh) - var(--_sidebar-section-sticky-top) - var(--_sidebar-section-sticky-bottom));
 			overflow-y: auto;
 		}
 	}

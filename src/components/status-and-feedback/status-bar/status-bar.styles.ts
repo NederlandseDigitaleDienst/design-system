@@ -10,16 +10,16 @@ export const statusBarStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--primitives-corner-radius-none);
-		--_background-color: var(--semantics-categories-neutral-filled-background-color);
-		--_height: var(--semantics-controls-xs-min-size);
-		--_inline-padding: var(--primitives-space-8);
-		--_gap: var(--primitives-space-2);
-		--_content-color: var(--semantics-categories-neutral-filled-content-color);
-		--_font: var(--primitives-font-body-xs-medium-flat);
-		--_is-hovered-background-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-500));
-		--_is-active-background-color: light-dark(var(--primitives-color-neutral-700), var(--primitives-color-neutral-550));
-		--_action-icon-size: var(--primitives-space-16);
+		--_status-bar-corner-radius: var(--primitives-corner-radius-none);
+		--_status-bar-background-color: var(--semantics-categories-neutral-filled-background-color);
+		--_status-bar-height: var(--semantics-controls-xs-min-size);
+		--_status-bar-inline-padding: var(--primitives-space-8);
+		--_status-bar-gap: var(--primitives-space-2);
+		--_status-bar-content-color: var(--semantics-categories-neutral-filled-content-color);
+		--_status-bar-font: var(--primitives-font-body-xs-medium-flat);
+		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-500));
+		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-neutral-700), var(--primitives-color-neutral-550));
+		--_status-bar-action-icon-size: var(--primitives-space-16);
 
 		${inheritedTextReset}
 		display: block;
@@ -30,31 +30,31 @@ export const statusBarStyles = css`
 	}
 
 	:host([variant="accent"]) {
-		--_background-color: var(--semantics-categories-accent-filled-background-color);
-		--_content-color: var(--semantics-categories-accent-filled-content-color);
-		--_is-hovered-background-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-450));
-		--_is-active-background-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-500));
+		--_status-bar-background-color: var(--semantics-categories-accent-filled-background-color);
+		--_status-bar-content-color: var(--semantics-categories-accent-filled-content-color);
+		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-450));
+		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-500));
 	}
 
 	:host([variant="success"]) {
-		--_background-color: var(--semantics-categories-success-filled-background-color);
-		--_content-color: var(--semantics-categories-success-filled-content-color);
-		--_is-hovered-background-color: var(--primitives-color-success-550);
-		--_is-active-background-color: var(--primitives-color-success-600);
+		--_status-bar-background-color: var(--semantics-categories-success-filled-background-color);
+		--_status-bar-content-color: var(--semantics-categories-success-filled-content-color);
+		--_status-bar-is-hovered-background-color: var(--primitives-color-success-550);
+		--_status-bar-is-active-background-color: var(--primitives-color-success-600);
 	}
 
 	:host([variant="warning"]) {
-		--_background-color: var(--semantics-categories-warning-filled-background-color);
-		--_content-color: var(--semantics-categories-warning-filled-content-color);
-		--_is-hovered-background-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
-		--_is-active-background-color: light-dark(var(--primitives-color-warning-500), var(--primitives-color-warning-700));
+		--_status-bar-background-color: var(--semantics-categories-warning-filled-background-color);
+		--_status-bar-content-color: var(--semantics-categories-warning-filled-content-color);
+		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
+		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-warning-500), var(--primitives-color-warning-700));
 	}
 
 	:host([variant="critical"]) {
-		--_background-color: var(--semantics-categories-critical-filled-background-color);
-		--_content-color: var(--semantics-categories-critical-filled-content-color);
-		--_is-hovered-background-color: light-dark(var(--primitives-color-critical-700), var(--primitives-color-critical-500));
-		--_is-active-background-color: light-dark(var(--primitives-color-critical-750), var(--primitives-color-critical-550));
+		--_status-bar-background-color: var(--semantics-categories-critical-filled-background-color);
+		--_status-bar-content-color: var(--semantics-categories-critical-filled-content-color);
+		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-critical-700), var(--primitives-color-critical-500));
+		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-critical-750), var(--primitives-color-critical-550));
 	}
 
 
@@ -69,17 +69,17 @@ export const statusBarStyles = css`
 		display: flex;
 		margin: 0;
 		border: none;
-		border-radius: var(--_corner-radius);
-		background-color: var(--_background-color);
+		border-radius: var(--_status-bar-corner-radius);
+		background-color: var(--_status-bar-background-color);
 		width: 100%;
-		min-height: var(--_height);
+		min-height: var(--_status-bar-height);
 		overflow: hidden;
-		padding-inline: var(--_inline-padding);
-		gap: var(--_gap);
+		padding-inline: var(--_status-bar-inline-padding);
+		gap: var(--_status-bar-gap);
 		align-items: center;
 		justify-content: center;
-		color: var(--_content-color);
-		font: var(--_font);
+		color: var(--_status-bar-content-color);
+		font: var(--_status-bar-font);
 		text-decoration: none;
 		white-space: nowrap;
 	}
@@ -96,12 +96,12 @@ export const statusBarStyles = css`
 
 	a.status-bar:hover,
 	button.status-bar:hover {
-		background-color: var(--_is-hovered-background-color);
+		background-color: var(--_status-bar-is-hovered-background-color);
 	}
 
 	a.status-bar:active,
 	button.status-bar:active {
-		background-color: var(--_is-active-background-color);
+		background-color: var(--_status-bar-is-active-background-color);
 	}
 
 
@@ -140,6 +140,6 @@ export const statusBarStyles = css`
 	.status-bar__action-icon {
 		display: flex;
 		flex-shrink: 0;
-		width: var(--_action-icon-size);
+		width: var(--_status-bar-action-icon-size);
 	}
 `;

@@ -118,11 +118,11 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 		if (changedProperties.has('width')) {
 			const w = this.width;
 			// Keyword 'full' handled via CSS attribute selectors; a valid CSS
-			// length is forwarded to --_width. Invalid values are dropped.
+			// length is forwarded to --_number-field-width. Invalid values are dropped.
 			if (w && w !== 'full' && CSS.supports('width', w)) {
-				this.style.setProperty('--_width', w);
+				this.style.setProperty('--_number-field-width', w);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_number-field-width');
 			}
 		}
 		if (changedProperties.has('value')) {

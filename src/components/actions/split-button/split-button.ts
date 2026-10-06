@@ -145,16 +145,16 @@ export class NLDDSplitButton extends LitElement {
 	override willUpdate(changedProperties: Map<string, unknown>): void {
 		if (changedProperties.has('width')) {
 			// 'full' switches the host to block + 100% via CSS; a valid CSS length
-			// is applied inline. Either way --_width drives the inner layout so the
+			// is applied inline. Either way --_split-button-width drives the inner layout so the
 			// split-button stretches and the main button fills the free space.
 			const w = this.width;
 			const isFull = w === 'full';
 			const isValidLength = !!w && !isFull && CSS.supports('width', w);
 			this.style.width = isValidLength ? w : '';
 			if (isFull || isValidLength) {
-				this.style.setProperty('--_width', '100%');
+				this.style.setProperty('--_split-button-width', '100%');
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_split-button-width');
 			}
 		}
 	}

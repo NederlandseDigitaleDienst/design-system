@@ -10,20 +10,20 @@ export const passwordFieldStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: 100%;
-		--_background-color: var(--semantics-input-fields-background-color);
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_min-size: var(--semantics-controls-md-min-size);
-		--_inline-padding: var(--semantics-controls-md-inline-padding);
-		--_text-font: var(--semantics-input-fields-md-text-font);
-		--_mask-font: var(--semantics-input-fields-md-mask-font);
-		--_validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
-		--_visibility-toggle-padding: calc((var(--_min-size) - var(--semantics-input-fields-border-width) * 2 - var(--semantics-controls-sm-min-size)) / 2);
-		--_button-focus-z-index: 1;
+		--_password-field-width: 100%;
+		--_password-field-background-color: var(--semantics-input-fields-background-color);
+		--_password-field-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_password-field-min-size: var(--semantics-controls-md-min-size);
+		--_password-field-inline-padding: var(--semantics-controls-md-inline-padding);
+		--_password-field-text-font: var(--semantics-input-fields-md-text-font);
+		--_password-field-mask-font: var(--semantics-input-fields-md-mask-font);
+		--_password-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
+		--_password-field-visibility-toggle-padding: calc((var(--_password-field-min-size) - var(--semantics-input-fields-border-width) * 2 - var(--semantics-controls-sm-min-size)) / 2);
+		--_password-field-button-focus-z-index: 1;
 
 		${inheritedTextReset}
 		display: block;
-		width: var(--_width);
+		width: var(--_password-field-width);
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;
 	}
@@ -33,13 +33,13 @@ export const passwordFieldStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_min-size: var(--semantics-controls-sm-min-size);
-		--_inline-padding: var(--semantics-controls-sm-inline-padding);
-		--_text-font: var(--semantics-input-fields-sm-text-font);
-		--_mask-font: var(--semantics-input-fields-sm-mask-font);
-		--_validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
-		--_visibility-toggle-padding: calc((var(--_min-size) - var(--semantics-input-fields-border-width) * 2 - var(--semantics-controls-xs-min-size)) / 2);
+		--_password-field-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_password-field-min-size: var(--semantics-controls-sm-min-size);
+		--_password-field-inline-padding: var(--semantics-controls-sm-inline-padding);
+		--_password-field-text-font: var(--semantics-input-fields-sm-text-font);
+		--_password-field-mask-font: var(--semantics-input-fields-sm-mask-font);
+		--_password-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
+		--_password-field-visibility-toggle-padding: calc((var(--_password-field-min-size) - var(--semantics-input-fields-border-width) * 2 - var(--semantics-controls-xs-min-size)) / 2);
 	}
 
 
@@ -49,10 +49,10 @@ export const passwordFieldStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		border: var(--semantics-input-fields-border);
-		border-radius: var(--_corner-radius);
-		background-color: var(--_background-color);
-		min-height: var(--_min-size);
-		padding-left: calc(var(--_inline-padding) - var(--semantics-input-fields-border-width));
+		border-radius: var(--_password-field-corner-radius);
+		background-color: var(--_password-field-background-color);
+		min-height: var(--_password-field-min-size);
+		padding-left: calc(var(--_password-field-inline-padding) - var(--semantics-input-fields-border-width));
 		flex-direction: row;
 		align-items: center;
 	}
@@ -66,7 +66,7 @@ export const passwordFieldStyles = css`
 	}
 
 	:host([readonly]) .password-field {
-		--_background-color: var(--semantics-input-fields-is-read-only-background-color);
+		--_password-field-background-color: var(--semantics-input-fields-is-read-only-background-color);
 		border-color: var(--semantics-input-fields-is-read-only-border-color);
 	}
 
@@ -76,7 +76,7 @@ export const passwordFieldStyles = css`
 
 	.password-field:has(input:-webkit-autofill),
 	.password-field:has(input:autofill) {
-		--_background-color: var(--semantics-input-fields-is-autofill-background-color);
+		--_password-field-background-color: var(--semantics-input-fields-is-autofill-background-color);
 	}
 
 	.password-field:focus-within:not(:has(.password-field__visibility-toggle-button:focus-within)) {
@@ -95,22 +95,22 @@ export const passwordFieldStyles = css`
 		border: none;
 		background: transparent;
 		min-width: 0;
-		min-height: calc(var(--_min-size) - var(--semantics-input-fields-border-width) * 2);
+		min-height: calc(var(--_password-field-min-size) - var(--semantics-input-fields-border-width) * 2);
 		overflow: hidden;
 		padding: 0;
 		flex-grow: 1;
 		color: var(--semantics-content-color);
-		font: var(--_text-font);
+		font: var(--_password-field-text-font);
 		appearance: none;
 	}
 
 	.password-field__input::placeholder {
 		color: var(--semantics-input-fields-placeholder-color);
-		font: var(--_text-font);
+		font: var(--_password-field-text-font);
 	}
 
 	.password-field__input.is-masked {
-		font: var(--_mask-font);
+		font: var(--_password-field-mask-font);
 	}
 
 	:host([disabled]) .password-field__input {
@@ -121,7 +121,7 @@ export const passwordFieldStyles = css`
 	.password-field__input:autofill,
 	.password-field__input:-webkit-autofill:disabled,
 	.password-field__input:autofill:disabled {
-		box-shadow: 0 0 0 999px var(--_background-color) inset;
+		box-shadow: 0 0 0 999px var(--_password-field-background-color) inset;
 		-webkit-text-fill-color: var(--semantics-input-fields-is-autofill-content-color);
 	}
 
@@ -138,15 +138,15 @@ export const passwordFieldStyles = css`
 		top: 0;
 		right: 0;
 		bottom: 0;
-		border-radius: var(--_corner-radius);
-		background: linear-gradient(90deg, color-mix(in oklch, var(--_background-color) 0%, transparent) 0%, var(--_background-color) 100%);
+		border-radius: var(--_password-field-corner-radius);
+		background: linear-gradient(90deg, color-mix(in oklch, var(--_password-field-background-color) 0%, transparent) 0%, var(--_password-field-background-color) 100%);
 		pointer-events: none;
 		width: var(--primitives-space-8);
 	}
 
 	.password-field__validation-icon-area {
 		display: flex;
-		width: calc(var(--_min-size) - var(--semantics-input-fields-border-width) * 2);
+		width: calc(var(--_password-field-min-size) - var(--semantics-input-fields-border-width) * 2);
 		height: 100%;
 		flex-shrink: 0;
 		align-items: center;
@@ -162,15 +162,15 @@ export const passwordFieldStyles = css`
 	}
 
 	.password-field__validation-icon {
-		width: var(--_validation-icon-size);
-		height: var(--_validation-icon-size);
+		width: var(--_password-field-validation-icon-size);
+		height: var(--_password-field-validation-icon-size);
 	}
 
 	.password-field__visibility-toggle-button {
 		display: flex;
 		height: 100%;
-		padding-block: var(--_visibility-toggle-padding);
-		padding-inline-end: var(--_visibility-toggle-padding);
+		padding-block: var(--_password-field-visibility-toggle-padding);
+		padding-inline-end: var(--_password-field-visibility-toggle-padding);
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
@@ -178,6 +178,6 @@ export const passwordFieldStyles = css`
 
 	.password-field__visibility-toggle-button:focus-within {
 		position: relative;
-		z-index: var(--_button-focus-z-index);
+		z-index: var(--_password-field-button-focus-z-index);
 	}
 `;

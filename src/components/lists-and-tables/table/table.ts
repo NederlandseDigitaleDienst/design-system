@@ -227,9 +227,9 @@ export class NLDDTable extends LitElement {
 	private _applyColumns(): void {
 		const cols = this._activeColumns();
 		if (cols) {
-			this.style.setProperty('--_columns', cols);
+			this.style.setProperty('--_table-columns', cols);
 		} else {
-			this.style.removeProperty('--_columns');
+			this.style.removeProperty('--_table-columns');
 		}
 	}
 

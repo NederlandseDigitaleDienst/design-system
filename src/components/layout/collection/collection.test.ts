@@ -42,9 +42,9 @@ describe('nldd-collection', () => {
 		// The token, not the number. Writing "16" through was the old bug: not a
 		// length, so the declaration fell away and the gap became zero in silence.
 		// A plain gap fills all three breakpoints, which is what the styles read.
-		expect(el.style.getPropertyValue('--_sm-gap')).toBe('var(--primitives-space-16)');
-		expect(el.style.getPropertyValue('--_md-gap')).toBe('var(--primitives-space-16)');
-		expect(el.style.getPropertyValue('--_lg-gap')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_collection-sm-gap')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_collection-md-gap')).toBe('var(--primitives-space-16)');
+		expect(el.style.getPropertyValue('--_collection-lg-gap')).toBe('var(--primitives-space-16)');
 	});
 
 	it('lets a breakpoint gap override the plain one', async () => {
@@ -53,13 +53,13 @@ describe('nldd-collection', () => {
 		);
 		await waitForUpdate(el);
 
-		expect(el.style.getPropertyValue('--_sm-gap')).toBe('var(--primitives-space-8)');
-		expect(el.style.getPropertyValue('--_md-gap')).toBe('var(--primitives-space-8)');
-		expect(el.style.getPropertyValue('--_lg-gap')).toBe('var(--primitives-space-32)');
+		expect(el.style.getPropertyValue('--_collection-sm-gap')).toBe('var(--primitives-space-8)');
+		expect(el.style.getPropertyValue('--_collection-md-gap')).toBe('var(--primitives-space-8)');
+		expect(el.style.getPropertyValue('--_collection-lg-gap')).toBe('var(--primitives-space-32)');
 	});
 
-	// The breakpoint blocks swap --_gap between the three, so writing a plain gap
-	// to --_gap itself would beat them from the style attribute and the 32 below
+	// The breakpoint blocks swap --_collection-gap between the three, so writing a plain gap
+	// to --_collection-gap itself would beat them from the style attribute and the 32 below
 	// would never reach the screen.
 	it('renders the breakpoint gap beside a plain one, per container width', async () => {
 		const wrapper = (width: string) =>
@@ -86,13 +86,13 @@ describe('nldd-collection', () => {
 		// writing it would be the silent zero this is here to stop.
 		el = await fixture('<nldd-collection gap="23"><div>Item</div></nldd-collection>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_sm-gap')).toBe('');
+		expect(el.style.getPropertyValue('--_collection-sm-gap')).toBe('');
 
 		// And a length, which is a value beside the scale rather than on it.
 		cleanup(el);
 		el = await fixture('<nldd-collection gap="23px"><div>Item</div></nldd-collection>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_sm-gap')).toBe('');
+		expect(el.style.getPropertyValue('--_collection-sm-gap')).toBe('');
 	});
 
 	it('lays lanes out in columns of the item width', async () => {
@@ -242,11 +242,11 @@ describe('nldd-collection', () => {
 	it('the gap attribute fills every breakpoint, and clearing it gives them back', async () => {
 		el = await fixture('<nldd-collection gap="8"><div>Item 1</div></nldd-collection>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_md-gap')).toBe('var(--primitives-space-8)');
+		expect(el.style.getPropertyValue('--_collection-md-gap')).toBe('var(--primitives-space-8)');
 		// Clearing it restores the responsive default (no inline override).
 		(el as HTMLElement & { gap?: string }).gap = '';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_md-gap')).toBe('');
+		expect(el.style.getPropertyValue('--_collection-md-gap')).toBe('');
 	});
 
 	// The arrows used to step by a fixed item + gap. From the end of the strip,
@@ -254,7 +254,7 @@ describe('nldd-collection', () => {
 	// every item stayed clipped. They snap to item edges now.
 	const scrollFixture = `
 		<div style="width: 300px;">
-			<nldd-collection layout="horizontal-scroll" item-width="200px" style="--_gap: 24px;">
+			<nldd-collection layout="horizontal-scroll" item-width="200px" style="--_collection-gap: 24px;">
 				<div style="width: 200px; height: 40px;"></div>
 				<div style="width: 200px; height: 40px;"></div>
 				<div style="width: 200px; height: 40px;"></div>

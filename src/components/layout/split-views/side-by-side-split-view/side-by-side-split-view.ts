@@ -62,7 +62,7 @@ export class NLDDSideBySideSplitView extends LitElement {
 
 	override firstUpdated() {
 		// Read pane min-width from CSS after first render — styles are guaranteed applied
-		this._paneMinWidth = parseFloat(getComputedStyle(this).getPropertyValue('--_pane-min-width'));
+		this._paneMinWidth = parseFloat(getComputedStyle(this).getPropertyValue('--_side-by-side-split-view-pane-min-width'));
 		this._updateVisiblePanes();
 	}
 

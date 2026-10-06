@@ -10,30 +10,30 @@ export const buttonStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
+		--_button-corner-radius: var(--semantics-controls-md-corner-radius);
 		/* A parent that stacks its buttons says so through the context variable;
 		   the button's own width attribute overrides it with an inline style. */
-		--_width: var(--context-button-width, auto);
-		--_min-size: var(--semantics-controls-md-min-size);
-		--_block-padding: var(--semantics-controls-md-block-padding);
-		--_inline-padding: var(--semantics-buttons-md-inline-padding);
-		--_gap: var(--semantics-buttons-md-gap);
-		--_font: var(--semantics-buttons-md-primary-text-font);
-		--_icon-size: var(--semantics-buttons-md-icon-size);
-		--_disclosure-icon-size: var(--primitives-space-20);
-		--_supporting-font: var(--semantics-buttons-md-supporting-text-font);
-		--_background-color: var(--semantics-buttons-neutral-tinted-background-color);
-		--_primary-content-color: var(--semantics-buttons-neutral-tinted-content-color);
-		--_secondary-content-color: var(--semantics-buttons-neutral-tinted-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-active-highlight-border-color);
+		--_button-width: var(--context-button-width, auto);
+		--_button-min-size: var(--semantics-controls-md-min-size);
+		--_button-block-padding: var(--semantics-controls-md-block-padding);
+		--_button-inline-padding: var(--semantics-buttons-md-inline-padding);
+		--_button-gap: var(--semantics-buttons-md-gap);
+		--_button-font: var(--semantics-buttons-md-primary-text-font);
+		--_button-icon-size: var(--semantics-buttons-md-icon-size);
+		--_button-disclosure-icon-size: var(--primitives-space-20);
+		--_button-supporting-font: var(--semantics-buttons-md-supporting-text-font);
+		--_button-background-color: var(--semantics-buttons-neutral-tinted-background-color);
+		--_button-primary-content-color: var(--semantics-buttons-neutral-tinted-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-neutral-tinted-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
+		--_button-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-hovered-highlight-border-color);
+		--_button-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
+		--_button-is-active-primary-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-active-highlight-border-color);
 
 		${inheritedTextReset}
 		/* inline-flex, not inline-block: a block container puts the control on a
@@ -54,131 +54,131 @@ export const buttonStyles = css`
 	}
 
 	:host([size="xs"]) {
-		--_corner-radius: var(--semantics-controls-xs-corner-radius);
-		--_min-size: var(--semantics-controls-xs-min-size);
-		--_block-padding: var(--semantics-controls-xs-block-padding);
-		--_inline-padding: var(--semantics-buttons-xs-inline-padding);
-		--_gap: var(--semantics-buttons-xs-gap);
-		--_font: var(--semantics-buttons-xs-primary-text-font);
-		--_icon-size: var(--semantics-buttons-xs-icon-size);
-		--_disclosure-icon-size: var(--primitives-space-16);
-		--_supporting-font: var(--semantics-buttons-xs-supporting-text-font);
+		--_button-corner-radius: var(--semantics-controls-xs-corner-radius);
+		--_button-min-size: var(--semantics-controls-xs-min-size);
+		--_button-block-padding: var(--semantics-controls-xs-block-padding);
+		--_button-inline-padding: var(--semantics-buttons-xs-inline-padding);
+		--_button-gap: var(--semantics-buttons-xs-gap);
+		--_button-font: var(--semantics-buttons-xs-primary-text-font);
+		--_button-icon-size: var(--semantics-buttons-xs-icon-size);
+		--_button-disclosure-icon-size: var(--primitives-space-16);
+		--_button-supporting-font: var(--semantics-buttons-xs-supporting-text-font);
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_min-size: var(--semantics-controls-sm-min-size);
-		--_block-padding: var(--semantics-controls-sm-block-padding);
-		--_inline-padding: var(--semantics-buttons-sm-inline-padding);
-		--_gap: var(--semantics-buttons-sm-gap);
-		--_font: var(--semantics-buttons-sm-primary-text-font);
-		--_icon-size: var(--semantics-buttons-sm-icon-size);
-		--_disclosure-icon-size: var(--primitives-space-18);
-		--_supporting-font: var(--semantics-buttons-sm-supporting-text-font);
+		--_button-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_button-min-size: var(--semantics-controls-sm-min-size);
+		--_button-block-padding: var(--semantics-controls-sm-block-padding);
+		--_button-inline-padding: var(--semantics-buttons-sm-inline-padding);
+		--_button-gap: var(--semantics-buttons-sm-gap);
+		--_button-font: var(--semantics-buttons-sm-primary-text-font);
+		--_button-icon-size: var(--semantics-buttons-sm-icon-size);
+		--_button-disclosure-icon-size: var(--primitives-space-18);
+		--_button-supporting-font: var(--semantics-buttons-sm-supporting-text-font);
 	}
 
 	:host([size="lg"]) {
-		--_corner-radius: var(--semantics-controls-lg-corner-radius);
-		--_min-size: var(--semantics-controls-lg-min-size);
-		--_block-padding: var(--semantics-controls-lg-block-padding);
-		--_inline-padding: var(--semantics-buttons-lg-inline-padding);
-		--_gap: var(--semantics-buttons-lg-gap);
-		--_font: var(--semantics-buttons-lg-primary-text-font);
-		--_icon-size: var(--semantics-buttons-lg-icon-size);
-		--_disclosure-icon-size: var(--primitives-space-24);
-		--_supporting-font: var(--semantics-buttons-lg-supporting-text-font);
+		--_button-corner-radius: var(--semantics-controls-lg-corner-radius);
+		--_button-min-size: var(--semantics-controls-lg-min-size);
+		--_button-block-padding: var(--semantics-controls-lg-block-padding);
+		--_button-inline-padding: var(--semantics-buttons-lg-inline-padding);
+		--_button-gap: var(--semantics-buttons-lg-gap);
+		--_button-font: var(--semantics-buttons-lg-primary-text-font);
+		--_button-icon-size: var(--semantics-buttons-lg-icon-size);
+		--_button-disclosure-icon-size: var(--primitives-space-24);
+		--_button-supporting-font: var(--semantics-buttons-lg-supporting-text-font);
 	}
 
 	:host([appearance="neutral-base"]) {
-		--_background-color: var(--semantics-buttons-neutral-base-background-color);
-		--_primary-content-color: var(--semantics-buttons-neutral-base-content-color);
-		--_secondary-content-color: var(--semantics-buttons-neutral-base-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-neutral-base-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-neutral-base-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-neutral-base-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-neutral-base-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-active-highlight-border-color);
+		--_button-background-color: var(--semantics-buttons-neutral-base-background-color);
+		--_button-primary-content-color: var(--semantics-buttons-neutral-base-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-neutral-base-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);
+		--_button-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-hovered-background-color);
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-hovered-highlight-border-color);
+		--_button-is-active-background-color: var(--semantics-buttons-neutral-base-is-active-background-color);
+		--_button-is-active-primary-content-color: var(--semantics-buttons-neutral-base-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-neutral-base-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-active-highlight-border-color);
 	}
 
 	:host([appearance="neutral-transparent"]) {
-		--_background-color: transparent;
-		--_primary-content-color: var(--semantics-buttons-neutral-transparent-content-color);
-		--_secondary-content-color: var(--semantics-buttons-neutral-transparent-content-secondary-color);
-		--_highlight-border-color: transparent;
-		--_is-hovered-background-color: transparent;
-		--_is-hovered-primary-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: transparent;
-		--_is-active-background-color: transparent;
-		--_is-active-primary-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: transparent;
+		--_button-background-color: transparent;
+		--_button-primary-content-color: var(--semantics-buttons-neutral-transparent-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-neutral-transparent-content-secondary-color);
+		--_button-highlight-border-color: transparent;
+		--_button-is-hovered-background-color: transparent;
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: transparent;
+		--_button-is-active-background-color: transparent;
+		--_button-is-active-primary-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: transparent;
 	}
 
 	:host([appearance="accent-filled"]),
 	:host([appearance="primary"]) {
-		--_background-color: var(--semantics-buttons-accent-filled-background-color);
-		--_primary-content-color: var(--semantics-buttons-accent-filled-content-color);
-		--_secondary-content-color: var(--semantics-buttons-accent-filled-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-accent-filled-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-accent-filled-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-accent-filled-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-accent-filled-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-accent-filled-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-accent-filled-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-accent-filled-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-accent-filled-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-accent-filled-is-active-highlight-border-color);
+		--_button-background-color: var(--semantics-buttons-accent-filled-background-color);
+		--_button-primary-content-color: var(--semantics-buttons-accent-filled-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-accent-filled-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-accent-filled-highlight-border-color);
+		--_button-is-hovered-background-color: var(--semantics-buttons-accent-filled-is-hovered-background-color);
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-accent-filled-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-accent-filled-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: var(--semantics-buttons-accent-filled-is-hovered-highlight-border-color);
+		--_button-is-active-background-color: var(--semantics-buttons-accent-filled-is-active-background-color);
+		--_button-is-active-primary-content-color: var(--semantics-buttons-accent-filled-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-accent-filled-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: var(--semantics-buttons-accent-filled-is-active-highlight-border-color);
 	}
 
 	:host([appearance="accent-transparent"]) {
-		--_background-color: transparent;
-		--_primary-content-color: var(--semantics-buttons-accent-transparent-content-color);
-		--_secondary-content-color: var(--semantics-buttons-accent-transparent-content-secondary-color);
-		--_highlight-border-color: transparent;
-		--_is-hovered-background-color: transparent;
-		--_is-hovered-primary-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: transparent;
-		--_is-active-background-color: transparent;
-		--_is-active-primary-content-color: var(--semantics-buttons-accent-transparent-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-accent-transparent-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: transparent;
+		--_button-background-color: transparent;
+		--_button-primary-content-color: var(--semantics-buttons-accent-transparent-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-accent-transparent-content-secondary-color);
+		--_button-highlight-border-color: transparent;
+		--_button-is-hovered-background-color: transparent;
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: transparent;
+		--_button-is-active-background-color: transparent;
+		--_button-is-active-primary-content-color: var(--semantics-buttons-accent-transparent-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-accent-transparent-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: transparent;
 	}
 
 	:host([appearance="critical-tinted"]),
 	:host([appearance="destructive"]) {
-		--_background-color: var(--semantics-buttons-critical-tinted-background-color);
-		--_primary-content-color: var(--semantics-buttons-critical-tinted-content-color);
-		--_secondary-content-color: var(--semantics-buttons-critical-tinted-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-critical-tinted-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-critical-tinted-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-critical-tinted-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-critical-tinted-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-critical-tinted-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-critical-tinted-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-critical-tinted-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-critical-tinted-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-critical-tinted-is-active-highlight-border-color);
+		--_button-background-color: var(--semantics-buttons-critical-tinted-background-color);
+		--_button-primary-content-color: var(--semantics-buttons-critical-tinted-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-critical-tinted-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-critical-tinted-highlight-border-color);
+		--_button-is-hovered-background-color: var(--semantics-buttons-critical-tinted-is-hovered-background-color);
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-critical-tinted-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-critical-tinted-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: var(--semantics-buttons-critical-tinted-is-hovered-highlight-border-color);
+		--_button-is-active-background-color: var(--semantics-buttons-critical-tinted-is-active-background-color);
+		--_button-is-active-primary-content-color: var(--semantics-buttons-critical-tinted-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-critical-tinted-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: var(--semantics-buttons-critical-tinted-is-active-highlight-border-color);
 	}
 
 	:host([appearance="critical-transparent"]) {
-		--_background-color: transparent;
-		--_primary-content-color: var(--semantics-buttons-critical-transparent-content-color);
-		--_secondary-content-color: var(--semantics-buttons-critical-transparent-content-secondary-color);
-		--_highlight-border-color: transparent;
-		--_is-hovered-background-color: transparent;
-		--_is-hovered-primary-content-color: var(--semantics-buttons-critical-transparent-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-critical-transparent-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: transparent;
-		--_is-active-background-color: transparent;
-		--_is-active-primary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: transparent;
+		--_button-background-color: transparent;
+		--_button-primary-content-color: var(--semantics-buttons-critical-transparent-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-critical-transparent-content-secondary-color);
+		--_button-highlight-border-color: transparent;
+		--_button-is-hovered-background-color: transparent;
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-critical-transparent-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-critical-transparent-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: transparent;
+		--_button-is-active-background-color: transparent;
+		--_button-is-active-primary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: transparent;
 	}
 
 	/* The on-color variants derive from currentColor (which stays
@@ -189,34 +189,34 @@ export const buttonStyles = css`
 
 	:host([appearance="inherit-tinted"]),
 	:host([expanded][appearance="inherit-tinted"]) {
-		--_background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
-		--_primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
-		--_secondary-content-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
-		--_is-hovered-background-color: var(--_background-color);
-		--_is-hovered-primary-content-color: var(--_primary-content-color);
-		--_is-hovered-secondary-content-color: var(--_secondary-content-color);
-		--_is-hovered-highlight-border-color: var(--_highlight-border-color);
-		--_is-active-background-color: var(--_background-color);
-		--_is-active-primary-content-color: var(--_primary-content-color);
-		--_is-active-secondary-content-color: var(--_secondary-content-color);
-		--_is-active-highlight-border-color: var(--_highlight-border-color);
+		--_button-background-color: var(--context-button-background-color, var(--semantics-buttons-inherit-tinted-background-color));
+		--_button-primary-content-color: var(--semantics-buttons-inherit-tinted-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-inherit-tinted-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-inherit-tinted-highlight-border-color);
+		--_button-is-hovered-background-color: var(--_button-background-color);
+		--_button-is-hovered-primary-content-color: var(--_button-primary-content-color);
+		--_button-is-hovered-secondary-content-color: var(--_button-secondary-content-color);
+		--_button-is-hovered-highlight-border-color: var(--_button-highlight-border-color);
+		--_button-is-active-background-color: var(--_button-background-color);
+		--_button-is-active-primary-content-color: var(--_button-primary-content-color);
+		--_button-is-active-secondary-content-color: var(--_button-secondary-content-color);
+		--_button-is-active-highlight-border-color: var(--_button-highlight-border-color);
 	}
 
 	:host([appearance="inherit-filled"]),
 	:host([expanded][appearance="inherit-filled"]) {
-		--_background-color: var(--semantics-buttons-inherit-filled-background-color);
-		--_primary-content-color: var(--context-parent-background-color, var(--semantics-buttons-inherit-filled-content-color));
-		--_secondary-content-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
-		--_is-hovered-background-color: var(--_background-color);
-		--_is-hovered-primary-content-color: var(--_primary-content-color);
-		--_is-hovered-secondary-content-color: var(--_secondary-content-color);
-		--_is-hovered-highlight-border-color: var(--_highlight-border-color);
-		--_is-active-background-color: var(--_background-color);
-		--_is-active-primary-content-color: var(--_primary-content-color);
-		--_is-active-secondary-content-color: var(--_secondary-content-color);
-		--_is-active-highlight-border-color: var(--_highlight-border-color);
+		--_button-background-color: var(--semantics-buttons-inherit-filled-background-color);
+		--_button-primary-content-color: var(--context-parent-background-color, var(--semantics-buttons-inherit-filled-content-color));
+		--_button-secondary-content-color: var(--semantics-buttons-inherit-filled-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-inherit-filled-highlight-border-color);
+		--_button-is-hovered-background-color: var(--_button-background-color);
+		--_button-is-hovered-primary-content-color: var(--_button-primary-content-color);
+		--_button-is-hovered-secondary-content-color: var(--_button-secondary-content-color);
+		--_button-is-hovered-highlight-border-color: var(--_button-highlight-border-color);
+		--_button-is-active-background-color: var(--_button-background-color);
+		--_button-is-active-primary-content-color: var(--_button-primary-content-color);
+		--_button-is-active-secondary-content-color: var(--_button-secondary-content-color);
+		--_button-is-active-highlight-border-color: var(--_button-highlight-border-color);
 	}
 
 	/* For inherit-filled the inner button keeps the inherited on-color:
@@ -229,116 +229,116 @@ export const buttonStyles = css`
 	}
 
 	:host([appearance="inherit-filled"]) .button > * {
-		color: var(--_primary-content-color);
+		color: var(--_button-primary-content-color);
 	}
 
 	/* ## Expanded — default (incl. unknown variant) */
 
 	:host([expanded]) {
-		--_background-color: var(--semantics-buttons-neutral-tinted-is-expanded-background-color);
-		--_primary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-content-color);
-		--_secondary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-is-expanded-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-active-highlight-border-color);
+		--_button-background-color: var(--semantics-buttons-neutral-tinted-is-expanded-background-color);
+		--_button-primary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-expanded-highlight-border-color);
+		--_button-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-hovered-background-color);
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-hovered-highlight-border-color);
+		--_button-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-active-background-color);
+		--_button-is-active-primary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-expanded-is-active-highlight-border-color);
 	}
 
 	:host([expanded][appearance="neutral-base"]) {
-		--_background-color: var(--semantics-buttons-neutral-base-is-expanded-background-color);
-		--_primary-content-color: var(--semantics-buttons-neutral-base-is-expanded-content-color);
-		--_secondary-content-color: var(--semantics-buttons-neutral-base-is-expanded-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-neutral-base-is-expanded-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-neutral-base-is-expanded-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-neutral-base-is-expanded-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-neutral-base-is-expanded-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-expanded-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-neutral-base-is-expanded-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-neutral-base-is-expanded-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-neutral-base-is-expanded-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-expanded-is-active-highlight-border-color);
+		--_button-background-color: var(--semantics-buttons-neutral-base-is-expanded-background-color);
+		--_button-primary-content-color: var(--semantics-buttons-neutral-base-is-expanded-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-neutral-base-is-expanded-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-neutral-base-is-expanded-highlight-border-color);
+		--_button-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-expanded-is-hovered-background-color);
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-neutral-base-is-expanded-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-neutral-base-is-expanded-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-expanded-is-hovered-highlight-border-color);
+		--_button-is-active-background-color: var(--semantics-buttons-neutral-base-is-expanded-is-active-background-color);
+		--_button-is-active-primary-content-color: var(--semantics-buttons-neutral-base-is-expanded-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-neutral-base-is-expanded-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-expanded-is-active-highlight-border-color);
 	}
 
 	:host([expanded][appearance="neutral-transparent"]) {
-		--_background-color: transparent;
-		--_primary-content-color: var(--semantics-buttons-neutral-transparent-content-color);
-		--_secondary-content-color: var(--semantics-buttons-neutral-transparent-content-secondary-color);
-		--_highlight-border-color: transparent;
-		--_is-hovered-background-color: transparent;
-		--_is-hovered-primary-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: transparent;
-		--_is-active-background-color: transparent;
-		--_is-active-primary-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: transparent;
+		--_button-background-color: transparent;
+		--_button-primary-content-color: var(--semantics-buttons-neutral-transparent-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-neutral-transparent-content-secondary-color);
+		--_button-highlight-border-color: transparent;
+		--_button-is-hovered-background-color: transparent;
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-neutral-transparent-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: transparent;
+		--_button-is-active-background-color: transparent;
+		--_button-is-active-primary-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-neutral-transparent-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: transparent;
 	}
 
 	:host([expanded][appearance="accent-filled"]),
 	:host([expanded][appearance="primary"]) {
-		--_background-color: var(--semantics-buttons-accent-filled-is-expanded-background-color);
-		--_primary-content-color: var(--semantics-buttons-accent-filled-is-expanded-content-color);
-		--_secondary-content-color: var(--semantics-buttons-accent-filled-is-expanded-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-accent-filled-is-expanded-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-accent-filled-is-expanded-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-accent-filled-is-expanded-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-accent-filled-is-expanded-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-accent-filled-is-expanded-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-accent-filled-is-expanded-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-accent-filled-is-expanded-is-active-highlight-border-color);
+		--_button-background-color: var(--semantics-buttons-accent-filled-is-expanded-background-color);
+		--_button-primary-content-color: var(--semantics-buttons-accent-filled-is-expanded-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-accent-filled-is-expanded-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-accent-filled-is-expanded-highlight-border-color);
+		--_button-is-hovered-background-color: var(--semantics-buttons-accent-filled-is-expanded-is-hovered-background-color);
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-accent-filled-is-expanded-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: var(--semantics-buttons-accent-filled-is-expanded-is-hovered-highlight-border-color);
+		--_button-is-active-background-color: var(--semantics-buttons-accent-filled-is-expanded-is-active-background-color);
+		--_button-is-active-primary-content-color: var(--semantics-buttons-accent-filled-is-expanded-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: var(--semantics-buttons-accent-filled-is-expanded-is-active-highlight-border-color);
 	}
 
 	:host([expanded][appearance="accent-transparent"]) {
-		--_background-color: transparent;
-		--_primary-content-color: var(--semantics-buttons-accent-transparent-content-color);
-		--_secondary-content-color: var(--semantics-buttons-accent-transparent-content-secondary-color);
-		--_highlight-border-color: transparent;
-		--_is-hovered-background-color: transparent;
-		--_is-hovered-primary-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: transparent;
-		--_is-active-background-color: transparent;
-		--_is-active-primary-content-color: var(--semantics-buttons-accent-transparent-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-accent-transparent-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: transparent;
+		--_button-background-color: transparent;
+		--_button-primary-content-color: var(--semantics-buttons-accent-transparent-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-accent-transparent-content-secondary-color);
+		--_button-highlight-border-color: transparent;
+		--_button-is-hovered-background-color: transparent;
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: transparent;
+		--_button-is-active-background-color: transparent;
+		--_button-is-active-primary-content-color: var(--semantics-buttons-accent-transparent-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-accent-transparent-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: transparent;
 	}
 
 	:host([expanded][appearance="critical-tinted"]),
 	:host([expanded][appearance="destructive"]) {
-		--_background-color: var(--semantics-buttons-critical-tinted-is-expanded-background-color);
-		--_primary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-content-color);
-		--_secondary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-content-secondary-color);
-		--_highlight-border-color: var(--semantics-buttons-critical-tinted-is-expanded-highlight-border-color);
-		--_is-hovered-background-color: var(--semantics-buttons-critical-tinted-is-expanded-is-hovered-background-color);
-		--_is-hovered-primary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: var(--semantics-buttons-critical-tinted-is-expanded-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--semantics-buttons-critical-tinted-is-expanded-is-active-background-color);
-		--_is-active-primary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: var(--semantics-buttons-critical-tinted-is-expanded-is-active-highlight-border-color);
+		--_button-background-color: var(--semantics-buttons-critical-tinted-is-expanded-background-color);
+		--_button-primary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-content-secondary-color);
+		--_button-highlight-border-color: var(--semantics-buttons-critical-tinted-is-expanded-highlight-border-color);
+		--_button-is-hovered-background-color: var(--semantics-buttons-critical-tinted-is-expanded-is-hovered-background-color);
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: var(--semantics-buttons-critical-tinted-is-expanded-is-hovered-highlight-border-color);
+		--_button-is-active-background-color: var(--semantics-buttons-critical-tinted-is-expanded-is-active-background-color);
+		--_button-is-active-primary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-critical-tinted-is-expanded-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: var(--semantics-buttons-critical-tinted-is-expanded-is-active-highlight-border-color);
 	}
 
 	:host([expanded][appearance="critical-transparent"]) {
-		--_background-color: transparent;
-		--_primary-content-color: var(--semantics-buttons-critical-transparent-content-color);
-		--_secondary-content-color: var(--semantics-buttons-critical-transparent-content-secondary-color);
-		--_highlight-border-color: transparent;
-		--_is-hovered-background-color: transparent;
-		--_is-hovered-primary-content-color: var(--semantics-buttons-critical-transparent-is-hovered-content-color);
-		--_is-hovered-secondary-content-color: var(--semantics-buttons-critical-transparent-is-hovered-content-secondary-color);
-		--_is-hovered-highlight-border-color: transparent;
-		--_is-active-background-color: transparent;
-		--_is-active-primary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-color);
-		--_is-active-secondary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-secondary-color);
-		--_is-active-highlight-border-color: transparent;
+		--_button-background-color: transparent;
+		--_button-primary-content-color: var(--semantics-buttons-critical-transparent-content-color);
+		--_button-secondary-content-color: var(--semantics-buttons-critical-transparent-content-secondary-color);
+		--_button-highlight-border-color: transparent;
+		--_button-is-hovered-background-color: transparent;
+		--_button-is-hovered-primary-content-color: var(--semantics-buttons-critical-transparent-is-hovered-content-color);
+		--_button-is-hovered-secondary-content-color: var(--semantics-buttons-critical-transparent-is-hovered-content-secondary-color);
+		--_button-is-hovered-highlight-border-color: transparent;
+		--_button-is-active-background-color: transparent;
+		--_button-is-active-primary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-color);
+		--_button-is-active-secondary-content-color: var(--semantics-buttons-critical-transparent-is-active-content-secondary-color);
+		--_button-is-active-highlight-border-color: transparent;
 	}
 
 	:host([width="full"]) {
@@ -367,9 +367,9 @@ export const buttonStyles = css`
 
 	:host([no-highlight-border]),
 	:host([no-highlight-border][expanded]) {
-		--_highlight-border-color: transparent;
-		--_is-hovered-highlight-border-color: transparent;
-		--_is-active-highlight-border-color: transparent;
+		--_button-highlight-border-color: transparent;
+		--_button-is-hovered-highlight-border-color: transparent;
+		--_button-is-active-highlight-border-color: transparent;
 	}
 
 
@@ -381,20 +381,20 @@ export const buttonStyles = css`
 		position: relative;
 		margin: 0;
 		border: none;
-		border-radius: var(--_corner-radius);
+		border-radius: var(--_button-corner-radius);
 		background: none;
-		background-color: var(--_background-color);
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
-		width: var(--_width);
-		min-width: var(--_min-size);
+		background-color: var(--_button-background-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_button-highlight-border-color);
+		width: var(--_button-width);
+		min-width: var(--_button-min-size);
 		max-width: 100%;
-		min-height: var(--_min-size);
-		padding: var(--_block-padding) var(--_inline-padding);
-		gap: var(--_gap);
+		min-height: var(--_button-min-size);
+		padding: var(--_button-block-padding) var(--_button-inline-padding);
+		gap: var(--_button-gap);
 		align-items: center;
 		justify-content: center;
-		color: var(--_primary-content-color);
-		font: var(--_font);
+		color: var(--_button-primary-content-color);
+		font: var(--_button-font);
 		text-align: center;
 		text-decoration: none;
 		text-wrap: pretty;
@@ -411,16 +411,16 @@ export const buttonStyles = css`
 
 	.button:hover {
 		@media (hover: hover) {
-			background-color: var(--_is-hovered-background-color);
-			color: var(--_is-hovered-primary-content-color);
-			--_highlight-border-color: var(--_is-hovered-highlight-border-color);
+			background-color: var(--_button-is-hovered-background-color);
+			color: var(--_button-is-hovered-primary-content-color);
+			--_button-highlight-border-color: var(--_button-is-hovered-highlight-border-color);
 		}
 	}
 
 	.button:active {
-		background-color: var(--_is-active-background-color);
-		color: var(--_is-active-primary-content-color);
-		--_highlight-border-color: var(--_is-active-highlight-border-color);
+		background-color: var(--_button-is-active-background-color);
+		color: var(--_button-is-active-primary-content-color);
+		--_button-highlight-border-color: var(--_button-is-active-highlight-border-color);
 	}
 
 	/* Loading keeps the control focusable (not disabled); activation is blocked in JS. */
@@ -431,7 +431,7 @@ export const buttonStyles = css`
 	.button:focus-visible {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
+		box-shadow: var(--semantics-focus-ring-box-shadow), inset 0 0 0 var(--primitives-border-width-thin) var(--_button-highlight-border-color);
 	}
 
 	.button:focus:not(:focus-visible) {
@@ -455,7 +455,7 @@ export const buttonStyles = css`
 		align-items: center;
 		/* Space between the icons and the text-area. Was padding-inline on the
 		   text-area; a flex gap keeps it off the text and out of the no-icon edges. */
-		gap: var(--_gap);
+		gap: var(--_button-gap);
 		transition: opacity var(--primitives-transition-duration-slow) var(--primitives-transition-easing-default);
 	}
 
@@ -478,7 +478,7 @@ export const buttonStyles = css`
 	.button__activity-indicator {
 		position: absolute;
 		inset: 0;
-		color: var(--_primary-content-color);
+		color: var(--_button-primary-content-color);
 	}
 
 	::slotted(nldd-icon) {
@@ -508,23 +508,23 @@ export const buttonStyles = css`
 	:host([size="sm"]) .button__text-area {
 		flex-direction: row;
 		align-items: baseline;
-		gap: var(--_gap);
+		gap: var(--_button-gap);
 	}
 
 	.button__supporting-text {
 		min-width: 0;
-		color: var(--_secondary-content-color);
-		font: var(--_supporting-font);
+		color: var(--_button-secondary-content-color);
+		font: var(--_button-supporting-font);
 	}
 
 	.button:hover .button__supporting-text {
 		@media (hover: hover) {
-			color: var(--_is-hovered-secondary-content-color);
+			color: var(--_button-is-hovered-secondary-content-color);
 		}
 	}
 
 	.button:active .button__supporting-text {
-		color: var(--_is-active-secondary-content-color);
+		color: var(--_button-is-active-secondary-content-color);
 	}
 
 	/* Visually-hidden "opens in new tab" announcement (href + target="_blank");
@@ -550,24 +550,24 @@ export const buttonStyles = css`
 
 	:host(:not([size])) .button.has-supporting-text,
 	:host([size="md"]) .button.has-supporting-text {
-		--_font: var(--semantics-buttons-sm-primary-text-font);
-		--_icon-size: var(--semantics-buttons-md-has-supporting-text-icon-size);
-		--_inline-padding: var(--semantics-buttons-md-has-supporting-text-inline-padding);
-		--_block-padding: var(--primitives-space-4);
+		--_button-font: var(--semantics-buttons-sm-primary-text-font);
+		--_button-icon-size: var(--semantics-buttons-md-has-supporting-text-icon-size);
+		--_button-inline-padding: var(--semantics-buttons-md-has-supporting-text-inline-padding);
+		--_button-block-padding: var(--primitives-space-4);
 	}
 
 	:host([size="lg"]) .button.has-supporting-text {
-		--_font: var(--semantics-buttons-md-primary-text-font);
-		--_icon-size: var(--semantics-buttons-lg-has-supporting-text-icon-size);
-		--_inline-padding: var(--semantics-buttons-lg-has-supporting-text-inline-padding);
-		--_block-padding: var(--primitives-space-4);
+		--_button-font: var(--semantics-buttons-md-primary-text-font);
+		--_button-icon-size: var(--semantics-buttons-lg-has-supporting-text-icon-size);
+		--_button-inline-padding: var(--semantics-buttons-lg-has-supporting-text-inline-padding);
+		--_button-block-padding: var(--primitives-space-4);
 	}
 
 	.button__start-icon,
 	.button__end-icon {
 		display: flex;
-		width: var(--_icon-size);
-		height: var(--_icon-size);
+		width: var(--_button-icon-size);
+		height: var(--_button-icon-size);
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
@@ -580,21 +580,21 @@ export const buttonStyles = css`
 	::slotted([slot="start-icon"]),
 	::slotted([slot="end-icon"]) {
 		flex-shrink: 0;
-		width: var(--_icon-size);
-		height: var(--_icon-size);
+		width: var(--_button-icon-size);
+		height: var(--_button-icon-size);
 	}
 
 	:host([expandable]) .button {
-		padding-inline-end: calc(var(--_inline-padding) + var(--_gap) + var(--_disclosure-icon-size));
+		padding-inline-end: calc(var(--_button-inline-padding) + var(--_button-gap) + var(--_button-disclosure-icon-size));
 	}
 
 	.button__disclosure-icon {
 		display: block;
 		position: absolute;
 		top: 50%;
-		inset-inline-end: var(--_inline-padding);
-		width: var(--_disclosure-icon-size);
-		height: var(--_disclosure-icon-size);
+		inset-inline-end: var(--_button-inline-padding);
+		width: var(--_button-disclosure-icon-size);
+		height: var(--_button-disclosure-icon-size);
 		transform: translateY(-50%);
 	}
 `;

@@ -163,9 +163,9 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 		if (changed.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {
-				this.style.setProperty('--_width', w);
+				this.style.setProperty('--_text-field-width', w);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_text-field-width');
 			}
 		}
 	}

@@ -10,21 +10,21 @@ export const menuStyles = css`
 	/* # Host */
 
 	:host {
-		--_viewport-margin: var(--primitives-space-16);
-		--_width: initial;
-		--_min-width: var(--primitives-area-280);
-		--_max-width: min(100vw - 2 * var(--_viewport-margin), var(--primitives-area-640));
-		--_max-height: calc(infinity * 1px);
-		--_max-items: 9999;
-		--_padding: var(--primitives-space-8);
-		--_item-size: var(--semantics-controls-md-min-size);
-		--_item-background-color: transparent;
-		--_item-is-highlighted-background-color: var(--semantics-controls-is-highlighted-indicator-color);
-		--_item-is-highlighted-content-color: var(--semantics-controls-is-highlighted-contrast-color);
+		--_menu-viewport-margin: var(--primitives-space-16);
+		--_menu-width: initial;
+		--_menu-min-width: var(--primitives-area-280);
+		--_menu-max-width: min(100vw - 2 * var(--_menu-viewport-margin), var(--primitives-area-640));
+		--_menu-max-height: calc(infinity * 1px);
+		--_menu-max-items: 9999;
+		--_menu-padding: var(--primitives-space-8);
+		--_menu-item-size: var(--semantics-controls-md-min-size);
+		--_menu-item-background-color: transparent;
+		--_menu-item-is-highlighted-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_menu-item-is-highlighted-content-color: var(--semantics-controls-is-highlighted-contrast-color);
 
 		@media (pointer: fine) {
-			--_padding: var(--primitives-space-6);
-			--_item-size: var(--semantics-controls-sm-min-size);
+			--_menu-padding: var(--primitives-space-6);
+			--_menu-item-size: var(--semantics-controls-sm-min-size);
 		}
 
 		/* A menu is an overlay: context from where it happens to be ANCHORED must
@@ -62,8 +62,8 @@ export const menuStyles = css`
 	}
 
 	:host([scroll-active]) {
-		--_item-is-highlighted-background-color: transparent;
-		--_item-is-highlighted-content-color: initial;
+		--_menu-item-is-highlighted-background-color: transparent;
+		--_menu-item-is-highlighted-content-color: initial;
 	}
 
 
@@ -75,15 +75,15 @@ export const menuStyles = css`
 		border-radius: var(--semantics-overlays-corner-radius);
 		box-shadow: var(--semantics-overlays-box-shadow);
 		background: var(--semantics-surfaces-base-background-color);
-		width: var(--_width, max-content);
-		min-width: var(--_min-width);
-		max-width: var(--_max-width);
+		width: var(--_menu-width, max-content);
+		min-width: var(--_menu-min-width);
+		max-width: var(--_menu-max-width);
 		flex-direction: column;
-		max-height: min(var(--_max-height), calc(var(--_max-items) * var(--_item-size) + var(--_padding) * 2));
+		max-height: min(var(--_menu-max-height), calc(var(--_menu-max-items) * var(--_menu-item-size) + var(--_menu-padding) * 2));
 		outline: none;
 		overflow-x: hidden;
 		overflow-y: auto;
-		scroll-padding-block: var(--_padding);
+		scroll-padding-block: var(--_menu-padding);
 	}
 
 	.menu:focus-visible:not(.is-pointer-focus) {
@@ -98,7 +98,7 @@ export const menuStyles = css`
 	.menu__main {
 		display: flex;
 		flex-direction: column;
-		padding: var(--_padding);
+		padding: var(--_menu-padding);
 	}
 
 	.menu__list {
@@ -137,7 +137,7 @@ export const menuStyles = css`
 		border-radius: var(--semantics-controls-md-corner-radius);
 		background: transparent;
 		width: 100%;
-		min-height: var(--_item-size);
+		min-height: var(--_menu-item-size);
 		padding: var(--primitives-space-8);
 		flex-direction: row;
 		align-items: center;
@@ -156,14 +156,14 @@ export const menuStyles = css`
 
 	@media (hover: hover) {
 		.menu__back-button:hover {
-			background-color: var(--_item-is-highlighted-background-color);
-			--context-content-color: var(--_item-is-highlighted-content-color);
+			background-color: var(--_menu-item-is-highlighted-background-color);
+			--context-content-color: var(--_menu-item-is-highlighted-content-color);
 		}
 	}
 
 	.menu__back-button:active:hover {
-		background-color: var(--_item-is-highlighted-background-color);
-		--context-content-color: var(--_item-is-highlighted-content-color);
+		background-color: var(--_menu-item-is-highlighted-background-color);
+		--context-content-color: var(--_menu-item-is-highlighted-content-color);
 	}
 
 	.menu__back-button:focus-visible {
@@ -222,7 +222,7 @@ export const menuItemStyles = css`
 	 * the cursor returns to the opener. */
 
 	.menu__item[aria-expanded="true"] {
-		--_item-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+		--_menu-item-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
 		--context-content-color: var(--_menu-item-is-expanded-content-color);
 		--context-content-secondary-color: var(--_menu-item-is-expanded-content-color);
 	}
@@ -232,21 +232,21 @@ export const menuItemStyles = css`
 	 * :hover on [aria-expanded="true"] covers the cursor-on-open-opener
 	 * case where [highlighted] has been cleared by submenu-open.
 	 * :active:hover is the press flash on touch (neutralised during
-	 * scroll via --_item-is-highlighted-* on :host([scroll-active])). */
+	 * scroll via --_menu-item-is-highlighted-* on :host([scroll-active])). */
 
 	:host([highlighted]) .menu__item,
 	.menu__item[aria-expanded="true"]:hover,
 	.menu__item:active:hover {
-		--_item-background-color: var(--_item-is-highlighted-background-color);
-		--context-content-color: var(--_item-is-highlighted-content-color);
-		--context-content-secondary-color: var(--_item-is-highlighted-content-color);
+		--_menu-item-background-color: var(--_menu-item-is-highlighted-background-color);
+		--context-content-color: var(--_menu-item-is-highlighted-content-color);
+		--context-content-secondary-color: var(--_menu-item-is-highlighted-content-color);
 	}
 
 	/* ## Destructive */
 
 	:host([destructive]) {
-		--_item-is-highlighted-background-color: light-dark(var(--primitives-color-critical-600), var(--primitives-color-critical-650));
-		--_item-is-highlighted-content-color: var(--primitives-color-neutral-0);
+		--_menu-item-is-highlighted-background-color: light-dark(var(--primitives-color-critical-600), var(--primitives-color-critical-650));
+		--_menu-item-is-highlighted-content-color: var(--primitives-color-neutral-0);
 		--context-content-color: var(--_menu-item-is-destructive-content-color);
 		--context-content-secondary-color: var(--_menu-item-is-destructive-content-color);
 	}
@@ -259,9 +259,9 @@ export const menuItemStyles = css`
 		box-sizing: border-box;
 		border: none;
 		border-radius: var(--semantics-controls-md-corner-radius);
-		background: var(--_item-background-color);
+		background: var(--_menu-item-background-color);
 		width: 100%;
-		min-height: var(--_item-size);
+		min-height: var(--_menu-item-size);
 		padding: var(--primitives-space-8);
 		flex-direction: row;
 		align-items: center;

@@ -10,19 +10,19 @@ export const multiLineTextFieldStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: 100%;
-		--_background-color: var(--semantics-input-fields-background-color);
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
-		--_min-height: var(--semantics-controls-md-min-size);
-		--_text-font: var(--semantics-input-fields-md-text-font);
-		--_icon-area-size: calc(var(--_min-height) - var(--semantics-input-fields-border-width) * 2);
-		--_validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
-		--_rows: 3;
+		--_multi-line-text-field-width: 100%;
+		--_multi-line-text-field-background-color: var(--semantics-input-fields-background-color);
+		--_multi-line-text-field-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_multi-line-text-field-inline-padding: calc(var(--semantics-controls-md-inline-padding) - var(--semantics-input-fields-border-width));
+		--_multi-line-text-field-min-height: var(--semantics-controls-md-min-size);
+		--_multi-line-text-field-text-font: var(--semantics-input-fields-md-text-font);
+		--_multi-line-text-field-icon-area-size: calc(var(--_multi-line-text-field-min-height) - var(--semantics-input-fields-border-width) * 2);
+		--_multi-line-text-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
+		--_multi-line-text-field-rows: 3;
 
 		${inheritedTextReset}
 		display: block;
-		width: var(--_width);
+		width: var(--_multi-line-text-field-width);
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;
 	}
@@ -32,11 +32,11 @@ export const multiLineTextFieldStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_inline-padding: calc(var(--semantics-controls-sm-inline-padding) - var(--semantics-input-fields-border-width));
-		--_min-height: var(--semantics-controls-sm-min-size);
-		--_text-font: var(--semantics-input-fields-sm-text-font);
-		--_validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
+		--_multi-line-text-field-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_multi-line-text-field-inline-padding: calc(var(--semantics-controls-sm-inline-padding) - var(--semantics-input-fields-border-width));
+		--_multi-line-text-field-min-height: var(--semantics-controls-sm-min-size);
+		--_multi-line-text-field-text-font: var(--semantics-input-fields-sm-text-font);
+		--_multi-line-text-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
 	}
 
 
@@ -47,8 +47,8 @@ export const multiLineTextFieldStyles = css`
 		display: block;
 		position: relative;
 		border: var(--semantics-input-fields-border);
-		border-radius: var(--_corner-radius);
-		background-color: var(--_background-color);
+		border-radius: var(--_multi-line-text-field-corner-radius);
+		background-color: var(--_multi-line-text-field-background-color);
 		overflow: hidden;
 	}
 
@@ -61,7 +61,7 @@ export const multiLineTextFieldStyles = css`
 	}
 
 	:host([readonly]) .multi-line-text-field {
-		--_background-color: var(--semantics-input-fields-is-read-only-background-color);
+		--_multi-line-text-field-background-color: var(--semantics-input-fields-is-read-only-background-color);
 		border-color: var(--semantics-input-fields-is-read-only-border-color);
 	}
 
@@ -71,7 +71,7 @@ export const multiLineTextFieldStyles = css`
 
 	.multi-line-text-field:has(textarea:-webkit-autofill),
 	.multi-line-text-field:has(textarea:autofill) {
-		--_background-color: var(--semantics-input-fields-is-autofill-background-color);
+		--_multi-line-text-field-background-color: var(--semantics-input-fields-is-autofill-background-color);
 	}
 
 	.multi-line-text-field:focus-within {
@@ -92,13 +92,13 @@ export const multiLineTextFieldStyles = css`
 		background: transparent;
 		width: 100%;
 		/* rows is the floor in every resize mode: one row already fits in
-		   --_min-height, each extra row adds one line height. (resize="auto"
+		   --_multi-line-text-field-min-height, each extra row adds one line height. (resize="auto"
 		   then grows past it via field-sizing.) */
-		min-height: calc(var(--_min-height) - var(--semantics-input-fields-border-width) * 2 + (var(--_rows) - 1) * 1lh);
-		padding-block: calc((var(--_min-height) - var(--semantics-input-fields-border-width) * 2 - 1lh) / 2);
-		padding-inline: var(--_inline-padding);
+		min-height: calc(var(--_multi-line-text-field-min-height) - var(--semantics-input-fields-border-width) * 2 + (var(--_multi-line-text-field-rows) - 1) * 1lh);
+		padding-block: calc((var(--_multi-line-text-field-min-height) - var(--semantics-input-fields-border-width) * 2 - 1lh) / 2);
+		padding-inline: var(--_multi-line-text-field-inline-padding);
 		color: var(--semantics-content-color);
-		font: var(--_text-font);
+		font: var(--_multi-line-text-field-text-font);
 		appearance: none;
 		resize: none;
 		field-sizing: content;
@@ -116,7 +116,7 @@ export const multiLineTextFieldStyles = css`
 
 	:host([valid]) .multi-line-text-field__input,
 	:host([invalid]) .multi-line-text-field__input {
-		padding-inline-end: var(--_icon-area-size);
+		padding-inline-end: var(--_multi-line-text-field-icon-area-size);
 	}
 
 	:host([disabled]) .multi-line-text-field__input {
@@ -131,7 +131,7 @@ export const multiLineTextFieldStyles = css`
 	.multi-line-text-field__input:autofill,
 	.multi-line-text-field__input:-webkit-autofill:disabled,
 	.multi-line-text-field__input:autofill:disabled {
-		box-shadow: 0 0 0 999px var(--_background-color) inset;
+		box-shadow: 0 0 0 999px var(--_multi-line-text-field-background-color) inset;
 		-webkit-text-fill-color: var(--semantics-input-fields-is-autofill-content-color);
 	}
 
@@ -141,8 +141,8 @@ export const multiLineTextFieldStyles = css`
 		top: 0;
 		right: 0;
 		pointer-events: none;
-		width: var(--_icon-area-size);
-		height: var(--_icon-area-size);
+		width: var(--_multi-line-text-field-icon-area-size);
+		height: var(--_multi-line-text-field-icon-area-size);
 		align-items: center;
 		justify-content: center;
 	}
@@ -156,7 +156,7 @@ export const multiLineTextFieldStyles = css`
 	}
 
 	.multi-line-text-field__validation-icon {
-		width: var(--_validation-icon-size);
-		height: var(--_validation-icon-size);
+		width: var(--_multi-line-text-field-validation-icon-size);
+		height: var(--_multi-line-text-field-validation-icon-size);
 	}
 `;

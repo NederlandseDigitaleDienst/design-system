@@ -422,9 +422,9 @@ export class NLDDList extends LitElement {
 			// local var the CSS reads as max-height on the scroll region.
 			const h = this.height;
 			if (h && CSS.supports('max-height', h)) {
-				this.style.setProperty('--_max-height', h);
+				this.style.setProperty('--_list-max-height', h);
 			} else {
-				this.style.removeProperty('--_max-height');
+				this.style.removeProperty('--_list-max-height');
 			}
 		}
 	}
@@ -1215,7 +1215,7 @@ export class NLDDList extends LitElement {
 		// Move floating clone
 		if (this._clone) {
 			this._listRect = this.getBoundingClientRect();
-			this._clone.style.setProperty('--_drag-clone-top', `${event.clientY - this._listRect.top - this._cloneOffsetY}px`);
+			this._clone.style.setProperty('--_list-drag-clone-top', `${event.clientY - this._listRect.top - this._cloneOffsetY}px`);
 		}
 
 		const draggingDown = event.clientY >= this._lastPointerY;
@@ -1357,10 +1357,10 @@ export class NLDDList extends LitElement {
 
 		this._clone = document.createElement('div');
 		this._clone.className = 'list__drag-clone';
-		this._clone.style.setProperty('--_drag-clone-top', `${clientY - this._listRect.top - this._cloneOffsetY}px`);
-		this._clone.style.setProperty('--_drag-clone-left', `${rect.left - this._listRect.left}px`);
-		this._clone.style.setProperty('--_drag-clone-width', `${rect.width}px`);
-		this._clone.style.setProperty('--_drag-clone-height', `${rect.height}px`);
+		this._clone.style.setProperty('--_list-drag-clone-top', `${clientY - this._listRect.top - this._cloneOffsetY}px`);
+		this._clone.style.setProperty('--_list-drag-clone-left', `${rect.left - this._listRect.left}px`);
+		this._clone.style.setProperty('--_list-drag-clone-width', `${rect.width}px`);
+		this._clone.style.setProperty('--_list-drag-clone-height', `${rect.height}px`);
 		this._clone.appendChild(hostClone);
 		this.renderRoot.appendChild(this._clone);
 	}
