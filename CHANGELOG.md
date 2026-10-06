@@ -17,6 +17,10 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-design-migrate` covers sites built by a static site generator** (MkDocs, Hugo, Eleventy). Leave the authors' Markdown alone and convert the rendered HTML in a build hook, take the bundle from the registry without a bundler and pin it with its integrity hash, and decide up front what is left without JavaScript and what loading the whole bundle on every page costs. The behavior check now also strips the base path a site runs under, because a pull request preview runs under a different one than production.
 
+### Changed
+
+- **`nldd-blockquote` wraps with `text-wrap: pretty`**, the quote as well as the attribution, so neither ends on a single word on its last line.
+
 ### Breaking
 
 - **The long form of a skill name is `/nldd-design-system:nldd-design`**, no longer `/nldd:nldd-design`, because the prefix follows the plugin name. This holds for existing installs too, from their next update. A permission rule such as `Skill(nldd:nldd-design-build)` or a hook that matches on the long form stops matching, without an error. The short form (`/nldd-design`) is unchanged, and so is the skill an assistant picks by itself. The README has a search that finds the places to change.

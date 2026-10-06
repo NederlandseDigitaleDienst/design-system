@@ -50,6 +50,7 @@ export const blockquoteStyles = css`
 		flex-direction: column;
 		gap: calc(var(--_spacing) / 2);
 		color: var(--semantics-content-color);
+		text-wrap: pretty;
 	}
 
 
