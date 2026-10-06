@@ -76,7 +76,7 @@ function layout({ title, description, path, main, facts, bodyClass = '' }) {
 	<nldd-app-view>
 		<nldd-page>
 			<nldd-skip-link slot="header">
-				<nldd-top-navigation-bar website-title="${SITE_NAME}" website-href="/">
+				<nldd-top-navigation-bar logo-title="Nederlandse Digitale Dienst" logo-subtitle="Ministerie van Economische Zaken en Klimaat" website-title="${SITE_NAME}" website-href="/">
 					<nldd-menu-bar slot="global" accessible-label="Hoofdnavigatie">
 					${items}
 					</nldd-menu-bar>
