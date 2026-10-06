@@ -204,11 +204,16 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 | --- | ---- | -------- |
 | Website: kleuren, iconen en favicon, en de presentaties | [mijnoverheidzakelijk.nl](https://mijnoverheidzakelijk.nl) | [MinBZK/moza-site](https://github.com/MinBZK/moza-site) |
 
-#### Overige projecten
+#### De dienst zelf
 
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
 | Website van de Nederlandse Digitale Dienst | [digitaledienst.overheid.nl](https://digitaledienst.overheid.nl) | geen publieke repository |
+
+#### Overige projecten
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
 | NeRDS, de Nederlandse Richtlijn Digitale Systemen | [nederlandsedigitaledienst.github.io/NeRDS](https://nederlandsedigitaledienst.github.io/NeRDS/) | [NederlandseDigitaleDienst/NeRDS](https://github.com/NederlandseDigitaleDienst/NeRDS) |
 | Ruimte, een werkinstrument voor het samenstellen van een formatie | [nederlandsedigitaledienst.github.io/ruimte](https://nederlandsedigitaledienst.github.io/ruimte/) | [NederlandseDigitaleDienst/ruimte](https://github.com/NederlandseDigitaleDienst/ruimte) |
 
