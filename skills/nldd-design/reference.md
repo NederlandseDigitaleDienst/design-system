@@ -1489,7 +1489,7 @@ A selectable button that toggles between selected and unselected. Available as a
 | `name` | `string` | Name for form submission (checkbox/radio) |
 | `text` | `string` | Button text |
 | `icon` | `string` | Icon name for nldd-icon |
-| `selected-icon` | `string` | Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one they fill, so the state always shows. |
+| `selected-icon` | `string` | Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one, or with `variant="text"` where the icon does not render, they fill, so the state always shows. |
 | `variant` | `'text' \| 'icon' \| 'icon-and-text'` | What renders: text, icon, or both. Unset → auto-detect from text/icon attributes. |
 | `accessible-label` | `string` | Accessible label; required for icon-only usage |
 | `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |

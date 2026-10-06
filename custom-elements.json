@@ -22115,7 +22115,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one they fill, so the state always shows.",
+              "description": "Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one, or with `variant=\"text\"` where the icon does not render, they fill, so the state always shows.",
               "fieldName": "selectedIcon"
             },
             {

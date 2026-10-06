@@ -29,6 +29,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A transparent `nldd-toggle-button` with `variant="text"` fills when it is on, also with a `selected-icon`.** A transparent toggle with a selected icon stays without a fill and lets the change of icon show that it is on. With `variant="text"` the icon does not render, so nothing changed at all when you switched it on.
+
 - **`nldd-toolbar` no longer leaves an item in the overflow menu that fits.** When the toolbar measured while the web font was still loading, an item could take its width from the fallback font, go into the menu, and stay there once the font arrived: a hidden item has no width to watch. The toolbar now measures again when the fonts have loaded. In the toolbar-with-actions pattern at 375px the tab bar went into the menu in 7 of 10 page loads.
 
 ## [0.8.95](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.94...v0.8.95) (2026-10-06)

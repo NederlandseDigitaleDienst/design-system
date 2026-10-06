@@ -150,7 +150,7 @@ export const toggleButtonStyles = css`
 		--_toggle-button-is-selected-is-active-highlight-border-color: var(--semantics-buttons-accent-transparent-is-selected-is-active-highlight-border-color);
 	}
 
-	:host([selected-icon]:is([appearance="neutral-transparent"], [appearance="accent-transparent"])) {
+	:host([selected-icon]:not([variant="text"]):is([appearance="neutral-transparent"], [appearance="accent-transparent"])) {
 		--_toggle-button-is-selected-background-color: var(--_toggle-button-background-color);
 		--_toggle-button-is-selected-content-color: var(--_toggle-button-content-color);
 		--_toggle-button-is-selected-highlight-border-color: var(--_toggle-button-highlight-border-color);

@@ -645,6 +645,15 @@ describe('nldd-toggle-button – selected-icon', () => {
 		});
 	}
 
+	// With variant="text" the icon does not render, so its change of shape says
+	// nothing: the fill has to show that it is on.
+	for (const appearance of ['neutral-transparent', 'accent-transparent']) {
+		it(`fills ${appearance} when on if variant="text" hides the selected-icon`, async () => {
+			el = await fixture<NLDDToggleButton>(`<nldd-toggle-button appearance="${appearance}" variant="text" text="Volgen" icon="plus" selected-icon="check-mark" selected></nldd-toggle-button>`);
+			expect(await surface()).not.toBe('rgba(0, 0, 0, 0)');
+		});
+	}
+
 	it('fills when on without a selected-icon', async () => {
 		el = await fixture<NLDDToggleButton>('<nldd-toggle-button appearance="neutral-transparent" text="Vet" icon="bold" selected></nldd-toggle-button>');
 		expect(await surface()).not.toBe('rgba(0, 0, 0, 0)');
