@@ -67,7 +67,7 @@ describe('nldd-top-navigation-bar', () => {
 		el.style.setProperty('--semantics-page-sections-md-margin-inline', '40px');
 		el.style.setProperty('--semantics-page-sections-lg-margin-inline', '56px');
 		el.style.setProperty('--semantics-page-sections-body-max-width', '1280px');
-		el.style.setProperty('--components-menu-bar-item-inline-padding', '8px');
+		el.style.setProperty('--semantics-menu-bar-items-inline-padding', '8px');
 		const sr = el.shadowRoot!;
 		const host = el.getBoundingClientRect();
 		const logoBar = sr.querySelector('.top-navigation-bar__logo-bar')!.getBoundingClientRect();

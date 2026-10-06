@@ -42,7 +42,7 @@ export const menuBarItemStyles = css`
 		background: none;
 		min-width: var(--semantics-controls-md-min-size);
 		height: var(--semantics-controls-md-min-size);
-		padding: 0 var(--components-menu-bar-item-inline-padding);
+		padding: 0 var(--semantics-menu-bar-items-inline-padding);
 		gap: var(--primitives-space-4);
 		align-items: center;
 		justify-content: center;

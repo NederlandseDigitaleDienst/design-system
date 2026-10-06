@@ -137,7 +137,7 @@ export const listStyles = css`
 	}
 
 	:host([appearance^="box"]) .list__items {
-		padding-inline: calc(var(--components-list-item-indicator-inline-inset) + var(--_box-padding));
+		padding-inline: calc(var(--semantics-list-items-indicator-inline-inset) + var(--_box-padding));
 		padding-block: var(--_box-padding);
 	}
 
@@ -145,7 +145,7 @@ export const listStyles = css`
 		max-height: var(--_max-height);
 		overflow-x: hidden;
 		overflow-y: auto;
-		padding-inline: var(--components-list-item-indicator-inline-inset);
+		padding-inline: var(--semantics-list-items-indicator-inline-inset);
 	}
 
 	.list__empty {
@@ -251,7 +251,7 @@ export const listStyles = css`
 
 	::slotted(.nldd-list-drag-placeholder) {
 		box-sizing: border-box;
-		border-radius: var(--components-list-item-indicator-corner-radius);
+		border-radius: var(--semantics-list-items-indicator-corner-radius);
 		background-color: var(--components-list-drag-placeholder-background-color);
 		pointer-events: none;
 	}
@@ -263,7 +263,7 @@ export const listStyles = css`
 		left: var(--_drag-clone-left);
 		opacity: var(--_drag-clone-opacity);
 		z-index: var(--_drag-clone-z-index);
-		border-radius: var(--components-list-item-indicator-corner-radius);
+		border-radius: var(--semantics-list-items-indicator-corner-radius);
 		background: var(--semantics-surfaces-base-background-color);
 		pointer-events: none;
 		width: var(--_drag-clone-width);

@@ -19,8 +19,8 @@ export const menuStyles = css`
 		--_padding: var(--primitives-space-8);
 		--_item-size: var(--semantics-controls-md-min-size);
 		--_item-background-color: transparent;
-		--_item-is-highlighted-background-color: var(--components-menu-item-is-highlighted-background-color);
-		--_item-is-highlighted-content-color: var(--components-menu-item-is-highlighted-content-color);
+		--_item-is-highlighted-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_item-is-highlighted-content-color: var(--semantics-controls-is-highlighted-contrast-color);
 
 		@media (pointer: fine) {
 			--_padding: var(--primitives-space-6);
@@ -73,7 +73,7 @@ export const menuStyles = css`
 		display: flex;
 		box-sizing: border-box;
 		border-radius: var(--semantics-overlays-corner-radius);
-		box-shadow: var(--components-menu-box-shadow);
+		box-shadow: var(--semantics-overlays-box-shadow);
 		background: var(--semantics-surfaces-base-background-color);
 		width: var(--_width, max-content);
 		min-width: var(--_min-width);
@@ -87,7 +87,7 @@ export const menuStyles = css`
 	}
 
 	.menu:focus-visible:not(.is-pointer-focus) {
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--components-menu-box-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow), var(--semantics-overlays-box-shadow);
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 	}

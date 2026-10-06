@@ -1705,6 +1705,60 @@
 	--semantics-focus-ring-outline-offset: var(--primitives-border-width-regular);
 	--semantics-focus-ring-box-shadow: 0 0 0 calc(var(--primitives-border-width-regular) * 3) var(--semantics-surfaces-base-background-color);
 
+	/* ## Code syntax */
+
+	--semantics-code-syntax-comment-color: var(--semantics-content-secondary-color);
+	--semantics-code-syntax-punctuation-color: var(--semantics-content-color);
+	--semantics-code-syntax-keyword-color: var(--primitives-color-donkergeel-650);
+	--semantics-code-syntax-string-color: var(--primitives-color-groen-650);
+	--semantics-code-syntax-number-color: var(--primitives-color-oranje-650);
+	--semantics-code-syntax-boolean-color: var(--primitives-color-oranje-650);
+	--semantics-code-syntax-null-color: var(--primitives-color-oranje-650);
+	--semantics-code-syntax-function-color: var(--primitives-color-lintblauw-650);
+	--semantics-code-syntax-class-color: var(--primitives-color-donkergeel-650);
+	--semantics-code-syntax-builtin-color: var(--primitives-color-donkergeel-650);
+	--semantics-code-syntax-tag-color: var(--primitives-color-groen-650);
+	--semantics-code-syntax-attr-name-color: var(--primitives-color-lintblauw-650);
+	--semantics-code-syntax-attr-value-color: var(--primitives-color-mintgroen-650);
+	--semantics-code-syntax-property-color: var(--primitives-color-lintblauw-650);
+	--semantics-code-syntax-selector-color: var(--primitives-color-donkergeel-650);
+	--semantics-code-syntax-atrule-color: var(--primitives-color-groen-650);
+	--semantics-code-syntax-regex-color: var(--primitives-color-rood-650);
+	--semantics-code-syntax-url-color: var(--primitives-color-mintgroen-650);
+	--semantics-code-syntax-operator-color: var(--primitives-color-groen-650);
+	--semantics-code-syntax-constant-color: var(--primitives-color-oranje-650);
+	--semantics-code-syntax-deleted-color: var(--primitives-color-rood-650);
+	--semantics-code-syntax-inserted-color: var(--primitives-color-groen-650);
+	--semantics-code-syntax-important-color: var(--primitives-color-rood-650);
+	--semantics-code-syntax-symbol-color: var(--primitives-color-violet-650);
+	--semantics-code-syntax-entity-color: var(--primitives-color-paars-650);
+	--semantics-code-syntax-variable-color: var(--primitives-color-lintblauw-650);
+
+	/* ## List items */
+
+	--semantics-list-items-indicator-corner-radius: var(--primitives-corner-radius-sm);
+	--semantics-list-items-indicator-inline-inset: var(--primitives-space-8);
+	--semantics-list-items-is-hovered-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+	--semantics-list-items-is-hovered-content-color: var(--primitives-color-neutral-1000);
+	--semantics-list-items-is-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-200));
+	--semantics-list-items-is-active-content-color: var(--primitives-color-neutral-1000);
+	--semantics-list-items-is-expanded-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+	--semantics-list-items-is-expanded-content-color: var(--primitives-color-neutral-1000);
+	--semantics-list-items-is-expanded-is-hovered-background-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
+	--semantics-list-items-is-expanded-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-350));
+	--semantics-list-items-is-selected-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+	--semantics-list-items-is-selected-content-color: var(--primitives-color-neutral-1000);
+	--semantics-list-items-is-selected-is-hovered-background-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
+	--semantics-list-items-is-selected-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-350));
+	--semantics-list-items-is-highlighted-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-700));
+	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-750));
+	--semantics-list-items-is-highlighted-content-color: var(--semantics-controls-is-highlighted-contrast-color);
+
+	/* ## Menu bar items */
+
+	--semantics-menu-bar-items-inline-padding: var(--primitives-space-8);
+
 	/* # Components */
 
 	/* ## Avatar */
@@ -1871,69 +1925,15 @@
 	--components-keyboard-shortcut-corner-radius: var(--primitives-corner-radius-xs);
 	--components-keyboard-shortcut-separator-color: var(--semantics-content-secondary-color);
 
-	/* ## Code
-
-	   Token colors used by nldd-code's Prism syntax highlighting.
-	   Solarized-inspired, mapped to descriptive DS palettes. Consumers
-	   can override per-instance on `nldd-code` to swap the theme. */
-
-	--components-code-viewer-token-comment-color: var(--semantics-content-secondary-color);
-	--components-code-viewer-token-punctuation-color: var(--semantics-content-color);
-	--components-code-viewer-token-keyword-color: var(--primitives-color-donkergeel-650);
-	--components-code-viewer-token-string-color: var(--primitives-color-groen-650);
-	--components-code-viewer-token-number-color: var(--primitives-color-oranje-650);
-	--components-code-viewer-token-boolean-color: var(--primitives-color-oranje-650);
-	--components-code-viewer-token-null-color: var(--primitives-color-oranje-650);
-	--components-code-viewer-token-function-color: var(--primitives-color-lintblauw-650);
-	--components-code-viewer-token-class-color: var(--primitives-color-donkergeel-650);
-	--components-code-viewer-token-builtin-color: var(--primitives-color-donkergeel-650);
-	--components-code-viewer-token-tag-color: var(--primitives-color-groen-650);
-	--components-code-viewer-token-attr-name-color: var(--primitives-color-lintblauw-650);
-	--components-code-viewer-token-attr-value-color: var(--primitives-color-mintgroen-650);
-	--components-code-viewer-token-property-color: var(--primitives-color-lintblauw-650);
-	--components-code-viewer-token-selector-color: var(--primitives-color-donkergeel-650);
-	--components-code-viewer-token-atrule-color: var(--primitives-color-groen-650);
-	--components-code-viewer-token-regex-color: var(--primitives-color-rood-650);
-	--components-code-viewer-token-url-color: var(--primitives-color-mintgroen-650);
-	--components-code-viewer-token-operator-color: var(--primitives-color-groen-650);
-	--components-code-viewer-token-constant-color: var(--primitives-color-oranje-650);
-	--components-code-viewer-token-deleted-color: var(--primitives-color-rood-650);
-	--components-code-viewer-token-inserted-color: var(--primitives-color-groen-650);
-	--components-code-viewer-token-important-color: var(--primitives-color-rood-650);
-	--components-code-viewer-token-symbol-color: var(--primitives-color-violet-650);
-	--components-code-viewer-token-entity-color: var(--primitives-color-paars-650);
-	--components-code-viewer-token-variable-color: var(--primitives-color-lintblauw-650);
-
 	/* ## List */
 
 	--components-list-drag-placeholder-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
 
 	--components-list-item-sm-padding-block: var(--primitives-space-6);
 	--components-list-item-md-padding-block: var(--primitives-space-10);
-	--components-list-item-indicator-corner-radius: var(--primitives-corner-radius-sm);
-	--components-list-item-indicator-inline-inset: var(--primitives-space-8);
-	--components-list-item-is-hovered-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
-	--components-list-item-is-hovered-content-color: var(--primitives-color-neutral-1000);
-	--components-list-item-is-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-200));
-	--components-list-item-is-active-content-color: var(--primitives-color-neutral-1000);
-	--components-list-item-is-expanded-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
-	--components-list-item-is-expanded-content-color: var(--primitives-color-neutral-1000);
-	--components-list-item-is-expanded-is-hovered-background-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
-	--components-list-item-is-expanded-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-350));
-	--components-list-item-is-selected-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
-	--components-list-item-is-selected-content-color: var(--primitives-color-neutral-1000);
-	--components-list-item-is-selected-is-hovered-background-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
-	--components-list-item-is-selected-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-350));
-	--components-list-item-is-highlighted-background-color: var(--semantics-controls-is-highlighted-indicator-color);
-	--components-list-item-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-700));
-	--components-list-item-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-750));
-	--components-list-item-is-highlighted-content-color: var(--semantics-controls-is-highlighted-contrast-color);
 
 	/* ## Menu */
 
-	--components-menu-box-shadow: var(--primitives-box-shadows-level-5);
-	--components-menu-item-is-highlighted-background-color: var(--semantics-controls-is-highlighted-indicator-color);
-	--components-menu-item-is-highlighted-content-color: var(--semantics-controls-is-highlighted-contrast-color);
 	--components-menu-item-is-expanded-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
 	--components-menu-item-is-expanded-content-color: var(--primitives-color-neutral-1000);
 	--components-menu-item-is-destructive-content-color: var(--semantics-content-critical-color);
@@ -1943,7 +1943,6 @@
 	/* ## Menu bar */
 
 	--components-menu-bar-item-font: var(--primitives-font-body-md-medium-flat);
-	--components-menu-bar-item-inline-padding: var(--primitives-space-8);
 	--components-menu-bar-item-content-color: var(--primitives-color-accent-750);
 	--components-menu-bar-item-is-hovered-indicator-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
 	--components-menu-bar-item-is-expanded-indicator-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-250));

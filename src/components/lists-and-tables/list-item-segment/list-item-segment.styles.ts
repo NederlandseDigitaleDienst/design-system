@@ -68,7 +68,7 @@ export const listItemSegmentStyles = css`
 		width: 100%;
 		min-width: 0;
 		padding: 0;
-		padding-inline: var(--components-list-item-indicator-inline-inset);
+		padding-inline: var(--semantics-list-items-indicator-inline-inset);
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
@@ -96,7 +96,7 @@ export const listItemSegmentStyles = css`
 		z-index: var(--_fill-z-index);
 		inset-block: 0;
 		inset-inline: 0;
-		border-radius: var(--components-list-item-indicator-corner-radius);
+		border-radius: var(--semantics-list-items-indicator-corner-radius);
 		background-color: var(--_background-color);
 		pointer-events: none;
 	}
@@ -106,9 +106,9 @@ export const listItemSegmentStyles = css`
 	@media (hover: hover) {
 		:host(:not([disabled])) a.list-item-segment:hover,
 		button.list-item-segment:not(:disabled):hover {
-			--_background-color: var(--context-list-item-hovered-background-color, var(--components-list-item-is-hovered-background-color));
-			--context-content-color: var(--context-list-item-hovered-content-color, var(--components-list-item-is-hovered-content-color));
-			--context-content-secondary-color: var(--context-list-item-hovered-content-color, var(--components-list-item-is-hovered-content-color));
+			--_background-color: var(--context-list-item-hovered-background-color, var(--semantics-list-items-is-hovered-background-color));
+			--context-content-color: var(--context-list-item-hovered-content-color, var(--semantics-list-items-is-hovered-content-color));
+			--context-content-secondary-color: var(--context-list-item-hovered-content-color, var(--semantics-list-items-is-hovered-content-color));
 		}
 	}
 
@@ -119,40 +119,40 @@ export const listItemSegmentStyles = css`
 	:host(:not([disabled])) a.list-item-segment.is-pressed,
 	button.list-item-segment:not(:disabled).is-pressed,
 	:host(:not([disabled])) .list-item-segment.is-pressed {
-		--_background-color: var(--context-list-item-active-background-color, var(--components-list-item-is-active-background-color));
-		--context-content-color: var(--context-list-item-active-content-color, var(--context-list-item-hovered-content-color, var(--components-list-item-is-active-content-color)));
-		--context-content-secondary-color: var(--context-list-item-active-content-color, var(--context-list-item-hovered-content-color, var(--components-list-item-is-active-content-color)));
+		--_background-color: var(--context-list-item-active-background-color, var(--semantics-list-items-is-active-background-color));
+		--context-content-color: var(--context-list-item-active-content-color, var(--context-list-item-hovered-content-color, var(--semantics-list-items-is-active-content-color)));
+		--context-content-secondary-color: var(--context-list-item-active-content-color, var(--context-list-item-hovered-content-color, var(--semantics-list-items-is-active-content-color)));
 	}
 
 	/* After the hover rule on purpose: hovering back over the segment must not
 	   dim it while what it opened is still on screen. */
 	:host([expanded]) .list-item-segment {
-		--_background-color: var(--components-list-item-is-expanded-background-color);
-		--context-content-color: var(--components-list-item-is-expanded-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-expanded-content-color);
+		--_background-color: var(--semantics-list-items-is-expanded-background-color);
+		--context-content-color: var(--semantics-list-items-is-expanded-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-expanded-content-color);
 	}
 
 	@media (hover: hover) {
 		:host([expanded]:not([disabled])) a.list-item-segment:hover,
 		:host([expanded]) button.list-item-segment:not(:disabled):hover {
-			--_background-color: var(--components-list-item-is-expanded-is-hovered-background-color);
-			--context-content-color: var(--components-list-item-is-expanded-content-color);
-			--context-content-secondary-color: var(--components-list-item-is-expanded-content-color);
+			--_background-color: var(--semantics-list-items-is-expanded-is-hovered-background-color);
+			--context-content-color: var(--semantics-list-items-is-expanded-content-color);
+			--context-content-secondary-color: var(--semantics-list-items-is-expanded-content-color);
 		}
 	}
 
 	:host([expanded]:not([disabled])) a.list-item-segment.is-pressed,
 	:host([expanded]) button.list-item-segment:not(:disabled).is-pressed,
 	:host([expanded]:not([disabled])) .list-item-segment.is-pressed {
-		--_background-color: var(--components-list-item-is-expanded-is-active-background-color);
-		--context-content-color: var(--components-list-item-is-expanded-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-expanded-content-color);
+		--_background-color: var(--semantics-list-items-is-expanded-is-active-background-color);
+		--context-content-color: var(--semantics-list-items-is-expanded-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-expanded-content-color);
 	}
 
 	:host([checked]) .list-item-segment {
-		--_background-color: var(--components-list-item-is-selected-background-color);
-		--context-content-color: var(--components-list-item-is-selected-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-selected-content-color);
+		--_background-color: var(--semantics-list-items-is-selected-background-color);
+		--context-content-color: var(--semantics-list-items-is-selected-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 	}
 
 	.list-item-segment:focus-visible:not(.is-pointer-focus)::after {
@@ -160,7 +160,7 @@ export const listItemSegmentStyles = css`
 		display: block;
 		position: absolute;
 		inset: 0;
-		border-radius: var(--components-list-item-indicator-corner-radius);
+		border-radius: var(--semantics-list-items-indicator-corner-radius);
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);

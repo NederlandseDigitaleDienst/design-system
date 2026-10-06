@@ -299,13 +299,13 @@ export const topNavigationBarStyles = css`
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			flex-direction: row;
 			align-items: center;
-			gap: var(--components-menu-bar-item-inline-padding);
+			gap: var(--semantics-menu-bar-items-inline-padding);
 		}
 
 		@container (min-width: ${lgMin}) {
 			flex-direction: row;
 			align-items: center;
-			gap: var(--components-menu-bar-item-inline-padding);
+			gap: var(--semantics-menu-bar-items-inline-padding);
 		}
 	}
 
@@ -320,7 +320,7 @@ export const topNavigationBarStyles = css`
 		}
 
 		@container (min-width: ${mdMin}) {
-			padding-inline-end: var(--components-menu-bar-item-inline-padding);
+			padding-inline-end: var(--semantics-menu-bar-items-inline-padding);
 			justify-content: flex-start;
 		}
 	}
@@ -381,7 +381,7 @@ export const topNavigationBarStyles = css`
 		flex-grow: 1;
 		/* Pull the menu out by the menu-bar items own inline padding so the first
 		   and last item text (not its hit-area) lines up with the content edge. */
-		margin-inline: calc(-1 * var(--components-menu-bar-item-inline-padding));
+		margin-inline: calc(-1 * var(--semantics-menu-bar-items-inline-padding));
 	}
 
 	/* ## Menu bar start */

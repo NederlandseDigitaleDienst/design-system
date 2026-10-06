@@ -37,11 +37,11 @@ export const listItemStyles = css`
 		/* !important: shields the widening from consumer universal resets, which
 		   beat normal :host declarations per CSS Scoping. A negative margin
 		   cannot move inward — an inner element cannot reach outside the host. */
-		margin-inline: calc(-1 * var(--components-list-item-indicator-inline-inset)) !important;
+		margin-inline: calc(-1 * var(--semantics-list-items-indicator-inline-inset)) !important;
 	}
 
 	:host(.is-interactive) .list-item {
-		padding-inline: var(--components-list-item-indicator-inline-inset);
+		padding-inline: var(--semantics-list-items-indicator-inline-inset);
 	}
 
 	:host(.is-interactive) .list-item:has(> .list-item__action) {
@@ -127,7 +127,7 @@ export const listItemStyles = css`
 		background: none;
 		width: 100%;
 		padding: 0;
-		padding-inline: var(--components-list-item-indicator-inline-inset);
+		padding-inline: var(--semantics-list-items-indicator-inline-inset);
 		flex-direction: row;
 		align-items: stretch;
 		text-align: start;
@@ -168,9 +168,9 @@ export const listItemStyles = css`
 		display: block;
 		position: absolute;
 		inset-block: 0;
-		inset-inline: calc(-1 * var(--components-list-item-indicator-inline-inset));
+		inset-inline: calc(-1 * var(--semantics-list-items-indicator-inline-inset));
 		z-index: var(--_indicator-z-index);
-		border-radius: var(--components-list-item-indicator-corner-radius);
+		border-radius: var(--semantics-list-items-indicator-corner-radius);
 		background-color: var(--_background-color);
 		pointer-events: none;
 	}
@@ -184,18 +184,18 @@ export const listItemStyles = css`
 	   current, so a segmented row paints without one on the host. */
 	:host(:is([selected], [checkbox][checked])),
 	:host(:is([current], [data-current])) {
-		--_background-color: var(--components-list-item-is-selected-background-color);
-		--context-content-color: var(--components-list-item-is-selected-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-selected-content-color);
+		--_background-color: var(--semantics-list-items-is-selected-background-color);
+		--context-content-color: var(--semantics-list-items-is-selected-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 	}
 
 
 	/* A checked checkbox action selects the whole row, so the fill runs across
 	   the disclosure action too instead of stopping at its boundary. */
 	.list-item.is-action-checked {
-		--_background-color: var(--components-list-item-is-selected-background-color);
-		--context-content-color: var(--components-list-item-is-selected-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-selected-content-color);
+		--_background-color: var(--semantics-list-items-is-selected-background-color);
+		--context-content-color: var(--semantics-list-items-is-selected-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 	}
 
 	/* Hover only on hover-capable devices, so a touch that turns into a scroll
@@ -207,23 +207,23 @@ export const listItemStyles = css`
 	   row it sits in. */
 	@media (hover: hover) {
 		:host(:not([disabled])) .list-item__action:hover {
-			--_background-color: var(--components-list-item-is-hovered-background-color);
-			--context-content-color: var(--components-list-item-is-hovered-content-color);
-			--context-content-secondary-color: var(--components-list-item-is-hovered-content-color);
+			--_background-color: var(--semantics-list-items-is-hovered-background-color);
+			--context-content-color: var(--semantics-list-items-is-hovered-content-color);
+			--context-content-secondary-color: var(--semantics-list-items-is-hovered-content-color);
 		}
 
 		:host(:is([selected], [checkbox][checked]):not([disabled])) .list-item__action:hover,
 		:host(:is([current], [data-current]):not([disabled])) .list-item__action:hover {
-			--_background-color: var(--components-list-item-is-selected-is-hovered-background-color);
-			--context-content-color: var(--components-list-item-is-selected-content-color);
-			--context-content-secondary-color: var(--components-list-item-is-selected-content-color);
+			--_background-color: var(--semantics-list-items-is-selected-is-hovered-background-color);
+			--context-content-color: var(--semantics-list-items-is-selected-content-color);
+			--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 		}
 	}
 
 	:host(:is([selected], [checkbox][checked])) {
-		--context-list-item-hovered-background-color: var(--components-list-item-is-selected-is-hovered-background-color);
-		--context-list-item-hovered-content-color: var(--components-list-item-is-selected-content-color);
-		--context-list-item-active-background-color: var(--components-list-item-is-selected-is-active-background-color);
+		--context-list-item-hovered-background-color: var(--semantics-list-items-is-selected-is-hovered-background-color);
+		--context-list-item-hovered-content-color: var(--semantics-list-items-is-selected-content-color);
+		--context-list-item-active-background-color: var(--semantics-list-items-is-selected-is-active-background-color);
 	}
 
 	/* Pressing the row you are on lands on the accent whether or not focus got
@@ -231,10 +231,10 @@ export const listItemStyles = css`
 	   waits for focus would go grey there while the other browsers go accent.
 	   Hover still follows the focus: that is the state, not the gesture. */
 	:host(:is([current], [data-current])) {
-		--context-list-item-hovered-background-color: var(--components-list-item-is-selected-is-hovered-background-color);
-		--context-list-item-hovered-content-color: var(--components-list-item-is-selected-content-color);
-		--context-list-item-active-background-color: var(--components-list-item-is-highlighted-is-active-background-color);
-		--context-list-item-active-content-color: var(--components-list-item-is-highlighted-content-color);
+		--context-list-item-hovered-background-color: var(--semantics-list-items-is-selected-is-hovered-background-color);
+		--context-list-item-hovered-content-color: var(--semantics-list-items-is-selected-content-color);
+		--context-list-item-active-background-color: var(--semantics-list-items-is-highlighted-is-active-background-color);
+		--context-list-item-active-content-color: var(--semantics-list-items-is-highlighted-content-color);
 	}
 
 	/* focus-within on the host, not on the row-wide control: focus inside a
@@ -245,19 +245,19 @@ export const listItemStyles = css`
 	   hovering it as well, and the state it just gave focus to has to win. */
 	:host(:is([current], [data-current]):focus-within) .list-item,
 	:host(:is([current], [data-current]):focus-within) .list-item__action {
-		--context-content-color: var(--components-list-item-is-highlighted-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-highlighted-content-color);
+		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
 	}
 
 	:host(:is([current], [data-current]):focus-within) {
-		--context-list-item-hovered-background-color: var(--components-list-item-is-highlighted-is-hovered-background-color);
-		--context-list-item-hovered-content-color: var(--components-list-item-is-highlighted-content-color);
-		--context-list-item-active-background-color: var(--components-list-item-is-highlighted-is-active-background-color);
+		--context-list-item-hovered-background-color: var(--semantics-list-items-is-highlighted-is-hovered-background-color);
+		--context-list-item-hovered-content-color: var(--semantics-list-items-is-highlighted-content-color);
+		--context-list-item-active-background-color: var(--semantics-list-items-is-highlighted-is-active-background-color);
 	}
 
 	:host(:is([current], [data-current]):focus-within) .list-item::before,
 	:host(:is([current], [data-current]):focus-within) .list-item__action::before {
-		background-color: var(--components-list-item-is-highlighted-background-color);
+		background-color: var(--semantics-list-items-is-highlighted-background-color);
 	}
 
 	/* Only the row-wide control, never the row itself: on a segmented row the
@@ -265,7 +265,7 @@ export const listItemStyles = css`
 	   would hide which segment you are on. */
 	@media (hover: hover) {
 		:host(:is([current], [data-current]):focus-within:not([disabled])) .list-item__action:hover::before {
-			background-color: var(--components-list-item-is-highlighted-is-hovered-background-color);
+			background-color: var(--semantics-list-items-is-highlighted-is-hovered-background-color);
 		}
 	}
 
@@ -275,50 +275,50 @@ export const listItemStyles = css`
 	   down means the row is not focused at all. */
 	:host(:is([current], [data-current]):not([disabled])) .list-item__action.is-pressed::before,
 	:host(:is([current], [data-current]):focus-within:not([disabled])) .list-item__action.is-pressed::before {
-		background-color: var(--components-list-item-is-highlighted-is-active-background-color);
+		background-color: var(--semantics-list-items-is-highlighted-is-active-background-color);
 	}
 
 	/* The content color has to travel with the fill: the neutral press rule
 	   above sets it too, and black on a deep accent is unreadable. */
 	:host(:is([current], [data-current]):focus-within:not([disabled])) .list-item__action:hover {
-		--context-content-color: var(--components-list-item-is-highlighted-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-highlighted-content-color);
+		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
 	}
 
 	/* JS-driven rather than :active, so a touch that turns into a scroll clears
 	   the press (pointercancel) instead of flashing it. */
 	:host(:not([disabled])) .list-item__action.is-pressed {
-		--_background-color: var(--components-list-item-is-active-background-color);
-		--context-content-color: var(--components-list-item-is-active-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-active-content-color);
+		--_background-color: var(--semantics-list-items-is-active-background-color);
+		--context-content-color: var(--semantics-list-items-is-active-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-active-content-color);
 	}
 
 	:host(:is([selected], [checkbox][checked]):not([disabled])) .list-item__action.is-pressed,
 	:host(:is([current], [data-current]):not([disabled])) .list-item__action.is-pressed {
-		--_background-color: var(--components-list-item-is-selected-is-active-background-color);
-		--context-content-color: var(--components-list-item-is-selected-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-selected-content-color);
+		--_background-color: var(--semantics-list-items-is-selected-is-active-background-color);
+		--context-content-color: var(--semantics-list-items-is-selected-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 	}
 
 	:host(:is([selected], [checkbox][checked])) .list-item__action {
-		--_background-color: var(--components-list-item-is-selected-background-color);
-		--context-content-color: var(--components-list-item-is-selected-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-selected-content-color);
+		--_background-color: var(--semantics-list-items-is-selected-background-color);
+		--context-content-color: var(--semantics-list-items-is-selected-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
 	}
 
 	/* .is-highlighted is set by the list: in a listbox the focus stays in the
 	   search input, so the option cannot carry the state itself. */
 	/* After the neutral press rules above, or black lands on a deep accent. */
 	:host(:is([current], [data-current]):not([disabled])) .list-item__action.is-pressed {
-		--context-content-color: var(--components-list-item-is-highlighted-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-highlighted-content-color);
+		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
 	}
 
 	.list-item.is-highlighted,
 	:host(:is([selected], [checkbox][checked])) .list-item.is-highlighted .list-item__action {
-		--_background-color: var(--components-list-item-is-highlighted-background-color);
-		--context-content-color: var(--components-list-item-is-highlighted-content-color);
-		--context-content-secondary-color: var(--components-list-item-is-highlighted-content-color);
+		--_background-color: var(--semantics-list-items-is-highlighted-background-color);
+		--context-content-color: var(--semantics-list-items-is-highlighted-content-color);
+		--context-content-secondary-color: var(--semantics-list-items-is-highlighted-content-color);
 	}
 
 
@@ -331,7 +331,7 @@ export const listItemStyles = css`
 		display: block;
 		position: absolute;
 		inset: 0;
-		border-radius: var(--components-list-item-indicator-corner-radius);
+		border-radius: var(--semantics-list-items-indicator-corner-radius);
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
@@ -361,7 +361,7 @@ export const listItemStyles = css`
 	}
 
 	:host(.is-interactive) .list-item__children {
-		padding-inline: var(--components-list-item-indicator-inline-inset);
+		padding-inline: var(--semantics-list-items-indicator-inline-inset);
 	}
 
 	.list-item__children[hidden] {
@@ -392,8 +392,8 @@ export const listItemStyles = css`
 
 	:host(.is-interactive) .list-item__divider {
 		inset-inline:
-			var(--_divider-inset-start, var(--components-list-item-indicator-inline-inset))
-			var(--_divider-inset-end, var(--components-list-item-indicator-inline-inset));
+			var(--_divider-inset-start, var(--semantics-list-items-indicator-inline-inset))
+			var(--_divider-inset-end, var(--semantics-list-items-indicator-inline-inset));
 	}
 
 	:host(.is-boxed.is-last) .list-item {

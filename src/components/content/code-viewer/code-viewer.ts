@@ -15,7 +15,7 @@
  * `language` ships zero grammar code.
  *
  * ### Theming
- * Token colors are the `--components-code-viewer-token-*` custom properties
+ * Token colors are the `--semantics-code-syntax-*` custom properties
  * (shared with the editor via the CodeMirror highlight style). Override them
  * per-instance to swap the theme.
  *
