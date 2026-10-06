@@ -21,7 +21,7 @@
  *
  * This module is intentionally pure — no Lit imports, no custom-element
  * registration side effects. Consumers (Node build pipelines, Workers,
- * tests) can import just the encoder without dragging in the Storybook
+ * tests) can import just the encoder without dragging in the story
  * UI. The file-picker UI lives in `lqip-encoder-element.ts` and registers
  * `<nldd-lqip-encoder>` separately.
  */
@@ -275,7 +275,7 @@ export function encodePixelDataToLqip(
 export async function encodeLqip(source: File | HTMLImageElement | ImageBitmap): Promise<string> {
 	// When we create the bitmap from a File / HTMLImageElement we own its
 	// lifecycle and must close it. When the caller passes an ImageBitmap they
-	// own it (the Storybook encoder element, for one, reuses + closes its own),
+	// own it (the encoder element of the stories, for one, reuses + closes its own),
 	// so we leave that case untouched.
 	const ownsBitmap = source instanceof File || source instanceof HTMLImageElement;
 	const bitmap: ImageBitmap = ownsBitmap ? await createImageBitmap(source) : source;

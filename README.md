@@ -28,11 +28,13 @@ import { NLDDButton, NLDDCheckbox, NLDDSwitch } from '@nldd/design-system';
 <nldd-switch-field label="Meldingen inschakelen"></nldd-switch-field>
 ```
 
-## Storybook
+## Documentatie
 
-Bekijk de live component documentatie: **https://nederlandsedigitaledienst.github.io/design-system/**
+De site toont elk component met live voorbeelden, de patronen en de ontwerprichtlijnen: **https://nederlandsedigitaledienst.github.io/design-system/**
 
 ## Plugin voor AI-assistenten
+
+De korte versie, met de installatie en wat de skills doen, staat op de site: [Werken met een AI-assistent](https://nederlandsedigitaledienst.github.io/design-system/aan-de-slag/ai-assistent/). Hieronder staat hetzelfde, plus de stappen voor wie van de oude marketplace komt.
 
 De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/design-system` te werken: de juiste tags, attributen, CSS-tokens en patronen. Hij staat in de NLDD-marketplace, [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins), met een manifest voor Claude Code en een voor Cursor. Hij levert vijf skills:
 
@@ -116,10 +118,10 @@ Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwij
 # Dependencies installeren
 npm install
 
-# Storybook starten
-npm run storybook
+# De documentatiesite starten
+npm run site
 
-# Open http://localhost:6006 voor de component documentatie
+# Open het adres dat Vite meldt (standaard http://localhost:5173)
 ```
 
 ## Componenten
@@ -141,7 +143,7 @@ npm run storybook
 | `accessible-label` | string  | `''`             | Toegankelijk label voor schermlezers                                                                                                                     |
 | `popovertarget`    | string  | `''`             | ID van het popover-element                                                                                                                               |
 
-Zie de [Storybook-documentatie](https://nederlandsedigitaledienst.github.io/design-system/) voor alle componenten.
+Zie de [documentatie](https://nederlandsedigitaledienst.github.io/design-system/componenten/) voor alle componenten.
 
 ## Styling structuur
 

@@ -4296,7 +4296,7 @@
               },
               "default": "''",
               "fieldName": "lqip",
-              "description": "Low-quality image placeholder as a CSV string `\"base,c1,c2,c3,c4,c5,c6\"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the \"LQIP encoder tool\" Storybook story. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the placeholder."
+              "description": "Low-quality image placeholder as a CSV string `\"base,c1,c2,c3,c4,c5,c6\"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the \"LQIP encoder tool\" story on the component's page. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the placeholder."
             },
             {
               "name": "translations",
@@ -26298,7 +26298,7 @@
             "text": "object"
           },
           "default": "{ background: 'inherit', width: '', height: '', paddingBlock: '', paddingTop: '', paddingBottom: '', smPaddingBlock: '', smPaddingTop: '', smPaddingBottom: '', mdPaddingBlock: '', mdPaddingTop: '', mdPaddingBottom: '', lgPaddingBlock: '', lgPaddingTop: '', lgPaddingBottom: '', }",
-          "description": "Shared Storybook controls for the PageSectionMixin surface API\n(background, width, height and the 12 block-padding overrides).\nSpread into a section story's `args` / `argTypes`, and bind onto the host\nelement in `render` with the `pageSectionAttrs` directive."
+          "description": "Shared story controls for the PageSectionMixin surface API\n(background, width, height and the 12 block-padding overrides).\nSpread into a section story's `args` / `argTypes`, and bind onto the host\nelement in `render` with the `pageSectionAttrs` directive."
         },
         {
           "kind": "variable",

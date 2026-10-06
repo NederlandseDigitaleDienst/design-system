@@ -669,7 +669,7 @@ Use this checklist when creating new components or features.
 For accessibility questions or to report accessibility issues:
 
 1. Check this documentation first
-2. Review component-specific Storybook documentation
+2. Review the component's page on the documentation site
 3. Consult the WAI-ARIA Authoring Practices Guide
 4. File an issue in the project repository with the label `accessibility`
 

@@ -1,0 +1,69 @@
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Hygiëne: deze workflow declareerde `contents: read` al vóór deze PR,
+          # dus hier stond geen read-write token op het spel zoals in ci.yml en
+          # validate.yml. Het token draagt wel `pages: write`, en het blijft de
+          # hele job bereikbaar via de git-config van deze checkout terwijl
+          # `build:site` dependency-code draait. Geen enkele stap heeft het
+          # nodig: configure-pages en upload-pages-artifact gaan niet via git.
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # --ignore-scripts: a hijacked dependency release must not get to run its
+      # preinstall/postinstall hook in the job that publishes to Pages.
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      # The site is served under the repository name on Pages, so every link
+      # and asset gets that base path. configure-pages knows it.
+      - name: Build site
+        run: npm run build:site
+        env:
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: './site-dist'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

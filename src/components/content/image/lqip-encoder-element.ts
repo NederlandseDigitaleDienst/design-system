@@ -1,5 +1,5 @@
 /**
- * Storybook UI element wrapping `encodeLqip()` in a file-picker. Kept in a
+ * Story-only UI element wrapping `encodeLqip()` in a file-picker. Kept in a
  * separate module from the pure encoder so consumers importing just the
  * functions (e.g. a Node build pipeline) don't accidentally register the
  * `nldd-lqip-encoder` custom element into their registry.

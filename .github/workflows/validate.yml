@@ -78,7 +78,7 @@ jobs:
             || (echo "::error::skills/nldd-design/reference.md is verouderd. Draai 'npm run generate:component-reference' en commit het resultaat." && exit 1)
 
       # The pattern pages in the skill are generated from src/patterns/, the
-      # same markup the Storybook pages render, so an edit to a pattern that did
+      # same markup the pattern pages of the site render, so an edit to a pattern that did
       # not reach the skill is drift.
       - name: Check skill patterns are in sync
         shell: bash

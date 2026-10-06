@@ -20,7 +20,7 @@ Stel je er een voor, begin dan bij het probleem en het bewijs, niet bij de code:
 
 - **Welke taak** van de gebruiker lost dit op, en waarom lukt dat nu niet met wat er al staat?
 - **Waar draait het?** Noem de producten of schermen waar deze compositie nu al in gebruik is. Een patroon dat in meerdere producten van verschillende teams terugkomt is een patroon van het systeem; iets dat in één app staat is voorlopig een gewoonte van die app. Dat laatste sluit niets uit, maar het bepaalt wel hoe hard het bewijs is.
-- **Wat is de regel?** Een patroon zonder "waarom zo" is een stuk voorbeeldcode, en dat kan in Storybook.
+- **Wat is de regel?** Een patroon zonder "waarom zo" is een stuk voorbeeldcode, en dat kan als story bij een component.
 
 Code mag later. Draait het patroon eenmaal, dan moet elke `nldd-*`-tag in de documentatie bestaan: `npm run validate:skill-markup` controleert dat in CI, tegen de echte component-API.
 
@@ -31,10 +31,10 @@ Je hebt Node 18 of hoger nodig.
 ```bash
 npm ci
 npx playwright install --with-deps chromium
-npm run storybook
+npm run site
 ```
 
-Storybook draait op http://localhost:6006 en is de plek waar je je wijziging bekijkt. De tests draaien in een echte browser, vandaar Playwright.
+De documentatiesite draait dan lokaal (Vite meldt het adres) en is de plek waar je je wijziging bekijkt: elke story van een component staat op de pagina van dat component. De tests draaien in een echte browser, vandaar Playwright.
 
 ```bash
 npm test            # unit tests in de browser, blijft meekijken

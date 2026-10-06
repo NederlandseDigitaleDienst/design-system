@@ -144,7 +144,7 @@ const INTERNAL_TAGS = new Set(['nldd-lqip-encoder']);
 // --- Icon names ---
 // The valid `icon` values are the SVG filenames in the icon
 // folder plus the aliases. Both are build inputs, so we read them directly to
-// give consumers an offline, in-sync catalog instead of "see Storybook".
+// give consumers an offline, in-sync catalog instead of "see the site".
 
 function collectIconNames() {
 	const iconsDir = resolve(componentsDir, 'content/icon/icons');
@@ -243,7 +243,7 @@ function main() {
 
 	const intro = `# Componentreferentie — @nldd/design-system
 
-Elk custom element met zijn attributen, slots en events. Dit is een offline snelreferentie; de levende documentatie met voorbeelden staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/), en de exacte types staan in de \`.d.ts\` bestanden van het pakket.
+Elk custom element met zijn attributen, slots en events. Dit is een offline snelreferentie; de levende documentatie met voorbeelden staat op [de site](https://nederlandsedigitaledienst.github.io/design-system/componenten/), en de exacte types staan in de \`.d.ts\` bestanden van het pakket.
 
 > Deze referentie komt uit de JSDoc van de componenten. Dat elk attribuut er in staat, wordt in CI afgedwongen: \`npm run validate:component-api\` vergelijkt de \`@property\`-decorators met de \`@attr\`-regels.
 

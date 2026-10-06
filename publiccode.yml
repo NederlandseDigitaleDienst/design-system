@@ -39,7 +39,7 @@ description:
       gebruiken. Alle visuele waarden komen uit CSS-variabelen in vier lagen,
       wat licht- en donkerthema's mogelijk maakt en de huisstijl op één plek
       houdt. Het pakket wordt gepubliceerd op npm en de levende documentatie
-      staat in Storybook.
+      staat op de site van het designsysteem.
     features:
       - Web components
       - Rijkshuisstijl

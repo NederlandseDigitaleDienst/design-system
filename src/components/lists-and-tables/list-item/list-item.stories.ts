@@ -306,7 +306,7 @@ export const SimpelMetCellenAchteraan = {
  */
 export const MetSleepgreep = {
 	// Imperative render: the nldd-reorder handler mutates the DOM in place so
-	// keyboard + pointer drag actually move items. A standard Storybook render
+	// keyboard + pointer drag actually move items. A standard story render
 	// function can't do this because Lit templates are stateless.
 	render: () => {
 		const onReorder = (e: Record<string, any>) => {

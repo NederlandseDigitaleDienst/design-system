@@ -57,6 +57,10 @@ jobs:
         run: npm run typecheck
       - name: Run unit tests
         run: npm run test:run
+      # The site is only published from main, so a pull request that breaks
+      # it would otherwise go unnoticed until after the merge.
+      - name: Build the documentation site
+        run: npm run build:site
       - name: Build styles
         run: npm run build:styles
       - name: Build components

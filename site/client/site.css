@@ -1,0 +1,272 @@
+/**
+ * Styles of the site itself. Everything a component can do is left to the
+ * components; what is here is the stage, which is deliberately not a component
+ * of the system, and the little the page needs around it.
+ *
+ * The stage speaks another visual language than the system on purpose: square
+ * corners where the system rounds, monospace where the system uses Rijks Sans,
+ * a dotted mat no component draws. A reader then sees at a glance which part of
+ * the page is an example and which part is the site.
+ */
+
+@layer site {
+	/* ## Stage */
+
+	site-stage {
+		--_stage-line: color-mix(in srgb, var(--semantics-content-color) 28%, transparent);
+		--_stage-ink: color-mix(in srgb, var(--semantics-content-color) 72%, transparent);
+
+		display: block;
+		border: var(--primitives-border-width-thin) solid var(--_stage-line);
+		font-family: var(--primitives-font-family-monospace);
+		font-size: 12px;
+		line-height: 1.5;
+		color: var(--_stage-ink);
+	}
+
+	site-stage[bare] {
+		border: 0;
+		font: inherit;
+		color: inherit;
+	}
+
+	.site-stage__bar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px 12px;
+		padding: 6px 10px;
+		border-bottom: var(--primitives-border-width-thin) dashed var(--_stage-line);
+	}
+
+	.site-stage__label {
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.site-stage__label::after {
+		content: '/';
+		margin-inline-start: 12px;
+		opacity: 0.5;
+	}
+
+	.site-stage__name {
+		color: var(--semantics-content-color);
+	}
+
+	.site-stage__tools {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		margin-inline-start: auto;
+	}
+
+	.site-stage__tool {
+		appearance: none;
+		padding: 2px 8px;
+		border: var(--primitives-border-width-thin) solid var(--_stage-line);
+		border-radius: 0;
+		background: transparent;
+		font: inherit;
+		color: inherit;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.site-stage__tool:hover,
+	.site-stage__tool[aria-pressed='true'] {
+		color: var(--semantics-surfaces-base-background-color);
+		background: var(--semantics-content-color);
+		border-color: var(--semantics-content-color);
+	}
+
+	.site-stage__tool:focus-visible {
+		outline: 2px solid var(--semantics-content-color);
+		outline-offset: 2px;
+	}
+
+	/* The mat: a dotted field around the canvas that belongs to the frame. */
+	.site-stage__mat {
+		padding: 12px;
+		background-image: radial-gradient(circle, var(--_stage-line) 1px, transparent 1.5px);
+		background-size: 12px 12px;
+		overflow-x: auto;
+	}
+
+	.site-stage__mat--frame {
+		display: flex;
+		justify-content: center;
+	}
+
+	/* The canvas is a surface of the system, set here and nowhere inherited from:
+	   an example reads the surface it stands on, and that must be the one the
+	   stage says it is, not whatever the page happens to have behind it. */
+	.site-stage__canvas {
+		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
+
+		padding: 24px;
+		background-color: var(--semantics-surfaces-base-background-color);
+		font: var(--primitives-font-body-md-regular-snug);
+		color: var(--semantics-content-color);
+	}
+
+	.site-stage__canvas[data-surface='tinted'] {
+		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
+
+		background-color: var(--semantics-surfaces-tinted-background-color);
+	}
+
+	.site-stage__frame {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		border: 0;
+		background-color: var(--semantics-surfaces-base-background-color);
+	}
+
+	.site-stage__events {
+		margin: 0;
+		padding: 6px 10px 6px 30px;
+		border-top: var(--primitives-border-width-thin) dashed var(--_stage-line);
+	}
+
+	.site-stage__code {
+		border-top: var(--primitives-border-width-thin) dashed var(--_stage-line);
+		padding: 12px;
+		max-height: 420px;
+		overflow: auto;
+	}
+
+	.site-stage__controls {
+		border-top: var(--primitives-border-width-thin) dashed var(--_stage-line);
+	}
+
+	.site-stage__controls > summary {
+		padding: 6px 10px;
+		cursor: pointer;
+	}
+
+	.site-stage__grid {
+		display: grid;
+		gap: 0;
+		border-top: var(--primitives-border-width-thin) dashed var(--_stage-line);
+	}
+
+	.site-stage__control {
+		display: grid;
+		grid-template-columns: minmax(120px, 200px) minmax(120px, 240px) 1fr;
+		gap: 4px 12px;
+		align-items: start;
+		padding: 6px 10px;
+	}
+
+	.site-stage__control + .site-stage__control {
+		border-top: var(--primitives-border-width-thin) solid color-mix(in srgb, var(--_stage-line) 40%, transparent);
+	}
+
+	.site-stage__control code {
+		color: var(--semantics-content-color);
+	}
+
+	.site-stage__control input:not([type='checkbox']),
+	.site-stage__control select {
+		width: 100%;
+		min-width: 0;
+		padding: 2px 6px;
+		border: var(--primitives-border-width-thin) solid var(--_stage-line);
+		border-radius: 0;
+		background: var(--semantics-surfaces-base-background-color);
+		font: inherit;
+		color: var(--semantics-content-color);
+	}
+
+	.site-stage__control input[type='checkbox'] {
+		justify-self: start;
+		margin: 3px 0;
+	}
+
+	.site-stage__hint {
+		font-family: var(--primitives-font-family-body);
+		font-size: 13px;
+	}
+
+	@media (max-width: 640px) {
+		.site-stage__control {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* ## One example on a page of its own */
+
+	.site-frame__root--padded {
+		padding: 16px;
+	}
+
+	/* ## Around the stage */
+
+	.site-story {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		scroll-margin-top: 16px;
+	}
+
+	.site-tagname {
+		font-family: var(--primitives-font-family-monospace);
+		font-size: 14px;
+		color: var(--semantics-content-secondary-color);
+	}
+
+	.site-nav-link {
+		display: block;
+		padding: 4px 8px;
+		border-radius: var(--primitives-corner-radius-sm);
+		font: var(--primitives-font-body-sm-regular-snug);
+		color: var(--semantics-content-color);
+		text-decoration: none;
+	}
+
+	.site-nav-link:hover {
+		text-decoration: underline;
+	}
+
+	.site-nav-link[aria-current='page'] {
+		font: var(--primitives-font-body-sm-bold-snug);
+		background-color: var(--semantics-surfaces-base-background-color);
+	}
+
+	.site-nav-trigger {
+		display: none;
+	}
+
+	nldd-sidebar-section[collapsed] .site-nav-trigger {
+		display: inline-flex;
+		align-self: start;
+	}
+
+	.site-api table {
+		display: block;
+		overflow-x: auto;
+	}
+
+	.site-filter-empty {
+		margin: 16px 0 0;
+	}
+
+	site-built-with {
+		display: block;
+		padding: 0 24px 16px;
+		font-family: var(--primitives-font-family-monospace);
+		font-size: 12px;
+		line-height: 1.6;
+		color: var(--semantics-content-secondary-color);
+	}
+
+	site-built-with a {
+		color: inherit;
+	}
+
+	[hidden] {
+		display: none !important;
+	}
+}

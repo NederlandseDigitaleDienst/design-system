@@ -22,7 +22,7 @@ const paddingControl = (name: string, description: string) => ({
 });
 
 /**
- * Shared Storybook controls for the PageSectionMixin surface API
+ * Shared story controls for the PageSectionMixin surface API
  * (background, width, height and the 12 block-padding overrides).
  * Spread into a section story's `args` / `argTypes`, and bind onto the host
  * element in `render` with the `pageSectionAttrs` directive.

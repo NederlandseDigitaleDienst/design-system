@@ -1,0 +1,246 @@
+			<nldd-hero main-background="accent">
+				<nldd-title
+					color="inherit"
+					size="1"
+					text="Bouw diensten van de Rijksoverheid met componenten die al kloppen"
+					heading-level="1"
+				></nldd-title>
+				<nldd-spacer size="16"></nldd-spacer>
+				<nldd-rich-text color="inherit">
+					<p>Het NLDD Designsysteem is een set web components in de Rijkshuisstijl. Het zijn gewone HTML-elementen, dus ze werken in elk framework en ook zonder. Toetsenbord, schermlezer en contrast zijn ingebouwd.</p>
+				</nldd-rich-text>
+				<nldd-spacer size="24"></nldd-spacer>
+				<nldd-container
+					layout="wrap"
+					gap="12"
+				>
+					<nldd-button
+						appearance="inherit-filled"
+						size="lg"
+						text="Aan de slag"
+						href="/aan-de-slag/"
+					></nldd-button>
+					<nldd-button
+						appearance="inherit-tinted"
+						size="lg"
+						text="Bekijk de componenten"
+						href="/componenten/"
+					></nldd-button>
+				</nldd-container>
+			</nldd-hero>
+
+			<nldd-simple-section
+				padding-top="16"
+				padding-bottom="0"
+			>
+				<nldd-container
+					layout="wrap"
+					gap="12"
+					vertical-alignment="center"
+				>
+					<nldd-tag text="Bèta"></nldd-tag>
+					<nldd-text
+						size="sm"
+						color="secondary"
+					>Versie {{version}}, uitgebracht op {{releaseDate}}.</nldd-text>
+					<nldd-link
+						size="sm"
+						href="/changelog/"
+						text="Wat is er veranderd"
+					></nldd-link>
+				</nldd-container>
+			</nldd-simple-section>
+
+			<nldd-one-half-one-half-section>
+				<nldd-title
+					slot="header"
+					size="2"
+					text="Van installeren tot eerste scherm"
+					heading-level="2"
+				></nldd-title>
+				<nldd-container
+					slot="left"
+					gap="12"
+				>
+					<nldd-title
+						size="5"
+						text="1. Installeer het pakket"
+						heading-level="3"
+					></nldd-title>
+					{{installCommand}}
+					<nldd-spacer size="4"></nldd-spacer>
+					<nldd-title
+						size="5"
+						text="2. Laad de styles en de componenten"
+						heading-level="3"
+					></nldd-title>
+					{{installImports}}
+					<nldd-spacer size="4"></nldd-spacer>
+					<nldd-title
+						size="5"
+						text="3. Schrijf HTML"
+						heading-level="3"
+					></nldd-title>
+					{{installMarkup}}
+				</nldd-container>
+				<nldd-container
+					slot="right"
+					gap="12"
+				>
+					<nldd-title
+						size="5"
+						text="Dit staat er dan"
+						heading-level="3"
+					></nldd-title>
+					{{installLive}}
+					<nldd-text
+						size="sm"
+						color="secondary"
+					>Dit kader is een voorbeeld: de drie elementen hierboven, echt gerenderd. Zet het op donker of op een getinte ondergrond en ze passen zich aan.</nldd-text>
+				</nldd-container>
+			</nldd-one-half-one-half-section>
+
+			<nldd-simple-section background="tinted">
+				<nldd-title
+					slot="header"
+					size="2"
+					text="Wat er in zit"
+					heading-level="2"
+				></nldd-title>
+				<nldd-collection
+					layout="grid"
+					item-width="240px"
+				>
+					<nldd-card href="/componenten/">
+						<nldd-container padding="16">
+							<nldd-title
+								size="4"
+								text="{{componentCount}} componenten"
+								heading-level="3"
+							></nldd-title>
+							<nldd-spacer size="8"></nldd-spacer>
+							<nldd-rich-text>
+								<p>Van een knop tot de schil van een applicatie, elk met live voorbeelden en de volledige lijst attributen.</p>
+							</nldd-rich-text>
+						</nldd-container>
+					</nldd-card>
+					<nldd-card href="/patronen/">
+						<nldd-container padding="16">
+							<nldd-title
+								size="4"
+								text="{{patternCount}} patronen"
+								heading-level="3"
+							></nldd-title>
+							<nldd-spacer size="8"></nldd-spacer>
+							<nldd-rich-text>
+								<p>Hoe je componenten samenstelt tot een formulier, een lijst met acties of een hele applicatie, met de redenen erbij.</p>
+							</nldd-rich-text>
+						</nldd-container>
+					</nldd-card>
+					<nldd-card href="/iconen/">
+						<nldd-container padding="16">
+							<nldd-title
+								size="4"
+								text="{{iconCount}} iconen"
+								heading-level="3"
+							></nldd-title>
+							<nldd-spacer size="8"></nldd-spacer>
+							<nldd-rich-text>
+								<p>In de huisstijl getekend en doorzoekbaar op naam. De naam is de waarde die je in je markup zet.</p>
+							</nldd-rich-text>
+						</nldd-container>
+					</nldd-card>
+					<nldd-card href="/richtlijnen/">
+						<nldd-container padding="16">
+							<nldd-title
+								size="4"
+								text="Ontwerprichtlijnen"
+								heading-level="3"
+							></nldd-title>
+							<nldd-spacer size="8"></nldd-spacer>
+							<nldd-rich-text>
+								<p>De keuzes achter het systeem. Waarom er geen disabled knoppen zijn, en geen wizards.</p>
+							</nldd-rich-text>
+						</nldd-container>
+					</nldd-card>
+				</nldd-collection>
+			</nldd-simple-section>
+
+			<nldd-simple-section>
+				<nldd-title
+					slot="header"
+					size="2"
+					text="Hulpmiddelen"
+					heading-level="2"
+				></nldd-title>
+				<nldd-collection
+					layout="grid"
+					item-width="240px"
+				>
+					<nldd-card href="https://www.npmjs.com/package/@nldd/design-system">
+						<nldd-container padding="16">
+							<nldd-title
+								size="5"
+								text="Het npm-pakket"
+								heading-level="3"
+							></nldd-title>
+							<nldd-spacer size="8"></nldd-spacer>
+							<nldd-rich-text>
+								<p>Componenten, styles en fonts in één pakket. Laad alles, of alleen de componenten die je gebruikt.</p>
+							</nldd-rich-text>
+						</nldd-container>
+					</nldd-card>
+					<nldd-card href="/aan-de-slag/#aanvullen-in-je-editor">
+						<nldd-container padding="16">
+							<nldd-title
+								size="5"
+								text="Aanvullen in je editor"
+								heading-level="3"
+							></nldd-title>
+							<nldd-spacer size="8"></nldd-spacer>
+							<nldd-rich-text>
+								<p>Het pakket beschrijft elke tag en elk attribuut in een formaat dat editors lezen, met types voor Vue.</p>
+							</nldd-rich-text>
+						</nldd-container>
+					</nldd-card>
+					<nldd-card href="/aan-de-slag/ai-assistent/">
+						<nldd-container padding="16">
+							<nldd-title
+								size="5"
+								text="Skills voor je AI-assistent"
+								heading-level="3"
+							></nldd-title>
+							<nldd-spacer size="8"></nldd-spacer>
+							<nldd-rich-text>
+								<p>Voor Claude Code en Cursor, zodat je assistent de tags, attributen en patronen gebruikt die er zijn.</p>
+							</nldd-rich-text>
+						</nldd-container>
+					</nldd-card>
+					<nldd-card href="{{repository}}">
+						<nldd-container padding="16">
+							<nldd-title
+								size="5"
+								text="De broncode"
+								heading-level="3"
+							></nldd-title>
+							<nldd-spacer size="8"></nldd-spacer>
+							<nldd-rich-text>
+								<p>Open source onder de EUPL-1.2. Meld wat niet klopt, of stel voor wat je mist.</p>
+							</nldd-rich-text>
+						</nldd-container>
+					</nldd-card>
+				</nldd-collection>
+			</nldd-simple-section>
+
+			<nldd-simple-section background="tinted">
+				<nldd-title
+					slot="header"
+					size="2"
+					text="Waar het draait"
+					heading-level="2"
+				></nldd-title>
+				<nldd-rich-text>
+					<p>Onder meer in <a href="https://regelrecht.rijks.app">RegelRecht</a>, <a href="https://docs.fundament.projects.digilab.network">Fundament</a>, <a href="https://mijnoverheidzakelijk.nl">MijnOverheid Zakelijk</a> en op de website van de <a href="https://digitaledienst.overheid.nl">Nederlandse Digitale Dienst</a>. Deze site is er zelf ook mee gebouwd.</p>
+					<p><a href="{{repository}}#waar-het-designsysteem-draait">Bekijk alle projecten</a></p>
+				</nldd-rich-text>
+			</nldd-simple-section>

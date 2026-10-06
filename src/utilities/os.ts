@@ -45,7 +45,7 @@ export function detectOS(): OS {
 /**
  * @internal — test/dev only.
  *
- * Force a specific OS for the duration of testing or Storybook stories.
+ * Force a specific OS for the duration of testing or stories.
  * Pass `null` to clear the override and fall back to real detection.
  * Mutates module-level singleton state and affects every component on
  * the page that calls `detectOS()` — not a supported public API

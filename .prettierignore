@@ -3,7 +3,8 @@ node_modules/
 
 # Build outputs
 dist/
-storybook-static/
+site-dist/
+site/.generated/
 
 # Package files
 package-lock.json

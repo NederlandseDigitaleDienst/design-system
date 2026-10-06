@@ -64,8 +64,7 @@ npm run build
 
 ```bash
 # Check dat alles werkt
-npm run sb:start
-npm run sb:status
+npm run site
 ```
 
 ## Volledige one-liner
@@ -110,7 +109,7 @@ jq -s '.[0] * .[1]' .claude/settings.local.json .worktrees/<branch-name>/.claude
 - [ ] `.claude/` folder gekopieerd (voor lokale permissies)
 - [ ] `npm install` uitgevoerd
 - [ ] `npm run build` geslaagd
-- [ ] Storybook start correct (`npm run sb:start`)
+- [ ] De documentatiesite start (`npm run site`)
 
 ## Troubleshooting
 
@@ -118,4 +117,3 @@ jq -s '.[0] * .[1]' .claude/settings.local.json .worktrees/<branch-name>/.claude
 |----------|-----------|
 | Permission denied errors | Check of `.claude/settings.local.json` is gekopieerd |
 | Build faalt | Run `npm install` eerst |
-| Port conflict bij Storybook | Gebruik `npm run sb:status` om poorten te checken |

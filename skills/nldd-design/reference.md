@@ -7,7 +7,7 @@
 
 # Componentreferentie — @nldd/design-system
 
-Elk custom element met zijn attributen, slots en events. Dit is een offline snelreferentie; de levende documentatie met voorbeelden staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/), en de exacte types staan in de `.d.ts` bestanden van het pakket.
+Elk custom element met zijn attributen, slots en events. Dit is een offline snelreferentie; de levende documentatie met voorbeelden staat op [de site](https://nederlandsedigitaledienst.github.io/design-system/componenten/), en de exacte types staan in de `.d.ts` bestanden van het pakket.
 
 > Deze referentie komt uit de JSDoc van de componenten. Dat elk attribuut er in staat, wordt in CI afgedwongen: `npm run validate:component-api` vergelijkt de `@property`-decorators met de `@attr`-regels.
 
@@ -460,7 +460,7 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 | `caption` | `string` | Caption text shown below the image |
 | `credit` | `string` | Smaller credit/attribution text shown beside the caption |
 | `decorative` | `boolean` | Decorative image: alt is forced empty + aria-hidden |
-| `lqip` | `string` | Low-quality image placeholder as a CSV string `"base,c1,c2,c3,c4,c5,c6"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the "LQIP encoder tool" Storybook story. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the placeholder. |
+| `lqip` | `string` | Low-quality image placeholder as a CSV string `"base,c1,c2,c3,c4,c5,c6"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the "LQIP encoder tool" story on the component's page. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the placeholder. |
 | `translations` | `object` | Override translation keys (e.g. the message shown when the image fails to load); unset keys fall back to Dutch. |
 
 **Slots**
@@ -486,7 +486,7 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 | `appearance` | `string` | 'box' (default) shows each key as a keycap with a fill and a highlight edge. 'simple' shows the keys as plain text with separators: lighter, for inline use such as in a menu item. |
 | `always-visible` | `boolean` | Show on touch-only devices too, where shortcuts cannot be invoked. |
 | `color` | `string` | 'neutral' (default) uses the component colors of its own. 'inherit' lets the keys and separators follow the surrounding text color (currentColor), with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row. |
-| `debug-os` | `'mac'\|'windows'\|'linux'\|'other'` | Development aid: overrides the OS detection for this instance, so you can show several platform variants side by side in Storybook or documentation. Not meant for production use; leave it empty (default) so the real OS detection applies. |
+| `debug-os` | `'mac'\|'windows'\|'linux'\|'other'` | Development aid: overrides the OS detection for this instance, so you can show several platform variants side by side in stories or documentation. Not meant for production use; leave it empty (default) so the real OS detection applies. |
 
 **Slots**
 

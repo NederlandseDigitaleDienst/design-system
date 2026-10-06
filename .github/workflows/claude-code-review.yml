@@ -42,7 +42,7 @@ jobs:
 
             This is the NLDD Design System — a library of vanilla Web Components for the
             Nederlandse Digitale Dienst (Rijksoverheid). Components are built with Lit +
-            TypeScript and documented in Storybook.
+            TypeScript and documented on the documentation site (site/).
 
             **Key architecture:**
             - `src/components/` — Lit + TypeScript web components using Shadow DOM

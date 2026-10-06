@@ -16,7 +16,7 @@ Twee plekken horen bij deze skill:
 
 De naslag staat apart, in `nldd-design`, want die geldt ook als je niets nieuws bouwt: de [componentreferentie](../nldd-design/reference.md) met elk `nldd-*` element en de icoonnamen, de [changelog](../nldd-design/changelog.md) en de [ontwerprichtlijnen](../nldd-design/design-guidelines.md).
 
-De levende documentatie met visuele voorbeelden staat in [Storybook](https://nederlandsedigitaledienst.github.io/design-system/). De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee als bron van waarheid voor detailvragen; deze skill leert je hoe je het systeem *goed* gebruikt.
+De levende documentatie met visuele voorbeelden staat op [de site](https://nederlandsedigitaledienst.github.io/design-system/). De exacte types staan in de `.d.ts` bestanden van het pakket. Gebruik die twee als bron van waarheid voor detailvragen; deze skill leert je hoe je het systeem *goed* gebruikt.
 
 Zet je een **bestaande** applicatie om naar dit systeem in plaats van een nieuwe te bouwen, gebruik dan de `nldd-design-migrate` skill. Die gaat over wat er bij zo'n omzetting stil misgaat en hoe je dat merkt.
 
@@ -203,7 +203,7 @@ Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan [`n
 
 ## Bron van waarheid
 
-1. **[Storybook](https://nederlandsedigitaledienst.github.io/design-system/)**: levende voorbeelden en controls per component.
+1. **[De site](https://nederlandsedigitaledienst.github.io/design-system/componenten/)**: levende voorbeelden en controls per component.
 2. **`.d.ts` types in het pakket**: de exacte, actuele API.
 3. **[`reference.md`](../nldd-design/reference.md)**: offline snelreferentie van alle elementen.
 4. **[`patterns/`](patterns/)**: hoe je die elementen samenstelt, met het waarom erbij. De referentie zegt wat een component kan; een patroon zegt hoe je er een taak mee afhandelt.
@@ -216,4 +216,4 @@ Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan [`n
 
 Deze skill gaat over het *gebruiken* van het designsysteem: welke componenten, welke patronen, welke visie. Wat erbuiten valt en je zelf invult vanuit je applicatie- en frameworkkeuzes: state-management en validatieregels, server-side foutafhandeling, routing, en het testen van je eigen app. Voor SSR/hydratie geldt de algemene web-componentenpraktijk (de componenten upgraden client-side; render geen kritieke inhoud uitsluitend in hun shadow DOM). De componenten zelf zijn los getest binnen het designsysteem; jouw app-tests schrijf je met je eigen testopstelling.
 
-> Voor onderhouders: `reference.md`, `changelog.md` en `design-guidelines.md` zijn gegenereerd (uit respectievelijk de JSDoc van de componenten, de root-CHANGELOG en `src/docs/design-guidelines.mdx`). Draai `npm run generate:skill-docs` na een API-wijziging, release of wijziging in de ontwerprichtlijnen en commit het resultaat. Het zijn echte bestanden, geen symlinks: een plugin wordt naar een geïsoleerde cache gekopieerd waarbij symlinks buiten de plugin-map wegvallen.
+> Voor onderhouders: `reference.md`, `changelog.md` en `design-guidelines.md` zijn gegenereerd (uit respectievelijk de JSDoc van de componenten, de root-CHANGELOG en `src/docs/design-guidelines.md`). Draai `npm run generate:skill-docs` na een API-wijziging, release of wijziging in de ontwerprichtlijnen en commit het resultaat. Het zijn echte bestanden, geen symlinks: een plugin wordt naar een geïsoleerde cache gekopieerd waarbij symlinks buiten de plugin-map wegvallen.
