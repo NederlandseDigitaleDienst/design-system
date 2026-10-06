@@ -9,6 +9,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **`nldd-design-migrate` covers sites built by a static site generator** (MkDocs, Hugo, Eleventy). Leave the authors' Markdown alone and convert the rendered HTML in a build hook, take the bundle from the registry without a bundler and pin it with its integrity hash, and decide up front what is left without JavaScript and what loading the whole bundle on every page costs. The behavior check now also strips the base path a site runs under, because a pull request preview runs under a different one than production.
+
 ### Fixed
 
 - **The stretching ribbon in `nldd-top-navigation-bar` is limited to Safari, and to every browser on iOS.** Chrome does not draw anything above the top of the page, so on a pull it showed only the piece that holds still at the top, and a hard pull opened a gap between that piece and the logo. Chrome and the other non-WebKit browsers now show the plain gap above the ribbon again, as they did before 0.8.94.
