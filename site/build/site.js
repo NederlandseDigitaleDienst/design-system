@@ -70,6 +70,7 @@ function layout({ title, description, path, main, facts, bodyClass = '' }) {
 	<meta name="description" content="${escapeHtml(description)}">
 	<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg">
 	<link rel="apple-touch-icon" href="/touch-icon.png">
+	<link rel="stylesheet" href="/styles.css">
 	<script type="module" src="/main.ts"></script>
 </head>
 <body class="site ${bodyClass}">
@@ -461,6 +462,7 @@ export function buildPages({ base = '/' } = {}) {
 	<title>Voorbeeld · ${SITE_NAME}</title>
 	<meta name="robots" content="noindex">
 	<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg">
+	<link rel="stylesheet" href="/styles.css">
 	<script type="module" src="/frame.ts"></script>
 </head>
 <body class="site-frame"></body>

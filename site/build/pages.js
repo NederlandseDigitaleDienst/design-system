@@ -14,9 +14,24 @@ import { repoRoot } from './sources.js';
 
 export const generatedDir = resolve(repoRoot, 'site/.generated');
 
+// The stylesheet is a file of its own, linked from the head of every page, and
+// not an import of the script: a stylesheet in the head is there before the
+// first paint, where one a script adds arrives after the unstyled page showed.
 const ENTRIES = {
 	'main.ts': "import '../client/main.ts';\n",
 	'frame.ts': "import '../client/frame.ts';\n",
+	'styles.css': [
+		'../../src/assets/styles/rijksoverheid-fonts.css',
+		'../../src/assets/styles/variables.css',
+		'../../src/assets/styles/document-reset.css',
+		'../../src/components/content/rich-text/rich-text.css',
+		'../../src/components/forms/form-section/form-section.css',
+		'../../src/components/forms/form/form.css',
+		'../../src/assets/styles/fouc.css',
+		'../client/site.css',
+	]
+		.map((path) => `@import '${path}';\n`)
+		.join(''),
 };
 
 const WATCHED = [/\.stories\.ts$/, /\.md$/, /custom-elements\.json$/, /site\/pages\//, /site\/build\//, /src\/patterns\/.+\.html$/];

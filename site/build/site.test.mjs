@@ -35,7 +35,7 @@ test('every link to a page of the site leads to a page that exists', () => {
 	const broken = [];
 	for (const [path, html] of Object.entries(pages)) {
 		for (const [, target] of html.matchAll(/href="(\/[^"#?]*)(?:[#?][^"]*)?"/g)) {
-			if (/\.(svg|png)$/.test(target)) continue;
+			if (/\.(svg|png|css)$/.test(target)) continue;
 			if (!pages[`${target.slice(1)}index.html`]) broken.push(`${path} -> ${target}`);
 		}
 	}

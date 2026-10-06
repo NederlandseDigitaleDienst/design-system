@@ -3,9 +3,7 @@
  * the few things that belong to the site itself.
  */
 
-import './styles.js';
 import '../../src/components/index.js';
-import './site.css';
 import './stage.js';
 import './built-with.js';
 

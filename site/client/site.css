@@ -9,6 +9,19 @@
  * the page is an example and which part is the site.
  */
 
+/* ## First paint */
+
+/* The package keeps a page hidden until its components are defined, and shows
+   it after 200ms regardless (fouc.css). This site loads every component, which
+   takes longer than that on a slow connection, and the page would then show as
+   bare text and jump. So it waits longer; a page whose script never arrives
+   still appears. Outside the layer below, because the rule it adjusts is not in
+   a layer either and would otherwise win. */
+body.site,
+body.site-frame {
+	animation-delay: 3s;
+}
+
 @layer site {
 	/* ## Stage */
 
