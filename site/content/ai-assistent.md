@@ -6,10 +6,7 @@ De plugin is er voor Claude Code en voor Cursor. Je hebt hem niet nodig om met h
 
 ## Installeren in Claude Code
 
-```text
-/plugin marketplace add NederlandseDigitaleDienst/ai-plugins
-/plugin install nldd-design-system@nldd
-```
+{{skillsInstall}}
 
 Een nieuwere versie haal je binnen met:
 
@@ -27,13 +24,7 @@ Deze route is in Claude Code gemeten en in Cursor nog niet. Loopt hij bij jou an
 
 De plugin levert vijf skills. De assistent kiest zelf welke hij nodig heeft.
 
-| Skill | Waarvoor |
-|---|---|
-| `nldd-design` | Opzoeken welke componenten, attributen, slots, events en iconen er zijn, en wat er per versie veranderde. |
-| `nldd-design-build` | Een applicatie bouwen: de basispatronen en hoe je componenten samenstelt. |
-| `nldd-design-migrate` | Een bestaande frontend omzetten naar dit systeem, bijvoorbeeld vanaf Tailwind of een ander design system. |
-| `nldd-design-upgrade` | Een applicatie die al op dit systeem draait naar een nieuwere versie brengen. |
-| `nldd-design-contribute` | Een wijziging voorstellen: een ontbrekend component, een patroon of een bug. |
+{{skillsTable}}
 
 In Claude Code roep je er ook zelf een aan, met `/nldd-design`.
 

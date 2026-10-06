@@ -389,12 +389,12 @@ npm run lint:a11y
 - Accessible form labels
 - Heading hierarchy
 
-#### pa11y-ci (Automated Browser Testing)
+#### axe (Automated Browser Testing)
 
 Run automated accessibility tests in a real browser:
 
 ```bash
-npm run test:a11y:storybook
+npm run test:a11y
 ```
 
 **What it checks:**

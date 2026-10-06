@@ -74,6 +74,8 @@ De documentatie is een eigen site in `site/`, gebouwd met de componenten zelf. E
 
 De story-bestanden houden het formaat dat ze hadden. De twee Storybook-imports die ze gebruiken (`storybook/actions`, `storybook/preview-api`) wijzen via een alias naar `site/client/shims/`. De site ondersteunt alleen wat de stories gebruiken; `play`, decorators en loaders bestaan niet.
 
+`npm run test:a11y` haalt axe over elke pagina en elk voorbeeld (WCAG 2.1 A en AA), in CI bij elke pull request. Dat vervangt het a11y-paneel van Storybook. Een bevinding op de site zelf is altijd een fout. Een bevinding in een voorbeeld wordt vergeleken met `site/a11y-baseline.json`: een nieuwe faalt, en een opgeloste moet uit de baseline (`npm run test:a11y -- --update`), zodat hij niet ongemerkt terugkomt. De baseline is een werklijst, geen vrijbrief.
+
 `site/client/stories.test.ts` rendert elke story en faalt als er een niets oplevert; `site/build/site.test.mjs` controleert dat elke interne link naar een bestaande pagina gaat.
 
 ## Testen

@@ -252,6 +252,22 @@ export class SiteStage extends HTMLElement {
 			keepInPlace(this.canvas);
 			mat.append(this.canvas);
 		}
+		// An example wider than the stage scrolls sideways. A region that scrolls
+		// must be reachable by keyboard, but only then: a tab stop on every
+		// stage of a page would be noise.
+		new ResizeObserver(() => {
+			const scrolls = mat.scrollWidth > mat.clientWidth + 1;
+			if (scrolls === mat.hasAttribute('tabindex')) return;
+			if (scrolls) {
+				mat.tabIndex = 0;
+				mat.setAttribute('role', 'group');
+				mat.setAttribute('aria-label', `Voorbeeld ${this.getAttribute('name') ?? ''}, schuift horizontaal`);
+			} else {
+				mat.removeAttribute('tabindex');
+				mat.removeAttribute('role');
+				mat.removeAttribute('aria-label');
+			}
+		}).observe(this.canvas);
 		this.events.hidden = true;
 		this.events.setAttribute('aria-label', 'Events van dit voorbeeld');
 		this.replaceChildren(bar, mat, this.events);
@@ -325,8 +341,11 @@ export class SiteStage extends HTMLElement {
 		);
 		if (!attributes.length && !content.length) return;
 
+		// Open from the start: changing an attribute and watching the example
+		// follow is what the first example of a page is for.
 		const panel = element('details', 'site-stage__controls');
-		panel.append(element('summary', '', `Attributen instellen (${attributes.length + content.length})`));
+		panel.open = true;
+		panel.append(element('summary', '', `Pas dit voorbeeld aan (${attributes.length + content.length} attributen)`));
 		const grid = element('div', 'site-stage__grid');
 
 		const row = (name: string, input: HTMLElement, description: string) => {

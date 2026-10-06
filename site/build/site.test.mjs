@@ -107,3 +107,19 @@ test('storyName reads an export name as a heading', () => {
 	assert.equal(storyName('KlikbareKaart'), 'Klikbare kaart');
 	assert.equal(storyName('Standaard'), 'Standaard');
 });
+
+test('the skills the site names are the skills the plugin ships', async () => {
+	const { SKILLS } = await import('./skills.js');
+	const shipped = readdirSync(resolve(repoRoot, 'skills'), { withFileTypes: true })
+		.filter((entry) => entry.isDirectory() && entry.name !== 'nldd')
+		.map((entry) => entry.name)
+		.sort();
+	assert.deepEqual(SKILLS.map((skill) => skill.name).sort(), shipped);
+});
+
+test('the landing page and the getting-started page both show how to install the skills', () => {
+	for (const path of ['index.html', 'aan-de-slag/index.html', 'aan-de-slag/ai-assistent/index.html']) {
+		assert.match(pages[path], /\/plugin install nldd-design-system@nldd/, path);
+		assert.match(pages[path], /nldd-design-migrate/, path);
+	}
+});

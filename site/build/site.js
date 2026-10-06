@@ -17,6 +17,7 @@ import { storybookId } from '../../scripts/lib/skill-patterns.js';
 import { collectComponents, collectPatterns, readFacts, repoRoot } from './sources.js';
 import { codeViewer, escapeHtml, renderMarkdown } from './markdown.js';
 import { controlFor } from './attribute-values.js';
+import { HTML_INSERTS, MARKDOWN_INSERTS } from './skills.js';
 
 const SITE_NAME = 'NLDD Designsysteem';
 
@@ -182,7 +183,9 @@ function firstSentence(markdown) {
 }
 
 function card({ href, title, text, search }) {
-	return `<nldd-card href="${href}"${search ? ` data-search="${escapeHtml(search)}"` : ''}>
+	// A card that is a link takes its name from its content, but a title set by
+	// attribute lives in a shadow root, where that name cannot be read from.
+	return `<nldd-card href="${href}" accessible-label="${escapeHtml(title)}"${search ? ` data-search="${escapeHtml(search)}"` : ''}>
 						<nldd-container padding="16">
 							<nldd-title size="5" text="${escapeHtml(title)}" heading-level="3"></nldd-title>
 							${text ? `<nldd-spacer size="4"></nldd-spacer>\n\t\t\t\t\t\t\t<nldd-text size="sm" color="secondary">${escapeHtml(text)}</nldd-text>` : ''}
@@ -352,6 +355,7 @@ function landing(components, patterns, facts) {
 		installImports: codeViewer("import '@nldd/design-system/styles';\nimport '@nldd/design-system';", 'javascript'),
 		installMarkup: codeViewer(snippet, 'html', { wrap: true }),
 		installLive: `<site-stage name="Het resultaat" inline-markup>${snippet}</site-stage>`,
+		...HTML_INSERTS,
 	};
 	return read('site/pages/index.html').replace(/\{\{(\w+)\}\}/g, (_, key) => {
 		if (!(key in replacements)) throw new Error(`Onbekende plaatshouder {{${key}}} in site/pages/index.html`);
@@ -413,7 +417,15 @@ export function buildPages({ base = '/' } = {}) {
 		['/changelog/', 'CHANGELOG.md', 'Wat er per versie is veranderd.'],
 	];
 	for (const [path, file, description] of prose) {
-		const rendered = prosePage({ markdown: read(file) });
+		// A page written for the site can insert what is kept in one place, such
+		// as the list of skills. The other sources are shown as they are.
+		const source = file.startsWith('site/content/')
+			? read(file).replace(/^\{\{(\w+)\}\}$/gm, (_, key) => {
+					if (!(key in MARKDOWN_INSERTS)) throw new Error(`Onbekende plaatshouder {{${key}}} in ${file}`);
+					return MARKDOWN_INSERTS[key];
+				})
+			: read(file);
+		const rendered = prosePage({ markdown: source });
 		page(path, rendered.title || 'Changelog', description, proseSection(rendered.html));
 	}
 

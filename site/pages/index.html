@@ -111,7 +111,10 @@
 					layout="grid"
 					item-width="240px"
 				>
-					<nldd-card href="/componenten/">
+					<nldd-card
+						href="/componenten/"
+						accessible-label="{{componentCount}} componenten"
+					>
 						<nldd-container padding="16">
 							<nldd-title
 								size="4"
@@ -124,7 +127,10 @@
 							</nldd-rich-text>
 						</nldd-container>
 					</nldd-card>
-					<nldd-card href="/patronen/">
+					<nldd-card
+						href="/patronen/"
+						accessible-label="{{patternCount}} patronen"
+					>
 						<nldd-container padding="16">
 							<nldd-title
 								size="4"
@@ -137,7 +143,10 @@
 							</nldd-rich-text>
 						</nldd-container>
 					</nldd-card>
-					<nldd-card href="/iconen/">
+					<nldd-card
+						href="/iconen/"
+						accessible-label="{{iconCount}} iconen"
+					>
 						<nldd-container padding="16">
 							<nldd-title
 								size="4"
@@ -150,7 +159,10 @@
 							</nldd-rich-text>
 						</nldd-container>
 					</nldd-card>
-					<nldd-card href="/richtlijnen/">
+					<nldd-card
+						href="/richtlijnen/"
+						accessible-label="Ontwerprichtlijnen"
+					>
 						<nldd-container padding="16">
 							<nldd-title
 								size="4"
@@ -166,18 +178,38 @@
 				</nldd-collection>
 			</nldd-simple-section>
 
-			<nldd-simple-section>
+			<nldd-two-thirds-one-third-section>
 				<nldd-title
 					slot="header"
 					size="2"
 					text="Hulpmiddelen"
 					heading-level="2"
 				></nldd-title>
-				<nldd-collection
-					layout="grid"
-					item-width="240px"
+				<nldd-container
+					slot="left"
+					gap="16"
 				>
-					<nldd-card href="https://www.npmjs.com/package/@nldd/design-system">
+					<nldd-title
+						size="4"
+						text="Skills voor je AI-assistent"
+						supporting-text="Voor Claude Code en Cursor. Je assistent gebruikt dan de tags, attributen en patronen die er zijn, in plaats van ze te raden."
+						heading-level="3"
+					></nldd-title>
+					{{skillsInstall}}
+					{{skillsList}}
+					<nldd-link
+						href="/aan-de-slag/ai-assistent/"
+						text="Zo werkt het, ook in Cursor"
+					></nldd-link>
+				</nldd-container>
+				<nldd-container
+					slot="right"
+					gap="12"
+				>
+					<nldd-card
+						href="https://www.npmjs.com/package/@nldd/design-system"
+						accessible-label="Het npm-pakket"
+					>
 						<nldd-container padding="16">
 							<nldd-title
 								size="5"
@@ -186,11 +218,14 @@
 							></nldd-title>
 							<nldd-spacer size="8"></nldd-spacer>
 							<nldd-rich-text>
-								<p>Componenten, styles en fonts in één pakket. Laad alles, of alleen de componenten die je gebruikt.</p>
+								<p>Componenten, styles en fonts in één pakket. Laad alles, of alleen wat je gebruikt.</p>
 							</nldd-rich-text>
 						</nldd-container>
 					</nldd-card>
-					<nldd-card href="/aan-de-slag/#aanvullen-in-je-editor">
+					<nldd-card
+						href="/aan-de-slag/#aanvullen-in-je-editor"
+						accessible-label="Aanvullen in je editor"
+					>
 						<nldd-container padding="16">
 							<nldd-title
 								size="5"
@@ -203,20 +238,10 @@
 							</nldd-rich-text>
 						</nldd-container>
 					</nldd-card>
-					<nldd-card href="/aan-de-slag/ai-assistent/">
-						<nldd-container padding="16">
-							<nldd-title
-								size="5"
-								text="Skills voor je AI-assistent"
-								heading-level="3"
-							></nldd-title>
-							<nldd-spacer size="8"></nldd-spacer>
-							<nldd-rich-text>
-								<p>Voor Claude Code en Cursor, zodat je assistent de tags, attributen en patronen gebruikt die er zijn.</p>
-							</nldd-rich-text>
-						</nldd-container>
-					</nldd-card>
-					<nldd-card href="{{repository}}">
+					<nldd-card
+						href="{{repository}}"
+						accessible-label="De broncode"
+					>
 						<nldd-container padding="16">
 							<nldd-title
 								size="5"
@@ -229,8 +254,8 @@
 							</nldd-rich-text>
 						</nldd-container>
 					</nldd-card>
-				</nldd-collection>
-			</nldd-simple-section>
+				</nldd-container>
+			</nldd-two-thirds-one-third-section>
 
 			<nldd-simple-section background="tinted">
 				<nldd-title

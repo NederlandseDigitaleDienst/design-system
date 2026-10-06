@@ -542,6 +542,8 @@
     "pretest:run": "npm run build:icons",
     "test": "vitest",
     "test:run": "vitest run",
+    "pretest:a11y": "npm run build:icons",
+    "test:a11y": "node scripts/check-site-a11y.js",
     "test:scripts": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs site/build/*.test.mjs",
     "pretypecheck": "npm run build:icons",
     "typecheck": "tsc --noEmit",

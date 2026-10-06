@@ -262,6 +262,24 @@ body.site-frame {
 		overflow-x: auto;
 	}
 
+	/* A name or a type is one word to a reader: it may wrap between the values
+	   of a union, never in the middle of one. */
+	.site-api td code {
+		word-break: normal;
+		overflow-wrap: normal;
+	}
+
+	.site-api td:first-child code,
+	.site-api th {
+		white-space: nowrap;
+	}
+
+	/* In a table in running text a code span is a name, and a name stays whole. */
+	.site-skills code,
+	.site-prose nldd-rich-text:not(.site-api) td code {
+		white-space: nowrap;
+	}
+
 	.site-filter-empty {
 		margin: 16px 0 0;
 	}

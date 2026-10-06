@@ -27,6 +27,18 @@ Daarna schrijf je de elementen in je HTML of in je template:
 
 Werk je voor een organisatie buiten de Rijksoverheid, laad dan `@nldd/design-system/styles/system-font` in plaats van `/styles`. Het font Rijksoverheid Sans is alleen bestemd voor de Rijksoverheid en voor wie in haar opdracht werkt.
 
+## Met een AI-assistent
+
+Bouw je met Claude Code of Cursor, geef je assistent dan de skills van het designsysteem. Hij gebruikt daarna de tags, attributen en patronen die er zijn, in plaats van ze te raden. In Claude Code:
+
+{{skillsInstall}}
+
+De plugin levert vijf skills, en je assistent kiest zelf welke hij nodig heeft:
+
+{{skillsTable}}
+
+Hoe je ze in Cursor zet en waar hun kennis vandaan komt, staat bij [werken met een AI-assistent](/aan-de-slag/ai-assistent/).
+
 ## Zonder bundler
 
 Heb je geen buildstap, zoals bij een statische sitegenerator, neem dan drie dingen uit het pakket en serveer ze zelf: `dist/nldd.min.js`, `dist/css/` en `dist/fonts/`.
@@ -72,8 +84,6 @@ Met één import erbij controleert Vue ook de attributen in je templates, met de
 ```js
 import '@nldd/design-system/vue';
 ```
-
-Werk je met een AI-assistent, dan zijn er [skills](/aan-de-slag/ai-assistent/) die dezelfde kennis meegeven.
 
 ## Een andere taal
 
