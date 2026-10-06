@@ -6,7 +6,9 @@ import '../../../actions/button/button.js';
 import '../../../actions/button-group/button-group.js';
 import '../../spacer/spacer.js';
 
-const MEDIA = 'sample-images/butterfly-1200.jpg';
+// From the base of the site, so the path holds on every page and under the
+// path the site is published at.
+const MEDIA = `${import.meta.env.BASE_URL}sample-images/butterfly-1200.jpg`;
 
 /**
  * Een paginakop met een mediavlak en een tekstpaneel op zes mogelijke

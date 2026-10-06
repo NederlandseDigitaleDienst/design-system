@@ -65,7 +65,7 @@ export default {
 	},
 };
 
-/** Storybook is nobody's application, so the stories play the consumer: a
+/** A story is nobody's application, so the stories play the consumer: a
  *  notification announces that it is done and whoever put it there removes it. */
 const weg = (e: Event) => (e.currentTarget as HTMLElement).remove();
 

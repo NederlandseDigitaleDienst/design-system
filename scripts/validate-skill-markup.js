@@ -1,5 +1,6 @@
 /**
- * Checks the nldd-* markup in the skill docs against the real API.
+ * Checks the nldd-* markup in the skill docs and the hand-written pages of the
+ * site against the real API.
  *
  * reference.md is generated, so it cannot drift: a stale attribute there fails
  * the drift check in CI. SKILL.md and examples/*.md are written by hand, and
@@ -121,6 +122,30 @@ function skillFiles() {
 	return files.sort();
 }
 
+/**
+ * The pages of the site that are written by hand: the landing page, its
+ * snippets and the Markdown pages. They are built with the same components, and
+ * the snippets on them are copied just as readily as the ones in the skills.
+ */
+function siteFiles() {
+	const files = [];
+	const walk = (dir) => {
+		for (const entry of readdirSync(dir, { withFileTypes: true })) {
+			const full = join(dir, entry.name);
+			if (entry.isDirectory()) walk(full);
+			else if (/\.(md|html)$/.test(entry.name)) files.push(full);
+		}
+	};
+	for (const dir of ['site/pages', 'site/content', 'src/docs']) {
+		try {
+			walk(resolve(repoRoot, dir));
+		} catch (err) {
+			if (err.code !== 'ENOENT') throw err;
+		}
+	}
+	return files.sort();
+}
+
 const api = collectApi();
 const options = {
 	api,
@@ -131,7 +156,7 @@ const options = {
 const errors = [];
 let checked = 0;
 
-for (const file of skillFiles()) {
+for (const file of [...skillFiles(), ...siteFiles()]) {
 	const rel = relative(repoRoot, file);
 	let source;
 	try {
@@ -148,7 +173,7 @@ for (const file of skillFiles()) {
 }
 
 if (errors.length > 0) {
-	console.error(`${errors.length} fout(en) in de hand-geschreven skill-documentatie:\n`);
+	console.error(`${errors.length} fout(en) in de hand-geschreven skill-documentatie en sitepagina's:\n`);
 	for (const error of errors) console.error(`  ${error}`);
 	console.error(
 		'\nDeze bestanden worden door consumenten en agents gekopieerd, dus een tag of\n' +

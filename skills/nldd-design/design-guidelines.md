@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Kopie van src/docs/design-guidelines.mdx (Storybook "Docs/Ontwerprichtlijnen").
+  Kopie van src/docs/design-guidelines.md (de pagina Ontwerprichtlijnen op de site).
   Hergenereren: npm run generate:skill-docs
 -->
 

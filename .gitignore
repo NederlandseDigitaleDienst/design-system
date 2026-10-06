@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 dist/
+site-dist/
+site/.generated/
 
 # Astro generated types and content collections
 .astro/
@@ -41,15 +43,9 @@ tmp/
 temp/
 *.tgz
 
-*storybook.log
-storybook-static
 
 # Playwright MCP screenshots
 .playwright-mcp/
-
-# Lost Pixel (keep baseline, ignore current and difference)
-.lostpixel/current/
-.lostpixel/difference/
 
 # Git worktrees
 .worktrees/

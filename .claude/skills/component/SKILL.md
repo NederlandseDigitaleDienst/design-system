@@ -66,7 +66,7 @@ src/components/{categorie}/{naam}/
   {naam}.styles.ts    # Styles
   {naam}.template.ts  # Render template
   {naam}.i18n.ts      # Vertalingen (optioneel, bij gebruikersgerichte tekst)
-  {naam}.stories.ts   # Storybook stories
+  {naam}.stories.ts   # Stories: de voorbeelden op de componentpagina
   {naam}.test.ts      # Tests
 ```
 
@@ -294,6 +294,10 @@ Zet het component ook in de tabellen in `form-field.test.ts`, die alle invoercom
 
 ## STORY TEMPLATE
 
+Een story is een voorbeeld op de pagina van het component (`/componenten/{naam}/`). De site leest het story-bestand zelf in; er is geen Storybook meer.
+
+**De controls van een component komen uit het component, niet uit de story.** Elk attribuut in `custom-elements.json` krijgt vanzelf een control, met de waarden uit het TypeScript-type. `argTypes` vullen dat alleen aan: een Nederlandse toelichting bij een attribuut, een label als `(geen)` voor een lege waarde, en controls voor wat geen attribuut is (de tekst in een slot). Een nieuw attribuut hoef je dus niet in `argTypes` bij te schrijven om er een control voor te krijgen.
+
 **`{naam}.stories.ts`:**
 
 ### Controls conventies
@@ -303,11 +307,11 @@ Zet het component ook in de tabellen in `form-field.test.ts`, die alle invoercom
 - **`name:`** het HTML attribuut in kebab-case (bijv. `name: 'start-icon'`, `name: 'full-width'`)
 - **`table.defaultValue.summary:`** invullen zodra er een default is die iets zegt: `md`, `false`, `content`, of de vertaling waar het component op terugvalt (`Kruimelpad`, `Meer opties`, `Tabs`). Die laatste is de belangrijkste, want de kolom beantwoordt de vraag "wat krijg ik als ik dit niet zet". Bij een toegankelijke naam is het antwoord daarop geen detail.
 
-  **Is de default leeg, laat de regel dan weg.** Storybook toont dan een streepje, en dat is precies wat je bedoelt. Schrijf er geen `summary: ''`, want `""` en `-` zijn dan twee manieren om hetzelfde te zeggen. Bij een select met een `(geen)`-optie zet je `(geen)` in de kolom, zodat de kolom de optie noemt die je kiest om terug te gaan.
+  **Is de default leeg, laat de regel dan weg.** De tabel toont dan niets, en dat is precies wat je bedoelt. Schrijf er geen `summary: ''`, want `""` en `-` zijn dan twee manieren om hetzelfde te zeggen. Bij een select met een `(geen)`-optie zet je `(geen)` in de kolom, zodat de kolom de optie noemt die je kiest om terug te gaan.
 - **`description:`** korte Nederlandse beschrijving
 - **Icon controls:** gebruik `control: 'select'` met `options: ['(geen)', ...ICONS]` plus `mapping: { '(geen)': '' }` — importeer `ICONS` uit `../../content/icon/icon.ts`. Nooit een text input voor iconen.
 - **Alias-naam heeft voorkeur:** kies bij het *gebruiken* van een icoon (`icon=`, `start-icon=`, in stories én consumers) de **alias-naam** boven de canonieke naam als er een alias bestaat — bijv. `harvest` i.p.v. `wheat`, `info` i.p.v. `info-circle`, `new-account` i.p.v. `person-circle-badge-plus`. Aliassen zijn betekenisvoller en stabieler; ze staan in `src/components/content/icon/icon-aliases.js`.
-- **Optionele select-controls:** Storybook toont anders een leeg item of letterlijk "undefined" in de dropdown. Gebruik een label tussen haakjes (zie de volgende bullet voor welk woord) en `mapping` om dat naar de echte waarde te vertalen. Plaats dat label als eerste element in `options`. In `args` staat de **actual value** (`''` of `undefined`) — Storybook reverse-lookt via `mapping` welke label de huidige waarde representeert en toont die als geselecteerd in de UI. De render-functie ontvangt eveneens de actual value. Let op: bij opties met numerieke waarden (`1, 2, ...`) plaatst JS de integer-index keys altijd eerst in `Object.keys`, waardoor `'(geen)'` visueel onderaan de dropdown belandt; de selected-state werkt wel correct, dus accepteer dat als trade-off.
+- **Optionele select-controls:** zonder label staat er een leeg item in de keuzelijst. Gebruik een label tussen haakjes (zie de volgende bullet voor welk woord) en `mapping` om dat naar de echte waarde te vertalen. Plaats dat label als eerste element in `options`. In `args` staat de **actual value** (`''` of `undefined`) — de site zoekt via `mapping` terug welke label de huidige waarde representeert en toont die als geselecteerd in de UI. De render-functie ontvangt eveneens de actual value. Let op: bij opties met numerieke waarden (`1, 2, ...`) plaatst JS de integer-index keys altijd eerst in `Object.keys`, waardoor `'(geen)'` visueel onderaan de dropdown belandt; de selected-state werkt wel correct, dus accepteer dat als trade-off.
   ```ts
   // String prop met '' als "geen waarde"
   args: { variant: '' },
@@ -345,7 +349,7 @@ Zet het component ook in de tabellen in `form-field.test.ts`, die alle invoercom
 
   **Staat het woord al als echte waarde in dezelfde dropdown, dan is het label bezet.** Dat is de `0` bij `nldd-container` hierboven, en het gebeurt ook zonder dat de woorden gelijk zijn: `(auto)` naast een echte `inherit` leest als twee manieren om te zeggen "haal het ergens anders vandaan", ook al betekenen ze iets anders. Kies dan geen ander label maar geef de default een naam, dan staan er twee echte waardes en heb je er helemaal geen nodig. Zo werd `color` op `nldd-title` en `nldd-rich-text` `content` naast `inherit`.
 - **Volgorde consistent**: `args`, `argTypes`, template-destructuring en HTML-attributen in de template gebruiken dezelfde volgorde, volgens de canon hieronder.
-- **Twee dingen laten een control naar het eind van de tabel springen.** De docs-tabel volgt de volgorde van `argTypes`, en Storybook bouwt een key opnieuw op (en zet hem dus achteraan) zodra je hem naderhand aanraakt:
+- **Twee dingen laten een control naar het eind van de tabel springen.** De controls voor wat geen attribuut is volgen de volgorde van `argTypes`, en JavaScript bouwt een key opnieuw op (en zet hem dus achteraan) zodra je hem naderhand aanraakt:
   1. Een key die je in `Standaard.args` opnieuw zet. Zet een default die je in `Standaard` wilt tonen daarom in de bovenste `args`, en laat `Standaard` alleen `render` houden.
   2. Een `type`-override in een argType, zoals `type: { name: 'string' }`. Wil je een tekstveld voor een numerieke prop (leeg mogen laten), dan is `control: { type: 'text' }` genoeg; documenteer het echte type met `table: { type: { summary: 'number' } }`.
 
@@ -373,7 +377,7 @@ Story-namen zijn Nederlands, maar een attribuut vertaal je niet. Een ontwikkelaa
 4. **Een story die alle waarden van een as toont** heet naar de as in het meervoud: "Grootten", "Varianten", "Kleuren". Schrijf "Grootten", niet "Maten" of "Sizes".
 5. **Een story over een situatie** blijft Nederlands proza: "Met hulptekst", "In een formulier", "Met een fout". Attribuut- en componentnamen vertaal je daarin niet: "Met Start Icon", niet "Met starticoon".
 
-Storybook zet elk woord van een exportnaam met een hoofdletter, dus `ToestandChecked` verschijnt als "Toestand Checked". Geef zo'n story daarom een expliciete `name`, zodat het attribuut klein en letterlijk blijft:
+De site maakt van een exportnaam een kop en zet alleen de eerste letter groot, dus `ToestandChecked` verschijnt als "Toestand checked". Geef zo'n story daarom een expliciete `name`, zodat het attribuut klein en letterlijk blijft:
 
 ```ts
 export const ToestandChecked = {
@@ -850,5 +854,5 @@ Andere regels die hetzelfde slotted element raken (`:hover`, `@media`, een speci
 - [ ] Geen `part` attributen op shadow DOM elementen
 
 **Verificatie:**
-- [ ] Storybook gestart
-- [ ] Component visueel gecontroleerd in Storybook
+- [ ] De documentatiesite gestart (`npm run site`)
+- [ ] Component visueel gecontroleerd op zijn pagina (`/componenten/{naam}/`)

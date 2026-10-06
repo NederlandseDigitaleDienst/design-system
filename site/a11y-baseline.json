@@ -1,0 +1,71 @@
+{
+	"/componenten/checkbox-field/": {
+		"color-contrast": 3
+	},
+	"/componenten/code-editor/": {
+		"color-contrast": 2
+	},
+	"/componenten/document-tab-bar/": {
+		"aria-required-children": 4
+	},
+	"/componenten/hero/": {
+		"color-contrast": 1
+	},
+	"/componenten/list-item-segment/": {
+		"aria-hidden-focus": 3,
+		"nested-interactive": 13
+	},
+	"/componenten/list/": {
+		"label": 1,
+		"nested-interactive": 30
+	},
+	"/componenten/multi-line-text-field/": {
+		"label": 4
+	},
+	"/componenten/number-field/": {
+		"label": 13
+	},
+	"/componenten/password-field/": {
+		"label": 4
+	},
+	"/componenten/rich-text/": {
+		"color-contrast": 1,
+		"scrollable-region-focusable": 1
+	},
+	"/componenten/split-button/": {
+		"aria-allowed-attr": 1
+	},
+	"/componenten/stepper/": {
+		"aria-hidden-focus": 10
+	},
+	"/componenten/switch-field/": {
+		"color-contrast": 2
+	},
+	"/componenten/text-editor/": {
+		"button-name": 1
+	},
+	"/componenten/text-field/": {
+		"label": 4
+	},
+	"/componenten/title/": {
+		"color-contrast": 2
+	},
+	"/componenten/token/": {
+		"color-contrast": 3
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fbar-split-view%2Fbar-split-view.stories.ts&story=MetStatusbalk": {
+		"scrollable-region-focusable": 1
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fnavigation-split-view%2Fnavigation-split-view.stories.ts&story=Standaard": {
+		"scrollable-region-focusable": 2
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fside-by-side-split-view%2Fside-by-side-split-view.stories.ts&story=DrieKolommen": {
+		"scrollable-region-focusable": 3
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fstacked-split-view%2Fstacked-split-view.stories.ts&story=DrieRijen": {
+		"scrollable-region-focusable": 3
+	},
+	"/voorbeeld/?file=src%2Fcomponents%2Flayout%2Fsplit-views%2Fstacked-split-view%2Fstacked-split-view.stories.ts&story=Standaard": {
+		"scrollable-region-focusable": 2
+	}
+}

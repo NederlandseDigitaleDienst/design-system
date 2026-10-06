@@ -5,7 +5,8 @@ Web Components voor de Nederlandse Digitale Dienst (Rijksoverheid).
 ## Snelreferentie
 
 ```bash
-npm run storybook        # Dev server op localhost:6006
+npm run site             # De documentatiesite, lokaal (Vite meldt het adres)
+npm run build:site       # De site bouwen naar site-dist/
 npm run build:styles     # Kopieer CSS + fonts naar dist
 npm run build            # Volledige build
 ```
@@ -18,7 +19,6 @@ npm run build            # Volledige build
 |------|-------|--------------|
 | Nieuwe branch starten | `/worktree <branch>` | Maakt worktree + kopieert .env en .claude/ |
 | Component maken/updaten | `/component <naam>` | Alle regels, formatting, BEM, CSS, templates |
-| Storybook beheren | `/storybook-manager` | Start/stop/status van Storybook instances |
 
 **Typische flow voor nieuwe feature:**
 ```
@@ -34,7 +34,7 @@ src/components/{categorie}/{naam}/
   {naam}.styles.ts    # Component styles
   {naam}.template.ts  # Render template
   {naam}.i18n.ts      # Vertalingen (optioneel)
-  {naam}.stories.ts   # Storybook stories
+  {naam}.stories.ts   # Stories: de voorbeelden op de pagina van het component
   {naam}.test.ts      # Unit tests
 ```
 
@@ -61,6 +61,22 @@ CSS variabelen worden gevalideerd tijdens de build (`npm run validate:styles`):
 - `--primitives-*`, `--semantics-*`, `--components-*` — Gevalideerd tegen variables.css
 
 Geen fallbacks. CI faalt als variabelen ontbreken.
+
+## De site
+
+De documentatie is een eigen site in `site/`, gebouwd met de componenten zelf. Er is geen Storybook meer. Alles rendert uit de bronnen: een component krijgt een pagina omdat er een `{naam}.stories.ts` bestaat, de API-tabel en de controls komen uit `custom-elements.json`, en de patroonpagina's uit `src/patterns/`.
+
+- `site/build/` maakt de pagina's (Node): `sources.js` leest de stories en het manifest, `site.js` bouwt de HTML, `attribute-values.js` leidt per attribuut de control en zijn waarden af uit het TypeScript-type.
+- `site/client/` draait in de browser: `stories.ts` leest een story-bestand zoals Storybook dat deed, `stage.ts` is het podium.
+- `site/pages/index.html` is de landingspagina, `site/content/*.md` zijn de handgeschreven tekstpagina's. Links schrijf je als sitepad (`/componenten/button/`); de base van de deploy komt er bij het bouwen voor.
+
+**Een live voorbeeld staat altijd op een podium (`site-stage`), en nergens anders.** De site is van dezelfde componenten gemaakt als de voorbeelden, dus zonder kader is niet te zien wat voorbeeld is en wat pagina. Het podium is daarom bewust geen `nldd`-component en ziet er anders uit. Een voorbeeld met `layout: 'fullscreen'` of `docs.story.inline: false` draait in een eigen venster (`/voorbeeld/`).
+
+De story-bestanden houden het formaat dat ze hadden. De twee Storybook-imports die ze gebruiken (`storybook/actions`, `storybook/preview-api`) wijzen via een alias naar `site/client/shims/`. De site ondersteunt alleen wat de stories gebruiken; `play`, decorators en loaders bestaan niet.
+
+`npm run test:a11y` haalt axe over elke pagina en elk voorbeeld (WCAG 2.1 A en AA), in CI bij elke pull request. Dat vervangt het a11y-paneel van Storybook. Een bevinding op de site zelf is altijd een fout. Een bevinding in een voorbeeld wordt vergeleken met `site/a11y-baseline.json`: een nieuwe faalt, en een opgeloste moet uit de baseline (`npm run test:a11y -- --update`), zodat hij niet ongemerkt terugkomt. De baseline is een werklijst, geen vrijbrief.
+
+`site/client/stories.test.ts` rendert elke story en faalt als er een niets oplevert; `site/build/site.test.mjs` controleert dat elke interne link naar een bestaande pagina gaat.
 
 ## Testen
 
@@ -129,7 +145,7 @@ Draai daarna `npm run build:icons` (registry) en `npm run generate:skill-docs` (
 
 ## Ontwerprichtlijnen
 
-De ontwerprichtlijnen staan in `src/docs/design-guidelines.mdx` (Storybook "Docs/Ontwerprichtlijnen"): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes). Heb je de directory `.claude/skills/ontwerprichtlijnen/` lokaal nog staan (van de oude generator), verwijder die dan handmatig; hij is nu een ongetrackte overblijver.
+De ontwerprichtlijnen staan in `src/docs/design-guidelines.md` (op de site: `/richtlijnen/`): dat is de enige bron. Wijzig je ze, draai dan `npm run generate:skill-principles` (of `npm run generate:skill-docs`) en commit het resultaat. `skills/nldd-design/design-guidelines.md` is een gegenereerde kopie die met de plugin meereist en in sync moet blijven; er is geen aparte ontwerprichtlijnen-skill meer. Houd de tekst em-dash-vrij (komma's, punten of haakjes). Heb je de directory `.claude/skills/ontwerprichtlijnen/` lokaal nog staan (van de oude generator), verwijder die dan handmatig; hij is nu een ongetrackte overblijver.
 
 Een ontwerpregel staat daarmee op één plek. Een skill of een patroon mag hem hoogstens in één zin noemen met een link naar de sectie, en schrijft hem niet opnieuw uit. Doe je dat wel, dan lopen de twee versies uiteen: de sticky-headerregel stond een tijd strenger in `nldd-design-build` dan in de richtlijn zelf, en niemand zag dat.
 
@@ -137,28 +153,28 @@ Hetzelfde geldt een laag lager voor gedrag: wat een component doet, documenteer 
 
 ## Patronen
 
-Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. Ze staan in Storybook onder "Patronen" en reizen als `skills/nldd-design-build/patterns/*.md` met de plugin mee naar consumenten.
+Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. Ze staan op de site onder `/patronen/` en reizen als `skills/nldd-design-build/patterns/*.md` met de plugin mee naar consumenten.
 
 Een patroon woont in `src/patterns/<slug>/`, met vier bestanden:
 
-- `<slug>.html`: de voorbeeldmarkup, zonder framework. Dit is de enige bron: de live story rendert hem, het codeblok op de docs-pagina toont hem en de skill neemt hem over.
+- `<slug>.html`: de voorbeeldmarkup, zonder framework. Dit is de enige bron: de live story rendert hem, het codeblok op de pagina toont hem en de skill neemt hem over.
 - `<slug>.stories.ts`: rendert de markup via `patternStory()` uit `src/patterns/pattern-story.ts`, plus het beetje gedrag dat een consument zelf schrijft (een knop die een sheet opent).
-- `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet, de compositie en waarom zo.
+- `<slug>.md`: de pagina op de site, met het probleem, wanneer wel en niet, de compositie en waarom zo.
 - `<slug>.test.ts`: test wat het patroon belooft, op dezelfde markup.
 
-`npm run generate:skill-patterns` (onderdeel van `generate:skill-docs`) maakt daar de skill-pagina van. De vertaling zit in `scripts/lib/skill-patterns.js` met tests ernaast: `<Canvas>` wordt het `.html`-bestand, en een link `?path=/docs/...` wordt een link naar het andere patroon, naar de component in `reference.md` of naar de ontwerprichtlijnen. `validate.yml` controleert dat de gegenereerde pagina's bij hun bron passen. Link in de MDX dus naar Storybook, en naar de voorbeelden in `examples/` via hun GitHub-URL. De titel en de bestandsnaam van elk patroon staan in `PATTERNS` in `scripts/generate-skill-patterns.js`.
+`npm run generate:skill-patterns` (onderdeel van `generate:skill-docs`) maakt daar de skill-pagina van. De vertaling zit in `scripts/lib/skill-patterns.js` met tests ernaast: de regel `<!-- voorbeeld: Naam -->` wordt het `.html`-bestand van die story (op de site wordt het een live voorbeeld), en een link naar een pagina van de site (`/componenten/sheet/`) wordt een link naar het andere patroon, naar de component in `reference.md` of naar de ontwerprichtlijnen. `validate.yml` controleert dat de gegenereerde pagina's bij hun bron passen. Link in de pagina dus met sitepaden, en naar de voorbeelden in `examples/` via hun GitHub-URL. De titel en de bestandsnaam van elk patroon staan in `PATTERNS` in `scripts/generate-skill-patterns.js`.
 
 Een regel die over één component gaat, hoort niet in een patroon maar in de JSDoc van dat component. Een patroon houdt de compositie en de redenen die over meer componenten gaan.
 
 De voorbeelden gebruiken één vaste cast, zodat een nieuw patroon schrijven kopiëren is en niet verzinnen: een **aanvraag** (`Aanvraag A-1042`, Dakisolatie, in behandeling; `Aanvraag A-1043`, Warmtepomp, afgerond), een **dossier** (`Dossier D-318`, team Uitvoering; `Dossier D-319`, team Beleid) en als dienstnaam **Mijn Dienst**. Geen datums, jaartallen, product- of organisatienamen, want die verouderen of vragen om een discussie die niets met het patroon te maken heeft. Lopende tekst mag gevulde tekst zijn; labels, knoppen, titels en validatieteksten blijven echt, want juist daar zijn de betekenis en de lengte het punt.
 
-Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-top-title-bar`](?path=…)`, niet "titelbalk" of "title bar". Dat is de naam die ook in de markup en in `reference.md` staat, dus wie erop zoekt vindt hem. In de zin eromheen schrijf je gewoon Nederlands ("de balk", "de rij"), want dan is net gezegd waar het over gaat.
+Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-top-title-bar`](/componenten/top-title-bar/)`, niet "titelbalk" of "title bar". Dat is de naam die ook in de markup en in `reference.md` staat, dus wie erop zoekt vindt hem. In de zin eromheen schrijf je gewoon Nederlands ("de balk", "de rij"), want dan is net gezegd waar het over gaat.
 
 Houd de set klein: patroonbibliotheken gaan dood aan achterstallig onderhoud, niet aan een verkeerd formaat. Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
 Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Onbekende tag, attribuut, slot of icoonnaam laat CI falen. De logica zit in `scripts/lib/skill-markup.js` met tests in `skill-markup.test.mjs`; die gebruikt dezelfde JSDoc-parser als de referentie, zodat de drie niet uiteen kunnen lopen. Twee dingen zijn expres toegestaan: framework-bindingen (`:text`, `[attr.x]`, `v-if`) en attributen die een ouder voor zijn kinderen documenteert (`above`/`below`/`only` op de split views).
 
-Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.mdx`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
+Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.md`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
 
 ## Plugin-versie
 

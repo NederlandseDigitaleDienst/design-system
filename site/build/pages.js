@@ -1,0 +1,144 @@
+/**
+ * Vite plugin that writes the site's pages to disk and keeps them current.
+ *
+ * Vite builds a multi-page site from HTML files, so the pages are generated
+ * into site/.generated/ (ignored by git) and Vite takes that directory as its
+ * root. In development the sources are watched: a change to a story, a pattern,
+ * a Markdown page or the manifest regenerates the pages and reloads the browser.
+ */
+
+import { mkdirSync, writeFileSync, readFileSync, existsSync, copyFileSync, rmSync, readdirSync, statSync } from 'node:fs';
+import { resolve, dirname, join, relative } from 'node:path';
+import { buildPages } from './site.js';
+import { readManifest, repoRoot } from './sources.js';
+
+export const generatedDir = resolve(repoRoot, 'site/.generated');
+
+// The stylesheet is a file of its own, linked from the head of every page, and
+// not an import of the script: a stylesheet in the head is there before the
+// first paint, where one a script adds arrives after the unstyled page showed.
+const ENTRIES = {
+	'main.ts': "import '../client/main.ts';\n",
+	'frame.ts': "import '../client/frame.ts';\n",
+	'styles.css': [
+		'../../src/assets/styles/rijksoverheid-fonts.css',
+		'../../src/assets/styles/variables.css',
+		'../../src/assets/styles/document-reset.css',
+		'../../src/components/content/rich-text/rich-text.css',
+		'../../src/components/forms/form-section/form-section.css',
+		'../../src/components/forms/form/form.css',
+		'../../src/assets/styles/fouc.css',
+		'../client/site.css',
+	]
+		.map((path) => `@import '${path}';\n`)
+		.join(''),
+};
+
+const WATCHED = [/\.stories\.ts$/, /\.md$/, /custom-elements\.json$/, /site\/pages\//, /site\/build\//, /src\/patterns\/.+\.html$/];
+
+function writeIfChanged(file, content) {
+	if (existsSync(file) && readFileSync(file, 'utf8') === content) return false;
+	mkdirSync(dirname(file), { recursive: true });
+	writeFileSync(file, content);
+	return true;
+}
+
+function htmlFiles(dir, found = []) {
+	if (!existsSync(dir)) return found;
+	for (const name of readdirSync(dir)) {
+		const full = join(dir, name);
+		if (statSync(full).isDirectory()) htmlFiles(full, found);
+		else if (name.endsWith('.html')) found.push(full);
+	}
+	return found;
+}
+
+/** The module that defines each element, by tag. */
+function componentModules() {
+	return Object.fromEntries(readManifest().map((element) => [element.tagName, resolve(repoRoot, element.module)]));
+}
+
+/**
+ * Gives a page an entry of its own: the components its markup uses, then the
+ * script every page runs. A page that shows a hero and four cards then loads
+ * those, and not the other hundred components.
+ */
+function withEntry(path, html, modules) {
+	const shared = path.startsWith('voorbeeld/') ? 'frame.ts' : 'main.ts';
+	const tags = [...new Set([...html.matchAll(/<(nldd-[a-z0-9-]+)/g)].map((match) => match[1]))].sort();
+	const dir = dirname(join(generatedDir, path));
+	const imports = tags.filter((tag) => modules[tag]).map((tag) => `import '${relative(dir, modules[tag])}';`);
+	const entry = `${[...imports, `import './${relative(dir, join(generatedDir, shared))}';`].join('\n')}\n`;
+	const name = `${dirname(path) === '.' ? '' : `${dirname(path)}/`}entry.ts`;
+	return { html: html.replace(`src="/${shared}"`, `src="/${name}"`), entryPath: name, entry };
+}
+
+function writePages(pages) {
+	const modules = componentModules();
+	for (const [path, source] of Object.entries(pages)) {
+		const { html, entryPath, entry } = withEntry(path, source, modules);
+		writeIfChanged(join(generatedDir, path), html);
+		writeIfChanged(join(generatedDir, entryPath), entry);
+	}
+}
+
+/** Writes every page and removes the ones whose source is gone. */
+export function generate({ base = '/' } = {}) {
+	const { pages, counts } = buildPages({ base });
+	writePages(pages);
+	for (const [name, content] of Object.entries(ENTRIES)) writeIfChanged(join(generatedDir, name), content);
+	for (const file of htmlFiles(generatedDir)) {
+		if (!(relative(generatedDir, file) in pages)) rmSync(file);
+	}
+	for (const asset of ['favicon.svg', 'touch-icon.png']) {
+		copyFileSync(resolve(repoRoot, 'src/assets/favicon', asset), join(generatedDir, asset));
+	}
+	return { inputs: Object.keys(pages).map((path) => join(generatedDir, path)), counts };
+}
+
+export function sitePages() {
+	let base = '/';
+	return {
+		name: 'nldd-site-pages',
+		// Every component by tag, for the loader that catches a tag nobody
+		// imported (site/client/autoload.ts).
+		resolveId(id) {
+			return id === 'virtual:site-components' ? '\0virtual:site-components' : null;
+		},
+		load(id) {
+			if (id !== '\0virtual:site-components') return null;
+			const entries = Object.entries(componentModules()).map(([tag, file]) => `\t'${tag}': () => import('${file}'),`);
+			return `export default {\n${entries.join('\n')}\n};\n`;
+		},
+		config(config) {
+			base = config.base ?? '/';
+			const { inputs } = generate({ base });
+			return { build: { rollupOptions: { input: inputs } } };
+		},
+		configureServer(server) {
+			server.watcher.add([
+				resolve(repoRoot, 'src'),
+				resolve(repoRoot, 'site/pages'),
+				resolve(repoRoot, 'site/content'),
+				resolve(repoRoot, 'site/build'),
+				resolve(repoRoot, 'CHANGELOG.md'),
+				resolve(repoRoot, 'custom-elements.json'),
+			]);
+			const regenerate = async (file) => {
+				if (file.startsWith(generatedDir) || !WATCHED.some((pattern) => pattern.test(file))) return;
+				try {
+					// The templates are plain modules; a fresh import picks up an edit.
+					const fresh = await import(`./site.js?update=${Date.now()}`);
+					const { pages } = fresh.buildPages({ base });
+					writePages(pages);
+					server.ws.send({ type: 'full-reload' });
+				} catch (error) {
+					server.config.logger.error(`Site niet bijgewerkt: ${error.message}`);
+				}
+			};
+			server.watcher.on('change', regenerate);
+			server.watcher.on('add', regenerate);
+			server.watcher.on('unlink', regenerate);
+		},
+	};
+}

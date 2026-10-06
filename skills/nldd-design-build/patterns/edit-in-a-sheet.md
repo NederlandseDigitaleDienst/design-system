@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/edit-in-a-sheet/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/edit-in-a-sheet/ (de .md-pagina en de .html-voorbeelden ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 

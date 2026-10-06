@@ -92,5 +92,5 @@ describe('nldd-avatar-group', () => {
 
 	// No assertions on the sizes and the overlap: the test document carries no
 	// design tokens, so every --_* that resolves to one computes to nothing
-	// here. Those are checked in Storybook (Sizes and Overlap stories).
+	// here. Those are checked by eye in the Sizes and Overlap stories.
 });

@@ -28,11 +28,13 @@ import { NLDDButton, NLDDCheckbox, NLDDSwitch } from '@nldd/design-system';
 <nldd-switch-field label="Meldingen inschakelen"></nldd-switch-field>
 ```
 
-## Storybook
+## Documentatie
 
-Bekijk de live component documentatie: **https://nederlandsedigitaledienst.github.io/design-system/**
+De site toont elk component met live voorbeelden, de patronen en de ontwerprichtlijnen: **https://nederlandsedigitaledienst.github.io/design-system/**
 
 ## Plugin voor AI-assistenten
+
+De korte versie, met de installatie en wat de skills doen, staat op de site: [Werken met een AI-assistent](https://nederlandsedigitaledienst.github.io/design-system/aan-de-slag/ai-assistent/). Hieronder staat hetzelfde, plus de stappen voor wie van de oude marketplace komt.
 
 De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/design-system` te werken: de juiste tags, attributen, CSS-tokens en patronen. Hij staat in de NLDD-marketplace, [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins), met een manifest voor Claude Code en een voor Cursor. Hij levert vijf skills:
 
@@ -112,14 +114,30 @@ Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwij
 
 ## Development setup
 
+Je hebt Node 18 of hoger nodig. De documentatiesite is ook de plek waar je een component bekijkt terwijl je eraan werkt.
+
 ```bash
-# Dependencies installeren
-npm install
+npm ci          # dependencies installeren
+npm run site    # de documentatiesite starten
+```
 
-# Storybook starten
-npm run storybook
+Open daarna het adres dat in de terminal verschijnt, standaard http://localhost:5173. De site ververst zelf als je een component, een story of een pagina wijzigt.
 
-# Open http://localhost:6006 voor de component documentatie
+Wil je een branch van iemand anders bekijken, haal die dan eerst op:
+
+```bash
+git fetch origin
+git switch <branch>
+npm ci
+npm run site
+```
+
+De overige commando's:
+
+```bash
+npm run build:site   # de site bouwen naar site-dist/
+npm run test:run     # de tests, in een echte browser (eenmalig: npx playwright install chromium)
+npm run test:a11y    # axe over elke pagina van de site en elk voorbeeld erop
 ```
 
 ## Componenten
@@ -141,7 +159,7 @@ npm run storybook
 | `accessible-label` | string  | `''`             | Toegankelijk label voor schermlezers                                                                                                                     |
 | `popovertarget`    | string  | `''`             | ID van het popover-element                                                                                                                               |
 
-Zie de [Storybook-documentatie](https://nederlandsedigitaledienst.github.io/design-system/) voor alle componenten.
+Zie de [documentatie](https://nederlandsedigitaledienst.github.io/design-system/componenten/) voor alle componenten.
 
 ## Styling structuur
 

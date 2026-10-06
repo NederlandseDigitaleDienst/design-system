@@ -9,6 +9,18 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The documentation is a site of its own, built with the components it documents.** [nederlandsedigitaledienst.github.io/design-system](https://nederlandsedigitaledienst.github.io/design-system/) now opens on a landing page with the install steps, and every component, pattern and guideline has an address you can share: `/componenten/button/`, `/patronen/form/`, `/richtlijnen/`. Storybook is gone. A Storybook link you saved (`?path=/docs/...`) is sent on to the page that replaced it.
+
+- **Every live example stands on a stage.** The frame around an example has its own switch for light and dark, for the base and the tinted surface, and, for an example that needs a whole window, for the width. An example therefore looks the same whatever page it is on, and you can see at a glance what is the example and what is the site.
+
+- **Every attribute has a control.** The controls of an example come from the component itself, with the values of its type, so an attribute no longer needs to be listed by hand to be tried out.
+
+### Changed
+
+- **The links in the skills point to the site.** The package and its components are unchanged.
+
 ## [0.8.95](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.94...v0.8.95) (2026-10-06)
 
 ### Highlights

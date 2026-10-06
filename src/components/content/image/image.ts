@@ -42,7 +42,7 @@
  *   Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base
  *   color shown outside the cell gradients; the other six are per-cell
  *   colors in row-major 3×2 order. Generate via the encoder in
- *   `lqip-encoder.ts` or via the "LQIP encoder tool" Storybook story.
+ *   `lqip-encoder.ts` or via the "LQIP encoder tool" story on the component's page.
  *   Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/)
  *   with per-cell hue — Lean's original format encodes grayscale cells only;
  *   ours encodes a color per cell so multi-color subjects survive the
@@ -287,7 +287,7 @@ export class NLDDImage extends LitElement {
 	/**
 	 * Says in DEV when an image has no text alternative. A non-decorative image
 	 * without one is a silent a11y failure (WCAG H37), so this surfaces it
-	 * during build and Storybook and stays quiet in production.
+	 * during build and on the documentation site and stays quiet in production.
 	 *
 	 * Slotted media replaces the built-in `<img>` and carries its own
 	 * alternative, so once something is slotted, that is what gets judged.
