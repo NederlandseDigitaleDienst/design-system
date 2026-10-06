@@ -1,4 +1,11 @@
 @layer reset {
+	/* iOS Safari inflates small text in landscape while this is auto. On the
+	   root it covers the whole page, light DOM and shadow roots alike. */
+	html {
+		-webkit-text-size-adjust: 100%;
+		text-size-adjust: 100%;
+	}
+
 	html:has(nldd-app-view),
 	html:has(nldd-app-view) body {
 		margin: 0;

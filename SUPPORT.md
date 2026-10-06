@@ -7,7 +7,7 @@ Begin bij de documentatie, want daar staat het meeste al in.
 - **[Storybook](https://nederlandsedigitaledienst.github.io/design-system/)** toont elk component met z'n varianten en attributen, en je kunt er zelf aan draaien. Dit is de plek om te zien hoe iets eruitziet en werkt.
 - **De [README](./README.md)** legt de installatie uit, de vijf lagen van CSS-variabelen en de opbouw van de styling.
 - **De typedefinities** in `node_modules/@nldd/design-system` zijn de exacte API. Ze zijn gegenereerd uit de broncode, dus ze lopen nooit achter.
-- **De `nldd`-plugin voor Claude Code** geeft een assistent dezelfde kennis, inclusief een offline referentie van elk component. Installeren staat in de [README](./README.md#claude-code-plugin).
+- **De `nldd-design-system`-plugin voor Claude Code en Cursor** geeft een assistent dezelfde kennis, inclusief een offline referentie van elk component. Installeren staat in de [README](./README.md#plugin-voor-ai-assistenten).
 
 ## Waar je een vraag stelt
 
@@ -30,4 +30,4 @@ Ondersteund is de laatst gepubliceerde versie op npm. Fixes komen in een nieuwe 
 
 Vragen over je eigen build, je framework of je applicatie vallen buiten dit project, tenzij het aan een component ligt. Werkt een component niet zoals de documentatie zegt, dan horen we het graag. Krijg je je bundler niet aan de praat, dan ben je bij je eigen team beter af.
 
-Voor de bekende opstellingen leveren we wel een startpunt mee: platte HTML en Vue 3 staan uitgewerkt in de voorbeelden bij de `nldd`-plugin.
+Voor de bekende opstellingen leveren we wel een startpunt mee: platte HTML en Vue 3 staan uitgewerkt in de voorbeelden bij de `nldd-design-system`-plugin.

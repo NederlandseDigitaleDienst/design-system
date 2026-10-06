@@ -32,9 +32,9 @@ import { NLDDButton, NLDDCheckbox, NLDDSwitch } from '@nldd/design-system';
 
 Bekijk de live component documentatie: **https://nederlandsedigitaledienst.github.io/design-system/**
 
-## Claude Code plugin
+## Plugin voor AI-assistenten
 
-Deze repository is ook een Claude Code marketplace. De `nldd`-plugin geeft Claude de kennis om met `@nldd/design-system` te werken: de juiste tags, attributen, CSS-tokens en patronen. Hij levert vijf skills:
+De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/design-system` te werken: de juiste tags, attributen, CSS-tokens en patronen. Hij staat in de NLDD-marketplace, [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins), met een manifest voor Claude Code en een voor Cursor. Hij levert vijf skills:
 
 | Skill | Waarvoor |
 |-------|----------|
@@ -44,22 +44,56 @@ Deze repository is ook een Claude Code marketplace. De `nldd`-plugin geeft Claud
 | `nldd-design-upgrade` | Een applicatie die al op dit systeem draait naar een nieuwere versie brengen. |
 | `nldd-design-contribute` | Een wijziging voorstellen: een ontbrekend component, een patroon, of een bug. |
 
-Claude kiest zelf welke hij nodig heeft; aanroepen kan ook met `/nldd-design`, of met `/nldd:nldd-design` als een skill van je eigen project dezelfde naam draagt.
+De assistent kiest zelf welke hij nodig heeft. In Claude Code kun je er ook een aanroepen met `/nldd-design`, of met `/nldd-design-system:nldd-design` als een skill van je eigen project dezelfde naam draagt.
 
-Toevoegen en installeren:
+### Claude Code
 
 ```
-/plugin marketplace add NederlandseDigitaleDienst/design-system
-/plugin install nldd@nldd-plugins
+/plugin marketplace add NederlandseDigitaleDienst/ai-plugins
+/plugin install nldd-design-system@nldd
 ```
 
-Bijwerken naar een nieuwere versie doe je met `/plugin marketplace update nldd-plugins`.
+Bijwerken naar een nieuwere versie doe je met `/plugin marketplace update nldd`.
+
+### Cursor
+
+Importeer de marketplace via **Dashboard → Settings → Plugins → Import** met de repository `NederlandseDigitaleDienst/ai-plugins`, en zet daarna `nldd-design-system` aan.
+
+Deze route is in Claude Code gemeten en in Cursor nog niet. Loopt hij bij jou anders, meld het dan in een [issue](https://github.com/NederlandseDigitaleDienst/ai-plugins/issues).
+
+### Heb je de plugin al als `nldd@nldd-plugins`?
+
+Dan blijft hij werken. Deze repository is tot 1 maart 2027 ook zelf nog een Claude Code marketplace (`nldd-plugins`), en wie de plugin daaruit heeft krijgt dezelfde skills en dezelfde updates. Daarna verdwijnt die marketplace en krijg je geen updates meer, dus stap voor die tijd over:
+
+```
+/plugin marketplace add NederlandseDigitaleDienst/ai-plugins
+/plugin install nldd-design-system@nldd
+/plugin uninstall nldd@nldd-plugins
+/plugin marketplace remove nldd-plugins
+```
+
+Staat de plugin in de `.claude/settings.json` van een project, vervang dan daar de twee verwijzingen:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "nldd": {
+      "source": { "source": "github", "repo": "NederlandseDigitaleDienst/ai-plugins" }
+    }
+  },
+  "enabledPlugins": {
+    "nldd-design-system@nldd": true
+  }
+}
+```
+
+Een tijd lang de oude en de nieuwe tegelijk aan hebben kan geen kwaad: de skills verschijnen één keer.
+
+Eén ding verandert ook als je niet overstapt. De plugin zelf heet nu `nldd-design-system`, dus de lange vorm van een skillnaam is `/nldd-design-system:nldd-design` en niet meer `/nldd:nldd-design`. De korte vorm (`/nldd-design`) blijft gelijk. Heb je de lange vorm ergens vastgelegd, bijvoorbeeld als `Skill(nldd:nldd-design-build)` in een permissieregel of in een hook, pas die dan aan: de zoekopdracht hieronder vindt ze.
 
 ### Kom je van een versie met één `nldd`-skill?
 
-De plugin heette altijd al `nldd` en blijft zo heten, dus je installatie en je `enabledPlugins` blijven werken. Wat veranderde zijn de **skills** erin: waar er één `nldd` was, zijn er nu vijf met een naam die zegt waar ze over gaan.
-
-Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee zonder foutmelding:
+Waar er één skill `nldd` was, zijn er nu vijf met een naam die zegt waar ze over gaan. Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee zonder foutmelding:
 
 1. in je eigen `CLAUDE.md`, `.claude/rules/*.md` of `AGENTS.md` ("gebruik de nldd skill"). Claude vindt hem niet en gaat verder zonder;
 2. in subagent-definities (`.claude/agents/*.md`) en hooks die op de naam matchen;
@@ -69,10 +103,12 @@ Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee
 Eén zoekopdracht vindt ze:
 
 ```
-rg -n '\bnldd\b' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
+rg -n '(^|[^-\w@])nldd([^-\w/]|$)' --glob '!node_modules' CLAUDE.md AGENTS.md .claude/
 ```
 
-Laat `nldd@nldd-plugins` staan: dat is de pluginnaam en die klopt nog. Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwijzen.
+Hij slaat `@nldd/design-system` en de `nldd-*`-tags over. Wat hij ook vindt zijn `nldd:` (de oude lange vorm) en `nldd@nldd-plugins` (de oude installatie); voor beide staat hierboven wat je ermee doet.
+
+Er blijft tot 1 maart 2027 een `nldd`-skill achter die niets doet dan doorverwijzen.
 
 ## Development setup
 
@@ -166,3 +202,63 @@ De broncode van dit designsysteem valt onder de **EUPL-1.2**. De volledige licen
 De fontbestanden in `src/assets/fonts/`, het logo en de huisstijlelementen van de Rijksoverheid (zoals het lint en de huisstijlkleuren) vallen daar niet onder; die zijn uitsluitend bestemd voor de Rijksoverheid en partijen die in haar opdracht werken, zie [`NOTICES.md`](./NOTICES.md).
 
 Verder horen bij dit project een [gedragscode](./CODE_OF_CONDUCT.md), een [beveiligingsbeleid](./SECURITY.md), een [bijdragegids](./CONTRIBUTING.md), een [ondersteuningspagina](./SUPPORT.md) en een beschrijving van [wie waarover beslist](./PROJECT_GOVERNANCE.md).
+
+## Waar het designsysteem draait
+
+Publieke repositories van overheidsorganisaties die `@nldd/design-system` gebruiken, met de plek waar je het resultaat kunt bekijken. Een project staat hier als het de componenten of de tokens gebruikt en de broncode of de site voor iedereen te openen is. Ontbreekt jouw project? [Maak een issue aan](https://github.com/NederlandseDigitaleDienst/design-system/issues) of stuur een pull request op deze lijst.
+
+### Nederlandse Digitale Dienst
+
+De [Nederlandse Digitale Dienst](https://digitaledienst.overheid.nl) is gestart met RegelRecht, Fundament en MijnOverheid Zakelijk. Hun broncode staat in andere GitHub-organisaties dan die van de dienst.
+
+#### RegelRecht
+
+Alle frontends staan in [MinBZK/regelrecht](https://github.com/MinBZK/regelrecht).
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Website en documentatie | [regelrecht.rijks.app](https://regelrecht.rijks.app) | [`docs/`](https://github.com/MinBZK/regelrecht/tree/main/docs) |
+| Editor voor regelgeving | [editor.regelrecht.rijks.app](https://editor.regelrecht.rijks.app) | [`frontend/`](https://github.com/MinBZK/regelrecht/tree/main/frontend) |
+| Demo-werkruimte | [demo.regelrecht.rijks.app](https://demo.regelrecht.rijks.app) | [`frontend-demo/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-demo) |
+| Wetgevingsproces | [lawmaking.regelrecht.rijks.app](https://lawmaking.regelrecht.rijks.app) | [`frontend-lawmaking/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-lawmaking) |
+| Proof-of-concepts | [poc.regelrecht.rijks.app](https://poc.regelrecht.rijks.app) | [`frontend-poc-portal/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-poc-portal) en de andere `frontend-poc-*`-mappen |
+
+#### Fundament
+
+De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](https://github.com/fundament-oss/fundament).
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Website en documentatie | [docs.fundament.projects.digilab.network](https://docs.fundament.projects.digilab.network) | [`docs-frontend/`](https://github.com/fundament-oss/fundament/tree/main/docs-frontend) |
+| Console | [console.fundament.projects.digilab.network](https://console.fundament.projects.digilab.network) | [`console-frontend/`](https://github.com/fundament-oss/fundament/tree/main/console-frontend) |
+| Marketplace voor plugins | [marketplace.fundament.projects.digilab.network](https://marketplace.fundament.projects.digilab.network) | [`marketplace-frontend/`](https://github.com/fundament-oss/fundament/tree/main/marketplace-frontend) |
+| DCIM (datacenter infrastructure management) | geen publieke URL | [`dcim-frontend/`](https://github.com/fundament-oss/fundament/tree/main/dcim-frontend) |
+
+#### MijnOverheid Zakelijk
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Website: kleuren, iconen en favicon, en de presentaties | [mijnoverheidzakelijk.nl](https://mijnoverheidzakelijk.nl) | [MinBZK/moza-site](https://github.com/MinBZK/moza-site) |
+
+#### De dienst zelf
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Website van de Nederlandse Digitale Dienst | [digitaledienst.overheid.nl](https://digitaledienst.overheid.nl) | geen publieke repository |
+
+#### Overige projecten
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| NeRDS, de Nederlandse Richtlijn Digitale Systemen | [nederlandsedigitaledienst.github.io/NeRDS](https://nederlandsedigitaledienst.github.io/NeRDS/) | [NederlandseDigitaleDienst/NeRDS](https://github.com/NederlandseDigitaleDienst/NeRDS) |
+| Ruimte, een werkinstrument voor het samenstellen van een formatie | [nederlandsedigitaledienst.github.io/ruimte](https://nederlandsedigitaledienst.github.io/ruimte/) | [NederlandseDigitaleDienst/ruimte](https://github.com/NederlandseDigitaleDienst/ruimte) |
+
+### Andere overheidsorganisaties
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Bouwmeester, beheer van het beleidscorpus van BZK | [bouwmeester.rijks.app](https://bouwmeester.rijks.app) | [BureauArchitectuurDigitaleOverheid/bouwmeester](https://github.com/BureauArchitectuurDigitaleOverheid/bouwmeester) |
+| ZAD, Zelfservice Applicatie Deployment | [zad.rijksapp.nl](https://zad.rijksapp.nl) | [RijksICTGilde/RIG-Cluster](https://github.com/RijksICTGilde/RIG-Cluster) |
+| Wies, een overzicht van wie waar aan werkt | [wies.rijksorganisatieodi.nl](https://wies.rijksorganisatieodi.nl) (achter een login) | [RijksICTGilde/wies](https://github.com/RijksICTGilde/wies) |
+| Lord of the Components, dat Jinja2-templates omzet naar NLDD-componenten | een bibliotheek, geen site | [RijksICTGilde/lord-of-the-components](https://github.com/RijksICTGilde/lord-of-the-components) |
+| Invulhulp voor AI-compliance-formulieren (proof of concept) | geen publieke URL | [MinFin-NL/invulhulp](https://github.com/MinFin-NL/invulhulp) |

@@ -46,7 +46,7 @@ Een volgorde die werkte:
 
 ## JavaScript is de laatste schuilplaats van het oude systeem
 
-Die vijfde stap staat er niet voor niets apart. Nadat alle templates en stylesheets om waren, zat het oude systeem nog in `static/js/`: markup voor een toast, klassen voor radio's, een selector voor foutmeldingen. Een scan over je templates ziet dat niet, want JavaScript bouwt HTML-strings op.
+Die vijfde stap staat er niet voor niets apart. Nadat alle templates en stylesheets om waren, zat het oude systeem nog in `static/js/`: markup voor een notification, klassen voor radio's, een selector voor foutmeldingen. Een scan over je templates ziet dat niet, want JavaScript bouwt HTML-strings op.
 
 Zoek oude klassenamen dus ook in je JavaScript, en houd er rekening mee dat ze daar in string-concatenatie en lookup-tabellen zitten in plaats van in markup.
 

@@ -629,9 +629,51 @@ describe('nldd-top-navigation-bar ribbon above the page', () => {
 		const bar = el.querySelector('nldd-top-navigation-bar')!;
 		await waitForUpdate(bar);
 		const logo = bar.shadowRoot!.querySelector('.top-navigation-bar__logo')!;
-		const rect = logo.getBoundingClientRect();
-		const ribbonBottom = rect.top + window.scrollY + rect.height - parseFloat(getComputedStyle(logo, '::before').bottom);
-		expect(rect.top + window.scrollY).toBeGreaterThanOrEqual(24);
-		expect(ribbonBottom).toBe(0);
+		const logoTop = logo.getBoundingClientRect().top + window.scrollY;
+		expect(logoTop).toBeGreaterThanOrEqual(24);
+		expect(bar.style.getPropertyValue('--_logo-offset')).toBe(`${Math.round(logoTop)}px`);
+	});
+
+	// Chrome paints nothing above the page, so only the fixed piece would show
+	// and a hard pull would open a gap between it and the logo.
+	it('is not drawn outside WebKit', async () => {
+		el = await fixture(`<nldd-top-navigation-bar></nldd-top-navigation-bar>`);
+		const logo = el.shadowRoot!.querySelector('.top-navigation-bar__logo')!;
+		expect(getComputedStyle(logo, '::before').content).toBe('none');
+		expect(getComputedStyle(logo, '::after').content).toBe('none');
+	});
+});
+
+// The link spans the wordmark's whole track so the ribbon stays centered, but
+// only the ribbon and the text take a click: the space beside them is not a link.
+describe('nldd-top-navigation-bar – clickable area of the logo link', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('takes a click on the ribbon and the text, not on the space beside them', async () => {
+		el = await fixture(
+			'<div style="width: 100%; --semantics-brand-ribbon-sm-width: 40px; --semantics-brand-ribbon-md-width: 44px; --semantics-brand-ribbon-lg-width: 48px; --primitives-space-12: 12px;">'
+			+ '<nldd-top-navigation-bar logo-title="Mijn Dienst" logo-href="/"></nldd-top-navigation-bar></div>',
+		);
+		const bar = el.querySelector('nldd-top-navigation-bar') as NLDDTopNavigationBar;
+		await waitForUpdate(bar);
+		const root = bar.shadowRoot!;
+		const link = root.querySelector<HTMLAnchorElement>('a.top-navigation-bar__logo-and-wordmark')!;
+		const inLink = (x: number, y: number) => !!root.elementFromPoint(x, y)?.closest('a');
+		const logo = root.querySelector('.top-navigation-bar__logo')!.getBoundingClientRect();
+		// The text itself, not its paragraph: a paragraph is as wide as its column.
+		const range = document.createRange();
+		range.selectNodeContents(root.querySelector('.top-navigation-bar__wordmark-title')!);
+		const title = range.getBoundingClientRect();
+		const area = link.getBoundingClientRect();
+
+		expect(inLink(logo.left + logo.width / 2, logo.top + logo.height / 2)).toBe(true);
+		expect(inLink(title.left + 2, title.top + title.height / 2)).toBe(true);
+		expect(area.right - title.right).toBeGreaterThan(40);
+		expect(inLink(title.right + 20, title.top + title.height / 2)).toBe(false);
+		expect(link.tabIndex).toBe(0);
 	});
 });

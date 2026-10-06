@@ -15,6 +15,38 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The plugin is now `nldd-design-system`, and it moved to the NLDD marketplace.** Install it from [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins) as `nldd-design-system@nldd`. That marketplace is tool-independent, and the plugin now ships a Cursor manifest next to the Claude Code one. An existing `nldd@nldd-plugins` install keeps working and keeps updating until 1 March 2027, when the marketplace in this repository goes away. The README has the four commands to move over.
+
+- **The current step in `nldd-step-indicator` is marked on the step itself**, with `status="current"` on the `nldd-step-indicator-item`, instead of a number on the parent. Move the attribute when you upgrade. See Breaking.
+
+- **A title in `nldd-toolbar` keeps its width.** Buttons move into the overflow menu first, and the title only truncates once none is left.
+
+### Added
+
+- **`nldd-design-migrate` covers sites built by a static site generator** (MkDocs, Hugo, Eleventy). Leave the authors' Markdown alone and convert the rendered HTML in a build hook, take the bundle from the registry without a bundler and pin it with its integrity hash, and decide up front what is left without JavaScript and what loading the whole bundle on every page costs. The behavior check now also strips the base path a site runs under, because a pull request preview runs under a different one than production.
+
+### Changed
+
+- **A title in `nldd-toolbar` keeps its own width while items can still move into the overflow menu.** It used to shrink first: next to a few buttons a title like "Aanvraag A-1042" came down to "Aanvraag A-…", or to nothing at all, while every button stayed. Now the items go first, in `priority` order, and the title only truncates once none is left to move. `min-width` on `nldd-toolbar-title` defaults to the width of its text, up to `max-width`. Set `min-width="0"` for the old behavior.
+
+- **Only the ribbon and the wordmark text in `nldd-top-navigation-bar` take a click.** The logo link spans the whole width beside the ribbon, which keeps the ribbon centered, and all of that space used to be clickable. It is still one link with one tab stop, named by the wordmark.
+
+- **`nldd-blockquote` wraps with `text-wrap: pretty`**, the quote as well as the attribution, so neither ends on a single word on its last line.
+
+### Breaking
+
+- **The current step in `nldd-step-indicator` is `status="current"` on the step.** It was a number on the parent (`current="2"`), which pointed at the wrong step as soon as an app left one out. Now it is the same `status` a step already had, with the same three values as `nldd-timeline-track-cell`: `current` marks where you are and the parent derives the rest from it, while `past` and `future` stay an exception for one step. With no step marked, step 1 is current, and with more than one the last wins. Move the attribute: `<nldd-step-indicator current="2">` becomes `status="current"` on the second item. A leftover `current` on the parent no longer does anything, and a dev build says so in the console, also when a framework sets it later.
+
+- **The long form of a skill name is `/nldd-design-system:nldd-design`**, no longer `/nldd:nldd-design`, because the prefix follows the plugin name. This holds for existing installs too, from their next update. A permission rule such as `Skill(nldd:nldd-design-build)` or a hook that matches on the long form stops matching, without an error. The short form (`/nldd-design`) is unchanged, and so is the skill an assistant picks by itself. The README has a search that finds the places to change.
+
+### Fixed
+
+- **Running text no longer grows when a phone turns to landscape.** iOS Safari enlarged the paragraphs in `nldd-rich-text` while the titles kept their size. `@nldd/design-system/styles` now sets `text-size-adjust: 100%` on `html`, in the reset layer, instead of on `nldd-rich-text`. If you load only the tokens, set it on your own root.
+
+- **The stretching ribbon in `nldd-top-navigation-bar` is limited to Safari, and to every browser on iOS.** Chrome does not draw anything above the top of the page, so on a pull it showed only the piece that holds still at the top, and a hard pull opened a gap between that piece and the logo. Chrome and the other non-WebKit browsers now show the plain gap above the ribbon again, as they did before 0.8.94.
+
 ## [0.8.94](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.93...v0.8.94) (2026-10-05)
 
 ### Highlights

@@ -1,3 +1,8 @@
+html {
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
 /* Storybook preview canvas
  *
  * Wire the canvas background to the design-system surface token so the

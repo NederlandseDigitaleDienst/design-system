@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "nldd-plugins",
   "metadata": {
-    "description": "Plugin voor het NLDD Designsysteem (Nederlandse Digitale Dienst, Rijksoverheid)"
+    "description": "Verhuisd naar NederlandseDigitaleDienst/ai-plugins. Deze marketplace blijft tot 1 maart 2027 werken voor wie de plugin al heeft; installeer nieuw als nldd-design-system@nldd."
   },
   "owner": {
     "name": "Nederlandse Digitale Dienst"
@@ -10,7 +10,8 @@
   "plugins": [
     {
       "name": "nldd",
-      "description": "Bouw applicaties met het NLDD Designsysteem (@nldd/design-system). Vijf skills: nldd-design om componenten, attributen, iconen en releases op te zoeken, nldd-design-build om een applicatie te bouwen, nldd-design-migrate om een bestaande frontend om te zetten, nldd-design-upgrade om een versie te verhogen, en nldd-design-contribute om een wijziging voor te stellen. Voor consumenten van het pakket, niet voor wie het systeem zelf onderhoudt.",
+      "displayName": "NLDD Designsysteem",
+      "description": "Verhuisd: installeer deze plugin voortaan als nldd-design-system@nldd uit NederlandseDigitaleDienst/ai-plugins. Deze oude naam blijft tot 1 maart 2027 werken. Bouw applicaties met het NLDD Designsysteem (@nldd/design-system). Vijf skills: nldd-design om componenten, attributen, iconen en releases op te zoeken, nldd-design-build om een applicatie te bouwen, nldd-design-migrate om een bestaande frontend om te zetten, nldd-design-upgrade om een versie te verhogen, en nldd-design-contribute om een wijziging voor te stellen. Voor consumenten van het pakket, niet voor wie het systeem zelf onderhoudt.",
       "version": "0.8.94",
       "author": {
         "name": "Nederlandse Digitale Dienst"

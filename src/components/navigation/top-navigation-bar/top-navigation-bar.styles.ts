@@ -104,7 +104,9 @@ export const topNavigationBarStyles = css`
 		justify-content: center;
 	}
 
-	@supports (animation-timeline: scroll()) {
+	/* WebKit only: Chrome paints nothing above the page and leaves the fixed
+	   ::after behind, so a hard pull shows a gap between it and the logo. */
+	@supports (animation-timeline: scroll()) and (font: -apple-system-body) {
 		.top-navigation-bar__logo {
 			position: relative;
 		}
@@ -178,8 +180,20 @@ export const topNavigationBarStyles = css`
 		grid-column: 2;
 	}
 
+	/* The link spans the wordmark's whole track so the ribbon stays centered;
+	   only the ribbon and the text take the click, not the space beside them. */
 	a.top-navigation-bar__logo-and-wordmark {
+		pointer-events: none;
 		text-decoration: none;
+	}
+
+	a.top-navigation-bar__logo-and-wordmark > .top-navigation-bar__logo,
+	a.top-navigation-bar__logo-and-wordmark .top-navigation-bar__wordmark-content > p {
+		pointer-events: auto;
+	}
+
+	a.top-navigation-bar__logo-and-wordmark .top-navigation-bar__wordmark-content > p {
+		width: fit-content;
 	}
 
 	a.top-navigation-bar__logo-and-wordmark:focus-visible {

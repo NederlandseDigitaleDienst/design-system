@@ -299,7 +299,7 @@ A row of controls that belong to a whole screen or pane, with an overflow menu f
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `width` | `string` | Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width. |
-| `min-width` | `string` | Minimum width as a CSS length (default: '0', so the title shrink-wraps its content and the next element sits against it). |
+| `min-width` | `string` | Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first. |
 | `max-width` | `string` | Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row). |
 | `align` | `string` | Text alignment: 'left' \| 'center' (default: 'left'). |
 | `text` | `string` | Title text. |
@@ -2808,7 +2808,7 @@ A narrow, page-wide status bar (24px) with a deep background color per variant. 
 
 ### `<nldd-step-indicator>`
 
-Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. The parent holds the truth: `current` (1-based) derives the status of every child — `past` before it, `future` after. A child can override that with a `status` of its own, for flows that jump back or skip a step. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
+Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Mark the step you are on with `status="current"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status="past"` or `status="future"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-timeline-track-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role="list"` with a `role="listitem"` per step. The current step gets `aria-current="step"`, the only notion WAI-ARIA has for this. "Done" and "still to do" do not exist as ARIA tokens and travel along as visually hidden text instead.
 
 **Attributes**
 
@@ -2816,7 +2816,6 @@ Shows where you are in a process of several steps: a row of discs with a number 
 | --- | --- | --- |
 | `accessible-label` | `string` | Name of the nav; defaults to the i18n value ("Voortgang") |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
-| `current` | `number` | 1-based number of the current step (default 1) |
 
 **Slots**
 
@@ -2826,13 +2825,13 @@ Shows where you are in a process of several steps: a row of discs with a number 
 
 ### `<nldd-step-indicator-item>`
 
-One step in an `nldd-step-indicator`. The parent decides the status and the number; those live here as internal state rather than as public API, except for `status`, which overrides what `current` derives.
+One step in an `nldd-step-indicator`. `status="current"` marks the step you are on; the parent derives the status of the others and the number of each, which live here as internal state rather than as public API. `past` and `future` override what is derived for this step.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `status` | `string` | `past` \| `current` \| `future`; overrides what the parent derives |
+| `status` | `'past' \| 'current' \| 'future'` | How far along this step is. `current` marks the step you are on (`aria-current="step"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only |
 | `text` | `string` | Label under the disc |
 | `icon` | `string` | Icon in the disc instead of the number or the check mark |
 | `href` | `string` | Makes the step a link (back to a completed step, for instance) |
@@ -3126,7 +3125,7 @@ A cell component for displaying timeline track indicators in lists. Shows a vert
 | `status` | `'past' \| 'current' \| 'future'` | How far along this row is (default 'past'); the same values as `nldd-step-indicator-item`. It colors the dot and the track around it: covered above where you are, still ahead below |
 | `size` | `'sm' \| 'md'` | How wide the lane is and so how big the dot: `sm` (default, 16px) for a timeline of events, `md` (24px) where a number or an icon has to fit. Every row in one list takes the same size, or the track jumps |
 | `direction` | `'down' \| 'up'` | The direction the timeline moves forward in: `down` (default) puts the past above, `up` below. Only the current step has half a track, so this only has an effect there |
-| `position` | `'first' \| 'between' \| 'last' \| 'only'` | Place in the series (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level="none"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it |
+| `position` | `'first' \| 'between' \| 'last' \| 'only'` | Place of the row in the list as it stands on screen (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `first` is the top row and only has a line below, `last` the bottom row and only has a line above, also with `direction="up"`: position is about where the row stands, `direction` about which way time runs. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level="none"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it |
 | `line` | `'auto' \| 'top' \| 'bottom' \| 'both' \| 'none'` | Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line="both"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `level="none"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you |
 | `text` | `string` | Number or short text in the dot |
 | `icon` | `string` | Icon name in the dot; wins over `text` |

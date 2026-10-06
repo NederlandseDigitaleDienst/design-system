@@ -1,4 +1,6 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, afterEach, vi } from 'vitest';
+import variablesCss from '../../../assets/styles/variables.css?raw';
+import colorsCss from '../../../assets/styles/colors.generated.css?raw';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { groupForOverflow } from './toolbar.js';
 import '../button/button.js';
@@ -635,7 +637,9 @@ describe('nldd-toolbar centered title layout', () => {
 	});
 
 	it('is not center-only when a real start item is present', async () => {
-		await mount('<nldd-toolbar-item slot="start"><nldd-icon-button icon="chevron-left" text="Terug"></nldd-icon-button></nldd-toolbar-item>' + TITLE);
+		// A real width: without the tokens loaded the icon button renders 300px
+		// wide, and next to a title that keeps its own width it would overflow.
+		await mount('<nldd-toolbar-item slot="start"><nldd-icon-button icon="chevron-left" text="Terug" style="width:44px"></nldd-icon-button></nldd-toolbar-item>' + TITLE);
 		expect(centerOnly(el)).toBe(false); // a rendered start item still balances via the spacers
 	});
 
@@ -653,6 +657,92 @@ describe('nldd-toolbar centered title layout', () => {
 	it('centers a lone title with no start/end at all', async () => {
 		await mount(TITLE);
 		expect(titleCenterOffset(el)).toBeCloseTo(180, -1);
+	});
+});
+
+describe('nldd-toolbar title width', () => {
+	let el: HTMLElement;
+	let styles: HTMLStyleElement[] = [];
+
+	// Real widths need the tokens: without them the overflow button alone is
+	// wider than the row. variables.css imports the palettes, which an @import
+	// in a <style> tag cannot resolve, so those go in separately.
+	beforeAll(() => {
+		styles = [colorsCss, variablesCss.replace(/@import[^;]+;/g, '')].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
+	});
+
+	afterAll(() => {
+		styles.forEach((style) => style.remove());
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const frames = (n: number): Promise<void> => new Promise((resolve) => {
+		const step = (left: number) => (left === 0 ? resolve() : requestAnimationFrame(() => step(left - 1)));
+		step(n);
+	});
+
+	const item = (text: string, slot: string, priority: number): string => `
+		<nldd-toolbar-item slot="${slot}" priority="${priority}">
+			<button type="button" style="width:100px">${text}</button>
+			<nldd-menu-item slot="overflow" text="${text}"></nldd-menu-item>
+		</nldd-toolbar-item>`;
+
+	const hiddenItems = (host: HTMLElement): string =>
+		Array.from(host.querySelectorAll('nldd-toolbar-item')).map(i => ((i as HTMLElement).hidden ? '-' : '+')).join('');
+
+	const titleTruncated = (host: HTMLElement): boolean => {
+		const text = host.querySelector('nldd-toolbar-title')!.shadowRoot!.querySelector('.toolbar__title') as HTMLElement;
+		return text.scrollWidth > text.clientWidth + 1;
+	};
+
+	it('moves items into the menu before the title truncates', async () => {
+		el = await fixture<HTMLElement>(`
+			<nldd-toolbar style="width:260px">
+				<nldd-toolbar-title slot="start" text="Aanvraag A-1042"></nldd-toolbar-title>
+				${item('Download', 'end', 0)}${item('Delen', 'end', 1)}${item('Sla op', 'end', 2)}
+			</nldd-toolbar>`);
+		await waitForUpdate(el);
+		await frames(4);
+		expect(hiddenItems(el)).toContain('-');
+		expect(titleTruncated(el)).toBe(false);
+	});
+
+	it('lets the title shrink first with min-width="0"', async () => {
+		el = await fixture<HTMLElement>(`
+			<nldd-toolbar style="width:360px">
+				<nldd-toolbar-title slot="start" min-width="0" text="Aanvraag A-1042"></nldd-toolbar-title>
+				${item('Download', 'end', 0)}${item('Delen', 'end', 1)}
+			</nldd-toolbar>`);
+		await waitForUpdate(el);
+		await frames(4);
+		expect(hiddenItems(el)).toBe('++');
+	});
+
+	// A centered title used to send the toolbar back and forth: with every item
+	// in the menu it switched to the center-only layout, where an item fit again.
+	it('settles with a centered title once every item is in the menu', async () => {
+		el = await fixture<HTMLElement>(`
+			<nldd-toolbar style="width:200px">
+				${item('Vet', 'start', 1)}
+				<nldd-toolbar-title slot="center" text="Document titel"></nldd-toolbar-title>
+				${item('Annuleer', 'end', 3)}${item('Sla op', 'end', 10)}
+			</nldd-toolbar>`);
+		await waitForUpdate(el);
+		await frames(4);
+		const first = hiddenItems(el);
+		await frames(6);
+		expect(hiddenItems(el)).toBe(first);
+		expect(first).toBe('---');
+		const items = el.shadowRoot!.querySelector('.toolbar__items') as HTMLElement;
+		expect(items.scrollWidth).toBeLessThanOrEqual(items.clientWidth + 1);
 	});
 });
 

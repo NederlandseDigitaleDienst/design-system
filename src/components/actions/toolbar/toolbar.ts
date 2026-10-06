@@ -45,7 +45,7 @@
  *
  * @element nldd-toolbar-title
  * @attr {string} width - Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width.
- * @attr {string} min-width - Minimum width as a CSS length (default: '0', so the title shrink-wraps its content and the next element sits against it).
+ * @attr {string} min-width - Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first.
  * @attr {string} max-width - Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row).
  * @attr {string} align - Text alignment: 'left' | 'center' (default: 'left').
  * @attr {string} text - Title text.
@@ -666,9 +666,11 @@ export class NLDDToolbar extends LitElement {
 		// so a consumer-hidden (display:none) back button doesn't strand a centered
 		// title at the left (it would otherwise keep centerOnly false and fall into
 		// the spacer path, where startWidth===0 && endWidth===0 suppresses both
-		// balancing spacers).
-		const centerOnly = !this._hasRenderedChild(this._startChildren)
-			&& !this._hasRenderedChild(this._endChildren)
+		// balancing spacers). An item the toolbar moved into the overflow menu
+		// still counts: switching layout then changes what fits, so the next
+		// measurement brings it back, and the two layouts take turns forever.
+		const centerOnly = !this._hasPresentChild(this._startChildren)
+			&& !this._hasPresentChild(this._endChildren)
 			&& this._centerChildren.length > 0;
 		if (centerOnly !== this._centerOnly) this._centerOnly = centerOnly;
 
@@ -686,6 +688,11 @@ export class NLDDToolbar extends LitElement {
 	 * `[hidden]`), so this counts real on-screen presence, not mere DOM presence. */
 	private _hasRenderedChild(children: ToolbarChild[]): boolean {
 		return children.some(c => (c.element as HTMLElement).getClientRects().length > 0);
+	}
+
+	/** Rendered, or moved into the overflow menu by the toolbar itself. */
+	private _hasPresentChild(children: ToolbarChild[]): boolean {
+		return children.some(c => this._overflowIds.has(c.id)) || this._hasRenderedChild(children);
 	}
 
 	private _measureAndUpdate(): void {
@@ -725,10 +732,8 @@ export class NLDDToolbar extends LitElement {
 		});
 		titleChildren.forEach(child => {
 			const host = child.element as HTMLElement;
-			if (host.hasAttribute('solo-fluid')) {
-				host.removeAttribute('solo-fluid');
-				host.style.removeProperty('min-width');
-			}
+			host.removeAttribute('solo-fluid');
+			host.style.removeProperty('min-width');
 		});
 
 		if (this._pinnedOverflowItems.length > 0) {
@@ -833,6 +838,13 @@ export class NLDDToolbar extends LitElement {
 			const host = remainingTitles[0].element as HTMLElement;
 			host.setAttribute('solo-fluid', '');
 			host.style.setProperty('min-width', '0px');
+			void itemsEl.offsetWidth;
+		}
+
+		// A title holds its own width while items can still move into the menu.
+		// When nothing else can go and the row still does not fit, it gives way.
+		if (itemsEl.scrollWidth > itemsEl.clientWidth + 1) {
+			remainingTitles.forEach(c => (c.element as HTMLElement).style.setProperty('min-width', '0px'));
 			void itemsEl.offsetWidth;
 		}
 	}

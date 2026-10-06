@@ -28,8 +28,6 @@ nldd-rich-text {
 	row-gap: var(--_spacing);
 	color: var(--semantics-content-color);
 	font: var(--primitives-font-body-md-regular-snug);
-	-webkit-text-size-adjust: 100%;
-	text-size-adjust: 100%;
 }
 
 nldd-rich-text[centered] {

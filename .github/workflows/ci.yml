@@ -64,4 +64,4 @@ jobs:
       - name: Verify exports map is up to date
         run: node scripts/generate-exports.js && git diff --exit-code package.json
       - name: Verify plugin manifests follow the package version
-        run: npm run generate:plugin-version && git diff --exit-code .claude-plugin/
+        run: npm run generate:plugin-version && git diff --exit-code .claude-plugin/ .cursor-plugin/
