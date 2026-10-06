@@ -180,8 +180,20 @@ export const topNavigationBarStyles = css`
 		grid-column: 2;
 	}
 
+	/* The link spans the wordmark's whole track so the ribbon stays centered;
+	   only the ribbon and the text take the click, not the space beside them. */
 	a.top-navigation-bar__logo-and-wordmark {
+		pointer-events: none;
 		text-decoration: none;
+	}
+
+	a.top-navigation-bar__logo-and-wordmark > .top-navigation-bar__logo,
+	a.top-navigation-bar__logo-and-wordmark .top-navigation-bar__wordmark-content > p {
+		pointer-events: auto;
+	}
+
+	a.top-navigation-bar__logo-and-wordmark .top-navigation-bar__wordmark-content > p {
+		width: fit-content;
 	}
 
 	a.top-navigation-bar__logo-and-wordmark:focus-visible {
