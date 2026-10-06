@@ -183,6 +183,9 @@ body.site-frame {
 
 	.site-stage__control input:not([type='checkbox']),
 	.site-stage__control select {
+		/* A text input sizes by its content box unless told otherwise, and would
+		   then stick out of its column by its own padding and border. */
+		box-sizing: border-box;
 		width: 100%;
 		min-width: 0;
 		padding: 2px 6px;
