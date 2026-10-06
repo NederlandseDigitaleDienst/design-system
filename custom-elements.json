@@ -30861,7 +30861,7 @@
               },
               "default": "'between'",
               "fieldName": "position",
-              "description": "Place in the series (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level=\"none\"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it"
+              "description": "Place of the row in the list as it stands on screen (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `first` is the top row and only has a line below, `last` the bottom row and only has a line above, also with `direction=\"up\"`: position is about where the row stands, `direction` about which way time runs. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level=\"none\"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it"
             },
             {
               "name": "line",

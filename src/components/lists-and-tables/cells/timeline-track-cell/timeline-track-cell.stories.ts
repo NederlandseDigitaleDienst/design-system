@@ -61,7 +61,7 @@ export default {
 		position: {
 			control: 'select',
 			options: ['first', 'between', 'last', 'only'],
-			description: 'Plek in de reeks; bepaalt waar de lijn doorloopt',
+			description: 'Plek van de rij in de lijst op het scherm; bepaalt waar de lijn doorloopt. first is de bovenste rij (alleen een lijn eronder), last de onderste (alleen een lijn erboven), ook bij direction up',
 			table: { defaultValue: { summary: 'between' } },
 		},
 		line: {
