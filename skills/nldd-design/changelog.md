@@ -33,6 +33,10 @@ here; consult the commit history if you need that level of detail.
 
   Search your own CSS for `--components-` to find what this affects.
 
+### Fixed
+
+- **`nldd-toolbar` no longer leaves an item in the overflow menu that fits.** When the toolbar measured while the web font was still loading, an item could take its width from the fallback font, go into the menu, and stay there once the font arrived: a hidden item has no width to watch. The toolbar now measures again when the fonts have loaded. In the toolbar-with-actions pattern at 375px the tab bar went into the menu in 7 of 10 page loads.
+
 ## [0.8.95](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.94...v0.8.95) (2026-10-06)
 
 ### Highlights

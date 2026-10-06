@@ -840,6 +840,38 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 		expect(measure).toHaveBeenCalled();
 	});
 
+	// A web font that finishes loading changes how wide an item is, and an item
+	// the toolbar already moved into the menu has no width to watch. Measured
+	// before the font, a tab bar in the toolbar-with-actions pattern took 310px
+	// and went into the menu; with the font it is 292px and fits.
+	it('measures again once the fonts have loaded, for an item that went into the menu', async () => {
+		el = await fixture(`
+			<nldd-toolbar label="Balk" style="width: 300px">
+				<nldd-toolbar-item slot="start" priority="1">
+					<span id="wide" style="display: inline-block; width: 400px">Weergave</span>
+					<nldd-menu-item slot="overflow" text="Weergave"></nldd-menu-item>
+				</nldd-toolbar-item>
+				<nldd-toolbar-item slot="end" priority="2">
+					<span style="display: inline-block; width: 40px">Deel</span>
+					<nldd-menu-item slot="overflow" text="Deel"></nldd-menu-item>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		`);
+		await waitForUpdate(el);
+		await frames(10);
+		const [wide] = el.querySelectorAll('nldd-toolbar-item');
+		expect(wide.hidden).toBe(true);
+
+		// What the font does: the hidden item would be narrow enough now.
+		(el.querySelector('#wide') as HTMLElement).style.width = '120px';
+		await frames(10);
+		expect(wide.hidden).toBe(true);
+
+		document.fonts.dispatchEvent(new Event('loadingdone'));
+		await frames(10);
+		expect(wide.hidden).toBe(false);
+	});
+
 	it('settles instead of measuring on and on', async () => {
 		el = await fixture(`
 			<nldd-toolbar label="Balk" style="width: 340px">

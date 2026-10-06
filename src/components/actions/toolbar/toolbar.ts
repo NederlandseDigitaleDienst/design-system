@@ -340,10 +340,20 @@ export class NLDDToolbar extends LitElement {
 		});
 		setTimeout(() => this._buildChildren(), 0);
 		this._createMenu();
+		document.fonts?.addEventListener('loadingdone', this._onFontsLoaded);
 	}
+
+	/** A web font that finishes loading changes how wide an item is. The child
+	 *  resize observer sees that for a visible item, but an item already in the
+	 *  overflow menu has no width to watch: measured with the fallback font it
+	 *  went into the menu, and would stay there although it fits now. */
+	private _onFontsLoaded = (): void => {
+		if (this._hasMeasured) this._measureAndUpdate();
+	};
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
+		document.fonts?.removeEventListener('loadingdone', this._onFontsLoaded);
 		this._observer?.disconnect();
 		this._observer = null;
 		this._resizeObserver?.disconnect();
