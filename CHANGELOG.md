@@ -27,6 +27,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **Running text no longer grows when a phone turns to landscape.** iOS Safari enlarged the paragraphs in `nldd-rich-text` while the titles kept their size. `@nldd/design-system/styles` now sets `text-size-adjust: 100%` on `html`, in the reset layer, instead of on `nldd-rich-text`. If you load only the tokens, set it on your own root.
+
 - **The stretching ribbon in `nldd-top-navigation-bar` is limited to Safari, and to every browser on iOS.** Chrome does not draw anything above the top of the page, so on a pull it showed only the piece that holds still at the top, and a hard pull opened a gap between that piece and the logo. Chrome and the other non-WebKit browsers now show the plain gap above the ribbon again, as they did before 0.8.94.
 
 ## [0.8.94](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.93...v0.8.94) (2026-10-05)
