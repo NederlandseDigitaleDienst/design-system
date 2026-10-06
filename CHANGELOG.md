@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.8.95](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.94...v0.8.95) (2026-10-06)
+
 ### Highlights
 
 - **The plugin is now `nldd-design-system`, and it moved to the NLDD marketplace.** Install it from [`NederlandseDigitaleDienst/ai-plugins`](https://github.com/NederlandseDigitaleDienst/ai-plugins) as `nldd-design-system@nldd`. That marketplace is tool-independent, and the plugin now ships a Cursor manifest next to the Claude Code one. An existing `nldd@nldd-plugins` install keeps working and keeps updating until 1 March 2027, when the marketplace in this repository goes away. The README has the four commands to move over.
