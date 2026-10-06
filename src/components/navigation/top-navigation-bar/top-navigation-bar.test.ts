@@ -629,9 +629,17 @@ describe('nldd-top-navigation-bar ribbon above the page', () => {
 		const bar = el.querySelector('nldd-top-navigation-bar')!;
 		await waitForUpdate(bar);
 		const logo = bar.shadowRoot!.querySelector('.top-navigation-bar__logo')!;
-		const rect = logo.getBoundingClientRect();
-		const ribbonBottom = rect.top + window.scrollY + rect.height - parseFloat(getComputedStyle(logo, '::before').bottom);
-		expect(rect.top + window.scrollY).toBeGreaterThanOrEqual(24);
-		expect(ribbonBottom).toBe(0);
+		const logoTop = logo.getBoundingClientRect().top + window.scrollY;
+		expect(logoTop).toBeGreaterThanOrEqual(24);
+		expect(bar.style.getPropertyValue('--_logo-offset')).toBe(`${Math.round(logoTop)}px`);
+	});
+
+	// Chrome paints nothing above the page, so only the fixed piece would show
+	// and a hard pull would open a gap between it and the logo.
+	it('is not drawn outside WebKit', async () => {
+		el = await fixture(`<nldd-top-navigation-bar></nldd-top-navigation-bar>`);
+		const logo = el.shadowRoot!.querySelector('.top-navigation-bar__logo')!;
+		expect(getComputedStyle(logo, '::before').content).toBe('none');
+		expect(getComputedStyle(logo, '::after').content).toBe('none');
 	});
 });

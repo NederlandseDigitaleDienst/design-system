@@ -104,7 +104,9 @@ export const topNavigationBarStyles = css`
 		justify-content: center;
 	}
 
-	@supports (animation-timeline: scroll()) {
+	/* WebKit only: Chrome paints nothing above the page and leaves the fixed
+	   ::after behind, so a hard pull shows a gap between it and the logo. */
+	@supports (animation-timeline: scroll()) and (font: -apple-system-body) {
 		.top-navigation-bar__logo {
 			position: relative;
 		}
