@@ -204,7 +204,7 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 | --- | ---- | -------- |
 | Website: kleuren, iconen en favicon, en de presentaties | [mijnoverheidzakelijk.nl](https://mijnoverheidzakelijk.nl) | [MinBZK/moza-site](https://github.com/MinBZK/moza-site) |
 
-#### De dienst zelf
+#### Overige projecten
 
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
