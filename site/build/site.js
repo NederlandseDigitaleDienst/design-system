@@ -91,7 +91,7 @@ function layout({ title, description, path, main, facts, bodyClass = '' }) {
 ${main}
 
 			<nldd-page-footer slot="footer">
-				<nldd-container layout="grid" padding="24" gap="16">
+				<nldd-container layout="grid" lg-column-count="4" md-column-count="2" sm-column-count="1" padding="24" gap="16">
 					<nldd-container gap="8">
 						<nldd-title size="5" text="Het systeem" heading-level="2"></nldd-title>
 						<nldd-link size="sm" href="/componenten/" text="Componenten"></nldd-link>
@@ -112,10 +112,15 @@ ${main}
 						<nldd-link size="sm" href="${facts.repository}" text="Broncode op GitHub"></nldd-link>
 						<nldd-link size="sm" href="/changelog/" text="Changelog"></nldd-link>
 					</nldd-container>
+					<nldd-container gap="8">
+						<nldd-title size="5" text="Onderdeel van" heading-level="2"></nldd-title>
+						<nldd-link size="sm" href="https://digitaledienst.overheid.nl/" text="Nederlandse Digitale Dienst"></nldd-link>
+						<nldd-text size="sm">Ministerie van Economische Zaken en Klimaat</nldd-text>
+					</nldd-container>
 				</nldd-container>
 				<site-built-with pages="${facts.slugs}"></site-built-with>
 				<nldd-page-footer-legal-bar slot="legal-bar">
-					<nldd-page-footer-legal-bar-item slot="start" text="Nederlandse Digitale Dienst"></nldd-page-footer-legal-bar-item>
+					<nldd-page-footer-legal-bar-item slot="start" href="https://digitaledienst.overheid.nl/" text="Nederlandse Digitale Dienst"></nldd-page-footer-legal-bar-item>
 					<nldd-page-footer-legal-bar-item slot="end" href="/changelog/" text="Versie ${facts.version}"></nldd-page-footer-legal-bar-item>
 					<nldd-page-footer-legal-bar-item slot="end" href="${facts.repository}/blob/main/LICENSE" text="EUPL-1.2"></nldd-page-footer-legal-bar-item>
 				</nldd-page-footer-legal-bar>
