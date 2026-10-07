@@ -17,7 +17,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **Ten new icons.** Seven file icons for a document's format: `file-pdf`, `file-markdown`, and `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf` for the OpenDocument formats, each also answering to `{format}-document`, such as `pdf-document`. And `microscope`, `share-network`, and `power-plug-socket` (also `plug-connected`) for a plug in its socket.
+- **Twelve new icons.** Seven file icons for a document's format: `file-pdf`, `file-markdown`, and `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf` for the OpenDocument formats, each also answering to `{format}-document`, such as `pdf-document`. And `microscope`, `share-network`, `power-plug-socket` (also `plug-connected`) for a plug in its socket, and `subscript` and `superscript` for text formatting.
 
 - **`nldd-step-bar` and `nldd-step-cell`.** The step indicator and the timeline track cell are renamed after what they draw: steps, across and under each other. See Breaking.
 
@@ -27,7 +27,7 @@ here; consult the commit history if you need that level of detail.
 
 - **File icons** `file-pdf`, `file-markdown`, `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf`, with the aliases `pdf-document`, `markdown-document`, `odt-document`, `ods-document`, `odp-document`, `odg-document` and `odf-document`.
 
-- **Icons** `microscope`, `share-network` and `power-plug-socket`, with the alias `plug-connected`.
+- **Icons** `microscope`, `share-network`, `power-plug-socket` (with the alias `plug-connected`), `subscript` and `superscript`.
 
 ### Breaking
 

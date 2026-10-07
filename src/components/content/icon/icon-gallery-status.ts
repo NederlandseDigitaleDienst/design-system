@@ -39,6 +39,8 @@ export const NEW_ICONS = new Set([
 	'microscope',
 	'power-plug-socket',
 	'share-network',
+	'subscript',
+	'superscript',
 ]);
 
 export const UPDATED_ICONS = new Set<string>();
