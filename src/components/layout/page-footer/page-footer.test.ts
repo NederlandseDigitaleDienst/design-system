@@ -33,7 +33,7 @@ describe('nldd-page-footer', () => {
 		expect(breadcrumbs.hidden).toBe(true);
 		expect(main.hidden).toBe(true);
 		expect(legal.hidden).toBe(true);
-		// Empty footer drops the gray band — only the lintje shows. See
+		// Empty footer drops the gray band — only the ribbon shows. See
 		// :host([empty]) in the styles.
 		expect(el.hasAttribute('empty')).toBe(true);
 	});

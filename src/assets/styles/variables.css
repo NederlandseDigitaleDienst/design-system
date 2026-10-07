@@ -939,6 +939,7 @@
 	--semantics-brand-ribbon-sm-width: var(--primitives-space-40);
 	--semantics-brand-ribbon-md-width: var(--primitives-space-44);
 	--semantics-brand-ribbon-lg-width: var(--primitives-space-48);
+	--semantics-brand-ribbon-color: var(--primitives-color-reference-lintblauw);
 
 	/* ## Dividers */
 

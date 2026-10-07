@@ -13,11 +13,7 @@ export const pageFooterStyles = css`
 	}
 	:host {
 		--_page-footer-max-width: var(--semantics-page-sections-body-max-width);
-		/* Official Rijksoverheid lintje color — identical across all
-		   .rijks.app / .overheid.nl sites by visual-identity policy, so it
-		   intentionally lives outside the semantic token system. Local
-		   --_ var keeps the value discoverable in one place. */
-		--_page-footer-lintje-color: #154273;
+		--_page-footer-ribbon-color: var(--semantics-brand-ribbon-color);
 		--_page-footer-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-50));
 		--_page-footer-divider-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-150));
 		--context-parent-background-color: var(--_page-footer-background-color);
@@ -41,7 +37,7 @@ export const pageFooterStyles = css`
 	}
 
 	.page-footer {
-		--_page-footer-lintje-height: calc(var(--_page-footer-lintje-width) / 2);
+		--_page-footer-ribbon-height: calc(var(--_page-footer-ribbon-width) / 2);
 
 		box-sizing: border-box;
 		display: flex;
@@ -52,27 +48,27 @@ export const pageFooterStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			--_page-footer-lintje-width: var(--primitives-space-40);
+			--_page-footer-ribbon-width: var(--semantics-brand-ribbon-sm-width);
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
-			--_page-footer-lintje-width: var(--primitives-space-44);
+			--_page-footer-ribbon-width: var(--semantics-brand-ribbon-md-width);
 		}
 
 		@container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
-			--_page-footer-lintje-width: var(--primitives-space-48);
+			--_page-footer-ribbon-width: var(--semantics-brand-ribbon-lg-width);
 		}
 	}
 
-	/* Empty footer = only the lintje. Add top space equal to the lintje height
+	/* Empty footer = only the ribbon. Add top space equal to the ribbon height
 	   (container-type on :host makes a BFC, so this margin stays inside the
 	   transparent host) so a preceding tinted page section doesn't butt right up
-	   against the lintje. */
+	   against the ribbon. */
 	:host([empty]) .page-footer {
-		min-height: var(--_page-footer-lintje-height);
-		margin-top: var(--_page-footer-lintje-height);
+		min-height: var(--_page-footer-ribbon-height);
+		margin-top: var(--_page-footer-ribbon-height);
 	}
 
 	.page-footer::after {
@@ -80,9 +76,9 @@ export const pageFooterStyles = css`
 		position: absolute;
 		bottom: 0;
 		left: 50%;
-		background-color: var(--_page-footer-lintje-color);
-		width: var(--_page-footer-lintje-width);
-		height: var(--_page-footer-lintje-height);
+		background-color: var(--_page-footer-ribbon-color);
+		width: var(--_page-footer-ribbon-width);
+		height: var(--_page-footer-ribbon-height);
 		transform: translateX(-50%);
 	}
 
@@ -129,11 +125,11 @@ export const pageFooterStyles = css`
 	}
 
 	.page-footer__body > div:not([hidden]):not(:has(~ div:not([hidden]))) {
-		padding-bottom: calc(var(--primitives-space-16) + var(--_page-footer-lintje-height));
+		padding-bottom: calc(var(--primitives-space-16) + var(--_page-footer-ribbon-height));
 	}
 
 	:host([single-slot]) .page-footer__body > div:not([hidden]) {
-		padding-top: calc(var(--primitives-space-16) + var(--_page-footer-lintje-height));
+		padding-top: calc(var(--primitives-space-16) + var(--_page-footer-ribbon-height));
 	}
 
 	.page-footer__breadcrumbs[hidden],

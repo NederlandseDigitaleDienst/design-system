@@ -18,7 +18,7 @@ export const topNavigationBarStyles = css`
 	:host {
 		--_top-navigation-bar-logo-width: var(--semantics-brand-ribbon-sm-width);
 		--_top-navigation-bar-logo-offset: 0px;
-		--_top-navigation-bar-logo-background-color: #154273;
+		--_top-navigation-bar-logo-background-color: var(--semantics-brand-ribbon-color);
 		--_top-navigation-bar-wordmark-content-color: light-dark(var(--primitives-color-reference-lintblauw), var(--primitives-color-neutral-1000));
 		--_top-navigation-bar-wordmark-max-width: 280px;
 		--_top-navigation-bar-max-width: var(--semantics-page-sections-body-max-width);

@@ -209,7 +209,7 @@ export class NLDDPageFooter extends LitElement {
 			(this._hasMain ? 1 : 0) +
 			(this._hasLegalBar ? 1 : 0);
 		// One visible row → centered single-slot padding; zero rows → the gray
-		// band drops and only the lintje shows (see :host([empty]) in the styles).
+		// band drops and only the ribbon shows (see :host([empty]) in the styles).
 		this.toggleAttribute('single-slot', visibleCount === 1);
 		this.toggleAttribute('empty', visibleCount === 0);
 

@@ -29,6 +29,8 @@ here; consult the commit history if you need that level of detail.
 
 - **Icons** `microscope`, `share-network`, `power-plug-socket` (with the alias `plug-connected`), `subscript` and `superscript`.
 
+- **`--semantics-brand-ribbon-color`**, next to the ribbon widths: the color of the Rijksoverheid ribbon, which `nldd-top-navigation-bar` and `nldd-page-footer` both draw. It does not follow a theme's accent color, since the ribbon does not either.
+
 ### Changed
 
 - **Every local variable in a component carries the component's name**, such as `--_button-background-color` instead of `--_background-color`. A custom property inherits through shadow boundaries, and a generic name on one component reached the elements of another slotted inside it. Locals were never meant to be set from outside; if you did set one, it now has a different name.
