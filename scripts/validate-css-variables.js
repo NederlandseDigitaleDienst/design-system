@@ -10,6 +10,10 @@
  *   named after a component in that folder: --_{tag without nldd-}-*. A custom
  *   property inherits through shadow boundaries, so a generic name reaches the
  *   elements of another component slotted inside.
+ *   The check reads the prefix only: it does not know which component defines
+ *   a variable. A folder with nldd-menu and nldd-menu-item accepts --_menu-item-*
+ *   from either, which the item needs, since it reads the menu's variables. That
+ *   those resolve is what src/components/subcomponent-variables.test.ts checks.
  * - --semantics-*, --primitives-* : CSS variables (validated against variables.css)
  * - --components-* : the component layer is gone; using one is an error.
  */

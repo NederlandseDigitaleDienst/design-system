@@ -23,6 +23,10 @@ here; consult the commit history if you need that level of detail.
 
 - **Icons** `microscope`, `share-network`, `power-plug-socket` (with the alias `plug-connected`), `subscript` and `superscript`.
 
+### Changed
+
+- **Every local variable in a component carries the component's name**, such as `--_button-background-color` instead of `--_background-color`. A custom property inherits through shadow boundaries, and a generic name on one component reached the elements of another slotted inside it. Locals were never meant to be set from outside; if you did set one, it now has a different name.
+
 ### Breaking
 
 - **`nldd-step-indicator` is now `nldd-step-bar`, and `nldd-timeline-track-cell` is now `nldd-step-cell`.** They are one family, the steps of a process across and under each other, as `nldd-progress-bar` and `nldd-progress-circle` are one family for how much is done. "Timeline" said less than the cell does: most of all it draws steps. Rename the tags, and the classes and imports if you use them:
