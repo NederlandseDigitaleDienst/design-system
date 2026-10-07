@@ -268,8 +268,29 @@ export const aliases = {
 	// file-badge-plus
 	'new-document': 'file-badge-plus',
 
+	// file-markdown
+	'markdown-document': 'file-markdown',
+
+	// file-odf
+	'odf-document': 'file-odf',
+
+	// file-odg
+	'odg-document': 'file-odg',
+
+	// file-odp
+	'odp-document': 'file-odp',
+
+	// file-ods
+	'ods-document': 'file-ods',
+
+	// file-odt
+	'odt-document': 'file-odt',
+
 	// file-on-file
 	'documents': 'file-on-file',
+
+	// file-pdf
+	'pdf-document': 'file-pdf',
 
 	// file-text
 	'text-document': 'file-text',

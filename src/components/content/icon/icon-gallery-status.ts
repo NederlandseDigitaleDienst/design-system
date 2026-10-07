@@ -14,7 +14,7 @@
 // days old, which is what the label is for. A date rather than a rolling window
 // so the sets only move when someone recomputes them.
 //
-//   git log --since=2026-08-20T00:00 --reverse --find-renames --name-status --format= \
+//   git log --since=2026-09-09T00:00 --reverse --find-renames --name-status --format= \
 //     -- src/components/content/icon/icons
 //
 // Read those events oldest first and chain renames forward to today's filename.
@@ -27,48 +27,15 @@
 // caret-down), which quietly moves new icons into the updated set.
 
 export const NEW_ICONS = new Set([
-	'boxes-3',
-	'check-mark-circle-light',
-	'circle',
-	'circle-circle',
-	'circle-circle-light',
-	'circle-light',
-	'clipboard-bullet-list',
-	'clock-light',
-	'cpu',
 	'erlenmeyer-flask',
 	'erlenmeyer-flask-light',
-	'external-hard-drive',
-	'external-hard-drives',
-	'gpu',
-	'kanban-columns',
-	'kvm-switch',
-	'lightning',
-	'memory-chip',
-	'minus-circle',
-	'network-switch',
-	'note',
-	'pci-card',
-	'power-plug',
-	'printer',
-	'psu',
-	'rack-server',
-	'rack-servers',
-	'screwdriver-wrench',
-	'shield-arrow-right-arrow-left',
-	'slash-circle-light',
-	'snowflake',
-	'ssd-hard-drive',
-	'transceiver-module',
-	'tulip',
-	'tulip-light',
-	'waving-crossing-lines',
+	'file-markdown',
+	'file-odf',
+	'file-odg',
+	'file-odp',
+	'file-ods',
+	'file-odt',
+	'file-pdf',
 ]);
 
-export const UPDATED_ICONS = new Set([
-	'shield',
-	'shield-check-mark',
-	'shield-lock',
-	'tray',
-	'viewfinder',
-]);
+export const UPDATED_ICONS = new Set<string>();

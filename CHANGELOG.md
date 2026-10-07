@@ -11,9 +11,15 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
+- **Seven file icons for a document's format:** `file-pdf`, `file-markdown`, and `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf` for the OpenDocument formats. Each also answers to `{format}-document`, such as `pdf-document`.
+
 - **`nldd-step-bar` and `nldd-step-cell`.** The step indicator and the timeline track cell are renamed after what they draw: steps, across and under each other. See Breaking.
 
 - **The `--components-*` layer is gone.** A component's values now sit as local variables in its own stylesheet, and what several components share became a semantics token. Restyling one component through a public token was a quiet way to make it differ from the rest. If you want a component to change, ask in an issue. See Breaking.
+
+### Added
+
+- **File icons** `file-pdf`, `file-markdown`, `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf`, with the aliases `pdf-document`, `markdown-document`, `odt-document`, `ods-document`, `odp-document`, `odg-document` and `odf-document`.
 
 ### Breaking
 
