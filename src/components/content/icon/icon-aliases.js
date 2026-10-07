@@ -683,6 +683,9 @@ export const aliases = {
 	// power-plug
 	'power': 'power-plug',
 
+	// power-plug-socket
+	'plug-connected': 'power-plug-socket',
+
 	// pipeline-corner-2
 	'pipeline': 'pipeline-corner-2',
 

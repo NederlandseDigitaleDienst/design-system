@@ -36,6 +36,9 @@ export const NEW_ICONS = new Set([
 	'file-ods',
 	'file-odt',
 	'file-pdf',
+	'microscope',
+	'power-plug-socket',
+	'share-network',
 ]);
 
 export const UPDATED_ICONS = new Set<string>();
