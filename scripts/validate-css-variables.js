@@ -181,10 +181,14 @@ function validate() {
     for (const tag of tags) prefixesByFolder.get(folder).add(tag);
   }
   const hasOwnPrefix = (varName, folder) => {
-    const prefixes = prefixesByFolder.get(folder);
-    if (!prefixes || prefixes.size === 0) return true;
+    const prefixes = prefixesByFolder.get(folder) ?? new Set();
     return [...prefixes].some((prefix) => varName.startsWith(`--_${prefix}-`));
   };
+  const prefixError = (file, varName) => ({
+    file,
+    variable: varName,
+    message: `Local variable "${varName}" does not start with the name of a component in this folder (--_{tag without nldd-}-…)`,
+  });
 
   // Process each component file
   for (const filePath of componentFiles) {
@@ -195,11 +199,7 @@ function validate() {
 
     for (const varName of definitions) {
       if (varName.startsWith('--_') && !hasOwnPrefix(varName, folder)) {
-        errors.push({
-          file: relativePath,
-          variable: varName,
-          message: `Local variable "${varName}" does not start with the name of a component in this folder (--_{tag without nldd-}-…)`,
-        });
+        errors.push(prefixError(relativePath, varName));
       }
     }
 
@@ -217,11 +217,7 @@ function validate() {
           // --_* variables must be defined somewhere in the component folder
           stats.internalVars++;
           if (!hasOwnPrefix(varName, folder)) {
-            errors.push({
-              file: relativePath,
-              variable: varName,
-              message: `Local variable "${varName}" does not start with the name of a component in this folder (--_{tag without nldd-}-…)`,
-            });
+            errors.push(prefixError(relativePath, varName));
           } else if (!folderDefs.has(varName)) {
             errors.push({
               file: relativePath,

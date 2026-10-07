@@ -146,13 +146,13 @@ export const toolbarItemStyles = css`
 	/* # Host */
 
 	:host {
-		--_toolbar-item-item-max-width: none;
-		--_toolbar-item-item-min-width: 0px;
-		--_toolbar-item-item-width: auto;
+		--_toolbar-item-max-width: none;
+		--_toolbar-item-min-width: 0px;
+		--_toolbar-item-width: auto;
 		--_toolbar-item-label-margin-top: var(--primitives-space-4);
 
 		display: inline-flex;
-		max-width: var(--_toolbar-item-item-max-width);
+		max-width: var(--_toolbar-item-max-width);
 		flex-direction: column;
 		flex-grow: 0;
 		flex-shrink: 0;
@@ -160,9 +160,9 @@ export const toolbarItemStyles = css`
 	}
 
 	:host([fluid]) {
-		min-width: var(--_toolbar-item-item-min-width);
+		min-width: var(--_toolbar-item-min-width);
 		flex-shrink: 1;
-		flex-basis: var(--_toolbar-item-item-width);
+		flex-basis: var(--_toolbar-item-width);
 	}
 
 	:host([solo-fluid]) {
@@ -220,33 +220,33 @@ export const toolbarTitleStyles = css`
 	/* # Host */
 
 	:host {
-		--_toolbar-title-title-group-min-width: min-content;
-		--_toolbar-title-title-width: auto;
-		--_toolbar-title-title-max-width: var(--primitives-area-240);
-		--_toolbar-title-title-group-height: var(--semantics-controls-md-min-size);
+		--_toolbar-title-group-min-width: min-content;
+		--_toolbar-title-width: auto;
+		--_toolbar-title-max-width: var(--primitives-area-240);
+		--_toolbar-title-group-height: var(--semantics-controls-md-min-size);
 		--_toolbar-title-content-gap: var(--primitives-space-6);
-		--_toolbar-title-title-font: var(--primitives-font-body-lg-semi-bold-flat);
+		--_toolbar-title-font: var(--primitives-font-body-lg-semi-bold-flat);
 		--_toolbar-title-supporting-text-font: var(--primitives-font-body-xs-regular-flat);
 
 		${inheritedTextReset}
 		display: inline-flex;
-		min-width: var(--_toolbar-title-title-group-min-width);
-		height: var(--_toolbar-title-title-group-height);
+		min-width: var(--_toolbar-title-group-min-width);
+		height: var(--_toolbar-title-group-height);
 		flex-direction: row;
 		flex-shrink: 1;
-		flex-basis: var(--_toolbar-title-title-width);
+		flex-basis: var(--_toolbar-title-width);
 		gap: var(--_toolbar-title-content-gap);
 		align-items: center;
 	}
 
 	:host([size="sm"]) {
-		--_toolbar-title-title-group-height: var(--semantics-controls-sm-min-size);
-		--_toolbar-title-title-font: var(--primitives-font-body-sm-semi-bold-flat);
+		--_toolbar-title-group-height: var(--semantics-controls-sm-min-size);
+		--_toolbar-title-font: var(--primitives-font-body-sm-semi-bold-flat);
 		--_toolbar-title-supporting-text-font: var(--primitives-font-body-xxs-regular-flat);
 	}
 
 	:host([size="lg"]) {
-		--_toolbar-title-title-group-height: var(--semantics-controls-lg-min-size);
+		--_toolbar-title-group-height: var(--semantics-controls-lg-min-size);
 	}
 
 	:host([solo-fluid]) {
@@ -257,7 +257,7 @@ export const toolbarTitleStyles = css`
 	}
 
 	/* Sole toolbar element: let the text fill the row instead of capping at
-	   --_toolbar-title-title-max-width, matching the pre-fit-content stretch behavior. */
+	   --_toolbar-title-max-width, matching the pre-fit-content stretch behavior. */
 	:host([solo-fluid]) .toolbar__title-group {
 		max-width: none;
 	}
@@ -288,7 +288,7 @@ export const toolbarTitleStyles = css`
 	.toolbar__title-group {
 		display: flex;
 		min-width: 0;
-		max-width: var(--_toolbar-title-title-max-width);
+		max-width: var(--_toolbar-title-max-width);
 		flex-direction: column;
 		justify-content: center;
 		align-items: flex-start;
@@ -344,7 +344,7 @@ export const toolbarTitleStyles = css`
 		max-width: 100%;
 		overflow: hidden;
 		color: var(--semantics-content-color);
-		font: var(--_toolbar-title-title-font);
+		font: var(--_toolbar-title-font);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		text-align: left;

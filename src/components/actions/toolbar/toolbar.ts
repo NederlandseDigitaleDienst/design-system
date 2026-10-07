@@ -202,9 +202,9 @@ export class NLDDToolbarTitle extends LitElement {
 	// willUpdate (not updated) so the size CSS variables are written before the
 	// toolbar measures the title with getBoundingClientRect() on the same frame.
 	override willUpdate(changedProperties: Map<string, unknown>): void {
-		if (changedProperties.has('minWidth')) this._reflectSizeVar('--_toolbar-title-title-group-min-width', this.minWidth);
-		if (changedProperties.has('width')) this._reflectSizeVar('--_toolbar-title-title-width', this.width);
-		if (changedProperties.has('maxWidth')) this._reflectSizeVar('--_toolbar-title-title-max-width', this.maxWidth);
+		if (changedProperties.has('minWidth')) this._reflectSizeVar('--_toolbar-title-group-min-width', this.minWidth);
+		if (changedProperties.has('width')) this._reflectSizeVar('--_toolbar-title-width', this.width);
+		if (changedProperties.has('maxWidth')) this._reflectSizeVar('--_toolbar-title-max-width', this.maxWidth);
 	}
 
 	private _reflectSizeVar(prop: string, value: string): void {
@@ -530,19 +530,19 @@ export class NLDDToolbar extends LitElement {
 				host.toggleAttribute('show-item-labels', this.showItemLabels);
 				host.toggleAttribute('fluid', child.isFluid);
 				if (child.isFluid && child.minWidth) {
-					host.style.setProperty('--_toolbar-item-item-min-width', child.minWidth);
+					host.style.setProperty('--_toolbar-item-min-width', child.minWidth);
 				} else {
-					host.style.removeProperty('--_toolbar-item-item-min-width');
+					host.style.removeProperty('--_toolbar-item-min-width');
 				}
 				if (child.isFluid && child.width) {
-					host.style.setProperty('--_toolbar-item-item-width', child.width);
+					host.style.setProperty('--_toolbar-item-width', child.width);
 				} else {
-					host.style.removeProperty('--_toolbar-item-item-width');
+					host.style.removeProperty('--_toolbar-item-width');
 				}
 				if (child.isFluid && child.maxWidth) {
-					host.style.setProperty('--_toolbar-item-item-max-width', child.maxWidth);
+					host.style.setProperty('--_toolbar-item-max-width', child.maxWidth);
 				} else {
-					host.style.removeProperty('--_toolbar-item-item-max-width');
+					host.style.removeProperty('--_toolbar-item-max-width');
 				}
 				// Forward size to the inner control(s).
 				Array.from(host.children).forEach(inner => {
@@ -736,7 +736,7 @@ export class NLDDToolbar extends LitElement {
 				host.removeAttribute('solo-fluid');
 				host.toggleAttribute('fluid', child.isFluid);
 				if (child.isFluid && child.minWidth) {
-					host.style.setProperty('--_toolbar-item-item-min-width', child.minWidth);
+					host.style.setProperty('--_toolbar-item-min-width', child.minWidth);
 				}
 			}
 		});
@@ -839,7 +839,7 @@ export class NLDDToolbar extends LitElement {
 			const host = remainingVisible[0].element as HTMLElement;
 			host.removeAttribute('fluid');
 			host.setAttribute('solo-fluid', '');
-			host.style.removeProperty('--_toolbar-item-item-min-width');
+			host.style.removeProperty('--_toolbar-item-min-width');
 			void itemsEl.offsetWidth;
 		}
 

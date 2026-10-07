@@ -201,6 +201,8 @@ export const menuItemStyles = css`
 
 	/* # Host */
 
+	/* --_menu-item-size, --_menu-item-background-color and
+	   --_menu-item-is-highlighted-* come from the nldd-menu around the item. */
 	:host {
 		--_menu-item-is-expanded-content-color: var(--primitives-color-neutral-1000);
 		--_menu-item-is-destructive-content-color: var(--semantics-content-critical-color);

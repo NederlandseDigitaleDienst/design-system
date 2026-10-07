@@ -176,7 +176,7 @@ describe('nldd-toolbar', () => {
 		expect(getComputedStyle(titleText).textAlign).toBe('center');
 	});
 
-	it('maps title min-width to --_toolbar-title-title-group-min-width', async () => {
+	it('maps title min-width to --_toolbar-title-group-min-width', async () => {
 		el = await fixture(`
 			<nldd-toolbar>
 				<nldd-toolbar-title slot="center" text="Titel" min-width="300px"></nldd-toolbar-title>
@@ -184,7 +184,7 @@ describe('nldd-toolbar', () => {
 		`);
 		await waitForUpdate(el);
 		const title = el.querySelector('nldd-toolbar-title') as HTMLElement;
-		expect(title.style.getPropertyValue('--_toolbar-title-title-group-min-width')).toBe('300px');
+		expect(title.style.getPropertyValue('--_toolbar-title-group-min-width')).toBe('300px');
 	});
 
 	it('maps title width and max-width to custom properties', async () => {
@@ -195,8 +195,8 @@ describe('nldd-toolbar', () => {
 		`);
 		await waitForUpdate(el);
 		const title = el.querySelector('nldd-toolbar-title')!;
-		expect(title.style.getPropertyValue('--_toolbar-title-title-width')).toBe('40%');
-		expect(title.style.getPropertyValue('--_toolbar-title-title-max-width')).toBe('480px');
+		expect(title.style.getPropertyValue('--_toolbar-title-width')).toBe('40%');
+		expect(title.style.getPropertyValue('--_toolbar-title-max-width')).toBe('480px');
 	});
 
 	// ## Overflow items
