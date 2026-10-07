@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.8.96](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.95...v0.8.96) (2026-10-07)
+
 ### Highlights
 
 - **Twelve new icons.** Seven file icons for a document's format: `file-pdf`, `file-markdown`, and `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf` for the OpenDocument formats, each also answering to `{format}-document`, such as `pdf-document`. And `microscope`, `share-network`, `power-plug-socket` (also `plug-connected`) for a plug in its socket, and `subscript` and `superscript` for text formatting.
