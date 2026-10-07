@@ -122,7 +122,7 @@ Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit d
 
 ## Iconen
 
-Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js` (`'brand': 'seal-star'`). Optimaliseer nieuwe bestanden naar de huisstijl: geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur, pad afgerond op twee decimalen, tabs, elk pad op een eigen regel.
+Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js` (`'brand': 'seal-star'`). Optimaliseer nieuwe bestanden naar de huisstijl met `npm run optimize:icons -- <bestand.svg> …` (svgo, instellingen in `scripts/svgo.config.mjs`): geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur, geen `fill-rule`, pad afgerond op twee decimalen, tabs, elk pad op een eigen regel. Draai het één keer, op de export uit Figma: een tweede ronde rondt opnieuw af en verschuift het icoon.
 
 Nieuwe en hertekende iconen krijgen een "Nieuw"- of "Bijgewerkt"-label in de icon-gallery. Die twee lijsten staan in `icon-gallery-status.ts` en worden bij elke batch **vervangen**, afgeleid uit de git-historie; dat bestand legt in zijn kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet gebruiken).
 
