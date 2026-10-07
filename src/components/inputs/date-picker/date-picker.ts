@@ -309,11 +309,11 @@ export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerT
 			// `full` says 100% explicitly; anything else flows through CSS.supports
 			// so a typo falls back to the intrinsic width instead of breaking layout.
 			if (w === 'full') {
-				this.style.setProperty('--_width', '100%');
+				this.style.setProperty('--_date-picker-width', '100%');
 			} else if (w && CSS.supports('width', w)) {
-				this.style.setProperty('--_width', w);
+				this.style.setProperty('--_date-picker-width', w);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_date-picker-width');
 			}
 		}
 

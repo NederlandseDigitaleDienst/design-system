@@ -10,21 +10,21 @@ export const activityIndicatorStyles = css`
 	/* # Host */
 
 	:host {
-		--_circle-size: var(--primitives-space-32);
-		--_color: var(--context-content-color, currentColor);
-		--_track-opacity: 0.25;
-		--_stroke-width: 2;
-		--_rotation-duration: 0.8s;
-		--_fade-duration: var(--primitives-transition-duration-slow);
-		--_fade-easing: ease-out;
-		--_pulse-duration: 2s;
-		--_pulse-easing: ease-in-out;
-		--_max-width: var(--primitives-area-240);
-		--_gap: var(--primitives-space-4);
-		--_text-font: var(--primitives-font-body-sm-regular-flat);
-		--_backdrop-blur: 3px;
-		--_overlay-panel-padding: var(--primitives-space-12);
-		--_overlay-panel-corner-radius: var(--primitives-corner-radius-md);
+		--_activity-indicator-circle-size: var(--primitives-space-32);
+		--_activity-indicator-color: var(--context-content-color, currentColor);
+		--_activity-indicator-track-opacity: 0.25;
+		--_activity-indicator-stroke-width: 2;
+		--_activity-indicator-rotation-duration: 0.8s;
+		--_activity-indicator-fade-duration: var(--primitives-transition-duration-slow);
+		--_activity-indicator-fade-easing: ease-out;
+		--_activity-indicator-pulse-duration: 2s;
+		--_activity-indicator-pulse-easing: ease-in-out;
+		--_activity-indicator-max-width: var(--primitives-area-240);
+		--_activity-indicator-gap: var(--primitives-space-4);
+		--_activity-indicator-text-font: var(--primitives-font-body-sm-regular-flat);
+		--_activity-indicator-backdrop-blur: 3px;
+		--_activity-indicator-overlay-panel-padding: var(--primitives-space-12);
+		--_activity-indicator-overlay-panel-corner-radius: var(--primitives-corner-radius-md);
 
 		${inheritedTextReset}
 		box-sizing: border-box;
@@ -54,17 +54,17 @@ export const activityIndicatorStyles = css`
 
 	/* ## Sizes (icon scale) */
 
-	:host([size="16"]) { --_circle-size: var(--primitives-space-16); }
-	:host([size="20"]) { --_circle-size: var(--primitives-space-20); }
-	:host([size="24"]) { --_circle-size: var(--primitives-space-24); }
-	:host([size="28"]) { --_circle-size: var(--primitives-space-28); }
-	:host([size="40"]) { --_circle-size: var(--primitives-space-40); }
-	:host([size="44"]) { --_circle-size: var(--primitives-space-44); }
-	:host([size="48"]) { --_circle-size: var(--primitives-space-48); }
-	:host([size="56"]) { --_circle-size: var(--primitives-space-56); }
-	:host([size="64"]) { --_circle-size: var(--primitives-space-64); }
-	:host([size="80"]) { --_circle-size: var(--primitives-space-80); }
-	:host([size="96"]) { --_circle-size: var(--primitives-space-96); }
+	:host([size="16"]) { --_activity-indicator-circle-size: var(--primitives-space-16); }
+	:host([size="20"]) { --_activity-indicator-circle-size: var(--primitives-space-20); }
+	:host([size="24"]) { --_activity-indicator-circle-size: var(--primitives-space-24); }
+	:host([size="28"]) { --_activity-indicator-circle-size: var(--primitives-space-28); }
+	:host([size="40"]) { --_activity-indicator-circle-size: var(--primitives-space-40); }
+	:host([size="44"]) { --_activity-indicator-circle-size: var(--primitives-space-44); }
+	:host([size="48"]) { --_activity-indicator-circle-size: var(--primitives-space-48); }
+	:host([size="56"]) { --_activity-indicator-circle-size: var(--primitives-space-56); }
+	:host([size="64"]) { --_activity-indicator-circle-size: var(--primitives-space-64); }
+	:host([size="80"]) { --_activity-indicator-circle-size: var(--primitives-space-80); }
+	:host([size="96"]) { --_activity-indicator-circle-size: var(--primitives-space-96); }
 
 
 	/* # Block
@@ -83,13 +83,13 @@ export const activityIndicatorStyles = css`
 		opacity: 0;
 		pointer-events: none;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_activity-indicator-max-width);
 		flex-direction: column;
 		align-items: center;
-		gap: var(--_gap);
+		gap: var(--_activity-indicator-gap);
 		transition-property: opacity, display;
-		transition-duration: var(--_fade-duration);
-		transition-timing-function: var(--_fade-easing);
+		transition-duration: var(--_activity-indicator-fade-duration);
+		transition-timing-function: var(--_activity-indicator-fade-easing);
 		transition-behavior: allow-discrete;
 	}
 
@@ -119,11 +119,11 @@ export const activityIndicatorStyles = css`
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		border-radius: var(--_overlay-panel-corner-radius);
+		border-radius: var(--_activity-indicator-overlay-panel-corner-radius);
 		background-color: var(--semantics-surfaces-base-background-color);
 		width: max-content;
 		max-width: calc(100% - var(--primitives-space-32));
-		padding: var(--_overlay-panel-padding);
+		padding: var(--_activity-indicator-overlay-panel-padding);
 		color: var(--semantics-content-color);
 		transform: translate(-50%, -50%);
 	}
@@ -143,12 +143,12 @@ export const activityIndicatorStyles = css`
 		   the content behind reads as inactive. backdrop-filter degrades
 		   gracefully where unsupported, leaving just the translucent fill. */
 		background-color: color-mix(in oklab, var(--context-parent-background-color, var(--semantics-surfaces-base-background-color)) calc((1 - var(--primitives-opacity-disabled)) * 100%), transparent);
-		-webkit-backdrop-filter: blur(var(--_backdrop-blur));
-		backdrop-filter: blur(var(--_backdrop-blur));
+		-webkit-backdrop-filter: blur(var(--_activity-indicator-backdrop-blur));
+		backdrop-filter: blur(var(--_activity-indicator-backdrop-blur));
 		pointer-events: none;
 		transition-property: opacity, display;
-		transition-duration: var(--_fade-duration);
-		transition-timing-function: var(--_fade-easing);
+		transition-duration: var(--_activity-indicator-fade-duration);
+		transition-timing-function: var(--_activity-indicator-fade-easing);
 		transition-behavior: allow-discrete;
 	}
 
@@ -175,14 +175,14 @@ export const activityIndicatorStyles = css`
 	/* The whole SVG (stroke included) scales with the size, like an icon. */
 	.activity-indicator__circle {
 		display: block;
-		width: var(--_circle-size);
-		height: var(--_circle-size);
+		width: var(--_activity-indicator-circle-size);
+		height: var(--_activity-indicator-circle-size);
 	}
 
 	.activity-indicator__track {
-		opacity: var(--_track-opacity);
-		stroke: var(--_color);
-		stroke-width: var(--_stroke-width);
+		opacity: var(--_activity-indicator-track-opacity);
+		stroke: var(--_activity-indicator-color);
+		stroke-width: var(--_activity-indicator-stroke-width);
 	}
 
 	/* Rotate only the arc inside the SVG (around the view-box center via
@@ -190,12 +190,12 @@ export const activityIndicatorStyles = css`
 	   element visibly wobbles when it sits at a sub-pixel position (next to a
 	   label, or overlaid on a button). Mirrors nldd-progress-circle. */
 	.activity-indicator__indicator {
-		stroke: var(--_color);
-		stroke-width: var(--_stroke-width);
+		stroke: var(--_activity-indicator-color);
+		stroke-width: var(--_activity-indicator-stroke-width);
 		stroke-linecap: round;
 		stroke-dasharray: 25 100;
 		transform-origin: 50% 50%;
-		animation: activity-indicator-rotate var(--_rotation-duration) linear infinite;
+		animation: activity-indicator-rotate var(--_activity-indicator-rotation-duration) linear infinite;
 	}
 
 	@keyframes activity-indicator-rotate {
@@ -204,7 +204,7 @@ export const activityIndicatorStyles = css`
 
 	.activity-indicator__text {
 		color: currentColor;
-		font: var(--_text-font);
+		font: var(--_activity-indicator-text-font);
 		text-align: center;
 	}
 
@@ -232,7 +232,7 @@ export const activityIndicatorStyles = css`
 		.activity-indicator__indicator {
 			/* Drop the rotation (vestibular safety); keep the 25 / 100 arc and
 			   pulse its opacity instead, mirroring nldd-progress-circle. */
-			animation: activity-indicator-pulse var(--_pulse-duration) var(--_pulse-easing) infinite;
+			animation: activity-indicator-pulse var(--_activity-indicator-pulse-duration) var(--_activity-indicator-pulse-easing) infinite;
 		}
 
 		@keyframes activity-indicator-pulse {

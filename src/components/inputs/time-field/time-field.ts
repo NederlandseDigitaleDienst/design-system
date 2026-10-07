@@ -627,17 +627,17 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 			// time plus the icon, so 'full' has to say 100% explicitly instead of
 			// falling back on that default.
 			if (w === 'full') {
-				this.style.setProperty('--_width', '100%');
+				this.style.setProperty('--_time-field-width', '100%');
 			} else if (w === 'fit-content') {
 				// Caught before CSS.supports, which would accept it as the keyword and
 				// hand the width to the content of the shadow root. It is the default
 				// calculation we want, only without the room the styles hold for a
 				// validation icon — so the override comes off and the styles do the rest.
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_time-field-width');
 			} else if (w && CSS.supports('width', w)) {
-				this.style.setProperty('--_width', w);
+				this.style.setProperty('--_time-field-width', w);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_time-field-width');
 			}
 		}
 	}

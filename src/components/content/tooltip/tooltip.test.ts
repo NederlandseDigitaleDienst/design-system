@@ -10,11 +10,11 @@ function isTooltipVisible(el: NLDDTooltip): boolean {
 
 /**
  * Tooltip uses a 700ms pointer-hover show delay (read from CSS
- * `--_show-delay`). In tests we override it to 0 so mouseenter shows the
+ * `--_tooltip-show-delay`). In tests we override it to 0 so mouseenter shows the
  * tooltip on the next microtask instead of forcing every test to wait.
  */
 function instantShow(el: NLDDTooltip): void {
-	el.style.setProperty('--_show-delay', '0');
+	el.style.setProperty('--_tooltip-show-delay', '0');
 }
 
 /**
@@ -24,7 +24,7 @@ function instantShow(el: NLDDTooltip): void {
  * reads a tooltip that was on its way out as one that stayed.
  */
 function instantHide(el: NLDDTooltip): void {
-	el.style.setProperty('--_hide-delay', '0');
+	el.style.setProperty('--_tooltip-hide-delay', '0');
 }
 
 /**
@@ -55,7 +55,7 @@ function tooltipState(el: NLDDTooltip) {
 	return {
 		popoverOpen: isTooltipVisible(el),
 		visible: (el as unknown as { _visible: boolean })._visible,
-		hideDelay: getComputedStyle(el).getPropertyValue('--_hide-delay').trim(),
+		hideDelay: getComputedStyle(el).getPropertyValue('--_tooltip-hide-delay').trim(),
 		pendingHide: (el as unknown as { _hideTimeout: unknown })._hideTimeout !== null,
 	};
 }
@@ -182,7 +182,7 @@ describe('nldd-tooltip – show/hide', () => {
 		// fire and open the tooltip even though the consumer just suppressed it.
 		el = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
 		await waitForUpdate(el);
-		el.style.setProperty('--_show-delay', '50');
+		el.style.setProperty('--_tooltip-show-delay', '50');
 
 		const trigger = el.querySelector('button')!;
 		trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));

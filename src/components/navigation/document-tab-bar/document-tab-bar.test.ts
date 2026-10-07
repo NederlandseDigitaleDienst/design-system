@@ -123,7 +123,7 @@ describe('nldd-document-tab-bar-item – short mode', () => {
 		const item = getItems(el)[0] as NLDDDocumentTabBarItem;
 
 		// Override the threshold so we don't depend on the production 200px.
-		item.style.setProperty('--_short-text-threshold', '100px');
+		item.style.setProperty('--_document-tab-bar-short-text-threshold', '100px');
 
 		// Below threshold → short mode active.
 		setItemWidth(item, 50);

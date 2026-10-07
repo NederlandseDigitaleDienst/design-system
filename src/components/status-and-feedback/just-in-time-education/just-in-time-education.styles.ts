@@ -10,30 +10,30 @@ export const justInTimeEducationStyles = css`
 	/* # Host */
 
 	:host {
-		--_arrow-length: var(--primitives-space-64); /* JS overrides this with the arrow-length attribute when valid */
-		--_desired-arrow-length: max(var(--primitives-space-40), var(--_arrow-length));
-		--_no-arrow-gap: var(--primitives-space-16);
-		--_gap: min(var(--_desired-arrow-length), var(--_available-distance));
-		--_available-distance: 9999px; /* JS sets the px distance to the viewport/document edge; default = no clamp */
-		--_background-blur: var(--primitives-space-8);
-		--_background-z-index: -1;
-		--_corner-radius: var(--primitives-space-40);
-		--_text-width: var(--primitives-area-320);
-		--_min-text-width: var(--primitives-area-200);
-		--_dismiss-width: var(--semantics-controls-md-min-size);
-		--_main-width: var(--_text-width);
-		--_max-width: var(--_main-width);
-		--_show-duration: var(--primitives-transition-duration-fast);
-		--_hide-duration: var(--primitives-transition-duration-medium);
-		--_offset: 0; /* px, unitless — read by JS */
-		--_shift-padding: 8; /* px, unitless — read by JS */
-		--_main-padding: var(--primitives-space-16);
-		--_main-background-color: color-mix(in srgb, var(--semantics-surfaces-base-background-color) 90%, transparent);
-		--_text-color: var(--semantics-content-color);
-		--_text-font: var(--primitives-font-body-lg-bold-tight);
-		--_supporting-text-color: var(--semantics-content-color);
-		--_supporting-text-font: var(--primitives-font-body-md-regular-tight);
-		--_arrow-color: var(--semantics-content-color);
+		--_just-in-time-education-arrow-length: var(--primitives-space-64); /* JS overrides this with the arrow-length attribute when valid */
+		--_just-in-time-education-desired-arrow-length: max(var(--primitives-space-40), var(--_just-in-time-education-arrow-length));
+		--_just-in-time-education-no-arrow-gap: var(--primitives-space-16);
+		--_just-in-time-education-gap: min(var(--_just-in-time-education-desired-arrow-length), var(--_just-in-time-education-available-distance));
+		--_just-in-time-education-available-distance: 9999px; /* JS sets the px distance to the viewport/document edge; default = no clamp */
+		--_just-in-time-education-background-blur: var(--primitives-space-8);
+		--_just-in-time-education-background-z-index: -1;
+		--_just-in-time-education-corner-radius: var(--primitives-space-40);
+		--_just-in-time-education-text-width: var(--primitives-area-320);
+		--_just-in-time-education-min-text-width: var(--primitives-area-200);
+		--_just-in-time-education-dismiss-width: var(--semantics-controls-md-min-size);
+		--_just-in-time-education-main-width: var(--_just-in-time-education-text-width);
+		--_just-in-time-education-max-width: var(--_just-in-time-education-main-width);
+		--_just-in-time-education-show-duration: var(--primitives-transition-duration-fast);
+		--_just-in-time-education-hide-duration: var(--primitives-transition-duration-medium);
+		--_just-in-time-education-offset: 0; /* px, unitless — read by JS */
+		--_just-in-time-education-shift-padding: 8; /* px, unitless — read by JS */
+		--_just-in-time-education-main-padding: var(--primitives-space-16);
+		--_just-in-time-education-main-background-color: color-mix(in srgb, var(--semantics-surfaces-base-background-color) 90%, transparent);
+		--_just-in-time-education-text-color: var(--semantics-content-color);
+		--_just-in-time-education-text-font: var(--primitives-font-body-lg-bold-tight);
+		--_just-in-time-education-supporting-text-color: var(--semantics-content-color);
+		--_just-in-time-education-supporting-text-font: var(--primitives-font-body-md-regular-tight);
+		--_just-in-time-education-arrow-color: var(--semantics-content-color);
 
 		${inheritedTextReset}
 		display: contents;
@@ -47,31 +47,31 @@ export const justInTimeEducationStyles = css`
 	 * fall below its minimum): drop to a small fixed gap, with no arrow drawn. */
 	:host([no-arrow]),
 	:host([data-arrow-collapsed]) {
-		--_gap: var(--_no-arrow-gap);
+		--_just-in-time-education-gap: var(--_just-in-time-education-no-arrow-gap);
 	}
 
 	/* Horizontal placement: the arrow gap is horizontal here (unlike vertical), so
 	 * the container is the main plus the arrow length. (Vertical keeps the base
-	 * --_max-width = --_main-width.) */
+	 * --_just-in-time-education-max-width = --_just-in-time-education-main-width.) */
 	:host([data-arrow-side="left"]),
 	:host([data-arrow-side="right"]) {
-		--_max-width: calc(var(--_main-width) + var(--_desired-arrow-length));
+		--_just-in-time-education-max-width: calc(var(--_just-in-time-education-main-width) + var(--_just-in-time-education-desired-arrow-length));
 	}
 
 	/* The dismiss button widens the main — it sits beside the text — for horizontal
-	 * placement only; vertical stacks it below. --_max-width follows via --_main-width. */
+	 * placement only; vertical stacks it below. --_just-in-time-education-max-width follows via --_just-in-time-education-main-width. */
 	:host([dismissable][data-arrow-side="left"]),
 	:host([dismissable][data-arrow-side="right"]) {
-		--_main-width: calc(var(--_text-width) + var(--_dismiss-width));
+		--_just-in-time-education-main-width: calc(var(--_just-in-time-education-text-width) + var(--_just-in-time-education-dismiss-width));
 	}
 
-	/* Horizontal placement near a viewport edge: --_available-distance (JS) is the
-	 * distance to that edge. Reserve the main's width (--_main-width) so the arrow
+	/* Horizontal placement near a viewport edge: --_just-in-time-education-available-distance (JS) is the
+	 * distance to that edge. Reserve the main's width (--_just-in-time-education-main-width) so the arrow
 	 * gap absorbs the first shrink and falls to 0; the container cap then narrows
 	 * the main itself. Skipped for no-arrow, which keeps its fixed gap. */
 	:host(:not([no-arrow]):not([data-arrow-collapsed])[data-arrow-side="left"]),
 	:host(:not([no-arrow]):not([data-arrow-collapsed])[data-arrow-side="right"]) {
-		--_gap: clamp(0px, var(--_desired-arrow-length), calc(var(--_available-distance) - var(--_main-width)));
+		--_just-in-time-education-gap: clamp(0px, var(--_just-in-time-education-desired-arrow-length), calc(var(--_just-in-time-education-available-distance) - var(--_just-in-time-education-main-width)));
 	}
 
 
@@ -96,14 +96,14 @@ export const justInTimeEducationStyles = css`
 		border: none;
 		background: none;
 		width: max-content;
-		max-width: var(--_max-width);
-		padding: var(--_background-blur);
+		max-width: var(--_just-in-time-education-max-width);
+		padding: var(--_just-in-time-education-background-blur);
 		pointer-events: none;
 		overflow: visible;
 		transition:
-			opacity var(--_hide-duration) ease,
-			display var(--_hide-duration) allow-discrete,
-			overlay var(--_hide-duration) allow-discrete;
+			opacity var(--_just-in-time-education-hide-duration) ease,
+			display var(--_just-in-time-education-hide-duration) allow-discrete,
+			overlay var(--_just-in-time-education-hide-duration) allow-discrete;
 		/* Force a GPU layer so Safari paints the freshly-opened top-layer popover
 		 * (blurred background + SVG arrow) correctly instead of leaving it stale
 		 * until a manual resize. */
@@ -125,26 +125,26 @@ export const justInTimeEducationStyles = css`
 	 * arrow gap has shrunk to 0, this is what makes the main itself narrower. */
 	:host([data-arrow-side="left"]) .just-in-time-education,
 	:host([data-arrow-side="right"]) .just-in-time-education {
-		max-width: min(var(--_max-width), var(--_available-distance));
+		max-width: min(var(--_just-in-time-education-max-width), var(--_just-in-time-education-available-distance));
 	}
 
 
 	/* ## Arrow-side padding (only the side facing the control needs the gap) */
 
 	:host([data-arrow-side="bottom"]) .just-in-time-education {
-		padding-block-start: var(--_gap);
+		padding-block-start: var(--_just-in-time-education-gap);
 	}
 
 	:host([data-arrow-side="top"]) .just-in-time-education {
-		padding-block-end: var(--_gap);
+		padding-block-end: var(--_just-in-time-education-gap);
 	}
 
 	:host([data-arrow-side="left"]) .just-in-time-education {
-		padding-inline-end: var(--_gap);
+		padding-inline-end: var(--_just-in-time-education-gap);
 	}
 
 	:host([data-arrow-side="right"]) .just-in-time-education {
-		padding-inline-start: var(--_gap);
+		padding-inline-start: var(--_just-in-time-education-gap);
 	}
 
 
@@ -153,9 +153,9 @@ export const justInTimeEducationStyles = css`
 	.just-in-time-education:popover-open {
 		opacity: 1;
 		transition:
-			opacity var(--_show-duration) ease,
-			display var(--_show-duration) allow-discrete,
-			overlay var(--_show-duration) allow-discrete;
+			opacity var(--_just-in-time-education-show-duration) ease,
+			display var(--_just-in-time-education-show-duration) allow-discrete,
+			overlay var(--_just-in-time-education-show-duration) allow-discrete;
 	}
 
 	/* Stay invisible (no fade) until Floating UI has placed it, so the fade-in plays at
@@ -189,7 +189,7 @@ export const justInTimeEducationStyles = css`
 		position: relative;
 		isolation: isolate;
 		pointer-events: auto;
-		padding: var(--_main-padding);
+		padding: var(--_just-in-time-education-main-padding);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -217,14 +217,14 @@ export const justInTimeEducationStyles = css`
 	 * viewport edge rather than shrinking further. */
 	:host([data-arrow-side="left"]) .just-in-time-education__main,
 	:host([data-arrow-side="right"]) .just-in-time-education__main {
-		min-width: var(--_min-text-width);
+		min-width: var(--_just-in-time-education-min-text-width);
 	}
 
 	/* ...plus the dismiss button when dismissable: it sits beside the text, so the
 	 * text keeps its 200px floor with the button next to it. */
 	:host([dismissable][data-arrow-side="left"]) .just-in-time-education__main,
 	:host([dismissable][data-arrow-side="right"]) .just-in-time-education__main {
-		min-width: calc(var(--_min-text-width) + var(--_dismiss-width));
+		min-width: calc(var(--_just-in-time-education-min-text-width) + var(--_just-in-time-education-dismiss-width));
 	}
 
 	/* Background lives on a blurred pseudo-element so its edges fade softly (no
@@ -235,11 +235,11 @@ export const justInTimeEducationStyles = css`
 	.just-in-time-education__main::before {
 		content: '';
 		position: absolute;
-		z-index: var(--_background-z-index);
-		inset: calc(-1 * var(--_background-blur));
-		border-radius: var(--_corner-radius);
-		background-color: var(--_main-background-color);
-		filter: blur(var(--_background-blur));
+		z-index: var(--_just-in-time-education-background-z-index);
+		inset: calc(-1 * var(--_just-in-time-education-background-blur));
+		border-radius: var(--_just-in-time-education-corner-radius);
+		background-color: var(--_just-in-time-education-main-background-color);
+		filter: blur(var(--_just-in-time-education-background-blur));
 		transform: translate3d(0, 0, 0);
 	}
 
@@ -262,16 +262,16 @@ export const justInTimeEducationStyles = css`
 
 	.just-in-time-education__text {
 		margin: 0;
-		color: var(--_text-color);
-		font: var(--_text-font);
+		color: var(--_just-in-time-education-text-color);
+		font: var(--_just-in-time-education-text-font);
 		font-style: italic;
 		text-wrap: pretty;
 	}
 
 	.just-in-time-education__supporting-text {
 		margin: 0;
-		color: var(--_supporting-text-color);
-		font: var(--_supporting-text-font);
+		color: var(--_just-in-time-education-supporting-text-color);
+		font: var(--_just-in-time-education-supporting-text-font);
 		font-style: italic;
 		text-wrap: pretty;
 	}
@@ -290,7 +290,7 @@ export const justInTimeEducationStyles = css`
 		position: absolute;
 		pointer-events: none;
 		overflow: visible;
-		color: var(--_arrow-color);
+		color: var(--_just-in-time-education-arrow-color);
 		transform: translate3d(0, 0, 0);
 	}
 

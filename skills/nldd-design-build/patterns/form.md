@@ -10,7 +10,7 @@
 
 **Wanneer wel.** Elke keer dat je invoervelden verzamelt die samen verstuurd worden.
 
-**Wanneer niet.** Voor één los zoekveld in een werkbalk gebruik je een [`nldd-search-field`](../../nldd-design/reference.md#nldd-search-field) zonder formulier eromheen. Velden waarmee iemand een lijst kleiner maakt zijn geen formulier maar filters, zie [filteren](filtering.md). En is het te veel voor één scherm, dan knip je het in losse pagina’s met een [`nldd-step-indicator`](../../nldd-design/reference.md#nldd-step-indicator) erboven, elk met hun eigen formulier.
+**Wanneer niet.** Voor één los zoekveld in een werkbalk gebruik je een [`nldd-search-field`](../../nldd-design/reference.md#nldd-search-field) zonder formulier eromheen. Velden waarmee iemand een lijst kleiner maakt zijn geen formulier maar filters, zie [filteren](filtering.md). En is het te veel voor één scherm, dan knip je het in losse pagina’s met een [`nldd-step-bar`](../../nldd-design/reference.md#nldd-step-bar) erboven, elk met hun eigen formulier.
 
 ## Compositie
 

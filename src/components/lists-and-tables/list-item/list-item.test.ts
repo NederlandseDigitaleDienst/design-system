@@ -522,7 +522,7 @@ describe('nldd-list-item – widened geometry', () => {
 
 	it('keeps content on the same grid for plain and interactive rows', async () => {
 		el = await fixture(`
-			<div style="padding: 40px; width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="padding: 40px; width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item><nldd-text-cell text="Plain"></nldd-text-cell></nldd-list-item>
 					<nldd-list-item button><nldd-text-cell text="Actie"></nldd-text-cell></nldd-list-item>
@@ -555,7 +555,7 @@ describe('nldd-list-item – widened geometry', () => {
 
 	it('makes the painted overhang clickable on a row-wide action', async () => {
 		el = await fixture(`
-			<div style="padding: 40px; width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="padding: 40px; width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item button><nldd-text-cell text="Actie"></nldd-text-cell></nldd-list-item>
 				</nldd-list>
@@ -572,7 +572,7 @@ describe('nldd-list-item – widened geometry', () => {
 
 	it('moves a leading action out to the row edge, without making it wider', async () => {
 		el = await fixture(`
-			<div style="padding: 40px; width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
+			<div style="padding: 40px; width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
 				<nldd-list type="tree" accessible-label="X">
 					<nldd-list-item>
 						<nldd-list-item-segment button disclosure accessible-label="Klap"></nldd-list-item-segment>
@@ -598,7 +598,7 @@ describe('nldd-list-item – widened geometry', () => {
 
 	it('puts the text of a leading action on the same grid as a plain row', async () => {
 		el = await fixture(`
-			<div style="padding: 40px; width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
+			<div style="padding: 40px; width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item><nldd-text-cell text="Plain"></nldd-text-cell></nldd-list-item>
 					<nldd-list-item>
@@ -618,7 +618,7 @@ describe('nldd-list-item – widened geometry', () => {
 
 	it('lets a trailing action absorb the end edge only', async () => {
 		el = await fixture(`
-			<div style="padding: 40px; width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
+			<div style="padding: 40px; width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-text-cell text="Rij"></nldd-text-cell>
@@ -637,7 +637,7 @@ describe('nldd-list-item – widened geometry', () => {
 
 	it('still sees its trailing action on a branch row with child rows', async () => {
 		el = await fixture(`
-			<div style="padding: 40px; width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
+			<div style="padding: 40px; width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
 				<nldd-list type="tree" accessible-label="X">
 					<nldd-list-item expanded>
 						<nldd-list-item-segment button disclosure accessible-label="Klap"></nldd-list-item-segment>
@@ -665,7 +665,7 @@ describe('nldd-list-item – widened geometry', () => {
 
 	it('leaves a mid-row action on the grid', async () => {
 		el = await fixture(`
-			<div style="padding: 40px; width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
+			<div style="padding: 40px; width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-text-cell text="Rij"></nldd-text-cell>
@@ -694,7 +694,7 @@ describe('nldd-list-item – divider markers', () => {
 
 	it('runs the divider from a divider-start cell', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-spacer-cell size="40"></nldd-spacer-cell>
@@ -706,16 +706,16 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		expect(inset).toBeGreaterThanOrEqual(40);
-		expect(item.style.getPropertyValue('--_divider-inset-end')).toBe('');
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-end')).toBe('');
 	});
 
 	// A row that opens with an icon already lines the divider up with the text, so
 	// every list does that consistently without having to set markers.
 	it('laat de divider vanzelf bij de tekst beginnen na een leidend icoon', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-icon-cell size="20"><nldd-icon icon="star"></nldd-icon></nldd-icon-cell>
@@ -728,14 +728,14 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		expect(inset).toBeGreaterThanOrEqual(40);
 	});
 
 	// The marker overrides the derivation: on the icon cell you get the full line back.
 	it('geeft de volle lijn terug met divider-start op de icoon-cel', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-icon-cell divider-start size="20"><nldd-icon icon="star"></nldd-icon></nldd-icon-cell>
@@ -748,7 +748,7 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		expect(inset).toBeLessThan(40);
 	});
 
@@ -756,7 +756,7 @@ describe('nldd-list-item – divider markers', () => {
 	// should inset the divider the way a leading icon does.
 	it('laat de divider inspringen bij een leidende avatar in een gewone cel', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-cell width="fit-content"><nldd-avatar name="Bart" style="width: 32px; height: 32px"></nldd-avatar></nldd-cell>
@@ -769,13 +769,13 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThan(0);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThan(0);
 	});
 
 	// Any single glyph-sized thing counts, not just an avatar.
 	it('laat de divider inspringen bij een leidende radio in een gewone cel', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-cell width="fit-content"><nldd-radio-button name="x" value="a" style="width: 24px; height: 24px"></nldd-radio-button></nldd-cell>
@@ -788,13 +788,13 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThan(0);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThan(0);
 	});
 
 	// The text can sit inside a segment; the divider still starts there.
 	it('laat de divider inspringen wanneer de tekst in een segment zit', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-cell width="fit-content"><nldd-avatar name="Bart" style="width: 32px; height: 32px"></nldd-avatar></nldd-cell>
@@ -812,14 +812,14 @@ describe('nldd-list-item – divider markers', () => {
 		// At the text, not at the action's padding edge.
 		const block = item.shadowRoot!.querySelector('.list-item')!.getBoundingClientRect();
 		const text = item.querySelector('nldd-text-cell')!.getBoundingClientRect();
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		expect(inset).toBeCloseTo(text.left - block.left, 0);
 	});
 
 	// The action can open with an icon of its own; the text after it is the mark.
 	it('slaat een icoon aan het begin van een segment over', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-cell width="fit-content"><nldd-avatar name="Bart" style="width: 32px; height: 32px"></nldd-avatar></nldd-cell>
@@ -838,7 +838,7 @@ describe('nldd-list-item – divider markers', () => {
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
 		const block = item.shadowRoot!.querySelector('.list-item')!.getBoundingClientRect();
 		const text = item.querySelector('nldd-text-cell')!.getBoundingClientRect();
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeCloseTo(
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeCloseTo(
 			text.left - block.left,
 			0,
 		);
@@ -847,7 +847,7 @@ describe('nldd-list-item – divider markers', () => {
 	// A cell holding more than one thing is not a glyph cell.
 	it('springt ook in bij een leidende cel met meer dan een ding erin', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-cell width="fit-content">
@@ -863,14 +863,14 @@ describe('nldd-list-item – divider markers', () => {
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
 		// What comes before it does not matter: the line starts at the text.
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThan(0);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThan(0);
 	});
 
 	// The text opens the row, so the derived start coincides with the content edge:
 	// dezelfde volle lijn, uitgedrukt als inspringing nul.
 	it('houdt de volle lijn als de rij met zijn tekst opent', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-text-cell text="Geen icoon"></nldd-text-cell>
@@ -882,13 +882,13 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBe(0);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBe(0);
 	});
 
 	// A tree indents with spacers, so the dividers indent along with it.
 	it('begint bij de tekst voorbij de inspring-spacers', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-16: 16px; --primitives-space-32: 32px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-16: 16px; --primitives-space-32: 32px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-spacer-cell size="16"></nldd-spacer-cell>
@@ -901,14 +901,14 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThanOrEqual(48);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThanOrEqual(48);
 	});
 
 	// De marker weghalen leidt opnieuw af in plaats van te wissen: dezelfde cel,
 	// on its own now, rather than by hand.
 	it('valt terug op de afgeleide start als de marker weg is', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-spacer-cell size="40"></nldd-spacer-cell>
@@ -922,13 +922,13 @@ describe('nldd-list-item – divider markers', () => {
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
 		el.querySelector('[divider-start]')!.removeAttribute('divider-start');
 		await settle();
-		expect(parseFloat(item.style.getPropertyValue('--_divider-inset-start'))).toBeGreaterThanOrEqual(40);
+		expect(parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'))).toBeGreaterThanOrEqual(40);
 	});
 
 	// Nothing to derive it from, so the vars disappear.
 	it('wist de vars als de rij geen tekst- of titel-cel heeft', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-spacer-cell size="40"></nldd-spacer-cell>
@@ -942,12 +942,12 @@ describe('nldd-list-item – divider markers', () => {
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
 		el.querySelector('[divider-start]')!.removeAttribute('divider-start');
 		await settle();
-		expect(item.style.getPropertyValue('--_divider-inset-start')).toBe('');
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-start')).toBe('');
 	});
 
 	it('falls back to full width when start lies past the last end', async () => {
 		el = await fixture(`
-			<div style="width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
+			<div style="width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px; --primitives-space-40: 40px; --semantics-dividers-thickness: 1px;">
 				<nldd-list accessible-label="X">
 					<nldd-list-item>
 						<nldd-text-cell divider-end text="Eind"></nldd-text-cell>
@@ -959,8 +959,8 @@ describe('nldd-list-item – divider markers', () => {
 		await waitForUpdate(el);
 		await settle();
 		const item = el.querySelector('nldd-list-item') as HTMLElement;
-		expect(item.style.getPropertyValue('--_divider-inset-start')).toBe('');
-		expect(item.style.getPropertyValue('--_divider-inset-end')).toBe('');
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-start')).toBe('');
+		expect(item.style.getPropertyValue('--_list-item-divider-inset-end')).toBe('');
 	});
 });
 
@@ -973,7 +973,7 @@ describe('nldd-list-item – nested widening', () => {
 
 	it('does not stack the widened inset per nesting level', async () => {
 		el = await fixture(`
-			<div style="padding: 40px; width: 400px; --components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
+			<div style="padding: 40px; width: 400px; --semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px;">
 				<nldd-list type="tree" accessible-label="X">
 					<nldd-list-item expanded>
 						<nldd-list-item-segment checkbox width="full" accessible-label="Ouder">
@@ -1080,7 +1080,7 @@ describe('nldd-list-item onder een universele reset', () => {
 	it('behoudt de negatieve inline-marge van een interactieve rij', async () => {
 		removeReset = installUniversalReset();
 		el = await fixture(`
-			<div style="--components-list-item-indicator-inline-inset: 8px;">
+			<div style="--semantics-list-items-indicator-inline-inset: 8px;">
 				<nldd-list-item button>
 					Rij
 				</nldd-list-item>
@@ -1116,7 +1116,7 @@ describe('nldd-list-item divider met verborgen cellen', () => {
 		// single one only gets us to the measurement rather than past it.
 		await nextFrames();
 
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		const verwacht = zichtbaar.getBoundingClientRect().left - block.getBoundingClientRect().left;
 		expect(inset).toBeGreaterThan(0);
 		expect(Math.abs(inset - verwacht)).toBeLessThan(1);
@@ -1146,7 +1146,7 @@ describe('nldd-list-item divider zonder eigen marker', () => {
 		const block = item.shadowRoot!.querySelector('.list-item') as HTMLElement;
 		await nextFrames();
 
-		const inset = parseFloat(item.style.getPropertyValue('--_divider-inset-start'));
+		const inset = parseFloat(item.style.getPropertyValue('--_list-item-divider-inset-start'));
 		const verwacht = zichtbaar.getBoundingClientRect().left - block.getBoundingClientRect().left;
 		expect(inset).toBeGreaterThan(0);
 		expect(Math.abs(inset - verwacht)).toBeLessThan(1);
@@ -1207,7 +1207,7 @@ describe('nldd-list-item – een aangevinkte rij', () => {
 	});
 
 	const fill = (row: Element) =>
-		getComputedStyle(row).getPropertyValue('--_background-color').trim();
+		getComputedStyle(row).getPropertyValue('--_list-item-background-color').trim();
 
 	it('paints like a selected row', async () => {
 		el = await fixture(`

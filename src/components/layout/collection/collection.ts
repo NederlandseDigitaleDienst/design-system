@@ -180,14 +180,14 @@ export class NLDDCollection extends LitElement {
 
 		if (changedProperties.has('itemWidth')) {
 			if (this.itemWidth) {
-				this.style.setProperty('--_item-width', this.itemWidth);
+				this.style.setProperty('--_collection-item-width', this.itemWidth);
 			} else {
-				this.style.removeProperty('--_item-width');
+				this.style.removeProperty('--_collection-item-width');
 			}
 		}
 
 		// The three breakpoint vars are what the styles read, so a plain gap is
-		// written into each one the consumer left open. Writing --_gap itself
+		// written into each one the consumer left open. Writing --_collection-gap itself
 		// would beat the breakpoint blocks, being inline, and a gap set beside a
 		// sm/md/lg one would swallow it.
 		if (
@@ -204,9 +204,9 @@ export class NLDDCollection extends LitElement {
 				if (value === null) this.style.removeProperty(name);
 				else this.style.setProperty(name, value);
 			};
-			write('--_sm-gap', this.smGap, 'sm-gap');
-			write('--_md-gap', this.mdGap, 'md-gap');
-			write('--_lg-gap', this.lgGap, 'lg-gap');
+			write('--_collection-sm-gap', this.smGap, 'sm-gap');
+			write('--_collection-md-gap', this.mdGap, 'md-gap');
+			write('--_collection-lg-gap', this.lgGap, 'lg-gap');
 		}
 
 		if (this.lazyLoad && this._loadMoreBtn && !this._intersectionObserver) {

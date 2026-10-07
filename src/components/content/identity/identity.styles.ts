@@ -13,13 +13,13 @@ export const identityStyles = css`
 	/* # Host */
 
 	:host {
-		--_gap: var(--primitives-space-8);
-		--_avatar-size: var(--primitives-space-40);
-		--_avatar-corner-radius: var(--primitives-corner-radius-full);
-		--_text-color: var(--semantics-content-color);
-		--_text-font: var(--primitives-font-body-md-medium-tight);
-		--_supporting-text-color: var(--semantics-content-secondary-color);
-		--_supporting-text-font: var(--primitives-font-body-sm-regular-tight);
+		--_identity-gap: var(--primitives-space-8);
+		--_identity-avatar-size: var(--primitives-space-40);
+		--_identity-avatar-corner-radius: var(--primitives-corner-radius-full);
+		--_identity-text-color: var(--semantics-content-color);
+		--_identity-text-font: var(--primitives-font-body-md-medium-tight);
+		--_identity-supporting-text-color: var(--semantics-content-secondary-color);
+		--_identity-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
 
 		${inheritedTextReset}
 		container-type: inline-size;
@@ -37,7 +37,7 @@ export const identityStyles = css`
 	.identity {
 		display: flex;
 		align-items: center;
-		gap: var(--_gap);
+		gap: var(--_identity-gap);
 	}
 
 	.identity[data-multiple-avatars] {
@@ -64,16 +64,16 @@ export const identityStyles = css`
 	   group of one would be a wrapper that says nothing. From two on, the group
 	   does the work, and these rules do not reach into it. */
 	.identity__avatars ::slotted(nldd-avatar) {
-		width: var(--_avatar-size) !important;
-		height: var(--_avatar-size) !important;
+		width: var(--_identity-avatar-size) !important;
+		height: var(--_identity-avatar-size) !important;
 	}
 
 	.identity__avatars ::slotted(img) {
 		${slottedReset}
 		display: block !important;
-		border-radius: var(--_avatar-corner-radius) !important;
-		width: var(--_avatar-size) !important;
-		height: var(--_avatar-size) !important;
+		border-radius: var(--_identity-avatar-corner-radius) !important;
+		width: var(--_identity-avatar-size) !important;
+		height: var(--_identity-avatar-size) !important;
 		object-fit: cover !important;
 	}
 
@@ -96,8 +96,8 @@ export const identityStyles = css`
 
 	.identity__text {
 		margin: 0;
-		color: var(--_text-color);
-		font: var(--_text-font);
+		color: var(--_identity-text-color);
+		font: var(--_identity-text-font);
 		text-wrap: pretty;
 	}
 
@@ -107,8 +107,8 @@ export const identityStyles = css`
 
 	.identity__supporting-text {
 		margin: 0;
-		color: var(--_supporting-text-color);
-		font: var(--_supporting-text-font);
+		color: var(--_identity-supporting-text-color);
+		font: var(--_identity-supporting-text-font);
 		text-wrap: pretty;
 	}
 

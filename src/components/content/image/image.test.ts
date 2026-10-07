@@ -84,12 +84,12 @@ describe('nldd-image', () => {
 		expect(img.hasAttribute('width')).toBe(false);
 	});
 
-	it('applies max-width via --_max-width custom property and width hint on img when width is numeric', async () => {
+	it('applies max-width via --_image-max-width custom property and width hint on img when width is numeric', async () => {
 		el = await fixture<NLDDImage>('<nldd-image src="/foo.jpg" alt="Foo" width="240"></nldd-image>');
 		await waitForUpdate(el);
-		// The component routes width through --_max-width so consumer CSS can
+		// The component routes width through --_image-max-width so consumer CSS can
 		// override the host's max-width if needed.
-		expect(el.style.getPropertyValue('--_max-width')).toBe('240px');
+		expect(el.style.getPropertyValue('--_image-max-width')).toBe('240px');
 		const img = el.shadowRoot!.querySelector('img')!;
 		expect(img.getAttribute('width')).toBe('240');
 	});

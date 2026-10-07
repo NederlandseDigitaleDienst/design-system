@@ -209,18 +209,18 @@ export class NLDDPageFooter extends LitElement {
 			(this._hasMain ? 1 : 0) +
 			(this._hasLegalBar ? 1 : 0);
 		// One visible row → centered single-slot padding; zero rows → the gray
-		// band drops and only the lintje shows (see :host([empty]) in the styles).
+		// band drops and only the ribbon shows (see :host([empty]) in the styles).
 		this.toggleAttribute('single-slot', visibleCount === 1);
 		this.toggleAttribute('empty', visibleCount === 0);
 
 		if (changed.has('width')) {
 			// A CSS length feeds the body max-width; 'full' is handled by CSS
-			// (:host([width="full"]) sets --_max-width: none); default clears it.
+			// (:host([width="full"]) sets --_page-footer-max-width: none); default clears it.
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('max-width', w)) {
-				this.style.setProperty('--_max-width', w);
+				this.style.setProperty('--_page-footer-max-width', w);
 			} else {
-				this.style.removeProperty('--_max-width');
+				this.style.removeProperty('--_page-footer-max-width');
 			}
 		}
 	}

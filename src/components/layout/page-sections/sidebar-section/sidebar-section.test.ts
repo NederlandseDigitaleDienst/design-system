@@ -228,12 +228,12 @@ describe('nldd-sidebar-section', () => {
 
 	it('a CSS-length width feeds the body max-width', async () => {
 		await make('width="200px"');
-		expect(el.style.getPropertyValue('--_max-width')).toBe('200px');
+		expect(el.style.getPropertyValue('--_sidebar-section-max-width')).toBe('200px');
 	});
 
 	it('sticky-top / sticky-bottom feed the sticky insets', async () => {
 		await make('sticky-top="80px" sticky-bottom="24px"');
-		expect(el.style.getPropertyValue('--_sticky-top')).toBe('80px');
-		expect(el.style.getPropertyValue('--_sticky-bottom')).toBe('24px');
+		expect(el.style.getPropertyValue('--_sidebar-section-sticky-top')).toBe('80px');
+		expect(el.style.getPropertyValue('--_sidebar-section-sticky-bottom')).toBe('24px');
 	});
 });

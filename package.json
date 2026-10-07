@@ -362,9 +362,9 @@
       "types": "./dist/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.d.ts",
       "default": "./dist/components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.js"
     },
-    "./timeline-track-cell": {
-      "types": "./dist/components/lists-and-tables/cells/timeline-track-cell/timeline-track-cell.d.ts",
-      "default": "./dist/components/lists-and-tables/cells/timeline-track-cell/timeline-track-cell.js"
+    "./step-cell": {
+      "types": "./dist/components/lists-and-tables/cells/step-cell/step-cell.d.ts",
+      "default": "./dist/components/lists-and-tables/cells/step-cell/step-cell.js"
     },
     "./breadcrumbs": {
       "types": "./dist/components/navigation/breadcrumbs/breadcrumbs.d.ts",
@@ -434,9 +434,9 @@
       "types": "./dist/components/status-and-feedback/progress-circle/progress-circle.d.ts",
       "default": "./dist/components/status-and-feedback/progress-circle/progress-circle.js"
     },
-    "./step-indicator": {
-      "types": "./dist/components/status-and-feedback/step-indicator/step-indicator.d.ts",
-      "default": "./dist/components/status-and-feedback/step-indicator/step-indicator.js"
+    "./step-bar": {
+      "types": "./dist/components/status-and-feedback/step-bar/step-bar.d.ts",
+      "default": "./dist/components/status-and-feedback/step-bar/step-bar.js"
     },
     "./activity-indicator": {
       "types": "./dist/components/status-and-feedback/activity-indicator/activity-indicator.d.ts",
@@ -524,6 +524,7 @@
     "validate:skill-markup": "node scripts/validate-skill-markup.js",
     "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:bundle && npm run build:components:standalone && npm run build:exports && npm run generate:cem",
     "build:icons": "node scripts/generate-icon-registry.js && node scripts/generate-logo.js",
+    "optimize:icons": "svgo --config scripts/svgo.config.mjs",
     "build:components:modules": "tsc -p tsconfig.build.json",
     "build:components:bundle": "vite build",
     "build:exports": "node scripts/generate-exports.js",
@@ -577,9 +578,10 @@
     "playwright": "^1.57.0",
     "semantic-release": "^25.0.2",
     "storybook": "^10.6.0",
+    "svgo": "^4.1.0",
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.58.0",
-    "vite": "8.3.1",
+    "vite": "8.3.2",
     "vitest": "5.0.3",
     "vue": "^3.5.40",
     "vue-tsc": "^3.3.7"

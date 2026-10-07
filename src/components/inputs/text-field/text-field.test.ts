@@ -131,7 +131,7 @@ describe('nldd-text-field', () => {
 		el = await fixture('<nldd-text-field width="240px"></nldd-text-field>');
 		await waitForUpdate(el);
 		expect(el.getAttribute('width')).toBe('240px');
-		expect(el.style.getPropertyValue('--_width')).toBe('240px');
+		expect(el.style.getPropertyValue('--_text-field-width')).toBe('240px');
 	});
 
 	it('participates in FormData via form-associated API', async () => {
@@ -158,7 +158,7 @@ describe('nldd-text-field', () => {
 		await waitForUpdate(el);
 		(el as any).width = '';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_text-field-width')).toBe('');
 	});
 
 	it('focus() delegates to the inner input', async () => {

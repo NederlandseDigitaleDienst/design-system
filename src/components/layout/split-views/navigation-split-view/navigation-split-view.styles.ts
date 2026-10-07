@@ -15,15 +15,15 @@ export const navigationSplitViewStyles = css`
 	/* # Host */
 
 	:host {
-		--_background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_navigation-split-view-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		/* Pane min-widths — read by JS via getComputedStyle in firstUpdated */
-		--_primary-sidebar-min-width: var(--primitives-area-320);
-		--_secondary-sidebar-min-width: var(--primitives-area-320);
-		--_main-min-width: var(--primitives-area-480);
-		--_inspector-min-width: var(--primitives-area-320);
+		--_navigation-split-view-primary-sidebar-min-width: var(--primitives-area-320);
+		--_navigation-split-view-secondary-sidebar-min-width: var(--primitives-area-320);
+		--_navigation-split-view-main-min-width: var(--primitives-area-480);
+		--_navigation-split-view-inspector-min-width: var(--primitives-area-320);
 
 		display: flex;
-		background-color: var(--_background-color);
+		background-color: var(--_navigation-split-view-background-color);
 		width: 100%;
 		height: 100%;
 	}
@@ -34,12 +34,12 @@ export const navigationSplitViewStyles = css`
 
 	:host([background="base"]) {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_navigation-split-view-background-color: var(--context-parent-background-color);
 	}
 
 	:host([background="tinted"]) {
 		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_navigation-split-view-background-color: var(--context-parent-background-color);
 	}
 
 	/* Root-scroll mode: flow instead of clipping (see ScrollModeController /
@@ -111,7 +111,7 @@ export const navigationSplitViewStyles = css`
 
 	.navigation-split-view__primary-sidebar-pane {
 		display: flex;
-		min-width: var(--_primary-sidebar-min-width);
+		min-width: var(--_navigation-split-view-primary-sidebar-min-width);
 		min-height: 0;
 		overflow: hidden;
 		flex-direction: column;
@@ -120,7 +120,7 @@ export const navigationSplitViewStyles = css`
 
 	.navigation-split-view__secondary-sidebar-pane {
 		display: flex;
-		min-width: var(--_secondary-sidebar-min-width);
+		min-width: var(--_navigation-split-view-secondary-sidebar-min-width);
 		min-height: 0;
 		overflow: hidden;
 		flex-direction: column;
@@ -134,7 +134,7 @@ export const navigationSplitViewStyles = css`
 
 	.navigation-split-view__main-pane {
 		display: flex;
-		min-width: var(--_main-min-width);
+		min-width: var(--_navigation-split-view-main-min-width);
 		min-height: 0;
 		overflow: hidden;
 		flex-direction: column;
@@ -168,7 +168,7 @@ export const navigationSplitViewStyles = css`
 		--context-dismiss-button-display: none;
 
 		display: flex;
-		min-width: var(--_inspector-min-width);
+		min-width: var(--_navigation-split-view-inspector-min-width);
 		min-height: 0;
 		overflow: hidden;
 		flex-direction: column;

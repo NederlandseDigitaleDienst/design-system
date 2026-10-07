@@ -124,32 +124,32 @@ export class NLDDTextCell extends VisibilityMixin(LitElement, 'cells-container')
 
 	private _applyDimensionStyles() {
 		// width's 'full' and 'fit-content' are handled via [width] attribute
-		// selectors in CSS; any other value is a CSS length fed through --_width.
+		// selectors in CSS; any other value is a CSS length fed through --_text-cell-width.
 		const w = this.width;
 		const widthIsKeyword = w === 'full' || w === 'fit-content';
 		const widthIsValidLength = !!w && !widthIsKeyword && CSS.supports('width', w);
 		if (widthIsValidLength) {
-			this.style.setProperty('--_width', w);
+			this.style.setProperty('--_text-cell-width', w);
 		} else {
-			this.style.removeProperty('--_width');
+			this.style.removeProperty('--_text-cell-width');
 		}
 		if (w && !widthIsKeyword && !widthIsValidLength) {
 			this.width = '';
 		}
 		if (this.minWidth) {
-			this.style.setProperty('--_min-width', this.minWidth);
+			this.style.setProperty('--_text-cell-min-width', this.minWidth);
 		} else {
-			this.style.removeProperty('--_min-width');
+			this.style.removeProperty('--_text-cell-min-width');
 		}
 		if (this.maxWidth) {
-			this.style.setProperty('--_max-width', this.maxWidth);
+			this.style.setProperty('--_text-cell-max-width', this.maxWidth);
 		} else {
-			this.style.removeProperty('--_max-width');
+			this.style.removeProperty('--_text-cell-max-width');
 		}
 		if (this.minHeight) {
-			this.style.setProperty('--_min-height', this.minHeight);
+			this.style.setProperty('--_text-cell-min-height', this.minHeight);
 		} else {
-			this.style.removeProperty('--_min-height');
+			this.style.removeProperty('--_text-cell-min-height');
 		}
 	}
 

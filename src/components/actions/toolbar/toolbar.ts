@@ -202,9 +202,9 @@ export class NLDDToolbarTitle extends LitElement {
 	// willUpdate (not updated) so the size CSS variables are written before the
 	// toolbar measures the title with getBoundingClientRect() on the same frame.
 	override willUpdate(changedProperties: Map<string, unknown>): void {
-		if (changedProperties.has('minWidth')) this._reflectSizeVar('--_title-group-min-width', this.minWidth);
-		if (changedProperties.has('width')) this._reflectSizeVar('--_title-width', this.width);
-		if (changedProperties.has('maxWidth')) this._reflectSizeVar('--_title-max-width', this.maxWidth);
+		if (changedProperties.has('minWidth')) this._reflectSizeVar('--_toolbar-title-group-min-width', this.minWidth);
+		if (changedProperties.has('width')) this._reflectSizeVar('--_toolbar-title-width', this.width);
+		if (changedProperties.has('maxWidth')) this._reflectSizeVar('--_toolbar-title-max-width', this.maxWidth);
 	}
 
 	private _reflectSizeVar(prop: string, value: string): void {
@@ -340,10 +340,20 @@ export class NLDDToolbar extends LitElement {
 		});
 		setTimeout(() => this._buildChildren(), 0);
 		this._createMenu();
+		document.fonts?.addEventListener('loadingdone', this._onFontsLoaded);
 	}
+
+	/** A web font that finishes loading changes how wide an item is. The child
+	 *  resize observer sees that for a visible item, but an item already in the
+	 *  overflow menu has no width to watch: measured with the fallback font it
+	 *  went into the menu, and would stay there although it fits now. */
+	private _onFontsLoaded = (): void => {
+		if (this._hasMeasured) this._measureAndUpdate();
+	};
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
+		document.fonts?.removeEventListener('loadingdone', this._onFontsLoaded);
 		this._observer?.disconnect();
 		this._observer = null;
 		this._resizeObserver?.disconnect();
@@ -520,19 +530,19 @@ export class NLDDToolbar extends LitElement {
 				host.toggleAttribute('show-item-labels', this.showItemLabels);
 				host.toggleAttribute('fluid', child.isFluid);
 				if (child.isFluid && child.minWidth) {
-					host.style.setProperty('--_item-min-width', child.minWidth);
+					host.style.setProperty('--_toolbar-item-min-width', child.minWidth);
 				} else {
-					host.style.removeProperty('--_item-min-width');
+					host.style.removeProperty('--_toolbar-item-min-width');
 				}
 				if (child.isFluid && child.width) {
-					host.style.setProperty('--_item-width', child.width);
+					host.style.setProperty('--_toolbar-item-width', child.width);
 				} else {
-					host.style.removeProperty('--_item-width');
+					host.style.removeProperty('--_toolbar-item-width');
 				}
 				if (child.isFluid && child.maxWidth) {
-					host.style.setProperty('--_item-max-width', child.maxWidth);
+					host.style.setProperty('--_toolbar-item-max-width', child.maxWidth);
 				} else {
-					host.style.removeProperty('--_item-max-width');
+					host.style.removeProperty('--_toolbar-item-max-width');
 				}
 				// Forward size to the inner control(s).
 				Array.from(host.children).forEach(inner => {
@@ -636,15 +646,15 @@ export class NLDDToolbar extends LitElement {
 			? overflowButtonEl.getBoundingClientRect().width + hostGap
 			: 0;
 
-		this.style.setProperty('--_overflow-button-width', `${overflowButtonWidth}px`);
+		this.style.setProperty('--_toolbar-overflow-button-width', `${overflowButtonWidth}px`);
 
 		const startWidth = this._computeAreaWidth(this._startChildren, itemGap);
 		const centerWidth = this._computeAreaWidth(this._centerChildren, itemGap);
 		const endWidth = this._computeAreaWidth(this._endChildren, itemGap);
 
-		this.style.setProperty('--_start-width', `${startWidth}px`);
-		this.style.setProperty('--_center-width', `${centerWidth}px`);
-		this.style.setProperty('--_end-width', `${endWidth}px`);
+		this.style.setProperty('--_toolbar-start-width', `${startWidth}px`);
+		this.style.setProperty('--_toolbar-center-width', `${centerWidth}px`);
+		this.style.setProperty('--_toolbar-end-width', `${endWidth}px`);
 
 		// The spacer basis subtracts a gap to account for the flex gap between a
 		// side area and its spacer. That gap only exists when the area is
@@ -652,8 +662,8 @@ export class NLDDToolbar extends LitElement {
 		// last) item and there is no such gap, so drop the subtraction to 0 —
 		// otherwise the center is pulled off-center by one gap once the opposite
 		// side gains items.
-		this.style.setProperty('--_left-spacer-gap', startWidth > 0 ? `${itemGap}px` : '0px');
-		this.style.setProperty('--_right-spacer-gap', endWidth > 0 ? `${itemGap}px` : '0px');
+		this.style.setProperty('--_toolbar-left-spacer-gap', startWidth > 0 ? `${itemGap}px` : '0px');
+		this.style.setProperty('--_toolbar-right-spacer-gap', endWidth > 0 ? `${itemGap}px` : '0px');
 
 		const { leftZero, rightZero } = this._computeSpacerZeros(
 			hostWidth, itemGap, overflowButtonWidth, startWidth, centerWidth, endWidth
@@ -702,7 +712,7 @@ export class NLDDToolbar extends LitElement {
 
 		this._isMeasuring = true;
 		const hostWidth = this.getBoundingClientRect().width;
-		this.style.setProperty('--_width', `${hostWidth}px`);
+		this.style.setProperty('--_toolbar-width', `${hostWidth}px`);
 		this._measureOverflow(itemsEl);
 		this._hasMeasured = true;
 		this._isMeasuring = false;
@@ -726,7 +736,7 @@ export class NLDDToolbar extends LitElement {
 				host.removeAttribute('solo-fluid');
 				host.toggleAttribute('fluid', child.isFluid);
 				if (child.isFluid && child.minWidth) {
-					host.style.setProperty('--_item-min-width', child.minWidth);
+					host.style.setProperty('--_toolbar-item-min-width', child.minWidth);
 				}
 			}
 		});
@@ -829,7 +839,7 @@ export class NLDDToolbar extends LitElement {
 			const host = remainingVisible[0].element as HTMLElement;
 			host.removeAttribute('fluid');
 			host.setAttribute('solo-fluid', '');
-			host.style.removeProperty('--_item-min-width');
+			host.style.removeProperty('--_toolbar-item-min-width');
 			void itemsEl.offsetWidth;
 		}
 

@@ -46,19 +46,20 @@ src/components/{categorie}/{naam}/
 |------|--------|--------------|
 | **Primitives** | `--primitives-*` | Basiswaarden (kleuren, spacing, typografie) |
 | **Semantics** | `--semantics-*` | Betekenisvolle variabelen (buttons, controls, surfaces) |
-| **Components** | `--components-*` | Component-specifieke variabelen |
 | **Context** | `--context-*` | Gedeelde variabelen voor communicatie tussen componenten |
-| **Lokaal** | `--_*` | Interne variabelen binnen een component (niet voor extern gebruik) |
+| **Lokaal** | `--_{component}-*` | Interne variabelen van één component, met zijn tag zonder `nldd-` voorop (`--_button-background-color`). Niet voor extern gebruik |
 
-Voorkeursvolgorde: components → semantics → primitives.
+Er is geen componentlaag in `variables.css`. Wat één component nodig heeft, staat als lokale variabele in zijn eigen `:host`; wat meer componenten delen, is een semantics-token. Een lokale variabele mag naar een semantics- of een primitives-token wijzen, verderop in de stijlen gebruik je alleen de lokale variabele. Wil iemand een component anders, dan is dat een issue en geen override.
+
+Een custom property erft door shadow boundaries heen, naar alles wat in de flat tree onder de host hangt, ook de interne elementen van een ander component dat erin geslot wordt. Daarom draagt elke lokale variabele de naam van zijn component: een generieke `--_background-color` op `nldd-tooltip` kwam zo terecht op de knop van een `nldd-icon-button` erin. Een subcomponent dat een variabele van zijn ouder leest of overschrijft, gebruikt de naam van de ouder (`--_step-bar-ring-color` in `nldd-step-bar-item`).
 
 ### Validatie
 
 CSS variabelen worden gevalideerd tijdens de build (`npm run validate:styles`):
 
 - `--context-*` — Niet gevalideerd, niet in variables.css
-- `--_*` — Gevalideerd binnen hetzelfde bestand
-- `--primitives-*`, `--semantics-*`, `--components-*` — Gevalideerd tegen variables.css
+- `--_*` — Gevalideerd binnen dezelfde componentmap, en het voorvoegsel moet van een component in die map zijn
+- `--primitives-*`, `--semantics-*` — Gevalideerd tegen variables.css
 
 Geen fallbacks. CI faalt als variabelen ontbreken.
 
@@ -121,7 +122,7 @@ Wil je toch handmatig iets toevoegen (bijv. iets dat semantic-release niet uit d
 
 ## Iconen
 
-Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js` (`'brand': 'seal-star'`). Optimaliseer nieuwe bestanden naar de huisstijl: geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur, pad afgerond op twee decimalen, tabs, elk pad op een eigen regel.
+Een icoon is een bestand in `src/components/content/icon/icons/`; de bestandsnaam is de icoonnaam. Staat er iets **tussen haakjes** in de naam, dan is dat een alias: haal het uit de bestandsnaam en zet het in `icon-aliases.js` (`'brand': 'seal-star'`). Optimaliseer nieuwe bestanden naar de huisstijl met `npm run optimize:icons -- <bestand.svg> …` (svgo, instellingen in `scripts/svgo.config.mjs`): geen `width`/`height`, `fill="currentColor"` in plaats van een vaste kleur, geen `fill-rule`, pad afgerond op twee decimalen, tabs, elk pad op een eigen regel. Draai het één keer, op de export uit Figma: een tweede ronde rondt opnieuw af en verschuift het icoon.
 
 Nieuwe en hertekende iconen krijgen een "Nieuw"- of "Bijgewerkt"-label in de icon-gallery. Die twee lijsten staan in `icon-gallery-status.ts` en worden bij elke batch **vervangen**, afgeleid uit de git-historie; dat bestand legt in zijn kop precies vast hoe je ze afleidt en welke valkuil er zit (`--follow` niet gebruiken).
 

@@ -161,15 +161,15 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 		super.updated(changed);
 		if (changed.has('width')) {
 			const w = this.width;
-			// 'full' is handled by CSS (--_max-width: none); CSS lengths feed the var.
+			// 'full' is handled by CSS (--_sidebar-section-max-width: none); CSS lengths feed the var.
 			if (w && w !== 'full' && CSS.supports('max-width', w)) {
-				this.style.setProperty('--_max-width', w);
+				this.style.setProperty('--_sidebar-section-max-width', w);
 			} else {
-				this.style.removeProperty('--_max-width');
+				this.style.removeProperty('--_sidebar-section-max-width');
 			}
 		}
-		if (changed.has('stickyTop')) this._applyInset('--_sticky-top', this.stickyTop);
-		if (changed.has('stickyBottom')) this._applyInset('--_sticky-bottom', this.stickyBottom);
+		if (changed.has('stickyTop')) this._applyInset('--_sidebar-section-sticky-top', this.stickyTop);
+		if (changed.has('stickyBottom')) this._applyInset('--_sidebar-section-sticky-bottom', this.stickyBottom);
 		// Toggling no-collapse flips whether a narrow section collapses — re-evaluate.
 		if (changed.has('noCollapse')) this._applyCollapsed(this.clientWidth, false);
 		// Expanding to the box (lg) moves the sidebar slot out of the sheet, so close

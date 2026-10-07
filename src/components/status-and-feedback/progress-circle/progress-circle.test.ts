@@ -260,10 +260,10 @@ describe('nldd-progress-circle-segment-indicator', () => {
 		expect(tokenMs).toBe(INDETERMINATE_TRANSITION_MS);
 	});
 
-	it('getStrokeWidthPx(size) matches every per-size --_stroke-width rule in the stylesheet', () => {
+	it('getStrokeWidthPx(size) matches every per-size --_progress-circle-stroke-width rule in the stylesheet', () => {
 		// Parse the real CSS (not a hand-kept copy) so a JS↔CSS drift is caught:
-		// every `--_stroke-width: calc(<stroke>px * 100 / <size>)` must equal getStrokeWidthPx(<size>).
-		const rules = [...progressCircleStyles.cssText.matchAll(/--_stroke-width:\s*calc\((\d+)px\s*\*\s*100\s*\/\s*(\d+)\)/g)];
+		// every `--_progress-circle-stroke-width: calc(<stroke>px * 100 / <size>)` must equal getStrokeWidthPx(<size>).
+		const rules = [...progressCircleStyles.cssText.matchAll(/--_progress-circle-stroke-width:\s*calc\((\d+)px\s*\*\s*100\s*\/\s*(\d+)\)/g)];
 		expect(rules.length).toBeGreaterThanOrEqual(12);
 		for (const [, strokePx, size] of rules) {
 			expect(getStrokeWidthPx(Number(size)), `size=${size}`).toBe(Number(strokePx));

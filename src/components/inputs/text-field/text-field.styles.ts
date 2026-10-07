@@ -10,17 +10,17 @@ export const textFieldStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: 100%;
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_background-color: var(--semantics-input-fields-background-color);
-		--_min-size: var(--semantics-controls-md-min-size);
-		--_inline-padding: var(--semantics-controls-md-inline-padding);
-		--_text-font: var(--semantics-input-fields-md-text-font);
-		--_validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
+		--_text-field-width: 100%;
+		--_text-field-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_text-field-background-color: var(--semantics-input-fields-background-color);
+		--_text-field-min-size: var(--semantics-controls-md-min-size);
+		--_text-field-inline-padding: var(--semantics-controls-md-inline-padding);
+		--_text-field-font: var(--semantics-input-fields-md-text-font);
+		--_text-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 
 		${inheritedTextReset}
 		display: block;
-		width: var(--_width);
+		width: var(--_text-field-width);
 		max-width: 100%;
 		-webkit-tap-highlight-color: transparent;
 	}
@@ -30,11 +30,11 @@ export const textFieldStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_min-size: var(--semantics-controls-sm-min-size);
-		--_inline-padding: var(--semantics-controls-sm-inline-padding);
-		--_text-font: var(--semantics-input-fields-sm-text-font);
-		--_validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
+		--_text-field-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_text-field-min-size: var(--semantics-controls-sm-min-size);
+		--_text-field-inline-padding: var(--semantics-controls-sm-inline-padding);
+		--_text-field-font: var(--semantics-input-fields-sm-text-font);
+		--_text-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
 	}
 
 
@@ -44,11 +44,11 @@ export const textFieldStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		border: var(--semantics-input-fields-border);
-		border-radius: var(--_corner-radius);
-		background-color: var(--_background-color);
-		min-height: var(--_min-size);
+		border-radius: var(--_text-field-corner-radius);
+		background-color: var(--_text-field-background-color);
+		min-height: var(--_text-field-min-size);
 		overflow: hidden;
-		padding-left: calc(var(--_inline-padding) - var(--semantics-input-fields-border-width));
+		padding-left: calc(var(--_text-field-inline-padding) - var(--semantics-input-fields-border-width));
 		flex-direction: row;
 		align-items: center;
 	}
@@ -62,7 +62,7 @@ export const textFieldStyles = css`
 	}
 
 	:host([readonly]) .text-field {
-		--_background-color: var(--semantics-input-fields-is-read-only-background-color);
+		--_text-field-background-color: var(--semantics-input-fields-is-read-only-background-color);
 		border-color: var(--semantics-input-fields-is-read-only-border-color);
 	}
 
@@ -72,7 +72,7 @@ export const textFieldStyles = css`
 
 	.text-field:has(input:-webkit-autofill),
 	.text-field:has(input:autofill) {
-		--_background-color: var(--semantics-input-fields-is-autofill-background-color);
+		--_text-field-background-color: var(--semantics-input-fields-is-autofill-background-color);
 	}
 
 	.text-field:focus-within {
@@ -91,12 +91,12 @@ export const textFieldStyles = css`
 		border: none;
 		background: transparent;
 		min-width: 0;
-		min-height: calc(var(--_min-size) - var(--semantics-input-fields-border-width) * 2);
+		min-height: calc(var(--_text-field-min-size) - var(--semantics-input-fields-border-width) * 2);
 		overflow: hidden;
 		padding: 0;
 		flex-grow: 1;
 		color: var(--semantics-content-color);
-		font: var(--_text-font);
+		font: var(--_text-field-font);
 		appearance: none;
 	}
 
@@ -112,7 +112,7 @@ export const textFieldStyles = css`
 	.text-field__input:autofill,
 	.text-field__input:-webkit-autofill:disabled,
 	.text-field__input:autofill:disabled {
-		box-shadow: 0 0 0 999px var(--_background-color) inset;
+		box-shadow: 0 0 0 999px var(--_text-field-background-color) inset;
 		-webkit-text-fill-color: var(--semantics-input-fields-is-autofill-content-color);
 	}
 
@@ -129,15 +129,15 @@ export const textFieldStyles = css`
 		top: 0;
 		right: 0;
 		bottom: 0;
-		border-radius: var(--_corner-radius);
-		background: linear-gradient(90deg, color-mix(in oklch, var(--_background-color) 0%, transparent) 0%, var(--_background-color) 100%);
+		border-radius: var(--_text-field-corner-radius);
+		background: linear-gradient(90deg, color-mix(in oklch, var(--_text-field-background-color) 0%, transparent) 0%, var(--_text-field-background-color) 100%);
 		pointer-events: none;
 		width: var(--primitives-space-8);
 	}
 
 	.text-field__validation-icon-area {
 		display: flex;
-		width: calc(var(--_min-size) - var(--semantics-input-fields-border-width) * 2);
+		width: calc(var(--_text-field-min-size) - var(--semantics-input-fields-border-width) * 2);
 		height: 100%;
 		flex-shrink: 0;
 		align-items: center;
@@ -153,7 +153,7 @@ export const textFieldStyles = css`
 	}
 
 	.text-field__validation-icon {
-		width: var(--_validation-icon-size);
-		height: var(--_validation-icon-size);
+		width: var(--_text-field-validation-icon-size);
+		height: var(--_text-field-validation-icon-size);
 	}
 `;

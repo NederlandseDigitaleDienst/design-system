@@ -7,7 +7,7 @@ export const validationListStyles = css`
 	/* # Host */
 
 	:host {
-		--_gap: var(--primitives-space-2);
+		--_validation-list-gap: var(--primitives-space-2);
 
 		display: block;
 	}
@@ -26,7 +26,7 @@ export const validationListStyles = css`
 	.validation-list {
 		display: flex;
 		flex-direction: column;
-		gap: var(--_gap);
+		gap: var(--_validation-list-gap);
 	}
 `;
 
@@ -37,12 +37,12 @@ export const validationItemStyles = css`
 	/* # Host */
 
 	:host {
-		--_content-color: var(--semantics-content-color);
-		--_font: var(--primitives-font-body-sm-regular-tight);
+		--_validation-item-content-color: var(--semantics-content-color);
+		--_validation-item-font: var(--primitives-font-body-sm-regular-tight);
 
 		display: none;
-		color: var(--_content-color);
-		font: var(--_font);
+		color: var(--_validation-item-content-color);
+		font: var(--_validation-item-font);
 	}
 
 	:host([visible]) {
@@ -50,7 +50,7 @@ export const validationItemStyles = css`
 	}
 
 	:host([unmet]) {
-		--_content-color: var(--semantics-content-critical-color);
+		--_validation-item-content-color: var(--semantics-content-critical-color);
 	}
 
 	/* After the visible rule at equal specificity: hidden must also win on an

@@ -190,11 +190,11 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.progress-circle.total-prefix-text': 'Total',
 	'components.progress-circle.loading-label': 'Loading',
 	'components.progress-circle.accessible-label': 'Progress',
-	'components.step-indicator.accessible-label': 'Progress',
-	'components.step-indicator.status-past-label': 'Completed',
-	'components.step-indicator.status-current-label': 'Current step',
-	'components.step-indicator.status-future-label': 'To do',
-	'components.step-indicator.compact-text': 'Step {current} of {total}',
+	'components.step-bar.accessible-label': 'Progress',
+	'components.step-bar.status-past-label': 'Completed',
+	'components.step-bar.status-current-label': 'Current step',
+	'components.step-bar.status-future-label': 'To do',
+	'components.step-bar.compact-text': 'Step {current} of {total}',
 };
 
 export default enUS;

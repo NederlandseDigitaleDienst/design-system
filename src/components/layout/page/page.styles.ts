@@ -9,21 +9,21 @@ export const pageStyles = css`
 	/* # Host */
 
 	:host {
-		--_background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_page-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		/* The insets this page arrived with, parked before it adds its own:
 		   republishing --context-inset-top on the element it reads from would be
 		   a cycle. */
-		--_outer-inset-top: var(--context-inset-top, 0px);
-		--_outer-inset-bottom: var(--context-inset-bottom, 0px);
-		--_header-height: 0px;
-		--_footer-height: 0px;
-		--_header-full-height: 0px;
+		--_page-outer-inset-top: var(--context-inset-top, 0px);
+		--_page-outer-inset-bottom: var(--context-inset-bottom, 0px);
+		--_page-header-height: 0px;
+		--_page-footer-height: 0px;
+		--_page-header-full-height: 0px;
 		/* Set from JS while the page owns the scroller. initial, not a length, so
 		   the fallback stands when the document scrolls instead. */
-		--_scroll-height: initial;
+		--_page-scroll-height: initial;
 
 		display: flex;
-		background-color: var(--_background-color);
+		background-color: var(--_page-background-color);
 		width: 100%;
 		height: 100%;
 		overflow-y: auto;
@@ -41,12 +41,12 @@ export const pageStyles = css`
 
 	:host([background="base"]) {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_page-background-color: var(--context-parent-background-color);
 	}
 
 	:host([background="tinted"]) {
 		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_page-background-color: var(--context-parent-background-color);
 	}
 
 	/* Overflow hidden prevents content from escaping the scroll wrapper.
@@ -113,7 +113,7 @@ export const pageStyles = css`
 		left: 0;
 		right: 0;
 		z-index: 1;
-		background-color: color-mix(in srgb, var(--_background-color) 95%, transparent);
+		background-color: color-mix(in srgb, var(--_page-background-color) 95%, transparent);
 	}
 
 	:host([sticky-header]) .page__header::after {
@@ -129,7 +129,7 @@ export const pageStyles = css`
 		left: 0;
 		right: 0;
 		opacity: 0;
-		background: linear-gradient(to bottom, color-mix(in srgb, var(--_background-color) 95%, transparent), transparent);
+		background: linear-gradient(to bottom, color-mix(in srgb, var(--_page-background-color) 95%, transparent), transparent);
 		pointer-events: none;
 		height: var(--primitives-space-24);
 		transition: opacity var(--primitives-transition-duration-medium) var(--primitives-transition-easing-default);
@@ -154,11 +154,11 @@ export const pageStyles = css`
 	   inside clears them without knowing a number. The header sits outside this
 	   element and keeps the value without itself in it. */
 	.page__scroll {
-		--context-inset-top: calc(var(--_outer-inset-top) + var(--_header-height));
-		--context-inset-bottom: calc(var(--_outer-inset-bottom) + var(--_footer-height));
+		--context-inset-top: calc(var(--_page-outer-inset-top) + var(--_page-header-height));
+		--context-inset-bottom: calc(var(--_page-outer-inset-bottom) + var(--_page-footer-height));
 		/* The height sticky content can cap itself on. Unset while the document
 		   scrolls, where the viewport is the whole story. */
-		--context-scroller-height: var(--_scroll-height, 100dvh);
+		--context-scroller-height: var(--_page-scroll-height, 100dvh);
 
 		display: flex;
 		min-height: 0;
@@ -169,9 +169,9 @@ export const pageStyles = css`
 	/* Nested scrolling: a sticky child is measured against this element, so the
 	   bars above the page fall outside it and only its own header counts. */
 	:host(:not([data-scroll="root"])) .page__scroll {
-		--context-inset-top: var(--_header-height);
-		--context-inset-bottom: var(--_footer-height);
-		padding-top: var(--_header-full-height);
+		--context-inset-top: var(--_page-header-height);
+		--context-inset-bottom: var(--_page-footer-height);
+		padding-top: var(--_page-header-full-height);
 	}
 
 	:host([sticky-header]) .page__scroll {
@@ -201,7 +201,7 @@ export const pageStyles = css`
 		position: sticky;
 		bottom: 0;
 		z-index: 1;
-		background-color: color-mix(in srgb, var(--_background-color) 95%, transparent);
+		background-color: color-mix(in srgb, var(--_page-background-color) 95%, transparent);
 	}
 
 	:host([sticky-footer]) .page__footer::before {
@@ -210,7 +210,7 @@ export const pageStyles = css`
 		bottom: 100%;
 		left: 0;
 		right: 0;
-		background: linear-gradient(to top, color-mix(in srgb, var(--_background-color) 95%, transparent), transparent);
+		background: linear-gradient(to top, color-mix(in srgb, var(--_page-background-color) 95%, transparent), transparent);
 		pointer-events: none;
 		height: var(--primitives-space-24);
 	}

@@ -36,8 +36,8 @@
  * / `<child md-order="N">` / `<child lg-order="N">` to override per breakpoint
  * (resolved against THIS container's width via @container queries, same scope
  * as the responsive padding/gap). The container observes slot changes and
- * child attribute mutations and bridges these to `--_slot-order` /
- * `--_slot-sm-order` / etc. custom properties on each child's inline style,
+ * child attribute mutations and bridges these to `--_container-slot-order` /
+ * `--_container-slot-sm-order` / etc. custom properties on each child's inline style,
  * which the container's CSS then reads via `::slotted(*)` inside @container
  * queries. Cascade: `sm-order` falls back to `order` falls back to `0` at sm
  * (and analogously for md/lg). No-op for `layout="columns"` (CSS multicol has
@@ -299,15 +299,15 @@ export class NLDDContainer extends LitElement {
 		const width = this.width;
 		const isKeyword = width === 'full' || width === 'fit-content';
 		const isLength = !!width && !isKeyword && CSS.supports('width', width);
-		if (isLength) this.style.setProperty('--_width', width);
-		else this.style.removeProperty('--_width');
+		if (isLength) this.style.setProperty('--_container-width', width);
+		else this.style.removeProperty('--_container-width');
 		if (width && !isKeyword && !isLength) this.width = '';
 
-		if (this.minWidth) this.style.setProperty('--_min-width', this.minWidth);
-		else this.style.removeProperty('--_min-width');
+		if (this.minWidth) this.style.setProperty('--_container-min-width', this.minWidth);
+		else this.style.removeProperty('--_container-min-width');
 
-		if (this.maxWidth) this.style.setProperty('--_max-width', this.maxWidth);
-		else this.style.removeProperty('--_max-width');
+		if (this.maxWidth) this.style.setProperty('--_container-max-width', this.maxWidth);
+		else this.style.removeProperty('--_container-max-width');
 	}
 
 	private writeCustomProperties(): void {
@@ -321,7 +321,7 @@ export class NLDDContainer extends LitElement {
 		//  - Row/wrap: horizontal = justify-content (main), vertical = align-items (cross)
 		//  - Stack (flex column): horizontal = align-items (cross), vertical = justify-content (main)
 		//  - Grid: per-cell — horizontal = justify-items, vertical = align-items
-		// We set --_justify-content/--_justify-items/--_align-items
+		// We set --_container-justify-content/--_container-justify-items/--_container-align-items
 		// independently; the .container picks up whichever applies to its
 		// current display. Columns layout has no alignment hooks.
 		const horizontal = this.horizontalAlignment ? HORIZONTAL_TO_FLEX[this.horizontalAlignment] : null;
@@ -332,38 +332,38 @@ export class NLDDContainer extends LitElement {
 		// lanes (a grid) does not inherit the flex-column mapping below.
 		const isMulticol = this.layout === 'columns' || this.layout === 'lanes';
 		if (isMulticol) {
-			setProp('--_justify-content', null);
-			setProp('--_justify-items', null);
-			setProp('--_align-items', null);
+			setProp('--_container-justify-content', null);
+			setProp('--_container-justify-items', null);
+			setProp('--_container-align-items', null);
 		} else if (isGrid) {
-			setProp('--_justify-items', horizontal);
-			setProp('--_justify-content', horizontal);
-			setProp('--_align-items', vertical);
+			setProp('--_container-justify-items', horizontal);
+			setProp('--_container-justify-content', horizontal);
+			setProp('--_container-align-items', vertical);
 		} else if (isFlexRow) {
-			setProp('--_justify-content', horizontal);
-			setProp('--_align-items', vertical);
-			setProp('--_justify-items', null);
+			setProp('--_container-justify-content', horizontal);
+			setProp('--_container-align-items', vertical);
+			setProp('--_container-justify-items', null);
 		} else {
-			setProp('--_justify-content', vertical);
-			setProp('--_align-items', horizontal);
-			setProp('--_justify-items', null);
+			setProp('--_container-justify-content', vertical);
+			setProp('--_container-align-items', horizontal);
+			setProp('--_container-justify-items', null);
 		}
 
 		// These three are what the styles read, so a plain gap fills each
-		// breakpoint the consumer left open. Writing --_gap itself would beat the
+		// breakpoint the consumer left open. Writing --_container-gap itself would beat the
 		// blocks that pick between them, being inline.
 		const plainGap = sizeToValue(this.gap, 'gap');
-		setProp('--_sm-gap', sizeToValue(this.smGap, 'sm-gap') ?? plainGap);
-		setProp('--_md-gap', sizeToValue(this.mdGap, 'md-gap') ?? plainGap);
-		setProp('--_lg-gap', sizeToValue(this.lgGap, 'lg-gap') ?? plainGap);
+		setProp('--_container-sm-gap', sizeToValue(this.smGap, 'sm-gap') ?? plainGap);
+		setProp('--_container-md-gap', sizeToValue(this.mdGap, 'md-gap') ?? plainGap);
+		setProp('--_container-lg-gap', sizeToValue(this.lgGap, 'lg-gap') ?? plainGap);
 
 		for (const scope of ['', 'sm', 'md', 'lg'] as const) {
 			const [top, right, bottom, left] = this.resolvePadding(scope);
 			const prefix = scope ? `${scope}-` : '';
-			setProp(`--_${prefix}padding-top`, sizeToValue(top?.size, top?.attribute ?? 'padding'));
-			setProp(`--_${prefix}padding-right`, sizeToValue(right?.size, right?.attribute ?? 'padding'));
-			setProp(`--_${prefix}padding-bottom`, sizeToValue(bottom?.size, bottom?.attribute ?? 'padding'));
-			setProp(`--_${prefix}padding-left`, sizeToValue(left?.size, left?.attribute ?? 'padding'));
+			setProp(`--_container-${prefix}padding-top`, sizeToValue(top?.size, top?.attribute ?? 'padding'));
+			setProp(`--_container-${prefix}padding-right`, sizeToValue(right?.size, right?.attribute ?? 'padding'));
+			setProp(`--_container-${prefix}padding-bottom`, sizeToValue(bottom?.size, bottom?.attribute ?? 'padding'));
+			setProp(`--_container-${prefix}padding-left`, sizeToValue(left?.size, left?.attribute ?? 'padding'));
 		}
 	}
 
@@ -389,7 +389,7 @@ export class NLDDContainer extends LitElement {
 	}
 
 	// Bridge: read order/sm-order/md-order/lg-order attributes on each slotted
-	// child and write them as --_slot-{attr} inline custom props on that child.
+	// child and write them as --_container-slot-{attr} inline custom props on that child.
 	// The container's @container queries pick the right one per breakpoint via
 	// var() fallback. Inline style cannot itself host @container queries, so
 	// this bridge exists to expose declarative attrs while letting CSS do the
@@ -420,7 +420,7 @@ export class NLDDContainer extends LitElement {
 	private _applyOrderProps(el: HTMLElement): void {
 		for (const attr of ORDER_ATTRS) {
 			const v = el.getAttribute(attr);
-			const prop = `--_slot-${attr}`;
+			const prop = `--_container-slot-${attr}`;
 			if (v !== null) el.style.setProperty(prop, v);
 			else el.style.removeProperty(prop);
 		}

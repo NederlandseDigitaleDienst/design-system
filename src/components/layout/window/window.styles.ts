@@ -10,6 +10,8 @@ export const windowStyles = css`
 	/* # Host */
 
 	:host {
+		--_window-default-width: var(--primitives-area-640);
+
 		${inheritedTextReset}
 		/* contents, not block: the window is a position:fixed <dialog>, so the host
 		   would only add an empty box. As a block it is a flex item like any other
@@ -34,7 +36,7 @@ export const windowStyles = css`
 		border-radius: var(--semantics-overlays-corner-radius);
 		box-shadow: var(--semantics-overlays-box-shadow);
 		background-color: var(--semantics-surfaces-base-background-color);
-		width: var(--components-window-default-width);
+		width: var(--_window-default-width);
 		max-width: calc(100vw - var(--semantics-overlays-inset) * 2);
 		max-height: calc(100dvh - var(--semantics-overlays-inset) * 2);
 		overflow: hidden;

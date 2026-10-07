@@ -276,19 +276,19 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	/** Shrink wide initials so they always fit. The fit factor is the shape's
 	 *  usable width over the initials' natural width (scrollWidth ignores
 	 *  the applied transform, so the measurement stays stable); capped at 1 so
-	 *  narrow initials are never enlarged. Applied via --_initials-fit (a
+	 *  narrow initials are never enlarged. Applied via --_avatar-initials-fit (a
 	 *  transform scale), so no reflow and it stays measurable. */
 	private _fitInitials(): void {
 		const initials = this.shadowRoot?.querySelector<HTMLElement>('.avatar__initials');
 		const shape = this.shadowRoot?.querySelector<HTMLElement>('.avatar');
 		if (!initials || !shape) {
-			this.style.removeProperty('--_initials-fit');
+			this.style.removeProperty('--_avatar-initials-fit');
 			return;
 		}
 		const available = shape.clientWidth * INITIALS_FIT_RATIO;
 		const actual = initials.scrollWidth;
 		if (available <= 0 || actual <= 0) return; // not laid out yet — leave as is
-		this.style.setProperty('--_initials-fit', String(Math.min(1, available / actual)));
+		this.style.setProperty('--_avatar-initials-fit', String(Math.min(1, available / actual)));
 	}
 
 	override render() {

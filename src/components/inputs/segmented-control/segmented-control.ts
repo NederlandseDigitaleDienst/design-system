@@ -413,16 +413,16 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	override updated(changedProperties: Map<string, unknown>): void {
 		if (changedProperties.has('width')) {
 			// Keyword 'full' is handled by CSS ([width="full"] sets
-			// --_width: 100% and switches display to grid). Keyword
+			// --_segmented-control-width: 100% and switches display to grid). Keyword
 			// 'fit-content' only changes grid-auto-columns and leaves the host
-			// width alone. A valid CSS length feeds --_width here.
+			// width alone. A valid CSS length feeds --_segmented-control-width here.
 			// Invalid values do nothing.
 			const w = this.width;
 			const isKeyword = w === 'full' || w === 'fit-content';
 			if (w && !isKeyword && CSS.supports('width', w)) {
-				this.style.setProperty('--_width', w);
+				this.style.setProperty('--_segmented-control-width', w);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_segmented-control-width');
 			}
 		}
 		if (

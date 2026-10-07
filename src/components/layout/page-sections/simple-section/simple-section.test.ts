@@ -92,17 +92,17 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 	it('strips block padding with padding-block="0"', async () => {
 		el = await fixture('<nldd-simple-section padding-block="0"></nldd-simple-section>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_padding-top')).toBe('0');
-		expect(el.style.getPropertyValue('--_padding-bottom')).toBe('0');
+		expect(el.style.getPropertyValue('--_simple-section-padding-top')).toBe('0');
+		expect(el.style.getPropertyValue('--_simple-section-padding-bottom')).toBe('0');
 	});
 
 	it('maps a numeric padding-block to the space token', async () => {
 		el = await fixture('<nldd-simple-section padding-block="24"></nldd-simple-section>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_padding-top')).toBe(
+		expect(el.style.getPropertyValue('--_simple-section-padding-top')).toBe(
 			'var(--primitives-space-24)',
 		);
-		expect(el.style.getPropertyValue('--_padding-bottom')).toBe(
+		expect(el.style.getPropertyValue('--_simple-section-padding-bottom')).toBe(
 			'var(--primitives-space-24)',
 		);
 	});
@@ -112,10 +112,10 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 			'<nldd-simple-section padding-block="24" padding-bottom="0"></nldd-simple-section>',
 		);
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_padding-top')).toBe(
+		expect(el.style.getPropertyValue('--_simple-section-padding-top')).toBe(
 			'var(--primitives-space-24)',
 		);
-		expect(el.style.getPropertyValue('--_padding-bottom')).toBe('0');
+		expect(el.style.getPropertyValue('--_simple-section-padding-bottom')).toBe('0');
 	});
 
 	it('applies height as the host min-height', async () => {
@@ -133,10 +133,10 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 	it('maps responsive sm-padding-block to the sm scope vars only', async () => {
 		el = await fixture('<nldd-simple-section sm-padding-block="0"></nldd-simple-section>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_sm-padding-top')).toBe('0');
-		expect(el.style.getPropertyValue('--_sm-padding-bottom')).toBe('0');
+		expect(el.style.getPropertyValue('--_simple-section-sm-padding-top')).toBe('0');
+		expect(el.style.getPropertyValue('--_simple-section-sm-padding-bottom')).toBe('0');
 		// Base scope is left untouched (falls back to the responsive default).
-		expect(el.style.getPropertyValue('--_padding-top')).toBe('');
+		expect(el.style.getPropertyValue('--_simple-section-padding-top')).toBe('');
 	});
 
 	it('lets lg-padding-bottom override only the lg bottom edge', async () => {
@@ -144,9 +144,9 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 			'<nldd-simple-section lg-padding-block="24" lg-padding-bottom="0"></nldd-simple-section>',
 		);
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_lg-padding-top')).toBe(
+		expect(el.style.getPropertyValue('--_simple-section-lg-padding-top')).toBe(
 			'var(--primitives-space-24)',
 		);
-		expect(el.style.getPropertyValue('--_lg-padding-bottom')).toBe('0');
+		expect(el.style.getPropertyValue('--_simple-section-lg-padding-bottom')).toBe('0');
 	});
 });

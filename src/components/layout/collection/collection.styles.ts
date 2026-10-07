@@ -15,30 +15,30 @@ export const collectionStyles = css`
 	/* # Host */
 
 	:host {
-		--_item-width: var(--primitives-area-280);
-		--_focus-ring-z-index: 1;
+		--_collection-item-width: var(--primitives-area-280);
+		--_collection-focus-ring-z-index: 1;
 
 		/* Two sets, because a collection inside a layout-container follows that
-		   container and anywhere else the viewport. The bare --_gap is what
+		   container and anywhere else the viewport. The bare --_collection-gap is what
 		   stands when neither set matches. */
-		--_sm-gap: var(--components-collection-sm-gap);
-		--_md-gap: var(--components-collection-md-gap);
-		--_lg-gap: var(--components-collection-lg-gap);
-		--_gap: var(--_sm-gap);
+		--_collection-sm-gap: var(--primitives-space-16);
+		--_collection-md-gap: var(--primitives-space-24);
+		--_collection-lg-gap: var(--primitives-space-24);
+		--_collection-gap: var(--_collection-sm-gap);
 
-		@media (max-width: ${smMax}) { --_gap: var(--_sm-gap); }
-		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_gap: var(--_md-gap); }
-		@media (min-width: ${lgMin}) { --_gap: var(--_lg-gap); }
+		@media (max-width: ${smMax}) { --_collection-gap: var(--_collection-sm-gap); }
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_collection-gap: var(--_collection-md-gap); }
+		@media (min-width: ${lgMin}) { --_collection-gap: var(--_collection-lg-gap); }
 
-		@container layout-container (max-width: ${smMax}) { --_gap: var(--_sm-gap); }
-		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_gap: var(--_md-gap); }
-		@container layout-container (min-width: ${lgMin}) { --_gap: var(--_lg-gap); }
+		@container layout-container (max-width: ${smMax}) { --_collection-gap: var(--_collection-sm-gap); }
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_collection-gap: var(--_collection-md-gap); }
+		@container layout-container (min-width: ${lgMin}) { --_collection-gap: var(--_collection-lg-gap); }
 
 		display: flex;
 		width: 100%;
 		min-width: 0;
 		flex-direction: column;
-		gap: var(--_gap);
+		gap: var(--_collection-gap);
 	}
 
 	:host([hidden]) {
@@ -51,7 +51,7 @@ export const collectionStyles = css`
 	.collection__items {
 		display: flex;
 		width: 100%;
-		gap: var(--_gap);
+		gap: var(--_collection-gap);
 	}
 
 	/* ## Grid */
@@ -61,7 +61,7 @@ export const collectionStyles = css`
 		/* min(item-width, 100%) clamps the track min to the container width so
 		   a single column never forces horizontal overflow on narrow screens. */
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(var(--_item-width), 100%), 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(min(var(--_collection-item-width), 100%), 1fr));
 	}
 
 	/* A grid item's automatic minimum is min-content, so one long unbreakable
@@ -87,7 +87,7 @@ export const collectionStyles = css`
 	   load-more adds to it. */
 	:host([layout="lanes"]) .collection__items {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(var(--_item-width), 100%), 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(min(var(--_collection-item-width), 100%), 1fr));
 	}
 
 	:host([layout="lanes"]) .collection__items ::slotted(*) {
@@ -135,7 +135,7 @@ export const collectionStyles = css`
 		max-width: 100%;
 		flex-grow: 1;
 		flex-shrink: 0;
-		flex-basis: var(--_item-width);
+		flex-basis: var(--_collection-item-width);
 		scroll-snap-align: start;
 	}
 
@@ -158,7 +158,7 @@ export const collectionStyles = css`
 		content: '';
 		position: absolute;
 		inset: 0;
-		z-index: var(--_focus-ring-z-index);
+		z-index: var(--_collection-focus-ring-z-index);
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);

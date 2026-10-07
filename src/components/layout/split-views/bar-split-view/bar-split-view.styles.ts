@@ -9,10 +9,10 @@ export const barSplitViewStyles = css`
 	/* # Host */
 
 	:host {
-		--_background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_bar-split-view-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 
 		display: flex;
-		background-color: var(--_background-color);
+		background-color: var(--_bar-split-view-background-color);
 		width: 100%;
 		height: 100%;
 		flex-direction: column;
@@ -24,12 +24,12 @@ export const barSplitViewStyles = css`
 
 	:host([background="base"]) {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_bar-split-view-background-color: var(--context-parent-background-color);
 	}
 
 	:host([background="tinted"]) {
 		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_bar-split-view-background-color: var(--context-parent-background-color);
 	}
 
 	/* Root-scroll mode: the document scrolls (ScrollModeController /
@@ -79,7 +79,7 @@ export const barSplitViewStyles = css`
 		overflow: visible;
 		/* Sticky bars sit over the scrolling document, so they need an opaque
 		   background to occlude the content passing beneath them. */
-		background-color: var(--_background-color);
+		background-color: var(--_bar-split-view-background-color);
 	}
 
 	/* Root-scroll mode: top/bottom bars stick; JS sets their top/bottom insets. */

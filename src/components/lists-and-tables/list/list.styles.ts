@@ -17,24 +17,25 @@ export const listStyles = css`
 	/* # Host */
 
 	:host {
-		--_drag-clone-top: 0px;
-		--_drag-clone-left: 0px;
-		--_drag-clone-opacity: 0.95;
-		--_drag-clone-z-index: 100;
-		--_drag-clone-width: 0px;
-		--_drag-clone-height: 0px;
-		--_max-height: none;
-		--_background-color: transparent;
-		--_highlight-border-color: transparent;
-		--_box-padding: var(--primitives-space-4);
-		--_gap: var(--primitives-space-8);
-		--_search-field-min-size: var(--semantics-controls-md-min-size);
-		--_search-field-icon-size: var(--primitives-space-24);
-		--_search-field-end-padding-right: calc((var(--_search-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
-		--_search-field-button-focus-z-index: 1;
-		--_search-bar-gap: var(--primitives-space-8);
-		--_toolbar-gap: var(--primitives-space-8);
-		--_empty-padding: var(--primitives-space-16);
+		--_list-drag-clone-top: 0px;
+		--_list-drag-clone-left: 0px;
+		--_list-drag-clone-opacity: 0.95;
+		--_list-drag-clone-z-index: 100;
+		--_list-drag-clone-width: 0px;
+		--_list-drag-clone-height: 0px;
+		--_list-max-height: none;
+		--_list-background-color: transparent;
+		--_list-highlight-border-color: transparent;
+		--_list-box-padding: var(--primitives-space-4);
+		--_list-gap: var(--primitives-space-8);
+		--_list-search-field-min-size: var(--semantics-controls-md-min-size);
+		--_list-search-field-icon-size: var(--primitives-space-24);
+		--_list-search-field-end-padding-right: calc((var(--_list-search-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_list-search-field-button-focus-z-index: 1;
+		--_list-search-bar-gap: var(--primitives-space-8);
+		--_list-toolbar-gap: var(--primitives-space-8);
+		--_list-empty-padding: var(--primitives-space-16);
+		--_list-drag-placeholder-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
 
 		display: block;
 		position: relative;
@@ -58,13 +59,13 @@ export const listStyles = css`
 	}
 
 	:host([appearance^="box"]) {
-		--_background-color: var(--semantics-surfaces-tinted-background-color);
-		--_highlight-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_list-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_list-highlight-border-color: var(--semantics-surfaces-tinted-border-color);
 	}
 
 	:host([appearance="box-base"]) {
-		--_background-color: var(--semantics-surfaces-base-background-color);
-		--_highlight-border-color: var(--semantics-surfaces-base-border-color);
+		--_list-background-color: var(--semantics-surfaces-base-background-color);
+		--_list-highlight-border-color: var(--semantics-surfaces-base-border-color);
 	}
 
 
@@ -73,7 +74,7 @@ export const listStyles = css`
 	.list {
 		display: flex;
 		flex-direction: column;
-		gap: var(--_gap);
+		gap: var(--_list-gap);
 	}
 
 
@@ -88,7 +89,7 @@ export const listStyles = css`
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--_toolbar-gap);
+		gap: var(--_list-toolbar-gap);
 	}
 
 	.list__toolbar[hidden] {
@@ -111,8 +112,8 @@ export const listStyles = css`
 	:host([appearance^="box"]) .list__main {
 		position: relative;
 		border-radius: var(--semantics-surfaces-corner-radius);
-		background-color: var(--_background-color);
-		box-shadow: inset 0 0 0 1px var(--_highlight-border-color);
+		background-color: var(--_list-background-color);
+		box-shadow: inset 0 0 0 1px var(--_list-highlight-border-color);
 	}
 
 	/* Listbox: give the options a bit more breathing room from the pinned
@@ -137,19 +138,19 @@ export const listStyles = css`
 	}
 
 	:host([appearance^="box"]) .list__items {
-		padding-inline: calc(var(--components-list-item-indicator-inline-inset) + var(--_box-padding));
-		padding-block: var(--_box-padding);
+		padding-inline: calc(var(--semantics-list-items-indicator-inline-inset) + var(--_list-box-padding));
+		padding-block: var(--_list-box-padding);
 	}
 
 	:host([type="listbox"]) .list__items {
-		max-height: var(--_max-height);
+		max-height: var(--_list-max-height);
 		overflow-x: hidden;
 		overflow-y: auto;
-		padding-inline: var(--components-list-item-indicator-inline-inset);
+		padding-inline: var(--semantics-list-items-indicator-inline-inset);
 	}
 
 	.list__empty {
-		padding: var(--_empty-padding);
+		padding: var(--_list-empty-padding);
 	}
 
 	.list__empty[hidden] {
@@ -160,7 +161,7 @@ export const listStyles = css`
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--_search-bar-gap);
+		gap: var(--_list-search-bar-gap);
 	}
 
 	.list__search-bar-end {
@@ -168,7 +169,7 @@ export const listStyles = css`
 		flex-shrink: 0;
 		flex-direction: row;
 		align-items: center;
-		gap: var(--_search-bar-gap);
+		gap: var(--_list-search-bar-gap);
 	}
 
 	.list__search-bar-end[hidden] {
@@ -184,7 +185,7 @@ export const listStyles = css`
 		background-color: var(--semantics-input-fields-background-color);
 		width: 100%;
 		min-width: 0;
-		min-height: var(--_search-field-min-size);
+		min-height: var(--_list-search-field-min-size);
 		flex-direction: row;
 		align-items: center;
 	}
@@ -206,9 +207,9 @@ export const listStyles = css`
 
 	.list__search-field-icon {
 		display: flex;
-		margin-inline: calc((var(--_search-field-min-size) - var(--_search-field-icon-size)) / 2 - var(--semantics-input-fields-border-width));
-		width: var(--_search-field-icon-size);
-		height: var(--_search-field-icon-size);
+		margin-inline: calc((var(--_list-search-field-min-size) - var(--_list-search-field-icon-size)) / 2 - var(--semantics-input-fields-border-width));
+		width: var(--_list-search-field-icon-size);
+		height: var(--_list-search-field-icon-size);
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
@@ -239,35 +240,35 @@ export const listStyles = css`
 	.list__search-field-end {
 		display: flex;
 		position: relative;
-		padding-right: var(--_search-field-end-padding-right);
+		padding-right: var(--_list-search-field-end-padding-right);
 		flex-shrink: 0;
 		align-items: center;
 	}
 
 	.list__search-field-clear:focus-within {
 		position: relative;
-		z-index: var(--_search-field-button-focus-z-index);
+		z-index: var(--_list-search-field-button-focus-z-index);
 	}
 
 	::slotted(.nldd-list-drag-placeholder) {
 		box-sizing: border-box;
-		border-radius: var(--components-list-item-indicator-corner-radius);
-		background-color: var(--components-list-drag-placeholder-background-color);
+		border-radius: var(--semantics-list-items-indicator-corner-radius);
+		background-color: var(--_list-drag-placeholder-background-color);
 		pointer-events: none;
 	}
 
 	.list__drag-clone {
 		display: flex;
 		position: absolute;
-		top: var(--_drag-clone-top);
-		left: var(--_drag-clone-left);
-		opacity: var(--_drag-clone-opacity);
-		z-index: var(--_drag-clone-z-index);
-		border-radius: var(--components-list-item-indicator-corner-radius);
+		top: var(--_list-drag-clone-top);
+		left: var(--_list-drag-clone-left);
+		opacity: var(--_list-drag-clone-opacity);
+		z-index: var(--_list-drag-clone-z-index);
+		border-radius: var(--semantics-list-items-indicator-corner-radius);
 		background: var(--semantics-surfaces-base-background-color);
 		pointer-events: none;
-		width: var(--_drag-clone-width);
-		height: var(--_drag-clone-height);
+		width: var(--_list-drag-clone-width);
+		height: var(--_list-drag-clone-height);
 		overflow: hidden;
 		flex-direction: row;
 		align-items: stretch;

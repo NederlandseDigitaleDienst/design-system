@@ -10,8 +10,8 @@ export const tokenStyles = css`
 	/* # Host */
 
 	:host {
-		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
-		--_focus-z-index: 1;
+		--_token-highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
+		--_token-focus-z-index: 1;
 
 		${inheritedTextReset}
 		display: inline-block;
@@ -34,7 +34,7 @@ export const tokenStyles = css`
 	/* z-index raises the ring above adjacent tokens so it isn't clipped. */
 	:host(:focus-visible) {
 		position: relative;
-		z-index: var(--_focus-z-index);
+		z-index: var(--_token-focus-z-index);
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
@@ -69,7 +69,7 @@ export const tokenStyles = css`
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_token-highlight-border-color);
 		pointer-events: none;
 	}
 

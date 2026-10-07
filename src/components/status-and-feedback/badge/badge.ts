@@ -85,8 +85,8 @@ export class NLDDBadge extends withTranslations(LitElement, nlddBadgeTranslation
 
 	override updated(changed: Map<string, unknown>): void {
 		if (!changed.has('customColor')) return;
-		if (this.customColor) this.style.setProperty('--_custom-color', this.customColor);
-		else this.style.removeProperty('--_custom-color');
+		if (this.customColor) this.style.setProperty('--_badge-custom-color', this.customColor);
+		else this.style.removeProperty('--_badge-custom-color');
 	}
 
 	get _hasText(): boolean {

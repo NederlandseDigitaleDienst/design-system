@@ -214,16 +214,16 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 			const w = this.width;
 			// 'full' switches host to block + 100% via CSS attribute selector.
 			// A valid CSS length is applied as inline style.width on the host.
-			// In either case the inner button stretches via --_width, so
+			// In either case the inner button stretches via --_icon-button-width, so
 			// a custom width on the host translates to a wide button instead
 			// of leaving the size-based square. Invalid values do nothing.
 			const isFull = w === 'full';
 			const isValidLength = !!w && !isFull && CSS.supports('width', w);
 			this.style.width = isValidLength ? w : '';
 			if (isFull || isValidLength) {
-				this.style.setProperty('--_width', '100%');
+				this.style.setProperty('--_icon-button-width', '100%');
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_icon-button-width');
 			}
 		}
 		const inaccessible = this._hasIcon && !this.text && !this.accessibleLabel;

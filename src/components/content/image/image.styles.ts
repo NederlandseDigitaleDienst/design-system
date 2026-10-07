@@ -10,26 +10,26 @@ export const imageStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--components-image-corner-radius);
-		--_background-color: var(--components-image-background-color);
-		--_caption-gap: var(--components-image-caption-gap);
-		--_caption-color: var(--components-image-caption-color);
-		--_caption-font: var(--components-image-caption-font);
-		--_credit-color: var(--components-image-credit-color);
-		--_credit-font: var(--components-image-credit-font);
-		--_error-text-color: var(--components-image-error-text-color);
-		--_error-font: var(--components-image-error-font);
-		--_error-padding: var(--primitives-space-8);
-		--_error-gap: var(--primitives-space-2);
-		--_caption-row-gap: var(--primitives-space-8);
-		--_object-fit: cover;
-		--_object-position: center;
-		--_max-width: 100%;
+		--_image-corner-radius: var(--primitives-corner-radius-none);
+		--_image-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-50));
+		--_image-caption-gap: var(--primitives-space-4);
+		--_image-caption-color: var(--semantics-content-color);
+		--_image-caption-font: var(--primitives-font-body-sm-regular-tight);
+		--_image-credit-color: var(--semantics-content-secondary-color);
+		--_image-credit-font: var(--primitives-font-body-sm-regular-tight);
+		--_image-error-text-color: var(--semantics-content-color);
+		--_image-error-font: var(--primitives-font-body-sm-regular-snug);
+		--_image-error-padding: var(--primitives-space-8);
+		--_image-error-gap: var(--primitives-space-2);
+		--_image-caption-row-gap: var(--primitives-space-8);
+		--_image-object-fit: cover;
+		--_image-object-position: center;
+		--_image-max-width: 100%;
 
 		${inheritedTextReset}
 		box-sizing: border-box;
 		display: block;
-		max-width: var(--_max-width);
+		max-width: var(--_image-max-width);
 	}
 
 	:host([hidden]) {
@@ -41,24 +41,24 @@ export const imageStyles = css`
 	   Driven by the reflected attribute so we can also style slotted img/picture
 	   via ::slotted() with the same CSS var. */
 
-	:host([object-fit="contain"]) { --_object-fit: contain; }
-	:host([object-fit="fill"]) { --_object-fit: fill; }
-	:host([object-fit="scale-down"]) { --_object-fit: scale-down; }
-	:host([object-fit="none"]) { --_object-fit: none; }
+	:host([object-fit="contain"]) { --_image-object-fit: contain; }
+	:host([object-fit="fill"]) { --_image-object-fit: fill; }
+	:host([object-fit="scale-down"]) { --_image-object-fit: scale-down; }
+	:host([object-fit="none"]) { --_image-object-fit: none; }
 
 
 	/* ## Object-position variants */
 
-	:host([object-position="top"]) { --_object-position: top; }
-	:host([object-position="bottom"]) { --_object-position: bottom; }
-	:host([object-position="left"]) { --_object-position: left; }
-	:host([object-position="right"]) { --_object-position: right; }
+	:host([object-position="top"]) { --_image-object-position: top; }
+	:host([object-position="bottom"]) { --_image-object-position: bottom; }
+	:host([object-position="left"]) { --_image-object-position: left; }
+	:host([object-position="right"]) { --_image-object-position: right; }
 
 
 	/* ## Shape variants */
 
-	:host([shape="rounded"]) { --_corner-radius: var(--components-image-rounded-corner-radius); }
-	:host([shape="circle"]) { --_corner-radius: 50%; }
+	:host([shape="rounded"]) { --_image-corner-radius: var(--semantics-controls-md-corner-radius); }
+	:host([shape="circle"]) { --_image-corner-radius: 50%; }
 
 
 	/* # Figure
@@ -70,7 +70,7 @@ export const imageStyles = css`
 		display: flex;
 		flex-direction: column;
 		margin: 0;
-		gap: var(--_caption-gap);
+		gap: var(--_image-caption-gap);
 	}
 
 
@@ -85,7 +85,7 @@ export const imageStyles = css`
 		position: relative;
 		overflow: hidden;
 		max-width: 100%;
-		border-radius: var(--_corner-radius);
+		border-radius: var(--_image-corner-radius);
 	}
 
 
@@ -102,8 +102,8 @@ export const imageStyles = css`
 		width: 100%;
 		height: 100%;
 		max-width: 100%;
-		object-fit: var(--_object-fit);
-		object-position: var(--_object-position);
+		object-fit: var(--_image-object-fit);
+		object-position: var(--_image-object-position);
 	}
 
 	::slotted(img) {
@@ -112,8 +112,8 @@ export const imageStyles = css`
 		width: 100% !important;
 		height: 100% !important;
 		max-width: 100% !important;
-		object-fit: var(--_object-fit) !important;
-		object-position: var(--_object-position) !important;
+		object-fit: var(--_image-object-fit) !important;
+		object-position: var(--_image-object-position) !important;
 	}
 
 	/* An inline <svg> is a drawing rather than a file, and it arrives through the
@@ -163,144 +163,144 @@ export const imageStyles = css`
 	   Firefox 113-127 would pass the gate but render transparent/black
 	   stops because rgb(from …) wouldn't parse. Older engines drop the
 	   LQIP gradient entirely and fall through to the neutral
-	   --_background-color set on .image__media. Degraded but harmless:
+	   --_image-background-color set on .image__media. Degraded but harmless:
 	   the placeholder is a "nice to have", not a load-bearing element. */
 
 	@supports (left: mod(1px, 1px)) and (background: oklab(0 0 0)) and (color: rgb(from red r g b)) {
 
 	.image__media--lqip {
-		--_lqip-base-ll: mod(round(down, var(--context-lqip-base) / 64), 4);
-		--_lqip-base-aaa: mod(round(down, var(--context-lqip-base) / 8), 8);
-		--_lqip-base-bbb: mod(var(--context-lqip-base), 8);
-		--_lqip-c1-ll: mod(round(down, var(--context-lqip-c1) / 64), 4);
-		--_lqip-c1-aaa: mod(round(down, var(--context-lqip-c1) / 8), 8);
-		--_lqip-c1-bbb: mod(var(--context-lqip-c1), 8);
-		--_lqip-c2-ll: mod(round(down, var(--context-lqip-c2) / 64), 4);
-		--_lqip-c2-aaa: mod(round(down, var(--context-lqip-c2) / 8), 8);
-		--_lqip-c2-bbb: mod(var(--context-lqip-c2), 8);
-		--_lqip-c3-ll: mod(round(down, var(--context-lqip-c3) / 64), 4);
-		--_lqip-c3-aaa: mod(round(down, var(--context-lqip-c3) / 8), 8);
-		--_lqip-c3-bbb: mod(var(--context-lqip-c3), 8);
-		--_lqip-c4-ll: mod(round(down, var(--context-lqip-c4) / 64), 4);
-		--_lqip-c4-aaa: mod(round(down, var(--context-lqip-c4) / 8), 8);
-		--_lqip-c4-bbb: mod(var(--context-lqip-c4), 8);
-		--_lqip-c5-ll: mod(round(down, var(--context-lqip-c5) / 64), 4);
-		--_lqip-c5-aaa: mod(round(down, var(--context-lqip-c5) / 8), 8);
-		--_lqip-c5-bbb: mod(var(--context-lqip-c5), 8);
-		--_lqip-c6-ll: mod(round(down, var(--context-lqip-c6) / 64), 4);
-		--_lqip-c6-aaa: mod(round(down, var(--context-lqip-c6) / 8), 8);
-		--_lqip-c6-bbb: mod(var(--context-lqip-c6), 8);
+		--_image-lqip-base-ll: mod(round(down, var(--context-lqip-base) / 64), 4);
+		--_image-lqip-base-aaa: mod(round(down, var(--context-lqip-base) / 8), 8);
+		--_image-lqip-base-bbb: mod(var(--context-lqip-base), 8);
+		--_image-lqip-c1-ll: mod(round(down, var(--context-lqip-c1) / 64), 4);
+		--_image-lqip-c1-aaa: mod(round(down, var(--context-lqip-c1) / 8), 8);
+		--_image-lqip-c1-bbb: mod(var(--context-lqip-c1), 8);
+		--_image-lqip-c2-ll: mod(round(down, var(--context-lqip-c2) / 64), 4);
+		--_image-lqip-c2-aaa: mod(round(down, var(--context-lqip-c2) / 8), 8);
+		--_image-lqip-c2-bbb: mod(var(--context-lqip-c2), 8);
+		--_image-lqip-c3-ll: mod(round(down, var(--context-lqip-c3) / 64), 4);
+		--_image-lqip-c3-aaa: mod(round(down, var(--context-lqip-c3) / 8), 8);
+		--_image-lqip-c3-bbb: mod(var(--context-lqip-c3), 8);
+		--_image-lqip-c4-ll: mod(round(down, var(--context-lqip-c4) / 64), 4);
+		--_image-lqip-c4-aaa: mod(round(down, var(--context-lqip-c4) / 8), 8);
+		--_image-lqip-c4-bbb: mod(var(--context-lqip-c4), 8);
+		--_image-lqip-c5-ll: mod(round(down, var(--context-lqip-c5) / 64), 4);
+		--_image-lqip-c5-aaa: mod(round(down, var(--context-lqip-c5) / 8), 8);
+		--_image-lqip-c5-bbb: mod(var(--context-lqip-c5), 8);
+		--_image-lqip-c6-ll: mod(round(down, var(--context-lqip-c6) / 64), 4);
+		--_image-lqip-c6-aaa: mod(round(down, var(--context-lqip-c6) / 8), 8);
+		--_image-lqip-c6-bbb: mod(var(--context-lqip-c6), 8);
 
-		--_lqip-base-clr: oklab(
-			calc(var(--_lqip-base-ll) / 3 * 0.6 + 0.2)
-			calc(var(--_lqip-base-aaa) / 8 * 0.7 - 0.35)
-			calc((var(--_lqip-base-bbb) + 1) / 8 * 0.7 - 0.35)
+		--_image-lqip-base-clr: oklab(
+			calc(var(--_image-lqip-base-ll) / 3 * 0.6 + 0.2)
+			calc(var(--_image-lqip-base-aaa) / 8 * 0.7 - 0.35)
+			calc((var(--_image-lqip-base-bbb) + 1) / 8 * 0.7 - 0.35)
 		);
-		--_lqip-c1-clr: oklab(
-			calc(var(--_lqip-c1-ll) / 3 * 0.6 + 0.2)
-			calc(var(--_lqip-c1-aaa) / 8 * 0.7 - 0.35)
-			calc((var(--_lqip-c1-bbb) + 1) / 8 * 0.7 - 0.35)
+		--_image-lqip-c1-clr: oklab(
+			calc(var(--_image-lqip-c1-ll) / 3 * 0.6 + 0.2)
+			calc(var(--_image-lqip-c1-aaa) / 8 * 0.7 - 0.35)
+			calc((var(--_image-lqip-c1-bbb) + 1) / 8 * 0.7 - 0.35)
 		);
-		--_lqip-c2-clr: oklab(
-			calc(var(--_lqip-c2-ll) / 3 * 0.6 + 0.2)
-			calc(var(--_lqip-c2-aaa) / 8 * 0.7 - 0.35)
-			calc((var(--_lqip-c2-bbb) + 1) / 8 * 0.7 - 0.35)
+		--_image-lqip-c2-clr: oklab(
+			calc(var(--_image-lqip-c2-ll) / 3 * 0.6 + 0.2)
+			calc(var(--_image-lqip-c2-aaa) / 8 * 0.7 - 0.35)
+			calc((var(--_image-lqip-c2-bbb) + 1) / 8 * 0.7 - 0.35)
 		);
-		--_lqip-c3-clr: oklab(
-			calc(var(--_lqip-c3-ll) / 3 * 0.6 + 0.2)
-			calc(var(--_lqip-c3-aaa) / 8 * 0.7 - 0.35)
-			calc((var(--_lqip-c3-bbb) + 1) / 8 * 0.7 - 0.35)
+		--_image-lqip-c3-clr: oklab(
+			calc(var(--_image-lqip-c3-ll) / 3 * 0.6 + 0.2)
+			calc(var(--_image-lqip-c3-aaa) / 8 * 0.7 - 0.35)
+			calc((var(--_image-lqip-c3-bbb) + 1) / 8 * 0.7 - 0.35)
 		);
-		--_lqip-c4-clr: oklab(
-			calc(var(--_lqip-c4-ll) / 3 * 0.6 + 0.2)
-			calc(var(--_lqip-c4-aaa) / 8 * 0.7 - 0.35)
-			calc((var(--_lqip-c4-bbb) + 1) / 8 * 0.7 - 0.35)
+		--_image-lqip-c4-clr: oklab(
+			calc(var(--_image-lqip-c4-ll) / 3 * 0.6 + 0.2)
+			calc(var(--_image-lqip-c4-aaa) / 8 * 0.7 - 0.35)
+			calc((var(--_image-lqip-c4-bbb) + 1) / 8 * 0.7 - 0.35)
 		);
-		--_lqip-c5-clr: oklab(
-			calc(var(--_lqip-c5-ll) / 3 * 0.6 + 0.2)
-			calc(var(--_lqip-c5-aaa) / 8 * 0.7 - 0.35)
-			calc((var(--_lqip-c5-bbb) + 1) / 8 * 0.7 - 0.35)
+		--_image-lqip-c5-clr: oklab(
+			calc(var(--_image-lqip-c5-ll) / 3 * 0.6 + 0.2)
+			calc(var(--_image-lqip-c5-aaa) / 8 * 0.7 - 0.35)
+			calc((var(--_image-lqip-c5-bbb) + 1) / 8 * 0.7 - 0.35)
 		);
-		--_lqip-c6-clr: oklab(
-			calc(var(--_lqip-c6-ll) / 3 * 0.6 + 0.2)
-			calc(var(--_lqip-c6-aaa) / 8 * 0.7 - 0.35)
-			calc((var(--_lqip-c6-bbb) + 1) / 8 * 0.7 - 0.35)
+		--_image-lqip-c6-clr: oklab(
+			calc(var(--_image-lqip-c6-ll) / 3 * 0.6 + 0.2)
+			calc(var(--_image-lqip-c6-aaa) / 8 * 0.7 - 0.35)
+			calc((var(--_image-lqip-c6-bbb) + 1) / 8 * 0.7 - 0.35)
 		);
 
-		--_lqip-stop10: 2%;
-		--_lqip-stop20: 8%;
-		--_lqip-stop30: 18%;
-		--_lqip-stop40: 32%;
+		--_image-lqip-stop10: 2%;
+		--_image-lqip-stop20: 8%;
+		--_image-lqip-stop30: 18%;
+		--_image-lqip-stop40: 32%;
 
 		background-color: transparent;
 		background-image:
 			radial-gradient(50% 75% at 16.67% 25%,
-				var(--_lqip-c1-clr),
-				rgb(from var(--_lqip-c1-clr) r g b / calc(100% - var(--_lqip-stop10))) 10%,
-				rgb(from var(--_lqip-c1-clr) r g b / calc(100% - var(--_lqip-stop20))) 20%,
-				rgb(from var(--_lqip-c1-clr) r g b / calc(100% - var(--_lqip-stop30))) 30%,
-				rgb(from var(--_lqip-c1-clr) r g b / calc(100% - var(--_lqip-stop40))) 40%,
-				rgb(from var(--_lqip-c1-clr) r g b / var(--_lqip-stop40)) 60%,
-				rgb(from var(--_lqip-c1-clr) r g b / var(--_lqip-stop30)) 70%,
-				rgb(from var(--_lqip-c1-clr) r g b / var(--_lqip-stop20)) 80%,
-				rgb(from var(--_lqip-c1-clr) r g b / var(--_lqip-stop10)) 90%,
+				var(--_image-lqip-c1-clr),
+				rgb(from var(--_image-lqip-c1-clr) r g b / calc(100% - var(--_image-lqip-stop10))) 10%,
+				rgb(from var(--_image-lqip-c1-clr) r g b / calc(100% - var(--_image-lqip-stop20))) 20%,
+				rgb(from var(--_image-lqip-c1-clr) r g b / calc(100% - var(--_image-lqip-stop30))) 30%,
+				rgb(from var(--_image-lqip-c1-clr) r g b / calc(100% - var(--_image-lqip-stop40))) 40%,
+				rgb(from var(--_image-lqip-c1-clr) r g b / var(--_image-lqip-stop40)) 60%,
+				rgb(from var(--_image-lqip-c1-clr) r g b / var(--_image-lqip-stop30)) 70%,
+				rgb(from var(--_image-lqip-c1-clr) r g b / var(--_image-lqip-stop20)) 80%,
+				rgb(from var(--_image-lqip-c1-clr) r g b / var(--_image-lqip-stop10)) 90%,
 				transparent),
 			radial-gradient(50% 75% at 50% 25%,
-				var(--_lqip-c2-clr),
-				rgb(from var(--_lqip-c2-clr) r g b / calc(100% - var(--_lqip-stop10))) 10%,
-				rgb(from var(--_lqip-c2-clr) r g b / calc(100% - var(--_lqip-stop20))) 20%,
-				rgb(from var(--_lqip-c2-clr) r g b / calc(100% - var(--_lqip-stop30))) 30%,
-				rgb(from var(--_lqip-c2-clr) r g b / calc(100% - var(--_lqip-stop40))) 40%,
-				rgb(from var(--_lqip-c2-clr) r g b / var(--_lqip-stop40)) 60%,
-				rgb(from var(--_lqip-c2-clr) r g b / var(--_lqip-stop30)) 70%,
-				rgb(from var(--_lqip-c2-clr) r g b / var(--_lqip-stop20)) 80%,
-				rgb(from var(--_lqip-c2-clr) r g b / var(--_lqip-stop10)) 90%,
+				var(--_image-lqip-c2-clr),
+				rgb(from var(--_image-lqip-c2-clr) r g b / calc(100% - var(--_image-lqip-stop10))) 10%,
+				rgb(from var(--_image-lqip-c2-clr) r g b / calc(100% - var(--_image-lqip-stop20))) 20%,
+				rgb(from var(--_image-lqip-c2-clr) r g b / calc(100% - var(--_image-lqip-stop30))) 30%,
+				rgb(from var(--_image-lqip-c2-clr) r g b / calc(100% - var(--_image-lqip-stop40))) 40%,
+				rgb(from var(--_image-lqip-c2-clr) r g b / var(--_image-lqip-stop40)) 60%,
+				rgb(from var(--_image-lqip-c2-clr) r g b / var(--_image-lqip-stop30)) 70%,
+				rgb(from var(--_image-lqip-c2-clr) r g b / var(--_image-lqip-stop20)) 80%,
+				rgb(from var(--_image-lqip-c2-clr) r g b / var(--_image-lqip-stop10)) 90%,
 				transparent),
 			radial-gradient(50% 75% at 83.33% 25%,
-				var(--_lqip-c3-clr),
-				rgb(from var(--_lqip-c3-clr) r g b / calc(100% - var(--_lqip-stop10))) 10%,
-				rgb(from var(--_lqip-c3-clr) r g b / calc(100% - var(--_lqip-stop20))) 20%,
-				rgb(from var(--_lqip-c3-clr) r g b / calc(100% - var(--_lqip-stop30))) 30%,
-				rgb(from var(--_lqip-c3-clr) r g b / calc(100% - var(--_lqip-stop40))) 40%,
-				rgb(from var(--_lqip-c3-clr) r g b / var(--_lqip-stop40)) 60%,
-				rgb(from var(--_lqip-c3-clr) r g b / var(--_lqip-stop30)) 70%,
-				rgb(from var(--_lqip-c3-clr) r g b / var(--_lqip-stop20)) 80%,
-				rgb(from var(--_lqip-c3-clr) r g b / var(--_lqip-stop10)) 90%,
+				var(--_image-lqip-c3-clr),
+				rgb(from var(--_image-lqip-c3-clr) r g b / calc(100% - var(--_image-lqip-stop10))) 10%,
+				rgb(from var(--_image-lqip-c3-clr) r g b / calc(100% - var(--_image-lqip-stop20))) 20%,
+				rgb(from var(--_image-lqip-c3-clr) r g b / calc(100% - var(--_image-lqip-stop30))) 30%,
+				rgb(from var(--_image-lqip-c3-clr) r g b / calc(100% - var(--_image-lqip-stop40))) 40%,
+				rgb(from var(--_image-lqip-c3-clr) r g b / var(--_image-lqip-stop40)) 60%,
+				rgb(from var(--_image-lqip-c3-clr) r g b / var(--_image-lqip-stop30)) 70%,
+				rgb(from var(--_image-lqip-c3-clr) r g b / var(--_image-lqip-stop20)) 80%,
+				rgb(from var(--_image-lqip-c3-clr) r g b / var(--_image-lqip-stop10)) 90%,
 				transparent),
 			radial-gradient(50% 75% at 16.67% 75%,
-				var(--_lqip-c4-clr),
-				rgb(from var(--_lqip-c4-clr) r g b / calc(100% - var(--_lqip-stop10))) 10%,
-				rgb(from var(--_lqip-c4-clr) r g b / calc(100% - var(--_lqip-stop20))) 20%,
-				rgb(from var(--_lqip-c4-clr) r g b / calc(100% - var(--_lqip-stop30))) 30%,
-				rgb(from var(--_lqip-c4-clr) r g b / calc(100% - var(--_lqip-stop40))) 40%,
-				rgb(from var(--_lqip-c4-clr) r g b / var(--_lqip-stop40)) 60%,
-				rgb(from var(--_lqip-c4-clr) r g b / var(--_lqip-stop30)) 70%,
-				rgb(from var(--_lqip-c4-clr) r g b / var(--_lqip-stop20)) 80%,
-				rgb(from var(--_lqip-c4-clr) r g b / var(--_lqip-stop10)) 90%,
+				var(--_image-lqip-c4-clr),
+				rgb(from var(--_image-lqip-c4-clr) r g b / calc(100% - var(--_image-lqip-stop10))) 10%,
+				rgb(from var(--_image-lqip-c4-clr) r g b / calc(100% - var(--_image-lqip-stop20))) 20%,
+				rgb(from var(--_image-lqip-c4-clr) r g b / calc(100% - var(--_image-lqip-stop30))) 30%,
+				rgb(from var(--_image-lqip-c4-clr) r g b / calc(100% - var(--_image-lqip-stop40))) 40%,
+				rgb(from var(--_image-lqip-c4-clr) r g b / var(--_image-lqip-stop40)) 60%,
+				rgb(from var(--_image-lqip-c4-clr) r g b / var(--_image-lqip-stop30)) 70%,
+				rgb(from var(--_image-lqip-c4-clr) r g b / var(--_image-lqip-stop20)) 80%,
+				rgb(from var(--_image-lqip-c4-clr) r g b / var(--_image-lqip-stop10)) 90%,
 				transparent),
 			radial-gradient(50% 75% at 50% 75%,
-				var(--_lqip-c5-clr),
-				rgb(from var(--_lqip-c5-clr) r g b / calc(100% - var(--_lqip-stop10))) 10%,
-				rgb(from var(--_lqip-c5-clr) r g b / calc(100% - var(--_lqip-stop20))) 20%,
-				rgb(from var(--_lqip-c5-clr) r g b / calc(100% - var(--_lqip-stop30))) 30%,
-				rgb(from var(--_lqip-c5-clr) r g b / calc(100% - var(--_lqip-stop40))) 40%,
-				rgb(from var(--_lqip-c5-clr) r g b / var(--_lqip-stop40)) 60%,
-				rgb(from var(--_lqip-c5-clr) r g b / var(--_lqip-stop30)) 70%,
-				rgb(from var(--_lqip-c5-clr) r g b / var(--_lqip-stop20)) 80%,
-				rgb(from var(--_lqip-c5-clr) r g b / var(--_lqip-stop10)) 90%,
+				var(--_image-lqip-c5-clr),
+				rgb(from var(--_image-lqip-c5-clr) r g b / calc(100% - var(--_image-lqip-stop10))) 10%,
+				rgb(from var(--_image-lqip-c5-clr) r g b / calc(100% - var(--_image-lqip-stop20))) 20%,
+				rgb(from var(--_image-lqip-c5-clr) r g b / calc(100% - var(--_image-lqip-stop30))) 30%,
+				rgb(from var(--_image-lqip-c5-clr) r g b / calc(100% - var(--_image-lqip-stop40))) 40%,
+				rgb(from var(--_image-lqip-c5-clr) r g b / var(--_image-lqip-stop40)) 60%,
+				rgb(from var(--_image-lqip-c5-clr) r g b / var(--_image-lqip-stop30)) 70%,
+				rgb(from var(--_image-lqip-c5-clr) r g b / var(--_image-lqip-stop20)) 80%,
+				rgb(from var(--_image-lqip-c5-clr) r g b / var(--_image-lqip-stop10)) 90%,
 				transparent),
 			radial-gradient(50% 75% at 83.33% 75%,
-				var(--_lqip-c6-clr),
-				rgb(from var(--_lqip-c6-clr) r g b / calc(100% - var(--_lqip-stop10))) 10%,
-				rgb(from var(--_lqip-c6-clr) r g b / calc(100% - var(--_lqip-stop20))) 20%,
-				rgb(from var(--_lqip-c6-clr) r g b / calc(100% - var(--_lqip-stop30))) 30%,
-				rgb(from var(--_lqip-c6-clr) r g b / calc(100% - var(--_lqip-stop40))) 40%,
-				rgb(from var(--_lqip-c6-clr) r g b / var(--_lqip-stop40)) 60%,
-				rgb(from var(--_lqip-c6-clr) r g b / var(--_lqip-stop30)) 70%,
-				rgb(from var(--_lqip-c6-clr) r g b / var(--_lqip-stop20)) 80%,
-				rgb(from var(--_lqip-c6-clr) r g b / var(--_lqip-stop10)) 90%,
+				var(--_image-lqip-c6-clr),
+				rgb(from var(--_image-lqip-c6-clr) r g b / calc(100% - var(--_image-lqip-stop10))) 10%,
+				rgb(from var(--_image-lqip-c6-clr) r g b / calc(100% - var(--_image-lqip-stop20))) 20%,
+				rgb(from var(--_image-lqip-c6-clr) r g b / calc(100% - var(--_image-lqip-stop30))) 30%,
+				rgb(from var(--_image-lqip-c6-clr) r g b / calc(100% - var(--_image-lqip-stop40))) 40%,
+				rgb(from var(--_image-lqip-c6-clr) r g b / var(--_image-lqip-stop40)) 60%,
+				rgb(from var(--_image-lqip-c6-clr) r g b / var(--_image-lqip-stop30)) 70%,
+				rgb(from var(--_image-lqip-c6-clr) r g b / var(--_image-lqip-stop20)) 80%,
+				rgb(from var(--_image-lqip-c6-clr) r g b / var(--_image-lqip-stop10)) 90%,
 				transparent),
-			linear-gradient(0deg, var(--_lqip-base-clr), var(--_lqip-base-clr));
+			linear-gradient(0deg, var(--_image-lqip-base-clr), var(--_image-lqip-base-clr));
 	}
 
 	} /* end @supports for LQIP gradient */
@@ -355,11 +355,11 @@ export const imageStyles = css`
 
 	/* # Error state
 	   Centred icon + alt-text shown when the image fails to load. The media is
-	   painted gray (--_background-color) via :host([errored]) so the icon and
+	   painted gray (--_image-background-color) via :host([errored]) so the icon and
 	   label stay legible — no separate card needed. */
 
 	:host([errored]) .image__media {
-		background-color: var(--_background-color);
+		background-color: var(--_image-background-color);
 	}
 
 	.image__error {
@@ -369,10 +369,10 @@ export const imageStyles = css`
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: var(--_error-gap);
-		padding: var(--_error-padding);
-		color: var(--_error-text-color);
-		font: var(--_error-font);
+		gap: var(--_image-error-gap);
+		padding: var(--_image-error-padding);
+		color: var(--_image-error-text-color);
+		font: var(--_image-error-font);
 		text-align: center;
 	}
 
@@ -387,15 +387,15 @@ export const imageStyles = css`
 	.image__caption {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--_caption-row-gap);
-		color: var(--_caption-color);
-		font: var(--_caption-font);
+		gap: var(--_image-caption-row-gap);
+		color: var(--_image-caption-color);
+		font: var(--_image-caption-font);
 		text-wrap: pretty;
 	}
 
 	.image__credit {
-		color: var(--_credit-color);
-		font: var(--_credit-font);
+		color: var(--_image-credit-color);
+		font: var(--_image-credit-font);
 	}
 
 

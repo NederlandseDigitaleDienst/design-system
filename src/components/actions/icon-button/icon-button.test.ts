@@ -381,25 +381,25 @@ describe('nldd-icon-button – width', () => {
 		if (el) cleanup(el);
 	});
 
-	it('applies inline host width and --_width=100% when width is a CSS length', async () => {
+	it('applies inline host width and --_icon-button-width=100% when width is a CSS length', async () => {
 		el = await fixture<NLDDIconButton>('<nldd-icon-button icon="dismiss" text="X" width="240px" tooltip-timing="never"></nldd-icon-button>');
 		await waitForUpdate(el);
 		expect((el as HTMLElement).style.width).toBe('240px');
-		expect(el.style.getPropertyValue('--_width')).toBe('100%');
+		expect(el.style.getPropertyValue('--_icon-button-width')).toBe('100%');
 	});
 
-	it('sets --_width=100% but leaves inline width empty for width="full"', async () => {
+	it('sets --_icon-button-width=100% but leaves inline width empty for width="full"', async () => {
 		el = await fixture<NLDDIconButton>('<nldd-icon-button icon="dismiss" text="X" width="full" tooltip-timing="never"></nldd-icon-button>');
 		await waitForUpdate(el);
 		expect((el as HTMLElement).style.width).toBe('');
-		expect(el.style.getPropertyValue('--_width')).toBe('100%');
+		expect(el.style.getPropertyValue('--_icon-button-width')).toBe('100%');
 	});
 
 	it('ignores invalid width values', async () => {
 		el = await fixture<NLDDIconButton>('<nldd-icon-button icon="dismiss" text="X" width="not-a-length" tooltip-timing="never"></nldd-icon-button>');
 		await waitForUpdate(el);
 		expect((el as HTMLElement).style.width).toBe('');
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_icon-button-width')).toBe('');
 	});
 });
 

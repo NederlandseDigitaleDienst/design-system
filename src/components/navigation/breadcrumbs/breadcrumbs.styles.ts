@@ -2,12 +2,12 @@ import { css } from 'lit';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
 /* The chevron separator rendered after each breadcrumb item; the item host
-   defines --_separator-vertical-offset. */
+   defines --_breadcrumbs-item-separator-vertical-offset. */
 const separatorStyles = css`
 	.breadcrumbs__separator {
 		display: inline-flex;
 		position: relative;
-		top: var(--_separator-vertical-offset);
+		top: var(--_breadcrumbs-item-separator-vertical-offset);
 		margin-inline: var(--primitives-space-2);
 		color: var(--semantics-content-secondary-color);
 		width: var(--primitives-space-16);
@@ -45,7 +45,7 @@ export const breadcrumbsItemStyles = css`
 		/* Small downward offset so the chevron-right-small icon sits closer
 		   to the text's optical centerline (the icon's bbox renders slightly
 		   above the visual baseline). */
-		--_separator-vertical-offset: 0.05em;
+		--_breadcrumbs-item-separator-vertical-offset: 0.05em;
 
 		${inheritedTextReset}
 		display: inline-flex;

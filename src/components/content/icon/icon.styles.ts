@@ -13,15 +13,15 @@ export const iconStyles = css`
 	 * surrounding text. [color] picks a semantic color or a rijkskleur. */
 
 	:host {
-		--_size: 100%;
-		--_color: inherit;
-		--_custom-color: inherit;
-		--_glyph-scale: 1;
+		--_icon-size: 100%;
+		--_icon-color: inherit;
+		--_icon-custom-color: inherit;
+		--_icon-glyph-scale: 1;
 
 		display: inline-flex;
-		width: var(--_size);
+		width: var(--_icon-size);
 		align-items: center;
-		color: var(--_color);
+		color: var(--_icon-color);
 	}
 
 	:host([hidden]) {
@@ -31,65 +31,65 @@ export const iconStyles = css`
 
 	/* # Size */
 
-	:host([size="full"]) { --_size: 100%; }
+	:host([size="full"]) { --_icon-size: 100%; }
 	/* An inline-flex box sits with its bottom edge on the baseline; the nudge
 	   drops it back onto the line, with the text that hangs below it. */
 	:host([size="inherit"]) {
-		--_size: 1em;
+		--_icon-size: 1em;
 
 		vertical-align: -0.15em;
 	}
 
-	:host([size="16"]) { --_size: var(--primitives-space-16); }
-	:host([size="20"]) { --_size: var(--primitives-space-20); }
-	:host([size="24"]) { --_size: var(--primitives-space-24); }
-	:host([size="28"]) { --_size: var(--primitives-space-28); }
-	:host([size="32"]) { --_size: var(--primitives-space-32); }
-	:host([size="40"]) { --_size: var(--primitives-space-40); }
-	:host([size="44"]) { --_size: var(--primitives-space-44); }
-	:host([size="48"]) { --_size: var(--primitives-space-48); }
-	:host([size="56"]) { --_size: var(--primitives-space-56); }
-	:host([size="64"]) { --_size: var(--primitives-space-64); }
-	:host([size="80"]) { --_size: var(--primitives-space-80); }
-	:host([size="96"]) { --_size: var(--primitives-space-96); }
+	:host([size="16"]) { --_icon-size: var(--primitives-space-16); }
+	:host([size="20"]) { --_icon-size: var(--primitives-space-20); }
+	:host([size="24"]) { --_icon-size: var(--primitives-space-24); }
+	:host([size="28"]) { --_icon-size: var(--primitives-space-28); }
+	:host([size="32"]) { --_icon-size: var(--primitives-space-32); }
+	:host([size="40"]) { --_icon-size: var(--primitives-space-40); }
+	:host([size="44"]) { --_icon-size: var(--primitives-space-44); }
+	:host([size="48"]) { --_icon-size: var(--primitives-space-48); }
+	:host([size="56"]) { --_icon-size: var(--primitives-space-56); }
+	:host([size="64"]) { --_icon-size: var(--primitives-space-64); }
+	:host([size="80"]) { --_icon-size: var(--primitives-space-80); }
+	:host([size="96"]) { --_icon-size: var(--primitives-space-96); }
 
 
 	/* # Color — functional */
 
-	:host([color="primary-content"])   { --_color: var(--semantics-content-color); }
-	:host([color="secondary-content"]) { --_color: var(--semantics-content-secondary-color); }
-	:host([color="accent"])            { --_color: var(--semantics-content-accent-color); }
-	:host([color="critical"])          { --_color: var(--semantics-content-critical-color); }
-	:host([color="warning"])           { --_color: var(--semantics-content-warning-color); }
-	:host([color="success"])           { --_color: var(--semantics-content-success-color); }
+	:host([color="primary-content"])   { --_icon-color: var(--semantics-content-color); }
+	:host([color="secondary-content"]) { --_icon-color: var(--semantics-content-secondary-color); }
+	:host([color="accent"])            { --_icon-color: var(--semantics-content-accent-color); }
+	:host([color="critical"])          { --_icon-color: var(--semantics-content-critical-color); }
+	:host([color="warning"])           { --_icon-color: var(--semantics-content-warning-color); }
+	:host([color="success"])           { --_icon-color: var(--semantics-content-success-color); }
 
 
 	/* # Color — rijkskleuren */
 
-	:host([color="lintblauw"])   { --_color: var(--components-icon-color-lintblauw-color); }
-	:host([color="donkerblauw"]) { --_color: var(--components-icon-color-donkerblauw-color); }
-	:host([color="hemelblauw"])  { --_color: var(--components-icon-color-hemelblauw-color); }
-	:host([color="lichtblauw"])  { --_color: var(--components-icon-color-lichtblauw-color); }
-	:host([color="paars"])       { --_color: var(--components-icon-color-paars-color); }
-	:host([color="violet"])      { --_color: var(--components-icon-color-violet-color); }
-	:host([color="robijnrood"])  { --_color: var(--components-icon-color-robijnrood-color); }
-	:host([color="roze"])        { --_color: var(--components-icon-color-roze-color); }
-	:host([color="rood"])        { --_color: var(--components-icon-color-rood-color); }
-	:host([color="oranje"])      { --_color: var(--components-icon-color-oranje-color); }
-	:host([color="donkergeel"])  { --_color: var(--components-icon-color-donkergeel-color); }
-	:host([color="geel"])        { --_color: var(--components-icon-color-geel-color); }
-	:host([color="donkerbruin"]) { --_color: var(--components-icon-color-donkerbruin-color); }
-	:host([color="bruin"])       { --_color: var(--components-icon-color-bruin-color); }
-	:host([color="donkergroen"]) { --_color: var(--components-icon-color-donkergroen-color); }
-	:host([color="groen"])       { --_color: var(--components-icon-color-groen-color); }
-	:host([color="mosgroen"])    { --_color: var(--components-icon-color-mosgroen-color); }
-	:host([color="mintgroen"])   { --_color: var(--components-icon-color-mintgroen-color); }
+	:host([color="lintblauw"])   { --_icon-color: light-dark(var(--primitives-color-lintblauw-750), var(--primitives-color-lintblauw-500)); }
+	:host([color="donkerblauw"]) { --_icon-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-500)); }
+	:host([color="hemelblauw"])  { --_icon-color: var(--primitives-color-hemelblauw-500); }
+	:host([color="lichtblauw"])  { --_icon-color: light-dark(var(--primitives-color-lichtblauw-450), var(--primitives-color-lichtblauw-800)); }
+	:host([color="paars"])       { --_icon-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-500)); }
+	:host([color="violet"])      { --_icon-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-500)); }
+	:host([color="robijnrood"])  { --_icon-color: light-dark(var(--primitives-color-robijnrood-550), var(--primitives-color-robijnrood-500)); }
+	:host([color="roze"])        { --_icon-color: light-dark(var(--primitives-color-roze-450), var(--primitives-color-roze-750)); }
+	:host([color="rood"])        { --_icon-color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500)); }
+	:host([color="oranje"])      { --_icon-color: light-dark(var(--primitives-color-oranje-450), var(--primitives-color-oranje-600)); }
+	:host([color="donkergeel"])  { --_icon-color: light-dark(var(--primitives-color-donkergeel-450), var(--primitives-color-donkergeel-800)); }
+	:host([color="geel"])        { --_icon-color: light-dark(var(--primitives-color-geel-450), var(--primitives-color-geel-900)); }
+	:host([color="donkerbruin"]) { --_icon-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-500)); }
+	:host([color="bruin"])       { --_icon-color: var(--primitives-color-bruin-500); }
+	:host([color="donkergroen"]) { --_icon-color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-500)); }
+	:host([color="groen"])       { --_icon-color: var(--primitives-color-groen-500); }
+	:host([color="mosgroen"])    { --_icon-color: var(--primitives-color-mosgroen-500); }
+	:host([color="mintgroen"])   { --_icon-color: light-dark(var(--primitives-color-mintgroen-450), var(--primitives-color-mintgroen-800)); }
 
 
 	/* # Custom color — after every [color] rule, so it wins over one */
 
 	:host([custom-color]) {
-		--_color: var(--_custom-color);
+		--_icon-color: var(--_icon-custom-color);
 	}
 
 
@@ -97,7 +97,7 @@ export const iconStyles = css`
 
 	svg {
 		display: block;
-		width: calc(100% * var(--_glyph-scale));
+		width: calc(100% * var(--_icon-glyph-scale));
 	}
 
 
@@ -113,9 +113,9 @@ export const iconStyles = css`
 	 * both written as a ratio so a change lands everywhere at once. */
 
 	:host([box]) {
-		--_glyph-scale: calc(4 / 5);
+		--_icon-glyph-scale: calc(4 / 5);
 
-		border-radius: calc(var(--_size) / 5);
+		border-radius: calc(var(--_icon-size) / 5);
 		background-color: currentColor;
 		aspect-ratio: 1;
 		justify-content: center;

@@ -10,24 +10,24 @@ export const segmentedControlStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_background-color: var(--semantics-buttons-neutral-tinted-background-color);
-		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
-		--_width: auto;
-		--_gap: var(--primitives-space-1);
-		--_selected-z-index: 1;
-		--_focus-z-index: 2;
+		--_segmented-control-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_segmented-control-background-color: var(--semantics-buttons-neutral-tinted-background-color);
+		--_segmented-control-highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
+		--_segmented-control-width: auto;
+		--_segmented-control-gap: var(--primitives-space-1);
+		--_segmented-control-selected-z-index: 1;
+		--_segmented-control-focus-z-index: 2;
 
 		${inheritedTextReset}
 		display: inline-grid;
 		position: relative;
-		border-radius: var(--_corner-radius);
-		background-color: var(--_background-color);
-		width: var(--_width);
+		border-radius: var(--_segmented-control-corner-radius);
+		background-color: var(--_segmented-control-background-color);
+		width: var(--_segmented-control-width);
 		max-width: 100%;
 		grid-auto-columns: 1fr;
 		grid-auto-flow: column;
-		gap: var(--_gap);
+		gap: var(--_segmented-control-gap);
 		isolation: isolate;
 		-webkit-user-select: none;
 		user-select: none;
@@ -39,25 +39,25 @@ export const segmentedControlStyles = css`
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_segmented-control-highlight-border-color);
 		pointer-events: none;
 	}
 
 	:host([appearance="neutral-base"]) {
-		--_background-color: var(--semantics-buttons-neutral-base-background-color);
-		--_highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);
+		--_segmented-control-background-color: var(--semantics-buttons-neutral-base-background-color);
+		--_segmented-control-highlight-border-color: var(--semantics-buttons-neutral-base-highlight-border-color);
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_segmented-control-corner-radius: var(--semantics-controls-sm-corner-radius);
 	}
 
 	:host([size="lg"]) {
-		--_corner-radius: var(--semantics-controls-lg-corner-radius);
+		--_segmented-control-corner-radius: var(--semantics-controls-lg-corner-radius);
 	}
 
 	:host([width="full"]) {
-		--_width: 100%;
+		--_segmented-control-width: 100%;
 
 		display: grid;
 	}
@@ -80,12 +80,12 @@ export const segmentedControlStyles = css`
 
 	::slotted(nldd-segmented-control-item[selected]) {
 		position: relative;
-		z-index: var(--_selected-z-index);
+		z-index: var(--_segmented-control-selected-z-index);
 	}
 
 	::slotted(nldd-segmented-control-item:focus-within) {
 		position: relative;
-		z-index: var(--_focus-z-index);
+		z-index: var(--_segmented-control-focus-z-index);
 	}
 `;
 
@@ -95,28 +95,28 @@ export const segmentedControlItemStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_min-size: var(--semantics-controls-md-min-size);
-		--_block-padding: var(--semantics-controls-md-block-padding);
-		--_inline-padding: var(--semantics-buttons-md-inline-padding);
-		--_gap: var(--semantics-buttons-md-gap);
-		--_font: var(--semantics-buttons-md-primary-text-font);
-		--_icon-size: var(--semantics-buttons-md-icon-size);
-		--_highlight-border-color: transparent;
-		--_content-color: var(--semantics-buttons-neutral-tinted-content-color);
-		--_is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
-		--_is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
-		--_is-active-background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
-		--_is-active-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
-		--_is-selected-background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
-		--_is-selected-content-color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
-		--_is-selected-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
-		--_is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
-		--_is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
-		--_is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
-		--_is-selected-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
-		--_is-selected-is-active-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
-		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
+		--_segmented-control-item-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_segmented-control-item-min-size: var(--semantics-controls-md-min-size);
+		--_segmented-control-item-block-padding: var(--semantics-controls-md-block-padding);
+		--_segmented-control-item-inline-padding: var(--semantics-buttons-md-inline-padding);
+		--_segmented-control-item-gap: var(--semantics-buttons-md-gap);
+		--_segmented-control-item-font: var(--semantics-buttons-md-primary-text-font);
+		--_segmented-control-item-icon-size: var(--semantics-buttons-md-icon-size);
+		--_segmented-control-item-highlight-border-color: transparent;
+		--_segmented-control-item-content-color: var(--semantics-buttons-neutral-tinted-content-color);
+		--_segmented-control-item-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-hovered-background-color);
+		--_segmented-control-item-is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-hovered-content-color);
+		--_segmented-control-item-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-active-background-color);
+		--_segmented-control-item-is-active-content-color: var(--semantics-buttons-neutral-tinted-is-active-content-color);
+		--_segmented-control-item-is-selected-background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+		--_segmented-control-item-is-selected-content-color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+		--_segmented-control-item-is-selected-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
+		--_segmented-control-item-is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-background-color);
+		--_segmented-control-item-is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-color);
+		--_segmented-control-item-is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
+		--_segmented-control-item-is-selected-is-active-background-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-background-color);
+		--_segmented-control-item-is-selected-is-active-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-color);
+		--_segmented-control-item-is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
 
 		${inheritedTextReset}
 		display: flex;
@@ -126,20 +126,20 @@ export const segmentedControlItemStyles = css`
 	}
 
 	:host([appearance="neutral-base"]) {
-		--_content-color: var(--semantics-buttons-neutral-base-content-color);
-		--_is-hovered-background-color: var(--semantics-buttons-neutral-base-is-hovered-background-color);
-		--_is-hovered-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-color);
-		--_is-active-background-color: var(--semantics-buttons-neutral-base-is-active-background-color);
-		--_is-active-content-color: var(--semantics-buttons-neutral-base-is-active-content-color);
-		--_is-selected-background-color: var(--semantics-buttons-neutral-base-is-selected-background-color);
-		--_is-selected-content-color: var(--semantics-buttons-neutral-base-is-selected-content-color);
-		--_is-selected-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-highlight-border-color);
-		--_is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-background-color);
-		--_is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-content-color);
-		--_is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-highlight-border-color);
-		--_is-selected-is-active-background-color: var(--semantics-buttons-neutral-base-is-selected-is-active-background-color);
-		--_is-selected-is-active-content-color: var(--semantics-buttons-neutral-base-is-selected-is-active-content-color);
-		--_is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-active-highlight-border-color);
+		--_segmented-control-item-content-color: var(--semantics-buttons-neutral-base-content-color);
+		--_segmented-control-item-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-hovered-background-color);
+		--_segmented-control-item-is-hovered-content-color: var(--semantics-buttons-neutral-base-is-hovered-content-color);
+		--_segmented-control-item-is-active-background-color: var(--semantics-buttons-neutral-base-is-active-background-color);
+		--_segmented-control-item-is-active-content-color: var(--semantics-buttons-neutral-base-is-active-content-color);
+		--_segmented-control-item-is-selected-background-color: var(--semantics-buttons-neutral-base-is-selected-background-color);
+		--_segmented-control-item-is-selected-content-color: var(--semantics-buttons-neutral-base-is-selected-content-color);
+		--_segmented-control-item-is-selected-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-highlight-border-color);
+		--_segmented-control-item-is-selected-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-background-color);
+		--_segmented-control-item-is-selected-is-hovered-content-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-content-color);
+		--_segmented-control-item-is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-hovered-highlight-border-color);
+		--_segmented-control-item-is-selected-is-active-background-color: var(--semantics-buttons-neutral-base-is-selected-is-active-background-color);
+		--_segmented-control-item-is-selected-is-active-content-color: var(--semantics-buttons-neutral-base-is-selected-is-active-content-color);
+		--_segmented-control-item-is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-base-is-selected-is-active-highlight-border-color);
 	}
 
 	:host([hidden]) {
@@ -147,49 +147,49 @@ export const segmentedControlItemStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_min-size: var(--semantics-controls-sm-min-size);
-		--_block-padding: var(--semantics-controls-sm-block-padding);
-		--_inline-padding: var(--semantics-buttons-sm-inline-padding);
-		--_gap: var(--semantics-buttons-sm-gap);
-		--_font: var(--semantics-buttons-sm-primary-text-font);
-		--_icon-size: var(--semantics-buttons-sm-icon-size);
+		--_segmented-control-item-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_segmented-control-item-min-size: var(--semantics-controls-sm-min-size);
+		--_segmented-control-item-block-padding: var(--semantics-controls-sm-block-padding);
+		--_segmented-control-item-inline-padding: var(--semantics-buttons-sm-inline-padding);
+		--_segmented-control-item-gap: var(--semantics-buttons-sm-gap);
+		--_segmented-control-item-font: var(--semantics-buttons-sm-primary-text-font);
+		--_segmented-control-item-icon-size: var(--semantics-buttons-sm-icon-size);
 	}
 
 	:host([size="lg"]) {
-		--_corner-radius: var(--semantics-controls-lg-corner-radius);
-		--_min-size: var(--semantics-controls-lg-min-size);
-		--_block-padding: var(--semantics-controls-lg-block-padding);
-		--_inline-padding: var(--semantics-buttons-lg-inline-padding);
-		--_gap: var(--semantics-buttons-lg-gap);
-		--_font: var(--semantics-buttons-lg-primary-text-font);
-		--_icon-size: var(--semantics-buttons-lg-icon-size);
+		--_segmented-control-item-corner-radius: var(--semantics-controls-lg-corner-radius);
+		--_segmented-control-item-min-size: var(--semantics-controls-lg-min-size);
+		--_segmented-control-item-block-padding: var(--semantics-controls-lg-block-padding);
+		--_segmented-control-item-inline-padding: var(--semantics-buttons-lg-inline-padding);
+		--_segmented-control-item-gap: var(--semantics-buttons-lg-gap);
+		--_segmented-control-item-font: var(--semantics-buttons-lg-primary-text-font);
+		--_segmented-control-item-icon-size: var(--semantics-buttons-lg-icon-size);
 	}
 
 	:host([variant="icon"]) {
-		--_block-padding: var(--semantics-buttons-md-is-icon-only-inline-padding);
-		--_inline-padding: var(--semantics-buttons-md-is-icon-only-inline-padding);
-		--_icon-size: var(--semantics-buttons-md-is-icon-only-icon-size);
+		--_segmented-control-item-block-padding: var(--semantics-buttons-md-is-icon-only-inline-padding);
+		--_segmented-control-item-inline-padding: var(--semantics-buttons-md-is-icon-only-inline-padding);
+		--_segmented-control-item-icon-size: var(--semantics-buttons-md-is-icon-only-icon-size);
 	}
 
 	:host([variant="icon"][size="sm"]) {
-		--_block-padding: var(--semantics-buttons-sm-is-icon-only-inline-padding);
-		--_inline-padding: var(--semantics-buttons-sm-is-icon-only-inline-padding);
-		--_icon-size: var(--semantics-buttons-sm-is-icon-only-icon-size);
+		--_segmented-control-item-block-padding: var(--semantics-buttons-sm-is-icon-only-inline-padding);
+		--_segmented-control-item-inline-padding: var(--semantics-buttons-sm-is-icon-only-inline-padding);
+		--_segmented-control-item-icon-size: var(--semantics-buttons-sm-is-icon-only-icon-size);
 	}
 
 	:host([variant="icon"][size="lg"]) {
-		--_block-padding: var(--semantics-buttons-lg-is-icon-only-inline-padding);
-		--_inline-padding: var(--semantics-buttons-lg-is-icon-only-inline-padding);
-		--_icon-size: var(--semantics-buttons-lg-is-icon-only-icon-size);
+		--_segmented-control-item-block-padding: var(--semantics-buttons-lg-is-icon-only-inline-padding);
+		--_segmented-control-item-inline-padding: var(--semantics-buttons-lg-is-icon-only-inline-padding);
+		--_segmented-control-item-icon-size: var(--semantics-buttons-lg-is-icon-only-icon-size);
 	}
 
 	:host([variant="icon-and-text"][size="lg"]) {
-		--_block-padding: var(--primitives-space-8);
-		--_inline-padding: var(--primitives-space-8);
-		--_gap: var(--primitives-space-2);
-		--_font: var(--primitives-font-body-xxs-medium-flat);
-		--_icon-size: var(--semantics-buttons-md-is-icon-only-icon-size);
+		--_segmented-control-item-block-padding: var(--primitives-space-8);
+		--_segmented-control-item-inline-padding: var(--primitives-space-8);
+		--_segmented-control-item-gap: var(--primitives-space-2);
+		--_segmented-control-item-font: var(--primitives-font-body-xxs-medium-flat);
+		--_segmented-control-item-icon-size: var(--semantics-buttons-md-is-icon-only-icon-size);
 	}
 
 
@@ -200,19 +200,19 @@ export const segmentedControlItemStyles = css`
 		display: flex;
 		position: relative;
 		cursor: default;
-		border-radius: var(--_corner-radius);
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
+		border-radius: var(--_segmented-control-item-corner-radius);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_segmented-control-item-highlight-border-color);
 		background: none;
 		width: 100%;
-		min-width: var(--_min-size);
-		height: var(--_min-size);
-		padding-block: var(--_block-padding);
-		padding-inline: var(--_inline-padding);
-		gap: var(--_gap);
+		min-width: var(--_segmented-control-item-min-size);
+		height: var(--_segmented-control-item-min-size);
+		padding-block: var(--_segmented-control-item-block-padding);
+		padding-inline: var(--_segmented-control-item-inline-padding);
+		gap: var(--_segmented-control-item-gap);
 		align-items: center;
 		justify-content: center;
-		color: var(--_content-color);
-		font: var(--_font);
+		color: var(--_segmented-control-item-content-color);
+		font: var(--_segmented-control-item-font);
 	}
 
 	:host([size="lg"][variant="icon-and-text"]) .segmented-control__item {
@@ -221,37 +221,37 @@ export const segmentedControlItemStyles = css`
 
 	@media (hover: hover) {
 		:host(:not([selected])) .segmented-control__item:hover {
-			background-color: var(--_is-hovered-background-color);
-			color: var(--_is-hovered-content-color);
+			background-color: var(--_segmented-control-item-is-hovered-background-color);
+			color: var(--_segmented-control-item-is-hovered-content-color);
 		}
 	}
 
 	:host(:not([selected])) .segmented-control__item:active {
-		background-color: var(--_is-active-background-color);
-		color: var(--_is-active-content-color);
+		background-color: var(--_segmented-control-item-is-active-background-color);
+		color: var(--_segmented-control-item-is-active-content-color);
 	}
 
 	:host([selected]) .segmented-control__item {
-		--_highlight-border-color: var(--_is-selected-highlight-border-color);
+		--_segmented-control-item-highlight-border-color: var(--_segmented-control-item-is-selected-highlight-border-color);
 
-		background-color: var(--_is-selected-background-color);
-		color: var(--_is-selected-content-color);
+		background-color: var(--_segmented-control-item-is-selected-background-color);
+		color: var(--_segmented-control-item-is-selected-content-color);
 	}
 
 	@media (hover: hover) {
 		:host([selected]) .segmented-control__item:hover {
-			--_highlight-border-color: var(--_is-selected-is-hovered-highlight-border-color);
+			--_segmented-control-item-highlight-border-color: var(--_segmented-control-item-is-selected-is-hovered-highlight-border-color);
 
-			background-color: var(--_is-selected-is-hovered-background-color);
-			color: var(--_is-selected-is-hovered-content-color);
+			background-color: var(--_segmented-control-item-is-selected-is-hovered-background-color);
+			color: var(--_segmented-control-item-is-selected-is-hovered-content-color);
 		}
 	}
 
 	:host([selected]) .segmented-control__item:active {
-		--_highlight-border-color: var(--_is-selected-is-active-highlight-border-color);
+		--_segmented-control-item-highlight-border-color: var(--_segmented-control-item-is-selected-is-active-highlight-border-color);
 
-		background-color: var(--_is-selected-is-active-background-color);
-		color: var(--_is-selected-is-active-content-color);
+		background-color: var(--_segmented-control-item-is-selected-is-active-background-color);
+		color: var(--_segmented-control-item-is-selected-is-active-content-color);
 	}
 
 	@media (forced-colors: active) {
@@ -277,7 +277,7 @@ export const segmentedControlItemStyles = css`
 
 	:host([selected]:focus-visible) .segmented-control__item,
 	:host([selected]) .segmented-control__item:has(:focus-visible) {
-		box-shadow: var(--semantics-focus-ring-box-shadow), inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
+		box-shadow: var(--semantics-focus-ring-box-shadow), inset 0 0 0 var(--primitives-border-width-thin) var(--_segmented-control-item-highlight-border-color);
 	}
 
 
@@ -306,8 +306,8 @@ export const segmentedControlItemStyles = css`
 
 	.segmented-control__item-icon {
 		display: none;
-		width: var(--_icon-size);
-		height: var(--_icon-size);
+		width: var(--_segmented-control-item-icon-size);
+		height: var(--_segmented-control-item-icon-size);
 		pointer-events: none;
 		flex-shrink: 0;
 		align-items: center;

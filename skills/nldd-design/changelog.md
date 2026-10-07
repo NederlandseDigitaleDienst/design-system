@@ -15,6 +15,59 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Twelve new icons.** Seven file icons for a document's format: `file-pdf`, `file-markdown`, and `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf` for the OpenDocument formats, each also answering to `{format}-document`, such as `pdf-document`. And `microscope`, `share-network`, `power-plug-socket` (also `plug-connected`) for a plug in its socket, and `subscript` and `superscript` for text formatting.
+
+- **`nldd-step-bar` and `nldd-step-cell`.** The step indicator and the timeline track cell are renamed after what they draw: steps, across and under each other. See Breaking.
+
+- **The `--components-*` layer is gone.** A component's values now sit as local variables in its own stylesheet, and what several components share became a semantics token. Restyling one component through a public token was a quiet way to make it differ from the rest. If you want a component to change, ask in an issue. See Breaking.
+
+### Added
+
+- **File icons** `file-pdf`, `file-markdown`, `file-odt`, `file-ods`, `file-odp`, `file-odg` and `file-odf`, with the aliases `pdf-document`, `markdown-document`, `odt-document`, `ods-document`, `odp-document`, `odg-document` and `odf-document`.
+
+- **Icons** `microscope`, `share-network`, `power-plug-socket` (with the alias `plug-connected`), `subscript` and `superscript`.
+
+- **`--semantics-brand-ribbon-color`**, next to the ribbon widths: the color of the Rijksoverheid ribbon, which `nldd-top-navigation-bar` and `nldd-page-footer` both draw. It does not follow a theme's accent color, since the ribbon does not either.
+
+### Changed
+
+- **Every local variable in a component carries the component's name**, such as `--_button-background-color` instead of `--_background-color`. A custom property inherits through shadow boundaries, and a generic name on one component reached the elements of another slotted inside it. Locals were never meant to be set from outside; if you did set one, it now has a different name.
+
+### Breaking
+
+- **`nldd-step-indicator` is now `nldd-step-bar`, and `nldd-timeline-track-cell` is now `nldd-step-cell`.** They are one family, the steps of a process across and under each other, as `nldd-progress-bar` and `nldd-progress-circle` are one family for how much is done. "Timeline" said less than the cell does: most of all it draws steps. Rename the tags, and the classes and imports if you use them:
+
+  | Was | Now |
+  |---|---|
+  | `nldd-step-indicator`, `NLDDStepIndicator` | `nldd-step-bar`, `NLDDStepBar` |
+  | `nldd-step-indicator-item`, `NLDDStepIndicatorItem` | `nldd-step-bar-item`, `NLDDStepBarItem` |
+  | `nldd-timeline-track-cell`, `NLDDTimelineTrackCell` | `nldd-step-cell`, `NLDDStepCell` |
+  | `@nldd/design-system/step-indicator` | `@nldd/design-system/step-bar` |
+  | `@nldd/design-system/timeline-track-cell` | `@nldd/design-system/step-cell` |
+  | translation keys `components.step-indicator.*` | `components.step-bar.*` |
+
+  The attributes stay the same. An old tag is an unknown element now and renders nothing, without a warning, so search your markup.
+
+- **The `--components-*` custom properties no longer exist.** If you set or read one, nothing happens now, without a warning. Most were never meant to be touched. The ones that more components share moved to semantics:
+
+  | Was | Now |
+  |---|---|
+  | `--components-code-viewer-token-*-color` | `--semantics-code-syntax-*-color` |
+  | `--components-list-item-is-*`, `--components-list-item-indicator-*` | `--semantics-list-items-is-*`, `--semantics-list-items-indicator-*` |
+  | `--components-menu-bar-item-inline-padding` | `--semantics-menu-bar-items-inline-padding` |
+  | `--components-menu-box-shadow` | `--semantics-overlays-box-shadow` |
+  | `--components-menu-item-is-highlighted-background-color` / `-content-color` | `--semantics-controls-is-highlighted-indicator-color` / `-contrast-color` |
+
+  Search your own CSS for `--components-` to find what this affects.
+
+### Fixed
+
+- **A transparent `nldd-toggle-button` with `variant="text"` fills when it is on, also with a `selected-icon`.** A transparent toggle with a selected icon stays without a fill and lets the change of icon show that it is on. With `variant="text"` the icon does not render, so nothing changed at all when you switched it on.
+
+- **`nldd-toolbar` no longer leaves an item in the overflow menu that fits.** When the toolbar measured while the web font was still loading, an item could take its width from the fallback font, go into the menu, and stay there once the font arrived: a hidden item has no width to watch. The toolbar now measures again when the fonts have loaded. In the toolbar-with-actions pattern at 375px the tab bar went into the menu in 7 of 10 page loads.
+
 ## [0.8.95](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.94...v0.8.95) (2026-10-06)
 
 ### Highlights

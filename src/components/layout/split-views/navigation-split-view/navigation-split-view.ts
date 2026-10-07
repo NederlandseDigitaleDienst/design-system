@@ -218,10 +218,10 @@ export class NLDDNavigationSplitView extends LitElement {
 			const style = getComputedStyle(this);
 			const read = (prop: string) => parseFloat(style.getPropertyValue(prop));
 			this._paneMinWidths = {
-				primarySidebar: read('--_primary-sidebar-min-width') || this._paneMinWidths.primarySidebar,
-				secondarySidebar: read('--_secondary-sidebar-min-width') || this._paneMinWidths.secondarySidebar,
-				main: read('--_main-min-width') || this._paneMinWidths.main,
-				inspector: read('--_inspector-min-width') || this._paneMinWidths.inspector,
+				primarySidebar: read('--_navigation-split-view-primary-sidebar-min-width') || this._paneMinWidths.primarySidebar,
+				secondarySidebar: read('--_navigation-split-view-secondary-sidebar-min-width') || this._paneMinWidths.secondarySidebar,
+				main: read('--_navigation-split-view-main-min-width') || this._paneMinWidths.main,
+				inspector: read('--_navigation-split-view-inspector-min-width') || this._paneMinWidths.inspector,
 			};
 			this._updateLayout();
 		});

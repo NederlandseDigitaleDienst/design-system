@@ -18,15 +18,15 @@ export const fullBleedSectionStyles = css`
 		container-type: inline-size;
 		/* Block-padding overrides from PageSectionMixin; 'initial' lets the
 		   block fall back to the responsive default until the mixin sets one. */
-		--_padding-top: initial;
-		--_padding-bottom: initial;
-		--_sm-padding-top: initial;
-		--_sm-padding-bottom: initial;
-		--_md-padding-top: initial;
-		--_md-padding-bottom: initial;
-		--_lg-padding-top: initial;
-		--_lg-padding-bottom: initial;
-		--_max-width: var(--semantics-page-sections-body-max-width);
+		--_full-bleed-section-padding-top: initial;
+		--_full-bleed-section-padding-bottom: initial;
+		--_full-bleed-section-sm-padding-top: initial;
+		--_full-bleed-section-sm-padding-bottom: initial;
+		--_full-bleed-section-md-padding-top: initial;
+		--_full-bleed-section-md-padding-bottom: initial;
+		--_full-bleed-section-lg-padding-top: initial;
+		--_full-bleed-section-lg-padding-bottom: initial;
+		--_full-bleed-section-max-width: var(--semantics-page-sections-body-max-width);
 
 		display: flex;
 		width: 100%;
@@ -39,7 +39,7 @@ export const fullBleedSectionStyles = css`
 	}
 
 	:host([width="full"]) {
-		--_max-width: none;
+		--_full-bleed-section-max-width: none;
 	}
 
 
@@ -55,18 +55,18 @@ export const fullBleedSectionStyles = css`
 
 
 		@container (max-width: ${smMax}) {
-			padding-top: var(--_sm-padding-top, var(--_padding-top, var(--semantics-page-sections-sm-margin-block)));
-			padding-bottom: var(--_sm-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-sm-margin-block)));
+			padding-top: var(--_full-bleed-section-sm-padding-top, var(--_full-bleed-section-padding-top, var(--semantics-page-sections-sm-margin-block)));
+			padding-bottom: var(--_full-bleed-section-sm-padding-bottom, var(--_full-bleed-section-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			padding-top: var(--_md-padding-top, var(--_padding-top, var(--semantics-page-sections-md-margin-block)));
-			padding-bottom: var(--_md-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-md-margin-block)));
+			padding-top: var(--_full-bleed-section-md-padding-top, var(--_full-bleed-section-padding-top, var(--semantics-page-sections-md-margin-block)));
+			padding-bottom: var(--_full-bleed-section-md-padding-bottom, var(--_full-bleed-section-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
 		@container (min-width: ${lgMin}) {
-			padding-top: var(--_lg-padding-top, var(--_padding-top, var(--semantics-page-sections-lg-margin-block)));
-			padding-bottom: var(--_lg-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-lg-margin-block)));
+			padding-top: var(--_full-bleed-section-lg-padding-top, var(--_full-bleed-section-padding-top, var(--semantics-page-sections-lg-margin-block)));
+			padding-bottom: var(--_full-bleed-section-lg-padding-bottom, var(--_full-bleed-section-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
 		}
 	}
 
@@ -76,7 +76,7 @@ export const fullBleedSectionStyles = css`
 	.full-bleed-section__body {
 		display: flex;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_full-bleed-section-max-width);
 		flex-direction: column;
 		flex-grow: 1;
 

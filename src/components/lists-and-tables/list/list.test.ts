@@ -1231,7 +1231,7 @@ describe('nldd-list – listbox', () => {
 	it('ignores an invalid height (no cap)', async () => {
 		el = await fixture('<nldd-list type="listbox" height="not-a-length"><nldd-list-item button><nldd-text-cell text="Een"></nldd-text-cell></nldd-list-item></nldd-list>');
 		await settle(el);
-		expect(el.style.getPropertyValue('--_max-height')).toBe('');
+		expect(el.style.getPropertyValue('--_list-max-height')).toBe('');
 	});
 
 	it('does not run roving arrow-navigation in listbox mode', async () => {

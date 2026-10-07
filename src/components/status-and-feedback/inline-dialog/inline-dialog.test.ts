@@ -144,7 +144,7 @@ describe('nldd-inline-dialog', () => {
 	it('icon-color overrides the variant icon color', async () => {
 		el = await fixture('<nldd-inline-dialog variant="alert" icon-color="critical"></nldd-inline-dialog>');
 		await waitForUpdate(el);
-		const iconColor = getComputedStyle(el).getPropertyValue('--_icon-color').trim();
+		const iconColor = getComputedStyle(el).getPropertyValue('--_inline-dialog-icon-color').trim();
 		const expected = getComputedStyle(document.documentElement)
 			.getPropertyValue('--semantics-content-critical-color').trim();
 		expect(iconColor).toBe(expected);

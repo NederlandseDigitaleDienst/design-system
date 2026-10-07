@@ -857,7 +857,7 @@ describe('nldd-date-field width="fit-content"', () => {
 		// and the stylesheet does the rest.
 		el = await fixture('<nldd-date-field width="fit-content" accessible-label="Due"></nldd-date-field>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_date-field-width')).toBe('');
 		expect(el.getAttribute('width')).toBe('fit-content');
 	});
 
@@ -869,7 +869,7 @@ describe('nldd-date-field width="fit-content"', () => {
 		const rule = /:host\(\[width="fit-content"\]:not\(\[valid\]\):not\(\[invalid\]\)\)\s*\{([^}]*)\}/
 			.exec(dateFieldCss);
 		expect(rule, 'no fit-content rule in date-field.styles.ts').not.toBeNull();
-		expect(rule![1]).toContain('--_validation-icon-area-width');
+		expect(rule![1]).toContain('--_date-field-validation-icon-area-width');
 		expect(rule![1]).toContain('--primitives-space-8');
 	});
 });

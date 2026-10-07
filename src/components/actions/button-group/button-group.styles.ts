@@ -12,10 +12,10 @@ export const buttonGroupStyles = css`
 	/* # Host */
 
 	:host {
-		--_width: 100%;
-		--_flex-direction: column;
-		--_flex-wrap: nowrap;
-		--_gap: var(--components-button-group-md-gap);
+		--_button-group-width: 100%;
+		--_button-group-flex-direction: column;
+		--_button-group-flex-wrap: nowrap;
+		--_button-group-gap: var(--primitives-space-8);
 
 		display: flex;
 		width: 100%;
@@ -31,7 +31,7 @@ export const buttonGroupStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_gap: var(--components-button-group-sm-gap);
+		--_button-group-gap: var(--primitives-space-6);
 	}
 
 	/* ## In a row
@@ -41,8 +41,8 @@ export const buttonGroupStyles = css`
 
 	:host([orientation="horizontal"]),
 	:host(:not([orientation="horizontal"], [orientation="vertical"])) {
-		--_flex-direction: row;
-		--_flex-wrap: wrap;
+		--_button-group-flex-direction: row;
+		--_button-group-flex-wrap: wrap;
 	}
 
 	/* ## Auto
@@ -107,9 +107,9 @@ export const buttonGroupStyles = css`
 
 	.button-group {
 		display: flex;
-		width: var(--_width);
-		flex-direction: var(--_flex-direction);
-		flex-wrap: var(--_flex-wrap);
-		gap: var(--_gap);
+		width: var(--_button-group-width);
+		flex-direction: var(--_button-group-flex-direction);
+		flex-wrap: var(--_button-group-flex-wrap);
+		gap: var(--_button-group-gap);
 	}
 `;

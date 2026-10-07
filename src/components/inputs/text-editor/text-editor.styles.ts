@@ -7,69 +7,69 @@ export const textEditorStyles = css`
 	/* # Host */
 
 	:host {
-		--_caret-width: var(--primitives-border-width-regular);
-		--_caret-ring-width: var(--primitives-border-width-thin);
-		--_corner-radius: 0;
-		--_background-color: transparent;
-		--_highlight-border-color: transparent;
-		--_highlight-border-shadow: none;
-		--_padding-block: 0px;
+		--_text-editor-caret-width: var(--primitives-border-width-regular);
+		--_text-editor-caret-ring-width: var(--primitives-border-width-thin);
+		--_text-editor-corner-radius: 0;
+		--_text-editor-background-color: transparent;
+		--_text-editor-highlight-border-color: transparent;
+		--_text-editor-highlight-border-shadow: none;
+		--_text-editor-padding-block: 0px;
 		/* Room for the caret's own ink at the first and last position of a line:
 		   its width plus its ring. Without it the edge carets are clipped. */
-		--_padding-inline: calc(var(--_caret-width) + var(--_caret-ring-width));
-		--_content-color: var(--semantics-content-color);
-		--_text-font: var(--primitives-font-body-md-regular-snug);
-		--_code-font: var(--primitives-font-monospace-md-regular-snug);
-		--_code-font-size: calc(var(--primitives-font-size-90) / var(--primitives-font-size-100) * 1em);
-		--_marker-font-size: var(--primitives-font-size-90);
+		--_text-editor-padding-inline: calc(var(--_text-editor-caret-width) + var(--_text-editor-caret-ring-width));
+		--_text-editor-content-color: var(--semantics-content-color);
+		--_text-editor-font: var(--primitives-font-body-md-regular-snug);
+		--_text-editor-code-font: var(--primitives-font-monospace-md-regular-snug);
+		--_text-editor-code-font-size: calc(var(--primitives-font-size-90) / var(--primitives-font-size-100) * 1em);
+		--_text-editor-marker-font-size: var(--primitives-font-size-90);
 		/* JetBrains Mono advance (600/1000 em) at the marker size; leading
 		   list/quote markers are mono so the hanging indent equals their width. */
-		--_marker-advance: calc(0.6 * var(--_marker-font-size));
-		--_bullet-size: 0.45em;
-		--_bullet-color: var(--semantics-content-secondary-color);
-		--_heading-marker-scale: 75%;
-		--_token-corner-radius: var(--primitives-corner-radius-sm);
-		--_token-block-padding: 0.15em;
-		--_token-inline-padding: 0.3em;
+		--_text-editor-marker-advance: calc(0.6 * var(--_text-editor-marker-font-size));
+		--_text-editor-bullet-size: 0.45em;
+		--_text-editor-bullet-color: var(--semantics-content-secondary-color);
+		--_text-editor-heading-marker-scale: 75%;
+		--_text-editor-token-corner-radius: var(--primitives-corner-radius-sm);
+		--_text-editor-token-block-padding: 0.15em;
+		--_text-editor-token-inline-padding: 0.3em;
 		/* Vertical padding for an inline token that inherits the block font (tint,
 		   mention): fills the line up to its line-height, never past it, so tokens on
 		   adjacent lines never overlap. 1lh and em resolve on the token, so it adapts
 		   to a heading's tighter line. (~1.2em is the text's own box.) */
-		--_token-block-padding-fit: max(0em, (1lh - 1.2em) / 2);
-		--_code-token-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
-		--_code-token-is-selected-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
-		--_code-block-inline-padding: var(--_token-inline-padding);
-		--_code-block-block-padding: var(--_token-block-padding);
-		--_annotation-token-background-color: light-dark(var(--primitives-color-mark-75), var(--primitives-color-mark-150));
-		--_annotation-token-is-selected-background-color: light-dark(var(--primitives-color-mark-200), var(--primitives-color-mark-400));
-		--_annotation-token-badge-content-color: var(--primitives-color-mark-1000);
-		--_annotation-token-badge-background-color: light-dark(var(--primitives-color-mark-250), var(--primitives-color-mark-300));
-		--_annotation-token-badge-highlight-border-color: light-dark(var(--primitives-color-mark-300), var(--primitives-color-mark-350));
-		--_annotation-token-badge-is-hovered-background-color: light-dark(var(--primitives-color-mark-300), var(--primitives-color-mark-350));
-		--_annotation-token-badge-is-hovered-highlight-border-color: light-dark(var(--primitives-color-mark-350), var(--primitives-color-mark-400));
-		--_annotation-token-badge-is-active-background-color: light-dark(var(--primitives-color-mark-350), var(--primitives-color-mark-400));
-		--_annotation-token-badge-is-active-highlight-border-color: light-dark(var(--primitives-color-mark-400), var(--primitives-color-mark-450));
+		--_text-editor-token-block-padding-fit: max(0em, (1lh - 1.2em) / 2);
+		--_text-editor-code-token-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+		--_text-editor-code-token-is-selected-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
+		--_text-editor-code-block-inline-padding: var(--_text-editor-token-inline-padding);
+		--_text-editor-code-block-block-padding: var(--_text-editor-token-block-padding);
+		--_text-editor-annotation-token-background-color: light-dark(var(--primitives-color-mark-75), var(--primitives-color-mark-150));
+		--_text-editor-annotation-token-is-selected-background-color: light-dark(var(--primitives-color-mark-200), var(--primitives-color-mark-400));
+		--_text-editor-annotation-token-badge-content-color: var(--primitives-color-mark-1000);
+		--_text-editor-annotation-token-badge-background-color: light-dark(var(--primitives-color-mark-250), var(--primitives-color-mark-300));
+		--_text-editor-annotation-token-badge-highlight-border-color: light-dark(var(--primitives-color-mark-300), var(--primitives-color-mark-350));
+		--_text-editor-annotation-token-badge-is-hovered-background-color: light-dark(var(--primitives-color-mark-300), var(--primitives-color-mark-350));
+		--_text-editor-annotation-token-badge-is-hovered-highlight-border-color: light-dark(var(--primitives-color-mark-350), var(--primitives-color-mark-400));
+		--_text-editor-annotation-token-badge-is-active-background-color: light-dark(var(--primitives-color-mark-350), var(--primitives-color-mark-400));
+		--_text-editor-annotation-token-badge-is-active-highlight-border-color: light-dark(var(--primitives-color-mark-400), var(--primitives-color-mark-450));
 		/* Same step in both themes: mark-450 keeps light mode as-is and, in dark
 		   mode, stays a readable amber instead of jumping to a near-white fill
 		   that swallows the white (mark-1000) badge number. */
-		--_annotation-token-is-selected-badge-background-color: var(--primitives-color-mark-450);
-		--_annotation-token-is-selected-badge-highlight-border-color: var(--primitives-color-mark-500);
-		--_annotation-badge-size: 1.5em;
-		--_annotation-badge-font-scale: 0.62;
-		--_link-badge-size: calc(1em + 2 * var(--_token-block-padding-fit));
-		--_link-badge-content-color: var(--semantics-categories-accent-tinted-content-color);
-		--_link-badge-background-color: var(--semantics-categories-accent-tinted-background-color);
-		--_link-badge-highlight-border-color: var(--semantics-categories-accent-tinted-highlight-border-color);
-		--_link-badge-is-hovered-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
-		--_link-badge-is-active-background-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
-		--_link-badge-is-hovered-highlight-border-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-200));
-		--_link-badge-is-active-highlight-border-color: light-dark(var(--primitives-color-accent-200), var(--primitives-color-accent-250));
-		--_mention-icon-size: 0.95em;
-		--_mention-token-background-color: var(--semantics-categories-accent-tinted-background-color);
-		--_mention-token-content-color: var(--semantics-categories-accent-tinted-content-color);
-		--_mention-token-is-selected-background-color: var(--semantics-categories-accent-filled-background-color);
-		--_mention-token-is-selected-content-color: var(--semantics-categories-accent-filled-content-color);
-		--_rows: 6;
+		--_text-editor-annotation-token-is-selected-badge-background-color: var(--primitives-color-mark-450);
+		--_text-editor-annotation-token-is-selected-badge-highlight-border-color: var(--primitives-color-mark-500);
+		--_text-editor-annotation-badge-size: 1.5em;
+		--_text-editor-annotation-badge-font-scale: 0.62;
+		--_text-editor-link-badge-size: calc(1em + 2 * var(--_text-editor-token-block-padding-fit));
+		--_text-editor-link-badge-content-color: var(--semantics-categories-accent-tinted-content-color);
+		--_text-editor-link-badge-background-color: var(--semantics-categories-accent-tinted-background-color);
+		--_text-editor-link-badge-highlight-border-color: var(--semantics-categories-accent-tinted-highlight-border-color);
+		--_text-editor-link-badge-is-hovered-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
+		--_text-editor-link-badge-is-active-background-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
+		--_text-editor-link-badge-is-hovered-highlight-border-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-200));
+		--_text-editor-link-badge-is-active-highlight-border-color: light-dark(var(--primitives-color-accent-200), var(--primitives-color-accent-250));
+		--_text-editor-mention-icon-size: 0.95em;
+		--_text-editor-mention-token-background-color: var(--semantics-categories-accent-tinted-background-color);
+		--_text-editor-mention-token-content-color: var(--semantics-categories-accent-tinted-content-color);
+		--_text-editor-mention-token-is-selected-background-color: var(--semantics-categories-accent-filled-background-color);
+		--_text-editor-mention-token-is-selected-content-color: var(--semantics-categories-accent-filled-content-color);
+		--_text-editor-rows: 6;
 
 		${inheritedTextReset}
 		display: flex;
@@ -89,12 +89,12 @@ export const textEditorStyles = css`
 	/* ## Appearance — input-field adds the framed surface + a default content padding */
 
 	:host([appearance="input-field"]) {
-		--_corner-radius: var(--primitives-corner-radius-lg);
-		--_background-color: var(--semantics-input-fields-background-color);
-		--_highlight-border-color: var(--semantics-input-fields-border-color);
-		--_highlight-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_highlight-border-color);
-		--_padding-block: var(--semantics-controls-md-inline-padding);
-		--_padding-inline: var(--semantics-controls-md-inline-padding);
+		--_text-editor-corner-radius: var(--primitives-corner-radius-lg);
+		--_text-editor-background-color: var(--semantics-input-fields-background-color);
+		--_text-editor-highlight-border-color: var(--semantics-input-fields-border-color);
+		--_text-editor-highlight-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_text-editor-highlight-border-color);
+		--_text-editor-padding-block: var(--semantics-controls-md-inline-padding);
+		--_text-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 	}
 
 
@@ -104,16 +104,16 @@ export const textEditorStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		position: relative;
-		border-radius: var(--_corner-radius);
-		box-shadow: var(--_highlight-border-shadow);
-		background-color: var(--_background-color);
+		border-radius: var(--_text-editor-corner-radius);
+		box-shadow: var(--_text-editor-highlight-border-shadow);
+		background-color: var(--_text-editor-background-color);
 		min-height: 0;
 		flex-direction: column;
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
-		color: var(--_content-color);
-		font: var(--_text-font);
+		color: var(--_text-editor-content-color);
+		font: var(--_text-editor-font);
 	}
 
 	:host([disabled]) .text-editor {
@@ -126,7 +126,7 @@ export const textEditorStyles = css`
 	:host([appearance="input-field"]) .text-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_highlight-border-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_text-editor-highlight-border-shadow);
 	}
 
 
@@ -136,13 +136,13 @@ export const textEditorStyles = css`
 	   on the content for click mapping + scroll-end padding. :host beats the
 	   shared theme's .cm-content reset. */
 	:host .cm-scroller {
-		padding-left: var(--_padding-inline);
+		padding-left: var(--_text-editor-padding-inline);
 	}
 
 	:host .cm-content {
-		padding-block: var(--_padding-block);
-		padding-right: var(--_padding-inline);
-		min-height: calc(var(--_rows) * 1lh);
+		padding-block: var(--_text-editor-padding-block);
+		padding-right: var(--_text-editor-padding-inline);
+		min-height: calc(var(--_text-editor-rows) * 1lh);
 	}
 
 	/* Prominent accent caret in both variants (the input-field variant additionally has the focus
@@ -153,19 +153,19 @@ export const textEditorStyles = css`
 		   surfaces in light and dark (accent-600 fell just short on white), so the
 		   caret stays clearly visible without washing out. */
 		border-left-color: var(--primitives-color-accent-700);
-		border-left-width: var(--_caret-width);
+		border-left-width: var(--_text-editor-caret-width);
 		/* CodeMirror centers its own 1.2px caret with a -0.6px margin. Ours is wider,
 		   so recenter it on the insertion point from its own width. */
-		margin-left: calc(var(--_caret-width) / -2);
+		margin-left: calc(var(--_text-editor-caret-width) / -2);
 		/* A thin surface-colored ring, like the drop cursor, so the caret stays legible
 		   even over a tinted token (annotation, inline code) where the accent alone can
 		   blend in. Blinks with the caret (opacity covers the shadow too). */
-		box-shadow: 0 0 0 var(--_caret-ring-width) var(--semantics-surfaces-base-background-color);
+		box-shadow: 0 0 0 var(--_text-editor-caret-ring-width) var(--semantics-surfaces-base-background-color);
 	}
 
 	:host .cm-scroller {
 		resize: none;
-		min-height: calc(var(--_rows) * 1lh + 2 * var(--_padding-block));
+		min-height: calc(var(--_text-editor-rows) * 1lh + 2 * var(--_text-editor-padding-block));
 	}
 
 	:host([resize="vertical"]) .cm-scroller {
@@ -173,14 +173,14 @@ export const textEditorStyles = css`
 	}
 
 	:host([resize="none"]) .cm-editor {
-		height: calc(var(--_rows) * 1lh + 2 * var(--_padding-block));
+		height: calc(var(--_text-editor-rows) * 1lh + 2 * var(--_text-editor-padding-block));
 	}
 
 
 	/* # Hybrid markdown decorations
 	   Headings follow rich-text's display scale at its sm step. Markers are kept
 	   visible but dimmed in monospace, which also gives the leading list/quote
-	   prefix a predictable width for the hanging indent (see --_marker-advance). */
+	   prefix a predictable width for the hanging indent (see --_text-editor-marker-advance). */
 
 	.cm-md-h1 {
 		font: var(--primitives-font-display-1-sm);
@@ -207,7 +207,7 @@ export const textEditorStyles = css`
 	}
 
 	:is(.cm-md-h1, .cm-md-h2, .cm-md-h3, .cm-md-h4, .cm-md-h5, .cm-md-h6) .cm-md-mark {
-		font-size: var(--_heading-marker-scale);
+		font-size: var(--_text-editor-heading-marker-scale);
 	}
 	.cm-md-strong {
 		font-weight: bold;
@@ -222,38 +222,38 @@ export const textEditorStyles = css`
 	/* The selected run is darkened with a decoration (see cm-md-code-selected
 	   below), since drawSelection hides the native selection. */
 	.cm-md-code {
-		padding-block: var(--_token-block-padding-fit);
+		padding-block: var(--_text-editor-token-block-padding-fit);
 		/* No inline padding: the tint hugs the backticks, which are the visible bounds
 		   anyway. A padded mark has no coordsAt hook, so the caret at its edge would
 		   otherwise jump by the padding depending on the direction it arrives from. */
 		/* line-height is left to inherit from the block, so a fixed snug line-height
 		   won't make the chip overflow inside a tight heading. */
 		font-family: var(--primitives-font-family-monospace);
-		font-size: var(--_code-font-size);
+		font-size: var(--_text-editor-code-font-size);
 		font-weight: var(--primitives-font-weight-body-regular);
-		background-color: var(--_code-token-background-color);
-		border-radius: var(--_token-corner-radius);
+		background-color: var(--_text-editor-code-token-background-color);
+		border-radius: var(--_text-editor-token-corner-radius);
 	}
 
 	/* :host beats the shared theme's ".cm-line { padding: 0 }" reset (equal
 	   specificity otherwise wins on source order), same as .cm-content above —
 	   without it the block padding never lands and the surface reads cramped. */
 	:host .cm-md-codeblock {
-		padding-inline: var(--_code-block-inline-padding);
-		font: var(--_code-font);
-		background-color: var(--_code-token-background-color);
+		padding-inline: var(--_text-editor-code-block-inline-padding);
+		font: var(--_text-editor-code-font);
+		background-color: var(--_text-editor-code-token-background-color);
 	}
 
 	:host .cm-md-codeblock-first {
-		padding-top: var(--_code-block-block-padding);
-		border-start-start-radius: var(--_token-corner-radius);
-		border-start-end-radius: var(--_token-corner-radius);
+		padding-top: var(--_text-editor-code-block-block-padding);
+		border-start-start-radius: var(--_text-editor-token-corner-radius);
+		border-start-end-radius: var(--_text-editor-token-corner-radius);
 	}
 
 	:host .cm-md-codeblock-last {
-		padding-bottom: var(--_code-block-block-padding);
-		border-end-start-radius: var(--_token-corner-radius);
-		border-end-end-radius: var(--_token-corner-radius);
+		padding-bottom: var(--_text-editor-code-block-block-padding);
+		border-end-start-radius: var(--_text-editor-token-corner-radius);
+		border-end-end-radius: var(--_text-editor-token-corner-radius);
 	}
 
 	/* Selected slice of a code span — drawSelection hides the native ::selection,
@@ -261,7 +261,7 @@ export const textEditorStyles = css`
 	   darker tint over the part that's selected. */
 	.cm-md-code-selected,
 	.cm-md-codeblock-selected {
-		background-color: var(--_code-token-is-selected-background-color);
+		background-color: var(--_text-editor-code-token-is-selected-background-color);
 	}
 	/* CM nests the base code mark inside the selected one, so the inner base tint
 	   would paint over the darker selected tint (leaving the token light, or split
@@ -275,7 +275,7 @@ export const textEditorStyles = css`
 	   tint, so the block lights up edge to edge — the padding included, like a
 	   fully selected token. :host to beat the base ".cm-md-codeblock" background. */
 	:host .cm-md-codeblock-line-selected {
-		background-color: var(--_code-token-is-selected-background-color);
+		background-color: var(--_text-editor-code-token-is-selected-background-color);
 	}
 
 	.cm-md-mention {
@@ -284,14 +284,14 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-mention-token {
-		padding-block: var(--_token-block-padding-fit);
+		padding-block: var(--_text-editor-token-block-padding-fit);
 		/* Left space equals the @ icon's vertical inset (token height minus the icon,
 		   halved), so the icon sits equally clear left, top and bottom; the right keeps
 		   the normal token inset around the name. */
-		padding-inline: max(0em, (max(1.2em, 1lh) - var(--_mention-icon-size)) / 2) var(--_token-inline-padding);
-		color: var(--_mention-token-content-color);
-		background-color: var(--_mention-token-background-color);
-		border-radius: var(--_token-corner-radius);
+		padding-inline: max(0em, (max(1.2em, 1lh) - var(--_text-editor-mention-icon-size)) / 2) var(--_text-editor-token-inline-padding);
+		color: var(--_text-editor-mention-token-content-color);
+		background-color: var(--_text-editor-mention-token-background-color);
+		border-radius: var(--_text-editor-token-corner-radius);
 		font-weight: 600;
 		white-space: nowrap;
 		cursor: default;
@@ -304,8 +304,8 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-mention-token-icon {
-		width: var(--_mention-icon-size);
-		height: var(--_mention-icon-size);
+		width: var(--_text-editor-mention-icon-size);
+		height: var(--_text-editor-mention-icon-size);
 		margin-inline-end: 0.1em;
 		vertical-align: -0.16em;
 	}
@@ -317,14 +317,14 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-mention-token[data-selected] {
-		color: var(--_mention-token-is-selected-content-color);
-		background-color: var(--_mention-token-is-selected-background-color);
+		color: var(--_text-editor-mention-token-is-selected-content-color);
+		background-color: var(--_text-editor-mention-token-is-selected-background-color);
 	}
 
 	/* A native selection over a mention keeps its text light on the filled accent.
 	   :host bumps specificity so it wins over .cm-content ::selection wherever it sits. */
 	:host .cm-md-mention-token ::selection {
-		color: var(--_mention-token-is-selected-content-color);
+		color: var(--_text-editor-mention-token-is-selected-content-color);
 	}
 
 	.cm-md-link {
@@ -363,7 +363,7 @@ export const textEditorStyles = css`
 	.cm-md-mark {
 		color: var(--semantics-content-secondary-color);
 		font-family: var(--primitives-font-family-monospace);
-		font-size: var(--_marker-font-size);
+		font-size: var(--_text-editor-marker-font-size);
 	}
 
 	.cm-md-code .cm-md-mark {
@@ -372,7 +372,7 @@ export const textEditorStyles = css`
 
 	/* Bullet-list marker: hide the literal dash (its box keeps the mono advance so
 	   wrapped lines still align under the text) and draw a filled dot in its place.
-	   Fully styleable via --_bullet-size / --_bullet-color above. */
+	   Fully styleable via --_text-editor-bullet-size / --_text-editor-bullet-color above. */
 	.cm-md-bullet {
 		position: relative;
 		color: transparent;
@@ -383,11 +383,11 @@ export const textEditorStyles = css`
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		width: var(--_bullet-size);
-		height: var(--_bullet-size);
+		width: var(--_text-editor-bullet-size);
+		height: var(--_text-editor-bullet-size);
 		transform: translate(-50%, -50%);
 		border-radius: var(--primitives-corner-radius-full);
-		background-color: var(--_bullet-color);
+		background-color: var(--_text-editor-bullet-color);
 	}
 
 	/* The leading prefix (and anything nested in it, e.g. a blockquote's own
@@ -396,7 +396,7 @@ export const textEditorStyles = css`
 	.cm-md-listprefix,
 	.cm-md-listprefix * {
 		font-family: var(--primitives-font-family-monospace);
-		font-size: var(--_marker-font-size);
+		font-size: var(--_text-editor-marker-font-size);
 	}
 
 
@@ -413,15 +413,15 @@ export const textEditorStyles = css`
 	   wrapped fragment; padding-block extends the tint without growing the line
 	   (vertical padding on an inline box is visual only). */
 	.cm-annotation {
-		background-color: var(--_annotation-token-background-color);
-		border-radius: var(--_token-corner-radius);
-		padding-block: var(--_token-block-padding-fit);
+		background-color: var(--_text-editor-annotation-token-background-color);
+		border-radius: var(--_text-editor-token-corner-radius);
+		padding-block: var(--_text-editor-token-block-padding-fit);
 		/* Right space mirrors the badge's vertical inset (token height minus the badge,
 		   halved), so the badge sits equally clear of the top, bottom and right edges.
 		   Token height is max(1.2em text box, 1lh); the badge height in token units is
 		   its box × its font scale. */
-		padding-inline: var(--_token-inline-padding)
-			max(0em, (max(1.2em, 1lh) - var(--_annotation-badge-size) * var(--_annotation-badge-font-scale)) / 2);
+		padding-inline: var(--_text-editor-token-inline-padding)
+			max(0em, (max(1.2em, 1lh) - var(--_text-editor-annotation-badge-size) * var(--_text-editor-annotation-badge-font-scale)) / 2);
 		-webkit-box-decoration-break: clone;
 		box-decoration-break: clone;
 	}
@@ -439,7 +439,7 @@ export const textEditorStyles = css`
 	   stands in for the hidden selection; the text takes the strongest content color. */
 	.cm-annotation.is-selected,
 	.cm-annotation .is-selected {
-		background-color: var(--_annotation-token-is-selected-background-color);
+		background-color: var(--_text-editor-annotation-token-is-selected-background-color);
 		color: var(--primitives-color-neutral-950);
 	}
 
@@ -457,15 +457,15 @@ export const textEditorStyles = css`
 		position: relative;
 		align-items: center;
 		justify-content: center;
-		min-width: var(--_annotation-badge-size);
-		height: var(--_annotation-badge-size);
+		min-width: var(--_text-editor-annotation-badge-size);
+		height: var(--_text-editor-annotation-badge-size);
 		margin-inline: 0.4em 0;
 		padding-inline: 0.3em;
 		border: 0;
 		border-radius: var(--primitives-corner-radius-full);
-		background-color: var(--_annotation-token-badge-background-color);
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_annotation-token-badge-highlight-border-color);
-		color: var(--_annotation-token-badge-content-color);
+		background-color: var(--_text-editor-annotation-token-badge-background-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-annotation-token-badge-highlight-border-color);
+		color: var(--_text-editor-annotation-token-badge-content-color);
 		/* vertical-align: middle lands the nub ~1px below the text's em-box center, and
 		   the optical middle of the ink sits higher again, so it reads low; nudge up onto
 		   it. The em is the badge's own (scaled-down) font size, so the value is larger
@@ -473,7 +473,7 @@ export const textEditorStyles = css`
 		vertical-align: middle;
 		transform: translateY(-0.11em);
 		font-family: var(--primitives-font-family-body);
-		font-size: calc(var(--_annotation-badge-font-scale) * 1em);
+		font-size: calc(var(--_text-editor-annotation-badge-font-scale) * 1em);
 		font-weight: 700;
 		line-height: 1;
 		cursor: default;
@@ -489,22 +489,22 @@ export const textEditorStyles = css`
 
 	@media (hover: hover) {
 		.cm-annotation-badge:hover {
-			background-color: var(--_annotation-token-badge-is-hovered-background-color);
-			box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_annotation-token-badge-is-hovered-highlight-border-color);
+			background-color: var(--_text-editor-annotation-token-badge-is-hovered-background-color);
+			box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-annotation-token-badge-is-hovered-highlight-border-color);
 		}
 	}
 
 	.cm-annotation-badge:active {
-		background-color: var(--_annotation-token-badge-is-active-background-color);
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_annotation-token-badge-is-active-highlight-border-color);
+		background-color: var(--_text-editor-annotation-token-badge-is-active-background-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-annotation-token-badge-is-active-highlight-border-color);
 	}
 
 	/* The nub darkens with the block only when the whole annotation is selected (full
 	   mark) or the slice covering it is (a selection running through the badge). */
 	.cm-annotation.is-selected .cm-annotation-badge,
 	.cm-annotation .is-selected .cm-annotation-badge {
-		background-color: var(--_annotation-token-is-selected-badge-background-color);
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_annotation-token-is-selected-badge-highlight-border-color);
+		background-color: var(--_text-editor-annotation-token-is-selected-badge-background-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-annotation-token-is-selected-badge-highlight-border-color);
 	}
 
 	.cm-annotation-badge:focus-visible {
@@ -543,10 +543,10 @@ export const textEditorStyles = css`
 		z-index: 5;
 		max-width: 24ch;
 		padding: 0 var(--primitives-space-4);
-		border-radius: var(--_token-corner-radius);
+		border-radius: var(--_text-editor-token-corner-radius);
 		background-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-250));
-		color: var(--_content-color);
-		font: var(--_text-font);
+		color: var(--_text-editor-content-color);
+		font: var(--_text-editor-font);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -559,12 +559,12 @@ export const textEditorStyles = css`
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		min-width: var(--_link-badge-size);
-		height: var(--_link-badge-size);
+		min-width: var(--_text-editor-link-badge-size);
+		height: var(--_text-editor-link-badge-size);
 		border-radius: var(--primitives-corner-radius-full);
-		background-color: var(--_link-badge-background-color);
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_link-badge-highlight-border-color);
-		color: var(--_link-badge-content-color);
+		background-color: var(--_text-editor-link-badge-background-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-link-badge-highlight-border-color);
+		color: var(--_text-editor-link-badge-content-color);
 		/* Match the annotation nub's optical centering next to the ink. */
 		vertical-align: middle;
 		transform: translateY(-0.05em);
@@ -574,20 +574,20 @@ export const textEditorStyles = css`
 
 	@media (hover: hover) {
 		.cm-link-badge:hover {
-			background-color: var(--_link-badge-is-hovered-background-color);
-			box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_link-badge-is-hovered-highlight-border-color);
+			background-color: var(--_text-editor-link-badge-is-hovered-background-color);
+			box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-link-badge-is-hovered-highlight-border-color);
 		}
 	}
 
 	.cm-link-badge:active {
-		background-color: var(--_link-badge-is-active-background-color);
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_link-badge-is-active-highlight-border-color);
+		background-color: var(--_text-editor-link-badge-is-active-background-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-link-badge-is-active-highlight-border-color);
 	}
 
 	.cm-link-badge nldd-icon {
 		flex: none;
-		width: calc(0.65 * var(--_link-badge-size));
-		height: calc(0.65 * var(--_link-badge-size));
+		width: calc(0.65 * var(--_text-editor-link-badge-size));
+		height: calc(0.65 * var(--_text-editor-link-badge-size));
 	}
 
 	.cm-link-badge:focus-visible {

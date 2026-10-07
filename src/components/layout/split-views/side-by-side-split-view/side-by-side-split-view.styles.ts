@@ -9,12 +9,12 @@ export const sideBySideSplitViewStyles = css`
 	/* # Host */
 
 	:host {
-		--_background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_side-by-side-split-view-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		/* Pane min-width — read by JS via getComputedStyle in firstUpdated */
-		--_pane-min-width: var(--primitives-area-320);
+		--_side-by-side-split-view-pane-min-width: var(--primitives-area-320);
 
 		display: flex;
-		background-color: var(--_background-color);
+		background-color: var(--_side-by-side-split-view-background-color);
 		width: 100%;
 		height: 100%;
 	}
@@ -33,12 +33,12 @@ export const sideBySideSplitViewStyles = css`
 
 	:host([background="base"]) {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_side-by-side-split-view-background-color: var(--context-parent-background-color);
 	}
 
 	:host([background="tinted"]) {
 		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_background-color: var(--context-parent-background-color);
+		--_side-by-side-split-view-background-color: var(--context-parent-background-color);
 	}
 
 
@@ -68,7 +68,7 @@ export const sideBySideSplitViewStyles = css`
 
 	.side-by-side-split-view__pane {
 		display: flex;
-		min-width: var(--_pane-min-width);
+		min-width: var(--_side-by-side-split-view-pane-min-width);
 		min-height: 0;
 		overflow: hidden;
 		flex-direction: column;

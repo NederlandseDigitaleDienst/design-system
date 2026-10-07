@@ -1,7 +1,12 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
 import { fixture, cleanup, waitForUpdate, installUniversalReset } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDBanner } from './banner.js';
 import './banner.js';
+
+let removeTokens: () => void;
+beforeAll(() => { removeTokens = loadTokens(); });
+afterAll(() => removeTokens());
 
 describe('nldd-banner', () => {
 	let el: HTMLElement;
@@ -194,12 +199,11 @@ describe('nldd-banner', () => {
 		expect(content.hasAttribute('hidden')).toBe(false);
 	});
 
-	// The tokens come from variables.css, which the test environment does not
-	// load, so they are supplied here. What is under test is the wiring: which
-	// token each size reads, not the value it happens to hold.
+	// The test environment has no variables.css, so the tokens are loaded here:
+	// each size sets its padding and icon size from primitives in :host.
 	it('krimpt padding en icoon bij size="sm"', async () => {
 		el = await fixture(`
-			<div style="--components-banner-sm-padding: 8px; --components-banner-sm-icon-size: 24px;">
+			<div>
 				<nldd-banner size="sm" text="Let op"></nldd-banner>
 			</div>
 		`);
@@ -220,7 +224,7 @@ describe('nldd-banner', () => {
 
 	it('houdt md als standaard, zonder size-attribuut op de host', async () => {
 		el = await fixture(`
-			<div style="--components-banner-md-padding: 12px; --components-banner-md-icon-size: 32px;">
+			<div>
 				<nldd-banner text="Let op"></nldd-banner>
 			</div>
 		`);
@@ -244,7 +248,7 @@ describe('nldd-banner onder een universele reset', () => {
 	it('behoudt de padding rond de inhoud', async () => {
 		removeReset = installUniversalReset();
 		el = await fixture(`
-			<div style="--components-banner-md-padding: 12px;">
+			<div>
 				<nldd-banner text="Let op"></nldd-banner>
 			</div>
 		`);

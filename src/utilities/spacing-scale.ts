@@ -7,7 +7,7 @@
  * nothing else, and this is the one place that turns a step into its token.
  *
  * Which also settles what the attribute means. `gap="16"` in a component that
- * expected a CSS length wrote `--_gap: 16`, which is not one: the declaration
+ * expected a CSS length wrote `--_container-gap: 16`, which is not one: the declaration
  * fell away and the gap became zero with nothing said. Anything this cannot
  * place is refused and named in dev instead, a length included — writing an
  * unplaceable value is that same silent zero.

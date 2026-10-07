@@ -81,29 +81,29 @@ describe('nldd-hero', () => {
 	   Width (max-width) inline style
 	   ============================================================ */
 
-	it('width="full" sets no --_max-width inline style', async () => {
+	it('width="full" sets no --_hero-max-width inline style', async () => {
 		el = await fixture('<nldd-hero width="full"></nldd-hero>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('');
+		expect(el.style.getPropertyValue('--_hero-max-width')).toBe('');
 	});
 
-	it('a CSS-length width feeds --_max-width inline', async () => {
+	it('a CSS-length width feeds --_hero-max-width inline', async () => {
 		el = await fixture('<nldd-hero width="600px"></nldd-hero>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('600px');
+		expect(el.style.getPropertyValue('--_hero-max-width')).toBe('600px');
 	});
 
-	it('an invalid width sets no --_max-width', async () => {
+	it('an invalid width sets no --_hero-max-width', async () => {
 		el = await fixture('<nldd-hero width="not-a-length"></nldd-hero>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_max-width')).toBe('');
+		expect(el.style.getPropertyValue('--_hero-max-width')).toBe('');
 	});
 
 	it.each(['clamp(300px, 50%, 600px)', 'min(600px, 100%)', 'max(320px, 40vw)'])(
 		'accepts the CSS math function width "%s"', async (value) => {
 			el = await fixture(`<nldd-hero width="${value}"></nldd-hero>`);
 			await waitForUpdate(el);
-			expect(el.style.getPropertyValue('--_max-width')).not.toBe('');
+			expect(el.style.getPropertyValue('--_hero-max-width')).not.toBe('');
 		});
 
 
@@ -127,30 +127,30 @@ describe('nldd-hero', () => {
 		expect(el.shadowRoot!.querySelector('.hero__media img')).toBeNull();
 	});
 
-	it('media-aspect-ratio feeds --_media-aspect-ratio inline', async () => {
+	it('media-aspect-ratio feeds --_hero-media-aspect-ratio inline', async () => {
 		el = await fixture('<nldd-hero media-aspect-ratio="16/9"></nldd-hero>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_media-aspect-ratio')).toBe('16/9');
+		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('16/9');
 	});
 
 	it('media-aspect-ratio accepts colon notation', async () => {
 		el = await fixture('<nldd-hero media-aspect-ratio="16:9"></nldd-hero>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_media-aspect-ratio')).toBe('16/9');
+		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('16/9');
 	});
 
 	it('an invalid media-aspect-ratio sets no inline var', async () => {
 		el = await fixture('<nldd-hero media-aspect-ratio="not-a-ratio"></nldd-hero>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_media-aspect-ratio')).toBe('');
+		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('');
 	});
 
 	it('clearing media-aspect-ratio reverts to the default ratio', async () => {
 		el = await fixture('<nldd-hero media-aspect-ratio="16/9"></nldd-hero>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_media-aspect-ratio')).toBe('16/9');
+		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('16/9');
 		el.removeAttribute('media-aspect-ratio');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_media-aspect-ratio')).toBe('');
+		expect(el.style.getPropertyValue('--_hero-media-aspect-ratio')).toBe('');
 	});
 });

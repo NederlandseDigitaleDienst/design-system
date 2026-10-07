@@ -1864,7 +1864,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Explicit width, pinned exactly (sets --_width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
+              "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
               "attribute": "width",
               "reflects": true
             },
@@ -1904,7 +1904,7 @@
                 "text": "number"
               },
               "default": "0",
-              "description": "Maximum number of visible items before the menu scrolls.\nSets --_max-items internally. Default: 0 (no limit).",
+              "description": "Maximum number of visible items before the menu scrolls.\nSets --_menu-max-items internally. Default: 0 (no limit).",
               "attribute": "max-items"
             },
             {
@@ -2049,7 +2049,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Explicit width, pinned exactly (sets --_width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
+              "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
               "name": "width",
               "default": "''",
               "fieldName": "width"
@@ -2076,7 +2076,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "Maximum number of visible items before the menu scrolls.\nSets --_max-items internally. Default: 0 (no limit).",
+              "description": "Maximum number of visible items before the menu scrolls.\nSets --_menu-max-items internally. Default: 0 (no limit).",
               "name": "max-items",
               "default": "0",
               "fieldName": "maxItems"
@@ -3490,7 +3490,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Token colors are the `--components-code-viewer-token-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.",
+          "description": "A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.",
           "name": "NLDDCodeViewer",
           "members": [
             {
@@ -7021,10 +7021,10 @@
         },
         {
           "kind": "js",
-          "name": "NLDDTimelineTrackCell",
+          "name": "NLDDStepCell",
           "declaration": {
-            "name": "NLDDTimelineTrackCell",
-            "module": "./lists-and-tables/cells/timeline-track-cell/timeline-track-cell.js"
+            "name": "NLDDStepCell",
+            "module": "./lists-and-tables/cells/step-cell/step-cell.js"
           }
         },
         {
@@ -7189,18 +7189,18 @@
         },
         {
           "kind": "js",
-          "name": "NLDDStepIndicator",
+          "name": "NLDDStepBar",
           "declaration": {
-            "name": "NLDDStepIndicator",
-            "module": "./status-and-feedback/step-indicator/step-indicator.js"
+            "name": "NLDDStepBar",
+            "module": "./status-and-feedback/step-bar/step-bar.js"
           }
         },
         {
           "kind": "js",
-          "name": "NLDDStepIndicatorItem",
+          "name": "NLDDStepBarItem",
           "declaration": {
-            "name": "NLDDStepIndicatorItem",
-            "module": "./status-and-feedback/step-indicator/step-indicator.js"
+            "name": "NLDDStepBarItem",
+            "module": "./status-and-feedback/step-bar/step-bar.js"
           }
         },
         {
@@ -22115,7 +22115,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one they fill, so the state always shows.",
+              "description": "Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one, or with `variant=\"text\"` where the icon does not render, they fill, so the state always shows.",
               "fieldName": "selectedIcon"
             },
             {
@@ -22792,7 +22792,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The required root shell of a Nederlandse Digitale Dienst application. Always contains a split view or an nldd-page as direct content. The document font comes from the package stylesheet (`@nldd/design-system/styles`), not from this component: it gives `body` the body font and content color as soon as an app-view is on the page, inside `@layer reset` so any rule of your own wins. Import only the tokens (`/styles/tokens`) and text you write in the light DOM keeps the browser default. Set background=\"tinted\" to give the whole application a tinted background. All descendants read --context-parent-background-color via --_background-color automatically. Individual components can override locally with their own background attribute. The same background color is forced on `document.body` so that browser- chrome surfaces (iOS overscroll bounce, status bar, page-margin areas) blend with the app instead of revealing the user-agent's default white. Cleared when the app-view disconnects. The app scrolls the DOCUMENT (root mode) or lets each `nldd-page` scroll inside its pane (nested mode). The mode is derived from the outermost horizontal split view: one column means the document scrolls, several columns mean the panes do. An app without such a split view is a single column at every width and therefore scrolls the document too — nested scrolling would cost it the rubber-band and the collapsing browser toolbar on iOS for nothing. Set `--context-scroll-mode` on the `nldd-app-view` itself to override the derived mode; an inherited value loses from it. In nested scroll mode `overscroll-behavior: none` is set on `document.documentElement` and `document.body` while the app-view is connected. Combined with `overscroll-behavior: contain` on `nldd-page`'s scroll target, this prevents iOS rubber-band on the viewport when scroll gestures land outside an `nldd-page` (e.g. on a top-bar). In root scroll mode the document itself is the scroller, so this is lifted to let the native rubber-band happen. Cleared on last disconnect.",
+          "description": "The required root shell of a Nederlandse Digitale Dienst application. Always contains a split view or an nldd-page as direct content. The document font comes from the package stylesheet (`@nldd/design-system/styles`), not from this component: it gives `body` the body font and content color as soon as an app-view is on the page, inside `@layer reset` so any rule of your own wins. Import only the tokens (`/styles/tokens`) and text you write in the light DOM keeps the browser default. Set background=\"tinted\" to give the whole application a tinted background. All descendants read --context-parent-background-color via --_app-view-background-color automatically. Individual components can override locally with their own background attribute. The same background color is forced on `document.body` so that browser- chrome surfaces (iOS overscroll bounce, status bar, page-margin areas) blend with the app instead of revealing the user-agent's default white. Cleared when the app-view disconnects. The app scrolls the DOCUMENT (root mode) or lets each `nldd-page` scroll inside its pane (nested mode). The mode is derived from the outermost horizontal split view: one column means the document scrolls, several columns mean the panes do. An app without such a split view is a single column at every width and therefore scrolls the document too — nested scrolling would cost it the rubber-band and the collapsing browser toolbar on iOS for nothing. Set `--context-scroll-mode` on the `nldd-app-view` itself to override the derived mode; an inherited value loses from it. In nested scroll mode `overscroll-behavior: none` is set on `document.documentElement` and `document.body` while the app-view is connected. Combined with `overscroll-behavior: contain` on `nldd-page`'s scroll target, this prevents iOS rubber-band on the viewport when scroll gestures land outside an `nldd-page` (e.g. on a top-bar). In root scroll mode the document itself is the scroller, so this is lifted to let the native rubber-band happen. Cleared on last disconnect.",
           "name": "NLDDAppView",
           "members": [
             {
@@ -23350,7 +23350,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A simple layout primitive: pick a layout mode, give it a gap, optionally align contents, and add padding. Padding can be set for all sides, per axis (inline/block), or per individual side. Specificity: per side > per axis > all sides. The container owns the space around and between its children; use `nldd-spacer` only for a one-off gap between two different things. A block that is placed in more than one context gets no padding of its own: whoever places it wraps it in a container, so the inset is not counted twice. Responsive padding and gap have sm/md/lg variants. Each variant emits both an @media (viewport) and @container (layout-container) query. When inside a layout-container the @container query wins; otherwise the @media query provides the viewport-based fallback. Layout modes: - `stack` (default): block items, stacked vertically. The \"what you expect from DOM flow\" mode. - `row`: flex row, no wrapping. Items shrink or overflow. - `wrap`: flex row, items wrap to new lines. - `grid`: CSS grid, auto-fit columns at min 280px wide. - `columns`: CSS multi-column flow, 280px minimum column width, items don't split across column breaks. Alignment maps to the layout's natural axis: - `stack`: vertical = main-axis (justify-content), horizontal = cross-axis (align-items) - `row` / `wrap`: horizontal = main-axis, vertical = cross-axis - `grid`: horizontal = justify-items, vertical = align-items (per cell) - `columns`: alignment props have no effect (CSS multicol doesn't expose alignment) Item order is set per-child via attributes on the slotted children themselves: `<child order=\"3\">` for a fixed position, or `<child sm-order=\"N\">` / `<child md-order=\"N\">` / `<child lg-order=\"N\">` to override per breakpoint (resolved against THIS container's width via @container queries, same scope as the responsive padding/gap). The container observes slot changes and child attribute mutations and bridges these to `--_slot-order` / `--_slot-sm-order` / etc. custom properties on each child's inline style, which the container's CSS then reads via `::slotted(*)` inside @container queries. Cascade: `sm-order` falls back to `order` falls back to `0` at sm (and analogously for md/lg). No-op for `layout=\"columns\"` (CSS multicol has no per-item ordering hook). The `column-count` attribute (1-8) forces an exact column count for `layout=\"grid\"` (overrides auto-fit) and `layout=\"columns\"` (overrides the natural width-driven count). `sm-column-count` / `md-column-count` / `lg-column-count` resolve against this container's OWN width via an `@container (...)` query on the host — not against the viewport. That lets a footer in a narrow sidebar choose its own column count independent of the surrounding page width. `layout=\"lanes\"` packs items into balanced columns using native CSS grid lanes where supported, falling back to CSS multicol (column-order) elsewhere. CSS-only, no JS. Honours `gap` on both axes and `column-count`. Note that nldd-collection's lanes falls back to its own grid rather than to multicol: that component pages, and multicol redistributes the whole set every time load-more adds to it.",
+          "description": "A simple layout primitive: pick a layout mode, give it a gap, optionally align contents, and add padding. Padding can be set for all sides, per axis (inline/block), or per individual side. Specificity: per side > per axis > all sides. The container owns the space around and between its children; use `nldd-spacer` only for a one-off gap between two different things. A block that is placed in more than one context gets no padding of its own: whoever places it wraps it in a container, so the inset is not counted twice. Responsive padding and gap have sm/md/lg variants. Each variant emits both an @media (viewport) and @container (layout-container) query. When inside a layout-container the @container query wins; otherwise the @media query provides the viewport-based fallback. Layout modes: - `stack` (default): block items, stacked vertically. The \"what you expect from DOM flow\" mode. - `row`: flex row, no wrapping. Items shrink or overflow. - `wrap`: flex row, items wrap to new lines. - `grid`: CSS grid, auto-fit columns at min 280px wide. - `columns`: CSS multi-column flow, 280px minimum column width, items don't split across column breaks. Alignment maps to the layout's natural axis: - `stack`: vertical = main-axis (justify-content), horizontal = cross-axis (align-items) - `row` / `wrap`: horizontal = main-axis, vertical = cross-axis - `grid`: horizontal = justify-items, vertical = align-items (per cell) - `columns`: alignment props have no effect (CSS multicol doesn't expose alignment) Item order is set per-child via attributes on the slotted children themselves: `<child order=\"3\">` for a fixed position, or `<child sm-order=\"N\">` / `<child md-order=\"N\">` / `<child lg-order=\"N\">` to override per breakpoint (resolved against THIS container's width via @container queries, same scope as the responsive padding/gap). The container observes slot changes and child attribute mutations and bridges these to `--_container-slot-order` / `--_container-slot-sm-order` / etc. custom properties on each child's inline style, which the container's CSS then reads via `::slotted(*)` inside @container queries. Cascade: `sm-order` falls back to `order` falls back to `0` at sm (and analogously for md/lg). No-op for `layout=\"columns\"` (CSS multicol has no per-item ordering hook). The `column-count` attribute (1-8) forces an exact column count for `layout=\"grid\"` (overrides auto-fit) and `layout=\"columns\"` (overrides the natural width-driven count). `sm-column-count` / `md-column-count` / `lg-column-count` resolve against this container's OWN width via an `@container (...)` query on the host — not against the viewport. That lets a footer in a narrow sidebar choose its own column count independent of the surrounding page width. `layout=\"lanes\"` packs items into balanced columns using native CSS grid lanes where supported, falling back to CSS multicol (column-order) elsewhere. CSS-only, no JS. Honours `gap` on both axes and `column-count`. Note that nldd-collection's lanes falls back to its own grid rather than to multicol: that component pages, and multicol redistributes the whole set every time load-more adds to it.",
           "name": "NLDDContainer",
           "members": [
             {
@@ -28150,7 +28150,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "width",
-              "description": "Width as a CSS length (default: 320px through --components-popover-default-width). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV."
+              "description": "Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV."
             },
             {
               "name": "sm-full-height",
@@ -29454,7 +29454,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "width",
-              "description": "CSS width (default: var(--components-window-default-width))"
+              "description": "CSS width (default: 640px)"
             },
             {
               "name": "height",
@@ -30345,6 +30345,268 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/lists-and-tables/cells/step-cell/step-cell.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A cell that draws steps under each other in an `nldd-list`: a vertical track with a dot per row, colored by how far along each step is. It is the vertical counterpart of `nldd-step-bar`, with the same `status` values. Other systems call this a stepper, a progress list or a timeline. The row's block padding belongs to the cell itself (via `--context-cell-padding-block`), so the line spans the cell's own box edge to edge and consecutive steps connect without gaps. By default the dot is small and empty, for steps without a number, such as the moments in the history of a case. With `size=\"md\"` it grows big enough for a number or an icon. The size belongs to the lane rather than to the content: every dot in a list is the same size, or the track would jump.",
+          "name": "NLDDStepCell",
+          "members": [
+            {
+              "kind": "field",
+              "name": "level",
+              "type": {
+                "text": "Level"
+              },
+              "default": "'major'",
+              "description": "What stands in the lane: a whole dot, a smaller one, or nothing.\n\nA rank rather than a measurement — the cell picks the sizes, so the scale\ncan change later without every consumer following. `minor` is a row that\nbelongs under the one above it, and its dot stays empty: a number would not\nfit and would make the row a step of its own, so carry that hierarchy in\nthe row instead, with an `nldd-text-cell` rather than an `nldd-title-cell`.\n`none` is a row that carries what a step holds rather than being one.",
+              "attribute": "level",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "Status"
+              },
+              "default": "'past'",
+              "attribute": "status",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'sm'",
+              "description": "How wide the lane is, and with it how big the dot. One size per list: a\nlane that changes width halfway bends the track.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "direction",
+              "type": {
+                "text": "Direction"
+              },
+              "default": "'down'",
+              "description": "Which way the timeline moves forward. The cell only knows its own step, so\nit cannot tell which neighbor came first: with `up` (newest at the top)\nthe traveled half of the track is the one below the marker. Only the\ncurrent step has a half-and-half track, so this is the only row where it\nchanges anything.",
+              "attribute": "direction",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "type": {
+                "text": "Position"
+              },
+              "default": "'between'",
+              "attribute": "position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "line",
+              "type": {
+                "text": "Line"
+              },
+              "default": "'auto'",
+              "description": "Which halves of the track you have covered, for when the status gets it\nwrong.\n\nIt reads one row at a time, and a row that opens a group of its own is\nnot the end of the going: the step you are on sits inside it, further\ndown. Nothing in the cell can see that, and a cell that read its\nneighbours would break the moment rows come and go. So the consumer says\nit, and says it for both halves at once: the ones named are covered and\nthe other one is still ahead.\n\nThis is about fill, not about place. Where you stand in the series is what\n`position` says, and that keeps deciding which halves are drawn — naming a\nfill does not take a half away. It can add one, though: calling a half\ncovered draws it, even where the position left it out.",
+              "attribute": "line",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "showsContent",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Only a whole dot in a wide lane has room to read a number in: a minor one is\nsmaller still, and would claim to be a step of its own.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "hideBelow",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "hide-below",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "VisibilityMixin",
+                "module": "src/utilities/visibility-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hideAbove",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "hide-above",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "VisibilityMixin",
+                "module": "src/utilities/visibility-mixin.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "level",
+              "type": {
+                "text": "Level"
+              },
+              "default": "'major'",
+              "description": "What stands in the lane: a whole dot (`major`, the default), a smaller one for a row that belongs under the one above it (`minor`), or nothing at all (`none`) for a row that carries what a step holds rather than being a step. A `none` row keeps its `size` and its `status`, so it stays in the same lane and the track runs on in the right color",
+              "fieldName": "level"
+            },
+            {
+              "name": "status",
+              "type": {
+                "text": "Status"
+              },
+              "default": "'past'",
+              "fieldName": "status",
+              "description": "How far along this row is (default 'past'); the same values as `nldd-step-bar-item`. It colors the dot and the track around it: covered above where you are, still ahead below"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'sm'",
+              "description": "How wide the lane is and so how big the dot: `sm` (default, 16px) for steps without a number, `md` (24px) where a number or an icon has to fit. Every row in one list takes the same size, or the track jumps",
+              "fieldName": "size"
+            },
+            {
+              "name": "direction",
+              "type": {
+                "text": "Direction"
+              },
+              "default": "'down'",
+              "description": "The direction the timeline moves forward in: `down` (default) puts the past above, `up` below. Only the current step has half a track, so this only has an effect there",
+              "fieldName": "direction"
+            },
+            {
+              "name": "position",
+              "type": {
+                "text": "Position"
+              },
+              "default": "'between'",
+              "fieldName": "position",
+              "description": "Place of the row in the list as it stands on screen (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `first` is the top row and only has a line below, `last` the bottom row and only has a line above, also with `direction=\"up\"`: position is about where the row stands, `direction` about which way time runs. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level=\"none\"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it"
+            },
+            {
+              "name": "line",
+              "type": {
+                "text": "Line"
+              },
+              "default": "'auto'",
+              "description": "Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line=\"both\"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `level=\"none\"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you",
+              "fieldName": "line"
+            },
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "Number or short text in the dot"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon",
+              "description": "Icon name in the dot; wins over `text`"
+            },
+            {
+              "name": "hide-below",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "hideBelow",
+              "inheritedFrom": {
+                "name": "VisibilityMixin",
+                "module": "src/utilities/visibility-mixin.ts"
+              }
+            },
+            {
+              "name": "hide-above",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "hideAbove",
+              "inheritedFrom": {
+                "name": "VisibilityMixin",
+                "module": "src/utilities/visibility-mixin.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "VisibilityMixin",
+              "module": "/src/utilities/visibility-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-step-cell",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "Custom content in the dot (an alternative to `text` and `icon`)"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDStepCell",
+          "declaration": {
+            "name": "NLDDStepCell",
+            "module": "src/components/lists-and-tables/cells/step-cell/step-cell.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-step-cell",
+          "declaration": {
+            "name": "NLDDStepCell",
+            "module": "src/components/lists-and-tables/cells/step-cell/step-cell.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/lists-and-tables/cells/text-cell/text-cell.ts",
       "declarations": [
         {
@@ -30686,268 +30948,6 @@
           "declaration": {
             "name": "NLDDTextCell",
             "module": "src/components/lists-and-tables/cells/text-cell/text-cell.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/lists-and-tables/cells/timeline-track-cell/timeline-track-cell.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A cell component for displaying timeline track indicators in lists. Shows a vertical line with a dot indicating timeline position and state. The row's block padding belongs to the cell itself (via `--context-cell-padding-block`), so the line spans the cell's own box edge to edge and consecutive steps connect without gaps. By default the cell is a bare track: a line with a dot per row, for a timeline of events. With `size=\"md\"` the dot grows big enough for a number or an icon and you have a list of steps under each other, the vertical counterpart of `nldd-step-indicator`. The size belongs to the lane rather than to the content: every dot in a list is the same size, or the track would jump.",
-          "name": "NLDDTimelineTrackCell",
-          "members": [
-            {
-              "kind": "field",
-              "name": "level",
-              "type": {
-                "text": "Level"
-              },
-              "default": "'major'",
-              "description": "What stands in the lane: a whole dot, a smaller one, or nothing.\n\nA rank rather than a measurement — the cell picks the sizes, so the scale\ncan change later without every consumer following. `minor` is a row that\nbelongs under the one above it, and its dot stays empty: a number would not\nfit and would make the row a step of its own, so carry that hierarchy in\nthe row instead, with an `nldd-text-cell` rather than an `nldd-title-cell`.\n`none` is a row that carries what a step holds rather than being one.",
-              "attribute": "level",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "status",
-              "type": {
-                "text": "Status"
-              },
-              "default": "'past'",
-              "attribute": "status",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "Size"
-              },
-              "default": "'sm'",
-              "description": "How wide the lane is, and with it how big the dot. One size per list: a\nlane that changes width halfway bends the track.",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "direction",
-              "type": {
-                "text": "Direction"
-              },
-              "default": "'down'",
-              "description": "Which way the timeline moves forward. The cell only knows its own step, so\nit cannot tell which neighbor came first: with `up` (newest at the top)\nthe traveled half of the track is the one below the marker. Only the\ncurrent step has a half-and-half track, so this is the only row where it\nchanges anything.",
-              "attribute": "direction",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "type": {
-                "text": "Position"
-              },
-              "default": "'between'",
-              "attribute": "position",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "line",
-              "type": {
-                "text": "Line"
-              },
-              "default": "'auto'",
-              "description": "Which halves of the track you have covered, for when the status gets it\nwrong.\n\nIt reads one row at a time, and a row that opens a group of its own is\nnot the end of the going: the step you are on sits inside it, further\ndown. Nothing in the cell can see that, and a cell that read its\nneighbours would break the moment rows come and go. So the consumer says\nit, and says it for both halves at once: the ones named are covered and\nthe other one is still ahead.\n\nThis is about fill, not about place. Where you stand in the series is what\n`position` says, and that keeps deciding which halves are drawn — naming a\nfill does not take a half away. It can add one, though: calling a half\ncovered draws it, even where the position left it out.",
-              "attribute": "line",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "text"
-            },
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "showsContent",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Only a whole dot in a wide lane has room to read a number in: a minor one is\nsmaller still, and would claim to be a step of its own.",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "hideBelow",
-              "type": {
-                "text": "string | undefined"
-              },
-              "attribute": "hide-below",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "VisibilityMixin",
-                "module": "src/utilities/visibility-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "hideAbove",
-              "type": {
-                "text": "string | undefined"
-              },
-              "attribute": "hide-above",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "VisibilityMixin",
-                "module": "src/utilities/visibility-mixin.ts"
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "level",
-              "type": {
-                "text": "Level"
-              },
-              "default": "'major'",
-              "description": "What stands in the lane: a whole dot (`major`, the default), a smaller one for a row that belongs under the one above it (`minor`), or nothing at all (`none`) for a row that carries what a step holds rather than being a step. A `none` row keeps its `size` and its `status`, so it stays in the same lane and the track runs on in the right color",
-              "fieldName": "level"
-            },
-            {
-              "name": "status",
-              "type": {
-                "text": "Status"
-              },
-              "default": "'past'",
-              "fieldName": "status",
-              "description": "How far along this row is (default 'past'); the same values as `nldd-step-indicator-item`. It colors the dot and the track around it: covered above where you are, still ahead below"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "Size"
-              },
-              "default": "'sm'",
-              "description": "How wide the lane is and so how big the dot: `sm` (default, 16px) for a timeline of events, `md` (24px) where a number or an icon has to fit. Every row in one list takes the same size, or the track jumps",
-              "fieldName": "size"
-            },
-            {
-              "name": "direction",
-              "type": {
-                "text": "Direction"
-              },
-              "default": "'down'",
-              "description": "The direction the timeline moves forward in: `down` (default) puts the past above, `up` below. Only the current step has half a track, so this only has an effect there",
-              "fieldName": "direction"
-            },
-            {
-              "name": "position",
-              "type": {
-                "text": "Position"
-              },
-              "default": "'between'",
-              "fieldName": "position",
-              "description": "Place of the row in the list as it stands on screen (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `first` is the top row and only has a line below, `last` the bottom row and only has a line above, also with `direction=\"up\"`: position is about where the row stands, `direction` about which way time runs. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level=\"none\"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it"
-            },
-            {
-              "name": "line",
-              "type": {
-                "text": "Line"
-              },
-              "default": "'auto'",
-              "description": "Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line=\"both\"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `level=\"none\"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you",
-              "fieldName": "line"
-            },
-            {
-              "name": "text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "text",
-              "description": "Number or short text in the dot"
-            },
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "icon",
-              "description": "Icon name in the dot; wins over `text`"
-            },
-            {
-              "name": "hide-below",
-              "type": {
-                "text": "string | undefined"
-              },
-              "fieldName": "hideBelow",
-              "inheritedFrom": {
-                "name": "VisibilityMixin",
-                "module": "src/utilities/visibility-mixin.ts"
-              }
-            },
-            {
-              "name": "hide-above",
-              "type": {
-                "text": "string | undefined"
-              },
-              "fieldName": "hideAbove",
-              "inheritedFrom": {
-                "name": "VisibilityMixin",
-                "module": "src/utilities/visibility-mixin.ts"
-              }
-            }
-          ],
-          "mixins": [
-            {
-              "name": "VisibilityMixin",
-              "module": "/src/utilities/visibility-mixin.js"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-timeline-track-cell",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "",
-              "description": "Custom content in the dot (an alternative to `text` and `icon`)"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "NLDDTimelineTrackCell",
-          "declaration": {
-            "name": "NLDDTimelineTrackCell",
-            "module": "src/components/lists-and-tables/cells/timeline-track-cell/timeline-track-cell.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-timeline-track-cell",
-          "declaration": {
-            "name": "NLDDTimelineTrackCell",
-            "module": "src/components/lists-and-tables/cells/timeline-track-cell/timeline-track-cell.ts"
           }
         }
       ]
@@ -37302,12 +37302,12 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/status-and-feedback/step-indicator/step-indicator.ts",
+      "path": "src/components/status-and-feedback/step-bar/step-bar.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "One step in an `nldd-step-indicator`. `status=\"current\"` marks the step you\nare on; the parent derives the status of the others and the number of each,\nwhich live here as internal state rather than as public API. `past` and\n`future` override what is derived for this step.",
-          "name": "NLDDStepIndicatorItem",
+          "description": "One step in an `nldd-step-bar`. `status=\"current\"` marks the step you\nare on; the parent derives the status of the others and the number of each,\nwhich live here as internal state rather than as public API. `past` and\n`future` override what is derived for this step.",
+          "name": "NLDDStepBarItem",
           "slots": [
             {
               "description": "Label (an alternative to `text`)",
@@ -37319,7 +37319,7 @@
               "kind": "field",
               "name": "status",
               "type": {
-                "text": "StepIndicatorStatus | undefined"
+                "text": "StepBarStatus | undefined"
               },
               "attribute": "status",
               "reflects": true
@@ -37368,7 +37368,7 @@
               "kind": "field",
               "name": "resolvedStatus",
               "type": {
-                "text": "StepIndicatorStatus"
+                "text": "StepBarStatus"
               },
               "description": "The status that counts. An own `past` or `future` wins over the derived\none. An own `current` is what the parent derives from, so the derived\nstatus already says it, and on a step that lost to a later one it does not\nhold.",
               "readonly": true
@@ -37377,7 +37377,7 @@
           "attributes": [
             {
               "type": {
-                "text": "StepIndicatorStatus | undefined"
+                "text": "StepBarStatus | undefined"
               },
               "description": "How far along this step is. `current` marks the step you are on (`aria-current=\"step\"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only",
               "name": "status",
@@ -37424,13 +37424,13 @@
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "nldd-step-indicator-item",
+          "tagName": "nldd-step-bar-item",
           "customElement": true
         },
         {
           "kind": "class",
-          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-timeline-track-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-timeline-track-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
-          "name": "NLDDStepIndicator",
+          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
+          "name": "NLDDStepBar",
           "members": [
             {
               "kind": "field",
@@ -37462,7 +37462,7 @@
               "kind": "field",
               "name": "currentItem",
               "type": {
-                "text": "NLDDStepIndicatorItem | undefined"
+                "text": "NLDDStepBarItem | undefined"
               },
               "readonly": true
             },
@@ -37517,12 +37517,12 @@
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "nldd-step-indicator",
+          "tagName": "nldd-step-bar",
           "customElement": true,
           "slots": [
             {
               "name": "",
-              "description": "`nldd-step-indicator-item` children"
+              "description": "`nldd-step-bar-item` children"
             }
           ]
         }
@@ -37530,34 +37530,34 @@
       "exports": [
         {
           "kind": "js",
-          "name": "NLDDStepIndicatorItem",
+          "name": "NLDDStepBarItem",
           "declaration": {
-            "name": "NLDDStepIndicatorItem",
-            "module": "src/components/status-and-feedback/step-indicator/step-indicator.ts"
+            "name": "NLDDStepBarItem",
+            "module": "src/components/status-and-feedback/step-bar/step-bar.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "nldd-step-indicator-item",
+          "name": "nldd-step-bar-item",
           "declaration": {
-            "name": "NLDDStepIndicatorItem",
-            "module": "src/components/status-and-feedback/step-indicator/step-indicator.ts"
+            "name": "NLDDStepBarItem",
+            "module": "src/components/status-and-feedback/step-bar/step-bar.ts"
           }
         },
         {
           "kind": "js",
-          "name": "NLDDStepIndicator",
+          "name": "NLDDStepBar",
           "declaration": {
-            "name": "NLDDStepIndicator",
-            "module": "src/components/status-and-feedback/step-indicator/step-indicator.ts"
+            "name": "NLDDStepBar",
+            "module": "src/components/status-and-feedback/step-bar/step-bar.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "nldd-step-indicator",
+          "name": "nldd-step-bar",
           "declaration": {
-            "name": "NLDDStepIndicator",
-            "module": "src/components/status-and-feedback/step-indicator/step-indicator.ts"
+            "name": "NLDDStepBar",
+            "module": "src/components/status-and-feedback/step-bar/step-bar.ts"
           }
         }
       ]

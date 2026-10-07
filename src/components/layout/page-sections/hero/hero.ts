@@ -113,23 +113,23 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		super.updated(changed);
 		if (changed.has('width')) {
 			// Same contract as the other page sections: the keyword 'full' is
-			// handled by CSS; CSS lengths feed --_max-width inline.
+			// handled by CSS; CSS lengths feed --_hero-max-width inline.
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('max-width', w)) {
-				this.style.setProperty('--_max-width', w);
+				this.style.setProperty('--_hero-max-width', w);
 			} else {
-				this.style.removeProperty('--_max-width');
+				this.style.removeProperty('--_hero-max-width');
 			}
 		}
 		if (changed.has('mediaAspectRatio')) {
 			// Accept '16:9' as well as '16/9' (like nldd-image). Clearing the
 			// attribute makes Lit set the property to null, so guard with ?? '';
-			// the empty value falls back to the stylesheet's --_media-aspect-ratio.
+			// the empty value falls back to the stylesheet's --_hero-media-aspect-ratio.
 			const ratio = (this.mediaAspectRatio ?? '').replace(':', '/').trim();
 			if (ratio && CSS.supports('aspect-ratio', ratio)) {
-				this.style.setProperty('--_media-aspect-ratio', ratio);
+				this.style.setProperty('--_hero-media-aspect-ratio', ratio);
 			} else {
-				this.style.removeProperty('--_media-aspect-ratio');
+				this.style.removeProperty('--_hero-media-aspect-ratio');
 			}
 		}
 	}

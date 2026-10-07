@@ -6,8 +6,16 @@
  * Validates that all CSS custom properties used in components are defined.
  * Token categories:
  * - --context-* : Context variables shared between components (SKIPPED)
- * - --_* : Internal variables (validated within same file)
- * - --components-*, --semantics-*, --primitives-* : CSS variables (validated against variables.css)
+ * - --_* : Local variables. Defined within the same component folder, and
+ *   named after a component in that folder: --_{tag without nldd-}-*. A custom
+ *   property inherits through shadow boundaries, so a generic name reaches the
+ *   elements of another component slotted inside.
+ *   The check reads the prefix only: it does not know which component defines
+ *   a variable. A folder with nldd-menu and nldd-menu-item accepts --_menu-item-*
+ *   from either, which the item needs, since it reads the menu's variables. That
+ *   those resolve is what src/components/subcomponent-variables.test.ts checks.
+ * - --semantics-*, --primitives-* : CSS variables (validated against variables.css)
+ * - --components-* : the component layer is gone; using one is an error.
  */
 
 import fs from 'fs';
@@ -121,7 +129,7 @@ function parseComponentFile(filePath) {
 function categorizeVariable(varName) {
   if (varName.startsWith('--context-')) return 'context';
   if (varName.startsWith('--_')) return 'internal';
-  if (varName.startsWith('--components-')) return 'style';
+  if (varName.startsWith('--components-')) return 'components';
   if (varName.startsWith('--semantics-')) return 'style';
   if (varName.startsWith('--primitives-')) return 'style';
   return 'unknown';
@@ -167,12 +175,37 @@ function validate() {
     for (const def of definitions) folderDefs.add(def);
   }
 
+  // The prefixes a local may carry in a folder: the tags its components register.
+  const prefixesByFolder = new Map();
+  for (const filePath of componentFiles) {
+    const folder = path.dirname(filePath);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const tags = [...content.matchAll(/(?:@customElement\(|customElements\.define\()\s*['"]nldd-([a-z0-9-]+)['"]/g)].map((m) => m[1]);
+    if (!prefixesByFolder.has(folder)) prefixesByFolder.set(folder, new Set());
+    for (const tag of tags) prefixesByFolder.get(folder).add(tag);
+  }
+  const hasOwnPrefix = (varName, folder) => {
+    const prefixes = prefixesByFolder.get(folder) ?? new Set();
+    return [...prefixes].some((prefix) => varName.startsWith(`--_${prefix}-`));
+  };
+  const prefixError = (file, varName) => ({
+    file,
+    variable: varName,
+    message: `Local variable "${varName}" does not start with the name of a component in this folder (--_{tag without nldd-}-…)`,
+  });
+
   // Process each component file
   for (const filePath of componentFiles) {
     const relativePath = path.relative(ROOT_DIR, filePath);
     const folder = path.dirname(filePath);
     const folderDefs = internalDefsByFolder.get(folder) ?? new Set();
-    const { usages } = parseComponentFile(filePath);
+    const { usages, definitions } = parseComponentFile(filePath);
+
+    for (const varName of definitions) {
+      if (varName.startsWith('--_') && !hasOwnPrefix(varName, folder)) {
+        errors.push(prefixError(relativePath, varName));
+      }
+    }
 
     for (const varName of usages) {
       stats.totalUsages++;
@@ -187,7 +220,9 @@ function validate() {
         case 'internal':
           // --_* variables must be defined somewhere in the component folder
           stats.internalVars++;
-          if (!folderDefs.has(varName)) {
+          if (!hasOwnPrefix(varName, folder)) {
+            errors.push(prefixError(relativePath, varName));
+          } else if (!folderDefs.has(varName)) {
             errors.push({
               file: relativePath,
               variable: varName,
@@ -206,6 +241,14 @@ function validate() {
               message: `Variable "${varName}" is not defined in variables.css`,
             });
           }
+          break;
+
+        case 'components':
+          errors.push({
+            file: relativePath,
+            variable: varName,
+            message: `"${varName}": there is no component layer. Use a local --_{component}-* variable in :host, or a semantics token when components share the value`,
+          });
           break;
 
         case 'unknown':

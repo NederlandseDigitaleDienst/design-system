@@ -14,7 +14,7 @@
  *
  * ## Background color
  * Set background="tinted" to give the whole application a tinted background.
- * All descendants read --context-parent-background-color via --_background-color automatically.
+ * All descendants read --context-parent-background-color via --_app-view-background-color automatically.
  * Individual components can override locally with their own background attribute.
  *
  * The same background color is forced on `document.body` so that browser-

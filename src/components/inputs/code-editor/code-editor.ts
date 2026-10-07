@@ -221,7 +221,7 @@ export class NLDDCodeEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 
 	override firstUpdated(): void {
 		this._initialValue = this.value;
-		this.style.setProperty('--_rows', String(this.rows));
+		this.style.setProperty('--_code-editor-rows', String(this.rows));
 		this.mountEditor(this.value);
 		this.onEditorMounted();
 	}
@@ -242,7 +242,7 @@ export class NLDDCodeEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 
 	override updated(changed: PropertyValues): void {
 		if (changed.has('rows')) {
-			this.style.setProperty('--_rows', String(this.rows));
+			this.style.setProperty('--_code-editor-rows', String(this.rows));
 		}
 		if (this.view) {
 			if (changed.has('value')) {

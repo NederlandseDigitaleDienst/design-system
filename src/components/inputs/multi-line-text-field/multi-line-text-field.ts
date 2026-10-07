@@ -140,16 +140,16 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 		if (changed.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {
-				this.style.setProperty('--_width', w);
+				this.style.setProperty('--_multi-line-text-field-width', w);
 			} else {
-				this.style.removeProperty('--_width');
+				this.style.removeProperty('--_multi-line-text-field-width');
 			}
 		}
 		if (changed.has('rows')) {
 			// Expose rows to CSS so the resize="auto" min-height can floor the field
 			// at the configured number of lines (field-sizing: content otherwise
 			// ignores the rows attribute and lets it shrink to one line).
-			this.style.setProperty('--_rows', String(this.rows));
+			this.style.setProperty('--_multi-line-text-field-rows', String(this.rows));
 		}
 		if (changed.has('resize') && this.resize === 'auto' && this._textarea) {
 			// Manual resize sets inline width/height on the textarea, which would

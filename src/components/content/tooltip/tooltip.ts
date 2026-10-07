@@ -235,9 +235,9 @@ export class NLDDTooltip extends LitElement {
 		}
 		// Pointer-hover show delay: schedule via JS now that the visibility
 		// transition is binary (popover open/closed) and the CSS no longer
-		// holds the delay. Read the same `--_show-delay` token so the value
+		// holds the delay. Read the same `--_tooltip-show-delay` token so the value
 		// stays consumer-tunable from CSS.
-		const parsedShow = parseInt(getComputedStyle(this).getPropertyValue('--_show-delay'), 10);
+		const parsedShow = parseInt(getComputedStyle(this).getPropertyValue('--_tooltip-show-delay'), 10);
 		const showDelay = Number.isFinite(parsedShow) ? parsedShow : DEFAULT_SHOW_DELAY_MS;
 		this._showTimeout = setTimeout(() => {
 			this._showTimeout = null;
@@ -274,7 +274,7 @@ export class NLDDTooltip extends LitElement {
 		if (this._hideTimeout) {
 			clearTimeout(this._hideTimeout);
 		}
-		const parsedHide = parseInt(getComputedStyle(this).getPropertyValue('--_hide-delay'), 10);
+		const parsedHide = parseInt(getComputedStyle(this).getPropertyValue('--_tooltip-hide-delay'), 10);
 		const hideDelay = Number.isFinite(parsedHide) ? parsedHide : DEFAULT_HIDE_DELAY_MS;
 		this._hideTimeout = setTimeout(() => {
 			this._visible = false;
@@ -371,9 +371,9 @@ export class NLDDTooltip extends LitElement {
 			placement: this._effectivePlacement,
 			strategy: 'fixed',
 			middleware: [
-				offset(parseInt(styles.getPropertyValue('--_offset'), 10)),
+				offset(parseInt(styles.getPropertyValue('--_tooltip-offset'), 10)),
 				flip(),
-				shift({ padding: parseInt(styles.getPropertyValue('--_shift-padding'), 10) }),
+				shift({ padding: parseInt(styles.getPropertyValue('--_tooltip-shift-padding'), 10) }),
 			],
 		});
 

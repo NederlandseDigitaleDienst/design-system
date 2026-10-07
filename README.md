@@ -145,15 +145,14 @@ Zie de [Storybook-documentatie](https://nederlandsedigitaledienst.github.io/desi
 
 ## Styling structuur
 
-CSS variabelen zijn georganiseerd in vijf lagen:
+CSS variabelen zijn georganiseerd in vier lagen:
 
 | Laag | Prefix | Beschrijving |
 | ---- | ------ | ------------ |
 | **Primitives** | `--primitives-*` | Basis waarden (kleuren, spacing, typography) |
 | **Semantics** | `--semantics-*` | Betekenisvolle variabelen (buttons, controls, surfaces) |
-| **Components** | `--components-*` | Component-specifieke variabelen |
 | **Context** | `--context-*` | Gedeelde variabelen voor communicatie tussen componenten |
-| **Local** | `--_*` | Interne variabelen binnen een component (niet bedoeld voor extern gebruik) |
+| **Local** | `--_{component}-*` | Interne variabelen van één component, met zijn tag zonder `nldd-` voorop (niet bedoeld voor extern gebruik) |
 
 ```css
 /* Primitives — basis waarden. Een kleur draagt zijn licht- en donkerwaarde
@@ -167,15 +166,13 @@ CSS variabelen zijn georganiseerd in vijf lagen:
 --semantics-buttons-accent-filled-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
 --semantics-controls-md-min-size: var(--primitives-space-44);
 
-/* Components — verwijzen naar semantics of primitives */
---components-box-background-color: var(--semantics-surfaces-tinted-background-color);
---components-button-group-sm-gap: var(--primitives-space-6);
-
 /* Context — communicatie tussen componenten */
 --context-parent-background-color: var(--semantics-surfaces-base-background-color);
 
-/* Local — intern binnen een component */
---_background-color: var(--context-parent-background-color);
+/* Local — intern binnen een component, in zijn :host. Wijst naar semantics
+   of primitives, en draagt de naam van het component. */
+--_box-background-color: var(--semantics-surfaces-tinted-background-color);
+--_button-group-sm-gap: var(--primitives-space-6);
 ```
 
 De kleurpaletten staan in `src/assets/styles/colors.generated.css` en worden gegenereerd; de accent-laag wijst naar een van die paletten, zodat één regel de huisstijlkleur van het hele systeem bepaalt.

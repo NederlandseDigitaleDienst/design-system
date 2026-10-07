@@ -195,11 +195,11 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.progress-circle.total-prefix-text': 'Total',
 	'components.progress-circle.loading-label': 'Kargando',
 	'components.progress-circle.accessible-label': 'Progreso',
-	'components.step-indicator.accessible-label': 'Progreso',
-	'components.step-indicator.status-past-label': 'Kompletá',
-	'components.step-indicator.status-current-label': 'Paso aktual',
-	'components.step-indicator.status-future-label': 'Ainda pa hasi',
-	'components.step-indicator.compact-text': 'Paso {current} di {total}',
+	'components.step-bar.accessible-label': 'Progreso',
+	'components.step-bar.status-past-label': 'Kompletá',
+	'components.step-bar.status-current-label': 'Paso aktual',
+	'components.step-bar.status-future-label': 'Ainda pa hasi',
+	'components.step-bar.compact-text': 'Paso {current} di {total}',
 };
 
 export default papCW;

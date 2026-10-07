@@ -16,40 +16,40 @@ export const dateFieldStyles = css`
 		/* Roomier than the text measures. Not to prevent clipping (the digits are
 		   tabular, so every date measures the same), but as air around the date and
 		   as a grip to select and drag by. */
-		--_text-width: 10.5ch;
+		--_date-field-text-width: 10.5ch;
 		/* Room reserved for the separator. The character itself gets its own width,
 		   because it is translatable and would clip in a fixed box. Whatever that
 		   reservation gets wrong is absorbed by the end date field. */
-		--_separator-width: 3.5ch;
-		--_separator-padding-right: var(--primitives-space-6);
+		--_date-field-separator-width: 3.5ch;
+		--_date-field-separator-padding-right: var(--primitives-space-6);
 		/* Left side of the field: it is a border-box, and padding-left already
 		   subtracts one border, so both borders together add up to one extra. */
-		--_edge-width: calc(var(--_inline-padding) + var(--semantics-input-fields-border-width));
+		--_date-field-edge-width: calc(var(--_date-field-inline-padding) + var(--semantics-input-fields-border-width));
 		/* Everything that cannot shrink. Only the last date field stretches, so this
 		   doubles as the lower bound: below it the calendar button would run out of
 		   the field. */
-		--_fixed-width: calc(var(--_edge-width) + var(--_trailing-width));
-		--_width: calc(var(--_fixed-width) + var(--_text-width));
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_background-color: var(--semantics-input-fields-background-color);
-		--_min-size: var(--semantics-controls-md-min-size);
-		--_inline-padding: var(--semantics-controls-md-inline-padding);
-		--_text-font: var(--semantics-input-fields-md-text-font);
-		--_validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
+		--_date-field-fixed-width: calc(var(--_date-field-edge-width) + var(--_date-field-trailing-width));
+		--_date-field-width: calc(var(--_date-field-fixed-width) + var(--_date-field-text-width));
+		--_date-field-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_date-field-background-color: var(--semantics-input-fields-background-color);
+		--_date-field-min-size: var(--semantics-controls-md-min-size);
+		--_date-field-inline-padding: var(--semantics-controls-md-inline-padding);
+		--_date-field-text-font: var(--semantics-input-fields-md-text-font);
+		--_date-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
 		/* As much air to the right of the button as above and below it, so derived
 		   from the height difference between field and button instead of a fixed
 		   value. */
-		--_end-padding-right: calc((var(--_min-size) - var(--_picker-button-size)) / 2 - var(--semantics-input-fields-border-width));
-		--_picker-button-size: var(--semantics-controls-sm-min-size);
-		--_validation-icon-area-width: calc(var(--_min-size) - var(--semantics-input-fields-border-width) * 2);
-		--_trailing-width: calc(var(--_validation-icon-area-width) + var(--_picker-button-size) + var(--_end-padding-right));
+		--_date-field-end-padding-right: calc((var(--_date-field-min-size) - var(--_date-field-picker-button-size)) / 2 - var(--semantics-input-fields-border-width));
+		--_date-field-picker-button-size: var(--semantics-controls-sm-min-size);
+		--_date-field-validation-icon-area-width: calc(var(--_date-field-min-size) - var(--semantics-input-fields-border-width) * 2);
+		--_date-field-trailing-width: calc(var(--_date-field-validation-icon-area-width) + var(--_date-field-picker-button-size) + var(--_date-field-end-padding-right));
 
 		${inheritedTextReset}
 		display: block;
-		width: var(--_width);
-		min-width: var(--_fixed-width);
+		width: var(--_date-field-width);
+		min-width: var(--_date-field-fixed-width);
 		max-width: 100%;
-		font: var(--_text-font);
+		font: var(--_date-field-text-font);
 		-webkit-tap-highlight-color: transparent;
 	}
 
@@ -68,28 +68,28 @@ export const dateFieldStyles = css`
 	   button, leaving the date, and a range's separator and end date, where it was. Opt-in, because only the consumer
 	   knows whether this field is ever validated. */
 	:host([width="fit-content"]:not([valid]):not([invalid])) {
-		--_validation-icon-area-width: var(--primitives-space-8);
+		--_date-field-validation-icon-area-width: var(--primitives-space-8);
 	}
 
 	:host([no-picker]) {
-		--_fixed-width: calc(var(--_edge-width) + var(--_inline-padding) + var(--_validation-icon-area-width));
+		--_date-field-fixed-width: calc(var(--_date-field-edge-width) + var(--_date-field-inline-padding) + var(--_date-field-validation-icon-area-width));
 	}
 
 	:host([range]) {
-		--_fixed-width: calc(var(--_edge-width) + var(--_text-width) + var(--_separator-width) + var(--_trailing-width));
+		--_date-field-fixed-width: calc(var(--_date-field-edge-width) + var(--_date-field-text-width) + var(--_date-field-separator-width) + var(--_date-field-trailing-width));
 	}
 
 	:host([range][no-picker]) {
-		--_fixed-width: calc(var(--_edge-width) + var(--_inline-padding) + var(--_text-width) + var(--_separator-width) + var(--_validation-icon-area-width));
+		--_date-field-fixed-width: calc(var(--_date-field-edge-width) + var(--_date-field-inline-padding) + var(--_date-field-text-width) + var(--_date-field-separator-width) + var(--_date-field-validation-icon-area-width));
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_min-size: var(--semantics-controls-sm-min-size);
-		--_inline-padding: var(--semantics-controls-sm-inline-padding);
-		--_text-font: var(--semantics-input-fields-sm-text-font);
-		--_validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
-		--_picker-button-size: var(--semantics-controls-xs-min-size);
+		--_date-field-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_date-field-min-size: var(--semantics-controls-sm-min-size);
+		--_date-field-inline-padding: var(--semantics-controls-sm-inline-padding);
+		--_date-field-text-font: var(--semantics-input-fields-sm-text-font);
+		--_date-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
+		--_date-field-picker-button-size: var(--semantics-controls-xs-min-size);
 	}
 
 
@@ -99,10 +99,10 @@ export const dateFieldStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		border: var(--semantics-input-fields-border);
-		border-radius: var(--_corner-radius);
-		background-color: var(--_background-color);
-		min-height: var(--_min-size);
-		padding-left: calc(var(--_inline-padding) - var(--semantics-input-fields-border-width));
+		border-radius: var(--_date-field-corner-radius);
+		background-color: var(--_date-field-background-color);
+		min-height: var(--_date-field-min-size);
+		padding-left: calc(var(--_date-field-inline-padding) - var(--semantics-input-fields-border-width));
 		flex-direction: row;
 		align-items: center;
 	}
@@ -116,7 +116,7 @@ export const dateFieldStyles = css`
 	}
 
 	:host([readonly]) .date-field {
-		--_background-color: var(--semantics-input-fields-is-read-only-background-color);
+		--_date-field-background-color: var(--semantics-input-fields-is-read-only-background-color);
 		border-color: var(--semantics-input-fields-is-read-only-border-color);
 	}
 
@@ -126,7 +126,7 @@ export const dateFieldStyles = css`
 
 	.date-field:has(input:-webkit-autofill),
 	.date-field:has(input:autofill) {
-		--_background-color: var(--semantics-input-fields-is-autofill-background-color);
+		--_date-field-background-color: var(--semantics-input-fields-is-autofill-background-color);
 	}
 
 	/* Keyed on the text input, not :focus-within: the calendar button and the
@@ -148,12 +148,12 @@ export const dateFieldStyles = css`
 		border: none;
 		background: transparent;
 		min-width: 0;
-		min-height: calc(var(--_min-size) - var(--semantics-input-fields-border-width) * 2);
+		min-height: calc(var(--_date-field-min-size) - var(--semantics-input-fields-border-width) * 2);
 		overflow: hidden;
 		padding: 0;
 		flex-grow: 1;
 		color: var(--semantics-content-color);
-		font: var(--_text-font);
+		font: var(--_date-field-text-font);
 		appearance: none;
 	}
 
@@ -169,7 +169,7 @@ export const dateFieldStyles = css`
 	.date-field__input:autofill,
 	.date-field__input:-webkit-autofill:disabled,
 	.date-field__input:autofill:disabled {
-		box-shadow: 0 0 0 999px var(--_background-color) inset;
+		box-shadow: 0 0 0 999px var(--_date-field-background-color) inset;
 		-webkit-text-fill-color: var(--semantics-input-fields-is-autofill-content-color);
 	}
 
@@ -177,7 +177,7 @@ export const dateFieldStyles = css`
 	   end date would jump the moment the validation icon claims its room or the
 	   field is set narrower. */
 	:host([range]) .date-field__input {
-		width: var(--_text-width);
+		width: var(--_date-field-text-width);
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
@@ -194,7 +194,7 @@ export const dateFieldStyles = css`
 	   it look lopsided on screen. */
 	.date-field__separator {
 		flex-shrink: 0;
-		padding-right: var(--_separator-padding-right);
+		padding-right: var(--_date-field-separator-padding-right);
 		color: var(--semantics-content-secondary-color);
 	}
 
@@ -211,15 +211,15 @@ export const dateFieldStyles = css`
 		top: 0;
 		right: 0;
 		bottom: 0;
-		border-radius: var(--_corner-radius);
-		background: linear-gradient(90deg, color-mix(in oklch, var(--_background-color) 0%, transparent) 0%, var(--_background-color) 100%);
+		border-radius: var(--_date-field-corner-radius);
+		background: linear-gradient(90deg, color-mix(in oklch, var(--_date-field-background-color) 0%, transparent) 0%, var(--_date-field-background-color) 100%);
 		pointer-events: none;
 		width: var(--primitives-space-8);
 	}
 
 	.date-field__validation-icon-area {
 		display: flex;
-		width: var(--_validation-icon-area-width);
+		width: var(--_date-field-validation-icon-area-width);
 		height: 100%;
 		flex-shrink: 0;
 		align-items: center;
@@ -236,14 +236,14 @@ export const dateFieldStyles = css`
 
 	.date-field__validation-icon {
 		display: flex;
-		width: var(--_validation-icon-size);
-		height: var(--_validation-icon-size);
+		width: var(--_date-field-validation-icon-size);
+		height: var(--_date-field-validation-icon-size);
 	}
 
 	.date-field__picker-button {
 		position: relative;
 		flex-shrink: 0;
-		padding-right: var(--_end-padding-right);
+		padding-right: var(--_date-field-end-padding-right);
 		display: flex;
 		align-items: center;
 	}

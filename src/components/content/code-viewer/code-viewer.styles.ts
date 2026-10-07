@@ -10,24 +10,24 @@ export const codeViewerStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--semantics-surfaces-corner-radius);
-		--_background-color: var(--semantics-surfaces-tinted-background-color);
-		--_border-width: var(--semantics-surfaces-border-width);
-		--_border-color: var(--semantics-surfaces-tinted-border-color);
-		--_border-shadow: inset 0 0 0 var(--_border-width) var(--_border-color);
-		--_block-padding: var(--primitives-space-16);
-		--_inline-padding: var(--primitives-space-16);
-		--_content-color: var(--semantics-content-color);
-		--_font: var(--primitives-font-monospace-sm-regular-snug);
-		--_actions-area-padding: var(--primitives-space-8);
-		--_actions-area-size: calc(var(--semantics-controls-md-min-size) + var(--_actions-area-padding) * 2);
-		--_actions-z-index: 1;
+		--_code-viewer-corner-radius: var(--semantics-surfaces-corner-radius);
+		--_code-viewer-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_code-viewer-border-width: var(--semantics-surfaces-border-width);
+		--_code-viewer-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_code-viewer-border-shadow: inset 0 0 0 var(--_code-viewer-border-width) var(--_code-viewer-border-color);
+		--_code-viewer-block-padding: var(--primitives-space-16);
+		--_code-viewer-inline-padding: var(--primitives-space-16);
+		--_code-viewer-content-color: var(--semantics-content-color);
+		--_code-viewer-font: var(--primitives-font-monospace-sm-regular-snug);
+		--_code-viewer-actions-area-padding: var(--primitives-space-8);
+		--_code-viewer-actions-area-size: calc(var(--semantics-controls-md-min-size) + var(--_code-viewer-actions-area-padding) * 2);
+		--_code-viewer-actions-z-index: 1;
 
 		${inheritedTextReset}
 		display: flex;
 		position: relative;
 		/* Own stacking context so the absolutely-positioned actions button
-		   (z-index: var(--_actions-z-index)) stays scoped to the code-viewer
+		   (z-index: var(--_code-viewer-actions-z-index)) stays scoped to the code-viewer
 		   and can't paint over other layers on the page. */
 		isolation: isolate;
 		/* iOS Safari inflates text in wide scrollable blocks (text autosizing);
@@ -41,16 +41,16 @@ export const codeViewerStyles = css`
 	}
 
 	:host([appearance="box-base"]) {
-		--_background-color: var(--semantics-surfaces-base-background-color);
-		--_border-color: var(--semantics-surfaces-base-border-color);
+		--_code-viewer-background-color: var(--semantics-surfaces-base-background-color);
+		--_code-viewer-border-color: var(--semantics-surfaces-base-border-color);
 	}
 
 	:host([appearance="simple"]) {
-		--_corner-radius: 0;
-		--_background-color: transparent;
-		--_border-color: transparent;
-		--_block-padding: 0;
-		--_inline-padding: 0;
+		--_code-viewer-corner-radius: 0;
+		--_code-viewer-background-color: transparent;
+		--_code-viewer-border-color: transparent;
+		--_code-viewer-block-padding: 0;
+		--_code-viewer-inline-padding: 0;
 	}
 
 
@@ -59,20 +59,20 @@ export const codeViewerStyles = css`
 	.code-viewer {
 		box-sizing: border-box;
 		position: relative;
-		border-radius: var(--_corner-radius);
+		border-radius: var(--_code-viewer-corner-radius);
 		/* Inner box-shadow paints the border ring inside the radius
 		   without taking layout space — matches nldd-box / nldd-banner.
-		   appearance="simple" suppresses the ring via --_border-color. The
+		   appearance="simple" suppresses the ring via --_code-viewer-border-color. The
 		   forced-colors fallback at the bottom restores a real border. */
-		box-shadow: var(--_border-shadow);
-		background-color: var(--_background-color);
+		box-shadow: var(--_code-viewer-border-shadow);
+		background-color: var(--_code-viewer-background-color);
 		min-width: 0;
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
-		padding: var(--_block-padding) var(--_inline-padding);
-		color: var(--_content-color);
-		font: var(--_font);
+		padding: var(--_code-viewer-block-padding) var(--_code-viewer-inline-padding);
+		color: var(--_code-viewer-content-color);
+		font: var(--_code-viewer-font);
 	}
 
 	/* Reserve the actions space only when the copy button actually renders: not
@@ -80,16 +80,16 @@ export const codeViewerStyles = css`
 	   set by JS when it isn't). Both attributes suppress the button, so both drop
 	   the reserved space. */
 	:host(:not([no-copy]):not([copy-unavailable])) .code-viewer {
-		min-height: var(--_actions-area-size);
-		padding-right: var(--_actions-area-size);
+		min-height: var(--_code-viewer-actions-area-size);
+		padding-right: var(--_code-viewer-actions-area-size);
 	}
 
 	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) {
-		--_actions-area-padding: 0;
+		--_code-viewer-actions-area-padding: 0;
 	}
 
 	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) .code-viewer {
-		min-height: var(--_actions-area-size);
+		min-height: var(--_code-viewer-actions-area-size);
 		padding-right: 0;
 	}
 
@@ -99,7 +99,7 @@ export const codeViewerStyles = css`
 	.code-viewer:has(.cm-scroller:focus-visible) {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_border-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_code-viewer-border-shadow);
 	}
 
 	.cm-content {
@@ -117,9 +117,9 @@ export const codeViewerStyles = css`
 
 	.code-viewer__actions {
 		position: absolute;
-		top: var(--_actions-area-padding);
-		right: var(--_actions-area-padding);
-		z-index: var(--_actions-z-index);
+		top: var(--_code-viewer-actions-area-padding);
+		right: var(--_code-viewer-actions-area-padding);
+		z-index: var(--_code-viewer-actions-z-index);
 	}
 
 	.code-viewer__live-region {
@@ -139,7 +139,7 @@ export const codeViewerStyles = css`
 
 	@media (forced-colors: active) {
 		:host .code-viewer {
-			border: var(--_border-width) solid CanvasText;
+			border: var(--_code-viewer-border-width) solid CanvasText;
 		}
 
 		:host([appearance="simple"]) .code-viewer {

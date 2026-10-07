@@ -9,15 +9,15 @@ export const avatarGroupStyles = css`
 	/* # Host */
 
 	:host {
-		--_avatar-size: var(--primitives-space-40);
-		--_overlap-size: calc(var(--_avatar-size) * 0.2);
-		--_ring-thickness: var(--semantics-surfaces-ring-thickness);
-		--_ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
-		--_corner-radius: var(--primitives-corner-radius-full);
-		--_overflow-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-150));
-		--_overflow-hover-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
-		--_overflow-content-color: var(--semantics-content-secondary-color);
-		--_overflow-font: var(--primitives-font-body-xs-medium-flat);
+		--_avatar-group-size: var(--primitives-space-40);
+		--_avatar-group-overlap-size: calc(var(--_avatar-group-size) * 0.2);
+		--_avatar-group-ring-thickness: var(--semantics-surfaces-ring-thickness);
+		--_avatar-group-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_avatar-group-corner-radius: var(--primitives-corner-radius-full);
+		--_avatar-group-overflow-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-150));
+		--_avatar-group-overflow-hover-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
+		--_avatar-group-overflow-content-color: var(--semantics-content-secondary-color);
+		--_avatar-group-overflow-font: var(--primitives-font-body-xs-medium-flat);
 
 		display: inline-flex;
 		vertical-align: middle;
@@ -30,24 +30,24 @@ export const avatarGroupStyles = css`
 
 	/* ## Size */
 
-	:host([size="16"]) { --_avatar-size: var(--primitives-space-16); }
-	:host([size="20"]) { --_avatar-size: var(--primitives-space-20); }
-	:host([size="24"]) { --_avatar-size: var(--primitives-space-24); }
-	:host([size="28"]) { --_avatar-size: var(--primitives-space-28); }
-	:host([size="32"]) { --_avatar-size: var(--primitives-space-32); }
-	:host([size="44"]) { --_avatar-size: var(--primitives-space-44); }
-	:host([size="48"]) { --_avatar-size: var(--primitives-space-48); }
-	:host([size="56"]) { --_avatar-size: var(--primitives-space-56); }
-	:host([size="64"]) { --_avatar-size: var(--primitives-space-64); }
-	:host([size="80"]) { --_avatar-size: var(--primitives-space-80); }
-	:host([size="96"]) { --_avatar-size: var(--primitives-space-96); }
+	:host([size="16"]) { --_avatar-group-size: var(--primitives-space-16); }
+	:host([size="20"]) { --_avatar-group-size: var(--primitives-space-20); }
+	:host([size="24"]) { --_avatar-group-size: var(--primitives-space-24); }
+	:host([size="28"]) { --_avatar-group-size: var(--primitives-space-28); }
+	:host([size="32"]) { --_avatar-group-size: var(--primitives-space-32); }
+	:host([size="44"]) { --_avatar-group-size: var(--primitives-space-44); }
+	:host([size="48"]) { --_avatar-group-size: var(--primitives-space-48); }
+	:host([size="56"]) { --_avatar-group-size: var(--primitives-space-56); }
+	:host([size="64"]) { --_avatar-group-size: var(--primitives-space-64); }
+	:host([size="80"]) { --_avatar-group-size: var(--primitives-space-80); }
+	:host([size="96"]) { --_avatar-group-size: var(--primitives-space-96); }
 
 
 	/* # Group */
 
 	.avatar-group {
 		display: flex;
-		padding-inline-start: var(--_overlap-size);
+		padding-inline-start: var(--_avatar-group-overlap-size);
 	}
 
 
@@ -66,18 +66,18 @@ export const avatarGroupStyles = css`
 		position: relative;
 		z-index: 0;
 		flex-shrink: 0;
-		margin-inline-start: calc(-1 * var(--_overlap-size));
+		margin-inline-start: calc(-1 * var(--_avatar-group-overlap-size));
 		border: none;
-		border-radius: var(--_corner-radius);
-		box-shadow: 0 0 0 var(--_ring-thickness) var(--_ring-color);
-		background-color: var(--_overflow-background-color);
-		width: var(--_avatar-size);
-		height: var(--_avatar-size);
+		border-radius: var(--_avatar-group-corner-radius);
+		box-shadow: 0 0 0 var(--_avatar-group-ring-thickness) var(--_avatar-group-ring-color);
+		background-color: var(--_avatar-group-overflow-background-color);
+		width: var(--_avatar-group-size);
+		height: var(--_avatar-group-size);
 		padding: 0;
 		align-items: center;
 		justify-content: center;
-		color: var(--_overflow-content-color);
-		font: var(--_overflow-font);
+		color: var(--_avatar-group-overflow-content-color);
+		font: var(--_avatar-group-overflow-font);
 	}
 
 	/* The smallest step the neutral scale has, one notch off the resting fill.
@@ -85,7 +85,7 @@ export const avatarGroupStyles = css`
 	   control that already looks like a button, and here they read as a jump.
 	   It only has to confirm that this disc is clickable. */
 	.avatar-group__overflow-button:hover {
-		background-color: var(--_overflow-hover-background-color);
+		background-color: var(--_avatar-group-overflow-hover-background-color);
 	}
 
 	.avatar-group__overflow-button:focus-visible {
@@ -105,18 +105,18 @@ export const avatarGroupStyles = css`
 	.avatar-group ::slotted(nldd-avatar) {
 		position: relative;
 		flex-shrink: 0;
-		margin-inline-start: calc(-1 * var(--_overlap-size));
-		border-radius: var(--_corner-radius);
-		box-shadow: 0 0 0 var(--_ring-thickness) var(--_ring-color);
-		width: var(--_avatar-size) !important;
-		height: var(--_avatar-size) !important;
+		margin-inline-start: calc(-1 * var(--_avatar-group-overlap-size));
+		border-radius: var(--_avatar-group-corner-radius);
+		box-shadow: 0 0 0 var(--_avatar-group-ring-thickness) var(--_avatar-group-ring-color);
+		width: var(--_avatar-group-size) !important;
+		height: var(--_avatar-group-size) !important;
 	}
 
 	/* A box-shadow does not paint in forced colors, so the separation comes
 	   back as a real border there. */
 	@media (forced-colors: active) {
 		.avatar-group ::slotted(nldd-avatar) {
-			border: var(--_ring-thickness) solid Canvas;
+			border: var(--_avatar-group-ring-thickness) solid Canvas;
 		}
 	}
 `;

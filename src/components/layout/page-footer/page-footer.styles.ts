@@ -12,17 +12,15 @@ export const pageFooterStyles = css`
 		box-sizing: border-box;
 	}
 	:host {
-		--_max-width: var(--semantics-page-sections-body-max-width);
-		/* Official Rijksoverheid lintje color — identical across all
-		   .rijks.app / .overheid.nl sites by visual-identity policy, so it
-		   intentionally lives outside the semantic token system. Local
-		   --_ var keeps the value discoverable in one place. */
-		--_lintje-color: #154273;
-		--context-parent-background-color: var(--components-page-footer-background-color);
+		--_page-footer-max-width: var(--semantics-page-sections-body-max-width);
+		--_page-footer-ribbon-color: var(--semantics-brand-ribbon-color);
+		--_page-footer-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-50));
+		--_page-footer-divider-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-150));
+		--context-parent-background-color: var(--_page-footer-background-color);
 
 		container-type: inline-size;
 		display: block;
-		background-color: var(--components-page-footer-background-color);
+		background-color: var(--_page-footer-background-color);
 		width: 100%;
 	}
 
@@ -35,11 +33,11 @@ export const pageFooterStyles = css`
 	}
 
 	:host([width="full"]) {
-		--_max-width: none;
+		--_page-footer-max-width: none;
 	}
 
 	.page-footer {
-		--_lintje-height: calc(var(--_lintje-width) / 2);
+		--_page-footer-ribbon-height: calc(var(--_page-footer-ribbon-width) / 2);
 
 		box-sizing: border-box;
 		display: flex;
@@ -50,27 +48,27 @@ export const pageFooterStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			--_lintje-width: var(--primitives-space-40);
+			--_page-footer-ribbon-width: var(--semantics-brand-ribbon-sm-width);
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
-			--_lintje-width: var(--primitives-space-44);
+			--_page-footer-ribbon-width: var(--semantics-brand-ribbon-md-width);
 		}
 
 		@container (min-width: ${lgMin}) {
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
-			--_lintje-width: var(--primitives-space-48);
+			--_page-footer-ribbon-width: var(--semantics-brand-ribbon-lg-width);
 		}
 	}
 
-	/* Empty footer = only the lintje. Add top space equal to the lintje height
+	/* Empty footer = only the ribbon. Add top space equal to the ribbon height
 	   (container-type on :host makes a BFC, so this margin stays inside the
 	   transparent host) so a preceding tinted page section doesn't butt right up
-	   against the lintje. */
+	   against the ribbon. */
 	:host([empty]) .page-footer {
-		min-height: var(--_lintje-height);
-		margin-top: var(--_lintje-height);
+		min-height: var(--_page-footer-ribbon-height);
+		margin-top: var(--_page-footer-ribbon-height);
 	}
 
 	.page-footer::after {
@@ -78,9 +76,9 @@ export const pageFooterStyles = css`
 		position: absolute;
 		bottom: 0;
 		left: 50%;
-		background-color: var(--_lintje-color);
-		width: var(--_lintje-width);
-		height: var(--_lintje-height);
+		background-color: var(--_page-footer-ribbon-color);
+		width: var(--_page-footer-ribbon-width);
+		height: var(--_page-footer-ribbon-height);
 		transform: translateX(-50%);
 	}
 
@@ -93,7 +91,7 @@ export const pageFooterStyles = css`
 	.page-footer__body {
 		display: flex;
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_page-footer-max-width);
 		flex-direction: column;
 	}
 
@@ -127,11 +125,11 @@ export const pageFooterStyles = css`
 	}
 
 	.page-footer__body > div:not([hidden]):not(:has(~ div:not([hidden]))) {
-		padding-bottom: calc(var(--primitives-space-16) + var(--_lintje-height));
+		padding-bottom: calc(var(--primitives-space-16) + var(--_page-footer-ribbon-height));
 	}
 
 	:host([single-slot]) .page-footer__body > div:not([hidden]) {
-		padding-top: calc(var(--primitives-space-16) + var(--_lintje-height));
+		padding-top: calc(var(--primitives-space-16) + var(--_page-footer-ribbon-height));
 	}
 
 	.page-footer__breadcrumbs[hidden],
@@ -144,7 +142,7 @@ export const pageFooterStyles = css`
 	.page-footer__divider {
 		margin: 0;
 		border: none;
-		background-color: var(--components-page-footer-divider-color);
+		background-color: var(--_page-footer-divider-color);
 		width: 100%;
 		height: var(--semantics-dividers-thickness);
 	}
@@ -203,6 +201,8 @@ export const pageFooterLegalBarStyles = css`
 
 export const pageFooterLegalBarItemStyles = css`
 	:host {
+		--_page-footer-legal-bar-item-color: var(--semantics-content-secondary-color);
+
 		${inheritedTextReset}
 		display: inline-flex;
 	}
@@ -213,12 +213,12 @@ export const pageFooterLegalBarItemStyles = css`
 
 	.page-footer__legal-bar-item {
 		display: inline-flex;
-		color: var(--components-page-footer-legal-bar-item-color);
+		color: var(--_page-footer-legal-bar-item-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 	}
 
 	.page-footer__legal-bar-item-link {
-		color: var(--components-page-footer-legal-bar-item-color);
+		color: var(--_page-footer-legal-bar-item-color);
 		text-decoration: underline;
 	}
 

@@ -402,7 +402,7 @@ const emptyMessageClose = [
  * from a mutation observer rather than on an update: CodeMirror measures the
  * tooltip right after it puts it there, and a closed popover has no size.
  */
-/** What an nldd-menu keeps free of the window's edge (--_viewport-margin). */
+/** What an nldd-menu keeps free of the window's edge (--_menu-viewport-margin). */
 const VIEWPORT_MARGIN = 16;
 
 function topLayerPopups(): Extension {
@@ -472,7 +472,7 @@ const popupTheme = EditorView.theme({
 		// No radius on the menu itself, like nldd-menu (overlays-corner-radius).
 		borderRadius: 'var(--semantics-overlays-corner-radius)',
 		backgroundColor: 'var(--semantics-surfaces-base-background-color)',
-		boxShadow: 'var(--components-menu-box-shadow)',
+		boxShadow: 'var(--semantics-overlays-box-shadow)',
 	},
 	// Match CM's own specificity (.cm-tooltip.cm-tooltip-autocomplete) so the
 	// body font wins over its monospace default — names read better in sans.
@@ -539,8 +539,8 @@ const popupTheme = EditorView.theme({
 		font: 'var(--primitives-font-body-sm-regular-tight)',
 	},
 	'.cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected]': {
-		backgroundColor: 'var(--components-menu-item-is-highlighted-background-color)',
-		color: 'var(--components-menu-item-is-highlighted-content-color)',
+		backgroundColor: 'var(--semantics-controls-is-highlighted-indicator-color)',
+		color: 'var(--semantics-controls-is-highlighted-contrast-color)',
 	},
 	// CodeMirror keeps the keyboard-selected option active on hover (Enter still
 	// applies that one), so hover can't share the accent 'highlighted' look —
@@ -548,8 +548,8 @@ const popupTheme = EditorView.theme({
 	// only on rows that aren't the keyboard selection.
 	'@media (hover: hover)': {
 		'.cm-tooltip.cm-tooltip-autocomplete > ul > li:not([aria-selected]):hover': {
-			backgroundColor: 'var(--components-list-item-is-hovered-background-color)',
-			color: 'var(--components-list-item-is-hovered-content-color)',
+			backgroundColor: 'var(--semantics-list-items-is-hovered-background-color)',
+			color: 'var(--semantics-list-items-is-hovered-content-color)',
 		},
 	},
 	'.cm-completionDetail': {
@@ -566,7 +566,7 @@ const popupTheme = EditorView.theme({
 		border: 'none',
 		borderRadius: 'var(--semantics-overlays-corner-radius)',
 		backgroundColor: 'var(--semantics-surfaces-base-background-color)',
-		boxShadow: 'var(--components-menu-box-shadow)',
+		boxShadow: 'var(--semantics-overlays-box-shadow)',
 		minWidth: 'var(--primitives-area-280)',
 		maxWidth: 'var(--primitives-area-400)',
 		boxSizing: 'border-box',

@@ -82,24 +82,24 @@ describe('nldd-toolbar-title', () => {
 		el = await fixture('<nldd-toolbar-title text="T" min-width="200px" width="50%" max-width="300px"></nldd-toolbar-title>');
 		await waitForUpdate(el);
 		const style = (el as HTMLElement).style;
-		expect(style.getPropertyValue('--_title-group-min-width')).toBe('200px');
-		expect(style.getPropertyValue('--_title-width')).toBe('50%');
-		expect(style.getPropertyValue('--_title-max-width')).toBe('300px');
+		expect(style.getPropertyValue('--_toolbar-title-group-min-width')).toBe('200px');
+		expect(style.getPropertyValue('--_toolbar-title-width')).toBe('50%');
+		expect(style.getPropertyValue('--_toolbar-title-max-width')).toBe('300px');
 	});
 
 	it('removes the title CSS variables when the size attributes are cleared (_reflectSizeVar)', async () => {
 		el = await fixture('<nldd-toolbar-title text="T" min-width="200px" width="50%" max-width="300px"></nldd-toolbar-title>');
 		await waitForUpdate(el);
 		const style = (el as HTMLElement).style;
-		expect(style.getPropertyValue('--_title-width')).toBe('50%');
+		expect(style.getPropertyValue('--_toolbar-title-width')).toBe('50%');
 		const title = el as unknown as { minWidth: string; width: string; maxWidth: string };
 		title.minWidth = '';
 		title.width = '';
 		title.maxWidth = '';
 		await waitForUpdate(el);
-		expect(style.getPropertyValue('--_title-group-min-width')).toBe('');
-		expect(style.getPropertyValue('--_title-width')).toBe('');
-		expect(style.getPropertyValue('--_title-max-width')).toBe('');
+		expect(style.getPropertyValue('--_toolbar-title-group-min-width')).toBe('');
+		expect(style.getPropertyValue('--_toolbar-title-width')).toBe('');
+		expect(style.getPropertyValue('--_toolbar-title-max-width')).toBe('');
 	});
 
 	it('renders a slotted action control after the title text', async () => {

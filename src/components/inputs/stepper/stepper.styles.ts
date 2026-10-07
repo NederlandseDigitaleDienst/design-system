@@ -9,9 +9,9 @@ export const stepperStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_divider-length: var(--semantics-buttons-md-divider-length);
-		--_highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
+		--_stepper-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_stepper-divider-length: var(--semantics-buttons-md-divider-length);
+		--_stepper-highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
 
 		display: inline-flex;
 		isolation: isolate;
@@ -25,13 +25,13 @@ export const stepperStyles = css`
 	}
 
 	:host([size="xs"]) {
-		--_corner-radius: var(--semantics-controls-xs-corner-radius);
-		--_divider-length: var(--semantics-buttons-xs-divider-length);
+		--_stepper-corner-radius: var(--semantics-controls-xs-corner-radius);
+		--_stepper-divider-length: var(--semantics-buttons-xs-divider-length);
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_divider-length: var(--semantics-buttons-sm-divider-length);
+		--_stepper-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_stepper-divider-length: var(--semantics-buttons-sm-divider-length);
 	}
 
 	:host([disabled]) {
@@ -49,7 +49,7 @@ export const stepperStyles = css`
 	.stepper {
 		display: inline-flex;
 		position: relative;
-		border-radius: var(--_corner-radius);
+		border-radius: var(--_stepper-corner-radius);
 		background-color: var(--semantics-buttons-neutral-tinted-background-color);
 		flex-direction: row;
 		align-items: center;
@@ -60,7 +60,7 @@ export const stepperStyles = css`
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
-		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_highlight-border-color);
+		box-shadow: inset 0 0 0 var(--primitives-border-width-thin) var(--_stepper-highlight-border-color);
 		pointer-events: none;
 	}
 
@@ -76,7 +76,7 @@ export const stepperStyles = css`
 	.stepper__divider {
 		background-color: var(--semantics-buttons-neutral-tinted-divider-color);
 		width: var(--semantics-dividers-thickness);
-		height: var(--_divider-length);
+		height: var(--_stepper-divider-length);
 		flex-shrink: 0;
 	}
 

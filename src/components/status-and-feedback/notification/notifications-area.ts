@@ -273,7 +273,7 @@ function syncStack(area: HTMLElement): void {
 
 	items.forEach((item, index) => {
 		item.style.gridArea = expanded ? '' : '1 / 1';
-		item.style.setProperty('--_stack-depth', expanded ? '0' : String(Math.min(index, MAX_DEPTH)));
+		item.style.setProperty('--_notification-stack-depth', expanded ? '0' : String(Math.min(index, MAX_DEPTH)));
 		// Closed, the front has to paint over the deck. Open, it is the other way
 		// round: each notification covers the shadow of the one above it, so no
 		// shadow lands on a notification instead of on the page.
@@ -346,7 +346,7 @@ function onDocumentPointerDown(e: Event): void {
  *  thing saying there is more here than the one message you can read. */
 function setFanned(area: HTMLElement, on: boolean): void {
 	notifications(area).forEach((item) => {
-		item.style.setProperty('--_stack-fanned', on ? '1' : '0');
+		item.style.setProperty('--_notification-stack-fanned', on ? '1' : '0');
 	});
 }
 

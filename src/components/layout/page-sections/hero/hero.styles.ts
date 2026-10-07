@@ -20,20 +20,20 @@ export const heroStyles = css`
 		/* Block-padding overrides from PageSectionMixin; 'initial' makes the
 		   var() in .hero fall back to the responsive default until the mixin
 		   sets a value inline on the host. */
-		--_padding-top: initial;
-		--_padding-bottom: initial;
-		--_sm-padding-top: initial;
-		--_sm-padding-bottom: initial;
-		--_md-padding-top: initial;
-		--_md-padding-bottom: initial;
-		--_lg-padding-top: initial;
-		--_lg-padding-bottom: initial;
-		--_max-width: var(--semantics-page-sections-body-max-width);
-		--_media-aspect-ratio: 21 / 9;
-		--_main-width: 50%;
-		--_main-background-color: var(--semantics-categories-accent-reference-background-color);
-		--_main-content-color: var(--semantics-categories-accent-reference-content-color);
-		--_main-padding: var(--primitives-space-16);
+		--_hero-padding-top: initial;
+		--_hero-padding-bottom: initial;
+		--_hero-sm-padding-top: initial;
+		--_hero-sm-padding-bottom: initial;
+		--_hero-md-padding-top: initial;
+		--_hero-md-padding-bottom: initial;
+		--_hero-lg-padding-top: initial;
+		--_hero-lg-padding-bottom: initial;
+		--_hero-max-width: var(--semantics-page-sections-body-max-width);
+		--_hero-media-aspect-ratio: 21 / 9;
+		--_hero-main-width: 50%;
+		--_hero-main-background-color: var(--semantics-categories-accent-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-accent-reference-content-color);
+		--_hero-main-padding: var(--primitives-space-16);
 
 		${inheritedTextReset}
 		display: flex;
@@ -52,114 +52,114 @@ export const heroStyles = css`
 	}
 
 	:host([width="full"]) {
-		--_max-width: none;
+		--_hero-max-width: none;
 	}
 
 	:host([main-width="2/3"]) {
-		--_main-width: 66.667%;
+		--_hero-main-width: 66.667%;
 	}
 
 	:host([main-width="3/4"]) {
-		--_main-width: 75%;
+		--_hero-main-width: 75%;
 	}
 
 	:host([main-width="full"]) {
-		--_main-width: 100%;
+		--_hero-main-width: 100%;
 	}
 
 	:host([main-background="base"]) {
-		--_main-background-color: var(--semantics-surfaces-base-background-color);
-		--_main-content-color: var(--semantics-content-color);
+		--_hero-main-background-color: var(--semantics-surfaces-base-background-color);
+		--_hero-main-content-color: var(--semantics-content-color);
 	}
 
 	:host([main-background="lintblauw"]) {
-		--_main-background-color: var(--semantics-categories-lintblauw-reference-background-color);
-		--_main-content-color: var(--semantics-categories-lintblauw-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-lintblauw-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-lintblauw-reference-content-color);
 	}
 
 	:host([main-background="donkerblauw"]) {
-		--_main-background-color: var(--semantics-categories-donkerblauw-reference-background-color);
-		--_main-content-color: var(--semantics-categories-donkerblauw-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-donkerblauw-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-donkerblauw-reference-content-color);
 	}
 
 	:host([main-background="hemelblauw"]) {
-		--_main-background-color: var(--semantics-categories-hemelblauw-reference-background-color);
-		--_main-content-color: var(--semantics-categories-hemelblauw-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-hemelblauw-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-hemelblauw-reference-content-color);
 	}
 
 	:host([main-background="lichtblauw"]) {
-		--_main-background-color: var(--semantics-categories-lichtblauw-reference-background-color);
-		--_main-content-color: var(--semantics-categories-lichtblauw-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-lichtblauw-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-lichtblauw-reference-content-color);
 	}
 
 	:host([main-background="paars"]) {
-		--_main-background-color: var(--semantics-categories-paars-reference-background-color);
-		--_main-content-color: var(--semantics-categories-paars-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-paars-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-paars-reference-content-color);
 	}
 
 	:host([main-background="violet"]) {
-		--_main-background-color: var(--semantics-categories-violet-reference-background-color);
-		--_main-content-color: var(--semantics-categories-violet-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-violet-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-violet-reference-content-color);
 	}
 
 	:host([main-background="robijnrood"]) {
-		--_main-background-color: var(--semantics-categories-robijnrood-reference-background-color);
-		--_main-content-color: var(--semantics-categories-robijnrood-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-robijnrood-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-robijnrood-reference-content-color);
 	}
 
 	:host([main-background="roze"]) {
-		--_main-background-color: var(--semantics-categories-roze-reference-background-color);
-		--_main-content-color: var(--semantics-categories-roze-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-roze-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-roze-reference-content-color);
 	}
 
 	:host([main-background="rood"]) {
-		--_main-background-color: var(--semantics-categories-rood-reference-background-color);
-		--_main-content-color: var(--semantics-categories-rood-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-rood-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-rood-reference-content-color);
 	}
 
 	:host([main-background="oranje"]) {
-		--_main-background-color: var(--semantics-categories-oranje-reference-background-color);
-		--_main-content-color: var(--semantics-categories-oranje-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-oranje-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-oranje-reference-content-color);
 	}
 
 	:host([main-background="donkergeel"]) {
-		--_main-background-color: var(--semantics-categories-donkergeel-reference-background-color);
-		--_main-content-color: var(--semantics-categories-donkergeel-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-donkergeel-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-donkergeel-reference-content-color);
 	}
 
 	:host([main-background="geel"]) {
-		--_main-background-color: var(--semantics-categories-geel-reference-background-color);
-		--_main-content-color: var(--semantics-categories-geel-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-geel-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-geel-reference-content-color);
 	}
 
 	:host([main-background="donkerbruin"]) {
-		--_main-background-color: var(--semantics-categories-donkerbruin-reference-background-color);
-		--_main-content-color: var(--semantics-categories-donkerbruin-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-donkerbruin-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-donkerbruin-reference-content-color);
 	}
 
 	:host([main-background="bruin"]) {
-		--_main-background-color: var(--semantics-categories-bruin-reference-background-color);
-		--_main-content-color: var(--semantics-categories-bruin-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-bruin-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-bruin-reference-content-color);
 	}
 
 	:host([main-background="donkergroen"]) {
-		--_main-background-color: var(--semantics-categories-donkergroen-reference-background-color);
-		--_main-content-color: var(--semantics-categories-donkergroen-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-donkergroen-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-donkergroen-reference-content-color);
 	}
 
 	:host([main-background="groen"]) {
-		--_main-background-color: var(--semantics-categories-groen-reference-background-color);
-		--_main-content-color: var(--semantics-categories-groen-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-groen-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-groen-reference-content-color);
 	}
 
 	:host([main-background="mosgroen"]) {
-		--_main-background-color: var(--semantics-categories-mosgroen-reference-background-color);
-		--_main-content-color: var(--semantics-categories-mosgroen-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-mosgroen-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-mosgroen-reference-content-color);
 	}
 
 	:host([main-background="mintgroen"]) {
-		--_main-background-color: var(--semantics-categories-mintgroen-reference-background-color);
-		--_main-content-color: var(--semantics-categories-mintgroen-reference-content-color);
+		--_hero-main-background-color: var(--semantics-categories-mintgroen-reference-background-color);
+		--_hero-main-content-color: var(--semantics-categories-mintgroen-reference-content-color);
 	}
 
 
@@ -179,22 +179,22 @@ export const heroStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			padding-top: var(--_sm-padding-top, var(--_padding-top, var(--semantics-page-sections-sm-margin-block)));
-			padding-bottom: var(--_sm-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-sm-margin-block)));
+			padding-top: var(--_hero-sm-padding-top, var(--_hero-padding-top, var(--semantics-page-sections-sm-margin-block)));
+			padding-bottom: var(--_hero-sm-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			--_main-padding: var(--primitives-space-24);
+			--_hero-main-padding: var(--primitives-space-24);
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
-			padding-top: var(--_md-padding-top, var(--_padding-top, var(--semantics-page-sections-md-margin-block)));
-			padding-bottom: var(--_md-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-md-margin-block)));
+			padding-top: var(--_hero-md-padding-top, var(--_hero-padding-top, var(--semantics-page-sections-md-margin-block)));
+			padding-bottom: var(--_hero-md-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
 		@container (min-width: ${lgMin}) {
-			--_main-padding: var(--primitives-space-32);
+			--_hero-main-padding: var(--primitives-space-32);
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
-			padding-top: var(--_lg-padding-top, var(--_padding-top, var(--semantics-page-sections-lg-margin-block)));
-			padding-bottom: var(--_lg-padding-bottom, var(--_padding-bottom, var(--semantics-page-sections-lg-margin-block)));
+			padding-top: var(--_hero-lg-padding-top, var(--_hero-padding-top, var(--semantics-page-sections-lg-margin-block)));
+			padding-bottom: var(--_hero-lg-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
 		}
 	}
 
@@ -209,9 +209,9 @@ export const heroStyles = css`
 	.hero__body {
 		display: grid;
 		position: relative;
-		background-color: var(--_main-background-color);
+		background-color: var(--_hero-main-background-color);
 		width: 100%;
-		max-width: var(--_max-width);
+		max-width: var(--_hero-max-width);
 		flex-grow: 1;
 		grid-template-columns: 100%;
 	}
@@ -231,7 +231,7 @@ export const heroStyles = css`
 	:host([data-has-media]:not([main-width="full"])) .hero__body::before {
 		@container (min-width: ${mdMin}) {
 			content: '';
-			aspect-ratio: var(--_media-aspect-ratio);
+			aspect-ratio: var(--_hero-media-aspect-ratio);
 			grid-area: 1 / 1;
 			align-self: start;
 		}
@@ -284,7 +284,7 @@ export const heroStyles = css`
 		/* Cascade the panel color so descendants that key off the parent
 		   background (inherit-filled buttons, badge rings) read this
 		   surface. */
-		--context-parent-background-color: var(--_main-background-color);
+		--context-parent-background-color: var(--_hero-main-background-color);
 
 		box-sizing: border-box;
 		display: flex;
@@ -292,11 +292,11 @@ export const heroStyles = css`
 		grid-area: 1 / 1;
 		align-self: end;
 		justify-self: start;
-		background-color: var(--_main-background-color);
-		width: var(--_main-width);
-		padding: var(--_main-padding);
+		background-color: var(--_hero-main-background-color);
+		width: var(--_hero-main-width);
+		padding: var(--_hero-main-padding);
 		flex-direction: column;
-		color: var(--_main-content-color);
+		color: var(--_hero-main-content-color);
 	}
 
 	:host(:not([data-has-media])) .hero__main {
@@ -352,7 +352,7 @@ export const heroStyles = css`
 
 		:host([data-has-media][main-width="full"]) .hero__media {
 			position: static;
-			aspect-ratio: var(--_media-aspect-ratio);
+			aspect-ratio: var(--_hero-media-aspect-ratio);
 		}
 	}
 
@@ -372,7 +372,7 @@ export const heroStyles = css`
 		.hero__media {
 			position: static;
 			overflow: hidden;
-			aspect-ratio: var(--_media-aspect-ratio);
+			aspect-ratio: var(--_hero-media-aspect-ratio);
 		}
 
 		.hero__main {

@@ -140,7 +140,7 @@ describe('nldd-list-item-segment', () => {
 		// control size and the inset (for the fixed action padding) in
 		// explicitly and check the action honours its square floor.
 		root = await fixture<HTMLElement>(
-			'<nldd-list style="--semantics-controls-md-min-size: 44px; --components-list-item-indicator-inline-inset: 8px"><nldd-list-item><nldd-list-item-segment button></nldd-list-item-segment></nldd-list-item></nldd-list>',
+			'<nldd-list style="--semantics-controls-md-min-size: 44px; --semantics-list-items-indicator-inline-inset: 8px"><nldd-list-item><nldd-list-item-segment button></nldd-list-item-segment></nldd-list-item></nldd-list>',
 		);
 		await waitForUpdate(root);
 		const a = root.querySelector<NLDDListItemSegment>('nldd-list-item-segment')!;
@@ -334,8 +334,8 @@ describe('nldd-list-item – padding on the cells', () => {
 
 	it('lets a action cover the full row height', async () => {
 		root = await fixture<HTMLElement>(
-			`<nldd-list style="--components-list-item-md-padding-block: 10px">
-				<nldd-list-item>
+			`<nldd-list>
+				<nldd-list-item style="--_list-item-md-padding-block: 10px">
 					<nldd-list-item-segment button width="full">
 						<nldd-text-cell text="Ministeries"></nldd-text-cell>
 					</nldd-list-item-segment>
@@ -512,7 +512,7 @@ describe('nldd-list-item-segment – vaste geometrie', () => {
 		if (el) cleanup(el);
 	});
 
-	const TOKENS = '--components-list-item-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px;';
+	const TOKENS = '--semantics-list-items-indicator-inline-inset: 8px; --semantics-controls-md-min-size: 44px; --semantics-controls-sm-min-size: 32px;';
 
 	it('is minimaal een vierkant van de controlmaat van de rij', async () => {
 		el = await fixture(`

@@ -187,8 +187,8 @@ describe('nldd-keyboard-shortcut color', () => {
 		el = await fixture('<nldd-keyboard-shortcut color="inherit" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
 		const cs = getComputedStyle(el);
-		expect(cs.getPropertyValue('--_content-color').trim()).toBe('currentColor');
-		expect(cs.getPropertyValue('--_separator-color').trim()).toBe('currentColor');
+		expect(cs.getPropertyValue('--_keyboard-shortcut-content-color').trim()).toBe('currentColor');
+		expect(cs.getPropertyValue('--_keyboard-shortcut-separator-color').trim()).toBe('currentColor');
 	});
 
 	it('defaults to color="neutral" with its own color tokens', async () => {
@@ -196,7 +196,7 @@ describe('nldd-keyboard-shortcut color', () => {
 		await waitForUpdate(el);
 		expect((el as unknown as { color: string }).color).toBe('neutral');
 		expect(el.hasAttribute('color')).toBe(false);
-		expect(getComputedStyle(el).getPropertyValue('--_content-color').trim()).not.toBe('currentColor');
+		expect(getComputedStyle(el).getPropertyValue('--_keyboard-shortcut-content-color').trim()).not.toBe('currentColor');
 	});
 });
 
@@ -253,9 +253,9 @@ describe('nldd-keyboard-shortcut size', () => {
 		el = await fixture('<nldd-keyboard-shortcut size="inherit" keys="Cmd+K" always-visible></nldd-keyboard-shortcut>');
 		await waitForUpdate(el);
 		const cs = getComputedStyle(el);
-		expect(cs.getPropertyValue('--_size').trim()).toBe('1.5em');
-		expect(cs.getPropertyValue('--_inline-padding').trim()).toBe('0.35em');
-		expect(cs.getPropertyValue('--_font-size').trim()).toBe('0.75em');
+		expect(cs.getPropertyValue('--_keyboard-shortcut-size').trim()).toBe('1.5em');
+		expect(cs.getPropertyValue('--_keyboard-shortcut-inline-padding').trim()).toBe('0.35em');
+		expect(cs.getPropertyValue('--_keyboard-shortcut-font-size').trim()).toBe('0.75em');
 	});
 
 	it('size="inherit" on the simple appearance takes the container font-size', async () => {

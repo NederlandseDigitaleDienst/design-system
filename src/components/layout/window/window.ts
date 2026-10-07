@@ -16,7 +16,7 @@
  * @element nldd-window
  *
  * @attr {'inherit'|'light'|'dark'} scheme - Color scheme (default 'inherit').
- * @attr {string} width - CSS width (default: var(--components-window-default-width))
+ * @attr {string} width - CSS width (default: 640px)
  * @attr {string} height - CSS height (default: content height)
  * @attr {string} top - CSS top position of the top edge (e.g. '0', '100px')
  * @attr {string} right - CSS right value

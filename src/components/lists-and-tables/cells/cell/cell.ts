@@ -64,9 +64,9 @@ export class NLDDCell extends VisibilityMixin(LitElement, 'cells-container') {
 		const widthIsKeyword = w === 'full' || w === 'fit-content';
 		const widthIsValidLength = !!w && !widthIsKeyword && CSS.supports('width', w);
 		if (widthIsValidLength) {
-			this.style.setProperty('--_width', w);
+			this.style.setProperty('--_cell-width', w);
 		} else {
-			this.style.removeProperty('--_width');
+			this.style.removeProperty('--_cell-width');
 		}
 		// Normalize invalid CSS lengths back to '' so the default :host([width=''])
 		// rule applies and the host doesn't get stuck in the fallback selector.
@@ -74,19 +74,19 @@ export class NLDDCell extends VisibilityMixin(LitElement, 'cells-container') {
 			this.width = '';
 		}
 		if (this.minWidth) {
-			this.style.setProperty('--_min-width', this.minWidth);
+			this.style.setProperty('--_cell-min-width', this.minWidth);
 		} else {
-			this.style.removeProperty('--_min-width');
+			this.style.removeProperty('--_cell-min-width');
 		}
 		if (this.maxWidth) {
-			this.style.setProperty('--_max-width', this.maxWidth);
+			this.style.setProperty('--_cell-max-width', this.maxWidth);
 		} else {
-			this.style.removeProperty('--_max-width');
+			this.style.removeProperty('--_cell-max-width');
 		}
 		if (this.minHeight) {
-			this.style.setProperty('--_min-height', this.minHeight);
+			this.style.setProperty('--_cell-min-height', this.minHeight);
 		} else {
-			this.style.removeProperty('--_min-height');
+			this.style.removeProperty('--_cell-min-height');
 		}
 	}
 

@@ -103,12 +103,12 @@ Voorkeur: `@media`/`@container` genest binnen de selector via native CSS nesting
 
 ## Lokale CSS-variabelen bovenaan
 
-Declareer lokale custom properties (`--_*` voor private, `--components-*`/ `--context-*` voor public) bovenaan het `:host` (of vergelijkbare top-level selector) blok, gescheiden van de rest met een witregel. Zo zie je in één oogopslag wat er instelbaar is voordat je de eigen properties leest.
+Declareer lokale custom properties (`--_{component}-*`) bovenaan het `:host` (of vergelijkbare top-level selector) blok, gescheiden van de rest met een witregel. Zo zie je in één oogopslag wat er instelbaar is voordat je de eigen properties leest.
 
 ```css
 :host {
-  --_max-height: calc(100vh - var(--semantics-overlays-inset) * 2);
-  --components-popover-default-width: 320px;
+  --_popover-max-height: calc(100vh - var(--semantics-overlays-inset) * 2);
+  --_popover-default-width: var(--primitives-area-320);
 
   display: flex;
   margin: 0;

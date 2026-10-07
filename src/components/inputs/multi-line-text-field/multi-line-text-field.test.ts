@@ -130,25 +130,25 @@ describe('nldd-multi-line-text-field', () => {
 		expect(textarea.rows).toBe(3);
 	});
 
-	it('exposes rows to CSS as --_rows on the host (auto-resize floor)', async () => {
+	it('exposes rows to CSS as --_multi-line-text-field-rows on the host (auto-resize floor)', async () => {
 		el = await fixture('<nldd-multi-line-text-field resize="auto" rows="5"></nldd-multi-line-text-field>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_rows')).toBe('5');
+		expect(el.style.getPropertyValue('--_multi-line-text-field-rows')).toBe('5');
 	});
 
-	it('defaults --_rows to 3 on the host', async () => {
+	it('defaults --_multi-line-text-field-rows to 3 on the host', async () => {
 		el = await fixture('<nldd-multi-line-text-field></nldd-multi-line-text-field>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_rows')).toBe('3');
+		expect(el.style.getPropertyValue('--_multi-line-text-field-rows')).toBe('3');
 	});
 
-	it('updates --_rows when rows changes at runtime', async () => {
+	it('updates --_multi-line-text-field-rows when rows changes at runtime', async () => {
 		el = await fixture('<nldd-multi-line-text-field resize="auto" rows="2"></nldd-multi-line-text-field>');
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_rows')).toBe('2');
+		expect(el.style.getPropertyValue('--_multi-line-text-field-rows')).toBe('2');
 		(el as any).rows = 6;
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_rows')).toBe('6');
+		expect(el.style.getPropertyValue('--_multi-line-text-field-rows')).toBe('6');
 	});
 
 	it('forwards accessible-label to the inner textarea', async () => {
@@ -200,7 +200,7 @@ describe('nldd-multi-line-text-field', () => {
 		el = await fixture('<nldd-multi-line-text-field width="240px"></nldd-multi-line-text-field>');
 		await waitForUpdate(el);
 		expect(el.getAttribute('width')).toBe('240px');
-		expect(el.style.getPropertyValue('--_width')).toBe('240px');
+		expect(el.style.getPropertyValue('--_multi-line-text-field-width')).toBe('240px');
 	});
 
 	it('clears inline textarea dimensions when resize is set to "auto"', async () => {
@@ -221,7 +221,7 @@ describe('nldd-multi-line-text-field', () => {
 		await waitForUpdate(el);
 		(el as any).width = '';
 		await waitForUpdate(el);
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_multi-line-text-field-width')).toBe('');
 	});
 
 	it('inner textarea keeps spellcheck=true by default', async () => {

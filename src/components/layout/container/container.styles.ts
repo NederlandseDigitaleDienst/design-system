@@ -16,58 +16,58 @@ export const containerStyles = css`
 	   .container in the shadow root, out of reach of consumer resets */
 
 	:host {
-		--_min-column-width: var(--primitives-area-280);
-		--_width: 100%;
-		--_min-width: auto;
-		--_max-width: none;
-		--_justify-content: initial;
-		--_justify-items: initial;
-		--_align-items: initial;
-		--_sm-gap: 0;
-		--_md-gap: 0;
-		--_lg-gap: 0;
-		--_gap: var(--_sm-gap);
-		--_padding-top: 0;
-		--_padding-right: 0;
-		--_padding-bottom: 0;
-		--_padding-left: 0;
-		--_sm-padding-top: var(--_padding-top);
-		--_sm-padding-right: var(--_padding-right);
-		--_sm-padding-bottom: var(--_padding-bottom);
-		--_sm-padding-left: var(--_padding-left);
-		--_md-padding-top: var(--_padding-top);
-		--_md-padding-right: var(--_padding-right);
-		--_md-padding-bottom: var(--_padding-bottom);
-		--_md-padding-left: var(--_padding-left);
-		--_lg-padding-top: var(--_padding-top);
-		--_lg-padding-right: var(--_padding-right);
-		--_lg-padding-bottom: var(--_padding-bottom);
-		--_lg-padding-left: var(--_padding-left);
-		--_slot-order: 0;
-		--_slot-sm-order: var(--_slot-order);
-		--_slot-md-order: var(--_slot-order);
-		--_slot-lg-order: var(--_slot-order);
+		--_container-min-column-width: var(--primitives-area-280);
+		--_container-width: 100%;
+		--_container-min-width: auto;
+		--_container-max-width: none;
+		--_container-justify-content: initial;
+		--_container-justify-items: initial;
+		--_container-align-items: initial;
+		--_container-sm-gap: 0;
+		--_container-md-gap: 0;
+		--_container-lg-gap: 0;
+		--_container-gap: var(--_container-sm-gap);
+		--_container-padding-top: 0;
+		--_container-padding-right: 0;
+		--_container-padding-bottom: 0;
+		--_container-padding-left: 0;
+		--_container-sm-padding-top: var(--_container-padding-top);
+		--_container-sm-padding-right: var(--_container-padding-right);
+		--_container-sm-padding-bottom: var(--_container-padding-bottom);
+		--_container-sm-padding-left: var(--_container-padding-left);
+		--_container-md-padding-top: var(--_container-padding-top);
+		--_container-md-padding-right: var(--_container-padding-right);
+		--_container-md-padding-bottom: var(--_container-padding-bottom);
+		--_container-md-padding-left: var(--_container-padding-left);
+		--_container-lg-padding-top: var(--_container-padding-top);
+		--_container-lg-padding-right: var(--_container-padding-right);
+		--_container-lg-padding-bottom: var(--_container-padding-bottom);
+		--_container-lg-padding-left: var(--_container-padding-left);
+		--_container-slot-order: 0;
+		--_container-slot-sm-order: var(--_container-slot-order);
+		--_container-slot-md-order: var(--_container-slot-order);
+		--_container-slot-lg-order: var(--_container-slot-order);
 		/* Two sets, because a container inside a layout-container follows that
 		   container and anywhere else the viewport. Multicol reads the gap in three
 		   rules, so the value is swapped here rather than declared in each. The
-		   bare --_gap is what stands when neither set matches. */
-		@media (max-width: ${smMax}) { --_gap: var(--_sm-gap); }
-		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_gap: var(--_md-gap); }
-		@media (min-width: ${lgMin}) { --_gap: var(--_lg-gap); }
+		   bare --_container-gap is what stands when neither set matches. */
+		@media (max-width: ${smMax}) { --_container-gap: var(--_container-sm-gap); }
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_container-gap: var(--_container-md-gap); }
+		@media (min-width: ${lgMin}) { --_container-gap: var(--_container-lg-gap); }
 
-		@container layout-container (max-width: ${smMax}) { --_gap: var(--_sm-gap); }
-		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_gap: var(--_md-gap); }
-		@container layout-container (min-width: ${lgMin}) { --_gap: var(--_lg-gap); }
+		@container layout-container (max-width: ${smMax}) { --_container-gap: var(--_container-sm-gap); }
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) { --_container-gap: var(--_container-md-gap); }
+		@container layout-container (min-width: ${lgMin}) { --_container-gap: var(--_container-lg-gap); }
 
 		display: block;
-		width: var(--_width);
-		min-width: var(--_min-width);
-		max-width: var(--_max-width);
+		width: var(--_container-width);
+		min-width: var(--_container-min-width);
+		max-width: var(--_container-max-width);
 		height: auto;
 	}
 
 	:host([width="fit-content"]) {
-		--_width: fit-content;
+		--_container-width: fit-content;
 	}
 
 	:host([hidden]) {
@@ -82,51 +82,51 @@ export const containerStyles = css`
 	.container {
 		container-type: inline-size;
 		box-sizing: border-box;
-		padding-top: var(--_padding-top);
-		padding-right: var(--_padding-right);
-		padding-bottom: var(--_padding-bottom);
-		padding-left: var(--_padding-left);
+		padding-top: var(--_container-padding-top);
+		padding-right: var(--_container-padding-right);
+		padding-bottom: var(--_container-padding-bottom);
+		padding-left: var(--_container-padding-left);
 
 		@media (max-width: ${smMax}) {
-			padding-top: var(--_sm-padding-top);
-			padding-right: var(--_sm-padding-right);
-			padding-bottom: var(--_sm-padding-bottom);
-			padding-left: var(--_sm-padding-left);
+			padding-top: var(--_container-sm-padding-top);
+			padding-right: var(--_container-sm-padding-right);
+			padding-bottom: var(--_container-sm-padding-bottom);
+			padding-left: var(--_container-sm-padding-left);
 		}
 
 		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			padding-top: var(--_md-padding-top);
-			padding-right: var(--_md-padding-right);
-			padding-bottom: var(--_md-padding-bottom);
-			padding-left: var(--_md-padding-left);
+			padding-top: var(--_container-md-padding-top);
+			padding-right: var(--_container-md-padding-right);
+			padding-bottom: var(--_container-md-padding-bottom);
+			padding-left: var(--_container-md-padding-left);
 		}
 
 		@media (min-width: ${lgMin}) {
-			padding-top: var(--_lg-padding-top);
-			padding-right: var(--_lg-padding-right);
-			padding-bottom: var(--_lg-padding-bottom);
-			padding-left: var(--_lg-padding-left);
+			padding-top: var(--_container-lg-padding-top);
+			padding-right: var(--_container-lg-padding-right);
+			padding-bottom: var(--_container-lg-padding-bottom);
+			padding-left: var(--_container-lg-padding-left);
 		}
 
 		@container layout-container (max-width: ${smMax}) {
-			padding-top: var(--_sm-padding-top);
-			padding-right: var(--_sm-padding-right);
-			padding-bottom: var(--_sm-padding-bottom);
-			padding-left: var(--_sm-padding-left);
+			padding-top: var(--_container-sm-padding-top);
+			padding-right: var(--_container-sm-padding-right);
+			padding-bottom: var(--_container-sm-padding-bottom);
+			padding-left: var(--_container-sm-padding-left);
 		}
 
 		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-			padding-top: var(--_md-padding-top);
-			padding-right: var(--_md-padding-right);
-			padding-bottom: var(--_md-padding-bottom);
-			padding-left: var(--_md-padding-left);
+			padding-top: var(--_container-md-padding-top);
+			padding-right: var(--_container-md-padding-right);
+			padding-bottom: var(--_container-md-padding-bottom);
+			padding-left: var(--_container-md-padding-left);
 		}
 
 		@container layout-container (min-width: ${lgMin}) {
-			padding-top: var(--_lg-padding-top);
-			padding-right: var(--_lg-padding-right);
-			padding-bottom: var(--_lg-padding-bottom);
-			padding-left: var(--_lg-padding-left);
+			padding-top: var(--_container-lg-padding-top);
+			padding-right: var(--_container-lg-padding-right);
+			padding-bottom: var(--_container-lg-padding-bottom);
+			padding-left: var(--_container-lg-padding-left);
 		}
 	}
 
@@ -137,10 +137,10 @@ export const containerStyles = css`
 		display: flex;
 		flex-direction: column;
 		flex-wrap: nowrap;
-		justify-content: var(--_justify-content);
-		justify-items: var(--_justify-items);
-		align-items: var(--_align-items);
-		gap: var(--_gap);
+		justify-content: var(--_container-justify-content);
+		justify-items: var(--_container-justify-items);
+		align-items: var(--_container-align-items);
+		gap: var(--_container-gap);
 	}
 
 	:host([layout="row"]) .container__inner {
@@ -155,15 +155,15 @@ export const containerStyles = css`
 	:host([layout="grid"]) .container__inner {
 		display: grid;
 		grid-template-columns: repeat(
-			var(--_column-count, auto-fit),
-			minmax(var(--_track-min, var(--_min-column-width)), 1fr)
+			var(--_container-column-count, auto-fit),
+			minmax(var(--_container-track-min, var(--_container-min-column-width)), 1fr)
 		);
 	}
 
 	:host([layout="columns"]) .container__inner {
 		display: block;
-		columns: var(--_min-column-width);
-		column-gap: var(--_gap);
+		columns: var(--_container-min-column-width);
+		column-gap: var(--_container-gap);
 	}
 
 	:host([layout="columns"]) ::slotted(*) {
@@ -175,23 +175,23 @@ export const containerStyles = css`
 	   packs shortest-column (row-order). */
 	:host([layout="lanes"]) .container__inner {
 		display: block;
-		columns: var(--_min-column-width);
-		column-gap: var(--_gap);
+		columns: var(--_container-min-column-width);
+		column-gap: var(--_container-gap);
 	}
 
 	:host([layout="lanes"]) ::slotted(*) {
 		break-inside: avoid;
 		/* multicol has no row-gap; item margin supplies the vertical gap. The
 		   native branch resets this (grid-lanes gap covers both axes). */
-		margin-bottom: var(--_gap);
+		margin-bottom: var(--_container-gap);
 	}
 
 	@supports (display: grid-lanes) {
 		:host([layout="lanes"]) .container__inner {
 			display: grid-lanes;
 			grid-template-columns: repeat(
-				var(--_column-count, auto-fill),
-				minmax(var(--_track-min, var(--_min-column-width)), 1fr)
+				var(--_container-column-count, auto-fill),
+				minmax(var(--_container-track-min, var(--_container-min-column-width)), 1fr)
 			);
 		}
 
@@ -208,90 +208,90 @@ export const containerStyles = css`
 	:host([layout="lanes"][sm-column-count]) .container__inner,
 	:host([layout="lanes"][md-column-count]) .container__inner,
 	:host([layout="lanes"][lg-column-count]) .container__inner {
-		column-count: var(--_column-count);
+		column-count: var(--_container-column-count);
 		column-width: auto;
 	}
 
 
 	/* # Column count — base scope */
 
-	:host([column-count="1"]) .container__inner { --_column-count: 1; }
-	:host([column-count="2"]) .container__inner { --_column-count: 2; }
-	:host([column-count="3"]) .container__inner { --_column-count: 3; }
-	:host([column-count="4"]) .container__inner { --_column-count: 4; }
-	:host([column-count="5"]) .container__inner { --_column-count: 5; }
-	:host([column-count="6"]) .container__inner { --_column-count: 6; }
-	:host([column-count="7"]) .container__inner { --_column-count: 7; }
-	:host([column-count="8"]) .container__inner { --_column-count: 8; }
-	:host([column-count]) .container__inner { --_track-min: 0; }
+	:host([column-count="1"]) .container__inner { --_container-column-count: 1; }
+	:host([column-count="2"]) .container__inner { --_container-column-count: 2; }
+	:host([column-count="3"]) .container__inner { --_container-column-count: 3; }
+	:host([column-count="4"]) .container__inner { --_container-column-count: 4; }
+	:host([column-count="5"]) .container__inner { --_container-column-count: 5; }
+	:host([column-count="6"]) .container__inner { --_container-column-count: 6; }
+	:host([column-count="7"]) .container__inner { --_container-column-count: 7; }
+	:host([column-count="8"]) .container__inner { --_container-column-count: 8; }
+	:host([column-count]) .container__inner { --_container-track-min: 0; }
 
 
 	/* # Column count — sm scope (queries :host own width) */
 
 	@container (max-width: ${smMax}) {
-		:host([sm-column-count="1"]) .container__inner { --_column-count: 1; }
-		:host([sm-column-count="2"]) .container__inner { --_column-count: 2; }
-		:host([sm-column-count="3"]) .container__inner { --_column-count: 3; }
-		:host([sm-column-count="4"]) .container__inner { --_column-count: 4; }
-		:host([sm-column-count="5"]) .container__inner { --_column-count: 5; }
-		:host([sm-column-count="6"]) .container__inner { --_column-count: 6; }
-		:host([sm-column-count="7"]) .container__inner { --_column-count: 7; }
-		:host([sm-column-count="8"]) .container__inner { --_column-count: 8; }
-		:host([sm-column-count]) .container__inner { --_track-min: 0; }
+		:host([sm-column-count="1"]) .container__inner { --_container-column-count: 1; }
+		:host([sm-column-count="2"]) .container__inner { --_container-column-count: 2; }
+		:host([sm-column-count="3"]) .container__inner { --_container-column-count: 3; }
+		:host([sm-column-count="4"]) .container__inner { --_container-column-count: 4; }
+		:host([sm-column-count="5"]) .container__inner { --_container-column-count: 5; }
+		:host([sm-column-count="6"]) .container__inner { --_container-column-count: 6; }
+		:host([sm-column-count="7"]) .container__inner { --_container-column-count: 7; }
+		:host([sm-column-count="8"]) .container__inner { --_container-column-count: 8; }
+		:host([sm-column-count]) .container__inner { --_container-track-min: 0; }
 	}
 
 
 	/* # Column count — md scope */
 
 	@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-		:host([md-column-count="1"]) .container__inner { --_column-count: 1; }
-		:host([md-column-count="2"]) .container__inner { --_column-count: 2; }
-		:host([md-column-count="3"]) .container__inner { --_column-count: 3; }
-		:host([md-column-count="4"]) .container__inner { --_column-count: 4; }
-		:host([md-column-count="5"]) .container__inner { --_column-count: 5; }
-		:host([md-column-count="6"]) .container__inner { --_column-count: 6; }
-		:host([md-column-count="7"]) .container__inner { --_column-count: 7; }
-		:host([md-column-count="8"]) .container__inner { --_column-count: 8; }
-		:host([md-column-count]) .container__inner { --_track-min: 0; }
+		:host([md-column-count="1"]) .container__inner { --_container-column-count: 1; }
+		:host([md-column-count="2"]) .container__inner { --_container-column-count: 2; }
+		:host([md-column-count="3"]) .container__inner { --_container-column-count: 3; }
+		:host([md-column-count="4"]) .container__inner { --_container-column-count: 4; }
+		:host([md-column-count="5"]) .container__inner { --_container-column-count: 5; }
+		:host([md-column-count="6"]) .container__inner { --_container-column-count: 6; }
+		:host([md-column-count="7"]) .container__inner { --_container-column-count: 7; }
+		:host([md-column-count="8"]) .container__inner { --_container-column-count: 8; }
+		:host([md-column-count]) .container__inner { --_container-track-min: 0; }
 	}
 
 
 	/* # Column count — lg scope */
 
 	@container (min-width: ${lgMin}) {
-		:host([lg-column-count="1"]) .container__inner { --_column-count: 1; }
-		:host([lg-column-count="2"]) .container__inner { --_column-count: 2; }
-		:host([lg-column-count="3"]) .container__inner { --_column-count: 3; }
-		:host([lg-column-count="4"]) .container__inner { --_column-count: 4; }
-		:host([lg-column-count="5"]) .container__inner { --_column-count: 5; }
-		:host([lg-column-count="6"]) .container__inner { --_column-count: 6; }
-		:host([lg-column-count="7"]) .container__inner { --_column-count: 7; }
-		:host([lg-column-count="8"]) .container__inner { --_column-count: 8; }
-		:host([lg-column-count]) .container__inner { --_track-min: 0; }
+		:host([lg-column-count="1"]) .container__inner { --_container-column-count: 1; }
+		:host([lg-column-count="2"]) .container__inner { --_container-column-count: 2; }
+		:host([lg-column-count="3"]) .container__inner { --_container-column-count: 3; }
+		:host([lg-column-count="4"]) .container__inner { --_container-column-count: 4; }
+		:host([lg-column-count="5"]) .container__inner { --_container-column-count: 5; }
+		:host([lg-column-count="6"]) .container__inner { --_container-column-count: 6; }
+		:host([lg-column-count="7"]) .container__inner { --_container-column-count: 7; }
+		:host([lg-column-count="8"]) .container__inner { --_container-column-count: 8; }
+		:host([lg-column-count]) .container__inner { --_container-track-min: 0; }
 	}
 
 
 	/* # Slot order — per-child via order / sm-order / md-order / lg-order
 	   attributes on slotted children. Container JS bridges those to
-	   --_slot-{attr} inline custom props on the child; the queries below
+	   --_container-slot-{attr} inline custom props on the child; the queries below
 	   pick the right value per breakpoint with var() cascading
 	   sm/md/lg-order → order → 0. No-op for layout="columns" (multicol). */
 
 	::slotted(*) {
 		/* Keep padded slotted items inside their track (multicol/grid columns). */
 		box-sizing: border-box;
-		order: var(--_slot-order, 0);
+		order: var(--_container-slot-order, 0);
 	}
 
 	@container (max-width: ${smMax}) {
-		::slotted(*) { order: var(--_slot-sm-order, var(--_slot-order, 0)); }
+		::slotted(*) { order: var(--_container-slot-sm-order, var(--_container-slot-order, 0)); }
 	}
 
 	@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
-		::slotted(*) { order: var(--_slot-md-order, var(--_slot-order, 0)); }
+		::slotted(*) { order: var(--_container-slot-md-order, var(--_container-slot-order, 0)); }
 	}
 
 	@container (min-width: ${lgMin}) {
-		::slotted(*) { order: var(--_slot-lg-order, var(--_slot-order, 0)); }
+		::slotted(*) { order: var(--_container-slot-lg-order, var(--_container-slot-order, 0)); }
 	}
 `;

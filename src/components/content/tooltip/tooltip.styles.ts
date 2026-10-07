@@ -10,14 +10,17 @@ export const tooltipStyles = css`
 	/* # Host */
 
 	:host {
-		--_hide-duration: var(--primitives-transition-duration-fast);
-		--_show-duration: var(--primitives-transition-duration-fast);
-		--_max-width: var(--primitives-area-280);
-		--_z-index: 10000;
-		--_show-delay: 700ms;
-		--_hide-delay: 50; /* unitless ms, read by JavaScript */
-		--_offset: 4; /* px, unitless — read by JS */
-		--_shift-padding: 8; /* px, unitless — read by JS */
+		--_tooltip-hide-duration: var(--primitives-transition-duration-fast);
+		--_tooltip-show-duration: var(--primitives-transition-duration-fast);
+		--_tooltip-max-width: var(--primitives-area-280);
+		--_tooltip-z-index: 10000;
+		--_tooltip-show-delay: 700ms;
+		--_tooltip-box-shadow: var(--primitives-box-shadows-level-2);
+		--_tooltip-background-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-750));
+		--_tooltip-content-color: var(--primitives-color-neutral-0);
+		--_tooltip-hide-delay: 50; /* unitless ms, read by JavaScript */
+		--_tooltip-offset: 4; /* px, unitless — read by JS */
+		--_tooltip-shift-padding: 8; /* px, unitless — read by JS */
 
 		${inheritedTextReset}
 		display: contents;
@@ -38,17 +41,17 @@ export const tooltipStyles = css`
 		background: none;
 		padding: 0;
 		transition:
-			opacity var(--_hide-duration) ease,
-			display var(--_hide-duration) allow-discrete,
-			overlay var(--_hide-duration) allow-discrete;
+			opacity var(--_tooltip-hide-duration) ease,
+			display var(--_tooltip-hide-duration) allow-discrete,
+			overlay var(--_tooltip-hide-duration) allow-discrete;
 	}
 
 	.tooltip:popover-open {
 		opacity: 1;
 		transition:
-			opacity var(--_show-duration) ease,
-			display var(--_show-duration) allow-discrete,
-			overlay var(--_show-duration) allow-discrete;
+			opacity var(--_tooltip-show-duration) ease,
+			display var(--_tooltip-show-duration) allow-discrete,
+			overlay var(--_tooltip-show-duration) allow-discrete;
 	}
 
 	/* Stay invisible (no fade) until Floating UI has placed it, so the fade-in plays at
@@ -81,13 +84,13 @@ export const tooltipStyles = css`
 
 	.tooltip__body {
 		border-radius: var(--primitives-corner-radius-xs);
-		box-shadow: var(--components-tooltip-box-shadow);
-		background-color: var(--components-tooltip-background-color);
+		box-shadow: var(--_tooltip-box-shadow);
+		background-color: var(--_tooltip-background-color);
 		width: max-content;
-		max-width: var(--_max-width);
+		max-width: var(--_tooltip-max-width);
 		padding-block: var(--primitives-space-4);
 		padding-inline: var(--primitives-space-8);
-		color: var(--components-tooltip-content-color);
+		color: var(--_tooltip-content-color);
 		font: var(--primitives-font-body-xs-regular-tight);
 		overflow-wrap: break-word;
 	}

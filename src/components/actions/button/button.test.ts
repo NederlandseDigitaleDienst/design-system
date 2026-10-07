@@ -272,7 +272,7 @@ describe('nldd-button – icon attributes', () => {
 	it('makes the highlight border transparent when no-highlight-border is set', async () => {
 		el = await fixture<NLDDButton>('<nldd-button text="X" no-highlight-border></nldd-button>');
 		await waitForUpdate(el);
-		expect(getComputedStyle(el).getPropertyValue('--_highlight-border-color').trim()).toBe('transparent');
+		expect(getComputedStyle(el).getPropertyValue('--_button-highlight-border-color').trim()).toBe('transparent');
 	});
 
 	it('hides the expandable chevron while loading but keeps it laid out', async () => {
@@ -531,18 +531,18 @@ describe('nldd-button – single-line / width', () => {
 		expect(el.singleLine).toBe(true);
 	});
 
-	it('applies inline host width and --_width=100% when width is a CSS length', async () => {
+	it('applies inline host width and --_button-width=100% when width is a CSS length', async () => {
 		el = await fixture<NLDDButton>('<nldd-button text="X" width="240px"></nldd-button>');
 		await waitForUpdate(el);
 		expect((el as HTMLElement).style.width).toBe('240px');
-		expect(el.style.getPropertyValue('--_width')).toBe('100%');
+		expect(el.style.getPropertyValue('--_button-width')).toBe('100%');
 	});
 
-	it('sets --_width=100% but leaves inline width empty for width="full"', async () => {
+	it('sets --_button-width=100% but leaves inline width empty for width="full"', async () => {
 		el = await fixture<NLDDButton>('<nldd-button text="X" width="full"></nldd-button>');
 		await waitForUpdate(el);
 		expect((el as HTMLElement).style.width).toBe('');
-		expect(el.style.getPropertyValue('--_width')).toBe('100%');
+		expect(el.style.getPropertyValue('--_button-width')).toBe('100%');
 	});
 
 	it('stretches in a flex column only with width="full"', async () => {
@@ -590,20 +590,20 @@ describe('nldd-button – single-line / width', () => {
 		expect((el as HTMLElement).style.maxWidth).toBe('');
 	});
 
-	it('clears inline width and --_width when width is cleared', async () => {
+	it('clears inline width and --_button-width when width is cleared', async () => {
 		el = await fixture<NLDDButton>('<nldd-button text="X" width="240px"></nldd-button>');
 		await waitForUpdate(el);
 		el.width = '';
 		await waitForUpdate(el);
 		expect((el as HTMLElement).style.width).toBe('');
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_button-width')).toBe('');
 	});
 
-	it('ignores invalid width values (drops both inline width and --_width)', async () => {
+	it('ignores invalid width values (drops both inline width and --_button-width)', async () => {
 		el = await fixture<NLDDButton>('<nldd-button text="X" width="not-a-length"></nldd-button>');
 		await waitForUpdate(el);
 		expect((el as HTMLElement).style.width).toBe('');
-		expect(el.style.getPropertyValue('--_width')).toBe('');
+		expect(el.style.getPropertyValue('--_button-width')).toBe('');
 	});
 });
 

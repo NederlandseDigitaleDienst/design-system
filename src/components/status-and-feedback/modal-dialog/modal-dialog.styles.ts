@@ -13,9 +13,9 @@ export const modalDialogStyles = css`
 	/* # Host */
 
 	:host {
-		--_max-height: 90vh;
-		--_animation-duration: 150ms;
-		--_animation-easing: ease;
+		--_modal-dialog-max-height: 90vh;
+		--_modal-dialog-animation-duration: 150ms;
+		--_modal-dialog-animation-easing: ease;
 
 		${inheritedTextReset}
 		display: contents;
@@ -44,7 +44,7 @@ export const modalDialogStyles = css`
 		background-color: var(--semantics-surfaces-base-background-color);
 		width: calc(100% - var(--primitives-space-16) * 2);
 		max-width: var(--primitives-area-480);
-		max-height: var(--_max-height);
+		max-height: var(--_modal-dialog-max-height);
 		overflow-y: auto;
 		padding: var(--primitives-space-16);
 
@@ -68,11 +68,11 @@ export const modalDialogStyles = css`
 	}
 
 	.modal-dialog[open] {
-		animation: modal-dialog-in var(--_animation-duration) var(--_animation-easing) backwards;
+		animation: modal-dialog-in var(--_modal-dialog-animation-duration) var(--_modal-dialog-animation-easing) backwards;
 	}
 
 	.modal-dialog.is-closing {
-		animation: modal-dialog-out var(--_animation-duration) var(--_animation-easing) both;
+		animation: modal-dialog-out var(--_modal-dialog-animation-duration) var(--_modal-dialog-animation-easing) both;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

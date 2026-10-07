@@ -24,7 +24,7 @@
  *
  * @element nldd-popover
  *
- * @attr {string} width - Width as a CSS length (default: 320px through --components-popover-default-width). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV.
+ * @attr {string} width - Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV.
  * @attr {boolean} sm-full-height - On an sm viewport (where the popover renders as a bottom sheet) fills the whole available height instead of shrinking to its content. No effect on md and up (anchored mode). Opt-in for content-heavy cases such as search results or long detail views; content-sized is the default, following the Apple and Material convention.
  * @attr {string} anchor - ID of the trigger element, used for positioning
  * @attr {string} placement - Floating UI placement (default: 'bottom-start')
@@ -218,9 +218,9 @@ export class NLDDPopover extends LitElement {
 				);
 			}
 			if (this.width && !contentSized) {
-				this.style.setProperty('--components-popover-default-width', this.width);
+				this.style.setProperty('--_popover-default-width', this.width);
 			} else {
-				this.style.removeProperty('--components-popover-default-width');
+				this.style.removeProperty('--_popover-default-width');
 			}
 		}
 		if (changed.has('accessibleLabel') || changed.has('translations')) {
@@ -324,7 +324,7 @@ export class NLDDPopover extends LitElement {
 			this.style.removeProperty('right');
 			this.style.removeProperty('bottom');
 			this.style.removeProperty('transform');
-			this.style.removeProperty('--_max-height');
+			this.style.removeProperty('--_popover-max-height');
 			if (crossedBreakpoint) this._restoreTransition();
 			return;
 		}
@@ -387,7 +387,7 @@ export class NLDDPopover extends LitElement {
 				size({
 					padding: inset,
 					apply: ({ availableHeight }: { availableHeight: number }) => {
-						this.style.setProperty('--_max-height', `${availableHeight}px`);
+						this.style.setProperty('--_popover-max-height', `${availableHeight}px`);
 					},
 				}),
 			],

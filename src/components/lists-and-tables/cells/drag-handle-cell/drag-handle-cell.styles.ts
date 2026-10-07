@@ -9,9 +9,9 @@ export const dragHandleCellStyles = css`
 	/* # Host */
 
 	:host {
-		--_corner-radius: var(--semantics-controls-md-corner-radius);
-		--_width: var(--semantics-controls-sm-min-size);
-		--_height: var(--semantics-controls-md-min-size);
+		--_drag-handle-cell-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_drag-handle-cell-width: var(--semantics-controls-sm-min-size);
+		--_drag-handle-cell-height: var(--semantics-controls-md-min-size);
 
 		display: inline-flex;
 		/* !important: shields the row padding from consumer universal resets, which beat normal :host declarations per CSS Scoping. */
@@ -31,9 +31,9 @@ export const dragHandleCellStyles = css`
 	}
 
 	:host([size="sm"]) {
-		--_corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_width: var(--semantics-controls-xs-min-size);
-		--_height: var(--semantics-controls-sm-min-size);
+		--_drag-handle-cell-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_drag-handle-cell-width: var(--semantics-controls-xs-min-size);
+		--_drag-handle-cell-height: var(--semantics-controls-sm-min-size);
 	}
 
 
@@ -43,11 +43,11 @@ export const dragHandleCellStyles = css`
 		display: flex;
 		margin: 0;
 		border: none;
-		border-radius: var(--_corner-radius);
+		border-radius: var(--_drag-handle-cell-corner-radius);
 		background-color: var(--semantics-grab-handles-background-color);
 		cursor: inherit;
-		width: var(--_width);
-		height: var(--_height);
+		width: var(--_drag-handle-cell-width);
+		height: var(--_drag-handle-cell-height);
 		padding: 0;
 		align-items: center;
 		justify-content: center;

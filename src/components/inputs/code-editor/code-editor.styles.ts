@@ -10,22 +10,22 @@ export const codeEditorStyles = css`
 	/* # Host */
 
 	:host {
-		--_caret-width: var(--primitives-border-width-regular);
-		--_corner-radius: 0;
-		--_background-color: transparent;
-		--_border-color: transparent;
-		--_border-shadow: none;
-		--_padding-block: 0px;
-		--_padding-inline: 0px;
-		--_content-color: var(--semantics-content-color);
-		--_font: var(--primitives-font-monospace-sm-regular-snug);
-		--_rows: 6;
+		--_code-editor-caret-width: var(--primitives-border-width-regular);
+		--_code-editor-corner-radius: 0;
+		--_code-editor-background-color: transparent;
+		--_code-editor-border-color: transparent;
+		--_code-editor-border-shadow: none;
+		--_code-editor-padding-block: 0px;
+		--_code-editor-padding-inline: 0px;
+		--_code-editor-content-color: var(--semantics-content-color);
+		--_code-editor-font: var(--primitives-font-monospace-sm-regular-snug);
+		--_code-editor-rows: 6;
 
 		/* iOS Safari auto-zooms a focused field rendered under 16px (sm is ~14px).
 		   Bump to the 16px md size on touch to prevent it; non-touch keeps the
 		   compact size, and pinch-zoom stays available (no maximum-scale hack). */
 		@media (pointer: coarse) {
-			--_font: var(--primitives-font-monospace-md-regular-snug);
+			--_code-editor-font: var(--primitives-font-monospace-md-regular-snug);
 		}
 
 		${inheritedTextReset}
@@ -46,14 +46,14 @@ export const codeEditorStyles = css`
 	/* ## Appearance — input-field adds the framed surface + a default content padding */
 
 	:host([appearance="input-field"]) {
-		--_corner-radius: var(--primitives-corner-radius-lg);
+		--_code-editor-corner-radius: var(--primitives-corner-radius-lg);
 		/* Match the other input fields (text-field, textarea): the input-field
 		   surface + border + control padding, not the tinted surface. */
-		--_background-color: var(--semantics-input-fields-background-color);
-		--_border-color: var(--semantics-input-fields-border-color);
-		--_border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_border-color);
-		--_padding-block: var(--semantics-controls-md-inline-padding);
-		--_padding-inline: var(--semantics-controls-md-inline-padding);
+		--_code-editor-background-color: var(--semantics-input-fields-background-color);
+		--_code-editor-border-color: var(--semantics-input-fields-border-color);
+		--_code-editor-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_code-editor-border-color);
+		--_code-editor-padding-block: var(--semantics-controls-md-inline-padding);
+		--_code-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 	}
 
 
@@ -63,16 +63,16 @@ export const codeEditorStyles = css`
 		box-sizing: border-box;
 		display: flex;
 		position: relative;
-		border-radius: var(--_corner-radius);
-		box-shadow: var(--_border-shadow);
-		background-color: var(--_background-color);
+		border-radius: var(--_code-editor-corner-radius);
+		box-shadow: var(--_code-editor-border-shadow);
+		background-color: var(--_code-editor-background-color);
 		min-height: 0;
 		flex-direction: column;
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
-		color: var(--_content-color);
-		font: var(--_font);
+		color: var(--_code-editor-content-color);
+		font: var(--_code-editor-font);
 	}
 
 	:host([disabled]) .code-editor {
@@ -85,7 +85,7 @@ export const codeEditorStyles = css`
 	:host([appearance="input-field"]) .code-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_border-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_code-editor-border-shadow);
 	}
 
 
@@ -98,13 +98,13 @@ export const codeEditorStyles = css`
 	   on the content so the padded area is clickable and horizontal scrolling
 	   keeps its end padding. :host beats the shared theme's .cm-content reset. */
 	:host .cm-scroller {
-		padding-left: var(--_padding-inline);
+		padding-left: var(--_code-editor-padding-inline);
 	}
 
 	:host .cm-content {
-		padding-block: var(--_padding-block);
-		padding-right: var(--_padding-inline);
-		min-height: calc(var(--_rows) * 1lh);
+		padding-block: var(--_code-editor-padding-block);
+		padding-right: var(--_code-editor-padding-inline);
+		min-height: calc(var(--_code-editor-rows) * 1lh);
 		tab-size: 2;
 	}
 
@@ -112,14 +112,14 @@ export const codeEditorStyles = css`
 	   CodeMirror's theme cursor color without depending on an attribute. */
 	:host .cm-cursor.cm-cursor {
 		border-left-color: var(--primitives-color-accent-600);
-		border-left-width: var(--_caret-width);
+		border-left-width: var(--_code-editor-caret-width);
 	}
 
 	/* Resize model — rows is the floor in every mode:
 	   auto (default) = grow, vertical = drag up from the floor, none = fixed. */
 	:host .cm-scroller {
 		resize: none;
-		min-height: calc(var(--_rows) * 1lh + 2 * var(--_padding-block));
+		min-height: calc(var(--_code-editor-rows) * 1lh + 2 * var(--_code-editor-padding-block));
 	}
 
 	:host([resize="vertical"]) .cm-scroller {
@@ -127,6 +127,6 @@ export const codeEditorStyles = css`
 	}
 
 	:host([resize="none"]) .cm-editor {
-		height: calc(var(--_rows) * 1lh + 2 * var(--_padding-block));
+		height: calc(var(--_code-editor-rows) * 1lh + 2 * var(--_code-editor-padding-block));
 	}
 `;

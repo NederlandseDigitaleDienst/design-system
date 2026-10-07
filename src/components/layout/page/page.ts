@@ -305,15 +305,15 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 		if (!header || !footer) return;
 
 		const publish = () => {
-			this._publish('--_header-height', `${this.stickyHeader ? header.offsetHeight : 0}px`);
-			this._publish('--_footer-height', `${this.stickyFooter ? footer.offsetHeight : 0}px`);
-			this._publish('--_header-full-height', `${this._measureHeaderFullHeight(header)}px`);
+			this._publish('--_page-header-height', `${this.stickyHeader ? header.offsetHeight : 0}px`);
+			this._publish('--_page-footer-height', `${this.stickyFooter ? footer.offsetHeight : 0}px`);
+			this._publish('--_page-header-full-height', `${this._measureHeaderFullHeight(header)}px`);
 			// How tall the scroller actually is. Sticky content inside it caps its
 			// height on what it can see, and while the page owns the scroller that
 			// is not the viewport: the chrome around the page eats into it. In root
 			// mode the document scrolls, so nothing is published and 100dvh stands.
-			if (this._isRoot) this.style.removeProperty('--_scroll-height');
-			else this._publish('--_scroll-height', `${this._scrollEl?.clientHeight ?? 0}px`);
+			if (this._isRoot) this.style.removeProperty('--_page-scroll-height');
+			else this._publish('--_page-scroll-height', `${this._scrollEl?.clientHeight ?? 0}px`);
 		};
 		publish();
 		this._insetObserver = new ResizeObserver(publish);

@@ -409,8 +409,8 @@ describe('nldd-number-field – hide-spin-buttons', () => {
 			.map(r => r.cssText)
 			.join('\n');
 		expect(cssText).toContain('[hide-spin-buttons]');
-		expect(cssText).toMatch(/padding-inline:\s*var\(--_inline-padding\)/);
-		expect(cssText).toMatch(/--_inline-padding:\s*calc/);
+		expect(cssText).toMatch(/padding-inline:\s*var\(--_number-field-inline-padding\)/);
+		expect(cssText).toMatch(/--_number-field-inline-padding:\s*calc/);
 	});
 
 	it('default (zonder hide-spin-buttons) toont spin-buttons', async () => {

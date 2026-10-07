@@ -10,60 +10,60 @@ export const datePickerStyles = css`
 	/* # Host */
 
 	:host {
-		--_header-margin-bottom: var(--primitives-space-16);
-		--_footer-margin-top: var(--primitives-space-8);
-		--_title-font: var(--primitives-font-display-5-sm);
-		--_title-button-corner-radius: var(--semantics-controls-sm-corner-radius);
-		--_title-button-min-size: var(--semantics-controls-sm-min-size);
-		--_title-picker-icon-size: var(--primitives-space-20);
-		--_weekday-header-font: var(--primitives-font-body-xs-regular-flat);
-		--_weekday-header-content-color: var(--semantics-content-secondary-color);
-		--_divider-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
-		--_divider-thickness: var(--semantics-dividers-thickness);
-		--_week-number-column-width: var(--primitives-space-32);
-		--_week-number-font: var(--primitives-font-body-xs-regular-flat);
-		--_week-number-content-color: var(--semantics-content-secondary-color);
+		--_date-picker-header-margin-bottom: var(--primitives-space-16);
+		--_date-picker-footer-margin-top: var(--primitives-space-8);
+		--_date-picker-title-font: var(--primitives-font-display-5-sm);
+		--_date-picker-title-button-corner-radius: var(--semantics-controls-sm-corner-radius);
+		--_date-picker-title-button-min-size: var(--semantics-controls-sm-min-size);
+		--_date-picker-title-picker-icon-size: var(--primitives-space-20);
+		--_date-picker-weekday-header-font: var(--primitives-font-body-xs-regular-flat);
+		--_date-picker-weekday-header-content-color: var(--semantics-content-secondary-color);
+		--_date-picker-divider-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+		--_date-picker-divider-thickness: var(--semantics-dividers-thickness);
+		--_date-picker-week-number-column-width: var(--primitives-space-32);
+		--_date-picker-week-number-font: var(--primitives-font-body-xs-regular-flat);
+		--_date-picker-week-number-content-color: var(--semantics-content-secondary-color);
 		/* Set from JS by the width attribute; initial keeps it guaranteed-invalid
-		   so every var(--_width, ...) below falls back to its own default. */
-		--_width: initial;
-		--_day-size: var(--semantics-controls-md-min-size);
-		--_day-corner-radius: var(--semantics-controls-md-corner-radius);
-		--_day-font: var(--primitives-font-body-sm-medium-flat);
-		--_day-indicator-inset: var(--primitives-space-2);
-		--_day-indicator-size: calc(var(--_day-size) - var(--_day-indicator-inset) * 2);
-		--_day-indicator-corner-radius: var(--_day-corner-radius);
-		--_day-is-in-range-background-color: var(--semantics-categories-accent-tinted-background-color);
-		--_day-is-in-range-content-color: var(--semantics-content-color);
-		--_day-is-today-border-color: light-dark(var(--primitives-color-neutral-250), var(--primitives-color-neutral-400));
-		--_day-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-150));
-		--_day-is-selected-background-color: var(--semantics-controls-is-highlighted-indicator-color);
-		--_day-is-selected-content-color: var(--semantics-controls-is-highlighted-contrast-color);
-		--_day-is-outside-month-content-color: var(--semantics-content-secondary-color);
-		--_day-is-unavailable-content-color: var(--semantics-content-secondary-color);
+		   so every var(--_date-picker-width, ...) below falls back to its own default. */
+		--_date-picker-width: initial;
+		--_date-picker-day-size: var(--semantics-controls-md-min-size);
+		--_date-picker-day-corner-radius: var(--semantics-controls-md-corner-radius);
+		--_date-picker-day-font: var(--primitives-font-body-sm-medium-flat);
+		--_date-picker-day-indicator-inset: var(--primitives-space-2);
+		--_date-picker-day-indicator-size: calc(var(--_date-picker-day-size) - var(--_date-picker-day-indicator-inset) * 2);
+		--_date-picker-day-indicator-corner-radius: var(--_date-picker-day-corner-radius);
+		--_date-picker-day-is-in-range-background-color: var(--semantics-categories-accent-tinted-background-color);
+		--_date-picker-day-is-in-range-content-color: var(--semantics-content-color);
+		--_date-picker-day-is-today-border-color: light-dark(var(--primitives-color-neutral-250), var(--primitives-color-neutral-400));
+		--_date-picker-day-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-150));
+		--_date-picker-day-is-selected-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_date-picker-day-is-selected-content-color: var(--semantics-controls-is-highlighted-contrast-color);
+		--_date-picker-day-is-outside-month-content-color: var(--semantics-content-secondary-color);
+		--_date-picker-day-is-unavailable-content-color: var(--semantics-content-secondary-color);
 
 		${inheritedTextReset}
 		display: block;
 		/* Stated, not fit-content: the calendar inside is sized in percentages, so
 		   measuring it from here is circular and resolves to the container. The
-		   width attribute (--_width) overrides the intrinsic seven-cell width;
+		   width attribute (--_date-picker-width) overrides the intrinsic seven-cell width;
 		   the percentage-based inside stretches along. */
-		width: var(--_width, calc(var(--_day-size) * 7));
+		width: var(--_date-picker-width, calc(var(--_date-picker-day-size) * 7));
 		color: var(--semantics-content-color);
 		-webkit-tap-highlight-color: transparent;
 	}
 
 	:host([week-numbers]) {
-		width: var(--_width, calc(var(--_day-size) * 7 + var(--_week-number-column-width)));
+		width: var(--_date-picker-width, calc(var(--_date-picker-day-size) * 7 + var(--_date-picker-week-number-column-width)));
 	}
 
 	/* An explicit width attribute outranks the derived stacked width: stacked
 	   only describes how narrow the picker happens to be, not what the consumer
 	   asked for. */
 	:host([stacked]) {
-		--_title-font: var(--primitives-font-display-4-sm);
-		--_title-button-min-size: var(--semantics-controls-md-min-size);
+		--_date-picker-title-font: var(--primitives-font-display-4-sm);
+		--_date-picker-title-button-min-size: var(--semantics-controls-md-min-size);
 
-		width: var(--_width, 100%);
+		width: var(--_date-picker-width, 100%);
 	}
 
 	:host([hidden]) {
@@ -87,7 +87,7 @@ export const datePickerStyles = css`
 
 	.date-picker__header {
 		display: flex;
-		margin-bottom: var(--_header-margin-bottom);
+		margin-bottom: var(--_date-picker-header-margin-bottom);
 		align-items: center;
 		justify-content: space-between;
 		gap: var(--primitives-space-8);
@@ -98,7 +98,7 @@ export const datePickerStyles = css`
 		margin: 0;
 		align-items: center;
 		gap: var(--primitives-space-4);
-		font: var(--_title-font);
+		font: var(--_date-picker-title-font);
 		/* A heading that breaks between month and year stops answering the one
 		   question it is there for. */
 		white-space: nowrap;
@@ -111,9 +111,9 @@ export const datePickerStyles = css`
 		margin: 0;
 		outline: none;
 		border: none;
-		border-radius: var(--_title-button-corner-radius);
+		border-radius: var(--_date-picker-title-button-corner-radius);
 		background: none;
-		min-height: var(--_title-button-min-size);
+		min-height: var(--_date-picker-title-button-min-size);
 		padding: 0;
 		align-items: center;
 		color: inherit;
@@ -123,8 +123,8 @@ export const datePickerStyles = css`
 
 	.date-picker__title-picker-icon {
 		display: flex;
-		width: var(--_title-picker-icon-size);
-		height: var(--_title-picker-icon-size);
+		width: var(--_date-picker-title-picker-icon-size);
+		height: var(--_date-picker-title-picker-icon-size);
 		flex-shrink: 0;
 		align-items: center;
 	}
@@ -157,16 +157,16 @@ export const datePickerStyles = css`
 
 	.date-picker__weekday-header-cell,
 	.date-picker__week-header-cell {
-		border-block-end: var(--_divider-thickness) solid var(--_divider-color);
+		border-block-end: var(--_date-picker-divider-thickness) solid var(--_date-picker-divider-color);
 		padding: 0 0 var(--primitives-space-4);
-		width: var(--_day-size);
-		color: var(--_weekday-header-content-color);
-		font: var(--_weekday-header-font);
+		width: var(--_date-picker-day-size);
+		color: var(--_date-picker-weekday-header-content-color);
+		font: var(--_date-picker-weekday-header-font);
 	}
 
 	.date-picker__day-cell,
 	.date-picker__week-cell {
-		border-block-end: var(--_divider-thickness) solid var(--_divider-color);
+		border-block-end: var(--_date-picker-divider-thickness) solid var(--_date-picker-divider-color);
 		padding: 0;
 	}
 
@@ -180,14 +180,14 @@ export const datePickerStyles = css`
 		/* Table cells do not inherit the host's border-box, so the padding and rule
 		   below would otherwise be added on top of the stated width. */
 		box-sizing: border-box;
-		border-inline-end: var(--_divider-thickness) solid var(--_divider-color);
+		border-inline-end: var(--_date-picker-divider-thickness) solid var(--_date-picker-divider-color);
 		/* Stated rather than auto: an auto column under table-layout: fixed takes
 		   all the surplus width and pushes the dates aside. */
-		width: var(--_week-number-column-width);
+		width: var(--_date-picker-week-number-column-width);
 		padding-right: var(--primitives-space-8);
 		text-align: right;
-		color: var(--_week-number-content-color);
-		font: var(--_week-number-font);
+		color: var(--_date-picker-week-number-content-color);
+		font: var(--_date-picker-week-number-font);
 	}
 
 
@@ -202,20 +202,20 @@ export const datePickerStyles = css`
 		border: none;
 		background: none;
 		width: 100%;
-		height: var(--_day-size);
+		height: var(--_date-picker-day-size);
 		padding: 0;
 		align-items: center;
 		justify-content: center;
 		color: inherit;
-		font: var(--_day-font);
+		font: var(--_date-picker-day-font);
 		appearance: none;
 	}
 
 	.date-picker__day-range-indicator {
 		position: absolute;
 		inset-inline: 0;
-		inset-block: var(--_day-indicator-inset);
-		background-color: var(--_day-is-in-range-background-color);
+		inset-block: var(--_date-picker-day-indicator-inset);
+		background-color: var(--_date-picker-day-is-in-range-background-color);
 		pointer-events: none;
 	}
 
@@ -232,11 +232,11 @@ export const datePickerStyles = css`
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		border-radius: var(--_day-indicator-corner-radius);
+		border-radius: var(--_date-picker-day-indicator-corner-radius);
 		background-color: transparent;
 		pointer-events: none;
-		width: var(--_day-indicator-size);
-		height: var(--_day-indicator-size);
+		width: var(--_date-picker-day-indicator-size);
+		height: var(--_date-picker-day-indicator-size);
 		transform: translate(-50%, -50%);
 	}
 
@@ -255,7 +255,7 @@ export const datePickerStyles = css`
 	}
 
 	.date-picker__day.is-today .date-picker__day-indicator {
-		border: var(--primitives-border-width-regular) solid var(--_day-is-today-border-color);
+		border: var(--primitives-border-width-regular) solid var(--_date-picker-day-is-today-border-color);
 	}
 
 	/* Touch reports a hover after a tap and keeps it until you touch something
@@ -263,7 +263,7 @@ export const datePickerStyles = css`
 	   really hover. */
 	@media (hover: hover) {
 		.date-picker__day:hover .date-picker__day-indicator {
-			background-color: var(--_day-is-hovered-background-color);
+			background-color: var(--_date-picker-day-is-hovered-background-color);
 		}
 	}
 
@@ -288,26 +288,26 @@ export const datePickerStyles = css`
 	/* These four all set the color at equal specificity, so the order is what
 	   decides: outside the month is the weakest, chosen the strongest. */
 	.date-picker__day.is-outside-month {
-		color: var(--_day-is-outside-month-content-color);
+		color: var(--_date-picker-day-is-outside-month-content-color);
 	}
 
 	.date-picker__day.is-in-range {
-		color: var(--_day-is-in-range-content-color);
+		color: var(--_date-picker-day-is-in-range-content-color);
 	}
 
 	.date-picker__day.is-selected {
-		color: var(--_day-is-selected-content-color);
+		color: var(--_date-picker-day-is-selected-content-color);
 	}
 
 	/* Repeated for :hover, which carries a pseudo-class and would otherwise
 	   outweigh the plain selected rule. */
 	.date-picker__day.is-selected .date-picker__day-indicator,
 	.date-picker__day.is-selected:hover .date-picker__day-indicator {
-		background-color: var(--_day-is-selected-background-color);
+		background-color: var(--_date-picker-day-is-selected-background-color);
 	}
 
 	.date-picker__day.is-unavailable {
-		color: var(--_day-is-unavailable-content-color);
+		color: var(--_date-picker-day-is-unavailable-content-color);
 		text-decoration: line-through;
 	}
 
@@ -320,7 +320,7 @@ export const datePickerStyles = css`
 
 	.date-picker__footer {
 		display: flex;
-		margin-top: var(--_footer-margin-top);
+		margin-top: var(--_date-picker-footer-margin-top);
 		align-items: center;
 		justify-content: space-between;
 		gap: var(--primitives-space-8);

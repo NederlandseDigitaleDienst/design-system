@@ -9,12 +9,15 @@ export const cardStyles = css`
 	/* # Host */
 
 	:host {
-		--_background-color: var(--components-card-background-color);
-		--_border-color: var(--components-card-highlight-border-color);
-		--_is-hovered-background-color: var(--components-card-is-hovered-background-color);
-		--_is-hovered-border-color: var(--components-card-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--components-card-is-active-background-color);
-		--_is-active-border-color: var(--components-card-is-active-highlight-border-color);
+		--_card-background-color: var(--semantics-surfaces-base-background-color);
+		--_card-border-color: var(--semantics-surfaces-base-border-color);
+		--_card-is-hovered-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-150));
+		--_card-is-hovered-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+		--_card-is-active-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
+		--_card-is-active-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
+		--_card-corner-radius: var(--semantics-surfaces-corner-radius);
+		--_card-box-shadow: none;
+		--_card-highlight-border-width: var(--semantics-surfaces-border-width);
 
 		display: flex;
 		/* Anchor for the focus ring, which hangs outside the card box. */
@@ -31,12 +34,12 @@ export const cardStyles = css`
 	/* ## Background variants */
 
 	:host([background="tinted"]) {
-		--_background-color: var(--components-card-tinted-background-color);
-		--_border-color: var(--components-card-tinted-highlight-border-color);
-		--_is-hovered-background-color: var(--components-card-tinted-is-hovered-background-color);
-		--_is-hovered-border-color: var(--components-card-tinted-is-hovered-highlight-border-color);
-		--_is-active-background-color: var(--components-card-tinted-is-active-background-color);
-		--_is-active-border-color: var(--components-card-tinted-is-active-highlight-border-color);
+		--_card-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_card-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_card-is-hovered-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-100));
+		--_card-is-hovered-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
+		--_card-is-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-150));
+		--_card-is-active-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
 	}
 
 
@@ -45,9 +48,9 @@ export const cardStyles = css`
 	.card {
 		display: flex;
 		position: relative;
-		border-radius: var(--components-card-corner-radius);
-		box-shadow: var(--components-card-box-shadow);
-		background-color: var(--_background-color);
+		border-radius: var(--_card-corner-radius);
+		box-shadow: var(--_card-box-shadow);
+		background-color: var(--_card-background-color);
 		overflow: hidden;
 		flex-direction: column;
 		flex-grow: 1;
@@ -57,14 +60,14 @@ export const cardStyles = css`
 
 	@media (hover: hover) {
 		.card:has(> .card__action:hover) {
-			--_border-color: var(--_is-hovered-border-color);
-			background-color: var(--_is-hovered-background-color);
+			--_card-border-color: var(--_card-is-hovered-border-color);
+			background-color: var(--_card-is-hovered-background-color);
 		}
 	}
 
 	.card:has(> .card__action:active) {
-		--_border-color: var(--_is-active-border-color);
-		background-color: var(--_is-active-background-color);
+		--_card-border-color: var(--_card-is-active-border-color);
+		background-color: var(--_card-is-active-background-color);
 	}
 
 	.card::after {
@@ -72,7 +75,7 @@ export const cardStyles = css`
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
-		box-shadow: inset 0 0 0 var(--components-card-highlight-border-width) var(--_border-color);
+		box-shadow: inset 0 0 0 var(--_card-highlight-border-width) var(--_card-border-color);
 		pointer-events: none;
 	}
 
@@ -116,7 +119,7 @@ export const cardStyles = css`
 		display: none;
 		position: absolute;
 		inset: 0;
-		border-radius: var(--components-card-corner-radius);
+		border-radius: var(--_card-corner-radius);
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);

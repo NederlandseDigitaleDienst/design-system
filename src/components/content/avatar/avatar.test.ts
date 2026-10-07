@@ -41,12 +41,12 @@ describe('nldd-avatar', () => {
 		await waitForUpdate(el);
 		expect(el.iconAligned).toBe(true);
 		expect(el.getAttribute('icon-aligned')).toBe('');
-		// --_shape-scale drives the 5/6 shape; default avatars stay full-bleed (1).
-		expect(getComputedStyle(el).getPropertyValue('--_shape-scale').trim()).toBe('calc(5 / 6)');
+		// --_avatar-shape-scale drives the 5/6 shape; default avatars stay full-bleed (1).
+		expect(getComputedStyle(el).getPropertyValue('--_avatar-shape-scale').trim()).toBe('calc(5 / 6)');
 		el.iconAligned = false;
 		await waitForUpdate(el);
 		expect(el.hasAttribute('icon-aligned')).toBe(false);
-		expect(getComputedStyle(el).getPropertyValue('--_shape-scale').trim()).toBe('1');
+		expect(getComputedStyle(el).getPropertyValue('--_avatar-shape-scale').trim()).toBe('1');
 	});
 
 	it('derives initials from the first and last word of the name', async () => {
@@ -85,7 +85,7 @@ describe('nldd-avatar', () => {
 		Object.defineProperty(shape, 'clientWidth', { value: shapeWidth, configurable: true });
 		Object.defineProperty(initials, 'scrollWidth', { value: initialsWidth, configurable: true });
 		(a as unknown as { _fitInitials(): void })._fitInitials();
-		return parseFloat(a.style.getPropertyValue('--_initials-fit'));
+		return parseFloat(a.style.getPropertyValue('--_avatar-initials-fit'));
 	};
 
 	it('scales wide initials down to fit the shape width', async () => {

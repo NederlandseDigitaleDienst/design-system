@@ -131,27 +131,27 @@ export class NLDDTitleCell extends VisibilityMixin(LitElement, 'cells-container'
 		const widthIsKeyword = w === 'full' || w === 'fit-content';
 		const widthIsValidLength = !!w && !widthIsKeyword && CSS.supports('width', w);
 		if (widthIsValidLength) {
-			this.style.setProperty('--_width', w);
+			this.style.setProperty('--_title-cell-width', w);
 		} else {
-			this.style.removeProperty('--_width');
+			this.style.removeProperty('--_title-cell-width');
 		}
 		if (w && !widthIsKeyword && !widthIsValidLength) {
 			this.width = '';
 		}
 		if (this.minWidth) {
-			this.style.setProperty('--_min-width', this.minWidth);
+			this.style.setProperty('--_title-cell-min-width', this.minWidth);
 		} else {
-			this.style.removeProperty('--_min-width');
+			this.style.removeProperty('--_title-cell-min-width');
 		}
 		if (this.maxWidth) {
-			this.style.setProperty('--_max-width', this.maxWidth);
+			this.style.setProperty('--_title-cell-max-width', this.maxWidth);
 		} else {
-			this.style.removeProperty('--_max-width');
+			this.style.removeProperty('--_title-cell-max-width');
 		}
 		if (this.minHeight) {
-			this.style.setProperty('--_min-height', this.minHeight);
+			this.style.setProperty('--_title-cell-min-height', this.minHeight);
 		} else {
-			this.style.removeProperty('--_min-height');
+			this.style.removeProperty('--_title-cell-min-height');
 		}
 	}
 
