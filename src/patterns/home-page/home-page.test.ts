@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { waitForUpdate } from '../../test-utils.js';
 import markup from './home-page.html?raw';
-import { expectHeaderIntro, expectImageAndText, expectLegalBar, expectNamedLinkCards, expectSoundHeadings, expectTextAndLinkList, expectTopBar } from '../page-checks.js';
+import { expectHeaderIntro, expectImageAndText, expectLegalBar, expectSoundHeadings, expectTextAndLinkList, expectTopBar } from '../page-checks.js';
 import '../../components/index.js';
 
 describe('patroon: home', () => {
@@ -39,8 +39,20 @@ describe('patroon: home', () => {
 		expectSoundHeadings(root);
 	});
 
-	it('maakt van elke kaart één link met een naam', () => {
-		expectNamedLinkCards(root);
+	it('geeft elke kaart een onderwerp als titel en een knop met de actie, zonder dat de kaart zelf een link is', () => {
+		// The button drops its default appearance from the DOM once it upgrades,
+		// so read the written markup.
+		const written = new DOMParser().parseFromString(markup, 'text/html');
+		const cards = [...written.querySelector('nldd-collection')!.children];
+		expect(cards.length).toBeGreaterThan(1);
+		for (const card of cards) {
+			expect(card.getAttribute('href') ?? '').toBe('');
+			const footer = card.querySelector(':scope > nldd-container[slot="footer"]')!;
+			const button = footer.querySelector('nldd-button')!;
+			expect(button.getAttribute('appearance')).toBe('neutral-tinted');
+			expect(button.getAttribute('href')).toBeTruthy();
+			expect(button.getAttribute('text')).not.toBe(card.querySelector('nldd-title')!.getAttribute('text'));
+		}
 	});
 
 	it('houdt de landmarks van een los document', () => {
@@ -53,6 +65,14 @@ describe('patroon: home', () => {
 		expect(written.querySelectorAll('[style], [class]').length).toBe(0);
 		expect(written.querySelector('nldd-simple-section[background="tinted"]')).not.toBeNull();
 		expect(written.querySelectorAll('nldd-simple-section[background]').length).toBeGreaterThan(1);
+	});
+
+	it('houdt één primaire knop over, voor de oproep onderaan', () => {
+		const written = new DOMParser().parseFromString(markup, 'text/html');
+		const primary = [...written.querySelectorAll('nldd-button[appearance="primary"]')];
+		expect(primary.length).toBe(1);
+		const sections = [...written.querySelectorAll('nldd-page > :not([slot])')];
+		expect(sections[sections.length - 1].contains(primary[0])).toBe(true);
 	});
 
 	it('zet de kaarten in een collection, niet in een eigen raster', () => {
@@ -69,7 +89,7 @@ describe('patroon: home', () => {
 	it('geeft elke kaart zijn padding via een container', () => {
 		const cards = [...root.querySelectorAll('nldd-card')];
 		expect(cards.length).toBeGreaterThan(0);
-		expect(cards.every((card) => card.querySelector(':scope > nldd-container[padding]') !== null)).toBe(true);
+		expect(cards.every((card) => card.querySelector(':scope > nldd-container:not([slot])[padding]') !== null)).toBe(true);
 	});
 
 	it('zet de footer in de footer-slot van de pagina, met een juridische rij', () => {

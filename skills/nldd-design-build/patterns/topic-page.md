@@ -30,7 +30,9 @@ nldd-app-view                            de buitenste schil
        ├─ nldd-one-third-two-thirds-section
        │    ├─ slot="left"               de titel en een korte uitleg
        │    └─ slot="right"              een nldd-list type="navigation" naar de pagina's eronder
-       ├─ nldd-simple-section            verwante onderwerpen, als nldd-link
+       ├─ nldd-simple-section            background="tinted", verwante onderwerpen
+       │    └─ nldd-collection
+       │         └─ nldd-card            href, naar het andere onderwerp
        └─ slot="footer"                  nldd-page-footer
             ├─ slot="breadcrumbs"
             └─ slot="legal-bar"
@@ -267,25 +269,66 @@ nldd-app-view                            de buitenste schil
       </nldd-list>
     </nldd-one-third-two-thirds-section>
 
-    <nldd-simple-section>
+    <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
         size="3"
         text="Verwante onderwerpen"
         heading-level="2"
       ></nldd-title>
-      <nldd-container gap="8">
-        <nldd-link
-          size="md"
+      <nldd-collection
+        layout="grid"
+        item-width="280px"
+      >
+        <nldd-card
           href="#warmtepomp"
-          text="Warmtepomp"
-        ></nldd-link>
-        <nldd-link
-          size="md"
+          accessible-label="Warmtepomp"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Warmtepomp"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Van luchtwarmtepomp tot hybride, en wat je huis ervoor nodig heeft.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
           href="#energie-besparen"
-          text="Energie besparen"
-        ></nldd-link>
-      </nldd-container>
+          accessible-label="Energie besparen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Energie besparen"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Kleine stappen die je meteen kunt zetten.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#zonnepanelen"
+          accessible-label="Zonnepanelen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Zonnepanelen"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Wat je moet weten voor je begint.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+      </nldd-collection>
     </nldd-simple-section>
 
     <nldd-page-footer slot="footer">
@@ -350,7 +393,7 @@ nldd-app-view                            de buitenste schil
 
 **De pagina's onder het onderwerp staan in een lijst.** Wat dieper over het onderwerp gaat, zoals de soorten isolatie, staat in een `nldd-list` met `type="navigation"` in de twee derde rechts, met de titel en een korte uitleg in het derde links, net als op de [navigatiepagina](navigation-page.md). Een lijst geeft die pagina's minder gewicht dan de kaarten erboven, en dat klopt: de kaarten zijn wat de meesten komen doen, de lijst is waar je verder leest.
 
-**Verwante onderwerpen zijn links, geen kaarten.** Ze zijn een uitweg voor wie op het verkeerde onderwerp is beland, en geen taak. Een rij [`nldd-link`](../../nldd-design/reference.md#nldd-link)'s in een `nldd-container` met `gap` houdt ze rustig, onder de kaarten.
+**Verwante onderwerpen staan onderaan, als kaarten.** Ze zijn een uitweg voor wie op het verkeerde onderwerp is beland, of verder wil. Ze staan in een getinte sectie met een `nldd-collection` van linkkaarten, net als Ook handig op de [contentpagina](content-page.md): een titel en één zin die zegt wat het andere onderwerp is. Kleiner dan de kaarten bovenaan, met een kop van `size="5"`, zodat ze niet gaan concurreren met wat je hier komt doen.
 
 **Het kruimelpad wijst naar de onderwerpen.** Een onderwerp hangt niet onder een deel van de site, dus het kruimelpad gaat via een lijst van alle onderwerpen, niet via de plek waar de pagina's eronder staan.
 

@@ -55,11 +55,14 @@ describe('patroon: onderwerppagina', () => {
 		expectNamedLinkCards(root);
 	});
 
-	it('zet verwante onderwerpen als links, niet als kaarten', () => {
-		const sections = [...root.querySelectorAll('nldd-page > :not([slot])')];
+	it('zet verwante onderwerpen onderaan als linkkaarten in een getinte sectie', () => {
+		const written = new DOMParser().parseFromString(markup, 'text/html');
+		const sections = [...written.querySelectorAll('nldd-page > :not([slot])')];
 		const related = sections[sections.length - 1];
-		expect(related.querySelectorAll('nldd-link[href]').length).toBeGreaterThan(1);
-		expect(related.querySelector('nldd-card')).toBeNull();
+		expect(related.getAttribute('background')).toBe('tinted');
+		const cards = [...related.querySelectorAll('nldd-collection > nldd-card')];
+		expect(cards.length).toBeGreaterThan(1);
+		expect(cards.every((card) => card.getAttribute('href') && card.getAttribute('accessible-label'))).toBe(true);
 	});
 
 	it('zet het kruimelpad onderaan, in de footer', () => {

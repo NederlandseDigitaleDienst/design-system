@@ -23,18 +23,19 @@ nldd-app-view                            de buitenste schil
        ├─ nldd-simple-section            background="tinted", wat je hier kunt
        │    ├─ slot="header"             de titel en een intro van een zin of twee
        │    └─ nldd-collection           layout="grid", item-width
-       │         └─ nldd-card            href, met een nldd-container voor de padding
+       │         └─ nldd-card            een onderwerp, een zin en een knop met de actie in de footer
        ├─ nldd-one-half-one-half-section afbeelding links, tekst rechts
        │    ├─ slot="left"               nldd-image met aspect-ratio
        │    └─ slot="right"              titel, tekst en een nldd-link verder
        ├─ nldd-two-thirds-one-third-section    background="tinted"
-       │    ├─ slot="left"               de lopende uitleg
+       │    ├─ slot="left"               de titel en de lopende uitleg
        │    └─ slot="right"              een ondersteunende kaart
        ├─ nldd-one-third-two-thirds-section
        │    ├─ slot="left"               de titel en een korte uitleg
        │    └─ slot="right"              een nldd-list type="navigation" naar de onderwerpen
        ├─ nldd-simple-section            background="tinted", de oproep
        └─ slot="footer"                  nldd-page-footer
+            └─ slot="legal-bar"
 ```
 
 ```html
@@ -106,14 +107,11 @@ nldd-app-view                            de buitenste schil
         layout="grid"
         item-width="320px"
       >
-        <nldd-card
-          href="#aanvraag-indienen"
-          accessible-label="Een aanvraag indienen"
-        >
+        <nldd-card>
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Een aanvraag indienen"
+              text="Je aanvraag"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -121,15 +119,23 @@ nldd-app-view                            de buitenste schil
               <p>Je vult in wat er nodig is en ziet meteen welke gegevens ontbreken.</p>
             </nldd-rich-text>
           </nldd-container>
+          <nldd-container
+            slot="footer"
+            padding-inline="16"
+            padding-bottom="16"
+          >
+            <nldd-button
+              appearance="neutral-tinted"
+              text="Aanvraag indienen"
+              href="#aanvraag-indienen"
+            ></nldd-button>
+          </nldd-container>
         </nldd-card>
-        <nldd-card
-          href="#behandeling-volgen"
-          accessible-label="De behandeling volgen"
-        >
+        <nldd-card>
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="De behandeling volgen"
+              text="De behandeling"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -137,21 +143,40 @@ nldd-app-view                            de buitenste schil
               <p>Elke stap in de behandeling staat op je aanvraag, met wie er aan werkt.</p>
             </nldd-rich-text>
           </nldd-container>
+          <nldd-container
+            slot="footer"
+            padding-inline="16"
+            padding-bottom="16"
+          >
+            <nldd-button
+              appearance="neutral-tinted"
+              text="Behandeling volgen"
+              href="#behandeling-volgen"
+            ></nldd-button>
+          </nldd-container>
         </nldd-card>
-        <nldd-card
-          href="#documenten"
-          accessible-label="Documenten terugvinden"
-        >
+        <nldd-card>
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Documenten terugvinden"
+              text="Brieven en besluiten"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
               <p>Alles wat je hebt ingestuurd of ontvangen staat bij het dossier.</p>
             </nldd-rich-text>
+          </nldd-container>
+          <nldd-container
+            slot="footer"
+            padding-inline="16"
+            padding-bottom="16"
+          >
+            <nldd-button
+              appearance="neutral-tinted"
+              text="Brieven bekijken"
+              href="#brieven"
+            ></nldd-button>
           </nldd-container>
         </nldd-card>
       </nldd-collection>
@@ -192,11 +217,15 @@ nldd-app-view                            de buitenste schil
 
     <nldd-two-thirds-one-third-section background="tinted">
       <nldd-title
-        slot="header"
+        slot="left"
         size="2"
         text="Hoe het werkt"
         heading-level="2"
       ></nldd-title>
+      <nldd-spacer
+        slot="left"
+        size="16"
+      ></nldd-spacer>
       <nldd-rich-text slot="left">
         <p>Een aanvraag gaat langs een vaste route: controleren, beoordelen, besluiten. Elke stap heeft een eigenaar, en je ziet waar de aanvraag ligt.</p>
         <p>Duurt een stap langer dan gepland, dan lees je op het dossier waarom, en wat er nodig is om verder te kunnen.</p>
@@ -308,46 +337,6 @@ nldd-app-view                            de buitenste schil
     </nldd-simple-section>
 
     <nldd-page-footer slot="footer">
-      <nldd-container
-        layout="grid"
-        padding="24"
-        gap="16"
-      >
-        <nldd-container gap="8">
-          <nldd-title
-            size="5"
-            text="Over Mijn Dienst"
-            heading-level="2"
-          ></nldd-title>
-          <nldd-link
-            size="sm"
-            href="#aanpak"
-            text="Hoe het werkt"
-          ></nldd-link>
-          <nldd-link
-            size="sm"
-            href="#publicaties"
-            text="Publicaties"
-          ></nldd-link>
-        </nldd-container>
-        <nldd-container gap="8">
-          <nldd-title
-            size="5"
-            text="Meedoen"
-            heading-level="2"
-          ></nldd-title>
-          <nldd-link
-            size="sm"
-            href="#werken-bij"
-            text="Werken bij"
-          ></nldd-link>
-          <nldd-link
-            size="sm"
-            href="#stage"
-            text="Stage lopen"
-          ></nldd-link>
-        </nldd-container>
-      </nldd-container>
       <nldd-page-footer-legal-bar slot="legal-bar">
         <nldd-page-footer-legal-bar-item
           slot="start"
@@ -385,7 +374,9 @@ nldd-app-view                            de buitenste schil
 
 **Een hero is voor de pagina's waar mensen binnenkomen.** De home, de [onderwerppagina](topic-page.md), en verder elke pagina waar bezoekers vanaf een andere website op landen. Daar is de [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop. Op de andere pagina's opent een sectie met een grote titel, en dat is genoeg.
 
-**De home is zelf het menu.** Wat je hier kunt, staat als kaarten in de inhoud, niet als een rij woorden in de bovenbalk. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#navigatie-en-structuur). Elke kaart heeft een `href`, en dan is de hele [`nldd-card`](../../nldd-design/reference.md#nldd-card) de link: geen losse "Lees meer"-knop eronder, want die zegt niets en verdubbelt de tabstops.
+**De home is zelf het menu.** Wat je hier kunt, staat als kaarten in de inhoud, niet als een rij woorden in de bovenbalk. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#navigatie-en-structuur).
+
+**De titel noemt het onderwerp, de knop de actie.** Een kaart op de home gaat over iets waar je mee bezig bent ("Je aanvraag", "Brieven en besluiten"), en daar hoort een titel bij die dat noemt, geen opdracht. Wat je ermee doet, staat op een [`nldd-button`](../../nldd-design/reference.md#nldd-button) met `href` in de `footer` van de [`nldd-card`](../../nldd-design/reference.md#nldd-card), in een `nldd-container` met `padding-inline` en `padding-bottom`. De footer staat altijd onderaan, dus de knoppen staan in een rij op één hoogte, ook als de teksten verschillen. Geef de kaart dan geen `href`: een kaart die zelf een link is met een knop erin, zijn twee acties die over elkaar liggen. Gebruik `neutral-tinted`: de grijze vulling maakt hem op een witte kaart meteen herkenbaar als knop, en de primaire knop blijft over voor de ene oproep onderaan, zodat de kaarten keuzes bieden en de oproep de volgende stap noemt. Is een kaart alleen een weg naar een andere pagina, zoals op de [navigatiepagina](navigation-page.md), dan is de kaart zelf de link en heeft hij geen knop.
 
 **Een rij kaarten krijgt een intro.** Eén of twee zinnen onder de titel van de sectie zeggen wat de kaarten gemeen hebben, zodat iemand niet uit vier titels hoeft af te leiden waar de rij over gaat. Zet de titel, een `nldd-spacer` en een `nldd-rich-text` los in het `header`-slot van de sectie.
 
@@ -395,6 +386,8 @@ nldd-app-view                            de buitenste schil
 
 **Beeld en tekst naast elkaar, in een sectie van twee helften.** Een [`nldd-one-half-one-half-section`](../../nldd-design/reference.md#nldd-one-half-one-half-section) zet de afbeelding in de ene kolom en de titel, de tekst en een link verder in de andere. Welke kant de afbeelding staat, kies je met de volgorde in de markup, en die is ook de volgorde op smal: daar stapelen de kolommen, dus een afbeelding links staat op een telefoon boven de tekst. Wissel je over de pagina heen tussen links en rechts, dan krijgt de pagina ritme; op de [onderwerppagina](topic-page.md) staat de tekst links. Geef de [`nldd-image`](../../nldd-design/reference.md#nldd-image) een `aspect-ratio`, dan reserveert hij zijn ruimte voor het beeld er is. Zonder `src` toont hij een neutraal vlak met een icoon, zoals in het voorbeeld; krijgt hij een foto, geef hem dan ook een `alt`.
 
+**Een kaart naast de uitleg staat naast de hele uitleg.** In "Hoe het werkt" staat de titel in de linkerkolom van de [`nldd-two-thirds-one-third-section`](../../nldd-design/reference.md#nldd-two-thirds-one-third-section), met een `nldd-spacer` en de tekst eronder, en niet in het `header`-slot. Dan begint de kaart rechts op dezelfde hoogte als de titel, en hoort hij bij het hele blok in plaats van pas naast de eerste alinea te beginnen.
+
 **Een lijst naar dieper gelegen pagina's naast een uitleg.** Waar kaarten te veel gewicht geven, zoals bij een rij onderwerpen, bouw je de sectie zoals de [navigatiepagina](navigation-page.md) met de lijst: een [`nldd-one-third-two-thirds-section`](../../nldd-design/reference.md#nldd-one-third-two-thirds-section) met de titel en een korte uitleg los in het smalle derde, en een [`nldd-list`](../../nldd-design/reference.md#nldd-list) met `type="navigation"` in de twee derde ernaast. Elke rij is een link met een `supporting-text` en eindigt op een chevron, met een `nldd-spacer-cell` ertussen. Geef de lijst een `aria-label`, gelijk aan de titel.
 
 **Wissel de vlakken af.** Getint, wit, getint: elke sectie met `background="tinted"` of zonder, zodat de pagina ritme krijgt zonder lijnen of eigen kleuren.
@@ -403,9 +396,9 @@ nldd-app-view                            de buitenste schil
 
 ## Toegankelijkheid
 
-Wat je gratis krijgt: een kaart met `href` is één link en één tabstop, en de kop van de hero houdt zijn contrast op de vulling.
+Wat je gratis krijgt: elke knop is een echte link met de actie als naam, en de kop van de hero houdt zijn contrast op de vulling.
 
-Wat jij nog moet doen: wat bij de [contentpagina](content-page.md) staat, en een `accessible-label` op elke kaart die een link is.
+Wat jij nog moet doen: wat bij de [contentpagina](content-page.md) staat, en een knoptekst die zonder de kaart eromheen te begrijpen is, want wie met een schermlezer door de links springt, hoort alleen die.
 
 ## Gezien in
 

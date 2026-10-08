@@ -66,14 +66,11 @@
         layout="grid"
         item-width="320px"
       >
-        <nldd-card
-          href="#aanvraag-indienen"
-          accessible-label="Een aanvraag indienen"
-        >
+        <nldd-card>
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Een aanvraag indienen"
+              text="Je aanvraag"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -81,15 +78,23 @@
               <p>Je vult in wat er nodig is en ziet meteen welke gegevens ontbreken.</p>
             </nldd-rich-text>
           </nldd-container>
+          <nldd-container
+            slot="footer"
+            padding-inline="16"
+            padding-bottom="16"
+          >
+            <nldd-button
+              appearance="neutral-tinted"
+              text="Aanvraag indienen"
+              href="#aanvraag-indienen"
+            ></nldd-button>
+          </nldd-container>
         </nldd-card>
-        <nldd-card
-          href="#behandeling-volgen"
-          accessible-label="De behandeling volgen"
-        >
+        <nldd-card>
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="De behandeling volgen"
+              text="De behandeling"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -97,21 +102,40 @@
               <p>Elke stap in de behandeling staat op je aanvraag, met wie er aan werkt.</p>
             </nldd-rich-text>
           </nldd-container>
+          <nldd-container
+            slot="footer"
+            padding-inline="16"
+            padding-bottom="16"
+          >
+            <nldd-button
+              appearance="neutral-tinted"
+              text="Behandeling volgen"
+              href="#behandeling-volgen"
+            ></nldd-button>
+          </nldd-container>
         </nldd-card>
-        <nldd-card
-          href="#documenten"
-          accessible-label="Documenten terugvinden"
-        >
+        <nldd-card>
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Documenten terugvinden"
+              text="Brieven en besluiten"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
             <nldd-rich-text>
               <p>Alles wat je hebt ingestuurd of ontvangen staat bij het dossier.</p>
             </nldd-rich-text>
+          </nldd-container>
+          <nldd-container
+            slot="footer"
+            padding-inline="16"
+            padding-bottom="16"
+          >
+            <nldd-button
+              appearance="neutral-tinted"
+              text="Brieven bekijken"
+              href="#brieven"
+            ></nldd-button>
           </nldd-container>
         </nldd-card>
       </nldd-collection>
@@ -152,11 +176,15 @@
 
     <nldd-two-thirds-one-third-section background="tinted">
       <nldd-title
-        slot="header"
+        slot="left"
         size="2"
         text="Hoe het werkt"
         heading-level="2"
       ></nldd-title>
+      <nldd-spacer
+        slot="left"
+        size="16"
+      ></nldd-spacer>
       <nldd-rich-text slot="left">
         <p>Een aanvraag gaat langs een vaste route: controleren, beoordelen, besluiten. Elke stap heeft een eigenaar, en je ziet waar de aanvraag ligt.</p>
         <p>Duurt een stap langer dan gepland, dan lees je op het dossier waarom, en wat er nodig is om verder te kunnen.</p>
@@ -268,46 +296,6 @@
     </nldd-simple-section>
 
     <nldd-page-footer slot="footer">
-      <nldd-container
-        layout="grid"
-        padding="24"
-        gap="16"
-      >
-        <nldd-container gap="8">
-          <nldd-title
-            size="5"
-            text="Over Mijn Dienst"
-            heading-level="2"
-          ></nldd-title>
-          <nldd-link
-            size="sm"
-            href="#aanpak"
-            text="Hoe het werkt"
-          ></nldd-link>
-          <nldd-link
-            size="sm"
-            href="#publicaties"
-            text="Publicaties"
-          ></nldd-link>
-        </nldd-container>
-        <nldd-container gap="8">
-          <nldd-title
-            size="5"
-            text="Meedoen"
-            heading-level="2"
-          ></nldd-title>
-          <nldd-link
-            size="sm"
-            href="#werken-bij"
-            text="Werken bij"
-          ></nldd-link>
-          <nldd-link
-            size="sm"
-            href="#stage"
-            text="Stage lopen"
-          ></nldd-link>
-        </nldd-container>
-      </nldd-container>
       <nldd-page-footer-legal-bar slot="legal-bar">
         <nldd-page-footer-legal-bar-item
           slot="start"

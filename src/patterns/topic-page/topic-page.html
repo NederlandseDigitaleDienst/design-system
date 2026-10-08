@@ -228,25 +228,66 @@
       </nldd-list>
     </nldd-one-third-two-thirds-section>
 
-    <nldd-simple-section>
+    <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
         size="3"
         text="Verwante onderwerpen"
         heading-level="2"
       ></nldd-title>
-      <nldd-container gap="8">
-        <nldd-link
-          size="md"
+      <nldd-collection
+        layout="grid"
+        item-width="280px"
+      >
+        <nldd-card
           href="#warmtepomp"
-          text="Warmtepomp"
-        ></nldd-link>
-        <nldd-link
-          size="md"
+          accessible-label="Warmtepomp"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Warmtepomp"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Van luchtwarmtepomp tot hybride, en wat je huis ervoor nodig heeft.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
           href="#energie-besparen"
-          text="Energie besparen"
-        ></nldd-link>
-      </nldd-container>
+          accessible-label="Energie besparen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Energie besparen"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Kleine stappen die je meteen kunt zetten.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#zonnepanelen"
+          accessible-label="Zonnepanelen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Zonnepanelen"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Wat je moet weten voor je begint.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+      </nldd-collection>
     </nldd-simple-section>
 
     <nldd-page-footer slot="footer">
