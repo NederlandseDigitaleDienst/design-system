@@ -46,8 +46,8 @@ export const heroStyles = css`
 		display: none;
 	}
 
-	:host(:last-child),
-	:host(.is-last) {
+	:host([data-growing]),
+	:host([grow]) {
 		flex-grow: 1;
 	}
 
@@ -179,21 +179,21 @@ export const heroStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			padding-top: var(--_hero-sm-padding-top, var(--_hero-padding-top, var(--semantics-page-sections-sm-margin-block)));
+			padding-top: var(--_hero-sm-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-sm-margin-block) / 2)));
 			padding-bottom: var(--_hero-sm-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_hero-main-padding: var(--primitives-space-24);
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
-			padding-top: var(--_hero-md-padding-top, var(--_hero-padding-top, var(--semantics-page-sections-md-margin-block)));
+			padding-top: var(--_hero-md-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-md-margin-block) / 2)));
 			padding-bottom: var(--_hero-md-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-md-margin-block)));
 		}
 
 		@container (min-width: ${lgMin}) {
 			--_hero-main-padding: var(--primitives-space-32);
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
-			padding-top: var(--_hero-lg-padding-top, var(--_hero-padding-top, var(--semantics-page-sections-lg-margin-block)));
+			padding-top: var(--_hero-lg-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-lg-margin-block) / 2)));
 			padding-bottom: var(--_hero-lg-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
 		}
 	}

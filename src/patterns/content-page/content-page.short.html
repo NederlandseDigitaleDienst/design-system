@@ -1,16 +1,3 @@
-<style>
-  /* The section owns the switch; this shows the button, and the space above
-     it, only when there is a sheet to open. */
-  nldd-sidebar-section:not([collapsed]) :is(#inhoud-openen, nldd-spacer:has(+ #inhoud-openen)) {
-    display: none;
-  }
-
-  /* The sheet has its own title bar with the same name. */
-  nldd-sidebar-section[collapsed] :is(#inhoud-kop, #inhoud-kop + nldd-spacer) {
-    display: none;
-  }
-</style>
-
 <nldd-app-view>
   <nldd-page>
     <nldd-skip-link slot="header">
@@ -50,106 +37,43 @@
       </nldd-top-navigation-bar>
     </nldd-skip-link>
 
-    <nldd-sidebar-section
-      sidebar-label="Op deze pagina"
-      grow
-    >
+    <nldd-two-thirds-one-third-section grow>
       <nldd-title
         slot="header"
         size="1"
-        text="Een aanvraag indienen"
+        text="Een aanvraag intrekken"
         heading-level="1"
       ></nldd-title>
-      <nldd-spacer
-        slot="header"
-        size="16"
-      ></nldd-spacer>
-      <nldd-button
-        slot="header"
-        id="inhoud-openen"
-        appearance="secondary"
-        start-icon="bullet-list"
-        text="Op deze pagina"
-        popup-type="dialog"
-      ></nldd-button>
-
-      <nldd-container
-        slot="sidebar"
-        padding="16"
-        padding-bottom="8"
-      >
-        <nldd-title
-          id="inhoud-kop"
-          size="5"
-          text="Op deze pagina"
-        ></nldd-title>
-        <nldd-spacer size="8"></nldd-spacer>
-        <nldd-list
-          type="navigation"
-          appearance="simple"
-          dividers="never"
-          aria-label="Op deze pagina"
-        >
-          <nldd-list-item
-            href="#wat-je-nodig-hebt"
-            current
-            current-type="location"
-          >
-            <nldd-text-cell text="Wat je nodig hebt"></nldd-text-cell>
-          </nldd-list-item>
-          <nldd-list-item
-            href="#zo-gaat-het"
-            current-type="location"
-          >
-            <nldd-text-cell text="Zo gaat het"></nldd-text-cell>
-          </nldd-list-item>
-          <nldd-list-item
-            href="#na-het-indienen"
-            current-type="location"
-          >
-            <nldd-text-cell text="Na het indienen"></nldd-text-cell>
-          </nldd-list-item>
-        </nldd-list>
-      </nldd-container>
-
-      <nldd-rich-text>
-        <p>Een aanvraag dien je online in. Je vult in wat er nodig is en ziet meteen welke gegevens nog ontbreken, dus je hoeft niet alles in één keer af te maken.</p>
-        <h2 id="wat-je-nodig-hebt">Wat je nodig hebt</h2>
-        <ul>
-          <li>Je DigiD</li>
-          <li>Het adres waar de aanvraag over gaat</li>
-          <li>Een offerte of factuur van de uitvoerder</li>
-        </ul>
-        <h2 id="zo-gaat-het">Zo gaat het</h2>
-        <ol>
-          <li>Je kiest waarvoor je een aanvraag doet.</li>
-          <li>Je vult je gegevens in en voegt de offerte toe.</li>
-          <li>Je controleert alles en verstuurt de aanvraag.</li>
-        </ol>
-        <h2 id="na-het-indienen">Na het indienen</h2>
-        <p>Je aanvraag krijgt een nummer en een behandelaar. Op het dossier zie je bij welke stap de aanvraag ligt, en lees je wat er nodig is als een stap langer duurt dan gepland.</p>
+      <nldd-rich-text slot="left">
+        <p>Zolang een aanvraag nog in behandeling is, kun je hem intrekken. Je hoeft daar geen reden voor te geven.</p>
+        <h2 id="zo-trek-je-hem-in">Zo trek je hem in</h2>
+        <p>Open de aanvraag in je dossier en kies onderaan voor intrekken. Je krijgt een bevestiging in je dossier, en de behandelaar stopt met de aanvraag.</p>
+        <h2 id="daarna">Daarna</h2>
+        <p>Een ingetrokken aanvraag kun je niet terughalen. Wil je het later toch, dan dien je een nieuwe aanvraag in.</p>
       </nldd-rich-text>
-      <nldd-spacer size="32"></nldd-spacer>
-      <nldd-card background="tinted">
+      <nldd-card
+        slot="right"
+        background="tinted"
+      >
         <nldd-container padding="16">
           <nldd-title
             size="4"
-            text="Zelf een aanvraag doen"
+            text="Je aanvraag intrekken"
             heading-level="2"
           ></nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-rich-text>
-            <p>Je hebt je DigiD nodig en tien minuten tijd.</p>
+            <p>Je hebt je DigiD nodig.</p>
           </nldd-rich-text>
           <nldd-spacer size="16"></nldd-spacer>
           <nldd-button
             appearance="primary"
-            text="Start een aanvraag"
-            href="#aanvraag-starten"
+            text="Naar je dossier"
+            href="#dossier"
           ></nldd-button>
         </nldd-container>
       </nldd-card>
-    </nldd-sidebar-section>
+    </nldd-two-thirds-one-third-section>
 
     <nldd-simple-section background="tinted">
       <nldd-title
@@ -163,18 +87,18 @@
         item-width="280px"
       >
         <nldd-card
-          href="#behandeling-volgen"
-          accessible-label="De behandeling volgen"
+          href="#aanvraag-wijzigen"
+          accessible-label="Een aanvraag wijzigen"
         >
           <nldd-container padding="16">
             <nldd-title
               size="5"
-              text="De behandeling volgen"
+              text="Een aanvraag wijzigen"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
             <nldd-rich-text>
-              <p>Elke stap staat op je aanvraag, met wie er aan werkt.</p>
+              <p>Soms is aanvullen genoeg, en hoef je niet opnieuw te beginnen.</p>
             </nldd-rich-text>
           </nldd-container>
         </nldd-card>
@@ -224,7 +148,7 @@
           href="#aanvragen"
         ></nldd-breadcrumbs-item>
         <nldd-breadcrumbs-item
-          text="Een aanvraag indienen"
+          text="Een aanvraag intrekken"
           current
         ></nldd-breadcrumbs-item>
       </nldd-breadcrumbs>

@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import './hero.js';
+import { loadTokens } from '../../../../test-tokens.js';
 
 const MEDIA = '<img slot="media" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 4 3\'%3E%3Crect width=\'4\' height=\'3\'/%3E%3C/svg%3E" alt="">';
 
@@ -80,6 +81,22 @@ describe('nldd-hero', () => {
 	/* ============================================================
 	   Width (max-width) inline style
 	   ============================================================ */
+
+	it('has half the section padding on top and the full padding below, unless padding-top is set', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			el = await fixture('<nldd-hero style="width: 1200px"></nldd-hero>');
+			await waitForUpdate(el);
+			const hero = el.shadowRoot!.querySelector('.hero')!;
+			expect(getComputedStyle(hero).paddingTop).toBe('24px');
+			expect(getComputedStyle(hero).paddingBottom).toBe('48px');
+			el.setAttribute('padding-top', '48');
+			await waitForUpdate(el);
+			expect(getComputedStyle(hero).paddingTop).toBe('48px');
+		} finally {
+			unloadTokens();
+		}
+	});
 
 	it('width="full" sets no --_hero-max-width inline style', async () => {
 		el = await fixture('<nldd-hero width="full"></nldd-hero>');

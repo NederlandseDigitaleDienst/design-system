@@ -55,14 +55,14 @@ export const sidebarSectionStyles = css`
 		--_sidebar-section-max-width: none;
 	}
 
-	/* # Growth — mirrors simple-section. The host only grows as the last
-	   (visible) section in an nldd-page; the chain below (block -> body ->
+	/* # Growth — mirrors simple-section. The host only grows when it is the
+	   growing section of an nldd-page, or has grow itself; the chain below (block -> body ->
 	   columns -> main) is unconditional, so whatever height the host gets
 	   always reaches the main column. An nldd-inline-dialog there (itself
 	   flex-grow: 1) then fills and centers in the leftover space. */
 
-	:host(:last-child),
-	:host(.is-last) {
+	:host([data-growing]),
+	:host([grow]) {
 		flex-grow: 1;
 	}
 

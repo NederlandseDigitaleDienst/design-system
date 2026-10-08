@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { waitForUpdate } from '../../test-utils.js';
 import markup from './content-page.html?raw';
+import short from './content-page.short.html?raw';
 import { Standaard } from './content-page.stories.js';
 import { expectBreadcrumbsInFooter, expectLegalBar, expectNamedLinkCards, expectSoundHeadings, expectTopBar } from '../page-checks.js';
 import '../../components/index.js';
@@ -58,6 +59,12 @@ describe('patroon: contentpagina', () => {
 		expect(text.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 		expect(card.querySelector('nldd-button[appearance="primary"]')).not.toBeNull();
 		expect(root.querySelectorAll('nldd-button[appearance="primary"]').length).toBe(1);
+	});
+
+	it('laat de tekst groeien en niet Ook handig', () => {
+		const sections = [...root.querySelectorAll('nldd-page > :not([slot])')];
+		expect(sections[0].hasAttribute('grow')).toBe(true);
+		expect(sections[sections.length - 1].hasAttribute('grow')).toBe(false);
 	});
 
 	it('houdt de landmarks van een los document', () => {
@@ -120,6 +127,47 @@ describe('patroon: contentpagina', () => {
 			const heading = story.querySelector('#na-het-indienen');
 			await expect.poll(() => document.activeElement).toBe(heading);
 			await expect.poll(() => rows.map((row) => row.hasAttribute('current'))).toEqual([false, false, true]);
+		});
+	});
+
+	describe('zonder inhoudsopgave', () => {
+		let page: HTMLElement;
+
+		beforeEach(async () => {
+			page = document.createElement('div');
+			page.innerHTML = short;
+			document.body.append(page);
+			for (const el of page.querySelectorAll('nldd-title, nldd-page, nldd-card')) await waitForUpdate(el as HTMLElement);
+		});
+
+		afterEach(() => {
+			page.remove();
+		});
+
+		it('heeft dezelfde bovenbalk, footer en koppen als de pagina met inhoudsopgave', () => {
+			expectTopBar(page, 'Aanvragen');
+			expectLegalBar(page);
+			expectBreadcrumbsInFooter(page);
+			expectSoundHeadings(page);
+			expectNamedLinkCards(page);
+		});
+
+		it('heeft geen sidebar en minder dan drie koppen in de tekst', () => {
+			expect(page.querySelector('nldd-sidebar-section')).toBeNull();
+			expect(page.querySelector('#inhoud-openen')).toBeNull();
+			const h2s = page.querySelectorAll('nldd-rich-text h2');
+			expect(h2s.length).toBeGreaterThan(0);
+			expect(h2s.length).toBeLessThan(3);
+		});
+
+		it('zet de tekst links en de actie rechts, met de titel in de header', () => {
+			const section = page.querySelector('nldd-page > :not([slot])')!;
+			expect(section.tagName).toBe('NLDD-TWO-THIRDS-ONE-THIRD-SECTION');
+			expect(section.hasAttribute('grow')).toBe(true);
+			expect(section.querySelector(':scope > nldd-title[slot="header"][heading-level="1"]')).not.toBeNull();
+			expect(section.querySelector(':scope > nldd-rich-text[slot="left"]')).not.toBeNull();
+			expect(section.querySelector(':scope > nldd-card[slot="right"] nldd-button[appearance="primary"]')).not.toBeNull();
+			expect(page.querySelectorAll('nldd-button[appearance="primary"]').length).toBe(1);
 		});
 	});
 });

@@ -24,8 +24,16 @@ export function imageTemplate(component: NLDDImage) {
 		});
 	}
 
+	const isEmpty = component._isEmpty;
 	const mediaClasses = classMap({
 		'image__media': true,
+		// No image at all: a neutral area with an icon, where an image belongs.
+		'image__media--empty': isEmpty,
+		// The built-in img is on its way and there is no LQIP to show meanwhile:
+		// the same neutral area, without the icon, so a fast load does not flash
+		// one. Slotted media is left alone, since its load cannot be observed and
+		// the fill would stay behind a transparent image.
+		'image__media--loading': !isEmpty && !hasLqip && !component._hasSlottedMedia && !component._imageLoaded && !component._imageErrored,
 		// LQIP only renders while the image is in-flight. Once it errors we
 		// fall back to the neutral background so the error card sits on a
 		// calm surface instead of a distracting gradient.
@@ -88,11 +96,15 @@ export function imageTemplate(component: NLDDImage) {
 		aria-live="polite"
 	>${errorStatusMessage}</span>`;
 
+	// An empty image conveys nothing, so the whole area is hidden from
+	// assistive technology. The slot stays, so media that arrives later is seen.
 	const media = html`
 		<div class=${mediaClasses}
 			style=${styleMap(mediaStyles)}
+			aria-hidden=${isEmpty ? 'true' : nothing}
 		>
-			<slot @slotchange=${component._onMediaSlotChange}>${fallbackImg}</slot>
+			<slot @slotchange=${component._onMediaSlotChange}>${isEmpty ? nothing : fallbackImg}</slot>
+			${isEmpty ? html`<span class="image__empty-icon"><nldd-icon icon="image"></nldd-icon></span>` : nothing}
 			${errorOverlay}
 			${liveRegion}
 		</div>

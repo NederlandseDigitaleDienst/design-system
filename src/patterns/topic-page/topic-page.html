@@ -37,23 +37,57 @@
       </nldd-top-navigation-bar>
     </nldd-skip-link>
 
-    <nldd-simple-section>
+    <nldd-hero main-background="accent">
       <nldd-title
-        slot="header"
+        color="inherit"
         size="1"
         text="Isoleren"
         heading-level="1"
       ></nldd-title>
-      <nldd-rich-text>
+      <nldd-spacer size="16"></nldd-spacer>
+      <nldd-rich-text color="inherit">
         <p>Een goed geïsoleerd huis houdt de warmte binnen en is in de zomer koeler. Voor dakisolatie kun je een aanvraag doen; hieronder staat wat je daarvoor moet weten.</p>
       </nldd-rich-text>
-      <nldd-spacer size="16"></nldd-spacer>
+      <nldd-spacer size="24"></nldd-spacer>
       <nldd-button
-        appearance="primary"
+        appearance="inherit-filled"
         text="Start een aanvraag"
         href="#aanvraag-starten"
       ></nldd-button>
-    </nldd-simple-section>
+    </nldd-hero>
+
+    <nldd-one-half-one-half-section>
+      <nldd-title
+        slot="left"
+        size="2"
+        text="Waarom isoleren"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer
+        slot="left"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="left">
+        <p>Een goed geïsoleerd huis verliest minder warmte, dus je stookt minder en het blijft in de zomer koeler.</p>
+        <p>Isoleren is ook vaak de eerste stap voor een warmtepomp: die werkt het best in een huis dat de warmte vasthoudt.</p>
+      </nldd-rich-text>
+      <nldd-spacer
+        slot="left"
+        size="16"
+      ></nldd-spacer>
+      <nldd-link
+        slot="left"
+        size="md"
+        end-icon="arrow-right"
+        href="#waarom-isoleren"
+        text="Meer over wat isoleren oplevert"
+      ></nldd-link>
+      <nldd-image
+        slot="right"
+        aspect-ratio="3/2"
+        shape="rounded"
+      ></nldd-image>
+    </nldd-one-half-one-half-section>
 
     <nldd-simple-section background="tinted">
       <nldd-title
@@ -62,26 +96,17 @@
         text="Wat je moet weten"
         heading-level="2"
       ></nldd-title>
+      <nldd-spacer
+        slot="header"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="header">
+        <p>Voor dakisolatie doe je een aanvraag. Dit zijn de pagina's die je daarbij helpen, waar ze op de site ook staan.</p>
+      </nldd-rich-text>
       <nldd-collection
         layout="grid"
         item-width="280px"
       >
-        <nldd-card
-          href="#dakisolatie"
-          accessible-label="Dakisolatie"
-        >
-          <nldd-container padding="16">
-            <nldd-title
-              size="5"
-              text="Dakisolatie"
-              heading-level="3"
-            ></nldd-title>
-            <nldd-spacer size="4"></nldd-spacer>
-            <nldd-rich-text>
-              <p>Welke isolatie onder de regeling valt en wat die moet opleveren.</p>
-            </nldd-rich-text>
-          </nldd-container>
-        </nldd-card>
         <nldd-card
           href="#aanvraag-indienen"
           accessible-label="Een aanvraag indienen"
@@ -114,8 +139,94 @@
             </nldd-rich-text>
           </nldd-container>
         </nldd-card>
+        <nldd-card
+          href="#bezwaar-maken"
+          accessible-label="Bezwaar maken"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Bezwaar maken"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Wat je doet als je het niet eens bent met een besluit.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
       </nldd-collection>
     </nldd-simple-section>
+
+    <nldd-one-third-two-thirds-section>
+      <nldd-title
+        slot="left"
+        size="2"
+        text="Soorten isolatie"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer
+        slot="left"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="left">
+        <p>Welke isolatie past, hangt af van je huis: hoe oud het is, hoe het gebouwd is en wat er al gedaan is. Per soort lees je wat het oplevert en waar je op let.</p>
+      </nldd-rich-text>
+      <nldd-list
+        slot="right"
+        type="navigation"
+        aria-label="Soorten isolatie"
+      >
+        <nldd-list-item href="#dakisolatie">
+          <nldd-text-cell
+            text="Dakisolatie"
+            supporting-text="Het meeste effect, omdat warmte opstijgt"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#spouwmuurisolatie">
+          <nldd-text-cell
+            text="Spouwmuurisolatie"
+            supporting-text="Voor huizen met een spouw tussen de muren"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#vloerisolatie">
+          <nldd-text-cell
+            text="Vloerisolatie"
+            supporting-text="Warmere voeten en minder vocht"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#isolerend-glas">
+          <nldd-text-cell
+            text="Isolerend glas"
+            supporting-text="Minder kou bij de ramen"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+      </nldd-list>
+    </nldd-one-third-two-thirds-section>
 
     <nldd-simple-section>
       <nldd-title

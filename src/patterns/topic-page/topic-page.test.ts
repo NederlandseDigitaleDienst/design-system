@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { waitForUpdate } from '../../test-utils.js';
 import markup from './topic-page.html?raw';
-import { expectBreadcrumbsInFooter, expectLegalBar, expectNamedLinkCards, expectSoundHeadings, expectTopBar } from '../page-checks.js';
+import { expectBreadcrumbsInFooter, expectHeaderIntro, expectImageAndText, expectLegalBar, expectNamedLinkCards, expectSoundHeadings, expectTextAndLinkList, expectTopBar } from '../page-checks.js';
 import '../../components/index.js';
 
 describe('patroon: onderwerppagina', () => {
@@ -26,16 +26,29 @@ describe('patroon: onderwerppagina', () => {
 		expectLegalBar(root);
 	});
 
+	it('zet tekst en beeld naast elkaar, geeft de kaarten een intro en de pagina\'s eronder een lijst', () => {
+		const written = new DOMParser().parseFromString(markup, 'text/html');
+		const halves = [...written.querySelectorAll('nldd-one-half-one-half-section')];
+		expect(halves.length).toBe(1);
+		expectImageAndText(halves[0], 'right');
+		expectHeaderIntro(written.querySelector('nldd-simple-section:has(nldd-collection)')!);
+		expectTextAndLinkList(written.querySelector('nldd-one-third-two-thirds-section')!);
+	});
+
 	it('heeft één h1 en slaat geen kopniveau over', () => {
 		expectSoundHeadings(root);
 	});
 
-	it('zet de hoofdtaak in de eerste sectie, als enige primaire knop', () => {
+	it('opent met een hero met de h1, een korte uitleg en de hoofdtaak als enige knop', () => {
 		const first = root.querySelector('nldd-page > :not([slot])')!;
-		expect(first.querySelector('nldd-title[heading-level="1"]')).not.toBeNull();
-		expect(first.querySelector('nldd-rich-text')).not.toBeNull();
-		expect(first.querySelector('nldd-button[appearance="primary"][href]')).not.toBeNull();
-		expect(root.querySelectorAll('nldd-button[appearance="primary"]').length).toBe(1);
+		expect(first.tagName).toBe('NLDD-HERO');
+		expect(first.querySelector(':scope > nldd-title[heading-level="1"][color="inherit"]')).not.toBeNull();
+		expect(first.querySelector(':scope > nldd-rich-text[color="inherit"]')).not.toBeNull();
+		const buttons = [...first.querySelectorAll('nldd-button')];
+		expect(buttons.length).toBe(1);
+		expect(buttons[0].getAttribute('appearance')).toBe('inherit-filled');
+		expect(buttons[0].getAttribute('href')).toBeTruthy();
+		expect(root.querySelectorAll('nldd-button').length).toBe(1);
 	});
 
 	it('maakt van elke kaart één link met een naam', () => {

@@ -47,7 +47,7 @@ describe('nldd-sidebar-section', () => {
 	it('grows as last section and passes the height down to the main column', async () => {
 		el = await fixture<NLDDSidebarSection>(`
 			<div style="display: flex; height: 600px; flex-direction: column;">
-				<nldd-sidebar-section class="is-last">
+				<nldd-sidebar-section data-growing>
 					<nldd-inline-dialog text="Leeg"></nldd-inline-dialog>
 				</nldd-sidebar-section>
 			</div>

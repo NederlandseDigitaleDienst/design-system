@@ -38,6 +38,11 @@ export const fullBleedSectionStyles = css`
 		display: none;
 	}
 
+	:host([data-growing]),
+	:host([grow]) {
+		flex-grow: 1;
+	}
+
 	:host([width="full"]) {
 		--_full-bleed-section-max-width: none;
 	}

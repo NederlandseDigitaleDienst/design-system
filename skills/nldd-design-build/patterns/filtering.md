@@ -57,13 +57,14 @@ nldd-page
     <nldd-container
       slot="sidebar"
       padding="16"
+      padding-bottom="8"
     >
       <nldd-title
         size="5"
         text="Status"
         heading-level="2"
       ></nldd-title>
-      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-list
         appearance="simple"
         dividers="never"
@@ -110,7 +111,7 @@ nldd-page
         text="Team"
         heading-level="2"
       ></nldd-title>
-      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-list
         appearance="simple"
         dividers="never"

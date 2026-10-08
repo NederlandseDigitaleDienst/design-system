@@ -1,4 +1,5 @@
 import markup from './content-page.html?raw';
+import short from './content-page.short.html?raw';
 import { patternStory } from '../pattern-story.js';
 
 export default {
@@ -46,3 +47,5 @@ export const Standaard = patternStory(markup, (root) => {
 	const kijker = new IntersectionObserver(markeer, { rootMargin: '0px 0px -67% 0px' });
 	koppen.forEach((kop) => kijker.observe(kop));
 }, 640);
+
+export const ZonderInhoudsopgave = patternStory(short, undefined, 640);

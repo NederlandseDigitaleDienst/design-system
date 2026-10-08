@@ -255,8 +255,10 @@ describe('nldd-page', () => {
 		});
 	});
 
-	describe('is-last main slot marker', () => {
-		it('marks the last visible main child with is-last', async () => {
+	describe('data-growing main slot marker', () => {
+		const growing = () => [...el.querySelectorAll('[data-growing]')].map((child) => child.id);
+
+		it('marks the last visible main child when none has grow', async () => {
 			el = await fixture(`
 				<nldd-page>
 					<div id="a">A</div>
@@ -265,10 +267,7 @@ describe('nldd-page', () => {
 				</nldd-page>
 			`);
 			await waitForUpdate(el);
-
-			expect(el.querySelector('#a')!.classList.contains('is-last')).toBe(false);
-			expect(el.querySelector('#b')!.classList.contains('is-last')).toBe(false);
-			expect(el.querySelector('#c')!.classList.contains('is-last')).toBe(true);
+			expect(growing()).toEqual(['c']);
 		});
 
 		it('skips hidden children when picking the last', async () => {
@@ -280,9 +279,7 @@ describe('nldd-page', () => {
 				</nldd-page>
 			`);
 			await waitForUpdate(el);
-
-			expect(el.querySelector('#b')!.classList.contains('is-last')).toBe(true);
-			expect(el.querySelector('#c')!.classList.contains('is-last')).toBe(false);
+			expect(growing()).toEqual(['b']);
 		});
 
 		it('ignores siblings in named slots', async () => {
@@ -294,11 +291,35 @@ describe('nldd-page', () => {
 				</nldd-page>
 			`);
 			await waitForUpdate(el);
+			expect(growing()).toEqual(['b']);
+		});
 
-			// `footer` is in a named slot — it should not appear in the main-slot
-			// last-pick and thus must not carry is-last.
-			expect(el.querySelector('#b')!.classList.contains('is-last')).toBe(true);
-			expect(el.querySelector('#footer')!.classList.contains('is-last')).toBe(false);
+		it('marks the children with grow instead of the last, and never writes grow', async () => {
+			el = await fixture(`
+				<nldd-page>
+					<div id="a">A</div>
+					<div id="b" grow>B</div>
+					<div id="c">C</div>
+				</nldd-page>
+			`);
+			await waitForUpdate(el);
+			expect(growing()).toEqual(['b']);
+			expect(el.querySelector('#c')!.hasAttribute('grow')).toBe(false);
+		});
+
+		it('follows a grow or hidden that changes after slotting', async () => {
+			el = await fixture(`
+				<nldd-page>
+					<div id="a">A</div>
+					<div id="b">B</div>
+				</nldd-page>
+			`);
+			await waitForUpdate(el);
+			el.querySelector('#a')!.setAttribute('grow', '');
+			await expect.poll(growing).toEqual(['a']);
+			el.querySelector('#a')!.removeAttribute('grow');
+			el.querySelector('#b')!.setAttribute('hidden', '');
+			await expect.poll(growing).toEqual(['a']);
 		});
 	});
 

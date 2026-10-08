@@ -23,7 +23,7 @@ const paddingControl = (name: string, description: string) => ({
 
 /**
  * Shared Storybook controls for the PageSectionMixin surface API
- * (background, width, height and the 12 block-padding overrides).
+ * (background, width, height, grow and the 12 block-padding overrides).
  * Spread into a section story's `args` / `argTypes`, and bind onto the host
  * element in `render` with the `pageSectionAttrs` directive.
  */
@@ -31,6 +31,7 @@ export const pageSectionArgs = {
 	background: 'inherit',
 	width: '',
 	height: '',
+	grow: false,
 	paddingBlock: '',
 	paddingTop: '',
 	paddingBottom: '',
@@ -59,6 +60,11 @@ export const pageSectionArgTypes = {
 	height: {
 		control: 'text',
 		description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. "400px" of "100dvh")',
+	},
+	grow: {
+		control: 'boolean',
+		description: 'Neemt de hoogte die de pagina over heeft, zodat de footer onderaan staat. Zonder `grow` groeit de laatste sectie van een `nldd-page`.',
+		table: { defaultValue: { summary: false } },
 	},
 	paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, "0" haalt hem weg)'),
 	paddingTop: paddingControl('padding-top', 'Alleen de padding boven'),
@@ -94,7 +100,9 @@ class PageSectionAttrsDirective extends Directive {
 		const el = part.element;
 		for (const [key, attribute] of PAGE_SECTION_ATTRS) {
 			const value = args[key];
-			if (typeof value === 'string' && value !== '') {
+			if (typeof value === 'boolean') {
+				el.toggleAttribute(attribute, value);
+			} else if (typeof value === 'string' && value !== '') {
 				el.setAttribute(attribute, value);
 			} else {
 				el.removeAttribute(attribute);

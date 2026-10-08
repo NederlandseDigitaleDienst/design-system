@@ -18,10 +18,17 @@ nldd-app-view                            de buitenste schil
   └─ nldd-page
        ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
        │    └─ nldd-top-navigation-bar   zoeken en taal, terug naar de onderwerpen
-       ├─ nldd-simple-section            de h1, een korte uitleg en de hoofdtaak
+       ├─ nldd-hero                      de h1, een korte uitleg en de hoofdtaak
+       ├─ nldd-one-half-one-half-section tekst links, afbeelding rechts
+       │    ├─ slot="left"               titel, tekst en een nldd-link verder
+       │    └─ slot="right"              nldd-image met aspect-ratio
        ├─ nldd-simple-section            background="tinted", wat je moet weten
+       │    ├─ slot="header"             de titel en een intro van een zin of twee
        │    └─ nldd-collection
        │         └─ nldd-card            href, naar pagina's waar ze ook staan
+       ├─ nldd-one-third-two-thirds-section
+       │    ├─ slot="left"               de titel en een korte uitleg
+       │    └─ slot="right"              een nldd-list type="navigation" naar de pagina's eronder
        ├─ nldd-simple-section            verwante onderwerpen, als nldd-link
        └─ slot="footer"                  nldd-page-footer
             ├─ slot="breadcrumbs"
@@ -34,11 +41,17 @@ nldd-app-view                            de buitenste schil
 
 **De basis is die van de contentpagina.** De app view, de secties, de koppen, de vlakken, de linkkaarten en de footer werken hier precies zo. Dat staat bij de [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs).
 
-**De hoofdtaak staat bovenaan.** Wie op een onderwerp landt, komt meestal voor één ding. Zet die taak als primaire [`nldd-button`](?path=/docs/components-actions-button--docs) direct onder de uitleg, in de eerste sectie, zodat niemand eerst langs de kaarten hoeft. Het is één knop; meer taken van hetzelfde gewicht horen bij de kaarten.
+**Een onderwerp opent met een hero.** Op een onderwerp landen mensen vaak rechtstreeks, vanuit een zoekmachine of een andere site, en dan is het net als de [home](?path=/docs/patronen-pagina-s-home--docs) een pagina waar ze binnenkomen. De [`nldd-hero`](?path=/docs/components-layout-page-sections-hero--docs) is de kop, met de titel, de korte uitleg en de hoofdtaak erin. Geef de titel en de tekst `color="inherit"`, zodat ze het contrast van de vulling volgen.
+
+**De hoofdtaak staat bovenaan.** Wie op een onderwerp landt, komt meestal voor één ding. Zet die taak als [`nldd-button`](?path=/docs/components-actions-button--docs) direct onder de uitleg in de hero, zodat niemand eerst langs de kaarten hoeft. Op de vulling van de hero is dat `appearance="inherit-filled"`: die neemt zijn kleuren van het vlak, waar een gewone primaire knop wegvalt tegen een accentkleur. Het is één knop; meer taken van hetzelfde gewicht horen bij de kaarten.
 
 **Eigen uitleg, maar kort.** Een paar zinnen over wat het onderwerp is en wat je hier vindt. Dat is het verschil met een navigatiepagina, waar de intro alleen zegt wat eronder valt. Wordt de uitleg langer dan een alinea, dan is hij een eigen contentpagina en krijgt hij een kaart.
 
-**De kaarten volgen het thema, niet de indeling van de site.** "Dakisolatie" staat bij de regelingen, "Een aanvraag indienen" bij de aanvragen: op deze pagina staan ze naast elkaar, omdat ze over hetzelfde gaan. De kaart linkt naar de pagina waar die al staat. Je kopieert de inhoud niet, anders heb je twee versies die uit elkaar lopen.
+**Uitleg met beeld, als je meer te zeggen hebt dan de intro.** Waarom het onderwerp ertoe doet, staat in een sectie met de tekst links en een afbeelding rechts. Hoe je die bouwt, staat bij de [home](?path=/docs/patronen-pagina-s-home--docs); hier staat de tekst eerst, zodat hij ook op smal boven de afbeelding komt.
+
+**De kaarten volgen het thema, niet de indeling van de site.** "Een aanvraag indienen" en "Bezwaar maken" staan bij de aanvragen, niet bij isoleren: op deze pagina staan ze toch, omdat je ze voor dit onderwerp nodig hebt. Een intro onder de titel zegt waarom. De kaart linkt naar de pagina waar die al staat. Je kopieert de inhoud niet, anders heb je twee versies die uit elkaar lopen.
+
+**De pagina's onder het onderwerp staan in een lijst.** Wat dieper over het onderwerp gaat, zoals de soorten isolatie, staat in een `nldd-list` met `type="navigation"` in de twee derde rechts, met de titel en een korte uitleg in het derde links, net als op de [navigatiepagina](?path=/docs/patronen-pagina-s-navigatiepagina--docs). Een lijst geeft die pagina's minder gewicht dan de kaarten erboven, en dat klopt: de kaarten zijn wat de meesten komen doen, de lijst is waar je verder leest.
 
 **Verwante onderwerpen zijn links, geen kaarten.** Ze zijn een uitweg voor wie op het verkeerde onderwerp is beland, en geen taak. Een rij [`nldd-link`](?path=/docs/components-navigation-link--docs)'s in een `nldd-container` met `gap` houdt ze rustig, onder de kaarten.
 

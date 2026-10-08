@@ -78,3 +78,44 @@ export function expectLegalBar(root: HTMLElement) {
 	expect(end.map((item) => item.getAttribute('text'))).toEqual(['Contact', 'Toegankelijkheid', 'Privacy', 'Over deze website']);
 	expect(end.every((item) => item.getAttribute('href'))).toBe(true);
 }
+
+/**
+ * A section with an image on one side and a title, text and link on the other,
+ * in that order in the markup so the narrow stack reads the same way.
+ */
+export function expectImageAndText(section: Element, imageSide: 'left' | 'right') {
+	expect(section.tagName).toBe('NLDD-ONE-HALF-ONE-HALF-SECTION');
+	const textSide = imageSide === 'left' ? 'right' : 'left';
+	const image = section.querySelector(`:scope > nldd-image[slot="${imageSide}"]`)!;
+	expect(image.getAttribute('aspect-ratio')).toBeTruthy();
+	const text = [...section.querySelectorAll(`:scope > [slot="${textSide}"]`)];
+	expect(text.map((el) => el.tagName)).toEqual(expect.arrayContaining(['NLDD-TITLE', 'NLDD-RICH-TEXT', 'NLDD-LINK']));
+	const first = section.querySelector(':scope > [slot="left"], :scope > [slot="right"]')!;
+	expect(first.getAttribute('slot')).toBe('left');
+}
+
+/**
+ * A section like the navigation page: the title and a short text in the left
+ * third, a navigation list in the other two thirds whose rows each end on a
+ * chevron.
+ */
+export function expectTextAndLinkList(section: Element) {
+	expect(section.tagName).toBe('NLDD-ONE-THIRD-TWO-THIRDS-SECTION');
+	const title = section.querySelector(':scope > nldd-title[slot="left"]')!;
+	expect(section.querySelector(':scope > nldd-rich-text[slot="left"]')).not.toBeNull();
+	const list = section.querySelector(':scope > nldd-list[slot="right"]')!;
+	expect(list.getAttribute('type')).toBe('navigation');
+	expect(list.getAttribute('aria-label')).toBe(title.getAttribute('text'));
+	const rows = [...list.querySelectorAll(':scope > nldd-list-item')];
+	expect(rows.length).toBeGreaterThan(1);
+	for (const row of rows) {
+		expect(row.getAttribute('href')).toBeTruthy();
+		expect([...row.children].map((cell) => cell.tagName)).toEqual(['NLDD-TEXT-CELL', 'NLDD-SPACER-CELL', 'NLDD-ICON-CELL']);
+	}
+}
+
+/** The section header holds the title and an intro, loose in the slot. */
+export function expectHeaderIntro(section: Element) {
+	expect(section.querySelector(':scope > nldd-title[slot="header"]')).not.toBeNull();
+	expect(section.querySelectorAll(':scope > nldd-rich-text[slot="header"] p').length).toBe(1);
+}

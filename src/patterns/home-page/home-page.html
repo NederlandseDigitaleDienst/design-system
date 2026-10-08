@@ -55,6 +55,13 @@
         text="Wat je hier kunt"
         heading-level="2"
       ></nldd-title>
+      <nldd-spacer
+        slot="header"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="header">
+        <p>Alles wat je met een aanvraag doet, begint hier. Kies wat je wilt doen, dan lees je wat ervoor nodig is.</p>
+      </nldd-rich-text>
       <nldd-collection
         layout="grid"
         item-width="320px"
@@ -110,7 +117,40 @@
       </nldd-collection>
     </nldd-simple-section>
 
-    <nldd-two-thirds-one-third-section>
+    <nldd-one-half-one-half-section>
+      <nldd-image
+        slot="left"
+        aspect-ratio="3/2"
+        shape="rounded"
+      ></nldd-image>
+      <nldd-title
+        slot="right"
+        size="2"
+        text="Alles op één plek"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer
+        slot="right"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="right">
+        <p>Je aanvragen, de brieven die je kreeg en wat er nog van je nodig is, staan bij elkaar in je dossier.</p>
+        <p>Zo zie je in één keer waar je staat, ook als een aanvraag langer loopt.</p>
+      </nldd-rich-text>
+      <nldd-spacer
+        slot="right"
+        size="16"
+      ></nldd-spacer>
+      <nldd-link
+        slot="right"
+        size="md"
+        end-icon="arrow-right"
+        href="#dossier"
+        text="Zo werkt je dossier"
+      ></nldd-link>
+    </nldd-one-half-one-half-section>
+
+    <nldd-two-thirds-one-third-section background="tinted">
       <nldd-title
         slot="header"
         size="2"
@@ -141,6 +181,76 @@
         </nldd-container>
       </nldd-card>
     </nldd-two-thirds-one-third-section>
+
+    <nldd-one-third-two-thirds-section>
+      <nldd-title
+        slot="left"
+        size="2"
+        text="Onderwerpen"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer
+        slot="left"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="left">
+        <p>Zoek je iets over een onderwerp en niet over je aanvraag? Op de onderwerppagina staat alles over dat onderwerp bij elkaar, ook wat elders op de site staat.</p>
+      </nldd-rich-text>
+      <nldd-list
+        slot="right"
+        type="navigation"
+        aria-label="Onderwerpen"
+      >
+        <nldd-list-item href="#isoleren">
+          <nldd-text-cell
+            text="Isoleren"
+            supporting-text="Dak, muren, vloer en glas"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#warmtepomp">
+          <nldd-text-cell
+            text="Warmtepomp"
+            supporting-text="Van luchtwarmtepomp tot hybride"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#energie-besparen">
+          <nldd-text-cell
+            text="Energie besparen"
+            supporting-text="Kleine stappen die je meteen kunt zetten"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#zonnepanelen">
+          <nldd-text-cell
+            text="Zonnepanelen"
+            supporting-text="Wat je moet weten voor je begint"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+      </nldd-list>
+    </nldd-one-third-two-thirds-section>
 
     <nldd-simple-section background="tinted">
       <nldd-title

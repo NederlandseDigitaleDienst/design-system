@@ -438,7 +438,7 @@ An editorial line that shows authors or editors: optional avatar or avatars, a n
 
 ### `<nldd-image>`
 
-Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image.
+Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image. Without an image (no `src`, `srcset`, `lqip` or slotted media) it shows a neutral area with an image icon, in the box, shape and caption a real image would get: a place where an image belongs, for a prototype or a pattern, or an image someone forgot. Without `aspect-ratio` that area is 16/9. While the built-in `<img>` loads without an `lqip`, the same area shows without the icon, and it goes once the image is in.
 
 **Attributes**
 
@@ -460,7 +460,7 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 | `caption` | `string` | Caption text shown below the image |
 | `credit` | `string` | Smaller credit/attribution text shown beside the caption |
 | `decorative` | `boolean` | Decorative image: alt is forced empty + aria-hidden |
-| `lqip` | `string` | Low-quality image placeholder as a CSV string `"base,c1,c2,c3,c4,c5,c6"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the "LQIP encoder tool" Storybook story. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the placeholder. |
+| `lqip` | `string` | Loading preview (LQIP, low-quality image placeholder) as a CSV string `"base,c1,c2,c3,c4,c5,c6"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the "LQIP encoder tool" Storybook story. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the preview. |
 | `translations` | `object` | Override translation keys (e.g. the message shown when the image fails to load); unset keys fall back to Dutch. |
 
 **Slots**
@@ -496,7 +496,7 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 
 ### `<nldd-rich-text>`
 
-A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. Children are placed in three zones: text (headings, paragraphs, lists, blockquote, div/section) reads at the `main` size; media and tables (img, figure, video, iframe, table) get the `wide` accent; everything else, code blocks and every component, gets the full `full` span with `justify-self: start`, so the room is available without being forced. Overridable per child with `data-width="main" | "wide" | "full"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical.
+A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. The headings keep one size on every width, the one they have on a phone. A heading in running text sits in a column as wide as a line of reading, on any screen, so its relation to the text beside it does not change and it has no reason to grow. Growing, an h2 on a wide screen was more than twice the size of the text, and an article broke into blocks at every heading. Page and section titles do grow: use nldd-title for those. Children are placed in three zones: text (headings, paragraphs, lists, blockquote, div/section) reads at the `main` size; media and tables (img, figure, video, iframe, table) get the `wide` accent; everything else, code blocks and every component, gets the full `full` span with `justify-self: start`, so the room is available without being forced. Overridable per child with `data-width="main" | "wide" | "full"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical.
 
 **Attributes**
 
@@ -506,7 +506,7 @@ A container for rich text content that automatically applies responsive typograp
 | `spacing` | `string` | Spacing between elements: 'flat' \| 'tight' \| 'snug' (default) \| 'loose' |
 | `centered` | `boolean` | Centers the main column inside the container; without it, content is left-aligned |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
-| `hyphens` | `boolean` | Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on p/li is always on, independent of this attribute, so long URLs and compounds break neatly instead of overflowing even without a dictionary. |
+| `hyphens` | `boolean` | Opt-in automatic hyphenation for running text (p, li, dd), for words of 15 letters or more only, with at least 5 on either side of the hyphen: long compounds break, ordinary words wrap whole. Safari has no minimum word length and breaks shorter words too. Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing, without a hyphen; headings never get one. |
 
 ### `<nldd-tag>`
 
@@ -1762,6 +1762,7 @@ A section that spans the full width without horizontal padding. Useful for backg
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
+| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |
@@ -1777,7 +1778,7 @@ A section that spans the full width without horizontal padding. Useful for backg
 
 ### `<nldd-hero>`
 
-A page header with a media area and a text panel (the main) that can stand in six positions. Every area is rectangular. With `main-width="full"` the media area sits as its own strip above or below the panel rather than behind it. On mobile the media always stacks above the full-width panel. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color="inherit"` (title, rich-text) are guaranteed to keep their contrast.
+A page header with a media area and a text panel (the main) that can stand in six positions. Every area is rectangular. With `main-width="full"` the media area sits as its own strip above or below the panel rather than behind it. On mobile the media always stacks above the full-width panel. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color="inherit"` (title, rich-text) are guaranteed to keep their contrast.
 
 **Attributes**
 
@@ -1786,6 +1787,7 @@ A page header with a media area and a text panel (the main) that can stand in si
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface behind the hero (section API) |
 | `width` | `string` | Body max-width; 'full' removes the bound (section API) |
 | `height` | `string` | Minimum height of the section (section API) |
+| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block padding override, also per edge and responsive (section API) |
 | `main-background` | `string` | Surface color of the panel: 'base' (the base surface) or a category color — 'accent' (default) or a Rijkshuisstijl color such as 'lintblauw'\|'donkerblauw'\|'oranje' |
 | `main-width` | `'1/2'\|'2/3'\|'3/4'\|'full'` | Width of the panel (default: '1/2'); 'full' makes a full top or bottom strip and is ignored with 'left'/'right' |
@@ -1840,6 +1842,7 @@ A section with two equal columns side by side. The columns wrap automatically wh
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
+| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |
@@ -1866,6 +1869,7 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
+| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |
@@ -2047,6 +2051,7 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `width` | `string` | Body max-width: 'full' removes the constraint; any CSS length overrides the default. |
+| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `sidebar-label` | `string` | Accessible name for the sidebar (the aside landmark on lg and the sheet on sm/md). Default 'Zijbalk'. |
 | `translations` | `object` | Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch. |
 | `no-collapse` | `boolean` | Opt out of the sheet: a narrow section stacks the sidebar above the main instead of collapsing. `collapsed` then stays false. |
@@ -2083,6 +2088,7 @@ A basic section with responsive padding and gap based on container size. Contain
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
+| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |
@@ -2171,6 +2177,7 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 | `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
+| `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block (top and bottom) padding override (token 0-96; '0' strips it). |
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |

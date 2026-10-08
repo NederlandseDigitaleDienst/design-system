@@ -38,6 +38,11 @@ export const oneThirdTwoThirdsSectionStyles = css`
 		display: none;
 	}
 
+	:host([data-growing]),
+	:host([grow]) {
+		flex-grow: 1;
+	}
+
 	:host([width="full"]) {
 		--_one-third-two-thirds-section-max-width: none;
 	}

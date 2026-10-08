@@ -22,6 +22,9 @@ export const imageStyles = css`
 		--_image-error-padding: var(--primitives-space-8);
 		--_image-error-gap: var(--primitives-space-2);
 		--_image-caption-row-gap: var(--primitives-space-8);
+		--_image-pending-background-color: var(--semantics-categories-neutral-tinted-background-color);
+		--_image-empty-icon-size: var(--primitives-space-32);
+		--_image-empty-icon-color: var(--semantics-categories-neutral-tinted-content-secondary-color);
 		--_image-object-fit: cover;
 		--_image-object-position: center;
 		--_image-max-width: 100%;
@@ -350,6 +353,35 @@ export const imageStyles = css`
 		overflow: hidden;
 		clip-path: inset(50%);
 		white-space: nowrap;
+	}
+
+
+	/* # Empty and loading */
+
+	.image__media--loading {
+		background-color: var(--_image-pending-background-color);
+	}
+
+	.image__media--empty {
+		display: flex;
+		background-color: var(--_image-pending-background-color);
+		aspect-ratio: 16 / 9;
+		align-items: center;
+		justify-content: center;
+	}
+
+	@media (forced-colors: active) {
+		.image__media--empty {
+			outline: 1px solid CanvasText;
+			outline-offset: -1px;
+		}
+	}
+
+	.image__empty-icon {
+		display: block;
+		width: var(--_image-empty-icon-size);
+		height: var(--_image-empty-icon-size);
+		color: var(--_image-empty-icon-color);
 	}
 
 

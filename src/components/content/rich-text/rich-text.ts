@@ -14,6 +14,14 @@
  * Any other wrapper becomes a single grid item, and the paragraphs inside it
  * lose their spacing.
  *
+ * ## Headings
+ * The headings keep one size on every width, the one they have on a phone. A
+ * heading in running text sits in a column as wide as a line of reading, on
+ * any screen, so its relation to the text beside it does not change and it has
+ * no reason to grow. Growing, an h2 on a wide screen was more than twice the
+ * size of the text, and an article broke into blocks at every heading. Page
+ * and section titles do grow: use nldd-title for those.
+ *
  * ## Width zones
  * Children are placed in three zones: text (headings, paragraphs, lists,
  * blockquote, div/section) reads at the `main` size; media and tables (img,
@@ -36,11 +44,14 @@
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} hyphens - Opt-in automatic hyphenation for running text (p,
- *   li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for
- *   instance): without language information the browser does not hyphenate. An
- *   `overflow-wrap: break-word` safety net on p/li is always on, independent of
- *   this attribute, so long URLs and compounds break neatly instead of
- *   overflowing even without a dictionary.
+ *   li, dd), for words of 15 letters or more only, with at least 5 on either
+ *   side of the hyphen: long compounds break, ordinary words wrap whole. Safari
+ *   has no minimum word length and breaks shorter words too. Needs a correct
+ *   `lang` on the page (`lang="nl"` on `<html>`, for instance): without
+ *   language information the browser does not hyphenate. An
+ *   `overflow-wrap: break-word` safety net on headings, p and li is always on,
+ *   independent of this attribute, so a word wider than the column breaks
+ *   instead of overflowing, without a hyphen; headings never get one.
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';

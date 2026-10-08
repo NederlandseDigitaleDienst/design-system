@@ -38,6 +38,11 @@ export const oneHalfOneHalfSectionStyles = css`
 		display: none;
 	}
 
+	:host([data-growing]),
+	:host([grow]) {
+		flex-grow: 1;
+	}
+
 	:host([width="full"]) {
 		--_one-half-one-half-section-max-width: none;
 	}

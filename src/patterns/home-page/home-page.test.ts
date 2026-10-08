@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { waitForUpdate } from '../../test-utils.js';
 import markup from './home-page.html?raw';
-import { expectLegalBar, expectNamedLinkCards, expectSoundHeadings, expectTopBar } from '../page-checks.js';
+import { expectHeaderIntro, expectImageAndText, expectLegalBar, expectNamedLinkCards, expectSoundHeadings, expectTextAndLinkList, expectTopBar } from '../page-checks.js';
 import '../../components/index.js';
 
 describe('patroon: home', () => {
@@ -24,6 +24,15 @@ describe('patroon: home', () => {
 
 	it('linkt in de juridische rij direct naar contact, toegankelijkheid en privacy', () => {
 		expectLegalBar(root);
+	});
+
+	it('geeft de kaarten een intro, zet beeld en tekst naast elkaar en de onderwerpen in een lijst', () => {
+		const written = new DOMParser().parseFromString(markup, 'text/html');
+		expectHeaderIntro(written.querySelector('nldd-simple-section:has(nldd-collection)')!);
+		const halves = [...written.querySelectorAll('nldd-one-half-one-half-section')];
+		expect(halves.length).toBe(1);
+		expectImageAndText(halves[0], 'left');
+		expectTextAndLinkList(written.querySelector('nldd-one-third-two-thirds-section')!);
 	});
 
 	it('heeft één h1 en slaat geen kopniveau over', () => {

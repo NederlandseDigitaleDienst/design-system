@@ -3970,7 +3970,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image.",
+          "description": "Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image. Without an image (no `src`, `srcset`, `lqip` or slotted media) it shows a neutral area with an image icon, in the box, shape and caption a real image would get: a place where an image belongs, for a prototype or a pattern, or an image someone forgot. Without `aspect-ratio` that area is 16/9. While the built-in `<img>` loads without an `lqip`, the same area shows without the icon, and it goes once the image is in.",
           "name": "NLDDImage",
           "members": [
             {
@@ -4296,7 +4296,7 @@
               },
               "default": "''",
               "fieldName": "lqip",
-              "description": "Low-quality image placeholder as a CSV string `\"base,c1,c2,c3,c4,c5,c6\"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the \"LQIP encoder tool\" Storybook story. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the placeholder."
+              "description": "Loading preview (LQIP, low-quality image placeholder) as a CSV string `\"base,c1,c2,c3,c4,c5,c6\"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the \"LQIP encoder tool\" Storybook story. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the preview."
             },
             {
               "name": "translations",
@@ -4662,7 +4662,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. Children are placed in three zones: text (headings, paragraphs, lists, blockquote, div/section) reads at the `main` size; media and tables (img, figure, video, iframe, table) get the `wide` accent; everything else, code blocks and every component, gets the full `full` span with `justify-self: start`, so the room is available without being forced. Overridable per child with `data-width=\"main\" | \"wide\" | \"full\"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical.",
+          "description": "A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. The headings keep one size on every width, the one they have on a phone. A heading in running text sits in a column as wide as a line of reading, on any screen, so its relation to the text beside it does not change and it has no reason to grow. Growing, an h2 on a wide screen was more than twice the size of the text, and an article broke into blocks at every heading. Page and section titles do grow: use nldd-title for those. Children are placed in three zones: text (headings, paragraphs, lists, blockquote, div/section) reads at the `main` size; media and tables (img, figure, video, iframe, table) get the `wide` accent; everything else, code blocks and every component, gets the full `full` span with `justify-self: start`, so the room is available without being forced. Overridable per child with `data-width=\"main\" | \"wide\" | \"full\"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical.",
           "name": "NLDDRichText",
           "members": [
             {
@@ -4759,7 +4759,7 @@
               },
               "default": "false",
               "fieldName": "hyphens",
-              "description": "Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on p/li is always on, independent of this attribute, so long URLs and compounds break neatly instead of overflowing even without a dictionary."
+              "description": "Opt-in automatic hyphenation for running text (p, li, dd), for words of 15 letters or more only, with at least 5 on either side of the hyphen: long compounds break, ordinary words wrap whole. Safari has no minimum word length and breaks shorter words too. Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing, without a hyphen; headings never get one."
             }
           ],
           "superclass": {
@@ -24485,6 +24485,20 @@
             },
             {
               "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "paddingBlock",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -24676,6 +24690,19 @@
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
             },
             {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
+            },
+            {
               "name": "padding-block",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -24865,7 +24892,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page header with a media area and a text panel (the main) that can stand in six positions. Every area is rectangular. With `main-width=\"full\"` the media area sits as its own strip above or below the panel rather than behind it. On mobile the media always stacks above the full-width panel. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "A page header with a media area and a text panel (the main) that can stand in six positions. Every area is rectangular. With `main-width=\"full\"` the media area sits as its own strip above or below the panel rather than behind it. On mobile the media always stacks above the full-width panel. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
           "name": "NLDDHero",
           "members": [
             {
@@ -24978,6 +25005,20 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true,
               "inheritedFrom": {
                 "name": "PageSectionMixin",
@@ -25249,6 +25290,19 @@
               "description": "Minimum height of the section (section API)"
             },
             {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
+            },
+            {
               "name": "padding-block",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -25474,6 +25528,20 @@
             },
             {
               "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "paddingBlock",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -25663,6 +25731,19 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
             },
             {
               "name": "padding-block",
@@ -25905,6 +25986,20 @@
             },
             {
               "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "paddingBlock",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -26094,6 +26189,19 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
             },
             {
               "name": "padding-block",
@@ -26297,8 +26405,8 @@
           "type": {
             "text": "object"
           },
-          "default": "{ background: 'inherit', width: '', height: '', paddingBlock: '', paddingTop: '', paddingBottom: '', smPaddingBlock: '', smPaddingTop: '', smPaddingBottom: '', mdPaddingBlock: '', mdPaddingTop: '', mdPaddingBottom: '', lgPaddingBlock: '', lgPaddingTop: '', lgPaddingBottom: '', }",
-          "description": "Shared Storybook controls for the PageSectionMixin surface API\n(background, width, height and the 12 block-padding overrides).\nSpread into a section story's `args` / `argTypes`, and bind onto the host\nelement in `render` with the `pageSectionAttrs` directive."
+          "default": "{ background: 'inherit', width: '', height: '', grow: false, paddingBlock: '', paddingTop: '', paddingBottom: '', smPaddingBlock: '', smPaddingTop: '', smPaddingBottom: '', mdPaddingBlock: '', mdPaddingTop: '', mdPaddingBottom: '', lgPaddingBlock: '', lgPaddingTop: '', lgPaddingBottom: '', }",
+          "description": "Shared Storybook controls for the PageSectionMixin surface API\n(background, width, height, grow and the 12 block-padding overrides).\nSpread into a section story's `args` / `argTypes`, and bind onto the host\nelement in `render` with the `pageSectionAttrs` directive."
         },
         {
           "kind": "variable",
@@ -26306,7 +26414,7 @@
           "type": {
             "text": "object"
           },
-          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\" en \"tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
+          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\" en \"tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, grow: { control: 'boolean', description: 'Neemt de hoogte die de pagina over heeft, zodat de footer onderaan staat. Zonder `grow` groeit de laatste sectie van een `nldd-page`.', table: { defaultValue: { summary: false } }, }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
         },
         {
           "kind": "variable",
@@ -26470,6 +26578,20 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true,
               "inheritedFrom": {
                 "name": "PageSectionMixin",
@@ -26735,6 +26857,19 @@
               }
             },
             {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
+            },
+            {
               "name": "padding-block",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -26992,6 +27127,20 @@
             },
             {
               "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "paddingBlock",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -27199,6 +27348,19 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
             },
             {
               "name": "padding-block",
@@ -27433,6 +27595,20 @@
             },
             {
               "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "paddingBlock",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -27622,6 +27798,19 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
             },
             {
               "name": "padding-block",
@@ -38377,7 +38566,7 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted`. Setting\n  `base`/`tinted` also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.",
+          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted`. Setting\n  `base`/`tinted` also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
           "name": "PageSectionMixin",
           "members": [
             {
@@ -38397,6 +38586,16 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true
             },
             {
@@ -38594,6 +38793,14 @@
                 "text": "string | undefined"
               },
               "fieldName": "height"
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow"
             },
             {
               "name": "padding-block",

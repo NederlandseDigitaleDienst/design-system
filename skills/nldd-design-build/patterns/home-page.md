@@ -21,11 +21,18 @@ nldd-app-view                            de buitenste schil
        │    └─ nldd-top-navigation-bar   zoeken en taal, geen terugknop
        ├─ nldd-hero                      de opening, met main-background
        ├─ nldd-simple-section            background="tinted", wat je hier kunt
+       │    ├─ slot="header"             de titel en een intro van een zin of twee
        │    └─ nldd-collection           layout="grid", item-width
        │         └─ nldd-card            href, met een nldd-container voor de padding
-       ├─ nldd-two-thirds-one-third-section
+       ├─ nldd-one-half-one-half-section afbeelding links, tekst rechts
+       │    ├─ slot="left"               nldd-image met aspect-ratio
+       │    └─ slot="right"              titel, tekst en een nldd-link verder
+       ├─ nldd-two-thirds-one-third-section    background="tinted"
        │    ├─ slot="left"               de lopende uitleg
        │    └─ slot="right"              een ondersteunende kaart
+       ├─ nldd-one-third-two-thirds-section
+       │    ├─ slot="left"               de titel en een korte uitleg
+       │    └─ slot="right"              een nldd-list type="navigation" naar de onderwerpen
        ├─ nldd-simple-section            background="tinted", de oproep
        └─ slot="footer"                  nldd-page-footer
 ```
@@ -88,6 +95,13 @@ nldd-app-view                            de buitenste schil
         text="Wat je hier kunt"
         heading-level="2"
       ></nldd-title>
+      <nldd-spacer
+        slot="header"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="header">
+        <p>Alles wat je met een aanvraag doet, begint hier. Kies wat je wilt doen, dan lees je wat ervoor nodig is.</p>
+      </nldd-rich-text>
       <nldd-collection
         layout="grid"
         item-width="320px"
@@ -143,7 +157,40 @@ nldd-app-view                            de buitenste schil
       </nldd-collection>
     </nldd-simple-section>
 
-    <nldd-two-thirds-one-third-section>
+    <nldd-one-half-one-half-section>
+      <nldd-image
+        slot="left"
+        aspect-ratio="3/2"
+        shape="rounded"
+      ></nldd-image>
+      <nldd-title
+        slot="right"
+        size="2"
+        text="Alles op één plek"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer
+        slot="right"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="right">
+        <p>Je aanvragen, de brieven die je kreeg en wat er nog van je nodig is, staan bij elkaar in je dossier.</p>
+        <p>Zo zie je in één keer waar je staat, ook als een aanvraag langer loopt.</p>
+      </nldd-rich-text>
+      <nldd-spacer
+        slot="right"
+        size="16"
+      ></nldd-spacer>
+      <nldd-link
+        slot="right"
+        size="md"
+        end-icon="arrow-right"
+        href="#dossier"
+        text="Zo werkt je dossier"
+      ></nldd-link>
+    </nldd-one-half-one-half-section>
+
+    <nldd-two-thirds-one-third-section background="tinted">
       <nldd-title
         slot="header"
         size="2"
@@ -174,6 +221,76 @@ nldd-app-view                            de buitenste schil
         </nldd-container>
       </nldd-card>
     </nldd-two-thirds-one-third-section>
+
+    <nldd-one-third-two-thirds-section>
+      <nldd-title
+        slot="left"
+        size="2"
+        text="Onderwerpen"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer
+        slot="left"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="left">
+        <p>Zoek je iets over een onderwerp en niet over je aanvraag? Op de onderwerppagina staat alles over dat onderwerp bij elkaar, ook wat elders op de site staat.</p>
+      </nldd-rich-text>
+      <nldd-list
+        slot="right"
+        type="navigation"
+        aria-label="Onderwerpen"
+      >
+        <nldd-list-item href="#isoleren">
+          <nldd-text-cell
+            text="Isoleren"
+            supporting-text="Dak, muren, vloer en glas"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#warmtepomp">
+          <nldd-text-cell
+            text="Warmtepomp"
+            supporting-text="Van luchtwarmtepomp tot hybride"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#energie-besparen">
+          <nldd-text-cell
+            text="Energie besparen"
+            supporting-text="Kleine stappen die je meteen kunt zetten"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#zonnepanelen">
+          <nldd-text-cell
+            text="Zonnepanelen"
+            supporting-text="Wat je moet weten voor je begint"
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+      </nldd-list>
+    </nldd-one-third-two-thirds-section>
 
     <nldd-simple-section background="tinted">
       <nldd-title
@@ -266,13 +383,21 @@ nldd-app-view                            de buitenste schil
 
 **De basis is die van de contentpagina.** De app view, één sectie per inhoudsblok, de koppen, vlakken met `background` en de footer werken op een home precies zo. Dat staat bij de [contentpagina](content-page.md). Hieronder staat alleen wat een home anders doet.
 
-**Een hero is voor de pagina's waar mensen binnenkomen.** De home, en verder elke pagina waar bezoekers vanaf een andere website op landen. Daar is de [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop. Op de andere pagina's opent een sectie met een grote titel, en dat is genoeg.
+**Een hero is voor de pagina's waar mensen binnenkomen.** De home, de [onderwerppagina](topic-page.md), en verder elke pagina waar bezoekers vanaf een andere website op landen. Daar is de [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop. Op de andere pagina's opent een sectie met een grote titel, en dat is genoeg.
 
 **De home is zelf het menu.** Wat je hier kunt, staat als kaarten in de inhoud, niet als een rij woorden in de bovenbalk. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#navigatie-en-structuur). Elke kaart heeft een `href`, en dan is de hele [`nldd-card`](../../nldd-design/reference.md#nldd-card) de link: geen losse "Lees meer"-knop eronder, want die zegt niets en verdubbelt de tabstops.
+
+**Een rij kaarten krijgt een intro.** Eén of twee zinnen onder de titel van de sectie zeggen wat de kaarten gemeen hebben, zodat iemand niet uit vier titels hoeft af te leiden waar de rij over gaat. Zet de titel, een `nldd-spacer` en een `nldd-rich-text` los in het `header`-slot van de sectie.
 
 **Een set gelijkwaardige kaarten is een collection.** De [`nldd-collection`](../../nldd-design/reference.md#nldd-collection) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint.
 
 **Een kaart zet zelf geen padding.** De kaart laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand.
+
+**Beeld en tekst naast elkaar, in een sectie van twee helften.** Een [`nldd-one-half-one-half-section`](../../nldd-design/reference.md#nldd-one-half-one-half-section) zet de afbeelding in de ene kolom en de titel, de tekst en een link verder in de andere. Welke kant de afbeelding staat, kies je met de volgorde in de markup, en die is ook de volgorde op smal: daar stapelen de kolommen, dus een afbeelding links staat op een telefoon boven de tekst. Wissel je over de pagina heen tussen links en rechts, dan krijgt de pagina ritme; op de [onderwerppagina](topic-page.md) staat de tekst links. Geef de [`nldd-image`](../../nldd-design/reference.md#nldd-image) een `aspect-ratio`, dan reserveert hij zijn ruimte voor het beeld er is. Zonder `src` toont hij een neutraal vlak met een icoon, zoals in het voorbeeld; krijgt hij een foto, geef hem dan ook een `alt`.
+
+**Een lijst naar dieper gelegen pagina's naast een uitleg.** Waar kaarten te veel gewicht geven, zoals bij een rij onderwerpen, bouw je de sectie zoals de [navigatiepagina](navigation-page.md) met de lijst: een [`nldd-one-third-two-thirds-section`](../../nldd-design/reference.md#nldd-one-third-two-thirds-section) met de titel en een korte uitleg los in het smalle derde, en een [`nldd-list`](../../nldd-design/reference.md#nldd-list) met `type="navigation"` in de twee derde ernaast. Elke rij is een link met een `supporting-text` en eindigt op een chevron, met een `nldd-spacer-cell` ertussen. Geef de lijst een `aria-label`, gelijk aan de titel.
+
+**Wissel de vlakken af.** Getint, wit, getint: elke sectie met `background="tinted"` of zonder, zodat de pagina ritme krijgt zonder lijnen of eigen kleuren.
 
 **Eén oproep, onderaan.** De getinte sectie aan het eind vraagt om één ding, met één primaire knop. Wie de pagina heeft gelezen weet dan wat de volgende stap is, en wie meteen wist waarvoor die kwam, vond het al bij de kaarten.
 

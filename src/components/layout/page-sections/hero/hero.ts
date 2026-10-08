@@ -10,6 +10,12 @@
  * `main-background="base"` that area gets a border so it stays visible on the
  * base surface.
  *
+ * The hero is the head of a page and sits right under the top bar, so its top
+ * padding is half that of the other page sections: the full distance is meant
+ * to separate two sections, and under the top bar it reads as a gap. The
+ * bottom keeps the full distance to the section below. Set `padding-top` to
+ * place a hero elsewhere.
+ *
  * `main-background` gives the panel a surface color from the filled categories.
  * Those carry a pure white or black content color along, so components with
  * `color="inherit"` (title, rich-text) are guaranteed to keep their contrast.
@@ -19,6 +25,7 @@
  * @attr {'inherit'|'base'|'tinted'} background - Surface behind the hero (section API)
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)
  * @attr {string} height - Minimum height of the section (section API)
+ * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
  * @attr {string} main-background - Surface color of the panel: 'base' (the base surface)
  *   or a category color — 'accent' (default) or a Rijkshuisstijl color such as
