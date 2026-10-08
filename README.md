@@ -254,7 +254,7 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
-| Bouwmeester, beheer van het beleidscorpus van BZK | [bouwmeester.rijks.app](https://bouwmeester.rijks.app) | [BureauArchitectuurDigitaleOverheid/bouwmeester](https://github.com/BureauArchitectuurDigitaleOverheid/bouwmeester) |
+| Bouwmeester, beheer van het beleidscorpus van BZK | [bouwmeester.rijks.app](https://bouwmeester.rijks.app) | [NederlandseDigitaleDienst/bouwmeester](https://github.com/NederlandseDigitaleDienst/bouwmeester) |
 | ZAD, Zelfservice Applicatie Deployment | [zad.rijksapp.nl](https://zad.rijksapp.nl) | [RijksICTGilde/RIG-Cluster](https://github.com/RijksICTGilde/RIG-Cluster) |
 | Wies, een overzicht van wie waar aan werkt | [wies.rijksorganisatieodi.nl](https://wies.rijksorganisatieodi.nl) (achter een login) | [RijksICTGilde/wies](https://github.com/RijksICTGilde/wies) |
 | Lord of the Components, dat Jinja2-templates omzet naar NLDD-componenten | een bibliotheek, geen site | [RijksICTGilde/lord-of-the-components](https://github.com/RijksICTGilde/lord-of-the-components) |
