@@ -15,6 +15,26 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Four page patterns for a website.** Home, topic page, navigation page and content page now sit together under "Patronen/Pagina's", each with a running example and a test. The home brings visitors in and is itself the menu, a topic page gathers one theme from across the site with its main task on top, a navigation page opens one part of the site and shows only what is below it, and a content page is where a visitor arrives to read.
+
+### Added
+
+- **Topic page and navigation page patterns** (`topic-page.md`, `navigation-page.md` in `nldd-design-build`). A topic page has a short explanation, one primary task, link cards to pages wherever they already live, and related topics as plain links. A navigation page shows its choice as a navigation list next to the title and a short intro, in an `nldd-one-third-two-thirds-section`, or as a full-width collection of link cards below them; the pattern shows both.
+
+- **`nldd-list-item` and `nldd-list-item-segment` have `current-type`**, the `aria-current` value a `current` row or segment puts on its link. It was always `page`, which is wrong for a table of contents: every row there points at a section of the page you are already on. Set `current-type="location"` there. Same attribute and values as on `nldd-menu-bar-item`.
+
+### Changed
+
+- **The sidebar of `nldd-sidebar-section` no longer draws the eye.** Beside the main content it was a tinted box, which pulled attention away from the text it sits next to. It now takes the surface of the section around it, base on a plain page and tinted on a tinted section, and is edged by a divider line, as the panes of a split view are. It still reads as a block, which it needs to be because it can scroll, and a `current` row in a list inside it now stands out against it. The sheet on narrow screens is unchanged.
+- **The content page pattern is now a home page, and the content page is a new one.** What used to be `content-page.md`, with a hero, cards and a call to action, is `home-page.md`, and its cards are now links. `content-page.md` now describes a page that explains one thing: the title as the heading, a table of contents in the sidebar of an `nldd-sidebar-section` that becomes a button under the title on narrow screens and marks the section you are reading, the text in a rich text with the action below it, and the breadcrumbs in the footer. Every page has search and a language menu in the utility slot of the top bar, and every page but the home a back button to the page above it. The legal bar links straight to Contact, Toegankelijkheid, Privacy and Over deze website: grouping the privacy statement under an "about" page alone is not enough, since the European data protection guidelines ask for a direct link on every page. The rules that hold for every page live on the content page; the other three only describe what they do differently.
+
+### Fixed
+
+- **A chevron at the end of a row no longer touches the text.** The application and edit-in-a-sheet patterns put the chevron straight after the text cell; there is now an `nldd-spacer-cell` between them, as in the other patterns.
+- **Link cards in the patterns have a name.** The page patterns said a card with `href` takes its accessible name from its content. It does not: the link lies over the card as an empty anchor, so it needs `accessible-label`. Every link card in the patterns now has one, set to the card's title.
+
 ## [0.8.96](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.95...v0.8.96) (2026-10-07)
 
 ### Highlights

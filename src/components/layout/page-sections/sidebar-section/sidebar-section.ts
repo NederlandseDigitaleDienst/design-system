@@ -4,7 +4,9 @@
  * A page section with a left sidebar alongside the main content.
  *
  * - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable
- *   tinted box (max-width 320px) beside the main content. Its sticky top/bottom insets
+ *   box (max-width 320px) beside the main content. It takes the surface of the
+ *   section around it and is edged by a divider line, so it reads as a block
+ *   without drawing the eye away from the main. Its sticky top/bottom insets
  *   default to 16px; override with `sticky-top` / `sticky-bottom` so it clears
  *   other sticky page elements (e.g. a sticky header).
  * - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on

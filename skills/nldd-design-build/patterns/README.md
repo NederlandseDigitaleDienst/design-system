@@ -8,7 +8,10 @@ De set groeit met wat zich in productie bewijst, dus hij is niet compleet en wil
 
 | Patroon | Voor welke taak |
 |---|---|
-| [Contentpagina](content-page.md) | Een pagina die iets uitlegt of aanprijst, met kaarten, een uitgelicht vlak en een footer |
+| [Home](home-page.md) | De pagina waar mensen binnenkomen: een hero en de taken als kaarten |
+| [Onderwerppagina](topic-page.md) | Alles over één thema bij elkaar, met de hoofdtaak bovenaan |
+| [Navigatiepagina](navigation-page.md) | Een deel van de site openen en laten zien wat eronder zit |
+| [Contentpagina](content-page.md) | Eén ding uitleggen, met de actie ernaast; de basis voor de andere pagina's |
 | [Applicatie](application.md) | Een scherm met panelen naast elkaar, elk met een eigen pagina |
 | [Werkbalk met acties](toolbar-with-actions.md) | Acties boven een scherm die ook op smal bereikbaar blijven |
 

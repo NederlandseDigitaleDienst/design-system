@@ -246,6 +246,22 @@ describe('nldd-list-item', () => {
 		expect(item.shadowRoot?.querySelector('a')?.getAttribute('aria-current')).toBe('page');
 	});
 
+	it('current-type sets the aria-current value, for a table of contents', async () => {
+		el = await fixture<NLDDListItem>(`
+			<nldd-list type="navigation" aria-label="Op deze pagina">
+				<nldd-list-item href="#racks" current current-type="location"><nldd-text-cell text="Racks"></nldd-text-cell></nldd-list-item>
+			</nldd-list>
+		`);
+		const item = el.querySelector('nldd-list-item') as NLDDListItem;
+		await waitForUpdate(item);
+		const anchor = item.shadowRoot?.querySelector('a');
+		expect(anchor?.getAttribute('aria-current')).toBe('location');
+		item.currentType = 'page';
+		await waitForUpdate(item);
+		expect(anchor?.getAttribute('aria-current')).toBe('page');
+		expect(item.hasAttribute('current-type')).toBe(false);
+	});
+
 	it('current reflects, so the styles can key off it', async () => {
 		el = await fixture<NLDDListItem>('<nldd-list-item current><nldd-text-cell text="Racks"></nldd-text-cell></nldd-list-item>');
 		const item = (el.tagName === 'NLDD-LIST-ITEM' ? el : el.querySelector('nldd-list-item')) as NLDDListItem;

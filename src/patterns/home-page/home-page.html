@@ -1,0 +1,229 @@
+<nldd-app-view>
+  <nldd-page>
+    <nldd-skip-link slot="header">
+      <nldd-top-navigation-bar
+        website-title="Mijn Dienst"
+      >
+        <nldd-menu-bar slot="utility">
+          <nldd-menu-bar-item
+            text="Zoeken"
+            icon="magnifier"
+            href="#zoeken"
+            content-priority="text"
+          ></nldd-menu-bar-item>
+          <nldd-menu-bar-item
+            text="NL"
+            accessible-label="Taal: Nederlands (NL)"
+            icon="globe"
+            expandable
+            content-priority="text"
+          >
+            <nldd-menu>
+              <nldd-menu-item
+                text="Nederlands"
+                type="radio"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="English"
+                type="radio"
+                lang="en"
+              ></nldd-menu-item>
+            </nldd-menu>
+          </nldd-menu-bar-item>
+        </nldd-menu-bar>
+      </nldd-top-navigation-bar>
+    </nldd-skip-link>
+
+    <nldd-hero main-background="accent">
+      <nldd-title
+        color="inherit"
+        size="1"
+        text="Regel je aanvraag online"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-spacer size="16"></nldd-spacer>
+      <nldd-rich-text color="inherit">
+        <p>Dien een aanvraag in, volg de behandeling en vind je documenten terug, zonder dat je hoeft te weten bij welke afdeling het ligt.</p>
+      </nldd-rich-text>
+    </nldd-hero>
+
+    <nldd-simple-section background="tinted">
+      <nldd-title
+        slot="header"
+        size="2"
+        text="Wat je hier kunt"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-collection
+        layout="grid"
+        item-width="320px"
+      >
+        <nldd-card
+          href="#aanvraag-indienen"
+          accessible-label="Een aanvraag indienen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="Een aanvraag indienen"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="8"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Je vult in wat er nodig is en ziet meteen welke gegevens ontbreken.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#behandeling-volgen"
+          accessible-label="De behandeling volgen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="De behandeling volgen"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="8"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Elke stap in de behandeling staat op je aanvraag, met wie er aan werkt.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#documenten"
+          accessible-label="Documenten terugvinden"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="Documenten terugvinden"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="8"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Alles wat je hebt ingestuurd of ontvangen staat bij het dossier.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+      </nldd-collection>
+    </nldd-simple-section>
+
+    <nldd-two-thirds-one-third-section>
+      <nldd-title
+        slot="header"
+        size="2"
+        text="Hoe het werkt"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-rich-text slot="left">
+        <p>Een aanvraag gaat langs een vaste route: controleren, beoordelen, besluiten. Elke stap heeft een eigenaar, en je ziet waar de aanvraag ligt.</p>
+        <p>Duurt een stap langer dan gepland, dan lees je op het dossier waarom, en wat er nodig is om verder te kunnen.</p>
+      </nldd-rich-text>
+      <nldd-card slot="right">
+        <nldd-container padding="16">
+          <nldd-title
+            size="4"
+            text="Loop je ergens vast?"
+            heading-level="3"
+          ></nldd-title>
+          <nldd-spacer size="8"></nldd-spacer>
+          <nldd-rich-text>
+            <p>De behandelaar van je aanvraag kan je vertellen wat er nodig is.</p>
+          </nldd-rich-text>
+          <nldd-spacer size="16"></nldd-spacer>
+          <nldd-button
+            appearance="secondary"
+            text="Neem contact op"
+            href="#contact"
+          ></nldd-button>
+        </nldd-container>
+      </nldd-card>
+    </nldd-two-thirds-one-third-section>
+
+    <nldd-simple-section background="tinted">
+      <nldd-title
+        size="2"
+        text="Zelf een aanvraag doen"
+        supporting-text="Je hebt je DigiD nodig en tien minuten tijd."
+        heading-level="2"
+      ></nldd-title>
+      <nldd-spacer size="16"></nldd-spacer>
+      <nldd-button
+        appearance="primary"
+        text="Start een aanvraag"
+        href="#aanpak"
+      ></nldd-button>
+    </nldd-simple-section>
+
+    <nldd-page-footer slot="footer">
+      <nldd-container
+        layout="grid"
+        padding="24"
+        gap="16"
+      >
+        <nldd-container gap="8">
+          <nldd-title
+            size="5"
+            text="Over Mijn Dienst"
+            heading-level="2"
+          ></nldd-title>
+          <nldd-link
+            size="sm"
+            href="#aanpak"
+            text="Hoe het werkt"
+          ></nldd-link>
+          <nldd-link
+            size="sm"
+            href="#publicaties"
+            text="Publicaties"
+          ></nldd-link>
+        </nldd-container>
+        <nldd-container gap="8">
+          <nldd-title
+            size="5"
+            text="Meedoen"
+            heading-level="2"
+          ></nldd-title>
+          <nldd-link
+            size="sm"
+            href="#werken-bij"
+            text="Werken bij"
+          ></nldd-link>
+          <nldd-link
+            size="sm"
+            href="#stage"
+            text="Stage lopen"
+          ></nldd-link>
+        </nldd-container>
+      </nldd-container>
+      <nldd-page-footer-legal-bar slot="legal-bar">
+        <nldd-page-footer-legal-bar-item
+          slot="start"
+          text="Nederlandse Digitale Dienst"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#contact"
+          text="Contact"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#toegankelijkheid"
+          text="Toegankelijkheid"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#privacy"
+          text="Privacy"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#over-deze-website"
+          text="Over deze website"
+        ></nldd-page-footer-legal-bar-item>
+      </nldd-page-footer-legal-bar>
+    </nldd-page-footer>
+  </nldd-page>
+</nldd-app-view>

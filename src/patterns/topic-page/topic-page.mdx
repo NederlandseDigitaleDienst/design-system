@@ -1,0 +1,51 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './topic-page.stories';
+
+<Meta of={Stories} />
+
+# Onderwerppagina
+
+**Welk probleem dit oplost.** Alles over één thema bij elkaar brengen. Mensen zoeken op een onderwerp ("isoleren"), niet op hoe de site is ingedeeld, en wat ze nodig hebben staat vaak verspreid over meer delen van de site.
+
+**Wanneer wel.** Een thema waar mensen mee binnenkomen, met een eigen korte uitleg, één taak die de meesten komen doen, en pagina's uit verschillende delen van de site die erbij horen.
+
+**Wanneer niet.** Een pagina die alleen een deel van de site opent en laat zien wat eronder zit, is een [navigatiepagina](?path=/docs/patronen-pagina-s-navigatiepagina--docs): die volgt de indeling van de site, de onderwerppagina het thema. Heeft het onderwerp één pagina uitleg en verder niets, dan is het een [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs).
+
+## Compositie
+
+```
+nldd-app-view                            de buitenste schil
+  └─ nldd-page
+       ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
+       │    └─ nldd-top-navigation-bar   zoeken en taal, terug naar de onderwerpen
+       ├─ nldd-simple-section            de h1, een korte uitleg en de hoofdtaak
+       ├─ nldd-simple-section            background="tinted", wat je moet weten
+       │    └─ nldd-collection
+       │         └─ nldd-card            href, naar pagina's waar ze ook staan
+       ├─ nldd-simple-section            verwante onderwerpen, als nldd-link
+       └─ slot="footer"                  nldd-page-footer
+            ├─ slot="breadcrumbs"
+            └─ slot="legal-bar"
+```
+
+<Canvas of={Stories.Standaard} />
+
+## Waarom zo
+
+**De basis is die van de contentpagina.** De app view, de secties, de koppen, de vlakken, de linkkaarten en de footer werken hier precies zo. Dat staat bij de [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs).
+
+**De hoofdtaak staat bovenaan.** Wie op een onderwerp landt, komt meestal voor één ding. Zet die taak als primaire [`nldd-button`](?path=/docs/components-actions-button--docs) direct onder de uitleg, in de eerste sectie, zodat niemand eerst langs de kaarten hoeft. Het is één knop; meer taken van hetzelfde gewicht horen bij de kaarten.
+
+**Eigen uitleg, maar kort.** Een paar zinnen over wat het onderwerp is en wat je hier vindt. Dat is het verschil met een navigatiepagina, waar de intro alleen zegt wat eronder valt. Wordt de uitleg langer dan een alinea, dan is hij een eigen contentpagina en krijgt hij een kaart.
+
+**De kaarten volgen het thema, niet de indeling van de site.** "Dakisolatie" staat bij de regelingen, "Een aanvraag indienen" bij de aanvragen: op deze pagina staan ze naast elkaar, omdat ze over hetzelfde gaan. De kaart linkt naar de pagina waar die al staat. Je kopieert de inhoud niet, anders heb je twee versies die uit elkaar lopen.
+
+**Verwante onderwerpen zijn links, geen kaarten.** Ze zijn een uitweg voor wie op het verkeerde onderwerp is beland, en geen taak. Een rij [`nldd-link`](?path=/docs/components-navigation-link--docs)'s in een `nldd-container` met `gap` houdt ze rustig, onder de kaarten.
+
+**Het kruimelpad wijst naar de onderwerpen.** Een onderwerp hangt niet onder een deel van de site, dus het kruimelpad gaat via een lijst van alle onderwerpen, niet via de plek waar de pagina's eronder staan.
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: wat bij de [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs) staat, en een knop met `href` die een echte link is.
+
+Wat jij nog moet doen: wat bij de [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs) staat, en een knoptekst die de taak noemt, want hij staat los van de kaarten en moet zonder de tekst eromheen te begrijpen zijn.

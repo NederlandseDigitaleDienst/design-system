@@ -3,6 +3,7 @@ import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import './sidebar-section.js';
 import '../../../status-and-feedback/inline-dialog/inline-dialog.js';
 import type { NLDDSidebarSection } from './sidebar-section.js';
+import { loadTokens } from '../../../../test-tokens.js';
 
 describe('nldd-sidebar-section', () => {
 	let el: NLDDSidebarSection;
@@ -85,6 +86,25 @@ describe('nldd-sidebar-section', () => {
 		expect(box!.assignedElements().length).toBe(1);
 		expect(el.shadowRoot!.querySelector('.sidebar-section__sheet slot[name="sidebar"]')).toBeNull();
 		expect(el.hasAttribute('collapsed')).toBe(false);
+	});
+
+	it('the box takes the surface of the section around it, edged by a divider line', async () => {
+		const unloadTokens = loadTokens();
+		await make('background="tinted"');
+		await setWidth(1200, false);
+		const box = el.shadowRoot!.querySelector('.sidebar-section__sidebar-box')!;
+		const tinted = getComputedStyle(el).backgroundColor;
+		expect(getComputedStyle(box).backgroundColor).toBe(tinted);
+		el.background = 'base';
+		await el.updateComplete;
+		expect(getComputedStyle(box).backgroundColor).toBe(getComputedStyle(el).backgroundColor);
+		expect(getComputedStyle(box).backgroundColor).not.toBe(tinted);
+		const divider = document.createElement('div');
+		divider.style.color = 'var(--semantics-dividers-color)';
+		document.body.append(divider);
+		expect(getComputedStyle(box).boxShadow).toContain(getComputedStyle(divider).color);
+		divider.remove();
+		unloadTokens();
 	});
 
 	it('the sticky box clears the layers above and below it, and caps its height on what is left', async () => {

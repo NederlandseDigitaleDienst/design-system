@@ -10,7 +10,7 @@
 
 **Wanneer wel.** Een scherm waarop je vaak tussen informatie beweegt: zoeken, vergelijken, kiezen, bewerken.
 
-**Wanneer niet.** Een landings-, informatie- of campagnepagina, of een scherm dat een verhaal vertelt. Dat is een [contentpagina](content-page.md).
+**Wanneer niet.** Een website-pagina die iemand leest of waarmee iemand de weg vindt: een [home](home-page.md), een [onderwerppagina](topic-page.md), een [navigatiepagina](navigation-page.md) of een [contentpagina](content-page.md).
 
 ## Compositie
 
@@ -389,6 +389,7 @@ nldd-sheet                                    het detail van een rij, in de docu
                     text="Dossier D-318"
                     supporting-text="In behandeling"
                   ></nldd-text-cell>
+                  <nldd-spacer-cell size="8"></nldd-spacer-cell>
                   <nldd-icon-cell
                     size="20"
                     color="secondary"
@@ -400,6 +401,7 @@ nldd-sheet                                    het detail van een rij, in de docu
                     text="Dossier D-319"
                     supporting-text="Afgerond"
                   ></nldd-text-cell>
+                  <nldd-spacer-cell size="8"></nldd-spacer-cell>
                   <nldd-icon-cell
                     size="20"
                     color="secondary"

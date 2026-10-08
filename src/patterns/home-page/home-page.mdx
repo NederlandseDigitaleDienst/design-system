@@ -1,0 +1,56 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './home-page.stories';
+
+<Meta of={Stories} />
+
+# Home
+
+**Welk probleem dit oplost.** De pagina waar mensen binnenkomen. In een paar seconden moet duidelijk zijn wat dit is, wat je hier kunt en waar je verder moet.
+
+**Wanneer wel.** De startpagina van een website, en een landings- of campagnepagina waar bezoekers vanaf een andere site binnenkomen.
+
+**Wanneer niet.** Een pagina die één onderwerp bij elkaar brengt is een [onderwerppagina](?path=/docs/patronen-pagina-s-onderwerppagina--docs). Een pagina die alleen naar de pagina's eronder leidt is een [navigatiepagina](?path=/docs/patronen-pagina-s-navigatiepagina--docs), en een pagina die iets uitlegt een [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs). Een scherm met panelen naast elkaar is een [applicatie](?path=/docs/patronen-applicatie--docs).
+
+## Compositie
+
+```
+nldd-app-view                            de buitenste schil
+  └─ nldd-page
+       ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
+       │    └─ nldd-top-navigation-bar   zoeken en taal, geen terugknop
+       ├─ nldd-hero                      de opening, met main-background
+       ├─ nldd-simple-section            background="tinted", wat je hier kunt
+       │    └─ nldd-collection           layout="grid", item-width
+       │         └─ nldd-card            href, met een nldd-container voor de padding
+       ├─ nldd-two-thirds-one-third-section
+       │    ├─ slot="left"               de lopende uitleg
+       │    └─ slot="right"              een ondersteunende kaart
+       ├─ nldd-simple-section            background="tinted", de oproep
+       └─ slot="footer"                  nldd-page-footer
+```
+
+<Canvas of={Stories.Standaard} />
+
+## Waarom zo
+
+**De basis is die van de contentpagina.** De app view, één sectie per inhoudsblok, de koppen, vlakken met `background` en de footer werken op een home precies zo. Dat staat bij de [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs). Hieronder staat alleen wat een home anders doet.
+
+**Een hero is voor de pagina's waar mensen binnenkomen.** De home, en verder elke pagina waar bezoekers vanaf een andere website op landen. Daar is de [`nldd-hero`](?path=/docs/components-layout-page-sections-hero--docs) de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop. Op de andere pagina's opent een sectie met een grote titel, en dat is genoeg.
+
+**De home is zelf het menu.** Wat je hier kunt, staat als kaarten in de inhoud, niet als een rij woorden in de bovenbalk. Zie de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#navigatie-en-structuur). Elke kaart heeft een `href`, en dan is de hele [`nldd-card`](?path=/docs/components-layout-card--docs) de link: geen losse "Lees meer"-knop eronder, want die zegt niets en verdubbelt de tabstops.
+
+**Een set gelijkwaardige kaarten is een collection.** De [`nldd-collection`](?path=/docs/components-layout-collection--docs) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint.
+
+**Een kaart zet zelf geen padding.** De kaart laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand.
+
+**Eén oproep, onderaan.** De getinte sectie aan het eind vraagt om één ding, met één primaire knop. Wie de pagina heeft gelezen weet dan wat de volgende stap is, en wie meteen wist waarvoor die kwam, vond het al bij de kaarten.
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: een kaart met `href` is één link en één tabstop, en de kop van de hero houdt zijn contrast op de vulling.
+
+Wat jij nog moet doen: wat bij de [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs) staat, en een `accessible-label` op elke kaart die een link is.
+
+## Gezien in
+
+Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.

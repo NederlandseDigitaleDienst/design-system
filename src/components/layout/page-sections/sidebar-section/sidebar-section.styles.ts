@@ -38,8 +38,8 @@ export const sidebarSectionStyles = css`
 		--_sidebar-section-sticky-top: calc(var(--context-inset-top, 0px) + var(--primitives-space-24));
 		--_sidebar-section-sticky-bottom: calc(var(--context-inset-bottom, 0px) + var(--primitives-space-24));
 		--_sidebar-section-width: var(--primitives-area-320);
-		--_sidebar-section-sidebar-box-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_sidebar-section-sidebar-box-highlight-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_sidebar-section-sidebar-box-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_sidebar-section-sidebar-box-border-color: var(--semantics-dividers-color);
 
 		display: flex;
 		width: 100%;
@@ -157,15 +157,16 @@ export const sidebarSectionStyles = css`
 		}
 	}
 
-	/* # Box — tinted always. Sticky + scrollable only beside the main (wide); when
-	   stacked it's a plain full-width tinted box above the main, so no sticky (which
-	   would scroll over the main) and no viewport height cap. */
+	/* # Box — the surface around it, edged by a divider. Sticky + scrollable only
+	   beside the main (wide); when stacked it's a plain full-width box above the
+	   main, so no sticky (which would scroll over the main) and no viewport
+	   height cap. */
 
 	.sidebar-section__sidebar-box {
 		box-sizing: border-box;
 		border-radius: var(--semantics-surfaces-corner-radius);
 		background-color: var(--_sidebar-section-sidebar-box-background-color);
-		box-shadow: inset 0 0 0 var(--semantics-surfaces-border-width) var(--_sidebar-section-sidebar-box-highlight-border-color);
+		box-shadow: inset 0 0 0 var(--semantics-surfaces-border-width) var(--_sidebar-section-sidebar-box-border-color);
 
 		@container (min-width: ${lgMin}) {
 			position: sticky;
