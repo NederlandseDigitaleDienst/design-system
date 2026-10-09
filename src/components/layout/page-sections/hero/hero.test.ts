@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, vi, type MockInstance } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import './hero.js';
 import { loadTokens } from '../../../../test-tokens.js';
@@ -18,12 +18,12 @@ describe('nldd-hero', () => {
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('defaults to main-position="bottom-left" and main-width="1/2"', async () => {
+	it('defaults to main-position="bottom-left" and main-width="auto"', async () => {
 		el = await fixture('<nldd-hero></nldd-hero>');
 		await waitForUpdate(el);
 		const h = el as unknown as { mainPosition: string; mainWidth: string; mainBackground: string };
 		expect(h.mainPosition).toBe('bottom-left');
-		expect(h.mainWidth).toBe('1/2');
+		expect(h.mainWidth).toBe('auto');
 		expect(h.mainBackground).toBe('accent');
 		expect(el.hasAttribute('main-position')).toBe(false);
 		expect(el.hasAttribute('main-width')).toBe(false);
@@ -104,6 +104,46 @@ describe('nldd-hero', () => {
 		}
 	});
 
+	it('sizes the panel to its content, between 480px and 720px', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			let { main } = await geometry('', 1200);
+			expect(Math.round(main.width)).toBe(480);
+			el = await fixture(`<nldd-hero style="width: 1200px">${IMG}<p>${'Een lange zin die doorloopt. '.repeat(20)}</p></nldd-hero>`);
+			await waitForUpdate(el);
+			await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
+			main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+			expect(Math.round(main.width)).toBe(720);
+		} finally {
+			unloadTokens();
+		}
+	});
+
+	it('never makes the panel wider than the image allows', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			el = await fixture(`<nldd-hero style="width: 700px">${IMG}<p>${'Een lange zin die doorloopt. '.repeat(20)}</p></nldd-hero>`);
+			await waitForUpdate(el);
+			await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
+			const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+			const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+			expect(Math.round(media.right - main.right)).toBeGreaterThanOrEqual(24);
+		} finally {
+			unloadTokens();
+		}
+	});
+
+	it('falls back to auto for a fraction, and says so in development', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			el = await fixture('<nldd-hero main-width="1/2"></nldd-hero>');
+			await waitForUpdate(el);
+			expect(warn.mock.calls.some(([message]) => String(message).includes('main-width="1/2"'))).toBe(true);
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
 	it('lays a full-width panel across the image, a gap from its sides', async () => {
 		const unloadTokens = loadTokens();
 		try {
@@ -131,7 +171,7 @@ describe('nldd-hero', () => {
 		try {
 			const { media, main } = await geometry('main-position="top-left"', 400);
 			expect(main.top).toBeGreaterThan(media.top);
-			expect(Math.round(media.bottom - main.top)).toBe(16);
+			expect(Math.round(media.bottom - main.top)).toBe(24);
 			expect(Math.round(main.left - media.left)).toBe(16);
 			expect(Math.round(media.right - main.right)).toBe(16);
 		} finally {
@@ -146,6 +186,7 @@ describe('nldd-hero', () => {
 			expect(Math.round(media.height)).toBe(320);
 			({ media } = await geometry('media-height="200px"', 400));
 			expect(Math.round(media.height)).toBe(200);
+			expect(Math.round(media.width)).toBe(Math.round(el.shadowRoot!.querySelector('.hero__body')!.getBoundingClientRect().width));
 		} finally {
 			unloadTokens();
 		}
@@ -167,6 +208,68 @@ describe('nldd-hero', () => {
 		} finally {
 			warn.mockRestore();
 		}
+	});
+
+	describe('layout="overhang"', () => {
+		const overhangWarnings = (warn: MockInstance<typeof console.warn>) => warn.mock.calls
+			.map(([message]) => String(message))
+			.filter((message) => message.includes('layout="overhang"'));
+
+		it('gives the image a fixed height and lets the panel fall overhang-size over it, running on below', async () => {
+			const unloadTokens = loadTokens();
+			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+			try {
+				const tall = '<p style="height: 300px">Tekst</p>';
+				el = await fixture(`<nldd-hero layout="overhang" style="width: 1200px">${IMG}${tall}</nldd-hero>`);
+				await waitForUpdate(el);
+				await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
+				const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+				const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+				expect(Math.round(media.height)).toBe(400);
+				expect(Math.round(media.width)).toBe(Math.round(el.shadowRoot!.querySelector('.hero__body')!.getBoundingClientRect().width));
+				expect(Math.round(media.bottom - main.top)).toBe(160);
+				expect(main.bottom).toBeGreaterThan(media.bottom);
+				expect(overhangWarnings(warn)).toHaveLength(0);
+			} finally {
+				warn.mockRestore();
+				unloadTokens();
+			}
+		});
+
+		it('takes overhang-size as any CSS length, and keeps it whatever the height of the image', async () => {
+			const unloadTokens = loadTokens();
+			try {
+				let { media, main } = await geometry('layout="overhang" overhang-size="100px"', 1200);
+				expect(Math.round(media.bottom - main.top)).toBe(100);
+				({ media, main } = await geometry('layout="overhang" media-height="240px"', 1200));
+				expect(Math.round(media.height)).toBe(240);
+				expect(Math.round(media.bottom - main.top)).toBe(160);
+			} finally {
+				unloadTokens();
+			}
+		});
+
+		it('keeps the aspect ratio when media-aspect-ratio is set', async () => {
+			const unloadTokens = loadTokens();
+			try {
+				const { media } = await geometry('layout="overhang" media-aspect-ratio="4/1"', 1200);
+				expect(Math.round(media.width / media.height)).toBe(4);
+			} finally {
+				unloadTokens();
+			}
+		});
+
+		it('says in development when the panel ends inside the image', async () => {
+			const unloadTokens = loadTokens();
+			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+			try {
+				await geometry('layout="overhang"', 1200);
+				await expect.poll(() => overhangWarnings(warn).length).toBe(1);
+			} finally {
+				warn.mockRestore();
+				unloadTokens();
+			}
+		});
 	});
 
 	it('has half the section padding on top and the full padding below, unless padding-top is set', async () => {

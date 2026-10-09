@@ -9,16 +9,18 @@ import '../../spacer/spacer.js';
 const MEDIA = 'sample-images/butterfly-1200.jpg';
 
 /**
- * Een paginakop met een mediavlak en een tekstpaneel op zes mogelijke
- * posities. Alle vlakken zijn rechthoekig.
- *
- * Beslaat het paneel een volledige rand (`left`/`right`, `main-width="full"`
- * of de gestapelde mobiele weergave), dan staat de media als losse strook
- * ernaast. Op mobiel stapelt de media altijd boven het paneel. Zonder media
- * vult de main het volledige vlak. `main-background` is standaard `accent`;
- * met `base` krijgt het vlak zonder media een rand zodat de vorm zichtbaar
- * blijft op de base-surface. Zet binnenin `color="inherit"` op title en
- * rich-text voor gegarandeerd contrast op de filled-kleuren.
+ * Een paginakop met een afbeelding en een tekstpaneel erop, op acht mogelijke
+ * posities. De afbeelding is sfeer en nooit de hoofdzaak, dus het paneel staat
+ * er altijd op: op een sectie-gap van de randen, of met `main-width="full"` als
+ * strook over de hele afbeelding. Het paneel is zo breed als de inhoud nodig
+ * heeft, tussen 480 en 720px. Met `layout="overhang"` begint het op een vaste
+ * plek in de afbeelding en loopt het eronder door. Op mobiel staat de
+ * afbeelding bovenaan en het paneel eronder, ingesprongen en een stukje over
+ * de afbeelding. Zonder media vult de main het volledige vlak.
+ * `main-background` is standaard `accent`; met `base` krijgt het vlak zonder
+ * media een rand zodat de vorm zichtbaar blijft op de base-surface. Zet
+ * binnenin `color="inherit"` op title en rich-text voor gegarandeerd contrast
+ * op de filled-kleuren.
  */
 export default {
 	title: 'Components/Layout/Page Sections/Hero',
@@ -32,9 +34,11 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
+		layout: 'contained',
 		mainBackground: 'accent',
-		mainWidth: '1/2',
+		mainWidth: 'auto',
 		mainPosition: 'bottom-left',
+		overhangSize: '',
 		mediaAspectRatio: '',
 		mediaHeight: '',
 		mediaSrc: MEDIA,
@@ -43,6 +47,12 @@ export default {
 		mediaAlt: '',
 	},
 	argTypes: {
+		layout: {
+			control: 'select',
+			options: ['contained', 'overhang'],
+			description: 'Hoe het vlak zich tot de afbeelding verhoudt: contained houdt het op de afbeelding, overhang laat het overhang-size over de onderrand vallen en eronder doorlopen',
+			table: { defaultValue: { summary: 'contained' } },
+		},
 		mainBackground: {
 			name: 'main-background',
 			control: 'select',
@@ -53,9 +63,9 @@ export default {
 		mainWidth: {
 			name: 'main-width',
 			control: 'select',
-			options: ['1/2', '2/3', '3/4', 'full'],
-			description: 'Breedte van het paneel; full maakt een strook over de hele afbeelding (genegeerd bij left/right)',
-			table: { defaultValue: { summary: '1/2' } },
+			options: ['auto', 'full'],
+			description: 'Breedte van het paneel: auto volgt de inhoud tussen 480 en 720px, full maakt een strook over de hele afbeelding (genegeerd bij left/right)',
+			table: { defaultValue: { summary: 'auto' } },
 		},
 		mainPosition: {
 			name: 'main-position',
@@ -63,6 +73,12 @@ export default {
 			options: ['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'],
 			description: 'Positie van het tekstpaneel',
 			table: { defaultValue: { summary: 'bottom-left' } },
+		},
+		overhangSize: {
+			name: 'overhang-size',
+			control: 'text',
+			description: 'Alleen bij layout="overhang": hoe ver het vlak over de onderrand van de afbeelding valt, elke CSS-lengte',
+			table: { defaultValue: { summary: '160px' } },
 		},
 		mediaAspectRatio: {
 			name: 'media-aspect-ratio',
@@ -102,9 +118,11 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-hero
+		layout=${args.layout === 'contained' ? nothing : args.layout}
 		main-background=${args.mainBackground}
-		main-width=${args.mainWidth}
+		main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
 		main-position=${args.mainPosition}
+		overhang-size=${args.overhangSize || nothing}
 		media-aspect-ratio=${args.mediaAspectRatio || nothing}
 		media-height=${args.mediaHeight || nothing}
 		media-src=${args.mediaSrc || nothing}
@@ -164,6 +182,57 @@ export const AllePosities = {
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
+};
+
+/**
+ * Met `layout="overhang"` valt het vlak `overhang-size` over de onderrand van
+ * de afbeelding en loopt het eronder door, zo ver als de tekst nodig heeft. De
+ * afbeelding houdt haar hoogte, hoeveel tekst er ook staat, en de overlap is
+ * altijd even groot, ook bij een andere hoogte of verhouding. Een vlak dat
+ * korter is dan `overhang-size` valt in de afbeelding; dat is aan de consument.
+ * Hieronder weinig, gemiddeld en veel tekst onder elkaar; verschuif
+ * `overhang-size` om te zien waar het omslaat.
+ */
+export const Overhang = {
+	args: { overhangSize: '', mainPosition: 'bottom-left', mainWidth: 'auto' },
+	render: (args: Record<string, any>) => html`
+		<div style="display: flex; flex-direction: column; gap: 48px;">
+			${[
+				['Weinig tekst', null],
+				['Gemiddeld', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
+				['Veel tekst', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p><p>Elke regel krijgt een vorm die mensen en systemen allebei kunnen lezen, zodat de uitvoering volgt wat er bedoeld is. Wie wil weten waarom een besluit zo uitvalt, kan het nalezen.</p></nldd-rich-text><nldd-spacer size="16"></nldd-spacer><nldd-button appearance="inherit-filled" text="Bekijk de regels"></nldd-button>`],
+			].map(([title, body]) => html`
+				<nldd-hero
+					layout="overhang"
+					main-background="donkerblauw"
+					main-position=${args.mainPosition}
+					main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
+					overhang-size=${args.overhangSize || nothing}
+				>
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					<nldd-title
+						color="inherit"
+						size="2"
+						text=${title}
+						heading-level="2"
+					></nldd-title>
+					${body ? html`<nldd-spacer size="16"></nldd-spacer>${body}` : nothing}
+				</nldd-hero>
+			`)}
+		</div>
+	`,
+	argTypes: {
+		overhangSize: {
+			name: 'overhang-size',
+			control: 'text',
+			description: 'Hoe ver het vlak over de onderrand van de afbeelding valt, elke CSS-lengte',
+			table: { defaultValue: { summary: '160px' } },
+		},
+	},
 };
 
 /**
