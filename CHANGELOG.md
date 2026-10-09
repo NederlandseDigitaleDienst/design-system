@@ -42,6 +42,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **An `nldd-image` in the media slot of `nldd-hero` fills the image area.** It took the height of the photo instead, so a portrait photo showed only its top, and a lazy image that had not loaded yet had no height at all, never came into view and never loaded. The hero now tells the image to fill its area, and the photo is cropped from the center.
 - **A page scrolls when its app-view is defined after it.** A page or split view that connected before `nldd-app-view` was defined started out on its own, and nothing made it register once the app-view was: in Chrome and Firefox the document did not scroll, in Safari a sidebar did not stick, until you resized the window. That happens whenever a section is imported before the shell, since `nldd-sidebar-section` defines `nldd-page`, and an app cannot control that order with code splitting and lazy routes. A page, a split view or a pane now waits for the app-view, sheet or modal dialog above it to be defined and registers then.
 - **A long word in a heading in `nldd-rich-text` no longer runs out of the column.** The safety net that breaks a word wider than the column was only on paragraphs and list items; headings have it too now. A heading still never gets a hyphen.
 - **A chevron at the end of a row no longer touches the text.** The application and edit-in-a-sheet patterns put the chevron straight after the text cell; there is now an `nldd-spacer-cell` between them, as in the other patterns.

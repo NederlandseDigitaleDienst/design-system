@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi, type MockInstance } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import './hero.js';
 import { loadTokens } from '../../../../test-tokens.js';
+import '../../../content/image/image.js';
 
 const MEDIA = '<img slot="media" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 4 3\'%3E%3Crect width=\'4\' height=\'3\'/%3E%3C/svg%3E" alt="">';
 
@@ -284,6 +285,17 @@ describe('nldd-hero', () => {
 				unloadTokens();
 			}
 		});
+	});
+
+	it('makes an nldd-image in the media slot fill the media area, before the photo has loaded', async () => {
+		el = await fixture('<nldd-hero style="width: 1200px"><nldd-image slot="media" src="/never.jpg" alt="Foto"></nldd-image><p>Tekst</p></nldd-hero>');
+		await waitForUpdate(el);
+		const image = el.querySelector('nldd-image')!;
+		await waitForUpdate(image as HTMLElement);
+		const area = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+		const media = image.shadowRoot!.querySelector('.image__media')!.getBoundingClientRect();
+		expect(area.height).toBeGreaterThan(0);
+		expect(Math.round(media.height)).toBe(Math.round(area.height));
 	});
 
 	it('has half the section padding on top and the full padding below, unless padding-top is set', async () => {

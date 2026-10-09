@@ -191,7 +191,6 @@ nldd-app-view                            de buitenste schil
       <nldd-image
         slot="left"
         aspect-ratio="3/2"
-        shape="rounded"
       ></nldd-image>
       <nldd-title
         slot="right"

@@ -272,6 +272,8 @@ export const heroStyles = css`
 	}
 
 	.hero__media ::slotted(nldd-image) {
+		--context-image-height: 100%;
+
 		display: block !important;
 		width: 100% !important;
 		height: 100% !important;

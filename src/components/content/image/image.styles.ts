@@ -28,6 +28,7 @@ export const imageStyles = css`
 		--_image-object-fit: cover;
 		--_image-object-position: center;
 		--_image-max-width: 100%;
+		--_image-media-height: var(--context-image-height, auto);
 
 		${inheritedTextReset}
 		box-sizing: border-box;
@@ -88,6 +89,7 @@ export const imageStyles = css`
 		position: relative;
 		overflow: hidden;
 		max-width: 100%;
+		height: var(--_image-media-height);
 		border-radius: var(--_image-corner-radius);
 	}
 
