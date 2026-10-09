@@ -24,6 +24,7 @@
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { oneThirdTwoThirdsSectionStyles } from './one-third-two-thirds-section.styles.js';
 import { oneThirdTwoThirdsSectionTemplate } from './one-third-two-thirds-section.template.js';
@@ -33,7 +34,7 @@ export class NLDDOneThirdTwoThirdsSection extends PageSectionMixin(LitElement) {
 	static override styles = oneThirdTwoThirdsSectionStyles;
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	override updated(changedProperties: Map<string, unknown>): void {

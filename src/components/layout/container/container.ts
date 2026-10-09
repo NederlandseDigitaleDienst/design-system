@@ -113,6 +113,7 @@
  */
 import { LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { containerStyles } from './container.styles.js';
 import { containerTemplate } from './container.template.js';
 import { spacingToValue, type SpacingSize } from '../../../utilities/spacing-scale.js';
@@ -176,7 +177,7 @@ export class NLDDContainer extends LitElement {
 	@property({ type: Number, reflect: true, attribute: 'lg-column-count' })
 	lgColumnCount?: ColumnCount;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	@property({ type: String, reflect: true, attribute: 'min-width' })

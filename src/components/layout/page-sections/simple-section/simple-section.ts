@@ -32,8 +32,8 @@
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
+import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { simpleSectionStyles } from './simple-section.styles.js';
 import { simpleSectionTemplate } from './simple-section.template.js';
 
@@ -45,7 +45,7 @@ export class NLDDSimpleSection extends PageSectionMixin(LitElement) {
 	static override styles = simpleSectionStyles;
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	/** Where the body's children sit; the body itself keeps its own max-width. */

@@ -49,8 +49,8 @@
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
+import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
 
@@ -70,7 +70,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	static override styles = heroStyles;
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	@property({ reflect: true, attribute: 'main-background', converter: reflectNonDefault<HeroMainBackground>('accent') })
@@ -84,7 +84,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 
 	/** Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives
 	 *  the hero height on md/lg and the media strip height on sm. */
-	@property({ type: String, reflect: true, attribute: 'media-aspect-ratio' })
+	@property({ reflect: true, attribute: 'media-aspect-ratio', converter: reflectNonDefault<string>('') })
 	mediaAspectRatio = '';
 
 	/** Hybrid media source: media-src renders an internal <img>, but a slotted

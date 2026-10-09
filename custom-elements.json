@@ -39555,6 +39555,30 @@
           "description": "Nearest ancestor app-view (light-DOM `closest`; slotted layers stay in the\nconsumer's light tree so this reaches across the slot boundaries), or null\nwhen a layer is used stand-alone (e.g. a bare page in the docs).\n\nAn overlay ends the search: a sheet or a modal dialog is its own scroll\ncontainer and its own top edge, so a page inside one owns its scroller\nwhatever the app around it does. Without this the app-view would push its\nroot mode straight through the overlay and the page's sticky header would\nstick against the document, over the content of the overlay. The overlays\nreset --context-scroll-mode as well, which is what the stand-alone read\nbelow then finds."
         },
         {
+          "kind": "function",
+          "name": "whenScrollModeProviderDefined",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "adopt",
+              "type": {
+                "text": "(provider: ScrollModeProvider) => void"
+              }
+            }
+          ],
+          "description": "Hands `adopt` the provider above `host` once it is defined, when it was not\nyet at the moment `host` connected.\n\nCustom elements upgrade in the order their modules are defined, and an app\ndoes not control that: importing nldd-sidebar-section defines nldd-page, and\na route that loads before its shell defines the page before the app-view. The\nprovider is then in the DOM but has no `registerScrollConsumer` yet, so\nfindScrollModeProvider returns null and the layer starts out stand-alone.\nThis lets it register as soon as the provider is defined. Nothing happens\nwhen the host has left the DOM by then, or sits under another provider."
+        },
+        {
           "kind": "class",
           "description": "Reads the inherited `--context-scroll-mode` and reflects it to the host's\n`[data-scroll]` attribute so CSS can branch.\n\nIn root-scroll mode the DOCUMENT scrolls (see nldd-app-view): every layout\nlayer between the document and an nldd-page — app-view, the split views and\ntheir panes — must flow (overflow: visible) instead of clipping, so the page's\nsticky header/footer can stick against the document. Rather than duplicate the\nread-and-reflect logic in each of those components, they share this controller.\n\nThe mode is derived upstream by nldd-app-view. When an app-view is present the\nhost registers as a consumer and app-view pushes an authoritative re-read on\nevery change (a bare `--context-scroll-mode` update would otherwise not reach\nthe resize-polling layers in time — rAF runs before ResizeObserver). Without\nan app-view (a stand-alone page), it falls back to re-reading on window resize\nso a manual/media-query override still works. `nldd-page` keeps its own inline\nlogic because it also has to re-wire scroll listeners.",
           "name": "ScrollModeController",
@@ -39611,6 +39635,12 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "field",
+              "name": "_adopt",
+              "privacy": "private",
+              "description": "Switches from stand-alone to push once a provider that was not yet\ndefined at connect is."
             },
             {
               "kind": "method",
@@ -39682,6 +39712,14 @@
           "name": "findScrollModeProvider",
           "declaration": {
             "name": "findScrollModeProvider",
+            "module": "src/utilities/scroll-mode-controller.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "whenScrollModeProviderDefined",
+          "declaration": {
+            "name": "whenScrollModeProviderDefined",
             "module": "src/utilities/scroll-mode-controller.ts"
           }
         },

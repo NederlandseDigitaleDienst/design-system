@@ -58,6 +58,7 @@
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { breakpoints } from '../../../../assets/styles/breakpoints.js';
 import { sidebarSectionStyles } from './sidebar-section.styles.js';
@@ -73,7 +74,7 @@ import { translate } from '../../../../utilities/translations.js';
 export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	static override styles = sidebarSectionStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	@property({ type: String, attribute: 'sidebar-label' })

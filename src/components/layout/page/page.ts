@@ -61,7 +61,7 @@
  */
 import { LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { findScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
+import { findScrollModeProvider, whenScrollModeProviderDefined } from '../../../utilities/scroll-mode-controller.js';
 import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
@@ -221,8 +221,19 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 				this._readScrollMode();
 				this._configureScroll();
 			}
+			whenScrollModeProviderDefined(this, this._adoptScrollProvider);
 		}
 	}
+
+	/** Switches from stand-alone to push once an app-view (or sheet, or modal
+	 *  dialog) that was not yet defined when this page connected, is. */
+	private _adoptScrollProvider = (provider: ScrollModeProvider): void => {
+		if (this._scrollProvider) return;
+		window.removeEventListener('resize', this._onResize);
+		this._scrollProvider = provider;
+		provider.registerScrollConsumer(this);
+		if (this.hasUpdated) this._configureScroll();
+	};
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();

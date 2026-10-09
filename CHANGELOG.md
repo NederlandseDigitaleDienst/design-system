@@ -22,6 +22,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **Page sections, `nldd-container` and `nldd-sheet` no longer write their defaults into the DOM.** Every section carried `width=""` and `background="inherit"`, and the hero `media-aspect-ratio=""`, whether or not anyone set them. They now only appear when they differ from the default, as the other attributes in the system already did. If you selected on one of those empty or default attributes, select on the value you set instead.
 - **The overline and supporting text in `nldd-text-cell` and `nldd-title-cell` wrap with `text-wrap: pretty`**, like the main text of a text cell already did, so a description over two lines no longer ends on a single word.
 - **`hyphens` on `nldd-rich-text` only breaks long words.** It used to hyphenate any word of six letters or more, so ordinary words were split too. It now only breaks words of 15 letters or more, with at least five letters on either side of the hyphen: long compounds get a hyphen, ordinary words wrap whole. Safari has no minimum word length and still breaks shorter words.
 - **Headings in `nldd-rich-text` keep their size on every width.** They used to grow with the screen, which made an `h2` on a wide screen more than twice the size of the text around it (41px next to 18px), so an article broke into blocks at every heading. They now keep the size they have on a phone everywhere (an `h2` is 29px). Page and section titles in `nldd-title` still grow, so the step from a page title to the headings in the text is clearer than before.
@@ -33,6 +34,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A page scrolls when its app-view is defined after it.** A page or split view that connected before `nldd-app-view` was defined started out on its own, and nothing made it register once the app-view was: in Chrome and Firefox the document did not scroll, in Safari a sidebar did not stick, until you resized the window. That happens whenever a section is imported before the shell, since `nldd-sidebar-section` defines `nldd-page`, and an app cannot control that order with code splitting and lazy routes. A page, a split view or a pane now waits for the app-view, sheet or modal dialog above it to be defined and registers then.
 - **A long word in a heading in `nldd-rich-text` no longer runs out of the column.** The safety net that breaks a word wider than the column was only on paragraphs and list items; headings have it too now. A heading still never gets a hyphen.
 - **A chevron at the end of a row no longer touches the text.** The application and edit-in-a-sheet patterns put the chevron straight after the text cell; there is now an `nldd-spacer-cell` between them, as in the other patterns.
 - **Link cards in the patterns have a name.** The page patterns said a card with `href` takes its accessible name from its content. It does not: the link lies over the card as an empty anchor, so it needs `accessible-label`. Every link card in the patterns now has one, set to the card's title.

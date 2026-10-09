@@ -63,4 +63,22 @@ describe('page sections: grow', () => {
 		expect(getComputedStyle(b).flexGrow).toBe('0');
 		expect(a.getBoundingClientRect().height).toBeGreaterThan(b.getBoundingClientRect().height);
 	});
+
+	it('puts no attributes on a section that the author did not set', async () => {
+		el = await fixture('<nldd-page><nldd-hero></nldd-hero><nldd-simple-section>A</nldd-simple-section></nldd-page>');
+		await waitForUpdate(el);
+		for (const tag of ['nldd-hero', 'nldd-simple-section']) {
+			const section = el.querySelector(tag) as HTMLElement;
+			await waitForUpdate(section);
+			expect(section.hasAttribute('width')).toBe(false);
+			expect(section.hasAttribute('background')).toBe(false);
+		}
+		expect(el.querySelector('nldd-hero')!.hasAttribute('media-aspect-ratio')).toBe(false);
+		const section = el.querySelector('nldd-simple-section') as HTMLElement & { background: string; width: string };
+		section.background = 'tinted';
+		section.width = 'full';
+		await waitForUpdate(section);
+		expect(section.getAttribute('background')).toBe('tinted');
+		expect(section.getAttribute('width')).toBe('full');
+	});
 });

@@ -1,5 +1,6 @@
 import { property } from 'lit/decorators.js';
 import { LitElement, type PropertyValues } from 'lit';
+import { reflectNonDefault } from './reflect-non-default.js';
 
 type Constructor<T = LitElement> = new (...args: any[]) => T;
 
@@ -65,7 +66,7 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 	Base: TBase,
 ) {
 	class WithPageSection extends Base {
-		@property({ type: String, reflect: true })
+		@property({ reflect: true, converter: reflectNonDefault<PageSectionBackground>('inherit') })
 		background: PageSectionBackground = 'inherit';
 
 		@property({ type: String, reflect: true })
