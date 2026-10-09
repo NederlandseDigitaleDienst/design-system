@@ -62,9 +62,8 @@ export default {
 		},
 		mainWidth: {
 			name: 'main-width',
-			control: 'select',
-			options: ['auto', 'full'],
-			description: 'Breedte van het paneel: auto volgt de inhoud tussen 480 en 720px, full maakt een strook over de hele afbeelding (genegeerd bij left/right)',
+			control: 'text',
+			description: 'Breedte van het paneel: auto volgt de inhoud tussen 480 en 720px, full maakt een strook over de hele afbeelding (genegeerd bij left/right), een CSS-breedte (bv. 560px) zet hem precies',
 			table: { defaultValue: { summary: 'auto' } },
 		},
 		mainPosition: {

@@ -33,12 +33,13 @@ export const heroStyles = css`
 		--_hero-media-height: auto;
 		--_hero-main-min-width: var(--primitives-area-480);
 		--_hero-main-max-width: var(--primitives-area-720);
+		--_hero-main-width: auto;
 		--_hero-main-background-color: var(--semantics-categories-accent-reference-background-color);
 		--_hero-main-content-color: var(--semantics-categories-accent-reference-content-color);
 		--_hero-main-padding: var(--primitives-space-16);
 		--_hero-main-inset: 0;
 		--_hero-sm-main-inset: var(--semantics-page-sections-sm-gap);
-		--_hero-sm-main-overlap: var(--primitives-space-24);
+		--_hero-sm-main-overlap: var(--primitives-space-32);
 		--_hero-overhang-size: initial;
 		--_hero-default-overhang-size: 0;
 		--_hero-default-media-height: auto;
@@ -315,6 +316,14 @@ export const heroStyles = css`
 
 	:host([data-has-media]) .hero__main {
 		margin: var(--_hero-main-inset);
+	}
+
+	:host([data-has-media][data-main-width-length]) .hero__main {
+		@container (min-width: ${mdMin}) {
+			width: var(--_hero-main-width);
+			min-width: 0;
+			max-width: calc(100% - 2 * var(--_hero-main-inset));
+		}
 	}
 
 	:host([data-has-media][main-width="full"]) .hero__main {

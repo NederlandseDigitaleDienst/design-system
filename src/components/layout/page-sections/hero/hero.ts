@@ -9,7 +9,7 @@
  * its edges, so it reads as a panel on the image rather than a frame cut out of
  * it; with `main-width="full"` it is a strip across the whole image, the same
  * gap from the sides. On mobile the image comes first and the panel below it,
- * indented by the section gap and overlapping the image by 24px. For an
+ * indented by the section gap and overlapping the image by 32px. For an
  * image beside text without that relation, use a section with an image beside
  * text instead. Without media the main fills the whole area; with
  * `main-background="base"` that area gets a border so it stays visible on the
@@ -45,7 +45,7 @@
  * @attr {string} main-background - Surface color of the panel: 'base' (the base surface)
  *   or a category color — 'accent' (default) or a Rijkshuisstijl color such as
  *   'lintblauw'|'donkerblauw'|'oranje'
- * @attr {'auto'|'full'} main-width - Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 720px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'
+ * @attr {string} main-width - Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 720px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto'
  * @attr {'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right'|'left'|'right'} main-position -
  *   Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height
  * @attr {string} overhang-size - With layout="overhang": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image
@@ -71,7 +71,7 @@ import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
 
 export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
-export type HeroMainWidth = 'auto' | 'full';
+export type HeroMainWidth = 'auto' | 'full' | (string & {});
 export type HeroLayout = 'contained' | 'overhang';
 export type HeroMainBackground =
 	| 'base' | 'accent'
@@ -166,8 +166,16 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			}
 		}
 		if (import.meta.env?.DEV && changed.has('layout')) this._watchOverhang();
-		if (import.meta.env?.DEV && changed.has('mainWidth') && (this.mainWidth as string) && !['auto', 'full'].includes(this.mainWidth)) {
-			console.warn(`<nldd-hero>: main-width="${this.mainWidth}" is no longer supported and falls back to "auto", which follows the content between 480px and 720px.`, this);
+		if (changed.has('mainWidth')) {
+			const width = (this.mainWidth ?? '').trim();
+			const length = width !== '' && width !== 'auto' && width !== 'full';
+			const valid = length && CSS.supports('width', width);
+			if (valid) this.style.setProperty('--_hero-main-width', width);
+			else this.style.removeProperty('--_hero-main-width');
+			this.toggleAttribute('data-main-width-length', valid);
+			if (import.meta.env?.DEV && length && !valid) {
+				console.warn(`<nldd-hero>: main-width="${width}" is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 720px.`, this);
+			}
 		}
 		if (changed.has('overhangSize')) {
 			const size = (this.overhangSize ?? '').trim();

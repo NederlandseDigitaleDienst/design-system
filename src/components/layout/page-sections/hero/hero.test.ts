@@ -133,6 +133,20 @@ describe('nldd-hero', () => {
 		}
 	});
 
+	it('takes a CSS width for main-width, still never wider than the image allows', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			let { main } = await geometry('main-width="560px"', 1200);
+			expect(Math.round(main.width)).toBe(560);
+			const { media, main: wide } = await geometry('main-width="2000px"', 1200);
+			expect(Math.round(media.right - wide.right)).toBe(32);
+			({ main } = await geometry('main-width="560px"', 400));
+			expect(Math.round(main.width)).toBe(Math.round(el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect().width) - 32);
+		} finally {
+			unloadTokens();
+		}
+	});
+
 	it('falls back to auto for a fraction, and says so in development', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		try {
@@ -171,7 +185,7 @@ describe('nldd-hero', () => {
 		try {
 			const { media, main } = await geometry('main-position="top-left"', 400);
 			expect(main.top).toBeGreaterThan(media.top);
-			expect(Math.round(media.bottom - main.top)).toBe(24);
+			expect(Math.round(media.bottom - main.top)).toBe(32);
 			expect(Math.round(main.left - media.left)).toBe(16);
 			expect(Math.round(media.right - main.right)).toBe(16);
 		} finally {
