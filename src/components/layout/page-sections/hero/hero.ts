@@ -2,11 +2,16 @@
  * Nederlandse Digitale Dienst Hero Component (Lit + TypeScript)
  *
  * A page header with a media area and a text panel (the main) that can stand in
- * six positions. Every area is rectangular.
+ * eight positions. Every area is rectangular.
  *
- * With `main-width="full"` the media area sits as its own strip above or below
- * the panel rather than behind it. On mobile the media always stacks above the
- * full-width panel. Without media the main fills the whole area; with
+ * The image in a hero sets the mood and is never the main content, so the
+ * panel always stands on it. Over an image the panel keeps a section gap from
+ * its edges, so it reads as a panel on the image rather than a frame cut out of
+ * it; with `main-width="full"` it is a strip across the whole image, the same
+ * gap from the sides. On mobile the image comes first and the panel below it,
+ * indented by the section gap and overlapping the image by as much. For an
+ * image beside text without that relation, use a section with an image beside
+ * text instead. Without media the main fills the whole area; with
  * `main-background="base"` that area gets a border so it stays visible on the
  * base surface.
  *
@@ -31,8 +36,8 @@
  *   or a category color — 'accent' (default) or a Rijkshuisstijl color such as
  *   'lintblauw'|'donkerblauw'|'oranje'
  * @attr {'1/2'|'2/3'|'3/4'|'full'} main-width - Width of the panel (default: '1/2');
- *   'full' makes a full top or bottom strip and is ignored with 'left'/'right'
- * @attr {'top-left'|'top-right'|'bottom-left'|'bottom-right'|'left'|'right'} main-position -
+ *   'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'
+ * @attr {'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right'|'left'|'right'} main-position -
  *   Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height
  * @attr {string} media-aspect-ratio - Aspect ratio of the media area (CSS form, '16/9' or '16:9');
  *   default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area
@@ -54,7 +59,7 @@ import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
 
-export type HeroMainPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'left' | 'right';
+export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
 export type HeroMainWidth = '1/2' | '2/3' | '3/4' | 'full';
 export type HeroMainBackground =
 	| 'base' | 'accent'

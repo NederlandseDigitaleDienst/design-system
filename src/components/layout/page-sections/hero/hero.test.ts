@@ -82,6 +82,63 @@ describe('nldd-hero', () => {
 	   Width (max-width) inline style
 	   ============================================================ */
 
+	const IMG = '<img slot="media" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="">';
+
+	const geometry = async (attrs: string, width: number) => {
+		el = await fixture(`<nldd-hero ${attrs} style="width: ${width}px">${IMG}<p>Tekst</p></nldd-hero>`);
+		await waitForUpdate(el);
+		await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
+		const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+		const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+		return { media, main };
+	};
+
+	it('keeps the panel a section gap from the edges of the image on wide screens', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			const { media, main } = await geometry('', 1200);
+			expect(Math.round(main.left - media.left)).toBe(32);
+			expect(Math.round(media.bottom - main.bottom)).toBe(32);
+		} finally {
+			unloadTokens();
+		}
+	});
+
+	it('lays a full-width panel across the image, a gap from its sides', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			const { media, main } = await geometry('main-width="full"', 1200);
+			expect(Math.round(main.left - media.left)).toBe(32);
+			expect(Math.round(media.right - main.right)).toBe(32);
+			expect(main.bottom).toBeLessThan(media.bottom);
+		} finally {
+			unloadTokens();
+		}
+	});
+
+	it('centers the panel with bottom-center', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			const { media, main } = await geometry('main-position="bottom-center"', 1200);
+			expect(Math.round(main.left - media.left)).toBe(Math.round(media.right - main.right));
+		} finally {
+			unloadTokens();
+		}
+	});
+
+	it('puts the image first on sm, with the panel indented and overlapping it, also for a top position', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			const { media, main } = await geometry('main-position="top-left"', 400);
+			expect(main.top).toBeGreaterThan(media.top);
+			expect(Math.round(media.bottom - main.top)).toBe(16);
+			expect(Math.round(main.left - media.left)).toBe(16);
+			expect(Math.round(media.right - main.right)).toBe(16);
+		} finally {
+			unloadTokens();
+		}
+	});
+
 	it('has half the section padding on top and the full padding below, unless padding-top is set', async () => {
 		const unloadTokens = loadTokens();
 		try {

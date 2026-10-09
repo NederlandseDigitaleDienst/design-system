@@ -34,6 +34,8 @@ export const heroStyles = css`
 		--_hero-main-background-color: var(--semantics-categories-accent-reference-background-color);
 		--_hero-main-content-color: var(--semantics-categories-accent-reference-content-color);
 		--_hero-main-padding: var(--primitives-space-16);
+		--_hero-main-inset: 0;
+		--_hero-sm-main-inset: var(--semantics-page-sections-sm-gap);
 
 		${inheritedTextReset}
 		display: flex;
@@ -185,6 +187,7 @@ export const heroStyles = css`
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_hero-main-padding: var(--primitives-space-24);
+			--_hero-main-inset: var(--semantics-page-sections-md-gap);
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
 			padding-top: var(--_hero-md-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-md-margin-block) / 2)));
 			padding-bottom: var(--_hero-md-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-md-margin-block)));
@@ -192,6 +195,7 @@ export const heroStyles = css`
 
 		@container (min-width: ${lgMin}) {
 			--_hero-main-padding: var(--primitives-space-32);
+			--_hero-main-inset: var(--semantics-page-sections-lg-gap);
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
 			padding-top: var(--_hero-lg-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-lg-margin-block) / 2)));
 			padding-bottom: var(--_hero-lg-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-lg-margin-block)));
@@ -209,11 +213,14 @@ export const heroStyles = css`
 	.hero__body {
 		display: grid;
 		position: relative;
-		background-color: var(--_hero-main-background-color);
 		width: 100%;
 		max-width: var(--_hero-max-width);
 		flex-grow: 1;
 		grid-template-columns: 100%;
+	}
+
+	:host(:not([data-has-media])) .hero__body {
+		background-color: var(--_hero-main-background-color);
 	}
 
 	/* Without media a base-colored panel would be invisible on the base surface;
@@ -228,7 +235,7 @@ export const heroStyles = css`
 	   (instead of aspect-ratio on the body) keeps growth content-driven
 	   rather than rigidly tied to the width. align-self: start stops the
 	   stretch fit from cancelling the ratio. */
-	:host([data-has-media]:not([main-width="full"])) .hero__body::before {
+	:host([data-has-media]) .hero__body::before {
 		@container (min-width: ${mdMin}) {
 			content: '';
 			aspect-ratio: var(--_hero-media-aspect-ratio);
@@ -303,6 +310,15 @@ export const heroStyles = css`
 		width: 100%;
 	}
 
+	:host([data-has-media]) .hero__main {
+		margin: var(--_hero-main-inset);
+	}
+
+	:host([data-has-media][main-width="full"]) .hero__main {
+		justify-self: stretch;
+		width: auto;
+	}
+
 	:host([main-position="top-left"]) .hero__main {
 		align-self: start;
 	}
@@ -314,6 +330,15 @@ export const heroStyles = css`
 
 	:host([main-position="bottom-right"]) .hero__main {
 		justify-self: end;
+	}
+
+	:host([main-position="bottom-center"]) .hero__main {
+		justify-self: center;
+	}
+
+	:host([main-position="top-center"]) .hero__main {
+		align-self: start;
+		justify-self: center;
 	}
 
 	:host([main-position="left"]) .hero__main {
@@ -332,41 +357,13 @@ export const heroStyles = css`
 	}
 
 
-	/* # Full-width strip (md+)
-	   With main-width="full" the panel is a full top or bottom strip and the
-	   media stacks on the opposite side instead of sitting behind it. Switch the
-	   body to a column so the two blocks stack: a bottom panel keeps the media on
-	   top, a top panel (column-reverse) drops it below. The media keeps the
-	   overlay's 21/9 strip. Below sm every layout already stacks, so this only
-	   targets md and up. */
-
-	@container (min-width: ${mdMin}) {
-		:host([data-has-media][main-width="full"]) .hero__body {
-			display: flex;
-			flex-direction: column;
-		}
-
-		:host([data-has-media][main-width="full"]:is([main-position="top-left"], [main-position="top-right"])) .hero__body {
-			flex-direction: column-reverse;
-		}
-
-		:host([data-has-media][main-width="full"]) .hero__media {
-			position: static;
-			aspect-ratio: var(--_hero-media-aspect-ratio);
-		}
-	}
-
-
-	/* # Mobile — stack media over a full-width panel. */
+	/* # Mobile — the media on top, the panel below it, indented and overlapping
+	   it a little. */
 
 	@container (max-width: ${smMax}) {
 		.hero__body {
 			display: flex;
 			flex-direction: column;
-		}
-
-		:host(:is([main-position="top-left"], [main-position="top-right"])) .hero__body {
-			flex-direction: column-reverse;
 		}
 
 		.hero__media {
@@ -377,6 +374,12 @@ export const heroStyles = css`
 
 		.hero__main {
 			width: 100%;
+		}
+
+		:host([data-has-media]) .hero__main {
+			margin: calc(-1 * var(--_hero-sm-main-inset)) var(--_hero-sm-main-inset) 0;
+			width: auto;
+			align-self: stretch;
 		}
 	}
 `;

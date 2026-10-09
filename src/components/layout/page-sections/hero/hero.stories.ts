@@ -58,13 +58,13 @@ export default {
 			name: 'main-width',
 			control: 'select',
 			options: ['1/2', '2/3', '3/4', 'full'],
-			description: 'Breedte van het paneel; full maakt een volle strook (genegeerd bij left/right)',
+			description: 'Breedte van het paneel; full maakt een strook over de hele afbeelding (genegeerd bij left/right)',
 			table: { defaultValue: { summary: '1/2' } },
 		},
 		mainPosition: {
 			name: 'main-position',
 			control: 'select',
-			options: ['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'],
+			options: ['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'],
 			description: 'Positie van het tekstpaneel',
 			table: { defaultValue: { summary: 'bottom-left' } },
 		},
@@ -142,7 +142,7 @@ export const Standaard = {
 export const AllePosities = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 24px;">
-			${['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'].map((position) => html`
+			${['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'].map((position) => html`
 				<nldd-hero
 					main-position=${position}
 					main-background="donkerblauw"
@@ -166,8 +166,9 @@ export const AllePosities = {
 };
 
 /**
- * `main-width="full"` maakt een volle boven- of onderstrook; het mediavlak
- * staat dan als losse strook boven of onder het paneel in plaats van erachter.
+ * `main-width="full"` maakt een strook over de hele breedte van de afbeelding,
+ * onder- of bovenaan, op een sectie-gap van de randen. De afbeelding blijft
+ * erachter: in een hero is die sfeer en nooit de hoofdzaak.
  */
 export const VolleStrook = {
 	render: () => html`
@@ -186,7 +187,7 @@ export const VolleStrook = {
 					color="inherit"
 					size="3"
 					text="Volle onderstrook"
-					supporting-text='main-position="bottom-left" — het mediavlak staat erboven'
+					supporting-text='main-position="bottom-left"'
 					heading-level="1"
 				></nldd-title>
 			</nldd-hero>
@@ -204,7 +205,7 @@ export const VolleStrook = {
 					color="inherit"
 					size="3"
 					text="Volle bovenstrook"
-					supporting-text='main-position="top-left" — het mediavlak staat eronder'
+					supporting-text='main-position="top-left"'
 					heading-level="1"
 				></nldd-title>
 			</nldd-hero>

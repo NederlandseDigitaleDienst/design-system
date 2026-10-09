@@ -24892,7 +24892,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page header with a media area and a text panel (the main) that can stand in six positions. Every area is rectangular. With `main-width=\"full\"` the media area sits as its own strip above or below the panel rather than behind it. On mobile the media always stacks above the full-width panel. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "A page header with a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by as much. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
           "name": "NLDDHero",
           "members": [
             {
@@ -25208,7 +25208,7 @@
               },
               "default": "'1/2'",
               "fieldName": "mainWidth",
-              "description": "Width of the panel (default: '1/2'); 'full' makes a full top or bottom strip and is ignored with 'left'/'right'"
+              "description": "Width of the panel (default: '1/2'); 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'"
             },
             {
               "name": "main-position",
