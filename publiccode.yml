@@ -19,6 +19,9 @@ developmentStatus: beta
 platforms:
   - web
 
+categories:
+  - it-development
+
 description:
   nl:
     shortDescription: >-
@@ -49,11 +52,14 @@ description:
 
 legal:
   license: EUPL-1.2
+  mainCopyrightOwner: Nederlandse Digitale Dienst
 
 maintenance:
   type: internal
   contacts:
     - name: Bart van de Biezen
+    - name: Nederlandse Digitale Dienst
+      email: opensource@minbzk.nl
 
 localisation:
   localisationReady: true
