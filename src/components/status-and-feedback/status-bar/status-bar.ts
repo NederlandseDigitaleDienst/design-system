@@ -20,6 +20,13 @@
  * action per bar at most; several actions, or links in running text, belong in
  * nldd-banner.
  *
+ * ## Placement
+ * The bar is the first thing on the screen: above nldd-top-navigation-bar or
+ * nldd-top-title-bar, across the whole app, also when a split view shows
+ * several panes. It reports the state of the service, not of one page, so it
+ * never sits inside the content or below a top bar. Below a top bar it says so
+ * in development.
+ *
  * ## ARIA
  * role and aria-live are set automatically from the variant:
  * - critical → role="alert" (implies aria-live="assertive"; interrupts the screen reader)
@@ -81,6 +88,22 @@ export class NLDDStatusBar extends LitElement {
 		// the live-region role is present from the start; updated() keeps it in sync
 		// on later variant changes.
 		this._applyAriaForVariant(this.variant);
+	}
+
+	override firstUpdated(): void {
+		if (import.meta.env?.DEV) this._checkPlacement();
+	}
+
+	/** DEV-only: warns when a top bar comes before the status bar. Top bars in an overlay are left out, since a sheet or dialog has its own. */
+	private _checkPlacement(): void {
+		const root = this.getRootNode() as Document | ShadowRoot;
+		const above = [...root.querySelectorAll('nldd-top-navigation-bar, nldd-top-title-bar')].some((bar) =>
+			!bar.closest('nldd-sheet, nldd-modal-dialog, nldd-popover, dialog')
+			&& (bar.compareDocumentPosition(this) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
+			&& !bar.contains(this));
+		if (above) {
+			console.warn('<nldd-status-bar>: The status bar sits below a top bar. It belongs above it, as the first thing on the screen.', this);
+		}
 	}
 
 	override updated(changed: Map<string, unknown>): void {
