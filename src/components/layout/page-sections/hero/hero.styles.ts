@@ -30,6 +30,7 @@ export const heroStyles = css`
 		--_hero-lg-padding-bottom: initial;
 		--_hero-max-width: var(--semantics-page-sections-body-max-width);
 		--_hero-media-aspect-ratio: 21 / 9;
+		--_hero-media-height: auto;
 		--_hero-main-width: 50%;
 		--_hero-main-background-color: var(--semantics-categories-accent-reference-background-color);
 		--_hero-main-content-color: var(--semantics-categories-accent-reference-content-color);
@@ -238,6 +239,7 @@ export const heroStyles = css`
 	:host([data-has-media]) .hero__body::before {
 		@container (min-width: ${mdMin}) {
 			content: '';
+			height: var(--_hero-media-height);
 			aspect-ratio: var(--_hero-media-aspect-ratio);
 			grid-area: 1 / 1;
 			align-self: start;
@@ -368,6 +370,7 @@ export const heroStyles = css`
 
 		.hero__media {
 			position: static;
+			height: var(--_hero-media-height);
 			overflow: hidden;
 			aspect-ratio: var(--_hero-media-aspect-ratio);
 		}

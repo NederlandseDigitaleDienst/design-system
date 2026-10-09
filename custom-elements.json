@@ -24892,7 +24892,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page header with a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by as much. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "A page header with a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by as much. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
           "name": "NLDDHero",
           "members": [
             {
@@ -24945,6 +24945,16 @@
               "default": "''",
               "description": "Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives\nthe hero height on md/lg and the media strip height on sm.",
               "attribute": "media-aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mediaHeight",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "media-height",
               "reflects": true
             },
             {
@@ -25229,6 +25239,15 @@
               "fieldName": "mediaAspectRatio"
             },
             {
+              "name": "media-height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "mediaHeight",
+              "description": "Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio"
+            },
+            {
               "name": "media-src",
               "type": {
                 "text": "string"
@@ -25286,8 +25305,7 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
-              },
-              "description": "Minimum height of the section (section API)"
+              }
             },
             {
               "name": "grow",

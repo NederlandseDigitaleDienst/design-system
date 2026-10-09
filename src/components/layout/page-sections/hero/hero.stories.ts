@@ -32,21 +32,17 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		height: '',
 		mainBackground: 'accent',
 		mainWidth: '1/2',
 		mainPosition: 'bottom-left',
 		mediaAspectRatio: '',
+		mediaHeight: '',
 		mediaSrc: MEDIA,
 		mediaSrcset: '',
 		mediaSizes: '',
 		mediaAlt: '',
 	},
 	argTypes: {
-		height: {
-			control: 'text',
-			description: 'Minimale hoogte van de sectie, elke CSS-lengte (bijv. 600px of 100dvh); de hero groeit verder met de content',
-		},
 		mainBackground: {
 			name: 'main-background',
 			control: 'select',
@@ -76,6 +72,11 @@ export default {
 			description: 'Aspect ratio van het mediavlak; bepaalt op md/lg de hoogte van de hero',
 			table: { defaultValue: { summary: '21/9' } },
 		},
+		mediaHeight: {
+			name: 'media-height',
+			control: 'text',
+			description: 'Vaste hoogte van het mediavlak, elke CSS-lengte (bijv. 320px of 40vh); wint van media-aspect-ratio',
+		},
 		mediaSrc: {
 			name: 'media-src',
 			control: 'text',
@@ -101,11 +102,11 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-hero
-		height=${args.height || nothing}
 		main-background=${args.mainBackground}
 		main-width=${args.mainWidth}
 		main-position=${args.mainPosition}
 		media-aspect-ratio=${args.mediaAspectRatio || nothing}
+		media-height=${args.mediaHeight || nothing}
 		media-src=${args.mediaSrc || nothing}
 		media-srcset=${args.mediaSrcset || nothing}
 		media-sizes=${args.mediaSizes || nothing}

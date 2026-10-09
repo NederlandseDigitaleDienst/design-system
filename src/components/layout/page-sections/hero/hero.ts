@@ -21,6 +21,11 @@
  * bottom keeps the full distance to the section below. Set `padding-top` to
  * place a hero elsewhere.
  *
+ * The height of a hero comes from its image: `media-aspect-ratio`, or a fixed
+ * `media-height`. The `height` of the other page sections is not used here: as
+ * a minimum height for the whole hero it stretched the panel once that sat
+ * below the image. A hero given `height` says so in development.
+ *
  * `main-background` gives the panel a surface color from the filled categories.
  * Those carry a pure white or black content color along, so components with
  * `color="inherit"` (title, rich-text) are guaranteed to keep their contrast.
@@ -29,7 +34,6 @@
  *
  * @attr {'inherit'|'base'|'tinted'} background - Surface behind the hero (section API)
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)
- * @attr {string} height - Minimum height of the section (section API)
  * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
  * @attr {string} main-background - Surface color of the panel: 'base' (the base surface)
@@ -41,6 +45,7 @@
  *   Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height
  * @attr {string} media-aspect-ratio - Aspect ratio of the media area (CSS form, '16/9' or '16:9');
  *   default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area
+ * @attr {string} media-height - Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio
  * @attr {string} media-src - Source of the media area (an alternative to the media slot);
  *   ignored as soon as the media slot is filled
  * @attr {string} media-srcset - Responsive source set for media-src
@@ -92,6 +97,9 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	@property({ reflect: true, attribute: 'media-aspect-ratio', converter: reflectNonDefault<string>('') })
 	mediaAspectRatio = '';
 
+	@property({ reflect: true, attribute: 'media-height', converter: reflectNonDefault<string>('') })
+	mediaHeight = '';
+
 	/** Hybrid media source: media-src renders an internal <img>, but a slotted
 	 *  media element wins (mirrors nldd-image / nldd-identity). srcset/sizes/alt
 	 *  feed that internal img. */
@@ -133,6 +141,23 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 				this.style.removeProperty('--_hero-max-width');
 			}
 		}
+		if (changed.has('mediaHeight')) {
+			const height = (this.mediaHeight ?? '').trim();
+			if (height && CSS.supports('height', height)) {
+				this.style.setProperty('--_hero-media-height', height);
+			} else {
+				this.style.removeProperty('--_hero-media-height');
+			}
+		}
+		if (changed.has('height') && this.height) {
+			// The section API turns `height` into the host's min-height; a hero
+			// takes its height from its image instead.
+			this.style.removeProperty('min-height');
+			if (import.meta.env?.DEV && !this._warnedHeight) {
+				this._warnedHeight = true;
+				console.warn('<nldd-hero>: `height` is not used on a hero, whose height comes from its image. Use `media-height` for a fixed height, or `media-aspect-ratio`.', this);
+			}
+		}
 		if (changed.has('mediaAspectRatio')) {
 			// Accept '16:9' as well as '16/9' (like nldd-image). Clearing the
 			// attribute makes Lit set the property to null, so guard with ?? '';
@@ -145,6 +170,9 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			}
 		}
 	}
+
+	/** DEV-only latch for the `height` warning. */
+	private _warnedHeight = false;
 
 	/** @internal Tracks the media slot so the no-media mode can collapse it. */
 	_onMediaSlotChange(e: Event): void {

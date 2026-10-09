@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import './hero.js';
 import { loadTokens } from '../../../../test-tokens.js';
@@ -136,6 +136,36 @@ describe('nldd-hero', () => {
 			expect(Math.round(media.right - main.right)).toBe(16);
 		} finally {
 			unloadTokens();
+		}
+	});
+
+	it('gives the image a fixed height with media-height, on wide screens and on sm', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			let { media } = await geometry('media-height="320px"', 1200);
+			expect(Math.round(media.height)).toBe(320);
+			({ media } = await geometry('media-height="200px"', 400));
+			expect(Math.round(media.height)).toBe(200);
+		} finally {
+			unloadTokens();
+		}
+	});
+
+	it('falls back to the aspect ratio for an invalid media-height', async () => {
+		el = await fixture('<nldd-hero media-height="nogal hoog"></nldd-hero>');
+		await waitForUpdate(el);
+		expect(el.style.getPropertyValue('--_hero-media-height')).toBe('');
+	});
+
+	it('ignores height, which would stretch the hero, and says so in development', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			el = await fixture('<nldd-hero height="900px"></nldd-hero>');
+			await waitForUpdate(el);
+			expect(el.style.minHeight).toBe('');
+			expect(warn.mock.calls.some(([message]) => String(message).includes('media-height'))).toBe(true);
+		} finally {
+			warn.mockRestore();
 		}
 	});
 
