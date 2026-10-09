@@ -32297,7 +32297,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current=\"page\"` on the inner action, in a `listbox` parent it drives `aria-selected`.",
+              "description": "Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.",
               "name": "selected",
               "default": "false",
               "fieldName": "selected"

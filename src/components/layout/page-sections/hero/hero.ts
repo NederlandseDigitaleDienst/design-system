@@ -65,8 +65,8 @@
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
 
