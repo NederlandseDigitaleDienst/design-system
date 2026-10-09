@@ -320,7 +320,7 @@ export const ZonderMedia = {
 export const MetRichText = {
 	render: () => html`
 		<nldd-hero
-			main-position="left"
+			main-position="bottom-left"
 			main-background="oranje"
 		>
 			<img
@@ -330,14 +330,19 @@ export const MetRichText = {
 			>
 			<nldd-title
 				color="inherit"
-				size="3"
-				text="Volle hoogte links"
+				size="2"
+				text="Regels die voor je werken"
 				heading-level="1"
 			></nldd-title>
-			<nldd-spacer size="8"></nldd-spacer>
+			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-rich-text color="inherit">
-				<p>Het paneel beslaat de volle hoogte; het mediavlak staat ernaast. Ook <a href="#">links</a> erven de contentkleur.</p>
+				<p>De tekst volgt de contentkleur van de vulling, en <a href="#">links</a> erven die ook.</p>
 			</nldd-rich-text>
+			<nldd-spacer size="24"></nldd-spacer>
+			<nldd-button
+				appearance="inherit-filled"
+				text="Bekijk de regels"
+			></nldd-button>
 		</nldd-hero>
 	`,
 	parameters: { controls: { disable: true } },
