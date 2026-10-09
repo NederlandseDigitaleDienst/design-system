@@ -279,7 +279,7 @@ nldd-app-view                            de buitenste schil
             text="Isoleren"
             supporting-text="Dak, muren, vloer en glas"
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -291,7 +291,7 @@ nldd-app-view                            de buitenste schil
             text="Warmtepomp"
             supporting-text="Van luchtwarmtepomp tot hybride"
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -303,7 +303,7 @@ nldd-app-view                            de buitenste schil
             text="Energie besparen"
             supporting-text="Kleine stappen die je meteen kunt zetten"
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -315,7 +315,7 @@ nldd-app-view                            de buitenste schil
             text="Zonnepanelen"
             supporting-text="Wat je moet weten voor je begint"
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"

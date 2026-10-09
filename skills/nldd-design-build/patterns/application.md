@@ -389,7 +389,7 @@ nldd-sheet                                    het detail van een rij, in de docu
                     text="Dossier D-318"
                     supporting-text="In behandeling"
                   ></nldd-text-cell>
-                  <nldd-spacer-cell size="8"></nldd-spacer-cell>
+                  <nldd-spacer-cell size="12"></nldd-spacer-cell>
                   <nldd-icon-cell
                     size="20"
                     color="secondary"
@@ -401,7 +401,7 @@ nldd-sheet                                    het detail van een rij, in de docu
                     text="Dossier D-319"
                     supporting-text="Afgerond"
                   ></nldd-text-cell>
-                  <nldd-spacer-cell size="8"></nldd-spacer-cell>
+                  <nldd-spacer-cell size="12"></nldd-spacer-cell>
                   <nldd-icon-cell
                     size="20"
                     color="secondary"

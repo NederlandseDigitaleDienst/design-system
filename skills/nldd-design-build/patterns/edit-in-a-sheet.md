@@ -46,7 +46,7 @@ nldd-sheet                     open, placement, width; in de document-root
           text="Aanvraag A-1042"
           supporting-text="Dakisolatie, in behandeling"
         ></nldd-text-cell>
-        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"
@@ -58,7 +58,7 @@ nldd-sheet                     open, placement, width; in de document-root
           text="Aanvraag A-1043"
           supporting-text="Warmtepomp, afgerond"
         ></nldd-text-cell>
-        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"

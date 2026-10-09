@@ -274,7 +274,7 @@ export const MetCellenVooraanEnAchteraan = {
 				></nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text="Item with start icon"></nldd-text-cell>
-				<nldd-spacer-cell size="8"></nldd-spacer-cell>
+				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-icon-cell size="16">
 					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
@@ -296,7 +296,7 @@ export const SimpelMetCellenAchteraan = {
 		<nldd-list appearance="simple">
 			<nldd-list-item>
 				<nldd-text-cell text="Trailing cells"></nldd-text-cell>
-				<nldd-spacer-cell size="8"></nldd-spacer-cell>
+				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-icon-cell size="16">
 					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
@@ -388,7 +388,7 @@ export const ResponsieveCellen = {
 					hide-below="480px"
 				></nldd-text-cell>
 				<nldd-spacer-cell
-					size="8"
+					size="12"
 					hide-below="280px"
 				></nldd-spacer-cell>
 				<nldd-icon-cell hide-below="280px"><nldd-icon icon="chevron-right-small"></nldd-icon></nldd-icon-cell>
@@ -405,7 +405,7 @@ export const ResponsieveCellen = {
 					hide-below="480px"
 				></nldd-text-cell>
 				<nldd-spacer-cell
-					size="8"
+					size="12"
 					hide-below="280px"
 				></nldd-spacer-cell>
 				<nldd-icon-cell hide-below="280px"><nldd-icon icon="chevron-right-small"></nldd-icon></nldd-icon-cell>

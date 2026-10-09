@@ -242,7 +242,7 @@ export const MetMeerdereKolommen = {
 					width="fit-content"
 					text="Detail"
 				></nldd-text-cell>
-				<nldd-spacer-cell size="8"></nldd-spacer-cell>
+				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-icon-cell
 					color="secondary"
 					size="16"
@@ -269,7 +269,7 @@ export const MetMeerdereKolommen = {
 					width="fit-content"
 					text="Meer detail"
 				></nldd-text-cell>
-				<nldd-spacer-cell size="8"></nldd-spacer-cell>
+				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-icon-cell
 					color="secondary"
 					size="16"

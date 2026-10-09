@@ -227,7 +227,7 @@ nldd-app-view                            de buitenste schil
             text="Dakisolatie"
             supporting-text="Het meeste effect, omdat warmte opstijgt"
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -239,7 +239,7 @@ nldd-app-view                            de buitenste schil
             text="Spouwmuurisolatie"
             supporting-text="Voor huizen met een spouw tussen de muren"
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -251,7 +251,7 @@ nldd-app-view                            de buitenste schil
             text="Vloerisolatie"
             supporting-text="Warmere voeten en minder vocht"
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -263,7 +263,7 @@ nldd-app-view                            de buitenste schil
             text="Isolerend glas"
             supporting-text="Minder kou bij de ramen"
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"

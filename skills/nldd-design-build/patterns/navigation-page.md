@@ -96,7 +96,7 @@ Met een lijst:
             text="Een aanvraag indienen"
             supporting-text="Wat je nodig hebt en hoe het indienen gaat."
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -108,7 +108,7 @@ Met een lijst:
             text="De behandeling volgen"
             supporting-text="Bij welke stap je aanvraag ligt, en wie er aan werkt."
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -120,7 +120,7 @@ Met een lijst:
             text="Een aanvraag wijzigen"
             supporting-text="Gegevens aanvullen of een offerte vervangen, zolang de aanvraag loopt."
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -132,7 +132,7 @@ Met een lijst:
             text="Een aanvraag intrekken"
             supporting-text="Stoppen met een aanvraag die nog in behandeling is."
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -144,7 +144,7 @@ Met een lijst:
             text="Het besluit begrijpen"
             supporting-text="Wat er in het besluit staat en wat het voor je betekent."
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
@@ -156,7 +156,7 @@ Met een lijst:
             text="Bezwaar maken"
             supporting-text="Wat je doet als je het niet eens bent met een besluit."
           ></nldd-text-cell>
-          <nldd-spacer-cell size="8"></nldd-spacer-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
           <nldd-icon-cell
             size="20"
             color="secondary"
