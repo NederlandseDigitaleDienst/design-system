@@ -9,7 +9,7 @@
  * its edges, so it reads as a panel on the image rather than a frame cut out of
  * it; with `main-width="full"` it is a strip across the whole image, the same
  * gap from the sides. On mobile the image comes first and the panel below it,
- * indented by the section gap and overlapping the image by 32px. For an
+ * indented by the section gap and overlapping the image by 48px. For an
  * image beside text without that relation, use a section with an image beside
  * text instead. Without media the main fills the whole area; with
  * `main-background="base"` that area gets a border so it stays visible on the

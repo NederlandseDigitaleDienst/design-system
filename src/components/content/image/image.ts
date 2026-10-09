@@ -112,7 +112,7 @@ function hasAriaName(el: Element): boolean {
 export class NLDDImage extends LitElement {
 	static override styles = imageStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	src = '';
 
 	@property({ type: String })

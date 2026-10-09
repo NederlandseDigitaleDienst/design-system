@@ -290,6 +290,25 @@ describe('nldd-image without an image', () => {
 		expect(Math.round(media().getBoundingClientRect().height)).toBe(320);
 	});
 
+	it('fills a box that its parent gives a size, with the icon in the middle', async () => {
+		el = await fixture<NLDDImage>('<nldd-image style="width: 300px; height: 120px"></nldd-image>');
+		await waitForUpdate(el);
+		const box = media().getBoundingClientRect();
+		expect(Math.round(box.width)).toBe(300);
+		expect(Math.round(box.height)).toBe(120);
+		const iconBox = media().querySelector('.image__empty-icon')!.getBoundingClientRect();
+		expect(Math.round(iconBox.top + iconBox.height / 2 - box.top)).toBe(60);
+	});
+
+	it('puts no src attribute on an image without one', async () => {
+		el = await fixture<NLDDImage>('<nldd-image></nldd-image>');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('src')).toBe(false);
+		el.src = '/foo.jpg';
+		await waitForUpdate(el);
+		expect(el.getAttribute('src')).toBe('/foo.jpg');
+	});
+
 	it('keeps the caption and the shape', async () => {
 		el = await fixture<NLDDImage>('<nldd-image shape="circle" caption="Bijschrift"></nldd-image>');
 		await waitForUpdate(el);

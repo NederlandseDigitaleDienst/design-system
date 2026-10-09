@@ -185,7 +185,7 @@ describe('nldd-hero', () => {
 		try {
 			const { media, main } = await geometry('main-position="top-left"', 400);
 			expect(main.top).toBeGreaterThan(media.top);
-			expect(Math.round(media.bottom - main.top)).toBe(32);
+			expect(Math.round(media.bottom - main.top)).toBe(48);
 			expect(Math.round(main.left - media.left)).toBe(16);
 			expect(Math.round(media.right - main.right)).toBe(16);
 		} finally {

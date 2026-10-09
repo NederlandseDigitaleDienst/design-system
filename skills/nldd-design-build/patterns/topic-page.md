@@ -19,7 +19,8 @@ nldd-app-view                            de buitenste schil
   └─ nldd-page
        ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
        │    └─ nldd-top-navigation-bar   zoeken en taal, terug naar de onderwerpen
-       ├─ nldd-hero                      de h1, een korte uitleg en de hoofdtaak
+       ├─ nldd-hero                      layout="overhang", de h1, een korte uitleg en de hoofdtaak
+       │    └─ slot="media"              nldd-image, hier nog zonder beeld
        ├─ nldd-one-half-one-half-section tekst links, afbeelding rechts
        │    ├─ slot="left"               titel, tekst en een nldd-link verder
        │    └─ slot="right"              nldd-image met aspect-ratio
@@ -78,7 +79,11 @@ nldd-app-view                            de buitenste schil
       </nldd-top-navigation-bar>
     </nldd-skip-link>
 
-    <nldd-hero main-background="accent">
+    <nldd-hero
+      layout="overhang"
+      main-background="accent"
+    >
+      <nldd-image slot="media"></nldd-image>
       <nldd-title
         color="inherit"
         size="1"
@@ -381,7 +386,7 @@ nldd-app-view                            de buitenste schil
 
 **De basis is die van de contentpagina.** De app view, de secties, de koppen, de vlakken, de linkkaarten en de footer werken hier precies zo. Dat staat bij de [contentpagina](content-page.md).
 
-**Een onderwerp opent met een hero.** Op een onderwerp landen mensen vaak rechtstreeks, vanuit een zoekmachine of een andere site, en dan is het net als de [home](home-page.md) een pagina waar ze binnenkomen. De [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) is de kop, met de titel, de korte uitleg en de hoofdtaak erin. Geef de titel en de tekst `color="inherit"`, zodat ze het contrast van de vulling volgen.
+**Een onderwerp opent met een hero.** Op een onderwerp landen mensen vaak rechtstreeks, vanuit een zoekmachine of een andere site, en dan is het net als de [home](home-page.md) een pagina waar ze binnenkomen. De [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) is de kop, met de titel, de korte uitleg en de hoofdtaak erin. Net als op de home met `layout="overhang"`: het vlak valt over de afbeelding en loopt eronder door. Geef de titel en de tekst `color="inherit"`, zodat ze het contrast van de vulling volgen.
 
 **De hoofdtaak staat bovenaan.** Wie op een onderwerp landt, komt meestal voor één ding. Zet die taak als [`nldd-button`](../../nldd-design/reference.md#nldd-button) direct onder de uitleg in de hero, zodat niemand eerst langs de kaarten hoeft. Op de vulling van de hero is dat `appearance="inherit-filled"`: die neemt zijn kleuren van het vlak, waar een gewone primaire knop wegvalt tegen een accentkleur. Het is één knop; meer taken van hetzelfde gewicht horen bij de kaarten.
 

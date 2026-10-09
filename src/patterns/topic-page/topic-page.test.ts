@@ -35,6 +35,16 @@ describe('patroon: onderwerppagina', () => {
 		expectTextAndLinkList(written.querySelector('nldd-one-third-two-thirds-section')!);
 	});
 
+	it('opent met een hero in overhang, met een lege nldd-image als plek voor de foto', () => {
+		const hero = root.querySelector('nldd-hero')!;
+		expect(hero.getAttribute('layout')).toBe('overhang');
+		const image = hero.querySelector(':scope > nldd-image[slot="media"]')!;
+		expect(image.hasAttribute('src')).toBe(false);
+		const media = hero.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+		const main = hero.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+		expect(main.bottom).toBeGreaterThan(media.bottom);
+	});
+
 	it('heeft één h1 en slaat geen kopniveau over', () => {
 		expectSoundHeadings(root);
 	});

@@ -39,7 +39,7 @@ export const heroStyles = css`
 		--_hero-main-padding: var(--primitives-space-16);
 		--_hero-main-inset: 0;
 		--_hero-sm-main-inset: var(--semantics-page-sections-sm-gap);
-		--_hero-sm-main-overlap: var(--primitives-space-32);
+		--_hero-sm-main-overlap: var(--primitives-space-48);
 		--_hero-overhang-size: initial;
 		--_hero-default-overhang-size: 0;
 		--_hero-default-media-height: auto;

@@ -365,6 +365,8 @@ export const imageStyles = css`
 	.image__media--empty {
 		display: flex;
 		background-color: var(--_image-pending-background-color);
+		width: 100%;
+		height: 100%;
 		aspect-ratio: 16 / 9;
 		align-items: center;
 		justify-content: center;

@@ -19,7 +19,8 @@ nldd-app-view                            de buitenste schil
   └─ nldd-page
        ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
        │    └─ nldd-top-navigation-bar   zoeken en taal, geen terugknop
-       ├─ nldd-hero                      de opening, met main-background
+       ├─ nldd-hero                      de opening, layout="overhang" en main-background
+       │    └─ slot="media"              nldd-image, hier nog zonder beeld
        ├─ nldd-simple-section            background="tinted", wat je hier kunt
        │    ├─ slot="header"             de titel en een intro van een zin of twee
        │    └─ nldd-collection           layout="grid", item-width
@@ -76,7 +77,11 @@ nldd-app-view                            de buitenste schil
       </nldd-top-navigation-bar>
     </nldd-skip-link>
 
-    <nldd-hero main-background="accent">
+    <nldd-hero
+      layout="overhang"
+      main-background="accent"
+    >
+      <nldd-image slot="media"></nldd-image>
       <nldd-title
         color="inherit"
         size="1"
@@ -372,7 +377,7 @@ nldd-app-view                            de buitenste schil
 
 **De basis is die van de contentpagina.** De app view, één sectie per inhoudsblok, de koppen, vlakken met `background` en de footer werken op een home precies zo. Dat staat bij de [contentpagina](content-page.md). Hieronder staat alleen wat een home anders doet.
 
-**Een hero is voor de pagina's waar mensen binnenkomen.** De home, de [onderwerppagina](topic-page.md), en verder elke pagina waar bezoekers vanaf een andere website op landen. Daar is de [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop. Op de andere pagina's opent een sectie met een grote titel, en dat is genoeg.
+**Een hero is voor de pagina's waar mensen binnenkomen.** De home, de [onderwerppagina](topic-page.md), en verder elke pagina waar bezoekers vanaf een andere website op landen. Daar is de [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop. Op de andere pagina's opent een sectie met een grote titel, en dat is genoeg. Met `layout="overhang"` valt het tekstvlak over de onderrand van de afbeelding en loopt het eronder door: zo blijft de afbeelding sfeer en draagt het vlak de pagina. Dat is de huisstijl voor een hero met beeld. Zolang er nog geen foto is, staat in het `media`-slot een [`nldd-image`](../../nldd-design/reference.md#nldd-image) zonder `src`: die toont een neutraal vlak op de plek van de foto.
 
 **De home is zelf het menu.** Wat je hier kunt, staat als kaarten in de inhoud, niet als een rij woorden in de bovenbalk. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#navigatie-en-structuur).
 
