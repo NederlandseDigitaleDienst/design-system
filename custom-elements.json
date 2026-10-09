@@ -25557,6 +25557,16 @@
             },
             {
               "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -25762,6 +25772,15 @@
               "default": "''",
               "description": "Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.",
               "fieldName": "width"
+            },
+            {
+              "name": "vertical-alignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "fieldName": "verticalAlignment",
+              "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
             },
             {
               "name": "background",
@@ -26015,6 +26034,16 @@
             },
             {
               "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -26220,6 +26249,15 @@
               "default": "''",
               "description": "Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.",
               "fieldName": "width"
+            },
+            {
+              "name": "vertical-alignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "fieldName": "verticalAlignment",
+              "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
             },
             {
               "name": "background",
@@ -27624,6 +27662,16 @@
             },
             {
               "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -27829,6 +27877,15 @@
               "default": "''",
               "description": "Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.",
               "fieldName": "width"
+            },
+            {
+              "name": "vertical-alignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "fieldName": "verticalAlignment",
+              "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
             },
             {
               "name": "background",

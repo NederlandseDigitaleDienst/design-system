@@ -85,6 +85,7 @@ export function expectLegalBar(root: HTMLElement) {
  */
 export function expectImageAndText(section: Element, imageSide: 'left' | 'right') {
 	expect(section.tagName).toBe('NLDD-ONE-HALF-ONE-HALF-SECTION');
+	expect(section.getAttribute('vertical-alignment')).toBe('center');
 	const textSide = imageSide === 'left' ? 'right' : 'left';
 	const image = section.querySelector(`:scope > nldd-image[slot="${imageSide}"]`)!;
 	expect(image.getAttribute('aspect-ratio')).toBeTruthy();

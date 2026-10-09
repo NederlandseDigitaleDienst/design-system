@@ -15,6 +15,7 @@
  * @attr {string} [padding-top] - Top padding override.
  * @attr {string} [padding-bottom] - Bottom padding override.
  * @attr {string} [sm-padding-block] - Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}).
+ * @attr {'top'|'center'|'bottom'} [vertical-alignment] - Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other.
  *
  * @slot header - Content above the columns
  * @slot left - Left column (1/3)
@@ -36,6 +37,9 @@ export class NLDDOneThirdTwoThirdsSection extends PageSectionMixin(LitElement) {
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
+
+	@property({ reflect: true, attribute: 'vertical-alignment', converter: reflectNonDefault<'top' | 'center' | 'bottom'>('top') })
+	verticalAlignment: 'top' | 'center' | 'bottom' = 'top';
 
 	override updated(changedProperties: Map<string, unknown>): void {
 		super.updated(changedProperties);

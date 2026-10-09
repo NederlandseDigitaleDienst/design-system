@@ -102,7 +102,7 @@ nldd-app-view                            de buitenste schil
       ></nldd-button>
     </nldd-hero>
 
-    <nldd-one-half-one-half-section>
+    <nldd-one-half-one-half-section vertical-alignment="center">
       <nldd-title
         slot="left"
         size="2"

@@ -130,6 +130,18 @@ export const twoThirdsOneThirdSectionStyles = css`
 		}
 	}
 
+	:host([vertical-alignment="center"]) .two-thirds-one-third-section__columns {
+		@container (min-width: 769px) {
+			align-items: center;
+		}
+	}
+
+	:host([vertical-alignment="bottom"]) .two-thirds-one-third-section__columns {
+		@container (min-width: 769px) {
+			align-items: flex-end;
+		}
+	}
+
 	.two-thirds-one-third-section__left-column {
 		min-width: var(--primitives-area-280);
 		flex-grow: 2;

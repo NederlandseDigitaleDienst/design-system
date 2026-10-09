@@ -121,6 +121,14 @@ export const oneHalfOneHalfSectionStyles = css`
 		}
 	}
 
+	:host([vertical-alignment="center"]) .one-half-one-half-section__columns {
+		align-items: center;
+	}
+
+	:host([vertical-alignment="bottom"]) .one-half-one-half-section__columns {
+		align-items: flex-end;
+	}
+
 	.one-half-one-half-section__left-column {
 		min-width: var(--primitives-area-280);
 		flex-grow: 1;

@@ -187,7 +187,7 @@ nldd-app-view                            de buitenste schil
       </nldd-collection>
     </nldd-simple-section>
 
-    <nldd-one-half-one-half-section>
+    <nldd-one-half-one-half-section vertical-alignment="center">
       <nldd-image
         slot="left"
         aspect-ratio="3/2"
@@ -388,7 +388,7 @@ nldd-app-view                            de buitenste schil
 
 **Een kaart zet zelf geen padding.** De kaart laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand.
 
-**Beeld en tekst naast elkaar, in een sectie van twee helften.** Een [`nldd-one-half-one-half-section`](../../nldd-design/reference.md#nldd-one-half-one-half-section) zet de afbeelding in de ene kolom en de titel, de tekst en een link verder in de andere. Welke kant de afbeelding staat, kies je met de volgorde in de markup, en die is ook de volgorde op smal: daar stapelen de kolommen, dus een afbeelding links staat op een telefoon boven de tekst. Wissel je over de pagina heen tussen links en rechts, dan krijgt de pagina ritme; op de [onderwerppagina](topic-page.md) staat de tekst links. Geef de [`nldd-image`](../../nldd-design/reference.md#nldd-image) een `aspect-ratio`, dan reserveert hij zijn ruimte voor het beeld er is. Zonder `src` toont hij een neutraal vlak met een icoon, zoals in het voorbeeld; krijgt hij een foto, geef hem dan ook een `alt`.
+**Beeld en tekst naast elkaar, in een sectie van twee helften.** Een [`nldd-one-half-one-half-section`](../../nldd-design/reference.md#nldd-one-half-one-half-section) zet de afbeelding in de ene kolom en de titel, de tekst en een link verder in de andere. Welke kant de afbeelding staat, kies je met de volgorde in de markup, en die is ook de volgorde op smal: daar stapelen de kolommen, dus een afbeelding links staat op een telefoon boven de tekst. Wissel je over de pagina heen tussen links en rechts, dan krijgt de pagina ritme; op de [onderwerppagina](topic-page.md) staat de tekst links. Met `vertical-alignment="center"` staat de tekst naast een hogere afbeelding in het midden, in plaats van tegen de bovenrand; op smal, waar de kolommen stapelen, doet dat niets. Geef de [`nldd-image`](../../nldd-design/reference.md#nldd-image) een `aspect-ratio`, dan reserveert hij zijn ruimte voor het beeld er is. Zonder `src` toont hij een neutraal vlak met een icoon, zoals in het voorbeeld; krijgt hij een foto, geef hem dan ook een `alt`.
 
 **Een kaart naast de uitleg staat naast de hele uitleg.** In "Hoe het werkt" staat de titel in de linkerkolom van de [`nldd-two-thirds-one-third-section`](../../nldd-design/reference.md#nldd-two-thirds-one-third-section), met een `nldd-spacer` en de tekst eronder, en niet in het `header`-slot. Dan begint de kaart rechts op dezelfde hoogte als de titel, en hoort hij bij het hele blok in plaats van pas naast de eerste alinea te beginnen.
 

@@ -1849,6 +1849,7 @@ A section with two equal columns side by side. The columns wrap automatically wh
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |
 | `sm-padding-block` | `string` | Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}). |
+| `vertical-alignment` | `'top'\|'center'\|'bottom'` | Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other. |
 
 **Slots**
 
@@ -1876,6 +1877,7 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |
 | `sm-padding-block` | `string` | Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}). |
+| `vertical-alignment` | `'top'\|'center'\|'bottom'` | Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other. |
 
 **Slots**
 
@@ -2184,6 +2186,7 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 | `padding-top` | `string` | Top padding override. |
 | `padding-bottom` | `string` | Bottom padding override. |
 | `sm-padding-block` | `string` | Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom}). |
+| `vertical-alignment` | `'top'\|'center'\|'bottom'` | Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other. |
 
 **Slots**
 
