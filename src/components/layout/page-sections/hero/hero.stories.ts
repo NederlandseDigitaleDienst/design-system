@@ -189,7 +189,7 @@ export const AllePosities = {
  * afbeelding houdt haar hoogte, hoeveel tekst er ook staat, en de overlap is
  * altijd even groot, ook bij een andere hoogte of verhouding. Een vlak dat
  * korter is dan `overhang-size` valt in de afbeelding; dat is aan de consument.
- * Hieronder weinig, gemiddeld en veel tekst onder elkaar; verschuif
+ * Hieronder veel, gemiddeld en weinig tekst onder elkaar; verschuif
  * `overhang-size` om te zien waar het omslaat.
  */
 export const Overhang = {
@@ -197,9 +197,9 @@ export const Overhang = {
 	render: (args: Record<string, any>) => html`
 		<div style="display: flex; flex-direction: column; gap: 48px;">
 			${[
-				['Weinig tekst', null],
-				['Gemiddeld', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
 				['Veel tekst', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p><p>Elke regel krijgt een vorm die mensen en systemen allebei kunnen lezen, zodat de uitvoering volgt wat er bedoeld is. Wie wil weten waarom een besluit zo uitvalt, kan het nalezen.</p></nldd-rich-text><nldd-spacer size="16"></nldd-spacer><nldd-button appearance="inherit-filled" text="Bekijk de regels"></nldd-button>`],
+				['Gemiddeld', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
+				['Weinig tekst', null],
 			].map(([title, body]) => html`
 				<nldd-hero
 					layout="overhang"
