@@ -24,7 +24,7 @@ export const imageStyles = css`
 		--_image-caption-row-gap: var(--primitives-space-8);
 		--_image-pending-background-color: var(--semantics-categories-neutral-tinted-background-color);
 		--_image-empty-icon-size: var(--primitives-space-32);
-		--_image-empty-icon-color: var(--semantics-categories-neutral-tinted-content-secondary-color);
+		--_image-empty-icon-color: light-dark(var(--primitives-color-neutral-450), var(--primitives-color-neutral-550));
 		--_image-object-fit: cover;
 		--_image-object-position: center;
 		--_image-max-width: 100%;
