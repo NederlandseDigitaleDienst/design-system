@@ -13,7 +13,7 @@ const MEDIA = 'sample-images/butterfly-1200.jpg';
  * posities. De afbeelding is sfeer en nooit de hoofdzaak, dus het paneel staat
  * er altijd op: op een sectie-gap van de randen, of met `main-width="full"` als
  * strook over de hele afbeelding. Het paneel is zo breed als de inhoud nodig
- * heeft, tussen 480 en 720px. Met `layout="overhang"` begint het op een vaste
+ * heeft, tussen 480 en 640px. Met `layout="overlap"` begint het op een vaste
  * plek in de afbeelding en loopt het eronder door. Op mobiel staat de
  * afbeelding bovenaan en het paneel eronder, ingesprongen en een stukje over
  * de afbeelding. Zonder media vult de main het volledige vlak.
@@ -38,7 +38,7 @@ export default {
 		mainBackground: 'accent',
 		mainWidth: 'auto',
 		mainPosition: 'bottom-left',
-		overhangSize: '',
+		overlapSize: '',
 		mediaAspectRatio: '',
 		mediaHeight: '',
 		mediaSrc: MEDIA,
@@ -49,8 +49,8 @@ export default {
 	argTypes: {
 		layout: {
 			control: 'select',
-			options: ['contained', 'overhang'],
-			description: 'Hoe het vlak zich tot de afbeelding verhoudt: contained houdt het op de afbeelding, overhang laat het overhang-size over de onderrand vallen en eronder doorlopen',
+			options: ['contained', 'overlap'],
+			description: 'Hoe het vlak zich tot de afbeelding verhoudt: contained houdt het op de afbeelding, overlap laat het overlap-size over de onderrand vallen en eronder doorlopen',
 			table: { defaultValue: { summary: 'contained' } },
 		},
 		mainBackground: {
@@ -63,7 +63,7 @@ export default {
 		mainWidth: {
 			name: 'main-width',
 			control: 'text',
-			description: 'Breedte van het paneel: auto volgt de inhoud tussen 480 en 720px, full maakt een strook over de hele afbeelding (genegeerd bij left/right), een CSS-breedte (bv. 560px) zet hem precies',
+			description: 'Breedte van het paneel: auto volgt de inhoud tussen 480 en 640px, full maakt een strook over de hele afbeelding (genegeerd bij left/right), een CSS-breedte (bv. 560px) zet hem precies',
 			table: { defaultValue: { summary: 'auto' } },
 		},
 		mainPosition: {
@@ -73,10 +73,10 @@ export default {
 			description: 'Positie van het tekstpaneel',
 			table: { defaultValue: { summary: 'bottom-left' } },
 		},
-		overhangSize: {
-			name: 'overhang-size',
+		overlapSize: {
+			name: 'overlap-size',
 			control: 'text',
-			description: 'Alleen bij layout="overhang": hoe ver het vlak over de onderrand van de afbeelding valt, elke CSS-lengte',
+			description: 'Alleen bij layout="overlap": hoe ver het vlak over de onderrand van de afbeelding valt, elke CSS-lengte',
 			table: { defaultValue: { summary: '160px' } },
 		},
 		mediaAspectRatio: {
@@ -121,7 +121,7 @@ const Template = (args: Record<string, any>) => html`
 		main-background=${args.mainBackground}
 		main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
 		main-position=${args.mainPosition}
-		overhang-size=${args.overhangSize || nothing}
+		overlap-size=${args.overlapSize || nothing}
 		media-aspect-ratio=${args.mediaAspectRatio || nothing}
 		media-height=${args.mediaHeight || nothing}
 		media-src=${args.mediaSrc || nothing}
@@ -184,16 +184,16 @@ export const AllePosities = {
 };
 
 /**
- * Met `layout="overhang"` valt het vlak `overhang-size` over de onderrand van
+ * Met `layout="overlap"` valt het vlak `overlap-size` over de onderrand van
  * de afbeelding en loopt het eronder door, zo ver als de tekst nodig heeft. De
  * afbeelding houdt haar hoogte, hoeveel tekst er ook staat, en de overlap is
  * altijd even groot, ook bij een andere hoogte of verhouding. Een vlak dat
- * korter is dan `overhang-size` valt in de afbeelding; dat is aan de consument.
+ * korter is dan `overlap-size` valt in de afbeelding; dat is aan de consument.
  * Hieronder veel, gemiddeld en weinig tekst onder elkaar; verschuif
- * `overhang-size` om te zien waar het omslaat.
+ * `overlap-size` om te zien waar het omslaat.
  */
-export const Overhang = {
-	args: { overhangSize: '', mainPosition: 'bottom-left', mainWidth: 'auto' },
+export const Overlap = {
+	args: { overlapSize: '', mainPosition: 'bottom-left', mainWidth: 'auto' },
 	render: (args: Record<string, any>) => html`
 		<div style="display: flex; flex-direction: column; gap: 48px;">
 			${[
@@ -202,11 +202,11 @@ export const Overhang = {
 				['Weinig tekst', null],
 			].map(([title, body]) => html`
 				<nldd-hero
-					layout="overhang"
+					layout="overlap"
 					main-background="donkerblauw"
 					main-position=${args.mainPosition}
 					main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
-					overhang-size=${args.overhangSize || nothing}
+					overlap-size=${args.overlapSize || nothing}
 				>
 					<img
 						slot="media"
@@ -225,8 +225,8 @@ export const Overhang = {
 		</div>
 	`,
 	argTypes: {
-		overhangSize: {
-			name: 'overhang-size',
+		overlapSize: {
+			name: 'overlap-size',
 			control: 'text',
 			description: 'Hoe ver het vlak over de onderrand van de afbeelding valt, elke CSS-lengte',
 			table: { defaultValue: { summary: '160px' } },

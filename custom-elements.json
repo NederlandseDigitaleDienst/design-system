@@ -24892,7 +24892,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page header with a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `layout=\"overhang\"`, where the panel falls over the bottom of the image and runs on below it, is the intended house style and will become the default in a later release. Use it where the panel has enough content to run on below the image; `contained` stays for a panel that should keep to the image. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "A page header with a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `layout=\"overlap\"`, where the panel falls over the bottom of the image and runs on below it, is the intended house style and will become the default in a later release. Use it where the panel has enough content to run on below the image; `contained` stays for a panel that should keep to the image. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
           "name": "NLDDHero",
           "members": [
             {
@@ -24959,12 +24959,12 @@
             },
             {
               "kind": "field",
-              "name": "overhangSize",
+              "name": "overlapSize",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "attribute": "overhang-size",
+              "attribute": "overlap-size",
               "reflects": true
             },
             {
@@ -25229,7 +25229,7 @@
               },
               "default": "'contained'",
               "fieldName": "layout",
-              "description": "How the panel relates to the image (default: 'contained'). 'contained' keeps it on the image; 'overhang' lets it fall `overhang-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overhang' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overhang-size` ends inside the image and says so in development"
+              "description": "How the panel relates to the image (default: 'contained'). 'contained' keeps it on the image; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development"
             },
             {
               "name": "main-background",
@@ -25247,7 +25247,7 @@
               },
               "default": "'auto'",
               "fieldName": "mainWidth",
-              "description": "Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 720px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto'"
+              "description": "Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 640px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto'"
             },
             {
               "name": "main-position",
@@ -25268,13 +25268,13 @@
               "fieldName": "mediaAspectRatio"
             },
             {
-              "name": "overhang-size",
+              "name": "overlap-size",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "overhangSize",
-              "description": "With layout=\"overhang\": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image"
+              "fieldName": "overlapSize",
+              "description": "With layout=\"overlap\": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image"
             },
             {
               "name": "media-height",

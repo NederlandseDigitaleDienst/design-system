@@ -18,11 +18,11 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **Four page patterns for a website.** Home, topic page, navigation page and content page now sit together under "Patronen/Pagina's", each with a running example and a test. The home brings visitors in and is itself the menu, a topic page gathers one theme from across the site with its main task on top, a navigation page opens one part of the site and shows only what is below it, and a content page is where a visitor arrives to read.
-- **An overhang layout for `nldd-hero`.** With `layout="overhang"` the text panel falls over the bottom of the image and runs on below it, as far as its content needs. The image keeps a fixed height and sets the mood, the panel carries the page, and a long text no longer has to fit inside the photo.
+- **An overlap layout for `nldd-hero`.** With `layout="overlap"` the text panel falls over the bottom of the image and runs on below it, as far as its content needs. The image keeps a fixed height and sets the mood, the panel carries the page, and a long text no longer has to fit inside the photo.
 
 ### Added
 
-- **`layout="overhang"` on `nldd-hero`**: the text panel falls over the bottom of the image by `overhang-size` (any CSS length, 160px by default) and runs on below it as far as its content needs. The image keeps a fixed height (320px on md, 400px on lg, or your own `media-height` or `media-aspect-ratio`), so it stays the same whatever the content, and the overlap stays the same whatever the image. A panel shorter than `overhang-size` ends inside the image; that is up to you, and it says so in development.
+- **`layout="overlap"` on `nldd-hero`**: the text panel falls over the bottom of the image by `overlap-size` (any CSS length, 160px by default) and runs on below it as far as its content needs. The image keeps a fixed height (320px on md, 400px on lg, or your own `media-height` or `media-aspect-ratio`), so it stays the same whatever the content, and the overlap stays the same whatever the image. A panel shorter than `overlap-size` ends inside the image; that is up to you, and it says so in development.
 - **`media-height` on `nldd-hero`**, a fixed height for the image in any CSS length, next to `media-aspect-ratio`. It wins over the ratio.
 - **`vertical-alignment` on `nldd-one-half-one-half-section`, `nldd-two-thirds-one-third-section` and `nldd-one-third-two-thirds-section`**: `top` (the default), `center` or `bottom` places the shorter column next to the longer one, such as text beside a taller image. It only applies while the columns stand side by side; stacked, they follow each other.
 - **`grow` on every page section**, to choose which section takes the height a page has left. Until now that was always the last section, so the footer sat at the bottom of a short page; with `grow` you can let a hero or a middle section fill instead. Without `grow` nothing changes. `nldd-page` marks the growing section with `data-growing`, a state it derives and never writes back into `grow`.
@@ -31,7 +31,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Breaking
 
-- **`main-width` on `nldd-hero` follows the content.** `1/2`, `2/3` and `3/4` are gone: half the width was too narrow for text on md, and three quarters too wide to read on a large screen. The panel is now as wide as its content needs, between 480px and 720px and never wider than the image allows (`main-width="auto"`, the default). `full` stays, and any CSS width (`560px`, `60%`) sets it exactly, still never wider than the image allows. A fraction is not a CSS width, so it falls back to `auto` and says so in development.
+- **`main-width` on `nldd-hero` follows the content.** `1/2`, `2/3` and `3/4` are gone: half the width was too narrow for text on md, and three quarters too wide to read on a large screen. The panel is now as wide as its content needs, between 480px and 640px and never wider than the image allows (`main-width="auto"`, the default). `full` stays, and any CSS width (`560px`, `60%`) sets it exactly, still never wider than the image allows. A fraction is not a CSS width, so it falls back to `auto` and says so in development.
 - **`is-last` is gone from page sections.** `nldd-page` marks the section that takes the leftover height with `data-growing` instead of the `is-last` class, since a framework's class binding rewrites `class` and could wipe it. If you styled `.is-last` yourself, use `[data-growing]`.
 
 ### Changed

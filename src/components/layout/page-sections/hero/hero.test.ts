@@ -105,7 +105,7 @@ describe('nldd-hero', () => {
 		}
 	});
 
-	it('sizes the panel to its content, between 480px and 720px', async () => {
+	it('sizes the panel to its content, between 480px and 640px', async () => {
 		const unloadTokens = loadTokens();
 		try {
 			let { main } = await geometry('', 1200);
@@ -114,7 +114,7 @@ describe('nldd-hero', () => {
 			await waitForUpdate(el);
 			await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
 			main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
-			expect(Math.round(main.width)).toBe(720);
+			expect(Math.round(main.width)).toBe(640);
 		} finally {
 			unloadTokens();
 		}
@@ -225,17 +225,17 @@ describe('nldd-hero', () => {
 		}
 	});
 
-	describe('layout="overhang"', () => {
-		const overhangWarnings = (warn: MockInstance<typeof console.warn>) => warn.mock.calls
+	describe('layout="overlap"', () => {
+		const overlapWarnings = (warn: MockInstance<typeof console.warn>) => warn.mock.calls
 			.map(([message]) => String(message))
-			.filter((message) => message.includes('layout="overhang"'));
+			.filter((message) => message.includes('layout="overlap"'));
 
-		it('gives the image a fixed height and lets the panel fall overhang-size over it, running on below', async () => {
+		it('gives the image a fixed height and lets the panel fall overlap-size over it, running on below', async () => {
 			const unloadTokens = loadTokens();
 			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 			try {
 				const tall = '<p style="height: 300px">Tekst</p>';
-				el = await fixture(`<nldd-hero layout="overhang" style="width: 1200px">${IMG}${tall}</nldd-hero>`);
+				el = await fixture(`<nldd-hero layout="overlap" style="width: 1200px">${IMG}${tall}</nldd-hero>`);
 				await waitForUpdate(el);
 				await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
 				const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
@@ -244,19 +244,19 @@ describe('nldd-hero', () => {
 				expect(Math.round(media.width)).toBe(Math.round(el.shadowRoot!.querySelector('.hero__body')!.getBoundingClientRect().width));
 				expect(Math.round(media.bottom - main.top)).toBe(160);
 				expect(main.bottom).toBeGreaterThan(media.bottom);
-				expect(overhangWarnings(warn)).toHaveLength(0);
+				expect(overlapWarnings(warn)).toHaveLength(0);
 			} finally {
 				warn.mockRestore();
 				unloadTokens();
 			}
 		});
 
-		it('takes overhang-size as any CSS length, and keeps it whatever the height of the image', async () => {
+		it('takes overlap-size as any CSS length, and keeps it whatever the height of the image', async () => {
 			const unloadTokens = loadTokens();
 			try {
-				let { media, main } = await geometry('layout="overhang" overhang-size="100px"', 1200);
+				let { media, main } = await geometry('layout="overlap" overlap-size="100px"', 1200);
 				expect(Math.round(media.bottom - main.top)).toBe(100);
-				({ media, main } = await geometry('layout="overhang" media-height="240px"', 1200));
+				({ media, main } = await geometry('layout="overlap" media-height="240px"', 1200));
 				expect(Math.round(media.height)).toBe(240);
 				expect(Math.round(media.bottom - main.top)).toBe(160);
 			} finally {
@@ -267,7 +267,7 @@ describe('nldd-hero', () => {
 		it('keeps the aspect ratio when media-aspect-ratio is set', async () => {
 			const unloadTokens = loadTokens();
 			try {
-				const { media } = await geometry('layout="overhang" media-aspect-ratio="4/1"', 1200);
+				const { media } = await geometry('layout="overlap" media-aspect-ratio="4/1"', 1200);
 				expect(Math.round(media.width / media.height)).toBe(4);
 			} finally {
 				unloadTokens();
@@ -278,8 +278,8 @@ describe('nldd-hero', () => {
 			const unloadTokens = loadTokens();
 			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 			try {
-				await geometry('layout="overhang"', 1200);
-				await expect.poll(() => overhangWarnings(warn).length).toBe(1);
+				await geometry('layout="overlap"', 1200);
+				await expect.poll(() => overlapWarnings(warn).length).toBe(1);
 			} finally {
 				warn.mockRestore();
 				unloadTokens();

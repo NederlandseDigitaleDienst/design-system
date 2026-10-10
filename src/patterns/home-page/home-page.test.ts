@@ -35,9 +35,9 @@ describe('patroon: home', () => {
 		expectTextAndLinkList(written.querySelector('nldd-one-third-two-thirds-section')!);
 	});
 
-	it('opent met een hero in overhang, met een lege nldd-image als plek voor de foto', () => {
+	it('opent met een hero in overlap, met een lege nldd-image als plek voor de foto', () => {
 		const hero = root.querySelector('nldd-hero')!;
-		expect(hero.getAttribute('layout')).toBe('overhang');
+		expect(hero.getAttribute('layout')).toBe('overlap');
 		const image = hero.querySelector(':scope > nldd-image[slot="media"]')!;
 		expect(image.hasAttribute('src')).toBe(false);
 		const media = hero.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();

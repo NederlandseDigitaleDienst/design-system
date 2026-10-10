@@ -21,7 +21,7 @@
  * bottom keeps the full distance to the section below. Set `padding-top` to
  * place a hero elsewhere.
  *
- * `layout="overhang"`, where the panel falls over the bottom of the image and
+ * `layout="overlap"`, where the panel falls over the bottom of the image and
  * runs on below it, is the intended house style and will become the default in
  * a later release. Use it where the panel has enough content to run on below
  * the image; `contained` stays for a panel that should keep to the image.
@@ -41,14 +41,14 @@
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)
  * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
- * @attr {'contained'|'overhang'} layout - How the panel relates to the image (default: 'contained'). 'contained' keeps it on the image; 'overhang' lets it fall `overhang-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overhang' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overhang-size` ends inside the image and says so in development
+ * @attr {'contained'|'overlap'} layout - How the panel relates to the image (default: 'contained'). 'contained' keeps it on the image; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development
  * @attr {string} main-background - Surface color of the panel: 'base' (the base surface)
  *   or a category color — 'accent' (default) or a Rijkshuisstijl color such as
  *   'lintblauw'|'donkerblauw'|'oranje'
- * @attr {string} main-width - Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 720px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto'
+ * @attr {string} main-width - Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 640px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto'
  * @attr {'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right'|'left'|'right'} main-position -
  *   Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height
- * @attr {string} overhang-size - With layout="overhang": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image
+ * @attr {string} overlap-size - With layout="overlap": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image
  * @attr {string} media-aspect-ratio - Aspect ratio of the media area (CSS form, '16/9' or '16:9');
  *   default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area
  * @attr {string} media-height - Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio
@@ -72,7 +72,7 @@ import { heroTemplate } from './hero.template.js';
 
 export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
 export type HeroMainWidth = 'auto' | 'full' | (string & {});
-export type HeroLayout = 'contained' | 'overhang';
+export type HeroLayout = 'contained' | 'overlap';
 export type HeroMainBackground =
 	| 'base' | 'accent'
 	| 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw'
@@ -107,8 +107,8 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	@property({ reflect: true, attribute: 'media-aspect-ratio', converter: reflectNonDefault<string>('') })
 	mediaAspectRatio = '';
 
-	@property({ reflect: true, attribute: 'overhang-size', converter: reflectNonDefault<string>('') })
-	overhangSize = '';
+	@property({ reflect: true, attribute: 'overlap-size', converter: reflectNonDefault<string>('') })
+	overlapSize = '';
 
 	@property({ reflect: true, attribute: 'media-height', converter: reflectNonDefault<string>('') })
 	mediaHeight = '';
@@ -144,13 +144,13 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		if (import.meta.env?.DEV && this.hasUpdated) this._watchOverhang();
+		if (import.meta.env?.DEV && this.hasUpdated) this._watchOverlap();
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this._overhangObserver?.disconnect();
-		this._overhangObserver = null;
+		this._overlapObserver?.disconnect();
+		this._overlapObserver = null;
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -165,7 +165,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 				this.style.removeProperty('--_hero-max-width');
 			}
 		}
-		if (import.meta.env?.DEV && changed.has('layout')) this._watchOverhang();
+		if (import.meta.env?.DEV && changed.has('layout')) this._watchOverlap();
 		if (changed.has('mainWidth')) {
 			const width = (this.mainWidth ?? '').trim();
 			const length = width !== '' && width !== 'auto' && width !== 'full';
@@ -174,15 +174,15 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			else this.style.removeProperty('--_hero-main-width');
 			this.toggleAttribute('data-main-width-length', valid);
 			if (import.meta.env?.DEV && length && !valid) {
-				console.warn(`<nldd-hero>: main-width="${width}" is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 720px.`, this);
+				console.warn(`<nldd-hero>: main-width="${width}" is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 640px.`, this);
 			}
 		}
-		if (changed.has('overhangSize')) {
-			const size = (this.overhangSize ?? '').trim();
+		if (changed.has('overlapSize')) {
+			const size = (this.overlapSize ?? '').trim();
 			if (size && CSS.supports('margin-top', size)) {
-				this.style.setProperty('--_hero-overhang-size', size);
+				this.style.setProperty('--_hero-overlap-size', size);
 			} else {
-				this.style.removeProperty('--_hero-overhang-size');
+				this.style.removeProperty('--_hero-overlap-size');
 			}
 		}
 		if (changed.has('mediaHeight')) {
@@ -218,41 +218,41 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	/** DEV-only latch for the `height` warning. */
 	private _warnedHeight = false;
 
-	/** DEV-only: watches an overhang hero for a panel that does not reach below its image. */
-	private _overhangObserver: ResizeObserver | null = null;
-	private _warnedOverhang = false;
+	/** DEV-only: watches an overlap hero for a panel that does not reach below its image. */
+	private _overlapObserver: ResizeObserver | null = null;
+	private _warnedOverlap = false;
 
-	private _watchOverhang(): void {
-		const watch = this.layout === 'overhang' && typeof ResizeObserver !== 'undefined';
+	private _watchOverlap(): void {
+		const watch = this.layout === 'overlap' && typeof ResizeObserver !== 'undefined';
 		if (!watch) {
-			this._overhangObserver?.disconnect();
-			this._overhangObserver = null;
+			this._overlapObserver?.disconnect();
+			this._overlapObserver = null;
 			return;
 		}
-		if (this._overhangObserver) return;
+		if (this._overlapObserver) return;
 		const media = this.shadowRoot?.querySelector('.hero__media');
 		const main = this.shadowRoot?.querySelector('.hero__main');
 		if (!media || !main) return;
-		this._overhangObserver = new ResizeObserver(() => this._checkOverhang(media, main));
-		this._overhangObserver.observe(media);
-		this._overhangObserver.observe(main);
+		this._overlapObserver = new ResizeObserver(() => this._checkOverlap(media, main));
+		this._overlapObserver.observe(media);
+		this._overlapObserver.observe(main);
 	}
 
 	/**
-	 * In an overhang hero the panel is meant to run on below the image. When it
-	 * ends inside it, the content is shorter than `overhang-size`; the consumer
+	 * In an overlap hero the panel is meant to run on below the image. When it
+	 * ends inside it, the content is shorter than `overlap-size`; the consumer
 	 * decides how far it runs on, so this only says so, in development.
 	 */
-	private _checkOverhang(media: Element, main: Element): void {
+	private _checkOverlap(media: Element, main: Element): void {
 		if (!this._hasMedia || getComputedStyle(media).position === 'static') return;
 		const falls = main.getBoundingClientRect().bottom <= media.getBoundingClientRect().bottom;
 		if (!falls) {
-			this._warnedOverhang = false;
+			this._warnedOverlap = false;
 			return;
 		}
-		if (this._warnedOverhang) return;
-		this._warnedOverhang = true;
-		console.warn('<nldd-hero>: With layout="overhang" the panel is shorter than `overhang-size` and ends inside the image. Give it more content or a smaller `overhang-size`.', this);
+		if (this._warnedOverlap) return;
+		this._warnedOverlap = true;
+		console.warn('<nldd-hero>: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`.', this);
 	}
 
 	/** @internal Tracks the media slot so the no-media mode can collapse it. */

@@ -32,7 +32,7 @@ export const heroStyles = css`
 		--_hero-media-aspect-ratio: 21 / 9;
 		--_hero-media-height: auto;
 		--_hero-main-min-width: var(--primitives-area-480);
-		--_hero-main-max-width: var(--primitives-area-720);
+		--_hero-main-max-width: var(--primitives-area-640);
 		--_hero-main-width: auto;
 		--_hero-main-background-color: var(--semantics-categories-accent-reference-background-color);
 		--_hero-main-content-color: var(--semantics-categories-accent-reference-content-color);
@@ -40,8 +40,8 @@ export const heroStyles = css`
 		--_hero-main-inset: 0;
 		--_hero-sm-main-inset: var(--semantics-page-sections-sm-gap);
 		--_hero-sm-main-overlap: var(--primitives-space-48);
-		--_hero-overhang-size: initial;
-		--_hero-default-overhang-size: 0;
+		--_hero-overlap-size: initial;
+		--_hero-default-overlap-size: 0;
 		--_hero-default-media-height: auto;
 
 		${inheritedTextReset}
@@ -183,7 +183,7 @@ export const heroStyles = css`
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_hero-main-padding: var(--primitives-space-24);
 			--_hero-main-inset: var(--semantics-page-sections-md-gap);
-			--_hero-default-overhang-size: var(--primitives-area-160);
+			--_hero-default-overlap-size: var(--primitives-area-160);
 			--_hero-default-media-height: var(--primitives-area-320);
 			padding-inline: var(--semantics-page-sections-md-margin-inline);
 			padding-top: var(--_hero-md-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-md-margin-block) / 2)));
@@ -193,7 +193,7 @@ export const heroStyles = css`
 		@container (min-width: ${lgMin}) {
 			--_hero-main-padding: var(--primitives-space-32);
 			--_hero-main-inset: var(--semantics-page-sections-lg-gap);
-			--_hero-default-overhang-size: var(--primitives-area-160);
+			--_hero-default-overlap-size: var(--primitives-area-160);
 			--_hero-default-media-height: var(--primitives-area-400);
 			padding-inline: var(--semantics-page-sections-lg-margin-inline);
 			padding-top: var(--_hero-lg-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-lg-margin-block) / 2)));
@@ -372,15 +372,15 @@ export const heroStyles = css`
 	}
 
 
-	/* # Overhang (md+) — the media keeps a fixed height; the panel sits in the
-	   row below it, pulled up over it by the overhang size. */
+	/* # Overlap (md+) — the media keeps a fixed height; the panel sits in the
+	   row below it, pulled up over it by the overlap size. */
 
 	@container (min-width: ${mdMin}) {
-		:host([data-has-media][layout="overhang"]) .hero__body::before {
+		:host([data-has-media][layout="overlap"]) .hero__body::before {
 			content: none;
 		}
 
-		:host([data-has-media][layout="overhang"]) .hero__media {
+		:host([data-has-media][layout="overlap"]) .hero__media {
 			position: relative;
 			width: 100%;
 			height: var(--_hero-media-height);
@@ -389,12 +389,12 @@ export const heroStyles = css`
 			align-self: start;
 		}
 
-		:host([data-has-media][layout="overhang"]:not([media-height], [media-aspect-ratio])) .hero__media {
+		:host([data-has-media][layout="overlap"]:not([media-height], [media-aspect-ratio])) .hero__media {
 			height: var(--_hero-default-media-height);
 		}
 
-		:host([data-has-media][layout="overhang"]) .hero__main {
-			margin-top: calc(-1 * var(--_hero-overhang-size, var(--_hero-default-overhang-size)));
+		:host([data-has-media][layout="overlap"]) .hero__main {
+			margin-top: calc(-1 * var(--_hero-overlap-size, var(--_hero-default-overlap-size)));
 			margin-bottom: 0;
 			grid-area: 2 / 1;
 			align-self: start;
