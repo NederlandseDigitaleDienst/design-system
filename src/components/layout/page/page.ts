@@ -61,7 +61,7 @@
  */
 import { LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { findScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
+import { findScrollModeProvider, whenScrollModeProviderDefined } from '../../../utilities/scroll-mode-controller.js';
 import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
@@ -152,6 +152,9 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	private _insetObserver: ResizeObserver | null = null;
 	private _headerFullHeight = 0;
 	private _mainSlot: HTMLSlotElement | null = null;
+	/** Watches the main children for a `grow` or `hidden` set after they were
+	 *  slotted, since that changes which section grows. */
+	private _mainAttrObserver: MutationObserver | null = null;
 	private _resizeRaf = 0;
 
 	private get _isRoot(): boolean {
@@ -218,8 +221,19 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 				this._readScrollMode();
 				this._configureScroll();
 			}
+			whenScrollModeProviderDefined(this, this._adoptScrollProvider);
 		}
 	}
+
+	/** Switches from stand-alone to push once an app-view (or sheet, or modal
+	 *  dialog) that was not yet defined when this page connected, is. */
+	private _adoptScrollProvider = (provider: ScrollModeProvider): void => {
+		if (this._scrollProvider) return;
+		window.removeEventListener('resize', this._onResize);
+		this._scrollProvider = provider;
+		provider.registerScrollConsumer(this);
+		if (this.hasUpdated) this._configureScroll();
+	};
 
 	override disconnectedCallback() {
 		super.disconnectedCallback();
@@ -373,17 +387,21 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 			: (((this.stickyHeader ? this._scrollEl : this) as HTMLElement | null)?.scrollTop ?? 0) > 0;
 	};
 
-	// Mark the last visible main-slot child with `is-last`, so section-style
-	// components can grow to fill remaining vertical space without coupling
-	// to specific tag types or relying on light-DOM `:last-child` (which
-	// breaks when slot="footer" siblings are present). Same shape as
-	// nldd-list's _updateItems().
+	// Mark the section that takes the remaining height with `data-growing`: the
+	// visible main-slot children with `grow`, or the last one when none has it.
+	// A data attribute rather than a class, since a framework's class binding
+	// rewrites `class` and would wipe it, and not `grow` itself, which is the
+	// author's to set. Same shape as nldd-list's _updateItems().
 	private _setupMainSlotListener() {
 		this._teardownMainSlotListener();
 		const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])') ?? null;
 		this._mainSlot = slot;
 		if (!slot) return;
 		slot.addEventListener('slotchange', this._updateMainItems);
+		this._mainAttrObserver = new MutationObserver((records) => {
+			if (records.some(record => record.target.parentElement === this)) this._updateMainItems();
+		});
+		this._mainAttrObserver.observe(this, { attributes: true, attributeFilter: ['grow', 'hidden'], subtree: true });
 		this._updateMainItems();
 	}
 
@@ -392,6 +410,8 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 			this._mainSlot.removeEventListener('slotchange', this._updateMainItems);
 			this._mainSlot = null;
 		}
+		this._mainAttrObserver?.disconnect();
+		this._mainAttrObserver = null;
 	}
 
 	private _updateMainItems = () => {
@@ -399,8 +419,9 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 		if (!slot) return;
 		const items = slot.assignedElements() as HTMLElement[];
 		const visible = items.filter(el => !el.hasAttribute('hidden'));
-		const last = visible[visible.length - 1];
-		items.forEach(el => el.classList.toggle('is-last', el === last));
+		const chosen = visible.filter(el => el.hasAttribute('grow'));
+		const growing = chosen.length > 0 ? chosen : visible.slice(-1);
+		items.forEach(el => el.toggleAttribute('data-growing', growing.includes(el)));
 	};
 
 	override render() {

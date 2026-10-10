@@ -57,13 +57,14 @@ nldd-page
     <nldd-container
       slot="sidebar"
       padding="16"
+      padding-bottom="8"
     >
       <nldd-title
         size="5"
         text="Status"
         heading-level="2"
       ></nldd-title>
-      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-list
         appearance="simple"
         dividers="never"
@@ -110,7 +111,7 @@ nldd-page
         text="Team"
         heading-level="2"
       ></nldd-title>
-      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-list
         appearance="simple"
         dividers="never"
@@ -253,7 +254,7 @@ nldd-page
           width="fit-content"
           text="In behandeling"
         ></nldd-text-cell>
-        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"
@@ -296,7 +297,7 @@ nldd-page
           width="fit-content"
           text="Afgerond"
         ></nldd-text-cell>
-        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"

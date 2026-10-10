@@ -133,6 +133,57 @@ describe('nldd-rich-text width zones', () => {
 	});
 });
 
+describe('nldd-rich-text headings', () => {
+	let styles: HTMLStyleElement[] = [];
+	let wrap: HTMLElement;
+
+	beforeAll(() => {
+		styles = [variablesCss, richTextCss].map((css) => {
+			const style = document.createElement('style');
+			style.textContent = css;
+			document.head.appendChild(style);
+			return style;
+		});
+	});
+
+	afterAll(() => {
+		styles.forEach((s) => s.remove());
+	});
+
+	afterEach(() => {
+		if (wrap) wrap.remove();
+	});
+
+	const sizes = (width: number) => {
+		wrap = document.createElement('div');
+		wrap.style.width = `${width}px`;
+		wrap.innerHTML = '<nldd-rich-text><h2>Kop</h2><h3>Kop</h3><p>Tekst</p></nldd-rich-text>';
+		document.body.append(wrap);
+		const size = (selector: string) => getComputedStyle(wrap.querySelector(selector)!).fontSize;
+		const result = { h2: size('h2'), h3: size('h3'), p: size('p') };
+		wrap.remove();
+		return result;
+	};
+
+	it('break a word wider than the column instead of overflowing it', () => {
+		wrap = document.createElement('div');
+		wrap.style.width = '240px';
+		wrap.innerHTML = '<nldd-rich-text><h2>Zorgtoeslagverantwoordelijkheid</h2></nldd-rich-text>';
+		document.body.append(wrap);
+		const heading = wrap.querySelector('h2')!;
+		expect(getComputedStyle(heading).overflowWrap).toBe('break-word');
+		expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth);
+	});
+
+	it('keep the size they have on a phone on every width', () => {
+		const narrow = sizes(400);
+		const wide = sizes(1200);
+		expect(wide).toEqual(narrow);
+		expect(parseFloat(wide.h2)).toBeGreaterThan(parseFloat(wide.h3));
+		expect(parseFloat(wide.h3)).toBeGreaterThan(parseFloat(wide.p));
+	});
+});
+
 describe('nldd-rich-text color="inherit"', () => {
 	let styles: HTMLStyleElement[] = [];
 	let wrap: HTMLElement;

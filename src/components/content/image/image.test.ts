@@ -119,10 +119,10 @@ describe('nldd-image', () => {
 	});
 
 	it('populates an aria-live status region with the error message + alt on error', async () => {
-		// Mount with no src first so the img doesn't try (and fail) to load a
-		// missing URL — that fires `error` synchronously in some browsers and
-		// races with the "pre-error state is empty" assertion below.
-		el = await fixture<NLDDImage>('<nldd-image alt="Beschrijving"></nldd-image>');
+		// A data URI that loads, so the img doesn't try (and fail) to load a
+		// missing URL — that fires `error` in some browsers and races with the
+		// "pre-error state is empty" assertion below.
+		el = await fixture<NLDDImage>('<nldd-image src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Beschrijving"></nldd-image>');
 		await waitForUpdate(el);
 		const status = el.shadowRoot!.querySelector('.image__status');
 		expect(status).not.toBeNull();
@@ -216,10 +216,9 @@ describe('nldd-image', () => {
 	});
 
 	it('sets the loaded host attribute when the image loads', async () => {
-		// No src: a relative URL would 404 in the test env and fire a real
-		// `error`, racing the synthetic `load` below. The load handler doesn't
-		// depend on src, so dispatching directly is enough.
-		el = await fixture<NLDDImage>('<nldd-image alt="Foo"></nldd-image>');
+		// A data URI rather than a relative URL, which would 404 in the test env
+		// and fire a real `error`, racing the synthetic `load` below.
+		el = await fixture<NLDDImage>('<nldd-image src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Foo"></nldd-image>');
 		await waitForUpdate(el);
 		const img = el.shadowRoot!.querySelector('img')!;
 		img.dispatchEvent(new Event('load'));
@@ -266,6 +265,94 @@ describe('nldd-image with an inline svg', () => {
 		const svg = el.querySelector('svg') as SVGElement;
 		expect(getComputedStyle(svg).display).toBe('block');
 		expect(svg.getBoundingClientRect().width).toBe(240);
+	});
+});
+
+describe('nldd-image without an image', () => {
+	let el: NLDDImage;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const media = () => el.shadowRoot!.querySelector('.image__media')!;
+	const icon = () => media().querySelector('.image__empty-icon nldd-icon');
+
+	it('shows a hidden area with an image icon, 16/9 without an aspect-ratio', async () => {
+		el = await fixture<NLDDImage>('<nldd-image style="width: 320px"></nldd-image>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('img')).toBeNull();
+		expect(media().getAttribute('aria-hidden')).toBe('true');
+		expect(icon()!.getAttribute('icon')).toBe('image');
+		expect(Math.round(media().getBoundingClientRect().height)).toBe(180);
+		el.aspectRatio = '1:1';
+		await waitForUpdate(el);
+		expect(Math.round(media().getBoundingClientRect().height)).toBe(320);
+	});
+
+	it('fills a box that its parent gives a size, with the icon in the middle', async () => {
+		el = await fixture<NLDDImage>('<nldd-image style="width: 300px; height: 120px"></nldd-image>');
+		await waitForUpdate(el);
+		const box = media().getBoundingClientRect();
+		expect(Math.round(box.width)).toBe(300);
+		expect(Math.round(box.height)).toBe(120);
+		const iconBox = media().querySelector('.image__empty-icon')!.getBoundingClientRect();
+		expect(Math.round(iconBox.top + iconBox.height / 2 - box.top)).toBe(60);
+	});
+
+	it('puts no src attribute on an image without one', async () => {
+		el = await fixture<NLDDImage>('<nldd-image></nldd-image>');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('src')).toBe(false);
+		el.src = '/foo.jpg';
+		await waitForUpdate(el);
+		expect(el.getAttribute('src')).toBe('/foo.jpg');
+	});
+
+	it('keeps the caption and the shape', async () => {
+		el = await fixture<NLDDImage>('<nldd-image shape="circle" caption="Bijschrift"></nldd-image>');
+		await waitForUpdate(el);
+		expect(icon()).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('figcaption')!.textContent).toContain('Bijschrift');
+	});
+
+	it('is no longer empty once a src arrives', async () => {
+		el = await fixture<NLDDImage>('<nldd-image></nldd-image>');
+		await waitForUpdate(el);
+		el.src = '/foo.jpg';
+		el.alt = 'Foo';
+		await waitForUpdate(el);
+		expect(icon()).toBeNull();
+		expect(media().hasAttribute('aria-hidden')).toBe(false);
+		expect(el.shadowRoot!.querySelector('img')).not.toBeNull();
+	});
+
+	it('is not empty with slotted media, from the first render on', async () => {
+		el = await fixture<NLDDImage>('<nldd-image><img src="/bar.jpg" alt="Bar"></nldd-image>');
+		await waitForUpdate(el);
+		expect(icon()).toBeNull();
+		expect(media().classList.contains('image__media--loading')).toBe(false);
+	});
+
+	it('is not empty with only an lqip, which shows its preview', async () => {
+		el = await fixture<NLDDImage>('<nldd-image lqip="28,28,164,164,106,170,99" aspect-ratio="16/9"></nldd-image>');
+		await waitForUpdate(el);
+		expect(icon()).toBeNull();
+		expect(media().classList.contains('image__media--lqip')).toBe(true);
+	});
+
+	it('fills the area while the image loads without an lqip, and clears it once loaded', async () => {
+		// The src 404s in the test env. Let that error land first, then put the
+		// image back in flight, so nothing races the assertions below.
+		el = await fixture<NLDDImage>('<nldd-image src="/missing.jpg" alt="Foo"></nldd-image>');
+		await expect.poll(() => el._imageErrored).toBe(true);
+		el._imageErrored = false;
+		await waitForUpdate(el);
+		expect(media().classList.contains('image__media--loading')).toBe(true);
+		expect(icon()).toBeNull();
+		el._onImageLoad();
+		await waitForUpdate(el);
+		expect(media().classList.contains('image__media--loading')).toBe(false);
 	});
 });
 

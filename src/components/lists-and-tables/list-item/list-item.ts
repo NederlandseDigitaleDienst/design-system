@@ -150,8 +150,9 @@ const NESTED_CONTROLS = [
  *
  * The item synchronizes its ARIA with its parent `nldd-list`'s `type`:
  * - `list` parent       → `role="listitem"`
- * - `navigation` parent → `role="listitem"` + `aria-current="page"` on the
- *   inner `<a>` / `<button>` when `selected`
+ * - `navigation` parent → `role="listitem"` + `aria-current` on the inner
+ *   `<a>` / `<button>` when `current` or `selected`, with `current-type` as
+ *   its value (`page` unless set)
  * - `listbox` parent    → `role="option"` + `aria-selected` reflecting `selected`.
  *   The list points its search input's `aria-activedescendant`
  *   at the active option via `_highlighted` (separate from `selected`).
@@ -166,10 +167,11 @@ const NESTED_CONTROLS = [
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
  * @attr {boolean} radio - Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it.
  * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
- * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current="page"` on the inner action, in a `listbox` parent it drives `aria-selected`.
+ * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
  * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
  * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
- * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, and takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current="page"` on the inner action. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
+ * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, and takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
+ * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
  * Divider markers, set on a CELL in the row rather than on the row itself:
@@ -250,6 +252,16 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 */
 	@property({ type: Boolean, reflect: true })
 	current = false;
+
+	/**
+	 * What kind of "current" this row is, for `aria-current`.
+	 *
+	 * `page` fits a menu of pages, but a table of contents points at sections
+	 * of the page you are already on: there every row would announce itself as
+	 * "the current page". `location` says "you are here" instead.
+	 */
+	@property({ reflect: true, attribute: 'current-type', converter: reflectNonDefault<'page' | 'step' | 'location' | 'date' | 'time' | 'true'>('page') })
+	currentType: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' = 'page';
 
 	/**
 	 * Switches off the row's own control.
@@ -435,7 +447,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/**
 	 * A segment marked `current` makes the whole row the current one.
 	 *
-	 * A row cut into segments has no control of its own, so `aria-current="page"`
+	 * A row cut into segments has no control of its own, so `aria-current`
 	 * belongs on the segment that holds the link. Written there, the row would
 	 * stay unpainted and the consumer had to set `current` twice, once for the
 	 * semantics and once for the color, with nothing to catch the two drifting
@@ -564,7 +576,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	override updated(changed: Map<string, unknown>) {
-		if (changed.has('selected') || changed.has('current') || changed.has('button') || changed.has('checkbox') || changed.has('radio') || changed.has('href') || changed.has('_parentType')) {
+		if (changed.has('selected') || changed.has('current') || changed.has('currentType') || changed.has('button') || changed.has('checkbox') || changed.has('radio') || changed.has('href') || changed.has('_parentType')) {
 			this._updateAriaState();
 		}
 		if (changed.has('button') || changed.has('checkbox') || changed.has('radio') || changed.has('href')) {
@@ -734,7 +746,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// aria-current on the inner action (link/button) — navigation only
 		const action = this._action;
 		if (this._parentType === 'navigation' && (this.current || this.selected) && action) {
-			action.setAttribute('aria-current', 'page');
+			action.setAttribute('aria-current', this.currentType);
 		} else {
 			action?.removeAttribute('aria-current');
 		}

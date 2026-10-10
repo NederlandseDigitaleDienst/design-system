@@ -5,11 +5,11 @@ import * as Stories from './content-page.stories';
 
 # Contentpagina
 
-**Welk probleem dit oplost.** Een landings-, informatie- of campagnepagina bouwen: lopende tekst, een collectie kaarten, een uitgelicht vlak en een footer.
+**Welk probleem dit oplost.** Eén ding uitleggen, zodat iemand het kan lezen, begrijpen en erover beslissen. Hier komt een bezoeker aan: de home, een onderwerppagina en een navigatiepagina leiden ernaartoe.
 
-**Wanneer wel.** Een pagina waarop je informatie verwerkt: lezen, begrijpen, beslissen.
+**Wanneer wel.** Een pagina die uitlegt hoe iets werkt, wat je nodig hebt, wat er daarna gebeurt.
 
-**Wanneer niet.** Een scherm waarop je vaak tussen informatie beweegt (zoeken, vergelijken, kiezen, bewerken) en waar onderdelen daarvoor naast elkaar staan: navigatie naast de inhoud, een lijst met het gekozen record ernaast, een inspector aan de zijkant. Dat is een [applicatie](?path=/docs/patronen-applicatie--docs), en die begint bij een split view.
+**Wanneer niet.** Een pagina die vooral doorverwijst is een [home](?path=/docs/patronen-pagina-s-home--docs), een [onderwerppagina](?path=/docs/patronen-pagina-s-onderwerppagina--docs) of een [navigatiepagina](?path=/docs/patronen-pagina-s-navigatiepagina--docs). Een scherm waarop je vaak tussen informatie beweegt (zoeken, vergelijken, kiezen, bewerken) en waar onderdelen daarvoor naast elkaar staan, is een [applicatie](?path=/docs/patronen-applicatie--docs), en die begint bij een split view.
 
 ## Compositie
 
@@ -17,45 +17,77 @@ import * as Stories from './content-page.stories';
 nldd-app-view                            de buitenste schil
   └─ nldd-page
        ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
-       ├─ nldd-hero                      de opening, met main-background
-       ├─ nldd-simple-section            background="tinted", een uitgelicht blok
-       │    └─ nldd-collection           layout="grid", item-width
-       │         └─ nldd-card            met een nldd-container voor de padding
-       ├─ nldd-two-thirds-one-third-section
-       │    ├─ slot="left"               de lopende uitleg
-       │    └─ slot="right"              een ondersteunende kaart
-       ├─ nldd-simple-section            background="tinted", de oproep
+       │    └─ nldd-top-navigation-bar   back-text en back-href naar de pagina erboven
+       │         └─ nldd-menu-bar        slot="utility", zoeken en taal
+       ├─ nldd-sidebar-section           sidebar-label en grow, breed een kolom, smal een sheet
+       │    ├─ slot="header"             de nldd-title met de h1, en op smal de knop naar de sheet
+       │    ├─ slot="sidebar"            de inhoudsopgave, een nldd-list type="navigation" met current-type="location"
+       │    ├─ nldd-rich-text            de uitleg, met een id op elke h2
+       │    └─ nldd-card                 de actie, na de uitleg
+       ├─ nldd-simple-section            background="tinted", waar je hierna heen kunt
+       │    └─ nldd-collection
+       │         └─ nldd-card            href
        └─ slot="footer"                  nldd-page-footer
+            ├─ slot="breadcrumbs"        waar deze pagina staat
+            └─ slot="legal-bar"
 ```
+
+Met een inhoudsopgave:
 
 <Canvas of={Stories.Standaard} />
 
+Zonder inhoudsopgave, voor een korte pagina:
+
+<Canvas of={Stories.ZonderInhoudsopgave} />
+
 ## Waarom zo
+
+Deze regels gelden voor alle pagina's, ook voor de [home](?path=/docs/patronen-pagina-s-home--docs), de [onderwerppagina](?path=/docs/patronen-pagina-s-onderwerppagina--docs) en de [navigatiepagina](?path=/docs/patronen-pagina-s-navigatiepagina--docs). Die beschrijven alleen wat ze anders doen.
 
 **De app view is altijd de buitenste schil.** De [`nldd-app-view`](?path=/docs/components-layout-app-view--docs) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Het documentfont komt uit de stylesheet van het pakket, zodra er een app view op de pagina staat.
 
-**Een hero is voor de pagina’s waar mensen binnenkomen.** De homepage, en verder elke pagina waar bezoekers vanaf een andere website op landen. Daar is de [`nldd-hero`](?path=/docs/components-layout-page-sections-hero--docs) de paginakop: een tekstpaneel dat je een vulling geeft met `main-background`, met plaats voor beeld ernaast of erachter. Die vulling draagt een eigen inhoudskleur mee, dus geef de titel en de tekst erin `color="inherit"`, dan houden ze hoe dan ook contrast. Zonder beeld vult het paneel de hele kop. Op de meeste andere pagina’s opent een sectie met een grote titel, en dat is genoeg.
+**Geen hero, de titel is de kop.** Wie hier komt, heeft al gekozen. Een grote titel boven de tekst is genoeg, en de uitleg begint direct eronder, zonder beeld of vlak dat er eerst langs moet.
 
 **Eén sectie per inhoudsblok, en kies de soort die de indeling al heeft.** Een [`nldd-simple-section`](?path=/docs/components-layout-page-sections-simple-section--docs) regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Moet een blok anders liggen, dan verwissel je de sectie in plaats van er zelf kolommen in te bouwen: [`nldd-two-thirds-one-third-section`](?path=/docs/components-layout-page-sections-two-thirds-one-third-section--docs) en [`nldd-one-half-one-half-section`](?path=/docs/components-layout-page-sections-one-half-one-half-section--docs) verdelen de breedte, [`nldd-sidebar-section`](?path=/docs/components-layout-page-sections-sidebar-section--docs) zet een vast paneel naast de inhoud, en [`nldd-full-bleed-section`](?path=/docs/components-layout-page-sections-full-bleed-section--docs) laat een vlak tot de rand lopen. Ze delen dezelfde marges en dezelfde `background`, dus afwisselen geeft ritme zonder dat de pagina uit het lood raakt.
 
-**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [`nldd-title`](?path=/docs/components-content-title--docs) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een overzichtspagina een `h2`, en laat de grootte los daarvan.
+**De tekst staat in een rich text.** Een [`nldd-rich-text`](?path=/docs/components-content-rich-text--docs) met gewone `h2`'s, lijsten en alinea's zet zelf het ritme en de leesbreedte. Geef elke `h2` een `id`, zodat de inhoudsopgave ernaar kan springen.
 
-**Laat de bovenbalk wegscrollen.** Een [`nldd-page`](?path=/docs/components-layout-page--docs) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet, en op een contentpagina houd je dat zo. Een [`nldd-top-navigation-bar`](?path=/docs/components-navigation-top-navigation-bar--docs) is een flinke stapel UI, en wat daarvan blijft staan, staat de inhoud in de weg waarvoor iemand kwam. Zie de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#visueel-en-layout).
+**Een inhoudsopgave alleen als er iets te overzien valt.** Heeft de tekst drie of meer `h2`'s, of is hij langer dan zo'n twee schermen, dan helpt een inhoudsopgave om te zien wat er komt en ernaartoe te springen. Bij een kortere pagina is het alleen UI die aandacht vraagt naast een tekst die je in één keer overziet. Laat hem dan weg, en gebruik een [`nldd-two-thirds-one-third-section`](?path=/docs/components-layout-page-sections-two-thirds-one-third-section--docs): de titel in het `header`-slot, de tekst links en de kaart met de actie rechts. Op breed staat de actie dan al in beeld terwijl je leest, en op smal schuift hij onder de tekst, zoals in de versie met inhoudsopgave.
 
-**Een set gelijkwaardige kaarten is een collection.** De [`nldd-collection`](?path=/docs/components-layout-collection--docs) leidt het aantal kolommen af uit `item-width` en de beschikbare breedte, en zet de tussenruimte per breakpoint.
+**De inhoudsopgave staat links, in de sidebar van de sectie.** De `nldd-sidebar-section` zet hem in een vaste kolom naast de tekst, die blijft staan terwijl je leest. Het is een [`nldd-list`](?path=/docs/components-lists-tables-list--docs) met `type="navigation"` en een `nldd-list-item` met `href` per `h2`, met dezelfde tekst als de kop. Houd hem bij de `h2`'s; een pagina met zoveel koppen dat de lijst zelf gaat scrollen, is eigenlijk meer pagina's.
 
-**Een kaart zet zelf geen padding.** De [`nldd-card`](?path=/docs/components-layout-card--docs) laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand.
+**Op smal is de inhoudsopgave een knop onder de titel.** Is de sectie te smal voor twee kolommen, dan verhuist de sidebar naar een sheet, en zou hij anders boven de tekst de inhoud omlaag duwen. De knop staat los onder de titel in het `header`-slot en verschijnt alleen als de sectie `collapsed` is, met een regel CSS die hem en de spacer erboven verbergt zolang de sectie geen sheet heeft: `nldd-sidebar-section:not([collapsed]) :is(#inhoud-openen, nldd-spacer:has(+ #inhoud-openen)) { display: none }`. Een klik roept `show()` aan. Geef de knop `popup-type="dialog"` en zet `expanded` op de `open`- en `close`-events van de sectie, dan weet een schermlezer of de sheet open is. De sheet heeft een eigen titelbalk met de `sidebar-label`, dus verberg de titel in de kolom zolang de sectie `collapsed` is.
 
-**Een vlak maak je met `background`, niet met eigen CSS.** Elke page-section kent het, en het cascadeert het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer. Loopt het vlak van rand tot rand, bijvoorbeeld om een afbeelding, pak dan de [`nldd-full-bleed-section`](?path=/docs/components-layout-page-sections-full-bleed-section--docs): die heeft geen horizontale padding, dus zet er zelf een container omheen als er tekst in staat.
+**Een keuze in de sheet sluit eerst de sheet, en springt dan pas.** Laat je de link gewoon zijn werk doen, dan scrolt de pagina onder een sheet die nog openstaat, en zet de sheet bij het sluiten de focus terug op de knop, boven aan de pagina. Vang de klik dus af zolang de sectie `collapsed` is, roep `hide()` aan, en spring na het `close`-event naar de kop: scroll hem in beeld en geef hem de focus, met `tabindex="-1"` erop. Doe dat in een `queueMicrotask`, zodat het na het terugzetten van de focus komt en niet ervoor.
 
-**De footer is een component en hoeft niet in een sectie.** De [`nldd-page-footer`](?path=/docs/components-layout-page-footer--docs) heeft een rij voor je eigen inhoud en een `legal-bar` eronder, trekt de scheidingslijnen tussen de gevulde rijen, en draagt het id waar een skip link naartoe kan springen.
+**De rij van de kop die je leest is `current`.** Zet `current-type="location"` op elke rij: de rijen wijzen naar stukken van deze pagina, en zonder dat attribuut meldt een schermlezer de actieve rij als "huidige pagina". Welke rij `current` is, houd jij bij. In het voorbeeld doet een `IntersectionObserver` dat, met een `rootMargin` die alleen het bovenste derde van het venster laat tellen: de laatste kop die daar voorbij is, is de actieve, en zolang er geen voorbij is, de eerste. Eén rij tegelijk, en die staat in de markup al op de eerste, zodat de lijst zonder JS ook klopt.
+
+**Met een inhoudsopgave komt de actie na de uitleg.** Wat je met de uitleg doet, staat in een kaart onder de tekst, met één primaire knop. Wie gelezen heeft, vindt hem daar, en de inhoudsopgave blijft over de tekst gaan.
+
+**Ook handig staat onderaan, niet in de sidebar.** Het is waar je heen kunt als je klaar bent met lezen, en dat is onderaan, op elke breedte. In de sidebar zou het op breed wel meereizen, maar op smal zit de sidebar achter de knop bovenaan, en daar zoekt niemand die net uitgelezen is. Het is een keuze per pagina en geen volledige lijst van de pagina's ernaast: pagina's uit hetzelfde onderdeel, of van elders op de site, zoals de onderwerppagina waar deze uitleg bij hoort. Waar je bent staat al in de titel, dus er is geen huidige kaart.
+
+**De tekst groeit, niet Ook handig.** Een [`nldd-page`](?path=/docs/components-layout-page--docs) laat standaard zijn laatste sectie de hoogte opvullen die over is, zodat de footer onderaan staat. Hier is dat Ook handig, en bij een korte tekst op een hoog scherm wordt die getinte strook dan een groot grijs vlak. Zet daarom `grow` op de sectie met de tekst: die rekt op, en Ook handig blijft een strook vlak boven de footer.
+
+**Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [`nldd-title`](?path=/docs/components-content-title--docs) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en op een navigatiepagina een `h2`, en laat de grootte los daarvan. De koppen in een rich text tellen gewoon mee.
+
+**Laat de bovenbalk wegscrollen.** Een [`nldd-page`](?path=/docs/components-layout-page--docs) kan zijn header vastzetten met `sticky-header`, maar doet dat standaard niet, en op een website houd je dat zo. Een [`nldd-top-navigation-bar`](?path=/docs/components-navigation-top-navigation-bar--docs) is een flinke stapel UI, en wat daarvan blijft staan, staat de inhoud in de weg waarvoor iemand kwam. Zie de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#visueel-en-layout).
+
+**Zoeken en taal staan rechts in de bovenbalk.** Ze horen in het `utility`-slot van de bovenbalk, als een [`nldd-menu-bar`](?path=/docs/components-navigation-menu-bar--docs), en blijven op elke breedte staan. Zoeken is een link naar de zoekpagina. Taal is een uitklapbaar item met de afkorting van de huidige taal als tekst ("NL"), en een `nldd-menu` met een radio-item per taal, daar met de volledige naam. De afkorting houdt de balk smal, maar een schermlezer spelt hem als losse letters, dus geef het item een `accessible-label` die de taal voluit noemt en de afkorting erin houdt ("Taal: Nederlands (NL)"), zodat wie het item met spraak bedient het nog bij zijn zichtbare naam kan noemen; geef elk item dat niet Nederlands is een `lang`, zodat een schermlezer "English" ook Engels uitspreekt. Met `content-priority="text"` vallen op smal de iconen weg en blijven "Zoeken" en "NL" staan: een woord zegt meer dan een loep, en de afkorting neemt nauwelijks ruimte in.
+
+**Elke pagina behalve de home heeft een weg terug.** Zet `back-text` en `back-href` op de bovenbalk, dan staat er een terugknop naast de naam van de website. Noem de pagina waar je heen gaat ("Aanvragen") en niet alleen "Terug": de knop gaat naar de pagina erboven, niet naar waar iemand vandaan kwam, en dan moet je dat kunnen zien. Op de home is er geen pagina erboven, dus daar staat hij niet.
+
+**Een vlak maak je met `background`, niet met eigen CSS.** Elke page-section kent het, en het cascadeert het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer. Loopt het vlak van rand tot rand, bijvoorbeeld om een afbeelding, pak dan de `nldd-full-bleed-section`: die heeft geen horizontale padding, dus zet er zelf een container omheen als er tekst in staat.
+
+**Een kaart zet zelf geen padding.** De [`nldd-card`](?path=/docs/components-layout-card--docs) laat dat aan de inhoud, zodat een afbeelding tot de rand kan lopen. Wikkel wat erin staat dus in een `nldd-container` met `padding`, anders plakt je tekst tegen de rand. Leidt de kaart naar een andere pagina, geef hem dan een `href` en de titel als `accessible-label`: dan is de hele kaart de link.
+
+**Het kruimelpad staat onderaan.** In de [`nldd-page-footer`](?path=/docs/components-layout-page-footer--docs) heeft de [`nldd-breadcrumbs`](?path=/docs/components-navigation-breadcrumbs--docs) een eigen rij, boven je eigen inhoud en de juridische rij. Daar helpt het wie wil weten waar deze pagina staat, zonder voor te gaan op de inhoud. Zie de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#navigatie-en-structuur).
+
+**De footer is een component en hoeft niet in een sectie.** De footer trekt de scheidingslijnen tussen de gevulde rijen, en draagt het id waar een skip link naartoe kan springen. Tussen het kruimelpad en de juridische rij heeft hij een rij voor je eigen inhoud, voor links die op de hele site gelden, zoals kolommen per onderwerp; hoe je die opbouwt, staat bij [`nldd-page-footer`](?path=/docs/components-layout-page-footer--docs). Op een site staat dezelfde footer op elke pagina. De patronen laten die rij weg om hun voorbeeld kort te houden.
+
+**De juridische rij linkt direct naar contact, toegankelijkheid en privacy.** De rest (copyright, archivering, een kwetsbaarheid melden) mag samen op een pagina "Over deze website" staan, die zelf een [navigatiepagina](?path=/docs/patronen-pagina-s-navigatiepagina--docs) is. De privacyverklaring hoort daar ook bij, maar niet alleen daar: de Europese privacytoezichthouders vragen om een directe link op elke pagina, onder een gangbare term als "Privacy" ([WP260, paragraaf 11](https://ec.europa.eu/newsroom/article29/items/622227)). Noem die pagina "Over deze website" en niet "Over", want "Over" kan net zo goed over de organisatie gaan.
 
 ## Toegankelijkheid
 
-Wat je gratis krijgt: de leesbreedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, en de juridische rij als eigen navigatie met een naam.
+Wat je gratis krijgt: de leesbreedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, het kruimelpad als eigen navigatie met `aria-current` op deze pagina, de terugknop als link, de inhoudsopgave als eigen navigatie met `aria-current="location"` op de rij die je leest, en de juridische rij als eigen navigatie met een naam.
 
-Wat jij nog moet doen: een `heading-level` op elke titel, ook op die in de footer, een [`nldd-skip-link`](?path=/docs/components-navigation-skip-link--docs) bovenaan als er navigatie voor de inhoud staat, en een tekst in een kaart die een link is. Die kaart ontleent zijn naam aan wat erin staat, dus een kaart met alleen een afbeelding krijgt een `accessible-label`.
-
-## Gezien in
-
-Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Dit is dezelfde pagina, nu getoetst.
+Wat jij nog moet doen: een `heading-level` op elke titel, ook op die in de footer, een `aria-label` op de lijst van de inhoudsopgave, een `id` op elke kop waar die naar springt, de focus op die kop na een keuze in de sheet, een `lang` op elke taal in het taalmenu die niet Nederlands is, een [`nldd-skip-link`](?path=/docs/components-navigation-skip-link--docs) bovenaan als er navigatie voor de inhoud staat, en een `accessible-label` op een kaart die een link is. De link ligt als een leeg vlak over de kaart en leest de tekst erin niet voor, dus zonder label heeft hij geen naam. Neem de titel van de kaart.

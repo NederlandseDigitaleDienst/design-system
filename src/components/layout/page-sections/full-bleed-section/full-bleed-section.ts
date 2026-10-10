@@ -10,6 +10,7 @@
  * @attr {'inherit'|'base'|'tinted'} [background] - Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface).
  * @attr {string} [width] - Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width.
  * @attr {string} [height] - Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width).
+ * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} [padding-block] - Block (top and bottom) padding override (token 0-96; '0' strips it).
  * @attr {string} [padding-top] - Top padding override.
  * @attr {string} [padding-bottom] - Bottom padding override.
@@ -21,6 +22,7 @@
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { fullBleedSectionStyles } from './full-bleed-section.styles.js';
 import { fullBleedSectionTemplate } from './full-bleed-section.template.js';
@@ -30,7 +32,7 @@ export class NLDDFullBleedSection extends PageSectionMixin(LitElement) {
 	static override styles = fullBleedSectionStyles;
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	override updated(changedProperties: Map<string, unknown>): void {

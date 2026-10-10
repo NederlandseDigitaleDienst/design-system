@@ -1,0 +1,183 @@
+<nldd-app-view>
+  <nldd-page>
+    <nldd-skip-link slot="header">
+      <nldd-top-navigation-bar
+        website-title="Mijn Dienst"
+        back-text="Aanvragen"
+        back-href="#aanvragen"
+      >
+        <nldd-menu-bar slot="utility">
+          <nldd-menu-bar-item
+            text="Zoeken"
+            icon="magnifier"
+            href="#zoeken"
+            content-priority="text"
+          ></nldd-menu-bar-item>
+          <nldd-menu-bar-item
+            text="NL"
+            accessible-label="Taal: Nederlands (NL)"
+            icon="globe"
+            expandable
+            content-priority="text"
+          >
+            <nldd-menu>
+              <nldd-menu-item
+                text="Nederlands"
+                type="radio"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="English"
+                type="radio"
+                lang="en"
+              ></nldd-menu-item>
+            </nldd-menu>
+          </nldd-menu-bar-item>
+        </nldd-menu-bar>
+      </nldd-top-navigation-bar>
+    </nldd-skip-link>
+
+    <nldd-two-thirds-one-third-section grow>
+      <nldd-title
+        slot="header"
+        size="1"
+        text="Een aanvraag intrekken"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-rich-text slot="left">
+        <p>Zolang een aanvraag nog in behandeling is, kun je hem intrekken. Je hoeft daar geen reden voor te geven.</p>
+        <h2 id="zo-trek-je-hem-in">Zo trek je hem in</h2>
+        <p>Open de aanvraag in je dossier en kies onderaan voor intrekken. Je krijgt een bevestiging in je dossier, en de behandelaar stopt met de aanvraag.</p>
+        <h2 id="daarna">Daarna</h2>
+        <p>Een ingetrokken aanvraag kun je niet terughalen. Wil je het later toch, dan dien je een nieuwe aanvraag in.</p>
+      </nldd-rich-text>
+      <nldd-card
+        slot="right"
+        background="tinted"
+      >
+        <nldd-container padding="16">
+          <nldd-title
+            size="4"
+            text="Je aanvraag intrekken"
+            heading-level="2"
+          ></nldd-title>
+          <nldd-spacer size="8"></nldd-spacer>
+          <nldd-rich-text>
+            <p>Je hebt je DigiD nodig.</p>
+          </nldd-rich-text>
+          <nldd-spacer size="16"></nldd-spacer>
+          <nldd-button
+            appearance="primary"
+            text="Naar je dossier"
+            href="#dossier"
+          ></nldd-button>
+        </nldd-container>
+      </nldd-card>
+    </nldd-two-thirds-one-third-section>
+
+    <nldd-simple-section background="tinted">
+      <nldd-title
+        slot="header"
+        size="3"
+        text="Ook handig"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-collection
+        layout="grid"
+        item-width="280px"
+      >
+        <nldd-card
+          href="#aanvraag-wijzigen"
+          accessible-label="Een aanvraag wijzigen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Een aanvraag wijzigen"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Soms is aanvullen genoeg, en hoef je niet opnieuw te beginnen.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#bezwaar-maken"
+          accessible-label="Bezwaar maken"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Bezwaar maken"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Ben je het niet eens met een besluit, dan zie je hier hoe je dat laat weten.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#isoleren"
+          accessible-label="Isoleren"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="5"
+              text="Isoleren"
+              heading-level="3"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Alles over isoleren bij elkaar, ook wat niet over de aanvraag gaat.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+      </nldd-collection>
+    </nldd-simple-section>
+
+    <nldd-page-footer slot="footer">
+      <nldd-breadcrumbs slot="breadcrumbs">
+        <nldd-breadcrumbs-item
+          text="Home"
+          href="#home"
+        ></nldd-breadcrumbs-item>
+        <nldd-breadcrumbs-item
+          text="Aanvragen"
+          href="#aanvragen"
+        ></nldd-breadcrumbs-item>
+        <nldd-breadcrumbs-item
+          text="Een aanvraag intrekken"
+          current
+        ></nldd-breadcrumbs-item>
+      </nldd-breadcrumbs>
+      <nldd-page-footer-legal-bar slot="legal-bar">
+        <nldd-page-footer-legal-bar-item
+          slot="start"
+          text="Nederlandse Digitale Dienst"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#contact"
+          text="Contact"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#toegankelijkheid"
+          text="Toegankelijkheid"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#privacy"
+          text="Privacy"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#over-deze-website"
+          text="Over deze website"
+        ></nldd-page-footer-legal-bar-item>
+      </nldd-page-footer-legal-bar>
+    </nldd-page-footer>
+  </nldd-page>
+</nldd-app-view>

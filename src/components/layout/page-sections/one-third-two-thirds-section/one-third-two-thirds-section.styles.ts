@@ -38,6 +38,11 @@ export const oneThirdTwoThirdsSectionStyles = css`
 		display: none;
 	}
 
+	:host([data-growing]),
+	:host([grow]) {
+		flex-grow: 1;
+	}
+
 	:host([width="full"]) {
 		--_one-third-two-thirds-section-max-width: none;
 	}
@@ -122,6 +127,18 @@ export const oneThirdTwoThirdsSectionStyles = css`
 
 		@container (min-width: ${lgMin}) {
 			gap: var(--semantics-page-sections-lg-gap);
+		}
+	}
+
+	:host([vertical-alignment="center"]) .one-third-two-thirds-section__columns {
+		@container (min-width: 769px) {
+			align-items: center;
+		}
+	}
+
+	:host([vertical-alignment="bottom"]) .one-third-two-thirds-section__columns {
+		@container (min-width: 769px) {
+			align-items: flex-end;
 		}
 	}
 

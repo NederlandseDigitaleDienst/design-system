@@ -1,0 +1,68 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './navigation-page.stories';
+
+<Meta of={Stories} />
+
+# Navigatiepagina
+
+**Welk probleem dit oplost.** Iemand één niveau dieper brengen. Tussen de home en de contentpagina's staan pagina's die een deel van de site openen ("alles over aanvragen"), en die alleen laten zien wat eronder zit.
+
+**Wanneer wel.** Een deel van de site met meer pagina's dan de home kwijt kan, waar een bezoeker eerst moet kiezen voor die iets leest.
+
+**Wanneer niet.** Heeft de pagina eigen uitleg nodig, of brengt hij pagina's uit verschillende delen van de site bij elkaar rond één thema, dan is het een [onderwerppagina](?path=/docs/patronen-pagina-s-onderwerppagina--docs). Staan er maar twee of drie pagina's onder, dan horen die als kaarten op de pagina erboven en is deze tussenstap overbodig. Een lijst records om in te zoeken of te filteren is een [lijst](?path=/docs/patronen-lijst--docs).
+
+## Compositie
+
+```
+nldd-app-view                            de buitenste schil
+  └─ nldd-page
+       ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
+       │    └─ nldd-top-navigation-bar   zoeken en taal, terug naar de home
+       ├─ nldd-one-third-two-thirds-section    met een lijst
+       │    ├─ slot="left"               de nldd-title met de h1 en een korte intro
+       │    └─ slot="right"              een nldd-list type="navigation"
+       ├─ nldd-simple-section            of, met kaarten
+       │    ├─ slot="header"             de nldd-title met de h1 en een korte intro
+       │    └─ nldd-collection           layout="grid", met een nldd-card per pagina
+       └─ slot="footer"                  nldd-page-footer
+            ├─ slot="breadcrumbs"        waar deze pagina staat
+            └─ slot="legal-bar"
+```
+
+Met een lijst:
+
+<Canvas of={Stories.Standaard} />
+
+Met kaarten:
+
+<Canvas of={Stories.Kaarten} />
+
+## Waarom zo
+
+**De basis is die van de contentpagina.** De app view, de secties, de koppen, de vlakken en de footer werken hier precies zo. Dat staat bij de [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs).
+
+**Een lijst staat naast de intro, kaarten eronder.** Bij een lijst zet een [`nldd-one-third-two-thirds-section`](?path=/docs/components-layout-page-sections-one-third-two-thirds-section--docs) de titel en een intro van een paar zinnen in het smalle derde, en de lijst in de twee derde ernaast. Een lijst is smal van zichzelf en vult die kolom, en zo staat de keuze op een breed scherm meteen naast de uitleg. Een raster kaarten heeft de breedte nodig: in twee derde passen er maar twee naast elkaar. Daar staan de titel en de intro dus in het `header`-slot van een `nldd-simple-section`, met de collectie over de volle breedte eronder. Op smal komt de intro in beide gevallen eerst. Houd hem daarom kort: geen hero, geen inleiding van drie alinea's, geen uitgelicht vlak. Wie hier is, wil kiezen. Zie de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#navigatie-en-structuur).
+
+**Een lijst of kaarten, en geen mengvorm.** Een [`nldd-list`](?path=/docs/components-lists-tables-list--docs) met `type="navigation"` is rustig en makkelijk te scannen, en houdt het ook met tien pagina's vol: kies hem als de titels voor zich spreken. Een [`nldd-collection`](?path=/docs/components-layout-collection--docs) met kaarten geeft elke keuze meer gewicht en ruimte voor een zin of een afbeelding, en past bij een handvol pagina's die echt van elkaar verschillen. Kies er één per pagina: twee vormen naast elkaar suggereren een rangorde die er niet is.
+
+**Een rij eindigt op een chevron.** Een `nldd-icon-cell` met `chevron-right` rechts in de rij zegt dat de rij verder leidt, en is in de lijst wat de rand van een kaart in de collectie is: het teken dat je hier kunt klikken. Zet er een `nldd-spacer-cell` voor, zodat een lange titel nooit tegen het icoon aan loopt.
+
+**Elke rij en elke kaart is één link.** Een `nldd-list-item` met `href` is in zijn geheel de link, met de tekst van zijn cel als naam. Een [`nldd-card`](?path=/docs/components-layout-card--docs) met `href` ook, maar daar is `accessible-label` de naam van die link: zet daar de titel van de kaart in. Een losse "Lees meer" of een knop eronder voegt niets toe en verdubbelt de tabstops.
+
+**De titel zegt waar de link heen gaat, de zin waarom je erop klikt.** Schrijf de titel als de taak ("Een aanvraag wijzigen"), niet als een bak ("Informatie", "Documenten"). De zin eronder, als `supporting-text` in de lijst of als tekst in de kaart, helpt kiezen tussen twee links die op elkaar lijken, en is niet het begin van de uitleg: die staat op de pagina waar de link heen gaat.
+
+**De kaartkoppen zijn een `h2`.** Er staat geen sectiekop tussen de paginatitel en de kaarten, dus komen ze direct onder de `h1`. Een kaart die je ook elders gebruikt, krijgt zijn kopniveau als parameter. De rijen van een lijst zijn geen koppen.
+
+**De volgorde volgt de taak.** Wat de meeste mensen komen doen staat eerst, en daarna de rest in de volgorde waarin het zich voordoet: indienen, volgen, wijzigen of intrekken, het besluit, bezwaar. Alfabetisch is alleen een volgorde als niemand weet wat er gezocht wordt.
+
+**Het kruimelpad staat onderaan.** Net als op de contentpagina, in de `breadcrumbs`-rij van de [`nldd-page-footer`](?path=/docs/components-layout-page-footer--docs). Bovenaan zou het boven de keuze komen te staan die iemand hier komt maken.
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: elke rij en elke kaart is één link en één tabstop, een lijst met `type="navigation"` is een eigen navigatie, en op smal staat alles in de volgorde waarin je het leest.
+
+Wat jij nog moet doen: wat bij de [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs) staat, een `aria-label` op de lijst, en een titel die zonder de zin eronder ook te begrijpen is. Bij kaarten is die titel ook het `accessible-label`, dus een schermlezer die door de links springt hoort alleen die.
+
+## Gezien in
+
+De pagina [Over deze website](https://digitaledienst.overheid.nl/over/) van de Nederlandse Digitale Dienst is een navigatiepagina met de lijst: een titel, een intro van twee regels, en een rij links met een chevron naar toegankelijkheid, privacy, copyright, archivering en het melden van een kwetsbaarheid. Het kruimelpad staat in de footer.

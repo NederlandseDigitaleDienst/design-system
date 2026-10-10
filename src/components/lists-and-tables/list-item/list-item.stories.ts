@@ -22,6 +22,7 @@ export default {
 		checked: false,
 		expanded: false,
 		current: false,
+		currentType: 'page',
 		disabled: false,
 	},
 	argTypes: {
@@ -69,6 +70,13 @@ export default {
 			description: 'De rij waar je bent: de pagina waar een menu-item heen wijst, het record dat de lijst open heeft staan. In rust net zo grijs als `selected`, en zodra de focus in de rij staat kleurt hij accent. Eén rij per lijst draagt het, waar `selected` er meerdere mag hebben.',
 			table: { defaultValue: { summary: false } },
 		},
+		currentType: {
+			name: 'current-type',
+			control: 'select',
+			options: ['page', 'step', 'location', 'date', 'time', 'true'],
+			description: 'De waarde van `aria-current` die een `current`- of `selected`-rij in een `navigation`-lijst op zijn link zet. `location` voor een inhoudsopgave, waarvan de rijen naar stukken van deze pagina wijzen.',
+			table: { defaultValue: { summary: 'page' } },
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Zet de eigen control van de rij uit: een `button`- of `checkbox`-rij reageert niet meer en dimt, een `href`-rij krijgt `aria-disabled` en een geblokkeerde klik. Een rij zonder eigen control heeft niets om uit te zetten, en segmenten hebben hun eigen `disabled`. De pijltjes slaan een uitgezette rij over.',
@@ -90,6 +98,7 @@ export const Standaard = {
 				?checked=${args.checked}
 				?expanded=${args.expanded}
 				?current=${args.current}
+				current-type=${args.currentType === 'page' ? nothing : args.currentType}
 				?disabled=${args.disabled}
 			>
 				<nldd-text-cell
@@ -265,7 +274,7 @@ export const MetCellenVooraanEnAchteraan = {
 				></nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
 				<nldd-text-cell text="Item with start icon"></nldd-text-cell>
-				<nldd-spacer-cell size="8"></nldd-spacer-cell>
+				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-icon-cell size="16">
 					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
@@ -287,7 +296,7 @@ export const SimpelMetCellenAchteraan = {
 		<nldd-list appearance="simple">
 			<nldd-list-item>
 				<nldd-text-cell text="Trailing cells"></nldd-text-cell>
-				<nldd-spacer-cell size="8"></nldd-spacer-cell>
+				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-icon-cell size="16">
 					<nldd-icon icon="chevron-right"></nldd-icon>
 				</nldd-icon-cell>
@@ -379,7 +388,7 @@ export const ResponsieveCellen = {
 					hide-below="480px"
 				></nldd-text-cell>
 				<nldd-spacer-cell
-					size="8"
+					size="12"
 					hide-below="280px"
 				></nldd-spacer-cell>
 				<nldd-icon-cell hide-below="280px"><nldd-icon icon="chevron-right-small"></nldd-icon></nldd-icon-cell>
@@ -396,7 +405,7 @@ export const ResponsieveCellen = {
 					hide-below="480px"
 				></nldd-text-cell>
 				<nldd-spacer-cell
-					size="8"
+					size="12"
 					hide-below="280px"
 				></nldd-spacer-cell>
 				<nldd-icon-cell hide-below="280px"><nldd-icon icon="chevron-right-small"></nldd-icon></nldd-icon-cell>

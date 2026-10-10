@@ -27,7 +27,7 @@ export default {
 		},
 		hyphens: {
 			control: 'boolean',
-			description: 'Opt-in automatische woordafbreking voor doorlopende tekst (p, li, dd). Vereist een correcte lang op de pagina',
+			description: 'Opt-in automatische woordafbreking voor doorlopende tekst (p, li, dd), alleen voor woorden van 15 letters of meer. Vereist een correcte lang op de pagina',
 			table: { defaultValue: { summary: false } },
 		},
 	},
@@ -89,9 +89,13 @@ export const Alinea = {
  * Opt-in via `hyphens`. Automatische woordafbreking voor doorlopende tekst
  * (p, li, dd), handig in smalle kolommen met lange Nederlandse
  * samenstellingen. Vereist een correcte `lang` op de pagina — hier staat
- * `lang="nl"` op de wrapper, anders breekt de browser niet af. De grens
- * `hyphenate-limit-chars: 6 3 3` voorkomt losse-letterafbrekingen. Links de
- * standaard (uit), rechts aan; let op de rechterrand van de tekst.
+ * `lang="nl"` op de wrapper, anders breekt de browser niet af. Alleen woorden
+ * van 15 letters of meer breken af, met minstens 5 letters aan elke kant van
+ * het streepje: lange samenstellingen krijgen een streepje, gewone woorden
+ * schuiven heel door. Safari kent geen minimale woordlengte en breekt ook
+ * kortere woorden af. Een kop breekt nooit met een streepje, alleen als één
+ * woord breder is dan de kolom. Links de standaard (uit), rechts aan; let op
+ * de rechterrand van de tekst.
  */
 export const Afbreken = {
 	render: (args: Record<string, any>) => {

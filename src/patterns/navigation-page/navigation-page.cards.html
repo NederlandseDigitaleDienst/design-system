@@ -1,0 +1,196 @@
+<nldd-app-view>
+  <nldd-page>
+    <nldd-skip-link slot="header">
+      <nldd-top-navigation-bar
+        website-title="Mijn Dienst"
+        back-text="Home"
+        back-href="#home"
+      >
+        <nldd-menu-bar slot="utility">
+          <nldd-menu-bar-item
+            text="Zoeken"
+            icon="magnifier"
+            href="#zoeken"
+            content-priority="text"
+          ></nldd-menu-bar-item>
+          <nldd-menu-bar-item
+            text="NL"
+            accessible-label="Taal: Nederlands (NL)"
+            icon="globe"
+            expandable
+            content-priority="text"
+          >
+            <nldd-menu>
+              <nldd-menu-item
+                text="Nederlands"
+                type="radio"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="English"
+                type="radio"
+                lang="en"
+              ></nldd-menu-item>
+            </nldd-menu>
+          </nldd-menu-bar-item>
+        </nldd-menu-bar>
+      </nldd-top-navigation-bar>
+    </nldd-skip-link>
+
+    <nldd-simple-section>
+      <nldd-title
+        slot="header"
+        size="1"
+        text="Aanvragen"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-spacer
+        slot="header"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="header">
+        <p>Alles over het indienen en volgen van een aanvraag, van wat je nodig hebt tot wat je doet als je het niet eens bent met het besluit.</p>
+      </nldd-rich-text>
+      <nldd-collection
+        layout="grid"
+        item-width="280px"
+      >
+        <nldd-card
+          href="#aanvraag-indienen"
+          accessible-label="Een aanvraag indienen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="Een aanvraag indienen"
+              heading-level="2"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Wat je nodig hebt en hoe het indienen gaat.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#behandeling-volgen"
+          accessible-label="De behandeling volgen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="De behandeling volgen"
+              heading-level="2"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Bij welke stap je aanvraag ligt, en wie er aan werkt.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#aanvraag-wijzigen"
+          accessible-label="Een aanvraag wijzigen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="Een aanvraag wijzigen"
+              heading-level="2"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Gegevens aanvullen of een offerte vervangen, zolang de aanvraag loopt.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#aanvraag-intrekken"
+          accessible-label="Een aanvraag intrekken"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="Een aanvraag intrekken"
+              heading-level="2"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Stoppen met een aanvraag die nog in behandeling is.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#besluit-begrijpen"
+          accessible-label="Het besluit begrijpen"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="Het besluit begrijpen"
+              heading-level="2"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Wat er in het besluit staat en wat het voor je betekent.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+        <nldd-card
+          href="#bezwaar-maken"
+          accessible-label="Bezwaar maken"
+        >
+          <nldd-container padding="16">
+            <nldd-title
+              size="4"
+              text="Bezwaar maken"
+              heading-level="2"
+            ></nldd-title>
+            <nldd-spacer size="4"></nldd-spacer>
+            <nldd-rich-text>
+              <p>Wat je doet als je het niet eens bent met een besluit.</p>
+            </nldd-rich-text>
+          </nldd-container>
+        </nldd-card>
+      </nldd-collection>
+    </nldd-simple-section>
+
+    <nldd-page-footer slot="footer">
+      <nldd-breadcrumbs slot="breadcrumbs">
+        <nldd-breadcrumbs-item
+          text="Home"
+          href="#home"
+        ></nldd-breadcrumbs-item>
+        <nldd-breadcrumbs-item
+          text="Aanvragen"
+          current
+        ></nldd-breadcrumbs-item>
+      </nldd-breadcrumbs>
+      <nldd-page-footer-legal-bar slot="legal-bar">
+        <nldd-page-footer-legal-bar-item
+          slot="start"
+          text="Nederlandse Digitale Dienst"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#contact"
+          text="Contact"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#toegankelijkheid"
+          text="Toegankelijkheid"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#privacy"
+          text="Privacy"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#over-deze-website"
+          text="Over deze website"
+        ></nldd-page-footer-legal-bar-item>
+      </nldd-page-footer-legal-bar>
+    </nldd-page-footer>
+  </nldd-page>
+</nldd-app-view>

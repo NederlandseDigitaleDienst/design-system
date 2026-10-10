@@ -47,7 +47,8 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {boolean} expanded - Disclosure state, reflected as `aria-expanded` on the control, and painted: the segment stays lit a step above hover for as long as what it opened is on screen, so a menu reads as hanging off this row rather than floating over the list. Set it on the segment that opens something (a tree row's chevron, a menu). Leave it off entirely when the segment discloses nothing — an absent attribute emits no aria-expanded.
  * @attr {string} popup-type - Type of popup this segment opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Becomes aria-haspopup on the control and makes aria-expanded permanent, so a row of identical "more" segments says what it opens before anything is open. An nldd-menu or nldd-popover anchored here sets it itself from the first render.
  * @attr {string} popovertarget - ID of a popover this segment toggles; forwarded to the inner button. The IDL counterparts `popoverTargetElement` and `popoverTargetAction` work across shadow boundaries, as on nldd-icon-button.
- * @attr {boolean} current - Marks the segment as the current page (`aria-current="page"`). The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
+ * @attr {boolean} current - Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.
+ * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value of a `current` segment (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
  * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
  *
  * Divider markers, set on a CELL inside the segment rather than on the segment itself:
@@ -131,6 +132,10 @@ export class NLDDListItemSegment extends LitElement {
 
 	@property({ type: Boolean, reflect: true })
 	current = false;
+
+	/** The `aria-current` value of a current segment; see nldd-list-item's `current-type`. */
+	@property({ reflect: true, attribute: 'current-type', converter: reflectNonDefault<'page' | 'step' | 'location' | 'date' | 'time' | 'true'>('page') })
+	currentType: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' = 'page';
 
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
@@ -287,7 +292,7 @@ export class NLDDListItemSegment extends LitElement {
 			this.rel,
 			this.checked,
 			this.disclosure ? this._rowExpanded : this.expanded,
-			this.current,
+			this.current ? this.currentType : undefined,
 			this.disabled,
 			this.accessibleLabel,
 			this._tabbable === undefined ? undefined : (this._tabbable ? '0' : '-1'),

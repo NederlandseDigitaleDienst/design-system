@@ -27,6 +27,8 @@ export interface ScrollModeProvider {
 	unregisterScrollConsumer(consumer: ScrollModeConsumer): void;
 }
 
+const PROVIDER_SELECTOR = 'nldd-app-view, nldd-sheet, nldd-modal-dialog';
+
 /** Nearest ancestor app-view (light-DOM `closest`; slotted layers stay in the
  *  consumer's light tree so this reaches across the slot boundaries), or null
  *  when a layer is used stand-alone (e.g. a bare page in the docs).
@@ -39,8 +41,30 @@ export interface ScrollModeProvider {
  *  reset --context-scroll-mode as well, which is what the stand-alone read
  *  below then finds. */
 export function findScrollModeProvider(host: Element): ScrollModeProvider | null {
-	const el = host.closest?.('nldd-app-view, nldd-sheet, nldd-modal-dialog');
+	const el = host.closest?.(PROVIDER_SELECTOR);
 	return el && 'registerScrollConsumer' in el ? (el as unknown as ScrollModeProvider) : null;
+}
+
+/**
+ * Hands `adopt` the provider above `host` once it is defined, when it was not
+ * yet at the moment `host` connected.
+ *
+ * Custom elements upgrade in the order their modules are defined, and an app
+ * does not control that: importing nldd-sidebar-section defines nldd-page, and
+ * a route that loads before its shell defines the page before the app-view. The
+ * provider is then in the DOM but has no `registerScrollConsumer` yet, so
+ * findScrollModeProvider returns null and the layer starts out stand-alone.
+ * This lets it register as soon as the provider is defined. Nothing happens
+ * when the host has left the DOM by then, or sits under another provider.
+ */
+export function whenScrollModeProviderDefined(host: Element, adopt: (provider: ScrollModeProvider) => void): void {
+	const el = host.closest?.(PROVIDER_SELECTOR);
+	if (!el || 'registerScrollConsumer' in el) return;
+	void customElements.whenDefined(el.localName).then(() => {
+		if (!host.isConnected) return;
+		const provider = findScrollModeProvider(host);
+		if (provider && (provider as unknown) === el) adopt(provider);
+	});
 }
 
 /**
@@ -90,8 +114,18 @@ export class ScrollModeController implements ReactiveController, ScrollModeConsu
 			// breakpoint.
 			window.addEventListener('resize', this._onResize, { passive: true });
 			this.read();
+			whenScrollModeProviderDefined(this._host, this._adopt);
 		}
 	}
+
+	/** Switches from stand-alone to push once a provider that was not yet
+	 *  defined at connect is. */
+	private _adopt = (provider: ScrollModeProvider): void => {
+		if (this._provider) return;
+		window.removeEventListener('resize', this._onResize);
+		this._provider = provider;
+		provider.registerScrollConsumer(this);
+	};
 
 	hostDisconnected(): void {
 		if (this._provider) {

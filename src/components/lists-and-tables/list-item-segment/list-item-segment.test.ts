@@ -73,6 +73,18 @@ describe('nldd-list-item-segment', () => {
 		expect(control(without).getAttribute('aria-expanded')).toBeNull();
 	});
 
+	it('puts aria-current on a current link, with current-type as its value', async () => {
+		const [a] = await mount('<nldd-list-item-segment href="#racks" current><nldd-text-cell text="Racks"></nldd-text-cell></nldd-list-item-segment>', 'type="navigation" aria-label="Op deze pagina"');
+		expect(control(a).getAttribute('aria-current')).toBe('page');
+		a.currentType = 'location';
+		await waitForUpdate(a);
+		expect(control(a).getAttribute('aria-current')).toBe('location');
+		expect(a.getAttribute('current-type')).toBe('location');
+		a.current = false;
+		await waitForUpdate(a);
+		expect(control(a).hasAttribute('aria-current')).toBe(false);
+	});
+
 	it('renders without a control — and without a role — when nothing interactive is asked for', async () => {
 		const [a] = await mount('<nldd-list-item-segment><nldd-text-cell text="X"></nldd-text-cell></nldd-list-item-segment>');
 		expect(control(a).tagName).toBe('DIV');

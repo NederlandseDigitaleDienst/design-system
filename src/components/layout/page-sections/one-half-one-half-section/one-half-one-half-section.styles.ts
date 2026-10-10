@@ -38,6 +38,11 @@ export const oneHalfOneHalfSectionStyles = css`
 		display: none;
 	}
 
+	:host([data-growing]),
+	:host([grow]) {
+		flex-grow: 1;
+	}
+
 	:host([width="full"]) {
 		--_one-half-one-half-section-max-width: none;
 	}
@@ -114,6 +119,14 @@ export const oneHalfOneHalfSectionStyles = css`
 		@container (min-width: ${lgMin}) {
 			gap: var(--semantics-page-sections-lg-gap);
 		}
+	}
+
+	:host([vertical-alignment="center"]) .one-half-one-half-section__columns {
+		align-items: center;
+	}
+
+	:host([vertical-alignment="bottom"]) .one-half-one-half-section__columns {
+		align-items: flex-end;
 	}
 
 	.one-half-one-half-section__left-column {

@@ -10,6 +10,13 @@
  * custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it
  * into the default slot and we'll style and wrap it like our own image.
  *
+ * Without an image (no `src`, `srcset`, `lqip` or slotted media) it shows a
+ * neutral area with an image icon, in the box, shape and caption a real image
+ * would get: a place where an image belongs, for a prototype or a pattern, or
+ * an image someone forgot. Without `aspect-ratio` that area is 16/9. While the
+ * built-in `<img>` loads without an `lqip`, the same area shows without the
+ * icon, and it goes once the image is in.
+ *
  * @element nldd-image
  *
  * @attr {string} src - Image URL
@@ -37,7 +44,7 @@
  * @attr {string} caption - Caption text shown below the image
  * @attr {string} credit - Smaller credit/attribution text shown beside the caption
  * @attr {boolean} decorative - Decorative image: alt is forced empty + aria-hidden
- * @attr {string} lqip - Low-quality image placeholder as a CSV string
+ * @attr {string} lqip - Loading preview (LQIP, low-quality image placeholder) as a CSV string
  *   `"base,c1,c2,c3,c4,c5,c6"` — seven 0-255 bytes, each packing an 8-bit
  *   Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base
  *   color shown outside the cell gradients; the other six are per-cell
@@ -46,9 +53,13 @@
  *   Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/)
  *   with per-cell hue — Lean's original format encodes grayscale cells only;
  *   ours encodes a color per cell so multi-color subjects survive the
- *   placeholder.
+ *   preview.
  * @attr {object} translations - Override translation keys (e.g. the message
  *   shown when the image fails to load); unset keys fall back to Dutch.
+ *
+ * A parent that gives the image a fixed box, such as the media area of
+ * nldd-hero, sets `--context-image-height: 100%` on it, so the image fills that
+ * box instead of taking the height of the photo.
  *
  * @slot - Custom `<img>`, `<picture>` or inline `<svg>` (overrides the src-based default). An inline svg keeps its own colors and scales by its viewBox, so a drawing gets the same box, ratio and caption as a photo. Slotted media carries its own text alternative: an `alt` on the img (empty when it conveys nothing), or `role="img"` with an `aria-label`, `aria-labelledby` or `<title>` on the svg.
  *   The internal `error` listener is attached only to the built-in `<img>`, so
@@ -105,7 +116,7 @@ function hasAriaName(el: Element): boolean {
 export class NLDDImage extends LitElement {
 	static override styles = imageStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	src = '';
 
 	@property({ type: String })
@@ -158,6 +169,7 @@ export class NLDDImage extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	decorative = false;
 
+
 	@property({ type: String })
 	lqip = '';
 
@@ -207,7 +219,7 @@ export class NLDDImage extends LitElement {
 	_hasSlottedCaption = false;
 
 	/** Tracks whether the internal <img> has finished loading. While false and
-	 *  an LQIP value is set, the image stays hidden so the placeholder shows. */
+	 *  an LQIP value is set, the image stays hidden so the loading preview shows. */
 	@state()
 	_imageLoaded = false;
 
@@ -331,7 +343,19 @@ export class NLDDImage extends LitElement {
 			: [el]);
 	}
 
+	/** Whether anything sits in the default slot. Read off the light DOM, so
+	 *  the first render already knows and an image does not flash empty. */
+	get _hasSlottedMedia(): boolean {
+		return Array.from(this.children).some(el => !el.hasAttribute('slot'));
+	}
+
+	/** No image at all: the component shows where one belongs. */
+	get _isEmpty(): boolean {
+		return !this.src && !this.srcset && !this._parsedLqip && !this._hasSlottedMedia;
+	}
+
 	_onMediaSlotChange = (): void => {
+		this.requestUpdate();
 		this._warnMissingAlt();
 	};
 

@@ -3970,7 +3970,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image.",
+          "description": "Wraps a native `<img>` with design-system styling: corner radius variants, aspect-ratio reservation, object-fit/position control, optional caption + credit. Renders as `<figure>` + `<figcaption>` only when a caption or credit is set — otherwise just the image, no extra wrapping. Hybrid source: the `src` attribute renders an internal `<img>`. To use a custom `<img>` or `<picture>` (e.g. with art-direction sources), slot it into the default slot and we'll style and wrap it like our own image. Without an image (no `src`, `srcset`, `lqip` or slotted media) it shows a neutral area with an image icon, in the box, shape and caption a real image would get: a place where an image belongs, for a prototype or a pattern, or an image someone forgot. Without `aspect-ratio` that area is 16/9. While the built-in `<img>` loads without an `lqip`, the same area shows without the icon, and it goes once the image is in.",
           "name": "NLDDImage",
           "members": [
             {
@@ -4296,7 +4296,7 @@
               },
               "default": "''",
               "fieldName": "lqip",
-              "description": "Low-quality image placeholder as a CSV string `\"base,c1,c2,c3,c4,c5,c6\"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the \"LQIP encoder tool\" Storybook story. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the placeholder."
+              "description": "Loading preview (LQIP, low-quality image placeholder) as a CSV string `\"base,c1,c2,c3,c4,c5,c6\"` — seven 0-255 bytes, each packing an 8-bit Oklab triplet (2 bits L, 3 bits a, 3 bits b). The first is the base color shown outside the cell gradients; the other six are per-cell colors in row-major 3×2 order. Generate via the encoder in `lqip-encoder.ts` or via the \"LQIP encoder tool\" Storybook story. Extends Lean Rada's CSS-only LQIP (https://leanrada.com/notes/css-only-lqip/) with per-cell hue — Lean's original format encodes grayscale cells only; ours encodes a color per cell so multi-color subjects survive the preview."
             },
             {
               "name": "translations",
@@ -4662,7 +4662,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. Children are placed in three zones: text (headings, paragraphs, lists, blockquote, div/section) reads at the `main` size; media and tables (img, figure, video, iframe, table) get the `wide` accent; everything else, code blocks and every component, gets the full `full` span with `justify-self: start`, so the room is available without being forced. Overridable per child with `data-width=\"main\" | \"wide\" | \"full\"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical.",
+          "description": "A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. The headings keep one size on every width, the one they have on a phone. A heading in running text sits in a column as wide as a line of reading, on any screen, so its relation to the text beside it does not change and it has no reason to grow. Growing, an h2 on a wide screen was more than twice the size of the text, and an article broke into blocks at every heading. Page and section titles do grow: use nldd-title for those. Children are placed in three zones: text (headings, paragraphs, lists, blockquote, div/section) reads at the `main` size; media and tables (img, figure, video, iframe, table) get the `wide` accent; everything else, code blocks and every component, gets the full `full` span with `justify-self: start`, so the room is available without being forced. Overridable per child with `data-width=\"main\" | \"wide\" | \"full\"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical.",
           "name": "NLDDRichText",
           "members": [
             {
@@ -4759,7 +4759,7 @@
               },
               "default": "false",
               "fieldName": "hyphens",
-              "description": "Opt-in automatic hyphenation for running text (p, li, dd). Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on p/li is always on, independent of this attribute, so long URLs and compounds break neatly instead of overflowing even without a dictionary."
+              "description": "Opt-in automatic hyphenation for running text (p, li, dd), for words of 15 letters or more only, with at least 5 on either side of the hyphen: long compounds break, ordinary words wrap whole. Safari has no minimum word length and breaks shorter words too. Needs a correct `lang` on the page (`lang=\"nl\"` on `<html>`, for instance): without language information the browser does not hyphenate. An `overflow-wrap: break-word` safety net on headings, p and li is always on, independent of this attribute, so a word wider than the column breaks instead of overflowing, without a hyphen; headings never get one."
             }
           ],
           "superclass": {
@@ -24485,6 +24485,20 @@
             },
             {
               "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "paddingBlock",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -24676,6 +24690,19 @@
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
             },
             {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
+            },
+            {
               "name": "padding-block",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -24865,7 +24892,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page header with a media area and a text panel (the main) that can stand in six positions. Every area is rectangular. With `main-width=\"full\"` the media area sits as its own strip above or below the panel rather than behind it. On mobile the media always stacks above the full-width panel. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "A page header with a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `layout=\"overlap\"`, where the panel falls over the bottom of the image and runs on below it, is the intended house style and will become the default in a later release. Use it where the panel has enough content to run on below the image; `contained` stays for a panel that should keep to the image. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
           "name": "NLDDHero",
           "members": [
             {
@@ -24877,6 +24904,16 @@
               "default": "''",
               "description": "Width mode: 'full' (removes body max-width) or any CSS length.",
               "attribute": "width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "HeroLayout"
+              },
+              "default": "'contained'",
+              "attribute": "layout",
               "reflects": true
             },
             {
@@ -24895,7 +24932,7 @@
               "type": {
                 "text": "HeroMainWidth"
               },
-              "default": "'1/2'",
+              "default": "'auto'",
               "attribute": "main-width",
               "reflects": true
             },
@@ -24918,6 +24955,26 @@
               "default": "''",
               "description": "Media aspect-ratio in CSS form ('16/9' or '16:9'); default '21/9'. Drives\nthe hero height on md/lg and the media strip height on sm.",
               "attribute": "media-aspect-ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "overlapSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "overlap-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mediaHeight",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "media-height",
               "reflects": true
             },
             {
@@ -24978,6 +25035,20 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true,
               "inheritedFrom": {
                 "name": "PageSectionMixin",
@@ -25152,6 +25223,15 @@
               "fieldName": "width"
             },
             {
+              "name": "layout",
+              "type": {
+                "text": "HeroLayout"
+              },
+              "default": "'contained'",
+              "fieldName": "layout",
+              "description": "How the panel relates to the image (default: 'contained'). 'contained' keeps it on the image; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development"
+            },
+            {
               "name": "main-background",
               "type": {
                 "text": "HeroMainBackground"
@@ -25165,9 +25245,9 @@
               "type": {
                 "text": "HeroMainWidth"
               },
-              "default": "'1/2'",
+              "default": "'auto'",
               "fieldName": "mainWidth",
-              "description": "Width of the panel (default: '1/2'); 'full' makes a full top or bottom strip and is ignored with 'left'/'right'"
+              "description": "Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 640px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto'"
             },
             {
               "name": "main-position",
@@ -25186,6 +25266,24 @@
               "default": "''",
               "description": "Aspect ratio of the media area (CSS form, '16/9' or '16:9'); default '21/9'. On md/lg it sets the height of the hero, on sm the height of the media area",
               "fieldName": "mediaAspectRatio"
+            },
+            {
+              "name": "overlap-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "overlapSize",
+              "description": "With layout=\"overlap\": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image"
+            },
+            {
+              "name": "media-height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "mediaHeight",
+              "description": "Fixed height of the media area, any CSS length (e.g. '320px', '40vh'); wins over media-aspect-ratio. An invalid value falls back to the ratio"
             },
             {
               "name": "media-src",
@@ -25245,8 +25343,20 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
               },
-              "description": "Minimum height of the section (section API)"
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
             },
             {
               "name": "padding-block",
@@ -25447,6 +25557,16 @@
             },
             {
               "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -25466,6 +25586,20 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true,
               "inheritedFrom": {
                 "name": "PageSectionMixin",
@@ -25640,6 +25774,15 @@
               "fieldName": "width"
             },
             {
+              "name": "vertical-alignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "fieldName": "verticalAlignment",
+              "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
+            },
+            {
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -25663,6 +25806,19 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
             },
             {
               "name": "padding-block",
@@ -25878,6 +26034,16 @@
             },
             {
               "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -25897,6 +26063,20 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true,
               "inheritedFrom": {
                 "name": "PageSectionMixin",
@@ -26071,6 +26251,15 @@
               "fieldName": "width"
             },
             {
+              "name": "vertical-alignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "fieldName": "verticalAlignment",
+              "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
+            },
+            {
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -26094,6 +26283,19 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
             },
             {
               "name": "padding-block",
@@ -26297,8 +26499,8 @@
           "type": {
             "text": "object"
           },
-          "default": "{ background: 'inherit', width: '', height: '', paddingBlock: '', paddingTop: '', paddingBottom: '', smPaddingBlock: '', smPaddingTop: '', smPaddingBottom: '', mdPaddingBlock: '', mdPaddingTop: '', mdPaddingBottom: '', lgPaddingBlock: '', lgPaddingTop: '', lgPaddingBottom: '', }",
-          "description": "Shared Storybook controls for the PageSectionMixin surface API\n(background, width, height and the 12 block-padding overrides).\nSpread into a section story's `args` / `argTypes`, and bind onto the host\nelement in `render` with the `pageSectionAttrs` directive."
+          "default": "{ background: 'inherit', width: '', height: '', grow: false, paddingBlock: '', paddingTop: '', paddingBottom: '', smPaddingBlock: '', smPaddingTop: '', smPaddingBottom: '', mdPaddingBlock: '', mdPaddingTop: '', mdPaddingBottom: '', lgPaddingBlock: '', lgPaddingTop: '', lgPaddingBottom: '', }",
+          "description": "Shared Storybook controls for the PageSectionMixin surface API\n(background, width, height, grow and the 12 block-padding overrides).\nSpread into a section story's `args` / `argTypes`, and bind onto the host\nelement in `render` with the `pageSectionAttrs` directive."
         },
         {
           "kind": "variable",
@@ -26306,7 +26508,7 @@
           "type": {
             "text": "object"
           },
-          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\" en \"tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
+          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\" en \"tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, grow: { control: 'boolean', description: 'Neemt de hoogte die de pagina over heeft, zodat de footer onderaan staat. Zonder `grow` groeit de laatste sectie van een `nldd-page`.', table: { defaultValue: { summary: false } }, }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
         },
         {
           "kind": "variable",
@@ -26347,7 +26549,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable tinted box (max-width 320px) beside the main content. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
+          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
           "name": "NLDDSidebarSection",
           "members": [
             {
@@ -26470,6 +26672,20 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true,
               "inheritedFrom": {
                 "name": "PageSectionMixin",
@@ -26735,6 +26951,19 @@
               }
             },
             {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
+            },
+            {
               "name": "padding-block",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -26992,6 +27221,20 @@
             },
             {
               "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "paddingBlock",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -27201,6 +27444,19 @@
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
             },
             {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
+            },
+            {
               "name": "padding-block",
               "type": {
                 "text": "PageSectionPadding | undefined"
@@ -27406,6 +27662,16 @@
             },
             {
               "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -27425,6 +27691,20 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true,
               "inheritedFrom": {
                 "name": "PageSectionMixin",
@@ -27599,6 +27879,15 @@
               "fieldName": "width"
             },
             {
+              "name": "vertical-alignment",
+              "type": {
+                "text": "'top' | 'center' | 'bottom'"
+              },
+              "default": "'top'",
+              "fieldName": "verticalAlignment",
+              "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
+            },
+            {
               "name": "background",
               "type": {
                 "text": "PageSectionBackground"
@@ -27622,6 +27911,19 @@
                 "module": "src/utilities/page-section-mixin.ts"
               },
               "description": "Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width)."
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow",
+              "inheritedFrom": {
+                "name": "PageSectionMixin",
+                "module": "src/utilities/page-section-mixin.ts"
+              },
+              "description": "Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow."
             },
             {
               "name": "padding-block",
@@ -31480,6 +31782,17 @@
             },
             {
               "kind": "field",
+              "name": "currentType",
+              "type": {
+                "text": "'page' | 'step' | 'location' | 'date' | 'time' | 'true'"
+              },
+              "default": "'page'",
+              "description": "The `aria-current` value of a current segment; see nldd-list-item's `current-type`.",
+              "attribute": "current-type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -31621,10 +31934,19 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Marks the segment as the current page (`aria-current=\"page\"`). The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.",
+              "description": "Marks the segment as the current one, with `aria-current` set to `current-type`. The row it sits in paints itself as the current row from it, so on a segmented row this is the only place it has to be set.",
               "name": "current",
               "default": "false",
               "fieldName": "current"
+            },
+            {
+              "type": {
+                "text": "'page' | 'step' | 'location' | 'date' | 'time' | 'true'"
+              },
+              "description": "The `aria-current` value of a `current` segment (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.",
+              "name": "current-type",
+              "default": "'page'",
+              "fieldName": "currentType"
             },
             {
               "type": {
@@ -31683,7 +32005,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox when `checkbox` is set, as a button when `button` is set, or as a plain container otherwise. All cells and segments share one flat slot, in source order. With one action, make the row itself the control (`href`, `button`, `checkbox` or `radio`): the whole row is then one hit area. With two or more, give each its own `nldd-list-item-segment` and leave the row without an action of its own. Both at once nests a control inside a control, and the item warns about that in development. Two rules govern every row: 1. State fills always paint the WIDENED row geometry — the row box extended by the indicator inline inset on both sides — whether or not the row is interactive. Paint never differs between a selected plain row and a selected interactive row. 2. The widened strip belongs to the ROW, never to a segment. A row with any action (its own `href`/`button`/`checkbox`, or a slotted segment) pulls itself outward (`is-interactive` host class → negative inline margin) and pads the row block back by the same amount, so content stays on the grid. A row-wide action owns that padding itself, making the whole widened box one hit area; slotted segments stay in the grid, so their footprint is position-independent and tree columns line up at any depth. By default the divider starts at the row's first text or title cell, so the line lands on the words rather than on whatever leads up to them — an icon, an avatar, a checkbox, or the spacers a tree indents with. Rows of different shapes then still line their dividers up with each other, and a tree's dividers step inward with its indentation. Text inside an `nldd-list-item-segment` counts as the row's content, and the marker is that text cell rather than the action: the action carries its own inline padding, so its edge sits before the words. A row with no text or title cell keeps the full content width. Mark a cell with `divider-start` and/or `divider-end` to place it yourself instead — an explicit marker replaces the derived one entirely, so `divider-start` on the leading cell restores the full-width line. Multiple markers resolve as the union: first `divider-start` through last `divider-end`. A start past the last end is an authoring error — the item DEV-warns and falls back to the full content width. A branch row can disclose its children in two ways: a dedicated `nldd-list-item-segment[disclosure]` segment (only the chevron is clickable), or the row itself as the control (`button` + `expanded`, the whole row toggles). In the second case, mark the chevron's `nldd-icon-cell` with `disclosure` and the row turns it with `expanded` — the same affordance, without having to trade a clickable row for a turning chevron. `checkbox` makes the WHOLE row the control: the inner action becomes a `role=\"checkbox\"` button carrying `aria-checked`, it toggles `checked` on activation and fires `change`. Slot an `nldd-checkbox decorative` (or any glyph) before the text: it only shows the state, since the row already conveys role and state, and a second focusable control would double the tab stops. Do NOT nest a real `<input type=\"checkbox\">` in the action: interactive content inside a `<button>` is invalid HTML and AT announces the button, not the checked state. A `<label>` variant is not offered for the same reason it cannot work — label-to-input association walks the DOM tree, and a slotted input is not a descendant of a label in the shadow root. When it renders as a link, `target` and `rel` are forwarded to the inner `<a>` (e.g. `target=\"_blank\" rel=\"noopener noreferrer\"`). With `target=\"_blank\"` the item also injects a visually hidden \"opens in new tab\" announcement for assistive technology (WCAG 2.1 SC 3.2.2). The item synchronizes its ARIA with its parent `nldd-list`'s `type`: - `list` parent → `role=\"listitem\"` - `navigation` parent → `role=\"listitem\"` + `aria-current=\"page\"` on the inner `<a>` / `<button>` when `selected` - `listbox` parent → `role=\"option\"` + `aria-selected` reflecting `selected`. The list points its search input's `aria-activedescendant` at the active option via `_highlighted` (separate from `selected`).",
+          "description": "A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox when `checkbox` is set, as a button when `button` is set, or as a plain container otherwise. All cells and segments share one flat slot, in source order. With one action, make the row itself the control (`href`, `button`, `checkbox` or `radio`): the whole row is then one hit area. With two or more, give each its own `nldd-list-item-segment` and leave the row without an action of its own. Both at once nests a control inside a control, and the item warns about that in development. Two rules govern every row: 1. State fills always paint the WIDENED row geometry — the row box extended by the indicator inline inset on both sides — whether or not the row is interactive. Paint never differs between a selected plain row and a selected interactive row. 2. The widened strip belongs to the ROW, never to a segment. A row with any action (its own `href`/`button`/`checkbox`, or a slotted segment) pulls itself outward (`is-interactive` host class → negative inline margin) and pads the row block back by the same amount, so content stays on the grid. A row-wide action owns that padding itself, making the whole widened box one hit area; slotted segments stay in the grid, so their footprint is position-independent and tree columns line up at any depth. By default the divider starts at the row's first text or title cell, so the line lands on the words rather than on whatever leads up to them — an icon, an avatar, a checkbox, or the spacers a tree indents with. Rows of different shapes then still line their dividers up with each other, and a tree's dividers step inward with its indentation. Text inside an `nldd-list-item-segment` counts as the row's content, and the marker is that text cell rather than the action: the action carries its own inline padding, so its edge sits before the words. A row with no text or title cell keeps the full content width. Mark a cell with `divider-start` and/or `divider-end` to place it yourself instead — an explicit marker replaces the derived one entirely, so `divider-start` on the leading cell restores the full-width line. Multiple markers resolve as the union: first `divider-start` through last `divider-end`. A start past the last end is an authoring error — the item DEV-warns and falls back to the full content width. A branch row can disclose its children in two ways: a dedicated `nldd-list-item-segment[disclosure]` segment (only the chevron is clickable), or the row itself as the control (`button` + `expanded`, the whole row toggles). In the second case, mark the chevron's `nldd-icon-cell` with `disclosure` and the row turns it with `expanded` — the same affordance, without having to trade a clickable row for a turning chevron. `checkbox` makes the WHOLE row the control: the inner action becomes a `role=\"checkbox\"` button carrying `aria-checked`, it toggles `checked` on activation and fires `change`. Slot an `nldd-checkbox decorative` (or any glyph) before the text: it only shows the state, since the row already conveys role and state, and a second focusable control would double the tab stops. Do NOT nest a real `<input type=\"checkbox\">` in the action: interactive content inside a `<button>` is invalid HTML and AT announces the button, not the checked state. A `<label>` variant is not offered for the same reason it cannot work — label-to-input association walks the DOM tree, and a slotted input is not a descendant of a label in the shadow root. When it renders as a link, `target` and `rel` are forwarded to the inner `<a>` (e.g. `target=\"_blank\" rel=\"noopener noreferrer\"`). With `target=\"_blank\"` the item also injects a visually hidden \"opens in new tab\" announcement for assistive technology (WCAG 2.1 SC 3.2.2). The item synchronizes its ARIA with its parent `nldd-list`'s `type`: - `list` parent → `role=\"listitem\"` - `navigation` parent → `role=\"listitem\"` + `aria-current` on the inner `<a>` / `<button>` when `current` or `selected`, with `current-type` as its value (`page` unless set) - `listbox` parent → `role=\"option\"` + `aria-selected` reflecting `selected`. The list points its search input's `aria-activedescendant` at the active option via `_highlighted` (separate from `selected`).",
           "name": "NLDDListItem",
           "slots": [
             {
@@ -31820,6 +32142,17 @@
               "default": "false",
               "description": "The row you are on, as opposed to the rows you picked (`selected`).\n\nKept apart because the two say different things and a list can show both:\na checkbox list where three rows are ticked and one is open. At rest they\npaint the same, so a menu reads the same as it always did; the difference\nshows when focus is in the row.",
               "attribute": "current",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "currentType",
+              "type": {
+                "text": "'page' | 'step' | 'location' | 'date' | 'time' | 'true'"
+              },
+              "default": "'page'",
+              "description": "What kind of \"current\" this row is, for `aria-current`.\n\n`page` fits a menu of pages, but a table of contents points at sections\nof the page you are already on: there every row would announce itself as\n\"the current page\". `location` says \"you are here\" instead.",
+              "attribute": "current-type",
               "reflects": true
             },
             {
@@ -31964,7 +32297,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current=\"page\"` on the inner action, in a `listbox` parent it drives `aria-selected`.",
+              "description": "Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.",
               "name": "selected",
               "default": "false",
               "fieldName": "selected"
@@ -31990,10 +32323,19 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, and takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current=\"page\"` on the inner action. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.",
+              "description": "Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, and takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.",
               "name": "current",
               "default": "false",
               "fieldName": "current"
+            },
+            {
+              "type": {
+                "text": "'page' | 'step' | 'location' | 'date' | 'time' | 'true'"
+              },
+              "description": "The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.",
+              "name": "current-type",
+              "default": "'page'",
+              "fieldName": "currentType"
             },
             {
               "type": {
@@ -37154,7 +37496,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status (\"Storing: …\", \"Gepland onderhoud …\"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. role and aria-live are set automatically from the variant: - critical → role=\"alert\" (implies aria-live=\"assertive\"; interrupts the screen reader) - others → role=\"status\" aria-live=\"polite\" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role=\"alert\" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).",
+          "description": "A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status (\"Storing: …\", \"Gepland onderhoud …\"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. role and aria-live are set automatically from the variant: - critical → role=\"alert\" (implies aria-live=\"assertive\"; interrupts the screen reader) - others → role=\"status\" aria-live=\"polite\" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role=\"alert\" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).",
           "name": "NLDDStatusBar",
           "members": [
             {
@@ -38337,7 +38679,7 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted`. Setting\n  `base`/`tinted` also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.",
+          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted`. Setting\n  `base`/`tinted` also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
           "name": "PageSectionMixin",
           "members": [
             {
@@ -38357,6 +38699,16 @@
                 "text": "string | undefined"
               },
               "attribute": "height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "grow",
               "reflects": true
             },
             {
@@ -38554,6 +38906,14 @@
                 "text": "string | undefined"
               },
               "fieldName": "height"
+            },
+            {
+              "name": "grow",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "grow"
             },
             {
               "name": "padding-block",
@@ -39308,6 +39668,30 @@
           "description": "Nearest ancestor app-view (light-DOM `closest`; slotted layers stay in the\nconsumer's light tree so this reaches across the slot boundaries), or null\nwhen a layer is used stand-alone (e.g. a bare page in the docs).\n\nAn overlay ends the search: a sheet or a modal dialog is its own scroll\ncontainer and its own top edge, so a page inside one owns its scroller\nwhatever the app around it does. Without this the app-view would push its\nroot mode straight through the overlay and the page's sticky header would\nstick against the document, over the content of the overlay. The overlays\nreset --context-scroll-mode as well, which is what the stand-alone read\nbelow then finds."
         },
         {
+          "kind": "function",
+          "name": "whenScrollModeProviderDefined",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "adopt",
+              "type": {
+                "text": "(provider: ScrollModeProvider) => void"
+              }
+            }
+          ],
+          "description": "Hands `adopt` the provider above `host` once it is defined, when it was not\nyet at the moment `host` connected.\n\nCustom elements upgrade in the order their modules are defined, and an app\ndoes not control that: importing nldd-sidebar-section defines nldd-page, and\na route that loads before its shell defines the page before the app-view. The\nprovider is then in the DOM but has no `registerScrollConsumer` yet, so\nfindScrollModeProvider returns null and the layer starts out stand-alone.\nThis lets it register as soon as the provider is defined. Nothing happens\nwhen the host has left the DOM by then, or sits under another provider."
+        },
+        {
           "kind": "class",
           "description": "Reads the inherited `--context-scroll-mode` and reflects it to the host's\n`[data-scroll]` attribute so CSS can branch.\n\nIn root-scroll mode the DOCUMENT scrolls (see nldd-app-view): every layout\nlayer between the document and an nldd-page — app-view, the split views and\ntheir panes — must flow (overflow: visible) instead of clipping, so the page's\nsticky header/footer can stick against the document. Rather than duplicate the\nread-and-reflect logic in each of those components, they share this controller.\n\nThe mode is derived upstream by nldd-app-view. When an app-view is present the\nhost registers as a consumer and app-view pushes an authoritative re-read on\nevery change (a bare `--context-scroll-mode` update would otherwise not reach\nthe resize-polling layers in time — rAF runs before ResizeObserver). Without\nan app-view (a stand-alone page), it falls back to re-reading on window resize\nso a manual/media-query override still works. `nldd-page` keeps its own inline\nlogic because it also has to re-wire scroll listeners.",
           "name": "ScrollModeController",
@@ -39364,6 +39748,12 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "field",
+              "name": "_adopt",
+              "privacy": "private",
+              "description": "Switches from stand-alone to push once a provider that was not yet\ndefined at connect is."
             },
             {
               "kind": "method",
@@ -39435,6 +39825,14 @@
           "name": "findScrollModeProvider",
           "declaration": {
             "name": "findScrollModeProvider",
+            "module": "src/utilities/scroll-mode-controller.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "whenScrollModeProviderDefined",
+          "declaration": {
+            "name": "whenScrollModeProviderDefined",
             "module": "src/utilities/scroll-mode-controller.ts"
           }
         },

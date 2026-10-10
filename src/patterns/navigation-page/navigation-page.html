@@ -1,0 +1,173 @@
+<nldd-app-view>
+  <nldd-page>
+    <nldd-skip-link slot="header">
+      <nldd-top-navigation-bar
+        website-title="Mijn Dienst"
+        back-text="Home"
+        back-href="#home"
+      >
+        <nldd-menu-bar slot="utility">
+          <nldd-menu-bar-item
+            text="Zoeken"
+            icon="magnifier"
+            href="#zoeken"
+            content-priority="text"
+          ></nldd-menu-bar-item>
+          <nldd-menu-bar-item
+            text="NL"
+            accessible-label="Taal: Nederlands (NL)"
+            icon="globe"
+            expandable
+            content-priority="text"
+          >
+            <nldd-menu>
+              <nldd-menu-item
+                text="Nederlands"
+                type="radio"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="English"
+                type="radio"
+                lang="en"
+              ></nldd-menu-item>
+            </nldd-menu>
+          </nldd-menu-bar-item>
+        </nldd-menu-bar>
+      </nldd-top-navigation-bar>
+    </nldd-skip-link>
+
+    <nldd-one-third-two-thirds-section>
+      <nldd-title
+        slot="left"
+        size="1"
+        text="Aanvragen"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-spacer
+        slot="left"
+        size="16"
+      ></nldd-spacer>
+      <nldd-rich-text slot="left">
+        <p>Alles over het indienen en volgen van een aanvraag, van wat je nodig hebt tot wat je doet als je het niet eens bent met het besluit.</p>
+      </nldd-rich-text>
+      <nldd-list
+        slot="right"
+        type="navigation"
+        aria-label="Aanvragen"
+      >
+        <nldd-list-item href="#aanvraag-indienen">
+          <nldd-text-cell
+            text="Een aanvraag indienen"
+            supporting-text="Wat je nodig hebt en hoe het indienen gaat."
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#behandeling-volgen">
+          <nldd-text-cell
+            text="De behandeling volgen"
+            supporting-text="Bij welke stap je aanvraag ligt, en wie er aan werkt."
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#aanvraag-wijzigen">
+          <nldd-text-cell
+            text="Een aanvraag wijzigen"
+            supporting-text="Gegevens aanvullen of een offerte vervangen, zolang de aanvraag loopt."
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#aanvraag-intrekken">
+          <nldd-text-cell
+            text="Een aanvraag intrekken"
+            supporting-text="Stoppen met een aanvraag die nog in behandeling is."
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#besluit-begrijpen">
+          <nldd-text-cell
+            text="Het besluit begrijpen"
+            supporting-text="Wat er in het besluit staat en wat het voor je betekent."
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+        <nldd-list-item href="#bezwaar-maken">
+          <nldd-text-cell
+            text="Bezwaar maken"
+            supporting-text="Wat je doet als je het niet eens bent met een besluit."
+          ></nldd-text-cell>
+          <nldd-spacer-cell size="12"></nldd-spacer-cell>
+          <nldd-icon-cell
+            size="20"
+            color="secondary"
+            icon="chevron-right"
+          ></nldd-icon-cell>
+        </nldd-list-item>
+      </nldd-list>
+    </nldd-one-third-two-thirds-section>
+
+    <nldd-page-footer slot="footer">
+      <nldd-breadcrumbs slot="breadcrumbs">
+        <nldd-breadcrumbs-item
+          text="Home"
+          href="#home"
+        ></nldd-breadcrumbs-item>
+        <nldd-breadcrumbs-item
+          text="Aanvragen"
+          current
+        ></nldd-breadcrumbs-item>
+      </nldd-breadcrumbs>
+      <nldd-page-footer-legal-bar slot="legal-bar">
+        <nldd-page-footer-legal-bar-item
+          slot="start"
+          text="Nederlandse Digitale Dienst"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#contact"
+          text="Contact"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#toegankelijkheid"
+          text="Toegankelijkheid"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#privacy"
+          text="Privacy"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#over-deze-website"
+          text="Over deze website"
+        ></nldd-page-footer-legal-bar-item>
+      </nldd-page-footer-legal-bar>
+    </nldd-page-footer>
+  </nldd-page>
+</nldd-app-view>

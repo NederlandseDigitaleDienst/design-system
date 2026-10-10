@@ -176,6 +176,7 @@ nldd-rich-text *:focus:not(:focus-visible) {
 nldd-rich-text :is(h1, h2, h3, h4, h5, h6) {
 	margin-top: var(--_rich-text-spacing);
 	margin-bottom: 0;
+	overflow-wrap: break-word;
 	text-wrap: balance;
 }
 
@@ -183,102 +184,42 @@ nldd-rich-text :is(h1, h2, h3, h4, h5, h6) {
 /* # Heading 1 */
 
 nldd-rich-text h1 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-1-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-1-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-1-lg);
-	}
+	font: var(--primitives-font-display-1-sm);
 }
 
 
 /* # Heading 2 */
 
 nldd-rich-text h2 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-2-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-2-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-2-lg);
-	}
+	font: var(--primitives-font-display-2-sm);
 }
 
 
 /* # Heading 3 */
 
 nldd-rich-text h3 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-3-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-3-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-3-lg);
-	}
+	font: var(--primitives-font-display-3-sm);
 }
 
 
 /* # Heading 4 */
 
 nldd-rich-text h4 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-4-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-4-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-4-lg);
-	}
+	font: var(--primitives-font-display-4-sm);
 }
 
 
 /* # Heading 5 */
 
 nldd-rich-text h5 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-5-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-5-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-5-lg);
-	}
+	font: var(--primitives-font-display-5-sm);
 }
 
 
 /* # Heading 6 */
 
 nldd-rich-text h6 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-6-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-6-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-6-lg);
-	}
+	font: var(--primitives-font-display-6-sm);
 }
 
 
@@ -297,13 +238,15 @@ nldd-rich-text p {
 
 /* # Hyphenation */
 
-/* Opt-in through [hyphens]; only works with a correct `lang` on the page. */
+/* Opt-in through [hyphens]; only works with a correct `lang` on the page.
+   Only words of 15 letters or more break, so long compounds get a hyphen and
+   ordinary words wrap whole. Safari knows no minimum word length. */
 nldd-rich-text[hyphens] :is(p, li, dd) {
 	-webkit-hyphens: auto;
 	hyphens: auto;
-	-webkit-hyphenate-limit-before: 3;
-	-webkit-hyphenate-limit-after: 3;
-	hyphenate-limit-chars: 6 3 3;
+	-webkit-hyphenate-limit-before: 5;
+	-webkit-hyphenate-limit-after: 5;
+	hyphenate-limit-chars: 15 5 5;
 }
 
 
@@ -336,7 +279,7 @@ nldd-rich-text ol > li > ol {
 nldd-rich-text li {
 	margin: calc(var(--_rich-text-spacing) / 2) 0;
 	padding: 0;
-	/* Zelfde vangnet als p: lange strings breken i.p.v. overlopen. */
+	/* Same safety net as p: long strings break instead of overflowing. */
 	overflow-wrap: break-word;
 	text-wrap: pretty;
 }

@@ -247,15 +247,19 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
-| NeRDS, de Nederlandse Richtlijn Digitale Systemen | [nederlandsedigitaledienst.github.io/NeRDS](https://nederlandsedigitaledienst.github.io/NeRDS/) | [NederlandseDigitaleDienst/NeRDS](https://github.com/NederlandseDigitaleDienst/NeRDS) |
+| NeRDS, de Nederlandse Richtlijn Digitale Systemen | [nederlandsedigitaledienst.github.io/NeRDS](https://nerds.digitaledienst.overheid.nl/) | [NederlandseDigitaleDienst/NeRDS](https://github.com/NederlandseDigitaleDienst/NeRDS) |
 | Ruimte, een werkinstrument voor het samenstellen van een formatie | [nederlandsedigitaledienst.github.io/ruimte](https://nederlandsedigitaledienst.github.io/ruimte/) | [NederlandseDigitaleDienst/ruimte](https://github.com/NederlandseDigitaleDienst/ruimte) |
 
 ### Andere overheidsorganisaties
 
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
-| Bouwmeester, beheer van het beleidscorpus van BZK | [bouwmeester.rijks.app](https://bouwmeester.rijks.app) | [BureauArchitectuurDigitaleOverheid/bouwmeester](https://github.com/BureauArchitectuurDigitaleOverheid/bouwmeester) |
+| Bouwmeester, beheer van het beleidscorpus van BZK | [bouwmeester.rijks.app](https://bouwmeester.rijks.app) | [NederlandseDigitaleDienst/bouwmeester](https://github.com/NederlandseDigitaleDienst/bouwmeester) |
 | ZAD, Zelfservice Applicatie Deployment | [zad.rijksapp.nl](https://zad.rijksapp.nl) | [RijksICTGilde/RIG-Cluster](https://github.com/RijksICTGilde/RIG-Cluster) |
 | Wies, een overzicht van wie waar aan werkt | [wies.rijksorganisatieodi.nl](https://wies.rijksorganisatieodi.nl) (achter een login) | [RijksICTGilde/wies](https://github.com/RijksICTGilde/wies) |
 | Lord of the Components, dat Jinja2-templates omzet naar NLDD-componenten | een bibliotheek, geen site | [RijksICTGilde/lord-of-the-components](https://github.com/RijksICTGilde/lord-of-the-components) |
 | Invulhulp voor AI-compliance-formulieren (proof of concept) | geen publieke URL | [MinFin-NL/invulhulp](https://github.com/MinFin-NL/invulhulp) |
+| Dashboard van het Innovatieteam van Financiën, met de tools van het team | geen publieke URL | [MinFin-NL/innovatieteam](https://github.com/MinFin-NL/innovatieteam) |
+| TekstOntleder, dat laat zien welke tekst in een document van een mens, van AI of uit een ander document komt | geen publieke URL | [MinFin-NL/TekstOntleder](https://github.com/MinFin-NL/TekstOntleder) |
+| Regiekamer, een demo van een organisatie van AI-collega's | geen publieke URL | [MinFin-NL/regiekamer](https://github.com/MinFin-NL/regiekamer) |
+| KasVisie, een dashboard voor kasprognoses (proof of concept) | geen publieke URL | [MinFin-NL/KasVisie](https://github.com/MinFin-NL/KasVisie) |

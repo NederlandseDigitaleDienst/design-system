@@ -10,7 +10,7 @@ export function template(
 	rel: string | undefined,
 	checked: boolean,
 	expanded: boolean | undefined,
-	current: boolean,
+	current: string | undefined,
 	disabled: boolean,
 	accessibleLabel: string,
 	actionTabindex?: string,
@@ -26,7 +26,7 @@ export function template(
 	const ariaExpanded = expanded === undefined
 		? (popupType ? 'false' : nothing)
 		: String(expanded);
-	const ariaCurrent = current ? 'page' : nothing;
+	const ariaCurrent = current ?? nothing;
 	const label = accessibleLabel || nothing;
 
 	if (control === 'link') {
