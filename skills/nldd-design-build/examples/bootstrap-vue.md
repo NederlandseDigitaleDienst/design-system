@@ -1,6 +1,6 @@
 # Bootstrap: Vue 3 + Vite
 
-Dit is de stack van [regelrecht](https://github.com/MinBZK/regelrecht), de productie-app die dit systeem het meest volwassen gebruikt. De voorbeelden zijn daaruit gedestilleerd.
+Dit is de stack van [regelrecht](https://github.com/NederlandseDigitaleDienst/regelrecht), de productie-app die dit systeem het meest volwassen gebruikt. De voorbeelden zijn daaruit gedestilleerd.
 
 ## 1. Importeren
 

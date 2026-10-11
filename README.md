@@ -210,15 +210,15 @@ De [Nederlandse Digitale Dienst](https://digitaledienst.overheid.nl) is gestart 
 
 #### RegelRecht
 
-Alle frontends staan in [MinBZK/regelrecht](https://github.com/MinBZK/regelrecht).
+Alle frontends staan in [NederlandseDigitaleDienst/regelrecht](https://github.com/NederlandseDigitaleDienst/regelrecht).
 
 | Wat | Live | Broncode |
 | --- | ---- | -------- |
-| Website en documentatie | [regelrecht.rijks.app](https://regelrecht.rijks.app) | [`docs/`](https://github.com/MinBZK/regelrecht/tree/main/docs) |
-| Editor voor regelgeving | [editor.regelrecht.rijks.app](https://editor.regelrecht.rijks.app) | [`frontend/`](https://github.com/MinBZK/regelrecht/tree/main/frontend) |
-| Demo-werkruimte | [demo.regelrecht.rijks.app](https://demo.regelrecht.rijks.app) | [`frontend-demo/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-demo) |
-| Wetgevingsproces | [lawmaking.regelrecht.rijks.app](https://lawmaking.regelrecht.rijks.app) | [`frontend-lawmaking/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-lawmaking) |
-| Proof-of-concepts | [poc.regelrecht.rijks.app](https://poc.regelrecht.rijks.app) | [`frontend-poc-portal/`](https://github.com/MinBZK/regelrecht/tree/main/frontend-poc-portal) en de andere `frontend-poc-*`-mappen |
+| Website en documentatie | [regelrecht.rijks.app](https://regelrecht.rijks.app) | [`docs/`](https://github.com/NederlandseDigitaleDienst/regelrecht/tree/main/docs) |
+| Editor voor regelgeving | [editor.regelrecht.rijks.app](https://editor.regelrecht.rijks.app) | [`frontend/`](https://github.com/NederlandseDigitaleDienst/regelrecht/tree/main/frontend) |
+| Demo-werkruimte | [demo.regelrecht.rijks.app](https://demo.regelrecht.rijks.app) | [`frontend-demo/`](https://github.com/NederlandseDigitaleDienst/regelrecht/tree/main/frontend-demo) |
+| Wetgevingsproces | [lawmaking.regelrecht.rijks.app](https://lawmaking.regelrecht.rijks.app) | [`frontend-lawmaking/`](https://github.com/NederlandseDigitaleDienst/regelrecht/tree/main/frontend-lawmaking) |
+| Proof-of-concepts | [poc.regelrecht.rijks.app](https://poc.regelrecht.rijks.app) | [`frontend-poc-portal/`](https://github.com/NederlandseDigitaleDienst/regelrecht/tree/main/frontend-poc-portal) en de andere `frontend-poc-*`-mappen |
 
 #### Fundament
 
