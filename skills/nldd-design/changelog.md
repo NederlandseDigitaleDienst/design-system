@@ -370,7 +370,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`required` on a radio group asks for one answer, not one per option.** A required `nldd-segmented-control` never reported anything, so the form submitted with nothing chosen. A required `nldd-toggle-button-group type="radio"` and required loose `nldd-radio-button`s reported it from every option at once, so the form refused to submit even after you chose one. A single required radio outside a group refused to submit at all, chosen or not. Each of them now answers the question a radio answers: is anything in this group chosen. The browser writes the message, in the user's language, and points it at the group.
 
-## [0.8.88](https://github.com/MinBZK/storybook/compare/v0.8.87...v0.8.88) (2026-09-15)
+## [0.8.88](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.87...v0.8.88) (2026-09-15)
 
 ### Fixed
 
@@ -380,7 +380,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`package-lock.json` travels with the release again.** The release bumps it along with `package.json`, but it was not in the list of files the release commit carries, so that bump was thrown away every time: the lockfile sat at 0.8.83 while the package ran on to 0.8.87. Anyone installing the repository from a release tag got a lockfile naming a version four releases old. Both files are committed together from now on, and they are back in step.
 
-## [0.8.87](https://github.com/MinBZK/storybook/compare/v0.8.86...v0.8.87) (2026-09-09)
+## [0.8.87](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.86...v0.8.87) (2026-09-09)
 
 ### Highlights
 
@@ -469,7 +469,7 @@ here; consult the commit history if you need that level of detail.
 
 - **The warning about a list that says nothing no longer fires for a list that has rows.** It read the rows off the slot, and a slot has nothing assigned until it has rendered, so the first pass called every list empty. It only warns once, so that first verdict stuck: a console with a line per list on the page teaches people to scroll past it. The rows are read from the children before that first render, where they already are, and the warning names the state the list is actually in: rows that are all hidden ask for `[slot="no-results"]` rather than for `[slot="empty"]`, and a slot that covers the state answers the question.
 
-## [0.8.86](https://github.com/MinBZK/storybook/compare/v0.8.85...v0.8.86) (2026-09-03)
+## [0.8.86](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.85...v0.8.86) (2026-09-03)
 
 ### Highlights
 
@@ -513,7 +513,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-progress-circle` keeps its ring color under a strict `style-src`.** The border on the track and on each segment is an SVG filter that floods the edge with a color, and that color went in as a literal `style="flood-color: …"`. A policy judges an inline style attribute the same way it judges an inline stylesheet, so on `style-src 'self'` the browser dropped it and the filter fell back to its default, which is black. The two fixed colors are ordinary rules in the component's stylesheet now, and the one that varies per segment is set through the CSSOM, which a policy leaves alone.
 
-## [0.8.85](https://github.com/MinBZK/storybook/compare/v0.8.84...v0.8.85) (2026-08-31)
+## [0.8.85](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.84...v0.8.85) (2026-08-31)
 
 ### Highlights
 
@@ -535,7 +535,7 @@ here; consult the commit history if you need that level of detail.
 
 - **A slotted icon in `nldd-button` gets the size the button gives its own.** The button measures the icon it renders from `start-icon` in a span of `--_icon-size`, but anything you slot into `start-icon` or `end-icon` landed in a bare slot and kept whatever size it arrived with. That slot is where a mark that is not one of our icons goes, a third-party logo for instance, and every consumer had to size it by hand against a token they first had to find. The size now applies to the slotted element itself rather than to a wrapper around the slot, so a button with no icon at all still reserves no room for one.
 
-## [0.8.84](https://github.com/MinBZK/storybook/compare/v0.8.83...v0.8.84) (2026-08-30)
+## [0.8.84](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.83...v0.8.84) (2026-08-30)
 
 ### Highlights
 
@@ -647,7 +647,7 @@ here; consult the commit history if you need that level of detail.
 
 - **A branch row that starts collapsed no longer warns.** The row reads an absent `expanded` as collapsed and emits `aria-expanded="false"`, so the warning asked for something that was already there. The warning about `slot="children"` outside a `type="tree"` list stays, and reports once per row instead of on every change.
 
-## [0.8.83](https://github.com/MinBZK/storybook/compare/v0.8.82...v0.8.83) (2026-08-20)
+## [0.8.83](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.82...v0.8.83) (2026-08-20)
 
 ### Highlights
 
@@ -721,9 +721,9 @@ here; consult the commit history if you need that level of detail.
 
 - **An overlay is where the app's layout context ends.** A sheet or dialog inherited the app's scroll mode, so a short page inside an overlay could float its sticky footer mid-screen. An overlay now starts its own context.
 
-## [0.8.82](https://github.com/MinBZK/storybook/compare/v0.8.81...v0.8.82) (2026-08-11)
+## [0.8.82](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.81...v0.8.82) (2026-08-11)
 
-## [0.8.81](https://github.com/MinBZK/storybook/compare/v0.8.80...v0.8.81) (2026-08-11)
+## [0.8.81](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.80...v0.8.81) (2026-08-11)
 
 ### Highlights
 
@@ -737,7 +737,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
-- **A click on the label of `nldd-form-field` now reaches every input.** It reached about half of them. The label focuses the slotted element by hand, because a `<label for>` cannot cross a shadow boundary, and that only lands somewhere when the element is a native control or carries a `focus()` of its own. Ten did not: `nldd-dropdown`, `nldd-checkbox`, `nldd-checkbox-field`, `nldd-radio-button`, `nldd-radio-button-field`, `nldd-radio-button-group`, `nldd-segmented-control`, `nldd-stepper`, `nldd-toggle-button` and `nldd-toggle-button-group`. Each of them now delegates focus to the control it wraps, so `el.focus()` also works on its own, without reaching into shadow DOM. A group sends focus to the chosen option and falls back to the first one that is enabled, which is where the keyboard puts you when you tab in. Nothing gained a `tabindex`, so no component became an extra tab stop. Reported in [#188](https://github.com/MinBZK/storybook/issues/188).
+- **A click on the label of `nldd-form-field` now reaches every input.** It reached about half of them. The label focuses the slotted element by hand, because a `<label for>` cannot cross a shadow boundary, and that only lands somewhere when the element is a native control or carries a `focus()` of its own. Ten did not: `nldd-dropdown`, `nldd-checkbox`, `nldd-checkbox-field`, `nldd-radio-button`, `nldd-radio-button-field`, `nldd-radio-button-group`, `nldd-segmented-control`, `nldd-stepper`, `nldd-toggle-button` and `nldd-toggle-button-group`. Each of them now delegates focus to the control it wraps, so `el.focus()` also works on its own, without reaching into shadow DOM. A group sends focus to the chosen option and falls back to the first one that is enabled, which is where the keyboard puts you when you tab in. Nothing gained a `tabindex`, so no component became an extra tab stop. Reported in [#188](https://github.com/NederlandseDigitaleDienst/design-system/issues/188).
 - **The label of `nldd-form-field` reaches the control as its accessible name.** It reached 8 of the 24 inputs. A label in a shadow root cannot point at a control in the consumer's light DOM, because `for` and `aria-labelledby` are IDREFs and an IDREF only resolves inside its own tree, so the name has to be handed over. Which channel to hand it through is a question about the control, and the field was answering a question about the element kind instead: it looked for `inputId`, an implementation detail of 8 of them, and put `aria-label` on the host of all the rest. A host is not the control, so for 10 inputs the name reached nobody and a screen reader announced an unnamed field. It now asks whether the control accepts `accessible-label`, the naming channel of this system, and hands it there. `nldd-dropdown`, `nldd-radio-button-group` and `nldd-stepper` gained that attribute, so the whole set has it. A stepper without one keeps its generic "adjust the value" fallback. `nldd-radio-button-group` also warns in DEV when it has neither `accessible-label` nor `accessible-labeled-by`, which its two sibling groups already did. A group inside a labeled `nldd-form-field` is named by the field, so the warning is left for the case that really has no name.
 - **A name you set closer to the control wins.** The rule that fell out of the fixes above, now in one place: an `aria-label` on a slotted `<select>` beats the `accessible-label` on the `nldd-dropdown` around it, which beats the caption of the `nldd-form-field` above that. Every layer fills a gap and takes back only what it wrote itself. Without that second half a component read "I have no name to give" as "remove the name that is there", which is how naming a `<select>` directly, the way `nldd-dropdown` documents it, quietly stopped working. The same slip sat in `nldd-radio-button-group`, `nldd-toggle-button-group` and `nldd-segmented-control`: an `aria-label` you put on the group was stripped on the first update.
 - **A field without a label of its own no longer wipes the name you set.** `<nldd-form-field><nldd-text-field accessible-label="Zoeken"></nldd-form-field>` came out nameless: the field removed `accessible-label` and `aria-label` whenever it had no label to put there, including the one you wrote. It now takes back only a name it wrote itself.
@@ -745,7 +745,7 @@ here; consult the commit history if you need that level of detail.
 - **Enter in a single-line field submits the form again.** The browser does this by itself and calls it implicit submission, but only for a control that has a form owner. The real `<input>` of an nldd field sits in a shadow root, and form ownership does not cross that boundary, so there was no form to submit and pressing Enter did nothing. The field is form-associated through ElementInternals, which does know the form, and the behavior is handed back over that connection. It is what `nldd-button type="submit"` already did from the other side, so pressing the button worked and pressing Enter did not. `nldd-text-field`, `nldd-password-field`, `nldd-number-field`, `nldd-date-field` and `nldd-time-field` submit; `nldd-multi-line-text-field`, `nldd-text-editor` and `nldd-code-editor` do not, because there Enter makes a line. A field that uses Enter for something keeps it: an open date picker chooses a date, `nldd-token-field` commits a token, `nldd-search-field` searches, and only an Enter none of them acted on reaches the form. The rule the specification puts around this is reproduced too, so without a submit button a form with more than one such field stays put. An Enter that behaves differently inside this design system than outside it is worse than one that does nothing.
 - **`nldd-toolbar` measures again when a control changes width.** Rename something and the control showing that name gets narrower, and the toolbar kept the old width reserved: space stayed empty and an item that had been pushed into the overflow menu stayed there until you resized the window. It watched for the wrong thing. Its mutation observer saw the `text` change and filed it under "a visible control changed, no toolbar work needed", which holds for a `selected` on a segmented control and not for the label of a button. Its resize observer watched only the toolbar itself, so a child that shrank while the toolbar stayed the same width told it nothing. It now watches how wide the children actually are, which also covers the reasons no attribute filter catches: a font that finishes loading, or your own CSS.
 - **The handle of `trash` is a loop again.** It went solid black in 0.8.80, when `fill-rule="evenodd"` was optimized away and the drawing stayed as it was. Rather than putting the attribute back, the hole is now drawn against the outline instead of along with it, which is what the icon style guide asks for and what makes it hold under the default fill rule. It survives the optimizer either way now, and that is the point: the attribute was a promise the drawing did not keep on its own. `flag` and `exclamation-2-circle` lost the same attribute in that release and render identically with or without it, so those were left as they are.
-- **An `nldd-menu-item` carries a menu role only inside a menu.** `menuitem` is a promise about what surrounds you, and an item on its own cannot make it true. It said it anyway, which matters in the one place the package puts a menu item outside a menu: the declaration in the `overflow` slot of an `nldd-toolbar-item`, which the toolbar clones into the real overflow menu when it collapses. The declaration stays behind in the light DOM, hidden, and rendered a full `role="menuitem"` with no menu around it. axe-core reports that as `aria-required-parent`, so a consumer following the toolbar documentation got a critical finding in their own accessibility run. Nobody met that item, since it is not rendered, but semantics that are only accidentally invisible are still wrong. The item now waits to be claimed by a menu, and `aria-checked` waits with it. The clone in the real menu is claimed there, including when it arrives while the menu is already open. Reported in [#190](https://github.com/MinBZK/storybook/issues/190).
+- **An `nldd-menu-item` carries a menu role only inside a menu.** `menuitem` is a promise about what surrounds you, and an item on its own cannot make it true. It said it anyway, which matters in the one place the package puts a menu item outside a menu: the declaration in the `overflow` slot of an `nldd-toolbar-item`, which the toolbar clones into the real overflow menu when it collapses. The declaration stays behind in the light DOM, hidden, and rendered a full `role="menuitem"` with no menu around it. axe-core reports that as `aria-required-parent`, so a consumer following the toolbar documentation got a critical finding in their own accessibility run. Nobody met that item, since it is not rendered, but semantics that are only accidentally invisible are still wrong. The item now waits to be claimed by a menu, and `aria-checked` waits with it. The clone in the real menu is claimed there, including when it arrives while the menu is already open. Reported in [#190](https://github.com/NederlandseDigitaleDienst/design-system/issues/190).
 - **`nldd-form-field` asks which of its children is the input, and looks inside a wrapper.** It took the first child that was not a help or error text and treated that as the field, so wrapping your input in a `div` or an `nldd-container` for layout sent the id, the accessible name and the error wiring to the wrapper. The field itself was left unnamed, and nothing about that was visible on screen. Every input now carries `static isFormInput = true` and the field goes looking for the first child that says so, through a wrapper if it has to. Asked rather than guessed, because half the package accepts `accessible-label` and reading that as the signal would let an `nldd-tag` beside your field be mistaken for the field. Finding nothing is a real answer: it wires up nothing and says so in DEV, naming the field by its label. A field that holds more than one input is untouched, so a radio group whose last option is "Anders" plus the text field that appears with it stays one question: the first input carries the caption and the ones after it name themselves. A consumer with an input of their own sets the same static, or names the control themselves.
 - **The label of `nldd-form-field` no longer pretends to be a control label.** `_focusInput` carried an exception that skipped `preventDefault` for checkboxes and radios, to protect a native toggle. There is no such toggle to protect: the label has no `for` and does not wrap the control, so the platform sees it as labeling nothing. The exception did nothing and the comment described a relationship this component deliberately does not have. A field caption moves focus, and never ticks a box, because every checkbox carries its own label and a caption over a group could not say which one it meant.
 
@@ -753,7 +753,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`point-bottom-left-to-point-top-right-s-curve-path` is redrawn.** Its two end points are a size smaller: the disc goes from 8 to 7 pixels across and the dot inside it from 4 to 3, with the ring around it still 2. That is the node the new `git-*` icons draw, so a route and a commit graph now sit at the same weight.
 
-## [0.8.80](https://github.com/MinBZK/storybook/compare/v0.8.79...v0.8.80) (2026-08-10)
+## [0.8.80](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.79...v0.8.80) (2026-08-10)
 
 ### Highlights
 
@@ -802,22 +802,22 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.79 (2026-08-07)</small>
 
-* chore(deps-dev): bump @semantic-release/changelog from 6.0.3 to 7.0.0 (#178) ([b4f7bec](https://github.com/MinBZK/storybook/commit/b4f7bec)), closes [#178](https://github.com/MinBZK/storybook/issues/178)
-* build(deps): bump the npm-minor-patch group across 1 directory with 20 updates (#177) ([5808fb9](https://github.com/MinBZK/storybook/commit/5808fb9)), closes [#177](https://github.com/MinBZK/storybook/issues/177)
-* ci(deps): bump actions/checkout from 6 to 7 (#176) ([2ff8f89](https://github.com/MinBZK/storybook/commit/2ff8f89)), closes [#176](https://github.com/MinBZK/storybook/issues/176)
-* ci(deps): bump actions/configure-pages from 5 to 6 (#175) ([c8528b6](https://github.com/MinBZK/storybook/commit/c8528b6)), closes [#175](https://github.com/MinBZK/storybook/issues/175)
-* ci(deps): bump actions/deploy-pages from 4 to 5 (#172) ([b4f6465](https://github.com/MinBZK/storybook/commit/b4f6465)), closes [#172](https://github.com/MinBZK/storybook/issues/172)
-* ci(deps): bump actions/setup-node from 6 to 7 (#174) ([8600ae4](https://github.com/MinBZK/storybook/commit/8600ae4)), closes [#174](https://github.com/MinBZK/storybook/issues/174)
-* ci(deps): bump actions/upload-pages-artifact from 3 to 5 (#173) ([acfa518](https://github.com/MinBZK/storybook/commit/acfa518)), closes [#173](https://github.com/MinBZK/storybook/issues/173)
+* chore(deps-dev): bump @semantic-release/changelog from 6.0.3 to 7.0.0 (#178) ([b4f7bec](https://github.com/NederlandseDigitaleDienst/design-system/commit/b4f7bec)), closes [#178](https://github.com/NederlandseDigitaleDienst/design-system/issues/178)
+* build(deps): bump the npm-minor-patch group across 1 directory with 20 updates (#177) ([5808fb9](https://github.com/NederlandseDigitaleDienst/design-system/commit/5808fb9)), closes [#177](https://github.com/NederlandseDigitaleDienst/design-system/issues/177)
+* ci(deps): bump actions/checkout from 6 to 7 (#176) ([2ff8f89](https://github.com/NederlandseDigitaleDienst/design-system/commit/2ff8f89)), closes [#176](https://github.com/NederlandseDigitaleDienst/design-system/issues/176)
+* ci(deps): bump actions/configure-pages from 5 to 6 (#175) ([c8528b6](https://github.com/NederlandseDigitaleDienst/design-system/commit/c8528b6)), closes [#175](https://github.com/NederlandseDigitaleDienst/design-system/issues/175)
+* ci(deps): bump actions/deploy-pages from 4 to 5 (#172) ([b4f6465](https://github.com/NederlandseDigitaleDienst/design-system/commit/b4f6465)), closes [#172](https://github.com/NederlandseDigitaleDienst/design-system/issues/172)
+* ci(deps): bump actions/setup-node from 6 to 7 (#174) ([8600ae4](https://github.com/NederlandseDigitaleDienst/design-system/commit/8600ae4)), closes [#174](https://github.com/NederlandseDigitaleDienst/design-system/issues/174)
+* ci(deps): bump actions/upload-pages-artifact from 3 to 5 (#173) ([acfa518](https://github.com/NederlandseDigitaleDienst/design-system/commit/acfa518)), closes [#173](https://github.com/NederlandseDigitaleDienst/design-system/issues/173)
 
 ## <small>0.8.78 (2026-08-05)</small>
 
-* feat: a time field and a time picker, plus a standalone browser bundle (#187) ([e2a94fd](https://github.com/MinBZK/storybook/commit/e2a94fd)), closes [#187](https://github.com/MinBZK/storybook/issues/187)
-* ci: geef CI en Validate een read-only token en persist het niet op schijf (#170) ([65bf797](https://github.com/MinBZK/storybook/commit/65bf797)), closes [#170](https://github.com/MinBZK/storybook/issues/170) [#167](https://github.com/MinBZK/storybook/issues/167)
-* ci: install dependencies with --ignore-scripts (#167) ([9f46021](https://github.com/MinBZK/storybook/commit/9f46021)), closes [#167](https://github.com/MinBZK/storybook/issues/167)
-* ci: laat actions/checkout het VERSION_BUMP_TOKEN niet op schijf achter (#168) ([ecd6dc0](https://github.com/MinBZK/storybook/commit/ecd6dc0)), closes [#168](https://github.com/MinBZK/storybook/issues/168) [#167](https://github.com/MinBZK/storybook/issues/167)
-* ci: publiceer vanuit een aparte job zonder dependency-code (#169) ([68964fb](https://github.com/MinBZK/storybook/commit/68964fb)), closes [#169](https://github.com/MinBZK/storybook/issues/169) [#167](https://github.com/MinBZK/storybook/issues/167)
-* ci: voeg Dependabot toe met een cooldown van vijf dagen (#171) ([1c852e4](https://github.com/MinBZK/storybook/commit/1c852e4)), closes [#171](https://github.com/MinBZK/storybook/issues/171)
+* feat: a time field and a time picker, plus a standalone browser bundle (#187) ([e2a94fd](https://github.com/NederlandseDigitaleDienst/design-system/commit/e2a94fd)), closes [#187](https://github.com/NederlandseDigitaleDienst/design-system/issues/187)
+* ci: geef CI en Validate een read-only token en persist het niet op schijf (#170) ([65bf797](https://github.com/NederlandseDigitaleDienst/design-system/commit/65bf797)), closes [#170](https://github.com/NederlandseDigitaleDienst/design-system/issues/170) [#167](https://github.com/NederlandseDigitaleDienst/design-system/issues/167)
+* ci: install dependencies with --ignore-scripts (#167) ([9f46021](https://github.com/NederlandseDigitaleDienst/design-system/commit/9f46021)), closes [#167](https://github.com/NederlandseDigitaleDienst/design-system/issues/167)
+* ci: laat actions/checkout het VERSION_BUMP_TOKEN niet op schijf achter (#168) ([ecd6dc0](https://github.com/NederlandseDigitaleDienst/design-system/commit/ecd6dc0)), closes [#168](https://github.com/NederlandseDigitaleDienst/design-system/issues/168) [#167](https://github.com/NederlandseDigitaleDienst/design-system/issues/167)
+* ci: publiceer vanuit een aparte job zonder dependency-code (#169) ([68964fb](https://github.com/NederlandseDigitaleDienst/design-system/commit/68964fb)), closes [#169](https://github.com/NederlandseDigitaleDienst/design-system/issues/169) [#167](https://github.com/NederlandseDigitaleDienst/design-system/issues/167)
+* ci: voeg Dependabot toe met een cooldown van vijf dagen (#171) ([1c852e4](https://github.com/NederlandseDigitaleDienst/design-system/commit/1c852e4)), closes [#171](https://github.com/NederlandseDigitaleDienst/design-system/issues/171)
 
 ### Highlights
 
@@ -851,7 +851,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.77 (2026-08-02)</small>
 
-* fix(popover): clear a stale centering transform when the override goes (#166) ([81ee9e8](https://github.com/MinBZK/storybook/commit/81ee9e8)), closes [#166](https://github.com/MinBZK/storybook/issues/166)
+* fix(popover): clear a stale centering transform when the override goes (#166) ([81ee9e8](https://github.com/NederlandseDigitaleDienst/design-system/commit/81ee9e8)), closes [#166](https://github.com/NederlandseDigitaleDienst/design-system/issues/166)
 
 ### Fixed
 
@@ -859,7 +859,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.76 (2026-08-02)</small>
 
-* fix(menu): set aria-haspopup on the anchor from first render (#165) ([2486d28](https://github.com/MinBZK/storybook/commit/2486d28)), closes [#165](https://github.com/MinBZK/storybook/issues/165)
+* fix(menu): set aria-haspopup on the anchor from first render (#165) ([2486d28](https://github.com/NederlandseDigitaleDienst/design-system/commit/2486d28)), closes [#165](https://github.com/NederlandseDigitaleDienst/design-system/issues/165)
 
 ### Fixed
 
@@ -867,13 +867,13 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.75 (2026-08-01)</small>
 
-* feat: font-free stylesheet entry, month picker, markdown code blocks and open-source docs (#164) ([263ffd6](https://github.com/MinBZK/storybook/commit/263ffd6)), closes [#164](https://github.com/MinBZK/storybook/issues/164)
+* feat: font-free stylesheet entry, month picker, markdown code blocks and open-source docs (#164) ([263ffd6](https://github.com/NederlandseDigitaleDienst/design-system/commit/263ffd6)), closes [#164](https://github.com/NederlandseDigitaleDienst/design-system/issues/164)
 
 ### Highlights
 
-- **Month and year each have their own menu.** The heading showed both with one chevron and opened a list of years only. Changing the month went by arrow, one step at a time, so a month on the other side of the year took up to six clicks. Both menus offer only what `min` and `max` allow. "Vandaag" moved out of the heading to the bottom left, which is what makes room for a month written out in full. The calendar in `nldd-date-field` opens under the input as well, instead of running off to the right of it ([#156](https://github.com/MinBZK/storybook/issues/156)).
-- **Open-source documentation expanded.** A code of conduct, a route for reporting vulnerabilities, a support page, a description of who decides what, and a `publiccode.yml` for the catalogue on developer.overheid.nl. The contributing guide grew from a page of changelog conventions into an actual guide ([#149](https://github.com/MinBZK/storybook/issues/149)).
-- **Host styling now survives a consuming app's CSS reset.** A universal rule like `* { margin: 0; padding: 0; border: 0 }` in a consuming app silently beat every normal `:host` declaration (CSS Scoping cascade order, [#160](https://github.com/MinBZK/storybook/issues/160)), stripping padding, dividers, and spacing from components that styled their shadow host. Banner, container, menu groups and dividers, table rows, cells, and interactive list rows now keep their layout under any reset, including Tailwind Preflight. Styling remains a CSS-variables affair — direct element styling such as `nldd-banner { padding: … }` was never a supported API and now consistently has no effect.
+- **Month and year each have their own menu.** The heading showed both with one chevron and opened a list of years only. Changing the month went by arrow, one step at a time, so a month on the other side of the year took up to six clicks. Both menus offer only what `min` and `max` allow. "Vandaag" moved out of the heading to the bottom left, which is what makes room for a month written out in full. The calendar in `nldd-date-field` opens under the input as well, instead of running off to the right of it ([#156](https://github.com/NederlandseDigitaleDienst/design-system/issues/156)).
+- **Open-source documentation expanded.** A code of conduct, a route for reporting vulnerabilities, a support page, a description of who decides what, and a `publiccode.yml` for the catalogue on developer.overheid.nl. The contributing guide grew from a page of changelog conventions into an actual guide ([#149](https://github.com/NederlandseDigitaleDienst/design-system/issues/149)).
+- **Host styling now survives a consuming app's CSS reset.** A universal rule like `* { margin: 0; padding: 0; border: 0 }` in a consuming app silently beat every normal `:host` declaration (CSS Scoping cascade order, [#160](https://github.com/NederlandseDigitaleDienst/design-system/issues/160)), stripping padding, dividers, and spacing from components that styled their shadow host. Banner, container, menu groups and dividers, table rows, cells, and interactive list rows now keep their layout under any reset, including Tailwind Preflight. Styling remains a CSS-variables affair — direct element styling such as `nldd-banner { padding: … }` was never a supported API and now consistently has no effect.
 - **New icons.** `viewfinder-line` (alias `scan`) is the existing `viewfinder` with a scan line through it, for scanning a document or a code. `display` and `paintbrush` landed in the same batch.
 
 ### Added
@@ -886,8 +886,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **`nldd-date-picker`** — the heading read "September 2026" with a chevron, promising both, and opened a list of years only ([#156](https://github.com/MinBZK/storybook/issues/156)). Month and year are now each their own button with their own menu, so a month on the other side of the year is two clicks instead of up to six on an arrow. "Vandaag" moves out of the heading to the bottom left, where the stacked layout already had it; that is what makes room for a month written out in full. The heading no longer wraps between month and year. The month and year buttons stand as tall as the paging controls beside them (32px, 44px stacked) instead of bare 22px text, which also satisfies the WCAG 2.5.8 target size. Both menus offer only what `min` and `max` allow, and a part with a single reachable value drops its chevron and its menu rather than opening to confirm what you already see.
-- **`nldd-date-picker`** — the day numbers carry medium weight. Weight was doing no work in the calendar (today is a ring, selected is a fill), so it was free to separate the dates from the chrome around them: the weekday headers and the week numbers now recede together ([#156](https://github.com/MinBZK/storybook/issues/156)).
+- **`nldd-date-picker`** — the heading read "September 2026" with a chevron, promising both, and opened a list of years only ([#156](https://github.com/NederlandseDigitaleDienst/design-system/issues/156)). Month and year are now each their own button with their own menu, so a month on the other side of the year is two clicks instead of up to six on an arrow. "Vandaag" moves out of the heading to the bottom left, where the stacked layout already had it; that is what makes room for a month written out in full. The heading no longer wraps between month and year. The month and year buttons stand as tall as the paging controls beside them (32px, 44px stacked) instead of bare 22px text, which also satisfies the WCAG 2.5.8 target size. Both menus offer only what `min` and `max` allow, and a part with a single reachable value drops its chevron and its menu rather than opening to confirm what you already see.
+- **`nldd-date-picker`** — the day numbers carry medium weight. Weight was doing no work in the calendar (today is a ring, selected is a fill), so it was free to separate the dates from the chrome around them: the weekday headers and the week numbers now recede together ([#156](https://github.com/NederlandseDigitaleDienst/design-system/issues/156)).
 - **`nldd-title`** — a slotted heading is capped at a 40ch measure and balances its lines, so a title on a wide section no longer runs the full width with a lonely last word.
 - **`nldd-list-item`** — a row that opens with an icon now starts its divider at the first text or title cell, so the line aligns with the words instead of the icon. Consumers no longer need a `divider-start` marker for this; an explicit marker still wins, and putting one on the icon cell restores the full-width line.
 - **Document typography** — the stylesheet now gives the `body` the document font and content color as soon as an `nldd-app-view` is on the page. Apps no longer need their own `body { font: … }`. The rule sits in `@layer reset`, so any consumer rule beats it without effort; a page without an app-view is untouched.
@@ -899,8 +899,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
-- **`nldd-date-field`** — the calendar hangs off the trigger, which sits at the end of the field, and opened rightward from there: on a 192px field it ran 302px past the field's right edge and barely overlapped the input it belonged to. It now opens leftward, landing under the input; against the left edge of the screen Floating UI falls back to the old direction on its own ([#156](https://github.com/MinBZK/storybook/issues/156)).
-- **`nldd-rich-text`** — a markdown renderer emits a fenced code block as `<pre><code>`, and the tinted chip meant for inline code painted once per rendered line, so a three-line block showed three separate boxes ([#158](https://github.com/MinBZK/storybook/issues/158)). The frame now sits on the `pre`, where the block is, and the `code` inside hands the chip back. It carries the same inset ring as `nldd-box` and `nldd-code-viewer`, so the block stays readable on a tinted surface instead of dissolving into it.
+- **`nldd-date-field`** — the calendar hangs off the trigger, which sits at the end of the field, and opened rightward from there: on a 192px field it ran 302px past the field's right edge and barely overlapped the input it belonged to. It now opens leftward, landing under the input; against the left edge of the screen Floating UI falls back to the old direction on its own ([#156](https://github.com/NederlandseDigitaleDienst/design-system/issues/156)).
+- **`nldd-rich-text`** — a markdown renderer emits a fenced code block as `<pre><code>`, and the tinted chip meant for inline code painted once per rendered line, so a three-line block showed three separate boxes ([#158](https://github.com/NederlandseDigitaleDienst/design-system/issues/158)). The frame now sits on the `pre`, where the block is, and the `code` inside hands the chip back. It carries the same inset ring as `nldd-box` and `nldd-code-viewer`, so the block stays readable on a tinted surface instead of dissolving into it.
 - **`nldd-rich-text`** — a `pre` had no `overflow-x`, so a single long code line escaped the element and stretched every ancestor with it. In a narrow card that read as rich-text ignoring the card width. Long lines now scroll inside the block, as a table already did.
 - **`nldd-date-picker`** — activating a paging arrow or "Vandaag" pulled focus into the day grid, so paging twice meant finding the arrow again. Focus now stays on the control that was activated; only the roving tabindex moves along, so tabbing into the grid still lands on the equivalent day.
 - **`nldd-date-field` and `nldd-password-field`** — the embedded button's focus ring carries a 6px halo meant to land exactly on the field's border, but the field's `overflow: hidden` clipped it at the padding box, leaving the border to cut through the ring. The clip is gone: nothing in either field can escape without it (the input clips its own text, and the autofill background is overridden inside the input), so the ring now paints over the field the way it does over any other neighbour.
@@ -916,11 +916,11 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.74 (2026-08-01)</small>
 
-* docs: add EUPL-1.2 LICENSE file and ship third-party notices (#148) ([e7791ea](https://github.com/MinBZK/storybook/commit/e7791ea)), closes [#148](https://github.com/MinBZK/storybook/issues/148) [#132](https://github.com/MinBZK/storybook/issues/132)
+* docs: add EUPL-1.2 LICENSE file and ship third-party notices (#148) ([e7791ea](https://github.com/NederlandseDigitaleDienst/design-system/commit/e7791ea)), closes [#148](https://github.com/NederlandseDigitaleDienst/design-system/issues/148) [#132](https://github.com/NederlandseDigitaleDienst/design-system/issues/132)
 
 ## <small>0.8.73 (2026-07-30)</small>
 
-* feat: 32 nieuwe iconen, icon-gallery met statusfilter en fine-tuning (#163) ([0425e4d](https://github.com/MinBZK/storybook/commit/0425e4d)), closes [#163](https://github.com/MinBZK/storybook/issues/163)
+* feat: 32 nieuwe iconen, icon-gallery met statusfilter en fine-tuning (#163) ([0425e4d](https://github.com/NederlandseDigitaleDienst/design-system/commit/0425e4d)), closes [#163](https://github.com/NederlandseDigitaleDienst/design-system/issues/163)
 
 ### Highlights
 
@@ -952,7 +952,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.72 (2026-07-29)</small>
 
-* fix(timeline-track-cell): laat het spoor over de rijgrens doorlopen (#162) ([950d6c1](https://github.com/MinBZK/storybook/commit/950d6c1)), closes [#162](https://github.com/MinBZK/storybook/issues/162)
+* fix(timeline-track-cell): laat het spoor over de rijgrens doorlopen (#162) ([950d6c1](https://github.com/NederlandseDigitaleDienst/design-system/commit/950d6c1)), closes [#162](https://github.com/NederlandseDigitaleDienst/design-system/issues/162)
 
 ### Fixed
 
@@ -960,7 +960,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.71 (2026-07-29)</small>
 
-* feat: step indicator, tree lists and a reworked list-item (#161) ([2c87577](https://github.com/MinBZK/storybook/commit/2c87577)), closes [#161](https://github.com/MinBZK/storybook/issues/161)
+* feat: step indicator, tree lists and a reworked list-item (#161) ([2c87577](https://github.com/NederlandseDigitaleDienst/design-system/commit/2c87577)), closes [#161](https://github.com/NederlandseDigitaleDienst/design-system/issues/161)
 
 ### Highlights
 
@@ -1052,7 +1052,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.70 (2026-07-21)</small>
 
-* feat!: nldd-date-picker en nldd-date-field, custom elements manifest en Vue-types (#155) ([e2ce97f](https://github.com/MinBZK/storybook/commit/e2ce97f)), closes [#155](https://github.com/MinBZK/storybook/issues/155)
+* feat!: nldd-date-picker en nldd-date-field, custom elements manifest en Vue-types (#155) ([e2ce97f](https://github.com/NederlandseDigitaleDienst/design-system/commit/e2ce97f)), closes [#155](https://github.com/NederlandseDigitaleDienst/design-system/issues/155)
 
 ### Highlights
 
@@ -1089,10 +1089,10 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.69 (2026-07-16)</small>
 
-* feat: nldd-avatar, content-color token cleanup (breaking), and component fixes (#139) ([482a04f](https://github.com/MinBZK/storybook/commit/482a04f)), closes [#139](https://github.com/MinBZK/storybook/issues/139)
-* ci(release): stop releasing on ci/chore/test, keep releasing what ships (#142) ([25b7645](https://github.com/MinBZK/storybook/commit/25b7645)), closes [#142](https://github.com/MinBZK/storybook/issues/142)
-* ci(review): always post the review as a sticky PR comment (#143) ([d5aa290](https://github.com/MinBZK/storybook/commit/d5aa290)), closes [#143](https://github.com/MinBZK/storybook/issues/143)
-* ci(review): enable track_progress so the review comment can actually be posted (#144) ([38b8483](https://github.com/MinBZK/storybook/commit/38b8483)), closes [#144](https://github.com/MinBZK/storybook/issues/144)
+* feat: nldd-avatar, content-color token cleanup (breaking), and component fixes (#139) ([482a04f](https://github.com/NederlandseDigitaleDienst/design-system/commit/482a04f)), closes [#139](https://github.com/NederlandseDigitaleDienst/design-system/issues/139)
+* ci(release): stop releasing on ci/chore/test, keep releasing what ships (#142) ([25b7645](https://github.com/NederlandseDigitaleDienst/design-system/commit/25b7645)), closes [#142](https://github.com/NederlandseDigitaleDienst/design-system/issues/142)
+* ci(review): always post the review as a sticky PR comment (#143) ([d5aa290](https://github.com/NederlandseDigitaleDienst/design-system/commit/d5aa290)), closes [#143](https://github.com/NederlandseDigitaleDienst/design-system/issues/143)
+* ci(review): enable track_progress so the review comment can actually be posted (#144) ([38b8483](https://github.com/NederlandseDigitaleDienst/design-system/commit/38b8483)), closes [#144](https://github.com/NederlandseDigitaleDienst/design-system/issues/144)
 
 ### Highlights
 
@@ -1138,15 +1138,15 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-page-footer`** — when the footer is empty and only the Rijksoverheid lintje shows, it now keeps space above the lintje so a preceding tinted page section no longer butts right up against it.
 ## <small>0.8.68 (2026-07-16)</small>
 
-* ci(review): let the review post inline comments and see the full diff (#141) ([819f241](https://github.com/MinBZK/storybook/commit/819f241)), closes [#141](https://github.com/MinBZK/storybook/issues/141)
+* ci(review): let the review post inline comments and see the full diff (#141) ([819f241](https://github.com/NederlandseDigitaleDienst/design-system/commit/819f241)), closes [#141](https://github.com/NederlandseDigitaleDienst/design-system/issues/141)
 
 ## <small>0.8.67 (2026-07-15)</small>
 
-* ci(review): fetch full history so the review can compute the PR diff (#140) ([a076e03](https://github.com/MinBZK/storybook/commit/a076e03)), closes [#140](https://github.com/MinBZK/storybook/issues/140)
+* ci(review): fetch full history so the review can compute the PR diff (#140) ([a076e03](https://github.com/NederlandseDigitaleDienst/design-system/commit/a076e03)), closes [#140](https://github.com/NederlandseDigitaleDienst/design-system/issues/140)
 
 ## <small>0.8.66 (2026-07-13)</small>
 
-* Text-editor improvements, icon set, toolbar & token-field commit-on-blur (#138) ([ca77ddb](https://github.com/MinBZK/storybook/commit/ca77ddb)), closes [#138](https://github.com/MinBZK/storybook/issues/138)
+* Text-editor improvements, icon set, toolbar & token-field commit-on-blur (#138) ([ca77ddb](https://github.com/NederlandseDigitaleDienst/design-system/commit/ca77ddb)), closes [#138](https://github.com/NederlandseDigitaleDienst/design-system/issues/138)
 
 ### Highlights
 
@@ -1176,7 +1176,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.65 (2026-07-08)</small>
 
-* feat: CodeMirror text/code editors + viewer, token-field, FOUC guard, flatter surfaces & fixes (#136 ([e490366](https://github.com/MinBZK/storybook/commit/e490366)), closes [#136](https://github.com/MinBZK/storybook/issues/136)
+* feat: CodeMirror text/code editors + viewer, token-field, FOUC guard, flatter surfaces & fixes (#136 ([e490366](https://github.com/NederlandseDigitaleDienst/design-system/commit/e490366)), closes [#136](https://github.com/NederlandseDigitaleDienst/design-system/issues/136)
 
 ### Highlights
 
@@ -1228,7 +1228,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.64 (2026-07-01)</small>
 
-* feat: filterable listbox, sidebar-section, hero media, container lanes + box-sizing hardening (#135) ([bf48d70](https://github.com/MinBZK/storybook/commit/bf48d70)), closes [#135](https://github.com/MinBZK/storybook/issues/135)
+* feat: filterable listbox, sidebar-section, hero media, container lanes + box-sizing hardening (#135) ([bf48d70](https://github.com/NederlandseDigitaleDienst/design-system/commit/bf48d70)), closes [#135](https://github.com/NederlandseDigitaleDienst/design-system/issues/135)
 
 ### Highlights
 
@@ -1274,7 +1274,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.63 (2026-06-18)</small>
 
-* feat: just-in-time-education, list arrow-key navigation, activity-indicator overlay, plus consumer-r ([1e6bf86](https://github.com/MinBZK/storybook/commit/1e6bf86)), closes [#130](https://github.com/MinBZK/storybook/issues/130)
+* feat: just-in-time-education, list arrow-key navigation, activity-indicator overlay, plus consumer-r ([1e6bf86](https://github.com/NederlandseDigitaleDienst/design-system/commit/1e6bf86)), closes [#130](https://github.com/NederlandseDigitaleDienst/design-system/issues/130)
 
 ### Highlights
 
@@ -1304,12 +1304,12 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.62 (2026-06-16)</small>
 
-* fix(list): fill the width under justify-self: start parents (rich-text) (#129) ([fd11dc3](https://github.com/MinBZK/storybook/commit/fd11dc3)), closes [#129](https://github.com/MinBZK/storybook/issues/129)
-* ci(release): generate the plugin version after the npm version bump (#128) ([75bc4dd](https://github.com/MinBZK/storybook/commit/75bc4dd)), closes [#128](https://github.com/MinBZK/storybook/issues/128)
+* fix(list): fill the width under justify-self: start parents (rich-text) (#129) ([fd11dc3](https://github.com/NederlandseDigitaleDienst/design-system/commit/fd11dc3)), closes [#129](https://github.com/NederlandseDigitaleDienst/design-system/issues/129)
+* ci(release): generate the plugin version after the npm version bump (#128) ([75bc4dd](https://github.com/NederlandseDigitaleDienst/design-system/commit/75bc4dd)), closes [#128](https://github.com/NederlandseDigitaleDienst/design-system/issues/128)
 
 ## <small>0.8.61 (2026-06-16)</small>
 
-* feat!: edge & document icons, list-item links, automatic bar-split-view dividers, and dark-mode fixe ([32e05fa](https://github.com/MinBZK/storybook/commit/32e05fa)), closes [#127](https://github.com/MinBZK/storybook/issues/127)
+* feat!: edge & document icons, list-item links, automatic bar-split-view dividers, and dark-mode fixe ([32e05fa](https://github.com/NederlandseDigitaleDienst/design-system/commit/32e05fa)), closes [#127](https://github.com/NederlandseDigitaleDienst/design-system/issues/127)
 
 ### Highlights
 
@@ -1335,12 +1335,12 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.60 (2026-06-16)</small>
 
-* fix(plugin): laat plugin-versie de pakketversie volgen (#126) ([d90d9fd](https://github.com/MinBZK/storybook/commit/d90d9fd)), closes [#126](https://github.com/MinBZK/storybook/issues/126)
-* refactor(skills): vouw ontwerprichtlijnen in de nldd-consumer-skill (#125) ([a53eaef](https://github.com/MinBZK/storybook/commit/a53eaef)), closes [#125](https://github.com/MinBZK/storybook/issues/125)
+* fix(plugin): laat plugin-versie de pakketversie volgen (#126) ([d90d9fd](https://github.com/NederlandseDigitaleDienst/design-system/commit/d90d9fd)), closes [#126](https://github.com/NederlandseDigitaleDienst/design-system/issues/126)
+* refactor(skills): vouw ontwerprichtlijnen in de nldd-consumer-skill (#125) ([a53eaef](https://github.com/NederlandseDigitaleDienst/design-system/commit/a53eaef)), closes [#125](https://github.com/NederlandseDigitaleDienst/design-system/issues/125)
 
 ## <small>0.8.59 (2026-06-15)</small>
 
-* feat!: richer menus, multi-level mobile nav, keyboard-shortcut variants, and a loading backdrop (#12 ([8b01ea9](https://github.com/MinBZK/storybook/commit/8b01ea9)), closes [#124](https://github.com/MinBZK/storybook/issues/124)
+* feat!: richer menus, multi-level mobile nav, keyboard-shortcut variants, and a loading backdrop (#12 ([8b01ea9](https://github.com/NederlandseDigitaleDienst/design-system/commit/8b01ea9)), closes [#124](https://github.com/NederlandseDigitaleDienst/design-system/issues/124)
 
 ### Highlights
 
@@ -1372,7 +1372,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.58 (2026-06-12)</small>
 
-* feat!: status bar, byline, hero, on-color support, and rich-text width zones (#123) ([5932b63](https://github.com/MinBZK/storybook/commit/5932b63)), closes [#123](https://github.com/MinBZK/storybook/issues/123)
+* feat!: status bar, byline, hero, on-color support, and rich-text width zones (#123) ([5932b63](https://github.com/NederlandseDigitaleDienst/design-system/commit/5932b63)), closes [#123](https://github.com/NederlandseDigitaleDienst/design-system/issues/123)
 
 ### Highlights
 
@@ -1420,7 +1420,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.57 (2026-06-09)</small>
 
-* feat!: lg size, highlight borders, new icons, and toolbar/input refinements (#122) ([e9f0570](https://github.com/MinBZK/storybook/commit/e9f0570)), closes [#122](https://github.com/MinBZK/storybook/issues/122)
+* feat!: lg size, highlight borders, new icons, and toolbar/input refinements (#122) ([e9f0570](https://github.com/NederlandseDigitaleDienst/design-system/commit/e9f0570)), closes [#122](https://github.com/NederlandseDigitaleDienst/design-system/issues/122)
 
 ### Highlights
 
@@ -1472,11 +1472,11 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.56 (2026-06-03)</small>
 
-* feat(plugin): marktplaats voor de nldd-plugin (#121) ([a883ba0](https://github.com/MinBZK/storybook/commit/a883ba0)), closes [#121](https://github.com/MinBZK/storybook/issues/121)
+* feat(plugin): marktplaats voor de nldd-plugin (#121) ([a883ba0](https://github.com/NederlandseDigitaleDienst/design-system/commit/a883ba0)), closes [#121](https://github.com/NederlandseDigitaleDienst/design-system/issues/121)
 
 ## <small>0.8.55 (2026-06-03)</small>
 
-* feat(plugin): consumentenskill voor het design system (#118) ([118c607](https://github.com/MinBZK/storybook/commit/118c607)), closes [#118](https://github.com/MinBZK/storybook/issues/118)
+* feat(plugin): consumentenskill voor het design system (#118) ([118c607](https://github.com/NederlandseDigitaleDienst/design-system/commit/118c607)), closes [#118](https://github.com/NederlandseDigitaleDienst/design-system/issues/118)
 
 ### Added
 
@@ -1484,7 +1484,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.54 (2026-06-02)</small>
 
-* feat!: data tables, activity indicator + loading buttons, and category reorg ([90f4951](https://github.com/MinBZK/storybook/commit/90f4951))
+* feat!: data tables, activity indicator + loading buttons, and category reorg ([90f4951](https://github.com/NederlandseDigitaleDienst/design-system/commit/90f4951))
 
 ### Highlights
 
@@ -1521,7 +1521,7 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.53 (2026-05-31)</small>
 
-* feat!: isolate slotted content, unify progress + corner-radius APIs, and refine components ([f84cfe2](https://github.com/MinBZK/storybook/commit/f84cfe2))
+* feat!: isolate slotted content, unify progress + corner-radius APIs, and refine components ([f84cfe2](https://github.com/NederlandseDigitaleDienst/design-system/commit/f84cfe2))
 
 ### Highlights
 
@@ -1551,12 +1551,12 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.52 (2026-05-29)</small>
 
-* fix(image): use relative sample-image paths so they load under GH Pages base ([4c3150b](https://github.com/MinBZK/storybook/commit/4c3150b))
+* fix(image): use relative sample-image paths so they load under GH Pages base ([4c3150b](https://github.com/NederlandseDigitaleDienst/design-system/commit/4c3150b))
 
 ## <small>0.8.51 (2026-05-29)</small>
 
-* feat: banner, progress family, image with LQIP, and new icons (#115) ([d217812](https://github.com/MinBZK/storybook/commit/d217812)), closes [#115](https://github.com/MinBZK/storybook/issues/115)
-* docs: fix ndd -> nldd in skills en bestandsnamen uitlijnen met codebase (#117) ([50c5c68](https://github.com/MinBZK/storybook/commit/50c5c68)), closes [#117](https://github.com/MinBZK/storybook/issues/117)
+* feat: banner, progress family, image with LQIP, and new icons (#115) ([d217812](https://github.com/NederlandseDigitaleDienst/design-system/commit/d217812)), closes [#115](https://github.com/NederlandseDigitaleDienst/design-system/issues/115)
+* docs: fix ndd -> nldd in skills en bestandsnamen uitlijnen met codebase (#117) ([50c5c68](https://github.com/NederlandseDigitaleDienst/design-system/commit/50c5c68)), closes [#117](https://github.com/NederlandseDigitaleDienst/design-system/issues/117)
 
 ### Highlights
 
@@ -1616,11 +1616,11 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.50 (2026-05-28)</small>
 
-* fix: deblokkeer pre-commit hooks (#116) ([50269f0](https://github.com/MinBZK/storybook/commit/50269f0)), closes [#116](https://github.com/MinBZK/storybook/issues/116)
+* fix: deblokkeer pre-commit hooks (#116) ([50269f0](https://github.com/NederlandseDigitaleDienst/design-system/commit/50269f0)), closes [#116](https://github.com/NederlandseDigitaleDienst/design-system/issues/116)
 
 ## <small>0.8.49 (2026-05-26)</small>
 
-* feat!: container order API, breadcrumbs centering fix, CHANGELOG workflow ([c1e0ad8](https://github.com/MinBZK/storybook/commit/c1e0ad8))
+* feat!: container order API, breadcrumbs centering fix, CHANGELOG workflow ([c1e0ad8](https://github.com/NederlandseDigitaleDienst/design-system/commit/c1e0ad8))
 
 ### Highlights
 
@@ -1669,11 +1669,11 @@ here; consult the commit history if you need that level of detail.
 
 ## <small>0.8.48 (2026-05-25)</small>
 
-* fix: padding new page-footer ([fbbdf2c](https://github.com/MinBZK/storybook/commit/fbbdf2c))
+* fix: padding new page-footer ([fbbdf2c](https://github.com/NederlandseDigitaleDienst/design-system/commit/fbbdf2c))
 
 ## <small>0.8.47 (2026-05-25)</small>
 
-* feat!: page-footer, breadcrumbs, container layout API, window scheme ([f96ebf1](https://github.com/MinBZK/storybook/commit/f96ebf1)), closes [#154273](https://github.com/MinBZK/storybook/issues/154273)
+* feat!: page-footer, breadcrumbs, container layout API, window scheme ([f96ebf1](https://github.com/NederlandseDigitaleDienst/design-system/commit/f96ebf1)), closes [#154273](https://github.com/NederlandseDigitaleDienst/design-system/issues/154273)
 
 ### Highlights
 
@@ -1718,7 +1718,7 @@ here; consult the commit history if you need that level of detail.
 - Buttons doen nu echt mee in formulieren: `nldd-button` en `nldd-icon-button` zijn form-associated, dus `type="submit"` en `type="reset"` werken nu ook binnen een `<form>` (voorheen deed een klik niets over de shadow-grens).
 - Consistente "pressed" (active) feedback op alle neutral-tinted controls.
 
-* feat(actions): form-associated buttons, text slot, and consistent active states ([a99a1c5](https://github.com/MinBZK/storybook/commit/a99a1c5))
+* feat(actions): form-associated buttons, text slot, and consistent active states ([a99a1c5](https://github.com/NederlandseDigitaleDienst/design-system/commit/a99a1c5))
 
 ## <small>0.8.45 (2026-05-21)</small>
 
@@ -1792,7 +1792,7 @@ Bijna alle breaking changes zijn "onbekende/lege attribuutwaardes → fallback o
 - `<nldd-document-tab-bar>` dismiss-button hover/active in dark mode.
 - `<nldd-collection>` load-more button stretcht via `button[width="full"]`.
 
-* feat!: bugs and housekeeping — menu, container, variant API, icon API, CSS refactor pass ([d53da4d](https://github.com/MinBZK/storybook/commit/d53da4d))
+* feat!: bugs and housekeeping — menu, container, variant API, icon API, CSS refactor pass ([d53da4d](https://github.com/NederlandseDigitaleDienst/design-system/commit/d53da4d))
 
 ## <small>0.8.44 (2026-05-16)</small>
 
@@ -1842,7 +1842,7 @@ Substantial branch: several components reworked, **7 breaking changes**, plus ac
 - full-bleed-section body horizontally centered (matches simple-section); touch uses `pointerdown` not `mousedown`.
 - OS detection refined: Android → other, UACH `iOS` → mac, ChromeOS classified correctly (more accurate `keyboard-shortcut`).
 
-* feat!: component reworks, breaking changes, fixes & new icons ([149f5aa](https://github.com/MinBZK/storybook/commit/149f5aa))
+* feat!: component reworks, breaking changes, fixes & new icons ([149f5aa](https://github.com/NederlandseDigitaleDienst/design-system/commit/149f5aa))
 
 ## <small>0.8.43 (2026-05-13)</small>
 
@@ -1889,4 +1889,4 @@ Migration guide:
 + token.addEventListener('toggle', e => { e.detail.expanded })
 ```
 
-* feat!: bugs and housekeeping — tokens, refactors, A11y fixes ([d54ed9e](https://github.com/MinBZK/storybook/commit/d54ed9e))
+* feat!: bugs and housekeeping — tokens, refactors, A11y fixes ([d54ed9e](https://github.com/NederlandseDigitaleDienst/design-system/commit/d54ed9e))
