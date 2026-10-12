@@ -12,8 +12,8 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **Four page patterns for a website.** Home, topic page, navigation page and content page now sit together under "Patronen/Pagina's", each with a running example and a test. The home is the starting point of a site and is itself the menu, a topic page is the home for a topic lower in the site, a navigation page helps visitors find the pages below it, and a content page holds the details at the lowest level. A page structure pattern describes the frame all four share, with its header and footer.
-- **`nldd-app-view` is now `nldd-shell`.** It is the outer layer of a website as much as of an application, and the old name suggested only the second. Every page needs the rename, since there is no alias; see Breaking.
 - **The text panel of `nldd-hero` overlaps the image.** By default the text panel now falls over the bottom of the image and runs on below it, as far as its content needs. The image keeps a fixed height and sets the mood, the panel carries the page, and a long text no longer has to fit inside the photo.
+- **`nldd-app-view` is now `nldd-shell`.** It is the outer layer of a website as much as of an application, and the old name suggested only the second. Every page needs the rename, since there is no alias; see Breaking.
 
 ### Added
 
