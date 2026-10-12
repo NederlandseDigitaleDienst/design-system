@@ -95,18 +95,51 @@ describe('nldd-rich-text width zones', () => {
 		expect(await place('<p id="x">tekst</p>', 'x')).toBe('main');
 	});
 
-	it('places images and tables at the wide accent', async () => {
+	it('places media and tables at the wide accent', async () => {
 		expect(await place('<img id="x" src="data:," alt="">', 'x')).toBe('wide');
+		wrap.remove();
+		expect(await place('<video id="x"></video>', 'x')).toBe('wide');
+		wrap.remove();
 		expect(await place('<table id="x"><tr><td>x</td></tr></table>', 'x')).toBe('wide');
+		wrap.remove();
+		expect(await place('<nldd-table id="x"></nldd-table>', 'x')).toBe('wide');
+		wrap.remove();
+		expect(await place('<nldd-step-bar id="x"></nldd-step-bar>', 'x')).toBe('wide');
 	});
 
-	it('places code blocks and other elements at the full span', async () => {
-		expect(await place('<pre id="x">code</pre>', 'x')).toBe('full');
+	it('places code at the main measure, filling it', async () => {
+		expect(await place('<p id="p">tekst</p><pre id="x">code</pre>', 'x')).toBe('main');
+		const line = wrap.querySelector('#p')!.getBoundingClientRect().width;
+		expect(Math.round(wrap.querySelector('#x')!.getBoundingClientRect().width)).toBe(Math.round(line));
+		wrap.remove();
+		expect(await place('<nldd-code-viewer id="x"></nldd-code-viewer>', 'x')).toBe('main');
 	});
 
-	it('lets data-width override the default per child', async () => {
-		expect(await place('<p id="x" data-width="full">tekst</p>', 'x')).toBe('full');
-		expect(await place('<table id="x" data-width="main"><tr><td>x</td></tr></table>', 'x')).toBe('main');
+	it('places what needs the room at the full span', async () => {
+		for (const tag of ['hr', 'nldd-collection', 'nldd-container']) {
+			expect(await place(`<${tag} id="x"></${tag}>`, 'x'), tag).toBe('full');
+			wrap.remove();
+		}
+	});
+
+	it('places every other component at the main measure, never wider than a line', async () => {
+		for (const tag of ['nldd-box', 'nldd-card', 'nldd-banner', 'nldd-list', 'nldd-button', 'nldd-some-new-component']) {
+			expect(await place(`<${tag} id="x"></${tag}>`, 'x'), tag).toBe('main');
+			wrap.remove();
+		}
+		// A block with more text than a line fits stops at the main measure.
+		await place(`<p id="p">tekst</p><div id="x" style="display: block" data-rich-text-width="main">${'Een lange zin die doorloopt. '.repeat(30)}</div><nldd-box id="b">${'Een lange zin die doorloopt. '.repeat(30)}</nldd-box>`, 'x');
+		const line = wrap.querySelector('#p')!.getBoundingClientRect().width;
+		expect(wrap.querySelector('#b')!.getBoundingClientRect().width).toBeLessThanOrEqual(line + 1);
+	});
+
+	it('places nldd-image at the wide accent, like other media', async () => {
+		expect(await place('<nldd-image id="x"></nldd-image>', 'x')).toBe('wide');
+	});
+
+	it('lets data-rich-text-width override the default per child', async () => {
+		expect(await place('<p id="x" data-rich-text-width="full">tekst</p>', 'x')).toBe('full');
+		expect(await place('<table id="x" data-rich-text-width="main"><tr><td>x</td></tr></table>', 'x')).toBe('main');
 	});
 
 	it('passes a sole plain wrapper div through, so its children keep zones and rhythm', async () => {
@@ -123,7 +156,7 @@ describe('nldd-rich-text width zones', () => {
 			'<div id="w" class="kader"><p>tekst</p></div>',
 			'<div id="w" style="padding: 8px"><p>tekst</p></div>',
 			'<div id="w" role="note"><p>tekst</p></div>',
-			'<div id="w" data-width="wide"><p>tekst</p></div>',
+			'<div id="w" data-rich-text-width="wide"><p>tekst</p></div>',
 			'<div id="w"><p>tekst</p></div><p>daarna</p>',
 		]) {
 			await place(markup, 'w');

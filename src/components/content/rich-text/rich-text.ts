@@ -9,7 +9,7 @@
  * The rich text lays out its direct children in a grid: the vertical rhythm
  * between headings, paragraphs and lists, and the width zones below, apply to
  * those children only. A single wrapper `div` without `class`, `style`, `role`
- * or `data-width`, as a markdown renderer or a component root produces it, is
+ * or `data-rich-text-width`, as a markdown renderer or a component root produces it, is
  * passed through with `display: contents`, so its children count as direct.
  * Any other wrapper becomes a single grid item, and the paragraphs inside it
  * lose their spacing.
@@ -23,12 +23,16 @@
  * and section titles do grow: use nldd-title for those.
  *
  * ## Width zones
- * Children are placed in three zones: text (headings, paragraphs, lists,
- * blockquote, div/section) reads at the `main` size; media and tables (img,
- * figure, video, iframe, table) get the `wide` accent; everything else, code
- * blocks and every component, gets the full `full` span with
- * `justify-self: start`, so the room is available without being forced.
- * Overridable per child with `data-width="main" | "wide" | "full"`. In the
+ * Children are placed in three zones. A child belongs to the text unless it is
+ * listed, so it reads at the `main` size and is never wider than a line: text
+ * (headings, paragraphs, lists, blockquote, div/section) and every component
+ * that is not named below, such as nldd-box, nldd-card, nldd-banner,
+ * nldd-list and a button, and code (pre, nldd-code-viewer), which scrolls
+ * inside its block when a line is longer. Media, tables and a step bar (img, figure, video, iframe,
+ * table, nldd-table, nldd-image, nldd-step-bar) get the `wide` accent. What
+ * needs the room gets the `full` span: hr, nldd-collection and nldd-container. A child takes the room it needs inside its zone
+ * (`justify-self: start`), so the room is available without being forced.
+ * Overridable per child with `data-rich-text-width="main" | "wide" | "full"`. In the
  * left-aligned layout, wide and full read as a bleed to the right; with
  * `centered` they are symmetrical.
  *
