@@ -42,6 +42,7 @@ export const NEW_ICONS = new Set([
 ]);
 
 export const UPDATED_ICONS = new Set([
+	'bold',
 	'heading-1',
 	'heading-2',
 	'heading-3',
@@ -49,4 +50,8 @@ export const UPDATED_ICONS = new Set([
 	'heading-5',
 	'heading-6',
 	'numbered-list',
+	'square-1',
+	'strikethrough',
+	'text-format-size',
+	'underlined',
 ]);
