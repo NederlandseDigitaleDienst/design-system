@@ -141,6 +141,11 @@ function ensurePrerequisites(cwd) {
     execSync(`${npmCmd} run build`, { cwd, stdio: 'inherit' });
     console.log('build completed\n');
   }
+
+  // The icon registry and the logo are generated and not in the repository.
+  // `npm run storybook` builds them in its pre-hook; this starts Storybook
+  // directly, so it does the same here.
+  execSync(`${npmCmd} run build:icons`, { cwd, stdio: 'ignore' });
 }
 
 /**

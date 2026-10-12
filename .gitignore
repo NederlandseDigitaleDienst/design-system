@@ -33,7 +33,7 @@ __screenshots__/
 .vitest/
 
 # Generated files
-src/components/content/icon/ndd-icon-registry.ts
+src/components/content/icon/icon-registry.ts
 src/components/navigation/top-navigation-bar/logo.ts
 
 # Temporary files
