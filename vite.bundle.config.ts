@@ -20,6 +20,9 @@ export default defineConfig({
 		},
 		outDir: 'dist',
 		emptyOutDir: false,
+		// public/ holds the sample images of the Storybook stories; they do not
+		// belong in the package.
+		copyPublicDir: false,
 		target: 'es2020',
 		minify: true,
 		rollupOptions: {
