@@ -4,7 +4,7 @@ Een component kan een pagina niet toegankelijk maken, maar wel veel werk uit han
 
 ## Waar we op bouwen
 
-We bouwen voor WCAG 2.1 niveau AA, de norm achter DigiToegankelijk (EN 301 549). Voor rollen en toetsenbordgedrag volgen de componenten de WAI-ARIA Authoring Practices.
+We bouwen voor WCAG 2.2 niveau AA. Dat is een stap verder dan wat DigiToegankelijk (EN 301 549) nu vraagt, WCAG 2.1 niveau AA. Voor rollen en toetsenbordgedrag volgen de componenten de WAI-ARIA Authoring Practices.
 
 Of een pagina voldoet, bepaal je per pagina. De componenten zijn daarvoor een voorwaarde en geen garantie: met de juiste onderdelen kun je nog steeds een pagina bouwen die niet te volgen is.
 
