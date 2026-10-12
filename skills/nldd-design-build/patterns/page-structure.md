@@ -6,7 +6,7 @@
 
 # Patroon: paginaopbouw
 
-De paginaopbouw is het geraamte dat elke pagina van een website deelt: een schil, de header bovenaan, secties met de inhoud en de footer onderaan. De [home](home-page.md), de [onderwerppagina](topic-page.md), de [navigatiepagina](navigation-page.md) en de [contentpagina](content-page.md) vullen dat geraamte elk op hun eigen manier in. Wisselen bezoekers tijdens een taak vaak tussen views, kies dan een [applicatie](application.md).
+De paginaopbouw beschrijft de vaste basis van een websitepagina: de shell, de header, de inhoudssecties en de footer. De [home](home-page.md), de [onderwerppagina](topic-page.md), de [navigatiepagina](navigation-page.md) en de [contentpagina](content-page.md) gebruiken die basis elk op hun eigen manier. Wisselen bezoekers tijdens een taak vaak tussen views, dan kan een [applicatie](application.md) meerdere van die pagina’s vervangen door één omgeving met verschillende views.
 
 ## Compositie
 
@@ -22,7 +22,7 @@ nldd-shell                            de buitenste schil
        ├─ nldd-simple-section            background="tinted", een vlak
        └─ slot="footer"                  de footer: nldd-page-footer
             ├─ slot="breadcrumbs"        nldd-breadcrumbs, waar deze pagina staat
-            ├─ nldd-container            je eigen rij, links voor de hele site
+            ├─ nldd-container            de hoofdinhoud, vrij in te vullen
             └─ slot="legal-bar"          nldd-page-footer-legal-bar
 ```
 
@@ -141,11 +141,11 @@ nldd-shell                            de buitenste schil
 
 ## Waarom zo
 
-**De shell staat altijd om alles heen.** De [`nldd-shell`](../../nldd-design/reference.md#nldd-shell) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Het documentfont komt uit de stylesheet van het pakket, zodra er een shell op de pagina staat. Daarin staat één [`nldd-page`](../../nldd-design/reference.md#nldd-page), met de header en de footer in hun eigen slot en de secties ertussen.
+**De shell staat altijd om alles heen.** De [`nldd-shell`](../../nldd-design/reference.md#nldd-shell) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Het documentfont komt uit de stylesheet van het pakket, zodra er een shell op de pagina staat. Bij een website staat daarin één [`nldd-page`](../../nldd-design/reference.md#nldd-page), met de header en de footer in hun eigen slot en de secties ertussen. Bij een [applicatie](application.md) staan er split views in, met een pagina per paneel.
 
-**Eén sectie per inhoudsblok, en kies de soort die de indeling al heeft.** Een [`nldd-simple-section`](../../nldd-design/reference.md#nldd-simple-section) regelt zelf de leesbreedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Moet een blok anders liggen, dan verwissel je de sectie in plaats van er zelf kolommen in te bouwen: [`nldd-two-thirds-one-third-section`](../../nldd-design/reference.md#nldd-two-thirds-one-third-section) en [`nldd-one-half-one-half-section`](../../nldd-design/reference.md#nldd-one-half-one-half-section) verdelen de breedte, [`nldd-sidebar-section`](../../nldd-design/reference.md#nldd-sidebar-section) zet een vast paneel naast de inhoud, en [`nldd-full-bleed-section`](../../nldd-design/reference.md#nldd-full-bleed-section) laat een vlak tot de rand lopen. Ze delen dezelfde marges en dezelfde `background`, dus afwisselen geeft ritme zonder dat de pagina uit het lood raakt.
+**Eén sectie per inhoudsblok, en kies de sectie met de indeling die je nodig hebt.** Een [`nldd-simple-section`](../../nldd-design/reference.md#nldd-simple-section) regelt zelf de breedte en de witruimte, en geeft de titel in zijn `header`-slot de juiste afstand tot de inhoud. Moet een blok anders liggen, dan verwissel je de sectie in plaats van er zelf kolommen in te bouwen: [`nldd-two-thirds-one-third-section`](../../nldd-design/reference.md#nldd-two-thirds-one-third-section) en [`nldd-one-half-one-half-section`](../../nldd-design/reference.md#nldd-one-half-one-half-section) verdelen de breedte, [`nldd-sidebar-section`](../../nldd-design/reference.md#nldd-sidebar-section) zet een vast paneel naast de inhoud, en [`nldd-full-bleed-section`](../../nldd-design/reference.md#nldd-full-bleed-section) laat een vlak tot de rand lopen. Ze delen dezelfde marges en dezelfde `background`, dus afwisselen geeft ritme zonder dat de pagina uit het lood raakt.
 
-**Een vlak maak je met `background`, niet met eigen CSS.** Elke sectie kent het, en het cascadeert het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling. Zet je er een eigen achtergrondkleur onder, dan weet de inhoud daar niets van en klopt het contrast niet meer.
+**Een vlak maak je met `background`, niet met eigen CSS.** Elke sectie kent het, en het cascadeert het oppervlak naar alles wat erin staat: een `nldd-card` in een getinte sectie kiest zelf een andere vulling.
 
 **Eén `h1` per pagina, en geen niveau overslaan.** `size` op een [`nldd-title`](../../nldd-design/reference.md#nldd-title) is hoe die eruitziet, `heading-level` wat die is. Dat maakt een herbruikbaar blok eenvoudig: geef het een kopniveau als parameter, zodat het onder een sectiekop een `h3` kan zijn en direct onder de paginatitel een `h2`, en laat de grootte los daarvan. De koppen in een rich text tellen gewoon mee.
 
@@ -153,7 +153,7 @@ nldd-shell                            de buitenste schil
 
 De header identificeert de website en biedt toegang tot zoeken en taal. Op pagina’s onder de home geeft de terugknop bezoekers een weg naar het bovenliggende niveau.
 
-Op een pagina met een pagina erboven:
+Op een onderliggende pagina:
 
 ```html
 <nldd-shell>
@@ -265,11 +265,11 @@ Op de home, zonder terugknop:
 </nldd-shell>
 ```
 
-Houd de header beperkt tot functies die op elke pagina nodig zijn. De pagina’s vormen samen de navigatie, dus er staat geen rij met menu-items in de [`nldd-top-navigation-bar`](../../nldd-design/reference.md#nldd-top-navigation-bar). Laat de header op een website met de pagina wegscrollen: een [`nldd-page`](../../nldd-design/reference.md#nldd-page) kan hem vastzetten met `sticky-header`, maar een vaste header neemt ruimte in van de inhoud. Zie de ontwerprichtlijnen over [navigatie](../../nldd-design/design-guidelines.md#navigatie-en-structuur) en over [de sticky header](../../nldd-design/design-guidelines.md#visueel-en-layout).
+**Alleen wat op elke pagina nodig is.** Houd de header beperkt tot functies die bezoekers op elke pagina nodig hebben. De pagina’s vormen samen de navigatie, dus er staat geen rij met menu-items in de [`nldd-top-navigation-bar`](../../nldd-design/reference.md#nldd-top-navigation-bar). Laat de header op een website met de pagina wegscrollen: een [`nldd-page`](../../nldd-design/reference.md#nldd-page) kan hem vastzetten met `sticky-header`, maar een vaste header neemt ruimte in van de inhoud. Zie de ontwerprichtlijnen over [navigatie](../../nldd-design/design-guidelines.md#navigatie-en-structuur) en over [de sticky header](../../nldd-design/design-guidelines.md#visueel-en-layout).
 
-Zet zoeken en taal in het `utility`-slot, als een [`nldd-menu-bar`](../../nldd-design/reference.md#nldd-menu-bar). Taal is een uitklapbaar item met de afkorting van de huidige taal als tekst ("NL"), en een `nldd-menu` met een radio-item per taal, daar met de volledige naam. Met `content-priority="text"` blijven op smalle schermen de teksten "Zoeken" en "NL" staan en vallen de iconen weg, zodat de functies herkenbaar blijven.
+**Zoeken en taal.** Ze staan rechts en blijven op elke breedte zichtbaar. Zet ze in het `utility`-slot, als een [`nldd-menu-bar`](../../nldd-design/reference.md#nldd-menu-bar). Taal is een uitklapbaar item met de afkorting van de huidige taal als tekst ("NL"), en een `nldd-menu` met een radio-item per taal, daar met de volledige naam. Met `content-priority="text"` blijven op smalle schermen de teksten "Zoeken" en "NL" staan en vallen de iconen weg, zodat de functies herkenbaar blijven.
 
-Heeft de site een persoonlijk deel, zoals een dossier, dan komt er een derde item bij, helemaal rechts. Voor wie niet is ingelogd is dat een link "Inloggen": het hele werkwoord, want het item leidt naar het inlogscherm en logt zelf niet in. Houd het bij één inlog voor de hele site. Zie de ontwerprichtlijnen over [knopteksten](../../nldd-design/design-guidelines.md#copywriting) en over [modes](../../nldd-design/design-guidelines.md#strategie-en-proces).
+**Inloggen.** Heeft de site een persoonlijk deel, zoals een dossier, dan komt er een derde item bij, helemaal rechts. Voor wie niet is ingelogd is dat een link "Inloggen": het hele werkwoord, want het item leidt naar het inlogscherm en logt zelf niet in. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#copywriting).
 
 ```html
 <nldd-shell>
@@ -332,7 +332,11 @@ Heeft de site een persoonlijk deel, zoals een dossier, dan komt er een derde ite
 </nldd-shell>
 ```
 
-Is iemand ingelogd, dan wordt het item een menu. In de balk staat een korte, vaste tekst ("Mijn account"), met in het `icon`-slot van het item een [`nldd-avatar`](../../nldd-design/reference.md#nldd-avatar) met de initialen: zo zie je in één oogopslag dat je bent ingelogd, en als wie. Met `content-priority="icon"` blijft op een smal scherm alleen die avatar over, en is de tekst de toegankelijke naam. Zet `icon-aligned` en `color="inherit"` op de avatar, dan lijnt hij uit met de iconen ernaast en heeft hij hun kleur; de naam staat voluit in het menu, in een [`nldd-identity`](../../nldd-design/reference.md#nldd-identity) in het `header`-slot, zodat je ziet wie er is ingelogd zonder dat een lange naam de balk vult. Het e-mailadres eronder zegt met welk account, voor wie er meer dan één heeft. Dezelfde avatar staat daar naast de naam. Hij toont de initialen uit `name`, dus er is geen foto voor nodig. Zet op beide `decorative`: de naam en de tekst van het item staan er al. Bovenaan staat de link naar het persoonlijke deel, want daar logt iemand voor in, en daaronder het profiel. "Log uit" staat onder een scheidingslijn, los van de links. Krijgt één rij een icoon, geef ze dan allemaal een, anders beginnen de teksten niet op één lijn. Uitloggen gebeurt meteen, dus dat staat in de gebiedende wijs, en het is een knop en geen link. Houd het menu hierbij: elke extra optie moet iedereen lezen en overslaan. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#strategie-en-proces).
+**Account.** Is iemand ingelogd, dan wordt het item een menu, en laat het zien dat je bent ingelogd en als wie. In de balk staat een korte, vaste tekst ("Mijn account"), met in het `icon`-slot van het item een [`nldd-avatar`](../../nldd-design/reference.md#nldd-avatar) met de initialen. Zet daar `icon-aligned` en `color="inherit"` op, dan lijnt hij uit met de iconen ernaast en heeft hij hun kleur. Met `content-priority="icon"` blijft op een smal scherm alleen de avatar over, en is de tekst de toegankelijke naam.
+
+De naam staat voluit in het menu, in een [`nldd-identity`](../../nldd-design/reference.md#nldd-identity) in het `header`-slot, zodat een lange naam de balk niet vult. Het e-mailadres eronder zegt met welk account, voor wie er meer dan één heeft. Dezelfde avatar staat daar naast de naam; hij toont de initialen uit `name`, dus er is geen foto voor nodig. Zet op beide avatars `decorative`: de naam en de tekst van het item staan er al.
+
+In het menu staat bovenaan de link naar het persoonlijke deel, want daar logt iemand voor in, en daaronder het profiel. "Log uit" staat onder een scheidingslijn, los van de links. Uitloggen gebeurt meteen, dus dat staat in de gebiedende wijs, en het is een knop en geen link.
 
 ```html
 <nldd-shell>
@@ -434,11 +438,11 @@ Is iemand ingelogd, dan wordt het item een menu. In de balk staat een korte, vas
 </nldd-shell>
 ```
 
-De terugknop linkt naar de bovenliggende pagina: zet `back-text` en `back-href` op de balk. Noem die bestemming, bijvoorbeeld "Aanvragen", in plaats van alleen "Terug". De knop gaat naar de pagina erboven en niet naar waar iemand vandaan kwam, en dat moet je kunnen zien. Op de home is geen terugknop nodig.
+**Terug naar het bovenliggende niveau.** De terugknop gaat naar de pagina erboven en niet naar waar iemand vandaan kwam, en dat moet je kunnen zien. Noem daarom de bestemming, bijvoorbeeld "Aanvragen", in plaats van alleen "Terug". Zet daarvoor `back-text` en `back-href` op de balk.
 
-Plaats een [`nldd-skip-link`](../../nldd-design/reference.md#nldd-skip-link) om de header heen, in het `header`-slot. Zo kan iemand met het toetsenbord de header overslaan en direct naar de inhoud gaan.
+**De skip link.** Iemand met een toetsenbord moet de header kunnen overslaan en direct naar de inhoud kunnen gaan. Plaats daarvoor een [`nldd-skip-link`](../../nldd-design/reference.md#nldd-skip-link) om de header heen, in het `header`-slot.
 
-Is er iets dat elke bezoeker moet weten, zoals een storing of gepland onderhoud, zet dan een [`nldd-status-bar`](../../nldd-design/reference.md#nldd-status-bar) in het `header`-slot, als eerste, boven de skip link en de balk. Hij gaat over de hele dienst en niet over deze pagina, dus hij staat boven de balk en nooit eronder. Is er niets te melden, dan staat hij er niet.
+**Statusmeldingen.** Is er iets dat elke bezoeker moet weten, zoals een storing of gepland onderhoud, dan staat dat boven de balk en nooit eronder: het gaat over de hele dienst en niet over deze pagina. Zet een [`nldd-status-bar`](../../nldd-design/reference.md#nldd-status-bar) in het `header`-slot, als eerste, boven de skip link en de balk.
 
 ```html
 <nldd-shell>
@@ -502,9 +506,9 @@ Is er iets dat elke bezoeker moet weten, zoals een storing of gepland onderhoud,
 
 ## De footer
 
-De footer sluit de pagina af. Hij bevat het kruimelpad, links die op de hele website gelden en de juridische links. Op alle pagina’s is de footer hetzelfde; alleen het kruimelpad verschilt. De home heeft geen kruimelpad.
+De footer sluit de pagina af. Hij bevat het kruimelpad, een hoofdinhoud en de juridische links. De structuur van de footer blijft op alle pagina’s hetzelfde. Het kruimelpad verschilt per pagina, en de hoofdinhoud kan per website verschillen. De home heeft geen kruimelpad.
 
-Op een pagina met een pagina erboven:
+Op een onderliggende pagina:
 
 ```html
 <nldd-shell>
@@ -754,16 +758,16 @@ Op de home, zonder kruimelpad:
 </nldd-shell>
 ```
 
-Zet het kruimelpad in zijn eigen rij, boven de overige footerinhoud: een [`nldd-breadcrumbs`](../../nldd-design/reference.md#nldd-breadcrumbs) in het `breadcrumbs`-slot van de [`nldd-page-footer`](../../nldd-design/reference.md#nldd-page-footer). Zo kunnen bezoekers zien waar ze zijn zonder dat het vóór de inhoud komt. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#navigatie-en-structuur).
+**Het kruimelpad.** Het staat in zijn eigen rij, boven de overige footerinhoud: een [`nldd-breadcrumbs`](../../nldd-design/reference.md#nldd-breadcrumbs) in het `breadcrumbs`-slot van de [`nldd-page-footer`](../../nldd-design/reference.md#nldd-page-footer). Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#navigatie-en-structuur).
 
-Gebruik de eigen rij voor links die op de hele website gelden, bijvoorbeeld gegroepeerd per onderdeel. Houd die links beperkt tot wat bezoekers onderaan elke pagina verwachten. De paginapatronen laten deze rij weg om hun voorbeeld kort te houden.
+**De hoofdinhoud.** Wat er tussen het kruimelpad en de juridische links staat, is vrij in te vullen per website. De paginapatronen laten dat deel weg om hun voorbeeld kort te houden.
 
-Zet Contact, Toegankelijkheid en Privacy als directe links in de juridische rij. Andere informatie over de website, zoals copyright en archivering, kan bij elkaar op een pagina "Over deze website" staan, die zelf een [navigatiepagina](navigation-page.md) is. De privacyverklaring hoort daar ook bij, maar niet alleen daar: de Europese privacytoezichthouders vragen om een directe link op elke pagina, onder een gangbare term als "Privacy" ([WP260, paragraaf 11](https://ec.europa.eu/newsroom/article29/items/622227)). Noem die pagina "Over deze website" en niet "Over", want "Over" kan net zo goed over de organisatie gaan.
+**De juridische links.** Zet Contact, Toegankelijkheid en Privacy als directe links in de juridische rij. Andere informatie over de website, zoals copyright en archivering, kan bij elkaar op een pagina "Over deze website" staan, die zelf een [navigatiepagina](navigation-page.md) is. De privacyverklaring hoort daar ook bij, maar niet alleen daar: de Europese privacytoezichthouders vragen om een directe link op elke pagina, onder een gangbare term als "Privacy" ([WP260, paragraaf 11](https://ec.europa.eu/newsroom/article29/items/622227)). Noem die pagina "Over deze website" en niet "Over", want "Over" kan net zo goed over de organisatie gaan.
 
-De footer heeft een eigen slot en regelt zelf de breedte, de witruimte en de scheiding tussen de rijen. Plaats hem daarom niet in een inhoudssectie.
+**Niet in een sectie.** De footer heeft een eigen slot en regelt zelf de breedte, de witruimte en de scheiding tussen de rijen. Plaats hem daarom niet in een inhoudssectie.
 
 ## Toegankelijkheid
 
-De componenten regelen de leesbreedte, de witruimte, de vlakken en de koppen die de titels renderen. Ze geven de terugknop, de zoekfunctie, de taalkeuze, de skip link, het kruimelpad en de juridische links ook de juiste semantiek.
+De componenten regelen de breedte, de witruimte, de vlakken en de koppen die de titels renderen. Ze geven de terugknop, de zoekfunctie, de taalkeuze, de skip link, het kruimelpad en de juridische links ook de juiste semantiek.
 
-Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagina. Dat geldt ook voor de titels in je eigen footerrij, zodat ze aansluiten op de koppen van de pagina. Geef het taalitem een `accessible-label` die de taal voluit noemt en de afkorting erin houdt, zoals "Taal: Nederlands (NL)": een schermlezer spelt "NL" anders als losse letters, en wie het item met spraak bedient moet het nog bij zijn zichtbare naam kunnen noemen. Geef taalnamen in andere talen een `lang`, zodat een schermlezer "English" Engels uitspreekt.
+Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagina. Dat geldt ook voor de titels in de hoofdinhoud van de footer, zodat ze aansluiten op de koppen van de pagina. Geef het taalitem een `accessible-label` die de taal voluit noemt en de afkorting erin houdt, zoals "Taal: Nederlands (NL)": een schermlezer spelt "NL" anders als losse letters, en wie het item met spraak bedient moet het nog bij zijn zichtbare naam kunnen noemen. Geef taalnamen in andere talen een `lang`, zodat een schermlezer "English" Engels uitspreekt.

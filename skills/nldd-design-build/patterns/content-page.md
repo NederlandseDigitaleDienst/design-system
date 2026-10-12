@@ -508,6 +508,6 @@ Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbo
 
 ## Toegankelijkheid
 
-Wat je gratis krijgt: wat bij de [paginaopbouw](page-structure.md) staat, de leesbreedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, en de inhoudsopgave als eigen navigatie met `aria-current="location"` op de rij die je leest.
+Wat je gratis krijgt: wat bij de [paginaopbouw](page-structure.md) staat, de breedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, en de inhoudsopgave als eigen navigatie met `aria-current="location"` op de rij die je leest.
 
 Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, een `aria-label` op de lijst van de inhoudsopgave, een `id` op elke kop waar die naar springt, de focus op die kop na een keuze in de sheet, en een `accessible-label` op een kaart die een link is. De link ligt als een leeg vlak over de kaart en leest de tekst erin niet voor, dus zonder label heeft hij geen naam. Neem de titel van de kaart.

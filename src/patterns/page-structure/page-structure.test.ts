@@ -136,7 +136,6 @@ describe('patroon: paginaopbouw, de header', () => {
 		expect(profile.getAttribute('href')).toBeTruthy();
 		expect(logOut.getAttribute('text')).toBe('Log uit');
 		expect(logOut.getAttribute('href')).toBeFalsy();
-		// One row with an icon gives the others a gap, so every row has one.
 		expect([personal, profile, logOut].map((row) => row.getAttribute('icon'))).toEqual(['folder', 'profile', 'logout']);
 	});
 
