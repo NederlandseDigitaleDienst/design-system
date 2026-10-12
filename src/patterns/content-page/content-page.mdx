@@ -16,11 +16,16 @@ nldd-shell                            de buitenste schil
        │    └─ nldd-skip-link            om de balk heen
        │         └─ nldd-top-navigation-bar   back-text en back-href naar de pagina erboven
        │              └─ nldd-menu-bar        slot="utility", zoeken en taal
-       ├─ nldd-sidebar-section           sidebar-label en grow, breed een kolom, smal een sheet
+       ├─ nldd-sidebar-section           met een inhoudsopgave: sidebar-label en grow, breed een kolom, smal een sheet
        │    ├─ slot="header"             de nldd-title met de h1, en op smal de knop naar de sheet
        │    ├─ slot="sidebar"            de inhoudsopgave, een nldd-list type="navigation" met current-type="location"
        │    ├─ nldd-rich-text            de uitleg, met een id op elke h2
        │    └─ nldd-card                 de actie, na de uitleg
+       ├─ nldd-two-thirds-one-third-section    of, kort met een vervolgactie
+       │    ├─ slot="header"             de nldd-title met de h1
+       │    ├─ slot="left"               de nldd-rich-text met de uitleg
+       │    └─ slot="right"              de nldd-card met de actie
+       ├─ nldd-simple-section            of, kort zonder vervolgactie: de h1 in het header-slot, de nldd-rich-text eronder
        ├─ nldd-simple-section            background="tinted", waar je hierna heen kunt
        │    └─ nldd-collection
        │         └─ nldd-card            href
@@ -39,27 +44,31 @@ Zonder inhoudsopgave, voor een korte pagina:
 
 ## Waarom zo
 
-**Geen hero, de titel is de kop.** Op een contentpagina is de tekst zelf het punt, ook voor wie er rechtstreeks vanuit een zoekmachine op landt. Een grote titel boven de tekst is genoeg, en de uitleg begint direct eronder, zonder beeld of vlak dat er eerst langs moet.
+**De inhoud staat centraal.** Op een contentpagina komt de bezoeker voor de inhoud zelf, ook wie er rechtstreeks vanuit een zoekmachine op landt. Daarom is de titel de kop en begint de uitleg direct eronder, zonder hero of ander onderdeel dat de aandacht eerst van de tekst afleidt.
 
-**De tekst staat in een rich text.** Een [`nldd-rich-text`](?path=/docs/components-content-rich-text--docs) met gewone `h2`'s, lijsten en alinea's zet zelf het ritme en de leesbreedte. Geef elke `h2` een `id`, zodat de inhoudsopgave ernaar kan springen.
+**Structureer de tekst met koppen.** Gebruik duidelijke tussenkoppen en korte tekstblokken. Een [`nldd-rich-text`](?path=/docs/components-content-rich-text--docs) met gewone `h2`'s, lijsten en alinea's regelt de leesbreedte en de ruimte ertussen.
 
-**Een inhoudsopgave alleen als er iets te overzien valt.** Heeft de tekst drie of meer `h2`'s, of is hij langer dan zo'n twee schermen, dan helpt een inhoudsopgave om te zien wat er komt en ernaartoe te springen. Bij een kortere pagina is het alleen UI die aandacht vraagt naast een tekst die je in één keer overziet. Laat hem dan weg, en gebruik een [`nldd-two-thirds-one-third-section`](?path=/docs/components-layout-page-sections-two-thirds-one-third-section--docs): de titel in het `header`-slot, de tekst links en de kaart met de actie rechts. Op breed staat de actie dan al in beeld terwijl je leest, en op smal schuift hij onder de tekst, zoals in de versie met inhoudsopgave.
+**Voeg een inhoudsopgave toe als die helpt.** Een inhoudsopgave laat bezoekers vooruitkijken en direct naar een deel van de tekst gaan. Gebruik er een als de tekst drie of meer `h2`'s heeft, of langer is dan zo'n twee schermen. Bij een kortere pagina is het alleen UI die aandacht vraagt naast een tekst die je in één keer overziet. Op een breed scherm staat de inhoudsopgave naast de tekst, in de sidebar van een [`nldd-sidebar-section`](?path=/docs/components-layout-page-sections-sidebar-section--docs), en blijft hij staan terwijl je leest. Op een smal scherm opent hij vanuit een knop onder de titel, zodat hij de tekst niet omlaag duwt. Het is een [`nldd-list`](?path=/docs/components-lists-tables-list--docs) met `type="navigation"` en een `nldd-list-item` met `href` per `h2`, met dezelfde tekst als de kop, en de rij van het deel dat je leest is gemarkeerd. Houd hem bij de `h2`'s; een pagina met zoveel koppen dat de lijst zelf gaat scrollen, is eigenlijk meer pagina's.
 
-**De inhoudsopgave staat links, in de sidebar van de sectie.** De `nldd-sidebar-section` zet hem in een vaste kolom naast de tekst, die blijft staan terwijl je leest. Het is een [`nldd-list`](?path=/docs/components-lists-tables-list--docs) met `type="navigation"` en een `nldd-list-item` met `href` per `h2`, met dezelfde tekst als de kop. Houd hem bij de `h2`'s; een pagina met zoveel koppen dat de lijst zelf gaat scrollen, is eigenlijk meer pagina's.
+**Plaats de vervolgactie bij de uitleg.** Een actie die bij de uitleg hoort, zoals een aanvraag starten, moet goed te vinden zijn zonder de tekst te onderbreken. Met een inhoudsopgave staat hij in een kaart onder de tekst, met één primaire knop: wie gelezen heeft, vindt hem daar, en de inhoudsopgave blijft over de tekst gaan. Op een korte pagina zonder inhoudsopgave past een [`nldd-two-thirds-one-third-section`](?path=/docs/components-layout-page-sections-two-thirds-one-third-section--docs), met de tekst links en de kaart met de actie rechts. Op breed staat de actie dan al in beeld terwijl je leest, en op smal schuift hij onder de tekst. Is er geen vervolgactie, dan is een [`nldd-simple-section`](?path=/docs/components-layout-page-sections-simple-section--docs) genoeg.
+
+**Zet verwijzingen naar andere pagina's onder de inhoud.** Het is waar je heen kunt als je klaar bent met lezen, en dat is onderaan, op elke breedte. In de sidebar zou het op breed wel meereizen, maar op smal zit de sidebar achter de knop bovenaan, en daar zoekt niemand die net uitgelezen is. Het is een keuze per pagina en geen volledige lijst van de pagina's ernaast: pagina's uit hetzelfde onderdeel, of van elders op de site, zoals de onderwerppagina waar deze uitleg bij hoort. Waar je bent staat al in de titel, dus er is geen huidige kaart.
+
+**De tekst groeit, niet de verwijzingen.** Een [`nldd-page`](?path=/docs/components-layout-page--docs) laat standaard zijn laatste sectie de hoogte opvullen die over is, zodat de footer onderaan staat. Hier is dat de sectie met verwijzingen, en bij een korte tekst op een hoog scherm wordt die getinte strook dan een groot grijs vlak. Zet daarom `grow` op de sectie met de tekst: die rekt op, en de verwijzingen blijven een strook vlak boven de footer.
+
+Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbouw](?path=/docs/patronen-pagina-s-paginaopbouw--docs).
+
+## Gedrag dat je zelf schrijft
+
+De inhoudsopgave vraagt wat code van jezelf. De markup staat in het voorbeeld hierboven; dit is wat erbij hoort.
+
+**Geef elke `h2` een `id`.** Dan kan de inhoudsopgave ernaar springen.
 
 **Op smal is de inhoudsopgave een knop onder de titel.** Is de sectie te smal voor twee kolommen, dan verhuist de sidebar naar een sheet, en zou hij anders boven de tekst de inhoud omlaag duwen. De knop staat los onder de titel in het `header`-slot en verschijnt alleen als de sectie `collapsed` is, met een regel CSS die hem en de spacer erboven verbergt zolang de sectie geen sheet heeft: `nldd-sidebar-section:not([collapsed]) :is(#inhoud-openen, nldd-spacer:has(+ #inhoud-openen)) { display: none }`. Een klik roept `show()` aan. Geef de knop `popup-type="dialog"` en zet `expanded` op de `open`- en `close`-events van de sectie, dan weet een schermlezer of de sheet open is. De sheet heeft een eigen titelbalk met de `sidebar-label`, dus verberg de titel in de kolom zolang de sectie `collapsed` is.
 
 **Een keuze in de sheet sluit eerst de sheet, en springt dan pas.** Laat je de link gewoon zijn werk doen, dan scrolt de pagina onder een sheet die nog openstaat, en zet de sheet bij het sluiten de focus terug op de knop, boven aan de pagina. Vang de klik dus af zolang de sectie `collapsed` is, roep `hide()` aan, en spring na het `close`-event naar de kop: scroll hem in beeld en geef hem de focus, met `tabindex="-1"` erop. Doe dat in een `queueMicrotask`, zodat het na het terugzetten van de focus komt en niet ervoor.
 
 **De rij van de kop die je leest is `current`.** Zet `current-type="location"` op elke rij: de rijen wijzen naar stukken van deze pagina, en zonder dat attribuut meldt een schermlezer de actieve rij als "huidige pagina". Welke rij `current` is, houd jij bij. In het voorbeeld doet een `IntersectionObserver` dat, met een `rootMargin` die alleen het bovenste derde van het venster laat tellen: de laatste kop die daar voorbij is, is de actieve, en zolang er geen voorbij is, de eerste. Eén rij tegelijk, en die staat in de markup al op de eerste, zodat de lijst zonder JS ook klopt.
-
-**Met een inhoudsopgave komt de actie na de uitleg.** Wat je met de uitleg doet, staat in een kaart onder de tekst, met één primaire knop. Wie gelezen heeft, vindt hem daar, en de inhoudsopgave blijft over de tekst gaan.
-
-**De verwijzingen naar andere pagina's staan onderaan, niet in de sidebar.** Het is waar je heen kunt als je klaar bent met lezen, en dat is onderaan, op elke breedte. In de sidebar zou het op breed wel meereizen, maar op smal zit de sidebar achter de knop bovenaan, en daar zoekt niemand die net uitgelezen is. Het is een keuze per pagina en geen volledige lijst van de pagina's ernaast: pagina's uit hetzelfde onderdeel, of van elders op de site, zoals de onderwerppagina waar deze uitleg bij hoort. Waar je bent staat al in de titel, dus er is geen huidige kaart.
-
-**De tekst groeit, niet de verwijzingen.** Een [`nldd-page`](?path=/docs/components-layout-page--docs) laat standaard zijn laatste sectie de hoogte opvullen die over is, zodat de footer onderaan staat. Hier is dat de sectie met verwijzingen, en bij een korte tekst op een hoog scherm wordt die getinte strook dan een groot grijs vlak. Zet daarom `grow` op de sectie met de tekst: die rekt op, en de verwijzingen blijven een strook vlak boven de footer.
-
-Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbouw](?path=/docs/patronen-pagina-s-paginaopbouw--docs).
 
 ## Toegankelijkheid
 
