@@ -198,7 +198,7 @@ De broncode van dit designsysteem valt onder de **EUPL-1.2**. De volledige licen
 
 De fontbestanden in `src/assets/fonts/`, het logo en de huisstijlelementen van de Rijksoverheid (zoals het lint en de huisstijlkleuren) vallen daar niet onder; die zijn uitsluitend bestemd voor de Rijksoverheid en partijen die in haar opdracht werken, zie [`NOTICES.md`](./NOTICES.md).
 
-Verder horen bij dit project een [gedragscode](./CODE_OF_CONDUCT.md), een [beveiligingsbeleid](./SECURITY.md), een [bijdragegids](./CONTRIBUTING.md), een [ondersteuningspagina](./SUPPORT.md) en een beschrijving van [wie waarover beslist](./PROJECT_GOVERNANCE.md).
+Verder horen bij dit project een [gedragscode](./docs/CODE_OF_CONDUCT.md), een [beveiligingsbeleid](./docs/SECURITY.md), een [bijdragegids](./docs/CONTRIBUTING.md), een [ondersteuningspagina](./docs/SUPPORT.md) en een beschrijving van [wie waarover beslist](./docs/PROJECT_GOVERNANCE.md).
 
 ## Waar het designsysteem draait
 

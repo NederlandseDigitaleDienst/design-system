@@ -40,7 +40,7 @@ Meld je via het NCSC, dan volgt de afhandeling het beleid op https://www.ncsc.nl
 
 ## Welke versies
 
-Er is één ondersteunde versie: de laatst gepubliceerde op npm. Fixes komen in een nieuwe release en worden niet teruggezet naar oudere versies. Wat er per release is veranderd staat in [`CHANGELOG.md`](./CHANGELOG.md).
+Er is één ondersteunde versie: de laatst gepubliceerde op npm. Fixes komen in een nieuwe release en worden niet teruggezet naar oudere versies. Wat er per release is veranderd staat in [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## Geen kwetsbaarheid, wel een bug
 

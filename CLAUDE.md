@@ -155,7 +155,7 @@ De voorbeelden gebruiken één vaste cast, zodat een nieuw patroon schrijven kop
 
 Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-top-title-bar`](?path=…)`, niet "titelbalk" of "title bar". Dat is de naam die ook in de markup en in `reference.md` staat, dus wie erop zoekt vindt hem. In de zin eromheen schrijf je gewoon Nederlands ("de balk", "de rij"), want dan is net gezegd waar het over gaat.
 
-Houd de set klein: patroonbibliotheken gaan dood aan achterstallig onderhoud, niet aan een verkeerd formaat. Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
+Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `docs/CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
 Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Onbekende tag, attribuut, slot of icoonnaam laat CI falen. De logica zit in `scripts/lib/skill-markup.js` met tests in `skill-markup.test.mjs`; die gebruikt dezelfde JSDoc-parser als de referentie, zodat de drie niet uiteen kunnen lopen. Twee dingen zijn expres toegestaan: framework-bindingen (`:text`, `[attr.x]`, `v-if`) en attributen die een ouder voor zijn kinderen documenteert (`above`/`below`/`only` op de split views).
 
