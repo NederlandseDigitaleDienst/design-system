@@ -48,4 +48,5 @@ export const UPDATED_ICONS = new Set([
 	'heading-4',
 	'heading-5',
 	'heading-6',
+	'numbered-list',
 ]);
