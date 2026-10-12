@@ -8,6 +8,11 @@
   nldd-sidebar-section[collapsed] #filters-openen:not([hidden]) {
     display: inline-flex;
   }
+
+  /* In the sheet the results lie behind it, so there is nothing to skip to. */
+  nldd-sidebar-section[collapsed] #filters-overslaan {
+    display: none;
+  }
 </style>
 
 <nldd-page>
@@ -27,6 +32,11 @@
       padding="16"
       padding-bottom="8"
     >
+      <nldd-skip-link
+        id="filters-overslaan"
+        text="Sla filters over"
+        href="#resultaten"
+      ></nldd-skip-link>
       <nldd-title
         size="5"
         text="Status"
@@ -179,7 +189,10 @@
 
     <nldd-spacer size="4"></nldd-spacer>
 
-    <nldd-list accessible-label="Dossiers">
+    <nldd-list
+      id="resultaten"
+      accessible-label="Dossiers"
+    >
       <nldd-inline-dialog
         slot="no-results"
         icon="magnifier"

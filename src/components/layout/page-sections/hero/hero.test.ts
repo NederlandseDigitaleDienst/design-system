@@ -26,6 +26,8 @@ describe('nldd-hero', () => {
 		expect(h.mainPosition).toBe('bottom-left');
 		expect(h.mainWidth).toBe('auto');
 		expect(h.mainBackground).toBe('accent');
+		expect((el as unknown as { layout: string }).layout).toBe('overlap');
+		expect(el.hasAttribute('layout')).toBe(false);
 		expect(el.hasAttribute('main-position')).toBe(false);
 		expect(el.hasAttribute('main-width')).toBe(false);
 		expect(el.hasAttribute('main-background')).toBe(false);
@@ -86,7 +88,10 @@ describe('nldd-hero', () => {
 	const IMG = '<img slot="media" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="">';
 
 	const geometry = async (attrs: string, width: number) => {
-		el = await fixture(`<nldd-hero ${attrs} style="width: ${width}px">${IMG}<p>Tekst</p></nldd-hero>`);
+		// The geometry of a panel on the image is that of `contained`; the overlap
+		// has its own tests below and names its layout.
+		const layout = attrs.includes('layout=') ? '' : 'layout="contained"';
+		el = await fixture(`<nldd-hero ${layout} ${attrs} style="width: ${width}px">${IMG}<p>Tekst</p></nldd-hero>`);
 		await waitForUpdate(el);
 		await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
 		const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
@@ -229,6 +234,23 @@ describe('nldd-hero', () => {
 		const overlapWarnings = (warn: MockInstance<typeof console.warn>) => warn.mock.calls
 			.map(([message]) => String(message))
 			.filter((message) => message.includes('layout="overlap"'));
+
+		it('is the layout of a hero that names none', async () => {
+			const unloadTokens = loadTokens();
+			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+			try {
+				el = await fixture(`<nldd-hero style="width: 1200px">${IMG}<p style="height: 300px">Tekst</p></nldd-hero>`);
+				await waitForUpdate(el);
+				await expect.poll(() => el.hasAttribute('data-has-media')).toBe(true);
+				const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+				const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+				expect(Math.round(media.bottom - main.top)).toBe(160);
+				expect(main.bottom).toBeGreaterThan(media.bottom);
+			} finally {
+				warn.mockRestore();
+				unloadTokens();
+			}
+		});
 
 		it('gives the image a fixed height and lets the panel fall overlap-size over it, running on below', async () => {
 			const unloadTokens = loadTokens();

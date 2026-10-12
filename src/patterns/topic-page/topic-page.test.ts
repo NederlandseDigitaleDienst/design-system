@@ -37,7 +37,7 @@ describe('patroon: onderwerppagina', () => {
 
 	it('opent met een hero in overlap, met een lege nldd-image als plek voor de foto', () => {
 		const hero = root.querySelector('nldd-hero')!;
-		expect(hero.getAttribute('layout')).toBe('overlap');
+		expect(hero.getAttribute('layout')).not.toBe('contained');
 		const image = hero.querySelector(':scope > nldd-image[slot="media"]')!;
 		expect(image.hasAttribute('src')).toBe(false);
 		const media = hero.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();

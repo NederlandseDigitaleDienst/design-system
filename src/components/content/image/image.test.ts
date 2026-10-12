@@ -331,7 +331,7 @@ describe('nldd-image without an image', () => {
 		el = await fixture<NLDDImage>('<nldd-image><img src="/bar.jpg" alt="Bar"></nldd-image>');
 		await waitForUpdate(el);
 		expect(icon()).toBeNull();
-		expect(media().classList.contains('image__media--loading')).toBe(false);
+		expect(media().classList.contains('is-loading')).toBe(false);
 	});
 
 	it('is not empty with only an lqip, which shows its preview', async () => {
@@ -348,11 +348,11 @@ describe('nldd-image without an image', () => {
 		await expect.poll(() => el._imageErrored).toBe(true);
 		el._imageErrored = false;
 		await waitForUpdate(el);
-		expect(media().classList.contains('image__media--loading')).toBe(true);
+		expect(media().classList.contains('is-loading')).toBe(true);
 		expect(icon()).toBeNull();
 		el._onImageLoad();
 		await waitForUpdate(el);
-		expect(media().classList.contains('image__media--loading')).toBe(false);
+		expect(media().classList.contains('is-loading')).toBe(false);
 	});
 });
 

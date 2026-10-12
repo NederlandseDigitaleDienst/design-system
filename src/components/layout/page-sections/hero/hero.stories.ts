@@ -13,8 +13,9 @@ const MEDIA = 'sample-images/butterfly-1200.jpg';
  * posities. De afbeelding is sfeer en nooit de hoofdzaak, dus het paneel staat
  * er altijd op: op een sectie-gap van de randen, of met `main-width="full"` als
  * strook over de hele afbeelding. Het paneel is zo breed als de inhoud nodig
- * heeft, tussen 480 en 640px. Met `layout="overlap"` begint het op een vaste
- * plek in de afbeelding en loopt het eronder door. Op mobiel staat de
+ * heeft, tussen 480 en 640px. Standaard (`layout="overlap"`) begint het op een
+ * vaste plek in de afbeelding en loopt het eronder door; met
+ * `layout="contained"` blijft het op de afbeelding, op een van de acht posities. Op mobiel staat de
  * afbeelding bovenaan en het paneel eronder, ingesprongen en een stukje over
  * de afbeelding. Zonder media vult de main het volledige vlak.
  * `main-background` is standaard `accent`; met `base` krijgt het vlak zonder
@@ -34,7 +35,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		layout: 'contained',
+		layout: 'overlap',
 		mainBackground: 'accent',
 		mainWidth: 'auto',
 		mainPosition: 'bottom-left',
@@ -50,8 +51,8 @@ export default {
 		layout: {
 			control: 'select',
 			options: ['contained', 'overlap'],
-			description: 'Hoe het vlak zich tot de afbeelding verhoudt: contained houdt het op de afbeelding, overlap laat het overlap-size over de onderrand vallen en eronder doorlopen',
-			table: { defaultValue: { summary: 'contained' } },
+			description: 'Hoe het vlak zich tot de afbeelding verhoudt: overlap laat het overlap-size over de onderrand vallen en eronder doorlopen, contained houdt het op de afbeelding',
+			table: { defaultValue: { summary: 'overlap' } },
 		},
 		mainBackground: {
 			name: 'main-background',
@@ -117,7 +118,7 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-hero
-		layout=${args.layout === 'contained' ? nothing : args.layout}
+		layout=${args.layout === 'overlap' ? nothing : args.layout}
 		main-background=${args.mainBackground}
 		main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
 		main-position=${args.mainPosition}
@@ -162,6 +163,7 @@ export const AllePosities = {
 		<div style="display: flex; flex-direction: column; gap: 24px;">
 			${['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'].map((position) => html`
 				<nldd-hero
+					layout="contained"
 					main-position=${position}
 					main-background="donkerblauw"
 				>
@@ -184,8 +186,8 @@ export const AllePosities = {
 };
 
 /**
- * Met `layout="overlap"` valt het vlak `overlap-size` over de onderrand van
- * de afbeelding en loopt het eronder door, zo ver als de tekst nodig heeft. De
+ * Standaard (`layout="overlap"`) valt het vlak `overlap-size` over de onderrand
+ * van de afbeelding en loopt het eronder door, zo ver als de tekst nodig heeft. De
  * afbeelding houdt haar hoogte, hoeveel tekst er ook staat, en de overlap is
  * altijd even groot, ook bij een andere hoogte of verhouding. Een vlak dat
  * korter is dan `overlap-size` valt in de afbeelding; dat is aan de consument.
@@ -202,7 +204,6 @@ export const Overlap = {
 				['Weinig tekst', null],
 			].map(([title, body]) => html`
 				<nldd-hero
-					layout="overlap"
 					main-background="donkerblauw"
 					main-position=${args.mainPosition}
 					main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
@@ -243,6 +244,7 @@ export const VolleStrook = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 24px;">
 			<nldd-hero
+				layout="contained"
 				main-position="bottom-left"
 				main-width="full"
 				main-background="lintblauw"
@@ -261,6 +263,7 @@ export const VolleStrook = {
 				></nldd-title>
 			</nldd-hero>
 			<nldd-hero
+				layout="contained"
 				main-position="top-left"
 				main-width="full"
 				main-background="lintblauw"

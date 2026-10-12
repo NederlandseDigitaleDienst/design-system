@@ -33,7 +33,7 @@ export function imageTemplate(component: NLDDImage) {
 		// the same neutral area, without the icon, so a fast load does not flash
 		// one. Slotted media is left alone, since its load cannot be observed and
 		// the fill would stay behind a transparent image.
-		'image__media--loading': !isEmpty && !hasLqip && !component._hasSlottedMedia && !component._imageLoaded && !component._imageErrored,
+		'is-loading': !isEmpty && !hasLqip && !component._hasSlottedMedia && !component._imageLoaded && !component._imageErrored,
 		// LQIP only renders while the image is in-flight. Once it errors we
 		// fall back to the neutral background so the error card sits on a
 		// calm surface instead of a distracting gradient.

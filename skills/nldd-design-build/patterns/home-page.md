@@ -16,7 +16,7 @@ nldd-shell                            de buitenste schil
        ├─ slot="header"                  de header
        │    └─ nldd-skip-link            om de balk heen
        │         └─ nldd-top-navigation-bar   zoeken en taal, geen terugknop
-       ├─ nldd-hero                      de opening, layout="overlap" en main-background
+       ├─ nldd-hero                      de opening, met main-background
        │    └─ slot="media"              nldd-image, hier nog zonder beeld
        ├─ nldd-simple-section            background="tinted", wat je hier kunt
        │    ├─ slot="header"             de titel en een intro van een zin of twee
@@ -75,7 +75,6 @@ nldd-shell                            de buitenste schil
     </nldd-skip-link>
 
     <nldd-hero
-      layout="overlap"
       main-background="accent"
     >
       <nldd-image slot="media"></nldd-image>

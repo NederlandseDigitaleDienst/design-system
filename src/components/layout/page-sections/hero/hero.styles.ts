@@ -376,11 +376,11 @@ export const heroStyles = css`
 	   row below it, pulled up over it by the overlap size. */
 
 	@container (min-width: ${mdMin}) {
-		:host([data-has-media][layout="overlap"]) .hero__body::before {
+		:host([data-has-media]:not([layout="contained"])) .hero__body::before {
 			content: none;
 		}
 
-		:host([data-has-media][layout="overlap"]) .hero__media {
+		:host([data-has-media]:not([layout="contained"])) .hero__media {
 			position: relative;
 			width: 100%;
 			height: var(--_hero-media-height);
@@ -389,11 +389,11 @@ export const heroStyles = css`
 			align-self: start;
 		}
 
-		:host([data-has-media][layout="overlap"]:not([media-height], [media-aspect-ratio])) .hero__media {
+		:host([data-has-media]:not([layout="contained"]):not([media-height], [media-aspect-ratio])) .hero__media {
 			height: var(--_hero-default-media-height);
 		}
 
-		:host([data-has-media][layout="overlap"]) .hero__main {
+		:host([data-has-media]:not([layout="contained"])) .hero__main {
 			margin-top: calc(-1 * var(--_hero-overlap-size, var(--_hero-default-overlap-size)));
 			margin-bottom: 0;
 			grid-area: 2 / 1;

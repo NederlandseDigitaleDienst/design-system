@@ -238,15 +238,13 @@ nldd-rich-text p {
 
 /* # Hyphenation */
 
-/* Opt-in through [hyphens]; only works with a correct `lang` on the page.
-   Only words of 15 letters or more break, so long compounds get a hyphen and
-   ordinary words wrap whole. Safari knows no minimum word length. */
+/* Opt-in through [hyphens]; only works with a correct `lang` on the page. */
 nldd-rich-text[hyphens] :is(p, li, dd) {
 	-webkit-hyphens: auto;
 	hyphens: auto;
-	-webkit-hyphenate-limit-before: 5;
-	-webkit-hyphenate-limit-after: 5;
-	hyphenate-limit-chars: 15 5 5;
+	-webkit-hyphenate-limit-before: 3;
+	-webkit-hyphenate-limit-after: 3;
+	hyphenate-limit-chars: 6 3 3;
 }
 
 

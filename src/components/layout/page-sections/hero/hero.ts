@@ -25,10 +25,10 @@
  * bottom keeps the full distance to the section below. Set `padding-top` to
  * place a hero elsewhere.
  *
- * `layout="overlap"`, where the panel falls over the bottom of the image and
- * runs on below it, is the intended house style and will become the default in
- * a later release. Use it where the panel has enough content to run on below
- * the image; `contained` stays for a panel that should keep to the image.
+ * By default the panel falls over the bottom of the image and runs on below it
+ * (`layout="overlap"`), so the image keeps its height whatever the content.
+ * `layout="contained"` keeps the panel on the image, for a short panel or one
+ * that stands at the top or along a side.
  *
  * The height of a hero comes from its image: `media-aspect-ratio`, or a fixed
  * `media-height`. The `height` of the other page sections is not used here: as
@@ -45,7 +45,7 @@
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)
  * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
- * @attr {'contained'|'overlap'} layout - How the panel relates to the image (default: 'contained'). 'contained' keeps it on the image; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development
+ * @attr {'contained'|'overlap'} layout - How the panel relates to the image (default: 'overlap'). 'contained' keeps it on the image, in any of the eight positions; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development
  * @attr {string} main-background - Surface color of the panel: 'base' (the base surface)
  *   or a category color — 'accent' (default) or a Rijkshuisstijl color such as
  *   'lintblauw'|'donkerblauw'|'oranje'
@@ -94,8 +94,8 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
-	@property({ reflect: true, converter: reflectNonDefault<HeroLayout>('contained') })
-	layout: HeroLayout = 'contained';
+	@property({ reflect: true, converter: reflectNonDefault<HeroLayout>('overlap') })
+	layout: HeroLayout = 'overlap';
 
 	@property({ reflect: true, attribute: 'main-background', converter: reflectNonDefault<HeroMainBackground>('accent') })
 	mainBackground: HeroMainBackground = 'accent';
@@ -227,7 +227,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	private _warnedOverlap = false;
 
 	private _watchOverlap(): void {
-		const watch = this.layout === 'overlap' && typeof ResizeObserver !== 'undefined';
+		const watch = this.layout !== 'contained' && typeof ResizeObserver !== 'undefined';
 		if (!watch) {
 			this._overlapObserver?.disconnect();
 			this._overlapObserver = null;
@@ -256,7 +256,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		}
 		if (this._warnedOverlap) return;
 		this._warnedOverlap = true;
-		console.warn('<nldd-hero>: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`.', this);
+		console.warn('<nldd-hero>: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout="contained" to keep the panel on the image.', this);
 	}
 
 	/** @internal Tracks the media slot so the no-media mode can collapse it. */

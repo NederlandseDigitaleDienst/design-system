@@ -44,9 +44,7 @@
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} hyphens - Opt-in automatic hyphenation for running text (p,
- *   li, dd), for words of 15 letters or more only, with at least 5 on either
- *   side of the hyphen: long compounds break, ordinary words wrap whole. Safari
- *   has no minimum word length and breaks shorter words too. Needs a correct
+ *   li, dd). Needs a correct
  *   `lang` on the page (`lang="nl"` on `<html>`, for instance): without
  *   language information the browser does not hyphenate. An
  *   `overflow-wrap: break-word` safety net on headings, p and li is always on,

@@ -360,7 +360,7 @@ export const imageStyles = css`
 
 	/* # Empty and loading */
 
-	.image__media--loading {
+	.image__media.is-loading {
 		background-color: var(--_image-pending-background-color);
 	}
 
