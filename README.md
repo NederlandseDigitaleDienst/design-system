@@ -1,6 +1,6 @@
 # NLDD Designsysteem
 
-Web Components voor Nederlandse Digitale Dienst (Rijksoverheid).
+Web Components voor de Nederlandse Digitale Dienst (Rijksoverheid).
 
 ## Installatie
 
