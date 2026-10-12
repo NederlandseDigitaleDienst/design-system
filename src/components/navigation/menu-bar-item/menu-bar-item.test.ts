@@ -1,6 +1,8 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './menu-bar-item.js';
+import '../../content/avatar/avatar.js';
 
 describe('nldd-menu-bar-item', () => {
 	let el: HTMLElement;
@@ -184,5 +186,88 @@ describe('nldd-menu-bar-item – URL sanitization', () => {
 		const link = el.shadowRoot!.querySelector('a');
 		expect(link).not.toBeNull();
 		expect(link!.getAttribute('href')).toBe('/page');
+	});
+});
+
+describe('nldd-menu-bar-item – icon slot', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const iconArea = () => el.shadowRoot!.querySelector('.menu-bar-item__icon') as HTMLElement;
+	const text = () => el.shadowRoot!.querySelector('.menu-bar-item__text') as HTMLElement;
+
+	it('shows no icon area without an icon or a slotted one', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Account"></nldd-menu-bar-item>');
+		await waitForUpdate(el);
+		expect(iconArea().hidden).toBe(true);
+		expect(el.hasAttribute('data-has-icon')).toBe(false);
+	});
+
+	it('puts a slotted element in the place of the icon, at the size of an icon', async () => {
+		// The size of the icon area is a token, which a test document does not have by itself.
+		const unloadTokens = loadTokens();
+		try {
+			el = await fixture('<nldd-menu-bar-item text="Account" icon="person"><span slot="icon" id="mine"></span></nldd-menu-bar-item>');
+			await waitForUpdate(el);
+			expect(iconArea().hidden).toBe(false);
+			expect(el.hasAttribute('data-has-icon')).toBe(true);
+			const slotted = el.querySelector('#mine')!.getBoundingClientRect();
+			expect(Math.round(slotted.width)).toBe(20);
+			expect(Math.round(slotted.height)).toBe(20);
+		} finally {
+			unloadTokens();
+		}
+		// The slotted element wins over the icon name, which is only the fallback.
+		const slot = el.shadowRoot!.querySelector('slot[name="icon"]') as HTMLSlotElement;
+		expect(slot.assignedElements().length).toBe(1);
+	});
+
+	it('keeps only the slotted icon in compact mode with content-priority="icon", named by the text', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Account" content-priority="icon" compact><span slot="icon"></span></nldd-menu-bar-item>');
+		await waitForUpdate(el);
+		expect(iconArea().hidden).toBe(false);
+		expect(Math.round(text().getBoundingClientRect().width)).toBeLessThanOrEqual(1);
+		expect(el.shadowRoot!.querySelector('.menu-bar-item')!.getAttribute('aria-label')).toBe('Account');
+	});
+
+	it('hides the slotted icon in compact mode with content-priority="text"', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Account" content-priority="text" compact><span slot="icon"></span></nldd-menu-bar-item>');
+		await waitForUpdate(el);
+		expect(getComputedStyle(iconArea()).display).toBe('none');
+		expect(text().getBoundingClientRect().width).toBeGreaterThan(1);
+	});
+
+	it('leaves a slotted avatar to center its own shape, so icon-aligned sits in the middle', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			el = await fixture('<nldd-menu-bar-item text="Account"><nldd-avatar slot="icon" name="Anouk de Vries" decorative icon-aligned></nldd-avatar></nldd-menu-bar-item>');
+			await waitForUpdate(el);
+			const avatar = el.querySelector('nldd-avatar') as HTMLElement;
+			await waitForUpdate(avatar);
+			const host = avatar.getBoundingClientRect();
+			const shape = avatar.shadowRoot!.querySelector('.avatar')!.getBoundingClientRect();
+			expect(Math.round(host.height)).toBe(20);
+			expect(shape.height).toBeLessThan(host.height);
+			expect(Math.abs((shape.top + shape.height / 2) - (host.top + host.height / 2))).toBeLessThan(0.6);
+		} finally {
+			unloadTokens();
+		}
+	});
+
+	it('follows a slotted icon that arrives or leaves later', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Account"></nldd-menu-bar-item>');
+		await waitForUpdate(el);
+		const avatar = document.createElement('span');
+		avatar.slot = 'icon';
+		el.append(avatar);
+		await expect.poll(() => el.hasAttribute('data-has-icon')).toBe(true);
+		expect(iconArea().hidden).toBe(false);
+		avatar.remove();
+		await expect.poll(() => el.hasAttribute('data-has-icon')).toBe(false);
+		await waitForUpdate(el);
+		expect(iconArea().hidden).toBe(true);
 	});
 });

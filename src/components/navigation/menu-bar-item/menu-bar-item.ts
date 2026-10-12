@@ -24,6 +24,7 @@
  *
  * @fires select - On a click on a non-expandable button item (bubbles, composed)
  *
+ * @slot icon - Takes the place of the icon: an `nldd-avatar` for the person who is signed in, for instance. It gets the size of an icon, and follows `content-priority` and `icon-only` as the icon does. Wins over `icon`.
  * @slot - Content of the expandable popover. Wrap items in an `<nldd-menu>` so
  *   this component does not have to duplicate the menu API (variant,
  *   accessible-label, translations, filterFn and so on). Event listeners on
@@ -31,7 +32,7 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { menuBarItemStyles } from './menu-bar-item.styles.js';
 import { template } from './menu-bar-item.template.js';
@@ -147,6 +148,17 @@ export class NLDDMenuBarItem extends LitElement {
 		this.removeEventListener('click', this._handleClick);
 		this._unwireMenu();
 	}
+
+	/** @internal Whether the icon slot is filled, so the icon area and the icon-only rules follow it. */
+	@state()
+	_hasSlottedIcon = false;
+
+	/** @internal */
+	_onIconSlotChange = (e: Event): void => {
+		this._hasSlottedIcon = (e.target as HTMLSlotElement).assignedElements().length > 0;
+		// A derived state for the host's own CSS, never written back into `icon`.
+		this.toggleAttribute('data-has-icon', this._hasSlottedIcon);
+	};
 
 	_onSlotChange = (): void => {
 		// Re-wire when a consumer swaps the slotted <nldd-menu> at runtime.

@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './menu-bar-item.js';
+import '../../content/avatar/avatar.js';
 import { ICONS } from '../../content/icon/icon.js';
 
 export default {
@@ -148,6 +149,57 @@ export const MetExpandable = {
 				<nldd-menu-item text="Log uit"></nldd-menu-item>
 			</nldd-menu>
 		</nldd-menu-bar-item>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
+ * Het `icon`-slot neemt de plek van het icoon in, bijvoorbeeld voor een
+ * `nldd-avatar` van wie er is ingelogd. Het krijgt de maat van een icoon en
+ * volgt `content-priority` en `icon-only` zoals het icoon dat doet: het tweede
+ * item is `compact` en toont alleen de avatar, met de tekst als toegankelijke
+ * naam.
+ */
+export const MetAvatar = {
+	name: 'Met avatar',
+	render: () => html`
+		<div style="display: flex; gap: 16px;">
+			<nldd-menu-bar-item
+				text="Mijn account"
+				expandable
+				content-priority="icon"
+			>
+				<nldd-avatar
+					slot="icon"
+					color="inherit"
+					name="Anouk de Vries"
+					decorative
+					icon-aligned
+				></nldd-avatar>
+				<nldd-menu>
+					<nldd-menu-item text="Profiel"></nldd-menu-item>
+					<nldd-menu-item text="Log uit"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-bar-item>
+			<nldd-menu-bar-item
+				text="Mijn account"
+				expandable
+				content-priority="icon"
+				compact
+			>
+				<nldd-avatar
+					slot="icon"
+					color="inherit"
+					name="Anouk de Vries"
+					decorative
+					icon-aligned
+				></nldd-avatar>
+				<nldd-menu>
+					<nldd-menu-item text="Profiel"></nldd-menu-item>
+					<nldd-menu-item text="Log uit"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-bar-item>
+		</div>
 	`,
 	parameters: { controls: { disable: true } },
 };

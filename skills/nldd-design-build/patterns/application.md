@@ -6,16 +6,12 @@
 
 # Patroon: applicatie
 
-**Welk probleem dit oplost.** Een scherm dat de ruimte gebruikt die er is: navigatie, een lijst, het gekozen record, een inspector, zoveel ernaast als er past. Wordt het scherm smaller, dan vallen de panelen één voor één weg tot er één overblijft, zonder dat je zelf verbergt, herschikt of een tweede layout bouwt.
-
-**Wanneer wel.** Een scherm waarop je vaak tussen informatie beweegt: zoeken, vergelijken, kiezen, bewerken.
-
-**Wanneer niet.** Een website-pagina die iemand leest of waarmee iemand de weg vindt: een [home](home-page.md), een [onderwerppagina](topic-page.md), een [navigatiepagina](navigation-page.md) of een [contentpagina](content-page.md).
+Een applicatie gebruik je als bezoekers tijdens een taak vaak tussen verschillende views moeten wisselen, bijvoorbeeld om gegevens te bekijken, vergelijken of bewerken. De applicatieopzet brengt die views samen in één omgeving. Daarmee kan ze verschillende soorten pagina’s vervangen; een [contentpagina](content-page.md) toont juist de details op het laagste niveau van een website.
 
 ## Compositie
 
 ```
-nldd-app-view                                 de buitenste schil
+nldd-shell                                 de buitenste schil
   └─ nldd-bar-split-view                      balken boven of onder de inhoud
        ├─ nldd-split-view-pane                slot="toolbar-md", only="md"
        │    └─ nldd-container                 met padding
@@ -40,7 +36,7 @@ nldd-sheet                                    het detail van een rij, in de docu
 ```
 
 ```html
-<nldd-app-view>
+<nldd-shell>
   <nldd-bar-split-view>
     <nldd-split-view-pane
       slot="toolbar-md"
@@ -532,7 +528,7 @@ nldd-sheet                                    het detail van een rij, in de docu
       </nldd-container>
     </nldd-split-view-pane>
   </nldd-bar-split-view>
-</nldd-app-view>
+</nldd-shell>
 
 <nldd-sheet
   placement="right"
@@ -557,7 +553,7 @@ Een rij opent het dossier in een sheet, want het detail hoeft hier niet altijd i
 
 ## Waarom zo
 
-**De app view is de buitenste schil, de split views zitten erin.** De [`nldd-app-view`](../../nldd-design/reference.md#nldd-app-view) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Daarbinnen komen de split views, en pas in een paneel begint een pagina.
+**De shell staat om alles heen, de split views zitten erin.** De [`nldd-shell`](../../nldd-design/reference.md#nldd-shell) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Daarbinnen komen de split views, en pas in een paneel begint een pagina.
 
 **Twee werkbalken, twee bereiken.** Wat voor het hele scherm geldt, hangt in de hoofdwerkbalk, een balk om de panelen heen: een [`nldd-bar-split-view`](../../nldd-design/reference.md#nldd-bar-split-view) met die balk in een eigen slot en de split view in `slot="main"`. Zet je de hoofdwerkbalk in een paneel, dan scrolt hij mee met de inhoud van dat ene paneel en geldt hij niet meer voor het scherm. Wat over de inhoud van één paneel gaat, zoals hier "Nieuw dossier" en het filter boven de lijst, krijgt juist wel een eigen [`nldd-toolbar`](../../nldd-design/reference.md#nldd-toolbar) in dat paneel. Zo blijft de hoofdwerkbalk hetzelfde terwijl je van scherm wisselt, en verhuist de andere mee met wat je aan het doen bent. Geef de hoofdwerkbalk een [`nldd-container`](../../nldd-design/reference.md#nldd-container) met padding, want de bar split view zet die zelf niet.
 

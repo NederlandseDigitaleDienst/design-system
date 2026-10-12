@@ -1,8 +1,12 @@
 /**
  * Nederlandse Digitale Dienst Hero Component (Lit + TypeScript)
  *
- * A page header with a media area and a text panel (the main) that can stand in
- * eight positions. Every area is rectangular.
+ * The section that says what a page is for: it names the main goal of what
+ * you can find there, draws the eye and is the visual welcome. It has a media
+ * area and a text panel (the main) that can stand in eight positions. Every
+ * area is rectangular. Use it on pages where a visitor first has to know where
+ * they are, such as a home or a topic page; where the title already does
+ * that, a section with a title is enough.
  *
  * The image in a hero sets the mood and is never the main content, so the
  * panel always stands on it. Over an image the panel keeps a section gap from

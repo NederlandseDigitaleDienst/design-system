@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import './app-view.js';
+import './shell.js';
 import '../split-views/navigation-split-view/navigation-split-view.js';
 import '../page/page.js';
 import '../page-sections/simple-section/simple-section.js';
@@ -7,24 +7,24 @@ import '../container/container.js';
 import '../../content/rich-text/rich-text.js';
 
 /**
- * De <code>nldd-app-view</code> is de verplichte root shell van elke Nederlandse Digitale Dienst applicatie.
+ * De <code>nldd-shell</code> is de verplichte root shell van elke Nederlandse Digitale Dienst applicatie.
  * Hij bevat altijd een split view of een <code>nldd-page</code> als directe inhoud.
  *
  * ## Gebruik
  * ```html
- * <nldd-app-view>
+ * <nldd-shell>
  *   <nldd-navigation-split-view>...</nldd-navigation-split-view>
- * </nldd-app-view>
+ * </nldd-shell>
  * ```
  */
 export default {
-	title: 'Components/Layout/App View',
-	component: 'nldd-app-view',
+	title: 'Components/Layout/Shell',
+	component: 'nldd-shell',
 	tags: ['autodocs'],
 	parameters: {
 		layout: 'fullscreen',
 		componentSource: {
-			file: 'src/components/layout/app-view/app-view.ts',
+			file: 'src/components/layout/shell/shell.ts',
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
 		status: {
@@ -45,7 +45,7 @@ export default {
 };
 
 export const MetHorizontalSplitView = ({ background }: { background: string }) => html`
-	<nldd-app-view
+	<nldd-shell
 		style="height: 600px;"
 		background=${background}
 	>
@@ -134,11 +134,11 @@ export const MetHorizontalSplitView = ({ background }: { background: string }) =
 				</nldd-simple-section>
 			</nldd-page>
 		</nldd-navigation-split-view>
-	</nldd-app-view>
+	</nldd-shell>
 `;
 
 export const MetPagina = () => html`
-	<nldd-app-view style="height: 600px;">
+	<nldd-shell style="height: 600px;">
 		<nldd-page sticky-header>
 			<nldd-container
 				slot="header"
@@ -155,7 +155,7 @@ export const MetPagina = () => html`
 				</nldd-rich-text>
 			</nldd-simple-section>
 		</nldd-page>
-	</nldd-app-view>
+	</nldd-shell>
 `;
 
 /**
@@ -165,7 +165,7 @@ export const MetPagina = () => html`
  */
 export const TintedPerPaneel = {
 	render: () => html`
-	<nldd-app-view style="height: 600px;">
+	<nldd-shell style="height: 600px;">
 		<nldd-navigation-split-view>
 			<nldd-page
 				sticky-header
@@ -210,7 +210,7 @@ export const TintedPerPaneel = {
 				</nldd-simple-section>
 			</nldd-page>
 		</nldd-navigation-split-view>
-	</nldd-app-view>
+	</nldd-shell>
 `,
 	parameters: { controls: { disable: true } },
 };

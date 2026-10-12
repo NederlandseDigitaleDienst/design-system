@@ -6,11 +6,7 @@
 
 # Patroon: menu bij een knop
 
-**Welk probleem dit oplost.** Meer acties aanbieden dan er knoppen passen, of een keuze laten maken die niet de hele aandacht verdient: een more-menu in een rij, een sorteermenu, een profielmenu.
-
-**Wanneer wel.** Een lijst acties of keuzes die bij één knop hoort.
-
-**Wanneer niet.** Voor de hoofdnavigatie van een site gebruik je een [`nldd-menu-bar`](../../nldd-design/reference.md#nldd-menu-bar). Voor een keuze in een formulier gebruik je geen menu: bij een handvol opties een [`nldd-segmented-control`](../../nldd-design/reference.md#nldd-segmented-control) of [`nldd-toggle-button-group`](../../nldd-design/reference.md#nldd-toggle-button-group), bij veel opties een [`nldd-combo-box`](../../nldd-design/reference.md#nldd-combo-box) waarin je typt, en pas als laatste een [`nldd-dropdown`](../../nldd-design/reference.md#nldd-dropdown), zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#invoer-en-formulieren). En geen megamenu's, zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md).
+Een menu bij een knop toont extra acties of keuzes wanneer iemand die nodig heeft. Gebruik het om meerdere verwante opties te bundelen, bijvoorbeeld acties voor één item. Zijn de acties allemaal belangrijk en vaak nodig, maak ze dan direct zichtbaar; is er maar één actie, gebruik dan een losse knop.
 
 ## Compositie
 

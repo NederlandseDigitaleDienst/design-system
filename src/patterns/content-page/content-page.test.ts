@@ -61,7 +61,7 @@ describe('patroon: contentpagina', () => {
 		expect(root.querySelectorAll('nldd-button[appearance="primary"]').length).toBe(1);
 	});
 
-	it('laat de tekst groeien en niet Ook handig', () => {
+	it('laat de tekst groeien en niet de verwijzingen', () => {
 		const sections = [...root.querySelectorAll('nldd-page > :not([slot])')];
 		expect(sections[0].hasAttribute('grow')).toBe(true);
 		expect(sections[sections.length - 1].hasAttribute('grow')).toBe(false);

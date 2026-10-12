@@ -6,11 +6,7 @@
 
 # Patroon: lijst
 
-**Welk probleem dit oplost.** Een verzameling records tonen die de gebruiker moet kunnen scannen, en waar per record iets mee te doen is: openen, aanvinken, een actie kiezen.
-
-**Wanneer wel.** Een reeks gelijkwaardige items met tekst en hoogstens een paar acties per rij.
-
-**Wanneer niet.** Vergelijkt de gebruiker kolommen met elkaar, dan is het een [`nldd-table`](../../nldd-design/reference.md#nldd-table). Gaat het om een handvol gelijkwaardige blokken met een afbeelding of veel tekst, dan is het een [`nldd-collection`](../../nldd-design/reference.md#nldd-collection) met kaarten.
+Een lijst toont vergelijkbare items in een vorm die bezoekers snel kunnen scannen en openen. Gebruik dit patroon als bezoekers items willen bekijken, vergelijken of kiezen. Zijn er maar enkele duidelijke keuzes, dan kunnen kaarten geschikter zijn; moet iemand een grote lijst doorzoeken, combineer de lijst dan met zoeken of [filters](filtering.md).
 
 ## Compositie
 

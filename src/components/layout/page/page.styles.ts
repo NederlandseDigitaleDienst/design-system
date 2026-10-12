@@ -57,7 +57,7 @@ export const pageStyles = css`
 		overflow: hidden;
 	}
 
-	/* Root-scroll mode: the DOCUMENT scrolls (see nldd-app-view), not the page.
+	/* Root-scroll mode: the DOCUMENT scrolls (see nldd-shell), not the page.
 	   The page stops owning an inner scroll container and its sticky-header/footer
 	   stick against the document, offset by the insets above and below
 	   (--context-inset-top/bottom, published by any bars outside the page). The mode is derived upstream and

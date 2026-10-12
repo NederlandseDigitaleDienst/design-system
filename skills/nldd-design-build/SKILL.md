@@ -121,7 +121,7 @@ Houd je daarna nog eigen CSS over voor iets dat geen component is, dan is een `-
 
 `light-dark()` heb je alleen nodig voor kleuren die niet uit het palet komen, of wanneer je per schema bewust een ándere stap wilt (bijvoorbeeld 100 in licht en 150 in donker, voor iets meer contrast).
 
-**Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `color-scheme: light` (of `dark`) op een root-element. Er is geen aparte thema-toggle-API op `nldd-app-view`.
+**Licht en donker.** Het hele palet is gebouwd op `light-dark()`, dus het thema volgt de CSS `color-scheme`. Standaard is dat de OS- of browservoorkeur. Wil je licht of donker forceren, zet dan `color-scheme: light` (of `dark`) op een root-element. Er is geen aparte thema-toggle-API op `nldd-shell`.
 
 ## Gebruikspatronen
 
@@ -139,14 +139,14 @@ Wat hieronder staat, hoort in geen van de drie thuis: het gaat telkens over meer
 
 ### Twee compositievormen, kies bewust
 
-`nldd-app-view` is altijd de buitenste schil. Wat daarbinnen komt, hangt af van wat je bouwt:
+`nldd-shell` is altijd de buitenste schil. Wat daarbinnen komt, hangt af van wat je bouwt:
 
 | Vorm | Wanneer | Het patroon |
 |---|---|---|
 | **Applicatie** | Een scherm met panelen: editors, dashboards, beheerschermen. | [applicatie](patterns/application.md) |
-| **Pagina** | Een website: een verticale stapel inhoud. | [home](patterns/home-page.md), [onderwerppagina](patterns/topic-page.md), [navigatiepagina](patterns/navigation-page.md), [contentpagina](patterns/content-page.md) |
+| **Pagina** | Een website: een verticale stapel inhoud. | [home](patterns/home-page.md), [onderwerppagina](patterns/topic-page.md), [navigatiepagina](patterns/navigation-page.md), [contentpagina](patterns/content-page.md), op de [paginaopbouw](patterns/page-structure.md) |
 
-Het verschil zit in de laag direct onder de app-view: een split view met een pagina per paneel, of één pagina met secties eronder. Die keuze maak je aan het begin, en achteraf terugdraaien is duur. Maak die keuze dus bewust.
+Het verschil zit in de laag direct onder de shell: een split view met een pagina per paneel, of één pagina met secties eronder. Die keuze maak je aan het begin, en achteraf terugdraaien is duur. Maak die keuze dus bewust.
 
 ### Overlays: sheet, modal of popover
 

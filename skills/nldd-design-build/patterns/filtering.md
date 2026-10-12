@@ -6,11 +6,7 @@
 
 # Patroon: filteren
 
-**Welk probleem dit oplost.** Een lange lijst terugbrengen tot wat je zoekt, met de filters in beeld, zodat zichtbaar blijft waarom er iets ontbreekt, en met een weg terug.
-
-**Wanneer wel.** Elke verzameling die langer wordt dan een scherm, of waar iemand een deelverzameling zoekt. Een lijst, een tabel, een kaartenoverzicht.
-
-**Wanneer niet.** Bij een handvol rijen filtert niemand: laat het weg. Gaat het om één zoekterm zonder verdere criteria, dan is een [`nldd-search-field`](../../nldd-design/reference.md#nldd-search-field) boven de lijst genoeg, en heb je geen zijbalk nodig.
+Met filters verkleinen bezoekers een lijst tot de resultaten die aan hun voorwaarden voldoen. Gebruik dit patroon als de lijst groot genoeg is om zoeken of verfijnen makkelijker te maken. Laat zien welke filters actief zijn en bied een eenvoudige manier om ze weer te wissen.
 
 ## Compositie
 

@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import './navigation-split-view.js';
-import '../../app-view/app-view.js';
+import '../../shell/shell.js';
 import '../../page/page.js';
 import '../../page-sections/simple-section/simple-section.js';
 import '../../../content/rich-text/rich-text.js';

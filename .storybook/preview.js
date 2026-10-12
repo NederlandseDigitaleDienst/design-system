@@ -39,7 +39,7 @@ const preview = {
 		options: {
 			storySort: {
 				method: 'alphabetical',
-				order: ['Docs', ['Introductie', 'Ontwerprichtlijnen', '*'], 'Components', 'Patronen', ["Pagina's", ['Home', 'Onderwerppagina', 'Navigatiepagina', 'Contentpagina'], '*'], '*'],
+				order: ['Docs', ['Introductie', 'Ontwerprichtlijnen', '*'], 'Components', 'Patronen', ["Pagina's", ['Paginaopbouw', 'Home', 'Onderwerppagina', 'Navigatiepagina', 'Contentpagina'], '*'], '*'],
 			},
 		},
 	},

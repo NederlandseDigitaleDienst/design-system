@@ -6709,10 +6709,10 @@
         },
         {
           "kind": "js",
-          "name": "NLDDAppView",
+          "name": "NLDDShell",
           "declaration": {
-            "name": "NLDDAppView",
-            "module": "./layout/app-view/app-view.js"
+            "name": "NLDDShell",
+            "module": "./layout/shell/shell.js"
           }
         },
         {
@@ -22788,70 +22788,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/layout/app-view/app-view.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "The required root shell of a Nederlandse Digitale Dienst application. Always contains a split view or an nldd-page as direct content. The document font comes from the package stylesheet (`@nldd/design-system/styles`), not from this component: it gives `body` the body font and content color as soon as an app-view is on the page, inside `@layer reset` so any rule of your own wins. Import only the tokens (`/styles/tokens`) and text you write in the light DOM keeps the browser default. Set background=\"tinted\" to give the whole application a tinted background. All descendants read --context-parent-background-color via --_app-view-background-color automatically. Individual components can override locally with their own background attribute. The same background color is forced on `document.body` so that browser- chrome surfaces (iOS overscroll bounce, status bar, page-margin areas) blend with the app instead of revealing the user-agent's default white. Cleared when the app-view disconnects. The app scrolls the DOCUMENT (root mode) or lets each `nldd-page` scroll inside its pane (nested mode). The mode is derived from the outermost horizontal split view: one column means the document scrolls, several columns mean the panes do. An app without such a split view is a single column at every width and therefore scrolls the document too — nested scrolling would cost it the rubber-band and the collapsing browser toolbar on iOS for nothing. Set `--context-scroll-mode` on the `nldd-app-view` itself to override the derived mode; an inherited value loses from it. In nested scroll mode `overscroll-behavior: none` is set on `document.documentElement` and `document.body` while the app-view is connected. Combined with `overscroll-behavior: contain` on `nldd-page`'s scroll target, this prevents iOS rubber-band on the viewport when scroll gestures land outside an `nldd-page` (e.g. on a top-bar). In root scroll mode the document itself is the scroller, so this is lifted to let the native rubber-band happen. Cleared on last disconnect.",
-          "name": "NLDDAppView",
-          "members": [
-            {
-              "kind": "field",
-              "name": "background",
-              "type": {
-                "text": "'base' | 'tinted'"
-              },
-              "default": "'base'",
-              "attribute": "background",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "background",
-              "type": {
-                "text": "'base' | 'tinted'"
-              },
-              "default": "'base'",
-              "fieldName": "background",
-              "description": "Background color (cascades to descendants)"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "nldd-app-view",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "",
-              "description": "Default slot for the application content"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "NLDDAppView",
-          "declaration": {
-            "name": "NLDDAppView",
-            "module": "src/components/layout/app-view/app-view.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-app-view",
-          "declaration": {
-            "name": "NLDDAppView",
-            "module": "src/components/layout/app-view/app-view.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/components/layout/box/box.ts",
       "declarations": [
         {
@@ -22878,7 +22814,7 @@
               },
               "default": "'tinted'",
               "fieldName": "background",
-              "description": "Which surface this box draws, named as it is on nldd-app-view, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `critical`: a region whose actions are destructive or irreversible (a \"danger zone\"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger — color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used."
+              "description": "Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `critical`: a region whose actions are destructive or irreversible (a \"danger zone\"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger — color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used."
             }
           ],
           "superclass": {
@@ -24892,7 +24828,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page header with a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `layout=\"overlap\"`, where the panel falls over the bottom of the image and runs on below it, is the intended house style and will become the default in a later release. Use it where the panel has enough content to run on below the image; `contained` stays for a panel that should keep to the image. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. `layout=\"overlap\"`, where the panel falls over the bottom of the image and runs on below it, is the intended house style and will become the default in a later release. Use it where the panel has enough content to run on below the image; `contained` stays for a panel that should keep to the image. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
           "name": "NLDDHero",
           "members": [
             {
@@ -28123,7 +28059,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page layout with optional sticky header and footer. Without sticky-header, the host is the scroll container and the header is in normal flow. With sticky-header, the header becomes absolute and .page__scroll takes over scrolling, padded by the measured header height. That padding freezes once you scroll, so a collapsing bar cannot drag the content up under the cursor. In root-scroll mode (--context-scroll-mode: root, derived upstream by nldd-app-view) the page stops owning a scroller: the document scrolls and the sticky header/footer stick against the document, offset by --context-inset-top/bottom. The mode is read on connect/resize and reflected to [data-scroll] so the CSS can branch. The page passes those insets on to its own content, with its sticky header and footer added: anything sticky inside (an nldd-sidebar-section, a sticky table head) reads --context-inset-top / --context-inset-bottom and clears every bar above and below it without being told a number. The heights are measured, because a top title bar shrinks as you scroll past its anchor. While the page owns the scroller, only its own bars count: the chrome above the page sits outside that scroller and does not push sticky content down. A page carries the landmarks of a document: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so a page that sits beside another one cannot have them. Such a page renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner. With `accessible-label` that section is a named region, so there is still one landmark to jump to; without a name it is no landmark at all, which beats an unnamed one. `landmarks` says which of the two a page is, and `auto` (the default) reads it off where the page sits: - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a region, because the overlay is not the document; - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or nldd-stacked-split-view a region, because those place pages beside each other; - anywhere else the page, including the `main` slot of an nldd-bar-split-view, which stacks bars around a single content area. So an app shell has no main until you say which pane holds the primary content, with `landmarks=\"page\"` on that one page. Only the application knows which pane that is. Two pages that both render a main is invalid HTML, and the page says so in development.",
+          "description": "A page layout with optional sticky header and footer. Without sticky-header, the host is the scroll container and the header is in normal flow. With sticky-header, the header becomes absolute and .page__scroll takes over scrolling, padded by the measured header height. That padding freezes once you scroll, so a collapsing bar cannot drag the content up under the cursor. In root-scroll mode (--context-scroll-mode: root, derived upstream by nldd-shell) the page stops owning a scroller: the document scrolls and the sticky header/footer stick against the document, offset by --context-inset-top/bottom. The mode is read on connect/resize and reflected to [data-scroll] so the CSS can branch. The page passes those insets on to its own content, with its sticky header and footer added: anything sticky inside (an nldd-sidebar-section, a sticky table head) reads --context-inset-top / --context-inset-bottom and clears every bar above and below it without being told a number. The heights are measured, because a top title bar shrinks as you scroll past its anchor. While the page owns the scroller, only its own bars count: the chrome above the page sits outside that scroller and does not push sticky content down. A page carries the landmarks of a document: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so a page that sits beside another one cannot have them. Such a page renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner. With `accessible-label` that section is a named region, so there is still one landmark to jump to; without a name it is no landmark at all, which beats an unnamed one. `landmarks` says which of the two a page is, and `auto` (the default) reads it off where the page sits: - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a region, because the overlay is not the document; - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or nldd-stacked-split-view a region, because those place pages beside each other; - anywhere else the page, including the `main` slot of an nldd-bar-split-view, which stacks bars around a single content area. So an app shell has no main until you say which pane holds the primary content, with `landmarks=\"page\"` on that one page. Only the application knows which pane that is. Two pages that both render a main is invalid HTML, and the page says so in development.",
           "name": "NLDDPage",
           "members": [
             {
@@ -28767,6 +28703,70 @@
           "declaration": {
             "name": "NLDDSheet",
             "module": "src/components/layout/sheet/sheet.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/layout/shell/shell.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The required root shell of a Nederlandse Digitale Dienst application. Always contains a split view or an nldd-page as direct content. The document font comes from the package stylesheet (`@nldd/design-system/styles`), not from this component: it gives `body` the body font and content color as soon as a shell is on the page, inside `@layer reset` so any rule of your own wins. Import only the tokens (`/styles/tokens`) and text you write in the light DOM keeps the browser default. Set background=\"tinted\" to give the whole application a tinted background. All descendants read --context-parent-background-color via --_shell-background-color automatically. Individual components can override locally with their own background attribute. The same background color is forced on `document.body` so that browser- chrome surfaces (iOS overscroll bounce, status bar, page-margin areas) blend with the app instead of revealing the user-agent's default white. Cleared when the shell disconnects. The app scrolls the DOCUMENT (root mode) or lets each `nldd-page` scroll inside its pane (nested mode). The mode is derived from the outermost horizontal split view: one column means the document scrolls, several columns mean the panes do. An app without such a split view is a single column at every width and therefore scrolls the document too — nested scrolling would cost it the rubber-band and the collapsing browser toolbar on iOS for nothing. Set `--context-scroll-mode` on the `nldd-shell` itself to override the derived mode; an inherited value loses from it. In nested scroll mode `overscroll-behavior: none` is set on `document.documentElement` and `document.body` while the shell is connected. Combined with `overscroll-behavior: contain` on `nldd-page`'s scroll target, this prevents iOS rubber-band on the viewport when scroll gestures land outside an `nldd-page` (e.g. on a top-bar). In root scroll mode the document itself is the scroller, so this is lifted to let the native rubber-band happen. Cleared on last disconnect.",
+          "name": "NLDDShell",
+          "members": [
+            {
+              "kind": "field",
+              "name": "background",
+              "type": {
+                "text": "'base' | 'tinted'"
+              },
+              "default": "'base'",
+              "attribute": "background",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "background",
+              "type": {
+                "text": "'base' | 'tinted'"
+              },
+              "default": "'base'",
+              "fieldName": "background",
+              "description": "Background color (cascades to descendants)"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-shell",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "Default slot for the application content"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDShell",
+          "declaration": {
+            "name": "NLDDShell",
+            "module": "src/components/layout/shell/shell.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-shell",
+          "declaration": {
+            "name": "NLDDShell",
+            "module": "src/components/layout/shell/shell.ts"
           }
         }
       ]
@@ -33938,6 +33938,10 @@
             }
           ],
           "slots": [
+            {
+              "name": "icon",
+              "description": "Takes the place of the icon: an `nldd-avatar` for the person who is signed in, for instance. It gets the size of an icon, and follows `content-priority` and `icon-only` as the icon does. Wins over `icon`."
+            },
             {
               "name": "",
               "description": "Content of the expandable popover. Wrap items in an `<nldd-menu>` so this component does not have to duplicate the menu API (variant, accessible-label, translations, filterFn and so on). Event listeners on items work directly, because nothing is cloned anymore."
@@ -39647,7 +39651,7 @@
             "text": "string"
           },
           "default": "'nldd-single-column-change'",
-          "description": "Bubbling + composed event a horizontal split view fires when it collapses to\n(or expands out of) a single visible column. nldd-app-view listens for it to\nderive the document-vs-nested scroll mode."
+          "description": "Bubbling + composed event a horizontal split view fires when it collapses to\n(or expands out of) a single visible column. nldd-shell listens for it to\nderive the document-vs-nested scroll mode."
         },
         {
           "kind": "function",
@@ -39665,7 +39669,7 @@
               }
             }
           ],
-          "description": "Nearest ancestor app-view (light-DOM `closest`; slotted layers stay in the\nconsumer's light tree so this reaches across the slot boundaries), or null\nwhen a layer is used stand-alone (e.g. a bare page in the docs).\n\nAn overlay ends the search: a sheet or a modal dialog is its own scroll\ncontainer and its own top edge, so a page inside one owns its scroller\nwhatever the app around it does. Without this the app-view would push its\nroot mode straight through the overlay and the page's sticky header would\nstick against the document, over the content of the overlay. The overlays\nreset --context-scroll-mode as well, which is what the stand-alone read\nbelow then finds."
+          "description": "Nearest ancestor shell (light-DOM `closest`; slotted layers stay in the\nconsumer's light tree so this reaches across the slot boundaries), or null\nwhen a layer is used stand-alone (e.g. a bare page in the docs).\n\nAn overlay ends the search: a sheet or a modal dialog is its own scroll\ncontainer and its own top edge, so a page inside one owns its scroller\nwhatever the app around it does. Without this the shell would push its\nroot mode straight through the overlay and the page's sticky header would\nstick against the document, over the content of the overlay. The overlays\nreset --context-scroll-mode as well, which is what the stand-alone read\nbelow then finds."
         },
         {
           "kind": "function",
@@ -39689,11 +39693,11 @@
               }
             }
           ],
-          "description": "Hands `adopt` the provider above `host` once it is defined, when it was not\nyet at the moment `host` connected.\n\nCustom elements upgrade in the order their modules are defined, and an app\ndoes not control that: importing nldd-sidebar-section defines nldd-page, and\na route that loads before its shell defines the page before the app-view. The\nprovider is then in the DOM but has no `registerScrollConsumer` yet, so\nfindScrollModeProvider returns null and the layer starts out stand-alone.\nThis lets it register as soon as the provider is defined. Nothing happens\nwhen the host has left the DOM by then, or sits under another provider."
+          "description": "Hands `adopt` the provider above `host` once it is defined, when it was not\nyet at the moment `host` connected.\n\nCustom elements upgrade in the order their modules are defined, and an app\ndoes not control that: importing nldd-sidebar-section defines nldd-page, and\na route that loads before its shell defines the page before the shell. The\nprovider is then in the DOM but has no `registerScrollConsumer` yet, so\nfindScrollModeProvider returns null and the layer starts out stand-alone.\nThis lets it register as soon as the provider is defined. Nothing happens\nwhen the host has left the DOM by then, or sits under another provider."
         },
         {
           "kind": "class",
-          "description": "Reads the inherited `--context-scroll-mode` and reflects it to the host's\n`[data-scroll]` attribute so CSS can branch.\n\nIn root-scroll mode the DOCUMENT scrolls (see nldd-app-view): every layout\nlayer between the document and an nldd-page — app-view, the split views and\ntheir panes — must flow (overflow: visible) instead of clipping, so the page's\nsticky header/footer can stick against the document. Rather than duplicate the\nread-and-reflect logic in each of those components, they share this controller.\n\nThe mode is derived upstream by nldd-app-view. When an app-view is present the\nhost registers as a consumer and app-view pushes an authoritative re-read on\nevery change (a bare `--context-scroll-mode` update would otherwise not reach\nthe resize-polling layers in time — rAF runs before ResizeObserver). Without\nan app-view (a stand-alone page), it falls back to re-reading on window resize\nso a manual/media-query override still works. `nldd-page` keeps its own inline\nlogic because it also has to re-wire scroll listeners.",
+          "description": "Reads the inherited `--context-scroll-mode` and reflects it to the host's\n`[data-scroll]` attribute so CSS can branch.\n\nIn root-scroll mode the DOCUMENT scrolls (see nldd-shell): every layout\nlayer between the document and an nldd-page — shell, the split views and\ntheir panes — must flow (overflow: visible) instead of clipping, so the page's\nsticky header/footer can stick against the document. Rather than duplicate the\nread-and-reflect logic in each of those components, they share this controller.\n\nThe mode is derived upstream by nldd-shell. When a shell is present the\nhost registers as a consumer and shell pushes an authoritative re-read on\nevery change (a bare `--context-scroll-mode` update would otherwise not reach\nthe resize-polling layers in time — rAF runs before ResizeObserver). Without\na shell (a stand-alone page), it falls back to re-reading on window resize\nso a manual/media-query override still works. `nldd-page` keeps its own inline\nlogic because it also has to re-wire scroll listeners.",
           "name": "ScrollModeController",
           "members": [
             {
@@ -39781,7 +39785,7 @@
                   }
                 }
               ],
-              "description": "ScrollModeConsumer — nldd-app-view pushes the mode it derived. When a mode is\npassed it is applied directly; this is race-free, whereas re-reading\n`getComputedStyle` during a synchronous push can return a stale value for a\ndeeply-nested host (the var may not have propagated through an ancestor's\npending re-render yet). With no argument (resize / no app-view) the inherited\nvar is re-read instead."
+              "description": "ScrollModeConsumer — nldd-shell pushes the mode it derived. When a mode is\npassed it is applied directly; this is race-free, whereas re-reading\n`getComputedStyle` during a synchronous push can return a stale value for a\ndeeply-nested host (the var may not have propagated through an ancestor's\npending re-render yet). With no argument (resize / no shell) the inherited\nvar is re-read instead."
             },
             {
               "kind": "method",

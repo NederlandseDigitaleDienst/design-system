@@ -11,7 +11,7 @@
   }
 </style>
 
-<nldd-app-view>
+<nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
       <nldd-top-navigation-bar
@@ -57,7 +57,7 @@
       <nldd-title
         slot="header"
         size="1"
-        text="Een aanvraag indienen"
+        text="Aanvraag indienen"
         heading-level="1"
       ></nldd-title>
       <nldd-spacer
@@ -95,56 +95,56 @@
             current
             current-type="location"
           >
-            <nldd-text-cell text="Wat je nodig hebt"></nldd-text-cell>
+            <nldd-text-cell text="Je hebt je DigiD, het adres en een offerte nodig"></nldd-text-cell>
           </nldd-list-item>
           <nldd-list-item
             href="#zo-gaat-het"
             current-type="location"
           >
-            <nldd-text-cell text="Zo gaat het"></nldd-text-cell>
+            <nldd-text-cell text="Indienen gaat in drie stappen"></nldd-text-cell>
           </nldd-list-item>
           <nldd-list-item
             href="#na-het-indienen"
             current-type="location"
           >
-            <nldd-text-cell text="Na het indienen"></nldd-text-cell>
+            <nldd-text-cell text="Je aanvraag krijgt een nummer en een behandelaar"></nldd-text-cell>
           </nldd-list-item>
         </nldd-list>
       </nldd-container>
 
       <nldd-rich-text>
         <p>Een aanvraag dien je online in. Je vult in wat er nodig is en ziet meteen welke gegevens nog ontbreken, dus je hoeft niet alles in één keer af te maken.</p>
-        <h2 id="wat-je-nodig-hebt">Wat je nodig hebt</h2>
+        <h2 id="wat-je-nodig-hebt">Je hebt je DigiD, het adres en een offerte nodig</h2>
         <ul>
           <li>Je DigiD</li>
           <li>Het adres waar de aanvraag over gaat</li>
           <li>Een offerte of factuur van de uitvoerder</li>
         </ul>
-        <h2 id="zo-gaat-het">Zo gaat het</h2>
+        <h2 id="zo-gaat-het">Indienen gaat in drie stappen</h2>
         <ol>
           <li>Je kiest waarvoor je een aanvraag doet.</li>
           <li>Je vult je gegevens in en voegt de offerte toe.</li>
           <li>Je controleert alles en verstuurt de aanvraag.</li>
         </ol>
-        <h2 id="na-het-indienen">Na het indienen</h2>
-        <p>Je aanvraag krijgt een nummer en een behandelaar. Op het dossier zie je bij welke stap de aanvraag ligt, en lees je wat er nodig is als een stap langer duurt dan gepland.</p>
+        <h2 id="na-het-indienen">Je aanvraag krijgt een nummer en een behandelaar</h2>
+        <p>Op het dossier zie je bij welke stap de aanvraag ligt, en lees je wat er nodig is als een stap langer duurt dan gepland.</p>
       </nldd-rich-text>
       <nldd-spacer size="32"></nldd-spacer>
       <nldd-card background="tinted">
         <nldd-container padding="16">
           <nldd-title
             size="4"
-            text="Zelf een aanvraag doen"
+            text="Aanvragen kost tien minuten"
             heading-level="2"
           ></nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
           <nldd-rich-text>
-            <p>Je hebt je DigiD nodig en tien minuten tijd.</p>
+            <p>Houd je DigiD bij de hand.</p>
           </nldd-rich-text>
           <nldd-spacer size="16"></nldd-spacer>
           <nldd-button
             appearance="primary"
-            text="Start een aanvraag"
+            text="Aanvraag starten"
             href="#aanvraag-starten"
           ></nldd-button>
         </nldd-container>
@@ -155,7 +155,7 @@
       <nldd-title
         slot="header"
         size="3"
-        text="Ook handig"
+        text="Hier kun je verder"
         heading-level="2"
       ></nldd-title>
       <nldd-collection
@@ -164,12 +164,12 @@
       >
         <nldd-card
           href="#behandeling-volgen"
-          accessible-label="De behandeling volgen"
+          accessible-label="Behandeling volgen"
         >
           <nldd-container padding="16">
             <nldd-title
               size="5"
-              text="De behandeling volgen"
+              text="Behandeling volgen"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -224,7 +224,7 @@
           href="#aanvragen"
         ></nldd-breadcrumbs-item>
         <nldd-breadcrumbs-item
-          text="Een aanvraag indienen"
+          text="Aanvraag indienen"
           current
         ></nldd-breadcrumbs-item>
       </nldd-breadcrumbs>
@@ -256,4 +256,4 @@
       </nldd-page-footer-legal-bar>
     </nldd-page-footer>
   </nldd-page>
-</nldd-app-view>
+</nldd-shell>

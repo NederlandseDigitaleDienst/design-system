@@ -166,7 +166,7 @@ export class NLDDBarSplitView extends LitElement {
 		// Everything above main sticks to the top and stacks; everything below
 		// sticks to the bottom. Dividers are included, so they ride with their bar
 		// and count toward the offset. Base offsets are inherited from any
-		// bars/app-view above this one (px values, so nested bars compose).
+		// bars/shell above this one (px values, so nested bars compose).
 		const cs = getComputedStyle(this);
 		let top = parseFloat(cs.getPropertyValue('--context-inset-top')) || 0;
 		for (let i = 0; i < mainIndex; i++) {

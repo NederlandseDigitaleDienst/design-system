@@ -6,19 +6,16 @@
 
 # Patroon: navigatiepagina
 
-**Welk probleem dit oplost.** Iemand één niveau dieper brengen. Tussen de home en de contentpagina's staan pagina's die een deel van de site openen ("alles over aanvragen"), en die alleen laten zien wat eronder zit.
-
-**Wanneer wel.** Een deel van de site met meer pagina's dan de home kwijt kan, waar een bezoeker eerst moet kiezen voor die iets leest.
-
-**Wanneer niet.** Heeft de pagina eigen uitleg nodig, of brengt hij pagina's uit verschillende delen van de site bij elkaar rond één thema, dan is het een [onderwerppagina](topic-page.md). Staan er maar twee of drie pagina's onder, dan horen die als kaarten op de pagina erboven en is deze tussenstap overbodig. Een lijst records om in te zoeken of te filteren is een [lijst](list.md).
+Een navigatiepagina helpt bezoekers hun weg te vinden naar onderliggende pagina’s. De pagina kan ook uitleg of andere content bevatten, maar de nadruk ligt op de keuzes en routes die bezoekers vanaf hier kunnen volgen. Ligt de nadruk vooral op het onderwerp zelf, met uitleg en uitgelichte informatie, kies dan een [onderwerppagina](topic-page.md).
 
 ## Compositie
 
 ```
-nldd-app-view                            de buitenste schil
+nldd-shell                            de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
-       │    └─ nldd-top-navigation-bar   zoeken en taal, terug naar de home
+       ├─ slot="header"                  de header
+       │    └─ nldd-skip-link            om de balk heen
+       │         └─ nldd-top-navigation-bar   zoeken en taal, terug naar de home
        ├─ nldd-one-third-two-thirds-section    met een lijst
        │    ├─ slot="left"               de nldd-title met de h1 en een korte intro
        │    └─ slot="right"              een nldd-list type="navigation"
@@ -33,7 +30,7 @@ nldd-app-view                            de buitenste schil
 Met een lijst:
 
 ```html
-<nldd-app-view>
+<nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
       <nldd-top-navigation-bar
@@ -93,7 +90,7 @@ Met een lijst:
       >
         <nldd-list-item href="#aanvraag-indienen">
           <nldd-text-cell
-            text="Een aanvraag indienen"
+            text="Aanvraag indienen"
             supporting-text="Wat je nodig hebt en hoe het indienen gaat."
           ></nldd-text-cell>
           <nldd-spacer-cell size="12"></nldd-spacer-cell>
@@ -105,7 +102,7 @@ Met een lijst:
         </nldd-list-item>
         <nldd-list-item href="#behandeling-volgen">
           <nldd-text-cell
-            text="De behandeling volgen"
+            text="Behandeling volgen"
             supporting-text="Bij welke stap je aanvraag ligt, en wie er aan werkt."
           ></nldd-text-cell>
           <nldd-spacer-cell size="12"></nldd-spacer-cell>
@@ -117,7 +114,7 @@ Met een lijst:
         </nldd-list-item>
         <nldd-list-item href="#aanvraag-wijzigen">
           <nldd-text-cell
-            text="Een aanvraag wijzigen"
+            text="Aanvraag wijzigen"
             supporting-text="Gegevens aanvullen of een offerte vervangen, zolang de aanvraag loopt."
           ></nldd-text-cell>
           <nldd-spacer-cell size="12"></nldd-spacer-cell>
@@ -129,7 +126,7 @@ Met een lijst:
         </nldd-list-item>
         <nldd-list-item href="#aanvraag-intrekken">
           <nldd-text-cell
-            text="Een aanvraag intrekken"
+            text="Aanvraag intrekken"
             supporting-text="Stoppen met een aanvraag die nog in behandeling is."
           ></nldd-text-cell>
           <nldd-spacer-cell size="12"></nldd-spacer-cell>
@@ -141,7 +138,7 @@ Met een lijst:
         </nldd-list-item>
         <nldd-list-item href="#besluit-begrijpen">
           <nldd-text-cell
-            text="Het besluit begrijpen"
+            text="Besluit begrijpen"
             supporting-text="Wat er in het besluit staat en wat het voor je betekent."
           ></nldd-text-cell>
           <nldd-spacer-cell size="12"></nldd-spacer-cell>
@@ -205,13 +202,13 @@ Met een lijst:
       </nldd-page-footer-legal-bar>
     </nldd-page-footer>
   </nldd-page>
-</nldd-app-view>
+</nldd-shell>
 ```
 
 Met kaarten:
 
 ```html
-<nldd-app-view>
+<nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
       <nldd-top-navigation-bar
@@ -270,12 +267,12 @@ Met kaarten:
       >
         <nldd-card
           href="#aanvraag-indienen"
-          accessible-label="Een aanvraag indienen"
+          accessible-label="Aanvraag indienen"
         >
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Een aanvraag indienen"
+              text="Aanvraag indienen"
               heading-level="2"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -286,12 +283,12 @@ Met kaarten:
         </nldd-card>
         <nldd-card
           href="#behandeling-volgen"
-          accessible-label="De behandeling volgen"
+          accessible-label="Behandeling volgen"
         >
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="De behandeling volgen"
+              text="Behandeling volgen"
               heading-level="2"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -302,12 +299,12 @@ Met kaarten:
         </nldd-card>
         <nldd-card
           href="#aanvraag-wijzigen"
-          accessible-label="Een aanvraag wijzigen"
+          accessible-label="Aanvraag wijzigen"
         >
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Een aanvraag wijzigen"
+              text="Aanvraag wijzigen"
               heading-level="2"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -318,12 +315,12 @@ Met kaarten:
         </nldd-card>
         <nldd-card
           href="#aanvraag-intrekken"
-          accessible-label="Een aanvraag intrekken"
+          accessible-label="Aanvraag intrekken"
         >
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Een aanvraag intrekken"
+              text="Aanvraag intrekken"
               heading-level="2"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -334,12 +331,12 @@ Met kaarten:
         </nldd-card>
         <nldd-card
           href="#besluit-begrijpen"
-          accessible-label="Het besluit begrijpen"
+          accessible-label="Besluit begrijpen"
         >
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Het besluit begrijpen"
+              text="Besluit begrijpen"
               heading-level="2"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -406,34 +403,30 @@ Met kaarten:
       </nldd-page-footer-legal-bar>
     </nldd-page-footer>
   </nldd-page>
-</nldd-app-view>
+</nldd-shell>
 ```
 
 ## Waarom zo
 
-**De basis is die van de contentpagina.** De app view, de secties, de koppen, de vlakken en de footer werken hier precies zo. Dat staat bij de [contentpagina](content-page.md).
+**De pagina helpt bezoekers verder.** Een navigatiepagina helpt bezoekers kiezen waar ze verder gaan. Een korte introductie geeft context. Eventuele contentsecties staan onder de navigatie en lichten het onderwerp verder toe. De nadruk ligt op de onderliggende pagina’s: bezoekers moeten kunnen zien welke routes er zijn en welke route bij hen past. Ligt de nadruk vooral op uitleg of uitgelichte informatie over het onderwerp, dan past een [onderwerppagina](topic-page.md) beter.
 
-**Een lijst staat naast de intro, kaarten eronder.** Bij een lijst zet een [`nldd-one-third-two-thirds-section`](../../nldd-design/reference.md#nldd-one-third-two-thirds-section) de titel en een intro van een paar zinnen in het smalle derde, en de lijst in de twee derde ernaast. Een lijst is smal van zichzelf en vult die kolom, en zo staat de keuze op een breed scherm meteen naast de uitleg. Een raster kaarten heeft de breedte nodig: in twee derde passen er maar twee naast elkaar. Daar staan de titel en de intro dus in het `header`-slot van een `nldd-simple-section`, met de collectie over de volle breedte eronder. Op smal komt de intro in beide gevallen eerst. Houd hem daarom kort: geen hero, geen inleiding van drie alinea's, geen uitgelicht vlak. Wie hier is, wil kiezen. Zie de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#navigatie-en-structuur).
+**Zet de navigatie op een plek waar bezoekers die snel zien.** Bij een lijst staan de titel en korte introductie naast de navigatie. Zo zien bezoekers op een breed scherm meteen welke routes er zijn. Kies je voor kaarten, zet de titel en introductie erboven en geef de kaarten de ruimte eronder. Op een smal scherm staat de introductie in beide gevallen boven de navigatie. Houd die daarom kort.
 
-**Een lijst of kaarten, en geen mengvorm.** Een [`nldd-list`](../../nldd-design/reference.md#nldd-list) met `type="navigation"` is rustig en makkelijk te scannen, en houdt het ook met tien pagina's vol: kies hem als de titels voor zich spreken. Een [`nldd-collection`](../../nldd-design/reference.md#nldd-collection) met kaarten geeft elke keuze meer gewicht en ruimte voor een zin of een afbeelding, en past bij een handvol pagina's die echt van elkaar verschillen. Kies er één per pagina: twee vormen naast elkaar suggereren een rangorde die er niet is.
+**Kies één vorm voor de navigatie.** Gebruik een lijst als de titels duidelijk maken waar een link naartoe gaat. Een lijst is rustig en makkelijk te scannen, ook als er veel pagina’s zijn. Kaarten geven keuzes meer nadruk en ruimte voor een toelichting of afbeelding. Ze passen vooral bij een klein aantal pagina’s die duidelijk van elkaar verschillen. Eventuele contentsecties volgen onder de lijst of kaarten.
 
-**Een rij eindigt op een chevron.** Een `nldd-icon-cell` met `chevron-right` rechts in de rij zegt dat de rij verder leidt, en is in de lijst wat de rand van een kaart in de collectie is: het teken dat je hier kunt klikken. Zet er een `nldd-spacer-cell` voor, zodat een lange titel nooit tegen het icoon aan loopt.
+**Maak elke keuze één duidelijke link.** Maak de hele rij of kaart klikbaar. Zo is elke keuze één link en één tabstop. Een losse knop of link met “Lees meer” herhaalt de link en voegt een extra tabstop toe. In een lijst laat een chevron zien dat de rij naar een andere pagina leidt.
 
-**Elke rij en elke kaart is één link.** Een `nldd-list-item` met `href` is in zijn geheel de link, met de tekst van zijn cel als naam. Een [`nldd-card`](../../nldd-design/reference.md#nldd-card) met `href` ook, maar daar is `accessible-label` de naam van die link: zet daar de titel van de kaart in. Een losse "Lees meer" of een knop eronder voegt niets toe en verdubbelt de tabstops.
+**Schrijf titels die de bestemming benoemen.** Laat de titel zeggen waar de link naartoe gaat, bijvoorbeeld "Aanvraag wijzigen". Een korte toelichting kan helpen om vergelijkbare keuzes van elkaar te onderscheiden. Houd die toelichting bij de keuze zelf; de uitgebreide uitleg hoort op de pagina waar de link naartoe leidt.
 
-**De titel zegt waar de link heen gaat, de zin waarom je erop klikt.** Schrijf de titel als de taak ("Een aanvraag wijzigen"), niet als een bak ("Informatie", "Documenten"). De zin eronder, als `supporting-text` in de lijst of als tekst in de kaart, helpt kiezen tussen twee links die op elkaar lijken, en is niet het begin van de uitleg: die staat op de pagina waar de link heen gaat.
+**Gebruik koppen op de juiste plek.** Kaarttitels zijn koppen. Als er geen andere sectiekop boven de kaarten staat, volgen ze direct op de paginatitel. Lijstrijen zijn geen koppen. Geef kaartcomponenten die je op meerdere plekken gebruikt het juiste kopniveau mee.
 
-**De kaartkoppen zijn een `h2`.** Er staat geen sectiekop tussen de paginatitel en de kaarten, dus komen ze direct onder de `h1`. Een kaart die je ook elders gebruikt, krijgt zijn kopniveau als parameter. De rijen van een lijst zijn geen koppen.
-
-**De volgorde volgt de taak.** Wat de meeste mensen komen doen staat eerst, en daarna de rest in de volgorde waarin het zich voordoet: indienen, volgen, wijzigen of intrekken, het besluit, bezwaar. Alfabetisch is alleen een volgorde als niemand weet wat er gezocht wordt.
-
-**Het kruimelpad staat onderaan.** Net als op de contentpagina, in de `breadcrumbs`-rij van de [`nldd-page-footer`](../../nldd-design/reference.md#nldd-page-footer). Bovenaan zou het boven de keuze komen te staan die iemand hier komt maken.
+Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbouw](page-structure.md).
 
 ## Toegankelijkheid
 
 Wat je gratis krijgt: elke rij en elke kaart is één link en één tabstop, een lijst met `type="navigation"` is een eigen navigatie, en op smal staat alles in de volgorde waarin je het leest.
 
-Wat jij nog moet doen: wat bij de [contentpagina](content-page.md) staat, een `aria-label` op de lijst, en een titel die zonder de zin eronder ook te begrijpen is. Bij kaarten is die titel ook het `accessible-label`, dus een schermlezer die door de links springt hoort alleen die.
+Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, een `aria-label` op de lijst, en een titel die zonder de zin eronder ook te begrijpen is. Bij kaarten is die titel ook het `accessible-label`, dus een schermlezer die door de links springt hoort alleen die.
 
 ## Gezien in
 

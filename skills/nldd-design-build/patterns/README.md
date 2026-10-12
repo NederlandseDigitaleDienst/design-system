@@ -8,10 +8,11 @@ De set groeit met wat zich in productie bewijst, dus hij is niet compleet en wil
 
 | Patroon | Voor welke taak |
 |---|---|
-| [Home](home-page.md) | De pagina waar mensen binnenkomen: een hero en de taken als kaarten |
-| [Onderwerppagina](topic-page.md) | Alles over één thema bij elkaar, met de hoofdtaak bovenaan |
-| [Navigatiepagina](navigation-page.md) | Een deel van de site openen en laten zien wat eronder zit |
-| [Contentpagina](content-page.md) | Eén ding uitleggen, met de actie ernaast; de basis voor de andere pagina's |
+| [Paginaopbouw](page-structure.md) | Het geraamte van elke pagina: de schil, de header, de secties en de footer |
+| [Home](home-page.md) | Het startpunt van een website: wat je er kunt vinden en doen |
+| [Onderwerppagina](topic-page.md) | De home voor een onderwerp op een lager niveau |
+| [Navigatiepagina](navigation-page.md) | De weg wijzen naar de pagina's eronder |
+| [Contentpagina](content-page.md) | De details op het laagste niveau: uitleg over één onderwerp, taak of besluit |
 | [Applicatie](application.md) | Een scherm met panelen naast elkaar, elk met een eigen pagina |
 | [Werkbalk met acties](toolbar-with-actions.md) | Acties boven een scherm die ook op smal bereikbaar blijven |
 

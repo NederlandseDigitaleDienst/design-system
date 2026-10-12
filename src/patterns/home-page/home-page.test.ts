@@ -77,6 +77,16 @@ describe('patroon: home', () => {
 		expect(written.querySelectorAll('nldd-simple-section[background]').length).toBeGreaterThan(1);
 	});
 
+	it('zet het doel als knop in de hero, en herhaalt het onderaan met dezelfde tekst', () => {
+		const written = new DOMParser().parseFromString(markup, 'text/html');
+		const inHero = [...written.querySelectorAll('nldd-hero nldd-button')];
+		expect(inHero.length).toBe(1);
+		expect(inHero[0].getAttribute('appearance')).toBe('inherit-filled');
+		const primary = written.querySelector('nldd-button[appearance="primary"]')!;
+		expect(primary.getAttribute('text')).toBe(inHero[0].getAttribute('text'));
+		expect(primary.getAttribute('href')).toBe(inHero[0].getAttribute('href'));
+	});
+
 	it('houdt één primaire knop over, voor de oproep onderaan', () => {
 		const written = new DOMParser().parseFromString(markup, 'text/html');
 		const primary = [...written.querySelectorAll('nldd-button[appearance="primary"]')];

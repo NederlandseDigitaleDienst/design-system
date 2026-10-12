@@ -9,7 +9,7 @@
  * content up under the cursor.
  *
  * In root-scroll mode (--context-scroll-mode: root, derived upstream by
- * nldd-app-view) the page stops owning a scroller: the document scrolls and the
+ * nldd-shell) the page stops owning a scroller: the document scrolls and the
  * sticky header/footer stick against the document, offset by
  * --context-inset-top/bottom. The mode is read on connect/resize and reflected
  * to [data-scroll] so the CSS can branch.
@@ -206,7 +206,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 		this.style.containerName = 'layout-container';
 		this._scrollProvider = findScrollModeProvider(this);
 		if (this._scrollProvider) {
-			// Push-driven inside an app-view: it pushes the authoritative mode on
+			// Push-driven inside a shell: it pushes the authoritative mode on
 			// register (and on every change), so the page never self-reads the var.
 			// A stale getComputedStyle read while re-mounting on navigation
 			// otherwise stuck the page in nested mode (clipped, footer not sticky
@@ -225,7 +225,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 		}
 	}
 
-	/** Switches from stand-alone to push once an app-view (or sheet, or modal
+	/** Switches from stand-alone to push once a shell (or sheet, or modal
 	 *  dialog) that was not yet defined when this page connected, is. */
 	private _adoptScrollProvider = (provider: ScrollModeProvider): void => {
 		if (this._scrollProvider) return;
@@ -261,15 +261,15 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	}
 
 	/**
-	 * ScrollModeConsumer — nldd-app-view pushes the derived mode here; called with
-	 * no argument (resize / no app-view) it re-reads the inherited var. @internal
+	 * ScrollModeConsumer — nldd-shell pushes the derived mode here; called with
+	 * no argument (resize / no shell) it re-reads the inherited var. @internal
 	 */
 	readScrollMode(mode?: ScrollMode): void {
 		if (this._readScrollMode(mode)) this._configureScroll();
 	}
 
 	// Apply the scroll mode; returns true when it changed so callers can
-	// reconfigure. With an explicit mode (app-view's push) it is applied directly
+	// reconfigure. With an explicit mode (shell's push) it is applied directly
 	// — race-free, unlike a getComputedStyle read mid-propagation. Otherwise the
 	// inherited --context-scroll-mode is read (anything but 'root' means nested).
 	private _readScrollMode(mode?: ScrollMode): boolean {

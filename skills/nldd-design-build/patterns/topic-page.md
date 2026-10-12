@@ -6,19 +6,16 @@
 
 # Patroon: onderwerppagina
 
-**Welk probleem dit oplost.** Alles over één thema bij elkaar brengen. Mensen zoeken op een onderwerp ("isoleren"), niet op hoe de site is ingedeeld, en wat ze nodig hebben staat vaak verspreid over meer delen van de site.
-
-**Wanneer wel.** Een thema waar mensen mee binnenkomen, met een eigen korte uitleg, één taak die de meesten komen doen, en pagina's uit verschillende delen van de site die erbij horen.
-
-**Wanneer niet.** Een pagina die alleen een deel van de site opent en laat zien wat eronder zit, is een [navigatiepagina](navigation-page.md): die volgt de indeling van de site, de onderwerppagina het thema. Heeft het onderwerp één pagina uitleg en verder niets, dan is het een [contentpagina](content-page.md).
+Een onderwerppagina is de [home](home-page.md) voor een onderwerp op een lager niveau in de website. De pagina geeft overzicht van wat bezoekers over dat onderwerp kunnen vinden en doen, en brengt relevante informatie en taken bij elkaar. Gebruik een [navigatiepagina](navigation-page.md) als bezoekers vooral naar onderliggende pagina’s moeten navigeren.
 
 ## Compositie
 
 ```
-nldd-app-view                            de buitenste schil
+nldd-shell                            de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                  nldd-skip-link om de nldd-top-navigation-bar
-       │    └─ nldd-top-navigation-bar   zoeken en taal, terug naar de onderwerpen
+       ├─ slot="header"                  de header
+       │    └─ nldd-skip-link            om de balk heen
+       │         └─ nldd-top-navigation-bar   zoeken en taal, terug naar de onderwerpen
        ├─ nldd-hero                      layout="overlap", de h1, een korte uitleg en de hoofdtaak
        │    └─ slot="media"              nldd-image, hier nog zonder beeld
        ├─ nldd-one-half-one-half-section tekst links, afbeelding rechts
@@ -40,7 +37,7 @@ nldd-app-view                            de buitenste schil
 ```
 
 ```html
-<nldd-app-view>
+<nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
       <nldd-top-navigation-bar
@@ -97,7 +94,7 @@ nldd-app-view                            de buitenste schil
       <nldd-spacer size="24"></nldd-spacer>
       <nldd-button
         appearance="inherit-filled"
-        text="Start een aanvraag"
+        text="Aanvraag starten"
         href="#aanvraag-starten"
       ></nldd-button>
     </nldd-hero>
@@ -106,7 +103,7 @@ nldd-app-view                            de buitenste schil
       <nldd-title
         slot="left"
         size="2"
-        text="Waarom isoleren"
+        text="Isoleren houdt de warmte binnen"
         heading-level="2"
       ></nldd-title>
       <nldd-spacer
@@ -138,7 +135,7 @@ nldd-app-view                            de buitenste schil
       <nldd-title
         slot="header"
         size="2"
-        text="Wat je moet weten"
+        text="Voor dakisolatie doe je een aanvraag"
         heading-level="2"
       ></nldd-title>
       <nldd-spacer
@@ -146,7 +143,7 @@ nldd-app-view                            de buitenste schil
         size="16"
       ></nldd-spacer>
       <nldd-rich-text slot="header">
-        <p>Voor dakisolatie doe je een aanvraag. Dit zijn de pagina's die je daarbij helpen, waar ze op de site ook staan.</p>
+        <p>Dit zijn de pagina's die je daarbij helpen, waar ze op de site ook staan.</p>
       </nldd-rich-text>
       <nldd-collection
         layout="grid"
@@ -154,12 +151,12 @@ nldd-app-view                            de buitenste schil
       >
         <nldd-card
           href="#aanvraag-indienen"
-          accessible-label="Een aanvraag indienen"
+          accessible-label="Aanvraag indienen"
         >
           <nldd-container padding="16">
             <nldd-title
               size="5"
-              text="Een aanvraag indienen"
+              text="Aanvraag indienen"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -170,12 +167,12 @@ nldd-app-view                            de buitenste schil
         </nldd-card>
         <nldd-card
           href="#behandeling-volgen"
-          accessible-label="De behandeling volgen"
+          accessible-label="Behandeling volgen"
         >
           <nldd-container padding="16">
             <nldd-title
               size="5"
-              text="De behandeling volgen"
+              text="Behandeling volgen"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="4"></nldd-spacer>
@@ -378,31 +375,19 @@ nldd-app-view                            de buitenste schil
       </nldd-page-footer-legal-bar>
     </nldd-page-footer>
   </nldd-page>
-</nldd-app-view>
+</nldd-shell>
 ```
 
 ## Waarom zo
 
-**De basis is die van de contentpagina.** De app view, de secties, de koppen, de vlakken, de linkkaarten en de footer werken hier precies zo. Dat staat bij de [contentpagina](content-page.md).
+**De onderwerppagina werkt zoals de home.** De secties introduceren wat bij het onderwerp hoort, geven de ingangen ernaartoe en scheppen de verwachting van wat je daar vindt. Wat bij de [home](home-page.md) staat over de hero, de secties en de koppen geldt hier ook. Hieronder staat alleen wat anders is.
 
-**Een onderwerp opent met een hero.** Op een onderwerp landen mensen vaak rechtstreeks, vanuit een zoekmachine of een andere site, en dan is het net als de [home](home-page.md) een pagina waar ze binnenkomen. De [`nldd-hero`](../../nldd-design/reference.md#nldd-hero) is de kop, met de titel, de korte uitleg en de hoofdtaak erin. Net als op de home met `layout="overlap"`: het vlak valt over de afbeelding en loopt eronder door. Geef de titel en de tekst `color="inherit"`, zodat ze het contrast van de vulling volgen.
+**Een onderwerppagina heeft een terugknop en een kruimelpad.** Dat is het grote verschil met de home: er ligt een pagina boven. De bovenbalk heeft daarom een terugknop daarnaartoe, en de footer een kruimelpad dat laat zien waar je bent.
 
-**De hoofdtaak staat bovenaan.** Wie op een onderwerp landt, komt meestal voor één ding. Zet die taak als [`nldd-button`](../../nldd-design/reference.md#nldd-button) direct onder de uitleg in de hero, zodat niemand eerst langs de kaarten hoeft. Op de vulling van de hero is dat `appearance="inherit-filled"`: die neemt zijn kleuren van het vlak, waar een gewone primaire knop wegvalt tegen een accentkleur. Het is één knop; meer taken van hetzelfde gewicht horen bij de kaarten.
-
-**Eigen uitleg, maar kort.** Een paar zinnen over wat het onderwerp is en wat je hier vindt. Dat is het verschil met een navigatiepagina, waar de intro alleen zegt wat eronder valt. Wordt de uitleg langer dan een alinea, dan is hij een eigen contentpagina en krijgt hij een kaart.
-
-**Uitleg met beeld, als je meer te zeggen hebt dan de intro.** Waarom het onderwerp ertoe doet, staat in een sectie met de tekst links en een afbeelding rechts. Hoe je die bouwt, staat bij de [home](home-page.md); hier staat de tekst eerst, zodat hij ook op smal boven de afbeelding komt.
-
-**De kaarten volgen het thema, niet de indeling van de site.** "Een aanvraag indienen" en "Bezwaar maken" staan bij de aanvragen, niet bij isoleren: op deze pagina staan ze toch, omdat je ze voor dit onderwerp nodig hebt. Een intro onder de titel zegt waarom. De kaart linkt naar de pagina waar die al staat. Je kopieert de inhoud niet, anders heb je twee versies die uit elkaar lopen.
-
-**De pagina's onder het onderwerp staan in een lijst.** Wat dieper over het onderwerp gaat, zoals de soorten isolatie, staat in een `nldd-list` met `type="navigation"` in de twee derde rechts, met de titel en een korte uitleg in het derde links, net als op de [navigatiepagina](navigation-page.md). Een lijst geeft die pagina's minder gewicht dan de kaarten erboven, en dat klopt: de kaarten zijn wat de meesten komen doen, de lijst is waar je verder leest.
-
-**Verwante onderwerpen staan onderaan, als kaarten.** Ze zijn een uitweg voor wie op het verkeerde onderwerp is beland, of verder wil. Ze staan in een getinte sectie met een `nldd-collection` van linkkaarten, net als Ook handig op de [contentpagina](content-page.md): een titel en één zin die zegt wat het andere onderwerp is. Kleiner dan de kaarten bovenaan, met een kop van `size="5"`, zodat ze niet gaan concurreren met wat je hier komt doen.
-
-**Het kruimelpad wijst naar de onderwerpen.** Een onderwerp hangt niet onder een deel van de site, dus het kruimelpad gaat via een lijst van alle onderwerpen, niet via de plek waar de pagina's eronder staan.
+Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbouw](page-structure.md).
 
 ## Toegankelijkheid
 
-Wat je gratis krijgt: wat bij de [contentpagina](content-page.md) staat, en een knop met `href` die een echte link is.
+Wat je gratis krijgt: wat bij de [paginaopbouw](page-structure.md) staat, en een knop met `href` die een echte link is.
 
-Wat jij nog moet doen: wat bij de [contentpagina](content-page.md) staat, en een knoptekst die de taak noemt, want hij staat los van de kaarten en moet zonder de tekst eromheen te begrijpen zijn.
+Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, en een knoptekst die de taak noemt, want hij staat los van de kaarten en moet zonder de tekst eromheen te begrijpen zijn.

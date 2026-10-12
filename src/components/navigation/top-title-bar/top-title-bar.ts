@@ -169,7 +169,7 @@ export class NLDDTopTitleBar extends LitElement {
 		this._wireScrollTarget();
 
 		// The page's scroll target flips when it switches scroll mode (nested
-		// inner scroller <-> the document, derived on resize by nldd-app-view).
+		// inner scroller <-> the document, derived on resize by nldd-shell).
 		// Re-wire onto the new target whenever the page reflects a new
 		// [data-scroll], so the collapse keeps tracking the live scroller.
 		if (this._pageElement) {

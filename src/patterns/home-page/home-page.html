@@ -1,4 +1,4 @@
-<nldd-app-view>
+<nldd-shell>
   <nldd-page>
     <nldd-skip-link slot="header">
       <nldd-top-navigation-bar
@@ -50,13 +50,19 @@
       <nldd-rich-text color="inherit">
         <p>Dien een aanvraag in, volg de behandeling en vind je documenten terug, zonder dat je hoeft te weten bij welke afdeling het ligt.</p>
       </nldd-rich-text>
+      <nldd-spacer size="24"></nldd-spacer>
+      <nldd-button
+        appearance="inherit-filled"
+        text="Aanvraag starten"
+        href="#aanpak"
+      ></nldd-button>
     </nldd-hero>
 
     <nldd-simple-section background="tinted">
       <nldd-title
         slot="header"
         size="2"
-        text="Wat je hier kunt"
+        text="Alles rond je aanvraag regel je hier"
         heading-level="2"
       ></nldd-title>
       <nldd-spacer
@@ -74,7 +80,7 @@
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="Je aanvraag"
+              text="Aanvraag"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -98,7 +104,7 @@
           <nldd-container padding="16">
             <nldd-title
               size="4"
-              text="De behandeling"
+              text="Behandeling"
               heading-level="3"
             ></nldd-title>
             <nldd-spacer size="8"></nldd-spacer>
@@ -153,7 +159,7 @@
       <nldd-title
         slot="right"
         size="2"
-        text="Alles op één plek"
+        text="Je dossier houdt alles bij elkaar"
         heading-level="2"
       ></nldd-title>
       <nldd-spacer
@@ -181,7 +187,7 @@
       <nldd-title
         slot="left"
         size="2"
-        text="Hoe het werkt"
+        text="Een aanvraag gaat langs drie vaste stappen"
         heading-level="2"
       ></nldd-title>
       <nldd-spacer
@@ -196,7 +202,7 @@
         <nldd-container padding="16">
           <nldd-title
             size="4"
-            text="Loop je ergens vast?"
+            text="De behandelaar helpt je verder"
             heading-level="3"
           ></nldd-title>
           <nldd-spacer size="8"></nldd-spacer>
@@ -206,7 +212,7 @@
           <nldd-spacer size="16"></nldd-spacer>
           <nldd-button
             appearance="secondary"
-            text="Neem contact op"
+            text="Contact opnemen"
             href="#contact"
           ></nldd-button>
         </nldd-container>
@@ -217,7 +223,7 @@
       <nldd-title
         slot="left"
         size="2"
-        text="Onderwerpen"
+        text="Hiervoor kun je een aanvraag doen"
         heading-level="2"
       ></nldd-title>
       <nldd-spacer
@@ -225,12 +231,12 @@
         size="16"
       ></nldd-spacer>
       <nldd-rich-text slot="left">
-        <p>Zoek je iets over een onderwerp en niet over je aanvraag? Op de onderwerppagina staat alles over dat onderwerp bij elkaar, ook wat elders op de site staat.</p>
+        <p>Per onderwerp staat alles bij elkaar: wat het is, wat je ervoor nodig hebt en hoe je een aanvraag doet.</p>
       </nldd-rich-text>
       <nldd-list
         slot="right"
         type="navigation"
-        aria-label="Onderwerpen"
+        aria-label="Hiervoor kun je een aanvraag doen"
       >
         <nldd-list-item href="#isoleren">
           <nldd-text-cell
@@ -286,14 +292,14 @@
     <nldd-simple-section background="tinted">
       <nldd-title
         size="2"
-        text="Zelf een aanvraag doen"
-        supporting-text="Je hebt je DigiD nodig en tien minuten tijd."
+        text="Aanvragen kost tien minuten"
+        supporting-text="Houd je DigiD bij de hand."
         heading-level="2"
       ></nldd-title>
       <nldd-spacer size="16"></nldd-spacer>
       <nldd-button
         appearance="primary"
-        text="Start een aanvraag"
+        text="Aanvraag starten"
         href="#aanpak"
       ></nldd-button>
     </nldd-simple-section>
@@ -327,4 +333,4 @@
       </nldd-page-footer-legal-bar>
     </nldd-page-footer>
   </nldd-page>
-</nldd-app-view>
+</nldd-shell>

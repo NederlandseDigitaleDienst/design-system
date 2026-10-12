@@ -142,7 +142,7 @@ export class NLDDNavigationSplitView extends LitElement {
 	}
 
 	/**
-	 * True when collapsed to a single visible pane (full-stack). nldd-app-view
+	 * True when collapsed to a single visible pane (full-stack). nldd-shell
 	 * reads this — and listens for the `single-column-change` event below — to
 	 * switch the whole app to document-level scroll.
 	 * @internal

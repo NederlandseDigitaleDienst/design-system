@@ -73,7 +73,7 @@ export class NLDDSideBySideSplitView extends LitElement {
 	}
 
 	/**
-	 * True when only one pane fits. nldd-app-view reads this — and listens for the
+	 * True when only one pane fits. nldd-shell reads this — and listens for the
 	 * `single-column-change` event below — to switch to document-level scroll.
 	 * @internal
 	 */
