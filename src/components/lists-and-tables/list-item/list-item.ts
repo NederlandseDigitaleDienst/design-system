@@ -324,6 +324,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 
 	private _warnedChildrenOutsideTree = false;
 	private _warnedExpandedInNavigation = false;
+	private _warnedStrayExpanded = false;
 	private _warnedStrayContent = false;
 	private _warnedNestedControl = false;
 
@@ -651,6 +652,9 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		}
 		if (this.href || this.button || this.checkbox) return;
 		if (this._ownDescendants('nldd-list-item-segment[disclosure]').length > 0) return;
+		// Once per row: this also runs on every change to the row's children.
+		if (this._warnedStrayExpanded) return;
+		this._warnedStrayExpanded = true;
 		console.warn('nldd-list-item: `expanded` needs somewhere to live — make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.');
 	}
 

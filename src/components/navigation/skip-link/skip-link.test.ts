@@ -149,7 +149,16 @@ describe('nldd-skip-link', () => {
 		expect(document.activeElement).not.toBe(section);
 	});
 
+	it('slaat een sibling over die een vlak heeft maar geen focus aanneemt', async () => {
+		el = await fixture('<div><nldd-skip-link></nldd-skip-link><div style="visibility: hidden">x</div><div inert>x</div><main>Content</main></div>');
+		const skipLink = el.querySelector('nldd-skip-link')!;
+		await waitForUpdate(skipLink);
+		(skipLink.shadowRoot!.querySelector('button') as HTMLButtonElement).click();
+		expect(document.activeElement).toBe(el.querySelector('main'));
+	});
+
 	it('laat geen tabindex achter op een doel dat de focus niet aanneemt', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture('<div><nldd-skip-link href="#skip-verborgen"></nldd-skip-link><section id="skip-verborgen" hidden>Doel</section></div>');
 		const skipLink = el.querySelector('nldd-skip-link') as unknown as HTMLElement & { _focus: (target: HTMLElement) => void };
 		await waitForUpdate(skipLink);
@@ -157,6 +166,8 @@ describe('nldd-skip-link', () => {
 		skipLink._focus(section);
 		expect(document.activeElement).not.toBe(section);
 		expect(section.hasAttribute('tabindex')).toBe(false);
+		expect(warn).toHaveBeenCalledOnce();
+		warn.mockRestore();
 	});
 
 	it('waarschuwt als er geen doel is', async () => {

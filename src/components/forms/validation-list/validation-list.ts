@@ -40,7 +40,7 @@
  * @attr {string} match - Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it". Not held against an empty value unless the field is required.
  * @attr {number} minlength - Fewest characters the value may have. Not held against an empty value unless the field is required.
  * @attr {number} maxlength - Most characters the value may have.
- * @attr {boolean} required - The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`.
+ * @attr {boolean} required - The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`. The control is read by its `required` property or attribute; one that only says `aria-required` needs this item.
  * @attr {boolean} hint - Show this item before there is a verdict, whatever the list says.
  * @attr {boolean} unmet - Whether the value fails this item. Managed by the list; do not set it yourself.
  * @attr {boolean} visible - Whether the item is on screen. Managed by the list.

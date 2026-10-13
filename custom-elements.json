@@ -6129,7 +6129,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`.",
+              "description": "The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`. The control is read by its `required` property or attribute; one that only says `aria-required` needs this item.",
               "fieldName": "required"
             },
             {

@@ -126,6 +126,9 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 		if ((target.getRootNode() as Document | ShadowRoot).activeElement !== target) {
 			target.removeEventListener('blur', restore);
 			restore();
+			if (import.meta.env?.DEV) {
+				console.warn('<nldd-skip-link>: the target did not take focus, so the skip link did nothing. It is probably hidden or inert.', target);
+			}
 		}
 	}
 
@@ -145,13 +148,17 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	}
 
 	/**
-	 * The element itself when it has a box. A `display: contents` wrapper has
-	 * none, yet its children are on screen, so the first rendered one of those
-	 * stands in for it.
+	 * The element itself when it has a box and can take focus. A `display:
+	 * contents` wrapper has no box, yet its children are on screen, so the
+	 * first rendered one of those stands in for it. An element that is
+	 * `visibility: hidden` or inert does have a box and still refuses focus.
 	 */
 	private _rendered(el: Element): HTMLElement | null {
 		if (!(el instanceof HTMLElement)) return null;
-		if (el.getClientRects().length > 0) return el;
+		if (el.getClientRects().length > 0) {
+			const reachable = getComputedStyle(el).visibility !== 'hidden' && !el.closest('[inert]');
+			return reachable ? el : null;
+		}
 		if (getComputedStyle(el).display !== 'contents') return null;
 		for (const child of el.children) {
 			const rendered = this._rendered(child);
