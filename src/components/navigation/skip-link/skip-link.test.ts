@@ -157,6 +157,18 @@ describe('nldd-skip-link', () => {
 		expect(document.activeElement).toBe(el.querySelector('main'));
 	});
 
+	it('laat geen tabindex achter als hij twee keer loopt voordat het doel de focus verliest', async () => {
+		el = await fixture('<div><nldd-skip-link></nldd-skip-link><main>Content</main></div>');
+		const skipLink = el.querySelector('nldd-skip-link') as unknown as HTMLElement & { _focus: (target: HTMLElement) => void };
+		await waitForUpdate(skipLink);
+		const main = el.querySelector('main')!;
+		skipLink._focus(main);
+		skipLink._focus(main);
+		expect(main.getAttribute('tabindex')).toBe('0');
+		main.blur();
+		expect(main.hasAttribute('tabindex')).toBe(false);
+	});
+
 	it('laat geen tabindex achter op een doel dat de focus niet aanneemt', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture('<div><nldd-skip-link href="#skip-verborgen"></nldd-skip-link><section id="skip-verborgen" hidden>Doel</section></div>');

@@ -98,6 +98,7 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	}
 
 	private _focusTimer?: ReturnType<typeof setTimeout>;
+	private _restoreTarget?: () => void;
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
@@ -113,18 +114,23 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	 * next Tab left the page instead of reaching the first link in it.
 	 */
 	private _focus(target: HTMLElement): void {
+		// A second run before the target has blurred would read the temporary 0
+		// as the original and put that back for good. Settle the first one first.
+		this._restoreTarget?.();
 		const previous = target.getAttribute('tabindex');
 		const restore = () => {
+			target.removeEventListener('blur', restore);
+			if (this._restoreTarget === restore) this._restoreTarget = undefined;
 			if (previous === null) target.removeAttribute('tabindex');
 			else target.setAttribute('tabindex', previous);
 		};
+		this._restoreTarget = restore;
 		target.setAttribute('tabindex', '0');
-		target.addEventListener('blur', restore, { once: true });
+		target.addEventListener('blur', restore);
 		target.focus();
 		// Focus did not take (the target got hidden or went inert in between):
 		// no blur will follow, so the tab stop would stay behind for good.
 		if ((target.getRootNode() as Document | ShadowRoot).activeElement !== target) {
-			target.removeEventListener('blur', restore);
 			restore();
 			if (import.meta.env?.DEV) {
 				console.warn('<nldd-skip-link>: the target did not take focus, so the skip link did nothing. It is probably hidden or inert.', target);
