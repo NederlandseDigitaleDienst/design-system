@@ -212,6 +212,24 @@ describe('nldd-hero', () => {
 		}
 	});
 
+	it('does not take a CSS-wide keyword for a length, which CSS.supports would let through', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			for (const keyword of ['inherit', 'initial', 'unset', 'revert']) {
+				el = await fixture(`<nldd-hero main-width="${keyword}" overlap-size="${keyword}" media-height="${keyword}" media-aspect-ratio="${keyword}" width="${keyword}"></nldd-hero>`);
+				await waitForUpdate(el);
+				for (const name of ['--_hero-main-width', '--_hero-overlap-size', '--_hero-media-height', '--_hero-media-aspect-ratio', '--_hero-max-width']) {
+					expect(el.style.getPropertyValue(name), `${name} for ${keyword}`).toBe('');
+				}
+				expect(el.hasAttribute('data-main-width-length')).toBe(false);
+				expect(warn.mock.calls.some(([message]) => String(message).includes(`main-width="${keyword}"`))).toBe(true);
+				cleanup(el);
+			}
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
 	it('falls back to the aspect ratio for an invalid media-height', async () => {
 		el = await fixture('<nldd-hero media-height="nogal hoog"></nldd-hero>');
 		await waitForUpdate(el);
@@ -302,6 +320,22 @@ describe('nldd-hero', () => {
 			try {
 				await geometry('layout="overlap"', 1200);
 				await expect.poll(() => overlapWarnings(warn).length).toBe(1);
+			} finally {
+				warn.mockRestore();
+				unloadTokens();
+			}
+		});
+
+		it('says so again for a hero that left the page and came back', async () => {
+			const unloadTokens = loadTokens();
+			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+			try {
+				await geometry('layout="overlap"', 1200);
+				await expect.poll(() => overlapWarnings(warn).length).toBe(1);
+				const parent = el.parentElement!;
+				el.remove();
+				parent.append(el);
+				await expect.poll(() => overlapWarnings(warn).length).toBe(2);
 			} finally {
 				warn.mockRestore();
 				unloadTokens();

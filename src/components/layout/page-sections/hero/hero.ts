@@ -77,6 +77,18 @@ import { heroTemplate } from './hero.template.js';
 export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
 export type HeroMainWidth = 'auto' | 'full' | (string & {});
 export type HeroLayout = 'contained' | 'overlap';
+
+const CSS_WIDE_KEYWORDS = new Set(['inherit', 'initial', 'unset', 'revert', 'revert-layer']);
+
+/**
+ * Whether `property` takes `value` as a value of its own. CSS.supports alone
+ * also says yes to the CSS-wide keywords, for any property; written into a
+ * custom property those would not fall back to the default but resolve to
+ * something else.
+ */
+function takesValue(property: string, value: string): boolean {
+	return !CSS_WIDE_KEYWORDS.has(value.trim().toLowerCase()) && CSS.supports(property, value);
+}
 export type HeroMainBackground =
 	| 'base' | 'accent'
 	| 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw'
@@ -155,6 +167,8 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		super.disconnectedCallback();
 		this._overlapObserver?.disconnect();
 		this._overlapObserver = null;
+		// A hero that comes back is watched again, so it may warn again.
+		this._warnedOverlap = false;
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -163,7 +177,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			// Same contract as the other page sections: the keyword 'full' is
 			// handled by CSS; CSS lengths feed --_hero-max-width inline.
 			const w = this.width;
-			if (w && w !== 'full' && CSS.supports('max-width', w)) {
+			if (w && w !== 'full' && takesValue('max-width', w)) {
 				this.style.setProperty('--_hero-max-width', w);
 			} else {
 				this.style.removeProperty('--_hero-max-width');
@@ -173,7 +187,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		if (changed.has('mainWidth')) {
 			const width = (this.mainWidth ?? '').trim();
 			const length = width !== '' && width !== 'auto' && width !== 'full';
-			const valid = length && CSS.supports('width', width);
+			const valid = length && takesValue('width', width);
 			if (valid) this.style.setProperty('--_hero-main-width', width);
 			else this.style.removeProperty('--_hero-main-width');
 			this.toggleAttribute('data-main-width-length', valid);
@@ -183,7 +197,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		}
 		if (changed.has('overlapSize')) {
 			const size = (this.overlapSize ?? '').trim();
-			if (size && CSS.supports('margin-top', size)) {
+			if (size && takesValue('margin-top', size)) {
 				this.style.setProperty('--_hero-overlap-size', size);
 			} else {
 				this.style.removeProperty('--_hero-overlap-size');
@@ -191,7 +205,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		}
 		if (changed.has('mediaHeight')) {
 			const height = (this.mediaHeight ?? '').trim();
-			if (height && CSS.supports('height', height)) {
+			if (height && takesValue('height', height)) {
 				this.style.setProperty('--_hero-media-height', height);
 			} else {
 				this.style.removeProperty('--_hero-media-height');
@@ -211,7 +225,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			// attribute makes Lit set the property to null, so guard with ?? '';
 			// the empty value falls back to the stylesheet's --_hero-media-aspect-ratio.
 			const ratio = (this.mediaAspectRatio ?? '').replace(':', '/').trim();
-			if (ratio && CSS.supports('aspect-ratio', ratio)) {
+			if (ratio && takesValue('aspect-ratio', ratio)) {
 				this.style.setProperty('--_hero-media-aspect-ratio', ratio);
 			} else {
 				this.style.removeProperty('--_hero-media-aspect-ratio');
