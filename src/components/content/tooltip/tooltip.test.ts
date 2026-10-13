@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import type { NLDDTooltip } from './tooltip.js';
 import './tooltip.js';
@@ -179,6 +180,25 @@ describe('nldd-tooltip – show/hide', () => {
 		document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 		await until(() => !isTooltipVisible(el));
 		expect(tooltipState(el)).toMatchObject({ popoverOpen: false, visible: false });
+	});
+
+	it('Escape sluit alleen de tooltip, niet de dialog eromheen', async () => {
+		el = await fixture<NLDDTooltip>('<dialog><nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip></dialog>') as unknown as NLDDTooltip;
+		const dialog = el as unknown as HTMLDialogElement;
+		const tooltip = dialog.querySelector('nldd-tooltip') as NLDDTooltip;
+		dialog.showModal();
+		await waitForUpdate(tooltip);
+		await triggerShow(tooltip, tooltip.querySelector('button')!);
+		expect(isTooltipVisible(tooltip)).toBe(true);
+
+		// A real key press, so the browser's own Escape handling takes part.
+		await userEvent.keyboard('{Escape}');
+		await until(() => !isTooltipVisible(tooltip));
+		expect(dialog.open).toBe(true);
+
+		await userEvent.keyboard('{Escape}');
+		await until(() => !dialog.open);
+		expect(dialog.open).toBe(false);
 	});
 
 	it('Escape buiten een geforceerd open tooltip laat hem staan', async () => {

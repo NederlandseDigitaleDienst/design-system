@@ -238,8 +238,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 			submitOnEnter(this, e);
 			return;
 		}
-		// Escape puts the tooltip away without moving focus, as WCAG 1.4.13 asks.
-		if (e.key === 'Escape') this._tooltip?._handleTriggerLeave();
 	};
 
 	override formValue(): FormValue {
@@ -276,7 +274,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	/**
 	 * The tooltip of an icon-only button, which shows itself when focus moves
 	 * into it. In radio mode the focus is on this element, outside it, so it
-	 * hears about focus and Escape from here.
+	 * hears about focus from here. Escape it hears by itself, from the document.
 	 */
 	private get _tooltip(): NLDDTooltip | null {
 		return this.type === 'radio'

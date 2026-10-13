@@ -12,6 +12,8 @@
  *
  * Escape closes a tooltip that hover or focus opened, wherever focus is: the
  * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
+ * That press closes the tooltip only. A dialog, sheet or menu around it stays
+ * open and takes the next one.
  *
  * @slot - The element the tooltip is shown for
  *
@@ -348,10 +350,16 @@ export class NLDDTooltip extends LitElement {
 			// bubbling to something else (modal close, etc.) when handled.
 			this.dispatchEvent(new CustomEvent('nldd-tooltip-dismiss', { bubbles: true, composed: true }));
 			e.preventDefault();
+			e.stopPropagation();
 			return;
 		}
 		// Hover/focus-shown tooltips: we own the lifecycle, dismiss directly.
+		// The key stops here. One Escape closes one thing, the topmost: with a
+		// tooltip showing inside a dialog, sheet or menu, the first press takes
+		// the tooltip and the second whatever is around it.
 		this._visible = false;
+		e.preventDefault();
+		e.stopPropagation();
 	};
 
 	private async _updatePosition(): Promise<void> {

@@ -143,7 +143,7 @@ export class NLDDSegmentedControlItem extends LitElement {
 	/**
 	 * The tooltip of the icon variant, which shows itself when focus moves into
 	 * it. In radio mode the focus is on this element, outside it, so it hears
-	 * about focus and Escape from here.
+	 * about focus from here. Escape it hears by itself, from the document.
 	 */
 	private get _tooltip(): NLDDTooltip | null {
 		return this.inputType === 'radio'
@@ -223,8 +223,6 @@ export class NLDDSegmentedControlItem extends LitElement {
 			this._select();
 			return;
 		}
-		// Escape puts the tooltip away without moving focus, as WCAG 1.4.13 asks.
-		if (e.key === 'Escape') this._tooltip?._handleTriggerLeave();
 	};
 
 	public _handleChange(e: Event): void {
