@@ -2,18 +2,23 @@ import { html, nothing } from 'lit';
 import type { NLDDMenuItem, NLDDMenu, NLDDMenuGroup } from './menu.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 
+export type MenuVariant = 'menu' | 'listbox' | 'navigation';
+
 const menuRoleMap = {
 	menu: 'menu',
 	listbox: 'listbox',
+	navigation: 'list',
 } as const;
 
+// A navigation menu is a list of links. The list item is the nldd-menu-item
+// host, so the link inside it keeps the role it has by itself.
 const itemRoleMap = {
 	button: { menu: 'menuitem', listbox: 'option' },
 	checkbox: { menu: 'menuitemcheckbox', listbox: 'option' },
 	radio: { menu: 'menuitemradio', listbox: 'option' },
 } as const;
 
-export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: 'menu' | 'listbox') {
+export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVariant) {
 	// role="menu"/"listbox" is now STATIC on .menu__list, which only ever owns
 	// nldd-menu-item children. The empty-state and the drill-in back button live
 	// in .menu__main as siblings of the list (outside the role), so an empty or
@@ -106,7 +111,7 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: 'menu' |
 	`;
 }
 
-export function menuItemTemplate(this: NLDDMenuItem, variant: 'menu' | 'listbox' | null = null) {
+export function menuItemTemplate(this: NLDDMenuItem, variant: MenuVariant | null = null) {
 	const hasCheckState = this.type !== 'button' && variant === 'menu';
 	// A plain item keeps the column empty when its menu has checkable items.
 	const hasCheckColumn = hasCheckState || (this.checkColumn && variant === 'menu');
@@ -114,7 +119,7 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: 'menu' | 'listbox'
 	// around you, and an item sitting on its own cannot make that true: it is
 	// then a button, and says so. aria-checked and aria-selected fall away with
 	// it, both being part of the same promise.
-	const role = variant ? itemRoleMap[this.type][variant] : nothing;
+	const role = variant && variant !== 'navigation' ? itemRoleMap[this.type][variant] : nothing;
 	const hasSubmenu = this._hasSubmenu;
 	// A plain button item with an href renders as a real link. Submenu openers,
 	// checkbox/radio items, and disabled items keep the button — they need its
@@ -207,7 +212,7 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: 'menu' | 'listbox'
 				?disabled=${this.disabled}
 				aria-checked=${hasCheckState ? String(this.selected) : nothing}
 				aria-selected=${variant === 'listbox' ? String(this.selected) : nothing}
-				aria-haspopup=${hasSubmenu ? 'menu' : nothing}
+				aria-haspopup=${hasSubmenu && variant !== 'navigation' ? 'menu' : nothing}
 				aria-expanded=${hasSubmenu ? String(this._submenuOpen) : nothing}
 				aria-controls=${hasSubmenu && this._submenuEl?.id ? this._submenuEl.id : nothing}
 				.popoverTargetElement=${this._submenuEl}
@@ -228,9 +233,11 @@ export function menuItemTemplate(this: NLDDMenuItem, variant: 'menu' | 'listbox'
 	`;
 }
 
-export function menuDividerTemplate() {
+export function menuDividerTemplate(variant: MenuVariant | null = null) {
+	// A list owns list items and nothing else, so in a navigation menu the
+	// rule is only drawn.
 	return html`<div class="menu__divider"
-		role="separator"
+		role=${variant === 'navigation' ? 'none' : 'separator'}
 	></div>`;
 }
 
@@ -246,7 +253,7 @@ export function menuGroupTemplate(component: NLDDMenuGroup) {
 				aria-hidden="true"
 			>${component.text}</div>
 			<div class="menu__group-items"
-				role="group"
+				role=${component.menuVariant === 'navigation' ? 'list' : 'group'}
 				aria-labelledby=${component._titleId}
 			>
 				<slot></slot>

@@ -270,6 +270,20 @@ describe('nldd-menu-bar-item – icon slot', () => {
 		await waitForUpdate(el);
 		expect(iconArea().hidden).toBe(true);
 	});
+	it('belooft geen menu als het een navigatie-submenu opent', async () => {
+		el = await fixture(`
+			<nldd-menu-bar-item text="Onderwerpen" expandable>
+				<nldd-menu variant="navigation">
+					<nldd-menu-item text="Dakisolatie" href="#dakisolatie"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-bar-item>
+		`);
+		await waitForUpdate(el);
+		const control = el.shadowRoot!.querySelector('.menu-bar-item')!;
+		expect(control.hasAttribute('aria-haspopup')).toBe(false);
+		expect(control.getAttribute('aria-expanded')).toBe('false');
+	});
+
 	it('laat een compact item zonder icoon zijn tekst houden, zonder aria-label of tooltip', async () => {
 		el = await fixture('<nldd-menu-bar-item text="Zoeken" content-priority="icon" compact></nldd-menu-bar-item>');
 		await waitForUpdate(el);

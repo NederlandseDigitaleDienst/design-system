@@ -1608,7 +1608,7 @@
               "kind": "field",
               "name": "menuVariant",
               "type": {
-                "text": "'menu' | 'listbox' | null"
+                "text": "MenuVariant | null"
               },
               "default": "null",
               "description": "Which menu owns this item, set by that nldd-menu. Not part of the public API.\n\n`null` until one claims it, and an unclaimed item carries no menu role.\nA menu role is a promise about what is around you, so an item cannot make\nit on its own. `nldd-toolbar-item` holds exactly such an item: the\ndeclaration of what belongs in the overflow menu, which the toolbar clones\ninto the real menu when it collapses. The clone is claimed there and the\ndeclaration stays what it is."
@@ -1850,10 +1850,10 @@
               "kind": "field",
               "name": "variant",
               "type": {
-                "text": "'menu' | 'listbox'"
+                "text": "MenuVariant"
               },
               "default": "'menu'",
-              "description": "Render variant. Use 'listbox' when the menu serves as a combobox popup —\nthis switches role to \"listbox\" and item roles to \"option\" per ARIA spec.\nDefault: 'menu'.",
+              "description": "What the menu is, which sets its roles and part of its keyboard. See the\n`variant` attribute in the docblock above.",
               "attribute": "variant",
               "reflects": true
             },
@@ -2047,6 +2047,15 @@
           "attributes": [
             {
               "type": {
+                "text": "MenuVariant"
+              },
+              "description": "What the menu is, which sets its roles and part of its keyboard. See the\n`variant` attribute in the docblock above.",
+              "name": "variant",
+              "default": "'menu'",
+              "fieldName": "variant"
+            },
+            {
+              "type": {
                 "text": "string"
               },
               "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
@@ -2114,15 +2123,6 @@
               },
               "description": "Custom filter function (query, item) => boolean.",
               "name": "filterFn"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'menu' | 'listbox'"
-              },
-              "default": "'menu'",
-              "description": "Render variant. Use 'listbox' when the menu serves as a combobox popup —\nthis switches role to \"listbox\" and item roles to \"option\" per ARIA spec.\nDefault: 'menu'.",
-              "fieldName": "variant"
             }
           ],
           "superclass": {
@@ -33878,7 +33878,7 @@
               },
               "default": "false",
               "fieldName": "expandable",
-              "description": "Show the disclosure icon and open the slotted `<nldd-menu>` on click"
+              "description": "Show the disclosure icon and open the slotted `<nldd-menu>` on click. The control then says `aria-haspopup=\"menu\"`, except for a menu with `variant=\"navigation\"`: that is a list of links, so the control only says `aria-expanded`."
             },
             {
               "name": "icon-only",

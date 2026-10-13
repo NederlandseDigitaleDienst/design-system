@@ -17,8 +17,13 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
+- **A submenu in the site navigation can be a list of links.** `variant="navigation"` on `nldd-menu` gives it the role of a list instead of a menu, which is what a screen reader should hear in a navigation.
 - **`label` on `nldd-toolbar` is now `accessible-label`.** Every toolbar with a name needs the rename, since there is no alias; see Breaking.
 - **The menu behind the Menu button says which item is the current one.** On a narrow screen the current item in the menu of `nldd-top-navigation-bar` was only painted; a screen reader now hears it too.
+
+### Added
+
+- **`variant="navigation"` on `nldd-menu`, for a submenu in a site navigation.** A submenu in `nldd-top-navigation-bar` was a menu of actions: `role="menu"` with menu items. For site navigation that is the wrong role, since a screen reader switches to an application mode in a menu where a visitor expects a list of links. With `variant="navigation"` the menu is a list (`role="list"`) and each item a list item around a real link; it looks the same. Tab reaches every link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The `nldd-menu-bar-item` that opens it says `aria-expanded` and no longer `aria-haspopup="menu"`. A submenu and a group inside it follow along. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. Give every item an `href`, and keep the default variant for menus that do things, such as an account menu or a language switch.
 
 ### Breaking
 

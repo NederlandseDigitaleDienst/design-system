@@ -320,8 +320,12 @@ export const SmalScherm = {
  * wordt op mobiel een aparte laag in de menu-sheet. Open de sheet via de
  * "Menu"-knop, tik op een rij met een chevron om in te zoomen; de titelbalk
  * toont dan een terugknop naar het vorige niveau. Submenu's mogen zelf weer
- * submenu's hebben ("Wonen" hieronder), zodat je net zo diep kunt navigeren als
- * de content vraagt.
+ * submenu's hebben ("Formulieren" hieronder), zodat je net zo diep kunt
+ * navigeren als de content vraagt.
+ *
+ * Het submenu heeft `variant="navigation"`: het is een lijst links en geen menu
+ * met acties. Een schermlezer leest het dan als links voor, en het balk-item
+ * zegt alleen of het open of dicht is.
  */
 export const MeerlaagsMenu = {
 	render: () => html`
@@ -336,16 +340,31 @@ export const MeerlaagsMenu = {
 						text="Componenten"
 						expandable
 					>
-						<nldd-menu>
-							<nldd-menu-item text="Acties"></nldd-menu-item>
+						<nldd-menu variant="navigation">
+							<nldd-menu-item
+								text="Acties"
+								href="#acties"
+							></nldd-menu-item>
 							<nldd-menu-item text="Formulieren">
 								<nldd-menu>
-									<nldd-menu-item text="Tekstveld"></nldd-menu-item>
-									<nldd-menu-item text="Keuzelijst"></nldd-menu-item>
-									<nldd-menu-item text="Datumveld"></nldd-menu-item>
+									<nldd-menu-item
+										text="Tekstveld"
+										href="#tekstveld"
+									></nldd-menu-item>
+									<nldd-menu-item
+										text="Keuzelijst"
+										href="#keuzelijst"
+									></nldd-menu-item>
+									<nldd-menu-item
+										text="Datumveld"
+										href="#datumveld"
+									></nldd-menu-item>
 								</nldd-menu>
 							</nldd-menu-item>
-							<nldd-menu-item text="Lijsten en tabellen"></nldd-menu-item>
+							<nldd-menu-item
+								text="Lijsten en tabellen"
+								href="#lijsten-en-tabellen"
+							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Aan de slag"></nldd-menu-bar-item>

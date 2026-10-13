@@ -3,7 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { computePosition, flip, shift, offset, size, autoUpdate } from '@floating-ui/dom';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { menuStyles, menuItemStyles, menuDividerStyles, menuGroupStyles } from './menu.styles.js';
-import { menuTemplate, menuItemTemplate, menuDividerTemplate, menuGroupTemplate } from './menu.template.js';
+import { menuTemplate, menuItemTemplate, menuDividerTemplate, menuGroupTemplate, type MenuVariant } from './menu.template.js';
 import { nlddMenuTranslations } from './menu.i18n.js';
 import type { NLDDMenuTranslations } from './menu.i18n.js';
 import type { QueryMarkMode } from '../../../utilities/render-marked.js';
@@ -18,6 +18,14 @@ import { breakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 
 
+/** Makes `host` a list item while its menu is a navigation menu, and takes
+ *  that back when it is not. */
+function syncListItemRole(host: HTMLElement, variant: MenuVariant | null): void {
+	if (variant === 'navigation') host.setAttribute('role', 'listitem');
+	else if (host.getAttribute('role') === 'listitem') host.removeAttribute('role');
+}
+
+
 // # nldd-menu-divider
 
 /**
@@ -28,8 +36,12 @@ import { translate } from '../../../utilities/translations.js';
 export class NLDDMenuDivider extends LitElement {
 	static override styles = menuDividerStyles;
 
+	/** @internal The variant of the menu around it, set by that nldd-menu. */
+	@state()
+	menuVariant: MenuVariant | null = null;
+
 	override render() {
-		return menuDividerTemplate();
+		return menuDividerTemplate(this.menuVariant);
 	}
 }
 
@@ -75,6 +87,16 @@ export class NLDDMenuGroup extends LitElement {
 	// today; revisit if hydration is added.
 	private static _idCounter = 0;
 	readonly _titleId = `nldd-menu-group-title-${NLDDMenuGroup._idCounter++}`;
+
+	/** @internal The variant of the menu around it, set by that nldd-menu. */
+	@state()
+	menuVariant: MenuVariant | null = null;
+
+	override updated(changed: Map<string, unknown>): void {
+		// In a navigation menu the group is a list item that holds a list of
+		// its own, named by the title: a list may only own list items.
+		if (changed.has('menuVariant')) syncListItemRole(this, this.menuVariant);
+	}
 
 	override render() {
 		return menuGroupTemplate(this);
@@ -172,7 +194,7 @@ export class NLDDMenuItem extends LitElement {
 	 * declaration stays what it is.
 	 */
 	@state()
-	menuVariant: 'menu' | 'listbox' | null = null;
+	menuVariant: MenuVariant | null = null;
 
 	/** Whether this item keeps the check-mark column free without being
 	 *  checkable, because another item in its menu is. Set by that nldd-menu.
@@ -245,6 +267,9 @@ export class NLDDMenuItem extends LitElement {
 	}
 
 	override updated(changedProperties: Map<string, unknown>): void {
+		// In a navigation menu the item is a list item, and the link inside it
+		// is just a link.
+		if (changedProperties.has('menuVariant')) syncListItemRole(this, this.menuVariant);
 		// An item that becomes checkable, or stops being so, changes whether its
 		// menu reserves the check-mark column, also while the menu is open.
 		if (changedProperties.has('type') && changedProperties.get('type') !== undefined && this.menuVariant) {
@@ -355,6 +380,7 @@ const defaultFilterFn = (query: string, item: NLDDMenuItem): boolean => {
  *
  * @element nldd-menu
  *
+ * @attr {'menu'|'listbox'|'navigation'} variant - What the menu is (default 'menu'). `menu` is a menu of actions: `role="menu"` with menu items, for things you do. `listbox` is the popup of a combobox: `role="listbox"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role="list"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too.
  * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
  * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a menu hung off a button. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.
  * @attr {string} placement - Floating UI placement. Default: 'bottom-start'.
@@ -373,12 +399,11 @@ export class NLDDMenu extends LitElement {
 	static override styles = menuStyles;
 
 	/**
-	 * Render variant. Use 'listbox' when the menu serves as a combobox popup —
-	 * this switches role to "listbox" and item roles to "option" per ARIA spec.
-	 * Default: 'menu'.
+	 * What the menu is, which sets its roles and part of its keyboard. See the
+	 * `variant` attribute in the docblock above.
 	 */
-	@property({ reflect: true, converter: reflectNonDefault<'menu' | 'listbox'>('menu') })
-	variant: 'menu' | 'listbox' = 'menu';
+	@property({ reflect: true, converter: reflectNonDefault<MenuVariant>('menu') })
+	variant: MenuVariant = 'menu';
 
 	/**
 	 * Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).
@@ -710,7 +735,9 @@ export class NLDDMenu extends LitElement {
 		// of identical "more" buttons hearing plain "button" — exactly the
 		// moment the type matters most, since nothing has been opened yet.
 		// nldd-popover already works this way.
-		if ('popupType' in anchor && !anchor.popupType) {
+		// A navigation menu is a disclosure: the trigger says expanded or not,
+		// and promises no menu.
+		if ('popupType' in anchor && !anchor.popupType && this.variant !== 'navigation') {
 			anchor.popupType = this.variant === 'listbox' ? 'listbox' : 'menu';
 		}
 		if ('popoverTargetAction' in anchor) {
@@ -1687,6 +1714,7 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('beforetoggle', this._handleBeforeToggle);
 		this.addEventListener('toggle', this._handleToggle);
 		this.addEventListener('keydown', this._handleKeydown);
+		this.addEventListener('focusout', this._handleFocusOut);
 		this.addEventListener('mouseenter', this._handleMenuItemMouseenter, true);
 		this.addEventListener('mouseleave', this._handleMouseleave);
 		this.addEventListener('menu-item-focused', this._handleMenuItemFocused);
@@ -1733,6 +1761,7 @@ export class NLDDMenu extends LitElement {
 		this._previousAnchorForResync?.removeEventListener('pointerdown', this._resyncAnchorFromPopoverState, true);
 		this._previousAnchorForResync = null;
 		this.removeEventListener('keydown', this._handleKeydown);
+		this.removeEventListener('focusout', this._handleFocusOut);
 		this.removeEventListener('mouseenter', this._handleMenuItemMouseenter, true);
 		this.removeEventListener('mouseleave', this._handleMouseleave);
 		this.removeEventListener('menu-item-focused', this._handleMenuItemFocused);
@@ -1894,6 +1923,10 @@ export class NLDDMenu extends LitElement {
 	 * keystroke. Text without the query in it is shown as it is.
 	 */
 	public filter(query: string, { hide = true }: { hide?: boolean } = {}): void {
+		if (import.meta.env?.DEV && this.variant === 'navigation' && !this._warnedFilterInNavigation) {
+			this._warnedFilterInNavigation = true;
+			console.warn('nldd-menu: filter() belongs to a menu of actions or options. A navigation menu is a short list of links and is not filtered.');
+		}
 		const allItems = Array.from(this.querySelectorAll('nldd-menu-item')) as NLDDMenuItem[];
 		allItems.forEach(item => {
 			const matches = !hide || !query || this.filterFn(query, item);
@@ -2044,6 +2077,10 @@ export class NLDDMenu extends LitElement {
 	// — Private handlers ——————————————————————————————————————————————————————
 
 	private _handleKeydown = (event: KeyboardEvent): void => {
+		if (event.key === 'Tab') {
+			this._tabbing = true;
+			setTimeout(() => { this._tabbing = false; });
+		}
 		const items = this._getVisibleItems();
 		if (items.length === 0) return;
 
@@ -2128,12 +2165,35 @@ export class NLDDMenu extends LitElement {
 				// Typeahead (ARIA APG menu pattern): typing a single printable
 				// character jumps to the next item whose visible text starts
 				// with it. Repeated presses cycle through matches.
-				if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+				// Not in a navigation menu: there the letter keys are the screen
+				// reader's, for moving through links and headings.
+				if (this.variant !== 'navigation' && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
 					this._handleTypeahead(event, items, index);
 				}
 			}
 		}
 	};
+
+	/**
+	 * A navigation menu closes when focus leaves it, the way a disclosure in a
+	 * site navigation does: Tab past the last link and the menu is gone, with
+	 * nothing left open over the page. An action menu keeps its own rules.
+	 *
+	 * Only when focus goes somewhere, or when Tab took it. Without a target it
+	 * is the window losing focus or a press on something that takes none, and
+	 * light dismiss covers those. Tab past the last link of the page has no
+	 * target either, though, and that one does leave the menu.
+	 */
+	private _handleFocusOut = (event: FocusEvent): void => {
+		if (this.variant !== 'navigation') return;
+		const next = event.relatedTarget as Node | null;
+		if (next ? this.contains(next) : !this._tabbing) return;
+		if (!(this as HTMLElement).matches(':popover-open')) return;
+		(this as HTMLElement).hidePopover();
+	};
+
+	/** True from a Tab keydown until the focus change it causes has happened. */
+	private _tabbing = false;
 
 	private _typeaheadBuffer = '';
 	private _typeaheadTimer: number | null = null;
@@ -2204,16 +2264,36 @@ export class NLDDMenu extends LitElement {
 	 * place. A submenu's items are its own and are left to it.
 	 */
 	public _claimItems = (): void => {
+		// A submenu of a navigation menu is navigation too. Set before the
+		// items are claimed, so they get one answer and not two.
+		if (this.variant === 'navigation') {
+			(Array.from(this.querySelectorAll('nldd-menu')) as NLDDMenu[]).forEach(menu => { menu.variant = 'navigation'; });
+		}
 		const items = Array.from(this.querySelectorAll('nldd-menu-item')) as NLDDMenuItem[];
 		items.forEach(item => {
 			item.menuVariant = this.variant;
 		});
+		(Array.from(this.querySelectorAll('nldd-menu-divider, nldd-menu-group')) as (NLDDMenuDivider | NLDDMenuGroup)[])
+			.forEach(part => { part.menuVariant = this.variant; });
+		this._warnOnActionsInNavigation(items);
 		const own = items.filter(item => item.closest('nldd-menu') === this);
 		const checkColumn = this.variant === 'menu' && own.some(item => item.type !== 'button');
 		own.forEach(item => {
 			item.checkColumn = checkColumn;
 		});
 	};
+
+	private _warnedActionsInNavigation = false;
+	private _warnedFilterInNavigation = false;
+
+	/** Checkable items and shortcuts belong to actions, not to a list of links. */
+	private _warnOnActionsInNavigation(items: NLDDMenuItem[]): void {
+		if (!import.meta.env?.DEV || this.variant !== 'navigation' || this._warnedActionsInNavigation) return;
+		const stray = items.find(item => item.type !== 'button' || item.shortcut);
+		if (!stray) return;
+		this._warnedActionsInNavigation = true;
+		console.warn('nldd-menu: variant="navigation" is a list of links. A checkbox or radio item, or a shortcut, belongs to an action menu and has no role to live in here. Use the default variant for actions.', stray);
+	}
 
 	private _handleBeforeToggle = (event: Event): void => {
 		if ((event as ToggleEvent).newState === 'open') this.removeAttribute('positioned');
