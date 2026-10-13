@@ -97,6 +97,15 @@ describe('nldd-code-viewer', () => {
 		expect(scroller.getAttribute('aria-label')).toBeTruthy();
 	});
 
+	it('max-height without a unit is ignored, with a warning', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-code-viewer max-height="40">a: 1</nldd-code-viewer>');
+		await waitForUpdate(el);
+		expect(el.style.getPropertyValue('--_code-viewer-max-height')).toBe('');
+		expect(warn.mock.calls.flat().join(' ')).toContain('max-height="40"');
+		warn.mockRestore();
+	});
+
 	it('max-height leaves a short block at its own height, without a tab stop', async () => {
 		el = await fixture('<nldd-code-viewer wrap max-height="200px">a: 1</nldd-code-viewer>');
 		await waitForUpdate(el);

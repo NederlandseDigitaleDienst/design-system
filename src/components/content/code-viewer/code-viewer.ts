@@ -255,6 +255,9 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 				this.style.setProperty('--_code-viewer-max-height', this.maxHeight);
 			} else {
 				this.style.removeProperty('--_code-viewer-max-height');
+				if (import.meta.env?.DEV && this.maxHeight) {
+					console.warn(`<nldd-code-viewer>: max-height="${this.maxHeight}" is not a CSS length, so it is ignored. Give it a unit, such as "400px" or "50vh".`);
+				}
 			}
 		}
 		if (!this.view) return;

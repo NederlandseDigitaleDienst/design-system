@@ -8,8 +8,9 @@
  * `<script>` or anything hidden, is passed over. Make sure a rendered element
  * follows the component, otherwise the skip link has no effect.
  *
- * With an `href` that points at an id, the link scrolls to that element and
- * moves focus to it too. The target needs no `tabindex` of its own.
+ * With an `href` that points at an id on the same page, the link scrolls to
+ * that element and moves focus to it too. The target needs no `tabindex` of
+ * its own. An href to another page is left to the browser.
  *
  * The component cannot know what it skips, so its default text only says
  * "Sla over". Name it with `text`: "Sla navigatie over", "Sla filters over".
@@ -63,11 +64,12 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	 * on the link, so the next Tab starts from the top again.
 	 */
 	_handleLinkClick = (event?: MouseEvent): void => {
-		if (!this.href.startsWith('#')) return;
+		const hash = this._samePageHash();
+		if (!hash) return;
 		// A click that opens the link elsewhere (middle button, or with a
 		// modifier held) leaves this page where it is, focus included.
 		if (event && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
-		let id = this.href.slice(1);
+		let id = hash.slice(1);
 		// A malformed escape throws; the raw id is then the best guess left.
 		try { id = decodeURIComponent(id); } catch { /* keep the raw id */ }
 		const root = this.getRootNode() as Document | ShadowRoot;
@@ -77,6 +79,23 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 		clearTimeout(this._focusTimer);
 		this._focusTimer = setTimeout(() => this._focus(target));
 	};
+
+	/**
+	 * The fragment of an href that stays on this page, or an empty string. An
+	 * absolute URL to the page you are on counts too: a router or a CMS writes
+	 * `/pagina#inhoud` as readily as `#inhoud`.
+	 */
+	private _samePageHash(): string {
+		try {
+			const url = new URL(this.href, location.href);
+			const samePage = url.origin === location.origin
+				&& url.pathname === location.pathname
+				&& url.search === location.search;
+			return samePage ? url.hash : '';
+		} catch {
+			return '';
+		}
+	}
 
 	private _focusTimer?: ReturnType<typeof setTimeout>;
 

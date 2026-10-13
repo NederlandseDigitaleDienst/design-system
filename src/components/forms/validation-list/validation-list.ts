@@ -323,6 +323,10 @@ export class NLDDValidationList extends LitElement {
 		const named = (control?.getAttribute('unmet') ?? '').split(' ').filter(Boolean);
 		const value = this._currentValue();
 		const items = this._items;
+		// Read as a property and as an attribute, which covers the nldd controls
+		// and a native input. A control that says "required" some other way is
+		// not seen here, and its empty value passes: give it an item with
+		// `required` instead.
 		const needsValue = items.some((item) => item.required)
 			|| Boolean((control as { required?: boolean } | null)?.required)
 			|| (control?.hasAttribute('required') ?? false);
