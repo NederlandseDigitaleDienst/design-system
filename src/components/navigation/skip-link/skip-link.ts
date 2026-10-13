@@ -64,7 +64,9 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	 */
 	_handleLinkClick = (): void => {
 		if (!this.href.startsWith('#')) return;
-		const id = decodeURIComponent(this.href.slice(1));
+		let id = this.href.slice(1);
+		// A malformed escape throws; the raw id is then the best guess left.
+		try { id = decodeURIComponent(id); } catch { /* keep the raw id */ }
 		const root = this.getRootNode() as Document | ShadowRoot;
 		const target = root.getElementById?.(id) ?? document.getElementById(id);
 		// After the navigation the click is about to cause, not before it.
@@ -97,8 +99,25 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	private _target(): HTMLElement | null {
 		let next = this.nextElementSibling;
 		while (next) {
-			if (next instanceof HTMLElement && next.getClientRects().length > 0) return next;
+			const rendered = this._rendered(next);
+			if (rendered) return rendered;
 			next = next.nextElementSibling;
+		}
+		return null;
+	}
+
+	/**
+	 * The element itself when it has a box. A `display: contents` wrapper has
+	 * none, yet its children are on screen, so the first rendered one of those
+	 * stands in for it.
+	 */
+	private _rendered(el: Element): HTMLElement | null {
+		if (!(el instanceof HTMLElement)) return null;
+		if (el.getClientRects().length > 0) return el;
+		if (getComputedStyle(el).display !== 'contents') return null;
+		for (const child of el.children) {
+			const rendered = this._rendered(child);
+			if (rendered) return rendered;
 		}
 		return null;
 	}

@@ -382,7 +382,7 @@ Shows a quote with an optional source attribution.
 
 ### `<nldd-code-viewer>`
 
-A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.
+A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. The viewer grows with its content. Set `max-height` to show a long file in a frame of its own: the block grows up to that height and scrolls beyond it. A scroller that overflows, in either direction, is a tab stop with a role and a name, so the keyboard reaches what a pointer can scroll to. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.
 
 **Attributes**
 
@@ -392,6 +392,7 @@ A read-only block of code/text built on a non-editable CodeMirror 6 view. Visual
 | `language` | `string` | Grammar to highlight with. Empty disables highlighting. |
 | `no-copy` | `boolean` | Hide the copy-to-clipboard button (shown by default). |
 | `wrap` | `boolean` | Wrap long lines instead of horizontal scroll |
+| `max-height` | `string` | Tallest the block may get, as a CSS length (e.g. '400px', '50vh'). Beyond it the content scrolls vertically. Unset means no cap. |
 | `translations` | `object` | Override translation keys (e.g. the copy button labels and the scroll-region label); unset keys fall back to Dutch. |
 
 **Slots**

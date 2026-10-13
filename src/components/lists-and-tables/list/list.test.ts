@@ -565,6 +565,25 @@ describe('nldd-list', () => {
 		expect(second._rovingActive).toBe(true);
 	});
 
+	it('navigation: `expanded` on a row with sub-pages is ignored, with a warning', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<nldd-list type="navigation">
+				<nldd-list-item href="/a" expanded>
+					A
+					<nldd-list-item slot="children" href="/a/1">A1</nldd-list-item>
+				</nldd-list-item>
+			</nldd-list>
+		`);
+		await waitForUpdate(el);
+		const parent = el.querySelector('nldd-list-item')!;
+		await waitForUpdate(parent);
+		expect(parent.shadowRoot!.querySelector('a')!.hasAttribute('aria-expanded')).toBe(false);
+		expect((parent.shadowRoot!.querySelector('.list-item__children') as HTMLElement).hidden).toBe(false);
+		expect(warn.mock.calls.flat().join(' ')).toContain('`expanded` does nothing');
+		warn.mockRestore();
+	});
+
 	it('tree: arrow navigation walks the rows of an open branch', async () => {
 		el = await fixture(`
 			<nldd-list type="tree">

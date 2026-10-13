@@ -102,6 +102,21 @@ describe('nldd-skip-link', () => {
 		history.replaceState(null, '', location.pathname + location.search);
 	});
 
+	it('kijkt door een display: contents-wrapper heen naar wat erin wordt weergegeven', async () => {
+		el = await fixture('<div><nldd-skip-link></nldd-skip-link><div style="display: contents"><span hidden>x</span><main>Content</main></div></div>');
+		const skipLink = el.querySelector('nldd-skip-link')!;
+		await waitForUpdate(skipLink);
+		(skipLink.shadowRoot!.querySelector('button') as HTMLButtonElement).click();
+		expect(document.activeElement).toBe(el.querySelector('main'));
+	});
+
+	it('gooit niet op een href met een kapotte escape', async () => {
+		el = await fixture('<div><nldd-skip-link href="#%E0%A4%A"></nldd-skip-link><main>Content</main></div>');
+		const skipLink = el.querySelector('nldd-skip-link') as HTMLElement & { _handleLinkClick: () => void };
+		await waitForUpdate(skipLink);
+		expect(() => skipLink._handleLinkClick()).not.toThrow();
+	});
+
 	it('waarschuwt als er geen doel is', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture('<div><nldd-skip-link></nldd-skip-link><noscript>x</noscript></div>');

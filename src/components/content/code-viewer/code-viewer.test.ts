@@ -81,6 +81,31 @@ describe('nldd-code-viewer', () => {
 		expect(content.textContent).toContain('b: 2');
 	});
 
+	// A long file in a frame of its own. With `wrap` nothing overflows sideways,
+	// so the scroller used to stay out of the tab order while it scrolled
+	// vertically (axe: scrollable-region-focusable, WCAG 2.1.1).
+	it('max-height caps the block, and the scroller that overflows is a named tab stop', async () => {
+		const lines = Array.from({ length: 80 }, (_, i) => `regel: ${i}`).join('\n');
+		el = await fixture(`<nldd-code-viewer wrap max-height="200px">${lines}</nldd-code-viewer>`);
+		await waitForUpdate(el);
+		const block = el.shadowRoot!.querySelector('.code-viewer') as HTMLElement;
+		const scroller = el.shadowRoot!.querySelector('.cm-scroller') as HTMLElement;
+		expect(block.getBoundingClientRect().height).toBeLessThanOrEqual(200);
+		await expect.poll(() => scroller.getAttribute('tabindex')).toBe('0');
+		expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight);
+		expect(scroller.getAttribute('role')).toBe('region');
+		expect(scroller.getAttribute('aria-label')).toBeTruthy();
+	});
+
+	it('max-height leaves a short block at its own height, without a tab stop', async () => {
+		el = await fixture('<nldd-code-viewer wrap max-height="200px">a: 1</nldd-code-viewer>');
+		await waitForUpdate(el);
+		const block = el.shadowRoot!.querySelector('.code-viewer') as HTMLElement;
+		const scroller = el.shadowRoot!.querySelector('.cm-scroller') as HTMLElement;
+		expect(block.getBoundingClientRect().height).toBeLessThan(200);
+		expect(scroller.hasAttribute('tabindex')).toBe(false);
+	});
+
 	it('reflects the wrap attribute', async () => {
 		el = await fixture('<nldd-code-viewer wrap>x</nldd-code-viewer>');
 		await waitForUpdate(el);

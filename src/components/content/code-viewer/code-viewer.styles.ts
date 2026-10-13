@@ -22,6 +22,7 @@ export const codeViewerStyles = css`
 		--_code-viewer-actions-area-padding: var(--primitives-space-8);
 		--_code-viewer-actions-area-size: calc(var(--semantics-controls-md-min-size) + var(--_code-viewer-actions-area-padding) * 2);
 		--_code-viewer-actions-z-index: 1;
+		--_code-viewer-max-height: none;
 
 		${inheritedTextReset}
 		display: flex;
@@ -100,6 +101,16 @@ export const codeViewerStyles = css`
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_code-viewer-border-shadow);
+	}
+
+	:host([max-height]) .code-viewer {
+		display: flex;
+		max-height: var(--_code-viewer-max-height);
+		flex-direction: column;
+	}
+
+	:host([max-height]) .cm-editor {
+		min-height: 0;
 	}
 
 	.cm-content {

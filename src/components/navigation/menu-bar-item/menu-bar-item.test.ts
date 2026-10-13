@@ -275,10 +275,16 @@ describe('nldd-menu-bar-item – icon slot', () => {
 		await waitForUpdate(el);
 		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
 		expect(tooltip.getAttribute('text')).toBeNull();
+		// The wrapper takes no box and adds no description: the control already
+		// carries the text as its name, and a second copy would be read twice.
+		expect(getComputedStyle(tooltip).display).toBe('contents');
+		const control = el.shadowRoot!.querySelector('.menu-bar-item')!;
+		expect(control.hasAttribute('aria-describedby')).toBe(false);
 
 		el.toggleAttribute('compact', true);
 		await waitForUpdate(el);
 		expect(tooltip.getAttribute('text')).toBe('Zoeken');
+		expect(control.hasAttribute('aria-describedby')).toBe(false);
 		// Same control as before: turning compact must not replace it.
 		expect(el.shadowRoot!.querySelector('nldd-tooltip')).toBe(tooltip);
 	});

@@ -323,6 +323,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	private _warnedDegenerateDivider = false;
 
 	private _warnedChildrenOutsideTree = false;
+	private _warnedExpandedInNavigation = false;
 	private _warnedStrayContent = false;
 	private _warnedNestedControl = false;
 
@@ -609,11 +610,14 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * aria-expanded at all. Without this split, `?expanded=\${false}` (which
 	 * removes the attribute) would leave a branch that never collapses.
 	 *
-	 * A navigation list is the exception. Its sub-pages are simply there, so an
-	 * absent `expanded` means "nothing to disclose" on a row with children too.
+	 * A navigation list is the exception. Its sub-pages are always shown, so a
+	 * row with children discloses nothing there and emits no aria-expanded,
+	 * whatever `expanded` says: "collapsed" next to visible children would be
+	 * a contradiction.
 	 */
 	private get _resolvedExpanded(): boolean | undefined {
-		if (this._showChildren && this._parentType !== 'navigation') return this.expanded === true;
+		if (this._showChildren && this._parentType === 'navigation') return undefined;
+		if (this._showChildren) return this.expanded === true;
 		return this.expanded;
 	}
 
@@ -639,6 +643,12 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	private _warnOnStrayExpanded(): void {
 		if (!import.meta.env?.DEV) return;
 		if (this.expanded === undefined) return;
+		if (this._showChildren && this._parentType === 'navigation') {
+			if (this._warnedExpandedInNavigation) return;
+			this._warnedExpandedInNavigation = true;
+			console.warn('nldd-list-item: `expanded` does nothing on a row with sub-pages in an nldd-list with type="navigation": they are always shown, so the attribute is ignored. Use type="tree" for sections that fold away.');
+			return;
+		}
 		if (this.href || this.button || this.checkbox) return;
 		if (this._ownDescendants('nldd-list-item-segment[disclosure]').length > 0) return;
 		console.warn('nldd-list-item: `expanded` needs somewhere to live — make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.');
@@ -891,6 +901,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			});
 		}
 		if (!import.meta.env?.DEV) return;
+		this._warnOnStrayExpanded();
 		// Once per row: slotchange runs this again on every change to the branch.
 		if (this._showChildren && this._parentType !== 'tree' && this._parentType !== 'navigation' && !this._warnedChildrenOutsideTree) {
 			this._warnedChildrenOutsideTree = true;
