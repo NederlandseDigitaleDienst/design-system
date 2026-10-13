@@ -153,6 +153,7 @@ export const textCellStyles = css`
 		color: var(--_text-cell-secondary-color);
 		font: var(--_text-cell-secondary-font);
 		overflow-wrap: anywhere;
+		text-wrap: pretty;
 	}
 
 	.text-cell__text {
@@ -180,5 +181,6 @@ export const textCellStyles = css`
 		color: var(--_text-cell-secondary-color);
 		font: var(--_text-cell-secondary-font);
 		overflow-wrap: anywhere;
+		text-wrap: pretty;
 	}
 `;

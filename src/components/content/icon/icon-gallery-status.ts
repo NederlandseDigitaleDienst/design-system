@@ -14,7 +14,7 @@
 // days old, which is what the label is for. A date rather than a rolling window
 // so the sets only move when someone recomputes them.
 //
-//   git log --since=2026-09-09T00:00 --reverse --find-renames --name-status --format= \
+//   git log --since=2026-10-07T00:00 --reverse --find-renames --name-status --format= \
 //     -- src/components/content/icon/icons
 //
 // Read those events oldest first and chain renames forward to today's filename.
@@ -27,8 +27,6 @@
 // caret-down), which quietly moves new icons into the updated set.
 
 export const NEW_ICONS = new Set([
-	'erlenmeyer-flask',
-	'erlenmeyer-flask-light',
 	'file-markdown',
 	'file-odf',
 	'file-odg',
@@ -43,4 +41,17 @@ export const NEW_ICONS = new Set([
 	'superscript',
 ]);
 
-export const UPDATED_ICONS = new Set<string>();
+export const UPDATED_ICONS = new Set([
+	'bold',
+	'heading-1',
+	'heading-2',
+	'heading-3',
+	'heading-4',
+	'heading-5',
+	'heading-6',
+	'numbered-list',
+	'square-1',
+	'strikethrough',
+	'text-format-size',
+	'underlined',
+]);

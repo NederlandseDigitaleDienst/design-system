@@ -167,6 +167,7 @@ export const titleCellStyles = css`
 		color: var(--_title-cell-secondary-color);
 		font: var(--primitives-font-body-xs-regular-tight);
 		overflow-wrap: anywhere;
+		text-wrap: pretty;
 	}
 
 	/* Balanced, not pretty: a title is a handful of words, and evening out the
@@ -197,5 +198,6 @@ export const titleCellStyles = css`
 		color: var(--_title-cell-secondary-color);
 		font: var(--primitives-font-body-sm-regular-tight);
 		overflow-wrap: anywhere;
+		text-wrap: pretty;
 	}
 `;

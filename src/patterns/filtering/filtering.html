@@ -8,6 +8,11 @@
   nldd-sidebar-section[collapsed] #filters-openen:not([hidden]) {
     display: inline-flex;
   }
+
+  /* In the sheet the results lie behind it, so there is nothing to skip to. */
+  nldd-sidebar-section[collapsed] #filters-overslaan {
+    display: none;
+  }
 </style>
 
 <nldd-page>
@@ -25,13 +30,19 @@
     <nldd-container
       slot="sidebar"
       padding="16"
+      padding-bottom="8"
     >
+      <nldd-skip-link
+        id="filters-overslaan"
+        text="Sla filters over"
+        href="#resultaten"
+      ></nldd-skip-link>
       <nldd-title
         size="5"
         text="Status"
         heading-level="2"
       ></nldd-title>
-      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-list
         appearance="simple"
         dividers="never"
@@ -78,7 +89,7 @@
         text="Team"
         heading-level="2"
       ></nldd-title>
-      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-list
         appearance="simple"
         dividers="never"
@@ -178,7 +189,10 @@
 
     <nldd-spacer size="4"></nldd-spacer>
 
-    <nldd-list accessible-label="Dossiers">
+    <nldd-list
+      id="resultaten"
+      accessible-label="Dossiers"
+    >
       <nldd-inline-dialog
         slot="no-results"
         icon="magnifier"
@@ -221,7 +235,7 @@
           width="fit-content"
           text="In behandeling"
         ></nldd-text-cell>
-        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"
@@ -264,7 +278,7 @@
           width="fit-content"
           text="Afgerond"
         ></nldd-text-cell>
-        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"

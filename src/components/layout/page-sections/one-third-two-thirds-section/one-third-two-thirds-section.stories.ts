@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './one-third-two-thirds-section.js';
 import '../../../content/title/title.js';
 import '../../../content/rich-text/rich-text.js';
@@ -33,13 +33,25 @@ export default {
 			type: 'stable',
 		},
 	},
-	args: pageSectionArgs,
-	argTypes: pageSectionArgTypes,
+	args: { ...pageSectionArgs, verticalAlignment: 'top' },
+	argTypes: {
+		...pageSectionArgTypes,
+		verticalAlignment: {
+			name: 'vertical-alignment',
+			control: { type: 'select' },
+			options: ['top', 'center', 'bottom'],
+			description: 'Waar de kortere kolom naast de langere staat; alleen als de kolommen naast elkaar staan',
+			table: { defaultValue: { summary: 'top' } },
+		},
+	},
 };
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-one-third-two-thirds-section ${pageSectionAttrs(args)}>
+		<nldd-one-third-two-thirds-section
+			${pageSectionAttrs(args)}
+			vertical-alignment=${args.verticalAlignment === 'top' ? nothing : args.verticalAlignment}
+		>
 			<nldd-title
 				slot="header"
 				text="Sectietitel"

@@ -4,7 +4,9 @@
  * A page section with a left sidebar alongside the main content.
  *
  * - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable
- *   tinted box (max-width 320px) beside the main content. Its sticky top/bottom insets
+ *   box (max-width 320px) beside the main content. It takes the surface of the
+ *   section around it and is edged by a divider line, so it reads as a block
+ *   without drawing the eye away from the main. Its sticky top/bottom insets
  *   default to 16px; override with `sticky-top` / `sticky-bottom` so it clears
  *   other sticky page elements (e.g. a sticky header).
  * - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on
@@ -32,6 +34,7 @@
  * @element nldd-sidebar-section
  *
  * @attr {string} [width] - Body max-width: 'full' removes the constraint; any CSS length overrides the default.
+ * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} [sidebar-label] - Accessible name for the sidebar (the aside landmark on lg and the sheet on sm/md). Default 'Zijbalk'.
  * @attr {object} [translations] - Override translation keys (sheet title fallback, dismiss label); unset keys fall back to Dutch.
  * @attr {boolean} [no-collapse] - Opt out of the sheet: a narrow section stacks the sidebar above the main instead of collapsing. `collapsed` then stays false.
@@ -55,6 +58,7 @@
  */
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
+import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { breakpoints } from '../../../../assets/styles/breakpoints.js';
 import { sidebarSectionStyles } from './sidebar-section.styles.js';
@@ -70,7 +74,7 @@ import { translate } from '../../../../utilities/translations.js';
 export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	static override styles = sidebarSectionStyles;
 
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	@property({ type: String, attribute: 'sidebar-label' })

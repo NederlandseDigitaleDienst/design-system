@@ -1,0 +1,60 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './home-page.stories';
+
+<Meta of={Stories} />
+
+# Home
+
+De home is het startpunt van een website. Het laat zien wat bezoekers er kunnen vinden en doen, en helpt ze de juiste richting te kiezen. Gebruik een [onderwerppagina](?path=/docs/patronen-pagina-s-onderwerppagina--docs) als startpunt voor een onderwerp op een lager niveau.
+
+## Compositie
+
+```
+nldd-shell                            de buitenste schil
+  └─ nldd-page
+       ├─ slot="header"                  de header
+       │    └─ nldd-skip-link            om de balk heen
+       │         └─ nldd-top-navigation-bar   zoeken en taal, geen terugknop
+       ├─ nldd-hero                      de opening, met main-background
+       │    └─ slot="media"              nldd-image, hier nog zonder beeld
+       ├─ nldd-simple-section            background="tinted", wat je hier kunt
+       │    ├─ slot="header"             de titel en een intro van een zin of twee
+       │    └─ nldd-collection           layout="grid", item-width
+       │         └─ nldd-card            een onderwerp, een zin en een knop met de actie in de footer
+       ├─ nldd-one-half-one-half-section afbeelding links, tekst rechts
+       │    ├─ slot="left"               nldd-image met aspect-ratio
+       │    └─ slot="right"              titel, tekst en een nldd-link verder
+       ├─ nldd-two-thirds-one-third-section    background="tinted"
+       │    ├─ slot="left"               de titel en de lopende uitleg
+       │    └─ slot="right"              een ondersteunende kaart
+       ├─ nldd-one-third-two-thirds-section
+       │    ├─ slot="left"               de titel en een korte uitleg
+       │    └─ slot="right"              een nldd-list type="navigation" naar de onderwerpen
+       ├─ nldd-simple-section            background="tinted", de oproep
+       └─ slot="footer"                  nldd-page-footer
+            └─ slot="legal-bar"
+```
+
+<Canvas of={Stories.Standaard} />
+
+## Waarom zo
+
+**De home is een pagina met secties, en is zelf het menu.** Samen introduceren de secties wat eronder ligt, geven ze de ingangen ernaartoe en scheppen ze de verwachting van wat je daar vindt. Wat de site te bieden heeft staat zo in de inhoud, als kaarten en lijsten, en niet als een rij woorden in de bovenbalk. Zie de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#navigatie-en-structuur).
+
+**De hero zegt waar de site voor is.** De [`nldd-hero`](?path=/docs/components-layout-page-sections-hero--docs) is de eerste sectie. Hij noemt het belangrijkste doel, trekt de aandacht en is het visuele welkom. Is er één logische volgende stap, dan staat die erin als knop, zodat wie weet waarvoor die komt meteen verder kan. Is die er niet, dan heeft de hero geen knop. Een afbeelding mag, als die het welkom sterker maakt; wat telt staat in het paneel.
+
+**Elke sectie introduceert één onderdeel en geeft de ingang ernaartoe.** Kies de opzet van een sectie afhankelijk van wat bij de onderliggende informatie past.
+
+**De koppen vertellen samen het verhaal.** Zet de secties in de volgorde waarin je de site aan iemand zou uitleggen. Wie alleen de koppen leest, weet dan wat de site te bieden heeft. Lees ze daarom onder elkaar terug. Lopen ze als een verhaal, dan klopt de volgorde; hapert het, dan staat er een sectie verkeerd of zegt een kop niet wat eronder staat. Zie de ontwerprichtlijnen over [volgorde](?path=/docs/docs-ontwerprichtlijnen--docs#navigatie-en-structuur) en over [koppen](?path=/docs/docs-ontwerprichtlijnen--docs#copywriting).
+
+Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbouw](?path=/docs/patronen-pagina-s-paginaopbouw--docs).
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: elke knop is een echte link met de actie als naam, en de kop van de hero houdt zijn contrast op de vulling.
+
+Wat jij nog moet doen: wat bij de [paginaopbouw](?path=/docs/patronen-pagina-s-paginaopbouw--docs) staat, een `heading-level` op elke titel, en een knoptekst die zonder de kaart eromheen te begrijpen is, want wie met een schermlezer door de links springt, hoort alleen die.
+
+## Gezien in
+
+Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.

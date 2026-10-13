@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
-import type { NLDDAppView } from './app-view.js';
-import './app-view.js';
+import type { NLDDShell } from './shell.js';
+import './shell.js';
 import type { NLDDNavigationSplitView } from '../split-views/navigation-split-view/navigation-split-view.js';
 import '../split-views/navigation-split-view/navigation-split-view.js';
 import '../split-views/bar-split-view/bar-split-view.js';
@@ -10,46 +10,46 @@ import '../page/page.js';
 import '../sheet/sheet.js';
 import '../../status-and-feedback/modal-dialog/modal-dialog.js';
 
-describe('nldd-app-view', () => {
-	let el: NLDDAppView;
+describe('nldd-shell', () => {
+	let el: NLDDShell;
 
 	afterEach(() => {
 		if (el) cleanup(el);
 	});
 
 	it('renders without error', async () => {
-		el = await fixture('<nldd-app-view></nldd-app-view>');
+		el = await fixture('<nldd-shell></nldd-shell>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot).not.toBeNull();
 	});
 
-	it('renders the app-view container', async () => {
-		el = await fixture('<nldd-app-view></nldd-app-view>');
+	it('renders the shell container', async () => {
+		el = await fixture('<nldd-shell></nldd-shell>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.app-view')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('.shell')).not.toBeNull();
 	});
 
 	it('renders slotted content', async () => {
-		el = await fixture('<nldd-app-view><div id="child"></div></nldd-app-view>');
+		el = await fixture('<nldd-shell><div id="child"></div></nldd-shell>');
 		await waitForUpdate(el);
 		expect(el.querySelector('#child')).not.toBeNull();
 	});
 
 	it('defaults background to "base"', async () => {
-		el = await fixture('<nldd-app-view></nldd-app-view>');
+		el = await fixture('<nldd-shell></nldd-shell>');
 		await waitForUpdate(el);
 		expect((el as unknown as { background: string }).background).toBe('base');
 		expect(el.hasAttribute('background')).toBe(false);
 	});
 
 	it('reflects background="tinted" attribute', async () => {
-		el = await fixture('<nldd-app-view background="tinted"></nldd-app-view>');
+		el = await fixture('<nldd-shell background="tinted"></nldd-shell>');
 		await waitForUpdate(el);
 		expect(el.getAttribute('background')).toBe('tinted');
 	});
 
 	it('setting background property reflects to attribute', async () => {
-		el = await fixture('<nldd-app-view></nldd-app-view>');
+		el = await fixture('<nldd-shell></nldd-shell>');
 		await waitForUpdate(el);
 		el.background = 'tinted';
 		await waitForUpdate(el);
@@ -59,9 +59,9 @@ describe('nldd-app-view', () => {
 	describe('document.body background ownership', () => {
 		// Track every fixture so a mid-test failure can't leave a detached
 		// instance still listed as `_bodyBackgroundOwner` inside the module.
-		const instances: NLDDAppView[] = [];
-		async function track(html: string): Promise<NLDDAppView> {
-			const el = await fixture<NLDDAppView>(html);
+		const instances: NLDDShell[] = [];
+		async function track(html: string): Promise<NLDDShell> {
+			const el = await fixture<NLDDShell>(html);
 			instances.push(el);
 			return el;
 		}
@@ -75,23 +75,23 @@ describe('nldd-app-view', () => {
 		});
 
 		it('writes the body background on connect', async () => {
-			el = await track('<nldd-app-view></nldd-app-view>');
+			el = await track('<nldd-shell></nldd-shell>');
 			await waitForUpdate(el);
 			expect(document.body.style.backgroundColor).not.toBe('');
 		});
 
 		it('clears the body background on disconnect when sole owner', async () => {
-			el = await track('<nldd-app-view></nldd-app-view>');
+			el = await track('<nldd-shell></nldd-shell>');
 			await waitForUpdate(el);
 			cleanup(el);
-			el = undefined as unknown as NLDDAppView;
+			el = undefined as unknown as NLDDShell;
 			expect(document.body.style.backgroundColor).toBe('');
 		});
 
 		it('does not erase a surviving instance when an older one disconnects', async () => {
-			const first = await track('<nldd-app-view></nldd-app-view>');
+			const first = await track('<nldd-shell></nldd-shell>');
 			await waitForUpdate(first);
-			const second = await track('<nldd-app-view background="tinted"></nldd-app-view>');
+			const second = await track('<nldd-shell background="tinted"></nldd-shell>');
 			await waitForUpdate(second);
 
 			// `second` is the most recent writer; its background sits on body.
@@ -110,9 +110,9 @@ describe('nldd-app-view', () => {
 	});
 
 	describe('overscroll-behavior on documentElement and body', () => {
-		const instances: NLDDAppView[] = [];
-		async function track(html: string): Promise<NLDDAppView> {
-			const el = await fixture<NLDDAppView>(html);
+		const instances: NLDDShell[] = [];
+		async function track(html: string): Promise<NLDDShell> {
+			const el = await fixture<NLDDShell>(html);
 			instances.push(el);
 			return el;
 		}
@@ -131,15 +131,15 @@ describe('nldd-app-view', () => {
 		// document itself, so it keeps the native bounce — hence the split view
 		// in these fixtures, sized to two columns.
 		const NESTED_APP = `
-			<nldd-app-view>
+			<nldd-shell>
 				<nldd-navigation-split-view>
 					<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
 					<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
 				</nldd-navigation-split-view>
-			</nldd-app-view>
+			</nldd-shell>
 		`;
 
-		async function trackNested(): Promise<NLDDAppView> {
+		async function trackNested(): Promise<NLDDShell> {
 			const app = await track(NESTED_APP);
 			const nav = app.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
 			vi.spyOn(nav, 'getBoundingClientRect').mockReturnValue({ width: 1280 } as DOMRect);
@@ -154,7 +154,7 @@ describe('nldd-app-view', () => {
 			expect(document.body.style.overscrollBehavior).toBe('none');
 
 			cleanup(el);
-			el = undefined as unknown as NLDDAppView;
+			el = undefined as unknown as NLDDShell;
 			expect(document.documentElement.style.overscrollBehavior).toBe('');
 			expect(document.body.style.overscrollBehavior).toBe('');
 		});
@@ -177,8 +177,8 @@ describe('nldd-app-view', () => {
    Derived scroll mode (Phase 3 — auto root/nested)
    ============================================================ */
 
-describe('nldd-app-view – derived scroll mode', () => {
-	let el: NLDDAppView;
+describe('nldd-shell – derived scroll mode', () => {
+	let el: NLDDShell;
 
 	afterEach(() => {
 		if (el) cleanup(el);
@@ -192,13 +192,13 @@ describe('nldd-app-view – derived scroll mode', () => {
 	}
 
 	it('derives root when its split view collapses to one column, nested when it expands', async () => {
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-navigation-split-view>
 					<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
 					<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
 				</nldd-navigation-split-view>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		const nav = el.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
 
@@ -212,18 +212,18 @@ describe('nldd-app-view – derived scroll mode', () => {
 		expect(el.style.getPropertyValue('--context-scroll-mode')).toBe('root');
 	});
 
-	it('re-derives when a split view is swapped in after the app-view connected', async () => {
+	it('re-derives when a split view is swapped in after the shell connected', async () => {
 		// A consumer that renders its split view behind a condition (a loading
-		// state, an error takeover, an empty state) leaves the app-view with no
+		// state, an error takeover, an empty state) leaves the shell with no
 		// split view to derive from, and no split view means `root`. When the
 		// split view comes back it measures itself, and on a wide viewport that
 		// equals its own starting state — so without the first-measurement
 		// announcement it stays silent and every pane keeps scrolling as one
 		// document until you reload.
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-page></nldd-page>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		expect(el.style.getPropertyValue('--context-scroll-mode')).toBe('root');
 
@@ -240,13 +240,13 @@ describe('nldd-app-view – derived scroll mode', () => {
 	});
 
 	it('falls back to root when the split view is taken away again', async () => {
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-navigation-split-view>
 					<nldd-split-view-pane slot="primary-sidebar" has-content></nldd-split-view-pane>
 					<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
 				</nldd-navigation-split-view>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		const nav = el.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
 		await setNavWidth(nav, 1280);
@@ -259,14 +259,14 @@ describe('nldd-app-view – derived scroll mode', () => {
 	});
 
 	it('pushes the derived mode down to a nested nldd-page', async () => {
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-navigation-split-view>
 					<nldd-split-view-pane slot="main" has-content>
 						<nldd-page></nldd-page>
 					</nldd-split-view-pane>
 				</nldd-navigation-split-view>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		const nav = el.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
 		const page = el.querySelector('nldd-page') as HTMLElement;
@@ -276,8 +276,8 @@ describe('nldd-app-view – derived scroll mode', () => {
 	});
 
 	it('propagates root through bar-split-view › nav-split-view › bar-split-view nesting', async () => {
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-bar-split-view>
 					<nldd-split-view-pane slot="main">
 						<nldd-navigation-split-view>
@@ -291,7 +291,7 @@ describe('nldd-app-view – derived scroll mode', () => {
 						</nldd-navigation-split-view>
 					</nldd-split-view-pane>
 				</nldd-bar-split-view>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		const nav = el.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
 		// [0] = outer bar-split-view, [1] = the one nested inside the nav pane.
@@ -308,23 +308,23 @@ describe('nldd-app-view – derived scroll mode', () => {
 	});
 
 	it('hands the current derived mode to a layer that registers after derivation (navigation re-mount)', async () => {
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-navigation-split-view>
 					<nldd-split-view-pane slot="main" has-content></nldd-split-view-pane>
 				</nldd-navigation-split-view>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		const nav = el.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
-		await setNavWidth(nav, 320);   // app-view derives root before the new layer exists
+		await setNavWidth(nav, 320);   // shell derives root before the new layer exists
 		expect(el.style.getPropertyValue('--context-scroll-mode')).toBe('root');
 
 		// A layer registering now (e.g. a page re-mounted on navigation) must be
 		// handed the current mode immediately — not left to self-read a var that
 		// can be stale mid-remount (the Chrome-only "stuck nested" bug).
 		const received: (string | undefined)[] = [];
-		const appView = el as unknown as { registerScrollConsumer(c: { readScrollMode(m?: string): void }): void };
-		appView.registerScrollConsumer({ readScrollMode: (m) => received.push(m) });
+		const shell = el as unknown as { registerScrollConsumer(c: { readScrollMode(m?: string): void }): void };
+		shell.registerScrollConsumer({ readScrollMode: (m) => received.push(m) });
 		expect(received).toEqual(['root']);
 	});
 
@@ -334,8 +334,8 @@ describe('nldd-app-view – derived scroll mode', () => {
 	// the document, offset by an app bar that stands outside the overlay, and
 	// paint it over the first field.
 	it('keeps a page inside a sheet out of root mode, and resets the insets', async () => {
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-navigation-split-view>
 					<nldd-split-view-pane slot="main" has-content style="--context-inset-top: 60px;">
 						<nldd-page id="in-pane"></nldd-page>
@@ -344,7 +344,7 @@ describe('nldd-app-view – derived scroll mode', () => {
 						</nldd-sheet>
 					</nldd-split-view-pane>
 				</nldd-navigation-split-view>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		const nav = el.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
 		const inPane = el.querySelector('#in-pane') as HTMLElement;
@@ -366,8 +366,8 @@ describe('nldd-app-view – derived scroll mode', () => {
 	});
 
 	it('keeps a page inside a modal dialog out of root mode', async () => {
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-navigation-split-view>
 					<nldd-split-view-pane slot="main" has-content>
 						<nldd-modal-dialog accessible-label="Confirm">
@@ -375,7 +375,7 @@ describe('nldd-app-view – derived scroll mode', () => {
 						</nldd-modal-dialog>
 					</nldd-split-view-pane>
 				</nldd-navigation-split-view>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		const nav = el.querySelector('nldd-navigation-split-view') as NLDDNavigationSplitView;
 		const inDialog = el.querySelector('#in-dialog') as HTMLElement;
@@ -390,10 +390,10 @@ describe('nldd-app-view – derived scroll mode', () => {
 	// nested scrolling would cost the rubber-band and the collapsing browser
 	// toolbar on iOS for nothing.
 	it('scrolls the document for a bare-page app (no horizontal split view)', async () => {
-		el = await fixture<NLDDAppView>(`
-			<nldd-app-view>
+		el = await fixture<NLDDShell>(`
+			<nldd-shell>
 				<nldd-page></nldd-page>
-			</nldd-app-view>
+			</nldd-shell>
 		`);
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--context-scroll-mode')).toBe('root');

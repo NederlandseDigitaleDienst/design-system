@@ -6,11 +6,7 @@
 
 # Patroon: formulier
 
-**Welk probleem dit oplost.** Gegevens van iemand vragen, in een indeling die leesbaar blijft, met labels die aan hun veld vastzitten en fouten die op de juiste plek en het juiste moment verschijnen.
-
-**Wanneer wel.** Elke keer dat je invoervelden verzamelt die samen verstuurd worden.
-
-**Wanneer niet.** Voor één los zoekveld in een werkbalk gebruik je een [`nldd-search-field`](../../nldd-design/reference.md#nldd-search-field) zonder formulier eromheen. Velden waarmee iemand een lijst kleiner maakt zijn geen formulier maar filters, zie [filteren](filtering.md). En is het te veel voor één scherm, dan knip je het in losse pagina’s met een [`nldd-step-bar`](../../nldd-design/reference.md#nldd-step-bar) erboven, elk met hun eigen formulier.
+Een formulier verzamelt de gegevens die nodig zijn om een taak uit te voeren of een aanvraag te versturen. Gebruik het als iemand informatie moet invullen of keuzes moet doorgeven. Vraag alleen wat nodig is, leg onduidelijke vragen uit en vertel wat er na het verzenden gebeurt.
 
 ## Compositie
 

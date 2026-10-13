@@ -94,7 +94,7 @@ Wat er dan beschikbaar is:
 
 Die lijst kan met de codebase meebewegen; `ls .claude/skills/` in je checkout is de actuele waarheid.
 
-`CONTRIBUTING.md` in die repository is de bron voor wat er van een wijziging wordt verwacht (tests in een echte browser, geen CSS-fallbacks, conventionele commits) en loopt verder dan deze skill. Eén ding dat verrast: elke `nldd-*`-tag in de documentatie wordt in CI gecontroleerd tegen de echte component-API, dus een voorbeeld met een verzonnen attribuut laat de build falen.
+`docs/CONTRIBUTING.md` in die repository is de bron voor wat er van een wijziging wordt verwacht (tests in een echte browser, geen CSS-fallbacks, conventionele commits) en loopt verder dan deze skill. Eén ding dat verrast: elke `nldd-*`-tag in de documentatie wordt in CI gecontroleerd tegen de echte component-API, dus een voorbeeld met een verzonnen attribuut laat de build falen.
 
 ## De andere skills in deze plugin
 

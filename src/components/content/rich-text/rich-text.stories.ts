@@ -90,8 +90,9 @@ export const Alinea = {
  * (p, li, dd), handig in smalle kolommen met lange Nederlandse
  * samenstellingen. Vereist een correcte `lang` op de pagina — hier staat
  * `lang="nl"` op de wrapper, anders breekt de browser niet af. De grens
- * `hyphenate-limit-chars: 6 3 3` voorkomt losse-letterafbrekingen. Links de
- * standaard (uit), rechts aan; let op de rechterrand van de tekst.
+ * `hyphenate-limit-chars: 6 3 3` voorkomt losse-letterafbrekingen. Een kop
+ * breekt nooit met een streepje, alleen als één woord breder is dan de kolom.
+ * Links de standaard (uit), rechts aan; let op de rechterrand van de tekst.
  */
 export const Afbreken = {
 	render: (args: Record<string, any>) => {
@@ -543,11 +544,12 @@ export const AlleGrootten = {
 };
 
 /**
- * Drie breedtezones: tekst en blockquotes lezen op de `main`-maat, media en
- * tabellen krijgen het `wide`-accent en codeblokken en componenten krijgen
- * de volle breedte (`full`) — beschikbaar, niet geforceerd, dankzij
+ * Drie breedtezones: tekst, blockquotes, codeblokken en componenten lezen op de
+ * `main`-maat, media, tabellen (ook `nldd-table`) en `nldd-step-bar` krijgen
+ * het `wide`-accent, en `nldd-collection` en `nldd-container` krijgen de
+ * volle breedte (`full`): beschikbaar, niet geforceerd, dankzij
  * `justify-self: start`. Per kind te overschrijven met
- * `data-width="main" | "wide" | "full"`; de laatste paragraaf hieronder
+ * `data-rich-text-width="main" | "wide" | "full"`; de laatste paragraaf hieronder
  * staat bewust op wide. Zet `centered` aan voor de symmetrische variant.
  */
 export const Breedtezones = {
@@ -573,12 +575,12 @@ export const Breedtezones = {
 				src="sample-images/butterfly-960.jpg"
 				alt="Vlinder op een bloem"
 			>
-			<p>Componenten zoals een banner vallen onder de full-default en vullen de beschikbare breedte met hun eigen gedrag.</p>
+			<p>Componenten zoals een banner horen bij de tekst en worden niet breder dan de main-maat.</p>
 			<nldd-banner
 				variant="accent"
-				text="Een component pakt automatisch de volle breedte"
+				text="Een component blijft binnen de leesbreedte"
 			></nldd-banner>
-			<p data-width="wide">Deze paragraaf staat bewust op <code>data-width="wide"</code> en leest dus iets breder dan de main-maat — de per-item override wint van elke default.</p>
+			<p data-rich-text-width="wide">Deze paragraaf staat bewust op <code>data-rich-text-width="wide"</code> en leest dus iets breder dan de main-maat — de per-item override wint van elke default.</p>
 		</nldd-rich-text>
 	`,
 };

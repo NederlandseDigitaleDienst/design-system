@@ -2,13 +2,17 @@
 
 Een component beantwoordt "wat is dit ding". Een patroon beantwoordt "hoe zet ik deze dingen samen tot iets dat een taak van de gebruiker afhandelt".
 
-De set groeit met wat zich in productie bewijst, dus hij is niet compleet en wil dat ook niet zijn. Staat jouw geval er niet bij, kijk dan of een van deze patronen de compositie al dekt; zo niet, dan is [`../reference.md`](../../nldd-design/reference.md) de volledige API en [Storybook](https://nederlandsedigitaledienst.github.io/design-system/) het levende voorbeeld.
+De set groeit met wat zich in productie bewijst. Staat jouw geval er nog niet bij, kijk dan of een van deze patronen de compositie al dekt; zo niet, dan is [`../reference.md`](../../nldd-design/reference.md) de volledige API en [Storybook](https://nederlandsedigitaledienst.github.io/design-system/) het levende voorbeeld.
 
 **De opbouw van een scherm**
 
 | Patroon | Voor welke taak |
 |---|---|
-| [Contentpagina](content-page.md) | Een pagina die iets uitlegt of aanprijst, met kaarten, een uitgelicht vlak en een footer |
+| [Paginaopbouw](page-structure.md) | Het geraamte van elke pagina: de schil, de header, de secties en de footer |
+| [Home](home-page.md) | Het startpunt van een website: wat je er kunt vinden en doen |
+| [Onderwerppagina](topic-page.md) | De home voor een onderwerp op een lager niveau |
+| [Navigatiepagina](navigation-page.md) | De weg wijzen naar de pagina's eronder |
+| [Contentpagina](content-page.md) | De details op het laagste niveau: uitleg over één onderwerp, taak of besluit |
 | [Applicatie](application.md) | Een scherm met panelen naast elkaar, elk met een eigen pagina |
 | [Werkbalk met acties](toolbar-with-actions.md) | Acties boven een scherm die ook op smal bereikbaar blijven |
 

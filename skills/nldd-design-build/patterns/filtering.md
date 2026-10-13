@@ -6,11 +6,7 @@
 
 # Patroon: filteren
 
-**Welk probleem dit oplost.** Een lange lijst terugbrengen tot wat je zoekt, met de filters in beeld, zodat zichtbaar blijft waarom er iets ontbreekt, en met een weg terug.
-
-**Wanneer wel.** Elke verzameling die langer wordt dan een scherm, of waar iemand een deelverzameling zoekt. Een lijst, een tabel, een kaartenoverzicht.
-
-**Wanneer niet.** Bij een handvol rijen filtert niemand: laat het weg. Gaat het om één zoekterm zonder verdere criteria, dan is een [`nldd-search-field`](../../nldd-design/reference.md#nldd-search-field) boven de lijst genoeg, en heb je geen zijbalk nodig.
+Met filters verkleinen bezoekers een lijst tot de resultaten die aan hun voorwaarden voldoen. Gebruik dit patroon als de lijst groot genoeg is om zoeken of verfijnen makkelijker te maken. Laat zien welke filters actief zijn en bied een eenvoudige manier om ze weer te wissen.
 
 ## Compositie
 
@@ -19,6 +15,7 @@ nldd-page
   └─ nldd-sidebar-section           sidebar-label, breed een kolom, smal een sheet
        ├─ nldd-title                slot="header", boven beide kolommen
        ├─ nldd-container            slot="sidebar", met padding
+       │    ├─ nldd-skip-link       href naar de resultaten, alleen in de kolom
        │    ├─ nldd-title           per filtergroep
        │    └─ nldd-list            een rij per optie, de rij is de checkbox
        ├─ nldd-toolbar              zoeken links, de knop naar de filters rechts
@@ -40,6 +37,11 @@ nldd-page
   nldd-sidebar-section[collapsed] #filters-openen:not([hidden]) {
     display: inline-flex;
   }
+
+  /* In the sheet the results lie behind it, so there is nothing to skip to. */
+  nldd-sidebar-section[collapsed] #filters-overslaan {
+    display: none;
+  }
 </style>
 
 <nldd-page>
@@ -57,13 +59,19 @@ nldd-page
     <nldd-container
       slot="sidebar"
       padding="16"
+      padding-bottom="8"
     >
+      <nldd-skip-link
+        id="filters-overslaan"
+        text="Sla filters over"
+        href="#resultaten"
+      ></nldd-skip-link>
       <nldd-title
         size="5"
         text="Status"
         heading-level="2"
       ></nldd-title>
-      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-list
         appearance="simple"
         dividers="never"
@@ -110,7 +118,7 @@ nldd-page
         text="Team"
         heading-level="2"
       ></nldd-title>
-      <nldd-spacer size="4"></nldd-spacer>
+      <nldd-spacer size="8"></nldd-spacer>
       <nldd-list
         appearance="simple"
         dividers="never"
@@ -210,7 +218,10 @@ nldd-page
 
     <nldd-spacer size="4"></nldd-spacer>
 
-    <nldd-list accessible-label="Dossiers">
+    <nldd-list
+      id="resultaten"
+      accessible-label="Dossiers"
+    >
       <nldd-inline-dialog
         slot="no-results"
         icon="magnifier"
@@ -253,7 +264,7 @@ nldd-page
           width="fit-content"
           text="In behandeling"
         ></nldd-text-cell>
-        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"
@@ -296,7 +307,7 @@ nldd-page
           width="fit-content"
           text="Afgerond"
         ></nldd-text-cell>
-        <nldd-spacer-cell size="8"></nldd-spacer-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"
@@ -319,6 +330,8 @@ Het voorbeeld is smal, dus de filters zitten hier achter de knop. Is de sectie b
 **De filteropties zijn een lijst, geen formulier.** Per groep een [`nldd-title`](../../nldd-design/reference.md#nldd-title) en een [`nldd-list`](../../nldd-design/reference.md#nldd-list), en de rij is zelf de checkbox: `checkbox` op de [`nldd-list-item`](../../nldd-design/reference.md#nldd-list-item), met daarin een [`nldd-checkbox`](../../nldd-design/reference.md#nldd-checkbox) die alleen `decorative` de staat toont. Zo is de hele rij het klikdoel in plaats van het vierkantje, past er een aantal achter de naam, en is er één tabstop per optie. Een filter dient ook niets in: er is geen "Opslaan", de lijst verandert terwijl je klikt, dus er valt geen formulier te versturen.
 
 **De knop naar de filters verschijnt alleen als er een sheet is.** De sectie meldt dat zelf met `collapsed`, en jij bepaalt waar de knop staat. In het voorbeeld staat hij rechts in de werkbalk, met een regel CSS ervoor: `nldd-sidebar-section[collapsed] #filters-openen { display: inline-flex }`. Zet er ook een `nldd-menu-item` in `slot="overflow"` bij, want in een smalle werkbalk verhuist de knop naar het overflow-menu. Dat menu toont een kopie maar meldt de keuze als `select` op het origineel, dus luister daarnaar en roep `show()` aan: een menukeuze betekent openen, niet omklappen. Laat je hem altijd staan, dan opent hij op een breed scherm niets.
+
+**Een skip link boven de filters.** Een kolom filters is een rij controls waar iemand met een toetsenbord elke keer doorheen moet om bij de resultaten te komen. Zet er daarom een [`nldd-skip-link`](../../nldd-design/reference.md#nldd-skip-link) boven, met een `href` naar de lijst met resultaten. Hij staat los boven de filters en niet eromheen, zodat je hem kunt verbergen zolang de sectie `collapsed` is: in de sheet liggen de resultaten erachter, en daar is "Klaar" de weg terug.
 
 **Het vinkje in de rij zet je zelf mee.** De rij houdt zijn eigen `checked` bij en meldt de wissel met `change`, maar de [`nldd-checkbox`](../../nldd-design/reference.md#nldd-checkbox) erin is een eigen element met een eigen staat, en `decorative` betekent alleen dat die niets aanneemt of aankondigt. Luister dus naar `change` op de rij en zet `checked` op dat vinkje. Doe je dat niet, dan klikt de rij wel aan en verandert er niets te zien.
 
@@ -344,7 +357,7 @@ Het voorbeeld is smal, dus de filters zitten hier achter de knop. Is de sectie b
 
 Wat je gratis krijgt: de zoekrol op het veld en de wisknop erin, op elk token een verwijderknop die het token noemt, een formulier waarin elke filtergroep een groepsnaam heeft, en de zijbalk als benoemde regio of als sheet met een titelbalk.
 
-Wat jij nog moet doen: een `sidebar-label` waar die naam vandaan komt, een naam voor het zoekveld, en een zin in `no-results` die uitlegt waarom de lijst leeg is. Het zoekveld neemt de `placeholder` als naam; is die een voorbeeld in plaats van een naam, zet dan `accessible-label`.
+Wat jij nog moet doen: een `sidebar-label` waar die naam vandaan komt, een naam voor het zoekveld, een `id` op de lijst met resultaten waar de skip link naartoe springt, en een zin in `no-results` die uitlegt waarom de lijst leeg is. Het zoekveld neemt de `placeholder` als naam; is die een voorbeeld in plaats van een naam, zet dan `accessible-label`.
 
 ## Gezien in
 

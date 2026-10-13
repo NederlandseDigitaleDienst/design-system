@@ -14,7 +14,7 @@ Voor kwetsbaarheden geldt een andere route. Die staan in [`SECURITY.md`](./SECUR
 
 ### Een patroon voorstellen
 
-Een patroon is geen component: het beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt. De set staat in [`skills/nldd-design-build/patterns/`](./skills/nldd-design-build/patterns/) en blijft **expres klein**; acht patronen die kloppen zijn nuttiger dan een catalogus die niemand bijhoudt.
+Een patroon is geen component: het beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt. De set staat in [`skills/nldd-design-build/patterns/`](../skills/nldd-design-build/patterns/).
 
 Stel je er een voor, begin dan bij het probleem en het bewijs, niet bij de code:
 
@@ -47,7 +47,7 @@ npm run build       # volledige build met alle validaties
 
 **Elk component heeft minimaal een smoke test.** Rendert het zonder fouten en heeft het een shadowRoot. Zit er logica in (een MutationObserver, slot-beheer, toetsenbordgedrag, statusovergangen), dan hoort daar een test bij die die logica raakt en niet alleen het bestaan ervan.
 
-**Visuele waarden komen uit CSS-variabelen.** Hardcodeer geen kleuren, maten of spacing. De lagen en de voorkeursvolgorde staan in de [README](./README.md#styling-structuur). `npm run validate:styles` faalt op een variabele die niet bestaat, zonder fallback.
+**Visuele waarden komen uit CSS-variabelen.** Hardcodeer geen kleuren, maten of spacing. De lagen en de voorkeursvolgorde staan in de [README](../README.md#styling-structuur). `npm run validate:styles` faalt op een variabele die niet bestaat, zonder fallback.
 
 **Verander je de publieke API van een component** (attributen, slots, events), draai dan `npm run generate:skill-docs` en commit het resultaat mee. De gegenereerde referentie in `skills/nldd-design/` wordt in CI vergeleken met de JSDoc, en loopt die uit de pas dan faalt de build.
 

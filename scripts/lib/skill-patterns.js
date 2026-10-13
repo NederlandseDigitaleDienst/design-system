@@ -38,7 +38,7 @@ export function storybookId(title) {
  *   and, per exported story, the file name of its markup
  */
 export function parsePatternStories(stories) {
-	const title = stories.match(/^\s*title:\s*'([^']+)'/m)?.[1];
+	const title = stories.match(/^\s*title:\s*(['"])(.+?)\1/m)?.[2];
 	if (!title) throw new Error('Geen title gevonden in het stories-bestand.');
 	const imports = Object.fromEntries(
 		[...stories.matchAll(/^import (\w+) from '\.\/([\w.-]+\.html)\?raw';/gm)].map((m) => [m[1], m[2]]),

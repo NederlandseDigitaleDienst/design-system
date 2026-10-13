@@ -138,7 +138,7 @@ export const Standaard = {
 	parameters: {
 		docs: {
 			description: {
-				story: 'Linker zijbalk naast de hoofdinhoud. Is de **sectie** ≥ 1008px breed, dan is de zijbalk een sticky, scrollbare tinted box (max 320px); is-ie smaller, dan verdwijnt-ie in een sheet (een linkerpaneel op md+, een bottom-sheet op mobiel) met automatisch een sticky titelbalk (de `sidebar-label` als titel + een Sluit-knop). De switch volgt de breedte van de sectie zelf, niet de viewport (zie de SmalleContainer-story). De **trigger is van de consument**: hier een `nldd-button` boven de inhoud, alleen getoond als `[collapsed]` (CSS), gekoppeld aan `show()` en met `aria-expanded` via de open/close-events. Verklein het venster om de switch te zien.',
+				story: 'Linker zijbalk naast de hoofdinhoud. Is de **sectie** ≥ 1008px breed, dan is de zijbalk een sticky, scrollbare box (max 320px) in de kleur van de sectie, met een scheidingslijn als rand; is-ie smaller, dan verdwijnt-ie in een sheet (een linkerpaneel op md+, een bottom-sheet op mobiel) met automatisch een sticky titelbalk (de `sidebar-label` als titel + een Sluit-knop). De switch volgt de breedte van de sectie zelf, niet de viewport (zie de SmalleContainer-story). De **trigger is van de consument**: hier een `nldd-button` boven de inhoud, alleen getoond als `[collapsed]` (CSS), gekoppeld aan `show()` en met `aria-expanded` via de open/close-events. Verklein het venster om de switch te zien.',
 			},
 		},
 	},

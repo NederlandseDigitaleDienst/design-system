@@ -79,7 +79,7 @@ export { NLDDTokenField } from './inputs/token-field/token-field.js';
 
 // # Layout components
 
-export { NLDDAppView } from './layout/app-view/app-view.js';
+export { NLDDShell } from './layout/shell/shell.js';
 
 export { NLDDBarSplitView } from './layout/split-views/bar-split-view/bar-split-view.js';
 export { NLDDNavigationSplitView } from './layout/split-views/navigation-split-view/navigation-split-view.js';

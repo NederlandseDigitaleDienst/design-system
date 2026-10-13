@@ -28,7 +28,7 @@ Vertrekt de maintainer, dan wijst het NLDD-team een opvolger aan. Het project ha
 
 De prioriteiten komen uit de behoefte van de teams die het systeem gebruiken. Die backlog is nu niet openbaar, dus er staat geen roadmap in deze repository.
 
-Wat wel openbaar is: de [issues](https://github.com/NederlandseDigitaleDienst/design-system/issues), de [`CHANGELOG.md`](./CHANGELOG.md) en de releases. Daarmee zie je wat er speelt en wat er is gewijzigd, ook zonder inzage in de planning erachter.
+Wat wel openbaar is: de [issues](https://github.com/NederlandseDigitaleDienst/design-system/issues), de [`CHANGELOG.md`](../CHANGELOG.md) en de releases. Daarmee zie je wat er speelt en wat er is gewijzigd, ook zonder inzage in de planning erachter.
 
 ## Wijzigingen in dit document
 

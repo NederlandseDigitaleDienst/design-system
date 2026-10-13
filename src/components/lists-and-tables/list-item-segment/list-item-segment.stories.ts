@@ -55,6 +55,7 @@ export default {
 		checked: false,
 		expanded: false,
 		current: false,
+		currentType: 'page',
 		disabled: false,
 	},
 	argTypes: {
@@ -81,8 +82,15 @@ export default {
 		expanded: { control: 'boolean', description: 'Uitklap-status; laat weg als het segment niets openklapt' },
 		current: {
 			control: 'boolean',
-			description: 'De huidige pagina (`aria-current="page"`). Zet het hier en niet op de rij: een gesegmenteerde rij heeft geen eigen link, en de rij leest het van z\'n segmenten en kleurt zichzelf.',
+			description: 'Het huidige segment, met `aria-current` op de waarde van `current-type`. Zet het hier en niet op de rij: een gesegmenteerde rij heeft geen eigen link, en de rij leest het van z\'n segmenten en kleurt zichzelf.',
 			table: { defaultValue: { summary: false } },
+		},
+		currentType: {
+			name: 'current-type',
+			control: 'select',
+			options: ['page', 'step', 'location', 'date', 'time', 'true'],
+			description: 'De waarde van `aria-current` op een `current`-segment. `location` voor een inhoudsopgave, waarvan de rijen naar stukken van deze pagina wijzen.',
+			table: { defaultValue: { summary: 'page' } },
 		},
 		disabled: { control: 'boolean', description: 'Uitgeschakelde staat' },
 	},
@@ -102,6 +110,7 @@ export const Standaard = {
 					?checked=${args.checked}
 					?expanded=${args.expanded}
 					?current=${args.current}
+					current-type=${args.currentType === 'page' ? nothing : args.currentType}
 					?disabled=${args.disabled}
 				>
 					<nldd-text-cell

@@ -6,7 +6,7 @@
  * helping users understand their relationship at a glance.
  *
  * @element nldd-box
- * @attr {'tinted'|'base'|'critical'} background - Which surface this box draws, named as it is on nldd-app-view, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it.
+ * @attr {'tinted'|'base'|'critical'} background - Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it.
  *   - `tinted` (default): a box on a plain page background.
  *   - `base`: a box on an already-tinted parent (the border ring gets +2
  *   palette steps so it still reads against a card-on-card).

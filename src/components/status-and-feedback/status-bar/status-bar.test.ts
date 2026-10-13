@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDStatusBar } from './status-bar.js';
@@ -195,5 +195,45 @@ describe('nldd-status-bar', () => {
 		(el as NLDDStatusBar).variant = 'success';
 		await waitForUpdate(el);
 		expect(el.getAttribute('aria-atomic')).toBe('true');
+	});
+
+	describe('placement', () => {
+		const placementWarnings = async (html: string) => {
+			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+			try {
+				el = await fixture(html);
+				await waitForUpdate(el.querySelector('nldd-status-bar') ?? el);
+				return warn.mock.calls.map(([message]) => String(message)).filter((message) => message.includes('below a top bar'));
+			} finally {
+				warn.mockRestore();
+			}
+		};
+
+		it('says so in development when it sits below a top bar', async () => {
+			expect(await placementWarnings(`
+				<div>
+					<nldd-top-title-bar text="Mijn Dienst"></nldd-top-title-bar>
+					<nldd-status-bar text="Storing"></nldd-status-bar>
+				</div>
+			`)).toHaveLength(1);
+		});
+
+		it('stays quiet above a top bar', async () => {
+			expect(await placementWarnings(`
+				<div>
+					<nldd-status-bar text="Storing"></nldd-status-bar>
+					<nldd-top-navigation-bar></nldd-top-navigation-bar>
+				</div>
+			`)).toHaveLength(0);
+		});
+
+		it('leaves out the top bar of an overlay', async () => {
+			expect(await placementWarnings(`
+				<div>
+					<nldd-sheet><nldd-top-title-bar text="Bewerken"></nldd-top-title-bar></nldd-sheet>
+					<nldd-status-bar text="Storing"></nldd-status-bar>
+				</div>
+			`)).toHaveLength(0);
+		});
 	});
 });

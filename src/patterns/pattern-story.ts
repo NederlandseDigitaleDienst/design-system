@@ -11,7 +11,7 @@ import '../components/index.js';
  * belongs to the consumer's framework.
  *
  * `frame` renders the story in an iframe of that height on the docs page. An
- * nldd-app-view is at least as tall as the viewport, so inline on the page it
+ * nldd-shell is at least as tall as the viewport, so inline on the page it
  * would stretch it; in a frame of its own it behaves as it does in an app. The
  * wrapper then takes the viewport height, which in an app comes from
  * document-reset.css, a stylesheet Storybook does not load.

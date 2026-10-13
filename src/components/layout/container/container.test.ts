@@ -219,7 +219,7 @@ describe('nldd-container', () => {
 		el.setAttribute('width', 'nogal breed');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_container-width')).toBe('');
-		expect(el.getAttribute('width')).toBe('');
+		expect(el.hasAttribute('width')).toBe(false);
 	});
 
 	it('removes the inline custom prop when a width attribute is cleared', async () => {

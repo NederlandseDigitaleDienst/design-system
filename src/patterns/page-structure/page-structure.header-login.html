@@ -1,0 +1,58 @@
+<nldd-shell>
+  <nldd-page>
+    <nldd-skip-link slot="header">
+      <nldd-top-navigation-bar
+        website-title="Mijn Dienst"
+        back-text="Aanvragen"
+        back-href="#aanvragen"
+      >
+        <nldd-menu-bar slot="utility">
+          <nldd-menu-bar-item
+            text="Zoeken"
+            icon="magnifier"
+            href="#zoeken"
+            content-priority="text"
+          ></nldd-menu-bar-item>
+          <nldd-menu-bar-item
+            text="NL"
+            accessible-label="Taal: Nederlands (NL)"
+            icon="globe"
+            expandable
+            content-priority="text"
+          >
+            <nldd-menu>
+              <nldd-menu-item
+                text="Nederlands"
+                type="radio"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="English"
+                type="radio"
+                lang="en"
+              ></nldd-menu-item>
+            </nldd-menu>
+          </nldd-menu-bar-item>
+          <nldd-menu-bar-item
+            text="Inloggen"
+            icon="account"
+            href="#inloggen"
+            content-priority="text"
+          ></nldd-menu-bar-item>
+        </nldd-menu-bar>
+      </nldd-top-navigation-bar>
+    </nldd-skip-link>
+
+    <nldd-simple-section>
+      <nldd-title
+        slot="header"
+        size="1"
+        text="Aanvraag intrekken"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-rich-text>
+        <p>Zolang een aanvraag nog in behandeling is, kun je hem intrekken. Je hoeft daar geen reden voor te geven.</p>
+      </nldd-rich-text>
+    </nldd-simple-section>
+  </nldd-page>
+</nldd-shell>

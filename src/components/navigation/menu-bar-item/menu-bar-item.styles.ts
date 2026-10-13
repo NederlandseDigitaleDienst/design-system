@@ -124,6 +124,16 @@ export const menuBarItemStyles = css`
 		flex-shrink: 0;
 	}
 
+	.menu-bar-item__icon[hidden] {
+		display: none;
+	}
+
+	::slotted([slot="icon"]) {
+		display: flex;
+		width: 100%;
+		height: 100%;
+	}
+
 	/* ## Disclosure icon */
 
 	.menu-bar-item__disclosure-icon {
@@ -169,12 +179,12 @@ export const menuBarItemStyles = css`
 	/* # Icon-only */
 
 	:host([icon-only]) .menu-bar-item,
-	:host([content-priority="icon"][compact][icon]:not([icon=""])) .menu-bar-item {
+	:host([content-priority="icon"][compact]:is([icon]:not([icon=""]), [data-has-icon])) .menu-bar-item {
 		padding: var(--primitives-space-8);
 	}
 
 	:host([icon-only]) .menu-bar-item__text,
-	:host([content-priority="icon"][compact][icon]:not([icon=""])) .menu-bar-item__text {
+	:host([content-priority="icon"][compact]:is([icon]:not([icon=""]), [data-has-icon])) .menu-bar-item__text {
 		position: absolute;
 		margin: -1px;
 		border: 0;

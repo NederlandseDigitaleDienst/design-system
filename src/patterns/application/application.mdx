@@ -5,16 +5,12 @@ import * as Stories from './application.stories';
 
 # Applicatie
 
-**Welk probleem dit oplost.** Een scherm dat de ruimte gebruikt die er is: navigatie, een lijst, het gekozen record, een inspector, zoveel ernaast als er past. Wordt het scherm smaller, dan vallen de panelen één voor één weg tot er één overblijft, zonder dat je zelf verbergt, herschikt of een tweede layout bouwt.
-
-**Wanneer wel.** Een scherm waarop je vaak tussen informatie beweegt: zoeken, vergelijken, kiezen, bewerken.
-
-**Wanneer niet.** Een landings-, informatie- of campagnepagina, of een scherm dat een verhaal vertelt. Dat is een [contentpagina](?path=/docs/patronen-contentpagina--docs).
+Een applicatie gebruik je als bezoekers tijdens een taak vaak tussen verschillende views moeten wisselen, bijvoorbeeld om gegevens te bekijken, vergelijken of bewerken. De applicatieopzet brengt die views samen in één omgeving. Daarmee kan ze verschillende soorten pagina’s vervangen; een [contentpagina](?path=/docs/patronen-pagina-s-contentpagina--docs) toont juist de details op het laagste niveau van een website.
 
 ## Compositie
 
 ```
-nldd-app-view                                 de buitenste schil
+nldd-shell                                 de buitenste schil
   └─ nldd-bar-split-view                      balken boven of onder de inhoud
        ├─ nldd-split-view-pane                slot="toolbar-md", only="md"
        │    └─ nldd-container                 met padding
@@ -44,7 +40,7 @@ Een rij opent het dossier in een sheet, want het detail hoeft hier niet altijd i
 
 ## Waarom zo
 
-**De app view is de buitenste schil, de split views zitten erin.** De [`nldd-app-view`](?path=/docs/components-layout-app-view--docs) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Daarbinnen komen de split views, en pas in een paneel begint een pagina.
+**De shell staat om alles heen, de split views zitten erin.** De [`nldd-shell`](?path=/docs/components-layout-shell--docs) zet de achtergrond en bepaalt wie er scrollt: het document, of elk paneel apart. Daarbinnen komen de split views, en pas in een paneel begint een pagina.
 
 **Twee werkbalken, twee bereiken.** Wat voor het hele scherm geldt, hangt in de hoofdwerkbalk, een balk om de panelen heen: een [`nldd-bar-split-view`](?path=/docs/components-layout-split-views-bar-split-view--docs) met die balk in een eigen slot en de split view in `slot="main"`. Zet je de hoofdwerkbalk in een paneel, dan scrolt hij mee met de inhoud van dat ene paneel en geldt hij niet meer voor het scherm. Wat over de inhoud van één paneel gaat, zoals hier "Nieuw dossier" en het filter boven de lijst, krijgt juist wel een eigen [`nldd-toolbar`](?path=/docs/components-actions-toolbar--docs) in dat paneel. Zo blijft de hoofdwerkbalk hetzelfde terwijl je van scherm wisselt, en verhuist de andere mee met wat je aan het doen bent. Geef de hoofdwerkbalk een [`nldd-container`](?path=/docs/components-layout-container--docs) met padding, want de bar split view zet die zelf niet.
 

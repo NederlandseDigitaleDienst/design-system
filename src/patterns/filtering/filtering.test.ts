@@ -32,6 +32,22 @@ describe('patroon: filteren', () => {
 		expect(root.querySelectorAll('nldd-sheet').length).toBe(0);
 	});
 
+	it('zet een skip link boven de filters, naar de resultaten, en verbergt hem in de sheet', async () => {
+		await mount();
+		const section = root.querySelector('nldd-sidebar-section')!;
+		const skip = section.querySelector('[slot="sidebar"] > nldd-skip-link')! as HTMLElement;
+		// Hij staat voor de eerste filtergroep, en wikkelt de filters niet in.
+		expect(skip.parentElement!.firstElementChild).toBe(skip);
+		expect(skip.children.length).toBe(0);
+		const target = root.querySelector(skip.getAttribute('href')!)!;
+		expect(target.tagName).toBe('NLDD-LIST');
+		expect(target.closest('[slot="sidebar"]')).toBeNull();
+		section.removeAttribute('collapsed');
+		expect(getComputedStyle(skip).display).not.toBe('none');
+		section.setAttribute('collapsed', '');
+		expect(getComputedStyle(skip).display).toBe('none');
+	});
+
 	it('toont de knop naar de filters alleen als er een sheet te openen valt', async () => {
 		await mount();
 		const section = root.querySelector('nldd-sidebar-section')!;

@@ -1,0 +1,110 @@
+<nldd-shell>
+  <nldd-page>
+    <nldd-skip-link slot="header">
+      <nldd-top-navigation-bar
+        website-title="Mijn Dienst"
+        back-text="Aanvragen"
+        back-href="#aanvragen"
+      >
+        <nldd-menu-bar slot="utility">
+          <nldd-menu-bar-item
+            text="Zoeken"
+            icon="magnifier"
+            href="#zoeken"
+            content-priority="text"
+          ></nldd-menu-bar-item>
+          <nldd-menu-bar-item
+            text="NL"
+            accessible-label="Taal: Nederlands (NL)"
+            icon="globe"
+            expandable
+            content-priority="text"
+          >
+            <nldd-menu>
+              <nldd-menu-item
+                text="Nederlands"
+                type="radio"
+                selected
+              ></nldd-menu-item>
+              <nldd-menu-item
+                text="English"
+                type="radio"
+                lang="en"
+              ></nldd-menu-item>
+            </nldd-menu>
+          </nldd-menu-bar-item>
+        </nldd-menu-bar>
+      </nldd-top-navigation-bar>
+    </nldd-skip-link>
+
+    <nldd-simple-section>
+      <nldd-title
+        slot="header"
+        size="1"
+        text="Aanvraag intrekken"
+        heading-level="1"
+      ></nldd-title>
+      <nldd-rich-text>
+        <p>Zolang een aanvraag nog in behandeling is, kun je hem intrekken. Je hoeft daar geen reden voor te geven.</p>
+      </nldd-rich-text>
+    </nldd-simple-section>
+
+    <nldd-simple-section
+      background="tinted"
+      grow
+    >
+      <nldd-title
+        slot="header"
+        size="3"
+        text="Intrekken kun je niet terugdraaien"
+        heading-level="2"
+      ></nldd-title>
+      <nldd-rich-text>
+        <p>Wil je het later toch, dan dien je een nieuwe aanvraag in.</p>
+      </nldd-rich-text>
+    </nldd-simple-section>
+
+    <nldd-page-footer slot="footer">
+      <nldd-breadcrumbs slot="breadcrumbs">
+        <nldd-breadcrumbs-item
+          text="Home"
+          href="#home"
+        ></nldd-breadcrumbs-item>
+        <nldd-breadcrumbs-item
+          text="Aanvragen"
+          href="#aanvragen"
+        ></nldd-breadcrumbs-item>
+        <nldd-breadcrumbs-item
+          text="Aanvraag intrekken"
+          current
+        ></nldd-breadcrumbs-item>
+      </nldd-breadcrumbs>
+      <nldd-page-footer-legal-bar slot="legal-bar">
+        <nldd-page-footer-legal-bar-item
+          slot="start"
+          text="Nederlandse Digitale Dienst"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#contact"
+          text="Contact"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#toegankelijkheid"
+          text="Toegankelijkheid"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#privacy"
+          text="Privacy"
+        ></nldd-page-footer-legal-bar-item>
+        <nldd-page-footer-legal-bar-item
+          slot="end"
+          href="#over-deze-website"
+          text="Over deze website"
+        ></nldd-page-footer-legal-bar-item>
+      </nldd-page-footer-legal-bar>
+    </nldd-page-footer>
+  </nldd-page>
+</nldd-shell>

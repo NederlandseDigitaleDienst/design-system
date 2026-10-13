@@ -1,5 +1,6 @@
 import { property } from 'lit/decorators.js';
 import { LitElement, type PropertyValues } from 'lit';
+import { reflectNonDefault } from './reflect-non-default.js';
 
 type Constructor<T = LitElement> = new (...args: any[]) => T;
 
@@ -51,6 +52,10 @@ const PADDING_KEYS = [
  * - **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's
  *   min-height (so the section is at least that tall) — mirroring how `width`
  *   maps to the body max-width.
+ * - **grow**: the section takes the height the page has left, so the footer
+ *   sits at the bottom of a short page. Without it, nldd-page lets its last
+ *   section grow. nldd-page reads this and marks the growing section with
+ *   `data-growing`; it never writes `grow`, which stays the author's.
  *
  * @example
  * ```ts
@@ -61,11 +66,14 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 	Base: TBase,
 ) {
 	class WithPageSection extends Base {
-		@property({ type: String, reflect: true })
+		@property({ reflect: true, converter: reflectNonDefault<PageSectionBackground>('inherit') })
 		background: PageSectionBackground = 'inherit';
 
 		@property({ type: String, reflect: true })
 		height?: string;
+
+		@property({ type: Boolean, reflect: true })
+		grow = false;
 
 		@property({ type: String, reflect: true, attribute: 'padding-block' })
 		paddingBlock?: PageSectionPadding;
@@ -172,6 +180,7 @@ export function PageSectionMixin<TBase extends Constructor<LitElement>>(
 				lgPaddingTop?: PageSectionPadding;
 				lgPaddingBottom?: PageSectionPadding;
 				height?: string;
+				grow: boolean;
 				_onSlotChange(e: Event): void;
 			}
 		>;

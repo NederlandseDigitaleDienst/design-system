@@ -37,9 +37,9 @@ describe('patroon: applicatie', () => {
 	});
 
 	it('zet de balk om de panelen heen, met een pagina per paneel', () => {
-		const appView = root.firstElementChild!;
-		expect(appView.tagName).toBe('NLDD-APP-VIEW');
-		const bar = appView.firstElementChild!;
+		const shell = root.firstElementChild!;
+		expect(shell.tagName).toBe('NLDD-SHELL');
+		const bar = shell.firstElementChild!;
 		expect(bar.tagName).toBe('NLDD-BAR-SPLIT-VIEW');
 		// De balk van het scherm staat buiten de panelen, in een eigen pane per
 		// breekpunt: op md met een zoekknop, vanaf lg met een zoekveld, en op sm
@@ -97,9 +97,9 @@ describe('patroon: applicatie', () => {
 		}
 	});
 
-	it('zet het detail in een sheet buiten de app view', () => {
+	it('zet het detail in een sheet buiten de shell', () => {
 		const sheet = root.querySelector('nldd-sheet')!;
-		expect(sheet.closest('nldd-app-view')).toBeNull();
+		expect(sheet.closest('nldd-shell')).toBeNull();
 		expect(sheet.querySelector('nldd-top-title-bar')!.getAttribute('text')).toBe('Dossier D-318');
 	});
 

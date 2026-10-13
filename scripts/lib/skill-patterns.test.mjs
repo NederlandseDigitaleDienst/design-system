@@ -10,6 +10,7 @@ const context = {
 test('storybookId follows how Storybook sanitizes a title', () => {
 	assert.equal(storybookId('Patronen/Bewerken in een sheet'), 'patronen-bewerken-in-een-sheet');
 	assert.equal(storybookId('Docs/Ontwerprichtlijnen'), 'docs-ontwerprichtlijnen');
+	assert.equal(storybookId("Patronen/Pagina's/Home"), 'patronen-pagina-s-home');
 });
 
 test('parsePatternStories maps each story to the markup file it renders', () => {
@@ -28,6 +29,18 @@ export const Leeg = patternStory(leeg, (root) => {});
 		title: 'Patronen/Bevestigen',
 		markup: { Standaard: 'a.html', Leeg: 'a.leeg.html' },
 	});
+});
+
+test('parsePatternStories reads a title in double quotes, for one with an apostrophe', () => {
+	const stories = `import markup from './a.html?raw';
+
+export default {
+	title: "Patronen/Pagina's/Home",
+};
+
+export const Standaard = patternStory(markup);
+`;
+	assert.equal(parsePatternStories(stories).title, "Patronen/Pagina's/Home");
 });
 
 test('parsePatternStories refuses a story that renders something other than an html file', () => {

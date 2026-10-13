@@ -67,7 +67,7 @@ export class NLDDSheet extends LitElement {
 	 * CSS length (e.g. '480px', '32rem'). Ignored on sm viewports (bottom-sheet
 	 * fallback) and for `placement="bottom"`. Clamped to `100vw - 2 * inset`.
 	 */
-	@property({ type: String, reflect: true })
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
 	/**

@@ -39,8 +39,8 @@ export const simpleSectionStyles = css`
 		display: none;
 	}
 
-	:host(:last-child),
-	:host(.is-last) {
+	:host([data-growing]),
+	:host([grow]) {
 		flex-grow: 1;
 	}
 

@@ -10,6 +10,15 @@ export function template(component: NLDDMenuBarItem) {
 	const ariaCurrent = component.current ? component.currentType : nothing;
 	const ariaHaspopup = component.expandable ? 'menu' : (component.haspopup || nothing);
 	const ariaExpanded = (component.expandable || component.haspopup) ? String(component.expanded) : nothing;
+	// The slot is always rendered, so a slotted icon is noticed when it arrives;
+	// the icon name is its fallback.
+	const icon = html`
+		<span class="menu-bar-item__icon" ?hidden=${!component.icon && !component._hasSlottedIcon}>
+			<slot name="icon" @slotchange=${component._onIconSlotChange}>
+				${component.icon ? html`<nldd-icon icon=${component.icon}></nldd-icon>` : nothing}
+			</slot>
+		</span>
+	`;
 
 	if (isLink) {
 		return html`
@@ -22,11 +31,7 @@ export function template(component: NLDDMenuBarItem) {
 				aria-haspopup=${ariaHaspopup}
 				aria-expanded=${ariaExpanded}
 			>
-				${component.icon ? html`
-					<span class="menu-bar-item__icon">
-						<nldd-icon icon=${component.icon}></nldd-icon>
-					</span>
-				` : nothing}
+				${icon}
 				<span class="menu-bar-item__text">
 					${component.text}
 				</span>
@@ -51,11 +56,7 @@ export function template(component: NLDDMenuBarItem) {
 			.popoverTargetElement=${component.popoverTargetElement}
 			.popoverTargetAction=${component.popoverTargetAction}
 		>
-			${component.icon ? html`
-				<span class="menu-bar-item__icon">
-					<nldd-icon icon=${component.icon}></nldd-icon>
-				</span>
-			` : nothing}
+			${icon}
 			<span class="menu-bar-item__text">
 				${component.text}
 			</span>

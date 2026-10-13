@@ -51,7 +51,7 @@ Drie patronen uit een typische Tailwind-setup vechten met het designsysteem en m
 
 - `*:focus-visible { outline: ... }` verdubbelt met de eigen focusring van de componenten.
 - `button, a, input, select, textarea { transition: all .15s }` vecht met de animaties van de componenten, onder andere met de geslotte `<select>` in `nldd-dropdown`.
-- `body { background-color: ... }`: `nldd-app-view` zet dat zelf op `document.body`.
+- `body { background-color: ... }`: `nldd-shell` zet dat zelf op `document.body`.
 
 Forceer verder `color-scheme: light` op de root zolang de migratie loopt. Donkere modus komt gratis met het palet, maar half omgezette schermen met `bg-white` en `text-gray-*` zijn er stuk in. Zet het pas aan als het laatste scherm om is.
 

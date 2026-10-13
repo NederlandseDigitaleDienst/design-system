@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-export const appViewStyles = css`
+export const shellStyles = css`
 	:host {
 		box-sizing: border-box;
 	}
@@ -10,10 +10,10 @@ export const appViewStyles = css`
 
 	:host {
 		--context-parent-background-color: var(--semantics-surfaces-base-background-color);
-		--_app-view-background-color: var(--context-parent-background-color);
+		--_shell-background-color: var(--context-parent-background-color);
 
 		display: flex;
-		background-color: var(--_app-view-background-color);
+		background-color: var(--_shell-background-color);
 		width: 100%;
 		height: 100%;
 	}
@@ -24,11 +24,11 @@ export const appViewStyles = css`
 
 	:host([background="tinted"]) {
 		--context-parent-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_app-view-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_shell-background-color: var(--semantics-surfaces-tinted-background-color);
 	}
 
 	/* Root-scroll mode — the DOCUMENT scrolls (see ScrollModeController +
-	   --context-scroll-mode). The app-view is the outermost DS layer, so it grows
+	   --context-scroll-mode). The shell is the outermost DS layer, so it grows
 	   with its content (min-height fills the viewport for short pages), letting a
 	   descendant nldd-page's sticky layers stick against the document. */
 	:host([data-scroll="root"]) {
@@ -39,7 +39,7 @@ export const appViewStyles = css`
 
 	/* # Block */
 
-	.app-view {
+	.shell {
 		display: flex;
 		min-width: 0;
 		min-height: 0;
@@ -52,7 +52,7 @@ export const appViewStyles = css`
 
 	/* Root-scroll mode — row axis untouched (this is a column block but a row item
 	   of the host); only stop clipping so descendant sticky layers can escape. */
-	:host([data-scroll="root"]) .app-view {
+	:host([data-scroll="root"]) .shell {
 		overflow: visible;
 	}
 

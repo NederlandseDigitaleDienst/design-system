@@ -1,0 +1,61 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './navigation-page.stories';
+
+<Meta of={Stories} />
+
+# Navigatiepagina
+
+Een navigatiepagina helpt bezoekers hun weg te vinden naar onderliggende pagina’s. De pagina kan ook uitleg of andere content bevatten, maar de nadruk ligt op de keuzes en routes die bezoekers vanaf hier kunnen volgen. Ligt de nadruk vooral op het onderwerp zelf, met uitleg en uitgelichte informatie, kies dan een [onderwerppagina](?path=/docs/patronen-pagina-s-onderwerppagina--docs).
+
+## Compositie
+
+```
+nldd-shell                            de buitenste schil
+  └─ nldd-page
+       ├─ slot="header"                  de header
+       │    └─ nldd-skip-link            om de balk heen
+       │         └─ nldd-top-navigation-bar   zoeken en taal, terug naar de home
+       ├─ nldd-one-third-two-thirds-section    met een lijst
+       │    ├─ slot="left"               de nldd-title met de h1 en een korte intro
+       │    └─ slot="right"              een nldd-list type="navigation"
+       ├─ nldd-simple-section            of, met kaarten
+       │    ├─ slot="header"             de nldd-title met de h1 en een korte intro
+       │    └─ nldd-collection           layout="grid", met een nldd-card per pagina
+       └─ slot="footer"                  nldd-page-footer
+            ├─ slot="breadcrumbs"        waar deze pagina staat
+            └─ slot="legal-bar"
+```
+
+Met een lijst:
+
+<Canvas of={Stories.Standaard} />
+
+Met kaarten:
+
+<Canvas of={Stories.Kaarten} />
+
+## Waarom zo
+
+**De pagina helpt bezoekers verder.** Een navigatiepagina helpt bezoekers kiezen waar ze verder gaan. Een korte introductie geeft context. Eventuele contentsecties staan onder de navigatie en lichten het onderwerp verder toe. De nadruk ligt op de onderliggende pagina’s: bezoekers moeten kunnen zien welke routes er zijn en welke route bij hen past. Ligt de nadruk vooral op uitleg of uitgelichte informatie over het onderwerp, dan past een [onderwerppagina](?path=/docs/patronen-pagina-s-onderwerppagina--docs) beter.
+
+**Zet de navigatie op een plek waar bezoekers die snel zien.** Bij een lijst staan de titel en korte introductie naast de navigatie. Zo zien bezoekers op een breed scherm meteen welke routes er zijn. Kies je voor kaarten, zet de titel en introductie erboven en geef de kaarten de ruimte eronder. Op een smal scherm staat de introductie in beide gevallen boven de navigatie. Houd die daarom kort.
+
+**Kies één vorm voor de navigatie.** Gebruik een lijst als de titels duidelijk maken waar een link naartoe gaat. Een lijst is rustig en makkelijk te scannen, ook als er veel pagina’s zijn. Kaarten geven keuzes meer nadruk en ruimte voor een toelichting of afbeelding. Ze passen vooral bij een klein aantal pagina’s die duidelijk van elkaar verschillen. Eventuele contentsecties volgen onder de lijst of kaarten.
+
+**Maak elke keuze één duidelijke link.** Maak de hele rij of kaart klikbaar. Zo is elke keuze één link en één tabstop. Een losse knop of link met “Lees meer” herhaalt de link en voegt een extra tabstop toe. In een lijst laat een chevron zien dat de rij naar een andere pagina leidt.
+
+**Schrijf titels die de bestemming benoemen.** Laat de titel zeggen waar de link naartoe gaat, bijvoorbeeld "Aanvraag wijzigen". Een korte toelichting kan helpen om vergelijkbare keuzes van elkaar te onderscheiden. Houd die toelichting bij de keuze zelf; de uitgebreide uitleg hoort op de pagina waar de link naartoe leidt.
+
+**Gebruik koppen op de juiste plek.** Kaarttitels zijn koppen. Als er geen andere sectiekop boven de kaarten staat, volgen ze direct op de paginatitel. Lijstrijen zijn geen koppen. Geef kaartcomponenten die je op meerdere plekken gebruikt het juiste kopniveau mee.
+
+Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbouw](?path=/docs/patronen-pagina-s-paginaopbouw--docs).
+
+## Toegankelijkheid
+
+Wat je gratis krijgt: elke rij en elke kaart is één link en één tabstop, een lijst met `type="navigation"` is een eigen navigatie, en op smal staat alles in de volgorde waarin je het leest.
+
+Wat jij nog moet doen: wat bij de [paginaopbouw](?path=/docs/patronen-pagina-s-paginaopbouw--docs) staat, een `heading-level` op elke titel, een `aria-label` op de lijst, en een titel die zonder de zin eronder ook te begrijpen is. Bij kaarten is die titel ook het `accessible-label`, dus een schermlezer die door de links springt hoort alleen die.
+
+## Gezien in
+
+De pagina [Over deze website](https://digitaledienst.overheid.nl/over/) van de Nederlandse Digitale Dienst is een navigatiepagina met de lijst: een titel, een intro van twee regels, en een rij links met een chevron naar toegankelijkheid, privacy, copyright, archivering en het melden van een kwetsbaarheid. Het kruimelpad staat in de footer.

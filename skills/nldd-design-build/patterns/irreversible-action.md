@@ -6,11 +6,7 @@
 
 # Patroon: onomkeerbare actie
 
-**Welk probleem dit oplost.** De gebruiker laten kiezen over iets dat niet terug te draaien is, op een plek waar niemand er per ongeluk op klikt.
-
-**Wanneer wel.** Als er echt geen weg terug is: een definitieve indiening, een betaling, een verwijdering zonder herstel.
-
-**Wanneer niet.** Bijna altijd. Kan de actie ongedaan worden gemaakt, doe dat dan en meld het achteraf met een herstelmogelijkheid: mensen klikken op de automatische piloot op "OK", dus een bevestiging vangt weinig fouten. Valt er niets te kiezen, dan hoeft er ook niet onderbroken te worden. Een melding zonder keuze is een [`nldd-notification`](../../nldd-design/reference.md#nldd-notification) of een [`nldd-banner`](../../nldd-design/reference.md#nldd-banner). En liever dan een modal: een [`nldd-popover`](../../nldd-design/reference.md#nldd-popover) die aan de actie vastzit en de pagina niet afdekt. De afwegingen staan in de [ontwerprichtlijnen](../../nldd-design/design-guidelines.md#feedback-en-state).
+Een bevestiging geeft iemand de kans om een actie met blijvende gevolgen nog eens te controleren. Gebruik dit patroon bijvoorbeeld voor het definitief verwijderen van gegevens of het intrekken van een aanvraag. Benoem duidelijk wat er gebeurt en geef een herkenbare mogelijkheid om te annuleren. Voor gewone, eenvoudig terug te draaien acties is een bevestiging meestal niet nodig.
 
 ## Compositie
 

@@ -87,31 +87,33 @@ nldd-rich-text[color="inherit"] figcaption {
 }
 
 /* # Child placement
-   Text reads at the main measure; everything else (components, tables,
-   code) gets the full span by default so new components automatically
-   receive room. justify-self: start makes that room available without
-   forcing it: width-100% children fill the span, the rest shrinkwraps.
+   A child belongs to the text unless it is listed: it reads at the main
+   measure, so a new component lands there too, and so does code. Media,
+   tables and a step bar get the wide accent, and what needs the room (a
+   collection, a container) gets the full span. justify-self: start makes room available without
+   forcing it: width-100% children fill their span, the rest shrinkwraps.
    In the left-aligned layout the full/wide start lines collapse onto
    main-start, so `full` and `wide` read as rightward bleed there and as
    symmetric spans in [centered]. */
 
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) {
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) {
 	display: contents;
 }
 
 nldd-rich-text > *,
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > * {
-	grid-column: full;
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > * {
+	grid-column: main;
 	justify-self: start;
+	max-width: 100%;
 }
 
 nldd-rich-text[centered] > *,
-nldd-rich-text[centered] > div:only-child:not([class], [style], [role], [data-width]) > * {
+nldd-rich-text[centered] > div:only-child:not([class], [style], [role], [data-rich-text-width]) > * {
 	justify-self: center;
 }
 
 nldd-rich-text > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote),
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote) {
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, div, section, blockquote) {
 	grid-column: main;
 	/* Fill the main column so short text blocks keep a shared left edge —
 	   justify-self: center would otherwise float a shrinkwrapped heading
@@ -121,42 +123,45 @@ nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :i
 	width: 100%;
 }
 
-/* nldd-table stays on the generic full default; use data-width to
-   override per table. */
-nldd-rich-text > :is(img, figure, video, iframe, table),
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(img, figure, video, iframe, table) {
+nldd-rich-text > :is(img, figure, video, iframe, table, nldd-table, nldd-image, nldd-step-bar),
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(img, figure, video, iframe, table, nldd-table, nldd-image, nldd-step-bar) {
 	grid-column: wide;
 }
 
+nldd-rich-text > :is(hr, nldd-collection, nldd-container),
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(hr, nldd-collection, nldd-container) {
+	grid-column: full;
+}
+
 nldd-rich-text > :is(pre, nldd-code-viewer),
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(pre, nldd-code-viewer) {
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(pre, nldd-code-viewer) {
 	width: 100%;
 }
 
 /* Per-item override for editors; wins on specificity from every default
    above. */
-nldd-rich-text > [data-width="main"],
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > [data-width="main"] {
+nldd-rich-text > [data-rich-text-width="main"],
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > [data-rich-text-width="main"] {
 	grid-column: main;
 }
 
-nldd-rich-text > [data-width="wide"],
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > [data-width="wide"] {
+nldd-rich-text > [data-rich-text-width="wide"],
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > [data-rich-text-width="wide"] {
 	grid-column: wide;
 }
 
-nldd-rich-text > [data-width="full"],
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > [data-width="full"] {
+nldd-rich-text > [data-rich-text-width="full"],
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > [data-rich-text-width="full"] {
 	grid-column: full;
 }
 
 nldd-rich-text > :first-child,
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :first-child {
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :first-child {
 	margin-top: 0;
 }
 
 nldd-rich-text > :last-child,
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :last-child {
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :last-child {
 	margin-bottom: 0;
 }
 
@@ -176,6 +181,7 @@ nldd-rich-text *:focus:not(:focus-visible) {
 nldd-rich-text :is(h1, h2, h3, h4, h5, h6) {
 	margin-top: var(--_rich-text-spacing);
 	margin-bottom: 0;
+	overflow-wrap: break-word;
 	text-wrap: balance;
 }
 
@@ -183,102 +189,42 @@ nldd-rich-text :is(h1, h2, h3, h4, h5, h6) {
 /* # Heading 1 */
 
 nldd-rich-text h1 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-1-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-1-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-1-lg);
-	}
+	font: var(--primitives-font-display-1-sm);
 }
 
 
 /* # Heading 2 */
 
 nldd-rich-text h2 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-2-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-2-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-2-lg);
-	}
+	font: var(--primitives-font-display-2-sm);
 }
 
 
 /* # Heading 3 */
 
 nldd-rich-text h3 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-3-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-3-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-3-lg);
-	}
+	font: var(--primitives-font-display-3-sm);
 }
 
 
 /* # Heading 4 */
 
 nldd-rich-text h4 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-4-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-4-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-4-lg);
-	}
+	font: var(--primitives-font-display-4-sm);
 }
 
 
 /* # Heading 5 */
 
 nldd-rich-text h5 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-5-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-5-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-5-lg);
-	}
+	font: var(--primitives-font-display-5-sm);
 }
 
 
 /* # Heading 6 */
 
 nldd-rich-text h6 {
-	@container (max-width: 640px) {
-		font: var(--primitives-font-display-6-sm);
-	}
-
-	@container (min-width: 641px) and (max-width: 1007px) {
-		font: var(--primitives-font-display-6-md);
-	}
-
-	@container (min-width: 1008px) {
-		font: var(--primitives-font-display-6-lg);
-	}
+	font: var(--primitives-font-display-6-sm);
 }
 
 
@@ -322,7 +268,7 @@ nldd-rich-text ol {
 }
 
 nldd-rich-text > :is(ul, ol),
-nldd-rich-text > div:only-child:not([class], [style], [role], [data-width]) > :is(ul, ol) {
+nldd-rich-text > div:only-child:not([class], [style], [role], [data-rich-text-width]) > :is(ul, ol) {
 	margin-block: calc(var(--_rich-text-spacing) / -2);
 }
 
@@ -336,7 +282,7 @@ nldd-rich-text ol > li > ol {
 nldd-rich-text li {
 	margin: calc(var(--_rich-text-spacing) / 2) 0;
 	padding: 0;
-	/* Zelfde vangnet als p: lange strings breken i.p.v. overlopen. */
+	/* Same safety net as p: long strings break instead of overflowing. */
 	overflow-wrap: break-word;
 	text-wrap: pretty;
 }

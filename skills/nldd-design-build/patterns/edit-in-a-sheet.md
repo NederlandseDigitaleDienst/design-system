@@ -6,11 +6,7 @@
 
 # Patroon: bewerken in een sheet
 
-**Welk probleem dit oplost.** Bewerken of details laten zien, zonder de gebruiker weg te halen van waar het werk begon. De pagina, met bijvoorbeeld een lijst, blijft in beeld, dus de context blijft staan.
-
-**Wanneer wel.** Secundaire inhoud die de context moet bewaren: een bewerkformulier, een detailweergave, een filterpaneel, instellingen.
-
-**Wanneer niet.** Kom je na het bewerken niet terug op de pagina waar je begon, dan is de context die de sheet bewaart niets waard: maak er een eigen pagina van, of een flow van meerdere pagina’s. Een sheet is een zijstap. Voor een korte en simpele bevestiging is een sheet te zwaar. Voor een klein paneel dat aan één knop hangt gebruik je een [`nldd-popover`](../../nldd-design/reference.md#nldd-popover). Gebruik een [menu](menu-from-a-button.md) als het gaat om een lijst met keuzes of acties.
+Met een sheet kan iemand iets aanpassen zonder de pagina waarop diegene werkt te verlaten. Gebruik deze vorm voor een korte, afgebakende bewerking waarbij de huidige context van belang blijft. Is de bewerking uitgebreid of vraagt die om veel uitleg, kies dan een aparte pagina.
 
 ## Compositie
 
@@ -46,6 +42,7 @@ nldd-sheet                     open, placement, width; in de document-root
           text="Aanvraag A-1042"
           supporting-text="Dakisolatie, in behandeling"
         ></nldd-text-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"
@@ -57,6 +54,7 @@ nldd-sheet                     open, placement, width; in de document-root
           text="Aanvraag A-1043"
           supporting-text="Warmtepomp, afgerond"
         ></nldd-text-cell>
+        <nldd-spacer-cell size="12"></nldd-spacer-cell>
         <nldd-icon-cell
           size="20"
           color="secondary"

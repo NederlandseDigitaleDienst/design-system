@@ -6,11 +6,7 @@
 
 # Patroon: werkbalk met acties
 
-**Welk probleem dit oplost.** Een rij acties boven een scherm of paneel, die ook op een smal scherm bereikbaar blijft, zonder dat je zelf mediaqueries schrijft of knoppen verstopt.
-
-**Wanneer wel.** Een scherm of paneel met meer dan twee acties die over alles gaan wat er staat: iets nieuws maken, filteren, exporteren, van weergave wisselen.
-
-**Wanneer niet.** Horen de acties bij één rij, dan horen ze in die rij, zie [lijst](list.md). Is er maar één actie, zet dan een knop neer.
+Een werkbalk bundelt acties die gelden voor een heel scherm of paneel, zoals iets nieuws maken, filteren, exporteren of van weergave wisselen. Gebruik de werkbalk als er meerdere van zulke acties zijn en ze ook op een smal scherm bereikbaar moeten blijven. Gaat een actie over één rij, plaats die dan bij die rij in de [lijst](list.md). Is er maar één actie, gebruik dan een losse knop.
 
 ## Compositie
 

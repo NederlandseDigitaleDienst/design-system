@@ -18,10 +18,10 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
 
 ## Minimale pagina
 
-`nldd-app-view` is de app-shell: die zet de kleurschema-context. De documenttypografie komt uit de stylesheet, die de `body` het documentfont geeft zodra er een app-view op de pagina staat. Plaats je inhoud erin.
+`nldd-shell` is de app-shell: die zet de kleurschema-context. De documenttypografie komt uit de stylesheet, die de `body` het documentfont geeft zodra er een shell op de pagina staat. Plaats je inhoud erin.
 
 ```html
-<nldd-app-view>
+<nldd-shell>
   <nldd-page>
     <nldd-container
       padding="16"
@@ -60,7 +60,7 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
       </nldd-form>
     </nldd-container>
   </nldd-page>
-</nldd-app-view>
+</nldd-shell>
 ```
 
 Let op:

@@ -9,18 +9,30 @@
  * The rich text lays out its direct children in a grid: the vertical rhythm
  * between headings, paragraphs and lists, and the width zones below, apply to
  * those children only. A single wrapper `div` without `class`, `style`, `role`
- * or `data-width`, as a markdown renderer or a component root produces it, is
+ * or `data-rich-text-width`, as a markdown renderer or a component root produces it, is
  * passed through with `display: contents`, so its children count as direct.
  * Any other wrapper becomes a single grid item, and the paragraphs inside it
  * lose their spacing.
  *
+ * ## Headings
+ * The headings keep one size on every width, the one they have on a phone. A
+ * heading in running text sits in a column as wide as a line of reading, on
+ * any screen, so its relation to the text beside it does not change and it has
+ * no reason to grow. Growing, an h2 on a wide screen was more than twice the
+ * size of the text, and an article broke into blocks at every heading. Page
+ * and section titles do grow: use nldd-title for those.
+ *
  * ## Width zones
- * Children are placed in three zones: text (headings, paragraphs, lists,
- * blockquote, div/section) reads at the `main` size; media and tables (img,
- * figure, video, iframe, table) get the `wide` accent; everything else, code
- * blocks and every component, gets the full `full` span with
- * `justify-self: start`, so the room is available without being forced.
- * Overridable per child with `data-width="main" | "wide" | "full"`. In the
+ * Children are placed in three zones. A child belongs to the text unless it is
+ * listed, so it reads at the `main` size and is never wider than a line: text
+ * (headings, paragraphs, lists, blockquote, div/section) and every component
+ * that is not named below, such as nldd-box, nldd-card, nldd-banner,
+ * nldd-list and a button, and code (pre, nldd-code-viewer), which scrolls
+ * inside its block when a line is longer. Media, tables and a step bar (img, figure, video, iframe,
+ * table, nldd-table, nldd-image, nldd-step-bar) get the `wide` accent. What
+ * needs the room gets the `full` span: hr, nldd-collection and nldd-container. A child takes the room it needs inside its zone
+ * (`justify-self: start`), so the room is available without being forced.
+ * Overridable per child with `data-rich-text-width="main" | "wide" | "full"`. In the
  * left-aligned layout, wide and full read as a bleed to the right; with
  * `centered` they are symmetrical.
  *
@@ -36,11 +48,12 @@
  * @attr {boolean} centered - Centers the main column inside the container; without it, content is left-aligned
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} hyphens - Opt-in automatic hyphenation for running text (p,
- *   li, dd). Needs a correct `lang` on the page (`lang="nl"` on `<html>`, for
- *   instance): without language information the browser does not hyphenate. An
- *   `overflow-wrap: break-word` safety net on p/li is always on, independent of
- *   this attribute, so long URLs and compounds break neatly instead of
- *   overflowing even without a dictionary.
+ *   li, dd). Needs a correct
+ *   `lang` on the page (`lang="nl"` on `<html>`, for instance): without
+ *   language information the browser does not hyphenate. An
+ *   `overflow-wrap: break-word` safety net on headings, p and li is always on,
+ *   independent of this attribute, so a word wider than the column breaks
+ *   instead of overflowing, without a hyphen; headings never get one.
  */
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';

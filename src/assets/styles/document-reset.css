@@ -6,8 +6,8 @@
 		text-size-adjust: 100%;
 	}
 
-	html:has(nldd-app-view),
-	html:has(nldd-app-view) body {
+	html:has(nldd-shell),
+	html:has(nldd-shell) body {
 		margin: 0;
 		height: 100%;
 	}
@@ -16,7 +16,7 @@
 	   consumer writes in the light DOM fell back to the browser default, so every
 	   app solved it with its own `body { font: … }`, each one slightly different.
 	   Inside @layer reset, so any consumer rule beats it without effort. */
-	html:has(nldd-app-view) body {
+	html:has(nldd-shell) body {
 		font: var(--primitives-font-body-md-regular-snug);
 		color: var(--semantics-content-color);
 	}

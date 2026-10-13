@@ -278,6 +278,43 @@ export const Decoratief = {
 	parameters: { controls: { disable: true } },
 };
 
+/**
+ * Zonder beeld (geen `src`, `srcset`, `lqip` of geslotte media) toont de
+ * afbeelding een neutraal vlak met een icoon, in dezelfde verhouding, vorm en
+ * met hetzelfde bijschrift als een echte afbeelding. Zo klopt de compositie van
+ * een prototype of een patroon al voordat er beeld is, en valt een vergeten
+ * afbeelding op. Zonder `aspect-ratio` is het vlak 16/9.
+ */
+export const ZonderBeeld = {
+	name: 'Zonder beeld',
+	render: () => html`
+		<div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;">
+			<div style="width: 320px;">
+				<nldd-image></nldd-image>
+			</div>
+			<div style="width: 200px;">
+				<nldd-image
+					aspect-ratio="1/1"
+					shape="rounded"
+				></nldd-image>
+			</div>
+			<div style="width: 120px;">
+				<nldd-image
+					aspect-ratio="1/1"
+					shape="circle"
+				></nldd-image>
+			</div>
+			<div style="width: 320px;">
+				<nldd-image
+					aspect-ratio="4/3"
+					caption="Een bijschrift blijft gewoon staan."
+				></nldd-image>
+			</div>
+		</div>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
 export const EigenImgInDeSlot = {
 	name: 'Eigen img in de slot',
 	render: () => html`
@@ -299,18 +336,21 @@ export const EigenImgInDeSlot = {
 };
 
 /**
- * CSS-only multi-color Low Quality Image Placeholder — geïnspireerd op
+ * Een laadvoorbeeld: een vage voorproef in de kleuren van de echte foto, zolang
+ * die laadt. Het is een CSS-only multi-color LQIP (low-quality image
+ * placeholder), geïnspireerd op
  * https://leanrada.com/notes/css-only-lqip/, uitgebreid met per-cel kleur
  * (Lean's originele encoding heeft alleen grijswaarde-cellen rondom één
  * dominante hue). Onze versie encodeert 7 bytes: een base color + 6 per-cel
  * Oklab kleuren in een 3×2 raster. Zichtbaar tot het echte beeld is geladen.
  *
- * Links: alleen de placeholder (geen src) zodat je het LQIP gradient los ziet.
- * Rechts: met src — placeholder is even zichtbaar en wordt overlapt zodra de
- * afbeelding geladen is.
+ * Links: alleen het laadvoorbeeld (geen src), zodat je het kleurverloop los
+ * ziet. Rechts: met src, waar het laadvoorbeeld even zichtbaar is en verdwijnt
+ * zodra de afbeelding geladen is. Zonder `lqip` toont een afbeelding die laadt
+ * een neutraal vlak.
  */
-export const PlaceholderMetLqip = {
-	name: 'Placeholder met LQIP',
+export const Laadvoorbeeld = {
+	name: 'Laadvoorbeeld (LQIP)',
 	render: () => html`
 		<div style="display: flex; gap: 24px; flex-wrap: wrap;">
 			<div style="width: 320px;">
@@ -340,7 +380,7 @@ export const PlaceholderMetLqip = {
  * toont het component een fallback: een icoon + de alt-tekst in een kleine
  * neutrale container, met de neutrale media-achtergrond erachter. Een
  * eventueel gezet `lqip` gradient wordt verborgen in error state — de
- * placeholder dient alleen tijdens het laden, niet ná een mislukking.
+ * laadvoorbeeld dient alleen tijdens het laden, niet ná een mislukking.
  *
  * Een decoratieve afbeelding (`decorative`) toont alleen het icoon, geen tekst.
  */
@@ -375,7 +415,7 @@ export const AfbeeldingLaadtNiet = {
  * van `nldd-image`.
  *
  * Mocht de [originele tool van Lean Rada](https://leanrada.com/notes/css-only-lqip/)
- * ooit offline gaan, dan kun je je placeholders nog steeds genereren met dit
+ * ooit offline gaan, dan kun je je laadvoorbeelden nog steeds genereren met dit
  * lokale alternatief.
  */
 export const LqipEncoder = {

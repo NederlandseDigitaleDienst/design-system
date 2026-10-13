@@ -218,9 +218,9 @@
       "types": "./dist/components/inputs/token-field/token-field.d.ts",
       "default": "./dist/components/inputs/token-field/token-field.js"
     },
-    "./app-view": {
-      "types": "./dist/components/layout/app-view/app-view.d.ts",
-      "default": "./dist/components/layout/app-view/app-view.js"
+    "./shell": {
+      "types": "./dist/components/layout/shell/shell.d.ts",
+      "default": "./dist/components/layout/shell/shell.js"
     },
     "./bar-split-view": {
       "types": "./dist/components/layout/split-views/bar-split-view/bar-split-view.d.ts",
