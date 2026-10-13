@@ -10,6 +10,7 @@ export function template(component: NLDDSkipLink) {
 			${safeHref ? html`
 				<a class="skip-link__control"
 					href=${safeHref}
+					@click=${component._handleLinkClick}
 				>
 					${component._text}
 				</a>

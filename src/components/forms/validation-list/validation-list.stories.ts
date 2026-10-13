@@ -81,6 +81,7 @@ export const Standaard = ({ hint, judging, for: control }: Record<string, unknow
 		<nldd-password-field
 			id="password"
 			name="password"
+			value="geheim"
 			?invalid=${judging}
 		></nldd-password-field>
 		<nldd-validation-list
@@ -100,6 +101,7 @@ export const AlleenBijEenFout = () => html`
 	<nldd-form-field label="Telefoonnummer">
 		<nldd-text-field
 			name="phone"
+			value="06 twaalf"
 			invalid
 		></nldd-text-field>
 		<nldd-validation-list>
@@ -110,8 +112,9 @@ export const AlleenBijEenFout = () => html`
 `;
 
 /**
- * `required` is de enige regel die een lege waarde niet haalt. Op een leeg veld
- * zie je dus die ene regel, en niet meteen alle andere.
+ * Zonder `required` laat de lijst een leeg veld met rust, zoals het native
+ * `pattern` en `minlength` dat doen. Met `required`, op een item of op de
+ * control, moet er een waarde zijn en gelden ook de andere regels op leeg.
  */
 export const VerplichtVeld = () => html`
 	<nldd-form-field label="Nieuw wachtwoord">
@@ -243,7 +246,10 @@ export const MetFor = () => html`
 export const NaastHelpTekst = () => html`
 	<nldd-form>
 		<nldd-form-field label="E-mailadres">
-			<nldd-text-field name="email"></nldd-text-field>
+			<nldd-text-field
+				name="email"
+				required
+			></nldd-text-field>
 			<nldd-validation-list>
 				<nldd-validation-item id="email-at" match="@">Een apenstaartje</nldd-validation-item>
 			</nldd-validation-list>
@@ -272,6 +278,7 @@ export const VerankerdPatroon = () => html`
 			<nldd-text-field
 				name="postal-code"
 				width="160px"
+				required
 			></nldd-text-field>
 			<nldd-validation-list>
 				<nldd-validation-item id="postal-code-format" match="^[0-9]{4} ?[A-Za-z]{2}$">Vier cijfers en dan twee letters, zoals 1234 AB</nldd-validation-item>

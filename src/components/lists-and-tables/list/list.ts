@@ -44,7 +44,12 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  *   it is false. Visual indentation is the consumer's — repeat a
  *   spacer-cell per level. Comes with its own keyboard, see "Tree" below.
  * - `navigation` — host `role="navigation"`, items with `selected` get
- *   `aria-current="page"` on their inner `<a>` or `<button>`.
+ *   `aria-current="page"` on their inner `<a>` or `<button>`. Sub-pages go
+ *   in their parent row's `slot="children"`, which the item renders as a
+ *   list inside the list item, so a screen reader hears the level and how
+ *   many there are. They are always shown and the arrows walk them like any
+ *   other row; a spacer-cell alone indents but says nothing. Visual
+ *   indentation is still the consumer's.
  * - `form` — rows that are not actions themselves: the controls inside them
  *   are. A row of a label and a field, a switch, a menu button, or a value you
  *   cannot change at all. Semantically the same as `list` (`role="list"`,
@@ -501,7 +506,7 @@ export class NLDDList extends LitElement {
 	private _getPaintedRows(rows = this._getItems()): NLDDListItem[] {
 		return rows
 			.filter(row => !row.hasAttribute('hidden'))
-			.flatMap(row => (row.expanded ? [row, ...this._getPaintedRows(row.childRows)] : [row]));
+			.flatMap(row => (row._childrenOpen ? [row, ...this._getPaintedRows(row.childRows)] : [row]));
 	}
 
 	private _updateItems() {

@@ -81,6 +81,40 @@ describe('nldd-code-viewer', () => {
 		expect(content.textContent).toContain('b: 2');
 	});
 
+	// A long file in a frame of its own. With `wrap` nothing overflows sideways,
+	// so the scroller used to stay out of the tab order while it scrolled
+	// vertically (axe: scrollable-region-focusable, WCAG 2.1.1).
+	it('max-height caps the block, and the scroller that overflows is a named tab stop', async () => {
+		const lines = Array.from({ length: 80 }, (_, i) => `regel: ${i}`).join('\n');
+		el = await fixture(`<nldd-code-viewer wrap max-height="200px">${lines}</nldd-code-viewer>`);
+		await waitForUpdate(el);
+		const block = el.shadowRoot!.querySelector('.code-viewer') as HTMLElement;
+		const scroller = el.shadowRoot!.querySelector('.cm-scroller') as HTMLElement;
+		expect(block.getBoundingClientRect().height).toBeLessThanOrEqual(200);
+		await expect.poll(() => scroller.getAttribute('tabindex')).toBe('0');
+		expect(scroller.scrollHeight).toBeGreaterThan(scroller.clientHeight);
+		expect(scroller.getAttribute('role')).toBe('region');
+		expect(scroller.getAttribute('aria-label')).toBeTruthy();
+	});
+
+	it('max-height without a unit is ignored, with a warning', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-code-viewer max-height="40">a: 1</nldd-code-viewer>');
+		await waitForUpdate(el);
+		expect(el.style.getPropertyValue('--_code-viewer-max-height')).toBe('');
+		expect(warn.mock.calls.flat().join(' ')).toContain('max-height="40"');
+		warn.mockRestore();
+	});
+
+	it('max-height leaves a short block at its own height, without a tab stop', async () => {
+		el = await fixture('<nldd-code-viewer wrap max-height="200px">a: 1</nldd-code-viewer>');
+		await waitForUpdate(el);
+		const block = el.shadowRoot!.querySelector('.code-viewer') as HTMLElement;
+		const scroller = el.shadowRoot!.querySelector('.cm-scroller') as HTMLElement;
+		expect(block.getBoundingClientRect().height).toBeLessThan(200);
+		expect(scroller.hasAttribute('tabindex')).toBe(false);
+	});
+
 	it('reflects the wrap attribute', async () => {
 		el = await fixture('<nldd-code-viewer wrap>x</nldd-code-viewer>');
 		await waitForUpdate(el);
@@ -215,6 +249,30 @@ describe('nldd-code-viewer', () => {
 			const tooltip = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-tooltip');
 			expect(tooltip!.getAttribute('text')).toBe('Kopiëren mislukt');
 		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
+	it('a failure outlasts the feedback duration and clears on blur', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) }, configurable: true });
+		vi.useFakeTimers();
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const litEl = el as HTMLElement & { updateComplete: Promise<boolean> };
+			await litEl.updateComplete;
+			await (el as unknown as NLDDCodeViewer)._onCopyClick();
+			await litEl.updateComplete;
+			await vi.advanceTimersByTimeAsync(2100);
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('failure');
+
+			const iconBtn = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-icon-button')!;
+			iconBtn.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true }));
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
+		} finally {
+			vi.useRealTimers();
 			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
 		}
 	});

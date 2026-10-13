@@ -237,13 +237,13 @@ describe('nldd-sidebar-section', () => {
 	it('sidebar-label defaults to the i18n value', async () => {
 		await make();
 		await setWidth(1200);
-		expect(el.shadowRoot!.querySelector('.sidebar-section__sidebar')!.getAttribute('aria-label')).toBe('Zijbalk');
+		expect(el.shadowRoot!.querySelector('aside')!.getAttribute('aria-label')).toBe('Zijbalk');
 	});
 
 	it('sidebar-label is overridable', async () => {
 		await make('sidebar-label="Filters"');
 		await setWidth(1200);
-		expect(el.shadowRoot!.querySelector('.sidebar-section__sidebar')!.getAttribute('aria-label')).toBe('Filters');
+		expect(el.shadowRoot!.querySelector('aside')!.getAttribute('aria-label')).toBe('Filters');
 	});
 
 	it('a CSS-length width feeds the body max-width', async () => {

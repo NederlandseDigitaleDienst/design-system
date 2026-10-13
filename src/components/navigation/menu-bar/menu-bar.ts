@@ -319,6 +319,9 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 			const menuItem = document.createElement('nldd-menu-item');
 			menuItem.setAttribute('text', item.text);
 			if (item.icon) menuItem.setAttribute('icon', item.icon);
+			// A link stays a link in the menu: nldd-menu-item renders an <a> for
+			// an href, and only that <a> carries aria-current for `selected`.
+			if (item.href) menuItem.setAttribute('href', item.href);
 			if (item.current) menuItem.setAttribute('selected', '');
 			if (item.disabled) menuItem.setAttribute('disabled', '');
 
@@ -354,8 +357,20 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 				}
 			}
 
-			menuItem.addEventListener('click', () => {
-				item.click();
+			menuItem.addEventListener('click', (event) => {
+				if (!item.href) {
+					item.click();
+					return;
+				}
+				// The link in the menu navigates by itself. The original still
+				// hears the click, so a router listening there can take over and
+				// cancel the navigation, as it does in the bar. With the button and
+				// the modifier keys of the real click, so a router that leaves a
+				// Cmd-click alone still does and the link opens in a new tab.
+				const { button, ctrlKey, metaKey, shiftKey, altKey } = event as MouseEvent;
+				const forwarded = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true, button, ctrlKey, metaKey, shiftKey, altKey });
+				item.dispatchEvent(forwarded);
+				if (forwarded.defaultPrevented) event.preventDefault();
 			});
 			this._overflowMenu!.appendChild(menuItem);
 		}

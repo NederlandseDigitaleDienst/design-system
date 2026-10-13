@@ -40,6 +40,12 @@ export default {
 			description: 'De twee `box`-waarden zijn een framed card met afgeronde hoeken + border ring en verschillen in de surface die ze vullen; `box-base` staat op een al getinte parent (border ring krijgt +2 stappen voor extra contrast). `simple` = geen chrome (geen kader, padding of border), voor inbedding in een eigen wrapper.',
 			table: { defaultValue: { summary: 'box-tinted' } },
 		},
+		maxHeight: {
+			name: 'max-height',
+			control: 'text',
+			description: 'Grootste hoogte van het blok, als CSS-lengte (bijvoorbeeld `400px` of `50vh`). Daarboven scrollt de inhoud verticaal.',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
 		content: {
 			control: 'text',
 			description: 'Code-inhoud (slot)',
@@ -64,6 +70,7 @@ export default {
 	},
 	args: {
 		appearance: 'box-tinted',
+		maxHeight: '',
 		content: DEFAULT_CONTENT,
 		language: '',
 		copy: true,
@@ -74,6 +81,7 @@ export default {
 const Template = (args: Record<string, any>) => html`
 	<nldd-code-viewer
 		appearance=${args.appearance}
+		max-height=${args.maxHeight || nothing}
 		language=${args.language || nothing}
 		?no-copy=${!args.copy}
 		?wrap=${args.wrap}
@@ -110,6 +118,22 @@ export const MetWrap = {
 		content: `function deeplyNestedFunctionWithAVeryLongNameThatExceedsTheTypicalContainerWidth(parameterOne, parameterTwo, parameterThree) {
   return parameterOne + parameterTwo + parameterThree;
 }`,
+	},
+};
+
+/**
+ * Een lang bestand in een eigen kader. Het blok groeit mee tot `max-height` en
+ * scrollt daarboven. De scroller staat dan in de tabvolgorde, met een rol en een
+ * naam, zodat je er ook met het toetsenbord doorheen komt.
+ */
+export const MetMaxHeight = {
+	name: 'Met max-height',
+	render: Template,
+	args: {
+		maxHeight: '240px',
+		language: 'yaml',
+		wrap: true,
+		content: Array.from({ length: 40 }, (_, i) => `aanvraag_${1042 + i}:\n  status: in behandeling\n  team: Uitvoering`).join('\n'),
 	},
 };
 

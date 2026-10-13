@@ -179,7 +179,7 @@ const NESTED_CONTROLS = [
  * @attr {boolean} divider-end - The divider stops after this cell. With several markers the line runs from the first start to the last end.
  *
  * @slot - Cells and segments, in source order. Anything else, bare text included, gets none of a cell's typography, size and alignment, and warns in development.
- * @slot children - Child rows of a branch in an `nldd-list type="tree"`. Rendered as a `role="group"` below the row, hidden while `expanded` is false. The nesting IS the hierarchy, so aria-level / -posinset / -setsize are derived, not authored. The group has no styling of its own: repeat a spacer-cell per level to indent, or show depth some other way.
+ * @slot children - Child rows of this row, in an `nldd-list type="tree"` or `type="navigation"`. In a tree they render as a `role="group"` below the row, hidden while `expanded` is false. In a navigation list they are the sub-pages: a `role="list"` inside this list item, always shown, and without the tree's keyboard. For sub-pages that fold away, use a tree. Either way the nesting IS the hierarchy, so a screen reader reads the level from it and nothing is authored. The group has no styling of its own: repeat a spacer-cell per level to indent, or show depth some other way.
  *
  * @fires change - On a `checkbox` row after it toggles, and on a `radio` row when it becomes checked; detail: { checked: boolean }
  */
@@ -323,6 +323,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	private _warnedDegenerateDivider = false;
 
 	private _warnedChildrenOutsideTree = false;
+	private _warnedExpandedInNavigation = false;
+	private _warnedStrayExpanded = false;
 	private _warnedStrayContent = false;
 	private _warnedNestedControl = false;
 
@@ -608,10 +610,27 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 * attribute keeps its other meaning: this row discloses nothing, emit no
 	 * aria-expanded at all. Without this split, `?expanded=\${false}` (which
 	 * removes the attribute) would leave a branch that never collapses.
+	 *
+	 * A navigation list is the exception. Its sub-pages are always shown, so a
+	 * row with children discloses nothing there and emits no aria-expanded,
+	 * whatever `expanded` says: "collapsed" next to visible children would be
+	 * a contradiction.
 	 */
 	private get _resolvedExpanded(): boolean | undefined {
+		if (this._showChildren && this._parentType === 'navigation') return undefined;
 		if (this._showChildren) return this.expanded === true;
 		return this.expanded;
+	}
+
+	/**
+	 * Whether the child rows are on screen. A tree branch is closed until it
+	 * says `expanded`. In a navigation list the sub-pages are always there: it
+	 * has no branches to open, which is what sets it apart from a tree.
+	 *
+	 * @internal Read by the list, which walks the rows that paint.
+	 */
+	get _childrenOpen(): boolean {
+		return this._parentType === 'navigation' || this.expanded === true;
 	}
 
 	/** Segments marked `disclosure` announce the row's expanded state, so the
@@ -625,8 +644,17 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	private _warnOnStrayExpanded(): void {
 		if (!import.meta.env?.DEV) return;
 		if (this.expanded === undefined) return;
+		if (this._showChildren && this._parentType === 'navigation') {
+			if (this._warnedExpandedInNavigation) return;
+			this._warnedExpandedInNavigation = true;
+			console.warn('nldd-list-item: `expanded` does nothing on a row with sub-pages in an nldd-list with type="navigation": they are always shown, so the attribute is ignored. Use type="tree" for sections that fold away.');
+			return;
+		}
 		if (this.href || this.button || this.checkbox) return;
 		if (this._ownDescendants('nldd-list-item-segment[disclosure]').length > 0) return;
+		// Once per row: this also runs on every change to the row's children.
+		if (this._warnedStrayExpanded) return;
+		this._warnedStrayExpanded = true;
 		console.warn('nldd-list-item: `expanded` needs somewhere to live — make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.');
 	}
 
@@ -877,10 +905,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			});
 		}
 		if (!import.meta.env?.DEV) return;
+		this._warnOnStrayExpanded();
 		// Once per row: slotchange runs this again on every change to the branch.
-		if (this._showChildren && this._parentType !== 'tree' && !this._warnedChildrenOutsideTree) {
+		if (this._showChildren && this._parentType !== 'tree' && this._parentType !== 'navigation' && !this._warnedChildrenOutsideTree) {
 			this._warnedChildrenOutsideTree = true;
-			console.warn('nldd-list-item: `slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree". Elsewhere the group has no owning tree and assistive technology cannot read the hierarchy.');
+			console.warn('nldd-list-item: `slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree" or type="navigation". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.');
 		}
 	}
 
@@ -1173,6 +1202,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this._showChildren,
 			this._hasCheckedSegment,
 			this.disabled,
+			this._parentType === 'navigation' ? 'list' : 'group',
+			this._childrenOpen,
 		);
 	}
 }

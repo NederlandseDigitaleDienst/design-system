@@ -270,4 +270,30 @@ describe('nldd-menu-bar-item – icon slot', () => {
 		await waitForUpdate(el);
 		expect(iconArea().hidden).toBe(true);
 	});
+	it('laat een compact item zonder icoon zijn tekst houden, zonder aria-label of tooltip', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Zoeken" content-priority="icon" compact></nldd-menu-bar-item>');
+		await waitForUpdate(el);
+		// Nothing to fall back on, so the text stays visible and is the name.
+		expect(el.shadowRoot!.querySelector('.menu-bar-item')!.hasAttribute('aria-label')).toBe(false);
+		expect(el.shadowRoot!.querySelector('nldd-tooltip')!.getAttribute('text')).toBeNull();
+	});
+
+	it('toont de tekst als tooltip zodra alleen het icoon zichtbaar is', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Zoeken" icon="search" content-priority="icon"></nldd-menu-bar-item>');
+		await waitForUpdate(el);
+		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
+		expect(tooltip.getAttribute('text')).toBeNull();
+		// The wrapper takes no box and adds no description: the control already
+		// carries the text as its name, and a second copy would be read twice.
+		expect(getComputedStyle(tooltip).display).toBe('contents');
+		const control = el.shadowRoot!.querySelector('.menu-bar-item')!;
+		expect(control.hasAttribute('aria-describedby')).toBe(false);
+
+		el.toggleAttribute('compact', true);
+		await waitForUpdate(el);
+		expect(tooltip.getAttribute('text')).toBe('Zoeken');
+		expect(control.hasAttribute('aria-describedby')).toBe(false);
+		// Same control as before: turning compact must not replace it.
+		expect(el.shadowRoot!.querySelector('nldd-tooltip')).toBe(tooltip);
+	});
 });

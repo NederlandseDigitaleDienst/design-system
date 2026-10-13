@@ -7,6 +7,11 @@
  * Whitespace is preserved; long lines scroll horizontally by default. Set
  * `wrap` to break long lines onto the next visual line.
  *
+ * The viewer grows with its content. Set `max-height` to show a long file in
+ * a frame of its own: the block grows up to that height and scrolls beyond it.
+ * A scroller that overflows, in either direction, is a tab stop with a role
+ * and a name, so the keyboard reaches what a pointer can scroll to.
+ *
  * ## Syntax highlighting
  * Set `language` to one of the supported grammars (yaml, json, javascript,
  * typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql,
@@ -25,6 +30,7 @@
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.
  * @attr {boolean} no-copy - Hide the copy-to-clipboard button (shown by default).
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
+ * @attr {string} max-height - Tallest the block may get, as a CSS length (e.g. '400px', '50vh'). Beyond it the content scrolls vertically. Unset means no cap.
  * @attr {object} translations - Override translation keys (e.g. the copy button
  *   labels and the scroll-region label); unset keys fall back to Dutch.
  *
@@ -80,6 +86,9 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 
 	@property({ type: Boolean, reflect: true })
 	wrap = false;
+
+	@property({ reflect: true, attribute: 'max-height', converter: reflectNonDefault<string>('') })
+	maxHeight = '';
 
 	/* Reflects when the copy button is suppressed because the Clipboard API is
 	 * unavailable (non-secure context), so the CSS can drop the reserved actions
@@ -241,6 +250,16 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		if (changed.has('noCopy')) {
 			this._copyUnavailable = !this.noCopy && !isClipboardAvailable();
 		}
+		if (changed.has('maxHeight')) {
+			if (this.maxHeight && CSS.supports('max-height', this.maxHeight)) {
+				this.style.setProperty('--_code-viewer-max-height', this.maxHeight);
+			} else {
+				this.style.removeProperty('--_code-viewer-max-height');
+				if (import.meta.env?.DEV && this.maxHeight) {
+					console.warn(`<nldd-code-viewer>: max-height="${this.maxHeight}" is not a CSS length, so it is ignored. Give it a unit, such as "400px" or "50vh".`);
+				}
+			}
+		}
 		if (!this.view) return;
 		// The region label follows a language switch, which re-renders without measuring.
 		if (this._isScrollable) this.view.scrollDOM.setAttribute('aria-label', this._t('components.code-viewer.region-label'));
@@ -255,6 +274,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		// on padding, so treat it the same.)
 		if (
 			changed.has('appearance')
+			|| changed.has('maxHeight')
 			|| changed.has('noCopy')
 			|| changed.has('_copyUnavailable')
 		) {
@@ -318,9 +338,10 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		});
 	}
 
-	/* The horizontally-scrollable region is CodeMirror's scroller. Mark it
-	 * focusable + labeled when content overflows so keyboard and screen-reader
-	 * users can reach and announce it (WCAG 2.1.1). */
+	/* The scrollable region is CodeMirror's scroller. Mark it focusable +
+	 * labeled when content overflows, in either direction, so keyboard and
+	 * screen-reader users can reach and announce it (WCAG 2.1.1). Wrapping
+	 * rules out the horizontal overflow, not the vertical one. */
 	private _updateScrollable(): void {
 		const scroller = this.view?.scrollDOM;
 		if (!scroller) return;
@@ -329,7 +350,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		// hidden viewer scrollable. Bail; a later ResizeObserver/slot tick re-measures
 		// once the width is real.
 		if (scroller.clientWidth === 0) return;
-		const scrollable = !this.wrap && scroller.scrollWidth > scroller.clientWidth;
+		const scrollable = scroller.scrollHeight > scroller.clientHeight
+			|| (!this.wrap && scroller.scrollWidth > scroller.clientWidth);
 		this._isScrollable = scrollable;
 		if (scrollable) {
 			scroller.setAttribute('tabindex', '0');
@@ -352,7 +374,11 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			.join('');
 	}
 
-	public async _onCopyClick(): Promise<void> {
+	public async _onCopyClick(event?: Event): Promise<void> {
+		// Safari and Firefox on Mac do not focus a button on click. A failure
+		// clears on focusout, so without focus a pointer user could never
+		// dismiss it by moving on.
+		(event?.currentTarget as HTMLElement | null)?.focus?.();
 		try {
 			if (!isClipboardAvailable()) throw new Error('Clipboard API unavailable');
 			await navigator.clipboard.writeText(this._getRawText());
@@ -361,9 +387,18 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			this._copyState = 'failure';
 		}
 		clearTimeout(this._copyResetTimer);
+		// A failure stays until the reader moves on (blur, Escape or another
+		// try): it is the outcome someone needs to read back, and a timer took
+		// it away before a screen magnifier user had found it.
+		if (this._copyState === 'failure') return;
 		this._copyResetTimer = setTimeout(() => {
 			this._copyState = 'idle';
 		}, COPY_FEEDBACK_DURATION_MS);
+	}
+
+	/** Leaving the button clears a failure, which no timer does. */
+	public _onCopyBlur(): void {
+		if (this._copyState === 'failure') this._copyState = 'idle';
 	}
 
 	/** Escape on the open feedback tooltip dismisses it early (WCAG 1.4.13). */

@@ -479,14 +479,13 @@ describe('nldd-toggle-button – tooltip', () => {
 		await waitForUpdate(tooltip);
 		expect(bubble.matches(':popover-open')).toBe(true);
 
-		// WCAG 1.4.13: away without moving focus. That Escape reaches the tooltip is
-		// what this element is responsible for; that the tooltip then goes is its
-		// own, and its own test. Waiting for the popover to close here is a race:
-		// the element still holds the focus, so a window that regains it shows the
-		// tooltip again, which is what a tooltip on focus is supposed to do.
-		const leave = vi.spyOn(tooltip as NLDDTooltip, '_handleTriggerLeave');
+		// WCAG 1.4.13: away without moving focus. The tooltip hears Escape from the
+		// document, so the focus being on this element and not inside it makes no
+		// difference. Asked of its state and not of the popover: the element still
+		// holds the focus, so a window that regains it shows the tooltip again,
+		// which is what a tooltip on focus is supposed to do.
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
-		expect(leave).toHaveBeenCalled();
+		expect((tooltip as NLDDTooltip)._visible).toBe(false);
 	});
 
 	it('participates in FormData when type="checkbox" and selected', async () => {

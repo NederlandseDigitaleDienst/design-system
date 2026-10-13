@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import type { NLDDTooltip } from './tooltip.js';
 import './tooltip.js';
@@ -166,6 +167,53 @@ describe('nldd-tooltip – show/hide', () => {
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 		await until(() => !isTooltipVisible(el));
 		expect(tooltipState(el)).toMatchObject({ popoverOpen: false, visible: false });
+	});
+
+	it('Escape sluit de tooltip ook als de focus ergens anders staat', async () => {
+		el = await fixture<NLDDTooltip>('<nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip>');
+		await waitForUpdate(el);
+		await triggerShow(el, el.querySelector('button')!);
+		expect(isTooltipVisible(el)).toBe(true);
+
+		// Opened by hover, so nothing inside the tooltip has focus and the key
+		// arrives at whatever does.
+		document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		await until(() => !isTooltipVisible(el));
+		expect(tooltipState(el)).toMatchObject({ popoverOpen: false, visible: false });
+	});
+
+	it('Escape sluit alleen de tooltip, niet de dialog eromheen', async () => {
+		el = await fixture<NLDDTooltip>('<dialog><nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip></dialog>') as unknown as NLDDTooltip;
+		const dialog = el as unknown as HTMLDialogElement;
+		const tooltip = dialog.querySelector('nldd-tooltip') as NLDDTooltip;
+		dialog.showModal();
+		await waitForUpdate(tooltip);
+		await triggerShow(tooltip, tooltip.querySelector('button')!);
+		expect(isTooltipVisible(tooltip)).toBe(true);
+
+		// A real key press, so the browser's own Escape handling takes part.
+		await userEvent.keyboard('{Escape}');
+		await until(() => !isTooltipVisible(tooltip));
+		expect(dialog.open).toBe(true);
+
+		await userEvent.keyboard('{Escape}');
+		await until(() => !dialog.open);
+		expect(dialog.open).toBe(false);
+	});
+
+	it('Escape buiten een geforceerd open tooltip laat hem staan', async () => {
+		el = await fixture<NLDDTooltip>('<nldd-tooltip text="Test" open><button>Trigger</button></nldd-tooltip>');
+		await waitForUpdate(el);
+		let dismissed = false;
+		el.addEventListener('nldd-tooltip-dismiss', () => { dismissed = true; });
+
+		const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+		document.body.dispatchEvent(event);
+		expect(dismissed).toBe(false);
+		expect(event.defaultPrevented).toBe(false);
+
+		el.querySelector('button')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+		expect(dismissed).toBe(true);
 	});
 
 	it('toont niet bij lege text', async () => {

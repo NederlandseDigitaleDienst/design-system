@@ -17,13 +17,13 @@ export function sidebarSectionTemplate(component: NLDDSidebarSection): TemplateR
 				</header>
 				<div class="sidebar-section__columns">
 					${!collapsed ? html`
-						<aside class="sidebar-section__sidebar"
-							aria-label=${sidebarLabel}
-						>
-							<div class="sidebar-section__sidebar-box">
+						<div class="sidebar-section__sidebar">
+							<aside class="sidebar-section__sidebar-box"
+								aria-label=${sidebarLabel}
+							>
 								<slot name="sidebar"></slot>
-							</div>
-						</aside>
+							</aside>
+						</div>
 					` : nothing}
 					<div class="sidebar-section__main">
 						<slot></slot>

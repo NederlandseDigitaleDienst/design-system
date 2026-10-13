@@ -289,6 +289,47 @@ describe('nldd-menu-bar – overflow detection', () => {
 		expect(overflowButton.style.display).toBe('inline-block');
 	});
 
+	it('keeps an overflowed link a link, with aria-current on the current page', async () => {
+		el = await fixture(`
+			<nldd-menu-bar>
+				<nldd-menu-bar-item text="Home" href="/home"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="About" href="/about" current></nldd-menu-bar-item>
+			</nldd-menu-bar>
+		`);
+		await waitForUpdate(el);
+		await nextFrames();
+		const items = el.querySelectorAll<HTMLElement>('nldd-menu-bar-item');
+		items.forEach(item => {
+			item.style.display = 'none';
+			item.setAttribute('data-overflow', 'true');
+		});
+		(el as any)._toggleOverflowMenu();
+		await waitForUpdate(el);
+
+		const menuItems = (el as any)._overflowMenu.querySelectorAll('nldd-menu-item') as NodeListOf<HTMLElement>;
+		expect(menuItems.length).toBe(2);
+		await waitForUpdate(menuItems[1]);
+		const home = menuItems[0].shadowRoot!.querySelector('a')!;
+		const about = menuItems[1].shadowRoot!.querySelector('a')!;
+		expect(home.getAttribute('href')).toBe('/home');
+		expect(home.hasAttribute('aria-current')).toBe(false);
+		expect(about.getAttribute('aria-current')).toBe('page');
+
+		// The original hears the click with its modifier keys, so a router that
+		// leaves a Cmd-click to the browser can tell.
+		let heard: MouseEvent | null = null;
+		items[0].addEventListener('click', e => { heard = e as MouseEvent; });
+		home.addEventListener('click', e => e.preventDefault(), { once: true });
+		home.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, composed: true, metaKey: true }));
+		expect(heard!.metaKey).toBe(true);
+
+		// A router on the original item can still cancel the navigation.
+		items[1].addEventListener('click', e => e.preventDefault());
+		const click = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+		about.dispatchEvent(click);
+		expect(click.defaultPrevented).toBe(true);
+	});
+
 	it('hides all items when none fit', async () => {
 		el = await fixture(`
 			<nldd-menu-bar>

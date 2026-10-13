@@ -13,8 +13,8 @@
  * @attr {string} href - Optional link URL. Without href it renders as a button.
  * @attr {string} icon - Optional icon name (nldd-icon)
  * @attr {boolean} expandable - Show the disclosure icon and open the slotted `<nldd-menu>` on click
- * @attr {boolean} icon-only - Hide the text visually (always)
- * @attr {'icon'|'text'} content-priority - Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon
+ * @attr {boolean} icon-only - Hide the text visually (always). The text then shows as a tooltip on hover and focus.
+ * @attr {'icon'|'text'} content-priority - Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead.
  * @attr {boolean} compact - Activates content-priority behavior (set by the parent nldd-menu-bar)
  * @attr {boolean} disabled - Turn interaction off
  * @attr {string} accessible-label - Override aria-label
