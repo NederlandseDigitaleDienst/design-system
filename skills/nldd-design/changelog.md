@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.8.97](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.96...v0.8.97) (2026-10-13)
+
 ### Highlights
 
 - **Four page patterns for a website.** Home, topic page, navigation page and content page now sit together under "Patronen/Pagina's", each with a running example and a test. The home is the starting point of a site and is itself the menu, a topic page is the home for a topic lower in the site, a navigation page helps visitors find the pages below it, and a content page holds the details at the lowest level. A page structure pattern describes the frame all four share, with its header and footer.
