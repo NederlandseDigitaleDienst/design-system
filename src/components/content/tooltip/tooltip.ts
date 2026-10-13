@@ -13,7 +13,9 @@
  * Escape closes a tooltip that hover or focus opened, wherever focus is: the
  * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
  * That press closes the tooltip only. A dialog, sheet or menu around it stays
- * open and takes the next one.
+ * open and takes the next one. The tooltip takes the key in the capture phase
+ * on `document` and stops it there, so a handler of your own for Escape does
+ * not hear that press either.
  *
  * @slot - The element the tooltip is shown for
  *
@@ -354,9 +356,10 @@ export class NLDDTooltip extends LitElement {
 			return;
 		}
 		// Hover/focus-shown tooltips: we own the lifecycle, dismiss directly.
-		// The key stops here. One Escape closes one thing, the topmost: with a
-		// tooltip showing inside a dialog, sheet or menu, the first press takes
-		// the tooltip and the second whatever is around it.
+		// The key stops here: with a tooltip showing inside a dialog, sheet or
+		// menu, the first press takes the tooltip and the second whatever is
+		// around it. Two tooltips showing at once both close on that first
+		// press, since each hears it on the document.
 		this._visible = false;
 		e.preventDefault();
 		e.stopPropagation();

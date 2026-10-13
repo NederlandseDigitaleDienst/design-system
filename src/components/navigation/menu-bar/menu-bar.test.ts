@@ -315,6 +315,14 @@ describe('nldd-menu-bar – overflow detection', () => {
 		expect(home.hasAttribute('aria-current')).toBe(false);
 		expect(about.getAttribute('aria-current')).toBe('page');
 
+		// The original hears the click with its modifier keys, so a router that
+		// leaves a Cmd-click to the browser can tell.
+		let heard: MouseEvent | null = null;
+		items[0].addEventListener('click', e => { heard = e as MouseEvent; });
+		home.addEventListener('click', e => e.preventDefault(), { once: true });
+		home.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, composed: true, metaKey: true }));
+		expect(heard!.metaKey).toBe(true);
+
 		// A router on the original item can still cancel the navigation.
 		items[1].addEventListener('click', e => e.preventDefault());
 		const click = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });

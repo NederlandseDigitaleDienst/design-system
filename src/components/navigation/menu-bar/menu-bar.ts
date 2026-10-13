@@ -364,8 +364,11 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 				}
 				// The link in the menu navigates by itself. The original still
 				// hears the click, so a router listening there can take over and
-				// cancel the navigation, as it does in the bar.
-				const forwarded = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+				// cancel the navigation, as it does in the bar. With the button and
+				// the modifier keys of the real click, so a router that leaves a
+				// Cmd-click alone still does and the link opens in a new tab.
+				const { button, ctrlKey, metaKey, shiftKey, altKey } = event as MouseEvent;
+				const forwarded = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true, button, ctrlKey, metaKey, shiftKey, altKey });
 				item.dispatchEvent(forwarded);
 				if (forwarded.defaultPrevented) event.preventDefault();
 			});
