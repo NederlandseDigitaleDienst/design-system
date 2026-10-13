@@ -133,6 +133,17 @@ export class NLDDValidationItem extends LitElement {
 		this.setAttribute('role', 'listitem');
 	}
 
+	/**
+	 * A rule that changes after the fact changes the verdict, and `required`
+	 * changes it for every item in the list. The list only re-checks on input
+	 * and on its control's attributes, so the item tells it.
+	 */
+	override updated(changed: PropertyValues) {
+		if (!['match', 'minlength', 'maxlength', 'required'].some((key) => changed.has(key))) return;
+		const list = this.parentElement;
+		if (list instanceof NLDDValidationList) list.requestUpdate();
+	}
+
 	override render() {
 		return validationItemTemplate(this);
 	}

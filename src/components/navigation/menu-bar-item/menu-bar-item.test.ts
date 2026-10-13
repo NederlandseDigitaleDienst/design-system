@@ -270,6 +270,14 @@ describe('nldd-menu-bar-item – icon slot', () => {
 		await waitForUpdate(el);
 		expect(iconArea().hidden).toBe(true);
 	});
+	it('laat een compact item zonder icoon zijn tekst houden, zonder aria-label of tooltip', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Zoeken" content-priority="icon" compact></nldd-menu-bar-item>');
+		await waitForUpdate(el);
+		// Nothing to fall back on, so the text stays visible and is the name.
+		expect(el.shadowRoot!.querySelector('.menu-bar-item')!.hasAttribute('aria-label')).toBe(false);
+		expect(el.shadowRoot!.querySelector('nldd-tooltip')!.getAttribute('text')).toBeNull();
+	});
+
 	it('toont de tekst als tooltip zodra alleen het icoon zichtbaar is', async () => {
 		el = await fixture('<nldd-menu-bar-item text="Zoeken" icon="search" content-priority="icon"></nldd-menu-bar-item>');
 		await waitForUpdate(el);

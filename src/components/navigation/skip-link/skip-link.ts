@@ -69,9 +69,18 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 		try { id = decodeURIComponent(id); } catch { /* keep the raw id */ }
 		const root = this.getRootNode() as Document | ShadowRoot;
 		const target = root.getElementById?.(id) ?? document.getElementById(id);
+		if (!target) return;
 		// After the navigation the click is about to cause, not before it.
-		if (target) setTimeout(() => this._focus(target));
+		clearTimeout(this._focusTimer);
+		this._focusTimer = setTimeout(() => this._focus(target));
 	};
+
+	private _focusTimer?: ReturnType<typeof setTimeout>;
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		clearTimeout(this._focusTimer);
+	}
 
 	/**
 	 * Focuses the target and leaves it as it was once focus moves on.
@@ -83,12 +92,19 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	 */
 	private _focus(target: HTMLElement): void {
 		const previous = target.getAttribute('tabindex');
-		target.setAttribute('tabindex', '0');
-		target.addEventListener('blur', () => {
+		const restore = () => {
 			if (previous === null) target.removeAttribute('tabindex');
 			else target.setAttribute('tabindex', previous);
-		}, { once: true });
+		};
+		target.setAttribute('tabindex', '0');
+		target.addEventListener('blur', restore, { once: true });
 		target.focus();
+		// Focus did not take (the target got hidden or went inert in between):
+		// no blur will follow, so the tab stop would stay behind for good.
+		if ((target.getRootNode() as Document | ShadowRoot).activeElement !== target) {
+			target.removeEventListener('blur', restore);
+			restore();
+		}
 	}
 
 	/**

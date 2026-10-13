@@ -117,6 +117,16 @@ describe('nldd-skip-link', () => {
 		expect(() => skipLink._handleLinkClick()).not.toThrow();
 	});
 
+	it('laat geen tabindex achter op een doel dat de focus niet aanneemt', async () => {
+		el = await fixture('<div><nldd-skip-link href="#skip-verborgen"></nldd-skip-link><section id="skip-verborgen" hidden>Doel</section></div>');
+		const skipLink = el.querySelector('nldd-skip-link') as unknown as HTMLElement & { _focus: (target: HTMLElement) => void };
+		await waitForUpdate(skipLink);
+		const section = el.querySelector('section')!;
+		skipLink._focus(section);
+		expect(document.activeElement).not.toBe(section);
+		expect(section.hasAttribute('tabindex')).toBe(false);
+	});
+
 	it('waarschuwt als er geen doel is', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture('<div><nldd-skip-link></nldd-skip-link><noscript>x</noscript></div>');

@@ -135,6 +135,24 @@ describe('nldd-validation-list', () => {
 		expect(control.internals.validity.customError).toBe(false);
 	});
 
+	it('volgt een `required` die later op een item komt', async () => {
+		el = await fixture(`
+			<nldd-form-field label="Wachtwoord">
+				<nldd-text-field invalid></nldd-text-field>
+				<nldd-validation-list>
+					<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
+				</nldd-validation-list>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		expect(item(el, 'password-length').unmet).toBe(false);
+
+		item(el, 'password-length').required = true;
+		await waitForUpdate(list(el));
+		await waitForUpdate(el);
+		expect(item(el, 'password-length').unmet).toBe(true);
+	});
+
 	it('houdt de regels wel tegen leeg als de control verplicht is', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Wachtwoord">
