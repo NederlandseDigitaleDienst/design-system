@@ -15,9 +15,9 @@ export default {
 };
 
 /**
- * Een menu met de acties op één ding. Elk item heeft een icoon, twee items
- * openen een submenu, en de actie die niet terug te draaien is staat onderaan,
- * los van de rest en `destructive`.
+ * Een menu met de acties op één ding. Elk item heeft een icoon, de eerste twee
+ * tonen hun sneltoets, twee items openen een submenu, en de actie die niet terug
+ * te draaien is staat onderaan, los van de rest en `destructive`.
  */
 export const Standaard = {
 	render: () => html`
@@ -29,10 +29,14 @@ export const Standaard = {
 				<nldd-menu-item
 					text="Bewerken"
 					icon="edit"
+					shortcut="Ctrl+E"
+					shortcut-mac="Cmd+E"
 				></nldd-menu-item>
 				<nldd-menu-item
 					text="Dupliceer"
 					icon="duplicate"
+					shortcut="Ctrl+D"
+					shortcut-mac="Cmd+D"
 				></nldd-menu-item>
 				<nldd-menu-item
 					text="Verplaatsen naar"
