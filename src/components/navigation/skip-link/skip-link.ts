@@ -62,8 +62,11 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	 * this moves focus there as well. Left to the browser, WebKit keeps focus
 	 * on the link, so the next Tab starts from the top again.
 	 */
-	_handleLinkClick = (): void => {
+	_handleLinkClick = (event?: MouseEvent): void => {
 		if (!this.href.startsWith('#')) return;
+		// A click that opens the link elsewhere (middle button, or with a
+		// modifier held) leaves this page where it is, focus included.
+		if (event && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
 		let id = this.href.slice(1);
 		// A malformed escape throws; the raw id is then the best guess left.
 		try { id = decodeURIComponent(id); } catch { /* keep the raw id */ }

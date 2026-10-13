@@ -117,6 +117,18 @@ describe('nldd-skip-link', () => {
 		expect(() => skipLink._handleLinkClick()).not.toThrow();
 	});
 
+	it('laat de focus staan bij een klik die de link elders opent', async () => {
+		el = await fixture('<div><nldd-skip-link href="#skip-elders"></nldd-skip-link><section id="skip-elders">Doel</section></div>');
+		const skipLink = el.querySelector('nldd-skip-link') as unknown as HTMLElement & { _handleLinkClick: (e: MouseEvent) => void };
+		await waitForUpdate(skipLink);
+		const section = el.querySelector('section')!;
+		skipLink._handleLinkClick(new MouseEvent('click', { metaKey: true }));
+		skipLink._handleLinkClick(new MouseEvent('click', { button: 1 }));
+		await new Promise(resolve => setTimeout(resolve, 20));
+		expect(section.hasAttribute('tabindex')).toBe(false);
+		expect(document.activeElement).not.toBe(section);
+	});
+
 	it('laat geen tabindex achter op een doel dat de focus niet aanneemt', async () => {
 		el = await fixture('<div><nldd-skip-link href="#skip-verborgen"></nldd-skip-link><section id="skip-verborgen" hidden>Doel</section></div>');
 		const skipLink = el.querySelector('nldd-skip-link') as unknown as HTMLElement & { _focus: (target: HTMLElement) => void };
