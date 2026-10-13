@@ -76,19 +76,6 @@ describe('nldd-validation-list', () => {
 		expect(item(el, 'password-length').visible).toBe(false);
 	});
 
-	it('houdt een lege waarde tegen de regels aan, want die haalt hij niet', async () => {
-		el = await fixture(`
-			<nldd-form-field label="Wachtwoord">
-				<nldd-text-field invalid></nldd-text-field>
-				<nldd-validation-list>
-					<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
-				</nldd-validation-list>
-			</nldd-form-field>
-		`);
-		await waitForUpdate(el);
-		expect(item(el, 'password-length').unmet).toBe(true);
-	});
-
 	it('laat een onaangeraakt veld met rust, want er is nog geen oordeel', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Wachtwoord">
@@ -121,6 +108,43 @@ describe('nldd-validation-list', () => {
 
 		await type(el, 'x');
 		expect(item(el, 'password-empty').unmet).toBe(false);
+		expect(item(el, 'password-length').unmet).toBe(true);
+	});
+
+	it('laat een lege waarde door in een veld dat niet verplicht is', async () => {
+		el = await fixture(`
+			<nldd-form-field label="Website" optional>
+				<nldd-text-field invalid></nldd-text-field>
+				<nldd-validation-list>
+					<nldd-validation-item id="website-format" match="^\\S+\\.\\S+$">Een webadres, zoals voorbeeld.nl</nldd-validation-item>
+					<nldd-validation-item id="website-length" minlength="4">Minimaal 4 tekens</nldd-validation-item>
+				</nldd-validation-list>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
+		const control = el.querySelector('nldd-text-field') as HTMLElement & { internals: ElementInternals };
+		expect(item(el, 'website-format').unmet).toBe(false);
+		expect(item(el, 'website-length').unmet).toBe(false);
+		expect(control.internals.validity.customError).toBe(false);
+
+		await type(el, 'x');
+		expect(item(el, 'website-format').unmet).toBe(true);
+		expect(control.internals.validity.customError).toBe(true);
+
+		await type(el, '');
+		expect(control.internals.validity.customError).toBe(false);
+	});
+
+	it('houdt de regels wel tegen leeg als de control verplicht is', async () => {
+		el = await fixture(`
+			<nldd-form-field label="Wachtwoord">
+				<nldd-text-field invalid required></nldd-text-field>
+				<nldd-validation-list>
+					<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
+				</nldd-validation-list>
+			</nldd-form-field>
+		`);
+		await waitForUpdate(el);
 		expect(item(el, 'password-length').unmet).toBe(true);
 	});
 
@@ -234,7 +258,7 @@ describe('nldd-validation-list', () => {
 	it('kleurt niets rood onder een veld dat er goed uitziet', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Wachtwoord">
-				<nldd-text-field invalid></nldd-text-field>
+				<nldd-text-field value="kort" invalid></nldd-text-field>
 				<nldd-validation-list>
 					<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 				</nldd-validation-list>
@@ -287,7 +311,7 @@ describe('nldd-validation-list', () => {
 		el = await fixture(`
 			<div>
 				<nldd-form-field label="Wachtwoord">
-					<nldd-text-field invalid></nldd-text-field>
+					<nldd-text-field value="kort" invalid></nldd-text-field>
 					<nldd-validation-list>
 						<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 					</nldd-validation-list>
@@ -392,7 +416,7 @@ describe('nldd-form markeert een control op het moment dat het platform het zegt
 		el = await fixture(`
 			<nldd-form novalidate>
 				<nldd-form-field label="Wachtwoord">
-					<nldd-text-field name="password"></nldd-text-field>
+					<nldd-text-field name="password" value="kort"></nldd-text-field>
 					<nldd-validation-list>
 						<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 					</nldd-validation-list>
@@ -457,7 +481,7 @@ describe('nldd-form markeert een control op het moment dat het platform het zegt
 					</nldd-validation-list>
 				</nldd-form-field>
 				<nldd-form-field label="Tweede">
-					<nldd-text-field name="second"></nldd-text-field>
+					<nldd-text-field name="second" value="kort"></nldd-text-field>
 					<nldd-validation-list>
 						<nldd-validation-item id="second-length" minlength="8">Minimaal 8</nldd-validation-item>
 					</nldd-validation-list>

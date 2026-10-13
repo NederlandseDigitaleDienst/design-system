@@ -38,6 +38,7 @@ export function codeViewerTemplate(component: NLDDCodeViewer): TemplateResult {
 						tooltip-timing="never"
 						size="md"
 						@click=${component._onCopyClick}
+						@focusout=${component._onCopyBlur}
 					></nldd-icon-button>
 				</nldd-tooltip>
 			</div>

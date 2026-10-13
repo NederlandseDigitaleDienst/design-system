@@ -160,9 +160,11 @@ export const sidebarSectionStyles = css`
 	/* # Box — the surface around it, edged by a divider. Sticky + scrollable only
 	   beside the main (wide); when stacked it's a plain full-width box above the
 	   main, so no sticky (which would scroll over the main) and no viewport
-	   height cap. */
+	   height cap. The box is the aside itself: Firefox puts a tab stop on
+	   whatever scrolls, and that stop needs the landmark's role and name. */
 
 	.sidebar-section__sidebar-box {
+		display: block;
 		box-sizing: border-box;
 		border-radius: var(--semantics-surfaces-corner-radius);
 		background-color: var(--_sidebar-section-sidebar-box-background-color);

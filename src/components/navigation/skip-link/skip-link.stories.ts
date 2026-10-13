@@ -114,10 +114,7 @@ export const MetHref = {
 					<p>Content bovenaan de pagina...</p>
 				</nldd-rich-text>
 			</nldd-simple-section>
-			<nldd-simple-section
-				id="contact-form"
-				tabindex="-1"
-			>
+			<nldd-simple-section id="contact-form">
 				<nldd-form
 					novalidate
 					label-alignment="right"

@@ -147,7 +147,10 @@ export const Optioneel = () => html`
 
 export const MetEenFout = () => html`
 	<nldd-form-field label="E-mailadres">
-		<nldd-text-field invalid></nldd-text-field>
+		<nldd-text-field
+			value="jan.voorbeeld.nl"
+			invalid
+		></nldd-text-field>
 		<nldd-validation-list>
 			<nldd-validation-item id="email-apenstaartje" match="@">Een apenstaartje</nldd-validation-item>
 		</nldd-validation-list>
@@ -209,6 +212,7 @@ export const VolledigFormulierLabelBoven = () => html`
 			<nldd-text-field
 				type="tel"
 				input-id="top-telefoon"
+				value="06 twaalf"
 				invalid
 			></nldd-text-field>
 			<nldd-validation-list>
@@ -262,6 +266,7 @@ export const VolledigFormulierLabelRechts = () => html`
 				<nldd-text-field
 					type="tel"
 					input-id="right-phone"
+					value="06 twaalf"
 					invalid
 				></nldd-text-field>
 				<nldd-validation-list>

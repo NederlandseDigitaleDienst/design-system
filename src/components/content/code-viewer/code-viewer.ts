@@ -361,9 +361,18 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			this._copyState = 'failure';
 		}
 		clearTimeout(this._copyResetTimer);
+		// A failure stays until the reader moves on (blur, Escape or another
+		// try): it is the outcome someone needs to read back, and a timer took
+		// it away before a screen magnifier user had found it.
+		if (this._copyState === 'failure') return;
 		this._copyResetTimer = setTimeout(() => {
 			this._copyState = 'idle';
 		}, COPY_FEEDBACK_DURATION_MS);
+	}
+
+	/** Leaving the button clears a failure, which no timer does. */
+	public _onCopyBlur(): void {
+		if (this._copyState === 'failure') this._copyState = 'idle';
 	}
 
 	/** Escape on the open feedback tooltip dismisses it early (WCAG 1.4.13). */

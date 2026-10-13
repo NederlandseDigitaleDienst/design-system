@@ -24,16 +24,19 @@ export const template = (
 	showChildren = false,
 	hasCheckedSegment = false,
 	disabled = false,
+	childrenRole: 'group' | 'list' = 'group',
+	childrenOpen = expanded === true,
 ) => {
 	const ariaExpanded = expanded === undefined ? nothing : String(expanded);
-	// The branch's child rows. `role="group"` is what makes the nesting the
-	// hierarchy: assistive technology derives level, position and set size from
-	// it, so none of those are authored. Hidden while collapsed — an
+	// The row's child rows. In a tree `role="group"` is what makes the nesting
+	// the hierarchy: assistive technology derives level, position and set size
+	// from it, so none of those are authored. In a navigation list the same
+	// nesting is a list inside a list item. Hidden while collapsed — an
 	// aria-expanded="false" node with reachable children contradicts itself.
 	const children = showChildren
 		? html`<div class="list-item__children"
-			role="group"
-			?hidden=${expanded !== true}
+			role=${childrenRole}
+			?hidden=${!childrenOpen}
 		><slot name="children"></slot></div>`
 		: html`<slot name="children" hidden></slot>`;
 	// `is-highlighted` paints the listbox active-option highlight (separate from

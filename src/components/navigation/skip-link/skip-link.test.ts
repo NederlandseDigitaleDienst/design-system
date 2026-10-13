@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './skip-link.js';
@@ -67,6 +67,49 @@ describe('nldd-skip-link', () => {
 		const btn = skipLink.shadowRoot!.querySelector('button') as HTMLButtonElement;
 		btn.click();
 		expect(document.activeElement).toBe(el.querySelector('main'));
+	});
+
+	it('slaat een sibling over die niet wordt weergegeven', async () => {
+		el = await fixture('<div><nldd-skip-link></nldd-skip-link><noscript>x</noscript><div hidden>x</div><main>Content</main></div>');
+		const skipLink = el.querySelector('nldd-skip-link')!;
+		await waitForUpdate(skipLink);
+		(skipLink.shadowRoot!.querySelector('button') as HTMLButtonElement).click();
+		expect(document.activeElement).toBe(el.querySelector('main'));
+	});
+
+	it('zet het doel tijdelijk op tabindex 0 en daarna terug', async () => {
+		// Never -1 while focused: WebKit skips everything inside a shadow host
+		// with a negative tabindex, so the next Tab would leave the page.
+		el = await fixture('<div><nldd-skip-link></nldd-skip-link><main tabindex="-1">Content</main><section>Meer</section></div>');
+		const skipLink = el.querySelector('nldd-skip-link')!;
+		await waitForUpdate(skipLink);
+		const main = el.querySelector('main')!;
+		(skipLink.shadowRoot!.querySelector('button') as HTMLButtonElement).click();
+		expect(main.getAttribute('tabindex')).toBe('0');
+		main.blur();
+		expect(main.getAttribute('tabindex')).toBe('-1');
+	});
+
+	it('verplaatst met een href de focus naar het doel, zonder eigen tabindex', async () => {
+		el = await fixture('<div><nldd-skip-link href="#skip-doel"></nldd-skip-link><p>x</p><section id="skip-doel">Doel</section></div>');
+		const skipLink = el.querySelector('nldd-skip-link')!;
+		await waitForUpdate(skipLink);
+		const section = el.querySelector('section')!;
+		(skipLink.shadowRoot!.querySelector('a') as HTMLAnchorElement).click();
+		await expect.poll(() => document.activeElement).toBe(section);
+		section.blur();
+		expect(section.hasAttribute('tabindex')).toBe(false);
+		history.replaceState(null, '', location.pathname + location.search);
+	});
+
+	it('waarschuwt als er geen doel is', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<div><nldd-skip-link></nldd-skip-link><noscript>x</noscript></div>');
+		const skipLink = el.querySelector('nldd-skip-link')!;
+		await waitForUpdate(skipLink);
+		(skipLink.shadowRoot!.querySelector('button') as HTMLButtonElement).click();
+		expect(warn).toHaveBeenCalledOnce();
+		warn.mockRestore();
 	});
 });
 

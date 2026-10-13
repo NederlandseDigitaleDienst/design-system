@@ -219,6 +219,30 @@ describe('nldd-code-viewer', () => {
 		}
 	});
 
+	it('a failure outlasts the feedback duration and clears on blur', async () => {
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) }, configurable: true });
+		vi.useFakeTimers();
+		try {
+			el = await fixture<NLDDCodeViewer>('<nldd-code-viewer>x</nldd-code-viewer>');
+			const litEl = el as HTMLElement & { updateComplete: Promise<boolean> };
+			await litEl.updateComplete;
+			await (el as unknown as NLDDCodeViewer)._onCopyClick();
+			await litEl.updateComplete;
+			await vi.advanceTimersByTimeAsync(2100);
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('failure');
+
+			const iconBtn = el.shadowRoot!.querySelector('.code-viewer__copy-button nldd-icon-button')!;
+			iconBtn.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true }));
+			await litEl.updateComplete;
+			expect((el as unknown as NLDDCodeViewer)._copyState).toBe('idle');
+		} finally {
+			vi.useRealTimers();
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
 	it('resets to idle after the feedback duration', async () => {
 		const originalClipboard = navigator.clipboard;
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockResolvedValue(undefined) }, configurable: true });

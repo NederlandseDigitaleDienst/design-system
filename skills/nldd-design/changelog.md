@@ -15,6 +15,33 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Navigation lists can nest.** A sub-page in an `nldd-list type="navigation"` goes in its parent row's `slot="children"` and is then a list inside a list item, where it used to be an indented row in one flat list.
+- **A round of accessibility fixes.** A skip link that could silently do nothing, a tooltip you could not close with Escape while pointing at it, a copy failure that vanished after two seconds, and a scrolling sidebar that Firefox focused without a role or a name.
+- **A rule in `nldd-validation-list` no longer rejects an empty optional field.** A `match` or `minlength` under a field that may stay empty used to block every submit that left it empty. See Breaking if a field relies on the old behavior.
+
+### Added
+
+- **Sub-pages in `nldd-list type="navigation"`.** Put the rows of a sub-level in their parent row's `slot="children"`, the slot a tree already uses. The parent renders them as a list inside its list item, so a screen reader hears the level and how many there are; an indent made with a spacer cell alone stayed one flat list. They are always shown and the arrow keys walk them like any other row. Indenting is still yours: add an `nldd-spacer-cell` per level.
+
+### Changed
+
+- **An `nldd-menu-bar-item` that shows only its icon has a tooltip.** With `icon-only`, or with `content-priority="icon"` in a compact bar, the text was gone for anyone not using a screen reader. A bar is compact at 200% zoom on a desktop too. The text now shows on hover and focus.
+- **A link stays a link in the overflow menu of `nldd-menu-bar`.** An item with `href` used to become a button in the "Meer opties" menu. It is an `<a>` now, so it opens in a new tab like the item in the bar, and a click handler on the original item still runs and can cancel the navigation.
+- **A failed copy in `nldd-code-viewer` stays on screen.** "Kopiëren mislukt" disappeared after two seconds like the success message. It now stays until you leave the button, press Escape or try again.
+
+### Breaking
+
+- **Rules in `nldd-validation-list` skip an empty value unless the field needs one.** An empty value used to fail `match`, `minlength` and `maxlength` like any other. It now passes them, the way the native `pattern` and `minlength` leave an empty input alone, unless an item has `required` or the control itself is `required`. If you counted on `minlength` to stop an empty field, add `required` to the control or add an item with `required`.
+
+### Fixed
+
+- **`nldd-skip-link` reaches its target, and Tab continues from there.** Three things could leave it doing nothing. Without `href` it moved focus to the next sibling whatever that was, so a `<noscript>`, a `<script>` or a hidden element right after it left the button dead; it now passes those over, and warns in development when nothing follows at all. In Safari the next Tab then left the page when the target was an `nldd-*` component, because WebKit skips everything inside a shadow host with `tabindex="-1"`. And with an `href`, Safari kept focus on the link. The skip link now moves focus itself in both forms, so the target needs no `tabindex` of its own.
+- **Escape closes an `nldd-tooltip` that was opened by pointing at it.** Escape only worked while focus was inside the tooltip's trigger, so with the pointer on a button and focus elsewhere it stayed open (WCAG 1.4.13).
+- **The current page has `aria-current` in the overflow menu of `nldd-menu-bar`.** The item was marked visually, but a screen reader heard nothing.
+- **The scrolling sidebar of `nldd-sidebar-section` has a role and a name in Firefox.** Firefox puts a tab stop on anything that scrolls, and that was an unnamed `div` inside the landmark. The `aside` itself scrolls now.
+
 ## [0.8.97](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.96...v0.8.97) (2026-10-13)
 
 ### Highlights

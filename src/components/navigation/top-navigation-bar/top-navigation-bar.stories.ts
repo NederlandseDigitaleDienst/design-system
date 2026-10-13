@@ -116,7 +116,7 @@ const Template = ({
 				></nldd-menu-bar-item>
 				<nldd-menu-bar-item
 					text="Mijn account"
-					icon="profile"
+					icon="account"
 					expandable
 					content-priority="text"
 				>
@@ -188,7 +188,7 @@ export const MijnOverheidZakelijk = {
 					></nldd-menu-bar-item>
 					<nldd-menu-bar-item
 						text="Bloom B.V."
-						icon="profile"
+						icon="account"
 						expandable
 					>
 						<nldd-menu>
@@ -225,7 +225,7 @@ export const RegelRecht = {
 				<nldd-menu-bar slot="utility">
 					<nldd-menu-bar-item
 						text="J. Jansen"
-						icon="profile"
+						icon="account"
 						expandable
 					>
 						<nldd-menu>
@@ -288,7 +288,7 @@ export const SmalScherm = {
 					></nldd-menu-bar-item>
 					<nldd-menu-bar-item
 						text="Mijn account"
-						icon="profile"
+						icon="account"
 						expandable
 						content-priority="text"
 					>
@@ -406,7 +406,7 @@ export const VeelGlobaleItems = {
 					></nldd-menu-bar-item>
 					<nldd-menu-bar-item
 						text="Mijn account"
-						icon="profile"
+						icon="account"
 						expandable
 						content-priority="text"
 					>
@@ -482,7 +482,7 @@ export const AlleToestanden = {
 						></nldd-menu-bar-item>
 						<nldd-menu-bar-item
 							text="Mijn account"
-							icon="profile"
+							icon="account"
 							expandable
 							content-priority="text"
 						>
@@ -536,7 +536,7 @@ export const AlleToestanden = {
 						></nldd-menu-bar-item>
 						<nldd-menu-bar-item
 							text="Mijn account"
-							icon="profile"
+							icon="account"
 							expandable
 							content-priority="text"
 						>
@@ -575,7 +575,7 @@ export const AlleToestanden = {
 						></nldd-menu-bar-item>
 						<nldd-menu-bar-item
 							text="Bloom B.V."
-							icon="profile"
+							icon="account"
 							expandable
 						>
 							<nldd-menu>
@@ -602,7 +602,7 @@ export const AlleToestanden = {
 					<nldd-menu-bar slot="utility">
 						<nldd-menu-bar-item
 							text="J. Jansen"
-							icon="profile"
+							icon="account"
 							expandable
 						>
 							<nldd-menu>

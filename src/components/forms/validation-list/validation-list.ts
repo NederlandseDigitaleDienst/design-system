@@ -37,10 +37,10 @@
  * the command ("Gebruik minimaal 8 tekens"): before a verdict it stands there as
  * what the field wants, after one as what the value does not meet.
  *
- * @attr {string} match - Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it".
- * @attr {number} minlength - Fewest characters the value may have.
+ * @attr {string} match - Regular expression the value has to contain. Not anchored, unlike the native `pattern`: `[A-Z]` means "has a capital in it". Not held against an empty value unless the field is required.
+ * @attr {number} minlength - Fewest characters the value may have. Not held against an empty value unless the field is required.
  * @attr {number} maxlength - Most characters the value may have.
- * @attr {boolean} required - The value may not be empty. Use it on a field whose other rules would pass an empty value.
+ * @attr {boolean} required - The value may not be empty. Without it, and without `required` on the control, an empty value passes every rule in the list, as it does for the native `pattern` and `minlength`.
  * @attr {boolean} hint - Show this item before there is a verdict, whatever the list says.
  * @attr {boolean} unmet - Whether the value fails this item. Managed by the list; do not set it yourself.
  * @attr {boolean} visible - Whether the item is on screen. Managed by the list.
@@ -90,7 +90,7 @@ export class NLDDValidationItem extends LitElement {
 	@property({ type: Number })
 	maxlength?: number;
 
-	/** For a field whose other rules would pass an empty value. See `test`. */
+	/** Makes the field one that needs a value. See `_evaluate` on the list. */
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
@@ -115,11 +115,9 @@ export class NLDDValidationItem extends LitElement {
 	 * Whether `value` satisfies this item, or null when there is nothing to
 	 * satisfy because the item carries no rule.
 	 *
-	 * An empty value is held against the rules like any other, so "minimaal 8
-	 * tekens" fails on it, because it does. What keeps a fresh field from
-	 * lighting up all of its requirements is not this method but the verdict: an
-	 * item only turns critical once the control says `invalid`, and an untouched
-	 * field has not been judged yet.
+	 * An empty value is held against the rules like any other here, so "minimaal
+	 * 8 tekens" fails on it. Whether an empty value is judged at all is not this
+	 * item's call but the list's, which knows if the field needs a value.
 	 */
 	test(value: string): boolean | null {
 		if (!this.hasRule) return null;
@@ -275,7 +273,7 @@ export class NLDDValidationList extends LitElement {
 			this._latchJudging();
 			this._evaluate();
 		});
-		this._observer.observe(next, { attributes: true, attributeFilter: ['invalid', 'unmet'] });
+		this._observer.observe(next, { attributes: true, attributeFilter: ['invalid', 'unmet', 'required'] });
 	}
 
 	private _detach(): void {
@@ -297,6 +295,12 @@ export class NLDDValidationList extends LitElement {
 	 * `unmet` on the control. Never both: a rule is held against the value as it
 	 * is now, while `unmet` is a snapshot of the last check and therefore older,
 	 * so letting the snapshot win would show a mistake that has been fixed.
+	 *
+	 * An empty value in a field that does not need one passes every rule, the
+	 * way the native `pattern` and `minlength` leave an empty input alone. A
+	 * field needs a value when an item says `required` or the control does.
+	 * Without this a `match` under an optional field blocked every submit that
+	 * left it empty, and nothing on screen said why.
 	 */
 	private _evaluate(): void {
 		const control = this._resolved;
@@ -307,13 +311,19 @@ export class NLDDValidationList extends LitElement {
 		const invalid = control?.hasAttribute('invalid') ?? false;
 		const named = (control?.getAttribute('unmet') ?? '').split(' ').filter(Boolean);
 		const value = this._currentValue();
+		const items = this._items;
+		const needsValue = items.some((item) => item.required)
+			|| Boolean((control as { required?: boolean } | null)?.required)
+			|| (control?.hasAttribute('required') ?? false);
+		const skipRules = value === '' && !needsValue;
 
 		let anyVisible = false;
 		let anyRuleFails = false;
 		const messages: string[] = [];
 
-		for (const item of this._items) {
-			const rule = item.test(value);
+		for (const item of items) {
+			const tested = item.test(value);
+			const rule = tested !== null && skipRules ? true : tested;
 			const failing = rule === null ? named.includes(item.id) : !rule;
 
 			if (import.meta.env?.DEV && rule !== null && named.includes(item.id)) {

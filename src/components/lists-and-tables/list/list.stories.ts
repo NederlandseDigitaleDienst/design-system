@@ -334,6 +334,46 @@ export const Navigatie = {
 };
 
 
+export const NavigatieMetSubpaginas = {
+	name: 'Navigatie met subpagina\'s',
+	render: () => html`
+		<nldd-list
+			type="navigation"
+			appearance="box-tinted"
+			aria-label="Op deze pagina"
+		>
+			<nldd-list-item href="#aanvragen">
+				<nldd-text-cell text="Aanvragen"></nldd-text-cell>
+				<nldd-list-item
+					slot="children"
+					href="#in-behandeling"
+					selected
+				>
+					<nldd-spacer-cell size="16"></nldd-spacer-cell>
+					<nldd-text-cell text="In behandeling"></nldd-text-cell>
+				</nldd-list-item>
+				<nldd-list-item
+					slot="children"
+					href="#afgerond"
+				>
+					<nldd-spacer-cell size="16"></nldd-spacer-cell>
+					<nldd-text-cell text="Afgerond"></nldd-text-cell>
+				</nldd-list-item>
+			</nldd-list-item>
+			<nldd-list-item href="#dossiers"><nldd-text-cell text="Dossiers"></nldd-text-cell></nldd-list-item>
+			<nldd-list-item href="#instellingen"><nldd-text-cell text="Instellingen"></nldd-text-cell></nldd-list-item>
+		</nldd-list>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Subpagina\'s staan in `slot="children"` van hun ouder. De rij rendert ze als een lijst binnen het lijstitem, zodat een schermlezer het niveau en het aantal hoort. Ze zijn altijd zichtbaar en de pijltjestoetsen lopen er gewoon doorheen. Het inspringen doe je zelf, met een `nldd-spacer-cell` per niveau: zonder de nesting springt de rij wel in, maar blijft het voor een schermlezer één platte lijst. Wil je dat een sectie kan inklappen, gebruik dan `type="tree"`.',
+			},
+		},
+	},
+};
+
 // — Type: listbox ——————————————————————————————————————————————————————————————
 
 // Shared imperative builder for the listbox stories: the consumer's filter

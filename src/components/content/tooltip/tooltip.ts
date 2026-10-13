@@ -10,6 +10,9 @@
  * @attr {string} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
  * @attr {string} timing - When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant.
  *
+ * Escape closes a tooltip that hover or focus opened, wherever focus is: the
+ * pointer can rest on a button while focus sits somewhere else (WCAG 1.4.13).
+ *
  * @slot - The element the tooltip is shown for
  *
  * @fires nldd-tooltip-dismiss - When a user presses Escape while `open=true`.
@@ -93,7 +96,7 @@ export class NLDDTooltip extends LitElement {
 
 	override connectedCallback(): void {
 		super.connectedCallback();
-		this.addEventListener('keydown', this._handleKeyDown);
+		if (this._visible) document.addEventListener('keydown', this._handleKeyDown, true);
 		// Re-register slotchange after reconnect (firstUpdated only runs once)
 		if (this.hasUpdated) {
 			this.shadowRoot?.querySelector('slot')?.addEventListener('slotchange', this._boundSlotChange);
@@ -123,6 +126,11 @@ export class NLDDTooltip extends LitElement {
 			}
 		}
 		if (changed.has('_visible')) {
+			// On the document and only while showing: a tooltip opened by hover
+			// has no focus inside it, so a listener on the host never hears the
+			// Escape that WCAG 1.4.13 asks for.
+			if (this._visible) document.addEventListener('keydown', this._handleKeyDown, true);
+			else document.removeEventListener('keydown', this._handleKeyDown, true);
 			const tooltip = this._getTooltipElement();
 			if (tooltip) {
 				if (this._visible) {
@@ -327,6 +335,10 @@ export class NLDDTooltip extends LitElement {
 	private _handleKeyDown = (e: KeyboardEvent): void => {
 		if (e.key !== 'Escape' || !this._visible) return;
 		if (this.open) {
+			// A forced tooltip belongs to whoever opened it, so only an Escape
+			// from inside it counts: one pressed elsewhere is meant for
+			// something else, such as the dialog around it.
+			if (!e.composedPath().includes(this)) return;
 			// WCAG 1.4.13 (Content on Hover or Focus): persistent
 			// keyboard-triggered overlay content must be dismissible without
 			// moving focus. The consumer controls the open lifecycle (e.g.
@@ -385,7 +397,7 @@ export class NLDDTooltip extends LitElement {
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
-		this.removeEventListener('keydown', this._handleKeyDown);
+		document.removeEventListener('keydown', this._handleKeyDown, true);
 		this.shadowRoot?.querySelector('slot')?.removeEventListener('slotchange', this._boundSlotChange);
 		if (this._hideTimeout) {
 			clearTimeout(this._hideTimeout);

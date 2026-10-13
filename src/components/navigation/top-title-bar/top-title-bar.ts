@@ -25,9 +25,16 @@
  * everyone. Anchor at the heading, then, and not at some other element that
  * happens to sit at the right height: the bar hands its title over to it.
  *
+ * The title stays on one line and is cut off with an ellipsis when it does not
+ * fit, which on a narrow screen or at 400% zoom is soon. The bar is therefore
+ * not the place for the full title: put that in an `nldd-title` at the top of
+ * the content, which wraps and always fits, and point `collapse-anchor` at it.
+ * A bar without an anchor holds the only copy of its title, so keep that one to
+ * a word or two.
+ *
  * @element nldd-top-title-bar
  *
- * @attr {string} text - Title of the bar, rendered as the heading in the title group.
+ * @attr {string} text - Title of the bar, rendered as the heading in the title group. One line, cut off with an ellipsis when it does not fit; see above for a title that can run long.
  * @attr {string} supporting-text - Text under the title.
  * @attr {1|2|3|4|5|6} heading-level - Heading level of the title: 1–6 (default: 1). Lower it where the bar is not the top of the page, such as a pane beside content that already has its h1.
  * @attr {string} collapse-anchor - Id of the element whose top edge triggers the compact state on scroll. Without it the state is static (see above).

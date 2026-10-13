@@ -1,5 +1,7 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
+import { page } from 'vitest/browser';
+import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTopNavigationBar } from './top-navigation-bar.js';
 import './top-navigation-bar.js';
 
@@ -675,5 +677,67 @@ describe('nldd-top-navigation-bar – clickable area of the logo link', () => {
 		expect(area.right - title.right).toBeGreaterThan(40);
 		expect(inLink(title.right + 20, title.top + title.height / 2)).toBe(false);
 		expect(link.tabIndex).toBe(0);
+	});
+});
+
+/* WCAG 1.4.10 (Reflow) next to 1.4.4 (Resize text): at 320 CSS px the utility
+   items have to stay reachable with their text, without the page scrolling
+   sideways. Items that keep their text move into the overflow menu; items that
+   fall back to their icon stay in the bar. Needs the tokens, since the widths
+   come from them. */
+describe('nldd-top-navigation-bar utility op 320 px', () => {
+	let el: HTMLElement;
+	let unloadTokens: () => void;
+	let eigen: { width: number; height: number };
+
+	const bar = (priority: string) => `
+		<nldd-top-navigation-bar>
+			<nldd-menu-bar slot="global">
+				<nldd-menu-bar-item text="Aanvragen" href="/aanvragen"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Dossiers" href="/dossiers"></nldd-menu-bar-item>
+			</nldd-menu-bar>
+			<nldd-menu-bar slot="utility">
+				<nldd-menu-bar-item text="Zoeken" icon="search" content-priority="${priority}"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Feedback" icon="info" content-priority="${priority}" href="/feedback"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Instellingen" icon="settings" content-priority="${priority}" href="/instellingen"></nldd-menu-bar-item>
+			</nldd-menu-bar>
+		</nldd-top-navigation-bar>
+	`;
+
+	const settle = async () => {
+		await waitForUpdate(el);
+		await expect.poll(() => el.querySelector('[slot="utility"]')!.hasAttribute('compact')).toBe(true);
+		await nextFrames();
+	};
+
+	beforeEach(async () => {
+		eigen = { width: window.innerWidth, height: window.innerHeight };
+		unloadTokens = loadTokens();
+		await page.viewport(320, 800);
+	});
+
+	afterEach(async () => {
+		if (el) cleanup(el);
+		document.querySelectorAll('nldd-menu').forEach(m => m.remove());
+		unloadTokens();
+		await page.viewport(eigen.width, eigen.height);
+	});
+
+	it('zet items die hun tekst houden in het overloopmenu', async () => {
+		el = await fixture(bar('text'));
+		await settle();
+		const items = [...el.querySelectorAll('[slot="utility"] nldd-menu-bar-item')];
+		await expect.poll(() => items.some(item => item.hasAttribute('data-overflow'))).toBe(true);
+		expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
+	});
+
+	it('houdt items die op hun icoon terugvallen in de balk, met de tekst als tooltip', async () => {
+		el = await fixture(bar('icon'));
+		await settle();
+		const items = [...el.querySelectorAll('[slot="utility"] nldd-menu-bar-item')];
+		expect(items.some(item => item.hasAttribute('data-overflow'))).toBe(false);
+		expect(items.map(item => item.shadowRoot!.querySelector('nldd-tooltip')!.getAttribute('text')))
+			.toEqual(['Zoeken', 'Feedback', 'Instellingen']);
+		expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
 	});
 });

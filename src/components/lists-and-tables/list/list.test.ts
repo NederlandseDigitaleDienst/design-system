@@ -530,6 +530,41 @@ describe('nldd-list', () => {
 		expect(children[1].classList.contains('is-last')).toBe(false);
 	});
 
+	it('navigation: sub-pages are a list inside their parent item, always shown', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<nldd-list type="navigation">
+				<nldd-list-item href="/a">
+					A
+					<nldd-list-item slot="children" href="/a/1" selected>A1</nldd-list-item>
+					<nldd-list-item slot="children" href="/a/2">A2</nldd-list-item>
+				</nldd-list-item>
+				<nldd-list-item href="/b">B</nldd-list-item>
+			</nldd-list>
+		`);
+		await waitForUpdate(el);
+		const parent = el.querySelector('nldd-list-item')!;
+		const [first, second] = [...parent.querySelectorAll('nldd-list-item')];
+		await waitForUpdate(parent);
+
+		const group = parent.shadowRoot!.querySelector('.list-item__children') as HTMLElement;
+		expect(group.getAttribute('role')).toBe('list');
+		expect(group.hidden).toBe(false);
+		expect(first.getAttribute('role')).toBe('listitem');
+		// Nothing to disclose: the parent is a plain link, not a collapsed branch.
+		expect(parent.shadowRoot!.querySelector('a')!.hasAttribute('aria-expanded')).toBe(false);
+		expect(first.shadowRoot!.querySelector('a')!.getAttribute('aria-current')).toBe('page');
+		expect(warn.mock.calls.flat().join(' ')).not.toContain('slot="children"');
+		warn.mockRestore();
+
+		// The arrows walk the sub-pages like any other row: the entry point is
+		// the current page, and down from there is its sibling, not row B.
+		expect(first._rovingActive).toBe(true);
+		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+		await waitForUpdate(el);
+		expect(second._rovingActive).toBe(true);
+	});
+
 	it('tree: arrow navigation walks the rows of an open branch', async () => {
 		el = await fixture(`
 			<nldd-list type="tree">

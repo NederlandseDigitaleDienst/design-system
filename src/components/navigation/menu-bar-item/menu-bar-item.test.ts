@@ -270,4 +270,16 @@ describe('nldd-menu-bar-item – icon slot', () => {
 		await waitForUpdate(el);
 		expect(iconArea().hidden).toBe(true);
 	});
+	it('toont de tekst als tooltip zodra alleen het icoon zichtbaar is', async () => {
+		el = await fixture('<nldd-menu-bar-item text="Zoeken" icon="search" content-priority="icon"></nldd-menu-bar-item>');
+		await waitForUpdate(el);
+		const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
+		expect(tooltip.getAttribute('text')).toBeNull();
+
+		el.toggleAttribute('compact', true);
+		await waitForUpdate(el);
+		expect(tooltip.getAttribute('text')).toBe('Zoeken');
+		// Same control as before: turning compact must not replace it.
+		expect(el.shadowRoot!.querySelector('nldd-tooltip')).toBe(tooltip);
+	});
 });
