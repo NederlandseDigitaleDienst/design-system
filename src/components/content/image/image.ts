@@ -169,7 +169,6 @@ export class NLDDImage extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	decorative = false;
 
-
 	@property({ type: String })
 	lqip = '';
 

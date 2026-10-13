@@ -271,6 +271,8 @@ export const heroStyles = css`
 		object-fit: cover !important;
 	}
 
+	/* Two heights: the host fills the media area, and the variable makes the
+	   image inside the host fill the host. Without either one it collapses. */
 	.hero__media ::slotted(nldd-image) {
 		--context-image-height: 100%;
 

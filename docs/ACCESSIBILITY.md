@@ -13,7 +13,7 @@ Of een pagina voldoet, bepaal je per pagina. De componenten zijn daarvoor een vo
 - **Rol, naam en toestand.** Elk component zet de juiste rol en de juiste `aria`-attributen op het element dat ze nodig heeft, ook als dat in een shadow root zit.
 - **Toetsenbord.** Alles wat je kunt aanklikken, kun je ook met het toetsenbord bedienen. Een groep zoals een lijst, een menu of een tabbalk is één tabstop, en binnen de groep ga je verder met de pijltjestoetsen.
 - **Focus.** De focusring komt uit één token en is op elk oppervlak zichtbaar. Een sheet en een modal dialog houden de focus bij zich zolang ze open zijn en geven hem daarna terug aan waar je vandaan kwam.
-- **Formaat.** Een control is standaard 44 pixels hoog. De kleinere formaten zijn er voor dichte schermen.
+- **Formaat.** Een control is standaard 44 pixels hoog. De kleinere formaten zijn 32 en 24 pixels, dus geen enkele control is kleiner dan de 24 pixels die WCAG 2.2 als minimum voor een aanraakdoel vraagt.
 - **Contrast op een vlak.** Een vlak geeft zijn inhoudskleur door aan wat erin staat, dus tekst op een gekleurd of getint vlak houdt zijn contrast. Zet daarvoor `background` op het component en `color="inherit"` op de tekst erin.
 - **Beweging en contrastmodus.** Componenten met een animatie volgen `prefers-reduced-motion`. In de contrastmodus van het besturingssysteem (`forced-colors`) blijven randen, toestanden en de focusring zichtbaar.
 - **Meldingen.** Een [`nldd-status-bar`](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/components-status-feedback-status-bar--docs) en een [`nldd-notification`](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/components-status-feedback-notification--docs) melden zichzelf aan een schermlezer.
