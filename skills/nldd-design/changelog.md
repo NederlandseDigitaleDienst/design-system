@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.8.98](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.97...v0.8.98) (2026-10-13)
+
 ### Highlights
 
 - **Navigation lists can nest.** A sub-page in an `nldd-list type="navigation"` goes in its parent row's `slot="children"` and is then a list inside a list item, where it used to be an indented row in one flat list.
