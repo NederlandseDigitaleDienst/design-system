@@ -237,6 +237,22 @@ export function joinArea(notification: NLDDNotification, label: string): void {
 	syncStack(area);
 }
 
+/**
+ * Puts a notification that is already in the deck back in front, as if it had
+ * just arrived. For one that was updated: the change is what just happened, and
+ * behind a newer notification nobody would see it.
+ */
+export function bringToFront(notification: NLDDNotification): void {
+	const area = document.getElementById(AREA_ID);
+	if (!area || notification.parentElement !== area) return;
+	if (notifications(area)[0] !== notification) {
+		notification._setMoving?.(true);
+		area.prepend(notification);
+		notification._setMoving?.(false);
+	}
+	syncStack(area);
+}
+
 export function leaveArea(notification: NLDDNotification): void {
 	const area = document.getElementById(AREA_ID);
 	if (!area) return;

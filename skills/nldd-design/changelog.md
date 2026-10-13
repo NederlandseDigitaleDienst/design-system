@@ -18,12 +18,15 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **A submenu in the site navigation can be a list of links.** `variant="navigation"` on `nldd-menu` gives it the role of a list instead of a menu, which is what a screen reader should hear in a navigation.
+- **Notifications can be raised from code.** `NLDDNotification.show()` creates, shows and cleans up a notification, which is the way to raise one from a framework.
 - **`label` on `nldd-toolbar` is now `accessible-label`.** Every toolbar with a name needs the rename, since there is no alias; see Breaking.
 - **The menu behind the Menu button says which item is the current one.** On a narrow screen the current item in the menu of `nldd-top-navigation-bar` was only painted; a screen reader now hears it too.
 
 ### Added
 
 - **`variant="navigation"` on `nldd-menu`, for a submenu in a site navigation.** A submenu in `nldd-top-navigation-bar` was a menu of actions: `role="menu"` with menu items. For site navigation that is the wrong role, since a screen reader switches to an application mode in a menu where a visitor expects a list of links. With `variant="navigation"` the menu is a list (`role="list"`) and each item a list item around a real link; it looks the same. Tab reaches every link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The `nldd-menu-bar-item` that opens it says `aria-expanded` and no longer `aria-haspopup="menu"`. A submenu and a group inside it follow along. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. Give every item an `href`, and keep the default variant for menus that do things, such as an account menu or a language switch.
+
+- **`NLDDNotification.show()`, to raise a notification from code.** An `nldd-notification` places itself, which is why it does not matter where you write it. It also means a framework cannot render one: the element is no longer where the framework left it, so a keyed list (`v-for` with a `:key`) fails on its next render and a removed row leaves its notification on screen. `NLDDNotification.show({ text, supportingText, variant, icon, duration, actions })` creates the element, shows it and removes it once it is dismissed. An action is `{ text, onClick }`, at most two, and a click on one takes the notification away as well. It returns a handle with `dismiss()` and `update(options)`. An update changes the message, puts the notification in front and starts its clock over, so a status that changes often stays one notification, and the clock still pauses on hover and focus. The declarative element stays as it is; raise notifications with `show()` from a framework.
 
 ### Breaking
 
