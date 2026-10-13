@@ -15,6 +15,19 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`label` on `nldd-toolbar` is now `accessible-label`.** Every toolbar with a name needs the rename, since there is no alias; see Breaking.
+- **The menu behind the Menu button says which item is the current one.** On a narrow screen the current item in the menu of `nldd-top-navigation-bar` was only painted; a screen reader now hears it too.
+
+### Breaking
+
+- **`label` on `nldd-toolbar` is now `accessible-label`.** It was the one place where an accessible name was called `label`; every other component says `accessible-label`, and on `nldd-toolbar-item` `label` is the visible text below the item, which made the two easy to mix up. There is no alias: a `label` left on a toolbar does nothing, so the toolbar loses its name. Rename the attribute on every `nldd-toolbar`. The `label` on `nldd-toolbar-item` stays as it is.
+
+### Fixed
+
+- **The current item in the menu sheet of `nldd-top-navigation-bar` has `aria-current`.** Behind the Menu button on a narrow screen the current item was only painted. The list in that sheet is a navigation list now, named after the global menu bar, so the link of the current item carries `aria-current` with the `current-type` of its menu bar item.
+
 ## [0.8.98](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.97...v0.8.98) (2026-10-13)
 
 ### Highlights

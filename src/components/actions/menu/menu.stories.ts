@@ -14,15 +14,56 @@ export default {
 	tags: ['autodocs'],
 };
 
+/**
+ * Een menu met de acties op één ding. Elk item heeft een icoon, twee items
+ * openen een submenu, en de actie die niet terug te draaien is staat onderaan,
+ * los van de rest en `destructive`.
+ */
 export const Standaard = {
-	tags: ['!autodocs'],
 	render: () => html`
 		<nldd-button
 			expandable
-			text="Open menu"
+			text="Acties"
 		>
 			<nldd-menu slot="popup">
-				<nldd-menu-item text="Menu item"></nldd-menu-item>
+				<nldd-menu-item
+					text="Bewerken"
+					icon="edit"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Dupliceer"
+					icon="duplicate"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Verplaatsen naar"
+					icon="folder"
+				>
+					<nldd-menu>
+						<nldd-menu-item text="Dossier D-318"></nldd-menu-item>
+						<nldd-menu-item text="Dossier D-319"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+				<nldd-menu-item
+					text="Delen"
+					icon="share"
+				>
+					<nldd-menu>
+						<nldd-menu-item
+							text="Kopieer link"
+							icon="link"
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="Download als pdf"
+							icon="download"
+						></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+				<nldd-menu-divider></nldd-menu-divider>
+				<nldd-menu-item
+					destructive
+					text="Verwijderen"
+					icon="delete"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -139,7 +180,7 @@ export const Links = {
 				<nldd-menu-item
 					text="Mijn profiel"
 					href="#profiel"
-					icon="user"
+					icon="profile"
 				></nldd-menu-item>
 				<nldd-menu-item
 					text="Instellingen"
@@ -594,7 +635,7 @@ export const MetHeaderEnFooter = {
 
 				<nldd-menu-item
 					text="Profiel"
-					icon="person"
+					icon="profile"
 				></nldd-menu-item>
 				<nldd-menu-item
 					text="Instellingen"

@@ -278,6 +278,29 @@ describe('nldd-top-navigation-bar – menu sheet items', () => {
 		expect(btn).not.toBeNull();
 		expect(btn.getAttribute('type')).toBe('button');
 	});
+	// WCAG 1.3.1: in the menu behind the Menu button the current item was only
+	// painted. The list is a navigation list now, so its link says so too.
+	it('marks the current item in the menu sheet with aria-current', async () => {
+		el = await fixture<NLDDTopNavigationBar>(`
+			<nldd-top-navigation-bar website-title="Test">
+				<nldd-menu-bar slot="global" accessible-label="Hoofdmenu">
+					<nldd-menu-bar-item text="Home" href="/home"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Over" href="/over" current></nldd-menu-bar-item>
+				</nldd-menu-bar>
+			</nldd-top-navigation-bar>
+		`);
+		await waitForUpdate(el);
+
+		await (el as any)._onMenuButtonClick();
+		const list = (el as any)._globalMenuSheetList as HTMLElement;
+		const [home, over] = Array.from(list.querySelectorAll('nldd-list-item')) as HTMLElement[];
+		await waitForUpdate(over);
+
+		expect(list.getAttribute('role')).toBe('navigation');
+		expect(list.getAttribute('aria-label')).toBe('Hoofdmenu');
+		await expect.poll(() => over.shadowRoot!.querySelector('a')!.getAttribute('aria-current')).toBe('page');
+		expect(home.shadowRoot!.querySelector('a')!.hasAttribute('aria-current')).toBe(false);
+	});
 });
 
 describe('nldd-top-navigation-bar – menu sheet drill-down', () => {

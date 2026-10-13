@@ -132,7 +132,7 @@ export const MetExpandableItems = {
 				></nldd-menu-bar-item>
 				<nldd-menu-bar-item
 					text="Account"
-					icon="person"
+					icon="account"
 					expandable
 					content-priority="text"
 				>

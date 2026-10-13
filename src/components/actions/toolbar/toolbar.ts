@@ -15,8 +15,8 @@
  *
  * @element nldd-toolbar
  * @attr {string} size - Toolbar size, propagated to all child controls: 'sm' | 'md' | 'lg' (default: 'md'). At 'lg' the overflow button (and lg-capable children like nldd-icon-button) stack their label below the icon.
+ * @attr {string} accessible-label - Accessible name of the toolbar. Only needed when multiple toolbars appear on the same page.
  * @attr {boolean} show-item-labels - When true, shows a text label below each toolbar item and the overflow button
- * @attr {string} label - Accessible label for the toolbar. Only needed when multiple toolbars appear on the same page
  * @attr {object} translations - Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch.
  *
  * @slot start - nldd-toolbar-item and nldd-toolbar-title elements placed at the start
@@ -230,11 +230,11 @@ export class NLDDToolbar extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<Size>('md') })
 	size: Size = 'md';
 
+	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
+	accessibleLabel = '';
+
 	@property({ type: Boolean, reflect: true, attribute: 'show-item-labels' })
 	showItemLabels = false;
-
-	@property({ type: String, reflect: true })
-	label = '';
 
 	@property({ type: Object })
 	translations: Partial<NLDDToolbarTranslations> = {};
@@ -1006,7 +1006,7 @@ export class NLDDToolbar extends LitElement {
 			isSoloFluid,
 			this._pinnedOverflowItems.length > 0 || this._overflowIds.size > 0,
 			this._menuOpen,
-			this.label,
+			this.accessibleLabel,
 			this._centerOnly,
 			(key) => this._t(key),
 		);

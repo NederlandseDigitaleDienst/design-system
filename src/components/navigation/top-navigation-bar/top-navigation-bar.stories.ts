@@ -123,7 +123,7 @@ const Template = ({
 					<nldd-menu>
 						<nldd-menu-item
 							text="Mijn gegevens"
-							icon="contact-card"
+							icon="profile"
 						></nldd-menu-item>
 						<nldd-menu-item
 							text="Instellingen"
@@ -231,7 +231,7 @@ export const RegelRecht = {
 						<nldd-menu>
 							<nldd-menu-item
 								text="Mijn profiel"
-								icon="contact-card"
+								icon="profile"
 							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
 							<nldd-menu-item
@@ -295,7 +295,7 @@ export const SmalScherm = {
 						<nldd-menu>
 							<nldd-menu-item
 								text="Mijn gegevens"
-								icon="contact-card"
+								icon="profile"
 							></nldd-menu-item>
 							<nldd-menu-item
 								text="Instellingen"
@@ -413,7 +413,7 @@ export const VeelGlobaleItems = {
 						<nldd-menu>
 							<nldd-menu-item
 								text="Mijn gegevens"
-								icon="contact-card"
+								icon="profile"
 							></nldd-menu-item>
 							<nldd-menu-item
 								text="Instellingen"
@@ -489,7 +489,7 @@ export const AlleToestanden = {
 							<nldd-menu>
 								<nldd-menu-item
 									text="Mijn gegevens"
-									icon="contact-card"
+									icon="profile"
 								></nldd-menu-item>
 								<nldd-menu-divider></nldd-menu-divider>
 								<nldd-menu-item
@@ -543,7 +543,7 @@ export const AlleToestanden = {
 							<nldd-menu>
 								<nldd-menu-item
 									text="Mijn gegevens"
-									icon="contact-card"
+									icon="profile"
 								></nldd-menu-item>
 								<nldd-menu-divider></nldd-menu-divider>
 								<nldd-menu-item
@@ -608,7 +608,7 @@ export const AlleToestanden = {
 							<nldd-menu>
 								<nldd-menu-item
 									text="Mijn profiel"
-									icon="contact-card"
+									icon="profile"
 								></nldd-menu-item>
 								<nldd-menu-divider></nldd-menu-divider>
 								<nldd-menu-item

@@ -62,8 +62,8 @@ const tabBarItems = html`
 		icon="home"
 	></nldd-tab-bar-item>
 	<nldd-tab-bar-item
-		text="Profiel"
-		icon="profile"
+		text="Account"
+		icon="account"
 	></nldd-tab-bar-item>
 	<nldd-tab-bar-item
 		text="Zoeken"
@@ -171,8 +171,8 @@ export const Gemengd = {
 		></nldd-tab-bar-item>
 		<nldd-tab-bar-item
 			variant="text"
-			text="Profiel"
-			icon="profile"
+			text="Account"
+			icon="account"
 		></nldd-tab-bar-item>
 		<nldd-tab-bar-item
 			variant="icon"
@@ -197,9 +197,9 @@ export const Navigatie = {
 			href="/home"
 		></nldd-tab-bar-item>
 		<nldd-tab-bar-item
-			text="Profiel"
-			icon="profile"
-			href="/profiel"
+			text="Account"
+			icon="account"
+			href="/account"
 		></nldd-tab-bar-item>
 		<nldd-tab-bar-item
 			text="Zoeken"

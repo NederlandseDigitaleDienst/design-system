@@ -551,9 +551,15 @@ describe('nldd-toolbar', () => {
 		expect(overflow[0].tagName.toLowerCase()).toBe('nldd-menu-group');
 	});
 
+	it('names the toolbar with accessible-label', async () => {
+		el = await fixture('<nldd-toolbar accessible-label="Opmaak"></nldd-toolbar>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('[role="toolbar"]')!.getAttribute('aria-label')).toBe('Opmaak');
+	});
+
 	it('overflows same-priority items together (whole groups)', async () => {
 		el = await fixture(`
-			<nldd-toolbar style="display:block;width:120px" label="T">
+			<nldd-toolbar style="display:block;width:120px" accessible-label="T">
 				<nldd-toolbar-item slot="start" priority="1"><div style="width:50px;height:24px"></div><nldd-menu-item slot="overflow" text="A"></nldd-menu-item></nldd-toolbar-item>
 				<nldd-toolbar-item slot="start" priority="1"><div style="width:50px;height:24px"></div><nldd-menu-item slot="overflow" text="B"></nldd-menu-item></nldd-toolbar-item>
 				<nldd-toolbar-item slot="start" priority="2"><div style="width:50px;height:24px"></div><nldd-menu-item slot="overflow" text="C"></nldd-menu-item></nldd-toolbar-item>
@@ -821,7 +827,7 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 
 	it('measures again when a control inside an item gets narrower', async () => {
 		el = await fixture(`
-			<nldd-toolbar label="Balk" style="width: 340px">
+			<nldd-toolbar accessible-label="Balk" style="width: 340px">
 				<nldd-toolbar-item slot="start">
 					<nldd-button id="name" text="Een behoorlijk lange naam"></nldd-button>
 				</nldd-toolbar-item>
@@ -846,7 +852,7 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 	// and went into the menu; with the font it is 292px and fits.
 	it('measures again once the fonts have loaded, for an item that went into the menu', async () => {
 		el = await fixture(`
-			<nldd-toolbar label="Balk" style="width: 300px">
+			<nldd-toolbar accessible-label="Balk" style="width: 300px">
 				<nldd-toolbar-item slot="start" priority="1">
 					<span id="wide" style="display: inline-block; width: 400px">Weergave</span>
 					<nldd-menu-item slot="overflow" text="Weergave"></nldd-menu-item>
@@ -874,7 +880,7 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 
 	it('settles instead of measuring on and on', async () => {
 		el = await fixture(`
-			<nldd-toolbar label="Balk" style="width: 340px">
+			<nldd-toolbar accessible-label="Balk" style="width: 340px">
 				<nldd-toolbar-item slot="start">
 					<nldd-button id="name2" text="Een behoorlijk lange naam"></nldd-button>
 				</nldd-toolbar-item>

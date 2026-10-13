@@ -43,7 +43,7 @@ nldd-sheet                                    het detail van een rij, in de docu
       only="md"
     >
       <nldd-container padding="8">
-        <nldd-toolbar label="Mijn Dienst">
+        <nldd-toolbar accessible-label="Mijn Dienst">
           <nldd-toolbar-item
             slot="start"
             priority="3"
@@ -166,7 +166,7 @@ nldd-sheet                                    het detail van een rij, in de docu
       above="lg"
     >
       <nldd-container padding="8">
-        <nldd-toolbar label="Mijn Dienst">
+        <nldd-toolbar accessible-label="Mijn Dienst">
           <nldd-toolbar-item
             slot="start"
             priority="3"
@@ -350,7 +350,7 @@ nldd-sheet                                    het detail van een rij, in de docu
                 text="Alle dossiers"
                 heading-level="1"
               ></nldd-title>
-              <nldd-toolbar label="Alle dossiers">
+              <nldd-toolbar accessible-label="Alle dossiers">
                 <nldd-toolbar-item
                   slot="start"
                   priority="2"
@@ -417,7 +417,7 @@ nldd-sheet                                    het detail van een rij, in de docu
       <nldd-container padding="8">
         <nldd-toolbar
           size="lg"
-          label="Mijn Dienst"
+          accessible-label="Mijn Dienst"
         >
           <nldd-toolbar-item slot="start">
             <nldd-tab-bar

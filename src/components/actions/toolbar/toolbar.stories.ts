@@ -15,8 +15,8 @@ export default {
 	tags: ['autodocs'],
 	args: {
 		size: 'md',
+		accessibleLabel: '',
 		showItemLabels: false,
-		label: '',
 	},
 	argTypes: {
 		size: {
@@ -25,15 +25,16 @@ export default {
 			description: 'Grootte van de toolbar. Bij "lg" stapelen de overflow-knop en lg-controls (zoals nldd-icon-button) hun label onder het icoon — bedoeld als grote icon-button actiebalk.',
 			table: { defaultValue: { summary: 'md' } },
 		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Naam van de werkbalk voor een schermlezer. Alleen nodig als er meer dan één werkbalk op de pagina staat.',
+		},
 		showItemLabels: {
 			name: 'show-item-labels',
 			control: 'boolean',
 			description: 'Toon labels onder toolbar-items',
 			table: { defaultValue: { summary: false } },
-		},
-		label: {
-			control: 'text',
-			description: 'Naam van de werkbalk voor een schermlezer. Alleen nodig als er meer dan één werkbalk op de pagina staat.',
 		},
 	},
 };
@@ -51,8 +52,8 @@ export const Standaard = {
 	render: (args: Record<string, any>) => resizable(html`
 		<nldd-toolbar
 			size=${args.size}
+			accessible-label=${args.accessibleLabel || nothing}
 			?show-item-labels=${args.showItemLabels}
-			label=${args.label || nothing}
 		>
 			<nldd-toolbar-item
 				slot="start"
@@ -1116,7 +1117,7 @@ export const MobieleActiebalk = {
 	render: () => resizable(html`
 		<nldd-toolbar
 			size="lg"
-			label="Acties"
+			accessible-label="Acties"
 		>
 			<nldd-toolbar-item
 				slot="start"
@@ -1129,8 +1130,8 @@ export const MobieleActiebalk = {
 						icon="home"
 					></nldd-tab-bar-item>
 					<nldd-tab-bar-item
-						text="Profiel"
-						icon="profile"
+						text="Account"
+						icon="account"
 					></nldd-tab-bar-item>
 					<nldd-tab-bar-item
 						text="Zoeken"
@@ -1149,8 +1150,8 @@ export const MobieleActiebalk = {
 					></nldd-menu-item>
 					<nldd-menu-item
 						type="radio"
-						text="Profiel"
-						icon="profile"
+						text="Account"
+						icon="account"
 					></nldd-menu-item>
 					<nldd-menu-item
 						type="radio"
@@ -1189,16 +1190,16 @@ export const MobieleActiebalk = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Profiel"
+				label="Account"
 			>
 				<nldd-icon-button
-					text="Profiel"
-					icon="profile"
+					text="Account"
+					icon="account"
 				></nldd-icon-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Profiel"
-					icon="profile"
+					text="Account"
+					icon="account"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 		</nldd-toolbar>
@@ -1218,7 +1219,7 @@ export const LosseGecentreerdeTitel = {
 			<div style="outline: 1px dashed var(--semantics-dividers-color);">
 				<nldd-toolbar
 					size="md"
-					label="Zonder start of end"
+					accessible-label="Zonder start of end"
 				>
 					<nldd-toolbar-title
 						slot="center"
@@ -1238,7 +1239,7 @@ export const LosseGecentreerdeTitel = {
 			<div style="outline: 1px dashed var(--semantics-dividers-color);">
 				<nldd-toolbar
 					size="md"
-					label="Met verborgen back-knop"
+					accessible-label="Met verborgen back-knop"
 				>
 					<nldd-toolbar-item
 						slot="start"
