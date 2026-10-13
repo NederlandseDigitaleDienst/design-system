@@ -37,11 +37,11 @@ export const heroStyles = css`
 		--_hero-main-background-color: var(--semantics-categories-accent-reference-background-color);
 		--_hero-main-content-color: var(--semantics-categories-accent-reference-content-color);
 		--_hero-main-padding: var(--primitives-space-16);
-		--_hero-main-inset: 0;
+		--_hero-main-inset: var(--primitives-space-0);
 		--_hero-sm-main-inset: var(--semantics-page-sections-sm-gap);
 		--_hero-sm-main-overlap: var(--primitives-space-48);
 		--_hero-overlap-size: initial;
-		--_hero-default-overlap-size: 0;
+		--_hero-default-overlap-size: var(--primitives-space-0);
 		--_hero-default-media-height: auto;
 
 		${inheritedTextReset}
