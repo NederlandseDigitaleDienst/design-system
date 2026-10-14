@@ -875,3 +875,35 @@ describe('nldd-popover – open attribute', () => {
 		expect(popover.hasAttribute('open')).toBe(false);
 	});
 });
+
+
+/* A trigger such as nldd-button switches text selection off for itself and
+   everything in it, and a slotted popover is in it. */
+describe('nldd-popover onder een knop', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		window.getSelection()?.removeAllRanges();
+	});
+
+	it('laat de tekst erin selecteren', async () => {
+		await import('../../actions/button/button.js');
+		const { userEvent } = await import('vitest/browser');
+		el = await fixture(`
+			<nldd-button expandable text="Info">
+				<nldd-popover slot="popup" accessible-label="Toelichting">
+					<p>Aanvraag A-1042 is in behandeling</p>
+				</nldd-popover>
+			</nldd-button>
+		`);
+		await waitForUpdate(el);
+		const popover = el.querySelector('nldd-popover') as NLDDPopover & { showPopover(): void; hidePopover(): void };
+		popover.showPopover();
+		await waitForUpdate(popover);
+
+		await userEvent.tripleClick(popover.querySelector('p')!);
+		expect(window.getSelection()?.toString().trim()).toBe('Aanvraag A-1042 is in behandeling');
+		popover.hidePopover();
+	});
+});

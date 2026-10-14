@@ -42,6 +42,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **Text in an `nldd-popover` under a button can be selected.** `nldd-button`, `nldd-icon-button`, `nldd-menu-bar-item` and `nldd-menu-bar` switch text selection off for themselves and everything in them, and a popover in their `popup` slot is in them. The popover now switches it back on, so its text can be selected and copied.
 - **A card that is a link or button no longer stays pressed when a touch turns into a scroll.** The pressed shade of `nldd-card` came from `:active`, which can flash or linger while a touch scrolls the page. The card now sets it on a press and clears it on release, or when the browser hands the touch to scrolling, as `nldd-list-item` already did.
 - **The ribbon of `nldd-top-navigation-bar` starts at the top of the bar again with `logo-href`.** With a link on the logo the ribbon sat in a span as an inline image, on the text baseline with room below it for descenders, and centering that taller box lifted the ribbon 2 to 4 pixels above the bar. Anything placed above the bar, such as an `nldd-status-bar`, was overlapped by it.
 - **The current item in the menu sheet of `nldd-top-navigation-bar` has `aria-current`.** Behind the Menu button on a narrow screen the current item was only painted. The list in that sheet is a navigation list now, named after the global menu bar, so the link of the current item carries `aria-current` with the `current-type` of its menu bar item.
