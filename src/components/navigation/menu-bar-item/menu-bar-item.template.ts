@@ -19,7 +19,9 @@ export function template(component: NLDDMenuBarItem) {
 	const tooltipText = showsIconOnly ? (component.accessibleLabel || component.text) : '';
 	const ariaCurrent = component.current ? component.currentType : nothing;
 	// A navigation submenu is a list of links behind a disclosure: the item
-	// says expanded or not, and promises no menu.
+	// says expanded or not, and promises no menu. Read at render time; the
+	// component re-renders when a menu arrives or its variant changes (see
+	// _wireMenu), so this does not go stale.
 	const opensNavigation = component.querySelector(':scope > nldd-menu')?.getAttribute('variant') === 'navigation';
 	const ariaHaspopup = component.expandable
 		? (opensNavigation ? nothing : 'menu')
