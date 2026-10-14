@@ -781,6 +781,16 @@ describe('nldd-document-tab-bar – sluiten met de muis', () => {
 		await expect.poll(() => bar.hasAttribute('data-holding-widths')).toBe(false);
 	});
 
+	it('verdeelt de tabs meteen als de laatste van de rij sluit en er niets in de overloop staat', async () => {
+		const bar = await make();
+		const before = widths(bar)[0];
+		usePointer();
+		clickDismiss(getItems(bar)[3]);
+		await waitForUpdate(bar);
+		expect(bar.hasAttribute('data-holding-widths')).toBe(false);
+		expect(widths(bar)[0]).toBeGreaterThan(before);
+	});
+
 	it('verdeelt de tabs meteen bij sluiten met het toetsenbord', async () => {
 		const bar = await make();
 		const before = widths(bar)[1];

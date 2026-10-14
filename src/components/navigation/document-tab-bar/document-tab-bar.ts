@@ -23,8 +23,9 @@
  * the overflow takes the same width, and when the overflow button goes away
  * it leaves room at the end. Once the pointer leaves the bar the tabs grow
  * into the space again, at once for anyone who asks for reduced motion.
- * Closing from the keyboard spreads them at once: there is no pointer to keep
- * in place.
+ * Closing the last tab of the row, with none left in the overflow, lets them
+ * grow into the space at once, since no next close button needs to stay in
+ * place. Closing from the keyboard spreads them at once, without the motion.
  *
  * @slot - nldd-document-tab-bar-item elements
  * @slot end - Action buttons (e.g. new tab)
@@ -199,6 +200,9 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 	/** Whether the tabs keep their width after a close, until the pointer leaves. */
 	private _holding = false;
+	/** The last tab of the row, closed with nothing in the overflow: once it
+	 *  has left the row, the others grow into the space straight away. */
+	private _releaseOnRemoval: NLDDDocumentTabBarItem | null = null;
 	/** The width of the bar, to tell a resize from any other change. */
 	private _rowWidth = 0;
 	/** Every tab there was when the hold began, overflowed ones included, so
@@ -237,6 +241,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this.removeEventListener('pointerdown', this._onPointerDown);
 		this.removeEventListener('pointerleave', this._releaseWidths);
 		this._itemsAtHold.clear();
+		this._releaseOnRemoval = null;
 		clearTimeout(this._releasingTimer);
 		this.removeAttribute('data-holding-widths');
 		this.removeAttribute('data-releasing-widths');
@@ -333,6 +338,10 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	}
 
 	_onSlotChange(): void {
+		if (this._releaseOnRemoval && !this._getItems().includes(this._releaseOnRemoval)) {
+			this._releaseOnRemoval = null;
+			this._releaseWidths();
+		}
 		// A tab that arrives while the widths are held needs room of its own.
 		if (this._holding && this._getItems().some(item => !this._itemsAtHold.has(item))) {
 			this._releaseWidths();
@@ -825,13 +834,28 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		}
 
 		const isLastItem = items.length === 1;
-		if (!isLastItem && isPointerMode()) this._holdWidths(items.filter(item => item !== dismissedItem));
+		// The last tab of the row, with none waiting in the overflow: no next
+		// close button would slide in under the pointer, so the others grow into
+		// the space at once. Held first, so they grow rather than jump, and let
+		// go as soon as the closed tab has left the row.
+		const visible = items.filter(item => !item.hidden);
+		const closesTheRow = visible[visible.length - 1] === dismissedItem && visible.length === items.length;
+		if (!isLastItem && isPointerMode()) {
+			this._holdWidths(items.filter(item => item !== dismissedItem));
+			if (closesTheRow) this._releaseOnRemoval = dismissedItem;
+		}
 
 		this.dispatchEvent(new CustomEvent('tabdismiss', {
 			bubbles: true,
 			composed: true,
 			detail: { item: dismissedItem, nextItem },
 		}));
+		// Removed in the handler, as most apps do: grow now. Removed later, by a
+		// framework's next render: the slotchange that follows does it.
+		if (this._releaseOnRemoval && !this._getItems().includes(this._releaseOnRemoval)) {
+			this._releaseOnRemoval = null;
+			this._releaseWidths();
+		}
 
 		if (isLastItem) {
 			this.dispatchEvent(new CustomEvent('tabempty', { bubbles: true, composed: true }));
@@ -872,6 +896,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this.removeEventListener('pointerleave', this._releaseWidths);
 		this._holding = false;
 		this._itemsAtHold.clear();
+		this._releaseOnRemoval = null;
 		clearTimeout(this._releasingTimer);
 
 		const from = this.style.getPropertyValue('--_document-tab-bar-held-item-width');
