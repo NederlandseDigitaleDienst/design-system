@@ -18,6 +18,9 @@ export const documentTabBarStyles = css`
 		--_document-tab-bar-drag-clone-z-index: 100;
 		--_document-tab-bar-short-text-threshold: 200px;
 		--_document-tab-bar-item-min-width: 100px;
+		--_document-tab-bar-held-item-width: auto;
+		--_document-tab-bar-release-duration: var(--primitives-transition-duration-medium);
+		--_document-tab-bar-release-easing: var(--primitives-transition-easing-default);
 		--_document-tab-bar-overflow-button-reserve: 52px; /* Used for overflowButtonReserve. Overflow button width + spacing */
 		--_document-tab-bar-dismiss-button-is-hovered-background-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-250));
 		--_document-tab-bar-dismiss-button-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
@@ -65,6 +68,22 @@ export const documentTabBarStyles = css`
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
+	}
+
+	:host([data-holding-widths]) ::slotted(nldd-document-tab-bar-item) {
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: var(--_document-tab-bar-held-item-width);
+	}
+
+	:host([data-releasing-widths]) ::slotted(nldd-document-tab-bar-item) {
+		transition: flex-basis var(--_document-tab-bar-release-duration) var(--_document-tab-bar-release-easing);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:host([data-releasing-widths]) ::slotted(nldd-document-tab-bar-item) {
+			transition: none;
+		}
 	}
 
 	::slotted(nldd-document-tab-bar-item[hidden]) {

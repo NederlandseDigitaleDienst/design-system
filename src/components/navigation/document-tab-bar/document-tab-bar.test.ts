@@ -680,3 +680,102 @@ describe('nldd-document-tab-bar – translations', () => {
 		expect(overflowBtn?.getAttribute('text')).toBe('Show more tabs');
 	});
 });
+
+
+/* Closing a row of tabs with the pointer: the next close button has to come to
+   the pointer, so the tabs keep their width until the pointer leaves the bar. */
+describe('nldd-document-tab-bar – sluiten met de muis', () => {
+	let el: NLDDDocumentTabBar;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const make = async (): Promise<NLDDDocumentTabBar> => {
+		el = await fixture<NLDDDocumentTabBar>(`
+			<div style="width: 900px">
+				<nldd-document-tab-bar accessible-label="Documenten">
+					<nldd-document-tab-bar-item selected text="Aanvraag A-1042"></nldd-document-tab-bar-item>
+					<nldd-document-tab-bar-item text="Aanvraag A-1043"></nldd-document-tab-bar-item>
+					<nldd-document-tab-bar-item text="Dossier D-318"></nldd-document-tab-bar-item>
+					<nldd-document-tab-bar-item text="Dossier D-319"></nldd-document-tab-bar-item>
+				</nldd-document-tab-bar>
+			</div>
+		`);
+		const bar = el.querySelector('nldd-document-tab-bar') as NLDDDocumentTabBar;
+		await waitForUpdate(bar);
+		bar.addEventListener('tabdismiss', (e) => ((e as CustomEvent).detail.item as HTMLElement).remove());
+		return bar;
+	};
+
+	const widths = (bar: NLDDDocumentTabBar) => getItems(bar).map(item => Math.round(item.getBoundingClientRect().width));
+	const usePointer = () => document.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'mouse', bubbles: true }));
+	const useKeyboard = () => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+
+	it('houdt de breedte van de andere tabs vast tot de muis de balk verlaat', async () => {
+		const bar = await make();
+		const before = widths(bar)[1];
+		usePointer();
+		clickDismiss(getItems(bar)[0]);
+		await waitForUpdate(bar);
+
+		expect(getItems(bar).length).toBe(3);
+		expect(widths(bar)).toEqual([before, before, before]);
+
+		bar.dispatchEvent(new PointerEvent('pointerleave'));
+		await waitForUpdate(bar);
+		expect(widths(bar)[0]).toBeGreaterThan(before);
+	});
+
+	it('houdt de breedte vast over meer sluitingen achter elkaar', async () => {
+		const bar = await make();
+		const before = widths(bar)[0];
+		usePointer();
+		clickDismiss(getItems(bar)[0]);
+		clickDismiss(getItems(bar)[0]);
+		await waitForUpdate(bar);
+		expect(widths(bar)).toEqual([before, before]);
+		bar.dispatchEvent(new PointerEvent('pointerleave'));
+	});
+
+	it('laat niets opschuiven als tabs uit de overloop terugkomen en de overloopknop verdwijnt', async () => {
+		el = await fixture<NLDDDocumentTabBar>(`
+			<div style="width: 520px">
+				<nldd-document-tab-bar accessible-label="Documenten">
+					${Array.from({ length: 7 }, (_, i) => `<nldd-document-tab-bar-item ${i === 0 ? 'selected' : ''} text="Aanvraag A-${1042 + i}"></nldd-document-tab-bar-item>`).join('')}
+				</nldd-document-tab-bar>
+			</div>
+		`);
+		const bar = el.querySelector('nldd-document-tab-bar') as NLDDDocumentTabBar;
+		await waitForUpdate(bar);
+		bar.addEventListener('tabdismiss', (e) => ((e as CustomEvent).detail.item as HTMLElement).remove());
+		await new Promise(requestAnimationFrame);
+		const lefts = () => getItems(bar).filter(item => !item.hidden).map(item => Math.round(item.getBoundingClientRect().left));
+		const before = lefts();
+		expect(getItems(bar).some(item => item.hidden)).toBe(true);
+
+		usePointer();
+		// Close until the overflow is empty and one more, so the step where
+		// the overflow button goes away is part of it.
+		let closes = 0;
+		while (closes < 10 && (getItems(bar).some(item => item.hidden) || closes === 0 || lefts().length === before.length)) {
+			clickDismiss(getItems(bar)[0]);
+			await new Promise(requestAnimationFrame);
+			await waitForUpdate(bar);
+			closes++;
+			// Every tab that is still shown stands where a tab stood before.
+			expect(lefts()).toEqual(before.slice(0, lefts().length));
+		}
+		expect(getItems(bar).some(item => item.hidden)).toBe(false);
+		bar.dispatchEvent(new PointerEvent('pointerleave'));
+	});
+
+	it('verdeelt de tabs meteen bij sluiten met het toetsenbord', async () => {
+		const bar = await make();
+		const before = widths(bar)[1];
+		useKeyboard();
+		clickDismiss(getItems(bar)[0]);
+		await waitForUpdate(bar);
+		expect(widths(bar)[0]).toBeGreaterThan(before);
+	});
+});

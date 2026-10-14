@@ -2,6 +2,9 @@ import { html } from 'lit';
 import './document-tab-bar.js';
 import './../../actions/icon-button/icon-button.js';
 
+/** What an app does with a closed tab: take it away. */
+const sluit = (e: CustomEvent) => (e.detail.item as HTMLElement).remove();
+
 
 export default {
 	title: 'Components/Navigation/Document Tab Bar',
@@ -30,6 +33,7 @@ export default {
 const Template = ({ accessibleLabel }: Record<string, any>) => html`
 	<nldd-document-tab-bar
 		accessible-label=${accessibleLabel}
+		@tabdismiss=${sluit}
 	>
 		<nldd-document-tab-bar-item
 			selected
@@ -65,7 +69,10 @@ export const Standaard = {
 
 export const VeelTabbladen = {
 	render: () => html`
-	<nldd-document-tab-bar accessible-label="Documenten">
+	<nldd-document-tab-bar
+		accessible-label="Documenten"
+		@tabdismiss=${sluit}
+	>
 		<nldd-document-tab-bar-item
 			selected
 			text="Artikel 2"
@@ -128,7 +135,10 @@ export const VeelTabbladen = {
 
 export const ZonderSubtitel = {
 	render: () => html`
-	<nldd-document-tab-bar accessible-label="Documenten">
+	<nldd-document-tab-bar
+		accessible-label="Documenten"
+		@tabdismiss=${sluit}
+	>
 		<nldd-document-tab-bar-item
 			selected
 			text="Artikel 2"
@@ -180,6 +190,7 @@ export const Herschikbaar = {
 				></nldd-document-tab-bar-item>
 			</nldd-document-tab-bar>
 		`;
+		el.querySelector('nldd-document-tab-bar')!.addEventListener('tabdismiss', sluit as EventListener);
 		return el;
 	},
 	parameters: { controls: { disable: true } },

@@ -29,6 +29,8 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-code-viewer` scrolls across its whole box.** The padding sat on the box and the scrolling on the code inside it, so a long line stopped short of the edge, the scrollbar was inset, and the room for the copy button kept the whole right side free. The scroll area is now the box itself, with the padding inside it: a line scrolls out to the edge, the scrollbar runs from corner to corner, and at the end of a long line the last character stops beside the copy button instead of behind it.
 
+- **Closing tabs in `nldd-document-tab-bar` one after another works like in Safari.** Closing a tab with the pointer used to spread the others over the space at once, so the close button of the next tab moved away from the pointer. The tabs now keep their width until the pointer leaves the bar, and the next close button slides in under the pointer. Then they grow into the space, without motion for anyone who asks for reduced motion. Closing from the keyboard spreads them at once.
+
 ### Breaking
 
 - **`label` on `nldd-toolbar` is now `accessible-label`.** It was the one place where an accessible name was called `label`; every other component says `accessible-label`, and on `nldd-toolbar-item` `label` is the visible text below the item, which made the two easy to mix up. There is no alias: a `label` left on a toolbar does nothing, so the toolbar loses its name. Rename the attribute on every `nldd-toolbar`. The `label` on `nldd-toolbar-item` stays as it is.
