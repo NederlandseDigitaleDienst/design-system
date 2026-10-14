@@ -123,7 +123,7 @@ export const MetTitelgroep = {
 				</nldd-toolbar-item>
 				<nldd-toolbar-title
 					slot="start"
-					text="Document titel"
+					text="Aanvraag A-1042"
 					supporting-text="Laatste wijziging: vandaag"
 				></nldd-toolbar-title>
 				<nldd-toolbar-item
@@ -172,7 +172,7 @@ export const MetTitelgroep = {
 				</nldd-toolbar-item>
 				<nldd-toolbar-title
 					slot="center"
-					text="Document titel"
+					text="Aanvraag A-1042"
 					supporting-text="Laatste wijziging: vandaag"
 					align="center"
 				></nldd-toolbar-title>
@@ -199,9 +199,9 @@ export const MetTitelgroep = {
  *  logo, and a story that reaches for a file on disk breaks wherever it runs. */
 const logoDataUri = 'data:image/svg+xml,'
 	+ encodeURIComponent(
-		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 28">'
+		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 28">'
 		+ '<rect width="28" height="28" rx="6" fill="#154273"/>'
-		+ '<text x="36" y="20" font-family="sans-serif" font-size="16" fill="#154273">Beleid</text>'
+		+ '<text x="36" y="20" font-family="sans-serif" font-size="16" fill="#154273">Mijn Dienst</text>'
 		+ '</svg>',
 	);
 
@@ -219,7 +219,7 @@ export const TitelMetMedia = {
 			>
 				<nldd-toolbar-title
 					slot="start"
-					text="beleid-2026"
+					text="Aanvraag A-1042"
 					href="#"
 				>
 					<nldd-icon
@@ -255,7 +255,7 @@ export const TitelMetMedia = {
 					<img
 						slot="media"
 						src=${logoDataUri}
-						alt="Rijksbeleid"
+						alt="Mijn Dienst"
 						height="28"
 					>
 				</nldd-toolbar-title>
@@ -290,7 +290,7 @@ export const TitelMetActie = {
 			>
 				<nldd-toolbar-title
 					slot="start"
-					text="beleid-2026"
+					text="Aanvraag A-1042"
 				>
 					<nldd-icon-button
 						slot="action"
@@ -811,7 +811,7 @@ export const OverloopMetPrioriteit = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-title
 				slot="center"
-				text="Document titel"
+				text="Aanvraag A-1042"
 				supporting-text="Laatste wijziging: vandaag"
 				align="center"
 			></nldd-toolbar-title>
@@ -1126,7 +1126,7 @@ export const MobieleActiebalk = {
 				<nldd-tab-bar accessible-label="Hoofdnavigatie">
 					<nldd-tab-bar-item
 						current
-						text="Home"
+						text="Overzicht"
 						icon="home"
 					></nldd-tab-bar-item>
 					<nldd-tab-bar-item
@@ -1145,7 +1145,7 @@ export const MobieleActiebalk = {
 					<nldd-menu-item
 						type="radio"
 						selected
-						text="Home"
+						text="Overzicht"
 						icon="home"
 					></nldd-menu-item>
 					<nldd-menu-item
@@ -1328,7 +1328,7 @@ export const LosseGecentreerdeTitel = {
 					<nldd-toolbar-title
 						slot="center"
 						align="center"
-						text="boodschappen"
+						text="Dossier D-318"
 					>
 						<nldd-icon-button
 							slot="action"
@@ -1363,7 +1363,7 @@ export const LosseGecentreerdeTitel = {
 					<nldd-toolbar-title
 						slot="center"
 						align="center"
-						text="boodschappen"
+						text="Dossier D-318"
 					>
 						<nldd-icon-button
 							slot="action"

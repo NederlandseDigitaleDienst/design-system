@@ -72,7 +72,7 @@ export default {
 		},
 	},
 	args: {
-		text: 'Paginatitel',
+		text: 'Aanvragen',
 		supportingText: '',
 		backText: '',
 		dismissText: '',
@@ -102,12 +102,12 @@ const Template = (args: Record<string, any>) => html`
 
 export const Standaard = {
 	render: Template,
-	args: { text: 'Paginatitel' },
+	args: { text: 'Aanvragen' },
 };
 
 export const MetTerugknop = {
 	render: Template,
-	args: { text: 'Detailpagina', backText: 'Overzicht' },
+	args: { text: 'Aanvraag A-1042', backText: 'Aanvragen' },
 	parameters: {
 		docs: {
 			description: {
@@ -126,8 +126,8 @@ export const Compact = {
 		<nldd-top-title-bar
 			class="is-compact"
 			slot="header"
-			text="Detailpagina"
-			back-text="Overzicht"
+			text="Aanvraag A-1042"
+			back-text="Aanvragen"
 			dismiss-text="Sluit"
 			@back=${action('back')}
 			@dismiss=${action('dismiss')}
@@ -146,20 +146,20 @@ export const Compact = {
 
 export const MetSluitknop = {
 	render: Template,
-	args: { text: 'Formulier', dismissText: 'Sluit' },
+	args: { text: 'Wijziging doorgeven', dismissText: 'Sluit' },
 };
 
 export const MetBeideKnoppen = {
 	render: Template,
-	args: { text: 'Detailpagina', backText: 'Overzicht', dismissText: 'Annuleer' },
+	args: { text: 'Aanvraag A-1042', backText: 'Aanvragen', dismissText: 'Annuleer' },
 };
 
 export const MetSubtitel = {
 	render: Template,
 	args: {
-		text: 'Paginatitel',
-		supportingText: 'Aanvullende informatie',
-		backText: 'Overzicht',
+		text: 'Aanvraag A-1042',
+		supportingText: 'Dakisolatie, in behandeling',
+		backText: 'Aanvragen',
 		dismissText: 'Sluit',
 	},
 };
@@ -172,8 +172,8 @@ export const MetWerkbalkActies = {
 	>
 		<nldd-top-title-bar
 			slot="header"
-			text="Document"
-			back-text="Overzicht"
+			text="Aanvraag A-1042"
+			back-text="Aanvragen"
 			dismiss-text="Sluit"
 		>
 			<nldd-icon-button
@@ -210,8 +210,8 @@ export const MetTitelAnker = {
 	>
 		<nldd-top-title-bar
 			slot="header"
-			text="Paginatitel"
-			back-text="Overzicht"
+			text="Aanvraag A-1042"
+			back-text="Aanvragen"
 			dismiss-text="Sluit"
 			collapse-anchor="page-title-bar"
 			@back=${action('back')}
@@ -221,7 +221,7 @@ export const MetTitelAnker = {
 			<nldd-title
 				id="page-title-bar"
 				size="2"
-				text="Paginatitel"
+				text="Aanvraag A-1042"
 				supporting-text="Scroll omlaag om te zien hoe de compacte stand wordt geactiveerd."
 				heading-level="1"
 			></nldd-title>
@@ -248,7 +248,7 @@ export const MetTitelAnkerZonderActies = {
 	>
 		<nldd-top-title-bar
 			slot="header"
-			text="Paginatitel"
+			text="Aanvraag A-1042"
 			collapse-anchor="page-title-bar-2"
 			@back=${action('back')}
 			@dismiss=${action('dismiss')}
@@ -257,7 +257,7 @@ export const MetTitelAnkerZonderActies = {
 			<nldd-title
 				id="page-title-bar-2"
 				size="2"
-				text="Paginatitel"
+				text="Aanvraag A-1042"
 				supporting-text="Zonder terugknop of sluitknop."
 				heading-level="1"
 			></nldd-title>

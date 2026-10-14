@@ -181,13 +181,12 @@ export const InEenFormulierveld = () => html`
 
 export const MetBereik = () => html`
 	<nldd-form-field
-		label="Datum in 2026"
-		supporting-label="Bijvoorbeeld 31-12-2026"
+		label="Startdatum"
+		supporting-label="Vanaf vandaag tot uiterlijk een jaar vooruit"
 	>
 		<nldd-date-field
-			value="2026-06-15"
-			min="2026-01-01"
-			max="2026-12-31"
+			min="today"
+			max="today+1y"
 		></nldd-date-field>
 	</nldd-form-field>
 `;

@@ -18,7 +18,7 @@ export default {
 		logoSupportingText1: '',
 		logoSupportingText2: '',
 		logoHref: '',
-		websiteTitle: 'Ontwerpsysteem',
+		websiteTitle: 'Mijn Dienst',
 		websiteHref: '',
 		backText: '',
 		backHref: '',
@@ -81,9 +81,9 @@ const Template = ({
 						text="Home"
 						current
 					></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Aan de slag"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Isoleren"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Over ons"></nldd-menu-bar-item>
 				</nldd-menu-bar>
 			`}
@@ -148,8 +148,8 @@ export const Standaard = {
 export const MetWoordmerk = {
 	render: Template,
 	args: {
-		logoTitle: 'Nederlandse Digitale Dienst',
-		logoSubtitle: 'Ministerie van Economische Zaken en Klimaat',
+		logoTitle: 'Mijn Dienst',
+		logoSubtitle: 'Aanvragen en dossiers',
 		logoHref: '/',
 		websiteHref: '/',
 	},
@@ -161,7 +161,7 @@ export const MetTerugknop = {
 	render: Template,
 	args: {
 		backHref: '/',
-		backText: 'Overzicht',
+		backText: 'Aanvragen',
 		noGlobalMenu: true,
 	},
 };
@@ -169,15 +169,15 @@ export const MetTerugknop = {
 export const MijnOverheidZakelijk = {
 	render: () => html`
 		<div style=${layoutArea}>
-			<nldd-top-navigation-bar logo-title="Mijn overheid zakelijk">
+			<nldd-top-navigation-bar logo-title="Mijn Dienst">
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
 						current
 					></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Over MOZa"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Actueel"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Onderwerpen"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Over Mijn Dienst"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Contact"></nldd-menu-bar-item>
 				</nldd-menu-bar>
 				<nldd-menu-bar slot="utility">
@@ -187,7 +187,7 @@ export const MijnOverheidZakelijk = {
 						content-priority="icon"
 					></nldd-menu-bar-item>
 					<nldd-menu-bar-item
-						text="Bloom B.V."
+						text="Team Uitvoering"
 						icon="account"
 						expandable
 					>
@@ -218,13 +218,13 @@ export const RegelRecht = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-top-navigation-bar
-				website-title="RegelRecht"
+				website-title="Mijn Dienst"
 				back-href="/"
-				back-text="Bibliotheek"
+				back-text="Dossiers"
 			>
 				<nldd-menu-bar slot="utility">
 					<nldd-menu-bar-item
-						text="J. Jansen"
+						text="Mijn account"
 						icon="account"
 						expandable
 					>
@@ -250,14 +250,14 @@ export const RegelRecht = {
 export const SmalScherm = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
-			<nldd-top-navigation-bar website-title="Ontwerpsysteem">
+			<nldd-top-navigation-bar website-title="Mijn Dienst">
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
 						current
 					></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
 				</nldd-menu-bar>
 				<nldd-menu-bar slot="utility">
 					<nldd-menu-bar-item
@@ -320,7 +320,7 @@ export const SmalScherm = {
  * wordt op mobiel een aparte laag in de menu-sheet. Open de sheet via de
  * "Menu"-knop, tik op een rij met een chevron om in te zoomen; de titelbalk
  * toont dan een terugknop naar het vorige niveau. Submenu's mogen zelf weer
- * submenu's hebben ("Formulieren" hieronder), zodat je net zo diep kunt
+ * submenu's hebben ("Isoleren" hieronder), zodat je net zo diep kunt
  * navigeren als de content vraagt.
  *
  * Het submenu heeft `variant="navigation"`: het is een lijst links en geen menu
@@ -330,44 +330,44 @@ export const SmalScherm = {
 export const MeerlaagsMenu = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
-			<nldd-top-navigation-bar website-title="Ontwerpsysteem">
+			<nldd-top-navigation-bar website-title="Mijn Dienst">
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
 						current
 					></nldd-menu-bar-item>
 					<nldd-menu-bar-item
-						text="Componenten"
+						text="Aanvragen"
 						expandable
 					>
 						<nldd-menu variant="navigation">
 							<nldd-menu-item
-								text="Acties"
-								href="#acties"
+								text="Mijn aanvragen"
+								href="#mijn-aanvragen"
 							></nldd-menu-item>
-							<nldd-menu-item text="Formulieren">
+							<nldd-menu-item text="Isoleren">
 								<nldd-menu>
 									<nldd-menu-item
-										text="Tekstveld"
-										href="#tekstveld"
+										text="Dakisolatie"
+										href="#dakisolatie"
 									></nldd-menu-item>
 									<nldd-menu-item
-										text="Keuzelijst"
-										href="#keuzelijst"
+										text="Spouwmuurisolatie"
+										href="#spouwmuurisolatie"
 									></nldd-menu-item>
 									<nldd-menu-item
-										text="Datumveld"
-										href="#datumveld"
+										text="Vloerisolatie"
+										href="#vloerisolatie"
 									></nldd-menu-item>
 								</nldd-menu>
 							</nldd-menu-item>
 							<nldd-menu-item
-								text="Lijsten en tabellen"
-								href="#lijsten-en-tabellen"
+								text="Warmtepomp"
+								href="#warmtepomp"
 							></nldd-menu-item>
 						</nldd-menu>
 					</nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Aan de slag"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Over ons"></nldd-menu-bar-item>
 				</nldd-menu-bar>
 			</nldd-top-navigation-bar>
@@ -380,20 +380,20 @@ export const VeelGlobaleItems = {
 	render: () => html`
 		<div style=${layoutArea}>
 			<nldd-top-navigation-bar
-				logo-title="Nederlandse Digitale Dienst"
-				logo-subtitle="Ministerie van Economische Zaken en Klimaat"
+				logo-title="Mijn Dienst"
+				logo-subtitle="Aanvragen en dossiers"
 			>
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
 						current
 					></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Patronen"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Iconen"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Tokens"></nldd-menu-bar-item>
-					<nldd-menu-bar-item text="Aan de slag"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Warmtepomp"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Subsidies"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Berichten"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Isoleren"></nldd-menu-bar-item>
 					<nldd-menu-bar-item text="Over ons"></nldd-menu-bar-item>
 				</nldd-menu-bar>
 				<nldd-menu-bar slot="utility">
@@ -465,15 +465,15 @@ export const AlleToestanden = {
 	render: () => html`
 		<div style="display: flex; flex-direction: column; gap: 32px;">
 			<div style=${layoutArea}>
-				<nldd-top-navigation-bar website-title="Ontwerpsysteem (Full width)">
+				<nldd-top-navigation-bar website-title="Mijn Dienst (volle breedte)">
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"
 							current
 						></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Aan de slag"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Isoleren"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Over ons"></nldd-menu-bar-item>
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
@@ -521,14 +521,14 @@ export const AlleToestanden = {
 				</nldd-top-navigation-bar>
 			</div>
 			<div style="${layoutArea} max-width: 400px;">
-				<nldd-top-navigation-bar website-title="Ontwerpsysteem (Small viewport)">
+				<nldd-top-navigation-bar website-title="Mijn Dienst (smal scherm)">
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"
 							current
 						></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Componenten"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Ontwerprichtlijnen"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
 						<nldd-menu-bar-item
@@ -575,15 +575,15 @@ export const AlleToestanden = {
 				</nldd-top-navigation-bar>
 			</div>
 			<div style=${layoutArea}>
-				<nldd-top-navigation-bar logo-title="Mijn overheid zakelijk">
+				<nldd-top-navigation-bar logo-title="Mijn Dienst">
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"
 							current
 						></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Over MOZa"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Actueel"></nldd-menu-bar-item>
-						<nldd-menu-bar-item text="Onderwerpen"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Over Mijn Dienst"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
 						<nldd-menu-bar-item text="Contact"></nldd-menu-bar-item>
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
@@ -593,7 +593,7 @@ export const AlleToestanden = {
 							content-priority="icon"
 						></nldd-menu-bar-item>
 						<nldd-menu-bar-item
-							text="Bloom B.V."
+							text="Team Uitvoering"
 							icon="account"
 							expandable
 						>
@@ -614,13 +614,13 @@ export const AlleToestanden = {
 			</div>
 			<div style=${layoutArea}>
 				<nldd-top-navigation-bar
-					website-title="RegelRecht"
+					website-title="Mijn Dienst"
 					back-href="/"
-					back-text="Bibliotheek"
+					back-text="Dossiers"
 				>
 					<nldd-menu-bar slot="utility">
 						<nldd-menu-bar-item
-							text="J. Jansen"
+							text="Mijn account"
 							icon="account"
 							expandable
 						>

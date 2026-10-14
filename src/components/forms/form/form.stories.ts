@@ -166,17 +166,10 @@ export const Persoonsgegevens = {
 			label-alignment="right"
 			novalidate
 		>
-			<nldd-form-field label="Voornaam">
+			<nldd-form-field label="Naam">
 				<nldd-text-field
-					name="given-name"
-					autocomplete="given-name"
-					required
-				></nldd-text-field>
-			</nldd-form-field>
-			<nldd-form-field label="Achternaam">
-				<nldd-text-field
-					name="family-name"
-					autocomplete="family-name"
+					name="name"
+					autocomplete="name"
 					required
 				></nldd-text-field>
 			</nldd-form-field>
@@ -254,17 +247,10 @@ export const MetSecties = {
 			novalidate
 		>
 			<nldd-form-section text="Persoon">
-				<nldd-form-field label="Voornaam">
+				<nldd-form-field label="Naam">
 					<nldd-text-field
-						name="given-name"
-						autocomplete="given-name"
-						required
-					></nldd-text-field>
-				</nldd-form-field>
-				<nldd-form-field label="Achternaam">
-					<nldd-text-field
-						name="family-name"
-						autocomplete="family-name"
+						name="name"
+						autocomplete="name"
 						required
 					></nldd-text-field>
 				</nldd-form-field>

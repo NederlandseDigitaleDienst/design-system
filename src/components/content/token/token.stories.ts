@@ -38,7 +38,7 @@ export default {
 		},
 	},
 	args: {
-		text: 'Token',
+		text: 'Dossier D-318',
 		control: 'none',
 		dismissText: '',
 		menuText: '',
@@ -216,22 +216,22 @@ export const FilterVoorbeeld = {
 			<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
 				<nldd-token
 					control="dismiss"
-					text="Status: Actief"
+					text="Status: In behandeling"
 					@dismiss=${handleDismiss}
 				></nldd-token>
 				<nldd-token
 					control="dismiss"
-					text="Type: Document"
+					text="Maatregel: Dakisolatie"
 					@dismiss=${handleDismiss}
 				></nldd-token>
 				<nldd-token
 					control="dismiss"
-					text="Datum: Vandaag"
+					text="Team: Uitvoering"
 					@dismiss=${handleDismiss}
 				></nldd-token>
 				<nldd-token
 					control="dismiss"
-					text="Auteur: Jan de Vries"
+					text="Behandelaar: Jan de Vries"
 					@dismiss=${handleDismiss}
 				></nldd-token>
 			</div>

@@ -79,7 +79,7 @@ export default {
 		variant: 'neutral',
 		size: 'md',
 		icon: '',
-		text: 'Banner-tekst',
+		text: 'Aanvraag A-1042 is in behandeling',
 		supportingText: '',
 		headingLevel: undefined,
 		dismissible: false,
@@ -107,23 +107,23 @@ export const AlleVarianten = {
 		<div style="display: flex; flex-direction: column; gap: 16px;">
 			<nldd-banner
 				variant="neutral"
-				text="Standaard mededeling"
-				supporting-text="Met wat extra context."
+				text="Aanvraag A-1042 is in behandeling"
+				supporting-text="Je hoort binnen vijf werkdagen van ons."
 			></nldd-banner>
 			<nldd-banner
 				variant="accent"
-				text="Uitgelicht"
-				supporting-text="Een geaccentueerde mededeling die de aandacht trekt."
+				text="Dossier D-319 is aan je toegewezen"
+				supporting-text="Team Beleid vraagt je om het dossier deze week op te pakken."
 			></nldd-banner>
 			<nldd-banner
 				variant="success"
-				text="Opgeslagen"
+				text="Aanvraag A-1043 is afgerond"
 				supporting-text="Je wijzigingen zijn bewaard."
 			></nldd-banner>
 			<nldd-banner
 				variant="warning"
 				text="Let op"
-				supporting-text="Deze actie heeft gevolgen voor andere gebruikers."
+				supporting-text="Deze wijziging raakt ook Dossier D-318 van team Uitvoering."
 			></nldd-banner>
 			<nldd-banner
 				variant="critical"
@@ -165,7 +165,7 @@ export const MetRichContent = {
 			heading-level="2"
 		>
 			<nldd-rich-text spacing="flat">
-				<p>Op zondag 28 mei wordt het systeem onderhouden tussen 02:00 en 04:00. Tijdens deze periode:</p>
+				<p>Zondagnacht wordt Mijn Dienst onderhouden tussen 02:00 en 04:00. Tijdens deze periode:</p>
 				<ul>
 					<li>Kun je niet inloggen</li>
 					<li>Kunnen openstaande zaken niet worden bewerkt</li>

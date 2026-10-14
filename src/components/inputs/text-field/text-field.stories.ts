@@ -139,7 +139,7 @@ export default {
 		width: '',
 		name: '',
 		value: '',
-		placeholder: 'Text field',
+		placeholder: 'Tekstveld',
 		type: 'text',
 		keyboard: undefined,
 		enterKey: undefined,
@@ -186,21 +186,21 @@ export const Standaard = {
 export const AlleToestanden = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-text-field placeholder="Neutral"></nldd-text-field>
+		<nldd-text-field placeholder="Neutraal"></nldd-text-field>
 		<nldd-text-field
-			.value=${'Valid input'}
+			.value=${'Geldige invoer'}
 			valid
 		></nldd-text-field>
 		<nldd-text-field
-			.value=${'Invalid input'}
+			.value=${'Ongeldige invoer'}
 			invalid
 		></nldd-text-field>
 		<nldd-text-field
-			.value=${'Disabled'}
+			.value=${'Uitgeschakeld'}
 			disabled
 		></nldd-text-field>
 		<nldd-text-field
-			.value=${'Readonly'}
+			.value=${'Alleen-lezen'}
 			readonly
 		></nldd-text-field>
 	</div>
@@ -211,9 +211,9 @@ export const AlleToestanden = {
 export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-text-field placeholder="Medium (md)"></nldd-text-field>
+		<nldd-text-field placeholder="Middel (md)"></nldd-text-field>
 		<nldd-text-field
-			placeholder="Small (sm)"
+			placeholder="Klein (sm)"
 			size="sm"
 		></nldd-text-field>
 	</div>

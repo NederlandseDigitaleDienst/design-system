@@ -110,7 +110,7 @@ const Template = (args: Record<string, any>) => html`
 		></nldd-toggle-button>
 		<nldd-toggle-button
 			value="inbox"
-			text="Inbox"
+			text="Postvak IN"
 			icon="inbox"
 			selected
 		></nldd-toggle-button>
@@ -202,7 +202,7 @@ export const TypeCheckbox = {
 			></nldd-toggle-button>
 			<nldd-toggle-button
 				value="inbox"
-				text="Inbox"
+				text="Postvak IN"
 				icon="inbox"
 			></nldd-toggle-button>
 			<nldd-toggle-button
@@ -440,7 +440,7 @@ export const ToestandDisabled = {
 			></nldd-toggle-button>
 			<nldd-toggle-button
 				value="inbox"
-				text="Inbox"
+				text="Postvak IN"
 				icon="inbox"
 				selected
 			></nldd-toggle-button>

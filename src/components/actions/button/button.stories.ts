@@ -193,7 +193,7 @@ export default {
 		expandable: false,
 		expanded: false,
 		popupType: '',
-		text: 'Button',
+		text: 'Bewaar',
 		supportingText: '',
 		singleLine: false,
 		startIcon: '',
@@ -236,7 +236,7 @@ const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expa
 export const Standaard = {
 	render: Template,
 	args: {
-		text: 'Button',
+		text: 'Bewaar',
 	},
 };
 
@@ -375,19 +375,19 @@ export const Grootten = {
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 		<nldd-button
 			size="lg"
-			text="Large"
+			text="Groot"
 		></nldd-button>
 		<nldd-button
 			size="md"
-			text="Medium"
+			text="Middel"
 		></nldd-button>
 		<nldd-button
 			size="sm"
-			text="Small"
+			text="Klein"
 		></nldd-button>
 		<nldd-button
 			size="xs"
-			text="Extra Small"
+			text="Extra klein"
 		></nldd-button>
 	</div>
 `,
@@ -612,7 +612,7 @@ export const MetPopover = {
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 			<nldd-button
 				expandable
-				text="Info"
+				text="Wat is dakisolatie?"
 			>
 				<nldd-popover
 					slot="popup"
@@ -625,15 +625,15 @@ export const MetPopover = {
 					>
 						<nldd-title
 							size="6"
-							text="Zorgtoeslag"
+							text="Dakisolatie"
 							heading-level="2"
 						></nldd-title>
 						<nldd-rich-text>
-							<p>Een tegemoetkoming in de kosten van je zorgverzekering, afhankelijk van je inkomen.</p>
+							<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
 						</nldd-rich-text>
 						<nldd-button
 							appearance="primary"
-							text="Meer lezen"
+							text="Lees meer over dakisolatie"
 						></nldd-button>
 					</nldd-container>
 				</nldd-popover>
@@ -702,7 +702,7 @@ export const ToestandLoading = {
 export const EigenIcoonInDeSlot = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-button text="Custom start">
+		<nldd-button text="Eigen icoon vooraan">
 			<svg
 				slot="start-icon"
 				width="20"
@@ -717,7 +717,7 @@ export const EigenIcoonInDeSlot = {
 				/>
 			</svg>
 		</nldd-button>
-		<nldd-button text="Custom end">
+		<nldd-button text="Eigen icoon achteraan">
 			<svg
 				slot="end-icon"
 				width="20"

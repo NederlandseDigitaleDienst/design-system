@@ -493,7 +493,7 @@ export const ToestandLoading = {
 export const EigenIcoonInDeSlot = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-icon-button text="Custom">
+		<nldd-icon-button text="Eigen icoon">
 			<svg
 				slot="icon"
 				width="20"
@@ -572,7 +572,7 @@ export const MetPopover = {
 		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 			<nldd-icon-button
 				icon="info-circle"
-				text="Info"
+				text="Uitleg dakisolatie"
 			>
 				<nldd-popover
 					slot="popup"
@@ -585,11 +585,11 @@ export const MetPopover = {
 					>
 						<nldd-title
 							size="6"
-							text="Zorgtoeslag"
+							text="Dakisolatie"
 							heading-level="2"
 						></nldd-title>
 						<nldd-rich-text>
-							<p>Een tegemoetkoming in de kosten van je zorgverzekering, afhankelijk van je inkomen.</p>
+							<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
 						</nldd-rich-text>
 					</nldd-container>
 				</nldd-popover>

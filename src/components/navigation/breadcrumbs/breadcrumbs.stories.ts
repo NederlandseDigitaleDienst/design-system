@@ -35,15 +35,11 @@ export const Standaard = {
 				href="/"
 			></nldd-breadcrumbs-item>
 			<nldd-breadcrumbs-item
-				text="Documentatie"
-				href="/docs/"
+				text="Aanvragen"
+				href="/aanvragen/"
 			></nldd-breadcrumbs-item>
 			<nldd-breadcrumbs-item
-				text="Architectuur"
-				href="/docs/architecture"
-			></nldd-breadcrumbs-item>
-			<nldd-breadcrumbs-item
-				text="Detail"
+				text="Aanvraag A-1042"
 				current
 			></nldd-breadcrumbs-item>
 		</nldd-breadcrumbs>
@@ -63,15 +59,15 @@ export const SmalleContainer = {
 					href="/"
 				></nldd-breadcrumbs-item>
 				<nldd-breadcrumbs-item
-					text="Documentatie"
-					href="/docs/"
+					text="Aanvragen"
+					href="/aanvragen/"
 				></nldd-breadcrumbs-item>
 				<nldd-breadcrumbs-item
-					text="Architectuur"
-					href="/docs/architecture"
+					text="Aanvraag A-1042"
+					href="/aanvragen/a-1042/"
 				></nldd-breadcrumbs-item>
 				<nldd-breadcrumbs-item
-					text="Huidige pagina"
+					text="Wijziging doorgeven"
 					current
 				></nldd-breadcrumbs-item>
 			</nldd-breadcrumbs>

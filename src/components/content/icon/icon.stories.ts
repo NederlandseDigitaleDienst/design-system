@@ -134,11 +134,11 @@ export const MeeMetDeTekst = {
 	render: () => {
 		const line = (font: string) => html`
 			<p style="font: ${font}; margin: 0;">
-				Deze aanvraag is <nldd-icon icon="check-mark" size="inherit" color="success"></nldd-icon> goedgekeurd,
+				Aanvraag A-1043 is <nldd-icon icon="check-mark" size="inherit" color="success"></nldd-icon> goedgekeurd,
 				staat <nldd-icon icon="lock-closed" size="inherit"></nldd-icon> vast sinds
-				<nldd-icon icon="calendar-event" size="inherit"></nldd-icon> 12 maart, en loopt af over
+				<nldd-icon icon="calendar-event" size="inherit"></nldd-icon> vorige week, en loopt af over
 				<nldd-icon icon="clock" size="inherit"></nldd-icon> 3 dagen.
-				<nldd-icon icon="info-circle" size="inherit" color="accent"></nldd-icon> Verlengen kan tot die datum.
+				<nldd-icon icon="info-circle" size="inherit" color="accent"></nldd-icon> Verlengen kan tot die tijd.
 			</p>
 		`;
 		return html`

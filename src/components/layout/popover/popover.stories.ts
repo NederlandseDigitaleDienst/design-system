@@ -56,7 +56,7 @@ export default {
 		bottom: '',
 		left: '',
 		centered: false,
-		accessibleLabel: 'Voorbeeld popover',
+		accessibleLabel: 'Toelichting bij Aanvraag A-1042',
 		open: false,
 	},
 	argTypes: {
@@ -122,7 +122,7 @@ const Template = ({ width, smFullHeight, placement, top, right, bottom, left, ce
 	return html`
 		<nldd-button
 			id="trigger-default"
-			text="Open popover"
+			text="Toelichting bekijken"
 		></nldd-button>
 		<nldd-popover
 			width=${width || nothing}
@@ -141,7 +141,7 @@ const Template = ({ width, smFullHeight, placement, top, right, bottom, left, ce
 		>
 			<nldd-container padding="16">
 				<nldd-rich-text>
-					<p>Dit is een eenvoudige popover. Klik buiten of druk op Esc om te sluiten.</p>
+					<p>Je aanvraag voor dakisolatie is in behandeling. Klik ernaast of druk op Esc om te sluiten.</p>
 				</nldd-rich-text>
 			</nldd-container>
 		</nldd-popover>
@@ -157,12 +157,12 @@ export const MetFormulier = {
 	render: () => html`
 		<nldd-button
 			id="trigger-form"
-			text="Open form"
+			text="Contactgegevens wijzigen"
 		></nldd-button>
 
 		<nldd-popover
 			anchor="trigger-form"
-			accessible-label="Filter instellingen"
+			accessible-label="Contactgegevens"
 		>
 			<nldd-container padding="16">
 				<nldd-form novalidate>
@@ -177,7 +177,7 @@ export const MetFormulier = {
 							<nldd-button
 								appearance="primary"
 								type="submit"
-								text="Pas toe"
+								text="Bewaar"
 							></nldd-button>
 						</nldd-button-group>
 					</nldd-form-actions>
@@ -194,48 +194,48 @@ export const Plaatsingen = {
 		<div style="display: flex; gap: 1rem; align-items: center; justify-content: center; min-height: 320px;">
 			<nldd-button
 				id="trigger-placement-bottom-start"
-				text="Bottom start"
+				text="Onder, begin"
 			></nldd-button>
 			<nldd-popover
 				anchor="trigger-placement-bottom-start"
 				placement="bottom-start"
-				accessible-label="Bottom start"
+				accessible-label="Onder, begin"
 			>
 				<nldd-container padding="16"><nldd-rich-text><p>placement="bottom-start"</p></nldd-rich-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
 				id="trigger-placement-top-start"
-				text="Top start"
+				text="Boven, begin"
 			></nldd-button>
 			<nldd-popover
 				anchor="trigger-placement-top-start"
 				placement="top-start"
-				accessible-label="Top start"
+				accessible-label="Boven, begin"
 			>
 				<nldd-container padding="16"><nldd-rich-text><p>placement="top-start"</p></nldd-rich-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
 				id="trigger-placement-right"
-				text="Right"
+				text="Rechts"
 			></nldd-button>
 			<nldd-popover
 				anchor="trigger-placement-right"
 				placement="right"
-				accessible-label="Right"
+				accessible-label="Rechts"
 			>
 				<nldd-container padding="16"><nldd-rich-text><p>placement="right"</p></nldd-rich-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
 				id="trigger-placement-left"
-				text="Left"
+				text="Links"
 			></nldd-button>
 			<nldd-popover
 				anchor="trigger-placement-left"
 				placement="left"
-				accessible-label="Left"
+				accessible-label="Links"
 			>
 				<nldd-container padding="16"><nldd-rich-text><p>placement="left"</p></nldd-rich-text></nldd-container>
 			</nldd-popover>

@@ -175,9 +175,9 @@ export const ZonderScheidingslijn = {
 			appearance=${args.appearance}
 			?disabled=${args.disabled}
 		>
-			<nldd-button text="Cut"></nldd-button>
-			<nldd-button text="Copy"></nldd-button>
-			<nldd-button text="Paste"></nldd-button>
+			<nldd-button text="Knip"></nldd-button>
+			<nldd-button text="Kopieer"></nldd-button>
+			<nldd-button text="Plak"></nldd-button>
 		</nldd-button-bar>
 	`,
 };

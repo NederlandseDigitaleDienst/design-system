@@ -553,7 +553,7 @@ export const MetSubmenuOpMeerdereNiveaus = {
 						<nldd-menu-item text="Nieuw"></nldd-menu-item>
 						<nldd-menu-item text="Open recent">
 							<nldd-menu>
-								<nldd-menu-item text="2026-Q2.xlsx"></nldd-menu-item>
+								<nldd-menu-item text="Aanvraag A-1042.pdf"></nldd-menu-item>
 								<nldd-menu-item text="Notulen.docx"></nldd-menu-item>
 								<nldd-menu-item text="Plan.pdf"></nldd-menu-item>
 							</nldd-menu>
@@ -584,7 +584,7 @@ export const MetSubmenu = {
 				<nldd-menu-item text="Nieuw"></nldd-menu-item>
 				<nldd-menu-item text="Open recent">
 					<nldd-menu>
-						<nldd-menu-item text="2026-Q2.xlsx"></nldd-menu-item>
+						<nldd-menu-item text="Aanvraag A-1042.pdf"></nldd-menu-item>
 						<nldd-menu-item text="Notulen.docx"></nldd-menu-item>
 						<nldd-menu-item text="Plan.pdf"></nldd-menu-item>
 					</nldd-menu>
@@ -624,7 +624,7 @@ export const DebugVeiligeDriehoek = {
 				<nldd-menu-item text="Nieuw"></nldd-menu-item>
 				<nldd-menu-item text="Open recent">
 					<nldd-menu debug-safe-triangle>
-						<nldd-menu-item text="2026-Q2.xlsx"></nldd-menu-item>
+						<nldd-menu-item text="Aanvraag A-1042.pdf"></nldd-menu-item>
 						<nldd-menu-item text="Notulen.docx"></nldd-menu-item>
 						<nldd-menu-item text="Plan.pdf"></nldd-menu-item>
 					</nldd-menu>
@@ -652,11 +652,11 @@ export const PlatEnGroepenGemengd = {
 				<nldd-menu-item text="Recent geopend"></nldd-menu-item>
 				<nldd-menu-group text="Mappen">
 					<nldd-menu-item
-						text="Documenten"
+						text="Dossier D-318"
 						icon="folder"
 					></nldd-menu-item>
 					<nldd-menu-item
-						text="Downloads"
+						text="Dossier D-319"
 						icon="folder"
 					></nldd-menu-item>
 				</nldd-menu-group>
@@ -696,7 +696,7 @@ export const MetHeaderEnFooter = {
 				>
 					<nldd-identity
 						text="Anouk de Vries"
-						supporting-text="anouk@rijksoverheid.nl"
+						supporting-text="anouk@example.nl"
 						avatar-src=${AVATAR}
 						avatar-alt=""
 					></nldd-identity>

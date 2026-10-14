@@ -20,13 +20,13 @@ import { ICONS } from './../../content/icon/icon.js';
  * <nldd-link
  * 	href="/pad"
  * 	size="md"
- * 	text="Bekijk meer"
+ * 	text="Voorwaarden voor dakisolatie"
  * ></nldd-link>
  * <nldd-link
  * 	href="https://example.com"
  * 	target="_blank"
  * 	size="md"
- * 	text="Externe"
+ * 	text="Warmtepompen vergelijken"
  * 	end-icon="arrow-up-right"
  * ></nldd-link>
  *
@@ -105,7 +105,7 @@ export default {
 	},
 	args: {
 		size: 'md',
-		text: 'Bekijk meer',
+		text: 'Voorwaarden voor dakisolatie',
 		startIcon: '',
 		endIcon: '',
 		href: '#',
@@ -138,22 +138,22 @@ export const Grootten = {
 			<nldd-link
 				href="#"
 				size="lg"
-				text="Large link"
+				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
 			<nldd-link
 				href="#"
 				size="md"
-				text="Medium link"
+				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
 			<nldd-link
 				href="#"
 				size="sm"
-				text="Small link"
+				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
 			<nldd-link
 				href="#"
 				size="xs"
-				text="Extra small link"
+				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
 		</div>
 	`,
@@ -174,7 +174,7 @@ export const InLopendeTekst = {
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In body-md — link is body-md</p>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
-					Wil je toeslag aanvragen? Bekijk dan eerst <nldd-link href="https://example.com" target="_blank">de voorwaarden op de website</nldd-link> van de Belastingdienst.
+					Wil je subsidie aanvragen voor dakisolatie? Bekijk dan eerst <nldd-link href="https://example.com" target="_blank">de voorwaarden voor dakisolatie</nldd-link> op de website van Mijn Dienst.
 				</p>
 			</div>
 			<div>
@@ -186,19 +186,19 @@ export const InLopendeTekst = {
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Lange link wraps over regels (display: inline)</p>
 				<p style="margin: 0; max-width: 280px; font: var(--primitives-font-body-md-regular-snug);">
-					Klik <nldd-link href="#">hier voor een nogal lange linktekst die over meerdere regels moet kunnen wrappen</nldd-link> en kijk wat er gebeurt.
+					Lees meer over <nldd-link href="#">de voorwaarden voor dakisolatie en wat je moet aanleveren bij je aanvraag</nldd-link> voordat je begint.
 				</p>
 			</div>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon</p>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
-					Bezoek <nldd-link href="https://example.com" target="_blank" end-icon="square-arrow-right-top">de website</nldd-link> voor meer info.
+					Vergelijk vooraf <nldd-link href="https://example.com" target="_blank" end-icon="square-arrow-right-top">de soorten warmtepompen</nldd-link> en wat ze kosten.
 				</p>
 			</div>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Expliciete <code>size="inherit"</code> doet hetzelfde als geen size</p>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
-					Lees ook <nldd-link href="#" size="inherit">de toelichting</nldd-link> voor context.
+					Lees ook <nldd-link href="#" size="inherit">de toelichting bij Aanvraag A-1042</nldd-link> voor de stand van zaken.
 				</p>
 			</div>
 		</div>
@@ -222,12 +222,12 @@ export const MetStartIcon = {
 		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
 			<nldd-link
 				href="#"
-				text="Download bestand"
+				text="Aanvraag A-1042 (pdf, 2 MB)"
 				start-icon="download"
 			></nldd-link>
 			<nldd-link
 				href="#"
-				text="Terug naar overzicht"
+				text="Terug naar aanvragen"
 				start-icon="arrow-left"
 			></nldd-link>
 		</div>
@@ -242,13 +242,13 @@ export const MetEndIcon = {
 		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
 			<nldd-link
 				href="#"
-				text="Verder lezen"
+				text="Aanvraag A-1042"
 				end-icon="arrow-right"
 			></nldd-link>
 			<nldd-link
 				href="https://example.com"
 				target="_blank"
-				text="Externe website"
+				text="Warmtepompen vergelijken"
 				end-icon="square-arrow-right-top"
 			></nldd-link>
 		</div>
@@ -268,7 +268,7 @@ export const ToestandDisabled = {
 	render: () => html`
 		<nldd-link
 			href="#"
-			text="Uitgeschakelde link"
+			text="Aanvraag A-1043"
 			disabled
 		></nldd-link>
 	`,

@@ -47,7 +47,7 @@ export const Standaard = {
 	render: () => html`
 		<nldd-page>
 			<nldd-skip-link slot="header">
-				<nldd-top-navigation-bar website-title="DigID">
+				<nldd-top-navigation-bar website-title="Mijn Dienst">
 					<nldd-menu-bar-item
 						slot="global"
 						text="Home"
@@ -67,9 +67,9 @@ export const Standaard = {
 			<nldd-simple-section>
 				<nldd-rich-text>
 					<p>Druk op Tab om de skip-link te zien.</p>
-					<h1>Hoofdinhoud</h1>
+					<h1>Aanvraag A-1042</h1>
 					<p>Na het klikken op de skip-link springt de focus hierheen.</p>
-					<a href="#">Eerste link in hoofdinhoud</a>
+					<a href="#">Voorwaarden voor dakisolatie</a>
 				</nldd-rich-text>
 			</nldd-simple-section>
 		</nldd-page>
@@ -83,7 +83,7 @@ export const MetTekst = {
 				slot="header"
 				text="Ga naar hoofdinhoud"
 			>
-				<nldd-top-navigation-bar website-title="Rijksoverheid">
+				<nldd-top-navigation-bar website-title="Mijn Dienst">
 					<nldd-menu-bar-item
 						slot="global"
 						text="Home"
@@ -91,7 +91,7 @@ export const MetTekst = {
 					></nldd-menu-bar-item>
 					<nldd-menu-bar-item
 						slot="global"
-						text="Onderwerpen"
+						text="Aanvragen"
 					></nldd-menu-bar-item>
 					<nldd-menu-bar-item
 						slot="utility"
@@ -102,8 +102,8 @@ export const MetTekst = {
 			</nldd-skip-link>
 			<nldd-simple-section>
 				<nldd-rich-text>
-					<h1>Hoofdinhoud</h1>
-					<a href="#">Link in de content</a>
+					<h1>Aanvraag A-1042</h1>
+					<a href="#">Voorwaarden voor dakisolatie</a>
 				</nldd-rich-text>
 			</nldd-simple-section>
 		</nldd-page>
@@ -115,12 +115,12 @@ export const MetHref = {
 		<nldd-page>
 			<nldd-skip-link
 				slot="header"
-				text="Ga naar formulier"
+				text="Ga naar contactformulier"
 				href="#contact-form"
 			></nldd-skip-link>
 			<nldd-simple-section>
 				<nldd-rich-text>
-					<p>Content bovenaan de pagina...</p>
+					<p>Aanvraag A-1042 voor dakisolatie is in behandeling. Heb je een vraag over je aanvraag? Vul dan het contactformulier hieronder in.</p>
 				</nldd-rich-text>
 			</nldd-simple-section>
 			<nldd-simple-section id="contact-form">

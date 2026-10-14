@@ -99,7 +99,7 @@ export const Standaard = ({ size, color, text, supportingText, overline, heading
 				slot="end"
 				appearance="secondary"
 				size="sm"
-				text="Actie"
+				text="Bewerken"
 			></nldd-button>
 		</nldd-title>
 	</div>
@@ -109,8 +109,8 @@ export const MetOverline = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
-			text="Artikel 1"
-			overline="Wet op de zorgtoeslag"
+			text="Aanvraag A-1042"
+			overline="Dakisolatie"
 			heading-level="1"
 		></nldd-title>
 	</div>
@@ -122,8 +122,8 @@ export const MetSupportingText = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
-			text="Wet op de zorgtoeslag"
-			supporting-text="Laatste wijziging: 1 januari 2024"
+			text="Aanvraag A-1042"
+			supporting-text="Dakisolatie, in behandeling"
 			heading-level="1"
 		></nldd-title>
 	</div>
@@ -135,9 +135,9 @@ export const MetOverlineEnSupportingText = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
-			text="Begripsbepalingen"
-			supporting-text="Ingangsdatum: 1 januari 2024"
-			overline="Hoofdstuk 1"
+			text="Dossier D-318"
+			supporting-text="Aanvraag A-1042 in behandeling"
+			overline="Team Uitvoering"
 			heading-level="1"
 		></nldd-title>
 	</div>
@@ -149,7 +149,7 @@ export const MetActies = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
-			text="Wet op de zorgtoeslag"
+			text="Aanvraag A-1042"
 			heading-level="1"
 		>
 			<nldd-button
@@ -229,8 +229,8 @@ export const OpKleurvlak = {
 export const MetEigenInhoud = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title supporting-text="Laatste wijziging: 1 januari 2024">
-			<h1><a href="https://wetten.overheid.nl/BWBR0018451">Wet op de zorgtoeslag</a></h1>
+		<nldd-title supporting-text="Dakisolatie, in behandeling">
+			<h1><a href="#aanvraag-a-1042">Aanvraag A-1042</a></h1>
 		</nldd-title>
 	</div>
 `,

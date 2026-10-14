@@ -38,7 +38,7 @@ export default {
 	},
 	args: {
 		text: 'Jan Jansen',
-		supportingText: 'Redacteur · 12 juni 2026',
+		supportingText: 'Redacteur · vorige week',
 	},
 	argTypes: {
 		text: {
@@ -94,7 +94,7 @@ export const EnkeleAvatarViaAttribuut = {
 		<nldd-identity
 			avatar-src=${AVATAR_IMAGE}
 			text="Jan Jansen"
-			supporting-text="Redacteur · 12 juni 2026"
+			supporting-text="Redacteur · vorige week"
 		></nldd-identity>
 	`,
 	parameters: { controls: { disable: true } },
@@ -109,7 +109,7 @@ export const MeerdereRedacteuren = {
 	render: () => html`
 		<nldd-identity
 			text="Jan Jansen, Petra Pietersen en Ahmed Karim"
-			supporting-text="Laatst bijgewerkt op 12 juni 2026"
+			supporting-text="Vorige week bijgewerkt"
 		>
 			<nldd-avatar-group slot="avatars">
 				<nldd-avatar
@@ -134,7 +134,7 @@ export const ZonderAvatar = {
 	render: () => html`
 		<nldd-identity
 			text="Jan Jansen"
-			supporting-text="Redacteur · 12 juni 2026"
+			supporting-text="Redacteur · vorige week"
 		></nldd-identity>
 	`,
 	parameters: { controls: { disable: true } },
@@ -156,8 +156,8 @@ export const MetTimeEnLink = {
 			<span slot="text">Door <nldd-link href="#auteur" text="Jan Jansen"></nldd-link></span>
 			<time
 				slot="supporting-text"
-				datetime="2026-06-12"
-			>12 juni 2026</time>
+				datetime="09:30"
+			>Vanochtend om 09:30</time>
 		</nldd-identity>
 	`,
 	parameters: { controls: { disable: true } },
@@ -176,7 +176,7 @@ export const SmalleContainer = {
 			<div style="outline: 1px dashed #cbd5e1; padding: 16px;">
 				<nldd-identity
 					text="Jan Jansen, Petra Pietersen en Ahmed Karim"
-					supporting-text="Laatst bijgewerkt op 12 juni 2026"
+					supporting-text="Vorige week bijgewerkt"
 				>
 					<nldd-avatar-group slot="avatars">
 						<nldd-avatar
@@ -197,7 +197,7 @@ export const SmalleContainer = {
 			<div style="outline: 1px dashed #cbd5e1; padding: 16px;">
 				<nldd-identity
 					text="Jan Jansen"
-					supporting-text="Redacteur · 12 juni 2026"
+					supporting-text="Redacteur · vorige week"
 				>
 					<nldd-avatar
 						slot="avatars"

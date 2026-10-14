@@ -148,7 +148,7 @@ export const PijltjesnavigatieMetControls = {
 			appearance=${args.appearance}
 			type=${args.type}
 		>
-			${['NL-00001', 'NL-00002', 'NL-00003'].map((label) => html`
+			${['Aanvraag A-1042', 'Aanvraag A-1043', 'Dossier D-318'].map((label) => html`
 				<nldd-list-item>
 					<nldd-text-cell
 						width="full"
@@ -196,7 +196,7 @@ export const Appearances = {
 			</nldd-list>
 
 			<nldd-list appearance="box-tinted">
-				<nldd-list-item><nldd-text-cell text="Box (default: tinted bg + border) — item 1"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Box (standaard: getinte achtergrond en rand) — item 1"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Box — item 2"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Box — item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
@@ -715,10 +715,7 @@ export const Formulier = {
 				></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-cell width="fit-content">
-					<nldd-date-field
-						size="sm"
-						value="2026-08-23"
-					></nldd-date-field>
+					<nldd-date-field size="sm"></nldd-date-field>
 				</nldd-cell>
 			</nldd-list-item>
 			<nldd-list-item>
@@ -785,7 +782,7 @@ export const Formulier = {
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell
 					width="fit-content"
-					text="24 juli 2026"
+					text="Gisteren"
 				></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>

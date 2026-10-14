@@ -32,7 +32,7 @@ export default {
 	args: {
 		variant: 'neutral',
 		icon: '',
-		text: 'Namespace burgerzaken-prod created',
+		text: 'Aanvraag A-1042 is ingediend',
 		supportingText: '',
 		duration: 10000,
 	},
@@ -110,7 +110,7 @@ export const Standaard = {
 export const Neutraal = {
 	render: () => html`
 		<nldd-notification
-			text="Sync requested"
+			text="Dossier D-318 wordt bijgewerkt"
 			duration="0"
 			@dismiss=${weg}
 		></nldd-notification>
@@ -122,7 +122,7 @@ export const Accent = {
 	render: () => html`
 		<nldd-notification
 			variant="accent"
-			text="Sync requested"
+			text="Dossier D-319 is aan je toegewezen"
 			duration="0"
 			@dismiss=${weg}
 		></nldd-notification>
@@ -134,7 +134,7 @@ export const Succes = {
 	render: () => html`
 		<nldd-notification
 			variant="success"
-			text="Namespace created"
+			text="Aanvraag A-1043 is afgerond"
 			duration="0"
 			@dismiss=${weg}
 		></nldd-notification>
@@ -146,7 +146,7 @@ export const Waarschuwing = {
 	render: () => html`
 		<nldd-notification
 			variant="warning"
-			text="Node pool is scaling down"
+			text="Aanvraag A-1042 mist nog een bijlage"
 			duration="0"
 			@dismiss=${weg}
 		></nldd-notification>
@@ -162,8 +162,8 @@ export const Kritiek = {
 	render: () => html`
 		<nldd-notification
 			variant="critical"
-			text="Cluster could not be created"
-			supporting-text="The region refused the request."
+			text="Aanvraag A-1042 is niet verstuurd"
+			supporting-text="De server weigerde het verzoek."
 			@dismiss=${weg}
 		></nldd-notification>
 	`,
@@ -179,19 +179,19 @@ export const MetActies = {
 	render: () => html`
 		<nldd-notification
 			variant="critical"
-			text="Node pool was not created"
-			supporting-text="The cluster is there, the pool is not."
+			text="Bijlage is niet geüpload"
+			supporting-text="De aanvraag is bewaard, de bijlage niet."
 			@dismiss=${weg}
 		>
 			<nldd-button
 				slot="actions"
 				size="sm"
-				text="Try again"
+				text="Probeer opnieuw"
 			></nldd-button>
 			<nldd-button
 				slot="actions"
 				size="sm"
-				text="View cluster"
+				text="Aanvraag bekijken"
 			></nldd-button>
 		</nldd-notification>
 	`,
@@ -210,17 +210,17 @@ export const MetActies = {
 export const Stapel = {
 	render: () => html`
 		<nldd-notification
-			text="Sync requested"
+			text="Dossier D-318 wordt bijgewerkt"
 			@dismiss=${weg}
 		></nldd-notification>
 		<nldd-notification
 			variant="success"
-			text="Namespace created"
+			text="Aanvraag A-1043 is afgerond"
 			@dismiss=${weg}
 		></nldd-notification>
 		<nldd-notification
 			variant="critical"
-			text="Cluster could not be created"
+			text="Aanvraag A-1042 is niet verstuurd"
 			@dismiss=${weg}
 		></nldd-notification>
 	`,

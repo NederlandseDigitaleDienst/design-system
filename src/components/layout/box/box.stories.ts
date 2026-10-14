@@ -55,7 +55,7 @@ export const Standaard = ({ background }: Record<string, unknown>) => html`
 	<nldd-box background=${background as string}>
 		<nldd-container padding="16">
 			<nldd-rich-text>
-				<h3>Wanneer gebruik je een box?</h3>
+				<h3>Een box groepeert wat bij elkaar hoort</h3>
 				<p>
 					Een box groepeert gerelateerde componenten visueel in een afgebakend gebied.
 					Gebruik een box wanneer een set van inhoud of acties bij elkaar hoort en
@@ -89,13 +89,13 @@ export const AchtergrondCritical = {
 		<nldd-box background="critical">
 		<nldd-container padding="16">
 				<nldd-rich-text>
-					<h3>Cluster verwijderen</h3>
-					<p>Een cluster verwijderen is definitief en kan niet ongedaan worden gemaakt.</p>
+					<h3>Dossier D-318 verwijderen</h3>
+					<p>Een dossier verwijderen is definitief en kan niet ongedaan worden gemaakt.</p>
 				</nldd-rich-text>
 				<nldd-spacer size="16"></nldd-spacer>
 				<nldd-button
 					appearance="destructive"
-					text="Verwijder dit cluster"
+					text="Verwijder dit dossier"
 				></nldd-button>
 
 		</nldd-container>

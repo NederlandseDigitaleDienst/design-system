@@ -10,7 +10,7 @@ export default {
 	args: {
 		expandable: false,
 		iconOnly: false,
-		text: 'Menu item',
+		text: 'Aanvragen',
 		icon: '',
 		href: '',
 		current: false,
@@ -119,7 +119,7 @@ export const ContentPriorityText = {
 	name: 'Content-priority text',
 	render: Template,
 	args: {
-		text: 'Mijn DigID',
+		text: 'Mijn account',
 		icon: 'person',
 		contentPriority: 'text',
 		compact: true,
@@ -138,7 +138,7 @@ export const ToestandDisabled = {
 export const MetExpandable = {
 	render: () => html`
 		<nldd-menu-bar-item
-			text="Account"
+			text="Mijn account"
 			icon="account"
 			expandable
 		>
@@ -207,44 +207,44 @@ export const MetAvatar = {
 export const AlleToestanden = {
 	render: () => html`
 		<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-			<nldd-menu-bar-item text="Default"></nldd-menu-bar-item>
+			<nldd-menu-bar-item text="Standaard"></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="Current"
+				text="Huidig"
 				current
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="With Icon"
+				text="Met icoon"
 				icon="magnifier"
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="Icon Only"
+				text="Alleen icoon"
 				icon="magnifier"
 				icon-only
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="Priority Icon"
+				text="Voorrang icoon"
 				icon="magnifier"
 				content-priority="icon"
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="Priority Icon (compact)"
+				text="Voorrang icoon (compact)"
 				icon="magnifier"
 				content-priority="icon"
 				compact
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="Priority Text"
+				text="Voorrang tekst"
 				icon="person"
 				content-priority="text"
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="Priority Text (compact)"
+				text="Voorrang tekst (compact)"
 				icon="person"
 				content-priority="text"
 				compact
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="Disabled"
+				text="Uitgeschakeld"
 				disabled
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
@@ -252,12 +252,12 @@ export const AlleToestanden = {
 				href="/"
 			></nldd-menu-bar-item>
 			<nldd-menu-bar-item
-				text="Expandable"
+				text="Uitklapbaar"
 				expandable
 			>
 				<nldd-menu>
-					<nldd-menu-item text="Optie 1"></nldd-menu-item>
-					<nldd-menu-item text="Optie 2"></nldd-menu-item>
+					<nldd-menu-item text="Aanvraag A-1042"></nldd-menu-item>
+					<nldd-menu-item text="Aanvraag A-1043"></nldd-menu-item>
 				</nldd-menu>
 			</nldd-menu-bar-item>
 		</div>

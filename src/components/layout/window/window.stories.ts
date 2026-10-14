@@ -117,9 +117,9 @@ const setNextOpen = (e: Event) => { ((e.currentTarget as HTMLElement).nextElemen
 const pageContent = html`
 	<nldd-simple-section>
 		<nldd-rich-text>
-			<p>Dit is de inhoud van het venster.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-			Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+			<p>Je aanvraag voor dakisolatie is in behandeling.</p>
+			<p>We kijken eerst of het dak in aanmerking komt. Klopt er iets niet meer,
+			geef de wijziging dan door voordat de beoordeling begint.</p>
 		</nldd-rich-text>
 	</nldd-simple-section>
 `;
@@ -128,7 +128,7 @@ const Template = (args: Record<string, unknown>) => {
 	const [, updateArgs] = useArgs();
 	return html`
 		<nldd-button
-			text="Open venster"
+			text="Aanvraag bekijken"
 			@click=${setNextOpen}
 		></nldd-button>
 		<nldd-window
@@ -149,7 +149,7 @@ const Template = (args: Record<string, unknown>) => {
 			<nldd-page sticky-header>
 				<nldd-top-title-bar
 					slot="header"
-					text="Venstertitel"
+					text="Aanvraag A-1042"
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				${pageContent}
@@ -166,19 +166,19 @@ export const Standaard = {
 export const Gepositioneerd = {
 	render: () => html`
 		<nldd-button
-			text="Open rechtsonder"
+			text="Aanvraag bekijken"
 			@click=${openNext}
 		></nldd-button>
 		<nldd-window
 			right="32px"
 			bottom="32px"
 			width="400px"
-			accessible-label="Gepositioneerd venster"
+			accessible-label="Aanvraag A-1042"
 		>
 			<nldd-page sticky-header>
 				<nldd-top-title-bar
 					slot="header"
-					text="Rechtsonder"
+					text="Aanvraag A-1042"
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				${pageContent}
@@ -198,12 +198,12 @@ export const Gepositioneerd = {
 export const MetFooter = {
 	render: () => html`
 		<nldd-button
-			text="Open venster met footer"
+			text="Wijziging doorgeven"
 			@click=${openNext}
 		></nldd-button>
 		<nldd-window
 			height="400px"
-			accessible-label="Venster met footer"
+			accessible-label="Wijziging doorgeven"
 		>
 			<nldd-page
 				sticky-header
@@ -211,7 +211,7 @@ export const MetFooter = {
 			>
 				<nldd-top-title-bar
 					slot="header"
-					text="Venster met acties"
+					text="Wijziging doorgeven"
 					dismiss-text="Annuleer"
 				></nldd-top-title-bar>
 				${pageContent}

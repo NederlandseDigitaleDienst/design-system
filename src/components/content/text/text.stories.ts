@@ -16,7 +16,7 @@ import './text.js';
  * ## Gebruik
  * ```html
  * <nldd-text>Toegewezen aan Yara Nijhuis</nldd-text>
- * <nldd-text size="sm" color="secondary">Laatst bijgewerkt op 3 maart</nldd-text>
+ * <nldd-text size="sm" color="secondary">Vorige week bijgewerkt</nldd-text>
  * ```
  */
 export default {

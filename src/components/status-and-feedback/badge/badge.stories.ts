@@ -254,7 +254,7 @@ export const MetPulse = {
 			<nldd-badge
 				color="success"
 				pulse
-				text="Online"
+				text="Verbonden"
 			></nldd-badge>
 		</div>
 	`,
@@ -297,7 +297,7 @@ export const MetTekst = {
 			></nldd-badge>
 			<nldd-badge
 				color="success"
-				text="Live"
+				text="Actief"
 			></nldd-badge>
 			<nldd-badge
 				color="warning"

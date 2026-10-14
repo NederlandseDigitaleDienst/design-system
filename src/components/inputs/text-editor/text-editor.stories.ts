@@ -13,9 +13,9 @@ import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import '../../layout/spacer/spacer.js';
 
-const SAMPLE = `# Zorgtoeslag
+const SAMPLE = `# Aanvraag A-1042
 
-Een **vetgedrukte** en *cursieve* zin met \`inline code\` en een [link](https://www.rijksoverheid.nl).
+Een **vetgedrukte** en *cursieve* zin met \`inline code\`. Lees meer over [dakisolatie](https://www.example.nl/dakisolatie).
 
 > Een blockquote met toelichting.
 
@@ -42,7 +42,7 @@ const onListChange = (event: CustomEvent) => {
 	const value = event.detail.value as string;
 	editorOf(event.currentTarget as Element)?.setList(value === 'numbered' ? 'ordered' : value);
 };
-const HEADING_LABELS = ['Paragraaf', 'Heading 1', 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6'];
+const HEADING_LABELS = ['Paragraaf', 'Kop 1', 'Kop 2', 'Kop 3', 'Kop 4', 'Kop 5', 'Kop 6'];
 const onHeadingSelect = (event: Event) => {
 	const item = event.target as HTMLElement;
 	if (item?.tagName !== 'NLDD-MENU-ITEM') return;
@@ -469,32 +469,32 @@ function toolbarEditor(editor: unknown) {
 							<nldd-menu-item
 								type="radio"
 								value="1"
-								text="Heading 1"
+								text="Kop 1"
 							></nldd-menu-item>
 							<nldd-menu-item
 								type="radio"
 								value="2"
-								text="Heading 2"
+								text="Kop 2"
 							></nldd-menu-item>
 							<nldd-menu-item
 								type="radio"
 								value="3"
-								text="Heading 3"
+								text="Kop 3"
 							></nldd-menu-item>
 							<nldd-menu-item
 								type="radio"
 								value="4"
-								text="Heading 4"
+								text="Kop 4"
 							></nldd-menu-item>
 							<nldd-menu-item
 								type="radio"
 								value="5"
-								text="Heading 5"
+								text="Kop 5"
 							></nldd-menu-item>
 							<nldd-menu-item
 								type="radio"
 								value="6"
-								text="Heading 6"
+								text="Kop 6"
 							></nldd-menu-item>
 							<nldd-menu-divider></nldd-menu-divider>
 							<nldd-menu-item
@@ -516,32 +516,32 @@ function toolbarEditor(editor: unknown) {
 						<nldd-menu-item
 							type="radio"
 							value="heading:1"
-							text="Heading 1"
+							text="Kop 1"
 						></nldd-menu-item>
 						<nldd-menu-item
 							type="radio"
 							value="heading:2"
-							text="Heading 2"
+							text="Kop 2"
 						></nldd-menu-item>
 						<nldd-menu-item
 							type="radio"
 							value="heading:3"
-							text="Heading 3"
+							text="Kop 3"
 						></nldd-menu-item>
 						<nldd-menu-item
 							type="radio"
 							value="heading:4"
-							text="Heading 4"
+							text="Kop 4"
 						></nldd-menu-item>
 						<nldd-menu-item
 							type="radio"
 							value="heading:5"
-							text="Heading 5"
+							text="Kop 5"
 						></nldd-menu-item>
 						<nldd-menu-item
 							type="radio"
 							value="heading:6"
-							text="Heading 6"
+							text="Kop 6"
 						></nldd-menu-item>
 						<nldd-menu-item
 							type="radio"
@@ -784,11 +784,11 @@ export const Links = {
 			rows="10"
 			accessible-label="Tekst"
 			.value=${[
-				'Een markdown-link: [Regelrecht](https://regelrecht.rijks.app).',
+				'Een markdown-link: [Mijn Dienst](https://www.example.nl).',
 				'',
-				'En een plat geplakte URL: https://regelrecht.rijks.app — die krijgt dezelfde badge.',
+				'En een plat geplakte URL: https://www.example.nl/aanvragen — die krijgt dezelfde badge.',
 				'',
-				'Ook www.rijksoverheid.nl en info@rijksoverheid.nl worden herkend.',
+				'Ook www.example.nl en info@example.nl worden herkend.',
 			].join('\n')}
 		></nldd-text-editor>
 	`,
@@ -865,7 +865,7 @@ export const VermeldingenInEenOverlay = {
 		return html`
 			<nldd-button
 				appearance="primary"
-				text="Open modal dialog"
+				text="Notitie toevoegen"
 				@click=${open}
 			></nldd-button>
 			<nldd-modal-dialog accessible-label="Notitie">
@@ -885,7 +885,7 @@ export const VermeldingenInEenOverlay = {
 
 			<nldd-button
 				appearance="secondary"
-				text="Open sheet"
+				text="Notitie toevoegen in sheet"
 				@click=${open}
 			></nldd-button>
 			<nldd-sheet accessible-label="Notitie in een sheet">
@@ -917,11 +917,11 @@ export const Typeaheads = {
 			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid', avatar: {} },
 			{ id: '2', text: 'Bram Jansen', supportingText: 'Communicatie', avatar: {} },
 			{ id: '3', text: 'Chen Wei', supportingText: 'Data', avatar: {} },
-			{ id: '4', text: 'Dienst Toeslagen', supportingText: 'Organisatie', avatar: { type: 'organization' as const } },
+			{ id: '4', text: 'Mijn Dienst', supportingText: 'Organisatie', avatar: { type: 'organization' as const } },
 		];
 		const channels = [
 			{ id: 'algemeen', text: 'algemeen', supportingText: 'Het hele team', icon: 'tag' },
-			{ id: 'zorgtoeslag', text: 'zorgtoeslag', supportingText: 'Het traject', icon: 'tag' },
+			{ id: 'dakisolatie', text: 'dakisolatie', supportingText: 'Het traject', icon: 'tag' },
 			{ id: 'vragen', text: 'vragen', supportingText: 'Hulp en vragen', icon: 'tag' },
 		];
 		// The shortcode convention of Mattermost and Slack: `:smile:`, the closing
@@ -977,7 +977,7 @@ export const Typeaheads = {
 export const Annotaties = {
 	render: () => {
 		const sample =
-			'De Rijksoverheid werkt aan een toegankelijk designsysteem. Componenten zijn herbruikbaar en consistent.\n\nFeedback is welkom op elk onderdeel.';
+			'Mijn Dienst werkt aan een toegankelijk designsysteem. Componenten zijn herbruikbaar en consistent.\n\nFeedback is welkom op elk onderdeel.';
 		const at = (needle: string) => {
 			const start = sample.indexOf(needle);
 			return { start, end: start + needle.length, quote: needle };
@@ -1149,7 +1149,7 @@ export const MetWerkbalk = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'De editor is headless. Deze toolbar is opgebouwd uit DS-componenten — `nldd-toolbar` met icon-`nldd-segmented-control`s (nadruk vet/cursief, code, citaat, en een exclusieve lijst-keuze geen/opsomming/genummerd) en een uitklapbare `nldd-button` met een `nldd-menu` voor de tekststijl (Paragraaf/Heading 1/…). Tweerichtings gekoppeld: de controls sturen de editor (`runCommand`, `setList`, `setHeading`) en het `nldd-text-editor-state`-event zet hun actieve staat. Sneltoetsen Cmd/Ctrl+B/I/E/K werken ook.',
+				story: 'De editor is headless. Deze toolbar is opgebouwd uit DS-componenten — `nldd-toolbar` met icon-`nldd-segmented-control`s (nadruk vet/cursief, code, citaat, en een exclusieve lijst-keuze geen/opsomming/genummerd) en een uitklapbare `nldd-button` met een `nldd-menu` voor de tekststijl (Paragraaf/Kop 1/…). Tweerichtings gekoppeld: de controls sturen de editor (`runCommand`, `setList`, `setHeading`) en het `nldd-text-editor-state`-event zet hun actieve staat. Sneltoetsen Cmd/Ctrl+B/I/E/K werken ook.',
 			},
 		},
 	},

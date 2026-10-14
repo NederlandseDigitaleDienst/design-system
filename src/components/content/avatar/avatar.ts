@@ -45,7 +45,7 @@
  *
  * @example
  * ```html
- * <nldd-avatar name="Bart van de Biezen"></nldd-avatar>
+ * <nldd-avatar name="Sanne van den Berg"></nldd-avatar>
  * <nldd-avatar
  * 	name="Jan Jansen"
  * 	src="/avatars/jan.jpg"
@@ -57,15 +57,15 @@
  * 	initials="KvK"
  * ></nldd-avatar>
  * <nldd-avatar
- * 	name="Bart van de Biezen"
+ * 	name="Sanne van den Berg"
  * 	color="inherit"
  * ></nldd-avatar>
  * <nldd-avatar
- * 	name="Bart van de Biezen"
+ * 	name="Sanne van den Berg"
  * 	href="/profiel/"
  * ></nldd-avatar>
  * <nldd-avatar
- * 	name="Bart van de Biezen"
+ * 	name="Sanne van den Berg"
  * 	button
  * 	accessible-label="Profielmenu openen"
  * ></nldd-avatar>

@@ -113,7 +113,7 @@ export default {
 		variant: '',
 		appearance: 'neutral-tinted',
 		size: 'md',
-		text: 'Toggle',
+		text: 'Favoriet',
 		icon: '',
 		selectedIcon: '',
 		type: 'button',
@@ -145,7 +145,7 @@ const Template = (args: Record<string, any>) => html`
 export const Standaard = {
 	render: Template,
 	args: {
-		text: 'Toggle button',
+		text: 'Favoriet',
 	},
 	parameters: {
 		docs: {
@@ -198,7 +198,7 @@ export const AlleTypes = {
 					type="checkbox"
 					name="filter"
 					value="inbox"
-					text="Inbox"
+					text="Postvak IN"
 					icon="inbox"
 					selected
 				></nldd-toggle-button>
@@ -658,7 +658,7 @@ export const TypeCheckbox = {
 				type="checkbox"
 				name="filter"
 				value="inbox"
-				text="Inbox"
+				text="Postvak IN"
 				icon="inbox"
 				selected
 			></nldd-toggle-button>

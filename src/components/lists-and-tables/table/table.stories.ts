@@ -297,12 +297,12 @@ export const MetActiekolom = {
 			<nldd-cell></nldd-cell>
 		</nldd-table-row>
 		<nldd-table-row>
-			<nldd-text-cell text="Jaarverslag 2025"></nldd-text-cell>
+			<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 			<nldd-text-cell text="Eva de Vries"></nldd-text-cell>
 			<nldd-cell horizontal-alignment="center"><nldd-icon-button size="sm" icon="download" text="Download"></nldd-icon-button></nldd-cell>
 		</nldd-table-row>
 		<nldd-table-row>
-			<nldd-text-cell text="Begroting Q1"></nldd-text-cell>
+			<nldd-text-cell text="Aanvraag A-1043"></nldd-text-cell>
 			<nldd-text-cell text="Daan Jansen"></nldd-text-cell>
 			<nldd-cell horizontal-alignment="center"><nldd-icon-button size="sm" icon="download" text="Download"></nldd-icon-button></nldd-cell>
 		</nldd-table-row>

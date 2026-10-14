@@ -41,12 +41,12 @@ export const Standaard = {
 			?centered=${args.centered}
 			?hyphens=${args.hyphens}
 		>
-				<h3>Artikel 1. Algemene begrippen</h3>
-				<p>In deze wet en de daarop berustende bepalingen wordt verstaan onder:</p>
+				<h3>Wat telt als dakisolatie</h3>
+				<p>Je aanvraag gaat over een van deze maatregelen:</p>
 				<ul>
-					<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-					<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
-					<li><strong>berekeningsjaar:</strong> het kalenderjaar waarover de zorgtoeslag wordt berekend;</li>
+					<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+					<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
+					<li><strong>warmtepomp:</strong> een installatie die warmte uit de lucht, de bodem of water haalt;</li>
 				</ul>
 			</nldd-rich-text>
 	`,
@@ -59,12 +59,12 @@ export const Koppen = {
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
-				<h1>Heading 1 — Wet op de zorgtoeslag</h1>
-				<h2>Heading 2 — Hoofdstuk 1</h2>
-				<h3>Heading 3 — Artikel 1</h3>
-				<h4>Heading 4 — Lid 1</h4>
-				<h5>Heading 5 — Onderdeel a</h5>
-				<h6>Heading 6 — Subonderdeel i</h6>
+				<h1>Heading 1 — Mijn Dienst</h1>
+				<h2>Heading 2 — Dossier D-318</h2>
+				<h3>Heading 3 — Aanvraag A-1042</h3>
+				<h4>Heading 4 — Dakisolatie</h4>
+				<h5>Heading 5 — Bijlagen</h5>
+				<h6>Heading 6 — Foto van het dak</h6>
 			</nldd-rich-text>
 	`,
 };
@@ -77,10 +77,10 @@ export const Alinea = {
 			?centered=${args.centered}
 			?hyphens=${args.hyphens}
 		>
-				<h3>Artikel 2. Zorgtoeslag</h3>
-				<p>De verzekerde die op de eerste dag van het berekeningsjaar de leeftijd van achttien jaar heeft bereikt, heeft aanspraak op een zorgtoeslag.</p>
-				<p>De zorgtoeslag wordt berekend op basis van het toetsingsinkomen van de verzekerde en, indien van toepassing, diens partner.</p>
-				<p>Bij algemene maatregel van bestuur worden regels gesteld omtrent de wijze waarop de zorgtoeslag wordt berekend.</p>
+				<h3>Aanvraag A-1042</h3>
+				<p>Je aanvraag voor dakisolatie is in behandeling. Team Uitvoering beoordeelt of de maatregel past bij je woning en of de offerte compleet is.</p>
+				<p>Ontbreekt er iets, dan krijg je een bericht in Mijn Dienst. Je hebt daarna twee weken om je aanvraag aan te vullen.</p>
+				<p>Na de beoordeling hoor je of de aanvraag is toegekend en welk bedrag je ontvangt voor de isolatie van je dak.</p>
 			</nldd-rich-text>
 	`,
 };
@@ -97,11 +97,11 @@ export const Alinea = {
 export const Afbreken = {
 	render: (args: Record<string, any>) => {
 		const content = html`
-			<h3>Zorgtoeslagverantwoordelijkheid</h3>
-			<p>De gegevensverwerkingsovereenkomst beschrijft de verantwoordelijkheidsverdeling tussen de socialezekerheidsuitvoeringsinstantie en de belanghebbende. Zie ook https://www.rijksoverheid.nl/onderwerpen/zorgtoeslag voor meer informatie.</p>
+			<h3>Dakisolatieverantwoordelijkheid</h3>
+			<p>De gegevensverwerkingsovereenkomst beschrijft de verantwoordelijkheidsverdeling tussen de isolatiewerkzaamhedenuitvoerder en de aanvrager. De voorwaarden staan op https://example.nl/mijn-dienst/aanvragen/dakisolatie/voorwaarden.</p>
 			<ul>
-				<li>Inkomensafhankelijkheidsberekening per huishouden</li>
-				<li>Arbeidsongeschiktheidsverzekeringspremie</li>
+				<li>Energiebesparingsberekening per woning</li>
+				<li>Dakisolatiesubsidieaanvraagformulier</li>
 			</ul>
 		`;
 		return html`
@@ -136,12 +136,12 @@ export const Lijsten = {
 			?centered=${args.centered}
 		>
 				<h3>Ongeordende lijst</h3>
-				<p>De volgende documenten zijn vereist:</p>
+				<p>Voeg bij je aanvraag toe:</p>
 				<ul>
-					<li>Geldig identiteitsbewijs</li>
-					<li>Bewijs van inschrijving bij de gemeente</li>
-					<li>Recent loonstrookje of jaaropgave</li>
-					<li>Bankafschrift van de afgelopen drie maanden</li>
+					<li>De offerte van de aannemer</li>
+					<li>Een foto van het dak voor de isolatie</li>
+					<li>De factuur van de werkzaamheden</li>
+					<li>Een bewijs dat je eigenaar bent van de woning</li>
 				</ul>
 				<h3>Geneste en ongeordende lijst</h3>
 				<ul>
@@ -161,11 +161,11 @@ export const Lijsten = {
 				<h3>Geordende lijst</h3>
 				<p>De aanvraag verloopt in de volgende stappen:</p>
 				<ol>
-					<li>Maak een DigiD aan op digid.nl</li>
-					<li>Log in op de website van de Belastingdienst</li>
+					<li>Log in bij Mijn Dienst</li>
+					<li>Kies een nieuwe aanvraag voor dakisolatie</li>
 					<li>Vul het aanvraagformulier volledig in</li>
-					<li>Voeg de vereiste documenten toe</li>
-					<li>Dien de aanvraag in en bewaar de bevestiging</li>
+					<li>Voeg de offerte en de foto van het dak toe</li>
+					<li>Verstuur de aanvraag en bewaar de bevestiging</li>
 				</ol>
 				<h3>Geneste en geordende lijst</h3>
 				<ol>
@@ -189,15 +189,15 @@ export const Lijsten = {
 export const Definitielijst = {
 	render: (args: Record<string, any>) => {
 		const content = html`
-			<h3>Artikel 1. Begrippen</h3>
+			<h3>Begrippen</h3>
 			<dl>
-				<dt>Alleenstaande</dt>
-				<dd>De verzekerde die geen partner heeft.</dd>
-				<dt>Partner</dt>
-				<dd>De persoon die met de verzekerde een gezamenlijke huishouding voert.</dd>
-				<dt>Toetsingsinkomen</dt>
-				<dd>Het inkomen als bedoeld in artikel 8.</dd>
-				<dd>Inclusief het inkomen van een eventuele toeslagpartner.</dd>
+				<dt>Aanvrager</dt>
+				<dd>De persoon die de aanvraag indient.</dd>
+				<dt>Maatregel</dt>
+				<dd>Dakisolatie, zoldervloerisolatie of een warmtepomp.</dd>
+				<dt>Oppervlakte</dt>
+				<dd>Het deel van het dak dat je isoleert, in vierkante meters.</dd>
+				<dd>Zonder dakramen en dakkapellen.</dd>
 			</dl>
 		`;
 		return html`
@@ -234,10 +234,10 @@ export const InlineElementen = {
 		>
 				<h3>Inline elementen</h3>
 				<p>Dit is een paragraaf met <strong>vetgedrukte tekst</strong> en <em>schuingedrukte tekst</em>.</p>
-				<p>Hier staat een <a href="#">hyperlink naar een pagina</a> in de tekst.</p>
+				<p>Hier staat een link naar <a href="#">Aanvraag A-1042</a> in de tekst.</p>
 				<p>Dit is een stukje <code>inline code</code> in een paragraaf.</p>
 				<p>Dit is <mark>gemarkeerde tekst</mark> die extra aandacht verdient.</p>
-				<p>Combinaties zijn ook mogelijk: <strong>vet en <em>vet schuins</em></strong> of een <a href="#"><strong>vetgedrukte link</strong></a>.</p>
+				<p>Combinaties zijn ook mogelijk: <strong>vet en <em>vet schuins</em></strong> of een vetgedrukte link naar <a href="#"><strong>Dossier D-318</strong></a>.</p>
 			</nldd-rich-text>
 	`,
 };
@@ -249,12 +249,12 @@ export const Citaat = {
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
-				<h3>Artikel 3. Citaat</h3>
-				<p>In de memorie van toelichting staat het volgende vermeld:</p>
+				<h3>Beoordeling van Aanvraag A-1042</h3>
+				<p>In de beoordeling van team Uitvoering staat het volgende:</p>
 				<blockquote>
-					De zorgtoeslag is bedoeld als tegemoetkoming in de kosten van de zorgverzekering voor mensen met een laag inkomen. Het doel is om de toegankelijkheid van de zorg voor iedereen te waarborgen, ongeacht de financiële situatie van de verzekerde.
+					De offerte beschrijft isolatie van het hele schuine dak, met een isolatiewaarde die past bij de voorwaarden. De foto laat zien dat de oude isolatie is verwijderd, dus de aanvraag kan door naar het besluit over de hoogte van de bijdrage.
 				</blockquote>
-				<p>Dit citaat vormt de basis voor de interpretatie van artikel 2.</p>
+				<p>Dit citaat vormt de basis voor het besluit over de aanvraag.</p>
 			</nldd-rich-text>
 	`,
 };
@@ -266,16 +266,16 @@ export const Figuur = {
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
-				<h3>Artikel 4. Toelichting met afbeelding</h3>
-				<p>Onderstaande afbeelding toont de verdeling van de zorgtoeslag over de verschillende inkomensgroepen.</p>
+				<h3>Aanvragen per maatregel</h3>
+				<p>Onderstaande afbeelding toont hoe de aanvragen in Dossier D-318 verdeeld zijn over de maatregelen.</p>
 				<figure>
 					<img
 						src="https://placehold.co/800x400"
-						alt="Verdeling zorgtoeslag per inkomensgroep"
+						alt="Verdeling van de aanvragen per maatregel"
 					/>
-					<figcaption>Figuur 1 — Verdeling van de zorgtoeslag per inkomensgroep (2024)</figcaption>
+					<figcaption>Figuur 1 — Verdeling van de aanvragen per maatregel</figcaption>
 				</figure>
-				<p>Uit de afbeelding blijkt dat de laagste inkomensgroepen de hoogste toeslag ontvangen.</p>
+				<p>Uit de afbeelding blijkt dat dakisolatie de meeste aanvragen krijgt.</p>
 			</nldd-rich-text>
 	`,
 };
@@ -287,28 +287,28 @@ export const Tabel = {
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
-				<h3>Artikel 5. Overzicht toeslagbedragen</h3>
-				<p>De maximale zorgtoeslag per jaar is afhankelijk van de huishoudsamenstelling:</p>
+				<h3>Bijdrage per maatregel</h3>
+				<p>De maximale bijdrage per aanvraag hangt af van de maatregel:</p>
 				<table>
 					<tr>
-						<th>Huishoudtype</th>
-						<th>Maximale toeslag</th>
-						<th>Inkomensgrens</th>
+						<th>Maatregel</th>
+						<th>Maximale bijdrage</th>
+						<th>Minimale oppervlakte</th>
 					</tr>
 					<tr>
-						<td>Alleenstaande</td>
+						<td>Dakisolatie</td>
 						<td>€ 1.234</td>
-						<td>€ 38.520</td>
+						<td>20 m²</td>
 					</tr>
 					<tr>
-						<td>Toeslagpartners</td>
+						<td>Zoldervloerisolatie</td>
+						<td>€ 768</td>
+						<td>20 m²</td>
+					</tr>
+					<tr>
+						<td>Warmtepomp</td>
 						<td>€ 2.368</td>
-						<td>€ 48.224</td>
-					</tr>
-					<tr>
-						<td>Alleenstaande ouder</td>
-						<td>€ 1.234</td>
-						<td>€ 38.520</td>
+						<td>Geen</td>
 					</tr>
 				</table>
 			</nldd-rich-text>
@@ -325,16 +325,16 @@ export const Codeblok = {
 		>
 				<h3>Codeblok</h3>
 				<p>Een markdown-renderer levert een fenced block als <code>&lt;pre&gt;&lt;code&gt;</code> aan. Het kader zit op de <code>pre</code>, de chip blijft voor inline code.</p>
-				<pre><code>const toeslag = berekenZorgtoeslag(inkomen);
-if (toeslag > 0) {
-  console.log(toeslag);
+				<pre><code>const bijdrage = berekenBijdrage(aanvraag);
+if (bijdrage > 0) {
+  console.log(bijdrage);
 }</code></pre>
 				<p>Een regel die niet past scrollt binnen het blok in plaats van de kaart eromheen op te rekken.</p>
-				<pre><code>const uitkomst = await client.evalueer('zorgtoeslag', { toetsingsinkomen: 24000, vermogen: 0, partner: false });</code></pre>
+				<pre><code>const uitkomst = await client.beoordeel('A-1042', { maatregel: 'dakisolatie', oppervlakte: 48, eigenaar: true });</code></pre>
 				<p>Zonder <code>&lt;code&gt;</code> is <code>pre</code> preformatted tekst die geen code is:</p>
-				<pre>zorgtoeslag
-├── toetsingsinkomen
-└── vermogen</pre>
+				<pre>aanvraag
+├── maatregel
+└── oppervlakte</pre>
 			</nldd-rich-text>
 		</div>
 	`,
@@ -364,11 +364,11 @@ export const Scheidingslijn = {
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
-				<h3>Artikel 6. Eerste onderdeel</h3>
-				<p>De verzekerde heeft recht op zorgtoeslag indien het toetsingsinkomen niet hoger is dan de vastgestelde inkomensgrens.</p>
+				<h3>Eerste stap: beoordeling</h3>
+				<p>Team Uitvoering kijkt of de offerte en de foto van het dak passen bij de voorwaarden voor dakisolatie.</p>
 				<hr>
-				<h3>Artikel 7. Tweede onderdeel</h3>
-				<p>De zorgtoeslag wordt maandelijks als voorschot uitbetaald op basis van het geschatte jaarinkomen.</p>
+				<h3>Tweede stap: besluit</h3>
+				<p>Je krijgt het besluit in Mijn Dienst, met het bedrag dat je ontvangt en wanneer het wordt betaald.</p>
 			</nldd-rich-text>
 	`,
 };
@@ -379,44 +379,44 @@ export const Witruimte = {
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">flat</p>
 				<nldd-rich-text spacing="flat">
-					<h3>Artikel 1. Algemene begrippen</h3>
-					<p>In deze wet wordt verstaan onder:</p>
+					<h3>Wat telt als dakisolatie</h3>
+					<p>Je aanvraag gaat over een van deze maatregelen:</p>
 					<ul>
-						<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-						<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
+						<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+						<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 					</ul>
 				</nldd-rich-text>
 			</div>
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">tight</p>
 				<nldd-rich-text spacing="tight">
-					<h3>Artikel 1. Algemene begrippen</h3>
-					<p>In deze wet wordt verstaan onder:</p>
+					<h3>Wat telt als dakisolatie</h3>
+					<p>Je aanvraag gaat over een van deze maatregelen:</p>
 					<ul>
-						<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-						<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
+						<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+						<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 					</ul>
 				</nldd-rich-text>
 			</div>
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">snug (default)</p>
 				<nldd-rich-text spacing="snug">
-					<h3>Artikel 1. Algemene begrippen</h3>
-					<p>In deze wet wordt verstaan onder:</p>
+					<h3>Wat telt als dakisolatie</h3>
+					<p>Je aanvraag gaat over een van deze maatregelen:</p>
 					<ul>
-						<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-						<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
+						<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+						<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 					</ul>
 				</nldd-rich-text>
 			</div>
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">loose</p>
 				<nldd-rich-text spacing="loose">
-					<h3>Artikel 1. Algemene begrippen</h3>
-					<p>In deze wet wordt verstaan onder:</p>
+					<h3>Wat telt als dakisolatie</h3>
+					<p>Je aanvraag gaat over een van deze maatregelen:</p>
 					<ul>
-						<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-						<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
+						<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+						<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 					</ul>
 				</nldd-rich-text>
 			</div>
@@ -431,54 +431,54 @@ export const VolledigArtikel = {
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
-				<h1>Wet op de zorgtoeslag</h1>
-				<h2>Hoofdstuk 1. Algemene bepalingen</h2>
-				<h3>Artikel 1. Begrippen</h3>
-				<p>In deze wet en de daarop berustende bepalingen wordt verstaan onder:</p>
+				<h1>Dakisolatie aanvragen</h1>
+				<h2>Voorwaarden</h2>
+				<h3>Wat telt als dakisolatie</h3>
+				<p>Je aanvraag gaat over een van deze maatregelen:</p>
 				<ul>
-					<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-					<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
-					<li><strong>berekeningsjaar:</strong> het kalenderjaar waarover de zorgtoeslag wordt berekend;</li>
-					<li><strong>toetsingsinkomen:</strong> het inkomen als bedoeld in artikel 8;</li>
+					<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+					<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
+					<li><strong>warmtepomp:</strong> een installatie die warmte uit de lucht, de bodem of water haalt;</li>
+					<li><strong>offerte:</strong> de prijsopgave van de aannemer voor de maatregel;</li>
 				</ul>
-				<h3>Artikel 2. Aanspraak op zorgtoeslag</h3>
-				<p>De verzekerde die op de eerste dag van het berekeningsjaar de leeftijd van achttien jaar heeft bereikt, heeft aanspraak op een zorgtoeslag indien:</p>
+				<h3>Wie een aanvraag kan doen</h3>
+				<p>Je kunt een aanvraag indienen voor de isolatie van je dak als:</p>
 				<ol>
-					<li>hij op die datum in Nederland woont;</li>
-					<li>hij verzekerd is op grond van de Zorgverzekeringswet;</li>
-					<li>zijn toetsingsinkomen de inkomensgrens niet overschrijdt.</li>
+					<li>je eigenaar bent van de woning;</li>
+					<li>je zelf in de woning woont;</li>
+					<li>de werkzaamheden nog niet zijn begonnen.</li>
 				</ol>
 				<blockquote>
-					De zorgtoeslag is bedoeld als tegemoetkoming in de kosten van de zorgverzekering voor mensen met een laag inkomen.
+					Isoleer eerst en verwarm daarna: een goed geïsoleerd dak maakt een warmtepomp zuiniger.
 				</blockquote>
-				<h2>Hoofdstuk 2. Berekening</h2>
-				<h3>Artikel 3. Toeslagbedragen</h3>
-				<p>De maximale zorgtoeslag per jaar is als volgt:</p>
+				<h2>Bijdrage</h2>
+				<h3>Bedragen per maatregel</h3>
+				<p>De maximale bijdrage per aanvraag is als volgt:</p>
 				<table>
 					<tr>
-						<th>Huishoudtype</th>
-						<th>Maximale toeslag</th>
-						<th>Inkomensgrens</th>
+						<th>Maatregel</th>
+						<th>Maximale bijdrage</th>
+						<th>Minimale oppervlakte</th>
 					</tr>
 					<tr>
-						<td>Alleenstaande</td>
+						<td>Dakisolatie</td>
 						<td>€ 1.234</td>
-						<td>€ 38.520</td>
+						<td>20 m²</td>
 					</tr>
 					<tr>
-						<td>Toeslagpartners</td>
+						<td>Warmtepomp</td>
 						<td>€ 2.368</td>
-						<td>€ 48.224</td>
+						<td>Geen</td>
 					</tr>
 				</table>
-				<h3>Artikel 4. Meer informatie</h3>
-				<p>Voor meer informatie verwijzen wij naar de <a href="#">website van de Belastingdienst</a> of het <a href="#">Besluit zorgtoeslag</a>.</p>
+				<h3>Je aanvraag volgen</h3>
+				<p>Bekijk de <a href="#">status van Aanvraag A-1042</a> of lees de <a href="#">voorwaarden voor dakisolatie</a>.</p>
 				<figure>
 					<img
 						src="https://placehold.co/800x400"
-						alt="Overzicht zorgtoeslag"
+						alt="Overzicht van de stappen van een aanvraag"
 					/>
-					<figcaption>Figuur 1 — Schematisch overzicht van de zorgtoeslag berekening</figcaption>
+					<figcaption>Figuur 1 — Schematisch overzicht van de stappen van een aanvraag</figcaption>
 				</figure>
 			</nldd-rich-text>
 	`,
@@ -495,11 +495,11 @@ export const AlleGrootten = {
 						spacing=${args.spacing}
 						?centered=${args.centered}
 					>
-						<h2>Artikel 1. Algemene begrippen</h2>
-						<p>In deze wet wordt verstaan onder:</p>
+						<h2>Wat telt als dakisolatie</h2>
+						<p>Je aanvraag gaat over een van deze maatregelen:</p>
 						<ul>
-							<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-							<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
+							<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+							<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 						</ul>
 					</nldd-rich-text>
 				</div>
@@ -512,11 +512,11 @@ export const AlleGrootten = {
 						spacing=${args.spacing}
 						?centered=${args.centered}
 					>
-						<h2>Artikel 1. Algemene begrippen</h2>
-						<p>In deze wet wordt verstaan onder:</p>
+						<h2>Wat telt als dakisolatie</h2>
+						<p>Je aanvraag gaat over een van deze maatregelen:</p>
 						<ul>
-							<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-							<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
+							<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+							<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 						</ul>
 					</nldd-rich-text>
 				</div>
@@ -529,11 +529,11 @@ export const AlleGrootten = {
 						spacing=${args.spacing}
 						?centered=${args.centered}
 					>
-						<h2>Artikel 1. Algemene begrippen</h2>
-						<p>In deze wet wordt verstaan onder:</p>
+						<h2>Wat telt als dakisolatie</h2>
+						<p>Je aanvraag gaat over een van deze maatregelen:</p>
 						<ul>
-							<li><strong>alleenstaande:</strong> de verzekerde die geen partner heeft;</li>
-							<li><strong>partner:</strong> de persoon die met de verzekerde een gezamenlijke huishouding voert;</li>
+							<li><strong>dakisolatie:</strong> isolatie aan de binnen- of buitenkant van een schuin of plat dak;</li>
+							<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 						</ul>
 					</nldd-rich-text>
 				</div>
@@ -559,15 +559,15 @@ export const Breedtezones = {
 			spacing=${args.spacing}
 			?centered=${args.centered}
 		>
-			<h2>Zorgtoeslag per huishoudtype</h2>
-			<p>De hoogte van de zorgtoeslag hangt af van het toetsingsinkomen en het huishoudtype. Onderstaande tabel toont de maximale bedragen per maand; de tabel krijgt het wide-accent.</p>
+			<h2>Bijdrage per maatregel</h2>
+			<p>De hoogte van de bijdrage hangt af van de maatregel en de oppervlakte die je isoleert. Onderstaande tabel toont de maximale bedragen per aanvraag; de tabel krijgt het wide-accent.</p>
 			<table>
 				<thead>
-					<tr><th>Huishoudtype</th><th>Toetsingsinkomen</th><th>Maximale toeslag</th></tr>
+					<tr><th>Maatregel</th><th>Oppervlakte</th><th>Maximale bijdrage</th></tr>
 				</thead>
 				<tbody>
-					<tr><td>Alleenstaande</td><td>tot € 37.496</td><td>€ 127</td></tr>
-					<tr><td>Met partner</td><td>tot € 47.368</td><td>€ 243</td></tr>
+					<tr><td>Dakisolatie</td><td>vanaf 20 m²</td><td>€ 1.234</td></tr>
+					<tr><td>Warmtepomp</td><td>niet van toepassing</td><td>€ 2.368</td></tr>
 				</tbody>
 			</table>
 			<p>Afbeeldingen krijgen het wide-accent: iets breder dan de tekst, zonder de pagina te domineren.</p>
