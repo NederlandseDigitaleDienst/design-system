@@ -254,7 +254,7 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 		const items = this._getItems();
 		const row = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar');
 		const list = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar__items');
-		const button = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar__overflow');
+		const button = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar__overflow-button');
 		if (!row || !list || !button || items.length === 0) return null;
 
 		this.toggleAttribute('data-measuring', true);

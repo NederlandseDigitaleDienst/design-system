@@ -9,16 +9,16 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 	const isNavigation = component.navigation;
 
 	// The overflow button sits beside the tablist and not in it: a tablist may
-	// only hold tabs. The group draws the border, as nldd-button-bar does.
+	// only hold tabs. The box draws the border, as nldd-button-bar does.
 	const itemsContainer = html`
-		<div class="tab-bar__group">
+		<div class="tab-bar__box">
 			<div class="tab-bar__items"
 				role=${isNavigation ? nothing : 'tablist'}
 				aria-label=${isNavigation ? nothing : label}
 			>
 				<slot @slotchange=${component._onSlotChange}></slot>
 			</div>
-			<div class="tab-bar__overflow"
+			<div class="tab-bar__overflow-button"
 				?hidden=${component._overflowItems.length === 0}
 			>
 				<nldd-icon-button

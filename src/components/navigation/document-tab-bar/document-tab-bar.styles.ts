@@ -94,12 +94,12 @@ export const documentTabBarStyles = css`
 		flex-grow: 0;
 	}
 
-	.document-tab-bar__overflow {
+	.document-tab-bar__overflow-button {
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
 
-	.document-tab-bar__overflow.is-hidden {
+	.document-tab-bar__overflow-button.is-hidden {
 		display: none;
 	}
 

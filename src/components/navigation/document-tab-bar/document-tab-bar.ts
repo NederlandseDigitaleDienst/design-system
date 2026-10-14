@@ -763,7 +763,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 	private _syncMenuAnchor(): void {
 		if (!this._menu) return;
-		const button = this.shadowRoot?.querySelector('.document-tab-bar__overflow nldd-icon-button') as HTMLElement & {
+		const button = this.shadowRoot?.querySelector('.document-tab-bar__overflow-button nldd-icon-button') as HTMLElement & {
 			popoverTargetElement?: Element | null;
 			popoverTargetAction?: 'toggle' | 'show' | 'hide';
 		} | null;

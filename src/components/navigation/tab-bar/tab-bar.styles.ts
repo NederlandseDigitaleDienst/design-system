@@ -56,7 +56,7 @@ export const tabBarStyles = css`
 		justify-content: center;
 	}
 
-	.tab-bar__group {
+	.tab-bar__box {
 		display: flex;
 		position: relative;
 		border-radius: var(--_tab-bar-corner-radius);
@@ -75,11 +75,11 @@ export const tabBarStyles = css`
 		gap: var(--_tab-bar-gap);
 	}
 
-	.tab-bar__overflow {
+	.tab-bar__overflow-button {
 		flex-shrink: 0;
 	}
 
-	.tab-bar__overflow[hidden] {
+	.tab-bar__overflow-button[hidden] {
 		display: none;
 	}
 
@@ -92,7 +92,7 @@ export const tabBarStyles = css`
 		width: 100%;
 	}
 
-	:host([data-overflowing]) .tab-bar__group {
+	:host([data-overflowing]) .tab-bar__box {
 		flex-grow: 1;
 	}
 
@@ -128,11 +128,11 @@ export const tabBarStyles = css`
 		display: inline-block;
 	}
 
-	:host([data-measuring]) .tab-bar__overflow[hidden] {
+	:host([data-measuring]) .tab-bar__overflow-button[hidden] {
 		display: block;
 	}
 
-	.tab-bar__group::after {
+	.tab-bar__box::after {
 		content: '';
 		position: absolute;
 		inset: 0;

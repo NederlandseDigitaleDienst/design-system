@@ -25,7 +25,7 @@ export function documentTabBarTemplate(component: NLDDDocumentTabBar): TemplateR
 		>
 			<slot @slotchange=${component._onSlotChange}></slot>
 		</div>
-		<div class=${classMap({ 'document-tab-bar__overflow': true, 'is-hidden': !hasOverflow })}>
+		<div class=${classMap({ 'document-tab-bar__overflow-button': true, 'is-hidden': !hasOverflow })}>
 			<nldd-icon-button
 				text=${component._t('components.document-tab-bar.overflow-action')}
 				appearance="neutral-tinted"

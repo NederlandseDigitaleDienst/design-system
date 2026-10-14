@@ -180,7 +180,7 @@ describe('nldd-tab-bar-item – content variant detection', () => {
 		expect(items[1].hasAttribute('data-overflow')).toBe(false);
 		const home = textOf(items[0]);
 		expect(home.scrollWidth).toBeLessThanOrEqual(home.clientWidth + 1);
-		const overflow = bar.shadowRoot!.querySelector('.tab-bar__overflow') as HTMLElement;
+		const overflow = bar.shadowRoot!.querySelector('.tab-bar__overflow-button') as HTMLElement;
 		expect(overflow.hidden).toBe(false);
 		expect([...overflow.querySelectorAll('nldd-menu-item')].map(item => item.getAttribute('text'))).toEqual([
 			'Een hele lange tablabel die echt niet in deze smalle balk past',
@@ -991,12 +991,12 @@ describe('nldd-tab-bar – overloop', () => {
 	};
 
 	const hidden = (items: HTMLElement[]) => items.map(item => item.hasAttribute('data-overflow'));
-	const menuItems = (bar: HTMLElement) => [...bar.shadowRoot!.querySelectorAll('.tab-bar__overflow nldd-menu-item')] as HTMLElement[];
+	const menuItems = (bar: HTMLElement) => [...bar.shadowRoot!.querySelectorAll('.tab-bar__overflow-button nldd-menu-item')] as HTMLElement[];
 
 	it('toont alles en geen knop als de tabs passen', async () => {
 		const { bar, items } = await make(1200);
 		expect(hidden(items)).toEqual([false, false, false, false]);
-		expect((bar.shadowRoot!.querySelector('.tab-bar__overflow') as HTMLElement).hidden).toBe(true);
+		expect((bar.shadowRoot!.querySelector('.tab-bar__overflow-button') as HTMLElement).hidden).toBe(true);
 	});
 
 	it('houdt de huidige tab in de balk, ook als hij achteraan staat', async () => {
@@ -1062,8 +1062,8 @@ describe('nldd-tab-bar – overloop', () => {
 		const { bar } = await make(420);
 		expect(bar.hasAttribute('data-overflowing')).toBe(true);
 		expect(Math.round(bar.getBoundingClientRect().width)).toBe(420);
-		const group = bar.shadowRoot!.querySelector('.tab-bar__group') as HTMLElement;
-		expect(Math.round(group.getBoundingClientRect().width)).toBe(420);
+		const box = bar.shadowRoot!.querySelector('.tab-bar__box') as HTMLElement;
+		expect(Math.round(box.getBoundingClientRect().width)).toBe(420);
 	});
 
 	it('haalt tabs terug als er weer ruimte is', async () => {

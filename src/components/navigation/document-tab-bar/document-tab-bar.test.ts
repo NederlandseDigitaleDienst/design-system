@@ -666,7 +666,7 @@ describe('nldd-document-tab-bar – translations', () => {
 	it('uses default Dutch overflow label', async () => {
 		el = await fixture<NLDDDocumentTabBar>(threeTabBar());
 		await waitForUpdate(el);
-		const overflowBtn = el.shadowRoot!.querySelector('.document-tab-bar__overflow nldd-icon-button');
+		const overflowBtn = el.shadowRoot!.querySelector('.document-tab-bar__overflow-button nldd-icon-button');
 		expect(overflowBtn?.getAttribute('text')).toBe('Toon meer tabbladen');
 	});
 
@@ -676,7 +676,7 @@ describe('nldd-document-tab-bar – translations', () => {
 			'components.document-tab-bar.overflow-action': 'Show more tabs',
 		};
 		await waitForUpdate(el);
-		const overflowBtn = el.shadowRoot!.querySelector('.document-tab-bar__overflow nldd-icon-button');
+		const overflowBtn = el.shadowRoot!.querySelector('.document-tab-bar__overflow-button nldd-icon-button');
 		expect(overflowBtn?.getAttribute('text')).toBe('Show more tabs');
 	});
 });
