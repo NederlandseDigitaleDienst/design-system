@@ -15,6 +15,24 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A single card in a horizontal scroll no longer stretches across the page.** Items in a horizontal-scroll `nldd-collection` stop at 480px, and the new `item-max-width` sets a different limit.
+
+### Added
+
+- **`item-max-width` on `nldd-collection`, the largest width of an item in a horizontal scroll.** A scroll with only one or two items, such as an agenda that starts small, keeps them at a readable width instead of filling the container. It takes a CSS length such as `400px` or `25rem` and is never wider than the container. Once the items overflow, scrolling, the edge fade and the previous and next buttons work as before. Grid, lanes and stack ignore it. A grid leaves empty columns rather than stretching an item, so the problem does not occur there, and a maximum would change how many columns fit.
+
+- **A design guideline for link text: say where the link goes, no "click here".** A screen reader can read every link on a page as a list of its own, and people scanning a page read the underlined words. Out of context, "klik hier", "lees meer" and "meer info" say nothing. The guideline asks for the destination or subject as the link, the distinguishing words first, a different text for every destination, and the format and size of a file. WCAG 2.4.4 accepts a generic link when the sentence around it gives the context. This guideline is stricter, because that context only helps whoever reads the sentence. The examples in Storybook follow it now.
+
+### Changed
+
+- **Items in a horizontal-scroll `nldd-collection` stop at 480px.** One or two items that fit grew to the full width of the container, so a card of 320px became more than 1000px wide on a desktop. They now grow up to 480px and stay at the start. An `item-min-width` wider than 480px raises the limit with it, and `item-max-width` sets your own.
+
+### Breaking
+
+- **`item-width` on `nldd-collection` is now `item-min-width`.** It was a minimum in every layout: in a grid the narrowest a column gets, in a horizontal scroll the width an item never shrinks below. The new name says so, and pairs with `item-max-width`. There is no alias. An `item-width` left on a collection does nothing, so its items fall back to the default of 280px. Rename the attribute on every `nldd-collection`.
+
 ## [0.8.99](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.98...v0.8.99) (2026-10-14)
 
 ### Highlights
