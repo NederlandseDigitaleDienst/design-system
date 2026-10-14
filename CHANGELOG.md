@@ -25,6 +25,10 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-visually-hidden`, text for a screen reader only.** It stays in the accessibility tree and the reading order and takes no room on the page. Use it for a name that is visually redundant, such as the header of a column of checkboxes. The recipe is the one the components already use inside, so a site no longer needs a `.visually-hidden` class of its own. It is not for repairing structure that is missing, nor for a status: a status that matters to a screen reader matters to anyone, so show it.
 
+### Changed
+
+- **`nldd-code-viewer` scrolls across its whole box.** The padding sat on the box and the scrolling on the code inside it, so a long line stopped short of the edge, the scrollbar was inset, and the room for the copy button kept the whole right side free. The scroll area is now the box itself, with the padding inside it: a line scrolls out to the edge, the scrollbar runs from corner to corner, and at the end of a long line the last character stops beside the copy button instead of behind it.
+
 ### Breaking
 
 - **`label` on `nldd-toolbar` is now `accessible-label`.** It was the one place where an accessible name was called `label`; every other component says `accessible-label`, and on `nldd-toolbar-item` `label` is the visible text below the item, which made the two easy to mix up. There is no alias: a `label` left on a toolbar does nothing, so the toolbar loses its name. Rename the attribute on every `nldd-toolbar`. The `label` on `nldd-toolbar-item` stays as it is.
