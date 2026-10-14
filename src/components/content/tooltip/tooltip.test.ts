@@ -182,7 +182,11 @@ describe('nldd-tooltip – show/hide', () => {
 	});
 
 	it('Escape sluit alleen de tooltip, niet de dialog eromheen', async () => {
-		el = await fixture<NLDDTooltip>('<dialog><nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip></dialog>') as unknown as NLDDTooltip;
+		// showModal() focuses the first control it finds. Without the autofocus
+		// that would be the trigger, the tooltip would show on that focus, and a
+		// runner window that regains OS focus mid-test refocuses it and shows the
+		// tooltip again after Escape put it away. Hover alone is what is tested.
+		el = await fixture<NLDDTooltip>('<dialog><button autofocus>Eerst</button><nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip></dialog>') as unknown as NLDDTooltip;
 		const dialog = el as unknown as HTMLDialogElement;
 		const tooltip = dialog.querySelector('nldd-tooltip') as NLDDTooltip;
 		const button = tooltip.querySelector('button')!;
