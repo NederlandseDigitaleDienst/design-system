@@ -6,6 +6,13 @@
  * the global navigation and the utility navigation. On narrow widths the global
  * navigation moves into a menu sheet behind the menu button.
  *
+ * The top bar of a website, and of nothing else: put it in the `header` slot
+ * of an `nldd-page`. Do not combine it with a split view. A split view is the
+ * layout of an application, whose panes carry a bar of their own, usually an
+ * `nldd-toolbar`, and a site header above it gives a second layer of
+ * navigation and a second thing that scrolls. Does a page need a sidebar under
+ * this bar, use an `nldd-sidebar-section` inside that `nldd-page`.
+ *
  * @element nldd-top-navigation-bar
  *
  * @attr {boolean} no-logo - Hides the whole logo bar, wordmark included.
