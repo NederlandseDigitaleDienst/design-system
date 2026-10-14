@@ -2197,9 +2197,9 @@ export class NLDDMenu extends LitElement {
 	 */
 	private _handleFocusOut = (event: FocusEvent): void => {
 		if (this.variant !== 'navigation') return;
+		if (!(this as HTMLElement).matches(':popover-open')) return;
 		const next = event.relatedTarget as Node | null;
 		if (next ? this.contains(next) || this._isAnchor(next) : !this._tabbing) return;
-		if (!(this as HTMLElement).matches(':popover-open')) return;
 		(this as HTMLElement).hidePopover();
 	};
 
