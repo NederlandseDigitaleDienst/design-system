@@ -12,6 +12,7 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **`nldd-menu` can be a navigation.** With `variant="navigation"` it is a list of links instead of a menu of actions, so a submenu in the site navigation is read as what it is.
+- **Tabs that do not fit go to a menu.** On a narrow screen `nldd-tab-bar` puts the tabs that do not fit behind a "Meer tabs" button instead of cutting off every tab, and the current tab always stays in the bar. In an `nldd-toolbar` the other items make room first.
 - **Closing tabs one after another keeps the next close button under the pointer.** The tabs in an `nldd-document-tab-bar` keep their width while you close them, and grow into the space once the pointer leaves the bar.
 - **Notifications can be raised from code.** `NLDDNotification.show()` creates, shows and cleans up a notification, which is the way to raise one from a framework.
 - **`nldd-visually-hidden` is new**, for text that only a screen reader reads, such as the header of a column of checkboxes.
