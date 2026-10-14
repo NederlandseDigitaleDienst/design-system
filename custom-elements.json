@@ -23121,7 +23121,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.",
+          "description": "A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.",
           "name": "NLDDCollection",
           "members": [
             {
@@ -23136,11 +23136,20 @@
             },
             {
               "kind": "field",
-              "name": "itemWidth",
+              "name": "itemMinWidth",
               "type": {
                 "text": "string | undefined"
               },
-              "attribute": "item-width",
+              "attribute": "item-min-width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "itemMaxWidth",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "item-max-width",
               "reflects": true
             },
             {
@@ -23236,12 +23245,20 @@
               "description": "Layout mode: 'grid' | 'stack' | 'lanes' | 'horizontal-scroll' (default: 'grid')"
             },
             {
-              "name": "item-width",
+              "name": "item-min-width",
               "type": {
                 "text": "string | undefined"
               },
-              "fieldName": "itemWidth",
-              "description": "Preferred width for each item (e.g. '280px', '20rem'). In grid and lanes layouts used as the minimum column width (columns will be at least this wide; 1fr if container allows more). In horizontal scroll used as flex-basis. Never forces horizontal overflow — the value is clamped to container width."
+              "fieldName": "itemMinWidth",
+              "description": "Smallest width an item takes (e.g. '280px', '20rem'). In grid and lanes the minimum column width: columns are at least this wide and grow to fill the row. In horizontal scroll the flex-basis: items never shrink below it, and grow up to `item-max-width` when they fit. No effect in stack. Never forces horizontal overflow, the value is clamped to the container width."
+            },
+            {
+              "name": "item-max-width",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "itemMaxWidth",
+              "description": "Largest width an item takes in horizontal scroll (e.g. '400px', '25rem'), so one or two items that fit do not stretch across the container. Defaults to 480px, or `item-min-width` when that is wider. Never wider than the container. No effect in grid, lanes and stack: a grid leaves empty columns rather than stretching an item, and its right edge stays aligned with the content around it."
             },
             {
               "name": "gap",

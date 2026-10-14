@@ -353,7 +353,7 @@ export const Icoongalerij = {
 					</nldd-segmented-control>
 				</nldd-container>
 				<nldd-collection
-					item-width="180px"
+					item-min-width="180px"
 					max-items="999"
 					gap="16"
 				>

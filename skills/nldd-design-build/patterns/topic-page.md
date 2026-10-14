@@ -146,7 +146,7 @@ nldd-shell                            de buitenste schil
       </nldd-rich-text>
       <nldd-collection
         layout="grid"
-        item-width="280px"
+        item-min-width="280px"
       >
         <nldd-card
           href="#aanvraag-indienen"
@@ -278,7 +278,7 @@ nldd-shell                            de buitenste schil
       ></nldd-title>
       <nldd-collection
         layout="grid"
-        item-width="280px"
+        item-min-width="280px"
       >
         <nldd-card
           href="#warmtepomp"

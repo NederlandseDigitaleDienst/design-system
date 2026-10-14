@@ -1658,14 +1658,15 @@ A visually bounded card with optional header, body and footer sections. The card
 
 ### `<nldd-collection>`
 
-A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.
+A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `layout` | `string` | Layout mode: 'grid' \| 'stack' \| 'lanes' \| 'horizontal-scroll' (default: 'grid') |
-| `item-width` | `string` | Preferred width for each item (e.g. '280px', '20rem'). In grid and lanes layouts used as the minimum column width (columns will be at least this wide; 1fr if container allows more). In horizontal scroll used as flex-basis. Never forces horizontal overflow — the value is clamped to container width. |
+| `item-min-width` | `string` | Smallest width an item takes (e.g. '280px', '20rem'). In grid and lanes the minimum column width: columns are at least this wide and grow to fill the row. In horizontal scroll the flex-basis: items never shrink below it, and grow up to `item-max-width` when they fit. No effect in stack. Never forces horizontal overflow, the value is clamped to the container width. |
+| `item-max-width` | `string` | Largest width an item takes in horizontal scroll (e.g. '400px', '25rem'), so one or two items that fit do not stretch across the container. Defaults to 480px, or `item-min-width` when that is wider. Never wider than the container. No effect in grid, lanes and stack: a grid leaves empty columns rather than stretching an item, and its right edge stays aligned with the content around it. |
 | `gap` | `string` | Gap between items, as a step of the spacing scale ('0', '2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'). Overrides the responsive default at every breakpoint; unset keeps the default. |
 | `sm-gap` | `string` | Gap at sm, overriding `gap` there |
 | `md-gap` | `string` | Gap at md, overriding `gap` there |
