@@ -175,7 +175,7 @@ export const MetRichContent = {
 			<nldd-button
 				slot="actions"
 				appearance="neutral-tinted"
-				text="Meer informatie"
+				text="Onderhoud bekijken"
 			></nldd-button>
 		</nldd-banner>
 	`,

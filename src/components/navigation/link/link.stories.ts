@@ -31,7 +31,7 @@ import { ICONS } from './../../content/icon/icon.js';
  * ></nldd-link>
  *
  * <!-- Inline in tekst, erft van parent -->
- * <p>Lees meer over de <nldd-link href="/voorwaarden">voorwaarden</nldd-link> hier.</p>
+ * <p>Lees meer over de <nldd-link href="/voorwaarden">voorwaarden</nldd-link>.</p>
  * ```
  */
 export default {
@@ -168,7 +168,7 @@ export const InLopendeTekst = {
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In een h2 — link erft display-grootte</p>
 				<h2 style="margin: 0; font: var(--primitives-font-display-2-md);">
-					Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link> hier.
+					Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link>.
 				</h2>
 			</div>
 			<div>

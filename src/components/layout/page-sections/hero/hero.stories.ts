@@ -148,7 +148,7 @@ const Template = (args: Record<string, any>) => html`
 			></nldd-button>
 			<nldd-button
 				appearance="inherit-tinted"
-				text="Meer informatie"
+				text="Over de Digitale Dienst"
 			></nldd-button>
 		</nldd-button-group>
 	</nldd-hero>

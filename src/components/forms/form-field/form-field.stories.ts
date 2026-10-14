@@ -54,7 +54,7 @@ import '../../actions/button-group/button-group.js';
  *     <nldd-validation-item id="wachtwoord-hoofdletter" match="[A-Z]">Een hoofdletter</nldd-validation-item>
  *   </nldd-validation-list>
  *   <nldd-form-field-help-text>
- *     We gebruiken dit alleen om je aan te melden. <a href="/help">Meer informatie</a>.
+ *     We gebruiken dit alleen om je aan te melden. <a href="/help">Hoe we je wachtwoord bewaren</a>.
  *   </nldd-form-field-help-text>
  * </nldd-form-field>
  * ```
@@ -165,7 +165,7 @@ export const MeerdereFouten = () => html`
 			<nldd-validation-item id="wachtwoord-lengte" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 		</nldd-validation-list>
 		<nldd-form-field-help-text>
-			We gebruiken dit alleen om je aan te melden. <a href="/help">Meer informatie</a>.
+			We gebruiken dit alleen om je aan te melden. <a href="/help">Hoe we je wachtwoord bewaren</a>.
 		</nldd-form-field-help-text>
 	</nldd-form-field>
 `;
