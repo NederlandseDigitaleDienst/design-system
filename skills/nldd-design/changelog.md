@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.8.99](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.98...v0.8.99) (2026-10-14)
+
 ### Highlights
 
 - **`nldd-menu` can be a navigation.** With `variant="navigation"` it is a list of links instead of a menu of actions, so a submenu in the site navigation is read as what it is.
