@@ -13,6 +13,10 @@
  *            Use `translations` property instead: `.translations=${{ 'components.document-tab-bar.overflow-action': 'Tabs' }}`
  * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use when items have hrefs
  *
+ * The tabs can always be put in another order: drag one, or move the focused
+ * tab with Shift+Arrow left or right. The bar moves the element itself and
+ * fires `nldd-reorder` with where it came from and where it went.
+ *
  * Closing a tab with the pointer leaves the other tabs at the width they had,
  * so the close button of the next one slides in under the pointer and a row of
  * tabs closes with one click after another, as in Safari. A tab that comes
@@ -27,7 +31,7 @@
  * @fires tabchange - Fired when a tab is selected; detail: { item }
  * @fires tabdismiss - Fired when a tab is dismissed; detail: { item, nextItem }
  * @fires tabempty - Fired when the last tab is dismissed
- * @fires nldd-reorder - Fired when tabs are reordered via drag; detail: { fromIndex, toIndex }
+ * @fires nldd-reorder - Fired when a tab is moved, by dragging or with Shift+Arrow; detail: { fromIndex, toIndex }
  *
  * ---
  *

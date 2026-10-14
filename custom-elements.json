@@ -33336,7 +33336,7 @@
             },
             {
               "name": "nldd-reorder",
-              "description": "Fired when tabs are reordered via drag; detail: { fromIndex, toIndex }"
+              "description": "Fired when a tab is moved, by dragging or with Shift+Arrow; detail: { fromIndex, toIndex }"
             }
           ],
           "attributes": [

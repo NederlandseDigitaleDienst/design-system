@@ -2308,7 +2308,7 @@ A horizontal tab bar for document tabs with an automatic overflow button and an 
 | `tabchange` | Fired when a tab is selected; detail: { item } |
 | `tabdismiss` | Fired when a tab is dismissed; detail: { item, nextItem } |
 | `tabempty` | Fired when the last tab is dismissed |
-| `nldd-reorder` | Fired when tabs are reordered via drag; detail: { fromIndex, toIndex } |
+| `nldd-reorder` | Fired when a tab is moved, by dragging or with Shift+Arrow; detail: { fromIndex, toIndex } |
 
 ### `<nldd-document-tab-bar-item>`
 
