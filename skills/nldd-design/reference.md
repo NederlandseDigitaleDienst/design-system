@@ -631,6 +631,16 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | --- | --- |
 | `nldd-tooltip-dismiss` | When a user presses Escape while `open=true`. The consumer owns the open lifecycle from there (we cannot clear `open` on our own), so this event is the consumer's chance to set `open` back to `false`. WCAG 1.4.13: a persistent hover or focus overlay has to be dismissible without moving focus. |
 
+### `<nldd-visually-hidden>`
+
+Text a screen reader reads and the screen does not show. It stays in the accessibility tree and in the reading order, and takes no room on the page. For a name that is visually redundant: the header of a column of checkboxes, where the checkboxes say enough to anyone who can see them, or the "(opent in een nieuw venster)" after a link whose icon already says it. Not for repairing structure that is missing. Hidden text that describes how something is laid out ("subpagina van Aanvragen") stands in for semantics the markup should carry, and only a screen reader gets the stand-in. Not for a status either: a status that matters to a screen reader matters to anyone, so show it, as text with `role="status"` or as an `nldd-notification`. And not for the name of a component that takes `accessible-label`: give it that. Nothing in it should take focus. A control inside would be reached with Tab and be nowhere on the screen.
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The text, read by a screen reader and not shown. |
+
 ## Forms
 
 ### `<nldd-form>`

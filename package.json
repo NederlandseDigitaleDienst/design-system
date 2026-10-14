@@ -94,6 +94,10 @@
       "types": "./dist/components/content/tooltip/tooltip.d.ts",
       "default": "./dist/components/content/tooltip/tooltip.js"
     },
+    "./visually-hidden": {
+      "types": "./dist/components/content/visually-hidden/visually-hidden.d.ts",
+      "default": "./dist/components/content/visually-hidden/visually-hidden.js"
+    },
     "./form": {
       "types": "./dist/components/forms/form/form.d.ts",
       "default": "./dist/components/forms/form/form.js"

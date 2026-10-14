@@ -5634,6 +5634,48 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/content/visually-hidden/visually-hidden.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Text a screen reader reads and the screen does not show. It stays in the accessibility tree and in the reading order, and takes no room on the page. For a name that is visually redundant: the header of a column of checkboxes, where the checkboxes say enough to anyone who can see them, or the \"(opent in een nieuw venster)\" after a link whose icon already says it. Not for repairing structure that is missing. Hidden text that describes how something is laid out (\"subpagina van Aanvragen\") stands in for semantics the markup should carry, and only a screen reader gets the stand-in. Not for a status either: a status that matters to a screen reader matters to anyone, so show it, as text with `role=\"status\"` or as an `nldd-notification`. And not for the name of a component that takes `accessible-label`: give it that. Nothing in it should take focus. A control inside would be reached with Tab and be nowhere on the screen.",
+          "name": "NLDDVisuallyHidden",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-visually-hidden",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "The text, read by a screen reader and not shown."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDVisuallyHidden",
+          "declaration": {
+            "name": "NLDDVisuallyHidden",
+            "module": "src/components/content/visually-hidden/visually-hidden.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-visually-hidden",
+          "declaration": {
+            "name": "NLDDVisuallyHidden",
+            "module": "src/components/content/visually-hidden/visually-hidden.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/forms/form-actions/form-actions.ts",
       "declarations": [
         {
@@ -6476,6 +6518,14 @@
           "declaration": {
             "name": "NLDDTooltip",
             "module": "./content/tooltip/tooltip.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDVisuallyHidden",
+          "declaration": {
+            "name": "NLDDVisuallyHidden",
+            "module": "./content/visually-hidden/visually-hidden.js"
           }
         },
         {
