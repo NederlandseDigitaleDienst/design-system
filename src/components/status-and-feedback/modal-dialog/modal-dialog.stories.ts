@@ -13,11 +13,12 @@ import { ICONS } from '../../content/icon/icon.js';
  * ## Gebruik
  * ```html
  * <nldd-modal-dialog
- *   text="Bevestiging vereist"
- *   supporting-text="Dit kan niet ongedaan worden gemaakt."
+ *   variant="alert"
+ *   text="Verwijder 'Dossier D-318'?"
+ *   supporting-text="Dit dossier en alle documenten erin worden verwijderd. Dit kan niet ongedaan worden gemaakt."
  * >
- *   <nldd-button slot="actions" appearance="primary" text="Bevestig"></nldd-button>
- *   <nldd-button slot="actions" appearance="neutral-tinted" text="Annuleer"></nldd-button>
+ *   <nldd-button slot="actions" appearance="primary" text="Behoud dossier"></nldd-button>
+ *   <nldd-button slot="actions" appearance="destructive" text="Verwijder dossier"></nldd-button>
  * </nldd-modal-dialog>
  * ```
  */
@@ -35,8 +36,8 @@ export default {
 	args: {
 		variant: '',
 		horizontalAlignment: '',
-		text: 'Dialog titel',
-		supportingText: 'Ondersteunende tekst voor aanvullende context.',
+		text: "Verwijder 'Dossier D-318'?",
+		supportingText: 'Dit dossier en alle documenten erin worden verwijderd. Dit kan niet ongedaan worden gemaakt.',
 		icon: '',
 		accessibleLabel: '',
 		open: false,
@@ -117,13 +118,13 @@ export const Standaard = (args: Record<string, any>) => {
 			<nldd-button
 				slot="actions"
 				appearance="primary"
-				text="Bevestig"
+				text="Behoud dossier"
 				@click=${setClosed}
 			></nldd-button>
 			<nldd-button
 				slot="actions"
-				appearance="neutral-tinted"
-				text="Annuleer"
+				appearance="destructive"
+				text="Verwijder dossier"
 				@click=${setClosed}
 			></nldd-button>
 		</nldd-modal-dialog>
@@ -138,19 +139,19 @@ export const ZonderIcoon = {
 		@click=${openNext}
 	></nldd-button>
 	<nldd-modal-dialog
-		text="Bevestiging vereist"
-		supporting-text="Weet u zeker dat u door wilt gaan? Dit kan niet ongedaan worden gemaakt."
+		text="Aanvraag A-1042 versturen?"
+		supporting-text="Na het versturen kun je de aanvraag niet meer wijzigen."
 	>
 		<nldd-button
 			slot="actions"
 			appearance="primary"
-			text="Bevestig"
+			text="Verstuur aanvraag"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 		<nldd-button
 			slot="actions"
 			appearance="neutral-tinted"
-			text="Annuleer"
+			text="Blijf bewerken"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 	</nldd-modal-dialog>
@@ -166,14 +167,20 @@ export const MetIcoon = {
 		@click=${openNext}
 	></nldd-button>
 	<nldd-modal-dialog
-		icon="check-mark-circle"
-		text="Succesvol opgeslagen"
-		supporting-text="Uw wijzigingen zijn opgeslagen."
+		icon="send"
+		text="Aanvraag A-1042 versturen?"
+		supporting-text="Na het versturen kun je de aanvraag niet meer wijzigen."
 	>
 		<nldd-button
 			slot="actions"
 			appearance="primary"
-			text="Sluiten"
+			text="Verstuur aanvraag"
+			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
+		></nldd-button>
+		<nldd-button
+			slot="actions"
+			appearance="neutral-tinted"
+			text="Blijf bewerken"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 	</nldd-modal-dialog>
@@ -191,19 +198,19 @@ export const VariantAlert = {
 	></nldd-button>
 	<nldd-modal-dialog
 		variant="alert"
-		text="Niet opgeslagen"
-		supporting-text="Als u doorgaat gaan uw wijzigingen verloren."
+		text="Je wijzigingen zijn nog niet bewaard"
+		supporting-text="Sluit je Aanvraag A-1042 nu, dan gaan ze verloren."
 	>
 		<nldd-button
 			slot="actions"
 			appearance="primary"
-			text="Doorgaan"
+			text="Blijf bewerken"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			appearance="neutral-tinted"
-			text="Annuleer"
+			appearance="destructive"
+			text="Verwijder wijzigingen"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 	</nldd-modal-dialog>
@@ -230,16 +237,16 @@ export const MetFormulier = {
 	></nldd-button>
 	<nldd-modal-dialog
 		icon="write"
-		text="Map hernoemen"
+		text="Dossier D-318 hernoemen"
 		supporting-text="De nieuwe naam is meteen zichtbaar voor iedereen met toegang."
 	>
 		<nldd-form-field label="Naam">
-				<nldd-text-field value="Beleidsstukken 2026"></nldd-text-field>
+				<nldd-text-field value="Dossier D-318"></nldd-text-field>
 			</nldd-form-field>
 		<nldd-button
 			slot="actions"
 			appearance="primary"
-			text="Opslaan"
+			text="Bewaar"
 			@click=${(e: any) => e.target.closest('nldd-modal-dialog').hide()}
 		></nldd-button>
 		<nldd-button

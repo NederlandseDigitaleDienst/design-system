@@ -212,7 +212,7 @@ export const MetFooter = {
 				<nldd-top-title-bar
 					slot="header"
 					text="Venster met acties"
-					dismiss-text="Sluit"
+					dismiss-text="Annuleer"
 				></nldd-top-title-bar>
 				${pageContent}
 				<nldd-container
@@ -223,11 +223,7 @@ export const MetFooter = {
 					<nldd-button-group orientation="horizontal">
 						<nldd-button
 							appearance="primary"
-							text="Opslaan"
-						></nldd-button>
-						<nldd-button
-							appearance="secondary"
-							text="Annuleer"
+							text="Bewaar"
 						></nldd-button>
 					</nldd-button-group>
 				</nldd-container>

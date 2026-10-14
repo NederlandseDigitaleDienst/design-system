@@ -170,7 +170,7 @@ export const MetStickyFooter = {
 				<nldd-top-title-bar
 					slot="header"
 					text="Sheet met footer"
-					dismiss-text="Sluit"
+					dismiss-text="Annuleer"
 				></nldd-top-title-bar>
 				${pageContent}
 				<nldd-container
@@ -180,12 +180,7 @@ export const MetStickyFooter = {
 					<nldd-button-group orientation="vertical">
 						<nldd-button
 							appearance="primary"
-							text="Opslaan"
-							width="full"
-						></nldd-button>
-						<nldd-button
-							appearance="secondary"
-							text="Annuleer"
+							text="Bewaar"
 							width="full"
 						></nldd-button>
 					</nldd-button-group>

@@ -452,7 +452,7 @@ describe('nldd-button – aria-expanded / aria-haspopup', () => {
 	});
 
 	it('omits aria-expanded on a plain button (no expandable, no popup-type, not open)', async () => {
-		el = await fixture<NLDDButton>('<nldd-button text="Sla op"></nldd-button>');
+		el = await fixture<NLDDButton>('<nldd-button text="Bewaar"></nldd-button>');
 		await waitForUpdate(el);
 		const inner = el.shadowRoot!.querySelector('button')!;
 		expect(inner.hasAttribute('aria-expanded')).toBe(false);

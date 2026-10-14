@@ -224,7 +224,7 @@ export const Persoonsgegevens = {
 					<nldd-button
 						appearance="primary"
 						type="submit"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>
@@ -297,7 +297,7 @@ export const MetSecties = {
 					<nldd-button
 						appearance="primary"
 						type="submit"
-						text="Versturen"
+						text="Verstuur"
 					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>

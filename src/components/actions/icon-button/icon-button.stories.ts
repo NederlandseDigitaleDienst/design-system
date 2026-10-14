@@ -452,13 +452,13 @@ export const ToestandLoading = {
 			loading
 			appearance="primary"
 			icon="download"
-			text="Opslaan"
+			text="Bewaar"
 		></nldd-icon-button>
 		<nldd-icon-button
 			loading
 			appearance="neutral-tinted"
 			icon="download"
-			text="Opslaan"
+			text="Bewaar"
 		></nldd-icon-button>
 		<nldd-icon-button
 			loading
@@ -539,7 +539,7 @@ export const MetMenu = {
 						icon="edit"
 					></nldd-menu-item>
 					<nldd-menu-item
-						text="Dupliceren"
+						text="Dupliceer"
 						icon="square-plus-on-square"
 					></nldd-menu-item>
 					<nldd-menu-divider></nldd-menu-divider>

@@ -13,7 +13,7 @@ import { ICONS } from '../../content/icon/icon.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-split-button text="Opslaan"></nldd-split-button>
+ * <nldd-split-button text="Bewaar"></nldd-split-button>
  * ```
  */
 export default {
@@ -71,7 +71,7 @@ export default {
 		appearance: 'neutral-tinted',
 		size: 'md',
 		width: '',
-		text: 'Opslaan',
+		text: 'Bewaar',
 		icon: '',
 		disabled: false,
 	},
@@ -84,7 +84,7 @@ const menu = html`
 			@select=${action('select: save-as')}
 		></nldd-menu-item>
 		<nldd-menu-item
-			text="Opslaan en sluiten"
+			text="Bewaar en sluit"
 			@select=${action('select: save-and-close')}
 		></nldd-menu-item>
 		<nldd-menu-divider></nldd-menu-divider>
@@ -117,9 +117,9 @@ export const Standaard = {
 export const Appearances = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-split-button text="Opslaan" appearance="primary">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" appearance="secondary">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" appearance="neutral-base">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" appearance="primary">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" appearance="secondary">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" appearance="neutral-base">${menu}</nldd-split-button>
 	</div>
 `,
 	parameters: {
@@ -138,8 +138,8 @@ export const Appearances = {
 export const OpKleurvlak = {
 	render: () => html`
 	<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-split-button text="Opslaan" appearance="inherit-filled">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" appearance="inherit-tinted">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" appearance="inherit-filled">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" appearance="inherit-tinted">${menu}</nldd-split-button>
 		<nldd-button appearance="inherit-tinted" text="Losse knop"></nldd-button>
 	</div>
 `,
@@ -152,9 +152,9 @@ export const OpKleurvlak = {
 export const MetStartIcon = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-split-button text="Opslaan" icon="check-mark" appearance="primary">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" icon="check-mark" appearance="secondary">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" icon="check-mark" appearance="neutral-base">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" icon="check-mark" appearance="primary">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" icon="check-mark" appearance="secondary">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" icon="check-mark" appearance="neutral-base">${menu}</nldd-split-button>
 	</div>
 `,
 	parameters: {
@@ -166,10 +166,10 @@ export const MetStartIcon = {
 export const Grootten = {
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-split-button text="Opslaan" size="lg">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" size="md">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" size="sm">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" size="xs">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" size="lg">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" size="md">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" size="sm">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" size="xs">${menu}</nldd-split-button>
 	</div>
 `,
 	parameters: {
@@ -181,7 +181,7 @@ export const Grootten = {
 export const VolleBreedte = {
 	name: 'Volle breedte',
 	render: () => html`
-	<nldd-split-button text="Opslaan" width="full">${menu}</nldd-split-button>
+	<nldd-split-button text="Bewaar" width="full">${menu}</nldd-split-button>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -193,9 +193,9 @@ export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: () => html`
 	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-split-button text="Opslaan" disabled size="md">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" disabled size="sm">${menu}</nldd-split-button>
-		<nldd-split-button text="Opslaan" disabled size="xs">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" disabled size="md">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" disabled size="sm">${menu}</nldd-split-button>
+		<nldd-split-button text="Bewaar" disabled size="xs">${menu}</nldd-split-button>
 	</div>
 `,
 	parameters: {

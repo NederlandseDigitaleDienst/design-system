@@ -296,7 +296,7 @@ export const InteractiefVoorbeeld = {
 					<nldd-button
 						appearance="primary"
 						type="submit"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>

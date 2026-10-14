@@ -273,28 +273,28 @@ export const MetSupportingText = {
 			<nldd-button
 				horizontal-alignment="left"
 				size="lg"
-				text="Opslaan"
+				text="Bewaar"
 				supporting-text="Alle wijzigingen"
 				start-icon="download"
 			></nldd-button>
 			<nldd-button
 				horizontal-alignment="left"
 				size="md"
-				text="Opslaan"
+				text="Bewaar"
 				supporting-text="Alle wijzigingen"
 				start-icon="download"
 			></nldd-button>
 			<nldd-button
 				horizontal-alignment="left"
 				size="sm"
-				text="Opslaan"
+				text="Bewaar"
 				supporting-text="3 items"
 				start-icon="download"
 			></nldd-button>
 			<nldd-button
 				horizontal-alignment="left"
 				size="xs"
-				text="Opslaan"
+				text="Bewaar"
 				supporting-text="3 items"
 				start-icon="download"
 			></nldd-button>
@@ -561,7 +561,7 @@ export const MetMenu = {
 						icon="pencil"
 					></nldd-menu-item>
 					<nldd-menu-item
-						text="Dupliceren"
+						text="Dupliceer"
 						icon="square-plus-on-square"
 					></nldd-menu-item>
 					<nldd-menu-divider></nldd-menu-divider>
@@ -658,18 +658,18 @@ export const ToestandLoading = {
 			loading
 			size="lg"
 			appearance="primary"
-			text="Opslaan"
+			text="Bewaar"
 			start-icon="download"
 		></nldd-button>
 		<nldd-button
 			loading
 			appearance="primary"
-			text="Opslaan"
+			text="Bewaar"
 		></nldd-button>
 		<nldd-button
 			loading
 			appearance="neutral-tinted"
-			text="Opslaan"
+			text="Bewaar"
 			start-icon="download"
 		></nldd-button>
 		<nldd-button

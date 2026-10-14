@@ -165,7 +165,7 @@ export const MetActies = {
 			<nldd-button
 				slot="end"
 				size="sm"
-				text="Opslaan"
+				text="Bewaar"
 			></nldd-button>
 		</nldd-title>
 	</div>

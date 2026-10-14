@@ -154,7 +154,7 @@ export const InEenSmalleContainer = {
 			></nldd-button>
 			<nldd-button
 				appearance="secondary"
-				text="Annuleer"
+				text="Bewaar als concept"
 			></nldd-button>
 		</nldd-button-group>
 	</div>

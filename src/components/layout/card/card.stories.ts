@@ -106,11 +106,7 @@ export const Standaard = (args: Record<string, any>) => html`
 			<nldd-button-group orientation="horizontal">
 				<nldd-button
 					appearance="primary"
-					text="Bevestig"
-				></nldd-button>
-				<nldd-button
-					appearance="secondary"
-					text="Annuleer"
+					text="Bewerken"
 				></nldd-button>
 			</nldd-button-group>
 		</nldd-container>

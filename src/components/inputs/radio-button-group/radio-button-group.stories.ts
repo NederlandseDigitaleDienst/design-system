@@ -95,7 +95,7 @@ const Template = ({ name, required, invalid, disabled }: Record<string, any>) =>
 				<nldd-button
 					appearance="primary"
 					type="submit"
-					text="Opslaan"
+					text="Bewaar"
 				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>
@@ -143,7 +143,7 @@ export const VeldDisabled = {
 				<nldd-button
 					appearance="primary"
 					type="submit"
-					text="Opslaan"
+					text="Bewaar"
 				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>

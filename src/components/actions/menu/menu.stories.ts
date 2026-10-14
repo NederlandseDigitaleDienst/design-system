@@ -183,22 +183,22 @@ export const Sneltoetsen = {
 		>
 			<nldd-menu slot="popup">
 				<nldd-menu-item
-					text="Ongedaan maken"
+					text="Maak ongedaan"
 					shortcut="Ctrl+Z"
 					shortcut-mac="Cmd+Z"
 				></nldd-menu-item>
 				<nldd-menu-item
-					text="Knippen"
+					text="Knip"
 					shortcut="Ctrl+X"
 					shortcut-mac="Cmd+X"
 				></nldd-menu-item>
 				<nldd-menu-item
-					text="Kopiëren"
+					text="Kopieer"
 					shortcut="Ctrl+C"
 					shortcut-mac="Cmd+C"
 				></nldd-menu-item>
 				<nldd-menu-item
-					text="Plakken"
+					text="Plak"
 					shortcut="Ctrl+V"
 					shortcut-mac="Cmd+V"
 				></nldd-menu-item>
@@ -338,7 +338,7 @@ export const MetScheidingslijn = {
 					icon="write"
 				></nldd-menu-item>
 				<nldd-menu-item
-					text="Dupliceren"
+					text="Dupliceer"
 					icon="duplicate"
 				></nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
@@ -522,7 +522,7 @@ export const MetGroepen = {
 				<nldd-menu-group text="Bestand">
 					<nldd-menu-item text="Nieuw"></nldd-menu-item>
 					<nldd-menu-item text="Open…"></nldd-menu-item>
-					<nldd-menu-item text="Opslaan"></nldd-menu-item>
+					<nldd-menu-item text="Bewaar"></nldd-menu-item>
 				</nldd-menu-group>
 				<nldd-menu-group text="Bewerken">
 					<nldd-menu-item text="Knip"></nldd-menu-item>
@@ -558,7 +558,7 @@ export const MetSubmenuOpMeerdereNiveaus = {
 								<nldd-menu-item text="Plan.pdf"></nldd-menu-item>
 							</nldd-menu>
 						</nldd-menu-item>
-						<nldd-menu-item text="Sluiten"></nldd-menu-item>
+						<nldd-menu-item text="Sluit"></nldd-menu-item>
 					</nldd-menu>
 				</nldd-menu-item>
 				<nldd-menu-item text="Bewerken"></nldd-menu-item>
@@ -597,7 +597,7 @@ export const MetSubmenu = {
 					</nldd-menu>
 				</nldd-menu-item>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item text="Sluiten"></nldd-menu-item>
+				<nldd-menu-item text="Sluit"></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -629,7 +629,7 @@ export const DebugVeiligeDriehoek = {
 						<nldd-menu-item text="Plan.pdf"></nldd-menu-item>
 					</nldd-menu>
 				</nldd-menu-item>
-				<nldd-menu-item text="Sluiten"></nldd-menu-item>
+				<nldd-menu-item text="Sluit"></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -661,7 +661,7 @@ export const PlatEnGroepenGemengd = {
 					></nldd-menu-item>
 				</nldd-menu-group>
 				<nldd-menu-divider></nldd-menu-divider>
-				<nldd-menu-item text="Sluiten"></nldd-menu-item>
+				<nldd-menu-item text="Sluit"></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -772,7 +772,7 @@ export const AnkerenViaId = {
 				icon="pencil"
 			></nldd-menu-item>
 			<nldd-menu-item
-				text="Dupliceren"
+				text="Dupliceer"
 				icon="square-plus-on-square"
 			></nldd-menu-item>
 			<nldd-menu-divider></nldd-menu-divider>

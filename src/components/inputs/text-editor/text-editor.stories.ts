@@ -1024,9 +1024,8 @@ export const AnnotatiesMaken = {
 		// editor): it reads getSelection() and adds an annotation on the range.
 		const commentBtn = document.createElement('nldd-icon-button');
 		commentBtn.setAttribute('icon', 'comment');
-		commentBtn.setAttribute('label', 'Reactie toevoegen');
+		commentBtn.setAttribute('text', 'Reactie toevoegen');
 		commentBtn.setAttribute('appearance', 'secondary');
-		(commentBtn as unknown as { disabled: boolean }).disabled = true;
 
 		const status = document.createElement('span');
 
@@ -1046,13 +1045,13 @@ export const AnnotatiesMaken = {
 		};
 		sync();
 
-		// Enable the button only when there is a non-empty selection (from the state event).
-		editor.addEventListener('nldd-text-editor-state', (e) => {
-			(commentBtn as unknown as { disabled: boolean }).disabled = (e as CustomEvent<{ empty: boolean }>).detail.empty;
-		});
+		// The button stays enabled; a click without a selection says what is missing.
 		commentBtn.addEventListener('click', () => {
 			const sel = (editor as unknown as { getSelection(): StoryAnnotation & { empty: boolean } }).getSelection();
-			if (sel.empty) return;
+			if (sel.empty) {
+				status.textContent = 'Selecteer eerst een stuk tekst';
+				return;
+			}
 			counter += 1;
 			annotations.push({ id: `note-${counter}`, start: sel.start, end: sel.end, quote: sel.quote });
 			sync();
@@ -1069,7 +1068,7 @@ export const AnnotatiesMaken = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'De volledige authoring-loop zoals een consumer (bijv. regelrecht) hem bouwt: een "reactie"-knop in de eigen toolbar leest `getSelection()` (clean offsets + quote) en voegt een annotatie toe; de knop is uitgeschakeld zolang de selectie leeg is (uit het `nldd-text-editor-state`-event). Een klik op de telbadge vuurt `nldd-text-editor-annotation-click` met de id(s). Annotaties bewegen mee met edits; `getAnnotations()` geeft de mee-geschoven posities terug om op te slaan.',
+				story: 'De volledige authoring-loop zoals een consumer (bijv. regelrecht) hem bouwt: een "reactie"-knop in de eigen toolbar leest `getSelection()` (clean offsets + quote) en voegt een annotatie toe. De knop blijft bruikbaar: zonder selectie zegt hij wat er ontbreekt, in plaats van uitgeschakeld te staan zonder reden. Een klik op de telbadge vuurt `nldd-text-editor-annotation-click` met de id(s). Annotaties bewegen mee met edits; `getAnnotations()` geeft de mee-geschoven posities terug om op te slaan.',
 			},
 		},
 	},

@@ -83,15 +83,15 @@ export const Standaard = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -128,26 +128,26 @@ export const MetTitelgroep = {
 				></nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Annuleer"
+					label="Delen"
 				>
-					<nldd-button text="Annuleer"></nldd-button>
+					<nldd-button text="Delen"></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Annuleer"
-						icon="dismiss-circle"
+						text="Delen"
+						icon="share"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 				<nldd-toolbar-item
 					slot="end"
-					label="Sla op"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Sla op"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Sla op"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -178,15 +178,15 @@ export const MetTitelgroep = {
 				></nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Sla op"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Sla op"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Sla op"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -231,15 +231,15 @@ export const TitelMetMedia = {
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Opslaan"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Opslaan"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -261,15 +261,15 @@ export const TitelMetMedia = {
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Opslaan"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Opslaan"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -315,15 +315,15 @@ export const TitelMetActie = {
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Opslaan"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Opslaan"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -361,15 +361,15 @@ export const TitelMetActie = {
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Opslaan"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Opslaan"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -409,15 +409,15 @@ export const Grootten = {
 						</nldd-toolbar-item>
 						<nldd-toolbar-item
 							slot="end"
-							label="Sla op"
+							label="Bewaar"
 						>
 							<nldd-button
 								appearance="primary"
-								text="Sla op"
+								text="Bewaar"
 							></nldd-button>
 							<nldd-menu-item
 								slot="overflow"
-								text="Sla op"
+								text="Bewaar"
 								icon="save"
 							></nldd-menu-item>
 						</nldd-toolbar-item>
@@ -452,15 +452,15 @@ export const Grootten = {
 						</nldd-toolbar-item>
 						<nldd-toolbar-item
 							slot="end"
-							label="Sla op"
+							label="Bewaar"
 						>
 							<nldd-button
 								appearance="primary"
-								text="Sla op"
+								text="Bewaar"
 							></nldd-button>
 							<nldd-menu-item
 								slot="overflow"
-								text="Sla op"
+								text="Bewaar"
 								icon="save"
 							></nldd-menu-item>
 						</nldd-toolbar-item>
@@ -685,26 +685,26 @@ export const Overloop = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Annuleer"
+				label="Delen"
 			>
-				<nldd-button text="Annuleer"></nldd-button>
+				<nldd-button text="Delen"></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Annuleer"
-					icon="dismiss-circle"
+					text="Delen"
+					icon="share"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -817,28 +817,28 @@ export const OverloopMetPrioriteit = {
 			></nldd-toolbar-title>
 			<nldd-toolbar-item
 				slot="end"
-				label="Annuleer"
+				label="Delen"
 				priority="3"
 			>
-				<nldd-button text="Annuleer"></nldd-button>
+				<nldd-button text="Delen"></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Annuleer"
-					icon="dismiss-circle"
+					text="Delen"
+					icon="share"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 				priority="10"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -880,27 +880,27 @@ export const MetMeegroeiendItem = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Annuleer"
+				label="Delen"
 			>
-				<nldd-button text="Annuleer"></nldd-button>
+				<nldd-button text="Delen"></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Annuleer"
-					icon="dismiss-circle"
+					text="Delen"
+					icon="share"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 				priority="2"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -950,15 +950,15 @@ export const MetVasteOverloopitems = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -1077,16 +1077,16 @@ export const VasteEnDynamischeOverloop = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 				priority="10"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -1176,15 +1176,15 @@ export const MobieleActiebalk = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Downloaden"
+				label="Download"
 			>
 				<nldd-icon-button
-					text="Downloaden"
+					text="Download"
 					icon="download"
 				></nldd-icon-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Downloaden"
+					text="Download"
 					icon="download"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -1294,15 +1294,15 @@ export const MetTabBar = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Downloaden"
+				label="Download"
 			>
 				<nldd-icon-button
-					text="Downloaden"
+					text="Download"
 					icon="download"
 				></nldd-icon-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Downloaden"
+					text="Download"
 					icon="download"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
