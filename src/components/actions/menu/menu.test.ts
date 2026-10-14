@@ -2943,6 +2943,17 @@ describe('nldd-menu – variant="navigation"', () => {
 		expect(getButton(el).hasAttribute('aria-haspopup')).toBe(false);
 	});
 
+	it('takes the list item role back when the variant changes', async () => {
+		const { menu } = await make();
+		const item = menu.querySelector('nldd-menu-item') as HTMLElement;
+		expect(item.getAttribute('role')).toBe('listitem');
+		menu.removeAttribute('variant');
+		await waitForUpdate(menu);
+		menu._claimItems();
+		await waitForUpdate(item);
+		expect(item.hasAttribute('role')).toBe(false);
+	});
+
 	it('an action menu stays open when focus leaves it', async () => {
 		const { menu, after } = await make();
 		menu.removeAttribute('variant');

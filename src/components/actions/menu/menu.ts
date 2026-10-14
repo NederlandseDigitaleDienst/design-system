@@ -2087,7 +2087,8 @@ export class NLDDMenu extends LitElement {
 	// — Private handlers ——————————————————————————————————————————————————————
 
 	private _handleKeydown = (event: KeyboardEvent): void => {
-		if (event.key === 'Tab') {
+		// Only a navigation menu closes on a Tab out; see _handleFocusOut.
+		if (event.key === 'Tab' && this.variant === 'navigation') {
 			this._tabbing = true;
 			setTimeout(() => { this._tabbing = false; });
 		}
