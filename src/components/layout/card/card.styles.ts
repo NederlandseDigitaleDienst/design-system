@@ -65,7 +65,7 @@ export const cardStyles = css`
 		}
 	}
 
-	.card:has(> .card__action:active) {
+	:host(.is-action-pressed) .card {
 		--_card-border-color: var(--_card-is-active-border-color);
 		background-color: var(--_card-is-active-background-color);
 	}

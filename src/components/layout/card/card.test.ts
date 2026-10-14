@@ -216,4 +216,30 @@ describe('nldd-card – hover', () => {
 		await userEvent.hover(el.querySelector('button')!);
 		expect(await look()).toEqual(rest);
 	});
+
+	// A touch that turns into a scroll: the browser fires pointercancel for that
+	// pointer. The pressed shade goes with it instead of lingering while the
+	// page moves, as :active could.
+	it('zet de ingedrukte toestand bij een druk op de kaart en haalt hem weg bij loslaten of scrollen', async () => {
+		el = await fixture<NLDDCard>('<nldd-card href="/aanvraag" accessible-label="Aanvraag A-1042"><span slot="header">Aanvraag A-1042</span></nldd-card>');
+		await waitForUpdate(el);
+		const action = el.shadowRoot!.querySelector('.card__action')!;
+		const press = () => action.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0, pointerType: 'touch' }));
+
+		press();
+		expect(el.classList.contains('is-action-pressed')).toBe(true);
+		window.dispatchEvent(new PointerEvent('pointercancel'));
+		expect(el.classList.contains('is-action-pressed')).toBe(false);
+
+		press();
+		window.dispatchEvent(new PointerEvent('pointerup'));
+		expect(el.classList.contains('is-action-pressed')).toBe(false);
+	});
+
+	it('zet de ingedrukte toestand niet bij een druk op inhoud boven de kaart', async () => {
+		el = await fixture<NLDDCard>('<nldd-card href="/aanvraag" accessible-label="Aanvraag A-1042"><button slot="footer" style="position: relative; z-index: 1">Bekijk</button></nldd-card>');
+		await waitForUpdate(el);
+		el.querySelector('button')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
+		expect(el.classList.contains('is-action-pressed')).toBe(false);
+	});
 });

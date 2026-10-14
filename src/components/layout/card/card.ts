@@ -12,7 +12,8 @@
  * above it with `position: relative; z-index: 1` to stay clickable.
  * A card that is a link or button steps its surface and border one shade up
  * on hover and one more while pressed, as a neutral-base button does; content
- * lifted above the overlay does not set it off.
+ * lifted above the overlay does not set it off. On a touch screen there is no
+ * hover, and a touch that turns into a scroll lets go of the pressed shade.
  *
  * @element nldd-card
  *
@@ -88,6 +89,28 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 		this._actionFocused = false;
 	};
 
+	/**
+	 * The pressed shade, set by the card rather than by `:active`. A touch that
+	 * turns into a scroll then clears it, since the browser fires
+	 * `pointercancel` for that pointer, where `:active` could flash or linger
+	 * while the page moves. Only a press on the card's own overlay counts, not
+	 * one on content lifted above it.
+	 */
+	private _onPointerDown = (e: PointerEvent): void => {
+		if (e.button > 0) return;
+		const target = e.composedPath()[0] as Element | undefined;
+		if (!target?.matches?.('.card__action')) return;
+		this.classList.add('is-action-pressed');
+		window.addEventListener('pointerup', this._clearPressed);
+		window.addEventListener('pointercancel', this._clearPressed);
+	};
+
+	private _clearPressed = (): void => {
+		window.removeEventListener('pointerup', this._clearPressed);
+		window.removeEventListener('pointercancel', this._clearPressed);
+		this.classList.remove('is-action-pressed');
+	};
+
 	override connectedCallback() {
 		super.connectedCallback();
 		// Set container-type/name as inline style on the host. Doing this from
@@ -101,6 +124,7 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 		// element's identity, written once and kept.
 		this.addEventListener('focusin', this._onFocusIn);
 		this.addEventListener('focusout', this._onFocusOut);
+		this.addEventListener('pointerdown', this._onPointerDown);
 		this.style.containerType = 'inline-size';
 		this.style.containerName = 'layout-container';
 	}
@@ -130,6 +154,8 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	override disconnectedCallback() {
 		this.removeEventListener('focusin', this._onFocusIn);
 		this.removeEventListener('focusout', this._onFocusOut);
+		this.removeEventListener('pointerdown', this._onPointerDown);
+		this._clearPressed();
 		super.disconnectedCallback();
 	}
 
