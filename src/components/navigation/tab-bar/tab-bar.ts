@@ -4,6 +4,19 @@
  * A horizontal navigation bar with mutually exclusive tabs.
  * Exports both NLDDTabBar and NLDDTabBarItem.
  *
+ * When the tabs do not fit, the ones that do not fit go behind a "Meer tabs"
+ * button at the end, in a menu. The current tab always stays in the bar: if it
+ * would fall in the part that does not fit, another tab goes to the menu in its
+ * place. While tabs are in the menu, the bar fills its container and the tabs in
+ * it share the width in proportion to their own. Choosing a tab in the bar
+ * changes nothing about what is shown; choosing one from the menu swaps it with
+ * the last tab in the bar, so the bar does not jump. `centered` has no effect
+ * then. In an nldd-toolbar the other items go to the toolbar's menu first, by
+ * their priority; when it is the bar's turn, it narrows down to the current tab
+ * beside its button, and only then moves into the toolbar's menu as a whole.
+ * Tabs are hidden, never moved, so a framework that renders them finds
+ * them where it put them. Only a tab that does not fit on its own is cut off.
+ *
  * @element nldd-tab-bar
  * @attr {string} variant - Visual mode: 'icon-and-text' | 'text' | 'icon'. When unset, the variant is inferred from each item's content. Drives the layout at every size.
  * @attr {string} size - Size: 'md' | 'lg' (default: 'md'). 'lg' enlarges the touch target; the per-variant layout is preserved (icon-and-text stacks the icon over the text, text renders large text, icon renders a larger icon-only control).
@@ -11,6 +24,7 @@
  * @attr {boolean} disabled - Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order
  * @attr {boolean} centered - Centers the tabs in the container (host fills the row, tabs group in the middle)
  * @attr {string} accessible-label - Accessible name for the navigation region; defaults to 'Tabs'
+ * @attr {object} translations - Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch.
  *
  * @slot - nldd-tab-bar-item elements
  *
@@ -35,6 +49,10 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tabBarStyles, tabBarItemStyles } from './tab-bar.styles.js';
 import { tabBarTemplate, tabBarItemTemplate } from './tab-bar.template.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
+import { withTranslations } from '../../../utilities/with-translations.js';
+import { nlddTabBarTranslations } from './tab-bar.i18n.js';
+import '../../actions/icon-button/icon-button.js';
+import '../../actions/menu/menu.js';
 
 
 // # nldd-tab-bar-item
@@ -149,7 +167,7 @@ export class NLDDTabBarItem extends LitElement {
 // # nldd-tab-bar
 
 @customElement('nldd-tab-bar')
-export class NLDDTabBar extends LitElement {
+export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslations) {
 	static override styles = tabBarStyles;
 
 	/** Centers the tabs in the container (host fills the row, tabs group in the middle). */
@@ -177,16 +195,179 @@ export class NLDDTabBar extends LitElement {
 	// Tracks whether the author provided an explicit accessible label
 	private _hasCustomLabel = false;
 
+	/** @internal The tabs that do not fit, in order, listed in the overflow menu. */
+	@state()
+	_overflowItems: NLDDTabBarItem[] = [];
+
+	private _resizeObserver: ResizeObserver | null = null;
+	private _itemObserver: MutationObserver | null = null;
+	private _overflowFrame: number | null = null;
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this.addEventListener('select', this._handleItemSelect as EventListener);
 		this.addEventListener('keydown', this._handleKeyDown);
+		// The bar shrink-wraps its tabs, so it does not grow when its container
+		// does; the parent is watched too, or tabs in the menu never come back.
+		this._resizeObserver = new ResizeObserver(() => this._scheduleOverflow());
+		this._resizeObserver.observe(this);
+		if (this.parentElement) this._resizeObserver.observe(this.parentElement);
+		this._itemObserver = new MutationObserver(this._onItemsMutated);
+		this._itemObserver.observe(this, { subtree: true, attributes: true, attributeFilter: ['text', 'icon', 'current', 'variant', 'size'] });
+		document.fonts?.ready.then(() => this._scheduleOverflow());
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this.removeEventListener('select', this._handleItemSelect as EventListener);
 		this.removeEventListener('keydown', this._handleKeyDown);
+		this._resizeObserver?.disconnect();
+		this._resizeObserver = null;
+		this._itemObserver?.disconnect();
+		this._itemObserver = null;
+		if (this._overflowFrame) cancelAnimationFrame(this._overflowFrame);
+		this._overflowFrame = null;
+	}
+
+	/** Whether the next pass may only swap the current tab in, rather than
+	 *  choose the whole set again. Cleared by anything that changes the room or
+	 *  the content. */
+	private _onlyCurrentChanged = true;
+
+	private _scheduleOverflow = (full = true): void => {
+		if (full) this._onlyCurrentChanged = false;
+		if (this._overflowFrame) return;
+		this._overflowFrame = requestAnimationFrame(() => {
+			this._overflowFrame = null;
+			const swapOnly = this._onlyCurrentChanged;
+			this._onlyCurrentChanged = true;
+			this._updateOverflow(swapOnly);
+		});
+	};
+
+	private _onItemsMutated = (records: MutationRecord[]): void => {
+		this._scheduleOverflow(records.some(record => record.attributeName !== 'current'));
+	};
+
+	/** Widths as the content wants them, and the room there is for them. */
+	private _measure() {
+		const items = this._getItems();
+		const row = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar');
+		const list = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar__items');
+		const button = this.shadowRoot?.querySelector<HTMLElement>('.tab-bar__overflow');
+		if (!row || !list || !button || items.length === 0) return null;
+
+		this.toggleAttribute('data-measuring', true);
+		const available = row.clientWidth;
+		const widths = items.map(item => item.getBoundingClientRect().width);
+		const gap = parseFloat(getComputedStyle(list).columnGap) || 0;
+		const buttonWidth = button.getBoundingClientRect().width;
+		this.removeAttribute('data-measuring');
+		return { items, available, widths, gap, budget: available - buttonWidth - gap };
+	}
+
+	/**
+	 * @internal Read by nldd-toolbar, which gives an item holding this bar the
+	 * room to show every tab, and lets it narrow down to the current tab beside
+	 * the overflow button before the whole bar goes into the toolbar's menu.
+	 */
+	_toolbarWidths(): { preferred: number; minimum: number } | null {
+		const measured = this._measure();
+		if (!measured) return null;
+		const { items, available, widths, gap, budget } = measured;
+		const preferred = widths.reduce((sum, w) => sum + w, 0) + gap * (items.length - 1);
+		if (items.length < 2) return { preferred, minimum: preferred };
+		const current = Math.max(items.findIndex(item => item.current), 0);
+		const buttonWidth = available - budget - gap;
+		return { preferred, minimum: Math.min(preferred, widths[current] + gap + buttonWidth) };
+	}
+
+	/**
+	 * Decides which tabs stay in the bar and which go to the menu.
+	 *
+	 * Measured with the bar at the full width of its container and every tab at
+	 * the width its content wants, all before the next paint.
+	 *
+	 * The set only changes when it has to. A different current tab that is
+	 * already in the bar changes nothing; one picked from the menu swaps places
+	 * with the last tab in the bar, so a single slot changes. Only a change in
+	 * the room or the content chooses the whole set again: the current tab
+	 * first, then the others in order, for as long as they fit next to the
+	 * overflow button. Tabs stay where they are in the DOM and are only hidden.
+	 */
+	_updateOverflow(swapOnly = false): void {
+		const measured = this._measure();
+		if (!measured) {
+			this._applyOverflow(this._getItems(), new Set(), []);
+			return;
+		}
+		const { items, available, widths, gap, budget } = measured;
+		const width = (shown: Set<number>) => [...shown].reduce((sum, i) => sum + widths[i], 0) + gap * Math.max(shown.size - 1, 0);
+
+		const total = widths.reduce((sum, w) => sum + w, 0) + gap * (items.length - 1);
+		if (total <= available) {
+			this._applyOverflow(items, new Set(), widths);
+			return;
+		}
+
+		const current = items.findIndex(item => item.current);
+		const previous = new Set(items.map((item, i) => (item.hasAttribute('data-overflow') ? -1 : i)).filter(i => i >= 0));
+		let shown: Set<number>;
+
+		if (swapOnly && this._overflowItems.length > 0 && previous.size > 0) {
+			shown = new Set(previous);
+			if (current >= 0 && !shown.has(current)) {
+				const last = [...shown].filter(i => i !== current).pop();
+				if (last !== undefined) shown.delete(last);
+				shown.add(current);
+			}
+			// A wider tab swapped in can push the row past the room it has.
+			while (shown.size > 1 && width(shown) > budget) {
+				const last = [...shown].sort((x, y) => x - y).filter(i => i !== current).pop();
+				if (last === undefined) break;
+				shown.delete(last);
+			}
+		} else {
+			shown = new Set();
+			if (current >= 0) shown.add(current);
+			for (let i = 0; i < items.length; i++) {
+				if (i === current) continue;
+				const next = new Set(shown).add(i);
+				if (width(next) > budget) break;
+				shown = next;
+			}
+			// Not even one tab fits beside the button: keep the first (or the
+			// current) one, cut off, rather than an empty bar.
+			if (shown.size === 0) shown.add(0);
+		}
+		this._applyOverflow(items, new Set(items.map((_, i) => i).filter(i => !shown.has(i))), widths);
+	}
+
+	/**
+	 * Hides the tabs that go to the menu. With an overflow the bar fills its
+	 * container and the tabs left in it share the room in proportion to the
+	 * width they want, so the bar's edge and the overflow button stay put.
+	 */
+	private _applyOverflow(items: NLDDTabBarItem[], overflowed: Set<number>, widths: number[]): void {
+		const overflowing = overflowed.size > 0;
+		this.toggleAttribute('data-overflowing', overflowing);
+		items.forEach((item, i) => {
+			item.toggleAttribute('data-overflow', overflowed.has(i));
+			if (overflowing && widths[i]) item.style.setProperty('--_tab-bar-item-natural-width', String(widths[i]));
+			else item.style.removeProperty('--_tab-bar-item-natural-width');
+		});
+		const next = items.filter((_, i) => overflowed.has(i));
+		const changed = next.length !== this._overflowItems.length || next.some((item, i) => item !== this._overflowItems[i]);
+		if (changed) {
+			this._overflowItems = next;
+			this._syncItems();
+		}
+	}
+
+	/** @internal A tab picked from the overflow menu. */
+	_selectFromOverflow(event: Event, item: NLDDTabBarItem): void {
+		event.stopPropagation();
+		this._activate(item);
 	}
 
 	override firstUpdated(): void {
@@ -204,6 +385,7 @@ export class NLDDTabBar extends LitElement {
 			changedProperties.has('disabled')
 		) {
 			this._syncItems();
+			this._scheduleOverflow();
 		}
 	}
 
@@ -227,9 +409,9 @@ export class NLDDTabBar extends LitElement {
 			item._groupDisabled = this.disabled;
 		});
 
-		// Ensure keyboard entry point
+		// Ensure keyboard entry point, among the tabs that are in the bar
 		const hasCurrent = items.some(item => item.current);
-		const firstItem = items[0] ?? null;
+		const firstItem = items.find(item => !item.hasAttribute('data-overflow')) ?? null;
 		items.forEach(item => {
 			item._isFallbackFocusable = !hasCurrent && item === firstItem;
 		});
@@ -237,10 +419,16 @@ export class NLDDTabBar extends LitElement {
 
 	_onSlotChange(): void {
 		this._syncItems();
+		this._scheduleOverflow();
 	}
 
 	private _handleItemSelect = (event: CustomEvent): void => {
 		event.stopPropagation();
+		this._activate(event.detail.item);
+	};
+
+	/** Makes a tab current (unless the bar navigates) and fires `tabchange`. */
+	private _activate(item: NLDDTabBarItem): void {
 		if (this.disabled) return;
 		// Navigation tabs are controlled by the consumer (the current tab follows
 		// the route), so don't mark one on click — matching the keyboard path, which
@@ -248,21 +436,21 @@ export class NLDDTabBar extends LitElement {
 		// actually navigate (e.g. blocked by a guard) must not leave the tab looking
 		// current. Content-switching tabs still self-manage.
 		if (!this.navigation) {
-			const items = this._getItems();
-			items.forEach(item => {
-				item.current = item === event.detail.item;
+			this._getItems().forEach(other => {
+				other.current = other === item;
 			});
 		}
 		this.dispatchEvent(new CustomEvent('tabchange', {
 			bubbles: true,
 			composed: true,
-			detail: event.detail,
+			detail: { item },
 		}));
-	};
+	}
 
 	private _handleKeyDown = (event: KeyboardEvent): void => {
 		if (this.disabled) return;
-		const items = this._getItems();
+		// The arrows walk the tabs in the bar; the ones in the menu are reached there.
+		const items = this._getItems().filter(item => !item.hasAttribute('data-overflow'));
 		if (items.length === 0) return;
 
 		const currentIndex = items.findIndex(

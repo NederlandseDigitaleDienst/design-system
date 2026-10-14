@@ -163,6 +163,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.document-tab-bar.reorder-canceled-text': 'Drag canceled.',
 	'components.link.opens-in-new-tab-label': 'Opens in a new tab',
 	'components.menu-bar.overflow-action': 'More options',
+	'components.tab-bar.overflow-action': 'More tabs',
 	'components.pagination.accessible-label': 'Pagination',
 	'components.pagination.previous-action': 'Go to previous page',
 	'components.pagination.next-action': 'Go to next page',

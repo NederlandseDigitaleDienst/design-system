@@ -1207,6 +1207,110 @@ export const MobieleActiebalk = {
 	parameters: { controls: { disable: true } },
 };
 
+export const MetTabBar = {
+	name: 'Met tab-bar',
+	render: () => resizable(html`
+		<nldd-toolbar accessible-label="Aanvragen">
+			<nldd-toolbar-item
+				slot="start"
+				priority="10"
+			>
+				<nldd-tab-bar
+					variant="icon-and-text"
+					accessible-label="Aanvragen"
+				>
+					<nldd-tab-bar-item
+						text="Alle aanvragen"
+						icon="tray"
+					></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						current
+						text="In behandeling"
+						icon="clock"
+					></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						text="Afgerond"
+						icon="check-mark-circle"
+					></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						text="Dossiers"
+						icon="folder"
+					></nldd-tab-bar-item>
+				</nldd-tab-bar>
+				<nldd-menu-group
+					slot="overflow"
+					text="Aanvragen"
+				>
+						<nldd-menu-item
+							type="radio"
+							text="Alle aanvragen"
+							icon="tray"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							selected
+							text="In behandeling"
+							icon="clock"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							text="Afgerond"
+							icon="check-mark-circle"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							text="Dossiers"
+							icon="folder"
+						></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Zoeken"
+			>
+				<nldd-icon-button
+					text="Zoeken"
+					icon="search"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Zoeken"
+					icon="search"
+				></nldd-menu-item>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Filteren"
+			>
+				<nldd-icon-button
+					text="Filteren"
+					icon="filter"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Filteren"
+					icon="filter"
+				></nldd-menu-item>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Downloaden"
+			>
+				<nldd-icon-button
+					text="Downloaden"
+					icon="download"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Downloaden"
+					icon="download"
+				></nldd-menu-item>
+			</nldd-toolbar-item>
+		</nldd-toolbar>
+	`),
+	parameters: { controls: { disable: true } },
+};
+
 /**
  * Een `align="center"` titel centreert nu ook wanneer hij het enige zichtbare
  * element is — zowel zonder start/end-items als wanneer een start-item

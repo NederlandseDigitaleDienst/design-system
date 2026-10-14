@@ -149,6 +149,8 @@ export const toolbarItemStyles = css`
 		--_toolbar-item-max-width: none;
 		--_toolbar-item-min-width: 0px;
 		--_toolbar-item-width: auto;
+		--_toolbar-item-preferred-width: auto;
+		--_toolbar-item-shrunk-min-width: 0px;
 		--_toolbar-item-label-margin-top: var(--primitives-space-4);
 
 		display: inline-flex;
@@ -172,6 +174,17 @@ export const toolbarItemStyles = css`
 		flex-basis: 0;
 	}
 
+	:host([shrinkable]) {
+		flex-basis: var(--_toolbar-item-preferred-width);
+	}
+
+	:host([shrunk]) {
+		min-width: var(--_toolbar-item-shrunk-min-width);
+		max-width: var(--_toolbar-item-preferred-width);
+		flex-grow: 1;
+		flex-shrink: 1;
+	}
+
 	:host([hidden]) {
 		display: none;
 	}
@@ -187,7 +200,8 @@ export const toolbarItemStyles = css`
 	}
 
 	:host([fluid]) .toolbar__item-content ::slotted(*),
-	:host([solo-fluid]) .toolbar__item-content ::slotted(*) {
+	:host([solo-fluid]) .toolbar__item-content ::slotted(*),
+	:host([shrinkable]) .toolbar__item-content ::slotted(*) {
 		width: 100%;
 	}
 

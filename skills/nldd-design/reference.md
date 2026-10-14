@@ -249,7 +249,7 @@ A split button combines a primary action button with a dropdown trigger. The mai
 
 ### `<nldd-toolbar>`
 
-A row of controls that belong to a whole screen or pane, with an overflow menu for what does not fit. The toolbar measures itself: as the row runs out of room, items move into that menu, the lowest `priority` first, and items that share a priority move together. So the order in the HTML says where an item sits, and `priority` says how long it stays. Every item carries its own alternative for the menu, an nldd-menu-item in its `overflow` slot. Without one the action is simply gone once the item overflows, which on a wide screen you never see; the item warns about it in development. The toolbar's own `overflow` slot holds the actions that live in the menu at every width.
+A row of controls that belong to a whole screen or pane, with an overflow menu for what does not fit. The toolbar measures itself: as the row runs out of room, items move into that menu, the lowest `priority` first, and items that share a priority move together. So the order in the HTML says where an item sits, and `priority` says how long it stays. An item holding a control with its own overflow, such as nldd-tab-bar, first narrows down when its turn comes, so that control moves what does not fit into its own menu, and only then goes into the toolbar's menu. Every item carries its own alternative for the menu, an nldd-menu-item in its `overflow` slot. Without one the action is simply gone once the item overflows, which on a wide screen you never see; the item warns about it in development. The toolbar's own `overflow` slot holds the actions that live in the menu at every width.
 
 **Attributes**
 
@@ -285,6 +285,8 @@ A row of controls that belong to a whole screen or pane, with an overflow menu f
 | `fluid` | `boolean` | Set by nldd-toolbar, not a consumer attribute: marks an item that grows or shrinks to fill space. Toggled synchronously during measurement, so it can appear or disappear between layout frames — do not style against it. It is not reflected as a JS property — read it with hasAttribute('fluid'). |
 | `solo-fluid` | `boolean` | Set by nldd-toolbar, not a consumer attribute: the sole fluid item, allowed to shrink below its content. Same synchronous-toggle and property-read caveats as fluid. |
 | `hidden` | `boolean` | Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat. |
+| `shrinkable` | `boolean` | Set by nldd-toolbar, not a consumer attribute: the item holds a control that overflows by itself (nldd-tab-bar), so it gets the width that control wants with everything shown. Same synchronous-toggle caveat. |
+| `shrunk` | `boolean` | Set by nldd-toolbar, not a consumer attribute: a shrinkable item narrowed down to what its control needs at least, before it would move into the overflow menu. Same synchronous-toggle caveat. |
 
 **Slots**
 
@@ -2452,7 +2454,7 @@ Accessibility pattern that lets keyboard users skip past content. Wraps content 
 
 ### `<nldd-tab-bar>`
 
-A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBar and NLDDTabBarItem.
+A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBar and NLDDTabBarItem. When the tabs do not fit, the ones that do not fit go behind a "Meer tabs" button at the end, in a menu. The current tab always stays in the bar: if it would fall in the part that does not fit, another tab goes to the menu in its place. While tabs are in the menu, the bar fills its container and the tabs in it share the width in proportion to their own. Choosing a tab in the bar changes nothing about what is shown; choosing one from the menu swaps it with the last tab in the bar, so the bar does not jump. `centered` has no effect then. In an nldd-toolbar the other items go to the toolbar's menu first, by their priority; when it is the bar's turn, it narrows down to the current tab beside its button, and only then moves into the toolbar's menu as a whole. Tabs are hidden, never moved, so a framework that renders them finds them where it put them. Only a tab that does not fit on its own is cut off.
 
 **Attributes**
 
@@ -2464,6 +2466,7 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 | `disabled` | `boolean` | Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order |
 | `centered` | `boolean` | Centers the tabs in the container (host fills the row, tabs group in the middle) |
 | `accessible-label` | `string` | Accessible name for the navigation region; defaults to 'Tabs' |
+| `translations` | `object` | Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch. |
 
 **Slots**
 

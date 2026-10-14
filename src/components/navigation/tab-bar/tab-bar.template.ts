@@ -8,12 +8,43 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 	const label = component.accessibleLabel || 'Tabs';
 	const isNavigation = component.navigation;
 
+	// The overflow button sits beside the tablist and not in it: a tablist may
+	// only hold tabs. The group draws the border, as nldd-button-bar does.
 	const itemsContainer = html`
-		<div class="tab-bar__items"
-			role=${isNavigation ? nothing : 'tablist'}
-			aria-label=${isNavigation ? nothing : label}
-		>
-			<slot @slotchange=${component._onSlotChange}></slot>
+		<div class="tab-bar__group">
+			<div class="tab-bar__items"
+				role=${isNavigation ? nothing : 'tablist'}
+				aria-label=${isNavigation ? nothing : label}
+			>
+				<slot @slotchange=${component._onSlotChange}></slot>
+			</div>
+			<div class="tab-bar__overflow"
+				?hidden=${component._overflowItems.length === 0}
+			>
+				<nldd-icon-button
+					appearance="neutral-tinted"
+					no-highlight-border
+					icon="ellipsis"
+					text=${component._t('components.tab-bar.overflow-action')}
+					size=${component.size}
+					?hide-lg-text=${component.variant !== 'icon-and-text'}
+					?disabled=${component.disabled}
+				>
+					<nldd-menu
+						slot="popup"
+						placement="bottom-end"
+					>
+						${component._overflowItems.map(item => html`
+							<nldd-menu-item
+								text=${item.text}
+								icon=${item.icon || nothing}
+								href=${sanitizeUrl(item.href) || nothing}
+								@select=${(event: Event) => component._selectFromOverflow(event, item)}
+							></nldd-menu-item>
+						`)}
+					</nldd-menu>
+				</nldd-icon-button>
+			</div>
 		</div>
 	`;
 
