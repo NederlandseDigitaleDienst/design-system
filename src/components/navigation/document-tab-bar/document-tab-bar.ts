@@ -198,6 +198,8 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 	/** Whether the tabs keep their width after a close, until the pointer leaves. */
 	private _holding = false;
+	/** The width of the bar, to tell a resize from any other change. */
+	private _rowWidth = 0;
 	/** Every tab there was when the hold began, overflowed ones included, so
 	 *  a tab coming back out of the overflow is not taken for a new one. */
 	private _itemsAtHold = new Set<NLDDDocumentTabBarItem>();
@@ -256,7 +258,18 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 		const container = this.shadowRoot?.querySelector('.document-tab-bar__items') as HTMLElement;
 		if (container) {
-			this._resizeObserver = new ResizeObserver(() => this._calculateOverflow());
+			this._rowWidth = this.clientWidth;
+			this._resizeObserver = new ResizeObserver(() => {
+				// A held width is only right for the row it was measured in. A
+				// window that changes size lets go, rather than leaving the tabs
+				// pinned wider than the row or short of it.
+				// The bar's own width and not the row's: the row grows when the
+				// overflow button goes away, and that is no reason to let go.
+				const width = this.clientWidth;
+				if (this._holding && width !== this._rowWidth) this._releaseWidths();
+				this._rowWidth = width;
+				this._calculateOverflow();
+			});
 			this._resizeObserver.observe(container);
 		}
 

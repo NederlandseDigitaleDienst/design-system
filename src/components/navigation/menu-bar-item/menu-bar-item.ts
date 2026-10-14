@@ -120,6 +120,9 @@ export class NLDDMenuBarItem extends LitElement {
 	private _menuOpen = false;
 	private _pointerdownWhileMenuOpen = false;
 	private _menuToggleHandler: ((event: Event) => void) | null = null;
+	/** Re-renders when the menu's variant changes, since that decides whether
+	 *  the control promises a menu (aria-haspopup) or only says expanded. */
+	private _menuVariantObserver: MutationObserver | null = null;
 
 	// ## Lifecycle
 
@@ -188,12 +191,17 @@ export class NLDDMenuBarItem extends LitElement {
 			this.expanded = isOpen;
 		};
 		menu.addEventListener('toggle', this._menuToggleHandler);
+		this._menuVariantObserver = new MutationObserver(() => this.requestUpdate());
+		this._menuVariantObserver.observe(menu, { attributes: true, attributeFilter: ['variant'] });
+		this.requestUpdate();
 	}
 
 	private _unwireMenu(): void {
 		if (this._menu && this._menuToggleHandler) {
 			this._menu.removeEventListener('toggle', this._menuToggleHandler);
 		}
+		this._menuVariantObserver?.disconnect();
+		this._menuVariantObserver = null;
 		this._menu = null;
 		this._menuToggleHandler = null;
 		this._menuOpen = false;

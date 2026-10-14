@@ -770,6 +770,17 @@ describe('nldd-document-tab-bar – sluiten met de muis', () => {
 		bar.dispatchEvent(new PointerEvent('pointerleave'));
 	});
 
+	it('laat de breedtes los als de balk van breedte verandert', async () => {
+		const bar = await make();
+		usePointer();
+		clickDismiss(getItems(bar)[0]);
+		await waitForUpdate(bar);
+		expect(bar.hasAttribute('data-holding-widths')).toBe(true);
+
+		(el as HTMLElement).style.width = '600px';
+		await expect.poll(() => bar.hasAttribute('data-holding-widths')).toBe(false);
+	});
+
 	it('verdeelt de tabs meteen bij sluiten met het toetsenbord', async () => {
 		const bar = await make();
 		const before = widths(bar)[1];

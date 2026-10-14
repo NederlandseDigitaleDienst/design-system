@@ -2900,6 +2900,49 @@ describe('nldd-menu – variant="navigation"', () => {
 		expect(open(menu)).toBe(false);
 	});
 
+	it('leaves closing to the trigger when focus goes there', async () => {
+		// Focus in the menu and a click on the trigger: the trigger takes focus
+		// on pointerdown. Closing on that focusout would let the click that
+		// follows open the menu again.
+		const { menu, button } = await make();
+		menu.showPopover();
+		await waitForUpdate(menu);
+		(menu.querySelector('nldd-menu-item') as HTMLElement).focus();
+		button.focus();
+		expect(open(menu)).toBe(true);
+		menu.hidePopover();
+	});
+
+	it('closes when Shift+Tab leaves the page from the first link', async () => {
+		const { menu } = await make();
+		const first = menu.querySelector('nldd-menu-item') as HTMLElement;
+		menu.showPopover();
+		await waitForUpdate(menu);
+		first.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, composed: true }));
+		first.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true, relatedTarget: null }));
+		expect(open(menu)).toBe(false);
+	});
+
+	it('takes back the popup type it gave its trigger when the variant changes', async () => {
+		el = await fixture(`
+			<nldd-button expandable text="Onderwerpen">
+				<nldd-menu slot="popup">
+					<nldd-menu-item text="Dakisolatie" href="#dakisolatie"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-button>
+		`);
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as Menu & { variant: string };
+		await waitForUpdate(menu);
+		await waitForUpdate(el);
+		expect(getButton(el).getAttribute('aria-haspopup')).toBe('menu');
+
+		menu.variant = 'navigation';
+		await waitForUpdate(menu);
+		await waitForUpdate(el);
+		expect(getButton(el).hasAttribute('aria-haspopup')).toBe(false);
+	});
+
 	it('an action menu stays open when focus leaves it', async () => {
 		const { menu, after } = await make();
 		menu.removeAttribute('variant');

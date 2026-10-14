@@ -19,7 +19,8 @@ import { translate } from '../../../utilities/translations.js';
 
 
 /** Makes `host` a list item while its menu is a navigation menu, and takes
- *  that back when it is not. */
+ *  that back when it is not. A `listitem` the consumer set by hand on an item
+ *  goes too when the variant changes back; nothing else uses that role here. */
 function syncListItemRole(host: HTMLElement, variant: MenuVariant | null): void {
 	if (variant === 'navigation') host.setAttribute('role', 'listitem');
 	else if (host.getAttribute('role') === 'listitem') host.removeAttribute('role');
@@ -628,6 +629,7 @@ export class NLDDMenu extends LitElement {
 		}
 		if (changedProperties.has('variant')) {
 			this._claimItems();
+			if (changedProperties.get('variant') !== undefined) this._syncAnchorPopupState(this._isOpen);
 		}
 		// A new anchor arrives closed and unlabeled — seed it right away rather
 		// than at its first open. Covers the popup slot (where the invoking
@@ -715,6 +717,10 @@ export class NLDDMenu extends LitElement {
 		this._syncAnchorPopupState(reallyOpen);
 	};
 
+	/** The popup type this menu gave its anchor, so a later variant can take
+	 *  it back without touching one the consumer chose. */
+	private _seededPopupType: string | null = null;
+
 	private _syncAnchorPopupState(isOpen: boolean): void {
 		const anchor = this._getAnchorEl() as HTMLElement & {
 			expanded?: boolean;
@@ -737,8 +743,12 @@ export class NLDDMenu extends LitElement {
 		// nldd-popover already works this way.
 		// A navigation menu is a disclosure: the trigger says expanded or not,
 		// and promises no menu.
-		if ('popupType' in anchor && !anchor.popupType && this.variant !== 'navigation') {
-			anchor.popupType = this.variant === 'listbox' ? 'listbox' : 'menu';
+		// One this menu seeded follows the variant when it changes; one the
+		// consumer set is left alone.
+		if ('popupType' in anchor && (!anchor.popupType || anchor.popupType === this._seededPopupType)) {
+			const wanted = this.variant === 'navigation' ? '' : this.variant === 'listbox' ? 'listbox' : 'menu';
+			anchor.popupType = wanted;
+			this._seededPopupType = wanted || null;
 		}
 		if ('popoverTargetAction' in anchor) {
 			anchor.popoverTargetAction = isOpen ? 'hide' : 'show';
@@ -2187,10 +2197,22 @@ export class NLDDMenu extends LitElement {
 	private _handleFocusOut = (event: FocusEvent): void => {
 		if (this.variant !== 'navigation') return;
 		const next = event.relatedTarget as Node | null;
-		if (next ? this.contains(next) : !this._tabbing) return;
+		if (next ? this.contains(next) || this._isAnchor(next) : !this._tabbing) return;
 		if (!(this as HTMLElement).matches(':popover-open')) return;
 		(this as HTMLElement).hidePopover();
 	};
+
+	/**
+	 * Whether focus went to the control that opens this menu. Closing here
+	 * would hand the click that follows a closed menu, and it would open it
+	 * again; the toggle on the anchor does the closing. The node arrives
+	 * retargeted, so an anchor inside a shadow root shows up as its host.
+	 */
+	private _isAnchor(node: Node): boolean {
+		const anchor = this._getAnchorEl();
+		if (!anchor) return false;
+		return node === anchor || anchor.contains(node) || (anchor.getRootNode() as ShadowRoot).host === node;
+	}
 
 	/** True from a Tab keydown until the focus change it causes has happened. */
 	private _tabbing = false;
