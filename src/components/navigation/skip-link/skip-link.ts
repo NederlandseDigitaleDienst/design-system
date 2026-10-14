@@ -10,9 +10,10 @@
  * every section is one more stop on the way, not one less.
  *
  * Without href it moves focus to the first rendered element after the skip
- * link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a
- * `<script>` or anything hidden, is passed over. Make sure a rendered element
- * follows the component, otherwise the skip link has no effect.
+ * link, so the next Tab lands on the first link or button in it. An element
+ * that is not rendered, such as a `<noscript>`, a `<script>` or anything
+ * hidden, is passed over. Make sure a rendered element follows the component,
+ * otherwise the skip link has no effect.
  *
  * With an `href` that points at an id on the same page, the link scrolls to
  * that element and moves focus to it too. The target needs no `tabindex` of

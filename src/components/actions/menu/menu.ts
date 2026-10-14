@@ -1772,6 +1772,8 @@ export class NLDDMenu extends LitElement {
 		this._previousAnchorForResync = null;
 		this.removeEventListener('keydown', this._handleKeydown);
 		this.removeEventListener('focusout', this._handleFocusOut);
+		clearTimeout(this._tabbingTimer);
+		this._tabbing = false;
 		this.removeEventListener('mouseenter', this._handleMenuItemMouseenter, true);
 		this.removeEventListener('mouseleave', this._handleMouseleave);
 		this.removeEventListener('menu-item-focused', this._handleMenuItemFocused);
@@ -2090,7 +2092,8 @@ export class NLDDMenu extends LitElement {
 		// Only a navigation menu closes on a Tab out; see _handleFocusOut.
 		if (event.key === 'Tab' && this.variant === 'navigation') {
 			this._tabbing = true;
-			setTimeout(() => { this._tabbing = false; });
+			clearTimeout(this._tabbingTimer);
+			this._tabbingTimer = setTimeout(() => { this._tabbing = false; });
 		}
 		const items = this._getVisibleItems();
 		if (items.length === 0) return;
@@ -2217,6 +2220,7 @@ export class NLDDMenu extends LitElement {
 
 	/** True from a Tab keydown until the focus change it causes has happened. */
 	private _tabbing = false;
+	private _tabbingTimer?: ReturnType<typeof setTimeout>;
 
 	private _typeaheadBuffer = '';
 	private _typeaheadTimer: number | null = null;
