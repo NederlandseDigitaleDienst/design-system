@@ -186,7 +186,7 @@ export const Gemengd = {
 
 /**
  * Passen de tabs niet, dan gaan de tabs die niet passen achter de knop "Meer
- * opties", in een menu. De huidige tab blijft altijd in de balk. Sleep de hoek
+ * tabs", in een menu. De huidige tab blijft altijd in de balk. Sleep de hoek
  * rechtsonder om de breedte aan te passen.
  */
 export const Overloop = {
