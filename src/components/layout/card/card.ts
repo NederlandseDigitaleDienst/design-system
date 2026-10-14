@@ -94,13 +94,14 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	 * turns into a scroll then clears it, since the browser fires
 	 * `pointercancel` for that pointer, where `:active` could flash or linger
 	 * while the page moves. Only a press on the card's own overlay counts, not
-	 * one on content lifted above it.
+	 * one on content lifted above it. An attribute and not a class, so a
+	 * framework that owns the card's `class` cannot wipe it mid-press.
 	 */
 	private _onPointerDown = (e: PointerEvent): void => {
 		if (e.button > 0) return;
 		const target = e.composedPath()[0] as Element | undefined;
 		if (!target?.matches?.('.card__action')) return;
-		this.classList.add('is-action-pressed');
+		this.toggleAttribute('data-action-pressed', true);
 		window.addEventListener('pointerup', this._clearPressed);
 		window.addEventListener('pointercancel', this._clearPressed);
 	};
@@ -108,7 +109,7 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	private _clearPressed = (): void => {
 		window.removeEventListener('pointerup', this._clearPressed);
 		window.removeEventListener('pointercancel', this._clearPressed);
-		this.classList.remove('is-action-pressed');
+		this.removeAttribute('data-action-pressed');
 	};
 
 	override connectedCallback() {
@@ -130,7 +131,7 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	}
 
 	override updated(): void {
-		this.classList.toggle('is-action-focused', this._actionFocused);
+		this.toggleAttribute('data-action-focused', this._actionFocused);
 		// An interactive card with no accessible name is a silent a11y failure —
 		// the overlay control has no text. Warn once in dev (like nldd-image does
 		// for alt); stay quiet in production.

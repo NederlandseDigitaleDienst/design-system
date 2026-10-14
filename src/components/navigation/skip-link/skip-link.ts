@@ -7,9 +7,10 @@
  * Not only for the header of a page. Any block with many stops that someone
  * on a keyboard often wants to get past can have one: a set of filters, a long
  * toolbar, a table of contents. Keep it to blocks like that; a skip link before
- * every section is one more stop on the way, not one less. Without href it moves focus to the first rendered
- * element after the skip link, so the next Tab lands on the first link or
- * button in it. An element that is not rendered, such as a `<noscript>`, a
+ * every section is one more stop on the way, not one less.
+ *
+ * Without href it moves focus to the first rendered element after the skip
+ * link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a
  * `<script>` or anything hidden, is passed over. Make sure a rendered element
  * follows the component, otherwise the skip link has no effect.
  *

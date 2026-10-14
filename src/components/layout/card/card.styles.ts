@@ -65,7 +65,7 @@ export const cardStyles = css`
 		}
 	}
 
-	:host(.is-action-pressed) .card {
+	:host([data-action-pressed]) .card {
 		--_card-border-color: var(--_card-is-active-border-color);
 		background-color: var(--_card-is-active-background-color);
 	}
@@ -126,7 +126,7 @@ export const cardStyles = css`
 		pointer-events: none;
 	}
 
-	:host(.is-action-focused) .card__focus-ring {
+	:host([data-action-focused]) .card__focus-ring {
 		display: block;
 	}
 

@@ -22,14 +22,14 @@ describe('nldd-card', () => {
 		await waitForUpdate(el);
 		const ring = el.shadowRoot!.querySelector('.card__focus-ring')!;
 		expect(ring).not.toBeNull();
-		expect(el.classList.contains('is-action-focused')).toBe(false);
+		expect(el.hasAttribute('data-action-focused')).toBe(false);
 
 		const control = el.shadowRoot!.querySelector<HTMLElement>('.card__action')!;
 		control.dispatchEvent(new FocusEvent('focusin', { bubbles: true, composed: true }));
 		await waitForUpdate(el);
 		// Programmatic focus is not focus-visible, so the ring stays away — that is
 		// the same rule the pointer follows.
-		expect(el.classList.contains('is-action-focused')).toBe(false);
+		expect(el.hasAttribute('data-action-focused')).toBe(false);
 	});
 
 	it('rendert zonder fouten', async () => {
@@ -227,19 +227,19 @@ describe('nldd-card – hover', () => {
 		const press = () => action.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0, pointerType: 'touch' }));
 
 		press();
-		expect(el.classList.contains('is-action-pressed')).toBe(true);
+		expect(el.hasAttribute('data-action-pressed')).toBe(true);
 		window.dispatchEvent(new PointerEvent('pointercancel'));
-		expect(el.classList.contains('is-action-pressed')).toBe(false);
+		expect(el.hasAttribute('data-action-pressed')).toBe(false);
 
 		press();
 		window.dispatchEvent(new PointerEvent('pointerup'));
-		expect(el.classList.contains('is-action-pressed')).toBe(false);
+		expect(el.hasAttribute('data-action-pressed')).toBe(false);
 	});
 
 	it('zet de ingedrukte toestand niet bij een druk op inhoud boven de kaart', async () => {
 		el = await fixture<NLDDCard>('<nldd-card href="/aanvraag" accessible-label="Aanvraag A-1042"><button slot="footer" style="position: relative; z-index: 1">Bekijk</button></nldd-card>');
 		await waitForUpdate(el);
 		el.querySelector('button')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
-		expect(el.classList.contains('is-action-pressed')).toBe(false);
+		expect(el.hasAttribute('data-action-pressed')).toBe(false);
 	});
 });
