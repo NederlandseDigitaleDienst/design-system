@@ -256,8 +256,8 @@ A row of controls that belong to a whole screen or pane, with an overflow menu f
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Toolbar size, propagated to all child controls: 'sm' \| 'md' \| 'lg' (default: 'md'). At 'lg' the overflow button (and lg-capable children like nldd-icon-button) stack their label below the icon. |
-| `accessible-label` | `string` | Accessible name of the toolbar. Only needed when multiple toolbars appear on the same page. |
 | `show-item-labels` | `boolean` | When true, shows a text label below each toolbar item and the overflow button |
+| `accessible-label` | `string` | Accessible name of the toolbar. Only needed when multiple toolbars appear on the same page. |
 | `translations` | `object` | Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch. |
 
 **Slots**

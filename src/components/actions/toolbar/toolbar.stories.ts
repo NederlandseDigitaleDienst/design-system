@@ -15,8 +15,8 @@ export default {
 	tags: ['autodocs'],
 	args: {
 		size: 'md',
-		accessibleLabel: '',
 		showItemLabels: false,
+		accessibleLabel: '',
 	},
 	argTypes: {
 		size: {
@@ -25,16 +25,16 @@ export default {
 			description: 'Grootte van de toolbar. Bij "lg" stapelen de overflow-knop en lg-controls (zoals nldd-icon-button) hun label onder het icoon — bedoeld als grote icon-button actiebalk.',
 			table: { defaultValue: { summary: 'md' } },
 		},
-		accessibleLabel: {
-			name: 'accessible-label',
-			control: 'text',
-			description: 'Naam van de werkbalk voor een schermlezer. Alleen nodig als er meer dan één werkbalk op de pagina staat.',
-		},
 		showItemLabels: {
 			name: 'show-item-labels',
 			control: 'boolean',
 			description: 'Toon labels onder toolbar-items',
 			table: { defaultValue: { summary: false } },
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Naam van de werkbalk voor een schermlezer. Alleen nodig als er meer dan één werkbalk op de pagina staat.',
 		},
 	},
 };
@@ -52,8 +52,8 @@ export const Standaard = {
 	render: (args: Record<string, any>) => resizable(html`
 		<nldd-toolbar
 			size=${args.size}
-			accessible-label=${args.accessibleLabel || nothing}
 			?show-item-labels=${args.showItemLabels}
+			accessible-label=${args.accessibleLabel || nothing}
 		>
 			<nldd-toolbar-item
 				slot="start"
