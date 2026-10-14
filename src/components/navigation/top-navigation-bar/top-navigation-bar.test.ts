@@ -764,3 +764,30 @@ describe('nldd-top-navigation-bar utility op 320 px', () => {
 		expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
 	});
 });
+
+
+/* With logo-href the ribbon sits in a span inside the link. An inline SVG
+   there stands on the text baseline, the line box grows below it for
+   descenders, and centering that taller box pushed the ribbon above the bar. */
+describe('nldd-top-navigation-bar logo', () => {
+	let el: HTMLElement;
+	let unloadTokens: () => void;
+
+	beforeEach(() => { unloadTokens = loadTokens(); });
+	afterEach(() => {
+		if (el) cleanup(el);
+		unloadTokens();
+	});
+
+	for (const [naam, attrs] of [['zonder logo-href', ''], ['met logo-href', 'logo-href="/"']]) {
+		it(`begint het lint precies bovenaan de balk, ${naam}`, async () => {
+			el = await fixture(`<div style="font: 18px / 27px sans-serif"><nldd-top-navigation-bar website-title="Mijn Dienst" ${attrs}></nldd-top-navigation-bar></div>`);
+			const bar = el.querySelector('nldd-top-navigation-bar') as HTMLElement;
+			await waitForUpdate(bar);
+			const logo = bar.shadowRoot!.querySelector('.top-navigation-bar__logo')!;
+			const svg = logo.querySelector('svg')!;
+			expect(svg.getBoundingClientRect().top).toBe(logo.getBoundingClientRect().top);
+			expect(svg.getBoundingClientRect().height).toBe(logo.getBoundingClientRect().height);
+		});
+	}
+});

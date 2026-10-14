@@ -31,6 +31,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **The ribbon of `nldd-top-navigation-bar` starts at the top of the bar again with `logo-href`.** With a link on the logo the ribbon sat in a span as an inline image, on the text baseline with room below it for descenders, and centering that taller box lifted the ribbon 2 to 4 pixels above the bar. Anything placed above the bar, such as an `nldd-status-bar`, was overlapped by it.
 - **The current item in the menu sheet of `nldd-top-navigation-bar` has `aria-current`.** Behind the Menu button on a narrow screen the current item was only painted. The list in that sheet is a navigation list now, named after the global menu bar, so the link of the current item carries `aria-current` with the `current-type` of its menu bar item.
 
 ## [0.8.98](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.97...v0.8.98) (2026-10-13)
