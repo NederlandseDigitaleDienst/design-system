@@ -11,11 +11,10 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **A submenu in the site navigation can be a list of links.** `variant="navigation"` on `nldd-menu` gives it the role of a list instead of a menu, which is what a screen reader should hear in a navigation.
-- **`nldd-visually-hidden` is new**, for text that only a screen reader reads, such as the header of a column of checkboxes.
+- **`nldd-menu` can be a navigation.** With `variant="navigation"` it is a list of links instead of a menu of actions, so a submenu in the site navigation is read as what it is.
+- **Closing tabs one after another keeps the next close button under the pointer.** The tabs in an `nldd-document-tab-bar` keep their width while you close them, and grow into the space once the pointer leaves the bar.
 - **Notifications can be raised from code.** `NLDDNotification.show()` creates, shows and cleans up a notification, which is the way to raise one from a framework.
-- **`label` on `nldd-toolbar` is now `accessible-label`.** Every toolbar with a name needs the rename, since there is no alias; see Breaking.
-- **The menu behind the Menu button says which item is the current one.** On a narrow screen the current item in the menu of `nldd-top-navigation-bar` was only painted; a screen reader now hears it too.
+- **`nldd-visually-hidden` is new**, for text that only a screen reader reads, such as the header of a column of checkboxes.
 
 ### Added
 
@@ -29,7 +28,7 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-code-viewer` scrolls across its whole box.** The padding sat on the box and the scrolling on the code inside it, so a long line stopped short of the edge, the scrollbar was inset, and the room for the copy button kept the whole right side free. The scroll area is now the box itself, with the padding inside it: a line scrolls out to the edge, the scrollbar runs from corner to corner, and at the end of a long line the last character stops beside the copy button instead of behind it.
 
-- **Closing tabs in `nldd-document-tab-bar` one after another works like in Safari.** Closing a tab with the pointer used to spread the others over the space at once, so the close button of the next tab moved away from the pointer. The tabs now keep their width until the pointer leaves the bar, and the next close button slides in under the pointer. Then they grow into the space, without motion for anyone who asks for reduced motion. Closing from the keyboard spreads them at once.
+- **Closing tabs in `nldd-document-tab-bar` one after another keeps the next close button under the pointer.** Closing a tab with the pointer used to spread the others over the space at once, so the close button of the next tab moved away from the pointer. The tabs now keep their width until the pointer leaves the bar, and the next close button slides in under the pointer. Then they grow into the space, without motion for anyone who asks for reduced motion. Closing from the keyboard spreads them at once.
 
 ### Breaking
 
@@ -37,6 +36,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A card that is a link or button no longer stays pressed when a touch turns into a scroll.** The pressed shade of `nldd-card` came from `:active`, which can flash or linger while a touch scrolls the page. The card now sets it on a press and clears it on release, or when the browser hands the touch to scrolling, as `nldd-list-item` already did.
 - **The ribbon of `nldd-top-navigation-bar` starts at the top of the bar again with `logo-href`.** With a link on the logo the ribbon sat in a span as an inline image, on the text baseline with room below it for descenders, and centering that taller box lifted the ribbon 2 to 4 pixels above the bar. Anything placed above the bar, such as an `nldd-status-bar`, was overlapped by it.
 - **The current item in the menu sheet of `nldd-top-navigation-bar` has `aria-current`.** Behind the Menu button on a narrow screen the current item was only painted. The list in that sheet is a navigation list now, named after the global menu bar, so the link of the current item carries `aria-current` with the `current-type` of its menu bar item.
 

@@ -19,7 +19,7 @@
  *
  * Closing a tab with the pointer leaves the other tabs at the width they had,
  * so the close button of the next one slides in under the pointer and a row of
- * tabs closes with one click after another, as in Safari. A tab that comes
+ * tabs closes with one click after another. A tab that comes
  * back out of the overflow takes the same width, and when the overflow button
  * goes away it leaves room at the end. Once the pointer leaves the bar they
  * grow into the space again, at once for anyone who asks for reduced motion. Closing from the keyboard
