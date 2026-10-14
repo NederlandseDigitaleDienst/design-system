@@ -159,7 +159,7 @@ nldd-page
       </nldd-list>
     </nldd-container>
 
-    <nldd-toolbar label="Zoeken en filteren">
+    <nldd-toolbar accessible-label="Zoeken en filteren">
       <nldd-toolbar-item
         slot="start"
         min-width="240px"

@@ -150,7 +150,14 @@ export const topNavigationBarStyles = css`
 		}
 	}
 
+	.top-navigation-bar__logo > span {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
 	.top-navigation-bar__logo svg {
+		display: block;
 		width: 100%;
 		height: 100%;
 	}

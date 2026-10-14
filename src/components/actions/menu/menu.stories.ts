@@ -12,17 +12,127 @@ export default {
 	title: 'Components/Actions/Menu',
 	component: 'nldd-menu',
 	tags: ['autodocs'],
+	args: {
+		variant: 'menu',
+	},
+	argTypes: {
+		variant: {
+			control: 'select',
+			options: ['menu', 'listbox', 'navigation'],
+			description: 'Wat het menu is. `menu` is een menu met acties. `listbox` is de popup van een combobox, met opties. `navigation` is een submenu in de sitenavigatie: een lijst links, zie de story "Variant navigation". Het beeld blijft gelijk; de rollen en een deel van het toetsenbord veranderen.',
+			table: { defaultValue: { summary: 'menu' } },
+		},
+	},
 };
 
+/**
+ * Een menu met de acties op één ding. Elk item heeft een icoon, de eerste twee
+ * tonen hun sneltoets, twee items openen een submenu, en de actie die niet terug
+ * te draaien is staat onderaan, los van de rest en `destructive`.
+ */
 export const Standaard = {
-	tags: ['!autodocs'],
+	render: ({ variant }: Record<string, any>) => html`
+		<nldd-button
+			expandable
+			text="Acties"
+		>
+			<nldd-menu
+				slot="popup"
+				variant=${variant}
+			>
+				<nldd-menu-item
+					text="Bewerken"
+					icon="edit"
+					shortcut="Ctrl+E"
+					shortcut-mac="Cmd+E"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Dupliceer"
+					icon="duplicate"
+					shortcut="Ctrl+D"
+					shortcut-mac="Cmd+D"
+				></nldd-menu-item>
+				<nldd-menu-item
+					text="Verplaatsen naar"
+					icon="folder"
+				>
+					<nldd-menu>
+						<nldd-menu-item text="Dossier D-318"></nldd-menu-item>
+						<nldd-menu-item text="Dossier D-319"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+				<nldd-menu-item
+					text="Delen"
+					icon="share"
+				>
+					<nldd-menu>
+						<nldd-menu-item
+							text="Kopieer link"
+							icon="link"
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="Download als pdf"
+							icon="download"
+						></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+				<nldd-menu-divider></nldd-menu-divider>
+				<nldd-menu-item
+					destructive
+					text="Verwijderen"
+					icon="delete"
+				></nldd-menu-item>
+			</nldd-menu>
+		</nldd-button>
+	`,
+};
+
+/**
+ * Met `variant="navigation"` is het menu een submenu in de sitenavigatie: een
+ * lijst links in plaats van een menu met acties. Het ziet er hetzelfde uit, maar
+ * een schermlezer leest het als links voor en schakelt niet naar een
+ * applicatiemodus. Elk item heeft een `href`. Tab loopt langs de links, de
+ * pijltjestoetsen, Home en End werken zoals in een gewoon menu, en het menu sluit
+ * met Escape of zodra de focus eruit gaat. Checkbox- en radio-items, sneltoetsen
+ * en filteren horen bij acties en dus niet hier.
+ */
+export const VariantNavigation = {
+	name: 'Variant navigation',
 	render: () => html`
 		<nldd-button
 			expandable
-			text="Open menu"
+			text="Onderwerpen"
 		>
-			<nldd-menu slot="popup">
-				<nldd-menu-item text="Menu item"></nldd-menu-item>
+			<nldd-menu
+				slot="popup"
+				variant="navigation"
+			>
+				<nldd-menu-item
+					text="Dakisolatie"
+					href="#dakisolatie"
+				></nldd-menu-item>
+				<nldd-menu-item
+					selected
+					text="Warmtepomp"
+					href="#warmtepomp"
+				></nldd-menu-item>
+				<nldd-menu-item text="Subsidies">
+					<nldd-menu>
+						<nldd-menu-item
+							text="Aanvragen"
+							href="#aanvragen"
+						></nldd-menu-item>
+						<nldd-menu-item
+							text="Voorwaarden"
+							href="#voorwaarden"
+						></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-item>
+				<nldd-menu-divider></nldd-menu-divider>
+				<nldd-menu-item
+					text="Alle onderwerpen"
+					href="#alle-onderwerpen"
+				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-button>
 	`,
@@ -139,7 +249,7 @@ export const Links = {
 				<nldd-menu-item
 					text="Mijn profiel"
 					href="#profiel"
-					icon="user"
+					icon="profile"
 				></nldd-menu-item>
 				<nldd-menu-item
 					text="Instellingen"
@@ -594,7 +704,7 @@ export const MetHeaderEnFooter = {
 
 				<nldd-menu-item
 					text="Profiel"
-					icon="person"
+					icon="profile"
 				></nldd-menu-item>
 				<nldd-menu-item
 					text="Instellingen"

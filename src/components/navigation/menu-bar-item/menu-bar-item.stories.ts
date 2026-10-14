@@ -139,7 +139,7 @@ export const MetExpandable = {
 	render: () => html`
 		<nldd-menu-bar-item
 			text="Account"
-			icon="person"
+			icon="account"
 			expandable
 		>
 			<nldd-menu>

@@ -557,3 +557,114 @@ describe('nldd-notification in a modal overlay', () => {
 		cleanup(dialog);
 	});
 });
+
+
+/* ============================================================
+   NLDDNotification.show(): a notification raised from code
+   ============================================================ */
+
+describe('NLDDNotification.show()', () => {
+	const Notification = customElements.get('nldd-notification') as unknown as typeof NLDDNotification;
+	const area = () => document.getElementById('nldd-notifications-area');
+	const deck = () => Array.from(area()?.querySelectorAll('nldd-notification') ?? []) as NLDDNotification[];
+
+	/** The move into the area happens a microtask after connect. */
+	const settle = async (element: NLDDNotification): Promise<void> => {
+		await Promise.resolve();
+		await waitForUpdate(element);
+	};
+
+	afterEach(() => {
+		document.querySelectorAll('nldd-notification').forEach((element) => element.remove());
+		clearRegion();
+	});
+
+	it('toont een notificatie zonder dat iemand het element beheert', async () => {
+		const shown = Notification.show({ text: 'Voltooid', supportingText: 'Aanvraag A-1042', variant: 'success', duration: 5000 });
+		await settle(shown.element);
+
+		expect(shown.element.parentElement).toBe(area());
+		expect(shown.element.text).toBe('Voltooid');
+		expect(shown.element.supportingText).toBe('Aanvraag A-1042');
+		expect(shown.element.variant).toBe('success');
+		expect(shown.element.duration).toBe(5000);
+	});
+
+	it('ruimt zichzelf op na dismiss, door de knop, Escape of de klok', async () => {
+		const shown = Notification.show({ text: 'Voltooid' });
+		await settle(shown.element);
+		shown.element.dispatchEvent(new CustomEvent('dismiss', { bubbles: true, composed: true }));
+		expect(shown.element.isConnected).toBe(false);
+		expect(area()).toBeNull();
+	});
+
+	it('verdwijnt vanzelf na de duur, zonder eigen timer bij de afnemer', async () => {
+		const shown = Notification.show({ text: 'Voltooid', duration: 60 });
+		await settle(shown.element);
+		await until(() => !shown.element.isConnected);
+		expect(shown.element.isConnected).toBe(false);
+	});
+
+	it('dismiss() op de handle haalt hem weg, ook als hij al weg is', async () => {
+		const shown = Notification.show({ text: 'Voltooid' });
+		await settle(shown.element);
+		shown.dismiss();
+		expect(shown.element.isConnected).toBe(false);
+		expect(() => shown.dismiss()).not.toThrow();
+	});
+
+	it('maakt van acties knoppen, en een klik voert de actie uit en sluit', async () => {
+		const undo = vi.fn();
+		const shown = Notification.show({ text: 'Verwijderd', actions: [{ text: 'Maak ongedaan', onClick: undo }, { text: 'Bekijk' }] });
+		await settle(shown.element);
+		const buttons = Array.from(shown.element.querySelectorAll('nldd-button[slot="actions"]')) as HTMLElement[];
+
+		expect(buttons.map((button) => button.getAttribute('text'))).toEqual(['Maak ongedaan', 'Bekijk']);
+		buttons[0].click();
+		expect(undo).toHaveBeenCalledOnce();
+		expect(shown.element.isConnected).toBe(false);
+	});
+
+	it('update() wijzigt de melding, zet hem vooraan en begint de klok opnieuw', async () => {
+		const status = Notification.show({ text: 'Bezig', duration: 400 });
+		await settle(status.element);
+		const newer = Notification.show({ text: 'Iets anders', duration: 0 });
+		await settle(newer.element);
+		expect(deck()[0]).toBe(newer.element);
+
+		await wacht(250);
+		status.update({ text: 'Klaar', variant: 'success' });
+		await settle(status.element);
+
+		expect(status.element.text).toBe('Klaar');
+		expect(status.element.variant).toBe('success');
+		// In front again, because the change is what just happened.
+		expect(deck()[0]).toBe(status.element);
+		// 250 ms of the old clock were gone; a full 400 ms start over from here.
+		await wacht(250);
+		expect(status.element.isConnected).toBe(true);
+		await until(() => !status.element.isConnected);
+	});
+
+	it('update() vervangt de acties en laat de rest staan', async () => {
+		const shown = Notification.show({ text: 'Bezig', supportingText: 'Aanvraag A-1042', actions: [{ text: 'Annuleer' }] });
+		await settle(shown.element);
+		shown.update({ actions: [{ text: 'Bekijk' }] });
+
+		const buttons = Array.from(shown.element.querySelectorAll('nldd-button[slot="actions"]'));
+		expect(buttons.map((button) => button.getAttribute('text'))).toEqual(['Bekijk']);
+		expect(shown.element.text).toBe('Bezig');
+		expect(shown.element.supportingText).toBe('Aanvraag A-1042');
+	});
+
+	it('update() laat een notificatie die al weg is opnieuw aankomen', async () => {
+		const shown = Notification.show({ text: 'Bezig' });
+		await settle(shown.element);
+		shown.dismiss();
+		shown.update({ text: 'Klaar' });
+		await settle(shown.element);
+
+		expect(shown.element.parentElement).toBe(area());
+		expect(shown.element.text).toBe('Klaar');
+	});
+});

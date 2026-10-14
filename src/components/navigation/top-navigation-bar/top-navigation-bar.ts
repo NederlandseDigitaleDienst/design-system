@@ -6,6 +6,13 @@
  * the global navigation and the utility navigation. On narrow widths the global
  * navigation moves into a menu sheet behind the menu button.
  *
+ * The top bar of a website, and of nothing else: put it in the `header` slot
+ * of an `nldd-page`. Do not combine it with a split view. A split view is the
+ * layout of an application, whose panes carry a bar of their own, usually an
+ * `nldd-toolbar`, and a site header above it gives a second layer of
+ * navigation and a second thing that scrolls. Does a page need a sidebar under
+ * this bar, use an `nldd-sidebar-section` inside that `nldd-page`.
+ *
  * @element nldd-top-navigation-bar
  *
  * @attr {boolean} no-logo - Hides the whole logo bar, wordmark included.
@@ -53,6 +60,8 @@ interface SheetEntry {
 	href: string;
 	/** Marks the row as the current/selected one. */
 	selected: boolean;
+	/** The `aria-current` value of a current row, when the source names one. */
+	currentType?: string;
 	/** Child nldd-menu when this row drills into a deeper level, else null. */
 	submenu: Element | null;
 	/** Triggers the source item's action — only used for button (non-link,
@@ -436,6 +445,15 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		const section = document.createElement('nldd-simple-section');
 
 		this._globalMenuSheetList = document.createElement('nldd-list');
+		// A navigation list, as the bar it stands in for is a navigation: the
+		// current row then carries aria-current on its link, where `selected`
+		// alone only painted it.
+		this._globalMenuSheetList.setAttribute('type', 'navigation');
+		this._globalMenuSheetList.setAttribute(
+			'aria-label',
+			this._getSlottedMenuBar(this._globalSlot)?.getAttribute('accessible-label')
+				|| this._t('components.top-navigation-bar.global-menu-bar-label'),
+		);
 		this._globalMenuSheetList.setAttribute('appearance', 'simple');
 		this._globalMenuSheetList.setAttribute('dividers', 'never');
 		section.appendChild(this._globalMenuSheetList);
@@ -476,6 +494,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 				text: item.text,
 				href: sanitizeUrl(item.href) ?? '',
 				selected: item.current,
+				currentType: item.currentType,
 				submenu: item.querySelector(':scope > nldd-menu'),
 				activate: () => item.click(),
 			}));
@@ -551,6 +570,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 				});
 			}
 			if (entry.selected) listItem.setAttribute('selected', '');
+			if (entry.currentType) listItem.setAttribute('current-type', entry.currentType);
 			if (focusOpenerText !== undefined && entry.text === focusOpenerText) openerItem = listItem;
 
 			list.appendChild(listItem);

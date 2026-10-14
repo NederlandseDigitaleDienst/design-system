@@ -56,11 +56,18 @@ export const tabBarStyles = css`
 		justify-content: center;
 	}
 
-	.tab-bar__items {
-		display: grid;
+	.tab-bar__box {
+		display: flex;
 		position: relative;
 		border-radius: var(--_tab-bar-corner-radius);
 		background-color: var(--semantics-buttons-neutral-tinted-background-color);
+		min-width: 0;
+		align-items: center;
+		gap: var(--_tab-bar-gap);
+	}
+
+	.tab-bar__items {
+		display: grid;
 		min-width: 0;
 		grid-auto-flow: column;
 		grid-auto-columns: auto;
@@ -68,7 +75,64 @@ export const tabBarStyles = css`
 		gap: var(--_tab-bar-gap);
 	}
 
-	.tab-bar__items::after {
+	.tab-bar__overflow-button {
+		flex-shrink: 0;
+	}
+
+	.tab-bar__overflow-button[hidden] {
+		display: none;
+	}
+
+	::slotted(nldd-tab-bar-item[data-overflow]) {
+		display: none;
+	}
+
+	:host([data-overflowing]) {
+		display: block;
+		width: 100%;
+	}
+
+	:host([data-overflowing]) .tab-bar__box {
+		flex-grow: 1;
+	}
+
+	:host([data-overflowing]) .tab-bar__items {
+		display: flex;
+		flex-grow: 1;
+	}
+
+	:host([data-overflowing]) ::slotted(nldd-tab-bar-item) {
+		min-width: 0;
+		flex-grow: var(--_tab-bar-item-natural-width);
+		flex-shrink: 1;
+		flex-basis: calc(var(--_tab-bar-item-natural-width) * 1px);
+	}
+
+	/* Measuring: the bar at the full width it may take, every tab at the width
+	   its content wants, the overflow button present. Never painted. */
+	:host([data-measuring]) {
+		display: block;
+		width: 100%;
+	}
+
+	:host([hidden]) {
+		display: none;
+	}
+
+	:host([data-measuring]) .tab-bar__items {
+		display: grid;
+		grid-auto-columns: max-content;
+	}
+
+	:host([data-measuring]) ::slotted(nldd-tab-bar-item[data-overflow]) {
+		display: inline-block;
+	}
+
+	:host([data-measuring]) .tab-bar__overflow-button[hidden] {
+		display: block;
+	}
+
+	.tab-bar__box::after {
 		content: '';
 		position: absolute;
 		inset: 0;
@@ -106,6 +170,7 @@ export const tabBarItemStyles = css`
 		--_tab-bar-item-icon-size: var(--semantics-buttons-md-icon-size);
 		--_tab-bar-item-highlight-border-color: transparent;
 		--_tab-bar-item-content-z-index: 1;
+		--_tab-bar-item-natural-width: 0;
 
 		${inheritedTextReset}
 		display: inline-block;

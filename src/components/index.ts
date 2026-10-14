@@ -36,6 +36,7 @@ export { NLDDText } from './content/text/text.js';
 export { NLDDTitle } from './content/title/title.js';
 export { NLDDToken } from './content/token/token.js';
 export { NLDDTooltip } from './content/tooltip/tooltip.js';
+export { NLDDVisuallyHidden } from './content/visually-hidden/visually-hidden.js';
 
 
 // # Forms components

@@ -5,7 +5,10 @@
  * menu for what does not fit. The toolbar measures itself: as the row runs out
  * of room, items move into that menu, the lowest `priority` first, and items
  * that share a priority move together. So the order in the HTML says where an
- * item sits, and `priority` says how long it stays.
+ * item sits, and `priority` says how long it stays. An item holding a control
+ * with its own overflow, such as nldd-tab-bar, first narrows down when its turn
+ * comes, so that control moves what does not fit into its own menu, and only
+ * then goes into the toolbar's menu.
  *
  * Every item carries its own alternative for the menu, an nldd-menu-item in its
  * `overflow` slot. Without one the action is simply gone once the item
@@ -16,7 +19,7 @@
  * @element nldd-toolbar
  * @attr {string} size - Toolbar size, propagated to all child controls: 'sm' | 'md' | 'lg' (default: 'md'). At 'lg' the overflow button (and lg-capable children like nldd-icon-button) stack their label below the icon.
  * @attr {boolean} show-item-labels - When true, shows a text label below each toolbar item and the overflow button
- * @attr {string} label - Accessible label for the toolbar. Only needed when multiple toolbars appear on the same page
+ * @attr {string} accessible-label - Accessible name of the toolbar. Only needed when multiple toolbars appear on the same page.
  * @attr {object} translations - Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch.
  *
  * @slot start - nldd-toolbar-item and nldd-toolbar-title elements placed at the start
@@ -37,6 +40,8 @@
  * @attr {boolean} fluid - Set by nldd-toolbar, not a consumer attribute: marks an item that grows or shrinks to fill space. Toggled synchronously during measurement, so it can appear or disappear between layout frames — do not style against it. It is not reflected as a JS property — read it with hasAttribute('fluid').
  * @attr {boolean} solo-fluid - Set by nldd-toolbar, not a consumer attribute: the sole fluid item, allowed to shrink below its content. Same synchronous-toggle and property-read caveats as fluid.
  * @attr {boolean} hidden - Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat.
+ * @attr {boolean} shrinkable - Set by nldd-toolbar, not a consumer attribute: the item holds a control that overflows by itself (nldd-tab-bar), so it gets the width that control wants with everything shown. Same synchronous-toggle caveat.
+ * @attr {boolean} shrunk - Set by nldd-toolbar, not a consumer attribute: a shrinkable item narrowed down to what its control needs at least, before it would move into the overflow menu. Same synchronous-toggle caveat.
  *
  * @slot - The control shown in the toolbar (e.g. nldd-icon-button)
  * @slot overflow - Required: nldd-menu-item / nldd-menu-divider / nldd-menu-group children, shown in the overflow menu when this item overflows. Without them the action is gone on a narrow toolbar, and the item warns in development.
@@ -233,8 +238,8 @@ export class NLDDToolbar extends LitElement {
 	@property({ type: Boolean, reflect: true, attribute: 'show-item-labels' })
 	showItemLabels = false;
 
-	@property({ type: String, reflect: true })
-	label = '';
+	@property({ reflect: true, attribute: 'accessible-label', converter: reflectNonDefault<string>('') })
+	accessibleLabel = '';
 
 	@property({ type: Object })
 	translations: Partial<NLDDToolbarTranslations> = {};
@@ -732,6 +737,7 @@ export class NLDDToolbar extends LitElement {
 		itemChildren.forEach(child => {
 			const host = child.element as HTMLElement;
 			host.hidden = false;
+			this._syncShrinkable(host);
 			if (host.hasAttribute('solo-fluid')) {
 				host.removeAttribute('solo-fluid');
 				host.toggleAttribute('fluid', child.isFluid);
@@ -792,9 +798,22 @@ export class NLDDToolbar extends LitElement {
 				if (nonFluidVisibleOutside.length === 0) break;
 			}
 
+			// An item whose control overflows by itself narrows down first, and
+			// only goes into the menu when even that is not enough.
+			const shrinkable = group
+				.map(c => c.element as HTMLElement)
+				.filter(host => host.hasAttribute('shrinkable'));
+			if (shrinkable.length > 0) {
+				shrinkable.forEach(host => host.toggleAttribute('shrunk', true));
+				void itemsEl.offsetWidth;
+				if (!isOverflowing()) break;
+			}
+
 			for (const child of group) {
 				newOverflowIds.add(child.id);
-				(child.element as HTMLElement).hidden = true;
+				const host = child.element as HTMLElement;
+				host.hidden = true;
+				host.removeAttribute('shrunk');
 			}
 			void itemsEl.offsetWidth;
 		}
@@ -815,6 +834,26 @@ export class NLDDToolbar extends LitElement {
 
 		this._measureItemWidths();
 		this._updateAreaVars();
+	}
+
+	/**
+	 * Gives an item whose control overflows by itself (nldd-tab-bar) the width
+	 * that control wants with everything shown, and remembers how narrow it can
+	 * get. Read on every measurement, because the control's content can change.
+	 */
+	private _syncShrinkable(host: HTMLElement): void {
+		host.removeAttribute('shrunk');
+		const control = Array.from(host.children).find(el => el.getAttribute('slot') !== 'overflow') as
+			(Element & { _toolbarWidths?: () => { preferred: number; minimum: number } | null }) | undefined;
+		const widths = typeof control?._toolbarWidths === 'function' ? control._toolbarWidths() : null;
+		host.toggleAttribute('shrinkable', Boolean(widths));
+		if (widths) {
+			host.style.setProperty('--_toolbar-item-preferred-width', `${widths.preferred}px`);
+			host.style.setProperty('--_toolbar-item-shrunk-min-width', `${widths.minimum}px`);
+		} else {
+			host.style.removeProperty('--_toolbar-item-preferred-width');
+			host.style.removeProperty('--_toolbar-item-shrunk-min-width');
+		}
 	}
 
 	/**
@@ -1006,7 +1045,7 @@ export class NLDDToolbar extends LitElement {
 			isSoloFluid,
 			this._pinnedOverflowItems.length > 0 || this._overflowIds.size > 0,
 			this._menuOpen,
-			this.label,
+			this.accessibleLabel,
 			this._centerOnly,
 			(key) => this._t(key),
 		);

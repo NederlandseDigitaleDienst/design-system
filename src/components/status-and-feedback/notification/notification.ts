@@ -50,6 +50,21 @@
  * role="status". Focus never moves on its own. Escape dismisses the
  * notification that focus is in.
  *
+ * ## From code
+ * `NLDDNotification.show({ text, supportingText, variant, icon, duration,
+ * actions })` raises a notification without an element to manage: it creates
+ * one, shows it, and removes it once it is dismissed. An action is `{ text,
+ * onClick }`, at most 2, and a click on one also takes the notification away.
+ * It returns a handle with `dismiss()` and `update(options)`. An update changes
+ * the message, puts the notification in front and starts its clock over, so a
+ * status that changes often is one notification that keeps up instead of a new
+ * one sliding in each time; one that has already left arrives again.
+ *
+ * Use `show()` from a framework. Because a notification places itself, an
+ * element that a framework rendered is no longer where that framework left it:
+ * a keyed list (`v-for` with a `:key`) then fails on its next render, and a
+ * removed row leaves its notification on screen.
+ *
  * @element nldd-notification
  *
  * @attr {'neutral'|'accent'|'success'|'warning'|'critical'} variant - What kind of message this is; sets the icon color and the ARIA role (default: 'neutral')
@@ -61,7 +76,9 @@
  *
  * @slot actions - At most 2 nldd-button elements, under the text. More than 2 is refused with a DEV warning: a message that needs three choices is a dialog.
  *
- * @fires dismiss - Fired when the notification is dismissed, by the button, by Escape, or by its own clock. The consumer removes it.
+ * @fires dismiss - Fired when the notification is dismissed, by the button, by Escape, or by its own clock. The consumer removes it, unless it was raised with `show()`, which removes it itself.
+ *
+ * @method NLDDNotification.show(options) - Static. Raises a notification from code and returns a handle with `dismiss()` and `update(options)`. See "From code" above.
  */
 
 import { LitElement, type PropertyValues } from 'lit';
@@ -69,11 +86,12 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { notificationStyles } from './notification.styles.js';
 import { notificationTemplate } from './notification.template.js';
-import { joinArea, leaveArea } from './notifications-area.js';
+import { bringToFront, joinArea, leaveArea } from './notifications-area.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddNotificationTranslations } from './notification.i18n.js';
 import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
+import '../../actions/button/button.js';
 
 export type NotificationVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 
@@ -86,6 +104,36 @@ const DEFAULT_ICONS: Record<NotificationVariant, string> = {
 };
 
 const DEFAULT_DURATION = 10000;
+
+/** A button under the message of a notification raised with `show()`. */
+export interface NotificationAction {
+	text: string;
+	/** Runs on a click, after which the notification leaves. */
+	onClick?: () => void;
+}
+
+/** What `NLDDNotification.show()` takes. The fields are the attributes of the
+ *  element, plus the actions that would otherwise be slotted buttons. */
+export interface NotificationOptions {
+	text: string;
+	supportingText?: string;
+	variant?: NotificationVariant;
+	icon?: string;
+	duration?: number;
+	/** At most 2, as in the `actions` slot. */
+	actions?: NotificationAction[];
+}
+
+/** What `NLDDNotification.show()` hands back. */
+export interface NotificationHandle {
+	/** The element on screen, for the rare thing the handle does not cover. */
+	readonly element: NLDDNotification;
+	/** Takes the notification away. Safe to call when it has already left. */
+	dismiss(): void;
+	/** Changes the notification, puts it in front and starts its clock over.
+	 *  One that has left arrives again. */
+	update(options: Partial<NotificationOptions>): void;
+}
 
 @customElement('nldd-notification')
 export class NLDDNotification extends withTranslations(LitElement, nlddNotificationTranslations) {
@@ -141,6 +189,68 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 	/** `critical` ignores any duration: a failure stays until it is read. */
 	private get _leavesOnItsOwn(): boolean {
 		return this.variant !== 'critical' && this.duration > 0;
+	}
+
+	/**
+	 * Raises a notification from code, and takes it away again when it is
+	 * dismissed.
+	 *
+	 * The way to raise one from a framework. A notification places itself, so
+	 * an element a framework rendered is no longer where that framework left
+	 * it, and the next render of that list fails. Here nothing owns the
+	 * element but the notification itself.
+	 */
+	static show(options: NotificationOptions): NotificationHandle {
+		const element = document.createElement('nldd-notification') as NLDDNotification;
+		const dismiss = () => element.remove();
+		element._apply(options, dismiss);
+		element.addEventListener('dismiss', dismiss);
+		document.body.append(element);
+		return {
+			element,
+			dismiss,
+			update: (next) => {
+				element._apply(next, dismiss);
+				if (!element.isConnected) {
+					document.body.append(element);
+					return;
+				}
+				element._restart();
+				bringToFront(element);
+			},
+		};
+	}
+
+	/** Writes the given options onto the element. Actions replace the ones
+	 *  that were there; a field that is left out stays as it was. */
+	private _apply(options: Partial<NotificationOptions>, dismiss: () => void): void {
+		if (options.text !== undefined) this.text = options.text;
+		if (options.supportingText !== undefined) this.supportingText = options.supportingText;
+		if (options.variant !== undefined) this.variant = options.variant;
+		if (options.icon !== undefined) this.icon = options.icon;
+		if (options.duration !== undefined) this.duration = options.duration;
+		if (options.actions === undefined) return;
+		this.querySelectorAll(':scope > [slot="actions"]').forEach((button) => button.remove());
+		for (const action of options.actions) {
+			const button = document.createElement('nldd-button');
+			button.slot = 'actions';
+			button.setAttribute('size', 'sm');
+			button.setAttribute('text', action.text);
+			button.addEventListener('click', () => {
+				action.onClick?.();
+				dismiss();
+			});
+			this.append(button);
+		}
+	}
+
+	/** Starts the clock over with the full duration, for a notification whose
+	 *  message just changed. */
+	private _restart(): void {
+		if (this._timer !== null) window.clearTimeout(this._timer);
+		this._timer = null;
+		this._remainingDuration = this.duration;
+		this._resumeTimer();
 	}
 
 	override connectedCallback(): void {

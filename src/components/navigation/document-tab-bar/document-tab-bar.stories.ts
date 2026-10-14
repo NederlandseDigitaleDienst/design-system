@@ -2,7 +2,20 @@ import { html } from 'lit';
 import './document-tab-bar.js';
 import './../../actions/icon-button/icon-button.js';
 
+/** What an app does with a closed tab: take it away. */
+const sluit = (e: CustomEvent) => (e.detail.item as HTMLElement).remove();
 
+
+/**
+ * Een rij tabbladen voor documenten die naast elkaar openstaan, zoals in een
+ * browser of een editor. Elk tabblad kun je sluiten. Passen ze niet meer, dan
+ * gaan de laatste in een menu achter de knop "Meer".
+ *
+ * De volgorde kun je altijd aanpassen: sleep een tabblad, of verplaats het
+ * tabblad met focus met Shift en een pijltjestoets. Sluit je tabbladen met de
+ * muis, dan houden de andere hun breedte tot je de balk verlaat, zodat het
+ * kruisje van het volgende tabblad onder je muis schuift.
+ */
 export default {
 	title: 'Components/Navigation/Document Tab Bar',
 	component: 'nldd-document-tab-bar',
@@ -30,6 +43,7 @@ export default {
 const Template = ({ accessibleLabel }: Record<string, any>) => html`
 	<nldd-document-tab-bar
 		accessible-label=${accessibleLabel}
+		@tabdismiss=${sluit}
 	>
 		<nldd-document-tab-bar-item
 			selected
@@ -65,7 +79,10 @@ export const Standaard = {
 
 export const VeelTabbladen = {
 	render: () => html`
-	<nldd-document-tab-bar accessible-label="Documenten">
+	<nldd-document-tab-bar
+		accessible-label="Documenten"
+		@tabdismiss=${sluit}
+	>
 		<nldd-document-tab-bar-item
 			selected
 			text="Artikel 2"
@@ -128,7 +145,10 @@ export const VeelTabbladen = {
 
 export const ZonderSubtitel = {
 	render: () => html`
-	<nldd-document-tab-bar accessible-label="Documenten">
+	<nldd-document-tab-bar
+		accessible-label="Documenten"
+		@tabdismiss=${sluit}
+	>
 		<nldd-document-tab-bar-item
 			selected
 			text="Artikel 2"
@@ -147,43 +167,6 @@ export const ZonderSubtitel = {
 	parameters: { controls: { disable: true } },
 };
 
-
-export const Herschikbaar = {
-	render: () => {
-		const el = document.createElement('div');
-		el.innerHTML = `
-			<nldd-document-tab-bar accessible-label="Documenten">
-				<nldd-document-tab-bar-item
-					selected
-					text="Artikel 2"
-					supporting-text="Wet op de Zorgtoeslag"
-					short-text="Art. 2"
-					short-supporting-text="WZT"
-				></nldd-document-tab-bar-item>
-				<nldd-document-tab-bar-item
-					text="Artikel 1"
-					supporting-text="Zorgverzekeringswet"
-					short-text="Art. 1"
-					short-supporting-text="Zvw"
-				></nldd-document-tab-bar-item>
-				<nldd-document-tab-bar-item
-					text="Artikel 3:2"
-					supporting-text="Algemene wet bestuursrecht"
-					short-text="Art. 3:2"
-					short-supporting-text="Awb"
-				></nldd-document-tab-bar-item>
-				<nldd-document-tab-bar-item
-					text="Artikel 7"
-					supporting-text="Algemene wet inkomensafhankelijke regelingen"
-					short-text="Art. 7"
-					short-supporting-text="Awir"
-				></nldd-document-tab-bar-item>
-			</nldd-document-tab-bar>
-		`;
-		return el;
-	},
-	parameters: { controls: { disable: true } },
-};
 
 export const Navigatie = {
 	render: () => html`

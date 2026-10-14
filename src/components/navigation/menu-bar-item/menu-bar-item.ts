@@ -12,7 +12,7 @@
  * @attr {string} current-type - aria-current value when current is true ('page', 'step', 'location', 'true'). Default: 'page'
  * @attr {string} href - Optional link URL. Without href it renders as a button.
  * @attr {string} icon - Optional icon name (nldd-icon)
- * @attr {boolean} expandable - Show the disclosure icon and open the slotted `<nldd-menu>` on click
+ * @attr {boolean} expandable - Show the disclosure icon and open the slotted `<nldd-menu>` on click. The control then says `aria-haspopup="menu"`, except for a menu with `variant="navigation"`: that is a list of links, so the control only says `aria-expanded`.
  * @attr {boolean} icon-only - Hide the text visually (always). The text then shows as a tooltip on hover and focus.
  * @attr {'icon'|'text'} content-priority - Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead.
  * @attr {boolean} compact - Activates content-priority behavior (set by the parent nldd-menu-bar)
@@ -120,6 +120,9 @@ export class NLDDMenuBarItem extends LitElement {
 	private _menuOpen = false;
 	private _pointerdownWhileMenuOpen = false;
 	private _menuToggleHandler: ((event: Event) => void) | null = null;
+	/** Re-renders when the menu's variant changes, since that decides whether
+	 *  the control promises a menu (aria-haspopup) or only says expanded. */
+	private _menuVariantObserver: MutationObserver | null = null;
 
 	// ## Lifecycle
 
@@ -188,12 +191,17 @@ export class NLDDMenuBarItem extends LitElement {
 			this.expanded = isOpen;
 		};
 		menu.addEventListener('toggle', this._menuToggleHandler);
+		this._menuVariantObserver = new MutationObserver(() => this.requestUpdate());
+		this._menuVariantObserver.observe(menu, { attributes: true, attributeFilter: ['variant'] });
+		this.requestUpdate();
 	}
 
 	private _unwireMenu(): void {
 		if (this._menu && this._menuToggleHandler) {
 			this._menu.removeEventListener('toggle', this._menuToggleHandler);
 		}
+		this._menuVariantObserver?.disconnect();
+		this._menuVariantObserver = null;
 		this._menu = null;
 		this._menuToggleHandler = null;
 		this._menuOpen = false;

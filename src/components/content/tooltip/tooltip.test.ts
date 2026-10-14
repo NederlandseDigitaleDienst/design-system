@@ -1,5 +1,4 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
 import type { NLDDTooltip } from './tooltip.js';
 import './tooltip.js';
@@ -183,22 +182,45 @@ describe('nldd-tooltip – show/hide', () => {
 	});
 
 	it('Escape sluit alleen de tooltip, niet de dialog eromheen', async () => {
-		el = await fixture<NLDDTooltip>('<dialog><nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip></dialog>') as unknown as NLDDTooltip;
+		// showModal() focuses the first control it finds. Without the autofocus
+		// that would be the trigger, the tooltip would show on that focus, and a
+		// runner window that regains OS focus mid-test refocuses it and shows the
+		// tooltip again after Escape put it away. Hover alone is what is tested.
+		el = await fixture<NLDDTooltip>('<dialog><button autofocus>Eerst</button><nldd-tooltip text="Test"><button>Trigger</button></nldd-tooltip></dialog>') as unknown as NLDDTooltip;
 		const dialog = el as unknown as HTMLDialogElement;
 		const tooltip = dialog.querySelector('nldd-tooltip') as NLDDTooltip;
+		const button = tooltip.querySelector('button')!;
 		dialog.showModal();
 		await waitForUpdate(tooltip);
-		await triggerShow(tooltip, tooltip.querySelector('button')!);
+		await triggerShow(tooltip, button);
 		expect(isTooltipVisible(tooltip)).toBe(true);
 
-		// A real key press, so the browser's own Escape handling takes part.
-		await userEvent.keyboard('{Escape}');
+		// What the dialog would hear. A dispatched key and not a pressed one: a
+		// real key press goes to whichever test page holds the OS focus, which
+		// made this test fail now and then in a full run. What keeps a native
+		// dialog open is that the key is canceled and never arrives, and that is
+		// what is asked here.
+		const heard: KeyboardEvent[] = [];
+		const listen = (e: Event) => heard.push(e as KeyboardEvent);
+		dialog.addEventListener('keydown', listen);
+		const press = () => {
+			const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true, cancelable: true });
+			button.dispatchEvent(event);
+			return event;
+		};
+
+		const first = press();
+		expect(first.defaultPrevented).toBe(true);
+		expect(heard.length).toBe(0);
 		await until(() => !isTooltipVisible(tooltip));
 		expect(dialog.open).toBe(true);
 
-		await userEvent.keyboard('{Escape}');
-		await until(() => !dialog.open);
-		expect(dialog.open).toBe(false);
+		// With the tooltip gone the next press is the dialog's again.
+		const second = press();
+		expect(second.defaultPrevented).toBe(false);
+		expect(heard.length).toBe(1);
+		dialog.removeEventListener('keydown', listen);
+		dialog.close();
 	});
 
 	it('Escape buiten een geforceerd open tooltip laat hem staan', async () => {

@@ -3,7 +3,9 @@ import variablesCss from '../../../assets/styles/variables.css?raw';
 import colorsCss from '../../../assets/styles/colors.generated.css?raw';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { groupForOverflow } from './toolbar.js';
+import { loadTokens } from '../../../test-tokens.js';
 import '../button/button.js';
+import '../../navigation/tab-bar/tab-bar.js';
 
 describe('nldd-toolbar', () => {
 	let el: HTMLElement;
@@ -551,9 +553,15 @@ describe('nldd-toolbar', () => {
 		expect(overflow[0].tagName.toLowerCase()).toBe('nldd-menu-group');
 	});
 
+	it('names the toolbar with accessible-label', async () => {
+		el = await fixture('<nldd-toolbar accessible-label="Opmaak"></nldd-toolbar>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('[role="toolbar"]')!.getAttribute('aria-label')).toBe('Opmaak');
+	});
+
 	it('overflows same-priority items together (whole groups)', async () => {
 		el = await fixture(`
-			<nldd-toolbar style="display:block;width:120px" label="T">
+			<nldd-toolbar style="display:block;width:120px" accessible-label="T">
 				<nldd-toolbar-item slot="start" priority="1"><div style="width:50px;height:24px"></div><nldd-menu-item slot="overflow" text="A"></nldd-menu-item></nldd-toolbar-item>
 				<nldd-toolbar-item slot="start" priority="1"><div style="width:50px;height:24px"></div><nldd-menu-item slot="overflow" text="B"></nldd-menu-item></nldd-toolbar-item>
 				<nldd-toolbar-item slot="start" priority="2"><div style="width:50px;height:24px"></div><nldd-menu-item slot="overflow" text="C"></nldd-menu-item></nldd-toolbar-item>
@@ -821,7 +829,7 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 
 	it('measures again when a control inside an item gets narrower', async () => {
 		el = await fixture(`
-			<nldd-toolbar label="Balk" style="width: 340px">
+			<nldd-toolbar accessible-label="Balk" style="width: 340px">
 				<nldd-toolbar-item slot="start">
 					<nldd-button id="name" text="Een behoorlijk lange naam"></nldd-button>
 				</nldd-toolbar-item>
@@ -846,7 +854,7 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 	// and went into the menu; with the font it is 292px and fits.
 	it('measures again once the fonts have loaded, for an item that went into the menu', async () => {
 		el = await fixture(`
-			<nldd-toolbar label="Balk" style="width: 300px">
+			<nldd-toolbar accessible-label="Balk" style="width: 300px">
 				<nldd-toolbar-item slot="start" priority="1">
 					<span id="wide" style="display: inline-block; width: 400px">Weergave</span>
 					<nldd-menu-item slot="overflow" text="Weergave"></nldd-menu-item>
@@ -874,7 +882,7 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 
 	it('settles instead of measuring on and on', async () => {
 		el = await fixture(`
-			<nldd-toolbar label="Balk" style="width: 340px">
+			<nldd-toolbar accessible-label="Balk" style="width: 340px">
 				<nldd-toolbar-item slot="start">
 					<nldd-button id="name2" text="Een behoorlijk lange naam"></nldd-button>
 				</nldd-toolbar-item>
@@ -894,5 +902,93 @@ describe('nldd-toolbar – re-measures on a width change', () => {
 		await frames(20);
 		expect(measure.mock.calls.length).toBe(afterChange);
 		expect(afterChange).toBeLessThanOrEqual(3);
+	});
+});
+
+/* ============================================================
+   A tab bar in a toolbar
+
+   A tab bar has its own overflow menu. In a toolbar the other items go first,
+   by priority; when it is the tab bar's turn, it narrows down to the current
+   tab beside its button, and only goes into the toolbar's menu after that.
+   ============================================================ */
+
+describe('nldd-toolbar – met een tab-bar', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+	beforeAll(() => { removeTokens = loadTokens(); });
+	afterAll(() => removeTokens());
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const mount = async (width: number): Promise<HTMLElement> => {
+		el = await fixture(`
+			<nldd-toolbar accessible-label="Aanvragen" style="width: ${width}px">
+				<nldd-toolbar-item slot="start">
+					<nldd-tab-bar variant="text" accessible-label="Aanvragen">
+						<nldd-tab-bar-item text="Alle aanvragen"></nldd-tab-bar-item>
+						<nldd-tab-bar-item current text="In behandeling"></nldd-tab-bar-item>
+						<nldd-tab-bar-item text="Afgerond"></nldd-tab-bar-item>
+						<nldd-tab-bar-item text="Dossiers"></nldd-tab-bar-item>
+					</nldd-tab-bar>
+					<nldd-menu-item slot="overflow" text="Aanvragen"></nldd-menu-item>
+				</nldd-toolbar-item>
+				<nldd-toolbar-item slot="end">
+					<nldd-button text="Zoeken"></nldd-button>
+					<nldd-menu-item slot="overflow" text="Zoeken"></nldd-menu-item>
+				</nldd-toolbar-item>
+			</nldd-toolbar>
+		`);
+		await waitForUpdate(el);
+		await frames(10);
+		return el;
+	};
+
+	const state = () => {
+		const [tabs, action] = el.querySelectorAll('nldd-toolbar-item');
+		const overflowed = [...el.querySelectorAll('nldd-tab-bar-item')].filter(item => item.hasAttribute('data-overflow')).length;
+		return { tabs, action, overflowed };
+	};
+
+	it('laat alles staan als het past', async () => {
+		await mount(900);
+		const { tabs, action, overflowed } = state();
+		expect(tabs.hasAttribute('shrinkable')).toBe(true);
+		expect(tabs.hasAttribute('shrunk')).toBe(false);
+		expect(action.hidden).toBe(false);
+		expect(overflowed).toBe(0);
+	});
+
+	it('zet eerst de andere items in het menu en laat dan de tab-bar krimpen', async () => {
+		const toolbar = await mount(900);
+		const full = state().tabs.getBoundingClientRect().width;
+		toolbar.style.width = `${Math.round(full * 0.75)}px`;
+		await frames(10);
+		const { tabs, action, overflowed } = state();
+		expect(action.hidden).toBe(true);
+		expect(tabs.hidden).toBe(false);
+		expect(tabs.hasAttribute('shrunk')).toBe(true);
+		expect(overflowed).toBeGreaterThan(0);
+		expect(el.querySelector('nldd-tab-bar-item[current]')!.hasAttribute('data-overflow')).toBe(false);
+	});
+
+	it('zet de tab-bar pas in het menu als zelfs de huidige tab niet past', async () => {
+		await mount(120);
+		const { tabs, action } = state();
+		expect(action.hidden).toBe(true);
+		expect(tabs.hidden).toBe(true);
+	});
+
+	it('haalt alles terug als er weer ruimte is', async () => {
+		const toolbar = await mount(120);
+		toolbar.style.width = '900px';
+		await frames(10);
+		const { tabs, action, overflowed } = state();
+		expect(tabs.hidden).toBe(false);
+		expect(tabs.hasAttribute('shrunk')).toBe(false);
+		expect(action.hidden).toBe(false);
+		expect(overflowed).toBe(0);
 	});
 });

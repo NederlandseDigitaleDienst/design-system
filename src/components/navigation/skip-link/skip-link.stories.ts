@@ -13,9 +13,18 @@ import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 
 /**
- * Skip-link component voor keyboard-navigatie.
- * Verbergt een link totdat de gebruiker er met Tab naartoe navigeert.
- * Klik of Enter om de gewrapte content over te slaan.
+ * Een link waarmee je met het toetsenbord een blok overslaat. Hij is pas te zien
+ * als hij focus krijgt, en Enter brengt je voorbij het blok dat hij omsluit, of
+ * naar het doel van zijn `href`.
+ *
+ * Niet alleen voor de kop van een pagina. Elk blok met veel tabstops waar je met
+ * het toetsenbord vaak langs wilt, kan er een krijgen: een set filters, een lange
+ * werkbalk, een inhoudsopgave. Houd het bij zulke blokken; een skiplink voor elke
+ * sectie is een tabstop extra en geen tabstop minder.
+ *
+ * Het component weet niet wat het overslaat, dus de standaardtekst is alleen
+ * "Sla over". Zeg met `text` wat je overslaat: "Sla navigatie over", "Sla filters
+ * over".
  */
 export default {
 	title: 'Components/Navigation/Skip Link',

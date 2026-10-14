@@ -68,20 +68,25 @@ export const codeViewerStyles = css`
 		box-shadow: var(--_code-viewer-border-shadow);
 		background-color: var(--_code-viewer-background-color);
 		min-width: 0;
+		overflow: hidden;
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
-		padding: var(--_code-viewer-block-padding) var(--_code-viewer-inline-padding);
 		color: var(--_code-viewer-content-color);
 		font: var(--_code-viewer-font);
 	}
 
-	/* Reserve the actions space only when the copy button actually renders: not
-	   opted out (no-copy) and the Clipboard API is usable (copy-unavailable is
-	   set by JS when it isn't). Both attributes suppress the button, so both drop
-	   the reserved space. */
+	/* The scroller spans the whole box, so the padding sits on the content
+	   inside it. Three classes deep to beat CodeMirror's own theme. */
+	.code-viewer .cm-scroller .cm-content {
+		padding: var(--_code-viewer-block-padding) var(--_code-viewer-inline-padding);
+	}
+
 	:host(:not([no-copy]):not([copy-unavailable])) .code-viewer {
 		min-height: var(--_code-viewer-actions-area-size);
+	}
+
+	:host(:not([no-copy]):not([copy-unavailable])) .code-viewer .cm-scroller .cm-content {
 		padding-right: var(--_code-viewer-actions-area-size);
 	}
 
@@ -89,8 +94,7 @@ export const codeViewerStyles = css`
 		--_code-viewer-actions-area-padding: 0;
 	}
 
-	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) .code-viewer {
-		min-height: var(--_code-viewer-actions-area-size);
+	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) .code-viewer .cm-scroller .cm-content {
 		padding-right: 0;
 	}
 

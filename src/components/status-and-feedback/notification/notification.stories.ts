@@ -1,7 +1,9 @@
 import { html, render } from 'lit';
 import './notification.js';
+import { NLDDNotification, type NotificationHandle } from './notification.js';
 import '../modal-dialog/modal-dialog.js';
 import '../../actions/button/button.js';
+import '../../actions/button-group/button-group.js';
 import '../../content/rich-text/rich-text.js';
 import '../../layout/container/container.js';
 import '../../layout/page/page.js';
@@ -280,6 +282,63 @@ const meldFout = () => {
  * overlay opent. Het kruisje en "Probeer opnieuw" blijven met muis en
  * toetsenbord bereikbaar zolang de overlay openstaat.
  */
+let upload: NotificationHandle | null = null;
+let geteld = 0;
+
+/** One notification that keeps up with a status, instead of a new one sliding
+ *  in for every step. */
+const meldVoortgang = () => {
+	geteld += 1;
+	const melding = { text: `${geteld} van 5 bestanden geüpload`, variant: 'neutral' as const, duration: 5000 };
+	if (geteld >= 5) {
+		upload?.update({ text: 'Alle bestanden zijn geüpload', variant: 'success', actions: [] });
+		geteld = 0;
+		upload = null;
+		return;
+	}
+	if (upload) upload.update(melding);
+	else upload = NLDDNotification.show({ ...melding, actions: [{ text: 'Annuleer', onClick: () => { geteld = 0; upload = null; } }] });
+};
+
+const meldVerwijderd = () => {
+	NLDDNotification.show({
+		text: 'Aanvraag A-1042 is verwijderd',
+		duration: 8000,
+		actions: [{
+			text: 'Maak ongedaan',
+			onClick: () => NLDDNotification.show({ variant: 'success', text: 'Aanvraag A-1042 is teruggezet' }),
+		}],
+	});
+};
+
+/**
+ * `NLDDNotification.show()` toont een notificatie vanuit code, zonder element om
+ * te beheren: de functie maakt het aan, toont het en ruimt het op na `dismiss`.
+ * Een klik op een actie sluit de notificatie ook. Gebruik deze vorm vanuit een
+ * framework, want een notificatie verplaatst zichzelf en staat daarna niet meer
+ * waar het framework hem neerzette.
+ *
+ * De functie geeft een object terug met `dismiss()` en `update()`. Met `update()`
+ * verandert de melding, komt ze vooraan te staan en begint de klok opnieuw.
+ * Klik een paar keer op "Upload een bestand": het blijft één notificatie.
+ */
+export const VanuitCode = {
+	name: 'Vanuit code',
+	render: () => html`
+		<nldd-button-group orientation="horizontal">
+			<nldd-button
+				text="Verwijder aanvraag"
+				@click=${meldVerwijderd}
+			></nldd-button>
+			<nldd-button
+				text="Upload een bestand"
+				@click=${meldVoortgang}
+			></nldd-button>
+		</nldd-button-group>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
 export const BovenEenOverlay = {
 	// Stacked on the left, clear of the corner the notifications take, so the
 	// buttons stay reachable while one is showing.

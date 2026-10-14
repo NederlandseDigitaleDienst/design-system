@@ -166,6 +166,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.document-tab-bar.reorder-canceled-text': 'Slepen annulearre.',
 	'components.link.opens-in-new-tab-label': 'Iepenet yn in nij ljepblêd',
 	'components.menu-bar.overflow-action': 'Mear opsjes',
+	'components.tab-bar.overflow-action': 'Mear ljepblêden',
 	'components.pagination.accessible-label': 'Paginearring',
 	'components.pagination.previous-action': 'Gean nei de foarige side',
 	'components.pagination.next-action': 'Gean nei de folgjende side',

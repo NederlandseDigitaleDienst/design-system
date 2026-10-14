@@ -2744,3 +2744,253 @@ describe('nldd-menu-item – highlight from the menu', () => {
 		expect(fill(destructive)).not.toBe('rgba(0, 0, 0, 0)');
 	});
 });
+
+
+/* ============================================================
+   variant="navigation": a submenu in a site navigation
+   ============================================================ */
+
+describe('nldd-menu – variant="navigation"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	type Menu = HTMLElement & { showPopover(): void; hidePopover(): void; _claimItems(): void; filter(q: string): void };
+
+	const make = async (inner = ''): Promise<{ menu: Menu; button: HTMLButtonElement; after: HTMLButtonElement }> => {
+		el = await fixture(`
+			<div>
+				<button id="navigatie-knop">Onderwerpen</button>
+				<nldd-menu variant="navigation" anchor="navigatie-knop">
+					<nldd-menu-item text="Dakisolatie" href="#dakisolatie"></nldd-menu-item>
+					<nldd-menu-item text="Warmtepomp" href="#warmtepomp" selected></nldd-menu-item>
+					<nldd-menu-divider></nldd-menu-divider>
+					<nldd-menu-item text="Alle onderwerpen" href="#alle"></nldd-menu-item>
+					${inner}
+				</nldd-menu>
+				<button id="navigatie-erna">Erna</button>
+			</div>
+		`);
+		const menu = el.querySelector('nldd-menu') as Menu;
+		await waitForUpdate(menu);
+		menu._claimItems();
+		await Promise.all(Array.from(menu.querySelectorAll('nldd-menu-item, nldd-menu-divider, nldd-menu-group')).map(part => waitForUpdate(part as HTMLElement)));
+		return { menu, button: el.querySelector('#navigatie-knop')!, after: el.querySelector('#navigatie-erna')! };
+	};
+
+	const link = (item: Element) => item.shadowRoot!.querySelector('.menu__item') as HTMLElement;
+	const open = (menu: Menu) => (menu as HTMLElement).matches(':popover-open');
+
+	it('is a list of links, not a menu', async () => {
+		const { menu } = await make();
+		const items = Array.from(menu.querySelectorAll('nldd-menu-item'));
+
+		expect(menu.shadowRoot!.querySelector('.menu__list')!.getAttribute('role')).toBe('list');
+		expect(items.map(item => item.getAttribute('role'))).toEqual(['listitem', 'listitem', 'listitem']);
+		// The link is a link: no menuitem role on it, and in the tab order.
+		expect(items.map(item => link(item).tagName)).toEqual(['A', 'A', 'A']);
+		expect(items.map(item => link(item).hasAttribute('role'))).toEqual([false, false, false]);
+		expect(items.map(item => link(item).tabIndex)).toEqual([0, 0, 0]);
+		expect(link(items[1]).getAttribute('aria-current')).toBe('page');
+		// A list owns list items only, so the rule is drawn and not announced.
+		expect(menu.querySelector('nldd-menu-divider')!.shadowRoot!.querySelector('.menu__divider')!.getAttribute('role')).toBe('none');
+	});
+
+	it('makes a group a list item that holds a list of its own', async () => {
+		const { menu } = await make(`
+			<nldd-menu-group text="Meer">
+				<nldd-menu-item text="Zonnepanelen" href="#zonnepanelen"></nldd-menu-item>
+			</nldd-menu-group>
+		`);
+		const group = menu.querySelector('nldd-menu-group')!;
+		expect(group.getAttribute('role')).toBe('listitem');
+		const inner = group.shadowRoot!.querySelector('.menu__group-items')!;
+		expect(inner.getAttribute('role')).toBe('list');
+		expect(inner.hasAttribute('aria-labelledby')).toBe(true);
+	});
+
+	it('gives a submenu the same variant', async () => {
+		const { menu } = await make(`
+			<nldd-menu-item text="Subsidies">
+				<nldd-menu>
+					<nldd-menu-item text="Aanvragen" href="#aanvragen"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-item>
+		`);
+		const openers = Array.from(menu.querySelectorAll(':scope > nldd-menu-item'));
+		const opener = openers[openers.length - 1];
+		await waitForUpdate(opener as HTMLElement);
+		expect(opener.querySelector('nldd-menu')!.getAttribute('variant')).toBe('navigation');
+		// A disclosure: expanded or not, and no promise of a menu.
+		expect(link(opener).hasAttribute('aria-haspopup')).toBe(false);
+		expect(link(opener).getAttribute('aria-expanded')).toBe('false');
+	});
+
+	it('moves between the links with the arrow keys, Home and End', async () => {
+		const { menu } = await make();
+		const items = Array.from(menu.querySelectorAll('nldd-menu-item')) as HTMLElement[];
+		menu.showPopover();
+		await waitForUpdate(menu);
+		const press = (key: string) => menu.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+		const focused = () => items.findIndex(item => item.shadowRoot!.activeElement === link(item));
+
+		items[0].focus();
+		press('ArrowDown');
+		expect(focused()).toBe(1);
+		press('End');
+		expect(focused()).toBe(2);
+		press('Home');
+		expect(focused()).toBe(0);
+		press('ArrowUp');
+		expect(focused()).toBe(2);
+		menu.hidePopover();
+	});
+
+	it('leaves the letter keys alone', async () => {
+		const { menu } = await make();
+		const items = Array.from(menu.querySelectorAll('nldd-menu-item')) as HTMLElement[];
+		menu.showPopover();
+		await waitForUpdate(menu);
+		items[0].focus();
+		// In an action menu "a" would jump to "Alle onderwerpen".
+		menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true, cancelable: true }));
+		expect(items[0].shadowRoot!.activeElement).toBe(link(items[0]));
+		menu.hidePopover();
+	});
+
+	it('closes on Escape and hands focus back to the trigger', async () => {
+		const { menu, button } = await make();
+		menu.showPopover();
+		await waitForUpdate(menu);
+		(menu.querySelector('nldd-menu-item') as HTMLElement).focus();
+		menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+		expect(open(menu)).toBe(false);
+		expect(document.activeElement).toBe(button);
+	});
+
+	it('closes when focus leaves it', async () => {
+		const { menu, after } = await make();
+		menu.showPopover();
+		await waitForUpdate(menu);
+		const items = Array.from(menu.querySelectorAll('nldd-menu-item')) as HTMLElement[];
+		items[0].focus();
+		items[1].focus();
+		expect(open(menu)).toBe(true);
+		after.focus();
+		expect(open(menu)).toBe(false);
+	});
+
+	it('closes when Tab leaves the page, and stays when the window loses focus', async () => {
+		const { menu } = await make();
+		const first = menu.querySelector('nldd-menu-item') as HTMLElement;
+		const leave = () => first.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true, relatedTarget: null }));
+		menu.showPopover();
+		await waitForUpdate(menu);
+
+		// Nowhere to go and no Tab: the window lost focus, the menu stays.
+		leave();
+		expect(open(menu)).toBe(true);
+
+		// Tab past the last link of the page has no target either, and does leave.
+		first.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+		leave();
+		expect(open(menu)).toBe(false);
+	});
+
+	it('leaves closing to the trigger when focus goes there', async () => {
+		// Focus in the menu and a click on the trigger: the trigger takes focus
+		// on pointerdown. Closing on that focusout would let the click that
+		// follows open the menu again.
+		const { menu, button } = await make();
+		menu.showPopover();
+		await waitForUpdate(menu);
+		(menu.querySelector('nldd-menu-item') as HTMLElement).focus();
+		button.focus();
+		expect(open(menu)).toBe(true);
+		menu.hidePopover();
+	});
+
+	it('closes when Shift+Tab leaves the page from the first link', async () => {
+		const { menu } = await make();
+		const first = menu.querySelector('nldd-menu-item') as HTMLElement;
+		menu.showPopover();
+		await waitForUpdate(menu);
+		first.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, composed: true }));
+		first.dispatchEvent(new FocusEvent('focusout', { bubbles: true, composed: true, relatedTarget: null }));
+		expect(open(menu)).toBe(false);
+	});
+
+	it('takes back the popup type it gave its trigger when the variant changes', async () => {
+		el = await fixture(`
+			<nldd-button expandable text="Onderwerpen">
+				<nldd-menu slot="popup">
+					<nldd-menu-item text="Dakisolatie" href="#dakisolatie"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-button>
+		`);
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as Menu & { variant: string };
+		await waitForUpdate(menu);
+		await waitForUpdate(el);
+		expect(getButton(el).getAttribute('aria-haspopup')).toBe('menu');
+
+		menu.variant = 'navigation';
+		await waitForUpdate(menu);
+		await waitForUpdate(el);
+		expect(getButton(el).hasAttribute('aria-haspopup')).toBe(false);
+	});
+
+	it('takes the list item role back when the variant changes', async () => {
+		const { menu } = await make();
+		const item = menu.querySelector('nldd-menu-item') as HTMLElement;
+		expect(item.getAttribute('role')).toBe('listitem');
+		menu.removeAttribute('variant');
+		await waitForUpdate(menu);
+		menu._claimItems();
+		await waitForUpdate(item);
+		expect(item.hasAttribute('role')).toBe(false);
+	});
+
+	it('an action menu stays open when focus leaves it', async () => {
+		const { menu, after } = await make();
+		menu.removeAttribute('variant');
+		await waitForUpdate(menu);
+		menu.showPopover();
+		await waitForUpdate(menu);
+		(menu.querySelector('nldd-menu-item') as HTMLElement).focus();
+		after.focus();
+		expect(open(menu)).toBe(true);
+		menu.hidePopover();
+	});
+
+	it('does not seed aria-haspopup on its trigger', async () => {
+		el = await fixture(`
+			<nldd-button expandable text="Onderwerpen">
+				<nldd-menu slot="popup" variant="navigation">
+					<nldd-menu-item text="Dakisolatie" href="#dakisolatie"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-button>
+		`);
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as Menu;
+		await waitForUpdate(menu);
+		menu.showPopover();
+		await waitForUpdate(menu);
+		await waitForUpdate(el);
+		expect(getButton(el).hasAttribute('aria-haspopup')).toBe(false);
+		expect(getButton(el).getAttribute('aria-expanded')).toBe('true');
+		menu.hidePopover();
+	});
+
+	it('warns about checkable items, shortcuts and filter()', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const { menu } = await make('<nldd-menu-item text="Compact" type="checkbox"></nldd-menu-item>');
+		menu.filter('dak');
+		const said = warn.mock.calls.flat().join(' ');
+		expect(said).toContain('variant="navigation" is a list of links');
+		expect(said).toContain('filter() belongs to a menu of actions');
+	});
+});

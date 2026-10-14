@@ -13,13 +13,27 @@
  *            Use `translations` property instead: `.translations=${{ 'components.document-tab-bar.overflow-action': 'Tabs' }}`
  * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use when items have hrefs
  *
+ * The tabs can always be put in another order: drag one, or move the focused
+ * tab with Shift+Arrow left or right. The bar moves the element itself and
+ * fires `nldd-reorder` with where it came from and where it went.
+ *
+ * Closing a tab with the pointer leaves the other tabs at the width they had,
+ * so the close button of the next one slides in under the pointer and a row
+ * of tabs closes with one click after another. A tab that comes back out of
+ * the overflow takes the same width, and when the overflow button goes away
+ * it leaves room at the end. Once the pointer leaves the bar the tabs grow
+ * into the space again, at once for anyone who asks for reduced motion.
+ * Closing the last tab of the row, with none left in the overflow, lets them
+ * grow into the space at once, since no next close button needs to stay in
+ * place. Closing from the keyboard spreads them at once, without the motion.
+ *
  * @slot - nldd-document-tab-bar-item elements
  * @slot end - Action buttons (e.g. new tab)
  *
  * @fires tabchange - Fired when a tab is selected; detail: { item }
  * @fires tabdismiss - Fired when a tab is dismissed; detail: { item, nextItem }
  * @fires tabempty - Fired when the last tab is dismissed
- * @fires nldd-reorder - Fired when tabs are reordered via drag; detail: { fromIndex, toIndex }
+ * @fires nldd-reorder - Fired when a tab is moved, by dragging or with Shift+Arrow; detail: { fromIndex, toIndex }
  *
  * ---
  *
@@ -43,6 +57,7 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddDocumentTabBarTranslations } from './document-tab-bar.i18n.js';
 import './../../actions/menu/menu.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
+import { isPointerMode } from '../../../utilities/input-modality.js';
 
 // Pointer movement threshold in px before drag mode activates.
 // Distinguishes a click (select) from a drag (reorder).
@@ -183,6 +198,17 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	private _resizeObserver: ResizeObserver | null = null;
 	private _hasCustomLabel = false;
 
+	/** Whether the tabs keep their width after a close, until the pointer leaves. */
+	private _holding = false;
+	/** The last tab of the row, closed with nothing in the overflow: once it
+	 *  has left the row, the others grow into the space straight away. */
+	private _releaseOnRemoval: NLDDDocumentTabBarItem | null = null;
+	/** The width of the bar, to tell a resize from any other change. */
+	private _rowWidth = 0;
+	/** Every tab there was when the hold began, overflowed ones included, so
+	 *  a tab coming back out of the overflow is not taken for a new one. */
+	private _itemsAtHold = new Set<NLDDDocumentTabBarItem>();
+
 	// — Drag state ——————————————————————————————————————————————————————————
 
 	private _draggingEl: NLDDDocumentTabBarItem | null = null;
@@ -213,6 +239,14 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		this.removeEventListener('dismiss', this._handleItemDismiss as EventListener);
 		this.removeEventListener('keydown', this._handleKeyDown);
 		this.removeEventListener('pointerdown', this._onPointerDown);
+		this.removeEventListener('pointerleave', this._releaseWidths);
+		this._itemsAtHold.clear();
+		this._releaseOnRemoval = null;
+		clearTimeout(this._releasingTimer);
+		this.removeAttribute('data-holding-widths');
+		this.removeAttribute('data-releasing-widths');
+		this.style.removeProperty('--_document-tab-bar-held-item-width');
+		this._holding = false;
 
 		this._menu?.remove();
 		this._menu = null;
@@ -231,7 +265,18 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 		const container = this.shadowRoot?.querySelector('.document-tab-bar__items') as HTMLElement;
 		if (container) {
-			this._resizeObserver = new ResizeObserver(() => this._calculateOverflow());
+			this._rowWidth = this.clientWidth;
+			this._resizeObserver = new ResizeObserver(() => {
+				// A held width is only right for the row it was measured in. A
+				// window that changes size lets go, rather than leaving the tabs
+				// pinned wider than the row or short of it.
+				// The bar's own width and not the row's: the row grows when the
+				// overflow button goes away, and that is no reason to let go.
+				const width = this.clientWidth;
+				if (this._holding && width !== this._rowWidth) this._releaseWidths();
+				this._rowWidth = width;
+				this._calculateOverflow();
+			});
 			this._resizeObserver.observe(container);
 		}
 
@@ -293,6 +338,14 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	}
 
 	_onSlotChange(): void {
+		if (this._releaseOnRemoval && !this._getItems().includes(this._releaseOnRemoval)) {
+			this._releaseOnRemoval = null;
+			this._releaseWidths();
+		}
+		// A tab that arrives while the widths are held needs room of its own.
+		if (this._holding && this._getItems().some(item => !this._itemsAtHold.has(item))) {
+			this._releaseWidths();
+		}
 		this._calculateOverflow();
 		this._propagateDismissLabel();
 		this._syncFallbackFocusable();
@@ -710,7 +763,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 	private _syncMenuAnchor(): void {
 		if (!this._menu) return;
-		const button = this.shadowRoot?.querySelector('.document-tab-bar__overflow nldd-icon-button') as HTMLElement & {
+		const button = this.shadowRoot?.querySelector('.document-tab-bar__overflow-button nldd-icon-button') as HTMLElement & {
 			popoverTargetElement?: Element | null;
 			popoverTargetAction?: 'toggle' | 'show' | 'hide';
 		} | null;
@@ -781,12 +834,28 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		}
 
 		const isLastItem = items.length === 1;
+		// The last tab of the row, with none waiting in the overflow: no next
+		// close button would slide in under the pointer, so the others grow into
+		// the space at once. Held first, so they grow rather than jump, and let
+		// go as soon as the closed tab has left the row.
+		const visible = items.filter(item => !item.hidden);
+		const closesTheRow = visible[visible.length - 1] === dismissedItem && visible.length === items.length;
+		if (!isLastItem && isPointerMode()) {
+			this._holdWidths(items.filter(item => item !== dismissedItem));
+			if (closesTheRow) this._releaseOnRemoval = dismissedItem;
+		}
 
 		this.dispatchEvent(new CustomEvent('tabdismiss', {
 			bubbles: true,
 			composed: true,
 			detail: { item: dismissedItem, nextItem },
 		}));
+		// Removed in the handler, as most apps do: grow now. Removed later, by a
+		// framework's next render: the slotchange that follows does it.
+		if (this._releaseOnRemoval && !this._getItems().includes(this._releaseOnRemoval)) {
+			this._releaseOnRemoval = null;
+			this._releaseWidths();
+		}
 
 		if (isLastItem) {
 			this.dispatchEvent(new CustomEvent('tabempty', { bubbles: true, composed: true }));
@@ -794,6 +863,70 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 		this._syncFallbackFocusable();
 	};
+
+	/**
+	 * Pins the tabs at the width they have now, so removing one moves the rest
+	 * along instead of growing them. One width for the whole bar and not one
+	 * per tab: a tab that comes back out of the overflow takes it too, and the
+	 * overflow button that disappears leaves room at the end instead of
+	 * spreading the tabs. Measured before the consumer removes the closed tab,
+	 * which it does in its `tabdismiss` handler.
+	 */
+	private _holdWidths(items: NLDDDocumentTabBarItem[]): void {
+		// A second close keeps the width of the first.
+		if (this._holding) return;
+		const sample = items.find(item => !item.hidden);
+		if (!sample) return;
+		this.style.setProperty('--_document-tab-bar-held-item-width', `${sample.getBoundingClientRect().width}px`);
+		this.toggleAttribute('data-holding-widths', true);
+		this._holding = true;
+		this._itemsAtHold = new Set(this._getItems());
+		this.addEventListener('pointerleave', this._releaseWidths);
+	}
+
+	/**
+	 * Lets the tabs spread over the space again, growing into it rather than
+	 * jumping. The held width runs to the width the tabs will have, and only
+	 * then is the hold dropped. Animating the flex values themselves would be
+	 * done halfway: once every tab grows, the free space is already shared out.
+	 * The transition is only on for this, so dragging, a new tab or a narrower
+	 * window do not animate.
+	 */
+	private _releaseWidths = (): void => {
+		this.removeEventListener('pointerleave', this._releaseWidths);
+		this._holding = false;
+		this._itemsAtHold.clear();
+		this._releaseOnRemoval = null;
+		clearTimeout(this._releasingTimer);
+
+		const from = this.style.getPropertyValue('--_document-tab-bar-held-item-width');
+		const finish = () => {
+			this.removeAttribute('data-holding-widths');
+			this.removeAttribute('data-releasing-widths');
+			this.style.removeProperty('--_document-tab-bar-held-item-width');
+			this._calculateOverflow();
+		};
+
+		// Where the tabs end up: an equal share of the row. Worked out rather
+		// than measured, since measuring with the hold off would hand the
+		// transition a starting point of zero.
+		const row = this.shadowRoot?.querySelector<HTMLElement>('.document-tab-bar__items');
+		const count = this._getVisibleItems().length;
+		const gap = row ? parseFloat(getComputedStyle(row).columnGap) || 0 : 0;
+		const to = row && count ? (row.clientWidth - gap * (count - 1)) / count : 0;
+		const duration = parseFloat(getComputedStyle(this).getPropertyValue('--_document-tab-bar-release-duration')) || 0;
+		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (!from || !to || !duration || reduced) {
+			finish();
+			return;
+		}
+
+		this.toggleAttribute('data-releasing-widths', true);
+		this.style.setProperty('--_document-tab-bar-held-item-width', `${to}px`);
+		this._releasingTimer = setTimeout(finish, duration + 50);
+	};
+
+	private _releasingTimer?: ReturnType<typeof setTimeout>;
 
 	private _handleKeyDown = (event: KeyboardEvent): void => {
 		const path = event.composedPath() as Element[];

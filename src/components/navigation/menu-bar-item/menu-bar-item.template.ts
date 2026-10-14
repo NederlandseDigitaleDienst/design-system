@@ -18,7 +18,14 @@ export function template(component: NLDDMenuBarItem) {
 	// control is not replaced (and focus lost) when the bar turns compact.
 	const tooltipText = showsIconOnly ? (component.accessibleLabel || component.text) : '';
 	const ariaCurrent = component.current ? component.currentType : nothing;
-	const ariaHaspopup = component.expandable ? 'menu' : (component.haspopup || nothing);
+	// A navigation submenu is a list of links behind a disclosure: the item
+	// says expanded or not, and promises no menu. Read at render time; the
+	// component re-renders when a menu arrives or its variant changes (see
+	// _wireMenu), so this does not go stale.
+	const opensNavigation = component.querySelector(':scope > nldd-menu')?.getAttribute('variant') === 'navigation';
+	const ariaHaspopup = component.expandable
+		? (opensNavigation ? nothing : 'menu')
+		: (component.haspopup || nothing);
 	const ariaExpanded = (component.expandable || component.haspopup) ? String(component.expanded) : nothing;
 	// The slot is always rendered, so a slotted icon is noticed when it arrives;
 	// the icon name is its fallback.

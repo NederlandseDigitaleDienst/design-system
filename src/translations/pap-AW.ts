@@ -168,6 +168,7 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.document-tab-bar.reorder-canceled-text': 'Hala a keda cancela.',
 	'components.link.opens-in-new-tab-label': 'Ta habri den un tab nobo',
 	'components.menu-bar.overflow-action': 'Mas opcion',
+	'components.tab-bar.overflow-action': 'Mas tab',
 	'components.pagination.accessible-label': 'Paginacion',
 	'components.pagination.previous-action': 'Bay na pagina anterior',
 	'components.pagination.next-action': 'Bay na pagina siguiente',

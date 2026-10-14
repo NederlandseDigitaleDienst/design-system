@@ -24,6 +24,10 @@ export const popoverStyles = css`
 		overflow: auto;
 		padding: 0;
 		isolation: isolate;
+		/* Selectable again under a trigger that switches selection off for itself
+		   and everything in it, as nldd-button and nldd-menu-bar-item do. */
+		-webkit-user-select: text;
+		user-select: text;
 
 		@media (max-width: ${smMax}) {
 			position: fixed;

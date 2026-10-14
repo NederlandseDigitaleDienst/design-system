@@ -2,11 +2,18 @@
  * Nederlandse Digitale Dienst Skip Link Component (Lit + TypeScript)
  *
  * Accessibility pattern that lets keyboard users skip past content. Wraps
- * content in a default slot. Without href it moves focus to the first rendered
- * element after the skip link, so the next Tab lands on the first link or
- * button in it. An element that is not rendered, such as a `<noscript>`, a
- * `<script>` or anything hidden, is passed over. Make sure a rendered element
- * follows the component, otherwise the skip link has no effect.
+ * content in a default slot.
+ *
+ * Not only for the header of a page. Any block with many stops that someone
+ * on a keyboard often wants to get past can have one: a set of filters, a long
+ * toolbar, a table of contents. Keep it to blocks like that; a skip link before
+ * every section is one more stop on the way, not one less.
+ *
+ * Without href it moves focus to the first rendered element after the skip
+ * link, so the next Tab lands on the first link or button in it. An element
+ * that is not rendered, such as a `<noscript>`, a `<script>` or anything
+ * hidden, is passed over. Make sure a rendered element follows the component,
+ * otherwise the skip link has no effect.
  *
  * With an `href` that points at an id on the same page, the link scrolls to
  * that element and moves focus to it too. The target needs no `tabindex` of

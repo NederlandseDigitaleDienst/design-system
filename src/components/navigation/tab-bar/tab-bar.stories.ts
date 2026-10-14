@@ -62,8 +62,8 @@ const tabBarItems = html`
 		icon="home"
 	></nldd-tab-bar-item>
 	<nldd-tab-bar-item
-		text="Profiel"
-		icon="profile"
+		text="Account"
+		icon="account"
 	></nldd-tab-bar-item>
 	<nldd-tab-bar-item
 		text="Zoeken"
@@ -171,8 +171,8 @@ export const Gemengd = {
 		></nldd-tab-bar-item>
 		<nldd-tab-bar-item
 			variant="text"
-			text="Profiel"
-			icon="profile"
+			text="Account"
+			icon="account"
 		></nldd-tab-bar-item>
 		<nldd-tab-bar-item
 			variant="icon"
@@ -181,6 +181,54 @@ export const Gemengd = {
 		></nldd-tab-bar-item>
 	</nldd-tab-bar>
 `,
+	parameters: { controls: { disable: true } },
+};
+
+/**
+ * Passen de tabs niet, dan gaan de tabs die niet passen achter de knop "Meer
+ * opties", in een menu. De huidige tab blijft altijd in de balk. Sleep de hoek
+ * rechtsonder om de breedte aan te passen.
+ */
+export const Overloop = {
+	render: () => html`
+		<div style="resize: horizontal; overflow: hidden; width: 360px; min-width: 160px; max-width: 100%; padding: 8px;">
+			<nldd-tab-bar
+				variant="text"
+				accessible-label="Aanvragen"
+			>
+				<nldd-tab-bar-item text="Alle aanvragen (144)"></nldd-tab-bar-item>
+				<nldd-tab-bar-item
+					current
+					text="In behandeling (72)"
+				></nldd-tab-bar-item>
+				<nldd-tab-bar-item text="Afgerond (72)"></nldd-tab-bar-item>
+			</nldd-tab-bar>
+		</div>
+		<div style="resize: horizontal; overflow: hidden; width: 280px; min-width: 160px; max-width: 100%; padding: 8px;">
+			<nldd-tab-bar
+				variant="icon-and-text"
+				accessible-label="Aanvragen"
+			>
+				<nldd-tab-bar-item
+					text="Alle"
+					icon="tray"
+				></nldd-tab-bar-item>
+				<nldd-tab-bar-item
+					current
+					text="In behandeling"
+					icon="clock"
+				></nldd-tab-bar-item>
+				<nldd-tab-bar-item
+					text="Afgerond"
+					icon="check-mark-circle"
+				></nldd-tab-bar-item>
+				<nldd-tab-bar-item
+					text="Dossiers"
+					icon="folder"
+				></nldd-tab-bar-item>
+			</nldd-tab-bar>
+		</div>
+	`,
 	parameters: { controls: { disable: true } },
 };
 
@@ -197,9 +245,9 @@ export const Navigatie = {
 			href="/home"
 		></nldd-tab-bar-item>
 		<nldd-tab-bar-item
-			text="Profiel"
-			icon="profile"
-			href="/profiel"
+			text="Account"
+			icon="account"
+			href="/account"
 		></nldd-tab-bar-item>
 		<nldd-tab-bar-item
 			text="Zoeken"

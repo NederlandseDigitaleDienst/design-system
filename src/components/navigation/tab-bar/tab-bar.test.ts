@@ -1,7 +1,8 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDTabBar, NLDDTabBarItem } from './tab-bar.js';
 import './tab-bar.js';
+import { loadTokens } from '../../../test-tokens.js';
 
 function threeTabBar(): string {
 	return `
@@ -151,10 +152,12 @@ describe('nldd-tab-bar-item – content variant detection', () => {
 		expect(cs.textOverflow).toBe('ellipsis');
 	});
 
-	it('caps the bar at its container and truncates only the overflowing tab', async () => {
-		// Real layout assertion in a narrow container: the bar must not exceed it,
-		// the long tab truncates, and short tabs keep their own (content) width
-		// instead of all shrinking proportionally (the grid-track behavior).
+	it('caps the bar at its container and moves a tab that does not fit to the menu', async () => {
+		// Real layout in a narrow container: the bar must not exceed it, the long
+		// tab goes behind the overflow button instead of being cut off, and the
+		// short tabs keep their own width.
+		// The widths come from the tokens, the overflow button's among them.
+		const unloadTokens = loadTokens();
 		const host = document.createElement('div');
 		host.style.width = '320px';
 		document.body.appendChild(host);
@@ -168,18 +171,23 @@ describe('nldd-tab-bar-item – content variant detection', () => {
 		const items = [...host.querySelectorAll('nldd-tab-bar-item')] as (HTMLElement & { updateComplete: Promise<boolean> })[];
 		await bar.updateComplete;
 		await Promise.all(items.map(i => i.updateComplete));
-		await new Promise(r => setTimeout(r, 0));
+		await expect.poll(() => items[2].hasAttribute('data-overflow')).toBe(true);
+		await bar.updateComplete;
 
 		const textOf = (item: Element) => item.shadowRoot!.querySelector('.tab-bar__item-text') as HTMLElement;
 		expect(bar.getBoundingClientRect().width).toBeLessThanOrEqual(321);
-		// Overflowing tab: rendered text is clipped.
-		const long = textOf(items[2]);
-		expect(long.scrollWidth).toBeGreaterThan(long.clientWidth);
-		// Short tab keeps its content width: its text is not clipped.
+		expect(items[0].hasAttribute('data-overflow')).toBe(false);
+		expect(items[1].hasAttribute('data-overflow')).toBe(false);
 		const home = textOf(items[0]);
 		expect(home.scrollWidth).toBeLessThanOrEqual(home.clientWidth + 1);
+		const overflow = bar.shadowRoot!.querySelector('.tab-bar__overflow-button') as HTMLElement;
+		expect(overflow.hidden).toBe(false);
+		expect([...overflow.querySelectorAll('nldd-menu-item')].map(item => item.getAttribute('text'))).toEqual([
+			'Een hele lange tablabel die echt niet in deze smalle balk past',
+		]);
 
 		host.remove();
+		unloadTokens();
 	});
 
 	it('hides the icon at size="lg" with variant="text"', async () => {
@@ -947,5 +955,123 @@ describe('nldd-tab-bar-item selected -> current', () => {
 		expect(warn).toHaveBeenCalledWith(expect.stringContaining('`selected` is now `current`'));
 		const item = el.querySelector('nldd-tab-bar-item') as HTMLElement & { current: boolean };
 		expect(item.current).toBe(false);
+	});
+});
+
+
+/* Tabs that do not fit go behind a "Meer tabs" button; the current tab stays. */
+describe('nldd-tab-bar – overloop', () => {
+	let host: HTMLDivElement;
+	let unloadTokens: () => void;
+
+	beforeEach(() => { unloadTokens = loadTokens(); });
+
+	afterEach(() => {
+		unloadTokens();
+		host?.remove();
+		document.querySelectorAll('body > nldd-menu').forEach(menu => menu.remove());
+	});
+
+	const make = async (width: number, current = 0) => {
+		host = document.createElement('div');
+		host.style.width = `${width}px`;
+		document.body.appendChild(host);
+		const texts = ['Aanvraag A-1042', 'Aanvraag A-1043', 'Dossier D-318', 'Dossier D-319'];
+		host.innerHTML = `
+			<nldd-tab-bar variant="text" accessible-label="Mijn Dienst">
+				${texts.map((text, i) => `<nldd-tab-bar-item text="${text}" ${i === current ? 'current' : ''}></nldd-tab-bar-item>`).join('')}
+			</nldd-tab-bar>`;
+		const bar = host.querySelector('nldd-tab-bar') as HTMLElement & { updateComplete: Promise<boolean>; _updateOverflow(swapOnly?: boolean): void };
+		const items = [...host.querySelectorAll('nldd-tab-bar-item')] as (HTMLElement & { current: boolean; updateComplete: Promise<boolean> })[];
+		await bar.updateComplete;
+		await Promise.all(items.map(i => i.updateComplete));
+		bar._updateOverflow();
+		await bar.updateComplete;
+		return { bar, items };
+	};
+
+	const hidden = (items: HTMLElement[]) => items.map(item => item.hasAttribute('data-overflow'));
+	const menuItems = (bar: HTMLElement) => [...bar.shadowRoot!.querySelectorAll('.tab-bar__overflow-button nldd-menu-item')] as HTMLElement[];
+
+	it('toont alles en geen knop als de tabs passen', async () => {
+		const { bar, items } = await make(1200);
+		expect(hidden(items)).toEqual([false, false, false, false]);
+		expect((bar.shadowRoot!.querySelector('.tab-bar__overflow-button') as HTMLElement).hidden).toBe(true);
+	});
+
+	it('houdt de huidige tab in de balk, ook als hij achteraan staat', async () => {
+		const { bar, items } = await make(320, 3);
+		expect(items[3].hasAttribute('data-overflow')).toBe(false);
+		expect(hidden(items).some(Boolean)).toBe(true);
+		expect(menuItems(bar).map(item => item.getAttribute('text'))).not.toContain('Dossier D-319');
+	});
+
+	it('verplaatst geen tabs in de DOM', async () => {
+		const { items } = await make(320, 3);
+		expect([...host.querySelectorAll('nldd-tab-bar-item')]).toEqual(items);
+	});
+
+	it('maakt een tab uit het menu de huidige en vuurt tabchange', async () => {
+		const { bar, items } = await make(320);
+		const picked = menuItems(bar)[0];
+		const index = items.findIndex(item => item.getAttribute('text') === picked.getAttribute('text'));
+		let changed: Element | null = null;
+		bar.addEventListener('tabchange', (e) => { changed = (e as CustomEvent).detail.item; });
+
+		picked.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true }));
+		expect(changed).toBe(items[index]);
+		expect(items[index].current).toBe(true);
+	});
+
+	it('laat de pijltjes alleen langs de tabs in de balk lopen', async () => {
+		const { bar, items } = await make(320);
+		const visible = items.filter(item => !item.hasAttribute('data-overflow'));
+		visible[visible.length - 1].focus();
+		bar.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+		expect(visible[0].current).toBe(true);
+	});
+
+	it('verandert niets aan wat er staat als je een tab in de balk kiest', async () => {
+		const { bar, items } = await make(420);
+		const before = hidden(items);
+		const visible = items.filter(item => !item.hasAttribute('data-overflow'));
+		expect(visible.length).toBeGreaterThan(1);
+		visible[visible.length - 1].current = true;
+		visible[0].current = false;
+		await visible[visible.length - 1].updateComplete;
+		bar._updateOverflow(true);
+		expect(hidden(items)).toEqual(before);
+	});
+
+	it('ruilt een tab uit het menu met de laatste in de balk', async () => {
+		const { bar, items } = await make(420);
+		const before = hidden(items);
+		const picked = items.findIndex(item => item.hasAttribute('data-overflow'));
+		const lastShown = before.lastIndexOf(false);
+		items.forEach((item, i) => { item.current = i === picked; });
+		await Promise.all(items.map(i => i.updateComplete));
+		bar._updateOverflow(true);
+		const after = hidden(items);
+		expect(after[picked]).toBe(false);
+		expect(after[lastShown]).toBe(true);
+		// Only those two changed place.
+		expect(after.filter((value, i) => value !== before[i]).length).toBe(2);
+	});
+
+	it('vult de breedte zolang er tabs in het menu staan', async () => {
+		const { bar } = await make(420);
+		expect(bar.hasAttribute('data-overflowing')).toBe(true);
+		expect(Math.round(bar.getBoundingClientRect().width)).toBe(420);
+		const box = bar.shadowRoot!.querySelector('.tab-bar__box') as HTMLElement;
+		expect(Math.round(box.getBoundingClientRect().width)).toBe(420);
+	});
+
+	it('haalt tabs terug als er weer ruimte is', async () => {
+		const { bar, items } = await make(320);
+		expect(hidden(items).some(Boolean)).toBe(true);
+		host.style.width = '1200px';
+		bar._updateOverflow();
+		await bar.updateComplete;
+		expect(hidden(items)).toEqual([false, false, false, false]);
 	});
 });

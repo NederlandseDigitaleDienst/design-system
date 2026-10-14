@@ -39,6 +39,7 @@ import { nlddLinkTranslations } from '../components/navigation/link/link.i18n.js
 import { nlddMenuBarTranslations } from '../components/navigation/menu-bar/menu-bar.i18n.js';
 import { nlddPaginationTranslations } from '../components/navigation/pagination/pagination.i18n.js';
 import { nlddSkipLinkTranslations } from '../components/navigation/skip-link/skip-link.i18n.js';
+import { nlddTabBarTranslations } from '../components/navigation/tab-bar/tab-bar.i18n.js';
 import { nlddTopNavigationBarTranslations } from '../components/navigation/top-navigation-bar/top-navigation-bar.i18n.js';
 import { nlddActivityIndicatorTranslations } from '../components/status-and-feedback/activity-indicator/activity-indicator.i18n.js';
 import { nlddBadgeTranslations } from '../components/status-and-feedback/badge/badge.i18n.js';
@@ -89,6 +90,7 @@ export const nl = {
 	...nlddMenuBarTranslations,
 	...nlddPaginationTranslations,
 	...nlddSkipLinkTranslations,
+	...nlddTabBarTranslations,
 	...nlddTopNavigationBarTranslations,
 	...nlddActivityIndicatorTranslations,
 	...nlddBadgeTranslations,

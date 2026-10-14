@@ -16,7 +16,7 @@ export default {
 	args: {
 		size: 'md',
 		showItemLabels: false,
-		label: '',
+		accessibleLabel: '',
 	},
 	argTypes: {
 		size: {
@@ -31,7 +31,8 @@ export default {
 			description: 'Toon labels onder toolbar-items',
 			table: { defaultValue: { summary: false } },
 		},
-		label: {
+		accessibleLabel: {
+			name: 'accessible-label',
 			control: 'text',
 			description: 'Naam van de werkbalk voor een schermlezer. Alleen nodig als er meer dan één werkbalk op de pagina staat.',
 		},
@@ -52,7 +53,7 @@ export const Standaard = {
 		<nldd-toolbar
 			size=${args.size}
 			?show-item-labels=${args.showItemLabels}
-			label=${args.label || nothing}
+			accessible-label=${args.accessibleLabel || nothing}
 		>
 			<nldd-toolbar-item
 				slot="start"
@@ -1116,7 +1117,7 @@ export const MobieleActiebalk = {
 	render: () => resizable(html`
 		<nldd-toolbar
 			size="lg"
-			label="Acties"
+			accessible-label="Acties"
 		>
 			<nldd-toolbar-item
 				slot="start"
@@ -1129,8 +1130,8 @@ export const MobieleActiebalk = {
 						icon="home"
 					></nldd-tab-bar-item>
 					<nldd-tab-bar-item
-						text="Profiel"
-						icon="profile"
+						text="Account"
+						icon="account"
 					></nldd-tab-bar-item>
 					<nldd-tab-bar-item
 						text="Zoeken"
@@ -1149,8 +1150,8 @@ export const MobieleActiebalk = {
 					></nldd-menu-item>
 					<nldd-menu-item
 						type="radio"
-						text="Profiel"
-						icon="profile"
+						text="Account"
+						icon="account"
 					></nldd-menu-item>
 					<nldd-menu-item
 						type="radio"
@@ -1189,16 +1190,120 @@ export const MobieleActiebalk = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Profiel"
+				label="Account"
 			>
 				<nldd-icon-button
-					text="Profiel"
-					icon="profile"
+					text="Account"
+					icon="account"
 				></nldd-icon-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Profiel"
-					icon="profile"
+					text="Account"
+					icon="account"
+				></nldd-menu-item>
+			</nldd-toolbar-item>
+		</nldd-toolbar>
+	`),
+	parameters: { controls: { disable: true } },
+};
+
+export const MetTabBar = {
+	name: 'Met tab-bar',
+	render: () => resizable(html`
+		<nldd-toolbar accessible-label="Aanvragen">
+			<nldd-toolbar-item
+				slot="start"
+				priority="10"
+			>
+				<nldd-tab-bar
+					variant="icon-and-text"
+					accessible-label="Aanvragen"
+				>
+					<nldd-tab-bar-item
+						text="Alle aanvragen"
+						icon="tray"
+					></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						current
+						text="In behandeling"
+						icon="clock"
+					></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						text="Afgerond"
+						icon="check-mark-circle"
+					></nldd-tab-bar-item>
+					<nldd-tab-bar-item
+						text="Dossiers"
+						icon="folder"
+					></nldd-tab-bar-item>
+				</nldd-tab-bar>
+				<nldd-menu-group
+					slot="overflow"
+					text="Aanvragen"
+				>
+						<nldd-menu-item
+							type="radio"
+							text="Alle aanvragen"
+							icon="tray"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							selected
+							text="In behandeling"
+							icon="clock"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							text="Afgerond"
+							icon="check-mark-circle"
+						></nldd-menu-item>
+						<nldd-menu-item
+							type="radio"
+							text="Dossiers"
+							icon="folder"
+						></nldd-menu-item>
+				</nldd-menu-group>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Zoeken"
+			>
+				<nldd-icon-button
+					text="Zoeken"
+					icon="search"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Zoeken"
+					icon="search"
+				></nldd-menu-item>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Filteren"
+			>
+				<nldd-icon-button
+					text="Filteren"
+					icon="filter"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Filteren"
+					icon="filter"
+				></nldd-menu-item>
+			</nldd-toolbar-item>
+			<nldd-toolbar-item
+				slot="end"
+				label="Downloaden"
+			>
+				<nldd-icon-button
+					text="Downloaden"
+					icon="download"
+				></nldd-icon-button>
+				<nldd-menu-item
+					slot="overflow"
+					text="Downloaden"
+					icon="download"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 		</nldd-toolbar>
@@ -1218,7 +1323,7 @@ export const LosseGecentreerdeTitel = {
 			<div style="outline: 1px dashed var(--semantics-dividers-color);">
 				<nldd-toolbar
 					size="md"
-					label="Zonder start of end"
+					accessible-label="Zonder start of end"
 				>
 					<nldd-toolbar-title
 						slot="center"
@@ -1238,7 +1343,7 @@ export const LosseGecentreerdeTitel = {
 			<div style="outline: 1px dashed var(--semantics-dividers-color);">
 				<nldd-toolbar
 					size="md"
-					label="Met verborgen back-knop"
+					accessible-label="Met verborgen back-knop"
 				>
 					<nldd-toolbar-item
 						slot="start"

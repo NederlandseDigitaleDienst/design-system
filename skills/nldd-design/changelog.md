@@ -15,6 +15,41 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-menu` can be a navigation.** With `variant="navigation"` it is a list of links instead of a menu of actions, so a submenu in the site navigation is read as what it is.
+- **Tabs that do not fit go to a menu.** On a narrow screen `nldd-tab-bar` puts the tabs that do not fit behind a "Meer tabs" button instead of cutting off every tab, and the current tab always stays in the bar. In an `nldd-toolbar` the other items make room first.
+- **Closing tabs one after another keeps the next close button under the pointer.** The tabs in an `nldd-document-tab-bar` keep their width while you close them, and grow into the space once the pointer leaves the bar.
+- **Notifications can be raised from code.** `NLDDNotification.show()` creates, shows and cleans up a notification, which is the way to raise one from a framework.
+- **`nldd-visually-hidden` is new**, for text that only a screen reader reads, such as the header of a column of checkboxes.
+
+### Added
+
+- **`variant="navigation"` on `nldd-menu`, for a submenu in a site navigation.** A submenu in `nldd-top-navigation-bar` was a menu of actions: `role="menu"` with menu items. For site navigation that is the wrong role, since a screen reader switches to an application mode in a menu where a visitor expects a list of links. With `variant="navigation"` the menu is a list (`role="list"`) and each item a list item around a real link; it looks the same. Tab reaches every link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The `nldd-menu-bar-item` that opens it says `aria-expanded` and no longer `aria-haspopup="menu"`. A submenu and a group inside it follow along. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. Give every item an `href`, and keep the default variant for menus that do things, such as an account menu or a language switch.
+
+- **`NLDDNotification.show()`, to raise a notification from code.** An `nldd-notification` places itself, which is why it does not matter where you write it. It also means a framework cannot render one: the element is no longer where the framework left it, so a keyed list (`v-for` with a `:key`) fails on its next render and a removed row leaves its notification on screen. `NLDDNotification.show({ text, supportingText, variant, icon, duration, actions })` creates the element, shows it and removes it once it is dismissed. An action is `{ text, onClick }`, at most two, and a click on one takes the notification away as well. It returns a handle with `dismiss()` and `update(options)`. An update changes the message, puts the notification in front and starts its clock over, so a status that changes often stays one notification, and the clock still pauses on hover and focus. The declarative element stays as it is; raise notifications with `show()` from a framework.
+
+- **`nldd-visually-hidden`, text for a screen reader only.** It stays in the accessibility tree and the reading order and takes no room on the page. Use it for a name that is visually redundant, such as the header of a column of checkboxes. The recipe is the one the components already use inside, so a site no longer needs a `.visually-hidden` class of its own. It is not for repairing structure that is missing, nor for a status: a status that matters to a screen reader matters to anyone, so show it.
+
+### Changed
+
+- **Tabs in `nldd-tab-bar` that do not fit go to a menu instead of being cut off.** On a narrow screen every tab was cut off with an ellipsis, and the rest of its text could not be read anywhere, often the very part that told the tabs apart. Tabs that do not fit now go behind a "Meer tabs" button at the end of the bar, in a menu. The current tab always stays in the bar. While tabs are in the menu, the bar fills its container and the tabs in it share the width in proportion to their own; choosing a tab in the bar leaves the rest where it is, and one chosen from the menu swaps places with the last tab in the bar, so the bar does not jump when you switch. In an `nldd-toolbar` the other items go to the toolbar's menu first; when it is the tab bar's turn, it narrows down to the current tab beside its own button, and only then goes into the toolbar's menu as a whole. Tabs are hidden, never moved in the DOM, so a framework that renders them finds them where it put them. Only a tab that does not fit on its own is still cut off. The label of the button can be translated with `components.tab-bar.overflow-action`.
+
+- **`nldd-code-viewer` scrolls across its whole box.** The padding sat on the box and the scrolling on the code inside it, so a long line stopped short of the edge, the scrollbar was inset, and the room for the copy button kept the whole right side free. The scroll area is now the box itself, with the padding inside it: a line scrolls out to the edge, the scrollbar runs from corner to corner, and at the end of a long line the last character stops beside the copy button instead of behind it.
+
+- **Closing tabs in `nldd-document-tab-bar` one after another keeps the next close button under the pointer.** Closing a tab with the pointer used to spread the others over the space at once, so the close button of the next tab moved away from the pointer. The tabs now keep their width until the pointer leaves the bar, and the next close button slides in under the pointer. Then they grow into the space, without motion for anyone who asks for reduced motion. Closing the last tab of the row, with none left in the overflow, lets them grow into the space at once; closing from the keyboard spreads them at once.
+
+### Breaking
+
+- **`label` on `nldd-toolbar` is now `accessible-label`.** It was the one place where an accessible name was called `label`; every other component says `accessible-label`, and on `nldd-toolbar-item` `label` is the visible text below the item, which made the two easy to mix up. There is no alias: a `label` left on a toolbar does nothing, so the toolbar loses its name. Rename the attribute on every `nldd-toolbar`. The `label` on `nldd-toolbar-item` stays as it is.
+
+### Fixed
+
+- **Text in an `nldd-popover` under a button can be selected.** `nldd-button`, `nldd-icon-button`, `nldd-menu-bar-item` and `nldd-menu-bar` switch text selection off for themselves and everything in them, and a popover in their `popup` slot is in them. The popover now switches it back on, so its text can be selected and copied.
+- **A card that is a link or button no longer stays pressed when a touch turns into a scroll.** The pressed shade of `nldd-card` came from `:active`, which can flash or linger while a touch scrolls the page. The card now sets it on a press and clears it on release, or when the browser hands the touch to scrolling, as `nldd-list-item` already did.
+- **The ribbon of `nldd-top-navigation-bar` starts at the top of the bar again with `logo-href`.** With a link on the logo the ribbon sat in a span as an inline image, on the text baseline with room below it for descenders, and centering that taller box lifted the ribbon 2 to 4 pixels above the bar. Anything placed above the bar, such as an `nldd-status-bar`, was overlapped by it.
+- **The current item in the menu sheet of `nldd-top-navigation-bar` has `aria-current`.** Behind the Menu button on a narrow screen the current item was only painted. The list in that sheet is a navigation list now, named after the global menu bar, so the link of the current item carries `aria-current` with the `current-type` of its menu bar item.
+
 ## [0.8.98](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.97...v0.8.98) (2026-10-13)
 
 ### Highlights

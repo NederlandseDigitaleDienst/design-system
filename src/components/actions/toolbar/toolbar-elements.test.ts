@@ -132,7 +132,7 @@ describe('nldd-toolbar-item – overflow declaration', () => {
 
 	it('leaves the declared overflow item without a menu role', async () => {
 		el = await fixture(`
-			<nldd-toolbar label="Labels">
+			<nldd-toolbar accessible-label="Labels">
 				<nldd-toolbar-item slot="start">
 					<button type="button">Nieuw label</button>
 					<nldd-menu-item slot="overflow" text="Nieuw label"></nldd-menu-item>
@@ -148,7 +148,7 @@ describe('nldd-toolbar-item – overflow declaration', () => {
 
 	it('leaves a declared radio item without a menu role, group or not', async () => {
 		el = await fixture(`
-			<nldd-toolbar label="Weergave">
+			<nldd-toolbar accessible-label="Weergave">
 				<nldd-toolbar-item slot="start">
 					<button type="button">Sorteren</button>
 					<nldd-menu-group slot="overflow" text="Sorteren">

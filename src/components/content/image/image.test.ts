@@ -128,6 +128,10 @@ describe('nldd-image', () => {
 		expect(status).not.toBeNull();
 		expect(status!.getAttribute('aria-live')).toBe('polite');
 		expect(status!.textContent).toBe('');
+		// Let the data URI finish loading first. Its `load` clears the error
+		// state, and on a slow runner it arrived after the error below and wiped
+		// the message the test was looking for.
+		await expect.poll(() => el.hasAttribute('loaded')).toBe(true);
 		// Force the error transition by dispatching directly on the internal img.
 		const img = el.shadowRoot!.querySelector('img')!;
 		img.dispatchEvent(new Event('error'));

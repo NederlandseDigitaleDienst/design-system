@@ -1608,7 +1608,7 @@
               "kind": "field",
               "name": "menuVariant",
               "type": {
-                "text": "'menu' | 'listbox' | null"
+                "text": "MenuVariant | null"
               },
               "default": "null",
               "description": "Which menu owns this item, set by that nldd-menu. Not part of the public API.\n\n`null` until one claims it, and an unclaimed item carries no menu role.\nA menu role is a promise about what is around you, so an item cannot make\nit on its own. `nldd-toolbar-item` holds exactly such an item: the\ndeclaration of what belongs in the overflow menu, which the toolbar clones\ninto the real menu when it collapses. The clone is claimed there and the\ndeclaration stays what it is."
@@ -1850,10 +1850,10 @@
               "kind": "field",
               "name": "variant",
               "type": {
-                "text": "'menu' | 'listbox'"
+                "text": "MenuVariant"
               },
               "default": "'menu'",
-              "description": "Render variant. Use 'listbox' when the menu serves as a combobox popup —\nthis switches role to \"listbox\" and item roles to \"option\" per ARIA spec.\nDefault: 'menu'.",
+              "description": "What the menu is, which sets its roles and part of its keyboard. See the\n`variant` attribute in the docblock above.",
               "attribute": "variant",
               "reflects": true
             },
@@ -2047,6 +2047,15 @@
           "attributes": [
             {
               "type": {
+                "text": "MenuVariant"
+              },
+              "description": "What the menu is, which sets its roles and part of its keyboard. See the\n`variant` attribute in the docblock above.",
+              "name": "variant",
+              "default": "'menu'",
+              "fieldName": "variant"
+            },
+            {
+              "type": {
                 "text": "string"
               },
               "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
@@ -2114,15 +2123,6 @@
               },
               "description": "Custom filter function (query, item) => boolean.",
               "name": "filterFn"
-            },
-            {
-              "name": "variant",
-              "type": {
-                "text": "'menu' | 'listbox'"
-              },
-              "default": "'menu'",
-              "description": "Render variant. Use 'listbox' when the menu serves as a combobox popup —\nthis switches role to \"listbox\" and item roles to \"option\" per ARIA spec.\nDefault: 'menu'.",
-              "fieldName": "variant"
             }
           ],
           "superclass": {
@@ -2709,7 +2709,7 @@
         },
         {
           "kind": "class",
-          "description": "A row of controls that belong to a whole screen or pane, with an overflow menu for what does not fit. The toolbar measures itself: as the row runs out of room, items move into that menu, the lowest `priority` first, and items that share a priority move together. So the order in the HTML says where an item sits, and `priority` says how long it stays. Every item carries its own alternative for the menu, an nldd-menu-item in its `overflow` slot. Without one the action is simply gone once the item overflows, which on a wide screen you never see; the item warns about it in development. The toolbar's own `overflow` slot holds the actions that live in the menu at every width.",
+          "description": "A row of controls that belong to a whole screen or pane, with an overflow menu for what does not fit. The toolbar measures itself: as the row runs out of room, items move into that menu, the lowest `priority` first, and items that share a priority move together. So the order in the HTML says where an item sits, and `priority` says how long it stays. An item holding a control with its own overflow, such as nldd-tab-bar, first narrows down when its turn comes, so that control moves what does not fit into its own menu, and only then goes into the toolbar's menu. Every item carries its own alternative for the menu, an nldd-menu-item in its `overflow` slot. Without one the action is simply gone once the item overflows, which on a wide screen you never see; the item warns about it in development. The toolbar's own `overflow` slot holds the actions that live in the menu at every width.",
           "name": "NLDDToolbar",
           "members": [
             {
@@ -2734,12 +2734,12 @@
             },
             {
               "kind": "field",
-              "name": "label",
+              "name": "accessibleLabel",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "attribute": "label",
+              "attribute": "accessible-label",
               "reflects": true
             },
             {
@@ -2772,13 +2772,13 @@
               "description": "When true, shows a text label below each toolbar item and the overflow button"
             },
             {
-              "name": "label",
+              "name": "accessible-label",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "label",
-              "description": "Accessible label for the toolbar. Only needed when multiple toolbars appear on the same page"
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name of the toolbar. Only needed when multiple toolbars appear on the same page."
             },
             {
               "name": "translations",
@@ -5634,6 +5634,48 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/content/visually-hidden/visually-hidden.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Text a screen reader reads and the screen does not show. It stays in the accessibility tree and in the reading order, and takes no room on the page. For a name that is visually redundant: the header of a column of checkboxes, where the checkboxes say enough to anyone who can see them, or the \"(opent in een nieuw venster)\" after a link whose icon already says it. Not for repairing structure that is missing. Hidden text that describes how something is laid out (\"subpagina van Aanvragen\") stands in for semantics the markup should carry, and only a screen reader gets the stand-in. Not for a status either: a status that matters to a screen reader matters to anyone, so show it, as text with `role=\"status\"` or as an `nldd-notification`. And not for the name of a component that takes `accessible-label`: give it that. Nothing in it should take focus. A control inside would be reached with Tab and be nowhere on the screen.",
+          "name": "NLDDVisuallyHidden",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-visually-hidden",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "The text, read by a screen reader and not shown."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDVisuallyHidden",
+          "declaration": {
+            "name": "NLDDVisuallyHidden",
+            "module": "src/components/content/visually-hidden/visually-hidden.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-visually-hidden",
+          "declaration": {
+            "name": "NLDDVisuallyHidden",
+            "module": "src/components/content/visually-hidden/visually-hidden.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/forms/form-actions/form-actions.ts",
       "declarations": [
         {
@@ -6476,6 +6518,14 @@
           "declaration": {
             "name": "NLDDTooltip",
             "module": "./content/tooltip/tooltip.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDVisuallyHidden",
+          "declaration": {
+            "name": "NLDDVisuallyHidden",
+            "module": "./content/visually-hidden/visually-hidden.js"
           }
         },
         {
@@ -22875,7 +22925,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A visually bounded card with optional header, body and footer sections. The card is elevated by default. Padding is left to nested containers. With `href` the whole card becomes a link (an overlay anchor across the card), with `button` a button (an overlay button that fires a plain, composed `click`, so a click listener or htmx attribute on the card itself works directly, and Enter/Space work natively). `href` wins when both are set. Nested interactive content, footer buttons for instance, has to be lifted above it with `position: relative; z-index: 1` to stay clickable. A card that is a link or button steps its surface and border one shade up on hover and one more while pressed, as a neutral-base button does; content lifted above the overlay does not set it off.",
+          "description": "A visually bounded card with optional header, body and footer sections. The card is elevated by default. Padding is left to nested containers. With `href` the whole card becomes a link (an overlay anchor across the card), with `button` a button (an overlay button that fires a plain, composed `click`, so a click listener or htmx attribute on the card itself works directly, and Enter/Space work natively). `href` wins when both are set. Nested interactive content, footer buttons for instance, has to be lifted above it with `position: relative; z-index: 1` to stay clickable. A card that is a link or button steps its surface and border one shade up on hover and one more while pressed, as a neutral-base button does; content lifted above the overlay does not set it off. On a touch screen there is no hover, and a touch that turns into a scroll lets go of the pressed shade.",
           "name": "NLDDCard",
           "members": [
             {
@@ -33286,7 +33336,7 @@
             },
             {
               "name": "nldd-reorder",
-              "description": "Fired when tabs are reordered via drag; detail: { fromIndex, toIndex }"
+              "description": "Fired when a tab is moved, by dragging or with Shift+Arrow; detail: { fromIndex, toIndex }"
             }
           ],
           "attributes": [
@@ -33878,7 +33928,7 @@
               },
               "default": "false",
               "fieldName": "expandable",
-              "description": "Show the disclosure icon and open the slotted `<nldd-menu>` on click"
+              "description": "Show the disclosure icon and open the slotted `<nldd-menu>` on click. The control then says `aria-haspopup=\"menu\"`, except for a menu with `variant=\"navigation\"`: that is a list of links, so the control only says `aria-expanded`."
             },
             {
               "name": "icon-only",
@@ -34293,7 +34343,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Accessibility pattern that lets keyboard users skip past content. Wraps content in a default slot. Without href it moves focus to the first rendered element after the skip link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a `<script>` or anything hidden, is passed over. Make sure a rendered element follows the component, otherwise the skip link has no effect. With an `href` that points at an id on the same page, the link scrolls to that element and moves focus to it too. The target needs no `tabindex` of its own. An href to another page is left to the browser. The component cannot know what it skips, so its default text only says \"Sla over\". Name it with `text`: \"Sla navigatie over\", \"Sla filters over\".",
+          "description": "Accessibility pattern that lets keyboard users skip past content. Wraps content in a default slot. Not only for the header of a page. Any block with many stops that someone on a keyboard often wants to get past can have one: a set of filters, a long toolbar, a table of contents. Keep it to blocks like that; a skip link before every section is one more stop on the way, not one less. Without href it moves focus to the first rendered element after the skip link, so the next Tab lands on the first link or button in it. An element that is not rendered, such as a `<noscript>`, a `<script>` or anything hidden, is passed over. Make sure a rendered element follows the component, otherwise the skip link has no effect. With an `href` that points at an id on the same page, the link scrolls to that element and moves focus to it too. The target needs no `tabindex` of its own. An href to another page is left to the browser. The component cannot know what it skips, so its default text only says \"Sla over\". Name it with `text`: \"Sla navigatie over\", \"Sla filters over\".",
           "name": "NLDDSkipLink",
           "members": [
             {
@@ -34557,7 +34607,7 @@
         },
         {
           "kind": "class",
-          "description": "A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBar and NLDDTabBarItem.",
+          "description": "A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBar and NLDDTabBarItem. When the tabs do not fit, the ones that do not fit go behind a \"Meer tabs\" button at the end, in a menu. The current tab always stays in the bar: if it would fall in the part that does not fit, another tab goes to the menu in its place. While tabs are in the menu, the bar fills its container and the tabs in it share the width in proportion to their own. Choosing a tab in the bar changes nothing about what is shown; choosing one from the menu swaps it with the last tab in the bar, so the bar does not jump. `centered` has no effect then. In an nldd-toolbar the other items go to the toolbar's menu first, by their priority; when it is the bar's turn, it narrows down to the current tab beside its button, and only then moves into the toolbar's menu as a whole. Tabs are hidden, never moved, so a framework that renders them finds them where it put them. Only a tab that does not fit on its own is cut off.",
           "name": "NLDDTabBar",
           "members": [
             {
@@ -34621,6 +34671,25 @@
               },
               "default": "''",
               "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "tabchange",
+              "description": "When a tab is selected; detail: { item: NLDDTabBarItem }"
             }
           ],
           "attributes": [
@@ -34677,6 +34746,25 @@
               "default": "''",
               "fieldName": "accessibleLabel",
               "description": "Accessible name for the navigation region; defaults to 'Tabs'"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -34685,12 +34773,6 @@
           },
           "tagName": "nldd-tab-bar",
           "customElement": true,
-          "events": [
-            {
-              "name": "tabchange",
-              "description": "When a tab is selected; detail: { item: NLDDTabBarItem }"
-            }
-          ],
           "slots": [
             {
               "name": "",
@@ -34740,7 +34822,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, and below it the main bar with the website title, a back button, the global navigation and the utility navigation. On narrow widths the global navigation moves into a menu sheet behind the menu button.",
+          "description": "The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, and below it the main bar with the website title, a back button, the global navigation and the utility navigation. On narrow widths the global navigation moves into a menu sheet behind the menu button. The top bar of a website, and of nothing else: put it in the `header` slot of an `nldd-page`. Do not combine it with a split view. A split view is the layout of an application, whose panes carry a bar of their own, usually an `nldd-toolbar`, and a site header above it gives a second layer of navigation and a second thing that scrolls. Does a page need a sidebar under this bar, use an `nldd-sidebar-section` inside that `nldd-page`.",
           "name": "NLDDTopNavigationBar",
           "members": [
             {
@@ -36504,7 +36586,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A short message that arrives over the interface and leaves on its own: a save that worked, a request that failed. Not a banner, which stands in the page and stays there — this one floats, stacks, and goes away. It places itself. Write it wherever it belongs in your code and it moves to one shared area: top right from md, full width across the top below that. Nothing about the position is settable, so notifications from anywhere in an application land in the same place and stack in the same order. A modal overlay is the one thing that moves it. An nldd-sheet, nldd-window or nldd-modal-dialog paints in the browser's top layer, above the whole page and out of reach of any z-index, and while one is open everything outside it is inert. So the area goes in: into the topmost overlay that is open, and back down as they close. A notification already on screen travels with it, and one raised from inside a sheet is readable and reachable where it is raised. More than one is a deck, not a list: the front one is readable and the older ones peek out below it, so a burst of messages takes the room of roughly one. The newest is in front. Behind it a notification is a bare surface, cut to the height of the one in front; dismiss the front and it slides up into the place that came free while its message fades in, because it was standing there all along. Under the front notification sits a strip as wide as the deck and as tall as the deck is when it fans out. Pointing at it fans the deck out to fill it, which is the only hint that there is more here than the message you can read; clicking it, or moving focus into the area, lays the whole deck out as a list. Clicking or tabbing away puts it back. The notification itself is not a button: a click on the message you are reading does nothing. Only the front of the deck counts down, and only while the deck is closed: open means someone is reading. The rest wait, so nothing disappears from under the one you are reading. `critical` never leaves on its own: a failure is worth reading, and the count-down would take it away while you were. That also keeps this within WCAG 2.2.1, which allows a time limit when what disappears is not essential. The clock pauses while a pointer moves over the notification and while focus is inside it, and resumes where it left off rather than starting over. A pointer that merely happens to rest where the notification appears does not count: it never moved, so nobody is reading. role follows the variant: `critical` becomes role=\"alert\", the rest role=\"status\". Focus never moves on its own. Escape dismisses the notification that focus is in.",
+          "description": "A short message that arrives over the interface and leaves on its own: a save that worked, a request that failed. Not a banner, which stands in the page and stays there — this one floats, stacks, and goes away. It places itself. Write it wherever it belongs in your code and it moves to one shared area: top right from md, full width across the top below that. Nothing about the position is settable, so notifications from anywhere in an application land in the same place and stack in the same order. A modal overlay is the one thing that moves it. An nldd-sheet, nldd-window or nldd-modal-dialog paints in the browser's top layer, above the whole page and out of reach of any z-index, and while one is open everything outside it is inert. So the area goes in: into the topmost overlay that is open, and back down as they close. A notification already on screen travels with it, and one raised from inside a sheet is readable and reachable where it is raised. More than one is a deck, not a list: the front one is readable and the older ones peek out below it, so a burst of messages takes the room of roughly one. The newest is in front. Behind it a notification is a bare surface, cut to the height of the one in front; dismiss the front and it slides up into the place that came free while its message fades in, because it was standing there all along. Under the front notification sits a strip as wide as the deck and as tall as the deck is when it fans out. Pointing at it fans the deck out to fill it, which is the only hint that there is more here than the message you can read; clicking it, or moving focus into the area, lays the whole deck out as a list. Clicking or tabbing away puts it back. The notification itself is not a button: a click on the message you are reading does nothing. Only the front of the deck counts down, and only while the deck is closed: open means someone is reading. The rest wait, so nothing disappears from under the one you are reading. `critical` never leaves on its own: a failure is worth reading, and the count-down would take it away while you were. That also keeps this within WCAG 2.2.1, which allows a time limit when what disappears is not essential. The clock pauses while a pointer moves over the notification and while focus is inside it, and resumes where it left off rather than starting over. A pointer that merely happens to rest where the notification appears does not count: it never moved, so nobody is reading. role follows the variant: `critical` becomes role=\"alert\", the rest role=\"status\". Focus never moves on its own. Escape dismisses the notification that focus is in. `NLDDNotification.show({ text, supportingText, variant, icon, duration, actions })` raises a notification without an element to manage: it creates one, shows it, and removes it once it is dismissed. An action is `{ text, onClick }`, at most 2, and a click on one also takes the notification away. It returns a handle with `dismiss()` and `update(options)`. An update changes the message, puts the notification in front and starts its clock over, so a status that changes often is one notification that keeps up instead of a new one sliding in each time; one that has already left arrives again. Use `show()` from a framework. Because a notification places itself, an element that a framework rendered is no longer where that framework left it: a keyed list (`v-for` with a `:key`) then fails on its next render, and a removed row leaves its notification on screen.",
           "name": "NLDDNotification",
           "members": [
             {
@@ -36558,6 +36640,25 @@
               }
             },
             {
+              "kind": "method",
+              "name": "show",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "NotificationHandle"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "NotificationOptions"
+                  }
+                }
+              ],
+              "description": "Raises a notification from code, and takes it away again when it is\ndismissed.\n\nThe way to raise one from a framework. A notification places itself, so\nan element a framework rendered is no longer where that framework left\nit, and the next render of that list fails. Here nothing owns the\nelement but the notification itself."
+            },
+            {
               "kind": "field",
               "name": "translations",
               "type": {
@@ -36574,7 +36675,7 @@
           "events": [
             {
               "name": "dismiss",
-              "description": "Fired when the notification is dismissed, by the button, by Escape, or by its own clock. The consumer removes it."
+              "description": "Fired when the notification is dismissed, by the button, by Escape, or by its own clock. The consumer removes it, unless it was raised with `show()`, which removes it itself."
             }
           ],
           "attributes": [
@@ -36703,6 +36804,24 @@
         },
         {
           "kind": "function",
+          "name": "bringToFront",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "notification",
+              "type": {
+                "text": "NLDDNotification"
+              }
+            }
+          ],
+          "description": "Puts a notification that is already in the deck back in front, as if it had\njust arrived. For one that was updated: the change is what just happened, and\nbehind a newer notification nobody would see it."
+        },
+        {
+          "kind": "function",
           "name": "leaveArea",
           "return": {
             "type": {
@@ -36725,6 +36844,14 @@
           "name": "joinArea",
           "declaration": {
             "name": "joinArea",
+            "module": "src/components/status-and-feedback/notification/notifications-area.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "bringToFront",
+          "declaration": {
+            "name": "bringToFront",
             "module": "src/components/status-and-feedback/notification/notifications-area.ts"
           }
         },
