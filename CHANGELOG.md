@@ -19,9 +19,17 @@ here; consult the commit history if you need that level of detail.
 
 - **A design guideline for link text: say where the link goes, no "click here".** A screen reader can read every link on a page as a list of its own, and people scanning a page read the underlined words. Out of context, "klik hier", "lees meer" and "meer info" say nothing. The guideline asks for the destination or subject as the link, the distinguishing words first, a different text for every destination, and the format and size of a file. WCAG 2.4.4 accepts a generic link when the sentence around it gives the context. This guideline is stricter, because that context only helps whoever reads the sentence. The examples in Storybook follow it now.
 
+- **`no-results` on `nldd-table`, for a table whose rows are all filtered away.** An empty table and a filtered one said the same thing, because the table had only `empty`. When every body row is `[hidden]`, the table now shows `[slot="no-results"]`: say that nothing matches and how to get rows back, and keep `empty` for a table that has no rows yet. Without `no-results` it falls back to `empty`, the same as `nldd-list`.
+
 ### Changed
 
 - **Items in a horizontal-scroll `nldd-collection` stop at 480px.** One or two items that fit grew to the full width of the container, so a card of 320px became more than 1000px wide on a desktop. They now grow up to 480px and stay at the start. An `item-min-width` wider than 480px raises the limit with it, and `item-max-width` sets your own.
+
+- **`nldd-modal-dialog` says so in development when it opens with one action.** A dialog with one button offers nothing to choose, which the design guidelines advise against. Tell the user with an `nldd-notification` or an inline message instead, or give the dialog a real choice. It warns once per dialog.
+
+- **The component docs point to the design guidelines where an attribute invites misuse.** `disabled` and `loading` on the buttons, `nldd-dropdown` as a last resort after visible options and a combo box, when an `nldd-modal-dialog` is right, an `nldd-status-bar` only while there is something to report, and horizontal scroll in `nldd-collection` as more than a carousel. The examples in Storybook follow the guidelines as well: labels in the imperative, no "Annuleer" next to the primary action, the safe way out first in a destructive dialog, and Dutch text with the fixed example cast.
+
+- **The form pattern allows a format requirement on an optional field.** An optional field is not `required`, and an empty value passes every requirement, so a phone number you may leave out can still be checked when it is filled in.
 
 ### Breaking
 
