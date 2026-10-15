@@ -10,7 +10,8 @@ export function tableTemplate() {
 	// role="cell" so the host stays a valid role="table" (an inline-dialog as a
 	// direct table child would be invalid ARIA); it's removed from the a11y tree
 	// while [hidden]. What an empty table should say is the app's to write, so
-	// the slot is empty until a consumer fills it.
+	// the slot is empty until a consumer fills it. Rows that are all hidden
+	// show the no-results slot instead, when one is given.
 	// Starts hidden — the table toggles `hidden` imperatively from _updateEmpty
 	// (avoids a reactive re-render scheduled out of firstUpdated).
 	return html`
@@ -24,6 +25,9 @@ export function tableTemplate() {
 				role="cell"
 			>
 				<slot name="empty"></slot>
+				<slot name="no-results"
+					hidden
+				></slot>
 			</div>
 		</div>
 	`;

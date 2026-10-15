@@ -9,7 +9,7 @@
  * nldd-notification or an inline message instead. In a destructive dialog the
  * safe way out comes first, as the primary button. Work that needs the page
  * as context, such as editing, belongs in an nldd-sheet. The design guidelines
- * say why.
+ * say why. A dialog that opens with one action says so in development.
  *
  * Open and close it with `open`, bound to your state together with the close
  * event: the dialog clears `open` itself when the user closes it. show() and
@@ -119,9 +119,21 @@ export class NLDDModalDialog extends LitElement {
 			if (dialog.open) return;
 			dialog.showModal();
 			this._manageFocus();
+			if (import.meta.env?.DEV) this._checkActions();
 		}
 		this.open = true;
 		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
+	}
+
+	private _warnedSingleAction = false;
+
+	/** DEV-only: warns once when the dialog opens with a single action. */
+	private _checkActions(): void {
+		if (this._warnedSingleAction) return;
+		const actions = [...this.children].filter((child) => child.getAttribute('slot') === 'actions');
+		if (actions.length !== 1) return;
+		this._warnedSingleAction = true;
+		console.warn('<nldd-modal-dialog>: The dialog has one action, so there is nothing to choose. Tell the user with an nldd-notification or an inline message instead, or give the dialog a real choice.', this);
 	}
 
 	private _manageFocus(): void {

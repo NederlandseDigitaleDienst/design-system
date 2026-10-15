@@ -2689,7 +2689,7 @@ A guided-discovery coach mark. Put a control (nldd-search-field, for instance) i
 
 ### `<nldd-modal-dialog>`
 
-A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Use it only when there is no way back, and give it a real choice: a dialog with one button offers nothing to decide, so tell the user with an nldd-notification or an inline message instead. In a destructive dialog the safe way out comes first, as the primary button. Work that needs the page as context, such as editing, belongs in an nldd-sheet. The design guidelines say why. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.
+A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Use it only when there is no way back, and give it a real choice: a dialog with one button offers nothing to decide, so tell the user with an nldd-notification or an inline message instead. In a destructive dialog the safe way out comes first, as the primary button. Work that needs the page as context, such as editing, belongs in an nldd-sheet. The design guidelines say why. A dialog that opens with one action says so in development. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.
 
 **Attributes**
 
@@ -3121,7 +3121,8 @@ Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surfa
 | --- | --- |
 | `header` | One `<nldd-table-row slot="header">` carrying the column headers |
 | _(default)_ | The body rows (`<nldd-table-row>`) |
-| `empty` | Shown when there are no visible body rows (the header is hidden too). Empty by default: what an empty table should say is the app's to write, so put an `nldd-inline-dialog` here. |
+| `empty` | Shown when the table has no body rows (the header is hidden too). Empty by default: what an empty table should say is the app's to write, so put an `nldd-inline-dialog` here. |
+| `no-results` | Shown when the table has body rows but every one of them is `[hidden]`, which is what consumer-driven filtering leaves behind. A different state from `empty` and a different sentence: say that nothing matches and how to get rows back. Falls back to `[slot="empty"]` when not given. |
 
 ### `<nldd-table-row>`
 

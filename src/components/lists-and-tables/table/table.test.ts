@@ -210,6 +210,50 @@ describe('nldd-table', () => {
 		expect(el.shadowRoot!.querySelector('.table__empty')!.hasAttribute('hidden')).toBe(false);
 	});
 
+	it('shows no-results instead of empty when every row is hidden', async () => {
+		el = await fixture<NLDDTable>(`<nldd-table columns="1fr">
+			<nldd-table-row hidden><nldd-cell>A</nldd-cell></nldd-table-row>
+			<nldd-inline-dialog slot="empty" text="Nog geen aanvragen"></nldd-inline-dialog>
+			<nldd-inline-dialog slot="no-results" text="Geen aanvraag past bij je filters"></nldd-inline-dialog>
+		</nldd-table>`);
+		await (el as unknown as NLDDTable).updateComplete;
+		const emptySlot = el.shadowRoot!.querySelector('slot[name="empty"]')!;
+		const noResultsSlot = el.shadowRoot!.querySelector('slot[name="no-results"]')!;
+		expect(getComputedStyle(emptySlot).display).toBe('none');
+		expect(getComputedStyle(noResultsSlot).display).toBe('contents');
+		expect(el.classList.contains('is-blank')).toBe(false);
+	});
+
+	it('shows empty, not no-results, when there are no rows at all', async () => {
+		el = await fixture<NLDDTable>(`<nldd-table columns="1fr">
+			<nldd-inline-dialog slot="empty" text="Nog geen aanvragen"></nldd-inline-dialog>
+			<nldd-inline-dialog slot="no-results" text="Geen aanvraag past bij je filters"></nldd-inline-dialog>
+		</nldd-table>`);
+		await (el as unknown as NLDDTable).updateComplete;
+		expect(getComputedStyle(el.shadowRoot!.querySelector('slot[name="empty"]')!).display).toBe('contents');
+		expect(getComputedStyle(el.shadowRoot!.querySelector('slot[name="no-results"]')!).display).toBe('none');
+	});
+
+	it('falls back to empty when every row is hidden and no-results is not given', async () => {
+		el = await fixture<NLDDTable>(`<nldd-table columns="1fr">
+			<nldd-table-row hidden><nldd-cell>A</nldd-cell></nldd-table-row>
+			<nldd-inline-dialog slot="empty" text="Nog geen aanvragen"></nldd-inline-dialog>
+		</nldd-table>`);
+		await (el as unknown as NLDDTable).updateComplete;
+		expect(getComputedStyle(el.shadowRoot!.querySelector('slot[name="empty"]')!).display).toBe('contents');
+	});
+
+	it('switches back to the rows when a hidden row shows again', async () => {
+		el = await fixture<NLDDTable>(`<nldd-table columns="1fr">
+			<nldd-table-row hidden><nldd-cell>A</nldd-cell></nldd-table-row>
+			<nldd-inline-dialog slot="no-results" text="Geen aanvraag past bij je filters"></nldd-inline-dialog>
+		</nldd-table>`);
+		await (el as unknown as NLDDTable).updateComplete;
+		el.querySelector('nldd-table-row')!.removeAttribute('hidden');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('.table__empty')!.hasAttribute('hidden')).toBe(true);
+	});
+
 	it('lets [slot=empty] content override the default dialog', async () => {
 		el = await fixture<NLDDTable>('<nldd-table columns="1fr"><nldd-inline-dialog slot="empty" text="Eigen melding"></nldd-inline-dialog></nldd-table>');
 		await (el as unknown as NLDDTable).updateComplete;

@@ -41,7 +41,8 @@
  *
  * @slot header - One `<nldd-table-row slot="header">` carrying the column headers
  * @slot - The body rows (`<nldd-table-row>`)
- * @slot empty - Shown when there are no visible body rows (the header is hidden too). Empty by default: what an empty table should say is the app's to write, so put an `nldd-inline-dialog` here.
+ * @slot empty - Shown when the table has no body rows (the header is hidden too). Empty by default: what an empty table should say is the app's to write, so put an `nldd-inline-dialog` here.
+ * @slot no-results - Shown when the table has body rows but every one of them is `[hidden]`, which is what consumer-driven filtering leaves behind. A different state from `empty` and a different sentence: say that nothing matches and how to get rows back. Falls back to `[slot="empty"]` when not given.
  *
  * @element nldd-table-row
  *
@@ -171,10 +172,12 @@ export class NLDDTable extends LitElement {
 		this._updateEmpty();
 	}
 
-	/** Show the empty-state slot when there are no visible body rows (header
-	 *  excluded). Toggled imperatively (like the tabindex affordance) so it
-	 *  doesn't schedule a reactive re-render out of firstUpdated. The `is-empty`
-	 *  host class drives hiding the header (CSS) so only the message shows. */
+	/** Show the empty-state row when there are no visible body rows (header
+	 *  excluded), with the no-results slot when there are rows that are all
+	 *  hidden and the empty slot otherwise. Toggled imperatively (like the
+	 *  tabindex affordance) so it doesn't schedule a reactive re-render out of
+	 *  firstUpdated. The `is-empty` host class drives hiding the header (CSS)
+	 *  so only the message shows. */
 	private _updateEmpty(): void {
 		const empty = this.shadowRoot?.querySelector('.table__empty');
 		if (!empty) return;
@@ -183,14 +186,15 @@ export class NLDDTable extends LitElement {
 			(el) => el.localName === 'nldd-table-row',
 		);
 		const isEmpty = rows.length === 0 || rows.every((row) => row.hasAttribute('hidden'));
+		const hasEmpty = !!this.querySelector(':scope > [slot="empty"]');
+		const noResults = isEmpty && rows.length > 0 && !!this.querySelector(':scope > [slot="no-results"]');
 		empty.toggleAttribute('hidden', !isEmpty);
+		this.shadowRoot?.querySelector('slot[name="empty"]')?.toggleAttribute('hidden', noResults);
+		this.shadowRoot?.querySelector('slot[name="no-results"]')?.toggleAttribute('hidden', !noResults);
 		this.classList.toggle('is-empty', isEmpty);
 		// See nldd-list: no rows and nothing slotted is not a thing on the page.
-		this.classList.toggle(
-			'is-blank',
-			isEmpty && !this.querySelector(':scope > [slot="empty"]'),
-		);
-		this._warnSilentEmpty(isEmpty);
+		this.classList.toggle('is-blank', isEmpty && !noResults && !hasEmpty);
+		this._warnSilentEmpty(isEmpty, rows.length > 0);
 	}
 
 	/**
@@ -202,10 +206,13 @@ export class NLDDTable extends LitElement {
 	 * tree either, so the table asks the person building it rather than
 	 * answering for them.
 	 */
-	private _warnSilentEmpty(isEmpty: boolean): void {
+	private _warnSilentEmpty(isEmpty: boolean, hasRows: boolean): void {
 		if (!import.meta.env?.DEV) return;
 		if (!isEmpty || this._warnedSilentEmpty) return;
 		if (this.querySelector(':scope > [slot="empty"]')) return;
+		// Rows that are all hidden are the no-results state, and a slot that covers
+		// it answers the question.
+		if (hasRows && this.querySelector(':scope > [slot="no-results"]')) return;
 		this._warnedSilentEmpty = true;
 		console.warn(
 			'nldd-table: no rows and nothing in [slot="empty"], so the table renders a blank area. '

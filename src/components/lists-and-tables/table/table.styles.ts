@@ -74,6 +74,10 @@ export const tableStyles = css`
 		padding: var(--primitives-space-16);
 	}
 
+	.table__empty-cell slot[hidden] {
+		display: none;
+	}
+
 	/* Empty state: collapse the column tracks to a single box-wide column so the
 	   message spans the surface instead of the (wider) data columns — otherwise
 	   the empty box scrolls horizontally. */
