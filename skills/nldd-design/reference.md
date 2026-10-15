@@ -2716,7 +2716,7 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 | Event | Description |
 | --- | --- |
 | `open` | When the dialog is opened |
-| `close` | When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice. |
+| `close` | When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened. |
 
 ### `<nldd-notification>`
 
