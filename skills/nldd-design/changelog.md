@@ -18,6 +18,9 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **A single card in a horizontal scroll no longer stretches across the page.** Items in a horizontal-scroll `nldd-collection` stop at 480px, and the new `item-max-width` sets a different limit.
+- **`nldd-hero` can take the rounded corner of the Rijkshuisstijl.** `corner` rounds one corner of the image and half a one on the panel, in a contained hero with the panel in a corner or along a side.
+- **A filtered table says something different from an empty one.** `nldd-table` takes a `no-results` slot for rows that are all hidden, beside `empty` for a table without rows.
+- **The examples follow the design guidelines.** Button labels in the imperative, no "Annuleer" next to the primary action, the safe way out first in a destructive dialog, link texts that name their destination, and Dutch text with the fixed example cast. A new guideline covers link text.
 
 ### Added
 
