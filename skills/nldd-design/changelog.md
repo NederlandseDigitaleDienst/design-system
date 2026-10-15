@@ -37,6 +37,10 @@ here; consult the commit history if you need that level of detail.
 
 - **The form pattern allows a format requirement on an optional field.** An optional field is not `required`, and an empty value passes every requirement, so a phone number you may leave out can still be checked when it is filled in.
 
+- **The title of the wordmark in `nldd-top-navigation-bar` is semi-bold.** It was medium, close enough to the subtitle below it that the two read as one block. One step heavier sets the name apart without competing with the page title.
+
+- **A menu under an `nldd-menu-bar-item` opens against its indicator.** The indicator stops 6px short of the item's bottom edge, and the menu hung off the item, so it opened with a gap below the gray box that marked the open item. It now touches the indicator, which keeps its rounded corners.
+
 ### Breaking
 
 - **`item-width` on `nldd-collection` is now `item-min-width`.** It was a minimum in every layout: in a grid the narrowest a column gets, in a horizontal scroll the width an item never shrinks below. The new name says so, and pairs with `item-max-width`. There is no alias. An `item-width` left on a collection does nothing, so its items fall back to the default of 280px. Rename the attribute on every `nldd-collection`.

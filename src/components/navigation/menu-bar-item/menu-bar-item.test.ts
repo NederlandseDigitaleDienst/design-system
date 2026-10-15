@@ -51,6 +51,30 @@ describe('nldd-menu-bar-item', () => {
 		expect(menu.matches(':popover-open')).toBe(true);
 	});
 
+	it('opens the menu against the indicator, not against the item', async () => {
+		const removeTokens = loadTokens();
+		try {
+			el = await fixture(`
+				<nldd-menu-bar-item text="NL" expandable>
+					<nldd-menu>
+						<nldd-menu-item text="Nederlands"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-bar-item>
+			`);
+			await waitForUpdate(el);
+			el.click();
+			await waitForUpdate(el);
+			const menu = el.querySelector('nldd-menu') as HTMLElement & { reposition(): Promise<void> };
+			await menu.reposition();
+			const item = el.shadowRoot!.querySelector('.menu-bar-item')!;
+			const inset = parseFloat(getComputedStyle(item, '::before').bottom);
+			expect(inset).toBeGreaterThan(0);
+			expect(menu.getBoundingClientRect().top).toBeCloseTo(item.getBoundingClientRect().bottom - inset, 0);
+		} finally {
+			removeTokens();
+		}
+	});
+
 	it('does not fire select when expandable with a slotted menu', async () => {
 		el = await fixture(`
 			<nldd-menu-bar-item text="NL" expandable>

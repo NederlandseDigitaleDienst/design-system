@@ -47,6 +47,7 @@ import '../../actions/menu/menu.js';
  */
 interface PopoverMenu extends HTMLElement {
 	anchorElement: Element | null;
+	anchorOffset: number;
 	showPopover(): void;
 	hidePopover(): void;
 }
@@ -240,6 +241,15 @@ export class NLDDMenuBarItem extends LitElement {
 
 	// ## Menu popover
 
+	/** How far the indicator stops short of the item's top and bottom, so the
+	 *  menu can open against the indicator instead of against the item. */
+	private _indicatorInset(): number {
+		const item = this.shadowRoot?.querySelector('.menu-bar-item');
+		if (!item) return 0;
+		const inset = parseFloat(getComputedStyle(item, '::before').top);
+		return Number.isNaN(inset) ? 0 : inset;
+	}
+
 	private _toggleMenu(): void {
 		if (this._pointerdownWhileMenuOpen) {
 			this._pointerdownWhileMenuOpen = false;
@@ -249,6 +259,7 @@ export class NLDDMenuBarItem extends LitElement {
 		// slotchange — no need to call it here.
 		if (!this._menu) return;
 		this._menu.anchorElement = this;
+		this._menu.anchorOffset = -this._indicatorInset();
 		if (this._menuOpen) {
 			this._menu.hidePopover();
 		} else {

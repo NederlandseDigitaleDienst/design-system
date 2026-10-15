@@ -21,6 +21,9 @@ export const topNavigationBarStyles = css`
 		--_top-navigation-bar-logo-background-color: var(--semantics-brand-ribbon-color);
 		--_top-navigation-bar-wordmark-content-color: light-dark(var(--primitives-color-reference-lintblauw), var(--primitives-color-neutral-1000));
 		--_top-navigation-bar-wordmark-max-width: 280px;
+		--_top-navigation-bar-wordmark-title-font: var(--primitives-font-body-sm-semi-bold-flat);
+		--_top-navigation-bar-wordmark-subtitle-font: var(--primitives-font-body-xs-regular-flat);
+		--_top-navigation-bar-wordmark-supporting-text-font: var(--primitives-font-body-xxs-regular-flat);
 		--_top-navigation-bar-max-width: var(--semantics-page-sections-body-max-width);
 		--_top-navigation-bar-title-sm-font: var(--primitives-font-display-6-sm);
 		--_top-navigation-bar-title-md-font: var(--primitives-font-display-5-sm);
@@ -278,19 +281,19 @@ export const topNavigationBarStyles = css`
 
 	.top-navigation-bar__wordmark-title {
 		margin: 0;
-		font: var(--primitives-font-body-sm-medium-flat);
+		font: var(--_top-navigation-bar-wordmark-title-font);
 		text-wrap: balance;
 	}
 
 	.top-navigation-bar__wordmark-subtitle {
 		margin: 0;
-		font: var(--primitives-font-body-xs-regular-flat);
+		font: var(--_top-navigation-bar-wordmark-subtitle-font);
 		text-wrap: balance;
 	}
 
 	.top-navigation-bar__wordmark-supporting-text {
 		margin: 0;
-		font: var(--primitives-font-body-xxs-regular-flat);
+		font: var(--_top-navigation-bar-wordmark-supporting-text-font);
 		text-wrap: balance;
 	}
 

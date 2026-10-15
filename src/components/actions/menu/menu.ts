@@ -431,6 +431,16 @@ export class NLDDMenu extends LitElement {
 	placement: string = 'bottom-start';
 
 	/**
+	 * Distance in px between the anchor and the menu, along the placement
+	 * side; negative pulls the menu in. Set by a component that hangs a menu
+	 * off itself and draws its own edge inside its box, such as
+	 * nldd-menu-bar-item, whose indicator stops short of the item. Not an
+	 * attribute: the anchor knows that inset, the consumer does not.
+	 */
+	@property({ attribute: false })
+	anchorOffset = 0;
+
+	/**
 	 * Maximum number of visible items before the menu scrolls.
 	 * Sets --_menu-max-items internally. Default: 0 (no limit).
 	 */
@@ -2068,7 +2078,7 @@ export class NLDDMenu extends LitElement {
 		const { x, y } = await computePosition(anchorEl, this, {
 			placement: effectivePlacement as import('@floating-ui/dom').Placement,
 			middleware: [
-				offset({ mainAxis: 0, alignmentAxis: -submenuPadding }),
+				offset({ mainAxis: this.anchorOffset, alignmentAxis: -submenuPadding }),
 				...(drillIn ? [] : [flip({ padding: viewportMargin })]),
 				shift({ padding: viewportMargin }),
 				size({
