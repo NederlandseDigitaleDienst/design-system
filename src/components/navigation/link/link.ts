@@ -25,7 +25,7 @@
  * @attr {string} start-icon - Icon before the text
  * @attr {string} end-icon - Icon after the text
  * @attr {string} accessible-label - Accessible label for screen readers
- * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {object} translations - Override translation keys (e.g. the "Opent in nieuw tabblad" announcement); unset keys fall back to Dutch.
  *

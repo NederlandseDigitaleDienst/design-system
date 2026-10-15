@@ -7,6 +7,12 @@
  * and keyboard navigation, including `<optgroup>`, `data-*` attributes and
  * dynamic changes to options.
  *
+ * A dropdown hides its options, so it is the last resort for a choice from a
+ * fixed set. Show a handful of options with nldd-segmented-control,
+ * nldd-toggle-button-group or nldd-radio-button-group, and let the user type
+ * in nldd-combo-box when there are many, a list of countries included. The
+ * design guidelines explain the order.
+ *
  * @element nldd-dropdown
  * @attr {string} size - Size: 'xs' | 'sm' | 'md' (default: 'md')
  * @attr {boolean} valid - Marks the field as valid

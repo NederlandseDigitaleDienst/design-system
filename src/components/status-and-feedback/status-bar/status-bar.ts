@@ -8,6 +8,9 @@
  * "Gepland onderhoud …"), so the meaning does not follow from color alone
  * (WCAG 1.4.1).
  *
+ * Show the bar only while there is something to report. A bar that says all
+ * is well takes room on every screen and teaches people to stop reading it.
+ *
  * Keep the text short: the bar shows one line and truncates with an ellipsis,
  * certainly on narrower screens. For a long message with a lot of information
  * only the essence belongs in the bar. Point to a separate page or sheet for

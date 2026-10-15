@@ -659,7 +659,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width.",
+              "description": "Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.",
               "fieldName": "loading"
             },
             {
@@ -678,7 +678,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "text",
@@ -1165,7 +1165,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled).",
+              "description": "Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.",
               "fieldName": "loading"
             },
             {
@@ -1184,7 +1184,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "no-highlight-border",
@@ -2317,7 +2317,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "width",
@@ -5464,7 +5464,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
             }
           ],
           "superclass": {
@@ -10489,7 +10489,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options.",
+          "description": "A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options. A dropdown hides its options, so it is the last resort for a choice from a fixed set. Show a handful of options with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group, and let the user type in nldd-combo-box when there are many, a list of countries included. The design guidelines explain the order.",
           "name": "NLDDDropdown",
           "members": [
             {
@@ -23121,7 +23121,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.",
+          "description": "A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. Use horizontal scroll for items that together serve one purpose, such as the events of one agenda; it is not a carousel for unrelated highlights, which the design guidelines advise against. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.",
           "name": "NLDDCollection",
           "members": [
             {
@@ -29918,7 +29918,7 @@
               },
               "default": "false",
               "fieldName": "noLightDismiss",
-              "description": "A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a wizard, a form with filled-in fields. Escape and the dismiss button keep working."
+              "description": "A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a process of several steps, a form with filled-in fields. Escape and the dismiss button keep working."
             },
             {
               "name": "open",
@@ -33647,7 +33647,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "no-tab",
@@ -33981,7 +33981,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Turn interaction off"
+              "description": "Turn interaction off. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "accessible-label",
@@ -34291,7 +34291,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "centered",
@@ -34752,7 +34752,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order",
+              "description": "Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order. Avoid it where you can; the design guidelines say why.",
               "fieldName": "disabled"
             },
             {
@@ -36389,7 +36389,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.",
+          "description": "A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Use it only when there is no way back, and give it a real choice: a dialog with one button offers nothing to decide, so tell the user with an nldd-notification or an inline message instead. In a destructive dialog the safe way out comes first, as the primary button. Work that needs the page as context, such as editing, belongs in an nldd-sheet. The design guidelines say why. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.",
           "name": "NLDDModalDialog",
           "members": [
             {
@@ -37663,7 +37663,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status (\"Storing: …\", \"Gepland onderhoud …\"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. role and aria-live are set automatically from the variant: - critical → role=\"alert\" (implies aria-live=\"assertive\"; interrupts the screen reader) - others → role=\"status\" aria-live=\"polite\" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role=\"alert\" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).",
+          "description": "A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status (\"Storing: …\", \"Gepland onderhoud …\"), so the meaning does not follow from color alone (WCAG 1.4.1). Show the bar only while there is something to report. A bar that says all is well takes room on every screen and teaches people to stop reading it. Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. role and aria-live are set automatically from the variant: - critical → role=\"alert\" (implies aria-live=\"assertive\"; interrupts the screen reader) - others → role=\"status\" aria-live=\"polite\" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role=\"alert\" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).",
           "name": "NLDDStatusBar",
           "members": [
             {
@@ -37869,7 +37869,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "For flows without a URL per step (a wizard inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
+              "description": "For flows without a URL per step (a process that runs inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
               "attribute": "button",
               "reflects": true
             },
@@ -37923,7 +37923,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "For flows without a URL per step (a wizard inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
+              "description": "For flows without a URL per step (a process that runs inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
               "name": "button",
               "default": "false",
               "fieldName": "button"

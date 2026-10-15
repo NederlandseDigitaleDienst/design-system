@@ -22,9 +22,9 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `appearance` | `string` | Visual style, color included: 'primary' \| 'secondary' \| 'destructive' \| 'accent-filled' \| 'accent-transparent' \| 'neutral-tinted' \| 'neutral-base' \| 'neutral-transparent' \| 'critical-tinted' \| 'critical-transparent' \| 'inherit-filled' \| 'inherit-tinted'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-parent-background-color) as the label color, with a white/black contrast flip as a fallback. |
 | `size` | `string` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md'). 'lg' uses larger text and 24px start/end icons. |
 | `horizontal-alignment` | `string` | Horizontal alignment of the button content: 'left' \| 'center' \| 'right' (default: unset, centered). Most visible with width="full" or a fixed width. |
-| `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. |
+| `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
 | `loading-text` | `string` | What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden". |
-| `disabled` | `boolean` | Disabled state |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `type` | `string` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
 | `popovertarget` | `string` | ID of a popover element this button invokes; forwarded to the inner button. Use the popoverTargetElement property instead when the popover lives in another tree. |
 | `expandable` | `boolean` | Whether the button has a icon to indicate it opens a menu or popover |
@@ -110,9 +110,9 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `size` | `string` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
 | `hide-lg-text` | `boolean` | In lg size, hides the text label and enlarges the icon by one step (28px) |
 | `no-highlight-border` | `boolean` | Removes the per-appearance highlight border (e.g. when a control group draws a single border instead). |
-| `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). |
+| `loading` | `boolean` | Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe. |
 | `loading-text` | `string` | What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden". |
-| `disabled` | `boolean` | Disabled state |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `no-tab` | `boolean` | Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable. |
 | `type` | `string` | Button type for form submission: 'button' \| 'submit' \| 'reset' (ignored when href is set) |
 | `expandable` | `boolean` | Whether the button opens a menu or popover and shows chevron next to the icon |
@@ -228,7 +228,7 @@ A split button combines a primary action button with a dropdown trigger. The mai
 | --- | --- | --- |
 | `size` | `string` | Button size: 'xs' \| 'sm' \| 'md' \| 'lg' (default: 'md') |
 | `appearance` | `string` | Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface) |
-| `disabled` | `boolean` | Disabled state |
+| `disabled` | `boolean` | Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why. |
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space |
 | `text` | `string` | Button text for the primary action |
 | `icon` | `string` | Icon name shown before the text on the primary action button |
@@ -593,7 +593,7 @@ A self-contained piece of data the user is handling: a person in an address fiel
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `roving` | `boolean` | Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable. |
 | `expanded` | `boolean` | Reflects whether the token's menu is open (control="menu"); managed by the token. |
-| `disabled` | `boolean` | Disabled state |
+| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 
 **Slots**
 
@@ -958,7 +958,7 @@ A calendar for picking a date or a period. The component works on its own (inlin
 
 ### `<nldd-dropdown>`
 
-A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options.
+A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options. A dropdown hides its options, so it is the last resort for a choice from a fixed set. Show a handful of options with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group, and let the user type in nldd-combo-box when there are many, a list of countries included. The design guidelines explain the order.
 
 **Attributes**
 
@@ -1658,7 +1658,7 @@ A visually bounded card with optional header, body and footer sections. The card
 
 ### `<nldd-collection>`
 
-A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.
+A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. Use horizontal scroll for items that together serve one purpose, such as the events of one agenda; it is not a carousel for unrelated highlights, which the design guidelines advise against. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.
 
 **Attributes**
 
@@ -2231,7 +2231,7 @@ A floating window based on the native <dialog> element, positionable through CSS
 | `centered` | `boolean` | Centers both axes on the viewport. Overridable per axis: `centered top="0"` is horizontally centered, top aligned. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides. |
 | `accessible-label` | `string` | Accessible name (aria-label). Unset, the window takes the text of the nldd-top-title-bar inside it, and without one the i18n default ('Venster'). Each window needs a unique, descriptive name, from either. |
 | `translations` | `object` | Override translation keys; unset keys fall back to the Dutch default. |
-| `no-light-dismiss` | `boolean` | A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a wizard, a form with filled-in fields. Escape and the dismiss button keep working. |
+| `no-light-dismiss` | `boolean` | A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a process of several steps, a form with filled-in fields. Escape and the dismiss button keep working. |
 | `open` | `boolean` | Whether the window is open. Set it to open or close the window, as an alternative to show() and hide(). The window clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event. |
 
 **Slots**
@@ -2349,7 +2349,7 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 | `start-icon` | `string` | Icon before the text |
 | `end-icon` | `string` | Icon after the text |
 | `accessible-label` | `string` | Accessible label for screen readers |
-| `disabled` | `boolean` | Disabled state |
+| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `translations` | `object` | Override translation keys (e.g. the "Opent in nieuw tabblad" announcement); unset keys fall back to Dutch. |
 
@@ -2396,7 +2396,7 @@ Interactive building block for use in a menu bar. Renders as an <a> (with href) 
 | `icon-only` | `boolean` | Hide the text visually (always). The text then shows as a tooltip on hover and focus. |
 | `content-priority` | `'icon'\|'text'` | Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead. |
 | `compact` | `boolean` | Activates content-priority behavior (set by the parent nldd-menu-bar) |
-| `disabled` | `boolean` | Turn interaction off |
+| `disabled` | `boolean` | Turn interaction off. Avoid it where you can; the design guidelines say why. |
 | `accessible-label` | `string` | Override aria-label |
 | `haspopup` | `string` | aria-haspopup value (e.g. "menu", "dialog") |
 | `open` | `boolean` | Whether the linked popover or menu is open |
@@ -2425,7 +2425,7 @@ A pagination control for navigating between pages of content.
 | --- | --- | --- |
 | `current` | `number` | Currently active page (1-based) |
 | `total` | `number` | Total number of pages (recommended max: 200 for compact select performance) |
-| `disabled` | `boolean` | Disabled state |
+| `disabled` | `boolean` | Disabled state. Avoid it where you can; the design guidelines say why. |
 | `centered` | `boolean` | Centers the pagination in the container (host fills row, items grouped in the middle) |
 | `href-pattern` | `string` | URL pattern with a {page} placeholder, renders links instead of buttons |
 | `translations` | `object` | Translations; unspecified keys fall back to Dutch |
@@ -2464,7 +2464,7 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 | `variant` | `string` | Visual mode: 'icon-and-text' \| 'text' \| 'icon'. When unset, the variant is inferred from each item's content. Drives the layout at every size. |
 | `size` | `string` | Size: 'md' \| 'lg' (default: 'md'). 'lg' enlarges the touch target; the per-variant layout is preserved (icon-and-text stacks the icon over the text, text renders large text, icon renders a larger icon-only control). |
 | `navigation` | `boolean` | Renders a nav landmark instead of tablist; use for href-based items that navigate between routes |
-| `disabled` | `boolean` | Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order |
+| `disabled` | `boolean` | Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order. Avoid it where you can; the design guidelines say why. |
 | `centered` | `boolean` | Centers the tabs in the container (host fills the row, tabs group in the middle) |
 | `accessible-label` | `string` | Accessible name for the navigation region; defaults to 'Tabs' |
 | `translations` | `object` | Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch. |
@@ -2689,7 +2689,7 @@ A guided-discovery coach mark. Put a control (nldd-search-field, for instance) i
 
 ### `<nldd-modal-dialog>`
 
-A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.
+A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Use it only when there is no way back, and give it a real choice: a dialog with one button offers nothing to decide, so tell the user with an nldd-notification or an inline message instead. In a destructive dialog the safe way out comes first, as the primary button. Work that needs the page as context, such as editing, belongs in an nldd-sheet. The design guidelines say why. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.
 
 **Attributes**
 
@@ -2822,7 +2822,7 @@ Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circul
 
 ### `<nldd-status-bar>`
 
-A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status ("Storing: …", "Gepland onderhoud …"), so the meaning does not follow from color alone (WCAG 1.4.1). Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. role and aria-live are set automatically from the variant: - critical → role="alert" (implies aria-live="assertive"; interrupts the screen reader) - others → role="status" aria-live="polite" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role="alert" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).
+A narrow, page-wide status bar (24px) with a deep background color per variant. Use it for persistent system state: an outage, planned maintenance, a draft view or a recording in progress. The bar deliberately shows no icon and supports text only. The text itself has to name the status ("Storing: …", "Gepland onderhoud …"), so the meaning does not follow from color alone (WCAG 1.4.1). Show the bar only while there is something to report. A bar that says all is well takes room on every screen and teaches people to stop reading it. Keep the text short: the bar shows one line and truncates with an ellipsis, certainly on narrower screens. For a long message with a lot of information only the essence belongs in the bar. Point to a separate page or sheet for the rest (through `href` or `button`, for instance), where the user can read on. The whole bar can be clickable: set `href` (renders an `<a>`) or `button` (renders a `<button>`; listen for the native `click` event). Without either the bar is static. On interaction a chevron appears as an affordance. One action per bar at most; several actions, or links in running text, belong in nldd-banner. The bar is the first thing on the screen: above nldd-top-navigation-bar or nldd-top-title-bar, across the whole app, also when a split view shows several panes. It reports the state of the service, not of one page, so it never sits inside the content or below a top bar. Below a top bar it says so in development. role and aria-live are set automatically from the variant: - critical → role="alert" (implies aria-live="assertive"; interrupts the screen reader) - others → role="status" aria-live="polite" Not overridable. If you need a quieter component, pick a different one. Use `critical` only for a real emergency: role="alert" interrupts the screen reader on every change of the content, so do not put text in it that changes regularly (a counting-down timer, for example).
 
 **Attributes**
 

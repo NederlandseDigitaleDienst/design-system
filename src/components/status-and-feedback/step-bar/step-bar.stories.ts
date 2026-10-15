@@ -65,7 +65,7 @@ export const Statussen = {
 /**
  * Een afgeronde stap kan een link zijn (`href`) of een knop (`button`), zodat je
  * terug kunt bladeren. De knop is er voor flows zonder eigen URL per stap, zoals
- * een wizard in één venster. Zonder allebei is een stap geen control, en `href`
+ * een werkstroom in één venster. Zonder allebei is een stap geen control, en `href`
  * wint van `button` — dezelfde regel als `nldd-card` en `nldd-avatar`.
  */
 export const Klikbaar = {

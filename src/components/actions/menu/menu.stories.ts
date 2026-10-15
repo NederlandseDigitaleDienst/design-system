@@ -26,7 +26,7 @@ export default {
 };
 
 /**
- * Een menu met de acties op één ding. Elk item heeft een icoon, de eerste twee
+ * Een menu met de acties op één ding. Elk icoon hoort bij zijn actie, de eerste twee
  * tonen hun sneltoets, twee items openen een submenu, en de actie die niet terug
  * te draaien is staat onderaan, los van de rest en `destructive`.
  */

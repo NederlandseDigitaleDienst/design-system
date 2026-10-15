@@ -6,9 +6,9 @@
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {boolean} hide-lg-text - In lg size, hides the text label and enlarges the icon by one step (28px)
  * @attr {boolean} no-highlight-border - Removes the per-appearance highlight border (e.g. when a control group draws a single border instead).
- * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled).
+ * @attr {boolean} loading - Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.
  * @attr {string} loading-text - What the screen reader announces while `loading` is on, for a button that does more than load: "Aan het bewaren". Leave it out and the activity indicator says its translated "Laden".
- * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {boolean} no-tab - Takes the button out of the tab order (tabindex="-1"), for a control owned by a roving container (an nldd-token in nldd-token-field, a button in a row of an nldd-list) that manages focus itself. Still mouse- and script-focusable.
  * @attr {string} type - Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)
  * @attr {boolean} expandable - Whether the button opens a menu or popover and shows chevron next to the icon

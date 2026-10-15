@@ -10,7 +10,10 @@
  *
  * In grid and stack modes, items are paginated via a load-more button. In
  * horizontal scroll, the prev/next controls and the edge fade appear only when
- * the items overflow the container.
+ * the items overflow the container. Use horizontal scroll for items that
+ * together serve one purpose, such as the events of one agenda; it is not a
+ * carousel for unrelated highlights, which the design guidelines advise
+ * against.
  * With `lazy-load`, the next items are automatically loaded when
  * the load-more button comes into view.
  *

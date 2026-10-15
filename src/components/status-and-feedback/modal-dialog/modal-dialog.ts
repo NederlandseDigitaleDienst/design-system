@@ -4,6 +4,13 @@
  * A modal window with overlay backdrop, based on the native <dialog> element.
  * Internally renders an <nldd-inline-dialog> for the visual structure.
  *
+ * Use it only when there is no way back, and give it a real choice: a dialog
+ * with one button offers nothing to decide, so tell the user with an
+ * nldd-notification or an inline message instead. In a destructive dialog the
+ * safe way out comes first, as the primary button. Work that needs the page
+ * as context, such as editing, belongs in an nldd-sheet. The design guidelines
+ * say why.
+ *
  * Open and close it with `open`, bound to your state together with the close
  * event: the dialog clears `open` itself when the user closes it. show() and
  * hide() do the same for code without a binding. Keep the dialog in the DOM

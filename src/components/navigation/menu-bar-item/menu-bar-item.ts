@@ -16,7 +16,7 @@
  * @attr {boolean} icon-only - Hide the text visually (always). The text then shows as a tooltip on hover and focus.
  * @attr {'icon'|'text'} content-priority - Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead.
  * @attr {boolean} compact - Activates content-priority behavior (set by the parent nldd-menu-bar)
- * @attr {boolean} disabled - Turn interaction off
+ * @attr {boolean} disabled - Turn interaction off. Avoid it where you can; the design guidelines say why.
  * @attr {string} accessible-label - Override aria-label
  * @attr {string} haspopup - aria-haspopup value (e.g. "menu", "dialog")
  * @attr {boolean} open - Whether the linked popover or menu is open
