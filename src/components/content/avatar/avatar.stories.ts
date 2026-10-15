@@ -33,7 +33,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
-		name: 'Sanne van den Berg',
+		name: 'Bart van de Biezen',
 		initials: '',
 		type: 'person',
 		size: '40',
@@ -162,7 +162,7 @@ export const Types = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center;">
 			${[
-				{ type: 'person', name: 'Sanne van den Berg', initials: '' },
+				{ type: 'person', name: 'Bart van de Biezen', initials: '' },
 				{ type: 'organization', name: 'Team Uitvoering', initials: 'TU' },
 			].map(({ type, name, initials }) => html`
 				<div style="display: flex; gap: 12px; align-items: center;">
@@ -192,7 +192,7 @@ export const Grootten = {
 		<div style="display: flex; gap: 16px; align-items: center;">
 			${SIZES.map(size => html`
 				<nldd-avatar
-					name="Sanne van den Berg"
+					name="Bart van de Biezen"
 					size=${size}
 				></nldd-avatar>
 			`)}
@@ -208,9 +208,9 @@ export const Grootten = {
 export const SchaaltMee = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: flex-end;">
-			<div style="width: 32px;"><nldd-avatar name="Sanne van den Berg"></nldd-avatar></div>
-			<div style="width: 56px;"><nldd-avatar name="Sanne van den Berg"></nldd-avatar></div>
-			<div style="width: 96px;"><nldd-avatar name="Sanne van den Berg"></nldd-avatar></div>
+			<div style="width: 32px;"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></div>
+			<div style="width: 56px;"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></div>
+			<div style="width: 96px;"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></div>
 		</div>
 	`,
 	parameters: { controls: { disable: true } },
@@ -226,11 +226,11 @@ export const KleurInherit = {
 		<div style="display: flex; gap: 20px; align-items: center;">
 			<span style="display: inline-flex; align-items: center; gap: 8px; color: var(--semantics-content-color);">
 				<nldd-avatar
-					name="Sanne van den Berg"
+					name="Bart van de Biezen"
 					color="inherit"
 					size="24"
 				></nldd-avatar>
-				Sanne van den Berg
+				Bart van de Biezen
 			</span>
 			<span style="display: inline-flex; align-items: center; gap: 8px; color: var(--semantics-content-accent-color);">
 				<nldd-avatar
@@ -266,7 +266,7 @@ export const IcoonUitlijning = {
 			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
 				avatar (edge-to-edge)
 				<nldd-avatar
-					name="Sanne van den Berg"
+					name="Bart van de Biezen"
 					size="24"
 					style="outline: 1px dashed var(--semantics-dividers-color);"
 				></nldd-avatar>
@@ -274,7 +274,7 @@ export const IcoonUitlijning = {
 			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
 				avatar (icon-aligned)
 				<nldd-avatar
-					name="Sanne van den Berg"
+					name="Bart van de Biezen"
 					size="24"
 					icon-aligned
 					style="outline: 1px dashed var(--semantics-dividers-color);"
@@ -293,7 +293,7 @@ export const Initialen = {
 	render: () => html`
 		<div style="display: flex; gap: 16px; align-items: center;">
 			<nldd-avatar
-				name="Sanne van den Berg"
+				name="Bart van de Biezen"
 				size="48"
 			></nldd-avatar>
 			<nldd-avatar
@@ -370,7 +370,7 @@ export const MetAfbeelding = {
 export const DodeAfbeelding = {
 	render: () => html`
 		<nldd-avatar
-			name="Sanne van den Berg"
+			name="Bart van de Biezen"
 			src="https://example.invalid/does-not-exist.jpg"
 			size="64"
 		></nldd-avatar>
@@ -411,7 +411,7 @@ export const LinkOfKnop = {
 	render: () => html`
 		<div style="display: flex; gap: 24px; align-items: center;">
 			<nldd-avatar
-				name="Sanne van den Berg"
+				name="Bart van de Biezen"
 				size="48"
 				href="#profiel"
 			></nldd-avatar>

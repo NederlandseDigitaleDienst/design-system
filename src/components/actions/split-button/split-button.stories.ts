@@ -89,6 +89,7 @@ const menu = html`
 		></nldd-menu-item>
 		<nldd-menu-divider></nldd-menu-divider>
 		<nldd-menu-item
+			destructive
 			text="Verwijderen"
 			@select=${action('select: delete')}
 		></nldd-menu-item>

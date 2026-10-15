@@ -198,7 +198,7 @@ export const AlleTypes = {
 					type="checkbox"
 					name="filter"
 					value="inbox"
-					text="Postvak IN"
+					text="Inbox"
 					icon="inbox"
 					selected
 				></nldd-toggle-button>
@@ -658,7 +658,7 @@ export const TypeCheckbox = {
 				type="checkbox"
 				name="filter"
 				value="inbox"
-				text="Postvak IN"
+				text="Inbox"
 				icon="inbox"
 				selected
 			></nldd-toggle-button>

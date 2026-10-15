@@ -127,17 +127,27 @@ const itemContent = (i: any) => html`
 	<nldd-rich-text spacing="flat">
 		<p>${descriptions[descriptionOrder[i % descriptionOrder.length]]}</p>
 	</nldd-rich-text>
-	<nldd-spacer size="16"></nldd-spacer>
-	<nldd-button-group orientation="horizontal">
-		<nldd-button
-			appearance="primary"
-			text="Bekijk"
-		></nldd-button>
-		<nldd-button
-			appearance="secondary"
-			text="Bewaar"
-		></nldd-button>
-	</nldd-button-group>
+`;
+
+/* In the card footer, so the buttons line up across a row of cards of
+   different heights. */
+const itemFooter = html`
+	<nldd-container
+		slot="footer"
+		padding-inline="16"
+		padding-bottom="16"
+	>
+		<nldd-button-group orientation="horizontal">
+			<nldd-button
+				appearance="primary"
+				text="Bekijk"
+			></nldd-button>
+			<nldd-button
+				appearance="secondary"
+				text="Bewaar"
+			></nldd-button>
+		</nldd-button-group>
+	</nldd-container>
 `;
 
 const gradientPairs: [string, string][] = [
@@ -166,6 +176,7 @@ const gridItems = Array.from({ length: 12 }, (_, i) => html`
 	<nldd-card>
 		${gradientImage(i)}
 		<nldd-container padding="16">${itemContent(i)}</nldd-container>
+		${itemFooter}
 	</nldd-card>
 `);
 
@@ -175,12 +186,14 @@ const laneItems = Array.from({ length: 12 }, (_, i) => html`
 	<nldd-card>
 		${gradientImage(i, 120 + ((i * 70) % 260))}
 		<nldd-container padding="16">${itemContent(i)}</nldd-container>
+		${itemFooter}
 	</nldd-card>
 `);
 
 const listItems = Array.from({ length: 12 }, (_, i) => html`
 	<nldd-card>
 		<nldd-container padding="16">${itemContent(i)}</nldd-container>
+		${itemFooter}
 	</nldd-card>
 `);
 
@@ -188,6 +201,7 @@ const scrollItems = Array.from({ length: 12 }, (_, i) => html`
 	<nldd-card>
 		${gradientImage(i)}
 		<nldd-container padding="16">${itemContent(i)}</nldd-container>
+		${itemFooter}
 	</nldd-card>
 `);
 

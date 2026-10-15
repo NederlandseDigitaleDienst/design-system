@@ -451,13 +451,13 @@ export const ToestandLoading = {
 		<nldd-icon-button
 			loading
 			appearance="primary"
-			icon="download"
+			icon="save"
 			text="Bewaar"
 		></nldd-icon-button>
 		<nldd-icon-button
 			loading
 			appearance="neutral-tinted"
-			icon="download"
+			icon="save"
 			text="Bewaar"
 		></nldd-icon-button>
 		<nldd-icon-button

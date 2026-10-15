@@ -19,7 +19,7 @@ describe('nldd-avatar', () => {
 	});
 
 	it('defaults to type person, default color, and a container-scaled size', async () => {
-		el = await fixture('<nldd-avatar name="Sanne van den Berg"></nldd-avatar>');
+		el = await fixture('<nldd-avatar name="Bart van de Biezen"></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.type).toBe('person');
 		expect(el.color).toBe('neutral');
@@ -27,7 +27,7 @@ describe('nldd-avatar', () => {
 	});
 
 	it('reflects color="inherit" and keeps default color unreflected', async () => {
-		el = await fixture('<nldd-avatar name="Sanne van den Berg" color="inherit"></nldd-avatar>');
+		el = await fixture('<nldd-avatar name="Bart van de Biezen" color="inherit"></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.color).toBe('inherit');
 		expect(el.getAttribute('color')).toBe('inherit');
@@ -37,7 +37,7 @@ describe('nldd-avatar', () => {
 	});
 
 	it('reflects icon-aligned and scales the shape to 5/6', async () => {
-		el = await fixture('<nldd-avatar name="Sanne van den Berg" size="48" icon-aligned></nldd-avatar>');
+		el = await fixture('<nldd-avatar name="Bart van de Biezen" size="48" icon-aligned></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.iconAligned).toBe(true);
 		expect(el.getAttribute('icon-aligned')).toBe('');
@@ -50,10 +50,10 @@ describe('nldd-avatar', () => {
 	});
 
 	it('derives initials from the first and last word of the name', async () => {
-		el = await fixture('<nldd-avatar name="Sanne van den Berg"></nldd-avatar>');
+		el = await fixture('<nldd-avatar name="Bart van de Biezen"></nldd-avatar>');
 		await waitForUpdate(el);
-		expect(el.resolvedInitials).toBe('SB');
-		expect(el.shadowRoot!.querySelector('.avatar__initials')!.textContent).toBe('SB');
+		expect(el.resolvedInitials).toBe('BB');
+		expect(el.shadowRoot!.querySelector('.avatar__initials')!.textContent).toBe('BB');
 	});
 
 	it('derives initials from first + last word, skipping middle words', async () => {
@@ -111,14 +111,14 @@ describe('nldd-avatar', () => {
 	});
 
 	it('falls back to initials when the image errors', async () => {
-		el = await fixture(`<nldd-avatar name="Sanne van den Berg" src="${IMAGE}"></nldd-avatar>`);
+		el = await fixture(`<nldd-avatar name="Bart van de Biezen" src="${IMAGE}"></nldd-avatar>`);
 		await waitForUpdate(el);
 		const img = el.shadowRoot!.querySelector('.avatar__image')!;
 		img.dispatchEvent(new Event('error'));
 		await waitForUpdate(el);
 		expect(el._imageFailed).toBe(true);
 		expect(el.shadowRoot!.querySelector('.avatar__image')).toBeNull();
-		expect(el.shadowRoot!.querySelector('.avatar__initials')!.textContent).toBe('SB');
+		expect(el.shadowRoot!.querySelector('.avatar__initials')!.textContent).toBe('BB');
 	});
 
 	// The shape does not resize when the image gives way to initials, so the
@@ -135,7 +135,7 @@ describe('nldd-avatar', () => {
 	});
 
 	it('resets the image-failed state when srcset changes', async () => {
-		el = await fixture<NLDDAvatar>(`<nldd-avatar name="Sanne van den Berg" src="${IMAGE}"></nldd-avatar>`);
+		el = await fixture<NLDDAvatar>(`<nldd-avatar name="Bart van de Biezen" src="${IMAGE}"></nldd-avatar>`);
 		await waitForUpdate(el);
 		el.shadowRoot!.querySelector('.avatar__image')!.dispatchEvent(new Event('error'));
 		await waitForUpdate(el);
@@ -148,7 +148,7 @@ describe('nldd-avatar', () => {
 	});
 
 	it('resets the image-failed state when src changes', async () => {
-		el = await fixture(`<nldd-avatar name="Sanne van den Berg" src="${IMAGE}"></nldd-avatar>`);
+		el = await fixture(`<nldd-avatar name="Bart van de Biezen" src="${IMAGE}"></nldd-avatar>`);
 		await waitForUpdate(el);
 		el.shadowRoot!.querySelector('.avatar__image')!.dispatchEvent(new Event('error'));
 		await waitForUpdate(el);
@@ -182,15 +182,15 @@ describe('nldd-avatar', () => {
 	});
 
 	it('exposes role=img and the name as label when named and not decorative', async () => {
-		el = await fixture('<nldd-avatar name="Sanne van den Berg"></nldd-avatar>');
+		el = await fixture('<nldd-avatar name="Bart van de Biezen"></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.getAttribute('role')).toBe('img');
-		expect(el.getAttribute('aria-label')).toBe('Sanne van den Berg');
+		expect(el.getAttribute('aria-label')).toBe('Bart van de Biezen');
 		expect(el.hasAttribute('aria-hidden')).toBe(false);
 	});
 
 	it('is hidden from assistive tech when decorative', async () => {
-		el = await fixture('<nldd-avatar name="Sanne van den Berg" decorative></nldd-avatar>');
+		el = await fixture('<nldd-avatar name="Bart van de Biezen" decorative></nldd-avatar>');
 		await waitForUpdate(el);
 		expect(el.getAttribute('aria-hidden')).toBe('true');
 		expect(el.hasAttribute('role')).toBe(false);
@@ -231,13 +231,13 @@ describe('nldd-avatar – full size', () => {
 
 	describe('interactief', () => {
 		it('rendert een link met href en houdt de host zonder role=img', async () => {
-			el = await fixture<NLDDAvatar>('<nldd-avatar name="Sanne van den Berg" href="/profiel/"></nldd-avatar>');
+			el = await fixture<NLDDAvatar>('<nldd-avatar name="Bart van de Biezen" href="/profiel/"></nldd-avatar>');
 			await waitForUpdate(el);
 			const link = el.shadowRoot!.querySelector('a.avatar');
 			expect(link).toBeTruthy();
 			expect(link!.getAttribute('href')).toBe('/profiel/');
 			// The control carries the name, so the host must not carry it again.
-			expect(link!.getAttribute('aria-label')).toBe('Sanne van den Berg');
+			expect(link!.getAttribute('aria-label')).toBe('Bart van de Biezen');
 			expect(el.getAttribute('role')).toBeNull();
 			expect(el.getAttribute('aria-hidden')).toBeNull();
 		});
