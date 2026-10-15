@@ -35,6 +35,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
+		corner: null,
 		layout: 'overlap',
 		mainBackground: 'accent',
 		mainWidth: 'auto',
@@ -48,6 +49,13 @@ export default {
 		mediaAlt: '',
 	},
 	argTypes: {
+		corner: {
+			control: 'select',
+			options: ['(geen)', 'auto', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
+			mapping: { '(geen)': null, 'auto': '' },
+			description: 'Rondt één hoek van het mediavlak af en een halve van het paneel. Auto kiest een hoek die het paneel vrijlaat',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
 		layout: {
 			control: 'select',
 			options: ['contained', 'overlap'],
@@ -118,6 +126,7 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-hero
+		corner=${args.corner ?? nothing}
 		layout=${args.layout === 'overlap' ? nothing : args.layout}
 		main-background=${args.mainBackground}
 		main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
@@ -156,6 +165,103 @@ const Template = (args: Record<string, any>) => html`
 
 export const Standaard = {
 	render: Template,
+};
+
+const cornerContent = (text: string) => html`
+	<nldd-title
+		color="inherit"
+		size="4"
+		text=${text}
+		heading-level="2"
+	></nldd-title>
+`;
+
+/**
+ * Met `corner` krijgt het mediavlak één afgeronde hoek en het paneel een halve,
+ * op de hoek die het beeld in wijst. Leeg gelaten kiest de hero een hoek die het
+ * paneel vrijlaat. Dat werkt met `layout="contained"` en het paneel in een hoek
+ * of langs een zijde. Het paneel staat dan tegen de rand van het beeld, dus een
+ * `main-width` in procenten is een deel van het beeld. Een paneel langs een hele
+ * zijde of als volle strook blijft recht.
+ */
+export const MetAfgerondeHoek = {
+	name: 'Met afgeronde hoek',
+	render: () => html`
+		<div style="display: flex; flex-direction: column; gap: 24px;">
+			${['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'].map((position) => html`
+				<nldd-hero
+					corner
+					layout="contained"
+					main-position=${position}
+					main-background="donkerblauw"
+				>
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					${cornerContent(`main-position="${position}"`)}
+				</nldd-hero>
+			`)}
+			${['33.33%', '50%', '66.67%'].map((width) => html`
+				<nldd-hero
+					corner
+					layout="contained"
+					main-width=${width}
+					main-background="donkerblauw"
+				>
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					${cornerContent(`main-width="${width}"`)}
+				</nldd-hero>
+			`)}
+			<nldd-hero
+				corner
+				main-background="donkerblauw"
+			>
+				${cornerContent('Zonder media')}
+			</nldd-hero>
+		</div>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
+ * Elke hoek van het mediavlak is ook zelf te kiezen. Kies je een hoek die onder
+ * het paneel valt, dan zegt de hero dat in development.
+ */
+const OPPOSITE_CORNER: Record<string, string> = {
+	'top-left': 'bottom-right',
+	'top-right': 'bottom-left',
+	'bottom-left': 'top-right',
+	'bottom-right': 'top-left',
+};
+
+export const AfgerondeHoekGekozen = {
+	name: 'Afgeronde hoek gekozen',
+	render: () => html`
+		<div style="display: flex; flex-direction: column; gap: 24px;">
+			${['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((corner) => html`
+				<nldd-hero
+					corner=${corner}
+					layout="contained"
+					main-position=${OPPOSITE_CORNER[corner]}
+					main-background="donkerblauw"
+				>
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					${cornerContent(`corner="${corner}"`)}
+				</nldd-hero>
+			`)}
+		</div>
+	`,
+	parameters: { controls: { disable: true } },
 };
 
 export const AllePosities = {

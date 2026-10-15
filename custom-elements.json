@@ -24919,11 +24919,45 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/layout/page-sections/hero/hero-corner.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "applyCorner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "CornerHost"
+              }
+            }
+          ],
+          "description": "Works out which corners are rounded and writes them onto the host as\n`data-media-corner` and `data-main-corner`, which the corner stylesheet\nkeys off. Without `corner`, or where a corner does not fit the shape\nlanguage, both are removed and the hero is rectangular."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "applyCorner",
+          "declaration": {
+            "name": "applyCorner",
+            "module": "src/components/layout/page-sections/hero/hero-corner.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/layout/page-sections/hero/hero.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
           "name": "NLDDHero",
           "members": [
             {
@@ -24935,6 +24969,17 @@
               "default": "''",
               "description": "Width mode: 'full' (removes body max-width) or any CSS length.",
               "attribute": "width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "corner",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Rounds one corner of the media area and one of the panel. An empty\nvalue lets the hero choose the media corner from `main-position`.",
+              "attribute": "corner",
               "reflects": true
             },
             {
@@ -25252,6 +25297,15 @@
               "default": "''",
               "description": "Body max-width; 'full' removes the bound (section API)",
               "fieldName": "width"
+            },
+            {
+              "name": "corner",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty to let the hero choose a corner the panel leaves free. Applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
+              "fieldName": "corner"
             },
             {
               "name": "layout",
