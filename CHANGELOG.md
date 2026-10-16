@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.8.100](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.99...v0.8.100) (2026-10-16)
+
 ### Highlights
 
 - **`nldd-hero` can take the rounded corner of the Rijkshuisstijl.** `corner` rounds one corner of the image and half a one on the panel, in a contained hero with the panel in a corner or along a side.
