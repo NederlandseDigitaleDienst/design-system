@@ -13,7 +13,7 @@
  * @element nldd-title
  *
  * @attr {number} size - Visual size of the title: 1–6 (default: 3)
- * @attr {string} sm-custom-size - A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(...)'), for a statement larger than size 1. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1 and says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size`
+ * @attr {string} sm-custom-size - A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. No percentage, also not inside clamp(): it would follow the parent's font size. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1 and says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size`
  * @attr {string} md-custom-size - The same, at md
  * @attr {string} lg-custom-size - The same, at lg
  * @attr {string} color - 'content' (the default) takes the system's own content
