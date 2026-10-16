@@ -29,6 +29,7 @@ test('a breaking change bumps the minor version, below 1.0', async () => {
 	assert.equal(await release('feat!: rename an attribute'), 'minor');
 	assert.equal(await release('fix(button)!: drop an alias'), 'minor');
 	assert.equal(await release('refactor: rename\n\nBREAKING CHANGE: the attribute is gone'), 'minor');
+	assert.equal(await release('an unprefixed message\n\nBREAKING CHANGE: the attribute is gone'), 'minor');
 });
 
 test('a squash commit with "!" and a Breaking section bumps the minor version', async () => {
