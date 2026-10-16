@@ -1904,7 +1904,7 @@
                 "text": "number"
               },
               "default": "0",
-              "description": "Distance in px between the anchor and the menu, along the placement\nside; negative pulls the menu in. Set by a component that hangs a menu\noff itself and draws its own edge inside its box, such as\nnldd-menu-bar-item, whose indicator stops short of the item. Not an\nattribute: the anchor knows that inset, the consumer does not. The anchor\nthat sets it owns it; another anchor taking over the menu sets it back."
+              "description": "Distance in px between the anchor and the menu, along the placement\nside; negative pulls the menu in. Set by a component that hangs a menu\noff itself and draws its own edge inside its box, such as\nnldd-menu-bar-item, whose indicator stops short of the item. Not an\nattribute: the anchor knows that inset, the consumer does not. The menu\ndoes not reset it: an anchor that takes over a menu with an offset sets\nit back to 0 itself."
             },
             {
               "kind": "field",
@@ -25361,7 +25361,7 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty to let the hero choose a corner the panel leaves free. Applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
+              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. Applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
               "fieldName": "corner"
             },
             {

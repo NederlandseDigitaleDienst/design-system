@@ -79,6 +79,18 @@ describe('nldd-hero – corner', () => {
 		expect(rounded('.hero__media')).toEqual(['bottom-left']);
 	});
 
+	it('takes a corner with spaces around it', async () => {
+		await hero('corner=" bottom-left " layout="contained" main-position="top-right"');
+		expect(el.getAttribute('data-media-corner')).toBe('bottom-left');
+	});
+
+	it('takes auto as the hero choosing, without a warning', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		await hero('corner="auto" layout="contained"');
+		expect(el.getAttribute('data-media-corner')).toBe('top-right');
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('is not a corner'))).toBe(false);
+	});
+
 	it('treats an inherited key as an unknown main-position', async () => {
 		await hero('corner layout="contained" main-position="constructor"');
 		expect(el.getAttribute('data-media-corner')).toBe('top-right');

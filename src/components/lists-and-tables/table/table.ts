@@ -194,7 +194,7 @@ export class NLDDTable extends LitElement {
 		this.classList.toggle('is-empty', isEmpty);
 		// See nldd-list: no rows and nothing slotted is not a thing on the page.
 		this.classList.toggle('is-blank', isEmpty && !noResults && !hasEmpty);
-		this._warnSilentEmpty(isEmpty, rows.length > 0);
+		this._warnSilentEmpty(isEmpty, hasEmpty, rows.length > 0);
 	}
 
 	/**
@@ -206,10 +206,9 @@ export class NLDDTable extends LitElement {
 	 * tree either, so the table asks the person building it rather than
 	 * answering for them.
 	 */
-	private _warnSilentEmpty(isEmpty: boolean, hasRows: boolean): void {
+	private _warnSilentEmpty(isEmpty: boolean, hasEmpty: boolean, hasRows: boolean): void {
 		if (!import.meta.env?.DEV) return;
-		if (!isEmpty || this._warnedSilentEmpty) return;
-		if (this.querySelector(':scope > [slot="empty"]')) return;
+		if (!isEmpty || this._warnedSilentEmpty || hasEmpty) return;
 		// Rows that are all hidden are the no-results state, and a slot that covers
 		// it answers the question.
 		if (hasRows && this.querySelector(':scope > [slot="no-results"]')) return;

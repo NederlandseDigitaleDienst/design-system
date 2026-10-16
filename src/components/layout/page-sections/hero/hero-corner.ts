@@ -89,7 +89,8 @@ export function applyCorner(host: CornerHost): void {
 	}
 
 	const cornerPosition = (center ? 'bottom-left' : position) as CornerPosition;
-	const chosen = CORNERS.includes(host.corner as HeroCorner) ? host.corner as HeroCorner : null;
+	const value = host.corner.trim();
+	const chosen = CORNERS.includes(value as HeroCorner) ? value as HeroCorner : null;
 	const covered = host._hasMedia ? coveredCorners(host, cornerPosition) : [];
 
 	let mediaCorner = chosen ?? AUTO_MEDIA_CORNER[cornerPosition];
@@ -107,7 +108,6 @@ export function applyCorner(host: CornerHost): void {
 	else host.removeAttribute('data-main-corner');
 
 	if (!import.meta.env?.DEV) return;
-	const value = host.corner.trim();
 	if (!chosen && value !== '' && value !== 'auto') {
 		warnOnce(host, `unknown-${value}`, `<nldd-hero>: corner="${value}" is not a corner, so the hero chooses one. Use "top-left", "top-right", "bottom-left" or "bottom-right", or leave the value empty.`);
 	}

@@ -168,12 +168,15 @@ export class NLDDTitle extends LitElement {
 			probe.style.fontSize = value;
 			return parseFloat(getComputedStyle(probe).fontSize);
 		};
-		for (const [breakpoint, value] of Object.entries(sizes) as [Breakpoint, string][]) {
-			if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) {
-				this._warnOnce(`floor-${breakpoint}-${value}`, `<nldd-title>: custom size "${value}" is smaller than size 1 at ${breakpoint} and shows as size 1. Use size for headings up to size 1.`);
+		try {
+			for (const [breakpoint, value] of Object.entries(sizes) as [Breakpoint, string][]) {
+				if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) {
+					this._warnOnce(`floor-${breakpoint}-${value}`, `<nldd-title>: custom size "${value}" is smaller than size 1 at ${breakpoint} and shows as size 1. Use size for headings up to size 1.`);
+				}
 			}
+		} finally {
+			probe.remove();
 		}
-		probe.remove();
 	}
 
 	override render() {
