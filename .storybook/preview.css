@@ -18,3 +18,9 @@ body,
 .docs-story {
 	background-color: var(--semantics-surfaces-base-background-color);
 }
+
+@media (max-width: 640px) {
+	.sbdocs-wrapper {
+		padding-inline: 16px !important;
+	}
+}
