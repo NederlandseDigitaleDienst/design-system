@@ -1904,7 +1904,7 @@
                 "text": "number"
               },
               "default": "0",
-              "description": "Distance in px between the anchor and the menu, along the placement\nside; negative pulls the menu in. Set by a component that hangs a menu\noff itself and draws its own edge inside its box, such as\nnldd-menu-bar-item, whose indicator stops short of the item. Not an\nattribute: the anchor knows that inset, the consumer does not."
+              "description": "Distance in px between the anchor and the menu, along the placement\nside; negative pulls the menu in. Set by a component that hangs a menu\noff itself and draws its own edge inside its box, such as\nnldd-menu-bar-item, whose indicator stops short of the item. Not an\nattribute: the anchor knows that inset, the consumer does not. The anchor\nthat sets it owns it; another anchor taking over the menu sets it back."
             },
             {
               "kind": "field",

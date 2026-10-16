@@ -435,7 +435,8 @@ export class NLDDMenu extends LitElement {
 	 * side; negative pulls the menu in. Set by a component that hangs a menu
 	 * off itself and draws its own edge inside its box, such as
 	 * nldd-menu-bar-item, whose indicator stops short of the item. Not an
-	 * attribute: the anchor knows that inset, the consumer does not.
+	 * attribute: the anchor knows that inset, the consumer does not. The anchor
+	 * that sets it owns it; another anchor taking over the menu sets it back.
 	 */
 	@property({ attribute: false })
 	anchorOffset = 0;
