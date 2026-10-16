@@ -120,22 +120,27 @@ export class NLDDTitle extends LitElement {
 		}
 	}
 
-	override updated(changed: PropertyValues): void {
-		super.updated(changed);
+	/** The valid custom size per breakpoint, worked out before the first paint. */
+	private _customSizes: Partial<Record<Breakpoint, string>> = {};
+
+	override willUpdate(changed: PropertyValues): void {
+		super.willUpdate(changed);
 		if (
 			!changed.has('smCustomSize') &&
 			!changed.has('mdCustomSize') &&
 			!changed.has('lgCustomSize')
 		) return;
 
-		// A breakpoint left without a valid value keeps the size from the scale.
+		// Written here rather than in updated(), so the first paint already has
+		// the custom size. A breakpoint left without a valid value keeps the
+		// size from the scale.
 		const own: Record<Breakpoint, string> = { sm: this.smCustomSize, md: this.mdCustomSize, lg: this.lgCustomSize };
-		const sizes: Partial<Record<Breakpoint, string>> = {};
+		this._customSizes = {};
 		for (const breakpoint of BREAKPOINTS) {
 			const value = (own[breakpoint] || '').trim();
 			const valid = value !== '' && isFontSize(value);
 			if (valid) {
-				sizes[breakpoint] = value;
+				this._customSizes[breakpoint] = value;
 				this.style.setProperty(`--_title-${breakpoint}-custom-size`, value);
 			} else {
 				this.style.removeProperty(`--_title-${breakpoint}-custom-size`);
@@ -145,7 +150,14 @@ export class NLDDTitle extends LitElement {
 				this._warnOnce(`invalid-${value}`, `<nldd-title>: "${value}" is not a CSS length, so the title keeps its size from the scale. Use a length such as "96px" or "6rem".`);
 			}
 		}
-		if (import.meta.env?.DEV) this._checkFloor(sizes);
+	}
+
+	override updated(changed: PropertyValues): void {
+		super.updated(changed);
+		if (!import.meta.env?.DEV) return;
+		if (changed.has('smCustomSize') || changed.has('mdCustomSize') || changed.has('lgCustomSize')) {
+			this._checkFloor(this._customSizes);
+		}
 	}
 
 	/** DEV-only: warnings already given, so each says it once per title. */

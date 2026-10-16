@@ -88,7 +88,7 @@ export function applyCorner(host: CornerHost): void {
 				host.layout !== 'contained' ? 'set layout="contained"' : '',
 				center ? `put the panel in a corner or along a side instead of main-position="${host.mainPosition}"` : '',
 			].filter(Boolean);
-			warnOnce(host, 'unsupported', `<nldd-hero>: corner only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. To round it, ${fixes.join(' and ')}; or drop the corner.`);
+			warnOnce(host, `unsupported-${fixes.length}-${center}`, `<nldd-hero>: corner only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. To round it, ${fixes.join(' and ')}; or drop the corner.`);
 		}
 		return;
 	}
