@@ -285,18 +285,27 @@ describe('nldd-title – custom-size', () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await title('lg-custom-size="huge"');
 		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('"huge" is not a CSS length'))).toBe(true);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('"huge" is not a size the title can use'))).toBe(true);
 	});
 
-	it('takes no percentage or size keyword, which would follow the parent', async () => {
+	it('takes no size keyword, which cannot go inside the floor', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		for (const value of ['150%', 'larger', 'xx-large']) {
+		for (const value of ['larger', 'xx-large', 'inherit']) {
 			await title(`lg-custom-size="${value}"`);
 			expect(el.hasAttribute('data-lg-custom-size'), value).toBe(false);
 			cleanup(el);
 		}
 		el = undefined as unknown as HTMLElement;
-		expect(warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('is not a CSS length'))).toHaveLength(3);
+		expect(warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('is not a size the title can use'))).toHaveLength(3);
+	});
+
+	it('takes a percentage or em and still keeps the size 1 floor', async () => {
+		await title('lg-custom-size="1%" md-custom-size="1%" sm-custom-size="0.1em"');
+		expect(el.hasAttribute('data-lg-custom-size')).toBe(true);
+		const custom = textStyle().fontSize;
+		cleanup(el);
+		await title('size="1"');
+		expect(custom).toBe(textStyle().fontSize);
 	});
 
 	it('goes back to the scale when the attribute is removed', async () => {
