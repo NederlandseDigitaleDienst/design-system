@@ -83,10 +83,12 @@ export function applyCorner(host: CornerHost): void {
 	// come into it.
 	if (host._hasMedia && (host.layout !== 'contained' || center)) {
 		clear(host);
-		if (import.meta.env?.DEV && host.layout !== 'contained') {
-			warnOnce(host, 'overlap', '<nldd-hero>: corner only applies with layout="contained", so this hero stays rectangular. Set layout="contained", or drop the corner.');
-		} else if (import.meta.env?.DEV) {
-			warnOnce(host, 'center', `<nldd-hero>: corner does not apply to a centered panel, so this hero stays rectangular. Put the panel in a corner or along a side instead of main-position="${host.mainPosition}", or drop the corner.`);
+		if (import.meta.env?.DEV) {
+			const fixes = [
+				host.layout !== 'contained' ? 'set layout="contained"' : '',
+				center ? `put the panel in a corner or along a side instead of main-position="${host.mainPosition}"` : '',
+			].filter(Boolean);
+			warnOnce(host, 'unsupported', `<nldd-hero>: corner only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. To round it, ${fixes.join(' and ')}; or drop the corner.`);
 		}
 		return;
 	}
