@@ -15,6 +15,8 @@ export const heroCornerStyles = css`
 		--_hero-corner-radius: calc(var(--semantics-brand-ribbon-sm-width) * 1.5);
 	}
 
+	/* On .hero, not :host: a var() resolves where it is declared, so on :host
+	   this would halve the sm radius at every breakpoint. */
 	:host([data-media-corner]) .hero {
 		--_hero-main-corner-radius: calc(var(--_hero-corner-radius) / 2);
 
