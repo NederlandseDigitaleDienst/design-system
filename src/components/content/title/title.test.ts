@@ -288,6 +288,17 @@ describe('nldd-title – custom-size', () => {
 		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('"huge" is not a CSS length'))).toBe(true);
 	});
 
+	it('takes no percentage or size keyword, which would follow the parent', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		for (const value of ['150%', 'larger', 'xx-large']) {
+			await title(`lg-custom-size="${value}"`);
+			expect(el.hasAttribute('data-lg-custom-size'), value).toBe(false);
+			cleanup(el);
+		}
+		el = undefined as unknown as HTMLElement;
+		expect(warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('is not a CSS length'))).toHaveLength(3);
+	});
+
 	it('goes back to the scale when the attribute is removed', async () => {
 		await title('sm-custom-size="200px" md-custom-size="200px" lg-custom-size="200px"');
 		expect(textStyle().fontSize).toBe('200px');

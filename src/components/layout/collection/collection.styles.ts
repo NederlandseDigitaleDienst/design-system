@@ -16,7 +16,7 @@ export const collectionStyles = css`
 
 	:host {
 		--_collection-item-min-width: var(--primitives-area-280);
-		--_collection-item-max-width: max(var(--_collection-item-min-width), var(--primitives-area-480));
+		--_collection-item-max-width: var(--primitives-area-480);
 		--_collection-focus-ring-z-index: 1;
 
 		/* Two sets, because a collection inside a layout-container follows that

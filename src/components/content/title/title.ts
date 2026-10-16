@@ -54,11 +54,17 @@ const SIZE_1_FONT_SIZE: Record<Breakpoint, string> = {
 	lg: 'var(--primitives-font-size-1000)',
 };
 
-const CSS_WIDE_KEYWORDS = new Set(['inherit', 'initial', 'unset', 'revert', 'revert-layer']);
+/** Font-size values that are not a length: the CSS-wide keywords, and the
+ *  absolute and relative size keywords, which resolve against the parent. */
+const NOT_A_LENGTH = new Set([
+	'inherit', 'initial', 'unset', 'revert', 'revert-layer',
+	'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xxx-large',
+	'larger', 'smaller', 'math',
+]);
 
-/** A length font-size takes as a value of its own; CSS.supports also says yes to the CSS-wide keywords. */
+/** A length font-size takes: no keyword, and no percentage, which would follow the parent's size. */
 function isFontSize(value: string): boolean {
-	return !CSS_WIDE_KEYWORDS.has(value.toLowerCase()) && CSS.supports('font-size', value);
+	return !NOT_A_LENGTH.has(value.toLowerCase()) && !value.includes('%') && CSS.supports('font-size', value);
 }
 
 @customElement('nldd-title')

@@ -176,6 +176,9 @@ export class NLDDCollection extends LitElement {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._visibleCount = this.maxItems;
+	}
+
+	override firstUpdated(): void {
 		// `item-width` was renamed to `item-min-width`. An unknown attribute does
 		// nothing, so without this a missed rename only shows as 280px items.
 		// Once per page: a missed rename is one search-and-replace.
