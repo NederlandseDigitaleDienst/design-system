@@ -246,6 +246,31 @@ describe('nldd-container', () => {
 	});
 });
 
+describe('nldd-container – width="fit-content"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('takes the width of its content in a row', async () => {
+		el = await fixture(`
+			<nldd-container layout="row">
+				<nldd-container
+					layout="row"
+					width="fit-content"
+				>
+					<div style="width: 48px; height: 48px;"></div>
+					<div style="width: 48px; height: 48px;"></div>
+				</nldd-container>
+			</nldd-container>
+		`);
+		await waitForUpdate(el);
+		const inner = el.querySelector('nldd-container') as HTMLElement;
+		expect(inner.getBoundingClientRect().width).toBe(96);
+	});
+});
+
 describe('nldd-container onder een universele reset', () => {
 	let el: HTMLElement;
 	let removeReset: () => void;

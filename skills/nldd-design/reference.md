@@ -563,7 +563,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `number` | Visual size of the title: 1–6 (default: 3) |
-| `sm-custom-size` | `string` | A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. No percentage, also not inside clamp(): it would follow the parent's font size. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1 and says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size` |
+| `sm-custom-size` | `string` | A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. No percentage, also not inside clamp(): it would follow the parent's font size. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1, and a fixed length that is smaller says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size` |
 | `md-custom-size` | `string` | The same, at md |
 | `lg-custom-size` | `string` | The same, at lg |
 | `color` | `string` | 'content' (the default) takes the system's own content colors. 'inherit' lets the title follow the text color of the surface instead (for colored areas such as the filled categories); overline and supporting-text get the same color at a lowered opacity. |
@@ -1705,7 +1705,7 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 | `sm-column-count` | `number` | Column count when this container is sm-wide |
 | `md-column-count` | `number` | Column count when this container is md-wide |
 | `lg-column-count` | `number` | Column count when this container is lg-wide |
-| `width` | `string` | 'full' (default, fills the parent) \| 'fit-content' \| a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. |
+| `width` | `string` | 'full' (default, fills the parent) \| 'fit-content' \| a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it. |
 | `min-width` | `string` | Minimum width as a CSS length (e.g. '280px') |
 | `max-width` | `string` | Maximum width as a CSS length (e.g. '480px') |
 | `gap` | `string` | Gap between children. One distance for all of them, so it fits children of one kind; for a stack of different kinds, space each seam with nldd-spacer instead. |

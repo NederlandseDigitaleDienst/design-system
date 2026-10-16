@@ -13,7 +13,7 @@
  * @element nldd-title
  *
  * @attr {number} size - Visual size of the title: 1–6 (default: 3)
- * @attr {string} sm-custom-size - A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. No percentage, also not inside clamp(): it would follow the parent's font size. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1 and says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size`
+ * @attr {string} sm-custom-size - A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. No percentage, also not inside clamp(): it would follow the parent's font size. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1, and a fixed length that is smaller says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size`
  * @attr {string} md-custom-size - The same, at md
  * @attr {string} lg-custom-size - The same, at lg
  * @attr {string} color - 'content' (the default) takes the system's own content
@@ -188,6 +188,10 @@ export class NLDDTitle extends LitElement {
 		};
 		try {
 			for (const [breakpoint, value] of Object.entries(sizes) as [Breakpoint, string][]) {
+				// A value relative to the viewport or a container resolves to
+				// something else at every width, so it is only checked by the CSS
+				// floor itself, not measured here at the width that happens to be open.
+				if (/\d(v[whib]|vmin|vmax|cq[whib]|cqmin|cqmax)\b/.test(value)) continue;
 				if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) {
 					this._warnOnce(`floor-${breakpoint}-${value}`, `<nldd-title>: custom size "${value}" is smaller than size 1 at ${breakpoint} and shows as size 1. Use size for headings up to size 1.`);
 				}

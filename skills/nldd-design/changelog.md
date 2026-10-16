@@ -55,6 +55,10 @@ here; consult the commit history if you need that level of detail.
 
 - **`item-width` on `nldd-collection` is now `item-min-width`.** It was a minimum in every layout: in a grid the narrowest a column gets, in a horizontal scroll the width an item never shrinks below. The new name says so, and pairs with `item-max-width`. There is no alias. An `item-width` left on a collection does nothing, so its items fall back to the default of 280px; in development the collection says so once, with the renamed attribute. Rename the attribute on every `nldd-collection`.
 
+### Fixed
+
+- **`nldd-container width="fit-content"` takes the width of its content.** The container measures its own width for its breakpoint padding and gap, and that measuring left a fit-content container 0px wide, so whatever was in it piled up on its neighbours. A fit-content container no longer measures itself; its breakpoints follow the container around it.
+
 ## [0.8.99](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.98...v0.8.99) (2026-10-14)
 
 ### Highlights

@@ -5235,7 +5235,7 @@
               },
               "default": "''",
               "fieldName": "smCustomSize",
-              "description": "A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. No percentage, also not inside clamp(): it would follow the parent's font size. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1 and says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size`"
+              "description": "A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. No percentage, also not inside clamp(): it would follow the parent's font size. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1, and a fixed length that is smaller says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size`"
             },
             {
               "name": "md-custom-size",
@@ -23905,7 +23905,7 @@
               },
               "default": "''",
               "fieldName": "width",
-              "description": "'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it."
+              "description": "'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it."
             },
             {
               "name": "min-width",
