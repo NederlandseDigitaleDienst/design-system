@@ -47,7 +47,7 @@ test('everything else that releases is a patch', async () => {
 });
 
 test('chore, ci and test release nothing, also when breaking', async () => {
-	for (const message of ['chore: deps', 'ci: a workflow', 'test: a case', 'chore!: drop a script', 'ci(release)!: change the rules', 'test!: a new runner']) {
+	for (const message of ['chore: deps', 'ci: a workflow', 'test: a case', 'chore!: drop a script', 'ci(release)!: change the rules', 'test!: a new runner', 'chore: drop a script\n\nBREAKING CHANGE: it is gone']) {
 		assert.equal(await release(message), null, message);
 	}
 });

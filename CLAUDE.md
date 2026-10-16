@@ -101,7 +101,7 @@ Leidend criterium: verandert de commit wat consumers krijgen (`dist/` of de meeg
 | `refactor:`, `style:`, `docs:`, `build:` | Patch (raken `dist/` of de skill-docs) |
 | `revert:` | Patch (een revert moet consumers ook bereiken) |
 | `feat!:`, `fix!:` (elk type dat een release geeft, met `!`) of `BREAKING CHANGE:` | Minor (0.8.100 → 0.9.0) |
-| `chore:`, `ci:`, `test:` | Geen, ook niet met `!` |
+| `chore:`, `ci:`, `test:` | Geen, ook niet met `!` of `BREAKING CHANGE:` |
 | Niet-herkend (geen conventionele prefix) | Patch (behandeld als feat) |
 
 Zolang de major 0 is, is minor het signaal voor een brekende wijziging en is elke andere release een patch. Zo werkt semver onder 1.0, en zo leest npm het ook: `^0.9.0` neemt 0.9.x mee, maar 0.10.0 niet. Een brekende release komt dus nooit ongevraagd bij een consument binnen. Het `!` in de titel telt alleen dankzij de `breakingHeaderPattern` in `.releaserc.json`; zonder die regel ziet de commit-analyzer alleen een `BREAKING CHANGE:` in de body.
