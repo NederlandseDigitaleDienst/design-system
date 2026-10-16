@@ -37,7 +37,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **Items in a horizontal-scroll `nldd-collection` stop at 480px.** One or two items that fit grew to the full width of the container, so a card of 320px became more than 1000px wide on a desktop. They now grow up to 480px and stay at the start. An `item-min-width` wider than 480px raises the limit with it, and `item-max-width` sets your own.
+- **Items in a horizontal-scroll `nldd-collection` stop at 480px.** One or two items that fit grew to the full width of the container, so a card of 320px became more than 1000px wide on a desktop. They now grow up to 480px and stay at the start. An `item-min-width` wider than 480px raises the limit with it, and `item-max-width` sets your own; `item-max-width="100%"` brings back the old behavior.
 
 - **`nldd-modal-dialog` says so in development when it opens with one action.** A dialog with one button offers nothing to choose, which the design guidelines advise against. Tell the user with an `nldd-notification` or an inline message instead, or give the dialog a real choice. It warns once per dialog.
 

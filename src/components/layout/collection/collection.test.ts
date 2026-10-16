@@ -111,6 +111,17 @@ describe('nldd-collection', () => {
 		expect(columns.length).toBe(3);
 	});
 
+	it('lets item-max-width="100%" fill the container, as before the default', async () => {
+		el = await fixture(`
+			<nldd-collection layout="horizontal-scroll" item-max-width="100%" style="width: 1000px;">
+				<div>Item</div>
+			</nldd-collection>
+		`);
+		await waitForUpdate(el);
+
+		expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(1000);
+	});
+
 	it('never lets item-max-width take an item below item-min-width', async () => {
 		el = await fixture(`
 			<nldd-collection layout="horizontal-scroll" item-min-width="320px" item-max-width="200px" style="width: 1000px;">

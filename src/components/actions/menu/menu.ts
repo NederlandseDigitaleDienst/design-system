@@ -431,7 +431,7 @@ export class NLDDMenu extends LitElement {
 	placement: string = 'bottom-start';
 
 	/**
-	 * Distance in px between the anchor and the menu, along the placement
+	 * @internal Distance in px between the anchor and the menu, along the placement
 	 * side; negative pulls the menu in. Set by a component that hangs a menu
 	 * off itself and draws its own edge inside its box, such as
 	 * nldd-menu-bar-item, whose indicator stops short of the item. Not an

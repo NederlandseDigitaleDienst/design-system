@@ -1899,15 +1899,6 @@
             },
             {
               "kind": "field",
-              "name": "anchorOffset",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Distance in px between the anchor and the menu, along the placement\nside; negative pulls the menu in. Set by a component that hangs a menu\noff itself and draws its own edge inside its box, such as\nnldd-menu-bar-item, whose indicator stops short of the item. Not an\nattribute: the anchor knows that inset, the consumer does not. Set it on\nevery open: the menu puts it back to 0 when it closes."
-            },
-            {
-              "kind": "field",
               "name": "maxItems",
               "type": {
                 "text": "number"
@@ -23324,7 +23315,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "itemMaxWidth",
-              "description": "Largest width an item takes in horizontal scroll (e.g. '400px', '25rem'), so one or two items that fit do not stretch across the container. Defaults to 480px. Never narrower than `item-min-width`, which wins when it is wider, and never wider than the container. No effect in grid, lanes and stack: a grid leaves empty columns rather than stretching an item, and its right edge stays aligned with the content around it."
+              "description": "Largest width an item takes in horizontal scroll (e.g. '400px', '25rem'), so one or two items that fit do not stretch across the container. Defaults to 480px; `item-max-width=\"100%\"` lets items fill the container, as they did before the default. Never narrower than `item-min-width`, which wins when it is wider, and never wider than the container. No effect in grid, lanes and stack: a grid leaves empty columns rather than stretching an item, and its right edge stays aligned with the content around it."
             },
             {
               "name": "gap",
