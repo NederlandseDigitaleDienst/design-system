@@ -435,9 +435,8 @@ export class NLDDMenu extends LitElement {
 	 * side; negative pulls the menu in. Set by a component that hangs a menu
 	 * off itself and draws its own edge inside its box, such as
 	 * nldd-menu-bar-item, whose indicator stops short of the item. Not an
-	 * attribute: the anchor knows that inset, the consumer does not. The menu
-	 * does not reset it: an anchor that takes over a menu with an offset sets
-	 * it back to 0 itself.
+	 * attribute: the anchor knows that inset, the consumer does not. Set it on
+	 * every open: the menu puts it back to 0 when it closes.
 	 */
 	@property({ attribute: false })
 	anchorOffset = 0;
@@ -2352,6 +2351,9 @@ export class NLDDMenu extends LitElement {
 		this._syncAnchorPopupState(this._isOpen);
 
 		if (toggleEvent.newState !== 'open') {
+			// The offset belongs to the anchor that opened the menu, which sets
+			// it again on every open; another anchor starts from 0.
+			this.anchorOffset = 0;
 			this._cleanupAutoUpdate?.();
 			this._cleanupAutoUpdate = null;
 			window.removeEventListener('resize', this._handleWindowResize);

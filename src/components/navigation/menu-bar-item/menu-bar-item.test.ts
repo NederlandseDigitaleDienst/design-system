@@ -75,6 +75,23 @@ describe('nldd-menu-bar-item', () => {
 		}
 	});
 
+	it('leaves no offset on the menu once it closes', async () => {
+		el = await fixture(`
+			<nldd-menu-bar-item text="NL" expandable>
+				<nldd-menu>
+					<nldd-menu-item text="Nederlands"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-bar-item>
+		`);
+		await waitForUpdate(el);
+		el.click();
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as HTMLElement & { anchorOffset: number; hidePopover(): void };
+		menu.hidePopover();
+		await waitForUpdate(el);
+		expect(menu.anchorOffset).toBe(0);
+	});
+
 	it('does not fire select when expandable with a slotted menu', async () => {
 		el = await fixture(`
 			<nldd-menu-bar-item text="NL" expandable>

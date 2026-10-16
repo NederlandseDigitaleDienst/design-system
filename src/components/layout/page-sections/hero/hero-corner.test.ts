@@ -163,6 +163,15 @@ describe('nldd-hero – corner', () => {
 		expect(rounded('.hero__main')).toEqual(['top-right']);
 	});
 
+	it('recomputes the corners when media is slotted after the first render', async () => {
+		await hero('corner layout="contained"', 1200, '');
+		expect(el.getAttribute('data-main-corner')).toBeNull();
+		el.insertAdjacentHTML('afterbegin', MEDIA);
+		await waitForUpdate(el);
+		expect(el.getAttribute('data-main-corner')).toBe('top-right');
+		expect(rounded('.hero__media')).toEqual(['top-right']);
+	});
+
 	it('drops the corner when the attribute is removed', async () => {
 		await hero('corner layout="contained"');
 		el.removeAttribute('corner');

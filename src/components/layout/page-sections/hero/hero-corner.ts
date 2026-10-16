@@ -75,7 +75,10 @@ export function applyCorner(host: CornerHost): void {
 	}
 
 	const center = host.mainPosition === 'top-center' || host.mainPosition === 'bottom-center';
-	const position: HeroMainPosition = center || Object.prototype.hasOwnProperty.call(MAIN_CORNER, host.mainPosition) ? host.mainPosition : 'bottom-left';
+	// An unknown main-position is the default, as on the hero itself.
+	const position: CornerPosition = Object.prototype.hasOwnProperty.call(MAIN_CORNER, host.mainPosition)
+		? host.mainPosition as CornerPosition
+		: 'bottom-left';
 	// Without media the panel is the whole hero, so layout and position do not
 	// come into it.
 	if (host._hasMedia && (host.layout !== 'contained' || center)) {
@@ -83,17 +86,16 @@ export function applyCorner(host: CornerHost): void {
 		if (import.meta.env?.DEV && host.layout !== 'contained') {
 			warnOnce(host, 'overlap', '<nldd-hero>: corner only applies with layout="contained", so this hero stays rectangular. Set layout="contained", or drop the corner.');
 		} else if (import.meta.env?.DEV) {
-			warnOnce(host, 'center', `<nldd-hero>: corner does not apply to a centered panel, so this hero stays rectangular. Put the panel in a corner or along a side instead of main-position="${position}", or drop the corner.`);
+			warnOnce(host, 'center', `<nldd-hero>: corner does not apply to a centered panel, so this hero stays rectangular. Put the panel in a corner or along a side instead of main-position="${host.mainPosition}", or drop the corner.`);
 		}
 		return;
 	}
 
-	const cornerPosition = (center ? 'bottom-left' : position) as CornerPosition;
 	const value = host.corner.trim();
 	const chosen = CORNERS.includes(value as HeroCorner) ? value as HeroCorner : null;
-	const covered = host._hasMedia ? coveredCorners(host, cornerPosition) : [];
+	const covered = host._hasMedia ? coveredCorners(host, position) : [];
 
-	let mediaCorner = chosen ?? AUTO_MEDIA_CORNER[cornerPosition];
+	let mediaCorner = chosen ?? AUTO_MEDIA_CORNER[position];
 	if (!chosen && covered.includes(mediaCorner)) {
 		// A full-width strip covers both corners on its edge: move to the
 		// other edge, on the same side.
@@ -101,7 +103,7 @@ export function applyCorner(host: CornerHost): void {
 		mediaCorner = `${mediaCorner.startsWith('top') ? 'bottom' : 'top'}-${horizontal}`;
 	}
 
-	const mainCorner = host._hasMedia && host.mainWidth !== 'full' ? MAIN_CORNER[cornerPosition] : null;
+	const mainCorner = host._hasMedia && host.mainWidth !== 'full' ? MAIN_CORNER[position] : null;
 
 	host.setAttribute('data-media-corner', mediaCorner);
 	if (mainCorner) host.setAttribute('data-main-corner', mainCorner);

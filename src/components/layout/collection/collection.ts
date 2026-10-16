@@ -178,6 +178,7 @@ export class NLDDCollection extends LitElement {
 		this._visibleCount = this.maxItems;
 		// `item-width` was renamed to `item-min-width`. An unknown attribute does
 		// nothing, so without this a missed rename only shows as 280px items.
+		// Once per page: a missed rename is one search-and-replace.
 		if (import.meta.env?.DEV && this.hasAttribute('item-width') && !warnedAboutItemWidth) {
 			warnedAboutItemWidth = true;
 			const value = this.getAttribute('item-width');
