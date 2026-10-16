@@ -12,7 +12,8 @@
             "type",
             "scope",
             "subject"
-          ]
+          ],
+          "breakingHeaderPattern": "^(\\w+)(?:\\(([^)]*)\\))?!:\\s*(.+)$"
         },
         "releaseRules": [
           {
@@ -49,7 +50,7 @@
           },
           {
             "breaking": true,
-            "release": "patch"
+            "release": "minor"
           },
           {
             "type": "chore",
