@@ -315,7 +315,6 @@ export const AppearancesNaarRol = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-button
 			appearance="primary"
@@ -347,7 +346,6 @@ export const AppearancesNaarUiterlijk = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-button
 			appearance="accent-filled"
@@ -587,7 +585,6 @@ export const MetMenu = {
 		<nldd-container
 			layout="wrap"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-button
 				expandable
@@ -650,7 +647,6 @@ export const MetPopover = {
 		<nldd-container
 			layout="wrap"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-button
 				expandable
@@ -750,7 +746,6 @@ export const EigenIcoonInDeSlot = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-button text="Eigen icoon vooraan">
 			<svg
@@ -795,7 +790,6 @@ export const TekstInDeSlot = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-button>
 			<span slot="text">Tekst met <strong>nadruk</strong></span>

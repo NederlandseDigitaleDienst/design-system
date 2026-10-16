@@ -84,7 +84,6 @@ export const AlleToestanden = {
 		<nldd-container
 			layout="row"
 			gap="32"
-			vertical-alignment="center"
 		>
 			<nldd-switch
 				accessible-label="Niet aan"
@@ -110,7 +109,6 @@ export const AlleToestanden = {
 		<nldd-container
 			layout="row"
 			gap="32"
-			vertical-alignment="center"
 		>
 			<nldd-switch
 				accessible-label="Niet aan klein"

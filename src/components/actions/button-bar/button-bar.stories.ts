@@ -56,7 +56,6 @@ export const Appearances = {
 		<nldd-container
 			layout="wrap"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-button-bar appearance="primary">
 				<nldd-button text="Bewerk"></nldd-button>
@@ -197,7 +196,6 @@ export const ToestandDisabled = {
 		<nldd-container
 			layout="wrap"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-button-bar
 				size="md"

@@ -2,6 +2,8 @@ import { html, nothing } from 'lit';
 import './toggle-button-group.js';
 import '../toggle-button/toggle-button.js';
 import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * De Toggle Button Group component groepeert `nldd-toggle-button` elementen en beheert
@@ -136,10 +138,11 @@ export const Standaard = {
 export const TypeButton = {
 	name: 'Type button',
 	render: () => html`
-	<nldd-container gap="8">
-		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
+	<nldd-container>
+		<nldd-text>
 			Met <code>type="button"</code> beheert elke knop zijn eigen <code>aria-pressed</code> toestand onafhankelijk. Ideaal voor teksteditor-toolbars.
-		</p>
+		</nldd-text>
+		<nldd-spacer size="8"></nldd-spacer>
 		<nldd-toggle-button-group
 			type="button"
 			aria-label="Tekst opmaken"
@@ -186,10 +189,11 @@ export const TypeButton = {
 export const TypeCheckbox = {
 	name: 'Type checkbox',
 	render: () => html`
-	<nldd-container gap="8">
-		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
+	<nldd-container>
+		<nldd-text>
 			Met <code>type="checkbox"</code> kunnen meerdere opties tegelijk geselecteerd zijn.
-		</p>
+		</nldd-text>
+		<nldd-spacer size="8"></nldd-spacer>
 		<nldd-toggle-button-group
 			type="checkbox"
 			name="filter"
@@ -233,11 +237,12 @@ export const TypeCheckbox = {
 export const TypeRadio = {
 	name: 'Type radio',
 	render: () => html`
-	<nldd-container gap="8">
-		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
+	<nldd-container>
+		<nldd-text>
 			Met <code>type="radio"</code> kan slechts één optie tegelijk geselecteerd zijn.
 			Navigeer met de pijltoetsen.
-		</p>
+		</nldd-text>
+		<nldd-spacer size="8"></nldd-spacer>
 		<nldd-toggle-button-group
 			type="radio"
 			name="sortering"

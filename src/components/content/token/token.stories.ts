@@ -3,6 +3,8 @@ import { html, nothing } from 'lit';
 import './token.js';
 import '../../actions/menu/menu.js';
 import '../../layout/container/container.js';
+import '../text/text.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * De Token is zelfstandige data waar de gebruiker mee werkt: een persoon in een
@@ -101,7 +103,6 @@ export const AlleControls = {
 	<nldd-container
 		layout="wrap"
 		gap="8"
-		vertical-alignment="center"
 	>
 		<nldd-token text="Geen control"></nldd-token>
 		<nldd-token
@@ -185,7 +186,6 @@ export const ToestandDisabled = {
 	<nldd-container
 		layout="wrap"
 		gap="8"
-		vertical-alignment="center"
 	>
 		<nldd-token
 			disabled
@@ -218,10 +218,11 @@ export const FilterVoorbeeld = {
 	};
 
 	return html`
-		<nldd-container gap="16">
-			<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug); color: var(--semantics-content-color);">
+		<nldd-container>
+			<nldd-text>
 				Actieve tokens — klik op × om een waarde te verwijderen:
-			</p>
+			</nldd-text>
+			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-container
 				layout="wrap"
 				gap="8"

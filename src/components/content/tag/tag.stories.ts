@@ -117,7 +117,6 @@ export const Kleuren = {
 		<nldd-container
 			layout="wrap"
 			gap="8"
-			vertical-alignment="center"
 		>
 			<nldd-tag
 				color="neutral"
@@ -250,7 +249,6 @@ export const MetIcoon = {
 		<nldd-container
 			layout="wrap"
 			gap="8"
-			vertical-alignment="center"
 		>
 			<nldd-tag
 				color="success"

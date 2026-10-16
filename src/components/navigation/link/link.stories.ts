@@ -2,6 +2,8 @@ import { html, nothing } from 'lit';
 import './link.js';
 import { ICONS } from './../../content/icon/icon.js';
 import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * De Link component werkt in twee modi:
@@ -172,42 +174,78 @@ export const InLopendeTekst = {
 			gap="24"
 			max-width="560px"
 		>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In een h2 — link erft display-grootte</p>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					In een h2 — link erft display-grootte
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<h2 style="margin: 0; font: var(--primitives-font-display-2-md);">
 					Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link>.
 				</h2>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In body-md — link is body-md</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					In body-md — link is body-md
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
 					Wil je subsidie aanvragen voor dakisolatie? Bekijk dan eerst <nldd-link href="https://example.com" target="_blank">de voorwaarden voor dakisolatie</nldd-link> op de website van Mijn Dienst.
 				</p>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In body-sm — link is body-sm</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					In body-sm — link is body-sm
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; font: var(--primitives-font-body-sm-regular-snug);">
 					Disclaimer: deze pagina is informatief. Voor juridische details zie <nldd-link href="#disclaimer">de disclaimer</nldd-link>.
 				</p>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Lange link wraps over regels (display: inline)</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					Lange link wraps over regels (display: inline)
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; max-width: 280px; font: var(--primitives-font-body-md-regular-snug);">
 					Lees meer over <nldd-link href="#">de voorwaarden voor dakisolatie en wat je moet aanleveren bij je aanvraag</nldd-link> voordat je begint.
 				</p>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
 					Vergelijk vooraf <nldd-link href="https://example.com" target="_blank" end-icon="square-arrow-right-top">de soorten warmtepompen</nldd-link> en wat ze kosten.
 				</p>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Expliciete <code>size="inherit"</code> doet hetzelfde als geen size</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					Expliciete <code>size="inherit"</code> doet hetzelfde als geen size
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
 					Lees ook <nldd-link href="#" size="inherit">de toelichting bij Aanvraag A-1042</nldd-link> voor de stand van zaken.
 				</p>
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 	parameters: {

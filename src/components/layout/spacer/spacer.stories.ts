@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './spacer.js';
 import '../../actions/button/button.js';
 import '../container/container.js';
+import '../../content/text/text.js';
 
 /**
  * Gebruik een spacer om ruimte tussen elementen te creëren.
@@ -158,12 +159,17 @@ export const Flexibel = {
 export const PerBreakpoint = {
 	render: () => html`
 		<nldd-container horizontal-alignment="left">
-			<p style="font-size: 14px; color: var(--semantics-content-color); margin: 0 0 8px 0;">
+			<nldd-text size="sm">
 				<code>sm-size="16" md-size="24" lg-size="32"</code>
-			</p>
-			<p style="font-size: 12px; color: var(--semantics-content-secondary-color); margin: 0 0 16px 0;">
+			</nldd-text>
+			<nldd-spacer size="8"></nldd-spacer>
+			<nldd-text
+				size="xs"
+				color="secondary"
+			>
 				Verklein het browservenster om de spacer mee te zien veranderen.
-			</p>
+			</nldd-text>
+			<nldd-spacer size="16"></nldd-spacer>
 			<div style="display: flex; flex-direction: column; align-items: flex-start; border: 1px dashed var(--primitives-color-neutral-150); padding: 8px;">
 				<nldd-button text="Knop"></nldd-button>
 				<nldd-spacer

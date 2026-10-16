@@ -1,6 +1,8 @@
 import { html } from 'lit';
 import './drag-handle-cell.js';
-import '../../../layout/container/container.js';
+import '../text-cell/text-cell.js';
+import '../../list/list.js';
+import '../../list-item/list-item.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Drag Handle Cell',
@@ -29,25 +31,15 @@ export const Standaard = {
 
 export const AlleGrootten = {
 	render: () => html`
-		<nldd-container
-			layout="row"
-			gap="16"
-			vertical-alignment="center"
-		>
-			<nldd-container
-				horizontal-alignment="center"
-				gap="4"
-			>
+		<nldd-list accessible-label="Grootten">
+			<nldd-list-item>
 				<nldd-drag-handle-cell size="md"></nldd-drag-handle-cell>
-				<span style="font-size: 0.75rem; color: var(--semantics-content-color);">MD</span>
-			</nldd-container>
-			<nldd-container
-				horizontal-alignment="center"
-				gap="4"
-			>
+				<nldd-text-cell text="MD"></nldd-text-cell>
+			</nldd-list-item>
+			<nldd-list-item>
 				<nldd-drag-handle-cell size="sm"></nldd-drag-handle-cell>
-				<span style="font-size: 0.75rem; color: var(--semantics-content-color);">SM</span>
-			</nldd-container>
-		</nldd-container>
+				<nldd-text-cell text="SM"></nldd-text-cell>
+			</nldd-list-item>
+		</nldd-list>
 	`,
 };

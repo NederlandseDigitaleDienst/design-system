@@ -7,6 +7,8 @@ import '../../actions/icon-button/icon-button.js';
 import '../../actions/button/button.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * De Table toont data in uitgelijnde kolommen. Het is altijd een box (afgeronde
@@ -345,14 +347,14 @@ export const HorizontaalScrollen = {
 				<nldd-text-cell text="Actief"></nldd-text-cell>
 			</nldd-table-row>`;
 		return html`
-			<div style="max-width: 460px;">
+			<nldd-container max-width="460px">
 				<nldd-table
 					columns="180px 220px 140px 160px 120px"
 					accessible-label="Brede tabel die horizontaal scrollt"
 				>
 					${rows()}
 				</nldd-table>
-			</div>
+			</nldd-container>
 		`;
 	},
 	parameters: {
@@ -407,17 +409,24 @@ export const ResponsieveKolommen = {
 				<nldd-text-cell text="Actief"></nldd-text-cell>
 			</nldd-table-row>`;
 		const table = (width: string, label: string) => html`
-			<div>
-				<p style="margin: 0 0 4px; font: var(--primitives-font-body-sm-regular-flat); color: var(--semantics-content-secondary-color);">${label}</p>
-				<div style="width: ${width};">
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					line-height="flat"
+					color="secondary"
+				>
+					${label}
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-container width=${width}>
 					<nldd-table
 						columns="minmax(160px,1fr) 1fr 140px 120px"
 						md-columns="minmax(160px,1fr) 140px 120px"
 						sm-columns="minmax(160px,1fr) 120px"
 						accessible-label=${'Gebruikers ' + label}
 					>${header()}${body()}</nldd-table>
-				</div>
-			</div>`;
+				</nldd-container>
+			</nldd-container>`;
 		return html`
 			<nldd-container gap="24">
 				${table('1100px', 'lg (≥1008px): alle kolommen')}

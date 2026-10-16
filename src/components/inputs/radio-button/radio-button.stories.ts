@@ -173,7 +173,6 @@ export const AlleToestanden = {
 	<nldd-container
 		layout="row"
 		gap="32"
-		vertical-alignment="center"
 	>
 		<nldd-radio-button accessible-label="Niet geselecteerd"></nldd-radio-button>
 		<nldd-radio-button

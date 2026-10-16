@@ -120,7 +120,6 @@ export const Appearances = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-split-button text="Bewaar" appearance="primary">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" appearance="secondary">${menu}</nldd-split-button>
@@ -159,7 +158,6 @@ export const MetStartIcon = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-split-button text="Bewaar" icon="check-mark" appearance="primary">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" icon="check-mark" appearance="secondary">${menu}</nldd-split-button>

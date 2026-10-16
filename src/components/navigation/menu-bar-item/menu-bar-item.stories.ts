@@ -213,7 +213,6 @@ export const AlleToestanden = {
 		<nldd-container
 			layout="wrap"
 			gap="8"
-			vertical-alignment="center"
 		>
 			<nldd-menu-bar-item text="Standaard"></nldd-menu-bar-item>
 			<nldd-menu-bar-item

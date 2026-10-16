@@ -8,6 +8,7 @@ import '../../layout/collection/collection.js';
 import '../../layout/container/container.js';
 import '../../layout/spacer/spacer.js';
 import '../tag/tag.js';
+import '../text/text.js';
 
 const aliasSet = new Set(Object.keys(aliases));
 const iconNames = ICONS.filter(name => !aliasSet.has(name));
@@ -168,7 +169,14 @@ export const Grootten = {
 						icon="heart"
 						size=${size}
 					></nldd-icon>
-					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${size}px</div>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-text
+						size="sm"
+						line-height="tight"
+						horizontal-alignment="center"
+					>
+						${size}px
+					</nldd-text>
 				</div>
 			`)}
 		</nldd-container>
@@ -181,7 +189,6 @@ export const FunctioneleKleuren = {
 		<nldd-container
 			layout="wrap"
 			gap="24"
-			vertical-alignment="center"
 		>
 			${FUNCTIONAL_COLORS.map(color => html`
 				<div style="text-align: center;">
@@ -190,7 +197,14 @@ export const FunctioneleKleuren = {
 						size="40"
 						color=${color}
 					></nldd-icon>
-					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${color}</div>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-text
+						size="sm"
+						line-height="tight"
+						horizontal-alignment="center"
+					>
+						${color}
+					</nldd-text>
 				</div>
 			`)}
 		</nldd-container>
@@ -208,7 +222,14 @@ export const Rijkskleuren = {
 						size="40"
 						color=${color}
 					></nldd-icon>
-					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${color}</div>
+					<nldd-spacer size="8"></nldd-spacer>
+					<nldd-text
+						size="sm"
+						line-height="tight"
+						horizontal-alignment="center"
+					>
+						${color}
+					</nldd-text>
 				</div>
 			`)}
 		</div>
@@ -222,7 +243,6 @@ export const EigenKleur = {
 		<nldd-container
 			layout="row"
 			gap="24"
-			vertical-alignment="center"
 		>
 			${['#ef4444', '#f97316', '#22c55e', '#3b82f6', '#8b5cf6'].map(color => html`
 				<nldd-icon
@@ -248,7 +268,6 @@ export const MetBox = {
 		<nldd-container
 			layout="row"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-icon
 				icon="terminal"
@@ -341,7 +360,6 @@ export const Icoongalerij = {
 				<nldd-container
 					layout="row"
 					gap="12"
-					vertical-alignment="center"
 				>
 					<nldd-search-field
 						width="full"
@@ -407,11 +425,22 @@ export const Icoongalerij = {
 										size="12"
 										direction="vertical"
 									></nldd-spacer>
-									<div style="font: var(--primitives-font-body-xs-regular-tight);">${iconName}</div>
+									<nldd-text
+										size="xs"
+										line-height="tight"
+										horizontal-alignment="center"
+									>
+										${iconName}
+									</nldd-text>
 									${iconAliases.length > 0 ? html`
-										<div style="font: var(--primitives-font-body-xxs-regular-tight); color: var(--semantics-content-secondary-color);">
+										<nldd-text
+											size="xxs"
+											line-height="tight"
+											color="secondary"
+											horizontal-alignment="center"
+										>
 											${iconAliases.join(', ')}
-										</div>
+										</nldd-text>
 									` : ''}
 								</nldd-container>
 							</nldd-card>

@@ -2,6 +2,8 @@ import { html, nothing } from 'lit';
 import './toggle-button.js';
 import { ICONS } from './../../content/icon/icon.js';
 import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * De Toggle Button component is een selecteerbare knop die tussen aan/uit kan schakelen.
@@ -165,10 +167,14 @@ export const Standaard = {
 export const AlleTypes = {
 	render: () => html`
 	<nldd-container gap="24">
-		<div>
-			<p style="font: var(--primitives-font-body-sm-regular-snug); color: var(--semantics-content-secondary-color); margin: 0 0 0.5rem;">
+		<nldd-container>
+			<nldd-text
+				size="sm"
+				color="secondary"
+			>
 				type="button" (standaard) — aria-pressed, geen formulierparticipatie
-			</p>
+			</nldd-text>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
 				layout="row"
 				gap="8"
@@ -185,11 +191,15 @@ export const AlleTypes = {
 					selected
 				></nldd-toggle-button>
 			</nldd-container>
-		</div>
-		<div>
-			<p style="font: var(--primitives-font-body-sm-regular-snug); color: var(--semantics-content-secondary-color); margin: 0 0 0.5rem;">
+		</nldd-container>
+		<nldd-container>
+			<nldd-text
+				size="sm"
+				color="secondary"
+			>
 				type="checkbox" — native checkbox input, meerdere tegelijk selecteerbaar
-			</p>
+			</nldd-text>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
 				layout="row"
 				gap="8"
@@ -217,11 +227,15 @@ export const AlleTypes = {
 					icon="calendar-event"
 				></nldd-toggle-button>
 			</nldd-container>
-		</div>
-		<div>
-			<p style="font: var(--primitives-font-body-sm-regular-snug); color: var(--semantics-content-secondary-color); margin: 0 0 0.5rem;">
+		</nldd-container>
+		<nldd-container>
+			<nldd-text
+				size="sm"
+				color="secondary"
+			>
 				type="radio" — native radio input, wederzijdse uitsluiting via name-groep
-			</p>
+			</nldd-text>
+			<nldd-spacer size="8"></nldd-spacer>
 			<nldd-container
 				layout="row"
 				gap="8"
@@ -251,7 +265,7 @@ export const AlleTypes = {
 					icon="sort"
 				></nldd-toggle-button>
 			</nldd-container>
-		</div>
+		</nldd-container>
 	</nldd-container>
 `,
 	parameters: {
@@ -274,7 +288,6 @@ export const AlleToestanden = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-toggle-button
 			text="Favoriet"
@@ -534,7 +547,6 @@ export const MetIcoon = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-toggle-button
 			text="Favoriet"
@@ -574,7 +586,6 @@ export const AlleenIcoon = {
 	<nldd-container
 		layout="row"
 		gap="8"
-		vertical-alignment="center"
 	>
 		<nldd-toggle-button
 			size="md"
@@ -622,10 +633,11 @@ export const AlleenIcoon = {
 export const TypeButton = {
 	name: 'Type button',
 	render: () => html`
-	<nldd-container gap="12">
-		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
+	<nldd-container>
+		<nldd-text>
 			<code>type="button"</code> is de standaard. Gebruikt <code>aria-pressed</code> voor de geselecteerde toestand en neemt niet deel aan formulierverwerking.
-		</p>
+		</nldd-text>
+		<nldd-spacer size="12"></nldd-spacer>
 		<nldd-container
 			layout="wrap"
 			gap="8"
@@ -673,10 +685,11 @@ export const TypeButton = {
 export const TypeCheckbox = {
 	name: 'Type checkbox',
 	render: () => html`
-	<nldd-container gap="12">
-		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
+	<nldd-container>
+		<nldd-text>
 			<code>type="checkbox"</code> voor filter-chips en multi-select acties met formulierparticipatie.
-		</p>
+		</nldd-text>
+		<nldd-spacer size="12"></nldd-spacer>
 		<nldd-container
 			layout="wrap"
 			gap="8"
@@ -732,10 +745,11 @@ export const TypeCheckbox = {
 export const TypeRadio = {
 	name: 'Type radio',
 	render: () => html`
-	<nldd-container gap="12">
-		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
+	<nldd-container>
+		<nldd-text>
 			<code>type="radio"</code> voor single-select keuzes. Gebruik <code>nldd-toggle-button-group</code> voor beheer via JavaScript.
-		</p>
+		</nldd-text>
+		<nldd-spacer size="12"></nldd-spacer>
 		<nldd-container
 			layout="row"
 			gap="8"

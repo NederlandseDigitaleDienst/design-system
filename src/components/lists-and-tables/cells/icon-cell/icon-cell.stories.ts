@@ -2,7 +2,8 @@ import { html, nothing } from 'lit';
 import './icon-cell.js';
 import '../../../content/icon/icon.js';
 import { ICONS } from '../../../content/icon/icon.js';
-import '../../../layout/container/container.js';
+import '../../list/list.js';
+import '../../list-item/list-item.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Icon Cell',
@@ -69,41 +70,39 @@ export const Standaard = {
 
 export const Kleuren = {
 	render: () => html`
-		<nldd-container
-			layout="row"
-			gap="16"
-			vertical-alignment="center"
-		>
-			<nldd-icon-cell
-				size="24"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-			<nldd-icon-cell
-				color="secondary"
-				size="24"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-			<nldd-icon-cell
-				color="accent"
-				size="24"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-			<nldd-icon-cell
-				color="success"
-				size="24"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-			<nldd-icon-cell
-				color="warning"
-				size="24"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-			<nldd-icon-cell
-				color="critical"
-				size="24"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-		</nldd-container>
+		<nldd-list accessible-label="Kleuren">
+			<nldd-list-item>
+				<nldd-icon-cell
+					size="24"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					color="secondary"
+					size="24"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					color="accent"
+					size="24"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					color="success"
+					size="24"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					color="warning"
+					size="24"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					color="critical"
+					size="24"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+			</nldd-list-item>
+		</nldd-list>
 	`,
 	parameters: {
 		docs: {
@@ -114,28 +113,26 @@ export const Kleuren = {
 
 export const AlleGrootten = {
 	render: () => html`
-		<nldd-container
-			layout="row"
-			gap="16"
-			vertical-alignment="center"
-		>
-			<nldd-icon-cell
-				size="16"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-			<nldd-icon-cell
-				size="20"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-			<nldd-icon-cell
-				size="24"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-			<nldd-icon-cell
-				size="32"
-				icon="icon-placeholder"
-			></nldd-icon-cell>
-		</nldd-container>
+		<nldd-list accessible-label="Grootten">
+			<nldd-list-item>
+				<nldd-icon-cell
+					size="16"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					size="20"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					size="24"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					size="32"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+			</nldd-list-item>
+		</nldd-list>
 	`,
 };
 

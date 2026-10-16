@@ -219,7 +219,6 @@ export const AppearancesNaarRol = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-icon-button
 			appearance="primary"
@@ -254,7 +253,6 @@ export const AppearancesNaarUiterlijk = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-icon-button
 			appearance="accent-filled"
@@ -338,7 +336,6 @@ export const GrootteLg = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-icon-button
 			size="lg"
@@ -372,7 +369,6 @@ export const MetAccessibleLabel = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-icon-button
 			icon="eye"
@@ -445,7 +441,6 @@ export const ToestandDisabled = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-icon-button
 			disabled
@@ -527,7 +522,6 @@ export const EigenIcoonInDeSlot = {
 	<nldd-container
 		layout="wrap"
 		gap="16"
-		vertical-alignment="center"
 	>
 		<nldd-icon-button text="Eigen icoon">
 			<svg
@@ -567,7 +561,6 @@ export const MetMenu = {
 		<nldd-container
 			layout="wrap"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-icon-button
 				icon="ellipsis"
@@ -612,7 +605,6 @@ export const MetPopover = {
 		<nldd-container
 			layout="wrap"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-icon-button
 				icon="info-circle"

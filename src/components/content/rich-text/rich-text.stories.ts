@@ -2,6 +2,8 @@ import { html, nothing } from 'lit';
 import './rich-text.js';
 import '../../status-and-feedback/banner/banner.js';
 import '../../layout/container/container.js';
+import '../text/text.js';
+import '../../layout/spacer/spacer.js';
 
 export default {
 	title: 'Components/Content/Rich Text',
@@ -113,13 +115,27 @@ export const Afbreken = {
 				lang="nl"
 			>
 				<div style="flex: 1;">
-					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">Zonder afbreking (standaard)</p>
+					<nldd-text
+						size="sm"
+						weight="bold"
+						line-height="tight"
+					>
+						Zonder afbreking (standaard)
+					</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 280px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text spacing=${args.spacing}>${content}</nldd-rich-text>
 					</div>
 				</div>
 				<div style="flex: 1;">
-					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">Met <code>hyphens</code></p>
+					<nldd-text
+						size="sm"
+						weight="bold"
+						line-height="tight"
+					>
+						Met <code>hyphens</code>
+					</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 280px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text spacing=${args.spacing} hyphens>${content}</nldd-rich-text>
 					</div>
@@ -205,24 +221,45 @@ export const Definitielijst = {
 		`;
 		return html`
 			<nldd-container gap="32">
-				<div>
-					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">sm (&lt; 641px) — gestapeld</p>
+				<nldd-container>
+					<nldd-text
+						size="sm"
+						weight="bold"
+						line-height="tight"
+					>
+						sm (&lt; 641px) — gestapeld
+					</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
-				</div>
-				<div>
-					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">md (≥ 641px) — term links (240px), definitie rechts</p>
+				</nldd-container>
+				<nldd-container>
+					<nldd-text
+						size="sm"
+						weight="bold"
+						line-height="tight"
+					>
+						md (≥ 641px) — term links (240px), definitie rechts
+					</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
-				</div>
-				<div>
-					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">lg (≥ 1008px) — term links (240px), definitie rechts</p>
+				</nldd-container>
+				<nldd-container>
+					<nldd-text
+						size="sm"
+						weight="bold"
+						line-height="tight"
+					>
+						lg (≥ 1008px) — term links (240px), definitie rechts
+					</nldd-text>
+					<nldd-spacer size="8"></nldd-spacer>
 					<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
-				</div>
+				</nldd-container>
 			</nldd-container>
 		`;
 	},
@@ -320,12 +357,12 @@ export const Tabel = {
 
 export const Codeblok = {
 	render: (args: Record<string, any>) => html`
-		<div style="max-width: 560px;">
-		<nldd-rich-text
-			color=${args.color || nothing}
-			spacing=${args.spacing}
-			?centered=${args.centered}
-		>
+		<nldd-container max-width="560px">
+			<nldd-rich-text
+				color=${args.color || nothing}
+				spacing=${args.spacing}
+				?centered=${args.centered}
+			>
 				<h3>Codeblok</h3>
 				<p>Een markdown-renderer levert een fenced block als <code>&lt;pre&gt;&lt;code&gt;</code> aan. Het kader zit op de <code>pre</code>, de chip blijft voor inline code.</p>
 				<pre><code>const bijdrage = berekenBijdrage(aanvraag);
@@ -339,7 +376,7 @@ if (bijdrage > 0) {
 ├── maatregel
 └── oppervlakte</pre>
 			</nldd-rich-text>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -379,8 +416,15 @@ export const Scheidingslijn = {
 export const Witruimte = {
 	render: () => html`
 		<nldd-container gap="48">
-			<div>
-				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">flat</p>
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					weight="bold"
+					line-height="tight"
+				>
+					flat
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-rich-text spacing="flat">
 					<h3>Wat telt als dakisolatie</h3>
 					<p>Je aanvraag gaat over een van deze maatregelen:</p>
@@ -389,9 +433,16 @@ export const Witruimte = {
 						<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 					</ul>
 				</nldd-rich-text>
-			</div>
-			<div>
-				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">tight</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					weight="bold"
+					line-height="tight"
+				>
+					tight
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-rich-text spacing="tight">
 					<h3>Wat telt als dakisolatie</h3>
 					<p>Je aanvraag gaat over een van deze maatregelen:</p>
@@ -400,9 +451,16 @@ export const Witruimte = {
 						<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 					</ul>
 				</nldd-rich-text>
-			</div>
-			<div>
-				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">snug (default)</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					weight="bold"
+					line-height="tight"
+				>
+					snug (default)
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-rich-text spacing="snug">
 					<h3>Wat telt als dakisolatie</h3>
 					<p>Je aanvraag gaat over een van deze maatregelen:</p>
@@ -411,9 +469,16 @@ export const Witruimte = {
 						<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 					</ul>
 				</nldd-rich-text>
-			</div>
-			<div>
-				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">loose</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					weight="bold"
+					line-height="tight"
+				>
+					loose
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				<nldd-rich-text spacing="loose">
 					<h3>Wat telt als dakisolatie</h3>
 					<p>Je aanvraag gaat over een van deze maatregelen:</p>
@@ -422,7 +487,7 @@ export const Witruimte = {
 						<li><strong>zoldervloerisolatie:</strong> isolatie op de vloer van een zolder die je niet verwarmt;</li>
 					</ul>
 				</nldd-rich-text>
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 };
@@ -490,8 +555,15 @@ export const VolledigArtikel = {
 export const AlleGrootten = {
 	render: (args: Record<string, any>) => html`
 		<nldd-container gap="32">
-			<div>
-				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">sm (&lt; 641px) — beperkt tot 393px</p>
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					weight="bold"
+					line-height="tight"
+				>
+					sm (&lt; 641px) — beperkt tot 393px
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text
 						color=${args.color || nothing}
@@ -506,9 +578,16 @@ export const AlleGrootten = {
 						</ul>
 					</nldd-rich-text>
 				</div>
-			</div>
-			<div>
-				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">md (≥ 641px) — beperkt tot 834px</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					weight="bold"
+					line-height="tight"
+				>
+					md (≥ 641px) — beperkt tot 834px
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 834px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text
 						color=${args.color || nothing}
@@ -523,9 +602,16 @@ export const AlleGrootten = {
 						</ul>
 					</nldd-rich-text>
 				</div>
-			</div>
-			<div>
-				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">lg (≥ 1008px) — beperkt tot 1200px</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					weight="bold"
+					line-height="tight"
+				>
+					lg (≥ 1008px) — beperkt tot 1200px
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				<div style="width: 1200px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
 					<nldd-rich-text
 						color=${args.color || nothing}
@@ -540,7 +626,7 @@ export const AlleGrootten = {
 						</ul>
 					</nldd-rich-text>
 				</div>
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 	name: 'Alle groottes (container query)',

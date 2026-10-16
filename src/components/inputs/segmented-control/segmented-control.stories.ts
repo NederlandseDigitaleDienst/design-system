@@ -496,7 +496,7 @@ export const IcoonEnTekst = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<div style="width: 400px;">
+		<nldd-container width="400px">
 			<nldd-segmented-control
 				value="bold"
 				variant="icon-and-text"
@@ -520,7 +520,7 @@ export const IcoonEnTekst = {
 					icon="underlined"
 				></nldd-segmented-control-item>
 			</nldd-segmented-control>
-		</div>
+		</nldd-container>
 	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },

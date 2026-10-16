@@ -2,6 +2,10 @@ import { html, nothing } from 'lit';
 import './title-cell.js';
 import '../../../content/tag/tag.js';
 import '../../../layout/container/container.js';
+import '../../list/list.js';
+import '../../list-item/list-item.js';
+import '../../../content/text/text.js';
+import '../../../layout/spacer/spacer.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Title Cell',
@@ -160,26 +164,32 @@ export const Accent = {
 
 export const Statuskleuren = {
 	render: () => html`
-		<nldd-container gap="16">
-			<nldd-title-cell
-				color="success"
-				overline="Status"
-				text="Goedgekeurd"
-				supporting-text="Verwerkt op 9 mei 2026"
-			></nldd-title-cell>
-			<nldd-title-cell
-				color="warning"
-				overline="Status"
-				text="Wacht op actie"
-				supporting-text="Reactie binnen 5 werkdagen"
-			></nldd-title-cell>
-			<nldd-title-cell
-				color="critical"
-				overline="Status"
-				text="Afgewezen"
-				supporting-text="Bekijk de toelichting"
-			></nldd-title-cell>
-		</nldd-container>
+		<nldd-list accessible-label="Statuskleuren">
+			<nldd-list-item>
+				<nldd-title-cell
+					color="success"
+					overline="Status"
+					text="Goedgekeurd"
+					supporting-text="Verwerkt op 9 mei 2026"
+				></nldd-title-cell>
+			</nldd-list-item>
+			<nldd-list-item>
+				<nldd-title-cell
+					color="warning"
+					overline="Status"
+					text="Wacht op actie"
+					supporting-text="Reactie binnen 5 werkdagen"
+				></nldd-title-cell>
+			</nldd-list-item>
+			<nldd-list-item>
+				<nldd-title-cell
+					color="critical"
+					overline="Status"
+					text="Afgewezen"
+					supporting-text="Bekijk de toelichting"
+				></nldd-title-cell>
+			</nldd-list-item>
+		</nldd-list>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -221,35 +231,41 @@ export const MetOverlineEnSupportingText = {
 
 export const AlleGrootten = {
 	render: () => html`
-		<nldd-container gap="16">
+		<nldd-list accessible-label="Grootten">
 			${[1, 2, 3, 4, 5, 6].map(s => html`
-				<nldd-title-cell
-					size=${s}
-					text="Titelcel (grootte ${s})"
-				></nldd-title-cell>
+				<nldd-list-item>
+					<nldd-title-cell
+						size=${s}
+						text="Titelcel (grootte ${s})"
+					></nldd-title-cell>
+				</nldd-list-item>
 			`)}
-		</nldd-container>
+		</nldd-list>
 	`,
 };
 
 export const HorizontaleUitlijning = {
 	render: () => html`
-		<nldd-container gap="8">
-			<nldd-title-cell
-				horizontal-alignment="left"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
-				overline="Overline"
-				text="Titelcel (links)"
-				supporting-text="Ondertitel"
-			></nldd-title-cell>
-			<nldd-title-cell
-				horizontal-alignment="right"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
-				overline="Overline"
-				text="Titelcel (rechts)"
-				supporting-text="Ondertitel"
-			></nldd-title-cell>
-		</nldd-container>
+		<nldd-list accessible-label="Horizontale uitlijning">
+			<nldd-list-item>
+				<nldd-title-cell
+					horizontal-alignment="left"
+					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					overline="Overline"
+					text="Titelcel (links)"
+					supporting-text="Ondertitel"
+				></nldd-title-cell>
+			</nldd-list-item>
+			<nldd-list-item>
+				<nldd-title-cell
+					horizontal-alignment="right"
+					style="border: 1px dashed var(--primitives-color-neutral-150);"
+					overline="Overline"
+					text="Titelcel (rechts)"
+					supporting-text="Ondertitel"
+				></nldd-title-cell>
+			</nldd-list-item>
+		</nldd-list>
 	`,
 };
 
@@ -281,29 +297,49 @@ export const TagInDeSlot = {
 			gap="16"
 			max-width="480px"
 		>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Overline slot — tag als statuslabel boven de titel.</p>
-				<nldd-title-cell
-					text="Aanvraag huurtoeslag"
-					supporting-text="Ingediend op 9 mei 2026"
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
 				>
-					<nldd-tag
-						slot="overline"
-						color="success"
-						size="sm"
-						text="Goedgekeurd"
-					></nldd-tag>
-				</nldd-title-cell>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Default slot — inline tag binnen de titel.</p>
-				<nldd-title-cell
-					overline="Sectie"
-					supporting-text="3 items"
+					Overline slot — tag als statuslabel boven de titel.
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-list accessible-label="Overline slot">
+					<nldd-list-item>
+						<nldd-title-cell
+							text="Aanvraag huurtoeslag"
+							supporting-text="Ingediend op 9 mei 2026"
+						>
+							<nldd-tag
+								slot="overline"
+								color="success"
+								size="sm"
+								text="Goedgekeurd"
+							></nldd-tag>
+						</nldd-title-cell>
+					</nldd-list-item>
+				</nldd-list>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
 				>
-					Aardappelen <nldd-tag color="accent" size="sm" text="Nieuw"></nldd-tag>
-				</nldd-title-cell>
-			</div>
+					Default slot — inline tag binnen de titel.
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-list accessible-label="Default slot">
+					<nldd-list-item>
+						<nldd-title-cell
+							overline="Sectie"
+							supporting-text="3 items"
+						>
+							Aardappelen <nldd-tag color="accent" size="sm" text="Nieuw"></nldd-tag>
+						</nldd-title-cell>
+					</nldd-list-item>
+				</nldd-list>
+			</nldd-container>
 		</nldd-container>
 	`,
 	parameters: {
@@ -328,30 +364,60 @@ export const ZoektermMarkeren = {
 			gap="16"
 			max-width="480px"
 		>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">predictive (default) — vet de niet-gematchte rest.</p>
-				<nldd-title-cell
-					text="Aardappelen"
-					query="aa"
-				></nldd-title-cell>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">match — vet de gematchte query.</p>
-				<nldd-title-cell
-					text="Aardappel knolgewas"
-					query="aar"
-					query-mark-mode="match"
-				></nldd-title-cell>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Werkt op text, overline en supporting-text.</p>
-				<nldd-title-cell
-					overline="Groente"
-					text="Aardappelen"
-					supporting-text="Ook: pieper, knol"
-					query="ap"
-				></nldd-title-cell>
-			</div>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					predictive (default) — vet de niet-gematchte rest.
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-list accessible-label="Predictive">
+					<nldd-list-item>
+						<nldd-title-cell
+							text="Aardappelen"
+							query="aa"
+						></nldd-title-cell>
+					</nldd-list-item>
+				</nldd-list>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					match — vet de gematchte query.
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-list accessible-label="Match">
+					<nldd-list-item>
+						<nldd-title-cell
+							text="Aardappel knolgewas"
+							query="aar"
+							query-mark-mode="match"
+						></nldd-title-cell>
+					</nldd-list-item>
+				</nldd-list>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					Werkt op text, overline en supporting-text.
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-list accessible-label="Alle tekstvelden">
+					<nldd-list-item>
+						<nldd-title-cell
+							overline="Groente"
+							text="Aardappelen"
+							supporting-text="Ook: pieper, knol"
+							query="ap"
+						></nldd-title-cell>
+					</nldd-list-item>
+				</nldd-list>
+			</nldd-container>
 		</nldd-container>
 	`,
 	parameters: {

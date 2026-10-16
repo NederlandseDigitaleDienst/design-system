@@ -175,15 +175,15 @@ export const AlleToestanden = {
 			hide-spin-buttons
 			width="240px"
 		></nldd-number-field>
-		<div style="width: 400px;">
+		<nldd-container width="400px">
 			<nldd-number-field
 				value="5"
 				min="0"
 				max="10"
 				width="full"
 			></nldd-number-field>
-		</div>
-		<div style="width: 400px;">
+		</nldd-container>
+		<nldd-container width="400px">
 			<nldd-number-field
 				value="5"
 				min="0"
@@ -191,7 +191,7 @@ export const AlleToestanden = {
 				hide-spin-buttons
 				width="full"
 			></nldd-number-field>
-		</div>
+		</nldd-container>
 	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },

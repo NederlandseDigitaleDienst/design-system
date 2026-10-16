@@ -9,6 +9,8 @@ import '../../inputs/search-field/search-field.js';
 import '../../inputs/segmented-control/segmented-control.js';
 import '../../navigation/tab-bar/tab-bar.js';
 import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 export default {
 	title: 'Components/Actions/Toolbar',
@@ -44,9 +46,10 @@ const resizable = (content: TemplateResult) => html`
 	<div style="resize: horizontal; overflow: hidden; min-width: 200px; max-width: 100%; padding: 8px;">
 		${content}
 	</div>
-	<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 8px 0 0;">
+	<nldd-spacer size="8"></nldd-spacer>
+	<nldd-text size="xs">
 		↔ Sleep de hoek rechtsonder om de breedte aan te passen
-	</p>
+	</nldd-text>
 `;
 
 export const Standaard = {
@@ -382,8 +385,11 @@ export const TitelMetActie = {
 export const Grootten = {
 	render: () => html`
 		<nldd-container gap="16">
-			<div>
-				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">md (default)</p>
+			<nldd-container>
+				<nldd-text size="xs">
+					md (default)
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="md">
 						<nldd-toolbar-item
@@ -424,9 +430,12 @@ export const Grootten = {
 						</nldd-toolbar-item>
 					</nldd-toolbar>
 				`}
-			</div>
-			<div>
-				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">sm</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text size="xs">
+					sm
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="sm">
 						<nldd-toolbar-item
@@ -467,7 +476,7 @@ export const Grootten = {
 						</nldd-toolbar-item>
 					</nldd-toolbar>
 				`}
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 };
@@ -476,8 +485,11 @@ export const LabelsAanUit = {
 	name: 'Labels aan en uit',
 	render: () => html`
 		<nldd-container gap="16">
-			<div>
-				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">Zonder labels</p>
+			<nldd-container>
+				<nldd-text size="xs">
+					Zonder labels
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="md">
 						<nldd-toolbar-item
@@ -528,9 +540,12 @@ export const LabelsAanUit = {
 						</nldd-toolbar-item>
 					</nldd-toolbar>
 				`}
-			</div>
-			<div>
-				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">Met labels</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text size="xs">
+					Met labels
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar
 						size="md"
@@ -584,7 +599,7 @@ export const LabelsAanUit = {
 						</nldd-toolbar-item>
 					</nldd-toolbar>
 				`}
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 };

@@ -176,7 +176,6 @@ export const Kleuren = {
 		<nldd-container
 			layout="wrap"
 			gap="24"
-			vertical-alignment="center"
 		>
 			${ALL_COLORS.map(c => html`
 				<nldd-progress-circle

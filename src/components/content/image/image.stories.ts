@@ -199,7 +199,7 @@ export const Vormen = {
 			gap="24"
 			vertical-alignment="bottom"
 		>
-			<div style="width: 200px;">
+			<nldd-container width="200px">
 				<nldd-image
 					src=${SAMPLE_SRC}
 					alt=${SAMPLE_ALT}
@@ -207,8 +207,8 @@ export const Vormen = {
 					shape="square"
 					caption="square"
 				></nldd-image>
-			</div>
-			<div style="width: 200px;">
+			</nldd-container>
+			<nldd-container width="200px">
 				<nldd-image
 					src=${SAMPLE_SRC}
 					alt=${SAMPLE_ALT}
@@ -216,8 +216,8 @@ export const Vormen = {
 					shape="rounded"
 					caption="rounded"
 				></nldd-image>
-			</div>
-			<div style="width: 120px;">
+			</nldd-container>
+			<nldd-container width="120px">
 				<nldd-image
 					src=${SAMPLE_SRC}
 					alt=${SAMPLE_ALT}
@@ -225,7 +225,7 @@ export const Vormen = {
 					shape="circle"
 					caption="circle"
 				></nldd-image>
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
@@ -238,14 +238,14 @@ export const Beeldverhoudingen = {
 			gap="16"
 		>
 			${['21/9', '16/9', '3/2', '4/3', '1/1', '3/4', '2/3'].map(ratio => html`
-				<div style="width: 240px;">
+				<nldd-container width="240px">
 					<nldd-image
 						src=${SAMPLE_SRC}
 						alt=${SAMPLE_ALT}
 						aspect-ratio=${ratio}
 						caption=${ratio}
 					></nldd-image>
-				</div>
+				</nldd-container>
 			`)}
 		</nldd-container>
 	`,
@@ -260,7 +260,7 @@ export const ObjectFit = {
 			gap="16"
 		>
 			${['cover', 'contain', 'fill', 'scale-down', 'none'].map(fit => html`
-				<div style="width: 180px;">
+				<nldd-container width="180px">
 					<nldd-image
 						src=${SAMPLE_SRC}
 						alt=${SAMPLE_ALT}
@@ -268,7 +268,7 @@ export const ObjectFit = {
 						object-fit=${fit}
 						caption=${fit}
 					></nldd-image>
-				</div>
+				</nldd-container>
 			`)}
 		</nldd-container>
 	`,
@@ -278,13 +278,13 @@ export const ObjectFit = {
 export const Decoratief = {
 	name: 'Met decorative (als achtergrond)',
 	render: () => html`
-		<div style="max-width: 480px;">
+		<nldd-container max-width="480px">
 			<nldd-image
 				src=${SAMPLE_SRC}
 				aspect-ratio="16/9"
 				decorative
 			></nldd-image>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -304,27 +304,27 @@ export const ZonderBeeld = {
 			gap="24"
 			vertical-alignment="top"
 		>
-			<div style="width: 320px;">
+			<nldd-container width="320px">
 				<nldd-image></nldd-image>
-			</div>
-			<div style="width: 200px;">
+			</nldd-container>
+			<nldd-container width="200px">
 				<nldd-image
 					aspect-ratio="1/1"
 					shape="rounded"
 				></nldd-image>
-			</div>
-			<div style="width: 120px;">
+			</nldd-container>
+			<nldd-container width="120px">
 				<nldd-image
 					aspect-ratio="1/1"
 					shape="circle"
 				></nldd-image>
-			</div>
-			<div style="width: 320px;">
+			</nldd-container>
+			<nldd-container width="320px">
 				<nldd-image
 					aspect-ratio="4/3"
 					caption="Een bijschrift blijft gewoon staan."
 				></nldd-image>
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
@@ -333,7 +333,7 @@ export const ZonderBeeld = {
 export const EigenImgInDeSlot = {
 	name: 'Eigen img in de slot',
 	render: () => html`
-		<div style="max-width: 480px;">
+		<nldd-container max-width="480px">
 			<nldd-image
 				aspect-ratio="16/9"
 				shape="rounded"
@@ -345,7 +345,7 @@ export const EigenImgInDeSlot = {
 					decoding="async"
 				>
 			</nldd-image>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -371,15 +371,15 @@ export const Laadvoorbeeld = {
 			layout="wrap"
 			gap="24"
 		>
-			<div style="width: 320px;">
+			<nldd-container width="320px">
 				<nldd-image
 					alt="Placeholder zonder image"
 					aspect-ratio="16/9"
 					lqip=${SAMPLE_LQIP}
 					caption="Alleen LQIP (geen src)"
 				></nldd-image>
-			</div>
-			<div style="width: 320px;">
+			</nldd-container>
+			<nldd-container width="320px">
 				<nldd-image
 					src=${SAMPLE_SRC}
 					alt=${SAMPLE_ALT}
@@ -387,7 +387,7 @@ export const Laadvoorbeeld = {
 					lqip=${SAMPLE_LQIP}
 					caption="LQIP + image"
 				></nldd-image>
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
@@ -409,22 +409,22 @@ export const AfbeeldingLaadtNiet = {
 			layout="wrap"
 			gap="24"
 		>
-			<div style="width: 320px;">
+			<nldd-container width="320px">
 				<nldd-image
 					src="/this-does-not-exist.jpg"
 					alt="Klein koolwitje op een vlinderstruik"
 					aspect-ratio="16/9"
 					caption="Met alt-tekst"
 				></nldd-image>
-			</div>
-			<div style="width: 320px;">
+			</nldd-container>
+			<nldd-container width="320px">
 				<nldd-image
 					src="/this-does-not-exist.jpg"
 					aspect-ratio="16/9"
 					decorative
 					caption="Decoratief (alleen icoon)"
 				></nldd-image>
-			</div>
+			</nldd-container>
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },

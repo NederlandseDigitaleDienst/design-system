@@ -131,7 +131,6 @@ export const AlleToestanden = {
 	<nldd-container
 		layout="wrap"
 		gap="32"
-		vertical-alignment="center"
 	>
 		<nldd-checkbox accessible-label="Niet aangevinkt"></nldd-checkbox>
 		<nldd-checkbox

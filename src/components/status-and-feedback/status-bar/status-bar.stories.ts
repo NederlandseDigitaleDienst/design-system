@@ -148,12 +148,12 @@ export const AlsKnop = {
 
 export const LangeTekst = {
 	render: () => html`
-		<div style="max-width: 360px;">
+		<nldd-container max-width="360px">
 			<nldd-status-bar
 				variant="warning"
 				text="Gepland onderhoud zaterdagavond van 22:00 tot 00:00, sommige onderdelen van Mijn Dienst zijn dan tijdelijk niet bereikbaar"
 			></nldd-status-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './badge.js';
 import { ICONS } from './../../content/icon/icon.js';
 import '../../layout/container/container.js';
+import '../../content/text/text.js';
 
 /**
  * De Badge toont de toestand van iets, of hoeveel er van iets is. Wat er staat
@@ -180,7 +181,6 @@ export const Kleuren = {
 		<nldd-container
 			layout="wrap"
 			gap="12"
-			vertical-alignment="center"
 		>
 			${COLORS.map(c => html`<nldd-badge color=${c} number="3"></nldd-badge>`)}
 		</nldd-container>
@@ -212,14 +212,15 @@ export const EigenKleur = {
 		<nldd-container
 			layout="wrap"
 			gap="24"
-			vertical-alignment="center"
 		>
 			<span style="color: #a90061; display: inline-flex; gap: 8px; align-items: center;">
 				<nldd-badge
 					color="inherit"
 					number="3"
 				></nldd-badge>
-				Erft de kleur van deze zin
+				<nldd-text color="inherit">
+					Erft de kleur van deze zin
+				</nldd-text>
 			</span>
 			<nldd-badge
 				custom-color="#f8fafc"
@@ -290,7 +291,6 @@ export const Stip = {
 		<nldd-container
 			layout="row"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-badge color="critical"></nldd-badge>
 			<nldd-badge color="accent"></nldd-badge>
@@ -314,7 +314,6 @@ export const MetTekst = {
 		<nldd-container
 			layout="row"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-badge
 				color="accent"
@@ -340,7 +339,6 @@ export const MetGetal = {
 		<nldd-container
 			layout="row"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-badge number="1"></nldd-badge>
 			<nldd-badge number="12"></nldd-badge>
@@ -366,7 +364,6 @@ export const MetIcoon = {
 		<nldd-container
 			layout="row"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-badge
 				color="success"
@@ -401,7 +398,6 @@ export const MetIcoonEnTekst = {
 		<nldd-container
 			layout="row"
 			gap="16"
-			vertical-alignment="center"
 		>
 			<nldd-badge
 				color="success"
@@ -435,7 +431,6 @@ export const OpEenIcoon = {
 		<nldd-container
 			layout="row"
 			gap="24"
-			vertical-alignment="center"
 		>
 			<span style="position: relative; display: inline-flex; width: var(--primitives-space-32); height: var(--primitives-space-32);">
 				<nldd-icon icon="envelope"></nldd-icon>
