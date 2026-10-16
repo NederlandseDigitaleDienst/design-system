@@ -140,9 +140,9 @@ export const MeeMetDeTekst = {
 				gap="20"
 				max-width="560px"
 			>
-				${line('var(--primitives-font-body-sm-regular-tight)')}
-				${line('var(--primitives-font-body-md-regular-tight)')}
 				${line('var(--primitives-font-body-lg-regular-tight)')}
+				${line('var(--primitives-font-body-md-regular-tight)')}
+				${line('var(--primitives-font-body-sm-regular-tight)')}
 			</nldd-container>
 		`;
 	},

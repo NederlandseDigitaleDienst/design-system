@@ -153,7 +153,7 @@ export class NLDDTitle extends LitElement {
 			}
 			this.toggleAttribute(`data-${breakpoint}-custom-size`, valid);
 			if (import.meta.env?.DEV && value !== '' && !valid) {
-				this._warnOnce(`invalid-${value}`, `<nldd-title>: "${value}" is not a CSS length, so the title keeps its size from the scale. Use a length such as "96px" or "6rem".`);
+				this._warnOnce(`invalid-${breakpoint}-${value}`, `<nldd-title>: ${breakpoint}-custom-size="${value}" is not a CSS length, so the title keeps its size from the scale at ${breakpoint}. Use a length such as "96px" or "6rem".`);
 			}
 		}
 	}

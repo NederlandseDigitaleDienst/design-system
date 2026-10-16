@@ -225,9 +225,9 @@ export const SchaaltMee = {
 			gap="16"
 			vertical-alignment="bottom"
 		>
-			<nldd-container width="32px"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></nldd-container>
-			<nldd-container width="56px"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></nldd-container>
 			<nldd-container width="96px"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></nldd-container>
+			<nldd-container width="56px"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></nldd-container>
+			<nldd-container width="32px"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></nldd-container>
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
