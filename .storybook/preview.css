@@ -19,6 +19,8 @@ body,
 	background-color: var(--semantics-surfaces-base-background-color);
 }
 
+/* Storybook sets 40px on the docs wrapper in its own scoped styles, which a
+   plain rule cannot beat; on a phone that leaves too little room. */
 @media (max-width: 640px) {
 	.sbdocs-wrapper {
 		padding-inline: 16px !important;
