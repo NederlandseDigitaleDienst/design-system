@@ -50,3 +50,16 @@ test('chore, ci and test release nothing, also when breaking', async () => {
 		assert.equal(await release(message), null, message);
 	}
 });
+
+// The analyzer takes the highest release among all matching rules, so a
+// single breaking rule would outrank "release: false" for chore, ci and
+// test. Breaking is therefore one rule per releasing type, and a type added
+// without its breaking twin would quietly release a patch for a breaking change.
+test('every type that releases also has a breaking rule', () => {
+	const rules = analyzer.releaseRules;
+	const releasing = rules.filter((rule) => !rule.breaking && rule.release).map((rule) => rule.type);
+	const breaking = new Set(rules.filter((rule) => rule.breaking).map((rule) => rule.type));
+	for (const type of releasing) {
+		assert.ok(breaking.has(type), `no breaking rule for type ${type}`);
+	}
+});
