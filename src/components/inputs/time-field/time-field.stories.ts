@@ -223,14 +223,14 @@ export const Grootten = () => html`
 		vertical-alignment="top"
 	>
 		<nldd-time-field
-			size="sm"
-			value="09:30"
-			accessible-label="Klein"
-		></nldd-time-field>
-		<nldd-time-field
 			size="md"
 			value="09:30"
 			accessible-label="Middel"
+		></nldd-time-field>
+		<nldd-time-field
+			size="sm"
+			value="09:30"
+			accessible-label="Klein"
 		></nldd-time-field>
 	</nldd-container>
 `;

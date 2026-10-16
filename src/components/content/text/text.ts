@@ -30,7 +30,7 @@
  * @attr {string} color - Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical' | 'inherit'. 'content' and 'secondary' follow the surrounding content channel; 'inherit' takes the color it inherits, for text on a painted surface.
  * @attr {string} horizontal-alignment - Alignment of the text within the block: 'left' | 'center' | 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box.
  *
- * @slot - The text. Inline elements work as they are: `<strong>` and `<b>` take the bold weight from the scale, `<a>`, `<em>` and components such as `nldd-tag` are left alone.
+ * @slot - The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, and `<mark>` is highlighted. This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone.
  */
 
 import { LitElement } from 'lit';

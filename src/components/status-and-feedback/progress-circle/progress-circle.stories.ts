@@ -137,24 +137,9 @@ export const Grootten = {
 			vertical-alignment="center"
 		>
 			<nldd-progress-circle
-				size="24"
+				size="96"
 				value="60"
-				text="24"
-			></nldd-progress-circle>
-			<nldd-progress-circle
-				size="32"
-				value="60"
-				text="32"
-			></nldd-progress-circle>
-			<nldd-progress-circle
-				size="48"
-				value="60"
-				text="48"
-			></nldd-progress-circle>
-			<nldd-progress-circle
-				size="56"
-				value="60"
-				text="56"
+				text="96"
 			></nldd-progress-circle>
 			<nldd-progress-circle
 				size="80"
@@ -162,9 +147,24 @@ export const Grootten = {
 				text="80"
 			></nldd-progress-circle>
 			<nldd-progress-circle
-				size="96"
+				size="56"
 				value="60"
-				text="96"
+				text="56"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="48"
+				value="60"
+				text="48"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="32"
+				value="60"
+				text="32"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="24"
+				value="60"
+				text="24"
 			></nldd-progress-circle>
 		</nldd-container>
 	`,

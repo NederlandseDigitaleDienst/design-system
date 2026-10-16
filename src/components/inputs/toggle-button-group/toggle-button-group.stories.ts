@@ -367,9 +367,9 @@ export const Grootten = {
 	<nldd-container gap="16">
 		<nldd-toggle-button-group
 			type="radio"
-			name="sortering-xs"
-			size="xs"
-			aria-label="Sortering (extra klein)"
+			name="sortering-md"
+			size="md"
+			aria-label="Sortering (middel)"
 		>
 			<nldd-toggle-button
 				value="oplopend"
@@ -403,9 +403,9 @@ export const Grootten = {
 		</nldd-toggle-button-group>
 		<nldd-toggle-button-group
 			type="radio"
-			name="sortering-md"
-			size="md"
-			aria-label="Sortering (middel)"
+			name="sortering-xs"
+			size="xs"
+			aria-label="Sortering (extra klein)"
 		>
 			<nldd-toggle-button
 				value="oplopend"

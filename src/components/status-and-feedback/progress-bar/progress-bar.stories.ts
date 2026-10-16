@@ -133,9 +133,9 @@ export const Grootten = {
 	render: () => html`
 		<nldd-container gap="24">
 			<nldd-progress-bar
-				size="sm"
-				value="40"
-				text="Klein (4px)"
+				size="lg"
+				value="80"
+				text="Groot (16px)"
 			></nldd-progress-bar>
 			<nldd-progress-bar
 				size="md"
@@ -143,9 +143,9 @@ export const Grootten = {
 				text="Middel (8px)"
 			></nldd-progress-bar>
 			<nldd-progress-bar
-				size="lg"
-				value="80"
-				text="Groot (16px)"
+				size="sm"
+				value="40"
+				text="Klein (4px)"
 			></nldd-progress-bar>
 		</nldd-container>
 	`,

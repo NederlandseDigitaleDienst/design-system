@@ -116,11 +116,7 @@ export const AlleGrootten = {
 		<nldd-list accessible-label="Grootten">
 			<nldd-list-item>
 				<nldd-icon-cell
-					size="16"
-					icon="icon-placeholder"
-				></nldd-icon-cell>
-				<nldd-icon-cell
-					size="20"
+					size="32"
 					icon="icon-placeholder"
 				></nldd-icon-cell>
 				<nldd-icon-cell
@@ -128,7 +124,11 @@ export const AlleGrootten = {
 					icon="icon-placeholder"
 				></nldd-icon-cell>
 				<nldd-icon-cell
-					size="32"
+					size="20"
+					icon="icon-placeholder"
+				></nldd-icon-cell>
+				<nldd-icon-cell
+					size="16"
 					icon="icon-placeholder"
 				></nldd-icon-cell>
 			</nldd-list-item>

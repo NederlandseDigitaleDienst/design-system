@@ -129,11 +129,7 @@ export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center; height: 120px;">
 			<nldd-activity-indicator
-				size="20"
-				timing="instant"
-			></nldd-activity-indicator>
-			<nldd-activity-indicator
-				size="28"
+				size="64"
 				timing="instant"
 			></nldd-activity-indicator>
 			<nldd-activity-indicator
@@ -141,7 +137,11 @@ export const Grootten = {
 				timing="instant"
 			></nldd-activity-indicator>
 			<nldd-activity-indicator
-				size="64"
+				size="28"
+				timing="instant"
+			></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="20"
 				timing="instant"
 			></nldd-activity-indicator>
 		</div>

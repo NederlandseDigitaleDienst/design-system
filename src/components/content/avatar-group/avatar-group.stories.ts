@@ -82,7 +82,7 @@ export const Grootten = {
 			gap="24"
 			vertical-alignment="center"
 		>
-			${['24', '32', '40', '56'].map(size => html`
+			${['56', '40', '32', '24'].map(size => html`
 				<nldd-avatar-group size=${size}>
 					<nldd-avatar
 						name="Jan Jansen"

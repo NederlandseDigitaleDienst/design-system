@@ -72,4 +72,15 @@ describe('nldd-text', () => {
 		expect(getComputedStyle(el.querySelector('span')!).textWrapStyle).toBe('pretty');
 	});
 
+
+	it('styles inline elements like nldd-rich-text', async () => {
+		el = await fixture('<nldd-text>Zet <code>no-picker</code>, lees <a href="#x">de voorwaarden</a> en let op <mark>dit</mark> en <em>dat</em>.</nldd-text>');
+		await waitForUpdate(el);
+		const code = getComputedStyle(el.querySelector('code')!);
+		expect(code.fontFamily).toMatch(/mono/i);
+		expect(code.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+		expect(getComputedStyle(el.querySelector('mark')!).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+		expect(getComputedStyle(el.querySelector('a')!).textDecorationLine).toBe('underline');
+		expect(getComputedStyle(el.querySelector('em')!).fontStyle).toBe('italic');
+	});
 });

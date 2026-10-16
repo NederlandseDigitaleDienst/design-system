@@ -45,6 +45,8 @@ here; consult the commit history if you need that level of detail.
 
 - **The icon gallery has its own page, Docs › Iconen.** It was the last story of `nldd-icon`, where nobody looking for an icon name thought to look. The page shows every icon and alias, two across on a phone, with a search field and a filter for the new and updated ones.
 
+- **Inline elements in `nldd-text` look as they do in `nldd-rich-text`.** `<em>` is italic, `<a>` an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted, beside the bold `<strong>` it already had. A short text with a code word or a link no longer needs a rich-text block.
+
 - **The form pattern allows a format requirement on an optional field.** An optional field is not `required`, and an empty value passes every requirement, so a phone number you may leave out can still be checked when it is filled in.
 
 - **The title of the wordmark in `nldd-top-navigation-bar` is semi-bold.** It was medium, close enough to the subtitle below it that the two read as one block. One step heavier sets the name apart without competing with the page title.

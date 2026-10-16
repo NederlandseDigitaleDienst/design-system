@@ -470,12 +470,7 @@ export const AlleGrootten = {
 		vertical-alignment="center"
 	>
 		<nldd-toggle-button
-			size="xs"
-			text="Meldingen"
-			icon="notifications"
-		></nldd-toggle-button>
-		<nldd-toggle-button
-			size="sm"
+			size="lg"
 			text="Meldingen"
 			icon="notifications"
 		></nldd-toggle-button>
@@ -485,7 +480,12 @@ export const AlleGrootten = {
 			icon="notifications"
 		></nldd-toggle-button>
 		<nldd-toggle-button
-			size="lg"
+			size="sm"
+			text="Meldingen"
+			icon="notifications"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			size="xs"
 			text="Meldingen"
 			icon="notifications"
 		></nldd-toggle-button>
