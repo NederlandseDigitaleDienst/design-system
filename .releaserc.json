@@ -12,7 +12,8 @@
             "type",
             "scope",
             "subject"
-          ]
+          ],
+          "breakingHeaderPattern": "^(\\w+)(?:\\(([^)]*)\\))?!:\\s*(.+)$"
         },
         "releaseRules": [
           {
@@ -48,8 +49,49 @@
             "release": "patch"
           },
           {
+            "type": "feat",
             "breaking": true,
-            "release": "patch"
+            "release": "minor"
+          },
+          {
+            "type": "fix",
+            "breaking": true,
+            "release": "minor"
+          },
+          {
+            "type": "perf",
+            "breaking": true,
+            "release": "minor"
+          },
+          {
+            "type": "refactor",
+            "breaking": true,
+            "release": "minor"
+          },
+          {
+            "type": "style",
+            "breaking": true,
+            "release": "minor"
+          },
+          {
+            "type": "docs",
+            "breaking": true,
+            "release": "minor"
+          },
+          {
+            "type": "build",
+            "breaking": true,
+            "release": "minor"
+          },
+          {
+            "type": "revert",
+            "breaking": true,
+            "release": "minor"
+          },
+          {
+            "type": null,
+            "breaking": true,
+            "release": "minor"
           },
           {
             "type": "chore",
