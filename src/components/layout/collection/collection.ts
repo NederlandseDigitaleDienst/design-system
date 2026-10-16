@@ -31,6 +31,8 @@
  * @attr {boolean} show-load-more - Show load-more button in grid/stack (default: false)
  * @attr {boolean} lazy-load - Automatically load more items when the button becomes visible
  *
+ * @migration Items in horizontal scroll stop at 480px (or at `item-min-width` when that is wider) instead of filling the container.
+ *            Set `item-max-width="100%"` where one or two items should still fill the row.
  * @migration The `item-width` attribute has been renamed to `item-min-width`, because it was a minimum in every layout.
  *            Replace `item-width="320px"` with `item-min-width="320px"`.
  * @migration The `load-more-label` attribute has been removed.
