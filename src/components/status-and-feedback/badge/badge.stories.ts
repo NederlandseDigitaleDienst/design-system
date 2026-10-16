@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './badge.js';
 import { ICONS } from './../../content/icon/icon.js';
+import '../../layout/container/container.js';
 
 /**
  * De Badge toont de toestand van iets, of hoeveel er van iets is. Wat er staat
@@ -152,7 +153,11 @@ export const Standaard = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-badge
 				size="md"
 				number="3"
@@ -163,7 +168,7 @@ export const Grootten = {
 			></nldd-badge>
 			<nldd-badge size="md"></nldd-badge>
 			<nldd-badge size="sm"></nldd-badge>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -172,9 +177,13 @@ export const Grootten = {
 
 export const Kleuren = {
 	render: () => html`
-		<div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+		<nldd-container
+			layout="wrap"
+			gap="12"
+			vertical-alignment="center"
+		>
 			${COLORS.map(c => html`<nldd-badge color=${c} number="3"></nldd-badge>`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -200,7 +209,11 @@ export const Kleuren = {
 export const EigenKleur = {
 	name: 'Inherit en custom-color',
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+		<nldd-container
+			layout="wrap"
+			gap="24"
+			vertical-alignment="center"
+		>
 			<span style="color: #a90061; display: inline-flex; gap: 8px; align-items: center;">
 				<nldd-badge
 					color="inherit"
@@ -228,7 +241,7 @@ export const EigenKleur = {
 				custom-color="oklch(0.6 0.2 20)"
 				text="Eigen"
 			></nldd-badge>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -237,7 +250,11 @@ export const EigenKleur = {
 
 export const MetPulse = {
 	render: () => html`
-		<div style="display: flex; gap: 32px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="32"
+			vertical-alignment="center"
+		>
 			<nldd-badge
 				color="critical"
 				pulse
@@ -256,7 +273,7 @@ export const MetPulse = {
 				pulse
 				text="Verbonden"
 			></nldd-badge>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -270,13 +287,17 @@ export const MetPulse = {
 
 export const Stip = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-badge color="critical"></nldd-badge>
 			<nldd-badge color="accent"></nldd-badge>
 			<nldd-badge color="neutral"></nldd-badge>
 			<nldd-badge color="warning"></nldd-badge>
 			<nldd-badge color="success"></nldd-badge>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -290,7 +311,11 @@ export const Stip = {
 
 export const MetTekst = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-badge
 				color="accent"
 				text="Nieuw"
@@ -303,7 +328,7 @@ export const MetTekst = {
 				color="warning"
 				text="Bèta"
 			></nldd-badge>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -312,7 +337,11 @@ export const MetTekst = {
 
 export const MetGetal = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-badge number="1"></nldd-badge>
 			<nldd-badge number="12"></nldd-badge>
 			<nldd-badge number="150"></nldd-badge>
@@ -320,7 +349,7 @@ export const MetGetal = {
 				number="150"
 				max="9"
 			></nldd-badge>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -334,7 +363,11 @@ export const MetGetal = {
 
 export const MetIcoon = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-badge
 				color="success"
 				icon="check-mark"
@@ -351,7 +384,7 @@ export const MetIcoon = {
 				color="accent"
 				icon="info-circle"
 			></nldd-badge>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -365,7 +398,11 @@ export const MetIcoon = {
 
 export const MetIcoonEnTekst = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-badge
 				color="success"
 				icon="check-mark"
@@ -381,7 +418,7 @@ export const MetIcoonEnTekst = {
 				icon="info-circle"
 				number="3"
 			></nldd-badge>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -395,7 +432,11 @@ export const MetIcoonEnTekst = {
 
 export const OpEenIcoon = {
 	render: () => html`
-		<div style="display: flex; gap: var(--primitives-space-24); align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="24"
+			vertical-alignment="center"
+		>
 			<span style="position: relative; display: inline-flex; width: var(--primitives-space-32); height: var(--primitives-space-32);">
 				<nldd-icon icon="envelope"></nldd-icon>
 				<nldd-badge
@@ -424,7 +465,7 @@ export const OpEenIcoon = {
 					style="position: absolute; top: 0; right: 0;"
 				></nldd-badge>
 			</span>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

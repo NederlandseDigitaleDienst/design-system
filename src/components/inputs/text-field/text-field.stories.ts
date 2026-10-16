@@ -6,6 +6,7 @@ import '../../forms/form-field/form-field.js';
 import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
+import '../../layout/container/container.js';
 
 /**
  * `nldd-text-field` is a single-line text input.
@@ -185,7 +186,7 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-text-field placeholder="Neutraal"></nldd-text-field>
 		<nldd-text-field
 			.value=${'Geldige invoer'}
@@ -203,20 +204,20 @@ export const AlleToestanden = {
 			.value=${'Alleen-lezen'}
 			readonly
 		></nldd-text-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
 
 export const Grootten = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-text-field placeholder="Middel (md)"></nldd-text-field>
 		<nldd-text-field
 			placeholder="Klein (sm)"
 			size="sm"
 		></nldd-text-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

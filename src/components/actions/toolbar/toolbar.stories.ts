@@ -8,6 +8,7 @@ import '../../actions/menu/menu.js';
 import '../../inputs/search-field/search-field.js';
 import '../../inputs/segmented-control/segmented-control.js';
 import '../../navigation/tab-bar/tab-bar.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Actions/Toolbar',
@@ -102,7 +103,7 @@ export const Standaard = {
 export const MetTitelgroep = {
 	args: { size: 'md', showItemLabels: false },
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-toolbar
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
@@ -191,7 +192,7 @@ export const MetTitelgroep = {
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -208,7 +209,7 @@ const logoDataUri = 'data:image/svg+xml,'
 export const TitelMetMedia = {
 	args: { size: 'md', showItemLabels: false },
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<!-- Icon before the name: says what kind of document this is before you
 			     read which one. With href the mark and the name are one link back
 			     to where this window belongs; the action beside it stays its own
@@ -274,14 +275,14 @@ export const TitelMetMedia = {
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const TitelMetActie = {
 	args: { size: 'md', showItemLabels: false },
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<!-- Short name: the title shrink-wraps (fit-content) so the xs action
 			     button sits right against it. -->
 			<nldd-toolbar
@@ -374,13 +375,13 @@ export const TitelMetActie = {
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<div>
 				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">md (default)</p>
 				${html`
@@ -467,14 +468,14 @@ export const Grootten = {
 					</nldd-toolbar>
 				`}
 			</div>
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const LabelsAanUit = {
 	name: 'Labels aan en uit',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<div>
 				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">Zonder labels</p>
 				${html`
@@ -584,7 +585,7 @@ export const LabelsAanUit = {
 					</nldd-toolbar>
 				`}
 			</div>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -1319,7 +1320,10 @@ export const MetTabBar = {
  */
 export const LosseGecentreerdeTitel = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 420px;">
+		<nldd-container
+			gap="16"
+			max-width="420px"
+		>
 			<div style="outline: 1px dashed var(--semantics-dividers-color);">
 				<nldd-toolbar
 					size="md"
@@ -1375,7 +1379,7 @@ export const LosseGecentreerdeTitel = {
 					</nldd-toolbar-title>
 				</nldd-toolbar>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

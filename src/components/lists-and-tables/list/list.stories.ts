@@ -21,6 +21,7 @@ import '../../layout/box/box.js';
 import '../../inputs/date-field/date-field.js';
 import '../../inputs/combo-box/combo-box.js';
 import '../../inputs/radio-button/radio-button.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Lists & Tables/List',
@@ -188,7 +189,7 @@ export const PijltjesnavigatieMetControls = {
 
 export const Appearances = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 32px;">
+		<nldd-container gap="32">
 			<nldd-list appearance="simple">
 				<nldd-list-item><nldd-text-cell text="Simple — item 1"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Simple — item 2"></nldd-text-cell></nldd-list-item>
@@ -208,7 +209,7 @@ export const Appearances = {
 					<nldd-list-item><nldd-text-cell text="item 3"></nldd-text-cell></nldd-list-item>
 				</nldd-list>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

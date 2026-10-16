@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './title.js';
 import '../../actions/button/button.js';
 import '../../layout/spacer/spacer.js';
+import '../../layout/container/container.js';
 
 /**
  * Gebruik een title bar om een paginatitel of sectietitel te tonen met
@@ -241,7 +242,7 @@ export const EigenGrootte = {
  */
 export const OpKleurvlak = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-title
 					color="inherit"
@@ -262,7 +263,7 @@ export const OpKleurvlak = {
 					heading-level="2"
 				></nldd-title>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './password-field.js';
+import '../../layout/container/container.js';
 
 /**
  * De Password Field component voor wachtwoordinvoer met zichtbaarheidstoggle.
@@ -217,7 +218,7 @@ export const ToestandDisabled = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-password-field placeholder="Neutraal"></nldd-password-field>
 		<nldd-password-field
 			.value=${"sterk-wachtwoord"}
@@ -235,20 +236,20 @@ export const AlleToestanden = {
 			.value=${"zichtbaar"}
 			.masked=${false}
 		></nldd-password-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
 
 export const Grootten = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-password-field placeholder="Middel (md)"></nldd-password-field>
 		<nldd-password-field
 			placeholder="Klein (sm)"
 			size="sm"
 		></nldd-password-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

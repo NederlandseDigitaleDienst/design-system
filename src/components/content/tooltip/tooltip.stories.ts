@@ -3,6 +3,7 @@ import './tooltip.js';
 import '../../actions/button/button.js';
 import '../../actions/icon-button/icon-button.js';
 import '../rich-text/rich-text.js';
+import '../../layout/container/container.js';
 
 /**
  * De Tooltip toont informatieve tekst bij hover of focus op een child element.
@@ -53,7 +54,11 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; justify-content: center; padding: 4rem;">
+		<nldd-container
+			layout="row"
+			padding="64"
+			horizontal-alignment="center"
+		>
 			<nldd-tooltip
 				text=${args.text}
 				placement=${args.placement}
@@ -61,18 +66,22 @@ export const Standaard = {
 			>
 				<nldd-button text="Toon tooltip"></nldd-button>
 			</nldd-tooltip>
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const MetIconButton = {
 	render: () => html`
-		<div style="display: flex; justify-content: center; padding: 4rem;">
+		<nldd-container
+			layout="row"
+			padding="64"
+			horizontal-alignment="center"
+		>
 			<nldd-icon-button
 				icon="info"
 				text="Uitleg bij de status"
 			></nldd-icon-button>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -86,7 +95,12 @@ export const MetIconButton = {
 
 export const Posities = {
 	render: () => html`
-		<div style="display: flex; gap: 2rem; justify-content: center; padding: 4rem;">
+		<nldd-container
+			layout="row"
+			gap="32"
+			padding="64"
+			horizontal-alignment="center"
+		>
 			<nldd-tooltip
 				text="Tooltip boven"
 				placement="top"
@@ -111,7 +125,7 @@ export const Posities = {
 			>
 				<nldd-button text="Rechts"></nldd-button>
 			</nldd-tooltip>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

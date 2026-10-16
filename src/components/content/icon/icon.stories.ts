@@ -142,11 +142,14 @@ export const MeeMetDeTekst = {
 			</p>
 		`;
 		return html`
-			<div style="display: flex; flex-direction: column; gap: 20px; max-width: 560px;">
+			<nldd-container
+				gap="20"
+				max-width="560px"
+			>
 				${line('var(--primitives-font-body-sm-regular-tight)')}
 				${line('var(--primitives-font-body-md-regular-tight)')}
 				${line('var(--primitives-font-body-lg-regular-tight)')}
-			</div>
+			</nldd-container>
 		`;
 	},
 	parameters: { controls: { disable: true } },
@@ -154,7 +157,11 @@ export const MeeMetDeTekst = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: end;">
+		<nldd-container
+			layout="row"
+			gap="24"
+			vertical-alignment="bottom"
+		>
 			${FIXED_SIZES.map(size => html`
 				<div style="text-align: center;">
 					<nldd-icon
@@ -164,14 +171,18 @@ export const Grootten = {
 					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${size}px</div>
 				</div>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const FunctioneleKleuren = {
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+		<nldd-container
+			layout="wrap"
+			gap="24"
+			vertical-alignment="center"
+		>
 			${FUNCTIONAL_COLORS.map(color => html`
 				<div style="text-align: center;">
 					<nldd-icon
@@ -182,7 +193,7 @@ export const FunctioneleKleuren = {
 					<div style="font: var(--primitives-font-body-sm-regular-tight); margin-top: 8px;">${color}</div>
 				</div>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -208,7 +219,11 @@ export const Rijkskleuren = {
 export const EigenKleur = {
 	name: 'Eigen kleur (custom-color)',
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="24"
+			vertical-alignment="center"
+		>
 			${['#ef4444', '#f97316', '#22c55e', '#3b82f6', '#8b5cf6'].map(color => html`
 				<nldd-icon
 					icon="circle-filled"
@@ -216,7 +231,7 @@ export const EigenKleur = {
 					custom-color=${color}
 				></nldd-icon>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -230,7 +245,11 @@ export const EigenKleur = {
 
 export const MetBox = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-icon
 				icon="terminal"
 				size="40"
@@ -261,7 +280,7 @@ export const MetBox = {
 				box
 				custom-color="#f5c400"
 			></nldd-icon>
-		</div>
+		</nldd-container>
 		<nldd-spacer size="24"></nldd-spacer>
 		<div style="width: 120px; height: 200px; outline: 1px dashed #bbb;">
 			<nldd-icon

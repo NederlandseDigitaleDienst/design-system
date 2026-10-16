@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './tag.js';
 import { ICONS } from './../icon/icon.js';
+import '../../layout/container/container.js';
 
 /**
  * De Tag is een compact kenmerk dat aan iets is toegekend: een categorie, een type,
@@ -113,7 +114,11 @@ export const Standaard = {
 
 export const Kleuren = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="8"
+			vertical-alignment="center"
+		>
 			<nldd-tag
 				color="neutral"
 				text="neutral"
@@ -206,7 +211,7 @@ export const Kleuren = {
 				color="mintgroen"
 				text="mintgroen"
 			></nldd-tag>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -220,7 +225,11 @@ export const Kleuren = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="8"
+			vertical-alignment="center"
+		>
 			<nldd-tag
 				size="md"
 				text="Medium"
@@ -229,7 +238,7 @@ export const Grootten = {
 				size="sm"
 				text="Small"
 			></nldd-tag>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -238,7 +247,11 @@ export const Grootten = {
 
 export const MetIcoon = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="8"
+			vertical-alignment="center"
+		>
 			<nldd-tag
 				color="success"
 				text="Goedgekeurd"
@@ -254,7 +267,36 @@ export const MetIcoon = {
 				text="Afgewezen"
 				icon="dismiss-circle"
 			></nldd-tag>
-		</div>
+		</nldd-container>
+	`,
+	parameters: {
+		controls: { disable: true },
+	},
+};
+
+/**
+ * Een set tags staat in een `nldd-container layout="wrap"`: zo lopen ze door
+ * naar een nieuwe regel als de ruimte op is, met overal dezelfde tussenruimte.
+ */
+export const Tagcloud = {
+	render: () => html`
+		<nldd-container
+			layout="wrap"
+			gap="8"
+		>
+			<nldd-tag text="Dakisolatie"></nldd-tag>
+			<nldd-tag text="Warmtepomp"></nldd-tag>
+			<nldd-tag text="Isoleren"></nldd-tag>
+			<nldd-tag text="Subsidie"></nldd-tag>
+			<nldd-tag text="Energielabel"></nldd-tag>
+			<nldd-tag text="Zonnepanelen"></nldd-tag>
+			<nldd-tag text="Ventilatie"></nldd-tag>
+			<nldd-tag text="Dubbel glas"></nldd-tag>
+			<nldd-tag text="Vloerisolatie"></nldd-tag>
+			<nldd-tag text="Aanvraag"></nldd-tag>
+			<nldd-tag text="Team Uitvoering"></nldd-tag>
+			<nldd-tag text="Team Beleid"></nldd-tag>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

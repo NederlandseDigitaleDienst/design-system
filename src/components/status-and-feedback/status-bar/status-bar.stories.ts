@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './status-bar.js';
+import '../../layout/container/container.js';
 
 /**
  * Een status bar is een smalle, paginabrede balk (24px) met een diepe
@@ -97,7 +98,7 @@ export const Standaard = {
 
 export const AlleVarianten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-status-bar
 				variant="neutral"
 				text="Conceptversie, nog niet gepubliceerd"
@@ -118,7 +119,7 @@ export const AlleVarianten = {
 				variant="critical"
 				text="Storing: inloggen bij Mijn Dienst is op dit moment niet mogelijk"
 			></nldd-status-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

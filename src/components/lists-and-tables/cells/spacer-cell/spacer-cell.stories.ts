@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './spacer-cell.js';
+import '../../../layout/container/container.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Spacer Cell',
@@ -62,9 +63,16 @@ export const Flexibel = {
 
 export const AlleVasteGrootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			gap="8"
+			horizontal-alignment="left"
+		>
 			${['2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'].map(size => html`
-				<div style="display: flex; align-items: center; gap: 8px;">
+				<nldd-container
+					layout="row"
+					vertical-alignment="center"
+					gap="8"
+				>
 					<span style="width: 40px; font-size: 12px; color: var(--semantics-content-color);">${size}px</span>
 					<div style=${containerStyle}>
 						<span>|</span>
@@ -74,8 +82,8 @@ export const AlleVasteGrootten = {
 						></nldd-spacer-cell>
 						<span>|</span>
 					</div>
-				</div>
+				</nldd-container>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 };

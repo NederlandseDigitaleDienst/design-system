@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './avatar-group.js';
 import '../avatar/avatar.js';
+import '../../layout/container/container.js';
 
 /**
  * De Avatar Group toont meerdere avatars als één groep: overlappend, met een ring
@@ -76,7 +77,11 @@ export const Standaard = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="24"
+			vertical-alignment="center"
+		>
 			${['24', '32', '40', '56'].map(size => html`
 				<nldd-avatar-group size=${size}>
 					<nldd-avatar
@@ -89,7 +94,7 @@ export const Grootten = {
 					></nldd-avatar>
 				</nldd-avatar-group>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './combo-box.js';
+import '../../layout/container/container.js';
 
 /**
  * De Combo Box component is een tekstveld met autocomplete/dropdown functionaliteit.
@@ -190,7 +191,7 @@ export const Standaard = {
 
 export const VoorafIngevuld = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 16px;">
+	<nldd-container gap="16">
 		<div>
 			<p style="margin: 0 0 4px; font-size: 12px; color: var(--semantics-content-secondary-color);">
 				Auto-derive — alleen <code>value="nl"</code> gezet, de combo-box leest <code>text="Nederland"</code> van het matching menu-item.
@@ -238,7 +239,7 @@ export const VoorafIngevuld = {
 				</nldd-menu>
 			</nldd-combo-box>
 		</div>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -501,7 +502,7 @@ export const AlleLanden = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-combo-box
 			placeholder="Zoek een land"
 			size="sm"
@@ -601,7 +602,7 @@ export const AlleToestanden = {
 				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-combo-box>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

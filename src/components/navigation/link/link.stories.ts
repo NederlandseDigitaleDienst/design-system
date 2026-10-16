@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './link.js';
 import { ICONS } from './../../content/icon/icon.js';
+import '../../layout/container/container.js';
 
 /**
  * De Link component werkt in twee modi:
@@ -134,7 +135,10 @@ export const Standaard = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			gap="8"
+			horizontal-alignment="left"
+		>
 			<nldd-link
 				href="#"
 				size="lg"
@@ -155,7 +159,7 @@ export const Grootten = {
 				size="xs"
 				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -164,7 +168,10 @@ export const Grootten = {
 
 export const InLopendeTekst = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px; max-width: 560px;">
+		<nldd-container
+			gap="24"
+			max-width="560px"
+		>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In een h2 — link erft display-grootte</p>
 				<h2 style="margin: 0; font: var(--primitives-font-display-2-md);">
@@ -201,7 +208,7 @@ export const InLopendeTekst = {
 					Lees ook <nldd-link href="#" size="inherit">de toelichting bij Aanvraag A-1042</nldd-link> voor de stand van zaken.
 				</p>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -219,7 +226,10 @@ Icons werken ook in inherit mode: de natuurlijke whitespace tussen icon en tekst
 
 export const MetStartIcon = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			gap="8"
+			horizontal-alignment="left"
+		>
 			<nldd-link
 				href="#"
 				text="Aanvraag A-1042 (pdf, 2 MB)"
@@ -230,7 +240,7 @@ export const MetStartIcon = {
 				text="Terug naar aanvragen"
 				start-icon="arrow-left"
 			></nldd-link>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -239,7 +249,10 @@ export const MetStartIcon = {
 
 export const MetEndIcon = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			gap="8"
+			horizontal-alignment="left"
+		>
 			<nldd-link
 				href="#"
 				text="Aanvraag A-1042"
@@ -251,7 +264,7 @@ export const MetEndIcon = {
 				text="Warmtepompen vergelijken"
 				end-icon="square-arrow-right-top"
 			></nldd-link>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

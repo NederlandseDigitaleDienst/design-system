@@ -117,11 +117,15 @@ export const Standaard = {
 // All appearances overview
 export const Appearances = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-split-button text="Bewaar" appearance="primary">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" appearance="secondary">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" appearance="neutral-base">${menu}</nldd-split-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -152,11 +156,15 @@ export const OpKleurvlak = {
 // Start icon
 export const MetStartIcon = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-split-button text="Bewaar" icon="check-mark" appearance="primary">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" icon="check-mark" appearance="secondary">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" icon="check-mark" appearance="neutral-base">${menu}</nldd-split-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -166,12 +174,16 @@ export const MetStartIcon = {
 // All sizes overview
 export const Grootten = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-split-button text="Bewaar" size="lg">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" size="md">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" size="sm">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" size="xs">${menu}</nldd-split-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -193,11 +205,15 @@ export const VolleBreedte = {
 export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-split-button text="Bewaar" disabled size="md">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" disabled size="sm">${menu}</nldd-split-button>
 		<nldd-split-button text="Bewaar" disabled size="xs">${menu}</nldd-split-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },

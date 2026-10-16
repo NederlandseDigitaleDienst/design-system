@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import './step-bar.js';
+import '../../layout/container/container.js';
 
 /**
  * Toont waar je staat in een proces van meerdere stappen. Je zet
@@ -70,7 +71,7 @@ export const Statussen = {
  */
 export const Klikbaar = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 32px;">
+		<nldd-container gap="32">
 			<nldd-step-bar accessible-label="Voortgang met links">
 				<nldd-step-bar-item
 					text="Gegevens"
@@ -99,7 +100,7 @@ export const Klikbaar = {
 					status="current"
 				></nldd-step-bar-item>
 			</nldd-step-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

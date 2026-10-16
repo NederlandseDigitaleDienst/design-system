@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './icon-cell.js';
 import '../../../content/icon/icon.js';
 import { ICONS } from '../../../content/icon/icon.js';
+import '../../../layout/container/container.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Icon Cell',
@@ -68,7 +69,11 @@ export const Standaard = {
 
 export const Kleuren = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-icon-cell
 				size="24"
 				icon="icon-placeholder"
@@ -98,7 +103,7 @@ export const Kleuren = {
 				size="24"
 				icon="icon-placeholder"
 			></nldd-icon-cell>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		docs: {
@@ -109,7 +114,11 @@ export const Kleuren = {
 
 export const AlleGrootten = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-icon-cell
 				size="16"
 				icon="icon-placeholder"
@@ -126,7 +135,7 @@ export const AlleGrootten = {
 				size="32"
 				icon="icon-placeholder"
 			></nldd-icon-cell>
-		</div>
+		</nldd-container>
 	`,
 };
 

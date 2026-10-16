@@ -319,7 +319,7 @@ export const MetFormulier = {
 export const UitlijningOverschrijven = {
 	name: 'Uitlijning overschrijven',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 32px;">
+		<nldd-container gap="32">
 			<nldd-inline-dialog
 				horizontal-alignment="left"
 				icon="alert"
@@ -350,7 +350,7 @@ export const UitlijningOverschrijven = {
 					text="Afronden"
 				></nldd-button>
 			</nldd-inline-dialog>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

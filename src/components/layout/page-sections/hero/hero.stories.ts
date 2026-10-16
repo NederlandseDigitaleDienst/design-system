@@ -5,6 +5,7 @@ import '../../../content/rich-text/rich-text.js';
 import '../../../actions/button/button.js';
 import '../../../actions/button-group/button-group.js';
 import '../../spacer/spacer.js';
+import '../../container/container.js';
 
 const MEDIA = 'sample-images/butterfly-1200.jpg';
 
@@ -187,7 +188,7 @@ const cornerContent = (text: string) => html`
 export const MetAfgerondeHoek = {
 	name: 'Met afgeronde hoek',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			${['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'].map((position) => html`
 				<nldd-hero
 					corner
@@ -224,7 +225,7 @@ export const MetAfgerondeHoek = {
 			>
 				${cornerContent('Zonder media')}
 			</nldd-hero>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -243,7 +244,7 @@ const OPPOSITE_CORNER: Record<string, string> = {
 export const AfgerondeHoekGekozen = {
 	name: 'Afgeronde hoek gekozen',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			${['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((corner) => html`
 				<nldd-hero
 					corner=${corner}
@@ -259,14 +260,14 @@ export const AfgerondeHoekGekozen = {
 					${cornerContent(`corner="${corner}"`)}
 				</nldd-hero>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const AllePosities = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			${['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'].map((position) => html`
 				<nldd-hero
 					layout="contained"
@@ -286,7 +287,7 @@ export const AllePosities = {
 					></nldd-title>
 				</nldd-hero>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -303,7 +304,7 @@ export const AllePosities = {
 export const Overlap = {
 	args: { overlapSize: '', mainPosition: 'bottom-left', mainWidth: 'auto' },
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 48px;">
+		<nldd-container gap="48">
 			${[
 				['Veel tekst', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p><p>Elke regel krijgt een vorm die mensen en systemen allebei kunnen lezen, zodat de uitvoering volgt wat er bedoeld is. Wie wil weten waarom een besluit zo uitvalt, kan het nalezen.</p></nldd-rich-text><nldd-spacer size="16"></nldd-spacer><nldd-button appearance="inherit-filled" text="Bekijk de regels"></nldd-button>`],
 				['Gemiddeld', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
@@ -329,7 +330,7 @@ export const Overlap = {
 					${body ? html`<nldd-spacer size="16"></nldd-spacer>${body}` : nothing}
 				</nldd-hero>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	argTypes: {
 		overlapSize: {
@@ -348,7 +349,7 @@ export const Overlap = {
  */
 export const VolleStrook = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			<nldd-hero
 				layout="contained"
 				main-position="bottom-left"
@@ -387,7 +388,7 @@ export const VolleStrook = {
 					heading-level="1"
 				></nldd-title>
 			</nldd-hero>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -399,7 +400,7 @@ export const VolleStrook = {
  */
 export const ZonderMedia = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			<nldd-hero main-background="hemelblauw">
 				<nldd-title
 					color="inherit"
@@ -417,7 +418,7 @@ export const ZonderMedia = {
 					heading-level="1"
 				></nldd-title>
 			</nldd-hero>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

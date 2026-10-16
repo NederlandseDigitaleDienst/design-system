@@ -252,7 +252,11 @@ KlikbareKaart.args = {
  * op `nldd-card` zelf werkt dus direct, en Enter/Space doen het native.
  */
 export const KaartAlsKnop = () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: start;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="top"
+	>
 		<nldd-card
 			button
 			accessible-label="Dossier D-318 openen"
@@ -300,5 +304,5 @@ export const KaartAlsKnop = () => html`
 				</nldd-rich-text>
 			</nldd-container>
 		</nldd-card>
-	</div>
+	</nldd-container>
 `;

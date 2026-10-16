@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './image.js';
 import './lqip-encoder-element.js';
+import '../../layout/container/container.js';
 
 // Lokale voorbeeldafbeelding (public/sample-images/), zodat de stories niet
 // afhankelijk zijn van een externe host en consumers van offline Storybook-builds.
@@ -193,7 +194,11 @@ export const MetCaption = {
 
 export const Vormen = {
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: flex-end;">
+		<nldd-container
+			layout="row"
+			gap="24"
+			vertical-alignment="bottom"
+		>
 			<div style="width: 200px;">
 				<nldd-image
 					src=${SAMPLE_SRC}
@@ -221,14 +226,17 @@ export const Vormen = {
 					caption="circle"
 				></nldd-image>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const Beeldverhoudingen = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; flex-wrap: wrap;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+		>
 			${['21/9', '16/9', '3/2', '4/3', '1/1', '3/4', '2/3'].map(ratio => html`
 				<div style="width: 240px;">
 					<nldd-image
@@ -239,7 +247,7 @@ export const Beeldverhoudingen = {
 					></nldd-image>
 				</div>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -247,7 +255,10 @@ export const Beeldverhoudingen = {
 export const ObjectFit = {
 	name: 'Object-fit vergeleken',
 	render: () => html`
-		<div style="display: flex; gap: 16px; flex-wrap: wrap;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+		>
 			${['cover', 'contain', 'fill', 'scale-down', 'none'].map(fit => html`
 				<div style="width: 180px;">
 					<nldd-image
@@ -259,7 +270,7 @@ export const ObjectFit = {
 					></nldd-image>
 				</div>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -288,7 +299,11 @@ export const Decoratief = {
 export const ZonderBeeld = {
 	name: 'Zonder beeld',
 	render: () => html`
-		<div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;">
+		<nldd-container
+			layout="wrap"
+			gap="24"
+			vertical-alignment="top"
+		>
 			<div style="width: 320px;">
 				<nldd-image></nldd-image>
 			</div>
@@ -310,7 +325,7 @@ export const ZonderBeeld = {
 					caption="Een bijschrift blijft gewoon staan."
 				></nldd-image>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -352,7 +367,10 @@ export const EigenImgInDeSlot = {
 export const Laadvoorbeeld = {
 	name: 'Laadvoorbeeld (LQIP)',
 	render: () => html`
-		<div style="display: flex; gap: 24px; flex-wrap: wrap;">
+		<nldd-container
+			layout="wrap"
+			gap="24"
+		>
 			<div style="width: 320px;">
 				<nldd-image
 					alt="Placeholder zonder image"
@@ -370,7 +388,7 @@ export const Laadvoorbeeld = {
 					caption="LQIP + image"
 				></nldd-image>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -387,7 +405,10 @@ export const Laadvoorbeeld = {
 export const AfbeeldingLaadtNiet = {
 	name: 'Als de afbeelding niet laadt',
 	render: () => html`
-		<div style="display: flex; gap: 24px; flex-wrap: wrap;">
+		<nldd-container
+			layout="wrap"
+			gap="24"
+		>
 			<div style="width: 320px;">
 				<nldd-image
 					src="/this-does-not-exist.jpg"
@@ -404,7 +425,7 @@ export const AfbeeldingLaadtNiet = {
 					caption="Decoratief (alleen icoon)"
 				></nldd-image>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

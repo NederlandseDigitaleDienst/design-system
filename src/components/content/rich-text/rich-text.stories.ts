@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './rich-text.js';
 import '../../status-and-feedback/banner/banner.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Content/Rich Text',
@@ -105,9 +106,11 @@ export const Afbreken = {
 			</ul>
 		`;
 		return html`
-			<div
+			<nldd-container
+				layout="row"
+				gap="24"
+				vertical-alignment="top"
 				lang="nl"
-				style="display: flex; gap: 24px; align-items: start;"
 			>
 				<div style="flex: 1;">
 					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">Zonder afbreking (standaard)</p>
@@ -121,7 +124,7 @@ export const Afbreken = {
 						<nldd-rich-text spacing=${args.spacing} hyphens>${content}</nldd-rich-text>
 					</div>
 				</div>
-			</div>
+			</nldd-container>
 		`;
 	},
 	parameters: { controls: { disable: true } },
@@ -201,7 +204,7 @@ export const Definitielijst = {
 			</dl>
 		`;
 		return html`
-			<div style="display: flex; flex-direction: column; gap: 2rem;">
+			<nldd-container gap="32">
 				<div>
 					<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">sm (&lt; 641px) — gestapeld</p>
 					<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -220,7 +223,7 @@ export const Definitielijst = {
 						<nldd-rich-text color=${args.color || nothing} spacing=${args.spacing} ?centered=${args.centered}>${content}</nldd-rich-text>
 					</div>
 				</div>
-			</div>
+			</nldd-container>
 		`;
 	},
 };
@@ -375,7 +378,7 @@ export const Scheidingslijn = {
 
 export const Witruimte = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 3rem;">
+		<nldd-container gap="48">
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">flat</p>
 				<nldd-rich-text spacing="flat">
@@ -420,7 +423,7 @@ export const Witruimte = {
 					</ul>
 				</nldd-rich-text>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -486,7 +489,7 @@ export const VolledigArtikel = {
 
 export const AlleGrootten = {
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 2rem;">
+		<nldd-container gap="32">
 			<div>
 				<p style="font: var(--primitives-font-body-sm-bold-tight); color: var(--semantics-content-color); margin: 0 0 8px;">sm (&lt; 641px) — beperkt tot 393px</p>
 				<div style="width: 393px; border: 1px dashed var(--semantics-dividers-color); padding: 16px;">
@@ -538,7 +541,7 @@ export const AlleGrootten = {
 					</nldd-rich-text>
 				</div>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	name: 'Alle groottes (container query)',
 };
@@ -595,7 +598,7 @@ export const Breedtezones = {
  */
 export const OpKleurvlak = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-rich-text color="inherit">
 					<h3>Op een donker vlak</h3>
@@ -615,7 +618,7 @@ export const OpKleurvlak = {
 					<p>De filled-categories leveren puur zwart of wit als contentkleur, zodat ook middentonen <a href="#">voldoende contrast</a> houden.</p>
 				</nldd-rich-text>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

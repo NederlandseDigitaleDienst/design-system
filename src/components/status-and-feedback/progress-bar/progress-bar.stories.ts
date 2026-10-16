@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './progress-bar.js';
+import '../../layout/container/container.js';
 
 const SEMANTIC_COLORS = ['neutral', 'accent', 'success', 'warning', 'critical'] as const;
 
@@ -130,7 +131,7 @@ export const Standaard = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			<nldd-progress-bar
 				size="sm"
 				value="40"
@@ -146,14 +147,14 @@ export const Grootten = {
 				value="80"
 				text="Groot (16px)"
 			></nldd-progress-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const Kleuren = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 12px;">
+		<nldd-container gap="12">
 			${ALL_COLORS.map(c => html`
 				<nldd-progress-bar
 					color=${c}
@@ -161,7 +162,7 @@ export const Kleuren = {
 					text=${c}
 				></nldd-progress-bar>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -259,7 +260,7 @@ export const ToestandIndeterminate = {
 export const Waardeformaten = {
 	name: 'Waardeformaten (value-format)',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-progress-bar
 				value="60"
 				max="100"
@@ -284,7 +285,7 @@ export const Waardeformaten = {
 				text="Custom (value-text)"
 				value-text="Bijna klaar"
 			></nldd-progress-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -292,7 +293,7 @@ export const Waardeformaten = {
 export const Waardeweergave = {
 	name: 'Waardeweergave (value-display)',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-progress-bar
 				value="60"
 				text="Inline (boven de balk)"
@@ -308,7 +309,7 @@ export const Waardeweergave = {
 				text="Verborgen"
 				value-display="none"
 			></nldd-progress-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

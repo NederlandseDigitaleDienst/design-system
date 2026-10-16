@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './menu-bar-item.js';
 import '../../content/avatar/avatar.js';
 import { ICONS } from '../../content/icon/icon.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Navigation/Menu Bar Item',
@@ -163,7 +164,10 @@ export const MetExpandable = {
 export const MetAvatar = {
 	name: 'Met avatar',
 	render: () => html`
-		<div style="display: flex; gap: 16px;">
+		<nldd-container
+			layout="row"
+			gap="16"
+		>
 			<nldd-menu-bar-item
 				text="Mijn account"
 				expandable
@@ -199,14 +203,18 @@ export const MetAvatar = {
 					<nldd-menu-item text="Log uit"></nldd-menu-item>
 				</nldd-menu>
 			</nldd-menu-bar-item>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const AlleToestanden = {
 	render: () => html`
-		<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+		<nldd-container
+			layout="wrap"
+			gap="8"
+			vertical-alignment="center"
+		>
 			<nldd-menu-bar-item text="Standaard"></nldd-menu-bar-item>
 			<nldd-menu-bar-item
 				text="Huidig"
@@ -260,7 +268,7 @@ export const AlleToestanden = {
 					<nldd-menu-item text="Aanvraag A-1043"></nldd-menu-item>
 				</nldd-menu>
 			</nldd-menu-bar-item>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

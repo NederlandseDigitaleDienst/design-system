@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './toggle-button-group.js';
 import '../toggle-button/toggle-button.js';
+import '../../layout/container/container.js';
 
 /**
  * De Toggle Button Group component groepeert `nldd-toggle-button` elementen en beheert
@@ -135,7 +136,7 @@ export const Standaard = {
 export const TypeButton = {
 	name: 'Type button',
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
+	<nldd-container gap="8">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
 			Met <code>type="button"</code> beheert elke knop zijn eigen <code>aria-pressed</code> toestand onafhankelijk. Ideaal voor teksteditor-toolbars.
 		</p>
@@ -170,7 +171,7 @@ export const TypeButton = {
 				icon="numbered-list"
 			></nldd-toggle-button>
 		</nldd-toggle-button-group>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -185,7 +186,7 @@ export const TypeButton = {
 export const TypeCheckbox = {
 	name: 'Type checkbox',
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
+	<nldd-container gap="8">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
 			Met <code>type="checkbox"</code> kunnen meerdere opties tegelijk geselecteerd zijn.
 		</p>
@@ -217,7 +218,7 @@ export const TypeCheckbox = {
 				icon="file-text"
 			></nldd-toggle-button>
 		</nldd-toggle-button-group>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -232,7 +233,7 @@ export const TypeCheckbox = {
 export const TypeRadio = {
 	name: 'Type radio',
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
+	<nldd-container gap="8">
 		<p style="font: var(--primitives-font-body-md-regular-snug); margin: 0;">
 			Met <code>type="radio"</code> kan slechts één optie tegelijk geselecteerd zijn.
 			Navigeer met de pijltoetsen.
@@ -259,7 +260,7 @@ export const TypeRadio = {
 				icon="sort"
 			></nldd-toggle-button>
 		</nldd-toggle-button-group>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -278,7 +279,7 @@ export const TypeRadio = {
 
 export const Appearances = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-toggle-button-group
 			type="radio"
 			name="sortering-neutral-tinted"
@@ -351,14 +352,14 @@ export const Appearances = {
 				selected
 			></nldd-toggle-button>
 		</nldd-toggle-button-group>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
 
 export const Grootten = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-toggle-button-group
 			type="radio"
 			name="sortering-xs"
@@ -413,7 +414,7 @@ export const Grootten = {
 				selected
 			></nldd-toggle-button>
 		</nldd-toggle-button-group>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -426,7 +427,7 @@ export const Grootten = {
 export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-toggle-button-group
 			type="checkbox"
 			name="filter-uit"
@@ -450,7 +451,7 @@ export const ToestandDisabled = {
 				icon="calendar-event"
 			></nldd-toggle-button>
 		</nldd-toggle-button-group>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },

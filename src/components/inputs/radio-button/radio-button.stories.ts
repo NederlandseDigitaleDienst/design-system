@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './radio-button.js';
+import '../../layout/container/container.js';
 
 /**
  * De Radio Button component wordt gebruikt voor exclusieve keuzes binnen een groep opties.
@@ -138,7 +139,7 @@ export const RadioGroep = {
 		style="border: none; padding: 0; margin: 0;"
 	>
 		<legend id="radio-groep-label" style="font-size: 16px; font-weight: 550; margin-bottom: 12px;">Kies een optie</legend>
-		<div style="display: flex; flex-direction: column; gap: 12px;">
+		<nldd-container gap="12">
 			<nldd-radio-button
 				name="groep"
 				value="1"
@@ -161,7 +162,7 @@ export const RadioGroep = {
 				disabled
 				accessible-label="Optie 4 (uitgeschakeld)"
 			></nldd-radio-button>
-		</div>
+		</nldd-container>
 	</fieldset>
 `,
 	parameters: { controls: { disable: true } },
@@ -169,7 +170,11 @@ export const RadioGroep = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; gap: 2rem; align-items: center;">
+	<nldd-container
+		layout="row"
+		gap="32"
+		vertical-alignment="center"
+	>
 		<nldd-radio-button accessible-label="Niet geselecteerd"></nldd-radio-button>
 		<nldd-radio-button
 			checked
@@ -184,7 +189,7 @@ export const AlleToestanden = {
 			disabled
 			accessible-label="Geselecteerd en uitgeschakeld"
 		></nldd-radio-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

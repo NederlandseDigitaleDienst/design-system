@@ -106,7 +106,7 @@ export const AchtergrondCritical = {
 
 export const Vlakken = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			<nldd-box background="tinted">
 		<nldd-container padding="16">
 					<nldd-rich-text><p>background="tinted" (default) — getint vlak op een plain pagina</p></nldd-rich-text>
@@ -121,7 +121,7 @@ export const Vlakken = {
 		</nldd-container>
 	</nldd-box>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

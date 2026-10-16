@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './file-field.js';
 import '../../forms/validation-list/validation-list.js';
 import '../../forms/form-field/form-field.js';
+import '../../layout/container/container.js';
 
 /**
  * Een bestandskiezer die als één control leest: een knop strak in de hoek van een
@@ -172,13 +173,16 @@ export const InEenFormulierveld = {
  */
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 420px;">
+		<nldd-container
+			gap="16"
+			max-width="420px"
+		>
 			<nldd-file-field accessible-label="Bijlage md"></nldd-file-field>
 			<nldd-file-field
 				size="sm"
 				accessible-label="Bijlage sm"
 			></nldd-file-field>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

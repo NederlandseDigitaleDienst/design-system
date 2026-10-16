@@ -3,6 +3,7 @@ import './banner.js';
 import '../../actions/button/button.js';
 import '../../content/rich-text/rich-text.js';
 import { ICONS } from '../../content/icon/icon.js';
+import '../../layout/container/container.js';
 
 /**
  * Een banner toont een persistente, inline notificatie met een getinte
@@ -104,7 +105,7 @@ export const Standaard = {
 
 export const AlleVarianten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-banner
 				variant="neutral"
 				text="Aanvraag A-1042 is in behandeling"
@@ -130,7 +131,7 @@ export const AlleVarianten = {
 				text="Er ging iets mis"
 				supporting-text="Controleer de gemarkeerde velden hieronder."
 			></nldd-banner>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

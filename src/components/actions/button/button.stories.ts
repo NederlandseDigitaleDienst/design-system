@@ -243,7 +243,10 @@ export const Standaard = {
 export const HorizontaleUitlijning = {
 	name: 'Horizontale uitlijning (volle breedte)',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; width: 320px;">
+		<nldd-container
+			gap="16"
+			width="320px"
+		>
 			<nldd-button
 				width="full"
 				horizontal-alignment="left"
@@ -262,14 +265,17 @@ export const HorizontaleUitlijning = {
 				text="Rechts"
 				start-icon="download"
 			></nldd-button>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const MetSupportingText = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
+		<nldd-container
+			gap="16"
+			horizontal-alignment="left"
+		>
 			<nldd-button
 				horizontal-alignment="left"
 				size="lg"
@@ -298,7 +304,7 @@ export const MetSupportingText = {
 				supporting-text="3 items"
 				start-icon="download"
 			></nldd-button>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -306,7 +312,11 @@ export const MetSupportingText = {
 export const AppearancesNaarRol = {
 	name: 'Appearances naar rol',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button
 			appearance="primary"
 			text="Primary"
@@ -319,7 +329,7 @@ export const AppearancesNaarRol = {
 			appearance="destructive"
 			text="Destructive"
 		></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -334,7 +344,11 @@ export const AppearancesNaarRol = {
 export const AppearancesNaarUiterlijk = {
 	name: 'Appearances naar uiterlijk',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button
 			appearance="accent-filled"
 			text="Accent Filled"
@@ -363,7 +377,7 @@ export const AppearancesNaarUiterlijk = {
 			appearance="critical-transparent"
 			text="Critical Transparent"
 		></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -372,7 +386,11 @@ export const AppearancesNaarUiterlijk = {
 
 export const Grootten = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button
 			size="lg"
 			text="Groot"
@@ -389,7 +407,7 @@ export const Grootten = {
 			size="xs"
 			text="Extra klein"
 		></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -398,7 +416,11 @@ export const Grootten = {
 
 export const MetStartIcon = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button
 			size="lg"
 			text="Download"
@@ -419,7 +441,7 @@ export const MetStartIcon = {
 			text="Download"
 			start-icon="download"
 		></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -433,7 +455,11 @@ export const MetStartIcon = {
 
 export const MetEndIcon = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button
 			size="lg"
 			text="Volgende"
@@ -454,7 +480,7 @@ export const MetEndIcon = {
 			text="Volgende"
 			end-icon="arrow-right"
 		></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -468,7 +494,11 @@ export const MetEndIcon = {
 
 export const MetBeideIconen = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button
 			size="lg"
 			text="Download bestand"
@@ -493,7 +523,7 @@ export const MetBeideIconen = {
 			start-icon="download"
 			end-icon="arrow-right"
 		></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -507,7 +537,11 @@ export const MetBeideIconen = {
 
 export const MetExpandable = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button
 			expandable
 			size="lg"
@@ -528,7 +562,7 @@ export const MetExpandable = {
 			size="xs"
 			text="Opties"
 		></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -550,7 +584,11 @@ export const MetExpandable = {
  */
 export const MetMenu = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-button
 				expandable
 				text="Acties"
@@ -589,7 +627,7 @@ export const MetMenu = {
 					></nldd-menu-item>
 				</nldd-menu>
 			</nldd-button>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -609,7 +647,11 @@ export const MetMenu = {
  */
 export const MetPopover = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-button
 				expandable
 				text="Wat is dakisolatie?"
@@ -638,7 +680,7 @@ export const MetPopover = {
 					</nldd-container>
 				</nldd-popover>
 			</nldd-button>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -653,7 +695,11 @@ export const MetPopover = {
 export const ToestandLoading = {
 	name: 'Toestand loading',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button
 			loading
 			size="lg"
@@ -687,7 +733,7 @@ export const ToestandLoading = {
 			size="xs"
 			text="Mini"
 		></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -701,7 +747,11 @@ export const ToestandLoading = {
 
 export const EigenIcoonInDeSlot = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button text="Eigen icoon vooraan">
 			<svg
 				slot="start-icon"
@@ -728,7 +778,7 @@ export const EigenIcoonInDeSlot = {
 				<polygon points="10,2 18,18 2,18"/>
 			</svg>
 		</nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -742,7 +792,11 @@ export const EigenIcoonInDeSlot = {
 
 export const TekstInDeSlot = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-button>
 			<span slot="text">Tekst met <strong>nadruk</strong></span>
 		</nldd-button>
@@ -752,7 +806,7 @@ export const TekstInDeSlot = {
 		>
 			<span slot="text">Prijs <span style="text-decoration: line-through;">€20</span> €15</span>
 		</nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -774,7 +828,7 @@ export const TekstInDeSlot = {
  */
 export const OpKleurvlak = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-button-group orientation="horizontal">
 					<nldd-button
@@ -824,7 +878,7 @@ export const OpKleurvlak = {
 					></nldd-button>
 				</nldd-button-group>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

@@ -3,6 +3,7 @@ import './identity.js';
 import '../avatar-group/avatar-group.js';
 import '../avatar/avatar.js';
 import '../../navigation/link/link.js';
+import '../../layout/container/container.js';
 
 // A self-contained SVG avatar (data URI) for the avatar-src attribute demo, so
 // the stories don't depend on external images. Slotted avatars use nldd-avatar
@@ -172,7 +173,10 @@ export const MetTimeEnLink = {
  */
 export const SmalleContainer = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px; max-width: 360px;">
+		<nldd-container
+			gap="24"
+			max-width="360px"
+		>
 			<div style="outline: 1px dashed #cbd5e1; padding: 16px;">
 				<nldd-identity
 					text="Jan Jansen, Petra Pietersen en Ahmed Karim"
@@ -206,7 +210,7 @@ export const SmalleContainer = {
 					></nldd-avatar>
 				</nldd-identity>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './time-field.ts';
 import '../../forms/form-field/form-field.ts';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Inputs/Time Field',
@@ -199,7 +200,11 @@ export const InEenFormField = () => html`
 `;
 
 export const Grootten = () => html`
-	<div style="display: flex; gap: 16px; align-items: flex-start;">
+	<nldd-container
+		layout="row"
+		gap="16"
+		vertical-alignment="top"
+	>
 		<nldd-time-field
 			size="sm"
 			value="09:30"
@@ -210,11 +215,15 @@ export const Grootten = () => html`
 			value="09:30"
 			accessible-label="Middel"
 		></nldd-time-field>
-	</div>
+	</nldd-container>
 `;
 
 export const AlleToestanden = () => html`
-	<div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="top"
+	>
 		<nldd-time-field
 			value="09:30"
 			valid
@@ -235,5 +244,5 @@ export const AlleToestanden = () => html`
 			disabled
 			accessible-label="Uitgeschakeld"
 		></nldd-time-field>
-	</div>
+	</nldd-container>
 `;

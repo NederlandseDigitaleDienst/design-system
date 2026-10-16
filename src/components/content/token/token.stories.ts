@@ -2,6 +2,7 @@ import { action } from 'storybook/actions';
 import { html, nothing } from 'lit';
 import './token.js';
 import '../../actions/menu/menu.js';
+import '../../layout/container/container.js';
 
 /**
  * De Token is zelfstandige data waar de gebruiker mee werkt: een persoon in een
@@ -97,7 +98,11 @@ export const Standaard = {
 
 export const AlleControls = {
 	render: () => html`
-	<div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+	<nldd-container
+		layout="wrap"
+		gap="8"
+		vertical-alignment="center"
+	>
 		<nldd-token text="Geen control"></nldd-token>
 		<nldd-token
 			control="dismiss"
@@ -119,7 +124,7 @@ export const AlleControls = {
 				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-token>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -177,7 +182,11 @@ export const MetMenu = {
 export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: () => html`
-	<div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+	<nldd-container
+		layout="wrap"
+		gap="8"
+		vertical-alignment="center"
+	>
 		<nldd-token
 			disabled
 			text="Geen control"
@@ -192,7 +201,7 @@ export const ToestandDisabled = {
 			disabled
 			text="Met menu"
 		></nldd-token>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -209,11 +218,14 @@ export const FilterVoorbeeld = {
 	};
 
 	return html`
-		<div style="display: flex; flex-direction: column; gap: 1rem;">
+		<nldd-container gap="16">
 			<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug); color: var(--semantics-content-color);">
 				Actieve tokens — klik op × om een waarde te verwijderen:
 			</p>
-			<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+			<nldd-container
+				layout="wrap"
+				gap="8"
+			>
 				<nldd-token
 					control="dismiss"
 					text="Status: In behandeling"
@@ -234,8 +246,8 @@ export const FilterVoorbeeld = {
 					text="Behandelaar: Jan de Vries"
 					@dismiss=${handleDismiss}
 				></nldd-token>
-			</div>
-		</div>
+			</nldd-container>
+		</nldd-container>
 	`;
 },
 	parameters: {

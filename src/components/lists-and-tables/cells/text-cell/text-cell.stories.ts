@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './text-cell.js';
 import '../../../content/tag/tag.js';
+import '../../../layout/container/container.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Text Cell',
@@ -168,7 +169,7 @@ export const Accent = {
 
 export const Statuskleuren = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px;">
+		<nldd-container gap="8">
 			<nldd-text-cell
 				color="success"
 				overline="Status"
@@ -187,7 +188,7 @@ export const Statuskleuren = {
 				text="Afgewezen"
 				supporting-text="Bekijk de toelichting"
 			></nldd-text-cell>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -201,7 +202,7 @@ export const Statuskleuren = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px;">
+		<nldd-container gap="8">
 			<nldd-text-cell
 				size="md"
 				overline="Overline"
@@ -214,7 +215,7 @@ export const Grootten = {
 				text="Tekstcel (sm)"
 				supporting-text="Ondersteunende tekst"
 			></nldd-text-cell>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -239,7 +240,11 @@ export const Breedte = {
 
 export const MinimaleHoogte = {
 	render: () => html`
-		<div style="display: flex; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			layout="row"
+			gap="8"
+			vertical-alignment="top"
+		>
 			<nldd-text-cell
 				vertical-alignment="top"
 				min-height="44px"
@@ -253,13 +258,13 @@ export const MinimaleHoogte = {
 				text="Met ondersteunende tekst"
 				supporting-text="Ondersteunende tekst"
 			></nldd-text-cell>
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const HorizontaleUitlijning = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px;">
+		<nldd-container gap="8">
 			<nldd-text-cell
 				horizontal-alignment="left"
 				style="border: 1px dashed var(--primitives-color-neutral-150);"
@@ -274,7 +279,7 @@ export const HorizontaleUitlijning = {
 				text="Tekstcel (rechts)"
 				supporting-text="Ondersteunende tekst"
 			></nldd-text-cell>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -302,7 +307,10 @@ export const VerticaleUitlijning = {
 
 export const TagInDeSlot = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 480px;">
+		<nldd-container
+			gap="16"
+			max-width="480px"
+		>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Default slot — inline tag tussen tekst.</p>
 				<nldd-text-cell
@@ -326,7 +334,7 @@ export const TagInDeSlot = {
 					></nldd-tag>
 				</nldd-text-cell>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -346,7 +354,10 @@ Gebruik dit voor zelfdragende custom elementen zoals \`<nldd-tag>\`, \`<nldd-ico
 
 export const ZoektermMarkeren = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 480px;">
+		<nldd-container
+			gap="16"
+			max-width="480px"
+		>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">predictive (default) — vet de niet-gematchte rest. Geschikt voor korte labels in combobox-lijsten.</p>
 				<nldd-text-cell
@@ -371,7 +382,7 @@ export const ZoektermMarkeren = {
 					query="ap"
 				></nldd-text-cell>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

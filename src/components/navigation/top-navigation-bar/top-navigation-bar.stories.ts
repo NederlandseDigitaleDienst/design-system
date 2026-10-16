@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './top-navigation-bar.js';
 import '../menu-bar/menu-bar.js';
 import '../menu-bar-item/menu-bar-item.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Navigation/Top Navigation Bar',
@@ -382,7 +383,7 @@ export const MinimaalLogo = {
 
 export const AlleToestanden = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 32px;">
+		<nldd-container gap="32">
 			<div style=${layoutArea}>
 				<nldd-top-navigation-bar website-title="Mijn Dienst (volle breedte)">
 					<nldd-menu-bar slot="global">
@@ -558,7 +559,7 @@ export const AlleToestanden = {
 					</nldd-menu-bar>
 				</nldd-top-navigation-bar>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

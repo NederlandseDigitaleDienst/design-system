@@ -6,6 +6,7 @@ import '../../inputs/checkbox/checkbox.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/button/button.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
+import '../../layout/container/container.js';
 
 /**
  * De Table toont data in uitgelijnde kolommen. Het is altijd een box (afgeronde
@@ -418,11 +419,11 @@ export const ResponsieveKolommen = {
 				</div>
 			</div>`;
 		return html`
-			<div style="display: flex; flex-direction: column; gap: 24px;">
+			<nldd-container gap="24">
 				${table('1100px', 'lg (≥1008px): alle kolommen')}
 				${table('800px', 'md (641–1007px): E-mail weg')}
 				${table('320px', 'sm (≤640px): E-mail + Rol weg')}
-			</div>
+			</nldd-container>
 		`;
 	},
 	parameters: {

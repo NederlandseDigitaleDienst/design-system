@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './time-picker.ts';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Inputs/Time Picker',
@@ -120,7 +121,11 @@ export const StapVanafMin = () => html`
 
 export const MinderRijen = () => html`
 	<p>Met <code>rows</code> bepaalt de consument hoe hoog de kolommen zijn, in rijen. De gekozen waarde staat altijd in het midden, dus een oneven aantal toont hele rijen en een even aantal kapt boven en onder een halve rij af.</p>
-	<div style="display: flex; gap: 48px; align-items: flex-start;">
+	<nldd-container
+		layout="row"
+		gap="48"
+		vertical-alignment="top"
+	>
 		<div>
 			<p><code>rows="5"</code>, hele rijen</p>
 			<nldd-time-picker
@@ -147,5 +152,5 @@ export const MinderRijen = () => html`
 				accessible-label="Zeven rijen"
 			></nldd-time-picker>
 		</div>
-	</div>
+	</nldd-container>
 `;

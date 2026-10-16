@@ -180,7 +180,7 @@ export const AppearanceInputField = {
 
 export const MetSyntaxkleuring = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 1rem;">
+		<nldd-container gap="16">
 			<nldd-code-editor
 				appearance="input-field"
 				language="yaml"
@@ -195,7 +195,7 @@ export const MetSyntaxkleuring = {
 				.value=${SAMPLE_JSON}
 				accessible-label="JSON"
 			></nldd-code-editor>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

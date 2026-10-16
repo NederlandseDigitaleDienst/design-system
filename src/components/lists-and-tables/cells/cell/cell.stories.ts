@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './cell.js';
 import '../../../actions/button/button.js';
+import '../../../layout/container/container.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Cell',
@@ -147,7 +148,11 @@ export const MetMinEnMaxBreedte = {
 
 export const MetMinimaleHoogte = {
 	render: () => html`
-		<div style="display: flex; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			layout="row"
+			gap="8"
+			vertical-alignment="top"
+		>
 			<nldd-cell
 				vertical-alignment="top"
 				min-height="44px"
@@ -158,7 +163,7 @@ export const MetMinimaleHoogte = {
 					text="Min-hoogte 44px"
 				></nldd-button>
 			</nldd-cell>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -198,7 +203,7 @@ export const VerticaleUitlijning = {
 
 export const HorizontaleUitlijning = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px;">
+		<nldd-container gap="8">
 			<nldd-cell
 				width="240px"
 				horizontal-alignment="left"
@@ -229,6 +234,6 @@ export const HorizontaleUitlijning = {
 					text="Rechts"
 				></nldd-button>
 			</nldd-cell>
-		</div>
+		</nldd-container>
 	`,
 };

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './title-cell.js';
 import '../../../content/tag/tag.js';
+import '../../../layout/container/container.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Title Cell',
@@ -159,7 +160,7 @@ export const Accent = {
 
 export const Statuskleuren = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-title-cell
 				color="success"
 				overline="Status"
@@ -178,7 +179,7 @@ export const Statuskleuren = {
 				text="Afgewezen"
 				supporting-text="Bekijk de toelichting"
 			></nldd-title-cell>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -220,20 +221,20 @@ export const MetOverlineEnSupportingText = {
 
 export const AlleGrootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			${[1, 2, 3, 4, 5, 6].map(s => html`
 				<nldd-title-cell
 					size=${s}
 					text="Titelcel (grootte ${s})"
 				></nldd-title-cell>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const HorizontaleUitlijning = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px;">
+		<nldd-container gap="8">
 			<nldd-title-cell
 				horizontal-alignment="left"
 				style="border: 1px dashed var(--primitives-color-neutral-150);"
@@ -248,7 +249,7 @@ export const HorizontaleUitlijning = {
 				text="Titelcel (rechts)"
 				supporting-text="Ondertitel"
 			></nldd-title-cell>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -276,7 +277,10 @@ export const VerticaleUitlijning = {
 
 export const TagInDeSlot = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 480px;">
+		<nldd-container
+			gap="16"
+			max-width="480px"
+		>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Overline slot — tag als statuslabel boven de titel.</p>
 				<nldd-title-cell
@@ -300,7 +304,7 @@ export const TagInDeSlot = {
 					Aardappelen <nldd-tag color="accent" size="sm" text="Nieuw"></nldd-tag>
 				</nldd-title-cell>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -320,7 +324,10 @@ Gebruik dit voor zelfdragende custom elementen zoals \`<nldd-tag>\`, \`<nldd-ico
 
 export const ZoektermMarkeren = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 480px;">
+		<nldd-container
+			gap="16"
+			max-width="480px"
+		>
 			<div>
 				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">predictive (default) — vet de niet-gematchte rest.</p>
 				<nldd-title-cell
@@ -345,7 +352,7 @@ export const ZoektermMarkeren = {
 					query="ap"
 				></nldd-title-cell>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
