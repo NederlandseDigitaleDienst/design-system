@@ -14,6 +14,7 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-hero` can take the rounded corner of the Rijkshuisstijl.** `corner` rounds one corner of the image and half a one on the panel, in a contained hero with the panel in a corner or along a side.
 - **Room to play with typography.** `nldd-title` takes `sm-`, `md-` and `lg-custom-size` for a statement larger than size 1, set per breakpoint and never smaller than size 1.
 - **A design guideline for link text.** A link names where it goes: no "klik hier", "lees meer" or "meer info", which say nothing to someone scanning the page or to a screen reader listing its links.
+- **Icons are easier to find.** The icon gallery has its own page under Docs › Iconen, where it used to be the last story of `nldd-icon`. Search every icon and alias there, or see what is new or updated.
 - **The examples follow the design guidelines.** Button labels in the imperative, no "Annuleer" next to the primary action, the safe way out first in a destructive dialog, link texts that name their destination, and Dutch text with the fixed example cast.
 
 ### Added
