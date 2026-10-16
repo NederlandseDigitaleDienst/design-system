@@ -20,6 +20,7 @@ export const textStyles = css`
 		--_text-code-corner-radius: var(--semantics-controls-xs-corner-radius);
 		--_text-code-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_text-code-font-family: var(--primitives-font-family-monospace);
+		--_text-code-font-size: var(--semantics-code-inline-font-size);
 		--_text-mark-padding: var(--primitives-space-1) var(--primitives-space-2);
 		--_text-mark-corner-radius: var(--semantics-controls-xs-corner-radius);
 		--_text-mark-background-color: var(--semantics-content-mark-background-color);
@@ -108,7 +109,7 @@ export const textStyles = css`
 		background-color: var(--_text-code-background-color);
 		padding: var(--_text-code-padding);
 		font-family: var(--_text-code-font-family);
-		font-size: 0.85em;
+		font-size: var(--_text-code-font-size);
 	}
 
 	::slotted(mark) {
