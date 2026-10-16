@@ -23324,7 +23324,7 @@
                 "text": "string | undefined"
               },
               "fieldName": "itemMaxWidth",
-              "description": "Largest width an item takes in horizontal scroll (e.g. '400px', '25rem'), so one or two items that fit do not stretch across the container. Defaults to 480px, or `item-min-width` when that is wider. Never wider than the container. No effect in grid, lanes and stack: a grid leaves empty columns rather than stretching an item, and its right edge stays aligned with the content around it."
+              "description": "Largest width an item takes in horizontal scroll (e.g. '400px', '25rem'), so one or two items that fit do not stretch across the container. Defaults to 480px. Never narrower than `item-min-width`, which wins when it is wider, and never wider than the container. No effect in grid, lanes and stack: a grid leaves empty columns rather than stretching an item, and its right edge stays aligned with the content around it."
             },
             {
               "name": "gap",

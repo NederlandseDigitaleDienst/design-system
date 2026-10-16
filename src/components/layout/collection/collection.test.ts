@@ -111,6 +111,17 @@ describe('nldd-collection', () => {
 		expect(columns.length).toBe(3);
 	});
 
+	it('never lets item-max-width take an item below item-min-width', async () => {
+		el = await fixture(`
+			<nldd-collection layout="horizontal-scroll" item-min-width="320px" item-max-width="200px" style="width: 1000px;">
+				<div>Item</div>
+			</nldd-collection>
+		`);
+		await waitForUpdate(el);
+
+		expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(320);
+	});
+
 	it('says in development that item-width is now item-min-width', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		try {

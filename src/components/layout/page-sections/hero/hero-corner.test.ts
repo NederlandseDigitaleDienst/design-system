@@ -79,6 +79,16 @@ describe('nldd-hero – corner', () => {
 		expect(rounded('.hero__media')).toEqual(['bottom-left']);
 	});
 
+	it('treats an inherited key as an unknown main-position', async () => {
+		await hero('corner layout="contained" main-position="constructor"');
+		expect(el.getAttribute('data-media-corner')).toBe('top-right');
+	});
+
+	it('writes no panel corner when the panel has none', async () => {
+		await hero('corner layout="contained" main-position="left"');
+		expect(el.hasAttribute('data-main-corner')).toBe(false);
+	});
+
 	it('falls back to choosing the corner for an unknown value, and says so', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await hero('corner="middle" layout="contained"');

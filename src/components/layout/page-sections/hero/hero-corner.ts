@@ -75,7 +75,7 @@ export function applyCorner(host: CornerHost): void {
 	}
 
 	const center = host.mainPosition === 'top-center' || host.mainPosition === 'bottom-center';
-	const position: HeroMainPosition = center || host.mainPosition in MAIN_CORNER ? host.mainPosition : 'bottom-left';
+	const position: HeroMainPosition = center || Object.prototype.hasOwnProperty.call(MAIN_CORNER, host.mainPosition) ? host.mainPosition : 'bottom-left';
 	// Without media the panel is the whole hero, so layout and position do not
 	// come into it.
 	if (host._hasMedia && (host.layout !== 'contained' || center)) {
@@ -103,7 +103,8 @@ export function applyCorner(host: CornerHost): void {
 	const mainCorner = host._hasMedia && host.mainWidth !== 'full' ? MAIN_CORNER[cornerPosition] : null;
 
 	host.setAttribute('data-media-corner', mediaCorner);
-	host.setAttribute('data-main-corner', mainCorner ?? 'none');
+	if (mainCorner) host.setAttribute('data-main-corner', mainCorner);
+	else host.removeAttribute('data-main-corner');
 
 	if (!import.meta.env?.DEV) return;
 	const value = host.corner.trim();

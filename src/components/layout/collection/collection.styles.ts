@@ -133,7 +133,7 @@ export const collectionStyles = css`
 	}
 
 	:host([layout="horizontal-scroll"]) .collection__items ::slotted(*) {
-		max-width: min(var(--_collection-item-max-width), 100%);
+		max-width: min(max(var(--_collection-item-min-width), var(--_collection-item-max-width)), 100%);
 		flex-grow: 1;
 		flex-shrink: 0;
 		flex-basis: var(--_collection-item-min-width);
