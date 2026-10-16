@@ -86,8 +86,8 @@ export default {
 const header = html`
 	<nldd-top-title-bar
 		slot="header"
-		text="Paginatitel"
-		back-text="Overzicht"
+		text="Aanvraag A-1042"
+		back-text="Aanvragen"
 		collapse-anchor="page-title"
 	></nldd-top-title-bar>
 `;
@@ -97,11 +97,7 @@ const footer = html`
 		<nldd-button-group orientation="horizontal">
 			<nldd-button
 				appearance="primary"
-				text="Opslaan"
-			></nldd-button>
-			<nldd-button
-				appearance="secondary"
-				text="Annuleren"
+				text="Bewaar"
 			></nldd-button>
 		</nldd-button-group>
 	</nldd-container>
@@ -112,25 +108,25 @@ const content = html`
 		<nldd-title
 			id="page-title"
 			size="2"
-			text="Paginatitel"
+			text="Aanvraag A-1042"
 			heading-level="1"
 		></nldd-title>
 		<nldd-spacer size="16"></nldd-spacer>
 		<nldd-rich-text>
 			<p>
-				Dit is het scrollbare hoofdgebied van de pagina. Voeg hier de inhoud van de pagina toe.
-				Wanneer de inhoud langer is dan de viewport, wordt het gebied scrollbaar.
+				Je aanvraag voor dakisolatie is binnen en staat op de lijst om beoordeeld te worden.
+				Op deze pagina zie je wat er al bekend is en wat we nog van je nodig hebben.
 			</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-			<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-			<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-			<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-			<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-			<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-			<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-			<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			<p>We kijken eerst of het dak in aanmerking komt. Daarvoor gebruiken we het oppervlak dat je hebt opgegeven en de offerte van het isolatiebedrijf.</p>
+			<p>Klopt het oppervlak niet, of heb je een nieuwe offerte gekregen? Geef de wijziging dan door voordat de beoordeling begint.</p>
+			<p>Tijdens de beoordeling kan een medewerker contact met je opnemen. Hij vraagt dan bijvoorbeeld om foto's van het dak of om een toelichting op de offerte.</p>
+			<p>Is de beoordeling klaar, dan krijg je een bericht in Mijn Dienst. Daarin staat of je aanvraag is goedgekeurd en welk bedrag je ontvangt.</p>
+			<p>Na goedkeuring heb je tijd om de isolatie te laten aanbrengen. Bewaar de factuur, want die heb je nodig om de aanvraag af te ronden.</p>
+			<p>Je kunt Aanvraag A-1042 altijd terugvinden onder Aanvragen. Daar zie je ook je eerdere aanvraag voor een warmtepomp, die al is afgerond.</p>
+			<p>Heb je een vraag over je aanvraag? Noem dan altijd het nummer A-1042, dan kunnen we je sneller helpen.</p>
+			<p>Wil je de aanvraag intrekken? Dat kan zolang de beoordeling nog niet is afgerond. Daarna neem je contact op met team Uitvoering.</p>
+			<p>Alle stukken die je hebt aangeleverd, staan in je dossier. Je kunt ze daar bekijken en downloaden.</p>
+			<p>Verandert er iets aan je situatie, bijvoorbeeld omdat je verhuist? Geef dat dan zo snel mogelijk door.</p>
 		</nldd-rich-text>
 	</nldd-simple-section>
 `;

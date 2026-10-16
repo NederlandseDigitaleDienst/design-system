@@ -16,7 +16,7 @@ import './text.js';
  * ## Gebruik
  * ```html
  * <nldd-text>Toegewezen aan Yara Nijhuis</nldd-text>
- * <nldd-text size="sm" color="secondary">Laatst bijgewerkt op 3 maart</nldd-text>
+ * <nldd-text size="sm" color="secondary">Vorige week bijgewerkt</nldd-text>
  * ```
  */
 export default {
@@ -170,5 +170,21 @@ export const HorizontaleUitlijning = {
 			<nldd-text horizontal-alignment="center">center</nldd-text>
 			<nldd-text horizontal-alignment="right">right</nldd-text>
 		</div>
+	`,
+};
+
+/**
+ * Inline elementen zien eruit zoals in `nldd-rich-text`: vet, schuin, een link,
+ * `code` op een getint vlak en een gemarkeerd woord. Dat geldt voor elementen
+ * direct in de tekst.
+ */
+export const InlineElementen = {
+	render: () => html`
+		<nldd-text>
+			Aanvraag A-1042 is <strong>in behandeling</strong> en wacht op een <em>controle</em>.
+			Zet <code>no-picker</code> om de knop weg te laten, lees meer over
+			<a href="#dakisolatie">de voorwaarden voor dakisolatie</a>, of let op de
+			<mark>gemarkeerde datum</mark>.
+		</nldd-text>
 	`,
 };

@@ -1,5 +1,8 @@
 import { html, nothing } from 'lit';
 import './combo-box.js';
+import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * De Combo Box component is een tekstveld met autocomplete/dropdown functionaliteit.
@@ -190,11 +193,15 @@ export const Standaard = {
 
 export const VoorafIngevuld = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 16px;">
-		<div>
-			<p style="margin: 0 0 4px; font-size: 12px; color: var(--semantics-content-secondary-color);">
+	<nldd-container gap="16">
+		<nldd-container>
+			<nldd-text
+				size="xs"
+				color="secondary"
+			>
 				Auto-derive — alleen <code>value="nl"</code> gezet, de combo-box leest <code>text="Nederland"</code> van het matching menu-item.
-			</p>
+			</nldd-text>
+			<nldd-spacer size="4"></nldd-spacer>
 			<nldd-combo-box
 				value="nl"
 				accessible-label="Land"
@@ -215,11 +222,15 @@ export const VoorafIngevuld = {
 					></nldd-menu-item>
 				</nldd-menu>
 			</nldd-combo-box>
-		</div>
-		<div>
-			<p style="margin: 0 0 4px; font-size: 12px; color: var(--semantics-content-secondary-color);">
+		</nldd-container>
+		<nldd-container>
+			<nldd-text
+				size="xs"
+				color="secondary"
+			>
 				Expliciet — <code>value</code> én <code>text</code> beide gezet (consumer bepaalt het label, bv. een custom format zoals <code>"Nederland (NL)"</code>).
-			</p>
+			</nldd-text>
+			<nldd-spacer size="4"></nldd-spacer>
 			<nldd-combo-box
 				value="nl"
 				text="Nederland (NL)"
@@ -237,8 +248,8 @@ export const VoorafIngevuld = {
 					></nldd-menu-item>
 				</nldd-menu>
 			</nldd-combo-box>
-		</div>
-	</div>
+		</nldd-container>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -501,7 +512,7 @@ export const AlleLanden = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-combo-box
 			placeholder="Zoek een land"
 			size="sm"
@@ -601,7 +612,7 @@ export const AlleToestanden = {
 				></nldd-menu-item>
 			</nldd-menu>
 		</nldd-combo-box>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

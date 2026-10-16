@@ -102,8 +102,8 @@ export const Standaard = {
 				?disabled=${args.disabled}
 			>
 				<nldd-text-cell
-					text="Text cell"
-					supporting-text="Supporting text"
+					text="Aanvraag A-1042"
+					supporting-text="Dakisolatie, in behandeling"
 				></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
@@ -115,7 +115,7 @@ export const GrootteMd = {
 	render: () => html`
 		<nldd-list appearance="simple">
 			<nldd-list-item size="md">
-				<nldd-text-cell text="Medium size item"></nldd-text-cell>
+				<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -128,7 +128,7 @@ export const GrootteSm = {
 			<nldd-list-item size="sm">
 				<nldd-text-cell
 					size="sm"
-					text="Small size item"
+					text="Aanvraag A-1042"
 				></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
@@ -140,13 +140,13 @@ export const ToestandSelected = {
 	render: () => html`
 		<nldd-list appearance="simple">
 			<nldd-list-item>
-				<nldd-text-cell text="Not selected"></nldd-text-cell>
+				<nldd-text-cell text="Dossier D-318"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item selected>
-				<nldd-text-cell text="Selected item"></nldd-text-cell>
+				<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-				<nldd-text-cell text="Not selected"></nldd-text-cell>
+				<nldd-text-cell text="Dossier D-319"></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -229,10 +229,10 @@ export const AlsKnop = {
 	render: () => html`
 		<nldd-list appearance="simple">
 			<nldd-list-item button>
-				<nldd-text-cell text="Clickable button item"></nldd-text-cell>
+				<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item button>
-				<nldd-text-cell text="Another button item"></nldd-text-cell>
+				<nldd-text-cell text="Aanvraag A-1043"></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -241,11 +241,11 @@ export const AlsKnop = {
 export const AlsLink = {
 	render: () => html`
 		<nldd-list appearance="simple">
-			<nldd-list-item href="/settings">
-				<nldd-text-cell text="Settings"></nldd-text-cell>
+			<nldd-list-item href="#instellingen">
+				<nldd-text-cell text="Instellingen"></nldd-text-cell>
 			</nldd-list-item>
-			<nldd-list-item href="/profile">
-				<nldd-text-cell text="Profile"></nldd-text-cell>
+			<nldd-list-item href="#profiel">
+				<nldd-text-cell text="Profiel"></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -255,10 +255,10 @@ export const BoxMetMarges = {
 	render: () => html`
 		<nldd-list appearance="box-tinted">
 			<nldd-list-item>
-				<nldd-text-cell text="Gutters visible (spacer)"></nldd-text-cell>
+				<nldd-text-cell text="Dossier D-318"></nldd-text-cell>
 			</nldd-list-item>
 			<nldd-list-item>
-				<nldd-text-cell text="Gutters visible (spacer)"></nldd-text-cell>
+				<nldd-text-cell text="Dossier D-319"></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -273,7 +273,7 @@ export const MetCellenVooraanEnAchteraan = {
 					size="32"
 				></nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
-				<nldd-text-cell text="Item with start icon"></nldd-text-cell>
+				<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-icon-cell size="16">
 					<nldd-icon icon="chevron-right"></nldd-icon>
@@ -285,7 +285,7 @@ export const MetCellenVooraanEnAchteraan = {
 					size="32"
 				></nldd-icon-cell>
 				<nldd-spacer-cell size="8"></nldd-spacer-cell>
-				<nldd-text-cell text="Another item"></nldd-text-cell>
+				<nldd-text-cell text="Aanvraag A-1043"></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,
@@ -295,7 +295,7 @@ export const SimpelMetCellenAchteraan = {
 	render: () => html`
 		<nldd-list appearance="simple">
 			<nldd-list-item>
-				<nldd-text-cell text="Trailing cells"></nldd-text-cell>
+				<nldd-text-cell text="Met cellen achteraan"></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-icon-cell size="16">
 					<nldd-icon icon="chevron-right"></nldd-icon>
@@ -347,7 +347,7 @@ export const MetSleepgreep = {
 						reorderable-only
 						size="8"
 					></nldd-spacer-cell>
-					<nldd-text-cell text="Versleepbaar item"></nldd-text-cell>
+					<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 				</nldd-list-item>
 				<nldd-list-item>
 					<nldd-drag-handle-cell
@@ -358,7 +358,7 @@ export const MetSleepgreep = {
 						reorderable-only
 						size="8"
 					></nldd-spacer-cell>
-					<nldd-text-cell text="Nog een item"></nldd-text-cell>
+					<nldd-text-cell text="Aanvraag A-1043"></nldd-text-cell>
 				</nldd-list-item>
 			</nldd-list>
 		`, el);
@@ -379,7 +379,7 @@ export const ResponsieveCellen = {
 			<nldd-list-item>
 				<nldd-icon-cell><nldd-icon icon="file-text"></nldd-icon></nldd-icon-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
-				<nldd-text-cell text="Begroting 2026"></nldd-text-cell>
+				<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell
 					width="fit-content"
@@ -396,7 +396,7 @@ export const ResponsieveCellen = {
 			<nldd-list-item>
 				<nldd-icon-cell><nldd-icon icon="folder"></nldd-icon></nldd-icon-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
-				<nldd-text-cell text="Projecten"></nldd-text-cell>
+				<nldd-text-cell text="Dossier D-318"></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell
 					width="fit-content"

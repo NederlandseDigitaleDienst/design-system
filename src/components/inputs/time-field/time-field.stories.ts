@@ -1,6 +1,9 @@
 import { html, nothing } from 'lit';
 import './time-field.ts';
 import '../../forms/form-field/form-field.ts';
+import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 export default {
 	title: 'Components/Inputs/Time Field',
@@ -145,7 +148,10 @@ const Template = ({
 export const Standaard = Template.bind({});
 
 export const Kwartieren = () => html`
-	<p>Stap 15: bij verlaten van het veld rondt de invoer af op het dichtstbijzijnde kwartier, en de pijltjestoetsen verspringen met een kwartier.</p>
+	<nldd-text>
+		Stap 15: bij verlaten van het veld rondt de invoer af op het dichtstbijzijnde kwartier, en de pijltjestoetsen verspringen met een kwartier.
+	</nldd-text>
+	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
 		step="15"
 		accessible-label="Starttijd"
@@ -153,7 +159,10 @@ export const Kwartieren = () => html`
 `;
 
 export const StapVanafMin = () => html`
-	<p>De stap telt vanaf <code>min</code>, dus deze reeks loopt 09:07, 09:22, 09:37.</p>
+	<nldd-text>
+		De stap telt vanaf <code>min</code>, dus deze reeks loopt 09:07, 09:22, 09:37.
+	</nldd-text>
+	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
 		min="09:07"
 		step="15"
@@ -162,7 +171,10 @@ export const StapVanafMin = () => html`
 `;
 
 export const Kantooruren = () => html`
-	<p>Buiten <code>min</code> en <code>max</code> blijft de getypte tekst staan, maar de waarde is leeg.</p>
+	<nldd-text>
+		Buiten <code>min</code> en <code>max</code> blijft de getypte tekst staan, maar de waarde is leeg.
+	</nldd-text>
+	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
 		min="09:00"
 		max="17:00"
@@ -172,7 +184,10 @@ export const Kantooruren = () => html`
 `;
 
 export const MetPicker = () => html`
-	<p>De knop opent een popover met twee kolommen. Op een klein scherm wordt dat een bottom sheet met een titelbalk.</p>
+	<nldd-text>
+		De knop opent een popover met twee kolommen. Op een klein scherm wordt dat een bottom sheet met een titelbalk.
+	</nldd-text>
+	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
 		value="09:30"
 		step="15"
@@ -181,7 +196,10 @@ export const MetPicker = () => html`
 `;
 
 export const ZonderPicker = () => html`
-	<p>Met <code>no-picker</code> vervalt de knop; het veld blijft precies breed genoeg voor een tijd en het validatie-icoon.</p>
+	<nldd-text>
+		Met <code>no-picker</code> vervalt de knop; het veld blijft precies breed genoeg voor een tijd en het validatie-icoon.
+	</nldd-text>
+	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-field
 		value="09:30"
 		no-picker
@@ -199,22 +217,30 @@ export const InEenFormField = () => html`
 `;
 
 export const Grootten = () => html`
-	<div style="display: flex; gap: 16px; align-items: flex-start;">
-		<nldd-time-field
-			size="sm"
-			value="09:30"
-			accessible-label="Klein"
-		></nldd-time-field>
+	<nldd-container
+		layout="row"
+		gap="16"
+		vertical-alignment="top"
+	>
 		<nldd-time-field
 			size="md"
 			value="09:30"
 			accessible-label="Middel"
 		></nldd-time-field>
-	</div>
+		<nldd-time-field
+			size="sm"
+			value="09:30"
+			accessible-label="Klein"
+		></nldd-time-field>
+	</nldd-container>
 `;
 
 export const AlleToestanden = () => html`
-	<div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="top"
+	>
 		<nldd-time-field
 			value="09:30"
 			valid
@@ -235,5 +261,5 @@ export const AlleToestanden = () => html`
 			disabled
 			accessible-label="Uitgeschakeld"
 		></nldd-time-field>
-	</div>
+	</nldd-container>
 `;

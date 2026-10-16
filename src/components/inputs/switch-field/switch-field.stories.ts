@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './switch-field.js';
+import '../../layout/container/container.js';
 
 /**
  * De Switch Field component is een switch toggle met een inline label voor gebruik in formulieren.
@@ -83,7 +84,7 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
+	<nldd-container gap="8">
 		<nldd-switch-field
 			label="Niet aan"
 			value="1"
@@ -104,7 +105,7 @@ export const AlleToestanden = {
 			checked
 			disabled
 		></nldd-switch-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

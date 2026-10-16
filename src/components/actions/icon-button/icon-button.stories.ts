@@ -216,7 +216,10 @@ export const Standaard = {
 export const AppearancesNaarRol = {
 	name: 'Appearances naar rol',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+	>
 		<nldd-icon-button
 			appearance="primary"
 			icon="add"
@@ -232,7 +235,7 @@ export const AppearancesNaarRol = {
 			icon="delete"
 			text="Verwijder"
 		></nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -247,7 +250,10 @@ export const AppearancesNaarRol = {
 export const AppearancesNaarUiterlijk = {
 	name: 'Appearances naar uiterlijk',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+	>
 		<nldd-icon-button
 			appearance="accent-filled"
 			icon="add"
@@ -283,7 +289,7 @@ export const AppearancesNaarUiterlijk = {
 			icon="delete"
 			text="Verwijder"
 		></nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -292,7 +298,11 @@ export const AppearancesNaarUiterlijk = {
 
 export const Grootten = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-icon-button
 			size="lg"
 			icon="dismiss"
@@ -313,7 +323,7 @@ export const Grootten = {
 			icon="dismiss"
 			text="Annuleer"
 		></nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -323,7 +333,10 @@ export const Grootten = {
 export const GrootteLg = {
 	name: 'Grootte lg',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+	>
 		<nldd-icon-button
 			size="lg"
 			icon="download"
@@ -339,7 +352,7 @@ export const GrootteLg = {
 			icon="search"
 			text="Zoeken"
 		></nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -353,7 +366,10 @@ export const GrootteLg = {
 
 export const MetAccessibleLabel = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+	>
 		<nldd-icon-button
 			icon="eye"
 			text="Toon"
@@ -364,7 +380,7 @@ export const MetAccessibleLabel = {
 			text="Verberg"
 			accessible-label="Verberg wachtwoord"
 		></nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -378,7 +394,11 @@ export const MetAccessibleLabel = {
 
 export const MetExpandable = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-icon-button
 			expandable
 			size="lg"
@@ -403,7 +423,7 @@ export const MetExpandable = {
 			icon="global-settings"
 			text="Instellingen"
 		></nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -418,7 +438,10 @@ export const MetExpandable = {
 export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+	>
 		<nldd-icon-button
 			disabled
 			appearance="accent-filled"
@@ -437,7 +460,7 @@ export const ToestandDisabled = {
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -447,18 +470,22 @@ export const ToestandDisabled = {
 export const ToestandLoading = {
 	name: 'Toestand loading',
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="center"
+	>
 		<nldd-icon-button
 			loading
 			appearance="primary"
-			icon="download"
-			text="Opslaan"
+			icon="save"
+			text="Bewaar"
 		></nldd-icon-button>
 		<nldd-icon-button
 			loading
 			appearance="neutral-tinted"
-			icon="download"
-			text="Opslaan"
+			icon="save"
+			text="Bewaar"
 		></nldd-icon-button>
 		<nldd-icon-button
 			loading
@@ -478,7 +505,7 @@ export const ToestandLoading = {
 			icon="dismiss"
 			text="Annuleer"
 		></nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -492,8 +519,11 @@ export const ToestandLoading = {
 
 export const EigenIcoonInDeSlot = {
 	render: () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
-		<nldd-icon-button text="Custom">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+	>
+		<nldd-icon-button text="Eigen icoon">
 			<svg
 				slot="icon"
 				width="20"
@@ -508,7 +538,7 @@ export const EigenIcoonInDeSlot = {
 				/>
 			</svg>
 		</nldd-icon-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -528,7 +558,10 @@ export const EigenIcoonInDeSlot = {
  */
 export const MetMenu = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+		>
 			<nldd-icon-button
 				icon="ellipsis"
 				text="Meer acties"
@@ -539,7 +572,7 @@ export const MetMenu = {
 						icon="edit"
 					></nldd-menu-item>
 					<nldd-menu-item
-						text="Dupliceren"
+						text="Dupliceer"
 						icon="square-plus-on-square"
 					></nldd-menu-item>
 					<nldd-menu-divider></nldd-menu-divider>
@@ -550,7 +583,7 @@ export const MetMenu = {
 					></nldd-menu-item>
 				</nldd-menu>
 			</nldd-icon-button>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -569,10 +602,13 @@ export const MetMenu = {
  */
 export const MetPopover = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+		>
 			<nldd-icon-button
 				icon="info-circle"
-				text="Info"
+				text="Uitleg dakisolatie"
 			>
 				<nldd-popover
 					slot="popup"
@@ -585,16 +621,16 @@ export const MetPopover = {
 					>
 						<nldd-title
 							size="6"
-							text="Zorgtoeslag"
+							text="Dakisolatie"
 							heading-level="2"
 						></nldd-title>
 						<nldd-rich-text>
-							<p>Een tegemoetkoming in de kosten van je zorgverzekering, afhankelijk van je inkomen.</p>
+							<p>Een bijdrage in de kosten van het isoleren van je dak, afhankelijk van het soort isolatie.</p>
 						</nldd-rich-text>
 					</nldd-container>
 				</nldd-popover>
 			</nldd-icon-button>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -617,7 +653,7 @@ export const MetPopover = {
  */
 export const OpKleurvlak = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md); display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
 				<nldd-icon-button
 					appearance="inherit-filled"
@@ -668,7 +704,7 @@ export const OpKleurvlak = {
 					text="Verwijder"
 				></nldd-icon-button>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

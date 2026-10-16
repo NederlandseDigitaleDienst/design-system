@@ -12,6 +12,19 @@ export const textStyles = css`
 		--_text-max-width: var(--semantics-text-max-width);
 		--_text-color: var(--context-content-color, var(--semantics-content-color));
 		--_text-align: left;
+		--_text-link-color: var(--semantics-links-color);
+		--_text-link-is-hovered-color: var(--semantics-links-is-hovered-color);
+		--_text-link-is-active-color: var(--semantics-links-is-active-color);
+		--_text-link-underline-offset: var(--primitives-space-2);
+		--_text-code-padding: var(--primitives-space-4);
+		--_text-code-corner-radius: var(--semantics-controls-xs-corner-radius);
+		--_text-code-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_text-code-font-family: var(--primitives-font-family-monospace);
+		--_text-code-font-size: var(--semantics-code-inline-font-size);
+		--_text-mark-padding: var(--primitives-space-1) var(--primitives-space-2);
+		--_text-mark-corner-radius: var(--semantics-controls-xs-corner-radius);
+		--_text-mark-background-color: var(--semantics-content-mark-background-color);
+		--_text-mark-color: var(--semantics-content-mark-color);
 
 		display: block;
 		max-width: var(--_text-max-width);
@@ -62,6 +75,48 @@ export const textStyles = css`
 	::slotted(b) {
 		color: inherit;
 		font-weight: var(--primitives-font-weight-body-bold);
+	}
+
+
+	/* # Inline elements */
+
+	::slotted(em),
+	::slotted(i) {
+		color: inherit;
+		font-style: italic;
+	}
+
+	::slotted(a) {
+		color: var(--_text-link-color);
+		text-decoration: underline;
+		text-underline-offset: var(--_text-link-underline-offset);
+	}
+
+	::slotted(a:hover) {
+		color: var(--_text-link-is-hovered-color);
+	}
+
+	::slotted(a:active) {
+		color: var(--_text-link-is-active-color);
+	}
+
+	:host([color="inherit"]) ::slotted(a) {
+		color: currentColor;
+	}
+
+	::slotted(code) {
+		border-radius: var(--_text-code-corner-radius);
+		background-color: var(--_text-code-background-color);
+		padding: var(--_text-code-padding);
+		font-family: var(--_text-code-font-family);
+		font-size: var(--_text-code-font-size);
+	}
+
+	::slotted(mark) {
+		border-radius: var(--_text-mark-corner-radius);
+		background-color: var(--_text-mark-background-color);
+		padding: var(--_text-mark-padding);
+		color: var(--_text-mark-color);
 	}
 
 

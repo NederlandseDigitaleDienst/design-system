@@ -200,7 +200,7 @@ Met een inhoudsopgave:
       ></nldd-title>
       <nldd-collection
         layout="grid"
-        item-width="280px"
+        item-min-width="280px"
       >
         <nldd-card
           href="#behandeling-volgen"
@@ -388,7 +388,7 @@ Zonder inhoudsopgave, voor een korte pagina:
       ></nldd-title>
       <nldd-collection
         layout="grid"
-        item-width="280px"
+        item-min-width="280px"
       >
         <nldd-card
           href="#aanvraag-wijzigen"

@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import './radio-button-field.js';
+import '../../layout/container/container.js';
 
 /**
  * De Radio Button Field component is een radio button met een inline label.
@@ -77,7 +78,7 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
+	<nldd-container gap="8">
 		<nldd-radio-button-field
 			label="Niet geselecteerd"
 			value="1"
@@ -98,7 +99,7 @@ export const AlleToestanden = {
 			checked
 			disabled
 		></nldd-radio-button-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

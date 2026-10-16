@@ -16,11 +16,12 @@ import { ICONS } from '../../content/icon/icon.js';
  * ## Gebruik
  * ```html
  * <nldd-inline-dialog
- *   text="Bevestiging vereist"
- *   supporting-text="Dit kan niet ongedaan worden gemaakt."
+ *   variant="alert"
+ *   text="Verwijder 'Dossier D-318'?"
+ *   supporting-text="Dit dossier en alle documenten erin worden verwijderd. Dit kan niet ongedaan worden gemaakt."
  * >
- *   <nldd-button slot="actions" appearance="primary" text="Bevestig"></nldd-button>
- *   <nldd-button slot="actions" appearance="neutral-tinted" text="Annuleer"></nldd-button>
+ *   <nldd-button slot="actions" appearance="primary" text="Behoud dossier"></nldd-button>
+ *   <nldd-button slot="actions" appearance="destructive" text="Verwijder dossier"></nldd-button>
  * </nldd-inline-dialog>
  * ```
  */
@@ -85,8 +86,8 @@ export default {
 	args: {
 		variant: '',
 		size: 'md',
-		text: 'Dialog titel',
-		supportingText: 'Ondersteunende tekst voor aanvullende context.',
+		text: "Verwijder 'Dossier D-318'?",
+		supportingText: 'Dit dossier en alle documenten erin worden verwijderd. Dit kan niet ongedaan worden gemaakt.',
 		icon: '',
 		iconColor: '',
 		horizontalAlignment: '',
@@ -106,12 +107,12 @@ export const Standaard = (args: Record<string, any>) => html`
 		<nldd-button
 			slot="actions"
 			appearance="primary"
-			text="Bevestig"
+			text="Behoud dossier"
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			appearance="neutral-tinted"
-			text="Annuleer"
+			appearance="destructive"
+			text="Verwijder dossier"
 		></nldd-button>
 	</nldd-inline-dialog>
 `;
@@ -119,18 +120,18 @@ export const Standaard = (args: Record<string, any>) => html`
 export const ZonderIcoon = {
 	render: () => html`
 	<nldd-inline-dialog
-		text="Bevestiging vereist"
-		supporting-text="Weet u zeker dat u door wilt gaan? Dit kan niet ongedaan worden gemaakt."
+		text="Aanvraag A-1042 versturen?"
+		supporting-text="Na het versturen kun je de aanvraag niet meer wijzigen."
 	>
 		<nldd-button
 			slot="actions"
 			appearance="primary"
-			text="Bevestig"
+			text="Verstuur aanvraag"
 		></nldd-button>
 		<nldd-button
 			slot="actions"
 			appearance="neutral-tinted"
-			text="Annuleer"
+			text="Blijf bewerken"
 		></nldd-button>
 	</nldd-inline-dialog>
 `,
@@ -142,7 +143,7 @@ export const MetIcoon = {
 	<nldd-inline-dialog
 		icon="gear"
 		text="Instellingen vereist"
-		supporting-text="Configureer eerst uw voorkeuren voordat u verder gaat."
+		supporting-text="Stel eerst je voorkeuren in, dan kun je verder."
 	>
 		<nldd-button
 			slot="actions"
@@ -182,18 +183,18 @@ export const VariantAlert = {
 	render: () => html`
 	<nldd-inline-dialog
 		variant="alert"
-		text="Niet opgeslagen"
-		supporting-text="Als u doorgaat gaan uw wijzigingen verloren."
+		text="Je wijzigingen zijn nog niet bewaard"
+		supporting-text="Sluit je Aanvraag A-1042 nu, dan gaan ze verloren."
 	>
 		<nldd-button
 			slot="actions"
 			appearance="primary"
-			text="Doorgaan"
+			text="Blijf bewerken"
 		></nldd-button>
 		<nldd-button
 			slot="actions"
-			appearance="neutral-tinted"
-			text="Annuleer"
+			appearance="destructive"
+			text="Verwijder wijzigingen"
 		></nldd-button>
 	</nldd-inline-dialog>
 `,
@@ -205,15 +206,9 @@ export const VariantSuccess = {
 	render: () => html`
 	<nldd-inline-dialog
 		variant="success"
-		text="Succesvol opgeslagen"
-		supporting-text="Uw wijzigingen zijn vastgelegd."
-	>
-		<nldd-button
-			slot="actions"
-			appearance="primary"
-			text="Sluiten"
-		></nldd-button>
-	</nldd-inline-dialog>
+		text="Aanvraag A-1043 is afgerond"
+		supporting-text="Je krijgt binnen twee weken bericht over de uitkomst."
+	></nldd-inline-dialog>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -249,13 +244,7 @@ export const Groot = {
 			icon="info-circle"
 			text="Grotere dialog"
 			supporting-text="Met size=&quot;lg&quot; krijgt zowel de hoofdtekst als de supporting-text een stap grotere typografie."
-		>
-			<nldd-button
-				slot="actions"
-				appearance="primary"
-				text="Begrepen"
-			></nldd-button>
-		</nldd-inline-dialog>
+		></nldd-inline-dialog>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -272,7 +261,7 @@ export const LegeToestand = {
 			<nldd-inline-dialog
 				icon="inbox"
 				text="Geen resultaten"
-				supporting-text="Er zijn geen items gevonden die overeenkomen met uw zoekopdracht."
+				supporting-text="Er zijn geen items gevonden die overeenkomen met je zoekopdracht."
 			>
 				<nldd-button
 					slot="actions"
@@ -300,16 +289,16 @@ export const MetFormulier = {
 	render: () => html`
 		<nldd-inline-dialog
 			icon="write"
-			text="Map hernoemen"
+			text="Dossier D-318 hernoemen"
 			supporting-text="De nieuwe naam is meteen zichtbaar voor iedereen met toegang."
 		>
 			<nldd-form-field label="Naam">
-				<nldd-text-field value="Beleidsstukken 2026"></nldd-text-field>
+				<nldd-text-field value="Dossier D-318"></nldd-text-field>
 			</nldd-form-field>
 			<nldd-button
 				slot="actions"
 				appearance="primary"
-				text="Opslaan"
+				text="Bewaar"
 			></nldd-button>
 			<nldd-button
 				slot="actions"
@@ -330,7 +319,7 @@ export const MetFormulier = {
 export const UitlijningOverschrijven = {
 	name: 'Uitlijning overschrijven',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 32px;">
+		<nldd-container gap="32">
 			<nldd-inline-dialog
 				horizontal-alignment="left"
 				icon="alert"
@@ -361,7 +350,7 @@ export const UitlijningOverschrijven = {
 					text="Afronden"
 				></nldd-button>
 			</nldd-inline-dialog>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

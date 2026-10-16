@@ -20,7 +20,7 @@ nldd-shell                            de buitenste schil
        │    └─ slot="media"              nldd-image, hier nog zonder beeld
        ├─ nldd-simple-section            background="tinted", wat je hier kunt
        │    ├─ slot="header"             de titel en een intro van een zin of twee
-       │    └─ nldd-collection           layout="grid", item-width
+       │    └─ nldd-collection           layout="grid", item-min-width
        │         └─ nldd-card            een onderwerp, een zin en een knop met de actie in de footer
        ├─ nldd-one-half-one-half-section afbeelding links, tekst rechts
        │    ├─ slot="left"               nldd-image met aspect-ratio
@@ -112,7 +112,7 @@ nldd-shell                            de buitenste schil
       </nldd-rich-text>
       <nldd-collection
         layout="grid"
-        item-width="320px"
+        item-min-width="320px"
       >
         <nldd-card>
           <nldd-container padding="16">

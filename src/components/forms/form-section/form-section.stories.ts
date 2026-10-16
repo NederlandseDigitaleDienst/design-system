@@ -52,16 +52,10 @@ const Template = ({ text, supportingText }: Record<string, any>) => html`
 			text=${text}
 			supporting-text=${supportingText}
 		>
-			<nldd-form-field label="Voornaam">
+			<nldd-form-field label="Naam">
 				<nldd-text-field
-					name="given-name"
-					autocomplete="given-name"
-				></nldd-text-field>
-			</nldd-form-field>
-			<nldd-form-field label="Achternaam">
-				<nldd-text-field
-					name="family-name"
-					autocomplete="family-name"
+					name="name"
+					autocomplete="name"
 				></nldd-text-field>
 			</nldd-form-field>
 		</nldd-form-section>
@@ -82,16 +76,10 @@ export const InEenFormulier = {
 				text="Persoonsgegevens"
 				supporting-text="Vul je naam en contactgegevens in."
 			>
-				<nldd-form-field label="Voornaam">
+				<nldd-form-field label="Naam">
 					<nldd-text-field
-						name="given-name"
-						autocomplete="given-name"
-					></nldd-text-field>
-				</nldd-form-field>
-				<nldd-form-field label="Achternaam">
-					<nldd-text-field
-						name="family-name"
-						autocomplete="family-name"
+						name="name"
+						autocomplete="name"
 					></nldd-text-field>
 				</nldd-form-field>
 				<nldd-form-field label="E-mail">
@@ -129,7 +117,7 @@ export const InEenFormulier = {
 					<nldd-button
 						appearance="primary"
 						type="submit"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>
@@ -142,11 +130,11 @@ export const ZonderText = {
 	render: () => html`
 		<nldd-form novalidate>
 			<nldd-form-section>
-				<nldd-form-field label="Voornaam">
-					<nldd-text-field></nldd-text-field>
-				</nldd-form-field>
-				<nldd-form-field label="Achternaam">
-					<nldd-text-field></nldd-text-field>
+				<nldd-form-field label="Naam">
+					<nldd-text-field
+						name="name"
+						autocomplete="name"
+					></nldd-text-field>
 				</nldd-form-field>
 			</nldd-form-section>
 		</nldd-form>

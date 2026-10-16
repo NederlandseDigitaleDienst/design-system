@@ -6,6 +6,7 @@ import '../../forms/form-field/form-field.js';
 import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
+import '../../layout/container/container.js';
 
 /**
  * `nldd-multi-line-text-field` is een meerregelig tekstveld op basis van
@@ -204,7 +205,7 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 1rem;">
+		<nldd-container gap="16">
 			<nldd-multi-line-text-field placeholder="Neutral"></nldd-multi-line-text-field>
 			<nldd-multi-line-text-field
 				.value=${'Geldige inhoud op meerdere\nregels'}
@@ -222,20 +223,20 @@ export const AlleToestanden = {
 				.value=${'Readonly inhoud die niet bewerkt mag worden.'}
 				readonly
 			></nldd-multi-line-text-field>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 1rem;">
+		<nldd-container gap="16">
 			<nldd-multi-line-text-field placeholder="Medium (md)"></nldd-multi-line-text-field>
 			<nldd-multi-line-text-field
 				placeholder="Small (sm)"
 				size="sm"
 			></nldd-multi-line-text-field>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -250,7 +251,7 @@ export const Grootten = {
 export const Meegroeiend = {
 	name: 'Meegroeiend (resize="auto")',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 1rem;">
+		<nldd-container gap="16">
 			<nldd-multi-line-text-field
 				accessible-label="Groeit mee, minimaal 2 regels"
 				placeholder="Groeit mee met de inhoud — minimaal 2 regels"
@@ -263,7 +264,7 @@ export const Meegroeiend = {
 				resize="auto"
 				rows="5"
 			></nldd-multi-line-text-field>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -296,7 +297,7 @@ export const InteractiefVoorbeeld = {
 					<nldd-button
 						appearance="primary"
 						type="submit"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 				</nldd-button-group>
 			</nldd-form-actions>

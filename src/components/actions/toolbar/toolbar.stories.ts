@@ -8,6 +8,9 @@ import '../../actions/menu/menu.js';
 import '../../inputs/search-field/search-field.js';
 import '../../inputs/segmented-control/segmented-control.js';
 import '../../navigation/tab-bar/tab-bar.js';
+import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 export default {
 	title: 'Components/Actions/Toolbar',
@@ -43,9 +46,10 @@ const resizable = (content: TemplateResult) => html`
 	<div style="resize: horizontal; overflow: hidden; min-width: 200px; max-width: 100%; padding: 8px;">
 		${content}
 	</div>
-	<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 8px 0 0;">
+	<nldd-spacer size="8"></nldd-spacer>
+	<nldd-text size="xs">
 		↔ Sleep de hoek rechtsonder om de breedte aan te passen
-	</p>
+	</nldd-text>
 `;
 
 export const Standaard = {
@@ -83,15 +87,15 @@ export const Standaard = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -102,7 +106,7 @@ export const Standaard = {
 export const MetTitelgroep = {
 	args: { size: 'md', showItemLabels: false },
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-toolbar
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
@@ -123,31 +127,31 @@ export const MetTitelgroep = {
 				</nldd-toolbar-item>
 				<nldd-toolbar-title
 					slot="start"
-					text="Document titel"
+					text="Aanvraag A-1042"
 					supporting-text="Laatste wijziging: vandaag"
 				></nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Annuleer"
+					label="Delen"
 				>
-					<nldd-button text="Annuleer"></nldd-button>
+					<nldd-button text="Delen"></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Annuleer"
-						icon="dismiss-circle"
+						text="Delen"
+						icon="share"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 				<nldd-toolbar-item
 					slot="end"
-					label="Sla op"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Sla op"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Sla op"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -172,26 +176,26 @@ export const MetTitelgroep = {
 				</nldd-toolbar-item>
 				<nldd-toolbar-title
 					slot="center"
-					text="Document titel"
+					text="Aanvraag A-1042"
 					supporting-text="Laatste wijziging: vandaag"
 					align="center"
 				></nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Sla op"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Sla op"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Sla op"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -199,16 +203,16 @@ export const MetTitelgroep = {
  *  logo, and a story that reaches for a file on disk breaks wherever it runs. */
 const logoDataUri = 'data:image/svg+xml,'
 	+ encodeURIComponent(
-		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 28">'
+		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 28">'
 		+ '<rect width="28" height="28" rx="6" fill="#154273"/>'
-		+ '<text x="36" y="20" font-family="sans-serif" font-size="16" fill="#154273">Beleid</text>'
+		+ '<text x="36" y="20" font-family="sans-serif" font-size="16" fill="#154273">Mijn Dienst</text>'
 		+ '</svg>',
 	);
 
 export const TitelMetMedia = {
 	args: { size: 'md', showItemLabels: false },
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<!-- Icon before the name: says what kind of document this is before you
 			     read which one. With href the mark and the name are one link back
 			     to where this window belongs; the action beside it stays its own
@@ -219,7 +223,7 @@ export const TitelMetMedia = {
 			>
 				<nldd-toolbar-title
 					slot="start"
-					text="beleid-2026"
+					text="Aanvraag A-1042"
 					href="#"
 				>
 					<nldd-icon
@@ -231,15 +235,15 @@ export const TitelMetMedia = {
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Opslaan"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Opslaan"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -255,33 +259,33 @@ export const TitelMetMedia = {
 					<img
 						slot="media"
 						src=${logoDataUri}
-						alt="Rijksbeleid"
+						alt="Mijn Dienst"
 						height="28"
 					>
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Opslaan"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Opslaan"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const TitelMetActie = {
 	args: { size: 'md', showItemLabels: false },
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<!-- Short name: the title shrink-wraps (fit-content) so the xs action
 			     button sits right against it. -->
 			<nldd-toolbar
@@ -290,7 +294,7 @@ export const TitelMetActie = {
 			>
 				<nldd-toolbar-title
 					slot="start"
-					text="beleid-2026"
+					text="Aanvraag A-1042"
 				>
 					<nldd-icon-button
 						slot="action"
@@ -315,15 +319,15 @@ export const TitelMetActie = {
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Opslaan"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Opslaan"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -361,28 +365,31 @@ export const TitelMetActie = {
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
 					slot="end"
-					label="Opslaan"
+					label="Bewaar"
 				>
 					<nldd-button
 						appearance="primary"
-						text="Opslaan"
+						text="Bewaar"
 					></nldd-button>
 					<nldd-menu-item
 						slot="overflow"
-						text="Opslaan"
+						text="Bewaar"
 						icon="save"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 			</nldd-toolbar>
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
-			<div>
-				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">md (default)</p>
+		<nldd-container gap="16">
+			<nldd-container>
+				<nldd-text size="xs">
+					md (default)
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="md">
 						<nldd-toolbar-item
@@ -409,23 +416,26 @@ export const Grootten = {
 						</nldd-toolbar-item>
 						<nldd-toolbar-item
 							slot="end"
-							label="Sla op"
+							label="Bewaar"
 						>
 							<nldd-button
 								appearance="primary"
-								text="Sla op"
+								text="Bewaar"
 							></nldd-button>
 							<nldd-menu-item
 								slot="overflow"
-								text="Sla op"
+								text="Bewaar"
 								icon="save"
 							></nldd-menu-item>
 						</nldd-toolbar-item>
 					</nldd-toolbar>
 				`}
-			</div>
-			<div>
-				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">sm</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text size="xs">
+					sm
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="sm">
 						<nldd-toolbar-item
@@ -452,31 +462,34 @@ export const Grootten = {
 						</nldd-toolbar-item>
 						<nldd-toolbar-item
 							slot="end"
-							label="Sla op"
+							label="Bewaar"
 						>
 							<nldd-button
 								appearance="primary"
-								text="Sla op"
+								text="Bewaar"
 							></nldd-button>
 							<nldd-menu-item
 								slot="overflow"
-								text="Sla op"
+								text="Bewaar"
 								icon="save"
 							></nldd-menu-item>
 						</nldd-toolbar-item>
 					</nldd-toolbar>
 				`}
-			</div>
-		</div>
+			</nldd-container>
+		</nldd-container>
 	`,
 };
 
 export const LabelsAanUit = {
 	name: 'Labels aan en uit',
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
-			<div>
-				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">Zonder labels</p>
+		<nldd-container gap="16">
+			<nldd-container>
+				<nldd-text size="xs">
+					Zonder labels
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar size="md">
 						<nldd-toolbar-item
@@ -527,9 +540,12 @@ export const LabelsAanUit = {
 						</nldd-toolbar-item>
 					</nldd-toolbar>
 				`}
-			</div>
-			<div>
-				<p style="font-size: 0.75rem; color: var(--semantics-content-color); margin: 0 0 8px;">Met labels</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text size="xs">
+					Met labels
+				</nldd-text>
+				<nldd-spacer size="8"></nldd-spacer>
 				${html`
 					<nldd-toolbar
 						size="md"
@@ -583,8 +599,8 @@ export const LabelsAanUit = {
 						</nldd-toolbar-item>
 					</nldd-toolbar>
 				`}
-			</div>
-		</div>
+			</nldd-container>
+		</nldd-container>
 	`,
 };
 
@@ -685,26 +701,26 @@ export const Overloop = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Annuleer"
+				label="Delen"
 			>
-				<nldd-button text="Annuleer"></nldd-button>
+				<nldd-button text="Delen"></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Annuleer"
-					icon="dismiss-circle"
+					text="Delen"
+					icon="share"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -811,34 +827,34 @@ export const OverloopMetPrioriteit = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-title
 				slot="center"
-				text="Document titel"
+				text="Aanvraag A-1042"
 				supporting-text="Laatste wijziging: vandaag"
 				align="center"
 			></nldd-toolbar-title>
 			<nldd-toolbar-item
 				slot="end"
-				label="Annuleer"
+				label="Delen"
 				priority="3"
 			>
-				<nldd-button text="Annuleer"></nldd-button>
+				<nldd-button text="Delen"></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Annuleer"
-					icon="dismiss-circle"
+					text="Delen"
+					icon="share"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 				priority="10"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -880,27 +896,27 @@ export const MetMeegroeiendItem = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Annuleer"
+				label="Delen"
 			>
-				<nldd-button text="Annuleer"></nldd-button>
+				<nldd-button text="Delen"></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Annuleer"
-					icon="dismiss-circle"
+					text="Delen"
+					icon="share"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 				priority="2"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -950,15 +966,15 @@ export const MetVasteOverloopitems = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -1077,16 +1093,16 @@ export const VasteEnDynamischeOverloop = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 				priority="10"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 					icon="save"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -1126,7 +1142,7 @@ export const MobieleActiebalk = {
 				<nldd-tab-bar accessible-label="Hoofdnavigatie">
 					<nldd-tab-bar-item
 						current
-						text="Home"
+						text="Overzicht"
 						icon="home"
 					></nldd-tab-bar-item>
 					<nldd-tab-bar-item
@@ -1145,7 +1161,7 @@ export const MobieleActiebalk = {
 					<nldd-menu-item
 						type="radio"
 						selected
-						text="Home"
+						text="Overzicht"
 						icon="home"
 					></nldd-menu-item>
 					<nldd-menu-item
@@ -1176,15 +1192,15 @@ export const MobieleActiebalk = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Downloaden"
+				label="Download"
 			>
 				<nldd-icon-button
-					text="Downloaden"
+					text="Download"
 					icon="download"
 				></nldd-icon-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Downloaden"
+					text="Download"
 					icon="download"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -1294,15 +1310,15 @@ export const MetTabBar = {
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Downloaden"
+				label="Download"
 			>
 				<nldd-icon-button
-					text="Downloaden"
+					text="Download"
 					icon="download"
 				></nldd-icon-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Downloaden"
+					text="Download"
 					icon="download"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
@@ -1319,7 +1335,10 @@ export const MetTabBar = {
  */
 export const LosseGecentreerdeTitel = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px; max-width: 420px;">
+		<nldd-container
+			gap="16"
+			max-width="420px"
+		>
 			<div style="outline: 1px dashed var(--semantics-dividers-color);">
 				<nldd-toolbar
 					size="md"
@@ -1328,7 +1347,7 @@ export const LosseGecentreerdeTitel = {
 					<nldd-toolbar-title
 						slot="center"
 						align="center"
-						text="boodschappen"
+						text="Dossier D-318"
 					>
 						<nldd-icon-button
 							slot="action"
@@ -1363,7 +1382,7 @@ export const LosseGecentreerdeTitel = {
 					<nldd-toolbar-title
 						slot="center"
 						align="center"
-						text="boodschappen"
+						text="Dossier D-318"
 					>
 						<nldd-icon-button
 							slot="action"
@@ -1375,7 +1394,7 @@ export const LosseGecentreerdeTitel = {
 					</nldd-toolbar-title>
 				</nldd-toolbar>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

@@ -6,6 +6,7 @@ import '../../forms/form-field/form-field.js';
 import '../../forms/form-actions/form-actions.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
+import '../../layout/container/container.js';
 
 /**
  * `nldd-text-field` is a single-line text input.
@@ -139,7 +140,7 @@ export default {
 		width: '',
 		name: '',
 		value: '',
-		placeholder: 'Text field',
+		placeholder: 'Tekstveld',
 		type: 'text',
 		keyboard: undefined,
 		enterKey: undefined,
@@ -185,38 +186,38 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-text-field placeholder="Neutral"></nldd-text-field>
+	<nldd-container gap="16">
+		<nldd-text-field placeholder="Neutraal"></nldd-text-field>
 		<nldd-text-field
-			.value=${'Valid input'}
+			.value=${'Geldige invoer'}
 			valid
 		></nldd-text-field>
 		<nldd-text-field
-			.value=${'Invalid input'}
+			.value=${'Ongeldige invoer'}
 			invalid
 		></nldd-text-field>
 		<nldd-text-field
-			.value=${'Disabled'}
+			.value=${'Uitgeschakeld'}
 			disabled
 		></nldd-text-field>
 		<nldd-text-field
-			.value=${'Readonly'}
+			.value=${'Alleen-lezen'}
 			readonly
 		></nldd-text-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
 
 export const Grootten = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-text-field placeholder="Medium (md)"></nldd-text-field>
+	<nldd-container gap="16">
+		<nldd-text-field placeholder="Middel (md)"></nldd-text-field>
 		<nldd-text-field
-			placeholder="Small (sm)"
+			placeholder="Klein (sm)"
 			size="sm"
 		></nldd-text-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -255,7 +256,7 @@ export const InteractiefVoorbeeld = {
 				<nldd-button
 					appearance="primary"
 					type="submit"
-					text="Opslaan"
+					text="Bewaar"
 				></nldd-button>
 			</nldd-button-group>
 		</nldd-form-actions>

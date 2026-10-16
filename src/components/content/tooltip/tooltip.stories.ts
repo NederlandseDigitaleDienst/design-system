@@ -3,6 +3,7 @@ import './tooltip.js';
 import '../../actions/button/button.js';
 import '../../actions/icon-button/icon-button.js';
 import '../rich-text/rich-text.js';
+import '../../layout/container/container.js';
 
 /**
  * De Tooltip toont informatieve tekst bij hover of focus op een child element.
@@ -10,8 +11,8 @@ import '../rich-text/rich-text.js';
  *
  * ## Gebruik
  * ```html
- * <nldd-tooltip text="Meer informatie">
- *   <nldd-icon-button icon="info" text="Info"></nldd-icon-button>
+ * <nldd-tooltip text="Uitleg bij de status">
+ *   <nldd-icon-button icon="info" text="Uitleg"></nldd-icon-button>
  * </nldd-tooltip>
  * ```
  */
@@ -45,7 +46,7 @@ export default {
 		},
 	},
 	args: {
-		text: 'Dit is een tooltip',
+		text: 'Aanvraag A-1042 is in behandeling',
 		placement: 'bottom',
 		timing: 'delay',
 	},
@@ -53,26 +54,34 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; justify-content: center; padding: 4rem;">
+		<nldd-container
+			layout="row"
+			padding="64"
+			horizontal-alignment="center"
+		>
 			<nldd-tooltip
 				text=${args.text}
 				placement=${args.placement}
 				timing=${args.timing}
 			>
-				<nldd-button text="Hover mij"></nldd-button>
+				<nldd-button text="Toon tooltip"></nldd-button>
 			</nldd-tooltip>
-		</div>
+		</nldd-container>
 	`,
 };
 
 export const MetIconButton = {
 	render: () => html`
-		<div style="display: flex; justify-content: center; padding: 4rem;">
+		<nldd-container
+			layout="row"
+			padding="64"
+			horizontal-alignment="center"
+		>
 			<nldd-icon-button
 				icon="info"
-				text="Info"
+				text="Uitleg bij de status"
 			></nldd-icon-button>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -86,32 +95,37 @@ export const MetIconButton = {
 
 export const Posities = {
 	render: () => html`
-		<div style="display: flex; gap: 2rem; justify-content: center; padding: 4rem;">
+		<nldd-container
+			layout="row"
+			gap="32"
+			padding="64"
+			horizontal-alignment="center"
+		>
 			<nldd-tooltip
-				text="Boven"
+				text="Tooltip boven"
 				placement="top"
 			>
-				<nldd-button text="Top"></nldd-button>
+				<nldd-button text="Boven"></nldd-button>
 			</nldd-tooltip>
 			<nldd-tooltip
-				text="Onder"
+				text="Tooltip onder"
 				placement="bottom"
 			>
-				<nldd-button text="Bottom"></nldd-button>
+				<nldd-button text="Onder"></nldd-button>
 			</nldd-tooltip>
 			<nldd-tooltip
-				text="Links"
+				text="Tooltip links"
 				placement="left"
 			>
-				<nldd-button text="Left"></nldd-button>
+				<nldd-button text="Links"></nldd-button>
 			</nldd-tooltip>
 			<nldd-tooltip
-				text="Rechts"
+				text="Tooltip rechts"
 				placement="right"
 			>
-				<nldd-button text="Right"></nldd-button>
+				<nldd-button text="Rechts"></nldd-button>
 			</nldd-tooltip>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -119,11 +133,11 @@ export const Posities = {
 export const MetLink = {
 	render: () => html`
 		<nldd-rich-text>
-			<p>Lees meer over
-				<nldd-tooltip text="Artikel 1: Allen die zich in Nederland bevinden, worden in gelijke gevallen gelijk behandeld.">
-					<a href="#">de Grondwet</a>
+			<p>Team Uitvoering beoordeelt
+				<nldd-tooltip text="Dakisolatie, in behandeling bij team Uitvoering. Je hoort binnen vijf werkdagen van ons.">
+					<a href="#">Aanvraag A-1042</a>
 				</nldd-tooltip>
-				voor meer informatie.
+				deze week.
 			</p>
 		</nldd-rich-text>
 	`,

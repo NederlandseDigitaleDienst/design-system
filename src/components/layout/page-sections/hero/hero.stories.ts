@@ -5,6 +5,7 @@ import '../../../content/rich-text/rich-text.js';
 import '../../../actions/button/button.js';
 import '../../../actions/button-group/button-group.js';
 import '../../spacer/spacer.js';
+import '../../container/container.js';
 
 const MEDIA = 'sample-images/butterfly-1200.jpg';
 
@@ -35,6 +36,7 @@ export default {
 		status: { type: 'beta' },
 	},
 	args: {
+		corner: null,
 		layout: 'overlap',
 		mainBackground: 'accent',
 		mainWidth: 'auto',
@@ -48,6 +50,13 @@ export default {
 		mediaAlt: '',
 	},
 	argTypes: {
+		corner: {
+			control: 'select',
+			options: ['(geen)', 'auto', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
+			mapping: { '(geen)': null, 'auto': '' },
+			description: 'Rondt één hoek van het mediavlak af en een halve van het paneel. Auto kiest een hoek die het paneel vrijlaat',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
 		layout: {
 			control: 'select',
 			options: ['contained', 'overlap'],
@@ -118,6 +127,7 @@ export default {
 
 const Template = (args: Record<string, any>) => html`
 	<nldd-hero
+		corner=${args.corner ?? nothing}
 		layout=${args.layout === 'overlap' ? nothing : args.layout}
 		main-background=${args.mainBackground}
 		main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
@@ -148,7 +158,7 @@ const Template = (args: Record<string, any>) => html`
 			></nldd-button>
 			<nldd-button
 				appearance="inherit-tinted"
-				text="Meer informatie"
+				text="Over de Digitale Dienst"
 			></nldd-button>
 		</nldd-button-group>
 	</nldd-hero>
@@ -158,9 +168,106 @@ export const Standaard = {
 	render: Template,
 };
 
+const cornerContent = (text: string) => html`
+	<nldd-title
+		color="inherit"
+		size="4"
+		text=${text}
+		heading-level="2"
+	></nldd-title>
+`;
+
+/**
+ * Met `corner` krijgt het mediavlak één afgeronde hoek en het paneel een halve,
+ * op de hoek die het beeld in wijst. Leeg gelaten kiest de hero een hoek die het
+ * paneel vrijlaat. Dat werkt met `layout="contained"` en het paneel in een hoek
+ * of langs een zijde. Het paneel staat dan tegen de rand van het beeld, dus een
+ * `main-width` in procenten is een deel van het beeld. Een paneel langs een hele
+ * zijde of als volle strook blijft recht.
+ */
+export const MetAfgerondeHoek = {
+	name: 'Met afgeronde hoek',
+	render: () => html`
+		<nldd-container gap="24">
+			${['bottom-left', 'bottom-right', 'top-left', 'top-right', 'left', 'right'].map((position) => html`
+				<nldd-hero
+					corner
+					layout="contained"
+					main-position=${position}
+					main-background="donkerblauw"
+				>
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					${cornerContent(`main-position="${position}"`)}
+				</nldd-hero>
+			`)}
+			${['33.33%', '50%', '66.67%'].map((width) => html`
+				<nldd-hero
+					corner
+					layout="contained"
+					main-width=${width}
+					main-background="donkerblauw"
+				>
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					${cornerContent(`main-width="${width}"`)}
+				</nldd-hero>
+			`)}
+			<nldd-hero
+				corner
+				main-background="donkerblauw"
+			>
+				${cornerContent('Zonder media')}
+			</nldd-hero>
+		</nldd-container>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
+ * Elke hoek van het mediavlak is ook zelf te kiezen. Kies je een hoek die onder
+ * het paneel valt, dan zegt de hero dat in development.
+ */
+const OPPOSITE_CORNER: Record<string, string> = {
+	'top-left': 'bottom-right',
+	'top-right': 'bottom-left',
+	'bottom-left': 'top-right',
+	'bottom-right': 'top-left',
+};
+
+export const AfgerondeHoekGekozen = {
+	name: 'Afgeronde hoek gekozen',
+	render: () => html`
+		<nldd-container gap="24">
+			${['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((corner) => html`
+				<nldd-hero
+					corner=${corner}
+					layout="contained"
+					main-position=${OPPOSITE_CORNER[corner]}
+					main-background="donkerblauw"
+				>
+					<img
+						slot="media"
+						src=${MEDIA}
+						alt=""
+					>
+					${cornerContent(`corner="${corner}"`)}
+				</nldd-hero>
+			`)}
+		</nldd-container>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
 export const AllePosities = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			${['bottom-left', 'bottom-center', 'bottom-right', 'top-left', 'top-center', 'top-right', 'left', 'right'].map((position) => html`
 				<nldd-hero
 					layout="contained"
@@ -180,7 +287,7 @@ export const AllePosities = {
 					></nldd-title>
 				</nldd-hero>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -197,7 +304,7 @@ export const AllePosities = {
 export const Overlap = {
 	args: { overlapSize: '', mainPosition: 'bottom-left', mainWidth: 'auto' },
 	render: (args: Record<string, any>) => html`
-		<div style="display: flex; flex-direction: column; gap: 48px;">
+		<nldd-container gap="48">
 			${[
 				['Veel tekst', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p><p>Elke regel krijgt een vorm die mensen en systemen allebei kunnen lezen, zodat de uitvoering volgt wat er bedoeld is. Wie wil weten waarom een besluit zo uitvalt, kan het nalezen.</p></nldd-rich-text><nldd-spacer size="16"></nldd-spacer><nldd-button appearance="inherit-filled" text="Bekijk de regels"></nldd-button>`],
 				['Gemiddeld', html`<nldd-rich-text color="inherit"><p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar, voor wie ze maakt en voor wie ermee werkt.</p></nldd-rich-text>`],
@@ -223,7 +330,7 @@ export const Overlap = {
 					${body ? html`<nldd-spacer size="16"></nldd-spacer>${body}` : nothing}
 				</nldd-hero>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	argTypes: {
 		overlapSize: {
@@ -242,7 +349,7 @@ export const Overlap = {
  */
 export const VolleStrook = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			<nldd-hero
 				layout="contained"
 				main-position="bottom-left"
@@ -281,7 +388,7 @@ export const VolleStrook = {
 					heading-level="1"
 				></nldd-title>
 			</nldd-hero>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -293,7 +400,7 @@ export const VolleStrook = {
  */
 export const ZonderMedia = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px;">
+		<nldd-container gap="24">
 			<nldd-hero main-background="hemelblauw">
 				<nldd-title
 					color="inherit"
@@ -311,7 +418,7 @@ export const ZonderMedia = {
 					heading-level="1"
 				></nldd-title>
 			</nldd-hero>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

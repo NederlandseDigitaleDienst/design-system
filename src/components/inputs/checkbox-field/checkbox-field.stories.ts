@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './checkbox-field.js';
+import '../../layout/container/container.js';
 
 /**
  * De Checkbox Field component is een checkbox met een inline label voor gebruik in formulieren.
@@ -90,7 +91,7 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 0.5rem;">
+	<nldd-container gap="8">
 		<nldd-checkbox-field
 			label="Niet aangevinkt"
 			value="1"
@@ -122,7 +123,7 @@ export const AlleToestanden = {
 			indeterminate
 			disabled
 		></nldd-checkbox-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

@@ -47,7 +47,7 @@ describe('patroon: formulier', () => {
 		await mount();
 		const optional = [...root.querySelectorAll('nldd-form-field[optional]')].map((field) => field.getAttribute('label'));
 		expect(optional).toEqual(['Naam']);
-		// Een optioneel veld heeft geen eis, dus ook geen lijst eronder.
+		// Het optionele veld vraagt hier geen formaat, dus er staat geen lijst onder.
 		expect(root.querySelector('nldd-form-field[optional] nldd-validation-list')).toBeNull();
 	});
 });

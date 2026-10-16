@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import './button-group.js';
 import '../button/button.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Actions/Button Group',
@@ -143,7 +144,7 @@ export const MaximaalDrieKnoppen = {
 export const InEenSmalleContainer = {
 	name: 'In een smalle container',
 	render: (args: Record<string, any>) => html`
-	<div style="width: 220px;">
+	<nldd-container width="220px">
 		<nldd-button-group
 			size=${args.size}
 			orientation=${args.orientation}
@@ -154,9 +155,9 @@ export const InEenSmalleContainer = {
 			></nldd-button>
 			<nldd-button
 				appearance="secondary"
-				text="Annuleer"
+				text="Bewaar als concept"
 			></nldd-button>
 		</nldd-button-group>
-	</div>
+	</nldd-container>
 	`,
 };

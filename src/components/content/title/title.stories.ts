@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './title.js';
 import '../../actions/button/button.js';
 import '../../layout/spacer/spacer.js';
+import '../../layout/container/container.js';
 
 /**
  * Gebruik een title bar om een paginatitel of sectietitel te tonen met
@@ -42,6 +43,9 @@ export default {
 	},
 	args: {
 		size: 3,
+		smCustomSize: '',
+		mdCustomSize: '',
+		lgCustomSize: '',
 		color: 'content',
 		text: 'Paginatitel',
 		supportingText: '',
@@ -54,6 +58,21 @@ export default {
 			options: [1, 2, 3, 4, 5, 6],
 			description: 'Visuele grootte van de titel',
 			table: { defaultValue: { summary: '3' } },
+		},
+		smCustomSize: {
+			name: 'sm-custom-size',
+			control: 'text',
+			description: 'Eigen grootte bij sm, elke CSS-lengte, voor een statement groter dan grootte 1. Een breedte zonder waarde houdt `size`; nooit kleiner dan grootte 1. Gebruik voor koppen `size`.',
+		},
+		mdCustomSize: {
+			name: 'md-custom-size',
+			control: 'text',
+			description: 'Eigen grootte bij md',
+		},
+		lgCustomSize: {
+			name: 'lg-custom-size',
+			control: 'text',
+			description: 'Eigen grootte bij lg',
 		},
 		color: {
 			control: 'select',
@@ -85,10 +104,13 @@ export default {
 	},
 };
 
-export const Standaard = ({ size, color, text, supportingText, overline, headingLevel }: Record<string, any>) => html`
+export const Standaard = ({ size, smCustomSize, mdCustomSize, lgCustomSize, color, text, supportingText, overline, headingLevel }: Record<string, any>) => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
 			size=${size}
+			sm-custom-size=${smCustomSize || nothing}
+			md-custom-size=${mdCustomSize || nothing}
+			lg-custom-size=${lgCustomSize || nothing}
 			color=${color || nothing}
 			text=${text || nothing}
 			supporting-text=${supportingText || nothing}
@@ -99,7 +121,7 @@ export const Standaard = ({ size, color, text, supportingText, overline, heading
 				slot="end"
 				appearance="secondary"
 				size="sm"
-				text="Actie"
+				text="Bewerken"
 			></nldd-button>
 		</nldd-title>
 	</div>
@@ -109,8 +131,8 @@ export const MetOverline = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
-			text="Artikel 1"
-			overline="Wet op de zorgtoeslag"
+			text="Aanvraag A-1042"
+			overline="Dakisolatie"
 			heading-level="1"
 		></nldd-title>
 	</div>
@@ -122,8 +144,8 @@ export const MetSupportingText = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
-			text="Wet op de zorgtoeslag"
-			supporting-text="Laatste wijziging: 1 januari 2024"
+			text="Aanvraag A-1042"
+			supporting-text="Dakisolatie, in behandeling"
 			heading-level="1"
 		></nldd-title>
 	</div>
@@ -135,9 +157,9 @@ export const MetOverlineEnSupportingText = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
-			text="Begripsbepalingen"
-			supporting-text="Ingangsdatum: 1 januari 2024"
-			overline="Hoofdstuk 1"
+			text="Dossier D-318"
+			supporting-text="Aanvraag A-1042 in behandeling"
+			overline="Team Uitvoering"
 			heading-level="1"
 		></nldd-title>
 	</div>
@@ -149,7 +171,7 @@ export const MetActies = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
-			text="Wet op de zorgtoeslag"
+			text="Aanvraag A-1042"
 			heading-level="1"
 		>
 			<nldd-button
@@ -165,7 +187,7 @@ export const MetActies = {
 			<nldd-button
 				slot="end"
 				size="sm"
-				text="Opslaan"
+				text="Bewaar"
 			></nldd-button>
 		</nldd-title>
 	</div>
@@ -189,6 +211,30 @@ export const AlleGrootten = {
 };
 
 /**
+ * Voor een statement dat groter moet dan grootte 1 geef je per breedte een eigen
+ * grootte, met `sm-`, `md-` en `lg-custom-size`. Een breedte zonder waarde houdt
+ * de maat uit `size`, dus een titel die op een breed scherm groot is, breekt
+ * nooit op een smal scherm. De titel neemt het gewicht, het lettertype en de
+ * regelhoogte van grootte 1 over en wordt nooit kleiner dan grootte 1. Voor koppen
+ * gebruik je `size`.
+ */
+export const EigenGrootte = {
+	name: 'Eigen grootte',
+	render: () => html`
+	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
+		<nldd-title
+			sm-custom-size="56px"
+			md-custom-size="80px"
+			lg-custom-size="96px"
+			text="Mijn Dienst"
+			heading-level="1"
+		></nldd-title>
+	</div>
+`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
  * Met `color="inherit"` volgt de titel de tekstkleur van de ondergrond —
  * voor gekleurde vlakken zoals de filled-categories, die een puur witte of
  * zwarte contentkleur meeleveren. De overline en supporting-text krijgen dezelfde
@@ -196,7 +242,7 @@ export const AlleGrootten = {
  */
 export const OpKleurvlak = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
 				<nldd-title
 					color="inherit"
@@ -217,7 +263,7 @@ export const OpKleurvlak = {
 					heading-level="2"
 				></nldd-title>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -229,8 +275,8 @@ export const OpKleurvlak = {
 export const MetEigenInhoud = {
 	render: () => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
-		<nldd-title supporting-text="Laatste wijziging: 1 januari 2024">
-			<h1><a href="https://wetten.overheid.nl/BWBR0018451">Wet op de zorgtoeslag</a></h1>
+		<nldd-title supporting-text="Dakisolatie, in behandeling">
+			<h1><a href="#aanvraag-a-1042">Aanvraag A-1042</a></h1>
 		</nldd-title>
 	</div>
 `,

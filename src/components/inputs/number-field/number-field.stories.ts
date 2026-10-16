@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './number-field.js';
+import '../../layout/container/container.js';
 
 /**
  * De Number Field component is een numeriek invoerveld met decrement en increment knoppen.
@@ -112,7 +113,7 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-number-field
 			value="5"
 			min="0"
@@ -174,15 +175,15 @@ export const AlleToestanden = {
 			hide-spin-buttons
 			width="240px"
 		></nldd-number-field>
-		<div style="width: 400px;">
+		<nldd-container width="400px">
 			<nldd-number-field
 				value="5"
 				min="0"
 				max="10"
 				width="full"
 			></nldd-number-field>
-		</div>
-		<div style="width: 400px;">
+		</nldd-container>
+		<nldd-container width="400px">
 			<nldd-number-field
 				value="5"
 				min="0"
@@ -190,8 +191,8 @@ export const AlleToestanden = {
 				hide-spin-buttons
 				width="full"
 			></nldd-number-field>
-		</div>
-	</div>
+		</nldd-container>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

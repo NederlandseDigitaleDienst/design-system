@@ -3,10 +3,10 @@
  *
  * The section that says what a page is for: it names the main goal of what
  * you can find there, draws the eye and is the visual welcome. It has a media
- * area and a text panel (the main) that can stand in eight positions. Every
- * area is rectangular. Use it on pages where a visitor first has to know where
- * they are, such as a home or a topic page; where the title already does
- * that, a section with a title is enough.
+ * area and a text panel (the main) that can stand in eight positions. The
+ * areas are rectangular; `corner` rounds one corner of each. Use it on pages
+ * where a visitor first has to know where they are, such as a home or a topic
+ * page; where the title already does that, a section with a title is enough.
  *
  * The image in a hero sets the mood and is never the main content, so the
  * panel always stands on it. Over an image the panel keeps a section gap from
@@ -45,6 +45,7 @@
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)
  * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
+ * @attr {string} corner - Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. Applies with `layout="contained"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width="full"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg. Says so in development when the chosen corner sits under the panel, or with `width="full"`
  * @attr {'contained'|'overlap'} layout - How the panel relates to the image (default: 'overlap'). 'contained' keeps it on the image, in any of the eight positions; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development
  * @attr {string} main-background - Surface color of the panel: 'base' (the base surface)
  *   or a category color — 'accent' (default) or a Rijkshuisstijl color such as
@@ -73,6 +74,8 @@ import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
+import { heroCornerStyles } from './hero-corner.styles.js';
+import { applyCorner } from './hero-corner.js';
 
 export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
 export type HeroMainWidth = 'auto' | 'full' | (string & {});
@@ -100,11 +103,16 @@ export type HeroMainBackground =
 
 @customElement('nldd-hero')
 export class NLDDHero extends PageSectionMixin(LitElement) {
-	static override styles = heroStyles;
+	static override styles = [heroStyles, heroCornerStyles];
 
 	/** Width mode: 'full' (removes body max-width) or any CSS length. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
+
+	/** Rounds one corner of the media area and one of the panel. An empty
+	 *  value lets the hero choose the media corner from `main-position`. */
+	@property({ type: String, reflect: true })
+	corner: string | null = null;
 
 	@property({ reflect: true, converter: reflectNonDefault<HeroLayout>('overlap') })
 	layout: HeroLayout = 'overlap';
@@ -154,8 +162,8 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
-		// The stylesheet only keys off whether media is present.
 		this.toggleAttribute('data-has-media', this._hasMedia);
+		applyCorner(this);
 	}
 
 	override connectedCallback(): void {

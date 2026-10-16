@@ -659,7 +659,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width.",
+              "description": "Loading state (default: false). Shows an activity indicator over the visually hidden content, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). The content stays laid out, so the button keeps its width. Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.",
               "fieldName": "loading"
             },
             {
@@ -678,7 +678,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "text",
@@ -1165,7 +1165,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled).",
+              "description": "Loading state (default: false). Shows an activity indicator over the visually hidden icon, sets aria-busy on the inner control and blocks activation, without dropping the button from the tab order (unlike disabled). Meant for an action that has to wait for the server, such as sending an application. For most actions, show the result right away and confirm in the background, as the design guidelines describe.",
               "fieldName": "loading"
             },
             {
@@ -1184,7 +1184,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "no-highlight-border",
@@ -2317,7 +2317,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why."
             },
             {
               "name": "width",
@@ -5085,7 +5085,7 @@
           "slots": [
             {
               "name": "",
-              "description": "The text. Inline elements work as they are: `<strong>` and `<b>` take the bold weight from the scale, `<a>`, `<em>` and components such as `nldd-tag` are left alone."
+              "description": "The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, and `<mark>` is highlighted. This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone."
             }
           ]
         }
@@ -5126,6 +5126,36 @@
               },
               "default": "3",
               "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "smCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "sm-custom-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mdCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "md-custom-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "lgCustomSize",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "lg-custom-size",
               "reflects": true
             },
             {
@@ -5188,6 +5218,33 @@
               "default": "3",
               "fieldName": "size",
               "description": "Visual size of the title: 1–6 (default: 3)"
+            },
+            {
+              "name": "sm-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "smCustomSize",
+              "description": "A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(3rem, 8vw, 7rem)'), for a statement larger than size 1. A var() works when the variable holds a length; one that is not defined leaves the title without its size, the floor included. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1, and a fixed length that is smaller says so in development (a relative value, such as vw, em or a percentage, is not checked there; the floor still holds). Takes the weight, typeface and line height of size 1. An invalid value falls back to `size`"
+            },
+            {
+              "name": "md-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "mdCustomSize",
+              "description": "The same, at md"
+            },
+            {
+              "name": "lg-custom-size",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "lgCustomSize",
+              "description": "The same, at lg"
             },
             {
               "name": "color",
@@ -5464,7 +5521,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
             }
           ],
           "superclass": {
@@ -10489,7 +10546,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options.",
+          "description": "A visual wrapper around a native `<select>` element. The consumer provides a native `<select>` as a slotted child — this way the browser retains full control over form submission, accessibility and keyboard navigation, including `<optgroup>`, `data-*` attributes and dynamic changes to options. A dropdown hides its options, so it is the last resort for a choice from a fixed set. Show a handful of options with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group, and let the user type in nldd-combo-box when there are many, a list of countries included. The design guidelines explain the order.",
           "name": "NLDDDropdown",
           "members": [
             {
@@ -23121,7 +23178,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.",
+          "description": "A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. Use horizontal scroll for items that together serve one purpose, such as the events of one agenda; it is not a carousel for unrelated highlights, which the design guidelines advise against. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.",
           "name": "NLDDCollection",
           "members": [
             {
@@ -23136,11 +23193,20 @@
             },
             {
               "kind": "field",
-              "name": "itemWidth",
+              "name": "itemMinWidth",
               "type": {
                 "text": "string | undefined"
               },
-              "attribute": "item-width",
+              "attribute": "item-min-width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "itemMaxWidth",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "item-max-width",
               "reflects": true
             },
             {
@@ -23227,6 +23293,9 @@
           ],
           "attributes": [
             {
+              "name": "item-width"
+            },
+            {
               "name": "layout",
               "type": {
                 "text": "Layout"
@@ -23236,12 +23305,20 @@
               "description": "Layout mode: 'grid' | 'stack' | 'lanes' | 'horizontal-scroll' (default: 'grid')"
             },
             {
-              "name": "item-width",
+              "name": "item-min-width",
               "type": {
                 "text": "string | undefined"
               },
-              "fieldName": "itemWidth",
-              "description": "Preferred width for each item (e.g. '280px', '20rem'). In grid and lanes layouts used as the minimum column width (columns will be at least this wide; 1fr if container allows more). In horizontal scroll used as flex-basis. Never forces horizontal overflow — the value is clamped to container width."
+              "fieldName": "itemMinWidth",
+              "description": "Smallest width an item takes (e.g. '280px', '20rem'). In grid and lanes the minimum column width: columns are at least this wide and grow to fill the row. In horizontal scroll the flex-basis: items never shrink below it, and grow up to `item-max-width` when they fit. No effect in stack. Never forces horizontal overflow, the value is clamped to the container width."
+            },
+            {
+              "name": "item-max-width",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "itemMaxWidth",
+              "description": "Largest width an item takes in horizontal scroll (e.g. '400px', '25rem'), so one or two items that fit do not stretch across the container. Defaults to 480px; `item-max-width=\"100%\"` lets items fill the container, as they did before the default. Never narrower than `item-min-width`, which wins when it is wider, and never wider than the container. No effect in grid, lanes and stack: a grid leaves empty columns rather than stretching an item, and its right edge stays aligned with the content around it."
             },
             {
               "name": "gap",
@@ -23822,7 +23899,7 @@
               },
               "default": "''",
               "fieldName": "width",
-              "description": "'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it."
+              "description": "'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it."
             },
             {
               "name": "min-width",
@@ -24893,11 +24970,45 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/layout/page-sections/hero/hero-corner.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "applyCorner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "CornerHost"
+              }
+            }
+          ],
+          "description": "Works out which corners are rounded and writes them onto the host as\n`data-media-corner` and `data-main-corner`, which the corner stylesheet\nkeys off. Without `corner`, or where a corner does not fit the shape\nlanguage, both are removed and the hero is rectangular."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "applyCorner",
+          "declaration": {
+            "name": "applyCorner",
+            "module": "src/components/layout/page-sections/hero/hero-corner.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/layout/page-sections/hero/hero.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. Every area is rectangular. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
           "name": "NLDDHero",
           "members": [
             {
@@ -24909,6 +25020,17 @@
               "default": "''",
               "description": "Width mode: 'full' (removes body max-width) or any CSS length.",
               "attribute": "width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "corner",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Rounds one corner of the media area and one of the panel. An empty\nvalue lets the hero choose the media corner from `main-position`.",
+              "attribute": "corner",
               "reflects": true
             },
             {
@@ -25226,6 +25348,15 @@
               "default": "''",
               "description": "Body max-width; 'full' removes the bound (section API)",
               "fieldName": "width"
+            },
+            {
+              "name": "corner",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. Applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
+              "fieldName": "corner"
             },
             {
               "name": "layout",
@@ -29901,7 +30032,7 @@
               },
               "default": "false",
               "fieldName": "noLightDismiss",
-              "description": "A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a wizard, a form with filled-in fields. Escape and the dismiss button keep working."
+              "description": "A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a process of several steps, a form with filled-in fields. Escape and the dismiss button keep working."
             },
             {
               "name": "open",
@@ -32869,7 +33000,11 @@
             },
             {
               "name": "empty",
-              "description": "Shown when there are no visible body rows (the header is hidden too). Empty by default: what an empty table should say is the app's to write, so put an `nldd-inline-dialog` here."
+              "description": "Shown when the table has no body rows (the header is hidden too). Empty by default: what an empty table should say is the app's to write, so put an `nldd-inline-dialog` here."
+            },
+            {
+              "name": "no-results",
+              "description": "Shown when the table has body rows but every one of them is `[hidden]`, which is what consumer-driven filtering leaves behind. A different state from `empty` and a different sentence: say that nothing matches and how to get rows back. Falls back to `[slot=\"empty\"]` when not given."
             }
           ]
         },
@@ -33630,7 +33765,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "no-tab",
@@ -33964,7 +34099,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Turn interaction off"
+              "description": "Turn interaction off. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "accessible-label",
@@ -34274,7 +34409,7 @@
               },
               "default": "false",
               "fieldName": "disabled",
-              "description": "Disabled state"
+              "description": "Disabled state. Avoid it where you can; the design guidelines say why."
             },
             {
               "name": "centered",
@@ -34735,7 +34870,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order",
+              "description": "Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order. Avoid it where you can; the design guidelines say why.",
               "fieldName": "disabled"
             },
             {
@@ -36372,7 +36507,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.",
+          "description": "A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Use it only when there is no way back, and give it a real choice: a dialog with one button offers nothing to decide, so tell the user with an nldd-notification or an inline message instead. In a destructive dialog the safe way out comes first, as the primary button. Work that needs the page as context, such as editing, belongs in an nldd-sheet. The design guidelines say why. A dialog that opens with one action says so in development. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.",
           "name": "NLDDModalDialog",
           "members": [
             {
@@ -36471,7 +36606,7 @@
             },
             {
               "name": "close",
-              "description": "When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened. The dismiss button of an nldd-top-title-bar inside it fires `dismiss`, which bubbles; this component catches that itself, closes and fires `close`. Listen to `close` alone, or one click runs your handler twice."
+              "description": "When the dialog is fully closed. Does not bubble: overlays nest, and a listener on one dialog asking about that dialog should not also hear the form it opened."
             }
           ],
           "attributes": [
@@ -37852,7 +37987,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "For flows without a URL per step (a wizard inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
+              "description": "For flows without a URL per step (a process that runs inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
               "attribute": "button",
               "reflects": true
             },
@@ -37906,7 +38041,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "For flows without a URL per step (a wizard inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
+              "description": "For flows without a URL per step (a process that runs inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
               "name": "button",
               "default": "false",
               "fieldName": "button"

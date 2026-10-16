@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './progress-circle.js';
+import '../../layout/container/container.js';
 
 const SEMANTIC_COLORS = ['neutral', 'accent', 'success', 'warning', 'critical'] as const;
 
@@ -130,26 +131,15 @@ export const Standaard = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; gap: 32px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="32"
+			vertical-alignment="center"
+		>
 			<nldd-progress-circle
-				size="24"
+				size="96"
 				value="60"
-				text="24"
-			></nldd-progress-circle>
-			<nldd-progress-circle
-				size="32"
-				value="60"
-				text="32"
-			></nldd-progress-circle>
-			<nldd-progress-circle
-				size="48"
-				value="60"
-				text="48"
-			></nldd-progress-circle>
-			<nldd-progress-circle
-				size="56"
-				value="60"
-				text="56"
+				text="96"
 			></nldd-progress-circle>
 			<nldd-progress-circle
 				size="80"
@@ -157,18 +147,36 @@ export const Grootten = {
 				text="80"
 			></nldd-progress-circle>
 			<nldd-progress-circle
-				size="96"
+				size="56"
 				value="60"
-				text="96"
+				text="56"
 			></nldd-progress-circle>
-		</div>
+			<nldd-progress-circle
+				size="48"
+				value="60"
+				text="48"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="32"
+				value="60"
+				text="32"
+			></nldd-progress-circle>
+			<nldd-progress-circle
+				size="24"
+				value="60"
+				text="24"
+			></nldd-progress-circle>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
 
 export const Kleuren = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="24"
+		>
 			${ALL_COLORS.map(c => html`
 				<nldd-progress-circle
 					color=${c}
@@ -177,7 +185,7 @@ export const Kleuren = {
 					size="56"
 				></nldd-progress-circle>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -276,7 +284,11 @@ export const ToestandIndeterminate = {
 export const Waardeformaten = {
 	name: 'Waardeformaten (value-format)',
 	render: () => html`
-		<div style="display: flex; gap: 32px; align-items: flex-start;">
+		<nldd-container
+			layout="row"
+			gap="32"
+			vertical-alignment="top"
+		>
 			<nldd-progress-circle
 				size="56"
 				value="60"
@@ -309,7 +321,7 @@ export const Waardeformaten = {
 				value-text="Bijna klaar"
 				value-display="inline"
 			></nldd-progress-circle>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -317,7 +329,11 @@ export const Waardeformaten = {
 export const Waardeweergave = {
 	name: 'Waardeweergave (value-display)',
 	render: () => html`
-		<div style="display: flex; gap: 32px; align-items: flex-start;">
+		<nldd-container
+			layout="row"
+			gap="32"
+			vertical-alignment="top"
+		>
 			<nldd-progress-circle
 				size="56"
 				value="60"
@@ -336,7 +352,7 @@ export const Waardeweergave = {
 				text="Verborgen"
 				value-display="none"
 			></nldd-progress-circle>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './tab-bar.js';
 import './../../content/icon/icon.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Navigation/Tab Bar',
@@ -122,7 +123,10 @@ export const MetIconenVariant = {
 export const Groot = {
 	name: 'Groot (lg)',
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 24px; align-items: flex-start;">
+	<nldd-container
+		gap="24"
+		horizontal-alignment="left"
+	>
 		<nldd-tab-bar
 			size="lg"
 			variant="icon-and-text"
@@ -144,7 +148,7 @@ export const Groot = {
 		>
 			${tabBarItems}
 		</nldd-tab-bar>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -186,7 +190,7 @@ export const Gemengd = {
 
 /**
  * Passen de tabs niet, dan gaan de tabs die niet passen achter de knop "Meer
- * opties", in een menu. De huidige tab blijft altijd in de balk. Sleep de hoek
+ * tabs", in een menu. De huidige tab blijft altijd in de balk. Sleep de hoek
  * rechtsonder om de breedte aan te passen.
  */
 export const Overloop = {

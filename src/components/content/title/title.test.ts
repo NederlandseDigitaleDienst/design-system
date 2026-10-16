@@ -1,5 +1,6 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './title.js';
 
 describe('nldd-title', () => {
@@ -213,5 +214,106 @@ describe('nldd-title – overline and supporting-text', () => {
 		el = await fixture('<nldd-title text="Titel"><p slot="subtitle">Oud</p></nldd-title>');
 		await waitForUpdate(el);
 		expect(warn).toHaveBeenCalledTimes(1);
+	});
+});
+
+describe('nldd-title – custom-size', () => {
+	let el: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		removeTokens();
+		vi.restoreAllMocks();
+	});
+
+	const title = async (attrs: string): Promise<HTMLElement> => {
+		el = await fixture(`<nldd-title text="Mijn Dienst" ${attrs}></nldd-title>`);
+		await waitForUpdate(el);
+		return el;
+	};
+
+	const textStyle = () => getComputedStyle(el.shadowRoot!.querySelector('.title__text')!);
+
+	it('writes each breakpoint value into its own variable', async () => {
+		await title('sm-custom-size="120px" md-custom-size="160px" lg-custom-size="200px"');
+		expect(el.style.getPropertyValue('--_title-sm-custom-size')).toBe('120px');
+		expect(el.style.getPropertyValue('--_title-md-custom-size')).toBe('160px');
+		expect(el.style.getPropertyValue('--_title-lg-custom-size')).toBe('200px');
+		for (const breakpoint of ['sm', 'md', 'lg']) {
+			expect(el.hasAttribute(`data-${breakpoint}-custom-size`)).toBe(true);
+		}
+	});
+
+	it('ignores a custom-size without a breakpoint', async () => {
+		await title('custom-size="200px"');
+		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
+		expect(textStyle().fontSize).not.toBe('200px');
+	});
+
+	it('leaves a breakpoint without a value to the scale', async () => {
+		await title('lg-custom-size="200px"');
+		expect(el.hasAttribute('data-lg-custom-size')).toBe(true);
+		expect(el.hasAttribute('data-sm-custom-size')).toBe(false);
+		expect(el.style.getPropertyValue('--_title-sm-custom-size')).toBe('');
+	});
+
+	it('takes the typography of size 1, whatever size says', async () => {
+		await title('size="6" sm-custom-size="200px" md-custom-size="200px" lg-custom-size="200px"');
+		const { fontWeight, fontFamily } = textStyle();
+		cleanup(el);
+		await title('size="1"');
+		expect(fontWeight).toBe(textStyle().fontWeight);
+		expect(fontFamily).toBe(textStyle().fontFamily);
+	});
+
+	it('never goes below size 1, and says so', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		await title('size="1"');
+		const sizeOne = textStyle().fontSize;
+		cleanup(el);
+		await title('sm-custom-size="10px" md-custom-size="10px" lg-custom-size="10px"');
+		expect(textStyle().fontSize).toBe(sizeOne);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('smaller than size 1'))).toBe(true);
+	});
+
+	it('keeps the scale for a value that is not a length, and says so', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		await title('lg-custom-size="huge"');
+		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('"huge" is not a size the title can use'))).toBe(true);
+	});
+
+	it('takes no size keyword, which cannot go inside the floor', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		for (const value of ['larger', 'xx-large', 'inherit']) {
+			await title(`lg-custom-size="${value}"`);
+			expect(el.hasAttribute('data-lg-custom-size'), value).toBe(false);
+			cleanup(el);
+		}
+		el = undefined as unknown as HTMLElement;
+		expect(warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('is not a size the title can use'))).toHaveLength(3);
+	});
+
+	it('takes a percentage or em and still keeps the size 1 floor', async () => {
+		await title('lg-custom-size="1%" md-custom-size="1%" sm-custom-size="0.1em"');
+		expect(el.hasAttribute('data-lg-custom-size')).toBe(true);
+		const custom = textStyle().fontSize;
+		cleanup(el);
+		await title('size="1"');
+		expect(custom).toBe(textStyle().fontSize);
+	});
+
+	it('goes back to the scale when the attribute is removed', async () => {
+		await title('sm-custom-size="200px" md-custom-size="200px" lg-custom-size="200px"');
+		expect(textStyle().fontSize).toBe('200px');
+		for (const breakpoint of ['sm', 'md', 'lg']) el.removeAttribute(`${breakpoint}-custom-size`);
+		await waitForUpdate(el);
+		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
+		expect(textStyle().fontSize).not.toBe('200px');
 	});
 });

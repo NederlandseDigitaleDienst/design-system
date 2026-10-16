@@ -2,6 +2,8 @@ import { html, nothing } from 'lit';
 import './avatar.js';
 import type { AvatarSize } from './avatar.js';
 import { ICONS } from '../icon/icon.js';
+import '../../layout/container/container.js';
+import '../text/text.js';
 
 // "Meisje met de parel" (Girl with a Pearl Earring), Johannes Vermeer, ca. 1665.
 // Publiek domein (Wikimedia Commons), bijgesneden op het gezicht (200x200,
@@ -160,12 +162,19 @@ export const Standaard = {
  */
 export const Types = {
 	render: () => html`
-		<div style="display: flex; gap: 32px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="32"
+		>
 			${[
 				{ type: 'person', name: 'Bart van de Biezen', initials: '' },
-				{ type: 'organization', name: 'Kamer van Koophandel', initials: 'KvK' },
+				{ type: 'organization', name: 'Team Uitvoering', initials: 'TU' },
 			].map(({ type, name, initials }) => html`
-				<div style="display: flex; gap: 12px; align-items: center;">
+				<nldd-container
+					layout="row"
+					gap="12"
+					width="fit-content"
+				>
 					<nldd-avatar
 						type=${type}
 						name=${name}
@@ -176,9 +185,9 @@ export const Types = {
 						type=${type}
 						size="48"
 					></nldd-avatar>
-				</div>
+				</nldd-container>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -189,14 +198,18 @@ export const Types = {
  */
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
-			${SIZES.map(size => html`
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
+			${[...SIZES].reverse().map(size => html`
 				<nldd-avatar
 					name="Bart van de Biezen"
 					size=${size}
 				></nldd-avatar>
 			`)}
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -207,11 +220,15 @@ export const Grootten = {
  */
 export const SchaaltMee = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: flex-end;">
-			<div style="width: 32px;"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></div>
-			<div style="width: 56px;"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></div>
-			<div style="width: 96px;"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></div>
-		</div>
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="bottom"
+		>
+			<nldd-container width="96px"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></nldd-container>
+			<nldd-container width="56px"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></nldd-container>
+			<nldd-container width="32px"><nldd-avatar name="Bart van de Biezen"></nldd-avatar></nldd-container>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -223,14 +240,19 @@ export const SchaaltMee = {
  */
 export const KleurInherit = {
 	render: () => html`
-		<div style="display: flex; gap: 20px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="20"
+		>
 			<span style="display: inline-flex; align-items: center; gap: 8px; color: var(--semantics-content-color);">
 				<nldd-avatar
 					name="Bart van de Biezen"
 					color="inherit"
 					size="24"
 				></nldd-avatar>
-				Bart van de Biezen
+				<nldd-text color="inherit">
+					Bart van de Biezen
+				</nldd-text>
 			</span>
 			<span style="display: inline-flex; align-items: center; gap: 8px; color: var(--semantics-content-accent-color);">
 				<nldd-avatar
@@ -238,9 +260,11 @@ export const KleurInherit = {
 					color="inherit"
 					size="24"
 				></nldd-avatar>
-				Anna Ismaili
+				<nldd-text color="inherit">
+					Anna Ismaili
+				</nldd-text>
 			</span>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -254,25 +278,46 @@ export const KleurInherit = {
  */
 export const IcoonUitlijning = {
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: center;">
-			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
-				icoon
+		<nldd-container
+			layout="row"
+			gap="24"
+		>
+			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; color: var(--semantics-content-secondary-color);">
+				<nldd-text
+					size="xs"
+					line-height="flat"
+					color="secondary"
+				>
+					icoon
+				</nldd-text>
 				<nldd-icon
 					icon="person"
 					size="24"
 					style="outline: 1px dashed var(--semantics-dividers-color);"
 				></nldd-icon>
 			</span>
-			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
-				avatar (edge-to-edge)
+			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; color: var(--semantics-content-secondary-color);">
+				<nldd-text
+					size="xs"
+					line-height="flat"
+					color="secondary"
+				>
+					avatar (edge-to-edge)
+				</nldd-text>
 				<nldd-avatar
 					name="Bart van de Biezen"
 					size="24"
 					style="outline: 1px dashed var(--semantics-dividers-color);"
 				></nldd-avatar>
 			</span>
-			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; font: var(--primitives-font-body-xs-regular-flat); color: var(--semantics-content-secondary-color);">
-				avatar (icon-aligned)
+			<span style="display: inline-flex; flex-direction: column; gap: 6px; align-items: center; color: var(--semantics-content-secondary-color);">
+				<nldd-text
+					size="xs"
+					line-height="flat"
+					color="secondary"
+				>
+					avatar (icon-aligned)
+				</nldd-text>
 				<nldd-avatar
 					name="Bart van de Biezen"
 					size="24"
@@ -280,7 +325,7 @@ export const IcoonUitlijning = {
 					style="outline: 1px dashed var(--semantics-dividers-color);"
 				></nldd-avatar>
 			</span>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -291,7 +336,10 @@ export const IcoonUitlijning = {
  */
 export const Initialen = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+		>
 			<nldd-avatar
 				name="Bart van de Biezen"
 				size="48"
@@ -305,7 +353,7 @@ export const Initialen = {
 				name="Anna Ismaili"
 				size="48"
 			></nldd-avatar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -317,7 +365,10 @@ export const Initialen = {
  */
 export const BredeInitialen = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+		>
 			<nldd-avatar
 				initials="II"
 				decorative
@@ -343,7 +394,7 @@ export const BredeInitialen = {
 				decorative
 				size="48"
 			></nldd-avatar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -386,7 +437,10 @@ export const DodeAfbeelding = {
  */
 export const TerugvalIcoon = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+		>
 			<nldd-avatar size="48"></nldd-avatar>
 			<nldd-avatar
 				type="organization"
@@ -396,7 +450,7 @@ export const TerugvalIcoon = {
 				icon="star"
 				size="48"
 			></nldd-avatar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -409,7 +463,10 @@ export const TerugvalIcoon = {
  */
 export const LinkOfKnop = {
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="24"
+		>
 			<nldd-avatar
 				name="Bart van de Biezen"
 				size="48"
@@ -423,11 +480,11 @@ export const LinkOfKnop = {
 			></nldd-avatar>
 			<nldd-avatar
 				type="organization"
-				name="Rijkswaterstaat"
+				name="Team Beleid"
 				size="48"
-				href="#organisatie"
+				href="#team-beleid"
 			></nldd-avatar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

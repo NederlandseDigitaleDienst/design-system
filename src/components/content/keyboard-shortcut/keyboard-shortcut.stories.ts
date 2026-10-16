@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './keyboard-shortcut.js';
+import '../../layout/container/container.js';
 
 /**
  * De KeyboardShortcut component toont een toetsencombinatie in één gecombineerde
@@ -121,13 +122,16 @@ export const Standaard = {
 
 export const VeelgebruikteSneltoetsen = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
+		<nldd-container
+			gap="12"
+			horizontal-alignment="left"
+		>
 			<nldd-keyboard-shortcut keys="Cmd+K"></nldd-keyboard-shortcut>
 			<nldd-keyboard-shortcut keys="Ctrl+C"></nldd-keyboard-shortcut>
 			<nldd-keyboard-shortcut keys="Ctrl+Shift+P"></nldd-keyboard-shortcut>
 			<nldd-keyboard-shortcut keys="⌘+⇧+F"></nldd-keyboard-shortcut>
 			<nldd-keyboard-shortcut keys="Esc"></nldd-keyboard-shortcut>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -136,7 +140,11 @@ export const VeelgebruikteSneltoetsen = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-keyboard-shortcut
 				size="md"
 				keys="Cmd+K"
@@ -145,7 +153,7 @@ export const Grootten = {
 				size="sm"
 				keys="Cmd+K"
 			></nldd-keyboard-shortcut>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -154,11 +162,14 @@ export const Grootten = {
 
 export const SchaaltMee = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
-			<span style="font-size: 14px;">Druk <nldd-keyboard-shortcut size="inherit" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut> om te zoeken (14px).</span>
+		<nldd-container
+			gap="12"
+			horizontal-alignment="left"
+		>
 			<span style="font-size: 20px;">Druk <nldd-keyboard-shortcut size="inherit" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut> om te zoeken (20px).</span>
+			<span style="font-size: 14px;">Druk <nldd-keyboard-shortcut size="inherit" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut> om te zoeken (14px).</span>
 			<span style="font-size: 14px;">Of als tekst: <nldd-keyboard-shortcut size="inherit" appearance="simple" keys="Ctrl+K" mac-keys="Cmd+K"></nldd-keyboard-shortcut>.</span>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -168,7 +179,11 @@ export const SchaaltMee = {
 
 export const Appearances = {
 	render: () => html`
-		<div style="display: flex; gap: 24px; align-items: center;">
+		<nldd-container
+			layout="row"
+			gap="24"
+			vertical-alignment="center"
+		>
 			<nldd-keyboard-shortcut
 				appearance="box"
 				keys="Cmd+K"
@@ -177,7 +192,7 @@ export const Appearances = {
 				appearance="simple"
 				keys="Cmd+K"
 			></nldd-keyboard-shortcut>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

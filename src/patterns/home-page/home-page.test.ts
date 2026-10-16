@@ -100,7 +100,7 @@ describe('patroon: home', () => {
 		// grid is its default, so read the written markup for the attributes.
 		const written = new DOMParser().parseFromString(markup, 'text/html').querySelector('nldd-collection')!;
 		expect(written.getAttribute('layout')).toBe('grid');
-		expect(written.hasAttribute('item-width')).toBe(true);
+		expect(written.hasAttribute('item-min-width')).toBe(true);
 		const cards = [...root.querySelector('nldd-collection')!.children];
 		expect(cards.length).toBeGreaterThan(1);
 		expect(cards.every((card) => card.tagName === 'NLDD-CARD')).toBe(true);

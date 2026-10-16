@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './checkbox.js';
+import '../../layout/container/container.js';
 
 /**
  * De Checkbox component stelt gebruikers in staat om een of meerdere opties te selecteren.
@@ -127,7 +128,10 @@ export const ToestandCheckedEnDisabled = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
+	<nldd-container
+		layout="wrap"
+		gap="32"
+	>
 		<nldd-checkbox accessible-label="Niet aangevinkt"></nldd-checkbox>
 		<nldd-checkbox
 			checked
@@ -151,7 +155,7 @@ export const AlleToestanden = {
 			disabled
 			accessible-label="Onbepaald en uitgeschakeld"
 		></nldd-checkbox>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

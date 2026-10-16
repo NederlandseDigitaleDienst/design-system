@@ -130,6 +130,10 @@ export const containerStyles = css`
 		}
 	}
 
+	:host([width="fit-content"]) .container {
+		container-type: normal;
+	}
+
 
 	/* # Inner — actual layout */
 

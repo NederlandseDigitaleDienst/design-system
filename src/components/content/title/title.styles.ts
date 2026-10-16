@@ -16,6 +16,13 @@ export const titleStyles = css`
 	/* # Host */
 
 	:host {
+		--_title-sm-custom-size: initial;
+		--_title-md-custom-size: initial;
+		--_title-lg-custom-size: initial;
+		--_title-sm-custom-font: var(--primitives-font-weight-display-bold) max(var(--_title-sm-custom-size), var(--primitives-font-size-700)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
+		--_title-md-custom-font: var(--primitives-font-weight-display-bold) max(var(--_title-md-custom-size), var(--primitives-font-size-800)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
+		--_title-lg-custom-font: var(--primitives-font-weight-display-bold) max(var(--_title-lg-custom-size), var(--primitives-font-size-1000)) / var(--primitives-line-height-flat) var(--primitives-font-family-display);
+
 		@media (max-width: ${smMax}) {
 			--_title-font: var(--primitives-font-display-3-sm);
 		}
@@ -171,6 +178,38 @@ export const titleStyles = css`
 
 		@container layout-container (min-width: ${lgMin}) {
 			--_title-font: var(--primitives-font-display-6-lg);
+		}
+	}
+
+	/* ## Custom size */
+
+	:host([data-sm-custom-size]) {
+		@media (max-width: ${smMax}) {
+			--_title-font: var(--_title-sm-custom-font);
+		}
+
+		@container layout-container (max-width: ${smMax}) {
+			--_title-font: var(--_title-sm-custom-font);
+		}
+	}
+
+	:host([data-md-custom-size]) {
+		@media (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--_title-md-custom-font);
+		}
+
+		@container layout-container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
+			--_title-font: var(--_title-md-custom-font);
+		}
+	}
+
+	:host([data-lg-custom-size]) {
+		@media (min-width: ${lgMin}) {
+			--_title-font: var(--_title-lg-custom-font);
+		}
+
+		@container layout-container (min-width: ${lgMin}) {
+			--_title-font: var(--_title-lg-custom-font);
 		}
 	}
 

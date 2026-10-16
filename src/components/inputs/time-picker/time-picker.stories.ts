@@ -1,5 +1,8 @@
 import { html, nothing } from 'lit';
 import './time-picker.ts';
+import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 export default {
 	title: 'Components/Inputs/Time Picker',
@@ -98,7 +101,10 @@ export const Kwartieren = () => html`
 `;
 
 export const Kantooruren = () => html`
-	<p>Buiten <code>min</code> en <code>max</code> staat geen enkele waarde in de kolommen, dus een ongeldige tijd is niet te kiezen.</p>
+	<nldd-text>
+		Buiten <code>min</code> en <code>max</code> staat geen enkele waarde in de kolommen, dus een ongeldige tijd is niet te kiezen.
+	</nldd-text>
+	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-picker
 		value="09:00"
 		min="09:00"
@@ -109,7 +115,10 @@ export const Kantooruren = () => html`
 `;
 
 export const StapVanafMin = () => html`
-	<p>De stap telt vanaf <code>min</code>, dus de minuten lopen 07, 22, 37, 52.</p>
+	<nldd-text>
+		De stap telt vanaf <code>min</code>, dus de minuten lopen 07, 22, 37, 52.
+	</nldd-text>
+	<nldd-spacer size="16"></nldd-spacer>
 	<nldd-time-picker
 		value="09:07"
 		min="09:07"
@@ -119,33 +128,49 @@ export const StapVanafMin = () => html`
 `;
 
 export const MinderRijen = () => html`
-	<p>Met <code>rows</code> bepaalt de consument hoe hoog de kolommen zijn, in rijen. De gekozen waarde staat altijd in het midden, dus een oneven aantal toont hele rijen en een even aantal kapt boven en onder een halve rij af.</p>
-	<div style="display: flex; gap: 48px; align-items: flex-start;">
-		<div>
-			<p><code>rows="5"</code>, hele rijen</p>
+	<nldd-text>
+		Met <code>rows</code> bepaalt de consument hoe hoog de kolommen zijn, in rijen. De gekozen waarde staat altijd in het midden, dus een oneven aantal toont hele rijen en een even aantal kapt boven en onder een halve rij af.
+	</nldd-text>
+	<nldd-spacer size="16"></nldd-spacer>
+	<nldd-container
+		layout="row"
+		gap="48"
+		vertical-alignment="top"
+	>
+		<nldd-container width="fit-content">
+			<nldd-text>
+				<code>rows="5"</code>, hele rijen
+			</nldd-text>
+			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-time-picker
 				rows="5"
 				value="09:30"
 				step="15"
 				accessible-label="Vijf rijen"
 			></nldd-time-picker>
-		</div>
-		<div>
-			<p><code>rows="6"</code>, halve rij aan de randen</p>
+		</nldd-container>
+		<nldd-container width="fit-content">
+			<nldd-text>
+				<code>rows="6"</code>, halve rij aan de randen
+			</nldd-text>
+			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-time-picker
 				rows="6"
 				value="09:30"
 				step="15"
 				accessible-label="Zes rijen"
 			></nldd-time-picker>
-		</div>
-		<div>
-			<p><code>rows="7"</code> (standaard)</p>
+		</nldd-container>
+		<nldd-container width="fit-content">
+			<nldd-text>
+				<code>rows="7"</code> (standaard)
+			</nldd-text>
+			<nldd-spacer size="16"></nldd-spacer>
 			<nldd-time-picker
 				value="09:30"
 				step="15"
 				accessible-label="Zeven rijen"
 			></nldd-time-picker>
-		</div>
-	</div>
+		</nldd-container>
+	</nldd-container>
 `;

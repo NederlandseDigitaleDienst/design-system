@@ -50,7 +50,8 @@ export default {
 	},
 	args: {
 		layout: 'grid',
-		itemWidth: '',
+		itemMinWidth: '',
+		itemMaxWidth: '',
 		gap: '',
 		smGap: '',
 		mdGap: '',
@@ -66,11 +67,17 @@ export default {
 			description: 'Lay-outmodus',
 			table: { defaultValue: { summary: 'grid' } },
 		},
-		itemWidth: {
-			name: 'item-width',
+		itemMinWidth: {
+			name: 'item-min-width',
 			control: 'text',
-			description: 'Gewenste breedte per item (bv. "280px", "20rem"). Bij grid wordt deze breedte geclamped op de container-breedte om horizontale overflow te voorkomen.',
+			description: 'Kleinste breedte per item (bv. "280px", "20rem"). Bij grid en banen de minimale kolombreedte, bij horizontale scroll de flex-basis. Geen effect bij stapel. Nooit breder dan de container.',
 			table: { defaultValue: { summary: '280px' } },
+		},
+		itemMaxWidth: {
+			name: 'item-max-width',
+			control: 'text',
+			description: 'Grootste breedte per item bij horizontale scroll (bv. "400px", "25rem"). Groeit mee met een bredere item-min-width. Geen effect bij grid, banen en stapel. Nooit breder dan de container.',
+			table: { defaultValue: { summary: '480px' } },
 		},
 		gap: gapControl('Ruimte tussen items, als stap op de spacing-schaal'),
 		smGap: { name: 'sm-gap', ...gapControl('Ruimte tussen items bij sm') },
@@ -120,17 +127,27 @@ const itemContent = (i: any) => html`
 	<nldd-rich-text spacing="flat">
 		<p>${descriptions[descriptionOrder[i % descriptionOrder.length]]}</p>
 	</nldd-rich-text>
-	<nldd-spacer size="16"></nldd-spacer>
-	<nldd-button-group orientation="horizontal">
-		<nldd-button
-			appearance="primary"
-			text="Bekijk"
-		></nldd-button>
-		<nldd-button
-			appearance="secondary"
-			text="Meer info"
-		></nldd-button>
-	</nldd-button-group>
+`;
+
+/* In the card footer, so the buttons line up across a row of cards of
+   different heights. */
+const itemFooter = html`
+	<nldd-container
+		slot="footer"
+		padding-inline="16"
+		padding-bottom="16"
+	>
+		<nldd-button-group orientation="horizontal">
+			<nldd-button
+				appearance="primary"
+				text="Bekijk"
+			></nldd-button>
+			<nldd-button
+				appearance="secondary"
+				text="Bewaar"
+			></nldd-button>
+		</nldd-button-group>
+	</nldd-container>
 `;
 
 const gradientPairs: [string, string][] = [
@@ -159,6 +176,7 @@ const gridItems = Array.from({ length: 12 }, (_, i) => html`
 	<nldd-card>
 		${gradientImage(i)}
 		<nldd-container padding="16">${itemContent(i)}</nldd-container>
+		${itemFooter}
 	</nldd-card>
 `);
 
@@ -168,12 +186,14 @@ const laneItems = Array.from({ length: 12 }, (_, i) => html`
 	<nldd-card>
 		${gradientImage(i, 120 + ((i * 70) % 260))}
 		<nldd-container padding="16">${itemContent(i)}</nldd-container>
+		${itemFooter}
 	</nldd-card>
 `);
 
 const listItems = Array.from({ length: 12 }, (_, i) => html`
 	<nldd-card>
 		<nldd-container padding="16">${itemContent(i)}</nldd-container>
+		${itemFooter}
 	</nldd-card>
 `);
 
@@ -181,13 +201,15 @@ const scrollItems = Array.from({ length: 12 }, (_, i) => html`
 	<nldd-card>
 		${gradientImage(i)}
 		<nldd-container padding="16">${itemContent(i)}</nldd-container>
+		${itemFooter}
 	</nldd-card>
 `);
 
-export const Standaard = ({ layout, itemWidth, gap, smGap, mdGap, lgGap, maxItems, showLoadMore, lazyLoad }: Record<string, any>) => html`
+export const Standaard = ({ layout, itemMinWidth, itemMaxWidth, gap, smGap, mdGap, lgGap, maxItems, showLoadMore, lazyLoad }: Record<string, any>) => html`
 	<nldd-collection
 		layout=${layout}
-		item-width=${itemWidth || nothing}
+		item-min-width=${itemMinWidth || nothing}
+		item-max-width=${itemMaxWidth || nothing}
 		gap=${gap || nothing}
 		sm-gap=${smGap || nothing}
 		md-gap=${mdGap || nothing}
@@ -273,7 +295,8 @@ export const HorizontaalScrollend = {
 
 /**
  * Passen alle items samen binnen de container, dan is er niets te scrollen:
- * geen navigatieknoppen en geen fade. De items vullen de volle breedte.
+ * geen navigatieknoppen en geen fade. De items groeien mee tot
+ * `item-max-width` en staan links.
  */
 export const HorizontaalPassend = {
 	render: () => html`
@@ -285,6 +308,46 @@ export const HorizontaalPassend = {
 };
 
 
+/**
+ * Items die passen groeien mee, maar niet verder dan `item-max-width`: standaard
+ * 480px, of `item-min-width` als die breder is. Daarna blijven ze links staan.
+ * Lopen de items over, dan scrollt het zoals altijd.
+ */
+export const HorizontaalMetItemMaxWidth = {
+	name: 'Horizontaal met item-max-width',
+	render: () => html`
+	${[1, 2, 6].map(count => html`
+		<nldd-title
+			size="5"
+			text="${count} ${count === 1 ? 'kaart' : 'kaarten'}, standaard"
+			heading-level="3"
+		></nldd-title>
+		<nldd-spacer size="8"></nldd-spacer>
+		<nldd-collection
+			layout="horizontal-scroll"
+			item-min-width="320px"
+		>
+			${scrollItems.slice(0, count)}
+		</nldd-collection>
+		<nldd-spacer size="32"></nldd-spacer>
+		<nldd-title
+			size="5"
+			text="${count} ${count === 1 ? 'kaart' : 'kaarten'}, item-max-width 400px"
+			heading-level="3"
+		></nldd-title>
+		<nldd-spacer size="8"></nldd-spacer>
+		<nldd-collection
+			layout="horizontal-scroll"
+			item-min-width="320px"
+			item-max-width="400px"
+		>
+			${scrollItems.slice(0, count)}
+		</nldd-collection>
+		<nldd-spacer size="48"></nldd-spacer>
+	`)}
+`,
+	parameters: { controls: { disable: true } },
+};
 
 export const InSimpleSectie = {
 	render: () => html`

@@ -1708,6 +1708,7 @@
 
 	/* ## Code syntax */
 
+	--semantics-code-inline-font-size: 0.85em;
 	--semantics-code-syntax-comment-color: var(--semantics-content-secondary-color);
 	--semantics-code-syntax-punctuation-color: var(--semantics-content-color);
 	--semantics-code-syntax-keyword-color: var(--primitives-color-donkergeel-650);

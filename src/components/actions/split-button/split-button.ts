@@ -24,7 +24,7 @@
  * @element nldd-split-button
  * @attr {string} size - Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')
  * @attr {string} appearance - Visual style (default: 'neutral-tinted'; 'inherit-tinted' and 'inherit-filled' for a colored surface)
- * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} disabled - Disabled state. Avoid it: let the action run and say afterwards what is missing; the design guidelines say why.
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space
  * @attr {string} text - Button text for the primary action
  * @attr {string} icon - Icon name shown before the text on the primary action button

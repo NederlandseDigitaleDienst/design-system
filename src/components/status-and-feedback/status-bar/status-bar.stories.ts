@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './status-bar.js';
+import '../../layout/container/container.js';
 
 /**
  * Een status bar is een smalle, paginabrede balk (24px) met een diepe
@@ -46,7 +47,7 @@ export default {
 	},
 	args: {
 		variant: 'neutral',
-		text: 'Gepland onderhoud op zaterdag 14 juni, 22:00–00:00',
+		text: 'Gepland onderhoud zaterdagavond, 22:00–00:00',
 		href: '',
 		target: '',
 		button: false,
@@ -97,14 +98,14 @@ export const Standaard = {
 
 export const AlleVarianten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-status-bar
 				variant="neutral"
-				text="Conceptversie — nog niet gepubliceerd"
+				text="Conceptversie, nog niet gepubliceerd"
 			></nldd-status-bar>
 			<nldd-status-bar
 				variant="accent"
-				text="U bekijkt een voorbeeldweergave"
+				text="Je bekijkt een voorbeeldweergave"
 			></nldd-status-bar>
 			<nldd-status-bar
 				variant="success"
@@ -112,13 +113,13 @@ export const AlleVarianten = {
 			></nldd-status-bar>
 			<nldd-status-bar
 				variant="warning"
-				text="Gepland onderhoud op zaterdag 14 juni, 22:00–00:00"
+				text="Gepland onderhoud zaterdagavond, 22:00–00:00"
 			></nldd-status-bar>
 			<nldd-status-bar
 				variant="critical"
-				text="Storing: inloggen met DigiD is op dit moment niet beschikbaar"
+				text="Storing: inloggen bij Mijn Dienst is op dit moment niet mogelijk"
 			></nldd-status-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -127,7 +128,7 @@ export const AlsLink = {
 	render: () => html`
 		<nldd-status-bar
 			variant="critical"
-			text="Storing: inloggen met DigiD is niet beschikbaar — bekijk de actuele status"
+			text="Storing: inloggen bij Mijn Dienst is niet mogelijk, bekijk de actuele status"
 			href="#status"
 		></nldd-status-bar>
 	`,
@@ -138,7 +139,7 @@ export const AlsKnop = {
 	render: () => html`
 		<nldd-status-bar
 			variant="accent"
-			text="U werkt in een testomgeving — terug naar de live-omgeving"
+			text="Je werkt in een testomgeving, ga terug naar de echte omgeving"
 			button
 		></nldd-status-bar>
 	`,
@@ -147,12 +148,12 @@ export const AlsKnop = {
 
 export const LangeTekst = {
 	render: () => html`
-		<div style="max-width: 360px;">
+		<nldd-container max-width="360px">
 			<nldd-status-bar
 				variant="warning"
-				text="Gepland onderhoud op zaterdag 14 juni van 22:00 tot 00:00 — sommige onderdelen zijn dan tijdelijk niet bereikbaar"
+				text="Gepland onderhoud zaterdagavond van 22:00 tot 00:00, sommige onderdelen van Mijn Dienst zijn dan tijdelijk niet bereikbaar"
 			></nldd-status-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },

@@ -16,7 +16,7 @@
  * @attr {boolean} icon-only - Hide the text visually (always). The text then shows as a tooltip on hover and focus.
  * @attr {'icon'|'text'} content-priority - Decides what stays visible in compact mode: 'icon' hides the text, 'text' hides the icon. A bar is compact on a narrow screen and also at 200% zoom on a desktop, so with 'icon' the text is gone there too and shows as a tooltip instead.
  * @attr {boolean} compact - Activates content-priority behavior (set by the parent nldd-menu-bar)
- * @attr {boolean} disabled - Turn interaction off
+ * @attr {boolean} disabled - Turn interaction off. Avoid it where you can; the design guidelines say why.
  * @attr {string} accessible-label - Override aria-label
  * @attr {string} haspopup - aria-haspopup value (e.g. "menu", "dialog")
  * @attr {boolean} open - Whether the linked popover or menu is open
@@ -47,6 +47,7 @@ import '../../actions/menu/menu.js';
  */
 interface PopoverMenu extends HTMLElement {
 	anchorElement: Element | null;
+	anchorOffset: number;
 	showPopover(): void;
 	hidePopover(): void;
 }
@@ -240,6 +241,15 @@ export class NLDDMenuBarItem extends LitElement {
 
 	// ## Menu popover
 
+	/** How far the indicator stops short of the item's top and bottom, so the
+	 *  menu can open against the indicator instead of against the item. */
+	private _indicatorInset(): number {
+		const item = this.shadowRoot?.querySelector('.menu-bar-item');
+		if (!item) return 0;
+		const inset = parseFloat(getComputedStyle(item, '::before').top);
+		return Number.isNaN(inset) ? 0 : inset;
+	}
+
 	private _toggleMenu(): void {
 		if (this._pointerdownWhileMenuOpen) {
 			this._pointerdownWhileMenuOpen = false;
@@ -249,6 +259,7 @@ export class NLDDMenuBarItem extends LitElement {
 		// slotchange — no need to call it here.
 		if (!this._menu) return;
 		this._menu.anchorElement = this;
+		this._menu.anchorOffset = -this._indicatorInset();
 		if (this._menuOpen) {
 			this._menu.hidePopover();
 		} else {

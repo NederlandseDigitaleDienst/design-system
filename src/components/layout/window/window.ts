@@ -25,7 +25,7 @@
  * @attr {boolean} centered - Centers both axes on the viewport. Overridable per axis: `centered top="0"` is horizontally centered, top aligned. Mirrors CSS `place-items: center` with `align-items`/`justify-items` overrides.
  * @attr {string} accessible-label - Accessible name (aria-label). Unset, the window takes the text of the nldd-top-title-bar inside it, and without one the i18n default ('Venster'). Each window needs a unique, descriptive name, from either.
  * @attr {object} translations - Override translation keys; unset keys fall back to the Dutch default.
- * @attr {boolean} no-light-dismiss - A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a wizard, a form with filled-in fields. Escape and the dismiss button keep working.
+ * @attr {boolean} no-light-dismiss - A click on the backdrop does not close the window. For windows where dismissing by accident costs work: a process of several steps, a form with filled-in fields. Escape and the dismiss button keep working.
  * @attr {boolean} open - Whether the window is open. Set it to open or close the window, as an alternative to show() and hide(). The window clears it itself when it closes another way (Escape, the backdrop, the close button of its title bar), so bind it together with the close event.
  *
  * @slot - Complete window content (e.g. nldd-page)

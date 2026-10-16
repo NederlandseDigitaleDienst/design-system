@@ -386,7 +386,7 @@ nldd-rich-text code {
 	border-radius: var(--semantics-controls-xs-corner-radius);
 	background-color: var(--semantics-surfaces-tinted-background-color);
 	font-family: var(--primitives-font-family-monospace);
-	font-size: 0.85em;
+	font-size: var(--semantics-code-inline-font-size);
 }
 
 /* Inside table cells, let long code tokens (e.g. type_spec.precision) break so

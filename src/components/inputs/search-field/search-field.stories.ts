@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './search-field.js';
+import '../../layout/container/container.js';
 
 /**
  * De Search Field component is een zoekveld met zoekicoon, een optionele dismiss knop
@@ -138,7 +139,7 @@ export const MetZoekKnop = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-search-field
 			size="md"
 			placeholder="Zoeken"
@@ -190,7 +191,7 @@ export const AlleToestanden = {
 			value="Zoekterm"
 			disabled
 		></nldd-search-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

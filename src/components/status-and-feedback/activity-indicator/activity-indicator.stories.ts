@@ -88,7 +88,7 @@ export default {
 // hij over de ronde hoeken heen steken. Zo klipt de kaart hem netjes af, en
 // leest het als "de inhoud van deze kaart laadt".
 const Template = ({ size, text, showText, timing, noBackdrop, complete }: Record<string, unknown>) => html`
-	<div style="width: 360px;">
+	<nldd-container width="360px">
 		<nldd-card accessible-label="Voorbeeldkaart">
 			<nldd-activity-indicator
 				size=${size as string}
@@ -113,7 +113,7 @@ const Template = ({ size, text, showText, timing, noBackdrop, complete }: Record
 				</nldd-container>
 			</nldd-activity-indicator>
 		</nldd-card>
-	</div>
+	</nldd-container>
 `;
 
 export const Standaard = {
@@ -129,11 +129,7 @@ export const Grootten = {
 	render: () => html`
 		<div style="display: flex; gap: 32px; align-items: center; height: 120px;">
 			<nldd-activity-indicator
-				size="20"
-				timing="instant"
-			></nldd-activity-indicator>
-			<nldd-activity-indicator
-				size="28"
+				size="64"
 				timing="instant"
 			></nldd-activity-indicator>
 			<nldd-activity-indicator
@@ -141,7 +137,11 @@ export const Grootten = {
 				timing="instant"
 			></nldd-activity-indicator>
 			<nldd-activity-indicator
-				size="64"
+				size="28"
+				timing="instant"
+			></nldd-activity-indicator>
+			<nldd-activity-indicator
+				size="20"
 				timing="instant"
 			></nldd-activity-indicator>
 		</div>
@@ -236,7 +236,7 @@ export const EigenProgressCircleInDeSlot = {
 export const Backdrop = {
 	name: 'Backdrop over de inhoud',
 	render: ({ noBackdrop }: Record<string, unknown>) => html`
-		<div style="width: 320px;">
+		<nldd-container width="320px">
 			<nldd-card accessible-label="Aanvraag indienen">
 				<nldd-activity-indicator
 					?no-backdrop=${noBackdrop as boolean}
@@ -258,7 +258,7 @@ export const Backdrop = {
 					</nldd-container>
 				</nldd-activity-indicator>
 			</nldd-card>
-		</div>
+		</nldd-container>
 	`,
 	args: { noBackdrop: false },
 	parameters: {

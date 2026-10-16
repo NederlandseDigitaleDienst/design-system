@@ -3,6 +3,7 @@ import './banner.js';
 import '../../actions/button/button.js';
 import '../../content/rich-text/rich-text.js';
 import { ICONS } from '../../content/icon/icon.js';
+import '../../layout/container/container.js';
 
 /**
  * Een banner toont een persistente, inline notificatie met een getinte
@@ -79,7 +80,7 @@ export default {
 		variant: 'neutral',
 		size: 'md',
 		icon: '',
-		text: 'Banner-tekst',
+		text: 'Aanvraag A-1042 is in behandeling',
 		supportingText: '',
 		headingLevel: undefined,
 		dismissible: false,
@@ -104,33 +105,33 @@ export const Standaard = {
 
 export const AlleVarianten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 16px;">
+		<nldd-container gap="16">
 			<nldd-banner
 				variant="neutral"
-				text="Standaard mededeling"
-				supporting-text="Met wat extra context."
+				text="Aanvraag A-1042 is in behandeling"
+				supporting-text="Je hoort binnen vijf werkdagen van ons."
 			></nldd-banner>
 			<nldd-banner
 				variant="accent"
-				text="Uitgelicht"
-				supporting-text="Een geaccentueerde mededeling die de aandacht trekt."
+				text="Dossier D-319 is aan je toegewezen"
+				supporting-text="Team Beleid vraagt je om het dossier deze week op te pakken."
 			></nldd-banner>
 			<nldd-banner
 				variant="success"
-				text="Opgeslagen"
+				text="Aanvraag A-1043 is afgerond"
 				supporting-text="Je wijzigingen zijn bewaard."
 			></nldd-banner>
 			<nldd-banner
 				variant="warning"
 				text="Let op"
-				supporting-text="Deze actie heeft gevolgen voor andere gebruikers."
+				supporting-text="Deze wijziging raakt ook Dossier D-318 van team Uitvoering."
 			></nldd-banner>
 			<nldd-banner
 				variant="critical"
 				text="Er ging iets mis"
 				supporting-text="Controleer de gemarkeerde velden hieronder."
 			></nldd-banner>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -165,7 +166,7 @@ export const MetRichContent = {
 			heading-level="2"
 		>
 			<nldd-rich-text spacing="flat">
-				<p>Op zondag 28 mei wordt het systeem onderhouden tussen 02:00 en 04:00. Tijdens deze periode:</p>
+				<p>Zondagnacht wordt Mijn Dienst onderhouden tussen 02:00 en 04:00. Tijdens deze periode:</p>
 				<ul>
 					<li>Kun je niet inloggen</li>
 					<li>Kunnen openstaande zaken niet worden bewerkt</li>
@@ -175,7 +176,7 @@ export const MetRichContent = {
 			<nldd-button
 				slot="actions"
 				appearance="neutral-tinted"
-				text="Meer informatie"
+				text="Onderhoud bekijken"
 			></nldd-button>
 		</nldd-banner>
 	`,

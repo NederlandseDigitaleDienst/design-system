@@ -17,7 +17,7 @@
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} roving - Inside a roving-focus container (e.g. nldd-token-field): the host is the single tab stop, so the trailing control is not separately tabbable.
  * @attr {boolean} expanded - Reflects whether the token's menu is open (control="menu"); managed by the token.
- * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  *
  * @slot - Token text
  * @slot menu - An nldd-menu that the token opens from its menu button (control="menu").

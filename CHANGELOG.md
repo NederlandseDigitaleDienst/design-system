@@ -9,6 +9,52 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-hero` can take the rounded corner of the Rijkshuisstijl.** `corner` rounds one corner of the image and half a one on the panel, in a contained hero with the panel in a corner or along a side.
+- **Room to play with typography.** `nldd-title` takes `sm-`, `md-` and `lg-custom-size` for a statement larger than size 1, set per breakpoint and never smaller than size 1.
+- **Icons are easier to find.** The icon gallery has its own page under Docs › Iconen, where it used to be the last story of `nldd-icon`. Search every icon and alias there, or see what is new or updated.
+- **A design guideline for link text.** A link names where it goes: no "klik hier", "lees meer" or "meer info", which say nothing to someone scanning the page or to a screen reader listing its links.
+- **The examples follow the design guidelines.** Button labels in the imperative, no "Annuleer" next to the primary action, the safe way out first in a destructive dialog, link texts that name their destination, and Dutch text with the fixed example cast.
+
+### Added
+
+- **`item-max-width` on `nldd-collection`, the largest width of an item in a horizontal scroll.** A scroll with only one or two items, such as an agenda that starts small, keeps them at a readable width instead of filling the container. It takes a CSS length such as `400px` or `25rem`, is never narrower than `item-min-width` and never wider than the container. Once the items overflow, scrolling, the edge fade and the previous and next buttons work as before. Grid, lanes and stack ignore it. A grid leaves empty columns rather than stretching an item, so the problem does not occur there, and a maximum would change how many columns fit.
+
+- **A design guideline for link text: say where the link goes, no "click here".** A screen reader can read every link on a page as a list of its own, and people scanning a page read the underlined words. Out of context, "klik hier", "lees meer" and "meer info" say nothing. The guideline asks for the destination or subject as the link, the distinguishing words first, a different text for every destination, and the format and size of a file. WCAG 2.4.4 accepts a generic link when the sentence around it gives the context. This guideline is stricter, because that context only helps whoever reads the sentence. The examples in Storybook follow it now.
+
+- **`corner` on `nldd-hero`, the rounded corner of the Rijkshuisstijl shape language.** `<nldd-hero corner>` (or `corner="auto"`) rounds one corner of the image and lets the hero choose one the panel leaves free; `corner="top-left"` and the other three choose it yourself. The panel gets a corner at half the radius, the one pointing into the image, and stands against the edge of the image, so a `main-width` of 33.33% or 50% is that share of the image. The radius follows the ribbon width: 1.5X on small screens, 2X above. It applies with `layout="contained"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development, as it does for a chosen corner that sits under the panel or a corner with `width="full"`. Without `corner` the hero is rectangular, as before.
+
+- **`sm-custom-size`, `md-custom-size` and `lg-custom-size` on `nldd-title`, for a statement larger than size 1.** Size 1 tops out at 52px, which is small for a title that has to make an impression. These take any CSS length per breakpoint, with the weight, typeface and line height of size 1. They never go below size 1 at the same breakpoint: a smaller value shows as size 1 and says so in development, so they are no way around the scale for an ordinary heading. There is no plain `custom-size` on purpose: a breakpoint you leave out keeps the size from `size`, so a title made large for a wide screen does not break a narrow one.
+
+- **`no-results` on `nldd-table`, for a table whose rows are all filtered away.** An empty table and a filtered one said the same thing, because the table had only `empty`. When every body row is `[hidden]`, the table now shows `[slot="no-results"]`: say that nothing matches and how to get rows back, and keep `empty` for a table that has no rows yet. Without `no-results` it falls back to `empty`, the same as `nldd-list`.
+
+### Changed
+
+- **`nldd-modal-dialog` says so in development when it opens with one action.** A dialog with one button offers nothing to choose, which the design guidelines advise against. Tell the user with an `nldd-notification` or an inline message instead, or give the dialog a real choice. It warns once per dialog.
+
+- **The component docs point to the design guidelines where an attribute invites misuse.** `disabled` and `loading` on the buttons, `nldd-dropdown` as a last resort after visible options and a combo box, when an `nldd-modal-dialog` is right, and horizontal scroll in `nldd-collection` as more than a carousel. The examples in Storybook follow the guidelines as well: labels in the imperative, no "Annuleer" next to the primary action, the safe way out first in a destructive dialog, and Dutch text with the fixed example cast. They are built from the system's own components too: `nldd-container` for layout, `nldd-text` for captions with an `nldd-spacer` to the example, and cells inside an `nldd-list`, so the code you copy from Storybook has no inline layout CSS.
+
+- **The icon gallery has its own page, Docs › Iconen.** It was the last story of `nldd-icon`, where nobody looking for an icon name thought to look. The page shows every icon and alias, two across on a phone, with a search field and a filter for the new and updated ones.
+
+- **Inline elements in `nldd-text` look as they do in `nldd-rich-text`.** `<em>` is italic, `<a>` an underlined link, `<code>` sits on a tinted surface in the monospace font and `<mark>` is highlighted, beside the bold `<strong>` it already had. A short text with a code word or a link no longer needs a rich-text block.
+
+- **The form pattern allows a format requirement on an optional field.** An optional field is not `required`, and an empty value passes every requirement, so a phone number you may leave out can still be checked when it is filled in.
+
+- **The title of the wordmark in `nldd-top-navigation-bar` is semi-bold.** It was medium, close enough to the subtitle below it that the two read as one block. One step heavier sets the name apart without competing with the page title.
+
+- **A menu under an `nldd-menu-bar-item` opens against its indicator.** The indicator stops 6px short of the item's bottom edge, and the menu hung off the item, so it opened with a gap below the gray box that marked the open item. It now touches the indicator, which keeps its rounded corners.
+
+### Breaking
+
+- **Items in a horizontal-scroll `nldd-collection` stop at 480px.** One or two items that fit grew to the full width of the container, so a card of 320px became more than 1000px wide on a desktop. They now grow up to 480px and stay at the start. An `item-min-width` wider than 480px raises the limit with it, and `item-max-width` sets your own; `item-max-width="100%"` brings back the old behavior.
+
+- **`item-width` on `nldd-collection` is now `item-min-width`.** It was a minimum in every layout: in a grid the narrowest a column gets, in a horizontal scroll the width an item never shrinks below. The new name says so, and pairs with `item-max-width`. There is no alias. An `item-width` left on a collection does nothing, so its items fall back to the default of 280px; in development the collection says so once, with the renamed attribute. Rename the attribute on every `nldd-collection`.
+
+### Fixed
+
+- **`nldd-container width="fit-content"` takes the width of its content.** The container measures its own width for its breakpoint padding and gap, and that measuring left a fit-content container 0px wide, so whatever was in it piled up on its neighbours. A fit-content container no longer measures itself; its breakpoints follow the container around it.
+
 ## [0.8.99](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.98...v0.8.99) (2026-10-14)
 
 ### Highlights

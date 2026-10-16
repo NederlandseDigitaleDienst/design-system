@@ -34,9 +34,9 @@ const Template = ({
 				text="Home"
 				current
 			></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Aanvragen & activeren"></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Manieren van inloggen"></nldd-menu-bar-item>
-			<nldd-menu-bar-item text="Veiligheid"></nldd-menu-bar-item>
+			<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+			<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
+			<nldd-menu-bar-item text="Isoleren"></nldd-menu-bar-item>
 			<nldd-menu-bar-item text="Hulp"></nldd-menu-bar-item>
 		</nldd-menu-bar>
 	</div>
@@ -69,13 +69,13 @@ export const VeelItems = {
 					text="Home"
 					current
 				></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Onderwerpen"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Documenten en publicaties"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Ministeries"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Isoleren"></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Contact"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Actueel"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Vraag en antwoord"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Wetten en regelgeving"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Warmtepomp"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Subsidies"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Voorwaarden en regels"></nldd-menu-bar-item>
 			</nldd-menu-bar>
 		</div>
 	`,
@@ -90,9 +90,9 @@ export const SmalleContainer = {
 					text="Home"
 					current
 				></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Aanvragen & activeren"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Manieren van inloggen"></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Veiligheid"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Aanvragen"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Isoleren"></nldd-menu-bar-item>
 				<nldd-menu-bar-item text="Hulp"></nldd-menu-bar-item>
 			</nldd-menu-bar>
 		</div>
@@ -131,7 +131,7 @@ export const MetExpandableItems = {
 					content-priority="icon"
 				></nldd-menu-bar-item>
 				<nldd-menu-bar-item
-					text="Account"
+					text="Mijn account"
 					icon="account"
 					expandable
 					content-priority="text"
@@ -175,7 +175,7 @@ export const Compact = {
 					content-priority="icon"
 				></nldd-menu-bar-item>
 				<nldd-menu-bar-item
-					text="Mijn DigID"
+					text="Mijn Dienst"
 					icon="person"
 					expandable
 					content-priority="text"

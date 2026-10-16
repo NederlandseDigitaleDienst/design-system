@@ -6,6 +6,9 @@ import '../../inputs/checkbox/checkbox.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/button/button.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
+import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * De Table toont data in uitgelijnde kolommen. Het is altijd een box (afgeronde
@@ -297,12 +300,12 @@ export const MetActiekolom = {
 			<nldd-cell></nldd-cell>
 		</nldd-table-row>
 		<nldd-table-row>
-			<nldd-text-cell text="Jaarverslag 2025"></nldd-text-cell>
+			<nldd-text-cell text="Aanvraag A-1042"></nldd-text-cell>
 			<nldd-text-cell text="Eva de Vries"></nldd-text-cell>
 			<nldd-cell horizontal-alignment="center"><nldd-icon-button size="sm" icon="download" text="Download"></nldd-icon-button></nldd-cell>
 		</nldd-table-row>
 		<nldd-table-row>
-			<nldd-text-cell text="Begroting Q1"></nldd-text-cell>
+			<nldd-text-cell text="Aanvraag A-1043"></nldd-text-cell>
 			<nldd-text-cell text="Daan Jansen"></nldd-text-cell>
 			<nldd-cell horizontal-alignment="center"><nldd-icon-button size="sm" icon="download" text="Download"></nldd-icon-button></nldd-cell>
 		</nldd-table-row>
@@ -344,14 +347,14 @@ export const HorizontaalScrollen = {
 				<nldd-text-cell text="Actief"></nldd-text-cell>
 			</nldd-table-row>`;
 		return html`
-			<div style="max-width: 460px;">
+			<nldd-container max-width="460px">
 				<nldd-table
 					columns="180px 220px 140px 160px 120px"
 					accessible-label="Brede tabel die horizontaal scrollt"
 				>
 					${rows()}
 				</nldd-table>
-			</div>
+			</nldd-container>
 		`;
 	},
 	parameters: {
@@ -406,23 +409,30 @@ export const ResponsieveKolommen = {
 				<nldd-text-cell text="Actief"></nldd-text-cell>
 			</nldd-table-row>`;
 		const table = (width: string, label: string) => html`
-			<div>
-				<p style="margin: 0 0 4px; font: var(--primitives-font-body-sm-regular-flat); color: var(--semantics-content-secondary-color);">${label}</p>
-				<div style="width: ${width};">
+			<nldd-container>
+				<nldd-text
+					size="sm"
+					line-height="flat"
+					color="secondary"
+				>
+					${label}
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
+				<nldd-container width=${width}>
 					<nldd-table
 						columns="minmax(160px,1fr) 1fr 140px 120px"
 						md-columns="minmax(160px,1fr) 140px 120px"
 						sm-columns="minmax(160px,1fr) 120px"
 						accessible-label=${'Gebruikers ' + label}
 					>${header()}${body()}</nldd-table>
-				</div>
-			</div>`;
+				</nldd-container>
+			</nldd-container>`;
 		return html`
-			<div style="display: flex; flex-direction: column; gap: 24px;">
+			<nldd-container gap="24">
 				${table('1100px', 'lg (≥1008px): alle kolommen')}
 				${table('800px', 'md (641–1007px): E-mail weg')}
 				${table('320px', 'sm (≤640px): E-mail + Rol weg')}
-			</div>
+			</nldd-container>
 		`;
 	},
 	parameters: {
@@ -453,14 +463,14 @@ export const Leeg = {
 			${emptyHeader()}
 			<nldd-inline-dialog
 				slot="empty"
-				icon="search"
-				text="Geen resultaten"
-				supporting-text="Pas de filters aan of probeer een andere zoekterm."
+				icon="person"
+				text="Er werkt nog niemand mee"
+				supporting-text="Nodig een collega uit, dan verschijnt die hier."
 			>
 				<nldd-button
 					slot="actions"
 					appearance="neutral-tinted"
-					text="Filters wissen"
+					text="Collega uitnodigen"
 				></nldd-button>
 			</nldd-inline-dialog>
 		</nldd-table>
@@ -469,7 +479,49 @@ export const Leeg = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zonder zichtbare body-rijen opent de tabel de lege rij en verbergt hij de header. Wat daar hoort te staan weet alleen de app, dus zet er zelf een `nldd-inline-dialog` in de `empty`-slot, met je eigen icoon, kop, ondersteunende tekst en knoppen.',
+				story: 'Zonder body-rijen opent de tabel de lege rij en verbergt hij de header. Wat daar hoort te staan weet alleen de app, dus zet er zelf een `nldd-inline-dialog` in de `empty`-slot, met je eigen icoon, kop, ondersteunende tekst en knoppen.',
+			},
+		},
+	},
+};
+
+export const GeenResultaten = {
+	name: 'Geen resultaten',
+	render: () => html`
+		<nldd-table
+			columns="minmax(160px, 1fr) minmax(200px, 1fr) 120px"
+			accessible-label="Gebruikers"
+		>
+			${emptyHeader()}
+			<nldd-table-row hidden>
+				<nldd-text-cell text="Eva de Vries"></nldd-text-cell>
+				<nldd-text-cell text="eva@example.nl"></nldd-text-cell>
+				<nldd-text-cell text="Beheerder"></nldd-text-cell>
+			</nldd-table-row>
+			<nldd-table-row hidden>
+				<nldd-text-cell text="Daan Jansen"></nldd-text-cell>
+				<nldd-text-cell text="daan@example.nl"></nldd-text-cell>
+				<nldd-text-cell text="Redacteur"></nldd-text-cell>
+			</nldd-table-row>
+			<nldd-inline-dialog
+				slot="empty"
+				icon="person"
+				text="Er werkt nog niemand mee"
+				supporting-text="Nodig een collega uit, dan verschijnt die hier."
+			></nldd-inline-dialog>
+			<nldd-inline-dialog
+				slot="no-results"
+				icon="search"
+				text="Geen gebruiker past bij je zoekopdracht"
+				supporting-text="Zoek op een andere naam of een ander e-mailadres."
+			></nldd-inline-dialog>
+		</nldd-table>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Zijn er wel rijen maar staan ze allemaal op `hidden`, omdat je app ze wegfiltert, dan toont de tabel de `no-results`-slot in plaats van `empty`. Dat is een andere toestand met een andere zin: er is wel iets, het past alleen niet bij wat de gebruiker zocht. Zonder `no-results` valt de tabel terug op `empty`.',
 			},
 		},
 	},

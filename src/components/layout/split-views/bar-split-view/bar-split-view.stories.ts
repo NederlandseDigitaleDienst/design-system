@@ -160,27 +160,27 @@ const toolbar = html`
 			></nldd-toolbar-title>
 			<nldd-toolbar-item
 				slot="end"
-				label="Annuleer"
+				label="Delen"
 				priority="3"
 			>
-				<nldd-button text="Annuleer"></nldd-button>
+				<nldd-button text="Delen"></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Annuleer"
+					text="Delen"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
 				slot="end"
-				label="Sla op"
+				label="Bewaar"
 				priority="10"
 			>
 				<nldd-button
 					appearance="primary"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-button>
 				<nldd-menu-item
 					slot="overflow"
-					text="Sla op"
+					text="Bewaar"
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 		</nldd-toolbar>
@@ -343,25 +343,25 @@ export const ResponsieveBalken = {
 				<nldd-toolbar>
 					<nldd-toolbar-item
 						slot="start"
-						label="Sla op"
+						label="Bewaar"
 					>
 						<nldd-button
 							appearance="primary"
-							text="Sla op"
+							text="Bewaar"
 						></nldd-button>
 						<nldd-menu-item
 							slot="overflow"
-							text="Sla op"
+							text="Bewaar"
 						></nldd-menu-item>
 					</nldd-toolbar-item>
 					<nldd-toolbar-item
 						slot="end"
-						label="Annuleer"
+						label="Delen"
 					>
-						<nldd-button text="Annuleer"></nldd-button>
+						<nldd-button text="Delen"></nldd-button>
 						<nldd-menu-item
 							slot="overflow"
-							text="Annuleer"
+							text="Delen"
 						></nldd-menu-item>
 					</nldd-toolbar-item>
 				</nldd-toolbar>

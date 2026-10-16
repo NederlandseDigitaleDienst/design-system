@@ -398,3 +398,43 @@ describe('nldd-modal-dialog – open attribute', () => {
 		expect(dialog().classList.contains('is-closing')).toBe(false);
 	});
 });
+
+describe('nldd-modal-dialog – single action warning', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const open = async (inner: string): Promise<ReturnType<typeof vi.spyOn>> => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`<nldd-modal-dialog text="Aanvraag A-1042">${inner}</nldd-modal-dialog>`);
+		await waitForUpdate(el);
+		(el as NLDDModalDialog).show();
+		return warn;
+	};
+
+	const singleActionWarnings = (warn: ReturnType<typeof vi.spyOn>) =>
+		warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('one action'));
+
+	it('warns when the dialog opens with one action', async () => {
+		const warn = await open('<nldd-button slot="actions" text="Sluit"></nldd-button>');
+		expect(singleActionWarnings(warn)).toHaveLength(1);
+	});
+
+	it('warns only once, however often the dialog opens', async () => {
+		const warn = await open('<nldd-button slot="actions" text="Sluit"></nldd-button>');
+		(el as NLDDModalDialog).hide();
+		(el as NLDDModalDialog).show();
+		expect(singleActionWarnings(warn)).toHaveLength(1);
+	});
+
+	it('stays quiet with two actions', async () => {
+		const warn = await open(`
+			<nldd-button slot="actions" text="Behoud dossier"></nldd-button>
+			<nldd-button slot="actions" text="Verwijder dossier"></nldd-button>
+		`);
+		expect(singleActionWarnings(warn)).toHaveLength(0);
+	});
+});

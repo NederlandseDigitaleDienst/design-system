@@ -263,7 +263,7 @@ Met kaarten:
       </nldd-rich-text>
       <nldd-collection
         layout="grid"
-        item-width="280px"
+        item-min-width="280px"
       >
         <nldd-card
           href="#aanvraag-indienen"

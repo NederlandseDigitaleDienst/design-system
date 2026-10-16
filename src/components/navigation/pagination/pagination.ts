@@ -6,7 +6,7 @@
  * @element nldd-pagination
  * @attr {number} current - Currently active page (1-based)
  * @attr {number} total - Total number of pages (recommended max: 200 for compact select performance)
- * @attr {boolean} disabled - Disabled state
+ * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {boolean} centered - Centers the pagination in the container (host fills row, items grouped in the middle)
  * @attr {string} href-pattern - URL pattern with a {page} placeholder, renders links instead of buttons
  * @attr {object} translations - Translations; unspecified keys fall back to Dutch

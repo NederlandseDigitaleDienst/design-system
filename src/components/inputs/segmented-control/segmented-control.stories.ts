@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import './segmented-control.js';
 import './../../content/icon/icon.js';
+import '../../layout/container/container.js';
 
 /**
  * De Segmented Control component is een horizontale groep van wederzijds exclusieve (radio)
@@ -127,7 +128,10 @@ export const Standaard = {
 
 export const Appearances = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
+	<nldd-container
+		gap="16"
+		horizontal-alignment="left"
+	>
 		<div style="padding: 16px; border-radius: var(--primitives-corner-radius-md); background: var(--semantics-surfaces-base-background-color);">
 			<nldd-segmented-control
 				appearance="neutral-tinted"
@@ -160,7 +164,7 @@ export const Appearances = {
 				></nldd-segmented-control-item>
 			</nldd-segmented-control>
 		</div>
-	</div>
+	</nldd-container>
 `,
 	parameters: {
 		controls: { disable: true },
@@ -174,7 +178,10 @@ export const Appearances = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
+	<nldd-container
+		gap="16"
+		horizontal-alignment="left"
+	>
 		<nldd-segmented-control
 			value="bold"
 			size="md"
@@ -299,7 +306,10 @@ export const AlleToestanden = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<div style="width: 400px; display: flex; flex-direction: column; gap: 1rem;">
+		<nldd-container
+			gap="16"
+			width="400px"
+		>
 			<nldd-segmented-control
 				value="bold"
 				width="full"
@@ -430,15 +440,18 @@ export const AlleToestanden = {
 					icon="underlined"
 				></nldd-segmented-control-item>
 			</nldd-segmented-control>
-		</div>
-	</div>
+		</nldd-container>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
 
 export const IcoonEnTekst = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
+	<nldd-container
+		gap="16"
+		horizontal-alignment="left"
+	>
 		<nldd-segmented-control
 			value="bold"
 			variant="icon-and-text"
@@ -483,7 +496,7 @@ export const IcoonEnTekst = {
 				icon="underlined"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-		<div style="width: 400px;">
+		<nldd-container width="400px">
 			<nldd-segmented-control
 				value="bold"
 				variant="icon-and-text"
@@ -507,8 +520,8 @@ export const IcoonEnTekst = {
 					icon="underlined"
 				></nldd-segmented-control-item>
 			</nldd-segmented-control>
-		</div>
-	</div>
+		</nldd-container>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -516,7 +529,10 @@ export const IcoonEnTekst = {
 export const GrootteLg = {
 	name: 'Grootte lg',
 	render: () => html`
-	<div style="display: flex; flex-direction: column; align-items: start; gap: 1rem;">
+	<nldd-container
+		gap="16"
+		horizontal-alignment="left"
+	>
 		<nldd-segmented-control
 			value="list"
 			variant="text"
@@ -580,7 +596,7 @@ export const GrootteLg = {
 				icon="calendar-event"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

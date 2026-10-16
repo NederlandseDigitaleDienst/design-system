@@ -1,6 +1,9 @@
 import { html, nothing } from 'lit';
 import './link.js';
 import { ICONS } from './../../content/icon/icon.js';
+import '../../layout/container/container.js';
+import '../../content/text/text.js';
+import '../../layout/spacer/spacer.js';
 
 /**
  * De Link component werkt in twee modi:
@@ -20,18 +23,18 @@ import { ICONS } from './../../content/icon/icon.js';
  * <nldd-link
  * 	href="/pad"
  * 	size="md"
- * 	text="Bekijk meer"
+ * 	text="Voorwaarden voor dakisolatie"
  * ></nldd-link>
  * <nldd-link
  * 	href="https://example.com"
  * 	target="_blank"
  * 	size="md"
- * 	text="Externe"
+ * 	text="Warmtepompen vergelijken"
  * 	end-icon="arrow-up-right"
  * ></nldd-link>
  *
  * <!-- Inline in tekst, erft van parent -->
- * <p>Lees meer over de <nldd-link href="/voorwaarden">voorwaarden</nldd-link> hier.</p>
+ * <p>Lees meer over de <nldd-link href="/voorwaarden">voorwaarden</nldd-link>.</p>
  * ```
  */
 export default {
@@ -105,7 +108,7 @@ export default {
 	},
 	args: {
 		size: 'md',
-		text: 'Bekijk meer',
+		text: 'Voorwaarden voor dakisolatie',
 		startIcon: '',
 		endIcon: '',
 		href: '#',
@@ -134,28 +137,31 @@ export const Standaard = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			gap="8"
+			horizontal-alignment="left"
+		>
 			<nldd-link
 				href="#"
 				size="lg"
-				text="Large link"
+				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
 			<nldd-link
 				href="#"
 				size="md"
-				text="Medium link"
+				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
 			<nldd-link
 				href="#"
 				size="sm"
-				text="Small link"
+				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
 			<nldd-link
 				href="#"
 				size="xs"
-				text="Extra small link"
+				text="Voorwaarden voor dakisolatie"
 			></nldd-link>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -164,44 +170,83 @@ export const Grootten = {
 
 export const InLopendeTekst = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px; max-width: 560px;">
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In een h2 — link erft display-grootte</p>
+		<nldd-container
+			gap="24"
+			max-width="560px"
+		>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					In een h2 — link erft display-grootte
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<h2 style="margin: 0; font: var(--primitives-font-display-2-md);">
-					Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link> hier.
+					Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link>.
 				</h2>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In body-md — link is body-md</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					In body-md — link is body-md
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
-					Wil je toeslag aanvragen? Bekijk dan eerst <nldd-link href="https://example.com" target="_blank">de voorwaarden op de website</nldd-link> van de Belastingdienst.
+					Wil je subsidie aanvragen voor dakisolatie? Bekijk dan eerst <nldd-link href="https://example.com" target="_blank">de voorwaarden voor dakisolatie</nldd-link> op de website van Mijn Dienst.
 				</p>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">In body-sm — link is body-sm</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					In body-sm — link is body-sm
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; font: var(--primitives-font-body-sm-regular-snug);">
 					Disclaimer: deze pagina is informatief. Voor juridische details zie <nldd-link href="#disclaimer">de disclaimer</nldd-link>.
 				</p>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Lange link wraps over regels (display: inline)</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					Lange link wraps over regels (display: inline)
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; max-width: 280px; font: var(--primitives-font-body-md-regular-snug);">
-					Klik <nldd-link href="#">hier voor een nogal lange linktekst die over meerdere regels moet kunnen wrappen</nldd-link> en kijk wat er gebeurt.
+					Lees meer over <nldd-link href="#">de voorwaarden voor dakisolatie en wat je moet aanleveren bij je aanvraag</nldd-link> voordat je begint.
 				</p>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
-					Bezoek <nldd-link href="https://example.com" target="_blank" end-icon="square-arrow-right-top">de website</nldd-link> voor meer info.
+					Vergelijk vooraf <nldd-link href="https://example.com" target="_blank" end-icon="square-arrow-right-top">de soorten warmtepompen</nldd-link> en wat ze kosten.
 				</p>
-			</div>
-			<div>
-				<p style="margin: 0 0 4px; font-size: 12px; color: var(--primitives-color-neutral-500);">Expliciete <code>size="inherit"</code> doet hetzelfde als geen size</p>
+			</nldd-container>
+			<nldd-container>
+				<nldd-text
+					size="xs"
+					color="secondary"
+				>
+					Expliciete <code>size="inherit"</code> doet hetzelfde als geen size
+				</nldd-text>
+				<nldd-spacer size="4"></nldd-spacer>
 				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
-					Lees ook <nldd-link href="#" size="inherit">de toelichting</nldd-link> voor context.
+					Lees ook <nldd-link href="#" size="inherit">de toelichting bij Aanvraag A-1042</nldd-link> voor de stand van zaken.
 				</p>
-			</div>
-		</div>
+			</nldd-container>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -219,18 +264,21 @@ Icons werken ook in inherit mode: de natuurlijke whitespace tussen icon en tekst
 
 export const MetStartIcon = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			gap="8"
+			horizontal-alignment="left"
+		>
 			<nldd-link
 				href="#"
-				text="Download bestand"
+				text="Aanvraag A-1042 (pdf, 2 MB)"
 				start-icon="download"
 			></nldd-link>
 			<nldd-link
 				href="#"
-				text="Terug naar overzicht"
+				text="Terug naar aanvragen"
 				start-icon="arrow-left"
 			></nldd-link>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -239,19 +287,22 @@ export const MetStartIcon = {
 
 export const MetEndIcon = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+		<nldd-container
+			gap="8"
+			horizontal-alignment="left"
+		>
 			<nldd-link
 				href="#"
-				text="Verder lezen"
+				text="Aanvraag A-1042"
 				end-icon="arrow-right"
 			></nldd-link>
 			<nldd-link
 				href="https://example.com"
 				target="_blank"
-				text="Externe website"
+				text="Warmtepompen vergelijken"
 				end-icon="square-arrow-right-top"
 			></nldd-link>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -268,7 +319,7 @@ export const ToestandDisabled = {
 	render: () => html`
 		<nldd-link
 			href="#"
-			text="Uitgeschakelde link"
+			text="Aanvraag A-1043"
 			disabled
 		></nldd-link>
 	`,

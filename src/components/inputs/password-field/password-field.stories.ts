@@ -1,12 +1,13 @@
 import { html, nothing } from 'lit';
 import './password-field.js';
+import '../../layout/container/container.js';
 
 /**
  * De Password Field component voor wachtwoordinvoer met zichtbaarheidstoggle.
  *
  * ## Gebruik
  * ```html
- * <nldd-password-field placeholder="Password field"></nldd-password-field>
+ * <nldd-password-field placeholder="Wachtwoord"></nldd-password-field>
  * ```
  */
 export default {
@@ -44,7 +45,6 @@ export default {
 		placeholder: {
 			control: 'text',
 			description: 'Placeholder text',
-			table: { defaultValue: { summary: 'Password field' } },
 		},
 		showButtonText: {
 			name: 'show-button-text',
@@ -132,7 +132,7 @@ export default {
 		width: '',
 		name: 'password',
 		value: '',
-		placeholder: 'Password field',
+		placeholder: 'Wachtwoord',
 		showButtonText: 'Toon',
 		hideButtonText: 'Verberg',
 		showButtonAccessibleLabel: 'Toon wachtwoord',
@@ -184,7 +184,7 @@ export const ZonderMasked = {
 	name: 'Zonder masked',
 	render: Template,
 	args: {
-		value: 'visible-password',
+		value: 'zichtbaar-wachtwoord',
 		masked: false,
 	},
 };
@@ -193,7 +193,7 @@ export const ToestandValid = {
 	name: 'Toestand valid',
 	render: Template,
 	args: {
-		value: 'strong-password-123',
+		value: 'sterk-wachtwoord-123',
 		valid: true,
 	},
 };
@@ -211,17 +211,17 @@ export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: Template,
 	args: {
-		value: 'disabled-password',
+		value: 'uitgeschakeld-wachtwoord',
 		disabled: true,
 	},
 };
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-password-field placeholder="Neutral"></nldd-password-field>
+	<nldd-container gap="16">
+		<nldd-password-field placeholder="Neutraal"></nldd-password-field>
 		<nldd-password-field
-			.value=${"strong-password"}
+			.value=${"sterk-wachtwoord"}
 			valid
 		></nldd-password-field>
 		<nldd-password-field
@@ -229,27 +229,27 @@ export const AlleToestanden = {
 			invalid
 		></nldd-password-field>
 		<nldd-password-field
-			.value=${"disabled"}
+			.value=${"uitgeschakeld"}
 			disabled
 		></nldd-password-field>
 		<nldd-password-field
-			.value=${"unmasked"}
+			.value=${"zichtbaar"}
 			.masked=${false}
 		></nldd-password-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
 
 export const Grootten = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<nldd-password-field placeholder="Medium (md)"></nldd-password-field>
+	<nldd-container gap="16">
+		<nldd-password-field placeholder="Middel (md)"></nldd-password-field>
 		<nldd-password-field
-			placeholder="Small (sm)"
+			placeholder="Klein (sm)"
 			size="sm"
 		></nldd-password-field>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

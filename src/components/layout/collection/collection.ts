@@ -5,19 +5,23 @@
  * Supports grid, stack, lanes and horizontal scroll layouts.
  *
  * Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS
- * grid of your own: the collection sets the columns from `item-width` and the
- * available width, and the gap per breakpoint.
+ * grid of your own: the collection sets the columns from `item-min-width` and
+ * the available width, and the gap per breakpoint.
  *
  * In grid and stack modes, items are paginated via a load-more button. In
  * horizontal scroll, the prev/next controls and the edge fade appear only when
- * the items overflow the container.
+ * the items overflow the container. Use horizontal scroll for items that
+ * together serve one purpose, such as the events of one agenda; it is not a
+ * carousel for unrelated highlights, which the design guidelines advise
+ * against.
  * With `lazy-load`, the next items are automatically loaded when
  * the load-more button comes into view.
  *
  * @element nldd-collection
  *
  * @attr {string} layout - Layout mode: 'grid' | 'stack' | 'lanes' | 'horizontal-scroll' (default: 'grid')
- * @attr {string} item-width - Preferred width for each item (e.g. '280px', '20rem'). In grid and lanes layouts used as the minimum column width (columns will be at least this wide; 1fr if container allows more). In horizontal scroll used as flex-basis. Never forces horizontal overflow — the value is clamped to container width.
+ * @attr {string} item-min-width - Smallest width an item takes (e.g. '280px', '20rem'). In grid and lanes the minimum column width: columns are at least this wide and grow to fill the row. In horizontal scroll the flex-basis: items never shrink below it, and grow up to `item-max-width` when they fit. No effect in stack. Never forces horizontal overflow, the value is clamped to the container width.
+ * @attr {string} item-max-width - Largest width an item takes in horizontal scroll (e.g. '400px', '25rem'), so one or two items that fit do not stretch across the container. Defaults to 480px; `item-max-width="100%"` lets items fill the container, as they did before the default. Never narrower than `item-min-width`, which wins when it is wider, and never wider than the container. No effect in grid, lanes and stack: a grid leaves empty columns rather than stretching an item, and its right edge stays aligned with the content around it.
  * @attr {string} gap - Gap between items, as a step of the spacing scale ('0', '2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'). Overrides the responsive default at every breakpoint; unset keeps the default.
  * @attr {string} sm-gap - Gap at sm, overriding `gap` there
  * @attr {string} md-gap - Gap at md, overriding `gap` there
@@ -27,6 +31,10 @@
  * @attr {boolean} show-load-more - Show load-more button in grid/stack (default: false)
  * @attr {boolean} lazy-load - Automatically load more items when the button becomes visible
  *
+ * @migration Items in horizontal scroll stop at 480px (or at `item-min-width` when that is wider) instead of filling the container.
+ *            Set `item-max-width="100%"` where one or two items should still fill the row.
+ * @migration The `item-width` attribute has been renamed to `item-min-width`, because it was a minimum in every layout.
+ *            Replace `item-width="320px"` with `item-min-width="320px"`.
  * @migration The `load-more-label` attribute has been removed.
  *            Use `translations` property instead: `.translations=${{ 'components.collection.load-more-action': 'Show more' }}`
  *
@@ -51,6 +59,8 @@ import { translate } from '../../../utilities/translations.js';
 
 type Layout = 'grid' | 'stack' | 'lanes' | 'horizontal-scroll';
 
+let warnedAboutItemWidth = false;
+
 @customElement('nldd-collection')
 export class NLDDCollection extends LitElement {
 	static override styles = collectionStyles;
@@ -58,8 +68,11 @@ export class NLDDCollection extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<Layout>('grid') })
 	layout: Layout = 'grid';
 
-	@property({ type: String, reflect: true, attribute: 'item-width' })
-	itemWidth: string | undefined;
+	@property({ type: String, reflect: true, attribute: 'item-min-width' })
+	itemMinWidth: string | undefined;
+
+	@property({ type: String, reflect: true, attribute: 'item-max-width' })
+	itemMaxWidth: string | undefined;
 
 	/** A step of the spacing scale, overriding the responsive default at every
 	 *  breakpoint. Unset keeps the default. */
@@ -167,6 +180,22 @@ export class NLDDCollection extends LitElement {
 		this._visibleCount = this.maxItems;
 	}
 
+	// `item-width` was renamed to `item-min-width`. An unknown attribute does
+	// nothing, so without this a missed rename only shows as 280px items.
+	// Observed rather than read once, so a binding that sets it after the
+	// first render is caught too. Once per page: one search-and-replace.
+	static override get observedAttributes(): string[] {
+		return [...super.observedAttributes, 'item-width'];
+	}
+
+	override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
+		super.attributeChangedCallback(name, old, value);
+		if (import.meta.env?.DEV && name === 'item-width' && value !== null && !warnedAboutItemWidth) {
+			warnedAboutItemWidth = true;
+			console.warn(`<nldd-collection>: the item-width attribute is now item-min-width. Rename item-width="${value}" to item-min-width="${value}", here and on every other nldd-collection.`, this);
+		}
+	}
+
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this._intersectionObserver?.disconnect();
@@ -178,11 +207,19 @@ export class NLDDCollection extends LitElement {
 			this._setupScrollListeners();
 		}
 
-		if (changedProperties.has('itemWidth')) {
-			if (this.itemWidth) {
-				this.style.setProperty('--_collection-item-width', this.itemWidth);
+		if (changedProperties.has('itemMinWidth')) {
+			if (this.itemMinWidth) {
+				this.style.setProperty('--_collection-item-min-width', this.itemMinWidth);
 			} else {
-				this.style.removeProperty('--_collection-item-width');
+				this.style.removeProperty('--_collection-item-min-width');
+			}
+		}
+
+		if (changedProperties.has('itemMaxWidth')) {
+			if (this.itemMaxWidth) {
+				this.style.setProperty('--_collection-item-max-width', this.itemMaxWidth);
+			} else {
+				this.style.removeProperty('--_collection-item-max-width');
 			}
 		}
 

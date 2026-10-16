@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import './step-bar.js';
+import '../../layout/container/container.js';
 
 /**
  * Toont waar je staat in een proces van meerdere stappen. Je zet
@@ -65,12 +66,12 @@ export const Statussen = {
 /**
  * Een afgeronde stap kan een link zijn (`href`) of een knop (`button`), zodat je
  * terug kunt bladeren. De knop is er voor flows zonder eigen URL per stap, zoals
- * een wizard in één venster. Zonder allebei is een stap geen control, en `href`
+ * een werkstroom in één venster. Zonder allebei is een stap geen control, en `href`
  * wint van `button` — dezelfde regel als `nldd-card` en `nldd-avatar`.
  */
 export const Klikbaar = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 32px;">
+		<nldd-container gap="32">
 			<nldd-step-bar accessible-label="Voortgang met links">
 				<nldd-step-bar-item
 					text="Gegevens"
@@ -99,7 +100,7 @@ export const Klikbaar = {
 					status="current"
 				></nldd-step-bar-item>
 			</nldd-step-bar>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

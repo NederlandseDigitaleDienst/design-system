@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import './dropdown.js';
+import '../../layout/container/container.js';
 
 /**
  * De Dropdown component is een visuele wrapper om een native `<select>` element.
@@ -90,7 +91,7 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
+	<nldd-container gap="16">
 		<nldd-dropdown size="xs">
 			<select
 				name="option-xs"
@@ -181,7 +182,7 @@ export const AlleToestanden = {
 				</optgroup>
 			</select>
 		</nldd-dropdown>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
@@ -196,7 +197,10 @@ const longOptions = html`
  */
 export const LangeOptie = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem; max-width: 20rem;">
+	<nldd-container
+		gap="16"
+		max-width="20rem"
+	>
 		${['xs', 'sm', 'md'].map((size) => html`
 			<nldd-dropdown size=${size}>
 				<select
@@ -211,7 +215,7 @@ export const LangeOptie = {
 				aria-label="Aanvraag"
 			>${longOptions}</select>
 		</nldd-dropdown>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

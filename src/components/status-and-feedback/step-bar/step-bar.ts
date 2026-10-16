@@ -92,7 +92,7 @@ export class NLDDStepBarItem extends LitElement {
 	@property({ type: String, reflect: true })
 	href = '';
 
-	/** For flows without a URL per step (a wizard inside one window). Ignored
+	/** For flows without a URL per step (a process that runs inside one window). Ignored
 	 *  once `href` is set: one step is one action, and a link outranks a button
 	 *  -- the same rule as nldd-card and nldd-avatar. */
 	@property({ type: Boolean, reflect: true })

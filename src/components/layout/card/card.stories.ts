@@ -22,7 +22,7 @@ import '../../layout/container/container.js';
  *   </nldd-container>
  *   <nldd-container slot="footer" padding-inline="16" padding-bottom="16">
  *     <nldd-button-group orientation="horizontal">
- *       <nldd-button appearance="primary" text="Actie"></nldd-button>
+ *       <nldd-button appearance="primary" text="Bewerken"></nldd-button>
  *     </nldd-button-group>
  *   </nldd-container>
  * </nldd-card>
@@ -88,14 +88,14 @@ export const Standaard = (args: Record<string, any>) => html`
 		>
 			<nldd-title
 				size="4"
-				text="Kaarttitel"
+				text="Aanvraag A-1042"
 				heading-level="3"
 			></nldd-title>
 		</nldd-container>
 		<nldd-container padding="16">
 			<nldd-rich-text>
-				<p>Dit is de inhoud van de kaart. Gebruik een card om gerelateerde informatie
-				visueel te groeperen met een duidelijke structuur van header, body en footer.</p>
+				<p>Je aanvraag voor dakisolatie is in behandeling. Klopt er iets niet meer,
+				zoals het oppervlak van het dak of de offerte, pas het dan nog aan.</p>
 			</nldd-rich-text>
 		</nldd-container>
 		<nldd-container
@@ -106,11 +106,7 @@ export const Standaard = (args: Record<string, any>) => html`
 			<nldd-button-group orientation="horizontal">
 				<nldd-button
 					appearance="primary"
-					text="Bevestig"
-				></nldd-button>
-				<nldd-button
-					appearance="secondary"
-					text="Annuleer"
+					text="Bewerken"
 				></nldd-button>
 			</nldd-button-group>
 		</nldd-container>
@@ -137,7 +133,7 @@ export const MetHeader = () => html`
 		>
 			<nldd-title
 				size="4"
-				text="Alleen header en body"
+				text="Dossier D-319"
 				heading-level="3"
 			></nldd-title>
 		</nldd-container>
@@ -158,7 +154,7 @@ export const VasteHoogte = () => html`
 		>
 			<nldd-title
 				size="4"
-				text="Vaste hoogte"
+				text="Aanvraag A-1043"
 				heading-level="3"
 			></nldd-title>
 		</nldd-container>
@@ -176,7 +172,7 @@ export const VasteHoogte = () => html`
 			<nldd-button-group orientation="horizontal">
 				<nldd-button
 					appearance="primary"
-					text="Actie"
+					text="Bekijken"
 				></nldd-button>
 			</nldd-button-group>
 		</nldd-container>
@@ -221,7 +217,7 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 		>
 			<nldd-title
 				size="4"
-				text="Dossier 2024-001"
+				text="Dossier D-318"
 				heading-level="3"
 			></nldd-title>
 		</nldd-container>
@@ -247,7 +243,7 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 `;
 KlikbareKaart.args = {
 	href: '#',
-	accessibleLabel: 'Dossier 2024-001',
+	accessibleLabel: 'Dossier D-318',
 };
 
 /**
@@ -256,10 +252,14 @@ KlikbareKaart.args = {
  * op `nldd-card` zelf werkt dus direct, en Enter/Space doen het native.
  */
 export const KaartAlsKnop = () => html`
-	<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: start;">
+	<nldd-container
+		layout="wrap"
+		gap="16"
+		vertical-alignment="top"
+	>
 		<nldd-card
 			button
-			accessible-label="Dossier 2024-001 openen"
+			accessible-label="Dossier D-318 openen"
 			style="max-width: 360px;"
 			@click=${() => window.alert('Kaart geactiveerd')}
 		>
@@ -270,7 +270,7 @@ export const KaartAlsKnop = () => html`
 			>
 				<nldd-title
 					size="4"
-					text="Dossier 2024-001"
+					text="Dossier D-318"
 					heading-level="3"
 				></nldd-title>
 			</nldd-container>
@@ -283,7 +283,7 @@ export const KaartAlsKnop = () => html`
 		<nldd-card
 			button
 			background="tinted"
-			accessible-label="Dossier 2024-002 openen"
+			accessible-label="Dossier D-319 openen"
 			style="max-width: 360px;"
 			@click=${() => window.alert('Kaart geactiveerd')}
 		>
@@ -294,7 +294,7 @@ export const KaartAlsKnop = () => html`
 			>
 				<nldd-title
 					size="4"
-					text="Dossier 2024-002"
+					text="Dossier D-319"
 					heading-level="3"
 				></nldd-title>
 			</nldd-container>
@@ -304,5 +304,5 @@ export const KaartAlsKnop = () => html`
 				</nldd-rich-text>
 			</nldd-container>
 		</nldd-card>
-	</div>
+	</nldd-container>
 `;

@@ -15,7 +15,8 @@ export const collectionStyles = css`
 	/* # Host */
 
 	:host {
-		--_collection-item-width: var(--primitives-area-280);
+		--_collection-item-min-width: var(--primitives-area-280);
+		--_collection-item-max-width: var(--primitives-area-480);
 		--_collection-focus-ring-z-index: 1;
 
 		/* Two sets, because a collection inside a layout-container follows that
@@ -58,10 +59,10 @@ export const collectionStyles = css`
 
 	:host([layout="grid"]) .collection__items,
 	:host(:not([layout])) .collection__items {
-		/* min(item-width, 100%) clamps the track min to the container width so
+		/* min(item-min-width, 100%) clamps the track min to the container width so
 		   a single column never forces horizontal overflow on narrow screens. */
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(var(--_collection-item-width), 100%), 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(min(var(--_collection-item-min-width), 100%), 1fr));
 	}
 
 	/* A grid item's automatic minimum is min-content, so one long unbreakable
@@ -87,7 +88,7 @@ export const collectionStyles = css`
 	   load-more adds to it. */
 	:host([layout="lanes"]) .collection__items {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(var(--_collection-item-width), 100%), 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(min(var(--_collection-item-min-width), 100%), 1fr));
 	}
 
 	:host([layout="lanes"]) .collection__items ::slotted(*) {
@@ -132,10 +133,10 @@ export const collectionStyles = css`
 	}
 
 	:host([layout="horizontal-scroll"]) .collection__items ::slotted(*) {
-		max-width: 100%;
+		max-width: min(max(var(--_collection-item-min-width), var(--_collection-item-max-width)), 100%);
 		flex-grow: 1;
 		flex-shrink: 0;
-		flex-basis: var(--_collection-item-width);
+		flex-basis: var(--_collection-item-min-width);
 		scroll-snap-align: start;
 	}
 

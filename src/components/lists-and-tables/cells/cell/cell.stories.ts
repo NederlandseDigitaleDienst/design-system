@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import './cell.js';
 import '../../../actions/button/button.js';
+import '../../list/list.js';
+import '../../list-item/list-item.js';
 
 export default {
 	title: 'Components/Lists & Tables/Cells/Cell',
@@ -147,18 +149,20 @@ export const MetMinEnMaxBreedte = {
 
 export const MetMinimaleHoogte = {
 	render: () => html`
-		<div style="display: flex; gap: 8px; align-items: flex-start;">
-			<nldd-cell
-				vertical-alignment="top"
-				min-height="44px"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
-			>
-				<nldd-button
-					appearance="neutral-tinted"
-					text="Min-hoogte 44px"
-				></nldd-button>
-			</nldd-cell>
-		</div>
+		<nldd-list accessible-label="Minimale hoogte">
+			<nldd-list-item>
+				<nldd-cell
+					vertical-alignment="top"
+					min-height="44px"
+					style="border: 1px dashed var(--primitives-color-neutral-150);"
+				>
+					<nldd-button
+						appearance="neutral-tinted"
+						text="Min-hoogte 44px"
+					></nldd-button>
+				</nldd-cell>
+			</nldd-list-item>
+		</nldd-list>
 	`,
 };
 
@@ -198,37 +202,43 @@ export const VerticaleUitlijning = {
 
 export const HorizontaleUitlijning = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 8px;">
-			<nldd-cell
-				width="240px"
-				horizontal-alignment="left"
-				style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
-			>
-				<nldd-button
-					appearance="neutral-tinted"
-					text="Links (default)"
-				></nldd-button>
-			</nldd-cell>
-			<nldd-cell
-				width="240px"
-				horizontal-alignment="center"
-				style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
-			>
-				<nldd-button
-					appearance="neutral-tinted"
-					text="Midden"
-				></nldd-button>
-			</nldd-cell>
-			<nldd-cell
-				width="240px"
-				horizontal-alignment="right"
-				style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
-			>
-				<nldd-button
-					appearance="neutral-tinted"
-					text="Rechts"
-				></nldd-button>
-			</nldd-cell>
-		</div>
+		<nldd-list accessible-label="Horizontale uitlijning">
+			<nldd-list-item>
+				<nldd-cell
+					width="240px"
+					horizontal-alignment="left"
+					style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
+				>
+					<nldd-button
+						appearance="neutral-tinted"
+						text="Links (default)"
+					></nldd-button>
+				</nldd-cell>
+			</nldd-list-item>
+			<nldd-list-item>
+				<nldd-cell
+					width="240px"
+					horizontal-alignment="center"
+					style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
+				>
+					<nldd-button
+						appearance="neutral-tinted"
+						text="Midden"
+					></nldd-button>
+				</nldd-cell>
+			</nldd-list-item>
+			<nldd-list-item>
+				<nldd-cell
+					width="240px"
+					horizontal-alignment="right"
+					style="height: 60px; border: 1px dashed var(--primitives-color-neutral-150);"
+				>
+					<nldd-button
+						appearance="neutral-tinted"
+						text="Rechts"
+					></nldd-button>
+				</nldd-cell>
+			</nldd-list-item>
+		</nldd-list>
 	`,
 };

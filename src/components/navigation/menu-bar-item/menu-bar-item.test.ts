@@ -51,6 +51,74 @@ describe('nldd-menu-bar-item', () => {
 		expect(menu.matches(':popover-open')).toBe(true);
 	});
 
+	it('opens the menu against the indicator, not against the item', async () => {
+		const removeTokens = loadTokens();
+		try {
+			el = await fixture(`
+				<nldd-menu-bar-item text="NL" expandable>
+					<nldd-menu>
+						<nldd-menu-item text="Nederlands"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-bar-item>
+			`);
+			await waitForUpdate(el);
+			el.click();
+			await waitForUpdate(el);
+			const menu = el.querySelector('nldd-menu') as HTMLElement & { reposition(): Promise<void> };
+			await menu.reposition();
+			const item = el.shadowRoot!.querySelector('.menu-bar-item')!;
+			const inset = parseFloat(getComputedStyle(item, '::before').bottom);
+			expect(inset).toBeGreaterThan(0);
+			expect(menu.getBoundingClientRect().top).toBeCloseTo(item.getBoundingClientRect().bottom - inset, 0);
+		} finally {
+			removeTokens();
+		}
+	});
+
+	it('opens against the indicator again after the menu was closed', async () => {
+		const removeTokens = loadTokens();
+		try {
+			el = await fixture(`
+				<nldd-menu-bar-item text="NL" expandable>
+					<nldd-menu>
+						<nldd-menu-item text="Nederlands"></nldd-menu-item>
+					</nldd-menu>
+				</nldd-menu-bar-item>
+			`);
+			await waitForUpdate(el);
+			const menu = el.querySelector('nldd-menu') as HTMLElement & { reposition(): Promise<void>; hidePopover(): void };
+			el.click();
+			await waitForUpdate(el);
+			menu.hidePopover();
+			await waitForUpdate(el);
+			el.click();
+			await waitForUpdate(el);
+			await menu.reposition();
+			const item = el.shadowRoot!.querySelector('.menu-bar-item')!;
+			const inset = parseFloat(getComputedStyle(item, '::before').bottom);
+			expect(menu.getBoundingClientRect().top).toBeCloseTo(item.getBoundingClientRect().bottom - inset, 0);
+		} finally {
+			removeTokens();
+		}
+	});
+
+	it('leaves no offset on the menu once it closes', async () => {
+		el = await fixture(`
+			<nldd-menu-bar-item text="NL" expandable>
+				<nldd-menu>
+					<nldd-menu-item text="Nederlands"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-bar-item>
+		`);
+		await waitForUpdate(el);
+		el.click();
+		await waitForUpdate(el);
+		const menu = el.querySelector('nldd-menu') as HTMLElement & { anchorOffset: number; hidePopover(): void };
+		menu.hidePopover();
+		await waitForUpdate(el);
+		expect(menu.anchorOffset).toBe(0);
+	});
+
 	it('does not fire select when expandable with a slotted menu', async () => {
 		el = await fixture(`
 			<nldd-menu-bar-item text="NL" expandable>

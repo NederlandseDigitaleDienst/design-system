@@ -65,7 +65,7 @@
  * @attr {number} sm-column-count - Column count when this container is sm-wide
  * @attr {number} md-column-count - Column count when this container is md-wide
  * @attr {number} lg-column-count - Column count when this container is lg-wide
- * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it.
+ * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it.
  * @attr {string} min-width - Minimum width as a CSS length (e.g. '280px')
  * @attr {string} max-width - Maximum width as a CSS length (e.g. '480px')
  * @attr {string} gap - Gap between children. One distance for all of them, so it fits children of one kind; for a stack of different kinds, space each seam with nldd-spacer instead.

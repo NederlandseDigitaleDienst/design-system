@@ -10,7 +10,7 @@ import '../avatar-group/avatar-group.js';
  * ```html
  * <nldd-blockquote>
  *   <p>Het beste systeem is het systeem dat je niet ziet.</p>
- *   <p slot="attribution">Jan Jansen, 2024</p>
+ *   <p slot="attribution">Jan Jansen, team Uitvoering</p>
  * </nldd-blockquote>
  * ```
  */
@@ -43,7 +43,7 @@ export default {
 	},
 	args: {
 		quote: 'Overheidsdienstverlening moet begrijpelijk, toegankelijk en inclusief zijn voor iedereen.',
-		attribution: 'Nederlandse Digitale Dienst, 2024',
+		attribution: 'Team Beleid, Dossier D-319',
 		cite: '',
 	},
 };
@@ -62,7 +62,7 @@ export const Standaard = {
 export const MetCite = {
 	render: Template,
 	args: {
-		cite: 'https://www.digitaleoverheid.nl/',
+		cite: 'https://example.nl/mijn-dienst/dossiers/d-319',
 	},
 };
 
@@ -96,7 +96,7 @@ export const MetIdentity = {
 			<nldd-identity
 				slot="attribution"
 				text="Jan Jansen"
-				supporting-text="Hoofdredacteur · 12 juni 2026"
+				supporting-text="Hoofdredacteur · team Beleid"
 			>
 				<img
 					slot="avatars"

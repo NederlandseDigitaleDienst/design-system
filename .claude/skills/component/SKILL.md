@@ -402,7 +402,7 @@ sidebarAsSheet, noLogo
 
 [2. Sizing]
 resize, rows, width, minWidth, maxWidth, height, minHeight, fullWidth,
-itemWidth, containerSize
+itemMinWidth, itemMaxWidth, containerSize
 
 [3. Space]
 spacing, padding, paddingInline, paddingBlock, paddingTop, paddingRight,

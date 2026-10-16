@@ -71,12 +71,12 @@ const setNextOpen = (e: Record<string, any>) => { e.currentTarget.nextElementSib
 const pageContent = html`
 	<nldd-simple-section>
 		<nldd-rich-text>
-			<p>Dit is de inhoud van de sheet.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-			<p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-			<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-			<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</p>
-			<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa.</p>
+			<p>Je aanvraag voor dakisolatie is in behandeling.</p>
+			<p>We kijken eerst of het dak in aanmerking komt.</p>
+			<p>Daarvoor gebruiken we het oppervlak en de offerte die je hebt opgegeven.</p>
+			<p>Klopt er iets niet meer? Geef de wijziging dan door voordat de beoordeling begint.</p>
+			<p>Is de beoordeling klaar, dan krijg je een bericht in Mijn Dienst.</p>
+			<p>Noem bij een vraag altijd het nummer A-1042.</p>
 		</nldd-rich-text>
 	</nldd-simple-section>
 `;
@@ -85,7 +85,7 @@ const Template = (args: Record<string, any>) => {
 	const [, updateArgs] = useArgs();
 	return html`
 		<nldd-button
-			text="Open sheet"
+			text="Aanvraag bekijken"
 			@click=${setNextOpen}
 		></nldd-button>
 		<nldd-sheet
@@ -100,7 +100,7 @@ const Template = (args: Record<string, any>) => {
 			<nldd-page sticky-header>
 				<nldd-top-title-bar
 					slot="header"
-					text="Sheet titel"
+					text="Aanvraag A-1042"
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				${pageContent}
@@ -134,15 +134,15 @@ export const Onder = {
 export const MetTerugknop = {
 	render: () => html`
 		<nldd-button
-			text="Open sheet"
+			text="Aanvraag bekijken"
 			@click=${openNext}
 		></nldd-button>
 		<nldd-sheet placement="right">
 			<nldd-page sticky-header>
 				<nldd-top-title-bar
 					slot="header"
-					text="Detailpagina"
-					back-text="Overzicht"
+					text="Aanvraag A-1042"
+					back-text="Aanvragen"
 					dismiss-text="Sluit"
 				></nldd-top-title-bar>
 				${pageContent}
@@ -159,7 +159,7 @@ export const MetTerugknop = {
 export const MetStickyFooter = {
 	render: () => html`
 		<nldd-button
-			text="Open sheet"
+			text="Wijziging doorgeven"
 			@click=${openNext}
 		></nldd-button>
 		<nldd-sheet placement="right">
@@ -169,8 +169,8 @@ export const MetStickyFooter = {
 			>
 				<nldd-top-title-bar
 					slot="header"
-					text="Sheet met footer"
-					dismiss-text="Sluit"
+					text="Wijziging doorgeven"
+					dismiss-text="Annuleer"
 				></nldd-top-title-bar>
 				${pageContent}
 				<nldd-container
@@ -180,12 +180,7 @@ export const MetStickyFooter = {
 					<nldd-button-group orientation="vertical">
 						<nldd-button
 							appearance="primary"
-							text="Opslaan"
-							width="full"
-						></nldd-button>
-						<nldd-button
-							appearance="secondary"
-							text="Annuleer"
+							text="Bewaar"
 							width="full"
 						></nldd-button>
 					</nldd-button-group>

@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 import './switch.js';
+import '../../layout/container/container.js';
 
 /**
  * De Switch component is een toggle control voor aan/uit instellingen.
@@ -79,8 +80,11 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<div style="display: flex; gap: 2rem; align-items: center;">
+	<nldd-container gap="16">
+		<nldd-container
+			layout="row"
+			gap="32"
+		>
 			<nldd-switch
 				accessible-label="Niet aan"
 				size="sm"
@@ -101,8 +105,11 @@ export const AlleToestanden = {
 				checked
 				disabled
 			></nldd-switch>
-		</div>
-		<div style="display: flex; gap: 2rem; align-items: center;">
+		</nldd-container>
+		<nldd-container
+			layout="row"
+			gap="32"
+		>
 			<nldd-switch
 				accessible-label="Niet aan klein"
 				size="xs"
@@ -123,8 +130,8 @@ export const AlleToestanden = {
 				checked
 				disabled
 			></nldd-switch>
-		</div>
-	</div>
+		</nldd-container>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

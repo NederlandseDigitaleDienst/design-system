@@ -14,8 +14,8 @@ export default {
 		status: { type: 'experimental' },
 	},
 	args: {
-		text: 'Zoek een wet om te openen',
-		supportingText: 'Markeer een wet als favoriet om die later snel terug te vinden.',
+		text: 'Zoek een aanvraag om te openen',
+		supportingText: 'Markeer een aanvraag als favoriet om die later snel terug te vinden.',
 		placement: 'auto',
 		arrowLength: '',
 		noArrow: false,

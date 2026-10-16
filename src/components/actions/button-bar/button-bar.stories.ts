@@ -2,6 +2,7 @@ import { html } from 'lit';
 import './button-bar.js';
 import '../button/button.js';
 import '../icon-button/icon-button.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Actions/Button Bar',
@@ -52,7 +53,10 @@ export const Standaard = {
 
 export const Appearances = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+		>
 			<nldd-button-bar appearance="primary">
 				<nldd-button text="Bewerk"></nldd-button>
 				<nldd-button-bar-divider></nldd-button-bar-divider>
@@ -77,7 +81,7 @@ export const Appearances = {
 					text="Verwijder"
 				></nldd-icon-button>
 			</nldd-button-bar>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -121,7 +125,11 @@ export const OpKleurvlak = {
 
 export const Grootten = {
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+			vertical-alignment="center"
+		>
 			<nldd-button-bar size="lg">
 				<nldd-button text="Bewerk"></nldd-button>
 				<nldd-button-bar-divider></nldd-button-bar-divider>
@@ -163,7 +171,7 @@ export const Grootten = {
 					text="Verwijder"
 				></nldd-icon-button>
 			</nldd-button-bar>
-		</div>
+		</nldd-container>
 	`,
 };
 
@@ -175,9 +183,9 @@ export const ZonderScheidingslijn = {
 			appearance=${args.appearance}
 			?disabled=${args.disabled}
 		>
-			<nldd-button text="Cut"></nldd-button>
-			<nldd-button text="Copy"></nldd-button>
-			<nldd-button text="Paste"></nldd-button>
+			<nldd-button text="Knip"></nldd-button>
+			<nldd-button text="Kopieer"></nldd-button>
+			<nldd-button text="Plak"></nldd-button>
 		</nldd-button-bar>
 	`,
 };
@@ -185,7 +193,10 @@ export const ZonderScheidingslijn = {
 export const ToestandDisabled = {
 	name: 'Toestand disabled',
 	render: () => html`
-		<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+		<nldd-container
+			layout="wrap"
+			gap="16"
+		>
 			<nldd-button-bar
 				size="md"
 				disabled
@@ -199,6 +210,6 @@ export const ToestandDisabled = {
 					text="Verwijder"
 				></nldd-icon-button>
 			</nldd-button-bar>
-		</div>
+		</nldd-container>
 	`,
 };

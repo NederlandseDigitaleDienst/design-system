@@ -1,5 +1,7 @@
 import { html } from 'lit';
 import './stepper.js';
+import '../../layout/container/container.js';
+import '../../content/text/text.js';
 
 /**
  * De Stepper component is een numerieke control met increment en decrement knoppen.
@@ -67,11 +69,15 @@ export default {
 };
 
 const Template = ({ size, value, min, max, step, invalid, disabled }: Record<string, any>) => html`
-	<div style="display: flex; gap: 1rem; align-items: center;">
-		<span
-			style="font: var(--primitives-font-body-md-regular-snug); min-width: 2ch;"
+	<nldd-container
+		layout="row"
+		gap="16"
+		vertical-alignment="center"
+	>
+		<nldd-text
+			style="min-width: 2ch;"
 			.textContent=${String(value)}
-		></span>
+		></nldd-text>
 		<nldd-stepper
 			value=${value}
 			min=${min}
@@ -85,7 +91,7 @@ const Template = ({ size, value, min, max, step, invalid, disabled }: Record<str
 				if (display) display.textContent = e.detail.value;
 			}}
 		></nldd-stepper>
-	</div>
+	</nldd-container>
 `;
 
 export const Standaard = {
@@ -95,44 +101,80 @@ export const Standaard = {
 
 export const AlleToestanden = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column; gap: 1rem;">
-		<div style="display: flex; gap: 1rem; align-items: center;">
-			<span style="font: var(--primitives-font-body-md-regular-snug); min-width: 2ch;">5</span>
+	<nldd-container gap="16">
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
+			<nldd-text style="min-width: 2ch;">
+				5
+			</nldd-text>
 			<nldd-stepper
 				value="5" min="0" max="10" size="xs"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
 			></nldd-stepper>
-		</div>
-		<div style="display: flex; gap: 1rem; align-items: center;">
-			<span style="font: var(--primitives-font-body-md-regular-snug); min-width: 2ch;">5</span>
+		</nldd-container>
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
+			<nldd-text style="min-width: 2ch;">
+				5
+			</nldd-text>
 			<nldd-stepper
 				value="5" min="0" max="10" size="sm"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
 			></nldd-stepper>
-		</div>
-		<div style="display: flex; gap: 1rem; align-items: center;">
-			<span style="font: var(--primitives-font-body-md-regular-snug); min-width: 2ch;">5</span>
+		</nldd-container>
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
+			<nldd-text style="min-width: 2ch;">
+				5
+			</nldd-text>
 			<nldd-stepper
 				value="5" min="0" max="10" size="md"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
 			></nldd-stepper>
-		</div>
-		<div style="display: flex; gap: 1rem; align-items: center;">
-			<span style="font: var(--primitives-font-body-md-regular-snug); min-width: 2ch;">0</span>
+		</nldd-container>
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
+			<nldd-text style="min-width: 2ch;">
+				0
+			</nldd-text>
 			<nldd-stepper
 				value="0" min="0" max="10" size="md"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
 			></nldd-stepper>
-		</div>
-		<div style="display: flex; gap: 1rem; align-items: center;">
-			<span style="font: var(--primitives-font-body-md-regular-snug); min-width: 2ch;">10</span>
+		</nldd-container>
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
+			<nldd-text style="min-width: 2ch;">
+				10
+			</nldd-text>
 			<nldd-stepper
 				value="10" min="0" max="10" size="md"
 				@change=${(e: any) => { e.target.previousElementSibling.textContent = e.detail.value; }}
 			></nldd-stepper>
-		</div>
-		<div style="display: flex; gap: 1rem; align-items: center;">
-			<span style="font: var(--primitives-font-body-md-regular-snug); min-width: 2ch;">5</span>
+		</nldd-container>
+		<nldd-container
+			layout="row"
+			gap="16"
+			vertical-alignment="center"
+		>
+			<nldd-text style="min-width: 2ch;">
+				5
+			</nldd-text>
 			<nldd-stepper
 				value="5"
 				min="0"
@@ -140,8 +182,8 @@ export const AlleToestanden = {
 				size="md"
 				disabled
 			></nldd-stepper>
-		</div>
-	</div>
+		</nldd-container>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

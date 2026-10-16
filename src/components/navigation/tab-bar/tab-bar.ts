@@ -21,7 +21,7 @@
  * @attr {string} variant - Visual mode: 'icon-and-text' | 'text' | 'icon'. When unset, the variant is inferred from each item's content. Drives the layout at every size.
  * @attr {string} size - Size: 'md' | 'lg' (default: 'md'). 'lg' enlarges the touch target; the per-variant layout is preserved (icon-and-text stacks the icon over the text, text renders large text, icon renders a larger icon-only control).
  * @attr {boolean} navigation - Renders a nav landmark instead of tablist; use for href-based items that navigate between routes
- * @attr {boolean} disabled - Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order
+ * @attr {boolean} disabled - Disables the whole bar: dims it, blocks pointer interaction, and takes the tabs out of the tab order. Avoid it where you can; the design guidelines say why.
  * @attr {boolean} centered - Centers the tabs in the container (host fills the row, tabs group in the middle)
  * @attr {string} accessible-label - Accessible name for the navigation region; defaults to 'Tabs'
  * @attr {object} translations - Override translation keys (e.g. the overflow button label); unset keys fall back to Dutch.

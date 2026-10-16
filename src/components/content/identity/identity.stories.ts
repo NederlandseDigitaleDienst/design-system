@@ -3,6 +3,7 @@ import './identity.js';
 import '../avatar-group/avatar-group.js';
 import '../avatar/avatar.js';
 import '../../navigation/link/link.js';
+import '../../layout/container/container.js';
 
 // A self-contained SVG avatar (data URI) for the avatar-src attribute demo, so
 // the stories don't depend on external images. Slotted avatars use nldd-avatar
@@ -38,7 +39,7 @@ export default {
 	},
 	args: {
 		text: 'Jan Jansen',
-		supportingText: 'Redacteur · 12 juni 2026',
+		supportingText: 'Redacteur · 13 juli 2026',
 	},
 	argTypes: {
 		text: {
@@ -94,7 +95,7 @@ export const EnkeleAvatarViaAttribuut = {
 		<nldd-identity
 			avatar-src=${AVATAR_IMAGE}
 			text="Jan Jansen"
-			supporting-text="Redacteur · 12 juni 2026"
+			supporting-text="Redacteur · 13 juli 2026"
 		></nldd-identity>
 	`,
 	parameters: { controls: { disable: true } },
@@ -109,7 +110,7 @@ export const MeerdereRedacteuren = {
 	render: () => html`
 		<nldd-identity
 			text="Jan Jansen, Petra Pietersen en Ahmed Karim"
-			supporting-text="Laatst bijgewerkt op 12 juni 2026"
+			supporting-text="Laatst bijgewerkt op 13 juli 2026"
 		>
 			<nldd-avatar-group slot="avatars">
 				<nldd-avatar
@@ -134,7 +135,7 @@ export const ZonderAvatar = {
 	render: () => html`
 		<nldd-identity
 			text="Jan Jansen"
-			supporting-text="Redacteur · 12 juni 2026"
+			supporting-text="Redacteur · 13 juli 2026"
 		></nldd-identity>
 	`,
 	parameters: { controls: { disable: true } },
@@ -156,8 +157,8 @@ export const MetTimeEnLink = {
 			<span slot="text">Door <nldd-link href="#auteur" text="Jan Jansen"></nldd-link></span>
 			<time
 				slot="supporting-text"
-				datetime="2026-06-12"
-			>12 juni 2026</time>
+				datetime="2026-07-13"
+			>13 juli 2026</time>
 		</nldd-identity>
 	`,
 	parameters: { controls: { disable: true } },
@@ -172,11 +173,14 @@ export const MetTimeEnLink = {
  */
 export const SmalleContainer = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 24px; max-width: 360px;">
+		<nldd-container
+			gap="24"
+			max-width="360px"
+		>
 			<div style="outline: 1px dashed #cbd5e1; padding: 16px;">
 				<nldd-identity
 					text="Jan Jansen, Petra Pietersen en Ahmed Karim"
-					supporting-text="Laatst bijgewerkt op 12 juni 2026"
+					supporting-text="Laatst bijgewerkt op 13 juli 2026"
 				>
 					<nldd-avatar-group slot="avatars">
 						<nldd-avatar
@@ -197,7 +201,7 @@ export const SmalleContainer = {
 			<div style="outline: 1px dashed #cbd5e1; padding: 16px;">
 				<nldd-identity
 					text="Jan Jansen"
-					supporting-text="Redacteur · 12 juni 2026"
+					supporting-text="Redacteur · 13 juli 2026"
 				>
 					<nldd-avatar
 						slot="avatars"
@@ -206,7 +210,7 @@ export const SmalleContainer = {
 					></nldd-avatar>
 				</nldd-identity>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };

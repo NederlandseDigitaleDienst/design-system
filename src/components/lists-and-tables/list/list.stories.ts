@@ -21,6 +21,7 @@ import '../../layout/box/box.js';
 import '../../inputs/date-field/date-field.js';
 import '../../inputs/combo-box/combo-box.js';
 import '../../inputs/radio-button/radio-button.js';
+import '../../layout/container/container.js';
 
 export default {
 	title: 'Components/Lists & Tables/List',
@@ -148,7 +149,7 @@ export const PijltjesnavigatieMetControls = {
 			appearance=${args.appearance}
 			type=${args.type}
 		>
-			${['NL-00001', 'NL-00002', 'NL-00003'].map((label) => html`
+			${['Aanvraag A-1042', 'Aanvraag A-1043', 'Dossier D-318'].map((label) => html`
 				<nldd-list-item>
 					<nldd-text-cell
 						width="full"
@@ -188,7 +189,7 @@ export const PijltjesnavigatieMetControls = {
 
 export const Appearances = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; gap: 32px;">
+		<nldd-container gap="32">
 			<nldd-list appearance="simple">
 				<nldd-list-item><nldd-text-cell text="Simple — item 1"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Simple — item 2"></nldd-text-cell></nldd-list-item>
@@ -196,7 +197,7 @@ export const Appearances = {
 			</nldd-list>
 
 			<nldd-list appearance="box-tinted">
-				<nldd-list-item><nldd-text-cell text="Box (default: tinted bg + border) — item 1"></nldd-text-cell></nldd-list-item>
+				<nldd-list-item><nldd-text-cell text="Box (standaard: getinte achtergrond en rand) — item 1"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Box — item 2"></nldd-text-cell></nldd-list-item>
 				<nldd-list-item><nldd-text-cell text="Box — item 3"></nldd-text-cell></nldd-list-item>
 			</nldd-list>
@@ -208,7 +209,7 @@ export const Appearances = {
 					<nldd-list-item><nldd-text-cell text="item 3"></nldd-text-cell></nldd-list-item>
 				</nldd-list>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -715,10 +716,7 @@ export const Formulier = {
 				></nldd-text-cell>
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-cell width="fit-content">
-					<nldd-date-field
-						size="sm"
-						value="2026-08-23"
-					></nldd-date-field>
+					<nldd-date-field size="sm"></nldd-date-field>
 				</nldd-cell>
 			</nldd-list-item>
 			<nldd-list-item>
@@ -785,7 +783,7 @@ export const Formulier = {
 				<nldd-spacer-cell size="12"></nldd-spacer-cell>
 				<nldd-text-cell
 					width="fit-content"
-					text="24 juli 2026"
+					text="Gisteren"
 				></nldd-text-cell>
 			</nldd-list-item>
 		</nldd-list>

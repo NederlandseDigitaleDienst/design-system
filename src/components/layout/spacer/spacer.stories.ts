@@ -1,6 +1,8 @@
 import { html, nothing } from 'lit';
 import './spacer.js';
 import '../../actions/button/button.js';
+import '../container/container.js';
+import '../../content/text/text.js';
 
 /**
  * Gebruik een spacer om ruimte tussen elementen te creëren.
@@ -127,7 +129,7 @@ export default {
 };
 
 export const Standaard = ({ size, smSize, mdSize, lgSize, direction }: Record<string, any>) => html`
-	<div style="display: flex; flex-direction: column; align-items: flex-start;">
+	<nldd-container horizontal-alignment="left">
 		<nldd-button text="Knop"></nldd-button>
 		<nldd-spacer
 			size=${size}
@@ -137,29 +139,37 @@ export const Standaard = ({ size, smSize, mdSize, lgSize, direction }: Record<st
 			direction=${direction}
 		></nldd-spacer>
 		<nldd-button text="Knop"></nldd-button>
-	</div>
+	</nldd-container>
 `;
 
 export const Flexibel = {
 	render: () => html`
-	<div style="display: flex; align-items: center;">
+	<nldd-container
+		layout="row"
+		vertical-alignment="center"
+	>
 		<nldd-button text="Links"></nldd-button>
 		<nldd-spacer size="flexible"></nldd-spacer>
 		<nldd-button text="Rechts"></nldd-button>
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };
 
 export const PerBreakpoint = {
 	render: () => html`
-		<div style="display: flex; flex-direction: column; align-items: flex-start;">
-			<p style="font-size: 14px; color: var(--semantics-content-color); margin: 0 0 8px 0;">
+		<nldd-container horizontal-alignment="left">
+			<nldd-text size="sm">
 				<code>sm-size="16" md-size="24" lg-size="32"</code>
-			</p>
-			<p style="font-size: 12px; color: var(--semantics-content-secondary-color); margin: 0 0 16px 0;">
+			</nldd-text>
+			<nldd-spacer size="8"></nldd-spacer>
+			<nldd-text
+				size="xs"
+				color="secondary"
+			>
 				Verklein het browservenster om de spacer mee te zien veranderen.
-			</p>
+			</nldd-text>
+			<nldd-spacer size="16"></nldd-spacer>
 			<div style="display: flex; flex-direction: column; align-items: flex-start; border: 1px dashed var(--primitives-color-neutral-150); padding: 8px;">
 				<nldd-button text="Knop"></nldd-button>
 				<nldd-spacer
@@ -169,7 +179,7 @@ export const PerBreakpoint = {
 				></nldd-spacer>
 				<nldd-button text="Knop"></nldd-button>
 			</div>
-		</div>
+		</nldd-container>
 	`,
 	parameters: {
 		controls: { disable: true },
@@ -185,20 +195,23 @@ Geef per breakpoint een eigen size op. Wat niet expliciet voor een breakpoint is
 
 export const VasteGroottes = {
 	render: () => html`
-	<div style="display: flex; flex-direction: column;">
+	<nldd-container>
 		${['2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'].map(
 			(size) => html`
-				<div style="display: flex; align-items: center;">
+				<nldd-container
+					layout="row"
+					vertical-alignment="center"
+				>
 					<nldd-button text="${size}"></nldd-button>
 					<nldd-spacer
 						size=${size}
 						direction="horizontal"
 					></nldd-spacer>
 					<nldd-button text="${size}"></nldd-button>
-				</div>
+				</nldd-container>
 			`,
 		)}
-	</div>
+	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
 };

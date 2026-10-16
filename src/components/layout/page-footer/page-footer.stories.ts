@@ -37,27 +37,27 @@ export const Standaard = {
 					href="/"
 				></nldd-breadcrumbs-item>
 				<nldd-breadcrumbs-item
-					text="Documentatie"
-					href="/docs/"
+					text="Aanvragen"
+					href="/aanvragen/"
 				></nldd-breadcrumbs-item>
 				<nldd-breadcrumbs-item
-					text="Architectuur"
+					text="Aanvraag A-1042"
 					current
 				></nldd-breadcrumbs-item>
 			</nldd-breadcrumbs>
 
 			<nldd-container>
 				<nldd-rich-text>
-					<h2>Over deze site</h2>
-					<p>Een verkenning van het Ministerie van Binnenlandse Zaken en Koninkrijksrelaties naar machine-leesbare wetuitvoering.</p>
-					<p><a href="/contact/">Contact opnemen</a> · <a href="/over/">Over de verkenning</a></p>
+					<h2>Over deze website</h2>
+					<p>Op Mijn Dienst vraag je subsidie aan voor isolatie en een warmtepomp, en volg je wat er met je aanvraag gebeurt.</p>
+					<p><a href="/contact/">Contact opnemen</a> · <a href="/over/">Over Mijn Dienst</a></p>
 				</nldd-rich-text>
 			</nldd-container>
 
 			<nldd-page-footer-legal-bar slot="legal-bar">
 				<nldd-page-footer-legal-bar-item
 					slot="start"
-					text="© 2026 Ministerie van Binnenlandse Zaken en Koninkrijksrelaties"
+					text="Mijn Dienst"
 				></nldd-page-footer-legal-bar-item>
 				<nldd-page-footer-legal-bar-item
 					slot="end"
@@ -204,7 +204,7 @@ export const AlleenLegalBar = {
 			<nldd-page-footer-legal-bar slot="legal-bar">
 				<nldd-page-footer-legal-bar-item
 					slot="start"
-					text="© 2026 Rijksoverheid"
+					text="Mijn Dienst"
 				></nldd-page-footer-legal-bar-item>
 				<nldd-page-footer-legal-bar-item
 					slot="end"
@@ -246,13 +246,13 @@ export const ZonderLegalBar = {
 					href="/"
 				></nldd-breadcrumbs-item>
 				<nldd-breadcrumbs-item
-					text="Documenten"
+					text="Aanvragen"
 					current
 				></nldd-breadcrumbs-item>
 			</nldd-breadcrumbs>
 			<nldd-container>
 				<nldd-rich-text>
-					<p>Een paginafooter met enkel breadcrumbs en wat content.</p>
+					<p>Heb je een vraag over je aanvraag? Noem dan altijd het nummer van de aanvraag.</p>
 				</nldd-rich-text>
 			</nldd-container>
 		</nldd-page-footer>
@@ -274,24 +274,24 @@ export const Smal = {
 						href="/"
 					></nldd-breadcrumbs-item>
 					<nldd-breadcrumbs-item
-						text="Documentatie"
-						href="/docs/"
+						text="Aanvragen"
+						href="/aanvragen/"
 					></nldd-breadcrumbs-item>
 					<nldd-breadcrumbs-item
-						text="Architectuur"
+						text="Aanvraag A-1042"
 						current
 					></nldd-breadcrumbs-item>
 				</nldd-breadcrumbs>
 				<nldd-container>
 					<nldd-rich-text>
-						<h2>Over deze site</h2>
-						<p>Een verkenning naar machine-leesbare wetuitvoering.</p>
+						<h2>Over deze website</h2>
+						<p>Op Mijn Dienst vraag je subsidie aan en volg je je aanvraag.</p>
 					</nldd-rich-text>
 				</nldd-container>
 				<nldd-page-footer-legal-bar slot="legal-bar">
 					<nldd-page-footer-legal-bar-item
 						slot="start"
-						text="© 2026 Rijksoverheid"
+						text="Mijn Dienst"
 					></nldd-page-footer-legal-bar-item>
 					<nldd-page-footer-legal-bar-item
 						slot="end"

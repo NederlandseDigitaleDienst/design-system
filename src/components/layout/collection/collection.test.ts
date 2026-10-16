@@ -1,5 +1,6 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './collection.js';
 
 describe('nldd-collection', () => {
@@ -97,7 +98,7 @@ describe('nldd-collection', () => {
 
 	it('lays lanes out in columns of the item width', async () => {
 		el = await fixture(`
-			<nldd-collection layout="lanes" item-width="200px" style="width: 640px;">
+			<nldd-collection layout="lanes" item-min-width="200px" style="width: 640px;">
 				<div>Item 1</div>
 				<div>Item 2</div>
 				<div>Item 3</div>
@@ -108,6 +109,148 @@ describe('nldd-collection', () => {
 		const columns = getComputedStyle(items).gridTemplateColumns.split(' ');
 
 		expect(columns.length).toBe(3);
+	});
+
+	it('lets item-max-width="100%" fill the container, as before the default', async () => {
+		el = await fixture(`
+			<nldd-collection layout="horizontal-scroll" item-max-width="100%" style="width: 1000px;">
+				<div>Item</div>
+			</nldd-collection>
+		`);
+		await waitForUpdate(el);
+
+		expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(1000);
+	});
+
+	it('says in development that item-width is now item-min-width, also when set after the first render, once per page', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const renamed = () => warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('is now item-min-width'));
+		try {
+			el = await fixture('<nldd-collection><div>Item</div></nldd-collection>');
+			await waitForUpdate(el);
+			el.setAttribute('item-width', '300px');
+			expect(renamed()).toHaveLength(1);
+			expect(String(renamed()[0][0])).toContain('item-min-width="300px"');
+			// A second collection on the same page stays quiet.
+			const other = document.createElement('nldd-collection');
+			other.setAttribute('item-width', '320px');
+			el.append(other);
+			expect(renamed()).toHaveLength(1);
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
+	it('never lets item-max-width take an item below item-min-width', async () => {
+		el = await fixture(`
+			<nldd-collection layout="horizontal-scroll" item-min-width="320px" item-max-width="200px" style="width: 1000px;">
+				<div>Item</div>
+			</nldd-collection>
+		`);
+		await waitForUpdate(el);
+
+		expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(320);
+	});
+
+	it('reflects item-max-width and writes it to the custom property, and clearing it gives it back', async () => {
+		el = await fixture('<nldd-collection><div>Item</div></nldd-collection>');
+		const collection = el as HTMLElement & { itemMaxWidth?: string };
+		collection.itemMaxWidth = '400px';
+		await waitForUpdate(el);
+		expect(el.getAttribute('item-max-width')).toBe('400px');
+		expect(el.style.getPropertyValue('--_collection-item-max-width')).toBe('400px');
+
+		collection.itemMaxWidth = undefined;
+		await waitForUpdate(el);
+		expect(el.hasAttribute('item-max-width')).toBe(false);
+		expect(el.style.getPropertyValue('--_collection-item-max-width')).toBe('');
+	});
+
+	it('stops a lone horizontal-scroll item at item-max-width, at the start', async () => {
+		el = await fixture(`
+			<nldd-collection layout="horizontal-scroll" item-min-width="320px" item-max-width="400px" style="width: 1000px;">
+				<div>Item</div>
+			</nldd-collection>
+		`);
+		await waitForUpdate(el);
+		const items = el.shadowRoot!.querySelector('.collection__items') as HTMLElement;
+		const item = el.querySelector('div')!;
+
+		expect(item.getBoundingClientRect().width).toBe(400);
+		expect(item.getBoundingClientRect().left - items.getBoundingClientRect().left).toBe(parseFloat(getComputedStyle(items).paddingLeft));
+		expect(el.hasAttribute('scrollable')).toBe(false);
+	});
+
+	it('stops a lone horizontal-scroll item at 480px without item-max-width', async () => {
+		const removeTokens = loadTokens();
+		try {
+			el = await fixture(`
+				<nldd-collection layout="horizontal-scroll" style="width: 1000px;">
+					<div>Item</div>
+				</nldd-collection>
+			`);
+			await waitForUpdate(el);
+
+			expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(480);
+		} finally {
+			removeTokens();
+		}
+	});
+
+	it('lets the default item-max-width grow with a wider item-min-width', async () => {
+		const removeTokens = loadTokens();
+		try {
+			el = await fixture(`
+				<nldd-collection layout="horizontal-scroll" item-min-width="600px" style="width: 1000px;">
+					<div>Item</div>
+				</nldd-collection>
+			`);
+			await waitForUpdate(el);
+
+			expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(600);
+		} finally {
+			removeTokens();
+		}
+	});
+
+	it('never lets item-max-width make an item wider than the container', async () => {
+		el = await fixture(`
+			<nldd-collection layout="horizontal-scroll" item-min-width="320px" item-max-width="400px" style="width: 300px;">
+				<div>Item</div>
+			</nldd-collection>
+		`);
+		await waitForUpdate(el);
+
+		expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(300);
+	});
+
+	it('still scrolls once the items overflow with item-max-width set', async () => {
+		el = await fixture(`
+			<nldd-collection layout="horizontal-scroll" item-min-width="320px" item-max-width="400px" style="width: 600px;">
+				${'<div>Item</div>'.repeat(6)}
+			</nldd-collection>
+		`);
+		await waitForUpdate(el);
+
+		expect(el.hasAttribute('scrollable')).toBe(true);
+		expect(el.shadowRoot!.querySelectorAll('nldd-icon-button').length).toBe(2);
+	});
+
+	it('ignores item-max-width in grid and lanes', async () => {
+		for (const layout of ['grid', 'lanes']) {
+			el = await fixture(`
+				<nldd-collection layout="${layout}" item-min-width="200px" item-max-width="300px" gap="0" style="width: 1000px;">
+					<div>Item</div>
+				</nldd-collection>
+			`);
+			await waitForUpdate(el);
+			const items = el.shadowRoot!.querySelector('.collection__items')!;
+			const columns = getComputedStyle(items).gridTemplateColumns.split(' ');
+
+			expect(columns).toEqual(['200px', '200px', '200px', '200px', '200px']);
+			cleanup(el);
+		}
+		el = undefined as unknown as HTMLElement;
 	});
 
 	it('keeps the load-more button on lanes', async () => {
@@ -254,7 +397,7 @@ describe('nldd-collection', () => {
 	// every item stayed clipped. They snap to item edges now.
 	const scrollFixture = `
 		<div style="width: 300px;">
-			<nldd-collection layout="horizontal-scroll" item-width="200px" style="--_collection-gap: 24px;">
+			<nldd-collection layout="horizontal-scroll" item-min-width="200px" style="--_collection-gap: 24px;">
 				<div style="width: 200px; height: 40px;"></div>
 				<div style="width: 200px; height: 40px;"></div>
 				<div style="width: 200px; height: 40px;"></div>
