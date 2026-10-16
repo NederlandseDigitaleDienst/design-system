@@ -122,6 +122,25 @@ describe('nldd-collection', () => {
 		expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(1000);
 	});
 
+	it('says in development that item-width is now item-min-width, also when set after the first render, once per page', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const renamed = () => warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('is now item-min-width'));
+		try {
+			el = await fixture('<nldd-collection><div>Item</div></nldd-collection>');
+			await waitForUpdate(el);
+			el.setAttribute('item-width', '300px');
+			expect(renamed()).toHaveLength(1);
+			expect(String(renamed()[0][0])).toContain('item-min-width="300px"');
+			// A second collection on the same page stays quiet.
+			const other = document.createElement('nldd-collection');
+			other.setAttribute('item-width', '320px');
+			el.append(other);
+			expect(renamed()).toHaveLength(1);
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
 	it('never lets item-max-width take an item below item-min-width', async () => {
 		el = await fixture(`
 			<nldd-collection layout="horizontal-scroll" item-min-width="320px" item-max-width="200px" style="width: 1000px;">
@@ -131,17 +150,6 @@ describe('nldd-collection', () => {
 		await waitForUpdate(el);
 
 		expect(el.querySelector('div')!.getBoundingClientRect().width).toBe(320);
-	});
-
-	it('says in development that item-width is now item-min-width', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		try {
-			el = await fixture('<nldd-collection item-width="320px"><div>Item</div></nldd-collection>');
-			await waitForUpdate(el);
-			expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('item-min-width="320px"'))).toBe(true);
-		} finally {
-			warn.mockRestore();
-		}
 	});
 
 	it('reflects item-max-width and writes it to the custom property, and clearing it gives it back', async () => {

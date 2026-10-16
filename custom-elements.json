@@ -23293,6 +23293,9 @@
           ],
           "attributes": [
             {
+              "name": "item-width"
+            },
+            {
               "name": "layout",
               "type": {
                 "text": "Layout"

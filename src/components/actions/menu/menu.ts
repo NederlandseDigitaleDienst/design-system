@@ -616,6 +616,7 @@ export class NLDDMenu extends LitElement {
 	// — Lifecycle ——————————————————————————————————————————————————————————————
 
 	override updated(changedProperties: Map<string, unknown>): void {
+		if (changedProperties.has('anchorOffset') && this._isOpen) void this.reposition();
 		if (changedProperties.has('width')) {
 			if (this.width) {
 				// An explicit width pins the menu to exactly that size — clamp the

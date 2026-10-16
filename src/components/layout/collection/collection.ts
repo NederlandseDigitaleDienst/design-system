@@ -180,13 +180,18 @@ export class NLDDCollection extends LitElement {
 		this._visibleCount = this.maxItems;
 	}
 
-	override firstUpdated(): void {
-		// `item-width` was renamed to `item-min-width`. An unknown attribute does
-		// nothing, so without this a missed rename only shows as 280px items.
-		// Once per page: a missed rename is one search-and-replace.
-		if (import.meta.env?.DEV && this.hasAttribute('item-width') && !warnedAboutItemWidth) {
+	// `item-width` was renamed to `item-min-width`. An unknown attribute does
+	// nothing, so without this a missed rename only shows as 280px items.
+	// Observed rather than read once, so a binding that sets it after the
+	// first render is caught too. Once per page: one search-and-replace.
+	static override get observedAttributes(): string[] {
+		return [...super.observedAttributes, 'item-width'];
+	}
+
+	override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
+		super.attributeChangedCallback(name, old, value);
+		if (import.meta.env?.DEV && name === 'item-width' && value !== null && !warnedAboutItemWidth) {
 			warnedAboutItemWidth = true;
-			const value = this.getAttribute('item-width');
 			console.warn(`<nldd-collection>: the item-width attribute is now item-min-width. Rename item-width="${value}" to item-min-width="${value}", here and on every other nldd-collection.`, this);
 		}
 	}
