@@ -15,8 +15,6 @@ export const heroCornerStyles = css`
 		--_hero-corner-radius: calc(var(--semantics-brand-ribbon-sm-width) * 1.5);
 	}
 
-	/* The main radius is declared here, beside the breakpoint radius, so it
-	   halves that one and not the one on :host. */
 	:host([data-media-corner]) .hero {
 		--_hero-main-corner-radius: calc(var(--_hero-corner-radius) / 2);
 
@@ -29,8 +27,7 @@ export const heroCornerStyles = css`
 		}
 	}
 
-	/* ## Contained — the panel stands against the edge of the image, so a
-	   main-width in percent is a share of the image. */
+	/* ## Contained */
 
 	:host([data-media-corner][data-has-media]) .hero {
 		@container (min-width: ${mdMin}) {
@@ -38,8 +35,6 @@ export const heroCornerStyles = css`
 		}
 	}
 
-	/* A panel that grows keeps a radius of image free on the side of its
-	   corner, so the corner of the image stays in view. */
 	:host([data-has-media]:is([data-main-corner="top-left"], [data-main-corner="top-right"])) .hero__main {
 		@container (min-width: ${mdMin}) {
 			margin-top: var(--_hero-corner-radius);
@@ -108,8 +103,7 @@ export const heroCornerStyles = css`
 		}
 	}
 
-	/* ## Without media — the panel fills the hero and takes the large corner,
-	   with room on that side so the text clears the curve. */
+	/* ## Without media */
 
 	:host(:not([data-has-media])[data-media-corner="top-left"]) :is(.hero__body, .hero__main) {
 		border-top-left-radius: var(--_hero-corner-radius);

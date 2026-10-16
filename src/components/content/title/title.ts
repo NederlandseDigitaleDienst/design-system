@@ -13,6 +13,9 @@
  * @element nldd-title
  *
  * @attr {number} size - Visual size of the title: 1–6 (default: 3)
+ * @attr {string} sm-custom-size - A size of your own at sm, any CSS length (e.g. '56px', '3.5rem', 'clamp(...)'), for a statement larger than size 1. For headings use `size`; if a design does not fit the scale, raise it as an issue. Set per breakpoint on purpose: a breakpoint without one keeps the size from `size`, so a title made large for a wide screen never breaks a narrow one. Never smaller than size 1 at the same breakpoint: a smaller value shows as size 1 and says so in development. Takes the weight, typeface and line height of size 1. An invalid value falls back to `size`
+ * @attr {string} md-custom-size - The same, at md
+ * @attr {string} lg-custom-size - The same, at lg
  * @attr {string} color - 'content' (the default) takes the system's own content
  *   colors. 'inherit' lets the title follow the text color of the surface
  *   instead (for colored areas such as the filled categories); overline and
@@ -27,7 +30,7 @@
  * @slot supporting-text - Supporting text that is more than text. Takes the place of the supporting-text attribute.
  * @slot end - Whatever belongs at the end of the title line: a button, a menu, a status badge, a version. Named for the position, not for a kind of content, because anything can sit there.
  */
-import { LitElement } from 'lit';
+import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { titleStyles } from './title.styles.js';
@@ -40,12 +43,39 @@ type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 /** One warning per page: a missed rename is one search-and-replace, not one per title. */
 let warnedAboutSubtitle = false;
 
+type Breakpoint = 'sm' | 'md' | 'lg';
+
+const BREAKPOINTS: readonly Breakpoint[] = ['sm', 'md', 'lg'];
+
+/** The font size of size 1 per breakpoint: the floor of a custom size. */
+const SIZE_1_FONT_SIZE: Record<Breakpoint, string> = {
+	sm: 'var(--primitives-font-size-700)',
+	md: 'var(--primitives-font-size-800)',
+	lg: 'var(--primitives-font-size-1000)',
+};
+
+const CSS_WIDE_KEYWORDS = new Set(['inherit', 'initial', 'unset', 'revert', 'revert-layer']);
+
+/** A length font-size takes as a value of its own; CSS.supports also says yes to the CSS-wide keywords. */
+function isFontSize(value: string): boolean {
+	return !CSS_WIDE_KEYWORDS.has(value.toLowerCase()) && CSS.supports('font-size', value);
+}
+
 @customElement('nldd-title')
 export class NLDDTitle extends LitElement {
 	static override styles = titleStyles;
 
 	@property({ type: Number, reflect: true })
 	size: Size = 3;
+
+	@property({ reflect: true, attribute: 'sm-custom-size', converter: reflectNonDefault<string>('') })
+	smCustomSize = '';
+
+	@property({ reflect: true, attribute: 'md-custom-size', converter: reflectNonDefault<string>('') })
+	mdCustomSize = '';
+
+	@property({ reflect: true, attribute: 'lg-custom-size', converter: reflectNonDefault<string>('') })
+	lgCustomSize = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<TitleColor>('content') })
 	color: TitleColor = 'content';
@@ -88,6 +118,62 @@ export class NLDDTitle extends LitElement {
 			warnedAboutSubtitle = true;
 			console.warn('NLDDTitle: the subtitle slot is now supporting-text. Rename slot="subtitle" to slot="supporting-text", or use the supporting-text attribute, here and on every other nldd-title.');
 		}
+	}
+
+	override updated(changed: PropertyValues): void {
+		super.updated(changed);
+		if (
+			!changed.has('smCustomSize') &&
+			!changed.has('mdCustomSize') &&
+			!changed.has('lgCustomSize')
+		) return;
+
+		// A breakpoint left without a valid value keeps the size from the scale.
+		const own: Record<Breakpoint, string> = { sm: this.smCustomSize, md: this.mdCustomSize, lg: this.lgCustomSize };
+		const sizes: Partial<Record<Breakpoint, string>> = {};
+		for (const breakpoint of BREAKPOINTS) {
+			const value = (own[breakpoint] || '').trim();
+			const valid = value !== '' && isFontSize(value);
+			if (valid) {
+				sizes[breakpoint] = value;
+				this.style.setProperty(`--_title-${breakpoint}-custom-size`, value);
+			} else {
+				this.style.removeProperty(`--_title-${breakpoint}-custom-size`);
+			}
+			this.toggleAttribute(`data-${breakpoint}-custom-size`, valid);
+			if (import.meta.env?.DEV && value !== '' && !valid) {
+				this._warnOnce(`invalid-${value}`, `<nldd-title>: "${value}" is not a CSS length, so the title keeps its size from the scale. Use a length such as "96px" or "6rem".`);
+			}
+		}
+		if (import.meta.env?.DEV) this._checkFloor(sizes);
+	}
+
+	/** DEV-only: warnings already given, so each says it once per title. */
+	private _warned = new Set<string>();
+
+	private _warnOnce(key: string, message: string): void {
+		if (this._warned.has(key)) return;
+		this._warned.add(key);
+		console.warn(message, this);
+	}
+
+	/** DEV-only: says so when a custom size is smaller than size 1, which then shows instead. */
+	private _checkFloor(sizes: Partial<Record<Breakpoint, string>>): void {
+		if (!this.shadowRoot || Object.keys(sizes).length === 0) return;
+		const probe = document.createElement('span');
+		probe.style.position = 'absolute';
+		probe.style.visibility = 'hidden';
+		this.shadowRoot.append(probe);
+		const px = (value: string): number => {
+			probe.style.fontSize = value;
+			return parseFloat(getComputedStyle(probe).fontSize);
+		};
+		for (const [breakpoint, value] of Object.entries(sizes) as [Breakpoint, string][]) {
+			if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) {
+				this._warnOnce(`floor-${breakpoint}-${value}`, `<nldd-title>: custom size "${value}" is smaller than size 1 at ${breakpoint} and shows as size 1. Use size for headings up to size 1.`);
+			}
+		}
+		probe.remove();
 	}
 
 	override render() {

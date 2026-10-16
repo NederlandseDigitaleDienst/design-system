@@ -42,6 +42,9 @@ export default {
 	},
 	args: {
 		size: 3,
+		smCustomSize: '',
+		mdCustomSize: '',
+		lgCustomSize: '',
 		color: 'content',
 		text: 'Paginatitel',
 		supportingText: '',
@@ -54,6 +57,21 @@ export default {
 			options: [1, 2, 3, 4, 5, 6],
 			description: 'Visuele grootte van de titel',
 			table: { defaultValue: { summary: '3' } },
+		},
+		smCustomSize: {
+			name: 'sm-custom-size',
+			control: 'text',
+			description: 'Eigen grootte bij sm, elke CSS-lengte, voor een statement groter dan grootte 1. Een breedte zonder waarde houdt `size`; nooit kleiner dan grootte 1. Gebruik voor koppen `size`.',
+		},
+		mdCustomSize: {
+			name: 'md-custom-size',
+			control: 'text',
+			description: 'Eigen grootte bij md',
+		},
+		lgCustomSize: {
+			name: 'lg-custom-size',
+			control: 'text',
+			description: 'Eigen grootte bij lg',
 		},
 		color: {
 			control: 'select',
@@ -85,10 +103,13 @@ export default {
 	},
 };
 
-export const Standaard = ({ size, color, text, supportingText, overline, headingLevel }: Record<string, any>) => html`
+export const Standaard = ({ size, smCustomSize, mdCustomSize, lgCustomSize, color, text, supportingText, overline, headingLevel }: Record<string, any>) => html`
 	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
 		<nldd-title
 			size=${size}
+			sm-custom-size=${smCustomSize || nothing}
+			md-custom-size=${mdCustomSize || nothing}
+			lg-custom-size=${lgCustomSize || nothing}
 			color=${color || nothing}
 			text=${text || nothing}
 			supporting-text=${supportingText || nothing}
@@ -183,6 +204,30 @@ export const AlleGrootten = {
 				heading-level="2"
 			></nldd-title>
 		`)}
+	</div>
+`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
+ * Voor een statement dat groter moet dan grootte 1 geef je per breedte een eigen
+ * grootte, met `sm-`, `md-` en `lg-custom-size`. Een breedte zonder waarde houdt
+ * de maat uit `size`, dus een titel die op een breed scherm groot is, breekt
+ * nooit op een smal scherm. De titel neemt het gewicht, het lettertype en de
+ * regelhoogte van grootte 1 over en wordt nooit kleiner dan grootte 1. Voor koppen
+ * gebruik je `size`.
+ */
+export const EigenGrootte = {
+	name: 'Eigen grootte',
+	render: () => html`
+	<div style="display: block; padding: 24px; container-type: inline-size; container-name: layout-container;">
+		<nldd-title
+			sm-custom-size="56px"
+			md-custom-size="80px"
+			lg-custom-size="96px"
+			text="Mijn Dienst"
+			heading-level="1"
+		></nldd-title>
 	</div>
 `,
 	parameters: { controls: { disable: true } },
