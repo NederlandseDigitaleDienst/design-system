@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './collection.js';
@@ -109,6 +109,17 @@ describe('nldd-collection', () => {
 		const columns = getComputedStyle(items).gridTemplateColumns.split(' ');
 
 		expect(columns.length).toBe(3);
+	});
+
+	it('says in development that item-width is now item-min-width', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			el = await fixture('<nldd-collection item-width="320px"><div>Item</div></nldd-collection>');
+			await waitForUpdate(el);
+			expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('item-min-width="320px"'))).toBe(true);
+		} finally {
+			warn.mockRestore();
+		}
 	});
 
 	it('reflects item-max-width and writes it to the custom property, and clearing it gives it back', async () => {

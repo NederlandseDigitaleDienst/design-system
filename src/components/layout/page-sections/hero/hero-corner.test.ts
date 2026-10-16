@@ -79,9 +79,11 @@ describe('nldd-hero – corner', () => {
 		expect(rounded('.hero__media')).toEqual(['bottom-left']);
 	});
 
-	it('falls back to choosing the corner for an unknown value', async () => {
+	it('falls back to choosing the corner for an unknown value, and says so', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await hero('corner="middle" layout="contained"');
 		expect(el.getAttribute('data-media-corner')).toBe('top-right');
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('corner="middle" is not a corner'))).toBe(true);
 	});
 
 	it('puts the panel against the edge of the image in contained', async () => {
@@ -115,14 +117,16 @@ describe('nldd-hero – corner', () => {
 		await hero('corner main-position="bottom-right"');
 		expect(el.hasAttribute('data-media-corner')).toBe(false);
 		expect(rounded('.hero__media')).toEqual([]);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('layout="contained"'))).toBe(true);
+		const messages = warn.mock.calls.map((call: unknown[]) => String(call[0]));
+		expect(messages.some((message) => message.includes('only applies with layout="contained"'))).toBe(true);
+		expect(messages.some((message) => message.includes('main-position'))).toBe(false);
 	});
 
 	it('stays rectangular with a centered panel and says so', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await hero('corner layout="contained" main-position="top-center"');
 		expect(el.hasAttribute('data-media-corner')).toBe(false);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('"top-center"'))).toBe(true);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('centered panel'))).toBe(true);
 	});
 
 	it('moves a bottom corner to the top on mobile and keeps the panel square', async () => {

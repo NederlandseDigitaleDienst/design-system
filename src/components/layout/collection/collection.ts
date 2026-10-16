@@ -57,6 +57,8 @@ import { translate } from '../../../utilities/translations.js';
 
 type Layout = 'grid' | 'stack' | 'lanes' | 'horizontal-scroll';
 
+let warnedAboutItemWidth = false;
+
 @customElement('nldd-collection')
 export class NLDDCollection extends LitElement {
 	static override styles = collectionStyles;
@@ -174,6 +176,13 @@ export class NLDDCollection extends LitElement {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._visibleCount = this.maxItems;
+		// `item-width` was renamed to `item-min-width`. An unknown attribute does
+		// nothing, so without this a missed rename only shows as 280px items.
+		if (import.meta.env?.DEV && this.hasAttribute('item-width') && !warnedAboutItemWidth) {
+			warnedAboutItemWidth = true;
+			const value = this.getAttribute('item-width');
+			console.warn(`<nldd-collection>: the item-width attribute is now item-min-width. Rename item-width="${value}" to item-min-width="${value}", here and on every other nldd-collection.`, this);
+		}
 	}
 
 	override disconnectedCallback(): void {

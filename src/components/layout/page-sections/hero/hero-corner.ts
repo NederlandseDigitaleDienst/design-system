@@ -80,8 +80,10 @@ export function applyCorner(host: CornerHost): void {
 	// come into it.
 	if (host._hasMedia && (host.layout !== 'contained' || center)) {
 		clear(host);
-		if (import.meta.env?.DEV) {
-			warnOnce(host, 'unsupported', `<nldd-hero>: corner only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. Set layout="contained" and a main-position other than "${position}", or drop the corner.`);
+		if (import.meta.env?.DEV && host.layout !== 'contained') {
+			warnOnce(host, 'overlap', '<nldd-hero>: corner only applies with layout="contained", so this hero stays rectangular. Set layout="contained", or drop the corner.');
+		} else if (import.meta.env?.DEV) {
+			warnOnce(host, 'center', `<nldd-hero>: corner does not apply to a centered panel, so this hero stays rectangular. Put the panel in a corner or along a side instead of main-position="${position}", or drop the corner.`);
 		}
 		return;
 	}
@@ -104,6 +106,10 @@ export function applyCorner(host: CornerHost): void {
 	host.setAttribute('data-main-corner', mainCorner ?? 'none');
 
 	if (!import.meta.env?.DEV) return;
+	const value = host.corner.trim();
+	if (!chosen && value !== '' && value !== 'auto') {
+		warnOnce(host, `unknown-${value}`, `<nldd-hero>: corner="${value}" is not a corner, so the hero chooses one. Use "top-left", "top-right", "bottom-left" or "bottom-right", or leave the value empty.`);
+	}
 	if (chosen && covered.includes(chosen)) {
 		warnOnce(host, `covered-${chosen}`, `<nldd-hero>: corner="${chosen}" sits under the panel, so the rounded corner does not show. Choose a corner the panel leaves free, or leave the value empty to let the hero choose.`);
 	}
