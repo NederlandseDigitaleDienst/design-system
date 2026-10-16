@@ -34,7 +34,7 @@ export const Galerij = {
 			wrapper.querySelectorAll<HTMLElement>('[data-search-tokens]').forEach(tile => {
 				const matchesQuery = !query || tile.dataset.searchTokens!.includes(query);
 				const matchesStatus = status === 'all' || tile.dataset.status !== undefined;
-				tile.style.display = matchesQuery && matchesStatus ? '' : 'none';
+				tile.style.display = matchesQuery && matchesStatus ? 'grid' : 'none';
 			});
 		};
 		const gallery = () => document.querySelector<HTMLElement>('[data-gallery]')!;
@@ -96,7 +96,7 @@ export const Galerij = {
 							<div
 								data-search-tokens=${searchTokens}
 								data-status=${status ?? nothing}
-								style="position: relative;"
+								style="position: relative; display: grid;"
 							>
 								<nldd-card>
 									<nldd-container
