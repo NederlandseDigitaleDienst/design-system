@@ -21,7 +21,7 @@
  * @attr {string} accessible-label - Accessible name of the card; with `href`/`button` it names the link or button, otherwise the card region
  * @attr {object} translations - Override translation keys (e.g. the "Opent in nieuw tabblad" announcement)
  * @attr {string} href - Makes the whole card a link to this URL (empty = no link)
- * @attr {string} target - Link target for href (e.g. '_blank'); adjusts rel automatically and adds an "Opent in nieuw tabblad" announcement for '_blank'
+ * @attr {string} target - Link target for href (e.g. '_blank'); adjusts rel automatically and adds an "Opent in nieuw tabblad" announcement for '_blank'. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "Andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Makes the whole card a button; ignored when `href` is set
  *

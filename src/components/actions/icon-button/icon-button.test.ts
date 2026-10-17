@@ -264,6 +264,12 @@ describe('nldd-icon-button – href / link rendering', () => {
 		expect(el.shadowRoot!.querySelector('a')!.getAttribute('aria-label')).toBe('Terug, Opent in nieuw tabblad');
 	});
 
+	it('folds another website into aria-label', async () => {
+		el = await fixture<NLDDIconButton>('<nldd-icon-button href="https://open.overheid.nl/" icon="external-link" text="Startnotitie"></nldd-icon-button>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('a')!.getAttribute('aria-label')).toBe('Startnotitie, Andere website');
+	});
+
 	it('omits the new-tab announcement when target is not _blank', async () => {
 		el = await fixture<NLDDIconButton>('<nldd-icon-button href="/overzicht" icon="arrow-left" text="Terug"></nldd-icon-button>');
 		await waitForUpdate(el);

@@ -265,7 +265,7 @@ describe('nldd-avatar – full size', () => {
 		});
 
 		it('zet rel bij target=_blank en meldt het nieuwe tabblad', async () => {
-			el = await fixture<NLDDAvatar>('<nldd-avatar name="Bart" href="https://example.org" target="_blank"></nldd-avatar>');
+			el = await fixture<NLDDAvatar>('<nldd-avatar name="Bart" href="/profiel" target="_blank"></nldd-avatar>');
 			await waitForUpdate(el);
 			const link = el.shadowRoot!.querySelector('a.avatar')!;
 			expect(link.getAttribute('rel')).toContain('noopener');

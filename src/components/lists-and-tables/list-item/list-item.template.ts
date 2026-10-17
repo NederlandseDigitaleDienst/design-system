@@ -14,7 +14,7 @@ export const template = (
 	href: string | undefined,
 	target: string | undefined,
 	rel: string | undefined,
-	opensInNewTabLabel?: string,
+	linkHint?: string,
 	actionTabindex?: string,
 	isHighlighted = false,
 	checkbox = false,
@@ -56,7 +56,7 @@ export const template = (
 				aria-expanded=${ariaExpanded}
 				tabindex=${actionTabindex ?? nothing}
 			>${content}${
-				opensInNewTabLabel ? html`<span class="list-item__opens-in-new-tab-hint">${opensInNewTabLabel}</span>` : nothing
+				linkHint ? html`<span class="list-item__link-hint">${linkHint}</span>` : nothing
 			}</a>
 			${divider}
 		</div>${children}`;

@@ -366,7 +366,7 @@ describe('nldd-button – href / link rendering', () => {
 		el = await fixture<NLDDButton>('<nldd-button href="/overzicht" target="_blank" text="Terug"></nldd-button>');
 		await waitForUpdate(el);
 		const a = el.shadowRoot!.querySelector('a')!;
-		expect(a.querySelector('.button__opens-in-new-tab-hint')?.textContent).toBe('Opent in nieuw tabblad');
+		expect(a.querySelector('.button__link-hint')?.textContent).toBe('Opent in nieuw tabblad');
 		// The name stays content-derived (visible text + hint), so no aria-label override.
 		expect(a.hasAttribute('aria-label')).toBe(false);
 	});
@@ -377,14 +377,14 @@ describe('nldd-button – href / link rendering', () => {
 		const a = el.shadowRoot!.querySelector('a')!;
 		expect(a.getAttribute('aria-label')).toBe('Ga terug, Opent in nieuw tabblad');
 		// A hidden span would lose to aria-label, so it isn't rendered.
-		expect(a.querySelector('.button__opens-in-new-tab-hint')).toBeNull();
+		expect(a.querySelector('.button__link-hint')).toBeNull();
 	});
 
 	it('omits the new-tab hint when target is not _blank', async () => {
 		el = await fixture<NLDDButton>('<nldd-button href="/overzicht" text="Terug"></nldd-button>');
 		await waitForUpdate(el);
 		const a = el.shadowRoot!.querySelector('a')!;
-		expect(a.querySelector('.button__opens-in-new-tab-hint')).toBeNull();
+		expect(a.querySelector('.button__link-hint')).toBeNull();
 		expect(a.hasAttribute('aria-label')).toBe(false);
 	});
 
@@ -392,7 +392,7 @@ describe('nldd-button – href / link rendering', () => {
 		el = await fixture<NLDDButton>('<nldd-button href="/overzicht" target="_blank" text="Terug"></nldd-button>');
 		el.translations = { 'components.button.opens-in-new-tab-label': 'Opens in a new tab' };
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.button__opens-in-new-tab-hint')?.textContent).toBe('Opens in a new tab');
+		expect(el.shadowRoot!.querySelector('.button__link-hint')?.textContent).toBe('Opens in a new tab');
 	});
 
 	it('sets aria-disabled on the anchor when disabled', async () => {

@@ -149,7 +149,7 @@ export const listItemStyles = css`
 		opacity: var(--primitives-opacity-disabled);
 	}
 
-	.list-item__opens-in-new-tab-hint {
+	.list-item__link-hint {
 		position: absolute;
 		margin: -1px;
 		border: 0;

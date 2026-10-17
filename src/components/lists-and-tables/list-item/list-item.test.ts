@@ -85,7 +85,7 @@ describe('nldd-list-item', () => {
 	it('injects a visually hidden "opens in new tab" announcement into the link when target="_blank"', async () => {
 		el = await fixture('<nldd-list-item href="/test" target="_blank"></nldd-list-item>');
 		await waitForUpdate(el);
-		const hint = el.shadowRoot!.querySelector('a.list-item__action .list-item__opens-in-new-tab-hint');
+		const hint = el.shadowRoot!.querySelector('a.list-item__action .list-item__link-hint');
 		expect(hint).not.toBeNull();
 		expect(hint?.textContent).toBe('Opent in nieuw tabblad');
 	});
@@ -93,7 +93,13 @@ describe('nldd-list-item', () => {
 	it('does not add the new-tab announcement for same-tab links', async () => {
 		el = await fixture('<nldd-list-item href="/test"></nldd-list-item>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.list-item__opens-in-new-tab-hint')).toBeNull();
+		expect(el.shadowRoot!.querySelector('.list-item__link-hint')).toBeNull();
+	});
+
+	it('says a row that links to another website goes there', async () => {
+		el = await fixture('<nldd-list-item href="https://open.overheid.nl/"></nldd-list-item>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('a.list-item__action .list-item__link-hint')?.textContent).toBe('Andere website');
 	});
 
 	it('lets the consumer override the new-tab announcement via translations', async () => {
@@ -102,7 +108,7 @@ describe('nldd-list-item', () => {
 			'components.list-item.opens-in-new-tab-label': 'opens in a new tab',
 		};
 		await waitForUpdate(el);
-		const hint = el.shadowRoot!.querySelector('.list-item__opens-in-new-tab-hint');
+		const hint = el.shadowRoot!.querySelector('.list-item__link-hint');
 		expect(hint?.textContent).toBe('opens in a new tab');
 	});
 

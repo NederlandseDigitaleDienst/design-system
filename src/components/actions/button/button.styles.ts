@@ -527,9 +527,9 @@ export const buttonStyles = css`
 		color: var(--_button-is-active-secondary-content-color);
 	}
 
-	/* Visually-hidden "opens in new tab" announcement (href + target="_blank");
+	/* Visually-hidden link hint (another website, a new tab);
 	   part of the link's accessible name but never shown. Standard recipe. */
-	.button__opens-in-new-tab-hint {
+	.button__link-hint {
 		position: absolute;
 		margin: -1px;
 		border: 0;

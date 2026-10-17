@@ -319,7 +319,7 @@ export const toolbarTitleStyles = css`
 		text-decoration: none;
 	}
 
-	.toolbar__opens-in-new-tab-hint {
+	.toolbar__link-hint {
 		position: absolute;
 		margin: -1px;
 		border: 0;

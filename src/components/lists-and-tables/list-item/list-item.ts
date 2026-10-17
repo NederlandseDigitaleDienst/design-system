@@ -7,6 +7,7 @@ import { template } from './list-item.template.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddListItemTranslations } from './list-item.i18n.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
 
 export type ListItemSize = 'sm' | 'md';
@@ -146,7 +147,9 @@ const NESTED_CONTROLS = [
  * When it renders as a link, `target` and `rel`
  * are forwarded to the inner `<a>` (e.g. `target="_blank" rel="noopener noreferrer"`). With
  * `target="_blank"` the item also injects a visually hidden "opens in new tab"
- * announcement for assistive technology (WCAG 2.1 SC 3.2.2).
+ * announcement for assistive technology (WCAG 2.1 SC 3.2.2), and an `href` to
+ * another website a visually hidden "Andere website". An `nldd-icon-cell` with
+ * `external-link` is only the picture of that; the row says it either way.
  *
  * The item synchronizes its ARIA with its parent `nldd-list`'s `type`:
  * - `list` parent       → `role="listitem"`
@@ -161,7 +164,7 @@ const NESTED_CONTROLS = [
  *
  * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
- * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology.
+ * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "Andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
@@ -1170,10 +1173,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	override render() {
-		const opensInNewTabLabel =
-			this.href && this.target === '_blank'
-				? this._t('components.list-item.opens-in-new-tab-label')
-				: undefined;
+		const hintKey = linkHintKey(this.href, this.target);
+		const linkHint = hintKey ? this._t(`components.list-item.${hintKey}`) : undefined;
 		// Listbox options are never separate tab stops — only the list's own
 		// search input is in the tab order, and active moves via
 		// aria-activedescendant. Roving tabindex (arrow-navigation) supersedes
@@ -1192,7 +1193,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this.href,
 			this.target,
 			this.rel,
-			opensInNewTabLabel,
+			linkHint,
 			actionTabindex,
 			this._highlighted,
 			this.checkbox,

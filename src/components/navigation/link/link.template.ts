@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDLink } from './link.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;
@@ -8,18 +9,17 @@ interface TemplateHelpers {
 
 export function template(this: NLDDLink, helpers: TemplateHelpers) {
 	const resolvedRel = linkRel(this.rel, this.target);
-	// A new-tab link is a change of context, so announce it (WCAG 2.1 SC 3.2.2).
+	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
 	// Suppressed when disabled (the <a> carries no href, so it doesn't navigate).
-	const opensInNewTabHint = !this.disabled && this.href && this.target === '_blank'
-		? this._t('components.link.opens-in-new-tab-label')
-		: '';
+	const hintKey = this.disabled ? null : linkHintKey(this.href, this.target);
+	const linkHint = hintKey ? this._t(`components.link.${hintKey}`) : '';
 	// aria-label wins the accessible-name cascade, so when one is set the hint
 	// must live inside it; otherwise the name is content-derived (text or slot)
 	// and the visually-hidden span below appends the hint to it.
 	const ariaLabel = this.accessibleLabel
-		? [this.accessibleLabel, opensInNewTabHint].filter(Boolean).join(', ')
+		? [this.accessibleLabel, linkHint].filter(Boolean).join(', ')
 		: nothing;
-	const renderOpensInNewTabHint = !!opensInNewTabHint && !this.accessibleLabel;
+	const renderLinkHint = !!linkHint && !this.accessibleLabel;
 	// Icons render in both modes:
 	// - sized mode: inline-flex container + gap controls spacing
 	// - inherit mode: inline container, the whitespace text node between
@@ -42,7 +42,7 @@ export function template(this: NLDDLink, helpers: TemplateHelpers) {
 			${this.endIcon ? html`
 				<span class="link__end-icon"><nldd-icon icon=${this.endIcon}></nldd-icon></span>
 			` : html`<slot name="end-icon"></slot>`}
-			${renderOpensInNewTabHint ? html`<span class="link__opens-in-new-tab-hint">${opensInNewTabHint}</span>` : nothing}
+			${renderLinkHint ? html`<span class="link__link-hint">${linkHint}</span>` : nothing}
 		</a>
 	`;
 }
