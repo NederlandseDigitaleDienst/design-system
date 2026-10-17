@@ -45,7 +45,7 @@
  * @attr {string} width - Body max-width; 'full' removes the bound (section API)
  * @attr {boolean} grow - Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow.
  * @attr {string} padding-block - Block padding override, also per edge and responsive (section API)
- * @attr {string} corner - Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. Applies with `layout="contained"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width="full"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg. Says so in development when the chosen corner sits under the panel, or with `width="full"`
+ * @attr {string} corner - Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. With media it applies with `layout="contained"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width="full"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. Without media the panel is the whole hero: the corner applies in every layout and position, at half the radius, and the hero chooses top-right, or top-left for a panel on the right. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg, and is never more than a third of the shortest side of the area it rounds, so a low hero keeps a corner rather than a drop. Says so in development when the chosen corner sits under the panel, or with `width="full"`
  * @attr {'contained'|'overlap'} layout - How the panel relates to the image (default: 'overlap'). 'contained' keeps it on the image, in any of the eight positions; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development
  * @attr {string} main-background - Surface color of the panel: 'base' (the base surface)
  *   or a category color — 'accent' (default) or a Rijkshuisstijl color such as
@@ -75,7 +75,7 @@ import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js'
 import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
 import { heroCornerStyles } from './hero-corner.styles.js';
-import { applyCorner } from './hero-corner.js';
+import { applyCorner, clearCornerLimits, limitCorner } from './hero-corner.js';
 
 export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
 export type HeroMainWidth = 'auto' | 'full' | (string & {});
@@ -109,8 +109,9 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	width = '';
 
-	/** Rounds one corner of the media area and one of the panel. An empty
-	 *  value lets the hero choose the media corner from `main-position`. */
+	/** Rounds one corner of the media area and one of the panel, or without
+	 *  media one corner of the hero. An empty value lets the hero choose the
+	 *  corner from `main-position`. */
 	@property({ type: String, reflect: true })
 	corner: string | null = null;
 
@@ -169,12 +170,15 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		if (import.meta.env?.DEV && this.hasUpdated) this._watchOverlap();
+		if (this.hasUpdated) this._watchCorner();
 	}
 
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this._overlapObserver?.disconnect();
 		this._overlapObserver = null;
+		this._cornerObserver?.disconnect();
+		this._cornerObserver = null;
 		// A hero that comes back is watched again, so it may warn again.
 		this._warnedOverlap = false;
 	}
@@ -192,6 +196,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			}
 		}
 		if (import.meta.env?.DEV && changed.has('layout')) this._watchOverlap();
+		if (changed.has('corner')) this._watchCorner();
 		if (changed.has('mainWidth')) {
 			const width = (this.mainWidth ?? '').trim();
 			const length = width !== '' && width !== 'auto' && width !== 'full';
@@ -239,6 +244,26 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 				this.style.removeProperty('--_hero-media-aspect-ratio');
 			}
 		}
+	}
+
+	/** Measures the rounded areas, so the radius never outgrows them. */
+	private _cornerObserver: ResizeObserver | null = null;
+
+	private _watchCorner(): void {
+		const watch = this.corner !== null && this.corner !== undefined && typeof ResizeObserver !== 'undefined';
+		if (!watch) {
+			this._cornerObserver?.disconnect();
+			this._cornerObserver = null;
+			clearCornerLimits(this);
+			return;
+		}
+		if (this._cornerObserver) return;
+		const media = this.shadowRoot?.querySelector('.hero__media');
+		const main = this.shadowRoot?.querySelector('.hero__main');
+		if (!media || !main) return;
+		this._cornerObserver = new ResizeObserver((entries) => limitCorner(this, entries));
+		this._cornerObserver.observe(media);
+		this._cornerObserver.observe(main);
 	}
 
 	/** DEV-only latch for the `height` warning. */

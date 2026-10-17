@@ -27,6 +27,12 @@ const AUTO_MEDIA_CORNER: Record<CornerPosition, HeroCorner> = {
 	'right': 'top-left',
 };
 
+/* Without media the panel is the whole hero: the free corner is at the top,
+ * on the side the text does not start from. */
+function autoCornerWithoutMedia(position: HeroMainPosition): HeroCorner {
+	return position.endsWith('right') ? 'top-left' : 'top-right';
+}
+
 /* The panel's own corner: the one pointing diagonally into the media. A panel
  * that spans a full side has none. */
 const MAIN_CORNER: Record<CornerPosition, HeroCorner | null> = {
@@ -97,7 +103,7 @@ export function applyCorner(host: CornerHost): void {
 	const chosen = CORNERS.includes(value as HeroCorner) ? value as HeroCorner : null;
 	const covered = host._hasMedia ? coveredCorners(host, position) : [];
 
-	let mediaCorner = chosen ?? AUTO_MEDIA_CORNER[position];
+	let mediaCorner = chosen ?? (host._hasMedia ? AUTO_MEDIA_CORNER[position] : autoCornerWithoutMedia(host.mainPosition));
 	if (!chosen && covered.includes(mediaCorner)) {
 		// A full-width strip covers both corners on its edge: move to the
 		// other edge, on the same side.
@@ -121,4 +127,28 @@ export function applyCorner(host: CornerHost): void {
 	if (host.width === 'full') {
 		warnOnce(host, 'width-full', '<nldd-hero>: corner with width="full" runs the hero to the edge of the screen. A shape with a rounded corner always keeps a margin around it; leave width="full" off or drop the corner.');
 	}
+}
+
+const LIMITS = ['--_hero-media-corner-limit', '--_hero-main-corner-limit'] as const;
+
+/**
+ * Caps the radius at a third of the shortest side of the area it rounds, so a
+ * low hero (a single title without media, a small `media-height`) keeps a
+ * corner rather than turning into a drop. Fed by a ResizeObserver on the media
+ * and the panel; the panel's own limit only counts without media, where it is
+ * the whole hero. An area that is not shown measures zero and keeps its limit.
+ */
+export function limitCorner(host: HTMLElement, entries: readonly ResizeObserverEntry[]): void {
+	for (const entry of entries) {
+		const box = entry.borderBoxSize?.[0];
+		const width = box?.inlineSize ?? entry.contentRect.width;
+		const height = box?.blockSize ?? entry.contentRect.height;
+		if (!width || !height) continue;
+		const limit = entry.target.classList.contains('hero__media') ? LIMITS[0] : LIMITS[1];
+		host.style.setProperty(limit, `${Math.min(width, height) / 3}px`);
+	}
+}
+
+export function clearCornerLimits(host: HTMLElement): void {
+	for (const limit of LIMITS) host.style.removeProperty(limit);
 }

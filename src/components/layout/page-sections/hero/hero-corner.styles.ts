@@ -13,12 +13,15 @@ export const heroCornerStyles = css`
 
 	:host([data-media-corner]) {
 		--_hero-corner-radius: calc(var(--semantics-brand-ribbon-sm-width) * 1.5);
+		--_hero-media-corner-limit: initial;
+		--_hero-main-corner-limit: initial;
 	}
 
 	/* On .hero, not :host: a var() resolves where it is declared, so on :host
 	   this would halve the sm radius at every breakpoint. */
 	:host([data-media-corner]) .hero {
-		--_hero-main-corner-radius: calc(var(--_hero-corner-radius) / 2);
+		--_hero-media-corner-radius: min(var(--_hero-corner-radius), var(--_hero-media-corner-limit, var(--_hero-corner-radius)));
+		--_hero-main-corner-radius: calc(var(--_hero-media-corner-radius) / 2);
 
 		@container (min-width: ${mdMin}) and (max-width: ${mdMax}) {
 			--_hero-corner-radius: calc(var(--semantics-brand-ribbon-md-width) * 2);
@@ -27,6 +30,10 @@ export const heroCornerStyles = css`
 		@container (min-width: ${lgMin}) {
 			--_hero-corner-radius: calc(var(--semantics-brand-ribbon-lg-width) * 2);
 		}
+	}
+
+	:host([data-media-corner]:not([data-has-media])) .hero {
+		--_hero-main-corner-radius: min(var(--_hero-corner-radius) / 2, var(--_hero-main-corner-limit, var(--_hero-corner-radius)));
 	}
 
 	/* ## Contained */
@@ -52,30 +59,30 @@ export const heroCornerStyles = css`
 	/* ## Media */
 
 	:host([data-has-media][data-media-corner="top-left"]) .hero__media {
-		border-top-left-radius: var(--_hero-corner-radius);
+		border-top-left-radius: var(--_hero-media-corner-radius);
 	}
 
 	:host([data-has-media][data-media-corner="top-right"]) .hero__media {
-		border-top-right-radius: var(--_hero-corner-radius);
+		border-top-right-radius: var(--_hero-media-corner-radius);
 	}
 
 	:host([data-has-media][data-media-corner="bottom-left"]) .hero__media {
 		@container (min-width: ${mdMin}) {
-			border-bottom-left-radius: var(--_hero-corner-radius);
+			border-bottom-left-radius: var(--_hero-media-corner-radius);
 		}
 
 		@container (max-width: ${smMax}) {
-			border-top-left-radius: var(--_hero-corner-radius);
+			border-top-left-radius: var(--_hero-media-corner-radius);
 		}
 	}
 
 	:host([data-has-media][data-media-corner="bottom-right"]) .hero__media {
 		@container (min-width: ${mdMin}) {
-			border-bottom-right-radius: var(--_hero-corner-radius);
+			border-bottom-right-radius: var(--_hero-media-corner-radius);
 		}
 
 		@container (max-width: ${smMax}) {
-			border-top-right-radius: var(--_hero-corner-radius);
+			border-top-right-radius: var(--_hero-media-corner-radius);
 		}
 	}
 
@@ -108,26 +115,26 @@ export const heroCornerStyles = css`
 	/* ## Without media */
 
 	:host(:not([data-has-media])[data-media-corner="top-left"]) :is(.hero__body, .hero__main) {
-		border-top-left-radius: var(--_hero-corner-radius);
+		border-top-left-radius: var(--_hero-main-corner-radius);
 	}
 
 	:host(:not([data-has-media])[data-media-corner="top-right"]) :is(.hero__body, .hero__main) {
-		border-top-right-radius: var(--_hero-corner-radius);
+		border-top-right-radius: var(--_hero-main-corner-radius);
 	}
 
 	:host(:not([data-has-media])[data-media-corner="bottom-left"]) :is(.hero__body, .hero__main) {
-		border-bottom-left-radius: var(--_hero-corner-radius);
+		border-bottom-left-radius: var(--_hero-main-corner-radius);
 	}
 
 	:host(:not([data-has-media])[data-media-corner="bottom-right"]) :is(.hero__body, .hero__main) {
-		border-bottom-right-radius: var(--_hero-corner-radius);
+		border-bottom-right-radius: var(--_hero-main-corner-radius);
 	}
 
 	:host(:not([data-has-media]):is([data-media-corner="top-left"], [data-media-corner="bottom-left"])) .hero__main {
-		padding-left: calc(var(--_hero-main-padding) + var(--_hero-corner-radius) / 2);
+		padding-left: calc(var(--_hero-main-padding) + var(--_hero-main-corner-radius) / 2);
 	}
 
 	:host(:not([data-has-media]):is([data-media-corner="top-right"], [data-media-corner="bottom-right"])) .hero__main {
-		padding-right: calc(var(--_hero-main-padding) + var(--_hero-corner-radius) / 2);
+		padding-right: calc(var(--_hero-main-padding) + var(--_hero-main-corner-radius) / 2);
 	}
 `;

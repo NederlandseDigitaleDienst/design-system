@@ -24989,6 +24989,47 @@
             }
           ],
           "description": "Works out which corners are rounded and writes them onto the host as\n`data-media-corner` and `data-main-corner`, which the corner stylesheet\nkeys off. Without `corner`, or where a corner does not fit the shape\nlanguage, both are removed and the hero is rectangular."
+        },
+        {
+          "kind": "function",
+          "name": "limitCorner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "entries",
+              "type": {
+                "text": "readonly ResizeObserverEntry[]"
+              }
+            }
+          ],
+          "description": "Caps the radius at a third of the shortest side of the area it rounds, so a\nlow hero (a single title without media, a small `media-height`) keeps a\ncorner rather than turning into a drop. Fed by a ResizeObserver on the media\nand the panel; the panel's own limit only counts without media, where it is\nthe whole hero. An area that is not shown measures zero and keeps its limit."
+        },
+        {
+          "kind": "function",
+          "name": "clearCornerLimits",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -24997,6 +25038,22 @@
           "name": "applyCorner",
           "declaration": {
             "name": "applyCorner",
+            "module": "src/components/layout/page-sections/hero/hero-corner.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "limitCorner",
+          "declaration": {
+            "name": "limitCorner",
+            "module": "src/components/layout/page-sections/hero/hero-corner.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "clearCornerLimits",
+          "declaration": {
+            "name": "clearCornerLimits",
             "module": "src/components/layout/page-sections/hero/hero-corner.ts"
           }
         }
@@ -25029,7 +25086,7 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "Rounds one corner of the media area and one of the panel. An empty\nvalue lets the hero choose the media corner from `main-position`.",
+              "description": "Rounds one corner of the media area and one of the panel, or without\nmedia one corner of the hero. An empty value lets the hero choose the\ncorner from `main-position`.",
               "attribute": "corner",
               "reflects": true
             },
@@ -25355,7 +25412,7 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. Applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
+              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. With media it applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. Without media the panel is the whole hero: the corner applies in every layout and position, at half the radius, and the hero chooses top-right, or top-left for a panel on the right. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg, and is never more than a third of the shortest side of the area it rounds, so a low hero keeps a corner rather than a drop. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
               "fieldName": "corner"
             },
             {
