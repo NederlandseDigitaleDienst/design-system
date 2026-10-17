@@ -26742,7 +26742,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
+          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
           "name": "NLDDSidebarSection",
           "members": [
             {
@@ -38492,6 +38492,105 @@
           "declaration": {
             "name": "isDismissFromTitleBar",
             "module": "src/utilities/dismiss-from-title-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/focus-target.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "samePageHash",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The fragment of an href that stays on this page, or an empty string. An\nabsolute URL to the page you are on counts too: a router or a CMS writes\n`/pagina#inhoud` as readily as `#inhoud`."
+        },
+        {
+          "kind": "function",
+          "name": "hashTarget",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "hash",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "from",
+              "type": {
+                "text": "Node"
+              }
+            }
+          ],
+          "description": "The element a fragment points at, looked up in the tree of `from` first."
+        },
+        {
+          "kind": "function",
+          "name": "focusTemporarily",
+          "return": {
+            "type": {
+              "text": "(() => void) | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "FocusOptions"
+              }
+            }
+          ],
+          "description": "Focuses the target and leaves it as it was once focus moves on. Returns the\nfunction that puts it back (safe to call twice), or null when the target did\nnot take focus because it is hidden or inert; it is then already put back.\n\nThe tabindex is 0 and not -1, also when the target came with a -1 of its\nown. WebKit skips everything inside a shadow host that has a negative\ntabindex, slotted content included, so with -1 on an nldd-* section the\nnext Tab left the page instead of reaching the first link in it."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "samePageHash",
+          "declaration": {
+            "name": "samePageHash",
+            "module": "src/utilities/focus-target.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hashTarget",
+          "declaration": {
+            "name": "hashTarget",
+            "module": "src/utilities/focus-target.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "focusTemporarily",
+          "declaration": {
+            "name": "focusTemporarily",
+            "module": "src/utilities/focus-target.ts"
           }
         }
       ]

@@ -1,6 +1,8 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import './sidebar-section.js';
+import '../../../lists-and-tables/list/list.js';
+import '../../../lists-and-tables/list-item/list-item.js';
 import '../../../status-and-feedback/inline-dialog/inline-dialog.js';
 import type { NLDDSidebarSection } from './sidebar-section.js';
 import { loadTokens } from '../../../../test-tokens.js';
@@ -255,5 +257,102 @@ describe('nldd-sidebar-section', () => {
 		await make('sticky-top="80px" sticky-bottom="24px"');
 		expect(el.style.getPropertyValue('--_sidebar-section-sticky-top')).toBe('80px');
 		expect(el.style.getPropertyValue('--_sidebar-section-sticky-bottom')).toBe('24px');
+	});
+	describe('a link in the sheet to a place on the page', () => {
+		const makeToc = async (): Promise<void> => {
+			el = await fixture<NLDDSidebarSection>(`
+				<nldd-sidebar-section sidebar-label="Op deze pagina">
+					<button id="inhoud-openen">Op deze pagina</button>
+					<div style="height: 3000px"></div>
+					<h2 id="wat-je-nodig-hebt">Wat je nodig hebt</h2>
+					<nldd-list slot="sidebar" type="navigation" accessible-label="Op deze pagina">
+						<nldd-list-item href="#wat-je-nodig-hebt" text="Wat je nodig hebt"></nldd-list-item>
+						<nldd-list-item href="#zijbalk-anker" text="In de zijbalk"></nldd-list-item>
+						<nldd-list-item href="/andere-pagina#wat-je-nodig-hebt" text="Andere pagina"></nldd-list-item>
+					</nldd-list>
+					<p slot="sidebar" id="zijbalk-anker">Onderaan de zijbalk</p>
+				</nldd-sidebar-section>
+			`);
+			await waitForUpdate(el);
+			await setWidth(500);
+			(el.querySelector('#inhoud-openen') as HTMLElement).focus();
+			el.show();
+			await waitForUpdate(el);
+		};
+
+		const anchorOf = (index: number) =>
+			el.querySelectorAll('nldd-list-item')[index].shadowRoot!.querySelector('a')!;
+
+		const closed = (): Promise<void> => new Promise((resolve) => {
+			const sheet = el.shadowRoot!.querySelector('.sidebar-section__sheet')!;
+			sheet.addEventListener('close', () => queueMicrotask(() => queueMicrotask(resolve)), { once: true });
+		});
+
+		it('closes the sheet, then moves focus to the place, in view', async () => {
+			await makeToc();
+			const done = closed();
+			anchorOf(0).click();
+			await done;
+			const heading = el.querySelector('#wat-je-nodig-hebt') as HTMLElement;
+			expect(document.activeElement).toBe(heading);
+			expect(dialog()!.open).toBe(false);
+			const box = heading.getBoundingClientRect();
+			expect(box.top).toBeGreaterThanOrEqual(0);
+			expect(box.top).toBeLessThan(window.innerHeight);
+			expect(location.hash).toBe('#wat-je-nodig-hebt');
+			history.replaceState(history.state, '', location.pathname + location.search);
+		});
+
+		it('leaves the place as it was once focus moves on', async () => {
+			await makeToc();
+			const done = closed();
+			anchorOf(0).click();
+			await done;
+			const heading = el.querySelector('#wat-je-nodig-hebt') as HTMLElement;
+			expect(heading.getAttribute('tabindex')).toBe('0');
+			heading.blur();
+			expect(heading.hasAttribute('tabindex')).toBe(false);
+			history.replaceState(history.state, '', location.pathname + location.search);
+		});
+
+		// Records whether the section claimed the click, after it had its turn,
+		// and keeps the browser from following the link either way.
+		const clickOn = (anchor: HTMLAnchorElement): boolean => {
+			let claimed = false;
+			const record = (event: Event) => { claimed = event.defaultPrevented; event.preventDefault(); };
+			document.addEventListener('click', record, { once: true });
+			anchor.click();
+			return claimed;
+		};
+
+		it('leaves a link into the sidebar itself alone', async () => {
+			await makeToc();
+			expect(clickOn(anchorOf(1))).toBe(false);
+			expect(dialog()!.open).toBe(true);
+		});
+
+		it('leaves a link to another page alone', async () => {
+			await makeToc();
+			expect(clickOn(anchorOf(2))).toBe(false);
+			expect(dialog()!.open).toBe(true);
+		});
+
+		it('leaves a click with a modifier key alone', async () => {
+			await makeToc();
+			let claimed = false;
+			document.addEventListener('click', (event) => { claimed = event.defaultPrevented; event.preventDefault(); }, { once: true });
+			anchorOf(0).dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true, cancelable: true, metaKey: true }));
+			expect(claimed).toBe(false);
+			expect(dialog()!.open).toBe(true);
+		});
+
+		it('leaves a click the consumer handled alone', async () => {
+			await makeToc();
+			const row = el.querySelector('nldd-list-item')!;
+			row.addEventListener('click', (event) => event.preventDefault(), { once: true });
+			anchorOf(0).click();
+			await waitForUpdate(el);
+			expect(dialog()!.open).toBe(true);
+		});
 	});
 });
