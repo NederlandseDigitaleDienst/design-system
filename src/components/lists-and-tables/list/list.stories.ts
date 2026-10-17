@@ -63,7 +63,7 @@ export default {
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
-			description: 'Toegankelijke naam van de lijst, bij `type="listbox"` van het zoekveld. Bij `type="navigation"` zet je `aria-label` op het element zelf.',
+			description: 'Toegankelijke naam van de lijst, bij `type="listbox"` van het zoekveld en bij `type="navigation"` van het navigatiegebied.',
 		},
 		reorderable: {
 			control: 'boolean',
@@ -314,7 +314,7 @@ export const Navigatie = {
 			<nldd-list
 				type="navigation"
 				appearance="box-tinted"
-				aria-label="Hoofdmenu"
+				accessible-label="Hoofdmenu"
 				@click=${onClick}
 			>
 				<nldd-list-item href="#dashboard"><nldd-text-cell text="Dashboard"></nldd-text-cell></nldd-list-item>
@@ -328,7 +328,7 @@ export const Navigatie = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Navigation-landmark. Items zijn links (of knoppen), elk afzonderlijk tab-focusbaar. Het actieve item krijgt `aria-current="page"` via `selected`. De host krijgt `role="navigation"` en een standaard `aria-label="Navigatie"` (te overschrijven via `aria-label`).',
+				story: 'Navigation-landmark. Items zijn links (of knoppen), elk afzonderlijk tab-focusbaar. Het actieve item krijgt `aria-current="page"` via `selected`. De host krijgt `role="navigation"` en als naam het `accessible-label`, of anders de standaardnaam "Navigatie".',
 			},
 		},
 	},
@@ -341,7 +341,7 @@ export const NavigatieMetSubpaginas = {
 		<nldd-list
 			type="navigation"
 			appearance="box-tinted"
-			aria-label="Op deze pagina"
+			accessible-label="Op deze pagina"
 		>
 			<nldd-list-item href="#aanvragen">
 				<nldd-text-cell text="Aanvragen"></nldd-text-cell>

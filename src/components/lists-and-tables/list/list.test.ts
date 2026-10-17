@@ -311,6 +311,46 @@ describe('nldd-list', () => {
 		expect(el.hasAttribute('data-nldd-auto-label')).toBe(false);
 	});
 
+	it('navigation: accessible-label names the landmark', async () => {
+		el = await fixture('<nldd-list type="navigation" accessible-label="Over deze website"></nldd-list>');
+		await waitForUpdate(el);
+		expect(el.getAttribute('aria-label')).toBe('Over deze website');
+	});
+
+	it('navigation: changing accessible-label renames it, removing it gives the default back', async () => {
+		el = await fixture('<nldd-list type="navigation" accessible-label="Over deze website"></nldd-list>');
+		await waitForUpdate(el);
+		el.setAttribute('accessible-label', 'Op deze pagina');
+		await waitForUpdate(el);
+		expect(el.getAttribute('aria-label')).toBe('Op deze pagina');
+		el.removeAttribute('accessible-label');
+		await waitForUpdate(el);
+		expect(el.getAttribute('aria-label')).toBe('Navigatie');
+	});
+
+	it('navigation: an aria-label on the element wins from accessible-label, also when set later', async () => {
+		el = await fixture('<nldd-list type="navigation" aria-label="Hoofdmenu" accessible-label="Over deze website"></nldd-list>');
+		await waitForUpdate(el);
+		expect(el.getAttribute('aria-label')).toBe('Hoofdmenu');
+		el.setAttribute('accessible-label', 'Op deze pagina');
+		await waitForUpdate(el);
+		expect(el.getAttribute('aria-label')).toBe('Hoofdmenu');
+	});
+
+	it('navigation: aria-labelledby on the element wins from accessible-label', async () => {
+		el = await fixture('<nldd-list type="navigation" aria-labelledby="kop" accessible-label="Over deze website"></nldd-list>');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('aria-label')).toBe(false);
+	});
+
+	it('navigation: switching to list takes off a name from accessible-label', async () => {
+		el = await fixture('<nldd-list type="navigation" accessible-label="Over deze website"></nldd-list>');
+		await waitForUpdate(el);
+		el.setAttribute('type', 'list');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('aria-label')).toBe(false);
+	});
+
 
 	// — Type / reorderable conflict ———————————————————————————————————————————
 

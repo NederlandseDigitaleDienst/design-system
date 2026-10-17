@@ -32821,7 +32821,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Accessible name, forwarded to the list in `type=\"list\"` and to the search field in `type=\"listbox\"`. For `type=\"navigation\"` set `aria-label` / `aria-labelledby` on the element itself. Falls back to the i18n default.",
+              "description": "Accessible name: of the list in `type=\"list\"`, of the search field in `type=\"listbox\"`, and of the navigation landmark in `type=\"navigation\"`, so several navigation lists on a page can be told apart. Falls back to the i18n default. An `aria-label` or `aria-labelledby` set on the element itself wins.",
               "name": "accessible-label",
               "default": "''",
               "fieldName": "accessibleLabel"
