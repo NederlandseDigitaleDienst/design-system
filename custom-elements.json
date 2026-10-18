@@ -32328,16 +32328,6 @@
             },
             {
               "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Accessible name of the row's action; replaces the content of the whole row.",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
               "name": "target",
               "type": {
                 "text": "string | undefined"
@@ -32388,6 +32378,16 @@
               "description": "When set, the whole row is one radio of a group. Ignored when href is set.",
               "attribute": "radio",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name of the row's action; replaces the content of the whole row.",
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -32541,15 +32541,6 @@
             },
             {
               "type": {
-                "text": "string"
-              },
-              "description": "Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it.",
-              "name": "accessible-label",
-              "default": "''",
-              "fieldName": "accessibleLabel"
-            },
-            {
-              "type": {
                 "text": "string | undefined"
               },
               "description": "Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden \"opens in new tab\" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.",
@@ -32590,6 +32581,15 @@
               "name": "radio",
               "default": "false",
               "fieldName": "radio"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it.",
+              "name": "accessible-label",
+              "default": "''",
+              "fieldName": "accessibleLabel"
             },
             {
               "type": {
