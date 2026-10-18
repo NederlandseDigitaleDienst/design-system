@@ -95,7 +95,7 @@ describe('nldd-card', () => {
 		const link = el.shadowRoot!.querySelector('.card__action') as HTMLAnchorElement;
 		expect(link.getAttribute('rel')).toContain('noopener');
 		expect(link.getAttribute('rel')).toContain('noreferrer');
-		expect(link.getAttribute('aria-label')).toBe('Open X, Opent in nieuw tabblad');
+		expect(link.getAttribute('aria-label')).toBe('Open X, opent in nieuw tabblad');
 	});
 
 	it('maakt de hele kaart een knop met button en zet de naam op de knop', async () => {

@@ -148,7 +148,7 @@ const NESTED_CONTROLS = [
  * are forwarded to the inner `<a>` (e.g. `target="_blank" rel="noopener noreferrer"`). With
  * `target="_blank"` the item also injects a visually hidden "opens in new tab"
  * announcement for assistive technology (WCAG 2.1 SC 3.2.2), and an `href` to
- * another website a visually hidden "Andere website". An `nldd-icon-cell` with
+ * another website a visually hidden "andere website". An `nldd-icon-cell` with
  * `external-link` is only the picture of that; the row says it either way.
  *
  * The item synchronizes its ARIA with its parent `nldd-list`'s `type`:
@@ -164,7 +164,8 @@ const NESTED_CONTROLS = [
  *
  * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
- * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "Andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
+ * @attr {string} accessible-label - Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it.
+ * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
@@ -196,6 +197,10 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/** When set, renders the item as a link. */
 	@property({ reflect: true })
 	href?: string;
+
+	/** Accessible name of the row's action; replaces the content of the whole row. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	/**
 	 * Link target (e.g. '_blank' to open in a new tab). Forwarded to the `<a>`; only applies with href.
@@ -1205,6 +1210,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this.disabled,
 			this._parentType === 'navigation' ? 'list' : 'group',
 			this._childrenOpen,
+			this.accessibleLabel,
 		);
 	}
 }

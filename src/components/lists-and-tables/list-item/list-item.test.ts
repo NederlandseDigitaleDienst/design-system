@@ -87,7 +87,7 @@ describe('nldd-list-item', () => {
 		await waitForUpdate(el);
 		const hint = el.shadowRoot!.querySelector('a.list-item__action .list-item__link-hint');
 		expect(hint).not.toBeNull();
-		expect(hint?.textContent).toBe('Opent in nieuw tabblad');
+		expect(hint?.textContent).toBe(', opent in nieuw tabblad');
 	});
 
 	it('does not add the new-tab announcement for same-tab links', async () => {
@@ -99,17 +99,37 @@ describe('nldd-list-item', () => {
 	it('says a row that links to another website goes there', async () => {
 		el = await fixture('<nldd-list-item href="https://open.overheid.nl/"></nldd-list-item>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('a.list-item__action .list-item__link-hint')?.textContent).toBe('Andere website');
+		expect(el.shadowRoot!.querySelector('a.list-item__action .list-item__link-hint')?.textContent).toBe(', andere website');
+	});
+
+	it('names its link with accessible-label, with the hint in it', async () => {
+		el = await fixture('<nldd-list-item href="https://open.overheid.nl/" accessible-label="Startnotitie"><nldd-text-cell text="Startnotitie" supporting-text="De dienst begint"></nldd-text-cell></nldd-list-item>');
+		await waitForUpdate(el);
+		const anchor = el.shadowRoot!.querySelector('a.list-item__action')!;
+		expect(anchor.getAttribute('aria-label')).toBe('Startnotitie, andere website');
+		expect(anchor.querySelector('.list-item__link-hint')).toBeNull();
+	});
+
+	it('names its button with accessible-label', async () => {
+		el = await fixture('<nldd-list-item button accessible-label="Aanvraag A-1042 openen"><nldd-text-cell text="A-1042"></nldd-text-cell></nldd-list-item>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('button.list-item__action')!.getAttribute('aria-label')).toBe('Aanvraag A-1042 openen');
+	});
+
+	it('leaves the name to the content without accessible-label', async () => {
+		el = await fixture('<nldd-list-item href="/a-1042"><nldd-text-cell text="A-1042"></nldd-text-cell></nldd-list-item>');
+		await waitForUpdate(el);
+		expect(el.shadowRoot!.querySelector('a.list-item__action')!.hasAttribute('aria-label')).toBe(false);
 	});
 
 	it('lets the consumer override the new-tab announcement via translations', async () => {
 		el = await fixture('<nldd-list-item href="/test" target="_blank"></nldd-list-item>');
 		(el as unknown as { translations: Record<string, string> }).translations = {
-			'components.list-item.opens-in-new-tab-label': 'opens in a new tab',
+			'components.list-item.opens-in-new-tab-lowercase-label': 'opens in a new tab',
 		};
 		await waitForUpdate(el);
 		const hint = el.shadowRoot!.querySelector('.list-item__link-hint');
-		expect(hint?.textContent).toBe('opens in a new tab');
+		expect(hint?.textContent).toBe(', opens in a new tab');
 	});
 
 	it('sets is-boxed class when inside a box list', async () => {

@@ -41,8 +41,7 @@ export function template(this: NLDDLink, helpers: TemplateHelpers) {
 			<span class="link__label">${this.text ? this.text : html`<slot></slot>`}</span>
 			${this.endIcon ? html`
 				<span class="link__end-icon"><nldd-icon icon=${this.endIcon}></nldd-icon></span>
-			` : html`<slot name="end-icon"></slot>`}
-			${renderLinkHint ? html`<span class="link__link-hint">${linkHint}</span>` : nothing}
+			` : html`<slot name="end-icon"></slot>`}${renderLinkHint ? html`<span class="link__link-hint">, ${linkHint}</span>` : nothing}
 		</a>
 	`;
 }

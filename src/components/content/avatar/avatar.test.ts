@@ -270,7 +270,7 @@ describe('nldd-avatar – full size', () => {
 			const link = el.shadowRoot!.querySelector('a.avatar')!;
 			expect(link.getAttribute('rel')).toContain('noopener');
 			expect(link.getAttribute('rel')).toContain('noreferrer');
-			expect(link.getAttribute('aria-label')).toContain('Opent in nieuw tabblad');
+			expect(link.getAttribute('aria-label')).toContain(', opent in nieuw tabblad');
 		});
 
 		it('blijft een gewone div zonder href of button', async () => {

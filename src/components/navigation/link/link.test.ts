@@ -68,7 +68,7 @@ describe('nldd-link', () => {
 		el = await fixture('<nldd-link href="/overzicht" target="_blank" text="External"></nldd-link>');
 		await waitForUpdate(el);
 		const anchor = el.shadowRoot!.querySelector('a')!;
-		expect(anchor.querySelector('.link__link-hint')?.textContent).toBe('Opent in nieuw tabblad');
+		expect(anchor.querySelector('.link__link-hint')?.textContent).toBe(', opent in nieuw tabblad');
 		// The name stays content-derived (visible text + hint), so no aria-label override.
 		expect(anchor.hasAttribute('aria-label')).toBe(false);
 	});
@@ -77,7 +77,7 @@ describe('nldd-link', () => {
 		el = await fixture('<nldd-link href="/overzicht" target="_blank" accessible-label="Externe site" text="External"></nldd-link>');
 		await waitForUpdate(el);
 		const anchor = el.shadowRoot!.querySelector('a')!;
-		expect(anchor.getAttribute('aria-label')).toBe('Externe site, Opent in nieuw tabblad');
+		expect(anchor.getAttribute('aria-label')).toBe('Externe site, opent in nieuw tabblad');
 		// A hidden span would lose to aria-label, so it isn't rendered.
 		expect(anchor.querySelector('.link__link-hint')).toBeNull();
 	});
@@ -99,22 +99,22 @@ describe('nldd-link', () => {
 
 	it('overrides the new-tab wording via the translations property', async () => {
 		el = await fixture('<nldd-link href="/overzicht" target="_blank" text="External"></nldd-link>');
-		(el as NLDDLink).translations = { 'components.link.opens-in-new-tab-label': 'Opens in a new tab' };
+		(el as NLDDLink).translations = { 'components.link.opens-in-new-tab-lowercase-label': 'opens in a new tab' };
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.link__link-hint')?.textContent).toBe('Opens in a new tab');
+		expect(el.shadowRoot!.querySelector('.link__link-hint')?.textContent).toBe(', opens in a new tab');
 	});
 
 	it('says a link to another website goes there', async () => {
 		el = await fixture('<nldd-link href="https://open.overheid.nl/" text="Lees de startnotitie"></nldd-link>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.link__link-hint')?.textContent).toBe('Andere website');
+		expect(el.shadowRoot!.querySelector('.link__link-hint')?.textContent).toBe(', andere website');
 	});
 
 	it('makes one sentence of another website in a new tab', async () => {
 		el = await fixture('<nldd-link href="https://open.overheid.nl/" target="_blank" text="Lees de startnotitie"></nldd-link>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelectorAll('.link__link-hint')).toHaveLength(1);
-		expect(el.shadowRoot!.querySelector('.link__link-hint')?.textContent).toBe('Andere website, opent in nieuw tabblad');
+		expect(el.shadowRoot!.querySelector('.link__link-hint')?.textContent).toBe(', andere website, opent in nieuw tabblad');
 	});
 
 	it('removes href and adds role="link" + tabindex=0 when disabled', async () => {

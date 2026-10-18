@@ -115,8 +115,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 				@pointerdown=${this._popup.handlePointerdown}
 				@click=${helpers.handleClick}
 			>
-				${content}
-				${renderLinkHint ? html`<span class="button__link-hint">${linkHint}</span>` : nothing}
+				${content}${renderLinkHint ? html`<span class="button__link-hint">, ${linkHint}</span>` : nothing}
 			</a>
 			${loadingIndicator}
 			${popupSlot}

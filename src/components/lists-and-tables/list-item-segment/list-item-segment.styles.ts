@@ -166,4 +166,16 @@ export const listItemSegmentStyles = css`
 		box-shadow: var(--semantics-focus-ring-box-shadow);
 		pointer-events: none;
 	}
+
+	.list-item-segment__link-hint {
+		position: absolute;
+		margin: -1px;
+		border: 0;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		padding: 0;
+		white-space: nowrap;
+		clip-path: inset(50%);
+	}
 `;

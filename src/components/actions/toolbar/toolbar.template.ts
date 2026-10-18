@@ -39,7 +39,7 @@ export function toolbarTitleTemplate(component: NLDDToolbarTitle) {
 				rel=${linkRel(null, component.target) || nothing}
 			>
 				<slot name="media"></slot>
-				${titleGroup}${hintKey ? html`<span class="toolbar__link-hint">${component._t(`components.toolbar.${hintKey}`)}</span>` : nothing}
+				${titleGroup}${hintKey ? html`<span class="toolbar__link-hint">, ${component._t(`components.toolbar.${hintKey}`)}</span>` : nothing}
 			</a>
 		` : html`
 			<slot name="media"></slot>
