@@ -1,7 +1,12 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, adoptedCss } from '../../../../test-utils.js';
 import type { NLDDStepCell } from './step-cell.js';
 import './step-cell.js';
+import { loadTokens } from '../../../../test-tokens.js';
+import '../../list/list.js';
+import '../../list-item/list-item.js';
+import '../spacer-cell/spacer-cell.js';
+import '../text-cell/text-cell.js';
 
 describe('nldd-step-cell', () => {
 	let el: NLDDStepCell;
@@ -312,5 +317,106 @@ describe('nldd-step-cell current without a dot', () => {
 		el = await fixture(`<nldd-step-cell level="none" status="current" direction="up" ${COLORS}></nldd-step-cell>`);
 		await waitForUpdate(el);
 		expect(fullLine(el)).toBe('rgb(1, 2, 3)');
+	});
+});
+
+describe('nldd-step-cell – where the dot stands', () => {
+	let root: HTMLElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => {
+		removeTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (root) cleanup(root);
+		removeTokens();
+		vi.restoreAllMocks();
+	});
+
+	const TEXT = 'Aanvraag A-1042 voor dakisolatie is in behandeling genomen. Het team neemt contact op als er iets ontbreekt, en anders volgt het besluit binnen zes weken.';
+
+	const row = async (stepAttrs: string): Promise<{ cell: HTMLElement; item: HTMLElement }> => {
+		root = await fixture<HTMLElement>(`
+			<nldd-list dividers="never" accessible-label="Verloop" style="width: 320px">
+				<nldd-list-item>
+					<nldd-step-cell ${stepAttrs}></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-text-cell vertical-alignment="top" text="Ingediend" supporting-text="${TEXT}"></nldd-text-cell>
+				</nldd-list-item>
+			</nldd-list>
+		`);
+		const item = root.querySelector('nldd-list-item') as HTMLElement;
+		const cell = root.querySelector('nldd-step-cell') as HTMLElement;
+		await waitForUpdate(item);
+		await waitForUpdate(cell);
+		return { cell, item };
+	};
+
+	const centerOf = (el: Element) => { const r = el.getBoundingClientRect(); return r.top + r.height / 2; };
+	const dotCenter = (cell: HTMLElement) => centerOf(cell.shadowRoot!.querySelector('.step-cell__marker')!);
+
+	const firstLineCenter = (item: HTMLElement) => {
+		const textCell = item.querySelector('nldd-text-cell')!;
+		const walker = document.createTreeWalker(textCell.shadowRoot!, NodeFilter.SHOW_TEXT);
+		let node: Node | null;
+		while ((node = walker.nextNode()) && !node.textContent!.trim());
+		const range = document.createRange();
+		range.selectNodeContents(node!);
+		const line = range.getClientRects()[0];
+		return line.top + line.height / 2;
+	};
+
+	// The lane spans the row edge to edge; the row itself reserves a divider's
+	// worth of space below that, so measure against the lane.
+	const lane = (cell: HTMLElement) => cell.shadowRoot!.querySelector('.step-cell')!.getBoundingClientRect();
+
+	it('stands in the middle of the row by default', async () => {
+		const { cell } = await row('');
+		const box = lane(cell);
+		expect(Math.abs(dotCenter(cell) - (box.top + box.height / 2))).toBeLessThan(1);
+	});
+
+	it('stands beside the first line of a text cell with vertical-alignment="top"', async () => {
+		const { cell, item } = await row('vertical-alignment="top"');
+		expect(Math.abs(dotCenter(cell) - firstLineCenter(item))).toBeLessThan(1);
+	});
+
+	it('puts a minor dot on the same line as a major one', async () => {
+		const major = dotCenter((await row('vertical-alignment="top"')).cell);
+		cleanup(root);
+		const minor = dotCenter((await row('vertical-alignment="top" level="minor"')).cell);
+		expect(minor).toBeCloseTo(major, 0);
+	});
+
+	it('mirrors top with vertical-alignment="bottom"', async () => {
+		const top = await row('vertical-alignment="top"');
+		const fromTop = dotCenter(top.cell) - lane(top.cell).top;
+		cleanup(root);
+		const bottom = await row('vertical-alignment="bottom"');
+		const fromBottom = lane(bottom.cell).bottom - dotCenter(bottom.cell);
+		expect(Math.abs(fromBottom - fromTop)).toBeLessThan(1);
+	});
+
+	it('runs the track to the middle of the dot', async () => {
+		const { cell } = await row('vertical-alignment="top"');
+		const topLine = cell.shadowRoot!.querySelector('.step-cell__top-line')!.getBoundingClientRect();
+		const bottomLine = cell.shadowRoot!.querySelector('.step-cell__bottom-line')!.getBoundingClientRect();
+		expect(topLine.bottom).toBeCloseTo(dotCenter(cell), 0);
+		expect(bottomLine.top).toBeCloseTo(dotCenter(cell), 0);
+	});
+
+	it('puts the middle of the dot marker-offset below the top of the content', async () => {
+		const { cell } = await row('marker-offset="20px" vertical-alignment="bottom"');
+		const padding = parseFloat(getComputedStyle(cell).paddingTop);
+		expect(Math.abs(dotCenter(cell) - lane(cell).top - (padding + 20))).toBeLessThan(1);
+	});
+
+	it('falls back to vertical-alignment for an invalid marker-offset, and says so', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const { cell, item } = await row('marker-offset="hoog" vertical-alignment="top"');
+		expect(cell.hasAttribute('data-marker-offset')).toBe(false);
+		expect(Math.abs(dotCenter(cell) - firstLineCenter(item))).toBeLessThan(1);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('marker-offset="hoog"'))).toBe(true);
 	});
 });

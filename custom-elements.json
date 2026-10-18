@@ -30945,6 +30945,26 @@
             },
             {
               "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "VerticalAlignment"
+              },
+              "default": "'center'",
+              "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "markerOffset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "marker-offset",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "direction",
               "type": {
                 "text": "Direction"
@@ -31056,6 +31076,24 @@
               "default": "'sm'",
               "description": "How wide the lane is and so how big the dot: `sm` (default, 16px) for steps without a number, `md` (24px) where a number or an icon has to fit. Every row in one list takes the same size, or the track jumps",
               "fieldName": "size"
+            },
+            {
+              "name": "vertical-alignment",
+              "type": {
+                "text": "VerticalAlignment"
+              },
+              "default": "'center'",
+              "fieldName": "verticalAlignment",
+              "description": "Where the dot stands in the row (default 'center'). `top` puts it beside the first line of an `nldd-text-cell` of the row's `size`, and `bottom` beside the last line, and never closer to the edge than a whole dot fits: the middle of every dot stands on the same line, so a `minor` dot lines up with a `major` one. The track runs to the middle of the dot either way, so consecutive rows still connect"
+            },
+            {
+              "name": "marker-offset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "markerOffset",
+              "description": "How far below the top of the row's content the middle of the dot stands, as a CSS length. For a row whose first line is not as high as a whole dot, such as a large title beside it: half the height of that line puts the dot beside it. Measured after the row's padding, so it stays right when `size` changes that padding. Prefer `rem` over `px`, so the dot moves along when someone sets a larger font size in the browser. Wins over `vertical-alignment`; an invalid value falls back to it and says so in development"
             },
             {
               "name": "direction",

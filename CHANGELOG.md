@@ -22,6 +22,8 @@ here; consult the commit history if you need that level of detail.
 
 - **`accessible-label` on `nldd-list-item`, the name of the row's action.** For a row whose text does not say enough on its own. It replaces the content of the whole row for a screen reader, the supporting text and a status included, so set it only on a row without text of its own, or put everything that matters in it.
 
+- **`vertical-alignment` and `marker-offset` on `nldd-step-cell`, for a step in a row higher than one line.** The dot stood in the middle of the row, so beside a title with a paragraph under it, it hung halfway down the text. `vertical-alignment="top"` puts it beside the first line of an `nldd-text-cell` of the row's `size`, and `bottom` beside the last one; the middle of every dot stands on the same line, so a `minor` dot lines up with a `major` one. For a first line of another height, such as an `nldd-title`, `marker-offset` says how far below the top of the content the middle of the dot stands, measured after the row's padding. Write it in `rem`, so the dot moves along when someone sets a larger font size. The track runs to the middle of the dot, so rows still connect.
+
 ### Changed
 
 - **The hint for a new tab follows the name after a comma, in lowercase.** "Lees de startnotitie, opent in nieuw tabblad". The hidden text ran on without a pause, and the hint in an `aria-label` started with a capital after the comma. `nldd-list-item-segment` now gives the hint as well.

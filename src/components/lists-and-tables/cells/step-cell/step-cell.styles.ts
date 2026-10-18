@@ -20,6 +20,8 @@ export const stepCellStyles = css`
 		--_step-cell-future-content-color: var(--semantics-content-secondary-color);
 		--_step-cell-current-fill-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
 		--_step-cell-icon-size: calc(var(--_step-cell-marker-size) * 2 / 3);
+		--_step-cell-marker-offset: 0px;
+		--_step-cell-marker-center: 50%;
 
 		isolation: isolate;
 		display: flex;
@@ -46,6 +48,18 @@ export const stepCellStyles = css`
 
 	:host([size="md"][level="minor"]) {
 		--_step-cell-marker-size: var(--primitives-space-12);
+	}
+
+	:host([vertical-alignment="top"]) {
+		--_step-cell-marker-center: calc(var(--context-cell-padding-block, 0px) + max(var(--_step-cell-lane-size), var(--context-cell-first-line-height, 0px)) / 2);
+	}
+
+	:host([vertical-alignment="bottom"]) {
+		--_step-cell-marker-center: calc(100% - var(--context-cell-padding-block, 0px) - max(var(--_step-cell-lane-size), var(--context-cell-first-line-height, 0px)) / 2);
+	}
+
+	:host([data-marker-offset]) {
+		--_step-cell-marker-center: calc(var(--context-cell-padding-block, 0px) + var(--_step-cell-marker-offset));
 	}
 
 	/* Bleeds back over the host's block padding, so consecutive rows connect. */
@@ -86,12 +100,12 @@ export const stepCellStyles = css`
 	}
 
 	.step-cell__top-line {
-		bottom: 50%;
-		height: 50%;
+		top: 0;
+		height: var(--_step-cell-marker-center);
 	}
 
 	.step-cell__bottom-line {
-		top: 50%;
+		top: var(--_step-cell-marker-center);
 		bottom: calc(-1 * var(--semantics-dividers-thickness));
 	}
 
@@ -135,7 +149,7 @@ export const stepCellStyles = css`
 	.step-cell__marker {
 		box-sizing: border-box;
 		position: absolute;
-		top: 50%;
+		top: var(--_step-cell-marker-center);
 		left: 50%;
 		z-index: var(--_step-cell-marker-z-index);
 		display: flex;

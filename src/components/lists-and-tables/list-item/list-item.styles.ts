@@ -21,6 +21,7 @@ export const listItemStyles = css`
 
 		--context-list-item-size: var(--semantics-controls-md-min-size);
 		--context-cell-padding-block: var(--_list-item-md-padding-block);
+		--context-cell-first-line-height: calc(var(--primitives-font-size-100) * var(--primitives-line-height-tight));
 		container-type: inline-size;
 		display: block;
 		width: 100%;
@@ -29,6 +30,7 @@ export const listItemStyles = css`
 
 	:host([size="sm"]) {
 		--context-cell-padding-block: var(--_list-item-sm-padding-block);
+		--context-cell-first-line-height: calc(var(--primitives-font-size-90) * var(--primitives-line-height-tight));
 		--context-list-item-size: var(--semantics-controls-sm-min-size);
 	}
 
