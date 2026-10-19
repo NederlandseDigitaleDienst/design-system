@@ -249,6 +249,9 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 			history.replaceState(history.state, '', hash);
 		}), { once: true, signal: jump.signal });
 		this.hide();
+		// The sheet clears `open` as soon as it starts to close. Still open means
+		// no close is coming, and a jump left waiting would fire on a later one.
+		if (this._sheet?.open) jump.abort();
 	};
 
 	private _pendingJump?: AbortController;

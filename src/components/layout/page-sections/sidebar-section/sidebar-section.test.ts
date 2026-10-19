@@ -362,6 +362,20 @@ describe('nldd-sidebar-section', () => {
 			history.replaceState(history.state, '', location.pathname + location.search);
 		});
 
+		it('drops a jump right away when no close starts', async () => {
+			await makeToc();
+			const sheet = el.shadowRoot!.querySelector('.sidebar-section__sheet') as HTMLElement & { hide(): void };
+			const hide = sheet.hide;
+			sheet.hide = () => {};
+			anchorOf(0).click();
+			sheet.hide = hide;
+			// A later close, by Escape or the close button, is not the jump's close.
+			const done = closed();
+			el.hide();
+			await done;
+			expect(document.activeElement).not.toBe(el.querySelector('#wat-je-nodig-hebt'));
+		});
+
 		it('leaves a click with a modifier key alone', async () => {
 			await makeToc();
 			let claimed = false;
