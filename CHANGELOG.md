@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.9.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.100...v0.9.0) (2026-10-19)
+
 ### Highlights
 
 - **Links say where they go to a screen reader.** A link to another domain adds "andere website" to its name by itself, in every component with an `href`. Nobody has to set anything, so nobody can forget it.
