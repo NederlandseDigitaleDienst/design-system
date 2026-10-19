@@ -20,6 +20,7 @@ here; consult the commit history if you need that level of detail.
 - **Links say where they go to a screen reader.** A link to another domain adds "andere website" to its name by itself, in every component with an `href`. Nobody has to set anything, so nobody can forget it.
 - **A table of contents in a sheet takes you to the heading.** A link in the collapsed sidebar of `nldd-sidebar-section` closes the sheet and moves focus to the heading it points at, in view.
 - **`accessible-label` works the same everywhere.** It names a navigation list, and `nldd-list-item` has one too.
+- **A step stands beside its title.** `nldd-step-cell` puts its dot beside the first line of a row with `vertical-alignment="top"`, or at a set distance with `marker-offset`, so a step with a title and a paragraph no longer has its dot halfway down the text.
 - **The corner of a hero without an image is smaller.** On a hero with a single title the corner took up most of its height, so the panel looked like a drop. Without media it now takes half the radius, and in any hero never more than a third of the height.
 
 ### Added
