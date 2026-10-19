@@ -59,7 +59,7 @@ export default {
 			name: 'vertical-alignment',
 			control: 'select',
 			options: ['top', 'center', 'bottom'],
-			description: 'Waar de stip in de rij staat. top zet hem naast de eerste regel van een nldd-text-cell van dezelfde size, bottom naast de laatste. Het midden van elke stip staat op dezelfde lijn, dus een minor-stip lijnt uit met een major. Het spoor loopt altijd tot het midden van de stip',
+			description: 'Waar de stip in de rij staat. top zet hem tegen de bovenste padding van de rij, bottom tegen de onderste, zoals een hele stip zou staan, dus een minor-stip lijnt uit met een major. Om uit te lijnen met wat ernaast staat, zoals de eerste regel van een tekstcel, gebruik je marker-offset. Het spoor loopt altijd tot het midden van de stip',
 			table: { defaultValue: { summary: 'center' } },
 		},
 		markerOffset: {
@@ -722,9 +722,9 @@ const tallRow = (alignment: string, position: string) => html`
 
 /**
  * In een hoge rij staat de stip standaard in het midden. Met
- * `vertical-alignment="top"` staat hij naast de eerste regel van een tekstcel
- * van dezelfde `size`, met `bottom` naast de laatste. Het spoor loopt tot het
- * midden van de stip, dus de rijen sluiten op elkaar aan.
+ * `vertical-alignment="top"` staat hij tegen de bovenste padding van de rij,
+ * met `bottom` tegen de onderste. Het spoor loopt tot het midden van de stip,
+ * dus de rijen sluiten op elkaar aan.
  */
 export const VerticaleUitlijningen = {
 	name: 'Verticale uitlijningen',

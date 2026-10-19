@@ -356,16 +356,6 @@ describe('nldd-step-cell – where the dot stands', () => {
 	const centerOf = (el: Element) => { const r = el.getBoundingClientRect(); return r.top + r.height / 2; };
 	const dotCenter = (cell: HTMLElement) => centerOf(cell.shadowRoot!.querySelector('.step-cell__marker')!);
 
-	const firstLineCenter = (item: HTMLElement) => {
-		const textCell = item.querySelector('nldd-text-cell')!;
-		const walker = document.createTreeWalker(textCell.shadowRoot!, NodeFilter.SHOW_TEXT);
-		let node: Node | null;
-		while ((node = walker.nextNode()) && !node.textContent!.trim());
-		const range = document.createRange();
-		range.selectNodeContents(node!);
-		const line = range.getClientRects()[0];
-		return line.top + line.height / 2;
-	};
 
 	// The lane spans the row edge to edge; the row itself reserves a divider's
 	// worth of space below that, so measure against the lane.
@@ -377,9 +367,15 @@ describe('nldd-step-cell – where the dot stands', () => {
 		expect(Math.abs(dotCenter(cell) - (box.top + box.height / 2))).toBeLessThan(1);
 	});
 
-	it('stands beside the first line of a text cell with vertical-alignment="top"', async () => {
-		const { cell, item } = await row('vertical-alignment="top"');
-		expect(Math.abs(dotCenter(cell) - firstLineCenter(item))).toBeLessThan(1);
+	const againstPadding = (cell: HTMLElement) => {
+		const padding = parseFloat(getComputedStyle(cell).paddingTop);
+		const half = parseFloat(getComputedStyle(cell).getPropertyValue('--_step-cell-lane-size')) / 2;
+		return Math.abs(dotCenter(cell) - lane(cell).top - (padding + half));
+	};
+
+	it('stands against the top padding with vertical-alignment="top", as a whole dot would', async () => {
+		const { cell } = await row('vertical-alignment="top"');
+		expect(againstPadding(cell)).toBeLessThan(1);
 	});
 
 	it('puts a minor dot on the same line as a major one', async () => {
@@ -414,9 +410,9 @@ describe('nldd-step-cell – where the dot stands', () => {
 
 	it('falls back to vertical-alignment for an invalid marker-offset, and says so', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		const { cell, item } = await row('marker-offset="hoog" vertical-alignment="top"');
+		const { cell } = await row('marker-offset="hoog" vertical-alignment="top"');
 		expect(cell.hasAttribute('data-marker-offset')).toBe(false);
-		expect(Math.abs(dotCenter(cell) - firstLineCenter(item))).toBeLessThan(1);
+		expect(againstPadding(cell)).toBeLessThan(1);
 		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('marker-offset="hoog"'))).toBe(true);
 	});
 });

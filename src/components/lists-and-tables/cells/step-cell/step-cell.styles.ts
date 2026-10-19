@@ -51,11 +51,11 @@ export const stepCellStyles = css`
 	}
 
 	:host([vertical-alignment="top"]) {
-		--_step-cell-marker-center: calc(var(--context-cell-padding-block, 0px) + max(var(--_step-cell-lane-size), var(--context-cell-first-line-height, 0px)) / 2);
+		--_step-cell-marker-center: calc(var(--context-cell-padding-block, 0px) + var(--_step-cell-lane-size) / 2);
 	}
 
 	:host([vertical-alignment="bottom"]) {
-		--_step-cell-marker-center: calc(100% - var(--context-cell-padding-block, 0px) - max(var(--_step-cell-lane-size), var(--context-cell-first-line-height, 0px)) / 2);
+		--_step-cell-marker-center: calc(100% - var(--context-cell-padding-block, 0px) - var(--_step-cell-lane-size) / 2);
 	}
 
 	:host([data-marker-offset]) {
