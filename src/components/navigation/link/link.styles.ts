@@ -145,9 +145,9 @@ export const linkStyles = css`
 		top: 0.2em;
 	}
 
-	/* Visually-hidden "opens in new tab" announcement (target="_blank"); part of
+	/* Visually-hidden link hint (another website, a new tab); part of
 	   the link's accessible name but never shown. Standard visually-hidden recipe. */
-	.link__opens-in-new-tab-hint {
+	.link__link-hint {
 		position: absolute;
 		margin: -1px;
 		border: 0;

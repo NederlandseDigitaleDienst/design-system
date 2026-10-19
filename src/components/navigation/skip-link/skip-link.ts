@@ -36,6 +36,7 @@ import { skipLinkStyles } from './skip-link.styles.js';
 import { template } from './skip-link.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddSkipLinkTranslations } from './skip-link.i18n.js';
+import { focusTemporarily, hashTarget, samePageHash } from '../../../utilities/focus-target.js';
 
 @customElement('nldd-skip-link')
 export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTranslations) {
@@ -71,38 +72,17 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	 * on the link, so the next Tab starts from the top again.
 	 */
 	_handleLinkClick = (event?: MouseEvent): void => {
-		const hash = this._samePageHash();
+		const hash = samePageHash(this.href);
 		if (!hash) return;
 		// A click that opens the link elsewhere (middle button, or with a
 		// modifier held) leaves this page where it is, focus included.
 		if (event && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
-		let id = hash.slice(1);
-		// A malformed escape throws; the raw id is then the best guess left.
-		try { id = decodeURIComponent(id); } catch { /* keep the raw id */ }
-		const root = this.getRootNode() as Document | ShadowRoot;
-		const target = root.getElementById?.(id) ?? document.getElementById(id);
+		const target = hashTarget(hash, this);
 		if (!target) return;
 		// After the navigation the click is about to cause, not before it.
 		clearTimeout(this._focusTimer);
 		this._focusTimer = setTimeout(() => this._focus(target));
 	};
-
-	/**
-	 * The fragment of an href that stays on this page, or an empty string. An
-	 * absolute URL to the page you are on counts too: a router or a CMS writes
-	 * `/pagina#inhoud` as readily as `#inhoud`.
-	 */
-	private _samePageHash(): string {
-		try {
-			const url = new URL(this.href, location.href);
-			const samePage = url.origin === location.origin
-				&& url.pathname === location.pathname
-				&& url.search === location.search;
-			return samePage ? url.hash : '';
-		} catch {
-			return '';
-		}
-	}
 
 	private _focusTimer?: ReturnType<typeof setTimeout>;
 	private _restoreTarget?: () => void;
@@ -112,36 +92,14 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 		clearTimeout(this._focusTimer);
 	}
 
-	/**
-	 * Focuses the target and leaves it as it was once focus moves on.
-	 *
-	 * The tabindex is 0 and not -1, also when the target came with a -1 of its
-	 * own. WebKit skips everything inside a shadow host that has a negative
-	 * tabindex, slotted content included, so with -1 on an nldd-* section the
-	 * next Tab left the page instead of reaching the first link in it.
-	 */
+	/** Focuses the target with a temporary tab stop; see focusTemporarily. */
 	private _focus(target: HTMLElement): void {
 		// A second run before the target has blurred would read the temporary 0
 		// as the original and put that back for good. Settle the first one first.
 		this._restoreTarget?.();
-		const previous = target.getAttribute('tabindex');
-		const restore = () => {
-			target.removeEventListener('blur', restore);
-			if (this._restoreTarget === restore) this._restoreTarget = undefined;
-			if (previous === null) target.removeAttribute('tabindex');
-			else target.setAttribute('tabindex', previous);
-		};
-		this._restoreTarget = restore;
-		target.setAttribute('tabindex', '0');
-		target.addEventListener('blur', restore);
-		target.focus();
-		// Focus did not take (the target got hidden or went inert in between):
-		// no blur will follow, so the tab stop would stay behind for good.
-		if ((target.getRootNode() as Document | ShadowRoot).activeElement !== target) {
-			restore();
-			if (import.meta.env?.DEV) {
-				console.warn('<nldd-skip-link>: the target did not take focus, so the skip link did nothing. It is probably hidden or inert.', target);
-			}
+		this._restoreTarget = focusTemporarily(target) ?? undefined;
+		if (!this._restoreTarget && import.meta.env?.DEV) {
+			console.warn('<nldd-skip-link>: the target did not take focus, so the skip link did nothing. It is probably hidden or inert.', target);
 		}
 	}
 

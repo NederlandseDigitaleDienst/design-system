@@ -14,7 +14,7 @@ export const template = (
 	href: string | undefined,
 	target: string | undefined,
 	rel: string | undefined,
-	opensInNewTabLabel?: string,
+	linkHint?: string,
 	actionTabindex?: string,
 	isHighlighted = false,
 	checkbox = false,
@@ -26,7 +26,11 @@ export const template = (
 	disabled = false,
 	childrenRole: 'group' | 'list' = 'group',
 	childrenOpen = expanded === true,
+	accessibleLabel = '',
 ) => {
+	// accessible-label replaces the content as the action's name, so the link
+	// hint goes into it; otherwise the hint follows the content in a hidden span.
+	const ariaLabel = accessibleLabel ? [accessibleLabel, linkHint].filter(Boolean).join(', ') : nothing;
 	const ariaExpanded = expanded === undefined ? nothing : String(expanded);
 	// The row's child rows. In a tree `role="group"` is what makes the nesting
 	// the hierarchy: assistive technology derives level, position and set size
@@ -52,11 +56,12 @@ export const template = (
 				href=${href}
 				target=${target ?? nothing}
 				rel=${linkRel(rel, target) || nothing}
+				aria-label=${ariaLabel}
 				aria-disabled=${disabled ? 'true' : nothing}
 				aria-expanded=${ariaExpanded}
 				tabindex=${actionTabindex ?? nothing}
 			>${content}${
-				opensInNewTabLabel ? html`<span class="list-item__opens-in-new-tab-hint">${opensInNewTabLabel}</span>` : nothing
+				linkHint && !accessibleLabel ? html`<span class="list-item__link-hint">, ${linkHint}</span>` : nothing
 			}</a>
 			${divider}
 		</div>${children}`;
@@ -71,6 +76,7 @@ export const template = (
 			<button class="list-item__action"
 				type="button"
 				role="checkbox"
+				aria-label=${ariaLabel}
 				?disabled=${disabled}
 				aria-checked=${String(checked)}
 				aria-expanded=${ariaExpanded}
@@ -89,6 +95,7 @@ export const template = (
 			<button class="list-item__action"
 				type="button"
 				role="radio"
+				aria-label=${ariaLabel}
 				?disabled=${disabled}
 				aria-checked=${String(checked)}
 				tabindex=${actionTabindex ?? nothing}
@@ -100,6 +107,7 @@ export const template = (
 		return html`<div class=${blockClass}>
 			<button class="list-item__action"
 				type="button"
+				aria-label=${ariaLabel}
 				?disabled=${disabled}
 				aria-expanded=${ariaExpanded}
 				tabindex=${actionTabindex ?? nothing}

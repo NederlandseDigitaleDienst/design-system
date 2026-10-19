@@ -18,6 +18,7 @@ export function template(
 	popovertarget?: string,
 	popoverTargetElement?: Element | null,
 	popoverTargetAction?: 'toggle' | 'show' | 'hide',
+	linkHint = '',
 ) {
 	const content = html`<slot></slot>`;
 	// A control that opens a popup always carries aria-expanded, open or not:
@@ -28,6 +29,9 @@ export function template(
 		: String(expanded);
 	const ariaCurrent = current ?? nothing;
 	const label = accessibleLabel || nothing;
+	// accessible-label replaces the content as the link's name, so the link hint
+	// goes into it; otherwise the hint follows the content in a hidden span.
+	const linkLabel = accessibleLabel ? [accessibleLabel, linkHint].filter(Boolean).join(', ') : nothing;
 
 	if (control === 'link') {
 		return html`<a class="list-item-segment"
@@ -37,9 +41,9 @@ export function template(
 			aria-disabled=${disabled ? 'true' : nothing}
 			aria-expanded=${ariaExpanded}
 			aria-current=${ariaCurrent}
-			aria-label=${label}
+			aria-label=${linkLabel}
 			tabindex=${actionTabindex ?? nothing}
-		>${content}</a>`;
+		>${content}${linkHint && !accessibleLabel ? html`<span class="list-item-segment__link-hint">, ${linkHint}</span>` : nothing}</a>`;
 	}
 
 	if (control === 'checkbox' || control === 'button') {

@@ -19,6 +19,18 @@
  *   The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a
  *   "Sluit" button — overridable via the `sheet-top-title-bar` slot.
  *
+ * A link in the sheet to a place on the page beside it, such as a row of a
+ * table of contents, closes the sheet first and then scrolls to that place and
+ * moves focus there, with a temporary tab stop as a skip link does. Left to the
+ * browser, the page would scroll under a sheet that is still open, and on
+ * closing the browser gives focus back to the trigger without scrolling to it,
+ * so focus ends up out of sight. A link that opens elsewhere (another page, a
+ * new tab, a modifier key, a `download`) or points into the sidebar itself is
+ * left alone, as is a click the consumer has already handled with
+ * `preventDefault()`. The address gets the fragment through `replaceState`,
+ * without a new history entry and without a `hashchange` event or a `:target`
+ * match: a router that listens for those does not see the jump.
+ *
  * The sidebar content lives in `slot="sidebar"`. Its slot outlet moves between the
  * box (expanded) and the sheet (collapsed) so there is a single, never-duplicated
  * copy — the light DOM (and its state) is preserved across the switch.
@@ -69,6 +81,7 @@ import '../../page/page.js';
 import '../../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDSheet } from '../../sheet/sheet.js';
 import { translate } from '../../../../utilities/translations.js';
+import { focusTemporarily, hashTarget, samePageHash } from '../../../../utilities/focus-target.js';
 
 @customElement('nldd-sidebar-section')
 export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
@@ -123,6 +136,7 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 		// whatever space it's placed in (a narrow column, a split-view pane, …).
 		this._ro = new ResizeObserver(this._onResize);
 		this._ro.observe(this);
+		this.addEventListener('click', this._onClick);
 	}
 
 	override disconnectedCallback(): void {
@@ -130,6 +144,8 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 		this._ro?.disconnect();
 		this._ro = undefined;
 		this._hasMeasured = false;
+		this.removeEventListener('click', this._onClick);
+		this._pendingJump?.abort();
 	}
 
 	override firstUpdated(): void {
@@ -207,9 +223,50 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 		else this._sheet?.show();
 	}
 
+	/** A link in the open sheet to a place on the page: close first, then go there. */
+	private _onClick = (event: MouseEvent): void => {
+		if (!this.collapsed || !this._sheetOpen || event.defaultPrevented) return;
+		if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+		const path = event.composedPath();
+		if (!path.some((node) => node instanceof Element && node.parentElement === this && node.slot === 'sidebar')) return;
+		const anchor = path.find((node): node is HTMLAnchorElement => node instanceof HTMLAnchorElement && node.hasAttribute('href'));
+		if (!anchor || anchor.hasAttribute('download') || (anchor.target && anchor.target !== '_self')) return;
+		const hash = samePageHash(anchor.href);
+		const target = hash ? hashTarget(hash, this) : null;
+		if (!target || this._inSidebar(target)) return;
+		event.preventDefault();
+		// The sheet gives focus back to its trigger as it closes; go on from there.
+		// A jump that never came (the close did not happen) must not fire on a
+		// later close, so a new click or the sheet opening again calls it off.
+		this._pendingJump?.abort();
+		const jump = new AbortController();
+		this._pendingJump = jump;
+		this._sheet?.addEventListener('close', () => queueMicrotask(() => {
+			if (jump.signal.aborted) return;
+			this._pendingJump = undefined;
+			target.scrollIntoView();
+			focusTemporarily(target, { preventScroll: true });
+			history.replaceState(history.state, '', hash);
+		}), { once: true, signal: jump.signal });
+		this.hide();
+		// The sheet clears `open` as soon as it starts to close. Still open means
+		// no close is coming, and a jump left waiting would fire on a later one.
+		if (this._sheet?.open) jump.abort();
+	};
+
+	private _pendingJump?: AbortController;
+
+	private _inSidebar(node: Node): boolean {
+		return [...this.children].some((child) => child.slot === 'sidebar' && child.contains(node));
+	}
+
 	// Track open state for toggle(); the open/close events still bubble out to the
 	// consumer (for aria-expanded) — these handlers don't stop them.
-	_onSheetOpen = (): void => { this._sheetOpen = true; };
+	_onSheetOpen = (): void => {
+		this._sheetOpen = true;
+		this._pendingJump?.abort();
+		this._pendingJump = undefined;
+	};
 	_onSheetClose = (): void => { this._sheetOpen = false; };
 
 	override render() {

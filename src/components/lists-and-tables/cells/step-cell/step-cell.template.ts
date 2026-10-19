@@ -8,7 +8,9 @@ export function stepCellTemplate(component: NLDDStepCell): TemplateResult {
 	if (component.level === 'none') {
 		return html`
 			<div class="step-cell">
-				${component.position === 'only' ? nothing : html`<div class="step-cell__full-line"></div>`}
+				<div class="step-cell__content">
+					${component.position === 'only' ? nothing : html`<div class="step-cell__full-line"></div>`}
+				</div>
 			</div>
 		`;
 	}
@@ -35,9 +37,11 @@ export function stepCellTemplate(component: NLDDStepCell): TemplateResult {
 
 	return html`
 		<div class="step-cell">
-			${showTopLine ? html`<div class="step-cell__top-line"></div>` : nothing}
-			<div class="step-cell__marker">${content}</div>
-			${showBottomLine ? html`<div class="step-cell__bottom-line"></div>` : nothing}
+			<div class="step-cell__content">
+				${showTopLine ? html`<div class="step-cell__top-line"></div>` : nothing}
+				<div class="step-cell__marker">${content}</div>
+				${showBottomLine ? html`<div class="step-cell__bottom-line"></div>` : nothing}
+			</div>
 		</div>
 	`;
 }

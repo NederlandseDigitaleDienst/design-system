@@ -231,6 +231,52 @@ export const MetAfgerondeHoek = {
 };
 
 /**
+ * Zonder media is het paneel de hele hero. `corner` werkt dan in elke layout,
+ * met de halve straal, en nooit groter dan een derde van de hoogte: een hero
+ * met één titel houdt zo een hoek en wordt geen druppel. Hier op de breedte van
+ * sm, md en lg.
+ */
+export const AfgerondeHoekZonderMedia = {
+	name: 'Afgeronde hoek zonder media',
+	render: () => html`
+		<nldd-container gap="24">
+			${[375, 800, 1200].map((width) => html`
+				<div style="width: min(${width}px, 100%)">
+					<nldd-container gap="24">
+						<nldd-hero
+							corner
+							main-background="lintblauw"
+						>
+							<nldd-title
+								color="inherit"
+								size="1"
+								text="Mijn Dienst"
+								heading-level="1"
+							></nldd-title>
+						</nldd-hero>
+						<nldd-hero
+							corner
+							main-background="lintblauw"
+						>
+							<nldd-title
+								color="inherit"
+								size="1"
+								text="Mijn Dienst"
+								heading-level="1"
+							></nldd-title>
+							<nldd-rich-text color="inherit">
+								<p>Vraag subsidie aan voor dakisolatie of een warmtepomp, en volg je aanvraag tot hij is afgerond.</p>
+							</nldd-rich-text>
+						</nldd-hero>
+					</nldd-container>
+				</div>
+			`)}
+		</nldd-container>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
+/**
  * Elke hoek van het mediavlak is ook zelf te kiezen. Kies je een hoek die onder
  * het paneel valt, dan zegt de hero dat in development.
  */

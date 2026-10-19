@@ -1,6 +1,7 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDAvatar } from './avatar.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 import '../tooltip/tooltip.js';
 
 export function avatarTemplate(component: NLDDAvatar): TemplateResult {
@@ -8,13 +9,12 @@ export function avatarTemplate(component: NLDDAvatar): TemplateResult {
 	const initials = component.resolvedInitials;
 	const showInitials = !showImage && initials !== '';
 	const showIcon = !showImage && !showInitials;
-	// A new-tab link is a change of context, so announce it (WCAG 2.1 SC 3.2.2).
-	const opensInNewTabHint = component.href && component.target === '_blank'
-		? component._t('components.avatar.opens-in-new-tab-label')
-		: '';
+	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
+	const hintKey = linkHintKey(component.href, component.target);
+	const linkHint = hintKey ? component._t(`components.avatar.${hintKey}`) : '';
 	// The control shows no text of its own, so its name comes from
-	// accessible-label (or the name it already carries), plus the new-tab hint.
-	const controlLabel = [component.accessibleLabel || component.name, opensInNewTabHint]
+	// accessible-label (or the name it already carries), plus the link hint.
+	const controlLabel = [component.accessibleLabel || component.name, linkHint]
 		.filter(Boolean).join(', ') || nothing;
 	// sizes="auto" (valid because the image is lazy) resolves srcset against the
 	// avatar's real rendered width; without a fixed size we can't know it here,

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDButton } from './button.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;
@@ -50,11 +51,10 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 	const isDisclosure = this.expandable || !!this.popupType;
 	const ariaExpanded = isDisclosure ? String(this.expanded) : (this.expanded ? 'true' : nothing);
 
-	// A new-tab link is a change of context, so announce it (WCAG 2.1 SC 3.2.2).
-	// Only the <a> path (href) can open a new tab.
-	const opensInNewTabHint = this.href && this.target === '_blank'
-		? this._t('components.button.opens-in-new-tab-label')
-		: '';
+	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
+	// Only the <a> path (href) navigates.
+	const hintKey = linkHintKey(this.href, this.target);
+	const linkHint = hintKey ? this._t(`components.button.${hintKey}`) : '';
 
 	// `supporting-text` renders in a sibling span next to the text; the
 	// accessible-name flat-string algorithm concatenates them without a
@@ -65,14 +65,14 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 	// those consumers should set accessible-label.)
 	const baseAriaLabel = this.accessibleLabel
 		|| (this.supportingText ? [this.text, this.supportingText].filter(Boolean).join(', ') : '');
-	// aria-label wins the accessible-name cascade, so when one is set the new-tab
+	// aria-label wins the accessible-name cascade, so when one is set the link
 	// hint must live inside it; otherwise `nothing` leaves the name content-derived
 	// and the visually-hidden span below appends the hint (it also reaches slotted
 	// text, which can't be read into a string here).
 	const ariaLabel = baseAriaLabel
-		? [baseAriaLabel, opensInNewTabHint].filter(Boolean).join(', ')
+		? [baseAriaLabel, linkHint].filter(Boolean).join(', ')
 		: nothing;
-	const renderOpensInNewTabHint = !!opensInNewTabHint && !baseAriaLabel;
+	const renderLinkHint = !!linkHint && !baseAriaLabel;
 
 	// Loading: an activity indicator overlays the (opacity-hidden) content. It
 	// sits OUTSIDE the <button>/<a> (a sibling, overlaid via the host's
@@ -115,8 +115,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 				@pointerdown=${this._popup.handlePointerdown}
 				@click=${helpers.handleClick}
 			>
-				${content}
-				${renderOpensInNewTabHint ? html`<span class="button__opens-in-new-tab-hint">${opensInNewTabHint}</span>` : nothing}
+				${content}${renderLinkHint ? html`<span class="button__link-hint">, ${linkHint}</span>` : nothing}
 			</a>
 			${loadingIndicator}
 			${popupSlot}

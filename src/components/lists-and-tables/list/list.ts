@@ -170,7 +170,7 @@ const SHADOW_TAB_STOP = ':is(a[href], button, input, select, textarea, [tabindex
  * @attr {'list'|'navigation'|'listbox'|'tree'|'form'|'radiogroup'} type - A11y role and behavior (default 'list'). See the docblock above.
  * @attr {'always'|'on-touch'|'never'} dividers - When to draw the lines between the items (default 'always'). `on-touch` draws them only where the primary input is touch, under `(pointer: coarse)`: a pointer has the hover highlight to tell one row from the next and a finger has nothing, so the line earns its place in the one case and is clutter in the other. `never` hides them everywhere
  * @attr {string} height - Listbox only: caps the options' scroll region at this CSS length (e.g. '320px'). Unset means no cap.
- * @attr {string} accessible-label - Accessible name, forwarded to the list in `type="list"` and to the search field in `type="listbox"`. For `type="navigation"` set `aria-label` / `aria-labelledby` on the element itself. Falls back to the i18n default.
+ * @attr {string} accessible-label - Accessible name: of the list in `type="list"`, of the search field in `type="listbox"`, and of the navigation landmark in `type="navigation"`, so several navigation lists on a page can be told apart. Falls back to the i18n default. An `aria-label` or `aria-labelledby` set on the element itself wins.
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} reorderable - Enables drag-to-reorder and pushes `reorderable` onto the items. Only valid with `type="list"`; there the arrow keys move rows instead of focus.
  *
@@ -439,10 +439,16 @@ export class NLDDList extends LitElement {
 	/** The navigation label this list set itself, so a consumer's own is left alone. */
 	private _autoLabel: string | null = null;
 
-	/** On every render, so the texts this list sets itself follow a language switch. */
+	/** The name of a navigation list: `accessible-label`, or the translated default. */
+	private _navigationLabel(): string {
+		return this.accessibleLabel || this._t('components.list.navigation-accessible-label');
+	}
+
+	/** On every render, so the texts this list sets itself follow a language
+	 *  switch and a change of `accessible-label`. */
 	private _syncTranslatedTexts(): void {
 		if (this.hasAttribute('data-nldd-auto-label') && this.getAttribute('aria-label') === this._autoLabel) {
-			this._autoLabel = this._t('components.list.navigation-accessible-label');
+			this._autoLabel = this._navigationLabel();
 			this.setAttribute('aria-label', this._autoLabel);
 		}
 		if (this.hasAttribute('aria-keyshortcuts')) {
@@ -458,7 +464,7 @@ export class NLDDList extends LitElement {
 		if (this.type === 'navigation') {
 			this.setAttribute('role', 'navigation');
 			if (!this.hasAttribute('aria-label') && !this.hasAttribute('aria-labelledby')) {
-				this._autoLabel = this._t('components.list.navigation-accessible-label');
+				this._autoLabel = this._navigationLabel();
 				this.setAttribute('aria-label', this._autoLabel);
 				this.setAttribute('data-nldd-auto-label', '');
 			}

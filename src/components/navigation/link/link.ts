@@ -18,7 +18,7 @@
  *
  * @element nldd-link
  * @attr {string} href - Link target
- * @attr {string} target - Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "Opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2).
+ * @attr {string} target - Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {string} size - Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' | 'sm' | 'md' | 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap.
  * @attr {string} text - Link text (alternative to the default slot)
@@ -27,7 +27,7 @@
  * @attr {string} accessible-label - Accessible label for screen readers
  * @attr {boolean} disabled - Disabled state. Avoid it where you can; the design guidelines say why.
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
- * @attr {object} translations - Override translation keys (e.g. the "Opent in nieuw tabblad" announcement); unset keys fall back to Dutch.
+ * @attr {object} translations - Override translation keys (e.g. the "opent in nieuw tabblad" announcement); unset keys fall back to Dutch.
  *
  * @slot - Link text (alternative to the text attribute)
  * @slot start-icon - Custom icon before the text

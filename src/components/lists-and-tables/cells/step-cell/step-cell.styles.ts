@@ -20,6 +20,8 @@ export const stepCellStyles = css`
 		--_step-cell-future-content-color: var(--semantics-content-secondary-color);
 		--_step-cell-current-fill-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
 		--_step-cell-icon-size: calc(var(--_step-cell-marker-size) * 2 / 3);
+		--_step-cell-marker-offset: 0px;
+		--_step-cell-marker-center: 50%;
 
 		isolation: isolate;
 		display: flex;
@@ -48,6 +50,18 @@ export const stepCellStyles = css`
 		--_step-cell-marker-size: var(--primitives-space-12);
 	}
 
+	:host([vertical-alignment="top"]) {
+		--_step-cell-marker-center: calc(var(--_step-cell-lane-size) / 2);
+	}
+
+	:host([vertical-alignment="bottom"]) {
+		--_step-cell-marker-center: calc(100% - var(--_step-cell-lane-size) / 2);
+	}
+
+	:host([data-marker-offset]) {
+		--_step-cell-marker-center: var(--_step-cell-marker-offset);
+	}
+
 	/* Bleeds back over the host's block padding, so consecutive rows connect. */
 	.step-cell {
 		position: relative;
@@ -55,6 +69,13 @@ export const stepCellStyles = css`
 		height: calc(100% + 2 * var(--context-cell-padding-block, 0px));
 		min-height: var(--primitives-space-48);
 		margin-block: calc(var(--context-cell-padding-block, 0px) * -1);
+	}
+
+	/* The row's content box: the dot is placed in it, and the lines reach out
+	   over the padding from it. */
+	.step-cell__content {
+		position: absolute;
+		inset: var(--context-cell-padding-block, 0px) 0;
 	}
 
 	/* The ring, but only left and right. A spread would put the same band above
@@ -81,18 +102,18 @@ export const stepCellStyles = css`
 	   without this the track breaks at every row. The top line needs nothing —
 	   the row above already covers the band. */
 	.step-cell__full-line {
-		top: 0;
-		bottom: calc(-1 * var(--semantics-dividers-thickness));
+		top: calc(-1 * var(--context-cell-padding-block, 0px));
+		bottom: calc(-1 * var(--context-cell-padding-block, 0px) - var(--semantics-dividers-thickness));
 	}
 
 	.step-cell__top-line {
-		bottom: 50%;
-		height: 50%;
+		top: calc(-1 * var(--context-cell-padding-block, 0px));
+		height: calc(var(--context-cell-padding-block, 0px) + var(--_step-cell-marker-center));
 	}
 
 	.step-cell__bottom-line {
-		top: 50%;
-		bottom: calc(-1 * var(--semantics-dividers-thickness));
+		top: var(--_step-cell-marker-center);
+		bottom: calc(-1 * var(--context-cell-padding-block, 0px) - var(--semantics-dividers-thickness));
 	}
 
 	:host([status="future"]:not([line])) .step-cell__top-line,
@@ -135,7 +156,7 @@ export const stepCellStyles = css`
 	.step-cell__marker {
 		box-sizing: border-box;
 		position: absolute;
-		top: 50%;
+		top: var(--_step-cell-marker-center);
 		left: 50%;
 		z-index: var(--_step-cell-marker-z-index);
 		display: flex;

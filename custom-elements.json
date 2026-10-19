@@ -758,7 +758,7 @@
                 "text": "string | undefined"
               },
               "default": "undefined",
-              "description": "Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden \"opens in new tab\" announcement for screen readers (WCAG 2.1 SC 3.2.2).",
+              "description": "Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden \"opens in new tab\" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.",
               "fieldName": "target"
             },
             {
@@ -1308,7 +1308,7 @@
                 "text": "string | undefined"
               },
               "default": "undefined",
-              "description": "Link target (e.g. '_blank'); only used when href is set. With '_blank' the \"opens in new tab\" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2).",
+              "description": "Link target (e.g. '_blank'); only used when href is set. With '_blank' the \"opens in new tab\" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.",
               "fieldName": "target"
             },
             {
@@ -2678,7 +2678,7 @@
               },
               "default": "''",
               "fieldName": "target",
-              "description": "Where the link opens; only meaningful with `href`. `_blank` adds rel=\"noopener noreferrer\" and a visually hidden \"opens in a new tab\" announcement."
+              "description": "Where the link opens; only meaningful with `href`. `_blank` adds rel=\"noopener noreferrer\" and a visually hidden \"opens in a new tab\" announcement. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off."
             },
             {
               "name": "translations",
@@ -3359,7 +3359,7 @@
               },
               "default": "''",
               "fieldName": "target",
-              "description": "Link target for href (e.g. '_blank'); completes rel and announces \"Opens in a new tab\""
+              "description": "Link target for href (e.g. '_blank'); completes rel and announces \"Opens in a new tab\". An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off."
             },
             {
               "name": "rel",
@@ -23091,7 +23091,7 @@
               },
               "default": "''",
               "fieldName": "target",
-              "description": "Link target for href (e.g. '_blank'); adjusts rel automatically and adds an \"Opent in nieuw tabblad\" announcement for '_blank'"
+              "description": "Link target for href (e.g. '_blank'); adjusts rel automatically and adds an \"opent in nieuw tabblad\" announcement for '_blank'. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off."
             },
             {
               "name": "rel",
@@ -23122,7 +23122,7 @@
                 "name": "withTranslations",
                 "module": "src/utilities/with-translations.ts"
               },
-              "description": "Override translation keys (e.g. the \"Opent in nieuw tabblad\" announcement)"
+              "description": "Override translation keys (e.g. the \"opent in nieuw tabblad\" announcement)"
             }
           ],
           "mixins": [
@@ -24989,6 +24989,47 @@
             }
           ],
           "description": "Works out which corners are rounded and writes them onto the host as\n`data-media-corner` and `data-main-corner`, which the corner stylesheet\nkeys off. Without `corner`, or where a corner does not fit the shape\nlanguage, both are removed and the hero is rectangular."
+        },
+        {
+          "kind": "function",
+          "name": "limitCorner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "entries",
+              "type": {
+                "text": "readonly ResizeObserverEntry[]"
+              }
+            }
+          ],
+          "description": "Caps the radius at a third of the shortest side of the area it rounds, so a\nlow hero (a single title without media, a small `media-height`) keeps a\ncorner rather than turning into a drop. Fed by a ResizeObserver on the media\nand the panel; the panel's own limit only counts without media, where it is\nthe whole hero. An area that is not shown measures zero and keeps its limit."
+        },
+        {
+          "kind": "function",
+          "name": "clearCornerLimits",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -24997,6 +25038,22 @@
           "name": "applyCorner",
           "declaration": {
             "name": "applyCorner",
+            "module": "src/components/layout/page-sections/hero/hero-corner.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "limitCorner",
+          "declaration": {
+            "name": "limitCorner",
+            "module": "src/components/layout/page-sections/hero/hero-corner.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "clearCornerLimits",
+          "declaration": {
+            "name": "clearCornerLimits",
             "module": "src/components/layout/page-sections/hero/hero-corner.ts"
           }
         }
@@ -25029,7 +25086,7 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "Rounds one corner of the media area and one of the panel. An empty\nvalue lets the hero choose the media corner from `main-position`.",
+              "description": "Rounds one corner of the media area and one of the panel, or without\nmedia one corner of the hero. An empty value lets the hero choose the\ncorner from `main-position`.",
               "attribute": "corner",
               "reflects": true
             },
@@ -25355,7 +25412,7 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. Applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
+              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. With media it applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. Without media the panel is the whole hero: the corner applies in every layout and position, at half the radius, and the hero chooses top-right, or top-left for a panel on the right. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg, and is never more than a third of the shortest side of the area it rounds, so a low hero keeps a corner rather than a drop. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
               "fieldName": "corner"
             },
             {
@@ -26685,7 +26742,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
+          "description": "A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a \"Sluit\" button — overridable via the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot=\"sidebar\"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.",
           "name": "NLDDSidebarSection",
           "members": [
             {
@@ -30888,6 +30945,26 @@
             },
             {
               "kind": "field",
+              "name": "verticalAlignment",
+              "type": {
+                "text": "VerticalAlignment"
+              },
+              "default": "'center'",
+              "attribute": "vertical-alignment",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "markerOffset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "marker-offset",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "direction",
               "type": {
                 "text": "Direction"
@@ -30999,6 +31076,24 @@
               "default": "'sm'",
               "description": "How wide the lane is and so how big the dot: `sm` (default, 16px) for steps without a number, `md` (24px) where a number or an icon has to fit. Every row in one list takes the same size, or the track jumps",
               "fieldName": "size"
+            },
+            {
+              "name": "vertical-alignment",
+              "type": {
+                "text": "VerticalAlignment"
+              },
+              "default": "'center'",
+              "fieldName": "verticalAlignment",
+              "description": "Where the dot stands in the row (default 'center'). `top` puts it against the row's top padding and `bottom` against its bottom padding, as a whole dot would stand, so a `minor` dot lines up with a `major` one. To line it up with what stands beside it, such as the first line of a text cell or a title, use `marker-offset`. The track runs to the middle of the dot either way, so consecutive rows still connect"
+            },
+            {
+              "name": "marker-offset",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "markerOffset",
+              "description": "How far below the top of the row's content the middle of the dot stands, as a CSS length or a percentage of the content's height: `0%` is its top, `50%` its middle and `100%` its bottom. For a row whose first line is not as high as a whole dot, such as a large title beside it: half the height of that line puts the dot beside it. Measured after the row's padding, so it stays right when `size` changes that padding. Prefer `rem` over `px`, so the dot moves along when someone sets a larger font size in the browser. Wins over `vertical-alignment`; an invalid value falls back to it and says so in development"
             },
             {
               "name": "direction",
@@ -32019,6 +32114,19 @@
                 }
               ],
               "description": "Delegates focus to the inner control so consumers needn't reach into shadow DOM."
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
             }
           ],
           "events": [
@@ -32049,7 +32157,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Link target forwarded to the `<a>`; only applies with `href`",
+              "description": "Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden \"opent in nieuw tabblad\" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label.",
               "name": "target",
               "fieldName": "target"
             },
@@ -32170,6 +32278,24 @@
               },
               "description": "The row's divider stops after this cell.",
               "name": "divider-end"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
             }
           ],
           "superclass": {
@@ -32205,7 +32331,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox when `checkbox` is set, as a button when `button` is set, or as a plain container otherwise. All cells and segments share one flat slot, in source order. With one action, make the row itself the control (`href`, `button`, `checkbox` or `radio`): the whole row is then one hit area. With two or more, give each its own `nldd-list-item-segment` and leave the row without an action of its own. Both at once nests a control inside a control, and the item warns about that in development. Two rules govern every row: 1. State fills always paint the WIDENED row geometry — the row box extended by the indicator inline inset on both sides — whether or not the row is interactive. Paint never differs between a selected plain row and a selected interactive row. 2. The widened strip belongs to the ROW, never to a segment. A row with any action (its own `href`/`button`/`checkbox`, or a slotted segment) pulls itself outward (`is-interactive` host class → negative inline margin) and pads the row block back by the same amount, so content stays on the grid. A row-wide action owns that padding itself, making the whole widened box one hit area; slotted segments stay in the grid, so their footprint is position-independent and tree columns line up at any depth. By default the divider starts at the row's first text or title cell, so the line lands on the words rather than on whatever leads up to them — an icon, an avatar, a checkbox, or the spacers a tree indents with. Rows of different shapes then still line their dividers up with each other, and a tree's dividers step inward with its indentation. Text inside an `nldd-list-item-segment` counts as the row's content, and the marker is that text cell rather than the action: the action carries its own inline padding, so its edge sits before the words. A row with no text or title cell keeps the full content width. Mark a cell with `divider-start` and/or `divider-end` to place it yourself instead — an explicit marker replaces the derived one entirely, so `divider-start` on the leading cell restores the full-width line. Multiple markers resolve as the union: first `divider-start` through last `divider-end`. A start past the last end is an authoring error — the item DEV-warns and falls back to the full content width. A branch row can disclose its children in two ways: a dedicated `nldd-list-item-segment[disclosure]` segment (only the chevron is clickable), or the row itself as the control (`button` + `expanded`, the whole row toggles). In the second case, mark the chevron's `nldd-icon-cell` with `disclosure` and the row turns it with `expanded` — the same affordance, without having to trade a clickable row for a turning chevron. `checkbox` makes the WHOLE row the control: the inner action becomes a `role=\"checkbox\"` button carrying `aria-checked`, it toggles `checked` on activation and fires `change`. Slot an `nldd-checkbox decorative` (or any glyph) before the text: it only shows the state, since the row already conveys role and state, and a second focusable control would double the tab stops. Do NOT nest a real `<input type=\"checkbox\">` in the action: interactive content inside a `<button>` is invalid HTML and AT announces the button, not the checked state. A `<label>` variant is not offered for the same reason it cannot work — label-to-input association walks the DOM tree, and a slotted input is not a descendant of a label in the shadow root. When it renders as a link, `target` and `rel` are forwarded to the inner `<a>` (e.g. `target=\"_blank\" rel=\"noopener noreferrer\"`). With `target=\"_blank\"` the item also injects a visually hidden \"opens in new tab\" announcement for assistive technology (WCAG 2.1 SC 3.2.2). The item synchronizes its ARIA with its parent `nldd-list`'s `type`: - `list` parent → `role=\"listitem\"` - `navigation` parent → `role=\"listitem\"` + `aria-current` on the inner `<a>` / `<button>` when `current` or `selected`, with `current-type` as its value (`page` unless set) - `listbox` parent → `role=\"option\"` + `aria-selected` reflecting `selected`. The list points its search input's `aria-activedescendant` at the active option via `_highlighted` (separate from `selected`).",
+          "description": "A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox when `checkbox` is set, as a button when `button` is set, or as a plain container otherwise. All cells and segments share one flat slot, in source order. With one action, make the row itself the control (`href`, `button`, `checkbox` or `radio`): the whole row is then one hit area. With two or more, give each its own `nldd-list-item-segment` and leave the row without an action of its own. Both at once nests a control inside a control, and the item warns about that in development. Two rules govern every row: 1. State fills always paint the WIDENED row geometry — the row box extended by the indicator inline inset on both sides — whether or not the row is interactive. Paint never differs between a selected plain row and a selected interactive row. 2. The widened strip belongs to the ROW, never to a segment. A row with any action (its own `href`/`button`/`checkbox`, or a slotted segment) pulls itself outward (`is-interactive` host class → negative inline margin) and pads the row block back by the same amount, so content stays on the grid. A row-wide action owns that padding itself, making the whole widened box one hit area; slotted segments stay in the grid, so their footprint is position-independent and tree columns line up at any depth. By default the divider starts at the row's first text or title cell, so the line lands on the words rather than on whatever leads up to them — an icon, an avatar, a checkbox, or the spacers a tree indents with. Rows of different shapes then still line their dividers up with each other, and a tree's dividers step inward with its indentation. Text inside an `nldd-list-item-segment` counts as the row's content, and the marker is that text cell rather than the action: the action carries its own inline padding, so its edge sits before the words. A row with no text or title cell keeps the full content width. Mark a cell with `divider-start` and/or `divider-end` to place it yourself instead — an explicit marker replaces the derived one entirely, so `divider-start` on the leading cell restores the full-width line. Multiple markers resolve as the union: first `divider-start` through last `divider-end`. A start past the last end is an authoring error — the item DEV-warns and falls back to the full content width. A branch row can disclose its children in two ways: a dedicated `nldd-list-item-segment[disclosure]` segment (only the chevron is clickable), or the row itself as the control (`button` + `expanded`, the whole row toggles). In the second case, mark the chevron's `nldd-icon-cell` with `disclosure` and the row turns it with `expanded` — the same affordance, without having to trade a clickable row for a turning chevron. `checkbox` makes the WHOLE row the control: the inner action becomes a `role=\"checkbox\"` button carrying `aria-checked`, it toggles `checked` on activation and fires `change`. Slot an `nldd-checkbox decorative` (or any glyph) before the text: it only shows the state, since the row already conveys role and state, and a second focusable control would double the tab stops. Do NOT nest a real `<input type=\"checkbox\">` in the action: interactive content inside a `<button>` is invalid HTML and AT announces the button, not the checked state. A `<label>` variant is not offered for the same reason it cannot work — label-to-input association walks the DOM tree, and a slotted input is not a descendant of a label in the shadow root. When it renders as a link, `target` and `rel` are forwarded to the inner `<a>` (e.g. `target=\"_blank\" rel=\"noopener noreferrer\"`). With `target=\"_blank\"` the item also injects a visually hidden \"opens in new tab\" announcement for assistive technology (WCAG 2.1 SC 3.2.2), and an `href` to another website a visually hidden \"andere website\". An `nldd-icon-cell` with `external-link` is only the picture of that; the row says it either way. The item synchronizes its ARIA with its parent `nldd-list`'s `type`: - `list` parent → `role=\"listitem\"` - `navigation` parent → `role=\"listitem\"` + `aria-current` on the inner `<a>` / `<button>` when `current` or `selected`, with `current-type` as its value (`page` unless set) - `listbox` parent → `role=\"option\"` + `aria-selected` reflecting `selected`. The list points its search input's `aria-activedescendant` at the active option via `_highlighted` (separate from `selected`).",
           "name": "NLDDListItem",
           "slots": [
             {
@@ -32290,6 +32416,16 @@
               "description": "When set, the whole row is one radio of a group. Ignored when href is set.",
               "attribute": "radio",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name of the row's action; replaces the content of the whole row.",
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -32445,7 +32581,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden \"opens in new tab\" announcement is added for assistive technology.",
+              "description": "Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden \"opens in new tab\" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.",
               "name": "target",
               "fieldName": "target"
             },
@@ -32486,6 +32622,15 @@
             },
             {
               "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it.",
+              "name": "accessible-label",
+              "default": "''",
+              "fieldName": "accessibleLabel"
+            },
+            {
+              "type": {
                 "text": "boolean"
               },
               "description": "Set by the parent `nldd-list` when its own `reorderable` is on (with `type=\"list\"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.",
@@ -32523,7 +32668,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, and takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.",
+              "description": "Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.",
               "name": "current",
               "default": "false",
               "fieldName": "current"
@@ -32764,7 +32909,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Accessible name, forwarded to the list in `type=\"list\"` and to the search field in `type=\"listbox\"`. For `type=\"navigation\"` set `aria-label` / `aria-labelledby` on the element itself. Falls back to the i18n default.",
+              "description": "Accessible name: of the list in `type=\"list\"`, of the search field in `type=\"listbox\"`, and of the navigation landmark in `type=\"navigation\"`, so several navigation lists on a page can be told apart. Falls back to the i18n default. An `aria-label` or `aria-labelledby` set on the element itself wins.",
               "name": "accessible-label",
               "default": "''",
               "fieldName": "accessibleLabel"
@@ -33702,7 +33847,7 @@
               },
               "default": "undefined",
               "fieldName": "target",
-              "description": "Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden \"Opent in nieuw tabblad\" announcement for screen readers (WCAG 2.1 SC 3.2.2)."
+              "description": "Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden \"opent in nieuw tabblad\" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off."
             },
             {
               "name": "rel",
@@ -33787,7 +33932,7 @@
                 "name": "withTranslations",
                 "module": "src/utilities/with-translations.ts"
               },
-              "description": "Override translation keys (e.g. the \"Opent in nieuw tabblad\" announcement); unset keys fall back to Dutch."
+              "description": "Override translation keys (e.g. the \"opent in nieuw tabblad\" announcement); unset keys fall back to Dutch."
             }
           ],
           "mixins": [
@@ -38441,6 +38586,105 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/focus-target.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "samePageHash",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The fragment of an href that stays on this page, or an empty string. An\nabsolute URL to the page you are on counts too: a router or a CMS writes\n`/pagina#inhoud` as readily as `#inhoud`."
+        },
+        {
+          "kind": "function",
+          "name": "hashTarget",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "hash",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "from",
+              "type": {
+                "text": "Node"
+              }
+            }
+          ],
+          "description": "The element a fragment points at, looked up in the tree of `from` first."
+        },
+        {
+          "kind": "function",
+          "name": "focusTemporarily",
+          "return": {
+            "type": {
+              "text": "(() => void) | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "FocusOptions"
+              }
+            }
+          ],
+          "description": "Focuses the target and leaves it as it was once focus moves on. Returns the\nfunction that puts it back (safe to call twice), or null when the target did\nnot take focus because it is hidden or inert; it is then already put back.\n\nThe tabindex is 0 and not -1, also when the target came with a -1 of its\nown. WebKit skips everything inside a shadow host that has a negative\ntabindex, slotted content included, so with -1 on an nldd-* section the\nnext Tab left the page instead of reaching the first link in it."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "samePageHash",
+          "declaration": {
+            "name": "samePageHash",
+            "module": "src/utilities/focus-target.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hashTarget",
+          "declaration": {
+            "name": "hashTarget",
+            "module": "src/utilities/focus-target.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "focusTemporarily",
+          "declaration": {
+            "name": "focusTemporarily",
+            "module": "src/utilities/focus-target.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/form-associated-mixin.ts",
       "declarations": [
         {
@@ -38718,6 +38962,71 @@
           "declaration": {
             "name": "isTouchMode",
             "module": "src/utilities/input-modality.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/link-hint.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "linkHintKey",
+          "return": {
+            "type": {
+              "text": "LinkHintKey | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string | null | undefined"
+              }
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string | null | undefined"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "isExternalHref",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Whether `href` points at another origin than the page it is on."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "linkHintKey",
+          "declaration": {
+            "name": "linkHintKey",
+            "module": "src/utilities/link-hint.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isExternalHref",
+          "declaration": {
+            "name": "isExternalHref",
+            "module": "src/utilities/link-hint.ts"
           }
         }
       ]

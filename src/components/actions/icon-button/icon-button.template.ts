@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDIconButton } from './icon-button.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 import '../../content/tooltip/tooltip.js';
 
 function renderContent(component: NLDDIconButton) {
@@ -26,19 +27,18 @@ function renderContent(component: NLDDIconButton) {
 }
 
 export function template(this: NLDDIconButton) {
-	// A new-tab link is a change of context, so announce it (WCAG 2.1 SC 3.2.2).
+	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
 	// The control always carries an aria-label, which wins the accessible-name
 	// cascade, so fold the hint into it rather than into a hidden span (which it
-	// would override). Only the <a> path (href) can open a new tab.
-	const opensInNewTabHint = this.href && this.target === '_blank'
-		? this._t('components.icon-button.opens-in-new-tab-label')
-		: '';
+	// would override). Only the <a> path (href) navigates.
+	const hintKey = linkHintKey(this.href, this.target);
+	const linkHint = hintKey ? this._t(`components.icon-button.${hintKey}`) : '';
 	const baseLabel = this.accessibleLabel || this.text || '';
-	const label = [baseLabel, opensInNewTabHint].filter(Boolean).join(', ') || nothing;
+	const label = [baseLabel, linkHint].filter(Boolean).join(', ') || nothing;
 	const content = renderContent(this);
 
 	// Tooltip text: accessible-label always, or text when not visible (non-lg).
-	// The new-tab hint is screen-reader only, so it stays out of the visual tooltip.
+	// The link hint is screen-reader only, so it stays out of the visual tooltip.
 	const tooltipText = this.accessibleLabel
 		|| ((this.size !== 'lg' || this.hideLgText) ? this.text : '');
 

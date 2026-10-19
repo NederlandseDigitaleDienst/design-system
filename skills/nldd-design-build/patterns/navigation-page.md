@@ -86,7 +86,7 @@ Met een lijst:
       <nldd-list
         slot="right"
         type="navigation"
-        aria-label="Aanvragen"
+        accessible-label="Aanvragen"
       >
         <nldd-list-item href="#aanvraag-indienen">
           <nldd-text-cell
@@ -426,7 +426,7 @@ Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbo
 
 Wat je gratis krijgt: elke rij en elke kaart is één link en één tabstop, een lijst met `type="navigation"` is een eigen navigatie, en op smal staat alles in de volgorde waarin je het leest.
 
-Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, een `aria-label` op de lijst, en een titel die zonder de zin eronder ook te begrijpen is. Bij kaarten is die titel ook het `accessible-label`, dus een schermlezer die door de links springt hoort alleen die.
+Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, een `accessible-label` op de lijst, en een titel die zonder de zin eronder ook te begrijpen is. Bij kaarten is die titel ook het `accessible-label`, dus een schermlezer die door de links springt hoort alleen die.
 
 ## Gezien in
 

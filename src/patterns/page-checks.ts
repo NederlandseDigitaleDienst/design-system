@@ -106,7 +106,7 @@ export function expectTextAndLinkList(section: Element) {
 	expect(section.querySelector(':scope > nldd-rich-text[slot="left"]')).not.toBeNull();
 	const list = section.querySelector(':scope > nldd-list[slot="right"]')!;
 	expect(list.getAttribute('type')).toBe('navigation');
-	expect(list.getAttribute('aria-label')).toBe(title.getAttribute('text'));
+	expect(list.getAttribute('accessible-label')).toBe(title.getAttribute('text'));
 	const rows = [...list.querySelectorAll(':scope > nldd-list-item')];
 	expect(rows.length).toBeGreaterThan(1);
 	for (const row of rows) {

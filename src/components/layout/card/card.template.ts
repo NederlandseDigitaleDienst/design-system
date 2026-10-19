@@ -1,17 +1,17 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDCard } from './card.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 
 export function cardTemplate(component: NLDDCard): TemplateResult {
-	// A new-tab link is a change of context, so announce it (WCAG 2.1 SC 3.2.2).
-	const opensInNewTabHint = component.href && component.target === '_blank'
-		? component._t('components.card.opens-in-new-tab-label')
-		: '';
+	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
+	const hintKey = linkHintKey(component.href, component.target);
+	const linkHint = hintKey ? component._t(`components.card.${hintKey}`) : '';
 	// The overlay control has no text, so its name comes from aria-label, with
-	// the new-tab hint appended. accessible-label names the link or button when
+	// the link hint appended. accessible-label names the link or button when
 	// the card is interactive, the article otherwise — so the card carries
 	// exactly one name.
-	const linkLabel = [component.accessibleLabel, opensInNewTabHint].filter(Boolean).join(', ') || nothing;
+	const linkLabel = [component.accessibleLabel, linkHint].filter(Boolean).join(', ') || nothing;
 	const isInteractive = Boolean(component.href) || component.button;
 	return html`
 		<article class="card"

@@ -57,6 +57,12 @@ describe('setTranslations() at runtime reaches the texts set outside a template'
 		expect(el.getAttribute('aria-label')).toBe('Mijn Dienst');
 	});
 
+	it('nldd-list: leaves a name from accessible-label, which is the site\'s own text', async () => {
+		el = await fixture('<nldd-list type="navigation" accessible-label="Over deze website"></nldd-list>');
+		await switchTo({ 'components.list.navigation-accessible-label': 'Nav' });
+		expect(el.getAttribute('aria-label')).toBe('Over deze website');
+	});
+
 	it('nldd-top-navigation-bar: the name of a slotted menu bar', async () => {
 		el = await fixture(`
 			<nldd-top-navigation-bar>

@@ -18,6 +18,7 @@ export default {
 		button: false,
 		checkbox: false,
 		radio: false,
+		accessibleLabel: '',
 		selected: false,
 		checked: false,
 		expanded: false,
@@ -50,6 +51,11 @@ export default {
 			control: 'boolean',
 			description: 'Maakt de hele rij één radio van een groep. Zet de rijen in een `nldd-list type="radiogroup"`. Wint van `button`, verliest van `href` en `checkbox`.',
 			table: { defaultValue: { summary: false } },
+		},
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijke naam van de control van de rij, voor een rij waarvan de tekst op zichzelf niet genoeg zegt. Vervangt voor een schermlezer de hele inhoud van de rij, ook de ondertekst en een status. Zet hem dus alleen op een rij zonder eigen tekst, of zet alles wat ertoe doet erin. De hint voor een andere website of een nieuw tabblad komt erachter.',
 		},
 		selected: {
 			control: 'boolean',
@@ -94,6 +100,7 @@ export const Standaard = {
 				?button=${args.button}
 				?checkbox=${args.checkbox}
 				?radio=${args.radio}
+				accessible-label=${args.accessibleLabel || nothing}
 				?selected=${args.selected}
 				?checked=${args.checked}
 				?expanded=${args.expanded}

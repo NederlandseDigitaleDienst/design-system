@@ -274,7 +274,7 @@ nldd-shell                            de buitenste schil
       <nldd-list
         slot="right"
         type="navigation"
-        aria-label="Hiervoor kun je een aanvraag doen"
+        accessible-label="Hiervoor kun je een aanvraag doen"
       >
         <nldd-list-item href="#isoleren">
           <nldd-text-cell

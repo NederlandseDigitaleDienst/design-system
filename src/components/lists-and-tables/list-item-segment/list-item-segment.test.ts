@@ -597,4 +597,32 @@ describe('nldd-list-item-segment – een uitgezette link', () => {
 		link.dispatchEvent(event);
 		expect(event.defaultPrevented).toBe(true);
 	});
+
+	describe('the link hint', () => {
+		it('says a link to another website goes there', async () => {
+			el = await fixture('<nldd-list-item-segment href="https://open.overheid.nl/"><nldd-text-cell text="Startnotitie"></nldd-text-cell></nldd-list-item-segment>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('a .list-item-segment__link-hint')?.textContent).toBe(', andere website');
+		});
+
+		it('says a link opens in a new tab', async () => {
+			el = await fixture('<nldd-list-item-segment href="/a-1042" target="_blank"><nldd-text-cell text="A-1042"></nldd-text-cell></nldd-list-item-segment>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('.list-item-segment__link-hint')?.textContent).toBe(', opent in nieuw tabblad');
+		});
+
+		it('folds the hint into accessible-label', async () => {
+			el = await fixture('<nldd-list-item-segment href="https://open.overheid.nl/" target="_blank" accessible-label="Startnotitie"><nldd-icon-cell icon="external-link"></nldd-icon-cell></nldd-list-item-segment>');
+			await waitForUpdate(el);
+			const anchor = el.shadowRoot!.querySelector('a')!;
+			expect(anchor.getAttribute('aria-label')).toBe('Startnotitie, andere website, opent in nieuw tabblad');
+			expect(anchor.querySelector('.list-item-segment__link-hint')).toBeNull();
+		});
+
+		it('gives a link on this site in the same tab no hint', async () => {
+			el = await fixture('<nldd-list-item-segment href="/a-1042"><nldd-text-cell text="A-1042"></nldd-text-cell></nldd-list-item-segment>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('.list-item-segment__link-hint')).toBeNull();
+		});
+	});
 });

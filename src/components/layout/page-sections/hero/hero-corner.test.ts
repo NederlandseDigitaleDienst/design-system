@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../../test-utils.js';
 import { loadTokens } from '../../../../test-tokens.js';
 import './hero.js';
 
@@ -169,6 +169,55 @@ describe('nldd-hero – corner', () => {
 		await hero('corner', 1200, '');
 		expect(rounded('.hero__body')).toEqual(['top-right']);
 		expect(rounded('.hero__main')).toEqual(['top-right']);
+	});
+
+	it('rounds the hero without media in overlap, without a warning', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		await hero('corner layout="overlap"', 1200, '');
+		expect(rounded('.hero__body')).toEqual(['top-right']);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('corner'))).toBe(false);
+	});
+
+	it('takes half the radius without media', async () => {
+		el = await fixture(`<nldd-hero corner style="width: 1200px"><p style="height: 400px">Aanvraag A-1042</p></nldd-hero>`);
+		await waitForUpdate(el);
+		await nextFrames();
+		const ribbon = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--semantics-brand-ribbon-lg-width'));
+		expect(radii('.hero__body')['top-right']).toBe(ribbon);
+	});
+
+	it('never takes more than a third of the height without media', async () => {
+		await hero('corner', 1200, '');
+		await nextFrames();
+		const body = el.shadowRoot!.querySelector('.hero__body')!.getBoundingClientRect();
+		const ribbon = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--semantics-brand-ribbon-lg-width'));
+		expect(body.height / 3).toBeLessThan(ribbon);
+		expect(radii('.hero__body')['top-right']).toBeCloseTo(body.height / 3, 0);
+	});
+
+	it('never takes more than a third of a low image', async () => {
+		await hero('corner layout="contained" media-height="90px"');
+		await nextFrames();
+		const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+		const ribbon = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--semantics-brand-ribbon-lg-width'));
+		expect(Math.min(media.width, media.height) / 3).toBeLessThan(ribbon * 2);
+		expect(radii('.hero__media')['top-right']).toBeCloseTo(Math.min(media.width, media.height) / 3, 0);
+	});
+
+	it('chooses a top corner without media, away from the side of the text', async () => {
+		const expected: Record<string, string> = {
+			'bottom-left': 'top-right',
+			'left': 'top-right',
+			'top-left': 'top-right',
+			'bottom-right': 'top-left',
+			'right': 'top-left',
+			'top-right': 'top-left',
+		};
+		for (const [position, corner] of Object.entries(expected)) {
+			await hero(`corner="auto" main-position="${position}"`, 1200, '');
+			expect(el.getAttribute('data-media-corner'), position).toBe(corner);
+			cleanup(el);
+		}
 	});
 
 	it('recomputes the corners when media is slotted after the first render', async () => {

@@ -9,6 +9,38 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Links say where they go to a screen reader.** A link to another domain adds "andere website" to its name by itself, in every component with an `href`. Nobody has to set anything, so nobody can forget it.
+- **A table of contents in a sheet takes you to the heading.** A link in the collapsed sidebar of `nldd-sidebar-section` closes the sheet and moves focus to the heading it points at, in view.
+- **`accessible-label` works the same everywhere.** It names a navigation list, and `nldd-list-item` has one too.
+- **A step stands beside its title.** `nldd-step-cell` puts its dot at the top of a row with `vertical-alignment="top"`, or beside a first line of any height with `marker-offset`, so a step with a title and a paragraph no longer has its dot halfway down the text.
+- **The corner of a hero without an image is smaller.** On a hero with a single title the corner took up most of its height, so the panel looked like a drop. Without media it now takes half the radius, and in any hero never more than a third of the height.
+
+### Added
+
+- **A hint for a link to another website.** An `href` to another origin than the page adds a visually hidden "andere website" to the link's name, in one sentence with "opent in nieuw tabblad" when both apply: "Lees de startnotitie, andere website, opent in nieuw tabblad". It works in `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-avatar`, `nldd-toolbar`, `nldd-list-item` and `nldd-list-item-segment`. Only `http:` and `https:` links count, a subdomain counts as another website too, and there is no way to switch it off: another domain has its own heading, navigation and title. An `external-link` icon stays your own choice. The hint is translated in English, Frisian and Papiamento.
+
+- **A design guideline: don't explain the interface, improve it.** A sentence that says where to click or what a button or filter does shows that the interface does not say it by itself. People read it only once they get stuck, and it goes stale as soon as the interface changes. Change the label, the order or the component instead. Where a hint is still needed, keep it short and put it next to the part it is about, not in an introduction above.
+
+- **`accessible-label` on `nldd-list-item`, the name of the row's action.** For a row whose text does not say enough on its own. It replaces the content of the whole row for a screen reader, the supporting text and a status included, so set it only on a row without text of its own, or put everything that matters in it.
+
+- **`vertical-alignment` and `marker-offset` on `nldd-step-cell`, for a step in a row higher than one line.** The dot stood in the middle of the row, so beside a title with a paragraph under it, it hung halfway down the text. `vertical-alignment="top"` puts it against the row's top padding and `bottom` against its bottom padding, as a whole dot would stand, so a `minor` dot lines up with a `major` one. To line it up with what stands beside it, such as the first line of a text cell or an `nldd-title`, `marker-offset` says how far below the top of the content the middle of the dot stands, measured after the row's padding, as a length or as a percentage of the content's height. Write it in `rem`, so the dot moves along when someone sets a larger font size. The track runs to the middle of the dot, so rows still connect.
+
+### Changed
+
+- **The hint for a new tab follows the name after a comma, in lowercase.** "Lees de startnotitie, opent in nieuw tabblad". The hidden text ran on without a pause, and the hint in an `aria-label` started with a capital after the comma. `nldd-list-item-segment` now gives the hint as well.
+
+- **A link in the sheet of `nldd-sidebar-section` closes it and moves focus to the place it points at.** Left to the browser, the page scrolled under a sheet that was still open, and closing it gave focus back to the trigger without scrolling to it, so focus ended up out of sight. The section now closes the sheet, scrolls to the heading and gives it focus with a temporary tab stop, as `nldd-skip-link` does. A link to another page, in a new tab, with a modifier key or into the sidebar itself is left alone, as is a click you already handled with `preventDefault()`. The content page pattern no longer needs its own click handler.
+
+- **`accessible-label` names a navigation list.** With `type="navigation"` it did nothing, and the landmark kept the default name "Navigatie". It now names the landmark, as it names the list and the search field in the other types. An `aria-label` or `aria-labelledby` on the element still wins. The page patterns use `accessible-label` on their navigation lists.
+
+- **The corner of an `nldd-hero` without media is smaller.** On a hero with a single title, the radius of 60px took up more than 80% of a panel 73px high. Without an image the panel is the whole hero, so it now takes the radius of a panel: half, 0.75X on small screens and 1X above. In any hero the radius is never more than a third of the shortest side of the area it rounds, which also protects a hero with a small `media-height`. Without media the corner applies in every layout, overlap included, and the hero chooses top-right, or top-left for a panel on the right.
+
+### Breaking
+
+- **The translation key for the new-tab hint is renamed.** `components.{name}.opens-in-new-tab-label` is now `components.{name}.link-hint-new-tab-lowercase-label`, next to the new `link-hint-external-lowercase-label` and `link-hint-external-new-tab-lowercase-label`, so the three hints of a link sit together. The text always follows a name after a comma, so the default is lowercase: "opent in nieuw tabblad". If you override this text with `translations` or `setTranslations()`, rename the key and write the text in lowercase. The old key does nothing anymore.
+
 ## [0.8.100](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.99...v0.8.100) (2026-10-16)
 
 ### Highlights

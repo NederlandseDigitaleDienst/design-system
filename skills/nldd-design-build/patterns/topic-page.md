@@ -216,7 +216,7 @@ nldd-shell                            de buitenste schil
       <nldd-list
         slot="right"
         type="navigation"
-        aria-label="Soorten isolatie"
+        accessible-label="Soorten isolatie"
       >
         <nldd-list-item href="#dakisolatie">
           <nldd-text-cell

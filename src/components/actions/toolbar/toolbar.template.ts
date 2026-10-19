@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import type { NLDDToolbar, NLDDToolbarItem, NLDDToolbarTitle } from './toolbar.js';
 import type { NLDDToolbarTranslations } from './toolbar.i18n.js';
 import { linkRel } from '../../../utilities/link-rel.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 import '../icon-button/icon-button.js';
 
 // # Item template
@@ -28,7 +29,8 @@ export function toolbarTitleTemplate(component: NLDDToolbarTitle) {
 
 	// The link takes the mark and the name, never the action slot: a control
 	// inside a link is a control you cannot reach without following the link.
-	// A new-tab link is a change of context, so it announces that (WCAG 2.1 SC 3.2.2).
+	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
+	const hintKey = linkHintKey(component.href, component.target);
 	return html`
 		${component.href ? html`
 			<a class="toolbar__title-link"
@@ -37,7 +39,7 @@ export function toolbarTitleTemplate(component: NLDDToolbarTitle) {
 				rel=${linkRel(null, component.target) || nothing}
 			>
 				<slot name="media"></slot>
-				${titleGroup}${component.target === '_blank' ? html`<span class="toolbar__opens-in-new-tab-hint">${component._t('components.toolbar.opens-in-new-tab-label')}</span>` : nothing}
+				${titleGroup}${hintKey ? html`<span class="toolbar__link-hint">, ${component._t(`components.toolbar.${hintKey}`)}</span>` : nothing}
 			</a>
 		` : html`
 			<slot name="media"></slot>

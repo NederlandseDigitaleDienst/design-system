@@ -7,6 +7,7 @@ import { template } from './list-item.template.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddListItemTranslations } from './list-item.i18n.js';
+import { linkHintKey } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
 
 export type ListItemSize = 'sm' | 'md';
@@ -146,7 +147,9 @@ const NESTED_CONTROLS = [
  * When it renders as a link, `target` and `rel`
  * are forwarded to the inner `<a>` (e.g. `target="_blank" rel="noopener noreferrer"`). With
  * `target="_blank"` the item also injects a visually hidden "opens in new tab"
- * announcement for assistive technology (WCAG 2.1 SC 3.2.2).
+ * announcement for assistive technology (WCAG 2.1 SC 3.2.2), and an `href` to
+ * another website a visually hidden "andere website". An `nldd-icon-cell` with
+ * `external-link` is only the picture of that; the row says it either way.
  *
  * The item synchronizes its ARIA with its parent `nldd-list`'s `type`:
  * - `list` parent       → `role="listitem"`
@@ -161,16 +164,17 @@ const NESTED_CONTROLS = [
  *
  * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
- * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology.
+ * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
  * @attr {boolean} radio - Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it.
+ * @attr {string} accessible-label - Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it.
  * @attr {boolean} reorderable - Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility.
  * @attr {boolean} selected - Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.
  * @attr {boolean} checked - Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it
  * @attr {boolean} expanded - Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live.
- * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, and takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
+ * @attr {boolean} current - Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs.
  * @attr {'page'|'step'|'location'|'date'|'time'|'true'} current-type - The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
@@ -219,6 +223,10 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/** When set, the whole row is one radio of a group. Ignored when href is set. */
 	@property({ type: Boolean, reflect: true })
 	radio = false;
+
+	/** Accessible name of the row's action; replaces the content of the whole row. */
+	@property({ type: String, attribute: 'accessible-label' })
+	accessibleLabel = '';
 
 	/** Set by the parent nldd-list when reorderable is enabled. Used as a CSS hook for drag handle visibility. */
 	@property({ type: Boolean, reflect: true })
@@ -1170,10 +1178,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	override render() {
-		const opensInNewTabLabel =
-			this.href && this.target === '_blank'
-				? this._t('components.list-item.opens-in-new-tab-label')
-				: undefined;
+		const hintKey = linkHintKey(this.href, this.target);
+		const linkHint = hintKey ? this._t(`components.list-item.${hintKey}`) : undefined;
 		// Listbox options are never separate tab stops — only the list's own
 		// search input is in the tab order, and active moves via
 		// aria-activedescendant. Roving tabindex (arrow-navigation) supersedes
@@ -1192,7 +1198,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this.href,
 			this.target,
 			this.rel,
-			opensInNewTabLabel,
+			linkHint,
 			actionTabindex,
 			this._highlighted,
 			this.checkbox,
@@ -1204,6 +1210,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this.disabled,
 			this._parentType === 'navigation' ? 'list' : 'group',
 			this._childrenOpen,
+			this.accessibleLabel,
 		);
 	}
 }

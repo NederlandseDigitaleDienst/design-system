@@ -1,8 +1,9 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { ICONS } from '../../../content/icon/icon.js';
 import './step-cell.js';
 import '../../../layout/box/box.js';
 import '../../../layout/container/container.js';
+import '../../../layout/spacer/spacer.js';
 import '../../../content/title/title.js';
 import '../../../content/text/text.js';
 import '../cell/cell.js';
@@ -27,6 +28,8 @@ export default {
 		level: 'major',
 		status: 'current',
 		size: 'md',
+		verticalAlignment: 'center',
+		markerOffset: '',
 		direction: 'down',
 		position: 'between',
 		text: '2',
@@ -51,6 +54,18 @@ export default {
 			options: ['sm', 'md'],
 			description: 'Hoe breed de baan is en dus hoe groot de stip: sm (16px) voor een tijdlijn van gebeurtenissen, md (24px) waar een cijfer of icoon in moet passen',
 			table: { defaultValue: { summary: 'sm' } },
+		},
+		verticalAlignment: {
+			name: 'vertical-alignment',
+			control: 'select',
+			options: ['top', 'center', 'bottom'],
+			description: 'Waar de stip in de rij staat. top zet hem tegen de bovenste padding van de rij, bottom tegen de onderste, zoals een hele stip zou staan, dus een minor-stip lijnt uit met een major. Om uit te lijnen met wat ernaast staat, zoals de eerste regel van een tekstcel, gebruik je marker-offset. Het spoor loopt altijd tot het midden van de stip',
+			table: { defaultValue: { summary: 'center' } },
+		},
+		markerOffset: {
+			name: 'marker-offset',
+			control: 'text',
+			description: 'Hoe ver onder de bovenkant van de inhoud het midden van de stip staat, als CSS-lengte of als percentage van de hoogte van de inhoud: 0% is de bovenkant, 50% het midden en 100% de onderkant. Voor een rij waarvan de eerste regel hoger is dan een stip, zoals naast een grote titel: de helft van die regel zet de stip ernaast. Gemeten na de padding van de rij. Gebruik rem in plaats van px, zodat de stip meeschuift als iemand de lettergrootte van de browser groter zet. Wint van vertical-alignment',
 		},
 		direction: {
 			control: 'select',
@@ -94,6 +109,8 @@ export const Standaard = {
 				status=${args.status}
 				size=${args.size}
 				level=${args.level}
+				vertical-alignment=${args.verticalAlignment === 'center' ? nothing : args.verticalAlignment}
+				marker-offset=${args.markerOffset || nothing}
 				direction=${args.direction}
 				position=${args.position}
 				line=${args.line}
@@ -682,6 +699,83 @@ export const NieuwsteBovenaan = {
 				supporting-text="3 maart"
 			></nldd-title-cell>
 			</nldd-list-item>
+		</nldd-list>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
+const tallRow = (alignment: string, position: string) => html`
+	<nldd-list-item>
+	<nldd-step-cell
+		status="past"
+		position=${position}
+		vertical-alignment=${alignment === 'center' ? nothing : alignment}
+	></nldd-step-cell>
+	<nldd-spacer-cell size="12"></nldd-spacer-cell>
+	<nldd-text-cell
+		vertical-alignment="top"
+		text=${`vertical-alignment="${alignment}"`}
+		supporting-text="Aanvraag A-1042 voor dakisolatie is in behandeling genomen. Het team neemt contact op als er iets ontbreekt, en anders volgt het besluit binnen zes weken."
+	></nldd-text-cell>
+	</nldd-list-item>
+`;
+
+/**
+ * In een hoge rij staat de stip standaard in het midden. Met
+ * `vertical-alignment="top"` staat hij tegen de bovenste padding van de rij,
+ * met `bottom` tegen de onderste. Het spoor loopt tot het midden van de stip,
+ * dus de rijen sluiten op elkaar aan.
+ */
+export const VerticaleUitlijningen = {
+	name: 'Verticale uitlijningen',
+	render: () => html`
+		<nldd-list
+			dividers="never"
+			accessible-label="Verloop aanvraag"
+			style="max-width: 420px;"
+		>
+			${tallRow('top', 'first')}
+			${tallRow('center', 'between')}
+			${tallRow('bottom', 'last')}
+		</nldd-list>
+	`,
+	parameters: { controls: { disable: true } },
+};
+
+const titledRow = (title: string, body: string, position: string, status = 'past') => html`
+	<nldd-list-item>
+	<nldd-step-cell
+		status=${status}
+		position=${position}
+		marker-offset="0.875rem"
+	></nldd-step-cell>
+	<nldd-spacer-cell size="16"></nldd-spacer-cell>
+	<nldd-cell width="full" vertical-alignment="top">
+		<nldd-title size="4" text=${title} heading-level="3"></nldd-title>
+		<nldd-spacer size="4"></nldd-spacer>
+		<nldd-text>${body}</nldd-text>
+	</nldd-cell>
+	</nldd-list-item>
+`;
+
+/**
+ * Staat er een grotere titel naast de stip, dan is zijn eerste regel hoger dan
+ * een stip, en past `top` niet. `marker-offset` zegt hoe ver onder de bovenkant
+ * van de inhoud het midden van de stip komt: de helft van die regel zet hem
+ * naast de titel. In `rem`, zodat hij meeschuift met de lettergrootte van de
+ * browser.
+ */
+export const NaastEenTitelMetTekst = {
+	name: 'Naast een titel met tekst',
+	render: () => html`
+		<nldd-list
+			dividers="never"
+			accessible-label="Verloop aanvraag"
+			style="max-width: 560px;"
+		>
+			${titledRow('Aanvraag ingediend', 'Aanvraag A-1042 voor dakisolatie is ontvangen en staat in de wachtrij van team Uitvoering.', 'first')}
+			${titledRow('In behandeling genomen', 'Het team kijkt of de aanvraag compleet is, en neemt contact op als er iets ontbreekt.', 'between', 'current')}
+			${titledRow('Besluit', 'Het besluit volgt binnen zes weken na het indienen.', 'last', 'future')}
 		</nldd-list>
 	`,
 	parameters: { controls: { disable: true } },
