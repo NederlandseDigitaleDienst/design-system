@@ -269,6 +269,7 @@ describe('nldd-sidebar-section', () => {
 						<nldd-list-item href="#wat-je-nodig-hebt" text="Wat je nodig hebt"></nldd-list-item>
 						<nldd-list-item href="#zijbalk-anker" text="In de zijbalk"></nldd-list-item>
 						<nldd-list-item href="/andere-pagina#wat-je-nodig-hebt" text="Andere pagina"></nldd-list-item>
+						<nldd-list-item href="#wat-je-nodig-hebt" text="Download"></nldd-list-item>
 					</nldd-list>
 					<p slot="sidebar" id="zijbalk-anker">Onderaan de zijbalk</p>
 				</nldd-sidebar-section>
@@ -335,6 +336,30 @@ describe('nldd-sidebar-section', () => {
 			await makeToc();
 			expect(clickOn(anchorOf(2))).toBe(false);
 			expect(dialog()!.open).toBe(true);
+		});
+
+		it('leaves a download link alone', async () => {
+			await makeToc();
+			anchorOf(3).setAttribute('download', '');
+			expect(clickOn(anchorOf(3))).toBe(false);
+			expect(dialog()!.open).toBe(true);
+		});
+
+		it('drops a jump whose close never came once the sheet opens again', async () => {
+			await makeToc();
+			const sheet = el.shadowRoot!.querySelector('.sidebar-section__sheet') as HTMLElement & { hide(): void };
+			const hide = sheet.hide;
+			// The click asks the sheet to close, and no close follows.
+			sheet.hide = () => {};
+			anchorOf(0).click();
+			sheet.hide = hide;
+			// The sheet opens again before the jump ever happened.
+			sheet.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
+			const done = closed();
+			el.hide();
+			await done;
+			expect(document.activeElement).not.toBe(el.querySelector('#wat-je-nodig-hebt'));
+			history.replaceState(history.state, '', location.pathname + location.search);
 		});
 
 		it('leaves a click with a modifier key alone', async () => {

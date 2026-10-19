@@ -125,7 +125,9 @@ export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container')
 		super.updated(changed);
 		if (changed.has('markerOffset')) {
 			const offset = (this.markerOffset ?? '').trim();
-			const valid = offset !== '' && !CSS_WIDE_KEYWORDS.has(offset.toLowerCase()) && CSS.supports('top', offset);
+			// padding-top takes a length or a percentage and nothing else, where top
+			// also takes `auto`, which is invalid in the calc() the offset ends up in.
+			const valid = offset !== '' && !CSS_WIDE_KEYWORDS.has(offset.toLowerCase()) && CSS.supports('padding-top', offset);
 			if (valid) this.style.setProperty('--_step-cell-marker-offset', offset);
 			else this.style.removeProperty('--_step-cell-marker-offset');
 			this.toggleAttribute('data-marker-offset', valid);

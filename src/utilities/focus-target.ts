@@ -9,7 +9,9 @@
  */
 export function samePageHash(href: string): string {
 	try {
-		const url = new URL(href, location.href);
+		// Resolved as the browser resolves a link: against the base URL, which a
+		// <base href> can move away from the page itself.
+		const url = new URL(href, document.baseURI);
 		const samePage = url.origin === location.origin
 			&& url.pathname === location.pathname
 			&& url.search === location.search;

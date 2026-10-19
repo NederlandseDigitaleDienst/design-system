@@ -415,4 +415,11 @@ describe('nldd-step-cell – where the dot stands', () => {
 		expect(againstPadding(cell)).toBeLessThan(1);
 		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('marker-offset="hoog"'))).toBe(true);
 	});
+
+	it('falls back for marker-offset="auto", which is not a length', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const { cell } = await row('marker-offset="auto" vertical-alignment="top"');
+		expect(cell.hasAttribute('data-marker-offset')).toBe(false);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('marker-offset="auto"'))).toBe(true);
+	});
 });
