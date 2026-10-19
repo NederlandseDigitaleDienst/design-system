@@ -278,7 +278,7 @@ describe('nldd-icon-button – href / link rendering', () => {
 
 	it('overrides the new-tab wording via the translations property', async () => {
 		el = await fixture<NLDDIconButton>('<nldd-icon-button href="/overzicht" target="_blank" icon="arrow-left" text="Terug"></nldd-icon-button>');
-		el.translations = { 'components.icon-button.opens-in-new-tab-lowercase-label': 'Opens in a new tab' };
+		el.translations = { 'components.icon-button.link-hint-new-tab-lowercase-label': 'Opens in a new tab' };
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('a')!.getAttribute('aria-label')).toBe('Terug, Opens in a new tab');
 	});

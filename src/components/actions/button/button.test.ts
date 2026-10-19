@@ -390,7 +390,7 @@ describe('nldd-button – href / link rendering', () => {
 
 	it('overrides the new-tab wording via the translations property', async () => {
 		el = await fixture<NLDDButton>('<nldd-button href="/overzicht" target="_blank" text="Terug"></nldd-button>');
-		el.translations = { 'components.button.opens-in-new-tab-lowercase-label': 'opens in a new tab' };
+		el.translations = { 'components.button.link-hint-new-tab-lowercase-label': 'opens in a new tab' };
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.button__link-hint')?.textContent).toBe(', opens in a new tab');
 	});

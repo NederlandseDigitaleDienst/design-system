@@ -31084,7 +31084,7 @@
               },
               "default": "'center'",
               "fieldName": "verticalAlignment",
-              "description": "Where the dot stands in the row (default 'center'). `top` puts it beside the first line of an `nldd-text-cell` of the row's `size`, and `bottom` beside the last line, and never closer to the edge than a whole dot fits: the middle of every dot stands on the same line, so a `minor` dot lines up with a `major` one. The track runs to the middle of the dot either way, so consecutive rows still connect"
+              "description": "Where the dot stands in the row (default 'center'). `top` puts it against the row's top padding and `bottom` against its bottom padding, as a whole dot would stand, so a `minor` dot lines up with a `major` one. To line it up with what stands beside it, such as the first line of a text cell or a title, use `marker-offset`. The track runs to the middle of the dot either way, so consecutive rows still connect"
             },
             {
               "name": "marker-offset",

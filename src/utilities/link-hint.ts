@@ -11,15 +11,15 @@
  *
  * Returns null when the link needs no hint.
  */
-export type LinkHintKey = 'external-site-lowercase-label' | 'opens-in-new-tab-lowercase-label' | 'external-site-opens-in-new-tab-lowercase-label';
+export type LinkHintKey = 'link-hint-external-lowercase-label' | 'link-hint-new-tab-lowercase-label' | 'link-hint-external-new-tab-lowercase-label';
 
 export function linkHintKey(href: string | null | undefined, target: string | null | undefined): LinkHintKey | null {
 	if (!href) return null;
 	const external = isExternalHref(href);
 	const newTab = target === '_blank';
-	if (external && newTab) return 'external-site-opens-in-new-tab-lowercase-label';
-	if (external) return 'external-site-lowercase-label';
-	if (newTab) return 'opens-in-new-tab-lowercase-label';
+	if (external && newTab) return 'link-hint-external-new-tab-lowercase-label';
+	if (external) return 'link-hint-external-lowercase-label';
+	if (newTab) return 'link-hint-new-tab-lowercase-label';
 	return null;
 }
 

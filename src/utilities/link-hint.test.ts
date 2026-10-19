@@ -14,15 +14,15 @@ describe('linkHintKey', () => {
 	});
 
 	it('says a link to another origin goes to another website', () => {
-		expect(linkHintKey('https://open.overheid.nl/', null)).toBe('external-site-lowercase-label');
+		expect(linkHintKey('https://open.overheid.nl/', null)).toBe('link-hint-external-lowercase-label');
 	});
 
 	it('says a link opens in a new tab', () => {
-		expect(linkHintKey('/overzicht', '_blank')).toBe('opens-in-new-tab-lowercase-label');
+		expect(linkHintKey('/overzicht', '_blank')).toBe('link-hint-new-tab-lowercase-label');
 	});
 
 	it('makes one sentence of both', () => {
-		expect(linkHintKey('https://open.overheid.nl/', '_blank')).toBe('external-site-opens-in-new-tab-lowercase-label');
+		expect(linkHintKey('https://open.overheid.nl/', '_blank')).toBe('link-hint-external-new-tab-lowercase-label');
 	});
 });
 

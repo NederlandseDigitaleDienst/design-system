@@ -14,18 +14,18 @@ here; consult the commit history if you need that level of detail.
 - **Links say where they go to a screen reader.** A link to another domain adds "andere website" to its name by itself, in every component with an `href`. Nobody has to set anything, so nobody can forget it.
 - **A table of contents in a sheet takes you to the heading.** A link in the collapsed sidebar of `nldd-sidebar-section` closes the sheet and moves focus to the heading it points at, in view.
 - **`accessible-label` works the same everywhere.** It names a navigation list, and `nldd-list-item` has one too.
-- **A step stands beside its title.** `nldd-step-cell` puts its dot beside the first line of a row with `vertical-alignment="top"`, or at a set distance with `marker-offset`, so a step with a title and a paragraph no longer has its dot halfway down the text.
+- **A step stands beside its title.** `nldd-step-cell` puts its dot at the top of a row with `vertical-alignment="top"`, or beside a first line of any height with `marker-offset`, so a step with a title and a paragraph no longer has its dot halfway down the text.
 - **The corner of a hero without an image is smaller.** On a hero with a single title the corner took up most of its height, so the panel looked like a drop. Without media it now takes half the radius, and in any hero never more than a third of the height.
 
 ### Added
 
 - **A hint for a link to another website.** An `href` to another origin than the page adds a visually hidden "andere website" to the link's name, in one sentence with "opent in nieuw tabblad" when both apply: "Lees de startnotitie, andere website, opent in nieuw tabblad". It works in `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-avatar`, `nldd-toolbar`, `nldd-list-item` and `nldd-list-item-segment`. Only `http:` and `https:` links count, a subdomain counts as another website too, and there is no way to switch it off: another domain has its own heading, navigation and title. An `external-link` icon stays your own choice. The hint is translated in English, Frisian and Papiamento.
 
-- **A design guideline: don't explain the interface, improve it.** A sentence that says where to click or what a filter does shows that the interface does not say it by itself. People read it only once they get stuck, and it goes stale as soon as the interface changes. Change the label, the order or the component instead. Where a hint is still needed, keep it short and put it next to the part it is about, not in an introduction above.
+- **A design guideline: don't explain the interface, improve it.** A sentence that says where to click or what a button or filter does shows that the interface does not say it by itself. People read it only once they get stuck, and it goes stale as soon as the interface changes. Change the label, the order or the component instead. Where a hint is still needed, keep it short and put it next to the part it is about, not in an introduction above.
 
 - **`accessible-label` on `nldd-list-item`, the name of the row's action.** For a row whose text does not say enough on its own. It replaces the content of the whole row for a screen reader, the supporting text and a status included, so set it only on a row without text of its own, or put everything that matters in it.
 
-- **`vertical-alignment` and `marker-offset` on `nldd-step-cell`, for a step in a row higher than one line.** The dot stood in the middle of the row, so beside a title with a paragraph under it, it hung halfway down the text. `vertical-alignment="top"` puts it beside the first line of an `nldd-text-cell` of the row's `size`, and `bottom` beside the last one; the middle of every dot stands on the same line, so a `minor` dot lines up with a `major` one. For a first line of another height, such as an `nldd-title`, `marker-offset` says how far below the top of the content the middle of the dot stands, measured after the row's padding. Write it in `rem`, so the dot moves along when someone sets a larger font size. The track runs to the middle of the dot, so rows still connect.
+- **`vertical-alignment` and `marker-offset` on `nldd-step-cell`, for a step in a row higher than one line.** The dot stood in the middle of the row, so beside a title with a paragraph under it, it hung halfway down the text. `vertical-alignment="top"` puts it against the row's top padding and `bottom` against its bottom padding, as a whole dot would stand, so a `minor` dot lines up with a `major` one. To line it up with what stands beside it, such as the first line of a text cell or an `nldd-title`, `marker-offset` says how far below the top of the content the middle of the dot stands, measured after the row's padding. Write it in `rem`, so the dot moves along when someone sets a larger font size. The track runs to the middle of the dot, so rows still connect.
 
 ### Changed
 
@@ -39,7 +39,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Breaking
 
-- **The translation key for the new-tab hint is renamed.** `components.{name}.opens-in-new-tab-label` is now `components.{name}.opens-in-new-tab-lowercase-label`, because the text always follows a name after a comma. The default text is lowercase: "opent in nieuw tabblad". If you override this text with `translations` or `setTranslations()`, rename the key and write the text in lowercase. The old key does nothing anymore.
+- **The translation key for the new-tab hint is renamed.** `components.{name}.opens-in-new-tab-label` is now `components.{name}.link-hint-new-tab-lowercase-label`, next to the new `link-hint-external-lowercase-label` and `link-hint-external-new-tab-lowercase-label`, so the three hints of a link sit together. The text always follows a name after a comma, so the default is lowercase: "opent in nieuw tabblad". If you override this text with `translations` or `setTranslations()`, rename the key and write the text in lowercase. The old key does nothing anymore.
 
 ## [0.8.100](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.99...v0.8.100) (2026-10-16)
 
