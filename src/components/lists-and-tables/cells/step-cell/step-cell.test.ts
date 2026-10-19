@@ -422,4 +422,22 @@ describe('nldd-step-cell – where the dot stands', () => {
 		expect(cell.hasAttribute('data-marker-offset')).toBe(false);
 		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('marker-offset="auto"'))).toBe(true);
 	});
+
+	it('takes a percentage of the content height in marker-offset: 50% is the middle', async () => {
+		const middle = dotCenter((await row('')).cell);
+		cleanup(root);
+		const { cell } = await row('marker-offset="50%"');
+		expect(Math.abs(dotCenter(cell) - middle)).toBeLessThan(1);
+	});
+
+	it('puts marker-offset="0%" on the top of the content', async () => {
+		const { cell } = await row('marker-offset="0%"');
+		const padding = parseFloat(getComputedStyle(cell).paddingTop);
+		expect(Math.abs(dotCenter(cell) - lane(cell).top - padding)).toBeLessThan(1);
+	});
+
+	it('takes a calc() of lengths in marker-offset', async () => {
+		const { cell } = await row('marker-offset="calc(1rem - 2px)"');
+		expect(cell.hasAttribute('data-marker-offset')).toBe(true);
+	});
 });

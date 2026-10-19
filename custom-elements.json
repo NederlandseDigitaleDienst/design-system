@@ -31093,7 +31093,7 @@
               },
               "default": "''",
               "fieldName": "markerOffset",
-              "description": "How far below the top of the row's content the middle of the dot stands, as a CSS length. For a row whose first line is not as high as a whole dot, such as a large title beside it: half the height of that line puts the dot beside it. Measured after the row's padding, so it stays right when `size` changes that padding. Prefer `rem` over `px`, so the dot moves along when someone sets a larger font size in the browser. Wins over `vertical-alignment`; an invalid value falls back to it and says so in development"
+              "description": "How far below the top of the row's content the middle of the dot stands, as a CSS length or a percentage of the content's height: `0%` is its top, `50%` its middle and `100%` its bottom. For a row whose first line is not as high as a whole dot, such as a large title beside it: half the height of that line puts the dot beside it. Measured after the row's padding, so it stays right when `size` changes that padding. Prefer `rem` over `px`, so the dot moves along when someone sets a larger font size in the browser. Wins over `vertical-alignment`; an invalid value falls back to it and says so in development"
             },
             {
               "name": "direction",

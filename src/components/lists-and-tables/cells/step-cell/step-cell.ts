@@ -19,7 +19,7 @@
  * @attr {'past' | 'current' | 'future'} status - How far along this row is (default 'past'); the same values as `nldd-step-bar-item`. It colors the dot and the track around it: covered above where you are, still ahead below
  * @attr {'sm' | 'md'} size - How wide the lane is and so how big the dot: `sm` (default, 16px) for steps without a number, `md` (24px) where a number or an icon has to fit. Every row in one list takes the same size, or the track jumps
  * @attr {'top' | 'center' | 'bottom'} vertical-alignment - Where the dot stands in the row (default 'center'). `top` puts it against the row's top padding and `bottom` against its bottom padding, as a whole dot would stand, so a `minor` dot lines up with a `major` one. To line it up with what stands beside it, such as the first line of a text cell or a title, use `marker-offset`. The track runs to the middle of the dot either way, so consecutive rows still connect
- * @attr {string} marker-offset - How far below the top of the row's content the middle of the dot stands, as a CSS length. For a row whose first line is not as high as a whole dot, such as a large title beside it: half the height of that line puts the dot beside it. Measured after the row's padding, so it stays right when `size` changes that padding. Prefer `rem` over `px`, so the dot moves along when someone sets a larger font size in the browser. Wins over `vertical-alignment`; an invalid value falls back to it and says so in development
+ * @attr {string} marker-offset - How far below the top of the row's content the middle of the dot stands, as a CSS length or a percentage of the content's height: `0%` is its top, `50%` its middle and `100%` its bottom. For a row whose first line is not as high as a whole dot, such as a large title beside it: half the height of that line puts the dot beside it. Measured after the row's padding, so it stays right when `size` changes that padding. Prefer `rem` over `px`, so the dot moves along when someone sets a larger font size in the browser. Wins over `vertical-alignment`; an invalid value falls back to it and says so in development
  * @attr {'down' | 'up'} direction - The direction the timeline moves forward in: `down` (default) puts the past above, `up` below. Only the current step has half a track, so this only has an effect there
  * @attr {'first' | 'between' | 'last' | 'only'} position - Place of the row in the list as it stands on screen (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `first` is the top row and only has a line below, `last` the bottom row and only has a line above, also with `direction="up"`: position is about where the row stands, `direction` about which way time runs. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level="none"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it
  * @attr {'auto' | 'top' | 'bottom' | 'both' | 'none'} line - Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line="both"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `level="none"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you
@@ -125,14 +125,14 @@ export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container')
 		super.updated(changed);
 		if (changed.has('markerOffset')) {
 			const offset = (this.markerOffset ?? '').trim();
-			// padding-top takes a length or a percentage and nothing else, where top
-			// also takes `auto`, which is invalid in the calc() the offset ends up in.
-			const valid = offset !== '' && !CSS_WIDE_KEYWORDS.has(offset.toLowerCase()) && CSS.supports('padding-top', offset);
+			// margin-top takes a length or a percentage, as the offset does, and also
+			// `auto`, which is no position: that one is turned away by name.
+			const valid = offset !== '' && !CSS_WIDE_KEYWORDS.has(offset.toLowerCase()) && offset.toLowerCase() !== 'auto' && CSS.supports('margin-top', offset);
 			if (valid) this.style.setProperty('--_step-cell-marker-offset', offset);
 			else this.style.removeProperty('--_step-cell-marker-offset');
 			this.toggleAttribute('data-marker-offset', valid);
 			if (import.meta.env?.DEV && offset !== '' && !valid) {
-				console.warn(`<nldd-step-cell>: marker-offset="${offset}" is not a CSS length, so the dot falls back to vertical-alignment. Use a length such as "1rem".`, this);
+				console.warn(`<nldd-step-cell>: marker-offset="${offset}" is not a CSS length or percentage, so the dot falls back to vertical-alignment. Use a length such as "1rem" or a percentage such as "25%".`, this);
 			}
 		}
 		if (!import.meta.env?.DEV) return;

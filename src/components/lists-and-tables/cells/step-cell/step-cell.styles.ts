@@ -51,15 +51,15 @@ export const stepCellStyles = css`
 	}
 
 	:host([vertical-alignment="top"]) {
-		--_step-cell-marker-center: calc(var(--context-cell-padding-block, 0px) + var(--_step-cell-lane-size) / 2);
+		--_step-cell-marker-center: calc(var(--_step-cell-lane-size) / 2);
 	}
 
 	:host([vertical-alignment="bottom"]) {
-		--_step-cell-marker-center: calc(100% - var(--context-cell-padding-block, 0px) - var(--_step-cell-lane-size) / 2);
+		--_step-cell-marker-center: calc(100% - var(--_step-cell-lane-size) / 2);
 	}
 
 	:host([data-marker-offset]) {
-		--_step-cell-marker-center: calc(var(--context-cell-padding-block, 0px) + var(--_step-cell-marker-offset));
+		--_step-cell-marker-center: var(--_step-cell-marker-offset);
 	}
 
 	/* Bleeds back over the host's block padding, so consecutive rows connect. */
@@ -69,6 +69,13 @@ export const stepCellStyles = css`
 		height: calc(100% + 2 * var(--context-cell-padding-block, 0px));
 		min-height: var(--primitives-space-48);
 		margin-block: calc(var(--context-cell-padding-block, 0px) * -1);
+	}
+
+	/* The row's content box: the dot is placed in it, and the lines reach out
+	   over the padding from it. */
+	.step-cell__content {
+		position: absolute;
+		inset: var(--context-cell-padding-block, 0px) 0;
 	}
 
 	/* The ring, but only left and right. A spread would put the same band above
@@ -95,18 +102,18 @@ export const stepCellStyles = css`
 	   without this the track breaks at every row. The top line needs nothing —
 	   the row above already covers the band. */
 	.step-cell__full-line {
-		top: 0;
-		bottom: calc(-1 * var(--semantics-dividers-thickness));
+		top: calc(-1 * var(--context-cell-padding-block, 0px));
+		bottom: calc(-1 * var(--context-cell-padding-block, 0px) - var(--semantics-dividers-thickness));
 	}
 
 	.step-cell__top-line {
-		top: 0;
-		height: var(--_step-cell-marker-center);
+		top: calc(-1 * var(--context-cell-padding-block, 0px));
+		height: calc(var(--context-cell-padding-block, 0px) + var(--_step-cell-marker-center));
 	}
 
 	.step-cell__bottom-line {
 		top: var(--_step-cell-marker-center);
-		bottom: calc(-1 * var(--semantics-dividers-thickness));
+		bottom: calc(-1 * var(--context-cell-padding-block, 0px) - var(--semantics-dividers-thickness));
 	}
 
 	:host([status="future"]:not([line])) .step-cell__top-line,

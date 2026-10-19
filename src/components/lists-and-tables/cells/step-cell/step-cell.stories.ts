@@ -65,7 +65,7 @@ export default {
 		markerOffset: {
 			name: 'marker-offset',
 			control: 'text',
-			description: 'Hoe ver onder de bovenkant van de inhoud het midden van de stip staat, als CSS-lengte. Voor een rij waarvan de eerste regel hoger is dan een stip, zoals naast een grote titel: de helft van die regel zet de stip ernaast. Gemeten na de padding van de rij. Gebruik rem in plaats van px, zodat de stip meeschuift als iemand de lettergrootte van de browser groter zet. Wint van vertical-alignment',
+			description: 'Hoe ver onder de bovenkant van de inhoud het midden van de stip staat, als CSS-lengte of als percentage van de hoogte van de inhoud: 0% is de bovenkant, 50% het midden en 100% de onderkant. Voor een rij waarvan de eerste regel hoger is dan een stip, zoals naast een grote titel: de helft van die regel zet de stip ernaast. Gemeten na de padding van de rij. Gebruik rem in plaats van px, zodat de stip meeschuift als iemand de lettergrootte van de browser groter zet. Wint van vertical-alignment',
 		},
 		direction: {
 			control: 'select',
