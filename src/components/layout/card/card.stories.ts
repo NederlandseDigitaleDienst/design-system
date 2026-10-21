@@ -306,3 +306,18 @@ export const KaartAlsKnop = () => html`
 		</nldd-card>
 	</nldd-container>
 `;
+
+export const Vlakken = {
+	render: () => html`
+		<nldd-container gap="24">
+			${(['base', 'tinted', 'accent-tinted'] as const).map((background) => html`
+				<nldd-card background=${background} style="max-width: 360px;">
+					<nldd-container padding="16">
+						<nldd-rich-text><p>background="${background}"${background === 'base' ? ' (default)' : ''}${background === 'accent-tinted' ? ' — een tint van de themakleur, met hetzelfde contrast als tinted' : ''}</p></nldd-rich-text>
+					</nldd-container>
+				</nldd-card>
+			`)}
+		</nldd-container>
+	`,
+	parameters: { controls: { disable: true } },
+};

@@ -45,7 +45,7 @@ export default {
 		background: {
 			control: 'select',
 			options: ['tinted', 'base', 'accent-tinted', 'critical'],
-			description: 'Welk vlak de box tekent. `tinted` voor een box op een plain page, `base` voor een box op een al getinte parent (border ring krijgt +2 stappen voor extra contrast), `critical` voor een gebied met onomkeerbare acties.',
+			description: 'Welk vlak de box tekent. `tinted` voor een box op een plain page, `base` voor een box op een al getinte parent (border ring krijgt +2 stappen voor extra contrast), `accent-tinted` voor een vlak in een tint van de themakleur, `critical` voor een gebied met onomkeerbare acties.',
 			table: { defaultValue: { summary: 'tinted' } },
 		},
 	},
@@ -121,6 +121,11 @@ export const Vlakken = {
 		</nldd-container>
 	</nldd-box>
 			</div>
+			<nldd-box background="accent-tinted">
+				<nldd-container padding="16">
+					<nldd-rich-text><p>background="accent-tinted" — een tint van de themakleur, met hetzelfde contrast als tinted</p></nldd-rich-text>
+				</nldd-container>
+			</nldd-box>
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
