@@ -8,6 +8,12 @@
  * grid of your own: the collection sets the columns from `item-min-width` and
  * the available width, and the gap per breakpoint.
  *
+ * A grid keeps as many columns as fit, also when there are fewer items, so a
+ * page of results lines up with the next. For a fixed set of a few cards
+ * without paging, such as three points on a landing page, use
+ * `nldd-container layout="grid"` instead: its empty columns collapse, so the
+ * cards fill the row.
+ *
  * In grid and stack modes, items are paginated via a load-more button. In
  * horizontal scroll, the prev/next controls and the edge fade appear only when
  * the items overflow the container. Use horizontal scroll for items that
