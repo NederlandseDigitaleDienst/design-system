@@ -22,6 +22,11 @@
  *   <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button>
  * </fieldset>
  *
+ * On a selected row of nldd-list-item a checked control takes the colors of the
+ * row: the row sets `--context-selected-indicator-color` and
+ * `--context-selected-contrast-color`, because the accent can fall below 3:1 on
+ * the gray of a selected row.
+ *
  * @element nldd-radio-button
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state

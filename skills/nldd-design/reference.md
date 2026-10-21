@@ -773,6 +773,8 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 ### `<nldd-checkbox>`
 
+On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1117,7 +1119,7 @@ A password input field with visibility toggle and validation states.
 
 ### `<nldd-radio-button>`
 
-WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role="radiogroup" aria-labelledby="options-label"> <legend id="options-label">Kies een optie</legend> <nldd-radio-button name="options" value="1" accessible-label="Optie 1"></nldd-radio-button> <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button> </fieldset>
+WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role="radiogroup" aria-labelledby="options-label"> <legend id="options-label">Kies een optie</legend> <nldd-radio-button name="options" value="1" accessible-label="Optie 1"></nldd-radio-button> <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button> </fieldset> On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
 
 **Attributes**
 
@@ -1313,7 +1315,7 @@ A numeric control with increment and decrement buttons.
 
 ### `<nldd-switch>`
 
-A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
+A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility. On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
 
 **Attributes**
 
