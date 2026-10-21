@@ -87,10 +87,10 @@
 	--semantics-categories-accent-filled-highlight-border-color: var(--semantics-categories-rood-filled-highlight-border-color);
 	--semantics-categories-accent-filled-content-color: var(--semantics-categories-rood-filled-content-color);
 	--semantics-categories-accent-filled-content-secondary-color: var(--semantics-categories-rood-filled-content-secondary-color);
-	--semantics-categories-accent-tinted-background-color: var(--semantics-categories-neutral-tinted-background-color);
-	--semantics-categories-accent-tinted-highlight-border-color: var(--semantics-categories-neutral-tinted-highlight-border-color);
-	--semantics-categories-accent-tinted-content-color: var(--semantics-categories-neutral-tinted-content-color);
-	--semantics-categories-accent-tinted-content-secondary-color: var(--semantics-categories-neutral-tinted-content-secondary-color);
+	--semantics-categories-accent-tinted-background-color: var(--semantics-categories-rood-tinted-background-color);
+	--semantics-categories-accent-tinted-highlight-border-color: var(--semantics-categories-rood-tinted-highlight-border-color);
+	--semantics-categories-accent-tinted-content-color: var(--semantics-categories-rood-tinted-content-color);
+	--semantics-categories-accent-tinted-content-secondary-color: var(--semantics-categories-rood-tinted-content-secondary-color);
 
 
 	/* ## Links */

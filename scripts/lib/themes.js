@@ -727,10 +727,9 @@ export function themeCss(name, palette, ref, { grounds, neutral, order } = {}) {
 		});
 	}
 	for (const token of CATEGORY_TOKENS) {
-		// A tint (tag, banner) reads as a status message in red or orange; a
-		// filled shape such as a progress bar reads as an amount.
-		const category = STATUS_THEMES.includes(name) && token.startsWith('tinted') ? 'neutral' : name;
-		const own = `var(--semantics-categories-${category}-${token})`;
+		// Red and orange keep their color on a tag too: a tag that must not read
+		// as a message takes color="neutral". The banner reads surfaces instead.
+		const own = `var(--semantics-categories-${name}-${token})`;
 		// The text and icon on the tint (tag, banner) follow the accent text.
 		const tintText = DARK_ACCENT_TEXT_STEPS.has(name) && /^tinted-content/.test(token);
 		// In light mode that is the accent text, near-black for yellow.

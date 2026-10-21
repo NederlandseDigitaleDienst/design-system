@@ -241,15 +241,15 @@ for (const { name, hex } of themes) {
 			}
 		});
 
-		test(`${name}: only the button, the hero, the badge, the status bar, the current tab, the focus ring and the filled category keep the theme color`, () => {
+		test(`${name}: only the button, the hero, the badge, the status bar, the current tab, the focus ring and the category keep the theme color`, () => {
 			const rule = themeCss(name, palette, hex, { grounds });
 			const ownColor = [...rule.matchAll(new RegExp(`^\\t(--[\\w-]+): .*--(?:primitives-color|semantics-categories)-${name}-`, 'gm'))].map((m) => m[1]);
 			assert.ok(ownColor.length > 0);
 			for (const prop of ownColor) {
-				const kept = ['--semantics-buttons-accent-filled-', '--semantics-surfaces-accent-filled-', '--semantics-content-on-accent-filled-', '--semantics-categories-accent-filled-', '--components-badge-accent-', '--components-tab-bar-is-current-', '--components-status-bar-accent-', '--semantics-list-items-is-highlighted-', '--semantics-focus-ring-', ...(DARK_LINK_STEPS.has(name) ? ['--semantics-links-'] : []), ...(ACCENT_TEXT_IN_COLOR.has(name) ? ['--semantics-content-accent-color', '--semantics-buttons-accent-transparent-'] : []), ...(STATUS_SELECTION_IN_COLOR.includes(name) ? ['--semantics-controls-is-selected-', '--semantics-buttons-neutral-', '--semantics-list-items-is-highlighted-'] : [])];
+				const kept = ['--semantics-buttons-accent-filled-', '--semantics-surfaces-accent-filled-', '--semantics-content-on-accent-filled-', '--semantics-categories-accent-', '--components-badge-accent-', '--components-tab-bar-is-current-', '--components-status-bar-accent-', '--semantics-list-items-is-highlighted-', '--semantics-focus-ring-', ...(DARK_LINK_STEPS.has(name) ? ['--semantics-links-'] : []), ...(ACCENT_TEXT_IN_COLOR.has(name) ? ['--semantics-content-accent-color', '--semantics-buttons-accent-transparent-'] : []), ...(STATUS_SELECTION_IN_COLOR.includes(name) ? ['--semantics-controls-is-selected-', '--semantics-buttons-neutral-', '--semantics-list-items-is-highlighted-'] : [])];
 				assert.ok(kept.some((prefix) => prop.startsWith(prefix)), prop);
 			}
-			assert.match(rule, /--semantics-categories-accent-tinted-background-color: var\(--semantics-categories-neutral-/);
+			assert.match(rule, new RegExp(`--semantics-categories-accent-tinted-background-color: var\\(--semantics-categories-${name}-`));
 		});
 	}
 
