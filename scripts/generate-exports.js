@@ -85,6 +85,8 @@ const exports = {
 	// map answers nothing that is not listed in it.
 	'./favicon.svg': './dist/favicon.svg',
 	'./touch-icon.png': './dist/touch-icon.png',
+	// The same marks per theme: favicon/geel/favicon.svg and touch-icon.png.
+	'./favicon/*': './dist/favicon/*',
 	// Breakpoints for consumers that drive matchMedia / layout logic from the
 	// same source as CSS. Replaced the ./tokens aggregator, which only ever
 	// re-exported this one module.

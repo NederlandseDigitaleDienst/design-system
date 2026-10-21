@@ -95,7 +95,7 @@ jobs:
         run: |
           set -e
           npm run generate:themes
-          test -z "$(git status --porcelain src/assets/styles/themes src/assets/styles/themes.css)" \
+          test -z "$(git status --porcelain src/assets/styles/themes src/assets/styles/themes.css src/assets/favicon)" \
             || (echo "::error::De themabestanden zijn verouderd. Draai 'npm run generate:themes' en commit het resultaat." && exit 1)
 
       # The manifest is committed rather than built on publish, so a change to a

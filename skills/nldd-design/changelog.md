@@ -22,6 +22,7 @@ here; consult the commit history if you need that level of detail.
 ### Added
 
 - **A stylesheet per theme.** Import `@nldd/design-system/themes/geel.css` and set `data-nldd-theme="geel"` on `<html>`. `@nldd/design-system/themes` holds all of them, for a site that switches without a reload. Lintblauw is the default and needs no file. A theme sets the accent scale, the tokens per role and, for cool colors, a gray with a hint of the theme color. The "Thema's" page in Storybook explains what each role does.
+- **A favicon and touch icon per theme.** `@nldd/design-system/favicon/geel/favicon.svg` and `…/geel/touch-icon.png`, and the same for every theme, have the field behind the ribbon in the theme color. The ribbon stays lintblauw and the coat of arms white. Without a theme, `@nldd/design-system/favicon.svg` and `touch-icon.png` stay as they are.
 - **Surface tokens in the theme color.** `--semantics-surfaces-accent-tinted-*` is a tint of the theme color with the contrast of `tinted`. `--semantics-surfaces-accent-filled-*` is the panel of the hero, with `--semantics-content-on-accent-filled-*` for the text on it.
 - **`background="accent-tinted"` on `nldd-box`, `nldd-card` and the page sections.** The area takes the tint of the theme color.
 - **`color="inherit"` on `nldd-checkbox`, `nldd-radio-button` and `nldd-switch`, and on their fields.** A checked control takes the text color of the area it sits on, and the color of that area for its mark. Use it on the accent panel of the hero, where the theme color would not stand out.

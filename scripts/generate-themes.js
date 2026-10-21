@@ -4,7 +4,8 @@
  *
  * Reads scripts/reference-colors.json and the palettes in
  * src/assets/styles/colors.generated.css, and writes
- * src/assets/styles/themes/<name>.css and src/assets/styles/themes.css.
+ * src/assets/styles/themes/<name>.css and src/assets/styles/themes.css, plus a
+ * favicon per theme in src/assets/favicon/<name>/favicon.svg.
  * The rules live in scripts/lib/themes.js.
  *
  * Run after changing the reference colors or the palettes:
@@ -20,6 +21,10 @@ import { neutralReference, parsePalettes, propertyOrder, selectionGrounds, theme
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const STYLES = join(ROOT, 'src/assets/styles');
 const OUTPUT_DIR = join(STYLES, 'themes');
+const FAVICON_DIR = join(ROOT, 'src/assets/favicon');
+// The white field of the default favicon. A theme fills it with its color; the
+// ribbon stays lintblauw and the coat of arms white, as on the site itself.
+const FAVICON_FIELD = '<path fill="#fff" d="M0 0h1024v1024H0z"/>';
 
 const references = JSON.parse(readFileSync(join(ROOT, 'scripts/reference-colors.json'), 'utf8'));
 const palettes = parsePalettes(readFileSync(join(STYLES, 'colors.generated.css'), 'utf8'));
@@ -48,6 +53,13 @@ const rules = themeColors(references).map(({ name, hex }) => {
 	return css;
 });
 
+const favicon = readFileSync(join(FAVICON_DIR, 'favicon.svg'), 'utf8');
+if (!favicon.includes(FAVICON_FIELD)) throw new Error('favicon.svg has no white field to fill');
+for (const { name, hex } of themeColors(references)) {
+	mkdirSync(join(FAVICON_DIR, name), { recursive: true });
+	writeFileSync(join(FAVICON_DIR, name, 'favicon.svg'), favicon.replace(FAVICON_FIELD, FAVICON_FIELD.replace('#fff', hex)));
+}
+
 writeFileSync(join(STYLES, 'themes.css'), header('All NLDD themes: set data-nldd-theme on <html> to pick one.') + rules.join('\n'));
 
-console.log(`Generated ${rules.length} themes → src/assets/styles/themes/ and themes.css`);
+console.log(`Generated ${rules.length} themes → src/assets/styles/themes/, themes.css and src/assets/favicon/<name>/`);

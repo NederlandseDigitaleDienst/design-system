@@ -82,4 +82,15 @@ Bij warme kleuren, van rood tot mosgroen, blijft het grijs neutraal. Een warme g
 - Statuskleuren: `success`, `warning` en `critical`.
 - De syntaxkleuren in `nldd-code-viewer`.
 
-De favicon, het touch icon en de kleur van de browserbalk (`<meta name="theme-color">`) volgen het thema nog niet. Dat komt later.
+## Gebruik de favicon van je thema
+
+Elk thema heeft een eigen favicon en touch icon: het vlak achter het lint krijgt de themakleur, het lint en het wapen blijven zoals ze zijn. Kopieer de bestanden naar de map die je statisch serveert en verwijs ernaar:
+
+```html
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/touch-icon.png">
+```
+
+De bestanden staan in `@nldd/design-system/favicon/geel/`, met de naam van het thema in het pad. Zonder thema gebruik je `@nldd/design-system/favicon.svg` en `@nldd/design-system/touch-icon.png`.
+
+De kleur van de browserbalk (`<meta name="theme-color">`) volgt het thema nog niet. Dat komt later.
