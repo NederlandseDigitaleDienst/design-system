@@ -49,7 +49,7 @@ export default {
 	argTypes: {
 		background: {
 			control: 'select',
-			options: ['base', 'tinted'],
+			options: ['base', 'tinted', 'accent-tinted'],
 			description: 'Vlakkleur van de kaart',
 			table: { defaultValue: { summary: 'base' } },
 		},

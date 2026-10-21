@@ -8,6 +8,7 @@
  * @element nldd-switch
  * @attr {boolean} checked - Whether the switch is on/off
  * @attr {boolean} disabled - Disabled state
+ * @attr {'inherit'} color - 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {string} size - Switch size: 'xs' | 'sm' (default: 'sm')
  * @attr {string} name - Name for form submission; nothing is submitted when the switch is off
@@ -56,6 +57,10 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ reflect: true, converter: reflectNonDefault<SwitchSize>('sm') })
 	size: SwitchSize = 'sm';
+
+	/** 'inherit' draws the control in the surrounding text color. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	color = '';
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';

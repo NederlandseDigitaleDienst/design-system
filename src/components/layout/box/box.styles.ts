@@ -11,8 +11,8 @@ export const boxStyles = css`
 	:host {
 		--_box-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_box-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_box-border-width: var(--semantics-surfaces-border-width);
-		--_box-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_box-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_box-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_box-highlight-border: inset 0 0 0 var(--_box-border-width) var(--_box-border-color);
 
 		display: block;
@@ -28,12 +28,17 @@ export const boxStyles = css`
 
 	:host([background="base"]) {
 		--_box-background-color: var(--semantics-surfaces-base-background-color);
-		--_box-border-color: var(--semantics-surfaces-base-border-color);
+		--_box-border-color: var(--semantics-surfaces-base-highlight-border-color);
+	}
+
+	:host([background="accent-tinted"]) {
+		--_box-background-color: var(--semantics-surfaces-accent-tinted-background-color);
+		--_box-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
 	}
 
 	:host([background="critical"]) {
-		--_box-background-color: var(--semantics-categories-critical-tinted-background-color);
-		--_box-border-color: var(--semantics-categories-critical-tinted-highlight-border-color);
+		--_box-background-color: var(--semantics-surfaces-critical-tinted-background-color);
+		--_box-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
 	}
 
 

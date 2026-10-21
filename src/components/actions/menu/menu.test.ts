@@ -2737,7 +2737,7 @@ describe('nldd-menu-item – highlight from the menu', () => {
 		`);
 		await waitForUpdate(el);
 		const [plain, destructive] = el.querySelectorAll('nldd-menu-item');
-		const highlight = resolve('var(--semantics-controls-is-highlighted-indicator-color)');
+		const highlight = resolve('var(--semantics-list-items-is-highlighted-background-color)');
 		expect(highlight).not.toBe('rgba(0, 0, 0, 0)');
 		expect(fill(plain)).toBe(highlight);
 		expect(fill(destructive)).not.toBe(highlight);

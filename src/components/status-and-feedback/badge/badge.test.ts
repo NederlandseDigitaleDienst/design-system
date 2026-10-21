@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './badge.js';
 
@@ -231,5 +231,31 @@ describe('nldd-badge color="inherit"', () => {
 		await waitForUpdate(badge);
 		const shape = badge.shadowRoot!.querySelector('.badge')!;
 		expect(getComputedStyle(shape).backgroundColor).toBe('rgb(0, 0, 0)');
+	});
+});
+
+describe('nldd-badge – color', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('gives a color it does not know the accent, and says so in development', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			el = await fixture('<nldd-badge color="hemelblauw" text="Nieuw"></nldd-badge>');
+			await waitForUpdate(el);
+			expect(el.hasAttribute('data-color-fallback')).toBe(true);
+			expect(warn.mock.calls.some(([message]) => String(message).includes('color="hemelblauw"'))).toBe(true);
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
+	it('marks no fallback for a color it knows', async () => {
+		el = await fixture('<nldd-badge color="success" text="Klaar"></nldd-badge>');
+		await waitForUpdate(el);
+		expect(el.hasAttribute('data-color-fallback')).toBe(false);
 	});
 });

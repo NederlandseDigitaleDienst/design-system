@@ -10,14 +10,14 @@ export const cardStyles = css`
 
 	:host {
 		--_card-background-color: var(--semantics-surfaces-base-background-color);
-		--_card-border-color: var(--semantics-surfaces-base-border-color);
+		--_card-border-color: var(--semantics-surfaces-base-highlight-border-color);
 		--_card-is-hovered-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-150));
 		--_card-is-hovered-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
 		--_card-is-active-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
 		--_card-is-active-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
 		--_card-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_card-box-shadow: none;
-		--_card-highlight-border-width: var(--semantics-surfaces-border-width);
+		--_card-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
 
 		display: flex;
 		/* Anchor for the focus ring, which hangs outside the card box. */
@@ -35,11 +35,20 @@ export const cardStyles = css`
 
 	:host([background="tinted"]) {
 		--_card-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_card-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_card-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_card-is-hovered-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-100));
 		--_card-is-hovered-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
 		--_card-is-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-150));
 		--_card-is-active-border-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
+	}
+
+	:host([background="accent-tinted"]) {
+		--_card-background-color: var(--semantics-surfaces-accent-tinted-background-color);
+		--_card-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
+		--_card-is-hovered-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-100));
+		--_card-is-hovered-border-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-250));
+		--_card-is-active-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-150));
+		--_card-is-active-border-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-300));
 	}
 
 

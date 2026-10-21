@@ -19,8 +19,8 @@ export const menuStyles = css`
 		--_menu-padding: var(--primitives-space-8);
 		--_menu-item-size: var(--semantics-controls-md-min-size);
 		--_menu-item-background-color: transparent;
-		--_menu-item-is-highlighted-background-color: var(--semantics-controls-is-highlighted-indicator-color);
-		--_menu-item-is-highlighted-content-color: var(--semantics-controls-is-highlighted-contrast-color);
+		--_menu-item-is-highlighted-background-color: var(--semantics-list-items-is-highlighted-background-color);
+		--_menu-item-is-highlighted-content-color: var(--semantics-list-items-is-highlighted-content-color);
 
 		@media (pointer: fine) {
 			--_menu-padding: var(--primitives-space-6);

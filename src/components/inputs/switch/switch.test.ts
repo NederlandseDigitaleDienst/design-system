@@ -363,3 +363,24 @@ describe('nldd-switch no-tab', () => {
 		expect(el.shadowRoot!.querySelector('.switch__input')!.hasAttribute('tabindex')).toBe(false);
 	});
 });
+
+describe('nldd-switch – color="inherit"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('fills a checked track with the surrounding text color, and the thumb with the surface color', async () => {
+		el = await fixture(`
+			<div style="color: rgb(255, 255, 255); --context-parent-background-color: rgb(24, 69, 118);">
+				<nldd-switch color="inherit" checked accessible-label="Meldingen"></nldd-switch>
+			</div>`);
+		const control = el.querySelector('nldd-switch') as HTMLElement;
+		await waitForUpdate(control);
+		const track = control.shadowRoot!.querySelector('.switch__track') as HTMLElement;
+		const thumb = control.shadowRoot!.querySelector('.switch__thumb') as HTMLElement;
+		expect(getComputedStyle(track).backgroundColor).toBe('rgb(255, 255, 255)');
+		expect(getComputedStyle(thumb).backgroundColor).toBe('rgb(24, 69, 118)');
+	});
+});

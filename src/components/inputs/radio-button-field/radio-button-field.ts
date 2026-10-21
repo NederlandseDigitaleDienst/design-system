@@ -21,6 +21,7 @@
  * @element nldd-radio-button-field
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
+ * @attr {'inherit'} color - 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
  * @attr {string} value - Value for form submission
  * @attr {string} name - Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group.
  * @attr {boolean} required - Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group.
@@ -71,6 +72,10 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 
 	@property({ type: Boolean, reflect: true })
 	required = false;
+
+	/** 'inherit' draws the control and its label in the surrounding text color. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	color = '';
 
 	@property({ type: String })
 	label = '';

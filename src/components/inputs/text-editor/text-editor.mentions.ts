@@ -539,8 +539,8 @@ const popupTheme = EditorView.theme({
 		font: 'var(--primitives-font-body-sm-regular-tight)',
 	},
 	'.cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected]': {
-		backgroundColor: 'var(--semantics-controls-is-highlighted-indicator-color)',
-		color: 'var(--semantics-controls-is-highlighted-contrast-color)',
+		backgroundColor: 'var(--semantics-list-items-is-highlighted-background-color)',
+		color: 'var(--semantics-list-items-is-highlighted-content-color)',
 	},
 	// CodeMirror keeps the keyboard-selected option active on hover (Enter still
 	// applies that one), so hover can't share the accent 'highlighted' look —

@@ -9,5 +9,7 @@
 		var globals = new URLSearchParams(location.search).get('globals') || '';
 		var chosen = globals.match(/(?:^|[;,])theme:([\w-]+)/);
 		document.documentElement.dataset.scheme = chosen ? chosen[1] : 'light';
+		var accent = globals.match(/(?:^|[;,])nlddTheme:([\w-]+)/);
+		if (accent && accent[1] !== 'lintblauw') document.documentElement.dataset.nlddTheme = accent[1];
 	})();
 </script>

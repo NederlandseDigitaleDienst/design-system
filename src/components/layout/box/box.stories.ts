@@ -44,7 +44,7 @@ export default {
 	argTypes: {
 		background: {
 			control: 'select',
-			options: ['tinted', 'base', 'critical'],
+			options: ['tinted', 'base', 'accent-tinted', 'critical'],
 			description: 'Welk vlak de box tekent. `tinted` voor een box op een plain page, `base` voor een box op een al getinte parent (border ring krijgt +2 stappen voor extra contrast), `critical` voor een gebied met onomkeerbare acties.',
 			table: { defaultValue: { summary: 'tinted' } },
 		},

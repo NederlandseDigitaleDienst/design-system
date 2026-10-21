@@ -12,8 +12,8 @@ export const codeViewerStyles = css`
 	:host {
 		--_code-viewer-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_code-viewer-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_code-viewer-border-width: var(--semantics-surfaces-border-width);
-		--_code-viewer-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_code-viewer-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_code-viewer-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_code-viewer-border-shadow: inset 0 0 0 var(--_code-viewer-border-width) var(--_code-viewer-border-color);
 		--_code-viewer-block-padding: var(--primitives-space-16);
 		--_code-viewer-inline-padding: var(--primitives-space-16);
@@ -43,7 +43,7 @@ export const codeViewerStyles = css`
 
 	:host([appearance="box-base"]) {
 		--_code-viewer-background-color: var(--semantics-surfaces-base-background-color);
-		--_code-viewer-border-color: var(--semantics-surfaces-base-border-color);
+		--_code-viewer-border-color: var(--semantics-surfaces-base-highlight-border-color);
 	}
 
 	:host([appearance="simple"]) {

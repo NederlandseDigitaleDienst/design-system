@@ -202,7 +202,7 @@ export const Appearances = {
 
 export const KleurInherit = {
 	render: () => html`
-		<div style="display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 8px; background: var(--semantics-categories-donkerblauw-reference-background-color); color: var(--semantics-categories-donkerblauw-reference-content-color);">
+		<div style="display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 8px; background: var(--semantics-surfaces-accent-filled-background-color); color: var(--semantics-content-on-accent-filled-color);">
 			<nldd-keyboard-shortcut
 				color="inherit"
 				keys="Cmd+K"

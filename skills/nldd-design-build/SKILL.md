@@ -98,6 +98,20 @@ Dat bereikt ook de componenten die een ander component zelf bouwt, zoals de laad
 
 Een key is taal, geen inhoud. Moet één knop iets anders zeggen dan een andere ("Aan het bewaren" in plaats van "Laden"), dan is dat een attribuut op dat element, zoals `loading-text`.
 
+### Een thema
+
+Een thema kiest de accentkleur, uit de kleuren van de Rijkshuisstijl. Lintblauw is de standaard en heeft geen thema nodig. Importeer het thema en zet het attribuut op `<html>`, niet op `nldd-shell`, want overlays hangen aan `<body>`:
+
+```js
+import '@nldd/design-system/themes/geel.css';   // of '@nldd/design-system/themes' voor alle thema's
+```
+
+```html
+<html lang="nl" data-nldd-theme="geel">
+```
+
+Een thema geldt voor de hele website. Een attribuut zonder geladen thema doet niets. Kleur zelf niets na om bij het thema te passen: elke rol kiest binnen zijn contrasteis de stap die het dichtst bij de themakleur ligt, en bij geel, rood, robijnrood en oranje wijkt het systeem bewust uit naar bijna zwart of grijs. Waarom, en hoe elk thema eruitziet, staat op de [pagina Thema's](https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-thema-s--docs).
+
 ## CSS-variabelen
 
 Alle visuele waarden in de componenten komen uit CSS-variabelen en niets is hardcoded. Zo werkt licht en donker, en zo blijft de huisstijl erin zitten. Voor jou is het vooral iets om van af te blijven: de variabelen zijn de bedrading van het systeem, geen publieke API. Ze worden hernoemd, samengevoegd en verwijderd wanneer een component daarom vraagt, en de changelog beschrijft zo'n wijziging vanuit dat component, niet vanuit jouw stylesheet. Gebruik je ze toch, dan is dat op eigen risico.

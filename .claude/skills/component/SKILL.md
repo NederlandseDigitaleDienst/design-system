@@ -40,12 +40,15 @@ Zoek in `src/components/` of het component al bestaat.
 1. `--semantics-*` (betekenisvol)
 2. `--primitives-*` (als er geen semantics-token voor bestaat)
 
-Er is geen componentlaag. Elke waarde van een component komt als lokale variabele in zijn `:host` en wijst daar naar een semantics- of primitives-token. Delen meer componenten een waarde, dan hoort die als semantics-token in `variables.css`.
+Elke waarde van een component komt als lokale variabele in zijn `:host` en wijst daar naar een semantics- of primitives-token. Delen meer componenten een waarde, dan hoort die als semantics-token in `variables.css`.
+
+De enige uitzondering is een waarde van één component die een thema moet kunnen zetten. Een thema bereikt alleen `:root`, niet de stijlen van een component. Zo'n waarde wordt een `--components-{component}-*`-token in `variables.css`, onder `# Components`, en de lokale variabele in `:host` wijst ernaar. Alleen dat component leest hem. Zet hem ook in `scripts/lib/themes.js`, zodat de generator hem per thema schrijft.
 
 **Naamconventies:**
 
 - **Primitives:** `--primitives-{property}-{variant}-{scale}` bijv. `--primitives-color-accent-750`
 - **Semantics:** `--semantics-{group}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` bijv. `--semantics-buttons-neutral-tinted-is-hovered-background-color`
+- **Component:** `--components-{component}-{variant}-{state}-{property}` Alleen voor een waarde die een thema zet, en alleen gelezen door het component in de naam. bijv. `--components-badge-accent-background-color`. `npm run validate:styles` keurt het af als een ander component hem leest.
 - **Context:** `--context-{context}-{property}` Gedeelde variabelen voor communicatie tussen componenten. Niet gedefinieerd in variables.css. bijv. `--context-parent-background-color`
 - **Lokaal:** `--_{component}-{variant}-{state}-{element}-{element-variant}-{element-state}-{property}` Interne variabelen binnen een component. Definieer defaults in `:host`. bijv. `--_button-background-color`. `{component}` is de tag zonder `nldd-`, voor een subcomponent zijn eigen tag (`--_menu-item-…` in `nldd-menu-item`). Een custom property erft door shadow boundaries heen, ook naar de interne elementen van een ander component dat in jouw component geslot wordt; zonder componentnaam kwam de `--_background-color` van `nldd-tooltip` zo op de knop van een `nldd-icon-button` terecht. Leest of overschrijft een subcomponent een variabele van zijn ouder, gebruik dan de naam van de ouder (`--_step-bar-ring-color` in `nldd-step-bar-item`). Het `{element}`-segment is de **volledige BEM-elementnaam**, niet afgekort: `--_button-disclosure-icon-margin-right`, niet `--_button-disclosure-margin-right`. Laat het element-segment weg voor het root-block. Gebruik één generieke naam als de var door meerdere elementen gedeeld wordt (bijv. `--_button-icon-size` voor `__start-icon` én `__end-icon`). `npm run validate:styles` keurt een lokale variabele af waarvan het voorvoegsel niet van een component in dezelfde map is.
 

@@ -32,12 +32,12 @@ export const datePickerStyles = css`
 		--_date-picker-day-indicator-inset: var(--primitives-space-2);
 		--_date-picker-day-indicator-size: calc(var(--_date-picker-day-size) - var(--_date-picker-day-indicator-inset) * 2);
 		--_date-picker-day-indicator-corner-radius: var(--_date-picker-day-corner-radius);
-		--_date-picker-day-is-in-range-background-color: var(--semantics-categories-accent-tinted-background-color);
+		--_date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-75));
 		--_date-picker-day-is-in-range-content-color: var(--semantics-content-color);
 		--_date-picker-day-is-today-border-color: light-dark(var(--primitives-color-neutral-250), var(--primitives-color-neutral-400));
 		--_date-picker-day-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-150));
-		--_date-picker-day-is-selected-background-color: var(--semantics-controls-is-highlighted-indicator-color);
-		--_date-picker-day-is-selected-content-color: var(--semantics-controls-is-highlighted-contrast-color);
+		--_date-picker-day-is-selected-background-color: var(--semantics-controls-is-selected-indicator-color);
+		--_date-picker-day-is-selected-content-color: var(--semantics-controls-is-selected-contrast-color);
 		--_date-picker-day-is-outside-month-content-color: var(--semantics-content-secondary-color);
 		--_date-picker-day-is-unavailable-content-color: var(--semantics-content-secondary-color);
 

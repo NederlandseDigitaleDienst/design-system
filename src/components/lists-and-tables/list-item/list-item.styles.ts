@@ -189,6 +189,10 @@ export const listItemStyles = css`
 		--_list-item-background-color: var(--semantics-list-items-is-selected-background-color);
 		--context-content-color: var(--semantics-list-items-is-selected-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
+		/* A checked control on the gray row takes the content color: the accent
+		   can fall under 3:1 against it. */
+		--context-selected-indicator-color: var(--semantics-list-items-is-selected-content-color);
+		--context-selected-contrast-color: var(--semantics-list-items-is-selected-background-color);
 	}
 
 
@@ -198,6 +202,8 @@ export const listItemStyles = css`
 		--_list-item-background-color: var(--semantics-list-items-is-selected-background-color);
 		--context-content-color: var(--semantics-list-items-is-selected-content-color);
 		--context-content-secondary-color: var(--semantics-list-items-is-selected-content-color);
+		--context-selected-indicator-color: var(--semantics-list-items-is-selected-content-color);
+		--context-selected-contrast-color: var(--semantics-list-items-is-selected-background-color);
 	}
 
 	/* Hover only on hover-capable devices, so a touch that turns into a scroll

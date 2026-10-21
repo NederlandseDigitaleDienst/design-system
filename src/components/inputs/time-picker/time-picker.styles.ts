@@ -14,8 +14,8 @@ export const timePickerStyles = css`
 		--_time-picker-control-corner-radius: var(--semantics-controls-md-corner-radius);
 		--_time-picker-list-item-font: var(--primitives-font-body-md-medium-flat);
 		--_time-picker-list-item-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-150));
-		--_time-picker-selection-background-color: var(--semantics-controls-is-highlighted-indicator-color);
-		--_time-picker-selection-content-color: var(--semantics-controls-is-highlighted-contrast-color);
+		--_time-picker-selection-background-color: var(--semantics-controls-is-selected-indicator-color);
+		--_time-picker-selection-content-color: var(--semantics-controls-is-selected-contrast-color);
 		--_time-picker-list-width: calc(var(--_time-picker-control-min-size) * 1.5);
 		--_time-picker-rows: 7;
 		--_time-picker-list-height: calc(var(--_time-picker-control-min-size) * var(--_time-picker-rows));

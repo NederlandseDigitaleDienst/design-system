@@ -258,3 +258,24 @@ describe('nldd-checkbox no-tab', () => {
 		expect(el.shadowRoot!.querySelector('.checkbox__input')!.hasAttribute('tabindex')).toBe(false);
 	});
 });
+
+describe('nldd-checkbox – color="inherit"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('fills a checked box with the surrounding text color, and draws the mark in the surface color', async () => {
+		el = await fixture(`
+			<div style="color: rgb(255, 255, 255); --context-parent-background-color: rgb(24, 69, 118);">
+				<nldd-checkbox color="inherit" checked accessible-label="Afgerond"></nldd-checkbox>
+			</div>`);
+		const checkbox = el.querySelector('nldd-checkbox') as NLDDCheckbox;
+		await waitForUpdate(checkbox);
+		const box = checkbox.shadowRoot!.querySelector('.checkbox__box') as HTMLElement;
+		const icon = checkbox.shadowRoot!.querySelector('.checkbox__check-icon') as Element;
+		expect(getComputedStyle(box).backgroundColor).toBe('rgb(255, 255, 255)');
+		expect(getComputedStyle(icon).color).toBe('rgb(24, 69, 118)');
+	});
+});

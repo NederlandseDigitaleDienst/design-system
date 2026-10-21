@@ -7434,6 +7434,17 @@
             },
             {
               "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "label",
               "type": {
                 "text": "string"
@@ -7737,6 +7748,15 @@
               "fieldName": "name"
             },
             {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "fieldName": "color"
+            },
+            {
               "name": "label",
               "type": {
                 "text": "string"
@@ -7888,6 +7908,17 @@
               },
               "default": "''",
               "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control in the surrounding text color.",
+              "attribute": "color",
               "reflects": true
             },
             {
@@ -8221,6 +8252,15 @@
               "default": "''",
               "fieldName": "name",
               "description": "Name for form submission"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "fieldName": "color"
             },
             {
               "name": "accessible-label",
@@ -13256,6 +13296,17 @@
             },
             {
               "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "label",
               "type": {
                 "text": "string"
@@ -13539,6 +13590,15 @@
               "default": "false",
               "fieldName": "required",
               "description": "Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group."
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "fieldName": "color"
             },
             {
               "name": "label",
@@ -13891,6 +13951,17 @@
             },
             {
               "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control in the surrounding text color.",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "accessibleLabel",
               "type": {
                 "text": "string"
@@ -14201,6 +14272,15 @@
               "default": "''",
               "fieldName": "value",
               "description": "Value submitted with the form when this radio button is checked"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "fieldName": "color"
             },
             {
               "name": "accessible-label",
@@ -16150,6 +16230,17 @@
             },
             {
               "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control and its label in the surrounding text color.",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "label",
               "type": {
                 "text": "string"
@@ -16267,6 +16358,15 @@
               "default": "''",
               "fieldName": "name",
               "description": "Name for form submission"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
+              "fieldName": "color"
             },
             {
               "name": "label",
@@ -16397,6 +16497,17 @@
               },
               "default": "'sm'",
               "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control in the surrounding text color.",
+              "attribute": "color",
               "reflects": true
             },
             {
@@ -16721,6 +16832,15 @@
               "default": "'sm'",
               "fieldName": "size",
               "description": "Switch size: 'xs' | 'sm' (default: 'sm')"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "fieldName": "color"
             },
             {
               "name": "accessible-label",
@@ -22940,7 +23060,7 @@
               },
               "default": "'tinted'",
               "fieldName": "background",
-              "description": "Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `critical`: a region whose actions are destructive or irreversible (a \"danger zone\"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger — color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used."
+              "description": "Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `accent-tinted`: a tint of the theme's accent, with the contrast of `tinted`, for a box that belongs to the service rather than to the page. - `critical`: a region whose actions are destructive or irreversible (a \"danger zone\"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger — color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used."
             }
           ],
           "superclass": {
@@ -23065,7 +23185,7 @@
               },
               "default": "'base'",
               "fieldName": "background",
-              "description": "Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface"
+              "description": "Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface, `accent-tinted` for a tint of the theme's accent with the contrast of `tinted`"
             },
             {
               "name": "accessible-label",
@@ -24757,7 +24877,7 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
-              "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -25065,7 +25185,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast.",
+          "description": "The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width=\"full\"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background=\"base\"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout=\"overlap\"`), so the image keeps its height whatever the content. `layout=\"contained\"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color, so components with `color=\"inherit\"` (title, rich-text) are guaranteed to keep their contrast. `main-background=\"base\"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.",
           "name": "NLDDHero",
           "members": [
             {
@@ -25431,7 +25551,7 @@
               },
               "default": "'accent'",
               "fieldName": "mainBackground",
-              "description": "Surface color of the panel: 'base' (the base surface) or a category color — 'accent' (default) or a Rijkshuisstijl color such as 'lintblauw'|'donkerblauw'|'oranje'"
+              "description": "Surface color of the panel: 'accent' (default), the accent color of the theme, or 'base', the base surface"
             },
             {
               "name": "main-width",
@@ -25986,7 +26106,7 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
-              "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -26463,7 +26583,7 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
-              "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -26701,7 +26821,7 @@
           "type": {
             "text": "object"
           },
-          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\" en \"tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, grow: { control: 'boolean', description: 'Neemt de hoogte die de pagina over heeft, zodat de footer onderaan staat. Zonder `grow` groeit de laatste sectie van een `nldd-page`.', table: { defaultValue: { summary: false } }, }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
+          "default": "{ background: { control: { type: 'select' }, options: ['inherit', 'base', 'tinted', 'accent-tinted'], description: 'Oppervlak: \"inherit\" laat het oppervlak van de ouder doorschijnen, \"base\", \"tinted\" en \"accent-tinted\" tekenen een eigen oppervlak dat naar de inhoud cascadeert', table: { defaultValue: { summary: 'inherit' } }, }, width: { control: 'text', description: 'Maximale breedte van de inhoud: \"full\" haalt de grens weg, een CSS-lengte (bv. \"480px\") vervangt hem', }, height: { control: 'text', description: 'Minimale hoogte van de sectie, als CSS-lengte (bv. \"400px\" of \"100dvh\")', }, grow: { control: 'boolean', description: 'Neemt de hoogte die de pagina over heeft, zodat de footer onderaan staat. Zonder `grow` groeit de laatste sectie van een `nldd-page`.', table: { defaultValue: { summary: false } }, }, paddingBlock: paddingControl('padding-block', 'Padding boven en onder (token 0 tot 96, \"0\" haalt hem weg)'), paddingTop: paddingControl('padding-top', 'Alleen de padding boven'), paddingBottom: paddingControl('padding-bottom', 'Alleen de padding onder'), smPaddingBlock: paddingControl('sm-padding-block', 'Padding boven en onder op sm (tot 640px)'), smPaddingTop: paddingControl('sm-padding-top', 'Padding boven op sm (tot 640px)'), smPaddingBottom: paddingControl('sm-padding-bottom', 'Padding onder op sm (tot 640px)'), mdPaddingBlock: paddingControl('md-padding-block', 'Padding boven en onder op md (641 tot 1007px)'), mdPaddingTop: paddingControl('md-padding-top', 'Padding boven op md (641 tot 1007px)'), mdPaddingBottom: paddingControl('md-padding-bottom', 'Padding onder op md (641 tot 1007px)'), lgPaddingBlock: paddingControl('lg-padding-block', 'Padding boven en onder op lg (vanaf 1008px)'), lgPaddingTop: paddingControl('lg-padding-top', 'Padding boven op lg (vanaf 1008px)'), lgPaddingBottom: paddingControl('lg-padding-bottom', 'Padding onder op lg (vanaf 1008px)'), }"
         },
         {
           "kind": "variable",
@@ -27622,7 +27742,7 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
-              "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -28091,7 +28211,7 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
-              "description": "Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface)."
+              "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
             {
               "name": "height",
@@ -35893,7 +36013,7 @@
               },
               "default": "'critical'",
               "fieldName": "color",
-              "description": "Semantic ('critical' | 'accent' | 'neutral' | 'warning' | 'success'), a Rijkshuisstijl color ('lintblauw' | 'hemelblauw' | 'oranje' | …), or 'inherit' to fill in the content color around it: the `--context-content-color` channel a list item, table row or menu sets, falling back to `currentColor`. Default: 'critical'"
+              "description": "The meaning of the badge, the same set as nldd-status-bar, or 'inherit' to fill in the content color around it: the `--context-content-color` channel a list item, table row or menu sets, falling back to `currentColor`. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development."
             },
             {
               "name": "custom-color",
@@ -39273,7 +39393,7 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted`. Setting\n  `base`/`tinted` also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
+          "description": "Shared surface controls for the page-section components. Adds three\northogonal capabilities, all written as inline host styles / custom\nproperties (no per-component CSS needed for the background — custom\nproperties inherit through the shadow boundary into the section's block\nelement and slotted content):\n\n- **background**: `inherit` (the default — transparent, shows the ancestor's\n  surface) | `base` (the base surface color) | `tinted` | `accent-tinted`\n  (a tint of the theme's accent, with the contrast of `tinted`). Setting\n  one of those also cascades `--context-parent-background-color` so\n  descendants (cards, nested sections) read the same surface.\n- **block padding**: `padding-block` (both edges) with `padding-top`\n  / `padding-bottom` per-edge overrides, each with responsive `sm-` /\n  `md-` / `lg-` variants (12 attrs total). Token scale `0`–`96`; `0` strips\n  the padding. Per breakpoint the section CSS resolves: scope override →\n  base override → responsive default. The inline (gutter) padding stays\n  design-controlled.\n- **height**: any CSS length (e.g. '400px', '100dvh') applied as the host's\n  min-height (so the section is at least that tall) — mirroring how `width`\n  maps to the body max-width.\n- **grow**: the section takes the height the page has left, so the footer\n  sits at the bottom of a short page. Without it, nldd-page lets its last\n  section grow. nldd-page reads this and marks the growing section with\n  `data-growing`; it never writes `grow`, which stays the author's.",
           "name": "PageSectionMixin",
           "members": [
             {

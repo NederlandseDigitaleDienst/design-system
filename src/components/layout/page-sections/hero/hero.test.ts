@@ -248,6 +248,27 @@ describe('nldd-hero', () => {
 		}
 	});
 
+	it('gives a Rijkshuisstijl color for the panel the accent instead, and points to a theme in development', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const unloadTokens = loadTokens();
+		try {
+			const panelColor = async (attributes: string) => {
+				el = await fixture(`<nldd-hero ${attributes}></nldd-hero>`);
+				await waitForUpdate(el);
+				const color = getComputedStyle(el).getPropertyValue('--_hero-main-background-color');
+				cleanup(el);
+				return color;
+			};
+			const accent = await panelColor('');
+			expect(accent).not.toBe('');
+			expect(await panelColor('main-background="donkerblauw"')).toBe(accent);
+			expect(warn.mock.calls.some(([message]) => String(message).includes('data-nldd-theme'))).toBe(true);
+		} finally {
+			unloadTokens();
+			warn.mockRestore();
+		}
+	});
+
 	describe('layout="overlap"', () => {
 		const overlapWarnings = (warn: MockInstance<typeof console.warn>) => warn.mock.calls
 			.map(([message]) => String(message))

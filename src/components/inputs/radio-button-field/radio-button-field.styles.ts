@@ -37,6 +37,13 @@ export const radioButtonFieldStyles = css`
 	}
 
 
+	/* ## Colors */
+
+	:host([color="inherit"]) .radio-button-field__label {
+		color: inherit;
+	}
+
+
 	/* # Elements */
 
 	.radio-button-field__control {

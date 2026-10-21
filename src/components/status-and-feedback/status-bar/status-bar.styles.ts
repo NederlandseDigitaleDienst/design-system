@@ -11,11 +11,11 @@ export const statusBarStyles = css`
 
 	:host {
 		--_status-bar-corner-radius: var(--primitives-corner-radius-none);
-		--_status-bar-background-color: var(--semantics-categories-neutral-filled-background-color);
+		--_status-bar-background-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-450));
 		--_status-bar-height: var(--semantics-controls-xs-min-size);
 		--_status-bar-inline-padding: var(--primitives-space-8);
 		--_status-bar-gap: var(--primitives-space-2);
-		--_status-bar-content-color: var(--semantics-categories-neutral-filled-content-color);
+		--_status-bar-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-neutral-1000));
 		--_status-bar-font: var(--primitives-font-body-xs-medium-flat);
 		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-500));
 		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-neutral-700), var(--primitives-color-neutral-550));
@@ -30,29 +30,29 @@ export const statusBarStyles = css`
 	}
 
 	:host([variant="accent"]) {
-		--_status-bar-background-color: var(--semantics-categories-accent-filled-background-color);
-		--_status-bar-content-color: var(--semantics-categories-accent-filled-content-color);
-		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-450));
-		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-500));
+		--_status-bar-background-color: var(--components-status-bar-accent-background-color);
+		--_status-bar-content-color: var(--components-status-bar-accent-content-color);
+		--_status-bar-is-hovered-background-color: var(--components-status-bar-accent-is-hovered-background-color);
+		--_status-bar-is-active-background-color: var(--components-status-bar-accent-is-active-background-color);
 	}
 
 	:host([variant="success"]) {
-		--_status-bar-background-color: var(--semantics-categories-success-filled-background-color);
-		--_status-bar-content-color: var(--semantics-categories-success-filled-content-color);
+		--_status-bar-background-color: var(--primitives-color-success-500);
+		--_status-bar-content-color: light-dark(var(--primitives-color-success-0), var(--primitives-color-success-1000));
 		--_status-bar-is-hovered-background-color: var(--primitives-color-success-550);
 		--_status-bar-is-active-background-color: var(--primitives-color-success-600);
 	}
 
 	:host([variant="warning"]) {
-		--_status-bar-background-color: var(--semantics-categories-warning-filled-background-color);
-		--_status-bar-content-color: var(--semantics-categories-warning-filled-content-color);
-		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
-		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-warning-500), var(--primitives-color-warning-700));
+		--_status-bar-background-color: light-dark(var(--primitives-color-warning-300), var(--primitives-color-warning-700));
+		--_status-bar-content-color: light-dark(var(--primitives-color-warning-1000), var(--primitives-color-warning-0));
+		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-warning-350), var(--primitives-color-warning-650));
+		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-warning-400), var(--primitives-color-warning-600));
 	}
 
 	:host([variant="critical"]) {
-		--_status-bar-background-color: var(--semantics-categories-critical-filled-background-color);
-		--_status-bar-content-color: var(--semantics-categories-critical-filled-content-color);
+		--_status-bar-background-color: light-dark(var(--primitives-color-critical-650), var(--primitives-color-critical-450));
+		--_status-bar-content-color: light-dark(var(--primitives-color-critical-0), var(--primitives-color-critical-1000));
 		--_status-bar-is-hovered-background-color: light-dark(var(--primitives-color-critical-700), var(--primitives-color-critical-500));
 		--_status-bar-is-active-background-color: light-dark(var(--primitives-color-critical-750), var(--primitives-color-critical-550));
 	}

@@ -1,4 +1,4 @@
-import { html, TemplateResult } from 'lit';
+import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDRadioButtonField } from './radio-button-field.js';
 import '../radio-button/radio-button.js';
 
@@ -22,6 +22,7 @@ export function radioButtonFieldTemplate(component: NLDDRadioButtonField): Templ
 			>
 			<div class="radio-button-field__control">
 				<nldd-radio-button
+					color=${component.color || nothing}
 					decorative
 					?checked=${component.checked}
 					?disabled=${component.disabled}

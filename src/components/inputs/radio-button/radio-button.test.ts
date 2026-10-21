@@ -3,6 +3,7 @@ import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDRadioButton } from './radio-button.js';
 import './radio-button.js';
+import { loadTokens } from '../../../test-tokens.js';
 
 describe('nldd-radio-button', () => {
 	let el: HTMLElement;
@@ -328,5 +329,28 @@ describe('nldd-radio-button grouped by name', () => {
 		los.checked = false;
 		await waitForUpdate(los);
 		expect(validity.validity.valueMissing).toBe(true);
+	});
+});
+
+describe('nldd-radio-button – color="inherit"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('fills a checked radio with the surrounding text color, and rings the dot in the surface color', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture(`
+			<div style="color: rgb(255, 255, 255); --context-parent-background-color: rgb(24, 69, 118);">
+				<nldd-radio-button color="inherit" checked decorative></nldd-radio-button>
+			</div>`);
+		const control = el.querySelector('nldd-radio-button') as HTMLElement;
+		await waitForUpdate(control);
+		const outer = control.shadowRoot!.querySelector('.radio-button__outer-shape') as HTMLElement;
+		const inner = control.shadowRoot!.querySelector('.radio-button__inner-shape') as HTMLElement;
+		expect(getComputedStyle(outer).backgroundColor).toBe('rgb(255, 255, 255)');
+		expect(getComputedStyle(inner).borderTopColor).toBe('rgb(24, 69, 118)');
+		unloadTokens();
 	});
 });

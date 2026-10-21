@@ -17,11 +17,11 @@ export const switchStyles = css`
 		--_switch-border-width: var(--primitives-border-width-regular);
 		--_switch-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 		--_switch-background-color: var(--semantics-surfaces-base-background-color);
-		--_switch-is-selected-background-color: var(--semantics-controls-is-highlighted-indicator-color);
+		--_switch-is-selected-background-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
 		--_switch-thumb-border-width: var(--primitives-border-width-regular);
 		--_switch-thumb-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
 		--_switch-thumb-background-color: var(--semantics-surfaces-base-background-color);
-		--_switch-is-selected-thumb-background-color: var(--semantics-controls-is-highlighted-contrast-color);
+		--_switch-is-selected-thumb-background-color: var(--context-selected-contrast-color, var(--semantics-controls-is-selected-mark-color));
 
 		display: inline-block;
 		position: relative;
@@ -44,6 +44,18 @@ export const switchStyles = css`
 
 	:host([disabled]) {
 		opacity: var(--primitives-opacity-disabled);
+	}
+
+
+	/* ## Colors */
+
+	:host([color="inherit"]) {
+		--_switch-border-color: currentColor;
+		--_switch-background-color: transparent;
+		--_switch-is-selected-background-color: currentColor;
+		--_switch-thumb-border-color: currentColor;
+		--_switch-thumb-background-color: currentColor;
+		--_switch-is-selected-thumb-background-color: var(--context-parent-background-color, var(--semantics-content-contrast-color));
 	}
 
 

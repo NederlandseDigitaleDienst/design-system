@@ -15,7 +15,10 @@
  *   from either, which the item needs, since it reads the menu's variables. That
  *   those resolve is what src/components/subcomponent-variables.test.ts checks.
  * - --semantics-*, --primitives-* : CSS variables (validated against variables.css)
- * - --components-* : the component layer is gone; using one is an error.
+ * - --components-* : tokens of one component that a theme sets, so they live
+ *   in variables.css rather than in the component's :host. Validated against
+ *   variables.css, and named after a component in the folder that reads them,
+ *   so the layer cannot grow back into overrides shared between components.
  */
 
 import fs from 'fs';
@@ -188,6 +191,10 @@ function validate() {
     const prefixes = prefixesByFolder.get(folder) ?? new Set();
     return [...prefixes].some((prefix) => varName.startsWith(`--_${prefix}-`));
   };
+  const hasOwnComponentPrefix = (varName, folder) => {
+    const prefixes = prefixesByFolder.get(folder) ?? new Set();
+    return [...prefixes].some((prefix) => varName.startsWith(`--components-${prefix}-`));
+  };
   const prefixError = (file, varName) => ({
     file,
     variable: varName,
@@ -244,11 +251,20 @@ function validate() {
           break;
 
         case 'components':
-          errors.push({
-            file: relativePath,
-            variable: varName,
-            message: `"${varName}": there is no component layer. Use a local --_{component}-* variable in :host, or a semantics token when components share the value`,
-          });
+          stats.styleVars++;
+          if (!hasOwnComponentPrefix(varName, folder)) {
+            errors.push({
+              file: relativePath,
+              variable: varName,
+              message: `"${varName}" is the token of another component. A --components-* token is read only by the component it is named after; share a value through a semantics token`,
+            });
+          } else if (!variables.has(varName)) {
+            errors.push({
+              file: relativePath,
+              variable: varName,
+              message: `Variable "${varName}" is not defined in variables.css`,
+            });
+          }
           break;
 
         case 'unknown':

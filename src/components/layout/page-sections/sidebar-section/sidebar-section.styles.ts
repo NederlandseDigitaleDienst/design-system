@@ -168,7 +168,7 @@ export const sidebarSectionStyles = css`
 		box-sizing: border-box;
 		border-radius: var(--semantics-surfaces-corner-radius);
 		background-color: var(--_sidebar-section-sidebar-box-background-color);
-		box-shadow: inset 0 0 0 var(--semantics-surfaces-border-width) var(--_sidebar-section-sidebar-box-border-color);
+		box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--_sidebar-section-sidebar-box-border-color);
 
 		@container (min-width: ${lgMin}) {
 			position: sticky;

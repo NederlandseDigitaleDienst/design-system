@@ -407,7 +407,7 @@ nldd-rich-text pre {
 	/* Inner box-shadow paints the ring inside the radius without taking layout
 	   space, same as nldd-box, nldd-banner and nldd-code-viewer. Without it the
 	   block is invisible on a tinted surface: identical background, no edge. */
-	box-shadow: inset 0 0 0 var(--semantics-surfaces-border-width) var(--semantics-surfaces-tinted-border-color);
+	box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--semantics-surfaces-tinted-highlight-border-color);
 	background-color: var(--semantics-surfaces-tinted-background-color);
 	font: var(--primitives-font-monospace-sm-regular-snug);
 	overflow-x: auto;
@@ -417,7 +417,7 @@ nldd-rich-text pre {
 	/* forced-colors strips box-shadow, so restore the frame with a real border.
 	   Same fallback as nldd-box, nldd-banner and nldd-list. */
 	@media (forced-colors: active) {
-		border: var(--semantics-surfaces-border-width) solid CanvasText;
+		border: var(--semantics-surfaces-highlight-border-width) solid CanvasText;
 	}
 }
 

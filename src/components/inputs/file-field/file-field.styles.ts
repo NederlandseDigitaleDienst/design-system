@@ -19,8 +19,8 @@ export const fileFieldStyles = css`
 		--_file-field-clear-button-padding-right: calc((var(--_file-field-min-size) - var(--semantics-controls-sm-min-size)) / 2);
 		--_file-field-validation-icon-area-padding-right: var(--_file-field-inline-padding);
 		--_file-field-validation-icon-size: var(--semantics-input-fields-md-validation-icon-size);
-		--_file-field-highlight-border-width: var(--semantics-surfaces-border-width);
-		--_file-field-highlight-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_file-field-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_file-field-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_file-field-background-color: var(--semantics-surfaces-tinted-background-color);
 
 		${inheritedTextReset}

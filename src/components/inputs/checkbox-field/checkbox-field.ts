@@ -11,6 +11,7 @@
  * @attr {boolean} checked - Checked state
  * @attr {boolean} indeterminate - Indeterminate state
  * @attr {boolean} disabled - Disabled state
+ * @attr {'inherit'} color - 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
  * @attr {string} value - Value for form submission
  * @attr {string} name - Name for form submission
  * @attr {string} label - Label text for the checkbox
@@ -56,6 +57,10 @@ export class NLDDCheckboxField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  the property alone must still register the field with the form. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
+
+	/** 'inherit' draws the control and its label in the surrounding text color. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	color = '';
 
 	@property({ type: String })
 	label = '';

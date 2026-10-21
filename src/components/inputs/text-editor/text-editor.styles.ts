@@ -57,18 +57,18 @@ export const textEditorStyles = css`
 		--_text-editor-annotation-badge-size: 1.5em;
 		--_text-editor-annotation-badge-font-scale: 0.62;
 		--_text-editor-link-badge-size: calc(1em + 2 * var(--_text-editor-token-block-padding-fit));
-		--_text-editor-link-badge-content-color: var(--semantics-categories-accent-tinted-content-color);
-		--_text-editor-link-badge-background-color: var(--semantics-categories-accent-tinted-background-color);
-		--_text-editor-link-badge-highlight-border-color: var(--semantics-categories-accent-tinted-highlight-border-color);
+		--_text-editor-link-badge-content-color: var(--primitives-color-accent-700);
+		--_text-editor-link-badge-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-75));
+		--_text-editor-link-badge-highlight-border-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
 		--_text-editor-link-badge-is-hovered-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
 		--_text-editor-link-badge-is-active-background-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
 		--_text-editor-link-badge-is-hovered-highlight-border-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-200));
 		--_text-editor-link-badge-is-active-highlight-border-color: light-dark(var(--primitives-color-accent-200), var(--primitives-color-accent-250));
 		--_text-editor-mention-icon-size: 0.95em;
-		--_text-editor-mention-token-background-color: var(--semantics-categories-accent-tinted-background-color);
-		--_text-editor-mention-token-content-color: var(--semantics-categories-accent-tinted-content-color);
-		--_text-editor-mention-token-is-selected-background-color: var(--semantics-categories-accent-filled-background-color);
-		--_text-editor-mention-token-is-selected-content-color: var(--semantics-categories-accent-filled-content-color);
+		--_text-editor-mention-token-background-color: var(--components-text-editor-mention-background-color);
+		--_text-editor-mention-token-content-color: var(--components-text-editor-mention-content-color);
+		--_text-editor-mention-token-is-selected-background-color: var(--components-text-editor-mention-is-selected-background-color);
+		--_text-editor-mention-token-is-selected-content-color: var(--components-text-editor-mention-is-selected-content-color);
 		--_text-editor-rows: 6;
 
 		${inheritedTextReset}

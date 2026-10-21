@@ -246,3 +246,19 @@ describe('nldd-checkbox-field – label click', () => {
 		expect(deepActiveElement()).toBe(inner.shadowRoot!.querySelector('.checkbox__input'));
 	});
 });
+
+describe('nldd-checkbox-field – color="inherit"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('passes the color to its checkbox and draws its label in the surrounding text color', async () => {
+		el = await fixture(`<div style="color: rgb(255, 255, 255);"><nldd-checkbox-field color="inherit" label="Afgerond"></nldd-checkbox-field></div>`);
+		const field = el.querySelector('nldd-checkbox-field') as HTMLElement;
+		await waitForUpdate(field);
+		expect(field.shadowRoot!.querySelector('nldd-checkbox')!.getAttribute('color')).toBe('inherit');
+		expect(getComputedStyle(field.shadowRoot!.querySelector('.checkbox-field__label')!).color).toBe('rgb(255, 255, 255)');
+	});
+});

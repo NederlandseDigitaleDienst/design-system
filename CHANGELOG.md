@@ -9,6 +9,23 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **A `--components-*` layer, only for what a theme sets.** A theme reaches `:root`, not the styles of a component, so the few values a theme changes for one component live in `variables.css` as `--components-{component}-*`: the accent badge and status bar, the icon of the accent banner, the mention in the text editor and the current tab of the tab bar. It is not the old component layer: a component reads only its own tokens, and the style check fails on any other. Everything else stays a local variable or a semantics token.
+
+### Changed
+
+- **`--semantics-controls-is-highlighted-*` is now `--semantics-controls-is-selected-*`.** It is the color of a checked, selected or current control, so the name says that, as `--semantics-buttons-*-is-selected-*` already did. The highlighted item of a menu or mention list, where the keyboard or pointer is, reads `--semantics-list-items-is-highlighted-*` instead, like the highlighted row of a list, and that token has its own values now. If your own CSS reads one of these tokens, rename it.
+- **Categories are for telling groups apart; surfaces are for areas.** Only the tag and the progress bar and circle read `--semantics-categories-*` now. The banner draws on `--semantics-surfaces-{tinted,accent-tinted,success-tinted,warning-tinted,critical-tinted}-*`, new for success, warning and critical; `nldd-box background="critical"` takes a surface too. The badge, status bar, date picker and image keep their colors in their own styles, and a mention in the text editor reads `--components-text-editor-mention-*`, which a theme can set. The neutral and accent banner are one step lighter, on the same tint as `background="tinted"`, and the warning and success icons of the banner are a lighter orange and green in light mode.
+- **The `reference` category style is gone.** `--semantics-categories-{color}-reference-*` drew the panel of the hero, which now reads `--semantics-surfaces-accent-filled-*` and `--semantics-content-on-accent-filled-*`. No component used it anymore. If your own CSS reads one of these tokens, take the accent-filled surface for the theme color, or the `filled` style of the color.
+- **The surface border tokens are called `highlight-border`, as everywhere else.** `--semantics-surfaces-border-width` is now `--semantics-surfaces-highlight-border-width`, and `--semantics-surfaces-base-border-color` and `--semantics-surfaces-tinted-border-color` are now `-highlight-border-color`. The components follow by themselves. If your own CSS reads one of these tokens, rename it.
+- **Warning is a lighter orange on the badge and the status bar.** They take orange step 300 instead of 400 (700 instead of 600 in dark mode), which reads clearer next to black text. Their border stays at 3:1 against the page.
+
+### Breaking
+
+- **`nldd-badge` no longer takes a Rijkshuisstijl color.** `color` is the same set as `nldd-status-bar`, plus `inherit`: `critical` (the default), `accent`, `neutral`, `warning`, `success` and `inherit`. A badge is a signal, not a category, and a color of its own clashed with the theme. A badge with `color="hemelblauw"` or another named color now gets the accent, and says so in the console during development. Pick the color for the whole site with a theme, or use `custom-color` for a color of its own.
+- **`nldd-hero` no longer takes a Rijkshuisstijl color for its panel.** `main-background` is `accent` (the default) or `base`. A color per hero came before themes. A theme now picks the color for the whole site. A hero with `main-background="donkerblauw"` or another named color gets the accent instead, and says so in the console during development. To keep the color, set the theme on `<html>` (`data-nldd-theme="donkerblauw"`, with `@nldd/design-system/themes/donkerblauw.css`) and remove the attribute. Without a theme the accent is lintblauw.
+
 ## [0.9.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.100...v0.9.0) (2026-10-19)
 
 ### Highlights

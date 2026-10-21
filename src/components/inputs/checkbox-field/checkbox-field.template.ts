@@ -10,6 +10,7 @@ export function checkboxFieldTemplate(component: NLDDCheckboxField): TemplateRes
 		>
 			<div class="checkbox-field__control">
 				<nldd-checkbox
+					color=${component.color || nothing}
 					?invalid=${component.invalid}
 					?required=${component.required}
 					?checked=${component.checked}

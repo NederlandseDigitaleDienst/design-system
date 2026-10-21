@@ -60,12 +60,12 @@ export const listStyles = css`
 
 	:host([appearance^="box"]) {
 		--_list-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_list-highlight-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_list-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 	}
 
 	:host([appearance="box-base"]) {
 		--_list-background-color: var(--semantics-surfaces-base-background-color);
-		--_list-highlight-border-color: var(--semantics-surfaces-base-border-color);
+		--_list-highlight-border-color: var(--semantics-surfaces-base-highlight-border-color);
 	}
 
 

@@ -17,7 +17,7 @@
  *
  * @element nldd-card
  *
- * @attr {'base'|'tinted'} background - Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface
+ * @attr {'base'|'tinted'|'accent-tinted'} background - Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface, `accent-tinted` for a tint of the theme's accent with the contrast of `tinted`
  * @attr {string} accessible-label - Accessible name of the card; with `href`/`button` it names the link or button, otherwise the card region
  * @attr {object} translations - Override translation keys (e.g. the "opent in nieuw tabblad" announcement)
  * @attr {string} href - Makes the whole card a link to this URL (empty = no link)
@@ -38,7 +38,7 @@ import { cardTemplate } from './card.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddCardTranslations } from './card.i18n.js';
 
-export type CardBackground = 'base' | 'tinted';
+export type CardBackground = 'base' | 'tinted' | 'accent-tinted';
 
 @customElement('nldd-card')
 export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations) {

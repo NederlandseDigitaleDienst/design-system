@@ -4,6 +4,7 @@
  * @element nldd-checkbox
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
+ * @attr {'inherit'} color - 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable.
  * @attr {boolean} decorative - Renders the box without the input: no focus, no
  *   name/value, nothing announced. For a control that owns the state elsewhere,
@@ -61,6 +62,10 @@ export class NLDDCheckbox extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	name = '';
+
+	/** 'inherit' draws the control in the surrounding text color. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	color = '';
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
