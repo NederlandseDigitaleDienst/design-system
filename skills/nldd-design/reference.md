@@ -779,7 +779,7 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
+| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `decorative` | `boolean` | Renders the box without the input: no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row that is itself the checkbox; putting a real input in there would nest a control inside a control. |
 | `indeterminate` | `boolean` | Indeterminate state (takes precedence over checked visually) |
@@ -1125,7 +1125,7 @@ WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
+| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `decorative` | `boolean` | Renders the shape only: no role, no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row or an nldd-radio-button-field that is itself the radio; putting a second radio in there would nest a control inside a control. |
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. |
@@ -1321,7 +1321,7 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 | --- | --- | --- |
 | `checked` | `boolean` | Whether the switch is on/off |
 | `disabled` | `boolean` | Disabled state |
-| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
+| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `size` | `string` | Switch size: 'xs' \| 'sm' (default: 'sm') |
 | `name` | `string` | Name for form submission; nothing is submitted when the switch is off |

@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './badge.js';
+import type { NLDDBadge } from './badge.js';
 
 describe('nldd-badge', () => {
 	let el: HTMLElement;
@@ -248,6 +249,39 @@ describe('nldd-badge – color', () => {
 			await waitForUpdate(el);
 			expect(el.hasAttribute('data-color-fallback')).toBe(true);
 			expect(warn.mock.calls.some(([message]) => String(message).includes('color="hemelblauw"'))).toBe(true);
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
+	it('marks the fallback before its first render', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			const badge = document.createElement('nldd-badge') as NLDDBadge;
+			badge.setAttribute('color', 'lintblauw');
+			badge.text = 'Nieuw';
+			let markedAtRender: boolean | undefined;
+			const render = badge.render.bind(badge);
+			badge.render = () => {
+				markedAtRender ??= badge.hasAttribute('data-color-fallback');
+				return render();
+			};
+			el = await fixture('<div></div>');
+			el.append(badge);
+			await badge.updateComplete;
+			expect(markedAtRender).toBe(true);
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
+	it('treats an empty color as unknown', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			el = await fixture('<nldd-badge color="" text="Nieuw"></nldd-badge>');
+			await waitForUpdate(el);
+			expect(el.hasAttribute('data-color-fallback')).toBe(true);
+			expect(warn.mock.calls.some(([message]) => String(message).includes('color=""'))).toBe(true);
 		} finally {
 			warn.mockRestore();
 		}

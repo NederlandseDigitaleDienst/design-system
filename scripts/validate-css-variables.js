@@ -19,6 +19,10 @@
  *   in variables.css rather than in the component's :host. Validated against
  *   variables.css, and named after a component in the folder that reads them,
  *   so the layer cannot grow back into overrides shared between components.
+ *
+ * It also fails on a px length in an @container or @media condition. With
+ * page zoom, Safari measures a container that takes its width from the layout
+ * in zoomed pixels, so a px condition keeps the wide layout; rem scales along.
  */
 
 import fs from 'fs';
@@ -195,6 +199,8 @@ function validate() {
     const prefixes = prefixesByFolder.get(folder) ?? new Set();
     return [...prefixes].some((prefix) => varName.startsWith(`--components-${prefix}-`));
   };
+  const allComponentPrefixes = new Set([...prefixesByFolder.values()].flatMap((prefixes) => [...prefixes]));
+  const namesAComponent = (varName) => [...allComponentPrefixes].some((prefix) => varName.startsWith(`--components-${prefix}-`));
   const prefixError = (file, varName) => ({
     file,
     variable: varName,
@@ -252,7 +258,13 @@ function validate() {
 
         case 'components':
           stats.styleVars++;
-          if (!hasOwnComponentPrefix(varName, folder)) {
+          if (!namesAComponent(varName)) {
+            errors.push({
+              file: relativePath,
+              variable: varName,
+              message: `"${varName}" does not start with the name of a component (--components-{tag without nldd-}-…)`,
+            });
+          } else if (!hasOwnComponentPrefix(varName, folder)) {
             errors.push({
               file: relativePath,
               variable: varName,
@@ -277,6 +289,31 @@ function validate() {
           });
           break;
       }
+    }
+  }
+
+  // A px length in a query condition: the condition runs up to the opening
+  // brace on the same line, so a mention in a comment does not count. A value
+  // built at runtime (`${below}`) carries no literal and passes.
+  const QUERY_PX = /@(container|media)\b[^{\n;*`]*?\b\d+(\.\d+)?px\b[^{\n;*`]*\{/g;
+  const queryFiles = [];
+  const walkQueries = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) walkQueries(fullPath);
+      else if (/\.(ts|js|css)$/.test(entry.name) && !/\.(stories|test)\.[tj]s$/.test(entry.name)) queryFiles.push(fullPath);
+    }
+  };
+  walkQueries(path.join(ROOT_DIR, 'src'));
+  for (const filePath of queryFiles) {
+    const source = fs.readFileSync(filePath, 'utf8');
+    for (const match of source.matchAll(QUERY_PX)) {
+      const line = source.slice(0, match.index).split('\n').length;
+      errors.push({
+        file: `${path.relative(ROOT_DIR, filePath)}:${line}`,
+        variable: match[0],
+        message: `"${match[0].replace(/\s+/g, ' ').trim()}" has a px length. Write the condition in rem (40rem, not 640px): with page zoom, Safari measures a container in zoomed pixels`,
+      });
     }
   }
 

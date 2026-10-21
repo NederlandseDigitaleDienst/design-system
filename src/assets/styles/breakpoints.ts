@@ -22,11 +22,21 @@ export const queryBreakpoints = {
 } as const;
 
 /**
- * A breakpoint in CSS pixels at the current root font size, for a width that
- * script compares itself. It matches what the rem conditions in the styles
- * see, also when someone has set a larger default font size.
+ * The root font size in CSS pixels, what 1rem is in the query conditions. It
+ * reads the computed style of the page, so call it in the browser (in
+ * connectedCallback, a resize observer or an event handler), not during SSR.
  */
-export function breakpointPx(name: keyof typeof queryBreakpoints): number {
-	const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-	return parseFloat(queryBreakpoints[name]) * rootFontSize;
+export function rootFontSize(): number {
+	return parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+}
+
+/**
+ * A breakpoint in CSS pixels at the root font size, for a width that script
+ * compares itself. It matches what the rem conditions in the styles see, also
+ * when someone has set a larger default font size. Comparing against more than
+ * one breakpoint, read `rootFontSize()` once and pass it in. Browser only, like
+ * `rootFontSize()`.
+ */
+export function breakpointPx(name: keyof typeof queryBreakpoints, fontSize = rootFontSize()): number {
+	return parseFloat(queryBreakpoints[name]) * fontSize;
 }

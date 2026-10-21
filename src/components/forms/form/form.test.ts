@@ -338,7 +338,7 @@ describe('nldd-form', () => {
 		});
 
 		it('CSS cascade: expliciete eigen label-alignment wint over geërfde via container query', async () => {
-			// Container >= mdMin so the @container (min-width: 640px) rule matches
+			// Container >= mdMin so the @container (min-width: 40.0625rem) rule matches
 			// and row layout applies for left/right alignment.
 			const wrapper = await fixture(`
 				<div style="width: 800px;">

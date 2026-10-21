@@ -112,7 +112,7 @@ export const oneThirdTwoThirdsSectionStyles = css`
 		   two near-equal columns; stack to a single column instead. nowrap
 		   stops the column-direction wrap container from stretching the
 		   shorter column to fill height. */
-		@container (max-width: 768px) {
+		@container (max-width: 48rem) {
 			flex-direction: column;
 			flex-wrap: nowrap;
 		}
@@ -131,13 +131,13 @@ export const oneThirdTwoThirdsSectionStyles = css`
 	}
 
 	:host([vertical-alignment="center"]) .one-third-two-thirds-section__columns {
-		@container (min-width: 769px) {
+		@container (min-width: 48.0625rem) {
 			align-items: center;
 		}
 	}
 
 	:host([vertical-alignment="bottom"]) .one-third-two-thirds-section__columns {
-		@container (min-width: 769px) {
+		@container (min-width: 48.0625rem) {
 			align-items: flex-end;
 		}
 	}

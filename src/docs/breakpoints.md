@@ -26,7 +26,7 @@ Daarom staan de breakpoints niet als CSS custom properties in `variables.css`: `
 ## Gebruik in JavaScript / TypeScript
 
 ```ts
-import { breakpointPx, breakpoints, queryBreakpoints } from '@nldd/design-system/breakpoints';
+import { breakpointPx, breakpoints, queryBreakpoints, rootFontSize } from '@nldd/design-system/breakpoints';
 
 const isDesktop = matchMedia(`(min-width: ${queryBreakpoints.lgMin})`).matches;
 const isTablet = matchMedia(`(min-width: ${queryBreakpoints.mdMin}) and (max-width: ${queryBreakpoints.mdMax})`).matches;
@@ -34,6 +34,11 @@ const isTablet = matchMedia(`(min-width: ${queryBreakpoints.mdMin}) and (max-wid
 // Een breedte die je zelf meet, vergelijk je met breakpointPx: die rekent
 // met de lettergrootte, net als de queries.
 const isWide = element.clientWidth >= breakpointPx('lgMin'); // 1008 bij 16px
+
+// Vergelijk je met meer breakpoints, lees de lettergrootte dan één keer:
+const fontSize = rootFontSize();
+const isSm = width <= breakpointPx('smMax', fontSize);
+const isMd = !isSm && width <= breakpointPx('mdMax', fontSize);
 
 // De px-waardes blijven beschikbaar:
 const lgMinPx = parseInt(breakpoints.lgMin); // 1008

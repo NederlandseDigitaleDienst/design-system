@@ -277,7 +277,7 @@ export const paginationStyles = css`
 	.pagination__page-buttons {
 		display: contents;
 
-		@container (max-width: 400px) {
+		@container (max-width: 25rem) {
 			display: none;
 		}
 	}
@@ -285,7 +285,7 @@ export const paginationStyles = css`
 	.pagination__compact {
 		display: none;
 
-		@container (max-width: 400px) {
+		@container (max-width: 25rem) {
 			display: contents;
 		}
 	}

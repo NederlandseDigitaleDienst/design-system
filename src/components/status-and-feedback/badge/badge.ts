@@ -76,14 +76,18 @@ export class NLDDBadge extends withTranslations(LitElement, nlddBadgeTranslation
 	@property({ type: Boolean, reflect: true })
 	decorative = false;
 
-	override updated(changed: Map<string, unknown>): void {
-		if (changed.has('color')) {
-			const known = COLORS.has(this.color);
-			this.toggleAttribute('data-color-fallback', !known);
-			if (import.meta.env?.DEV && !known) {
-				console.warn(`<nldd-badge>: color="${this.color}" is not one of ${[...COLORS].join(', ')}, and falls back to "accent". For a color of its own, use custom-color.`, this);
-			}
+	// Before the render, so an unknown color paints as the accent from the
+	// first frame rather than as critical first.
+	override willUpdate(changed: Map<string, unknown>): void {
+		if (!changed.has('color')) return;
+		const known = COLORS.has(this.color);
+		this.toggleAttribute('data-color-fallback', !known);
+		if (import.meta.env?.DEV && !known) {
+			console.warn(`<nldd-badge>: color="${this.color}" is not one of ${[...COLORS].join(', ')}, and falls back to "accent". For a color of its own, use custom-color.`, this);
 		}
+	}
+
+	override updated(changed: Map<string, unknown>): void {
 		if (!changed.has('customColor')) return;
 		if (this.customColor) this.style.setProperty('--_badge-custom-color', this.customColor);
 		else this.style.removeProperty('--_badge-custom-color');

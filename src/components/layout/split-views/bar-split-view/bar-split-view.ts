@@ -38,7 +38,7 @@ import { LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { barSplitViewStyles } from './bar-split-view.styles.js';
 import { barSplitViewTemplate } from './bar-split-view.template.js';
-import { breakpointPx } from '../../../../assets/styles/breakpoints.js';
+import { breakpointPx, rootFontSize } from '../../../../assets/styles/breakpoints.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
 
 export type Breakpoint = 'sm' | 'md' | 'lg';
@@ -94,8 +94,9 @@ export class NLDDBarSplitView extends LitElement {
 	}
 
 	private _getBreakpoint(width: number): Breakpoint {
-		if (width <= breakpointPx('smMax')) return 'sm';
-		if (width <= breakpointPx('mdMax')) return 'md';
+		const fontSize = rootFontSize();
+		if (width <= breakpointPx('smMax', fontSize)) return 'sm';
+		if (width <= breakpointPx('mdMax', fontSize)) return 'md';
 		return 'lg';
 	}
 

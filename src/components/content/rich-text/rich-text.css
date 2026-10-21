@@ -299,11 +299,11 @@ nldd-rich-text dl {
 	display: grid;
 	column-gap: var(--_rich-text-dl-column-gap);
 
-	@container (max-width: 640px) {
+	@container (max-width: 40rem) {
 		grid-template-columns: 1fr;
 	}
 
-	@container (min-width: 641px) {
+	@container (min-width: 40.0625rem) {
 		grid-template-columns: var(--_rich-text-dt-width) 1fr;
 	}
 }
@@ -311,7 +311,7 @@ nldd-rich-text dl {
 nldd-rich-text dt {
 	font-weight: var(--primitives-font-weight-body-bold);
 
-	@container (min-width: 641px) {
+	@container (min-width: 40.0625rem) {
 		grid-column: 1;
 	}
 }
@@ -320,7 +320,7 @@ nldd-rich-text dd {
 	margin-inline: 0;
 	text-wrap: pretty;
 
-	@container (min-width: 641px) {
+	@container (min-width: 40.0625rem) {
 		grid-column: 2;
 	}
 }
@@ -336,7 +336,7 @@ nldd-rich-text dd + dt {
    its row with that group-starting dt, so it needs the same top margin to
    stay aligned. */
 nldd-rich-text dd + dt + dd {
-	@container (min-width: 641px) {
+	@container (min-width: 40.0625rem) {
 		margin-top: var(--_rich-text-dl-gap);
 	}
 }
@@ -477,7 +477,7 @@ nldd-rich-text blockquote {
 	font: var(--semantics-blockquotes-md-quote-font);
 	text-wrap: pretty;
 
-	@container (max-width: 640px) {
+	@container (max-width: 40rem) {
 		gap: calc(var(--semantics-blockquotes-sm-spacing) / 2);
 		margin-block: max(
 			0px,
@@ -553,7 +553,7 @@ nldd-rich-text table {
 	-webkit-overflow-scrolling: touch;
 	scrollbar-width: thin;
 
-	@container (min-width: 641px) {
+	@container (min-width: 40.0625rem) {
 		display: table;
 		width: 100%;
 		overflow-x: unset;
@@ -579,7 +579,7 @@ nldd-rich-text th {
 	font: var(--primitives-font-body-md-bold-tight);
 	text-align: start;
 
-	@container (min-width: 641px) {
+	@container (min-width: 40.0625rem) {
 		min-width: unset;
 	}
 }
@@ -594,7 +594,7 @@ nldd-rich-text td {
 	font: var(--primitives-font-body-md-regular-tight);
 	text-align: left;
 
-	@container (min-width: 641px) {
+	@container (min-width: 40.0625rem) {
 		min-width: unset;
 	}
 }

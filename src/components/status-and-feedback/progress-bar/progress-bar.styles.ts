@@ -166,13 +166,13 @@ export const progressBarStyles = css`
 		animation: progress-bar-indeterminate var(--_progress-bar-indeterminate-duration) ease-in-out infinite alternate;
 	}
 
-	@container (min-width: 401px) and (max-width: 720px) {
+	@container (min-width: 25.0625rem) and (max-width: 45rem) {
 		.progress-bar__indeterminate-indicator::before {
 			--_progress-bar-indeterminate-duration: 1000ms;
 		}
 	}
 
-	@container (min-width: 721px) {
+	@container (min-width: 45.0625rem) {
 		.progress-bar__indeterminate-indicator::before {
 			--_progress-bar-indeterminate-duration: 1200ms;
 		}

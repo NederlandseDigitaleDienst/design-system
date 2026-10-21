@@ -8259,7 +8259,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color"
             },
             {
@@ -14279,7 +14279,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color"
             },
             {
@@ -16839,7 +16839,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else white or black, whichever reads. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
+              "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
               "fieldName": "color"
             },
             {
