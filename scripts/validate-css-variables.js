@@ -24,8 +24,9 @@
  * page zoom, Safari measures a container that takes its width from the layout
  * in zoomed pixels, so a px condition keeps the wide layout; rem scales along.
  * The same goes for a px length written out in a matchMedia() string. The
- * check reads a condition on one line, up to its opening brace, so a condition
- * spread over more lines is not caught.
+ * check reads a condition on one line, up to its opening brace, and stops at a
+ * `*` so a comment does not count. A condition spread over more lines, or one
+ * with a calc() that multiplies, is therefore not caught.
  */
 
 import fs from 'fs';
@@ -198,12 +199,13 @@ function validate() {
     const prefixes = prefixesByFolder.get(folder) ?? new Set();
     return [...prefixes].some((prefix) => varName.startsWith(`--_${prefix}-`));
   };
-  const hasOwnComponentPrefix = (varName, folder) => {
-    const prefixes = prefixesByFolder.get(folder) ?? new Set();
-    return [...prefixes].some((prefix) => varName.startsWith(`--components-${prefix}-`));
-  };
-  const allComponentPrefixes = new Set([...prefixesByFolder.values()].flatMap((prefixes) => [...prefixes]));
-  const namesAComponent = (varName) => [...allComponentPrefixes].some((prefix) => varName.startsWith(`--components-${prefix}-`));
+  // The component a --components-* token is named after: the longest name that
+  // matches, so --components-button-group-* belongs to button-group, not button.
+  const allComponentPrefixes = [...new Set([...prefixesByFolder.values()].flatMap((prefixes) => [...prefixes]))]
+    .sort((a, b) => b.length - a.length);
+  const componentOf = (varName) => allComponentPrefixes.find((prefix) => varName.startsWith(`--components-${prefix}-`));
+  const namesAComponent = (varName) => componentOf(varName) !== undefined;
+  const hasOwnComponentPrefix = (varName, folder) => (prefixesByFolder.get(folder) ?? new Set()).has(componentOf(varName));
   const prefixError = (file, varName) => ({
     file,
     variable: varName,
