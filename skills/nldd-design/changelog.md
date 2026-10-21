@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.10.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.9.0...v0.10.0) (2026-10-21)
+
 ### Highlights
 
 - **Themes for 17 Rijkshuisstijl colors.** Set `data-nldd-theme` on `<html>` and buttons, selections, links, the focus ring, the hero and the badge take that color instead of lintblauw, in light and dark mode. The ribbon and the logo stay lintblauw.
