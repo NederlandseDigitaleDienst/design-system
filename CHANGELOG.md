@@ -20,6 +20,12 @@ here; consult the commit history if you need that level of detail.
 - **The `reference` category style is gone.** `--semantics-categories-{color}-reference-*` drew the panel of the hero, which now reads `--semantics-surfaces-accent-filled-*` and `--semantics-content-on-accent-filled-*`. No component used it anymore. If your own CSS reads one of these tokens, take the accent-filled surface for the theme color, or the `filled` style of the color.
 - **The surface border tokens are called `highlight-border`, as everywhere else.** `--semantics-surfaces-border-width` is now `--semantics-surfaces-highlight-border-width`, and `--semantics-surfaces-base-border-color` and `--semantics-surfaces-tinted-border-color` are now `-highlight-border-color`. The components follow by themselves. If your own CSS reads one of these tokens, rename it.
 - **Warning is a lighter orange on the badge and the status bar.** They take orange step 300 instead of 400 (700 instead of 600 in dark mode), which reads clearer next to black text. Their border stays at 3:1 against the page.
+- **The wordmark of `nldd-top-navigation-bar` stands where the printed logo has it.** On md and lg it is 10px from the ribbon instead of 8px, so the first letter is as far from the ribbon as in the logo. On a small screen a wordmark taller than the ribbon keeps 16px from the top instead of 12px.
+
+### Fixed
+
+- **Components switch to their narrow layout when you zoom in Safari.** With page zoom, Safari measured the width of a container that takes its size from the layout in zoomed pixels, so a list 537px wide counted as wider than 641px and kept its desktop layout, with a column of one word per line. The breakpoints in the component styles are now in rem (`40rem` instead of `640px`), which scale with the zoom. At the default font size of 16px nothing changes; with a larger default font size the narrow layout comes earlier. `@nldd/design-system/breakpoints` adds `queryBreakpoints` (the rem values) and `breakpointPx()`, for a width you measure in script; `breakpoints` keeps its px values. A `hide-below` or `hide-above` with a px value of your own still has the problem in Safari: write it in rem.
+- **On a small screen `nldd-hero` keeps the full distance at the top again.** Half the distance (8px) put the hero too close to the top bar on mobile, so there it is 16px again, as for the other page sections. On md and lg the top stays at half.
 
 ### Breaking
 

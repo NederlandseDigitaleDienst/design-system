@@ -38,11 +38,8 @@ import { LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { barSplitViewStyles } from './bar-split-view.styles.js';
 import { barSplitViewTemplate } from './bar-split-view.template.js';
-import { breakpoints } from '../../../../assets/styles/breakpoints.js';
+import { breakpointPx } from '../../../../assets/styles/breakpoints.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
-
-const smMaxPx = parseInt(breakpoints.smMax);
-const mdMaxPx = parseInt(breakpoints.mdMax);
 
 export type Breakpoint = 'sm' | 'md' | 'lg';
 type BreakpointOrUnmeasured = Breakpoint | null;
@@ -97,8 +94,8 @@ export class NLDDBarSplitView extends LitElement {
 	}
 
 	private _getBreakpoint(width: number): Breakpoint {
-		if (width <= smMaxPx) return 'sm';
-		if (width <= mdMaxPx) return 'md';
+		if (width <= breakpointPx('smMax')) return 'sm';
+		if (width <= breakpointPx('mdMax')) return 'md';
 		return 'lg';
 	}
 

@@ -146,18 +146,18 @@ describe('nldd-step-cell', () => {
 
 	// Named breakpoints are static CSS in the adopted stylesheet, so no <style>
 	// is injected and a consumer needs no 'unsafe-inline' in its style-src.
-	it('adopts a @container rule for hide-below (md → max-width 640px)', async () => {
+	it('adopts a @container rule for hide-below (md → max-width 40rem)', async () => {
 		el = await fixture<NLDDStepCell>('<nldd-step-cell hide-below="md"></nldd-step-cell>');
 		await waitForUpdate(el);
-		expect(adoptedCss(el)).toContain('max-width: 640px');
+		expect(adoptedCss(el)).toContain('max-width: 40rem');
 		expect(adoptedCss(el)).toContain('display: none');
 		expect(el.shadowRoot!.querySelector('style')).toBeNull();
 	});
 
-	it('adopts a @container rule for hide-above (md → min-width 1008px)', async () => {
+	it('adopts a @container rule for hide-above (md → min-width 63rem)', async () => {
 		el = await fixture<NLDDStepCell>('<nldd-step-cell hide-above="md"></nldd-step-cell>');
 		await waitForUpdate(el);
-		expect(adoptedCss(el)).toContain('min-width: 1008px');
+		expect(adoptedCss(el)).toContain('min-width: 63rem');
 	});
 });
 

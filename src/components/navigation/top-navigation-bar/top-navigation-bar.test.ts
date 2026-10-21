@@ -561,7 +561,7 @@ describe('nldd-top-navigation-bar – wordmark beside the ribbon', () => {
 		if (el) cleanup(el);
 	});
 
-	const tokens = '--semantics-brand-ribbon-sm-width: 40px; --semantics-brand-ribbon-lg-width: 48px; --primitives-space-12: 12px;';
+	const tokens = '--semantics-brand-ribbon-sm-width: 40px; --semantics-brand-ribbon-lg-width: 48px; --primitives-space-16: 16px;';
 
 	const mount = async (width: string, attrs: string) => {
 		el = await fixture(
@@ -581,13 +581,13 @@ describe('nldd-top-navigation-bar – wordmark beside the ribbon', () => {
 		expect(Math.abs(midden(content) - midden(logo))).toBeLessThan(1);
 	});
 
-	it('keeps 12px from the top and grows downward when it does not fit', async () => {
+	it('keeps 16px from the top and grows downward when it does not fit', async () => {
 		const { logo, content } = await mount(
 			'375px',
 			'logo-subtitle="Ministerie van Economische Zaken en Klimaat" logo-supporting-text1="Directie Digitale Overheid"',
 		);
 		expect(content.height).toBeGreaterThan(logo.height);
-		expect(Math.round(content.top - logo.top)).toBe(12);
+		expect(Math.round(content.top - logo.top)).toBe(16);
 	});
 
 	// Room under the text would raise the whole bar for nothing.
@@ -680,7 +680,7 @@ describe('nldd-top-navigation-bar – clickable area of the logo link', () => {
 
 	it('takes a click on the ribbon and the text, not on the space beside them', async () => {
 		el = await fixture(
-			'<div style="width: 100%; --semantics-brand-ribbon-sm-width: 40px; --semantics-brand-ribbon-md-width: 44px; --semantics-brand-ribbon-lg-width: 48px; --primitives-space-12: 12px;">'
+			'<div style="width: 100%; --semantics-brand-ribbon-sm-width: 40px; --semantics-brand-ribbon-md-width: 44px; --semantics-brand-ribbon-lg-width: 48px; --primitives-space-16: 16px;">'
 			+ '<nldd-top-navigation-bar logo-title="Mijn Dienst" logo-href="/"></nldd-top-navigation-bar></div>',
 		);
 		const bar = el.querySelector('nldd-top-navigation-bar') as NLDDTopNavigationBar;

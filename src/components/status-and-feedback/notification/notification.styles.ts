@@ -1,7 +1,7 @@
 import { css, unsafeCSS } from 'lit';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
-const smMax = unsafeCSS(breakpoints.smMax);
+const smMax = unsafeCSS(queryBreakpoints.smMax);
 
 
 /* # Host */

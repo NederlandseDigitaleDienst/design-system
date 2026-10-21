@@ -1,11 +1,11 @@
 import { css, unsafeCSS } from 'lit';
-import { breakpoints } from '../../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
 import { inheritedTextReset, slottedReset } from '../../../../assets/styles/shadow-resets.js';
 
-const smMax = unsafeCSS(breakpoints.smMax);
-const mdMin = unsafeCSS(breakpoints.mdMin);
-const mdMax = unsafeCSS(breakpoints.mdMax);
-const lgMin = unsafeCSS(breakpoints.lgMin);
+const smMax = unsafeCSS(queryBreakpoints.smMax);
+const mdMin = unsafeCSS(queryBreakpoints.mdMin);
+const mdMax = unsafeCSS(queryBreakpoints.mdMax);
+const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 
 export const heroStyles = css`
 	:host {
@@ -86,7 +86,7 @@ export const heroStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-inline: var(--semantics-page-sections-sm-margin-inline);
-			padding-top: var(--_hero-sm-padding-top, var(--_hero-padding-top, calc(var(--semantics-page-sections-sm-margin-block) / 2)));
+			padding-top: var(--_hero-sm-padding-top, var(--_hero-padding-top, var(--semantics-page-sections-sm-margin-block)));
 			padding-bottom: var(--_hero-sm-padding-bottom, var(--_hero-padding-bottom, var(--semantics-page-sections-sm-margin-block)));
 		}
 

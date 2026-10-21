@@ -19,11 +19,12 @@
  * `main-background="base"` that area gets a border so it stays visible on the
  * base surface.
  *
- * The hero is the head of a page and sits right under the top bar, so its top
- * padding is half that of the other page sections: the full distance is meant
- * to separate two sections, and under the top bar it reads as a gap. The
- * bottom keeps the full distance to the section below. Set `padding-top` to
- * place a hero elsewhere.
+ * The hero is the head of a page and sits right under the top bar, so on md
+ * and lg its top padding is half that of the other page sections: the full
+ * distance is meant to separate two sections, and under the top bar it reads
+ * as a gap. On sm the top keeps the full distance, as the other sections do.
+ * The bottom keeps the full distance to the section below. Set `padding-top`
+ * to place a hero elsewhere.
  *
  * By default the panel falls over the bottom of the image and runs on below it
  * (`layout="overlap"`), so the image keeps its height whatever the content.

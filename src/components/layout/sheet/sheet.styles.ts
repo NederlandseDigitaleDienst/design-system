@@ -1,9 +1,9 @@
 import { css, unsafeCSS } from 'lit';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
-const smMax = unsafeCSS(breakpoints.smMax);
-const mdMin = unsafeCSS(breakpoints.mdMin);
-const lgMin = unsafeCSS(breakpoints.lgMin);
+const smMax = unsafeCSS(queryBreakpoints.smMax);
+const mdMin = unsafeCSS(queryBreakpoints.mdMin);
+const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 
 export const sheetStyles = css`
 	:host {

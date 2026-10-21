@@ -1,11 +1,11 @@
 import { css, unsafeCSS } from 'lit';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
-const smMax = unsafeCSS(breakpoints.smMax);
-const mdMin = unsafeCSS(breakpoints.mdMin);
-const mdMax = unsafeCSS(breakpoints.mdMax);
-const lgMin = unsafeCSS(breakpoints.lgMin);
+const smMax = unsafeCSS(queryBreakpoints.smMax);
+const mdMin = unsafeCSS(queryBreakpoints.mdMin);
+const mdMax = unsafeCSS(queryBreakpoints.mdMax);
+const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 
 export const topNavigationBarStyles = css`
 	:host {
@@ -95,6 +95,11 @@ export const topNavigationBarStyles = css`
 		gap: var(--primitives-space-8);
 		align-items: center;
 		width: 100%;
+
+		/* Off the 4px grid on purpose: puts the wordmark where the printed logo has it. */
+		@container (min-width: ${mdMin}) {
+			gap: var(--primitives-space-10);
+		}
 		max-width: var(--_top-navigation-bar-max-width);
 	}
 
@@ -236,12 +241,12 @@ export const topNavigationBarStyles = css`
 
 		/* The distance the text keeps from the top edge once it outgrows the
 		   ribbon. Only at the top: space under it would raise the bar for
-		   nothing. The minimum gives up the same 12, so the text still centres
-		   on the middle of the ribbon rather than 6px below it. */
+		   nothing. The minimum gives up the same 16, so the text still centres
+		   on the middle of the ribbon rather than 8px below it. */
 		@container (max-width: ${smMax}) {
 			align-self: start;
-			min-height: calc(var(--_top-navigation-bar-logo-height) - var(--primitives-space-12));
-			padding-block-start: var(--primitives-space-12);
+			min-height: calc(var(--_top-navigation-bar-logo-height) - var(--primitives-space-16));
+			padding-block-start: var(--primitives-space-16);
 		}
 	}
 

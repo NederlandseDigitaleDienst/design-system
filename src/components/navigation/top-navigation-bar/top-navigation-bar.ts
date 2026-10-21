@@ -43,7 +43,7 @@ import { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import '../menu-bar/menu-bar.js';
 import { NLDDMenuBar } from '../menu-bar/menu-bar.js';
 import '../../content/icon/icon.js';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 
 /** Minimal typed interface for nldd-sheet API. */
@@ -404,7 +404,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 	private _isSmBreakpoint(): boolean {
 		const container = this.shadowRoot?.querySelector('.top-navigation-bar') as HTMLElement;
 		if (!container) return false;
-		return container.clientWidth <= parseInt(breakpoints.smMax);
+		return container.clientWidth <= breakpointPx('smMax');
 	}
 
 	// ## Menu sheet

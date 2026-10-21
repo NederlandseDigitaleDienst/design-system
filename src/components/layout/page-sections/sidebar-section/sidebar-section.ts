@@ -72,7 +72,7 @@ import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
-import { breakpoints } from '../../../../assets/styles/breakpoints.js';
+import { breakpointPx } from '../../../../assets/styles/breakpoints.js';
 import { sidebarSectionStyles } from './sidebar-section.styles.js';
 import { sidebarSectionTemplate } from './sidebar-section.template.js';
 import { nlddSidebarSectionTranslations } from './sidebar-section.i18n.js';
@@ -113,7 +113,6 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 	private _sheet?: NLDDSheet;
 
 	private _ro?: ResizeObserver;
-	private readonly _lgMin = parseInt(breakpoints.lgMin, 10);
 	private _hasMeasured = false;
 	private _sheetOpen = false;
 
@@ -165,7 +164,7 @@ export class NLDDSidebarSection extends PageSectionMixin(LitElement) {
 
 	private _applyCollapsed(width: number, announce: boolean): void {
 		// no-collapse opts out of the sheet entirely — the sidebar stacks instead.
-		const next = width < this._lgMin && !this.noCollapse;
+		const next = width < breakpointPx('lgMin') && !this.noCollapse;
 		if (next === this.collapsed) return;
 		this.collapsed = next;
 		if (announce) {
