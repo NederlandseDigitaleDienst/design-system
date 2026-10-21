@@ -23,6 +23,8 @@
  * It also fails on a px length in an @container or @media condition. With
  * page zoom, Safari measures a container that takes its width from the layout
  * in zoomed pixels, so a px condition keeps the wide layout; rem scales along.
+ * The check reads a condition on one line, up to its opening brace, so a
+ * condition spread over more lines is not caught.
  */
 
 import fs from 'fs';
