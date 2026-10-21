@@ -75,7 +75,7 @@ export class NLDDRadioButtonField extends DescribedBy(FormAssociated(LitElement)
 
 	/** 'inherit' draws the control and its label in the surrounding text color. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
-	color = '';
+	color: '' | 'inherit' = '';
 
 	@property({ type: String })
 	label = '';

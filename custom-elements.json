@@ -7436,7 +7436,7 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the surrounding text color.",
@@ -7750,7 +7750,7 @@
             {
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
@@ -7914,7 +7914,7 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control in the surrounding text color.",
@@ -8256,7 +8256,7 @@
             {
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
@@ -13298,7 +13298,7 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the surrounding text color.",
@@ -13594,7 +13594,7 @@
             {
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
@@ -13953,7 +13953,7 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control in the surrounding text color.",
@@ -14276,7 +14276,7 @@
             {
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
@@ -16232,7 +16232,7 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the surrounding text color.",
@@ -16362,7 +16362,7 @@
             {
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
@@ -16503,7 +16503,7 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control in the surrounding text color.",
@@ -16836,7 +16836,7 @@
             {
               "name": "color",
               "type": {
-                "text": "string"
+                "text": "'' | 'inherit'"
               },
               "default": "''",
               "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
@@ -32762,7 +32762,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.",
+              "description": "Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. A selected row sets `--context-selected-indicator-color` and `--context-selected-contrast-color` to its text and fill color, so a checked nldd-checkbox, nldd-radio-button or nldd-switch in it takes the colors of the row: on its gray the accent can fall below 3:1. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`.",
               "name": "selected",
               "default": "false",
               "fieldName": "selected"

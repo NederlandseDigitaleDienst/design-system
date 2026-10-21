@@ -101,7 +101,7 @@ export class NLDDRadioButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** 'inherit' draws the control in the surrounding text color. */
 	@property({ reflect: true, converter: reflectNonDefault('') })
-	color = '';
+	color: '' | 'inherit' = '';
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';

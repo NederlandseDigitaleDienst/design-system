@@ -7,7 +7,9 @@
  * A condition is read on one line, up to its opening brace, and the match
  * stops at a `;`, a `*` or a backtick, so a mention in a comment does not
  * count. A condition spread over more lines, one with a calc() that
- * multiplies, and a value built at runtime (`${below}`) are not caught.
+ * multiplies, and a value built at runtime (`${below}`) are not caught. The
+ * style check runs it on the .ts, .js and .css files in src, so an example in
+ * an .md or .mdx page is not checked either.
  */
 
 const QUERY_PX = /@(container|media)\b[^{\n;*`]*?\b\d+(\.\d+)?px\b[^{\n;*`]*\{/g;
