@@ -12,6 +12,7 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **Themes for 17 Rijkshuisstijl colors.** Set `data-nldd-theme` on `<html>` and buttons, selections, links, the focus ring, the hero and the badge take that color instead of lintblauw, in light and dark mode. The ribbon and the logo stay lintblauw.
+- **A favicon and touch icon in the color of your theme.** The field behind the ribbon takes the theme color, so the tab and the home screen match the site. They ship as `@nldd/design-system/favicon/geel/` and so on.
 
 ### Added
 
