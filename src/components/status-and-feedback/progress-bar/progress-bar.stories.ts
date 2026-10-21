@@ -183,7 +183,7 @@ export const MeerdereSegmenten = {
 			></nldd-progress-bar-segment-indicator>
 			<nldd-progress-bar-segment-indicator
 				value="30"
-				color="accent"
+				color="hemelblauw"
 				name="Verwerken"
 			></nldd-progress-bar-segment-indicator>
 		</nldd-progress-bar>
@@ -232,7 +232,7 @@ export const VariantDistribution = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'In de `distribution`-variant zijn de segmenten categorieën die samen een totaal vormen (bijv. opslaggebruik), geen opeenvolgende voortgang. Ze meten tegen `max` — hier 350 van 500 GB, dus de rest blijft lege track. Gebruik Rijksleuren om segmenten visueel te onderscheiden. Tooltips zijn per segment expliciet ingesteld om eenheden te tonen (GB) — zonder `tooltip-text` zou auto-tekst alleen `Foto\'s: 40%` tonen.',
+				story: 'In de `distribution`-variant zijn de segmenten categorieën die samen een totaal vormen (bijv. opslaggebruik), geen opeenvolgende voortgang. Ze meten tegen `max` — hier 350 van 500 GB, dus de rest blijft lege track. Gebruik Rijkshuisstijlkleuren om segmenten visueel te onderscheiden. Tooltips zijn per segment expliciet ingesteld om eenheden te tonen (GB) — zonder `tooltip-text` zou auto-tekst alleen `Foto\'s: 40%` tonen.',
 			},
 		},
 	},

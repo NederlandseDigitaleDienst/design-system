@@ -133,7 +133,7 @@ export class NLDDLqipEncoder extends LitElement {
 
 		.encoder__error {
 			color: var(--semantics-content-color);
-			background-color: var(--semantics-categories-critical-tinted-background-color);
+			background-color: var(--semantics-surfaces-critical-tinted-background-color);
 			padding: var(--primitives-space-8) var(--primitives-space-12);
 			border-radius: var(--primitives-corner-radius-sm);
 		}

@@ -59,7 +59,7 @@ import { popoverStyles } from './popover.styles.js';
 import { popoverTemplate } from './popover.template.js';
 import { nlddPopoverTranslations, type NLDDPopoverTranslations } from './popover.i18n.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 
 @customElement('nldd-popover')
@@ -144,7 +144,7 @@ export class NLDDPopover extends LitElement {
 		document.addEventListener('pointercancel', this._handlePointerCancel, true);
 		document.addEventListener('click', this._handleDocumentClickCapture, true);
 		document.addEventListener('click', this._handleDocumentClick);
-		this._smQuery = window.matchMedia(`(max-width: ${breakpoints.smMax})`);
+		this._smQuery = window.matchMedia(`(max-width: ${queryBreakpoints.smMax})`);
 		this._wasOnSm = this._smQuery.matches;
 		this._smQuery.addEventListener('change', this._handleViewportChange);
 		// Seed aria-expanded/aria-haspopup on the anchor so a screen reader

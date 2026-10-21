@@ -45,7 +45,7 @@ describe('VisibilityMixin across every cell that applies it', () => {
 		el = await fixture(`<${tag} hide-below="md"></${tag}>`);
 		await waitForUpdate(el);
 
-		expect(adoptedCss(el)).toContain('max-width: 640px');
+		expect(adoptedCss(el)).toContain('max-width: 40rem');
 		expect(adoptedCss(el)).toContain('cells-container');
 		expect(el.shadowRoot!.querySelector('style')).toBeNull();
 	});

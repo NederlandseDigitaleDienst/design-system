@@ -11,13 +11,13 @@ export const badgeStyles = css`
 
 	:host {
 		--_badge-custom-color: transparent;
-		--_badge-background-color: var(--semantics-categories-critical-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-critical-filled-highlight-border-color);
+		--_badge-background-color: light-dark(var(--primitives-color-critical-650), var(--primitives-color-critical-450));
+		--_badge-border-color: light-dark(var(--primitives-color-critical-600), var(--primitives-color-critical-500));
 		--_badge-border-width: var(--primitives-border-width-thin);
 		--_badge-height: var(--primitives-space-20);
 		--_badge-inline-padding: var(--primitives-space-6);
 		--_badge-gap: var(--primitives-space-3);
-		--_badge-content-color: var(--semantics-categories-critical-filled-content-color);
+		--_badge-content-color: light-dark(var(--primitives-color-critical-0), var(--primitives-color-critical-1000));
 		--_badge-font: var(--primitives-font-body-xs-medium-flat);
 		--_badge-dot-size: var(--primitives-space-12);
 		--_badge-icon-size: var(--primitives-space-14);
@@ -57,140 +57,33 @@ export const badgeStyles = css`
 		--_badge-content-color: var(--semantics-content-contrast-color);
 	}
 
-	:host([color="accent"]) {
-		--_badge-background-color: var(--semantics-categories-accent-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-accent-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-accent-filled-content-color);
+	:host([color="accent"]),
+	:host([data-color-fallback]) {
+		--_badge-background-color: var(--components-badge-accent-background-color);
+		--_badge-border-color: var(--components-badge-accent-highlight-border-color);
+		--_badge-content-color: var(--components-badge-accent-content-color);
 	}
 
 	:host([color="neutral"]) {
-		--_badge-background-color: var(--semantics-categories-neutral-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-neutral-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-neutral-filled-content-color);
+		--_badge-background-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-450));
+		--_badge-border-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-500));
+		--_badge-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-neutral-1000));
 	}
 
 	:host([color="warning"]) {
-		--_badge-background-color: var(--semantics-categories-warning-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-warning-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-warning-filled-content-color);
+		--_badge-background-color: light-dark(var(--primitives-color-warning-300), var(--primitives-color-warning-700));
+		--_badge-border-color: light-dark(var(--primitives-color-warning-400), var(--primitives-color-warning-600));
+		--_badge-content-color: light-dark(var(--primitives-color-warning-1000), var(--primitives-color-warning-0));
 	}
 
 	:host([color="success"]) {
-		--_badge-background-color: var(--semantics-categories-success-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-success-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-success-filled-content-color);
+		--_badge-background-color: var(--primitives-color-success-500);
+		--_badge-border-color: var(--primitives-color-success-550);
+		--_badge-content-color: light-dark(var(--primitives-color-success-0), var(--primitives-color-success-1000));
 	}
 
 
-	/* ## Color — rijkskleuren */
-
-	:host([color="lintblauw"]) {
-		--_badge-background-color: var(--semantics-categories-lintblauw-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-lintblauw-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-lintblauw-filled-content-color);
-	}
-
-	:host([color="donkerblauw"]) {
-		--_badge-background-color: var(--semantics-categories-donkerblauw-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-donkerblauw-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-donkerblauw-filled-content-color);
-	}
-
-	:host([color="hemelblauw"]) {
-		--_badge-background-color: var(--semantics-categories-hemelblauw-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-hemelblauw-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-hemelblauw-filled-content-color);
-	}
-
-	:host([color="lichtblauw"]) {
-		--_badge-background-color: var(--semantics-categories-lichtblauw-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-lichtblauw-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-lichtblauw-filled-content-color);
-	}
-
-	:host([color="paars"]) {
-		--_badge-background-color: var(--semantics-categories-paars-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-paars-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-paars-filled-content-color);
-	}
-
-	:host([color="violet"]) {
-		--_badge-background-color: var(--semantics-categories-violet-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-violet-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-violet-filled-content-color);
-	}
-
-	:host([color="robijnrood"]) {
-		--_badge-background-color: var(--semantics-categories-robijnrood-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-robijnrood-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-robijnrood-filled-content-color);
-	}
-
-	:host([color="roze"]) {
-		--_badge-background-color: var(--semantics-categories-roze-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-roze-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-roze-filled-content-color);
-	}
-
-	:host([color="rood"]) {
-		--_badge-background-color: var(--semantics-categories-rood-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-rood-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-rood-filled-content-color);
-	}
-
-	:host([color="oranje"]) {
-		--_badge-background-color: var(--semantics-categories-oranje-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-oranje-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-oranje-filled-content-color);
-	}
-
-	:host([color="donkergeel"]) {
-		--_badge-background-color: var(--semantics-categories-donkergeel-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-donkergeel-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-donkergeel-filled-content-color);
-	}
-
-	:host([color="geel"]) {
-		--_badge-background-color: var(--semantics-categories-geel-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-geel-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-geel-filled-content-color);
-	}
-
-	:host([color="donkerbruin"]) {
-		--_badge-background-color: var(--semantics-categories-donkerbruin-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-donkerbruin-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-donkerbruin-filled-content-color);
-	}
-
-	:host([color="bruin"]) {
-		--_badge-background-color: var(--semantics-categories-bruin-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-bruin-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-bruin-filled-content-color);
-	}
-
-	:host([color="donkergroen"]) {
-		--_badge-background-color: var(--semantics-categories-donkergroen-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-donkergroen-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-donkergroen-filled-content-color);
-	}
-
-	:host([color="groen"]) {
-		--_badge-background-color: var(--semantics-categories-groen-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-groen-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-groen-filled-content-color);
-	}
-
-	:host([color="mosgroen"]) {
-		--_badge-background-color: var(--semantics-categories-mosgroen-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-mosgroen-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-mosgroen-filled-content-color);
-	}
-
-	:host([color="mintgroen"]) {
-		--_badge-background-color: var(--semantics-categories-mintgroen-filled-background-color);
-		--_badge-border-color: var(--semantics-categories-mintgroen-filled-highlight-border-color);
-		--_badge-content-color: var(--semantics-categories-mintgroen-filled-content-color);
-	}
+	/* ## Custom color */
 
 	/* color on the host rather than on the fill: the contrast token reads
 	   currentColor, so the text lands on black or white without a second formula

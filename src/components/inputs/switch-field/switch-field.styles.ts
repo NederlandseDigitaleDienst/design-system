@@ -30,6 +30,13 @@ export const switchFieldStyles = css`
 	}
 
 
+	/* ## Colors */
+
+	:host([color="inherit"]) .switch-field__label {
+		color: inherit;
+	}
+
+
 	/* # Elements */
 
 	.switch-field__control {

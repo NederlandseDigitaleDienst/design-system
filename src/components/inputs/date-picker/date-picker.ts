@@ -31,7 +31,7 @@
 
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { resolveDateBound, toIso } from '../../../utilities/resolve-date-bound.js';
@@ -274,7 +274,7 @@ export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerT
 		super.connectedCallback();
 		if (!this._focused) this._focused = this._initialFocus();
 		if (!this._view) this._view = firstOfMonth(this._focused);
-		this._stackedQuery = window.matchMedia(`(max-width: ${breakpoints.smMax}), (pointer: coarse)`);
+		this._stackedQuery = window.matchMedia(`(max-width: ${queryBreakpoints.smMax}), (pointer: coarse)`);
 		this._stacked = this._stackedQuery.matches;
 		this._stackedQuery.addEventListener('change', this._handleStackedChange);
 	}

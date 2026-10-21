@@ -57,17 +57,11 @@ import { tableStyles, tableRowStyles } from './table.styles.js';
 import { tableTemplate, tableRowTemplate } from './table.template.js';
 import { nlddTableTranslations } from './table.i18n.js';
 import type { NLDDTableTranslations } from './table.i18n.js';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { translate } from '../../../utilities/translations.js';
 
 export type TableBackground = 'base' | 'tinted';
-
-// Standard container breakpoints. The table picks its track list against its
-// own content-box width; the same values back the cells' `hide-below`.
-const SM_MAX = parseInt(breakpoints.smMax, 10);
-const MD_MAX = parseInt(breakpoints.mdMax, 10);
-
 
 // # nldd-table
 
@@ -225,8 +219,9 @@ export class NLDDTable extends LitElement {
 	/** The track list for the current width: a breakpoint override when set,
 	 *  otherwise the base `columns`. */
 	private _activeColumns(): string {
-		if (this._width <= SM_MAX) return this.smColumns || this.columns;
-		if (this._width <= MD_MAX) return this.mdColumns || this.columns;
+		const fontSize = rootFontSize();
+		if (this._width <= breakpointPx('smMax', fontSize)) return this.smColumns || this.columns;
+		if (this._width <= breakpointPx('mdMax', fontSize)) return this.mdColumns || this.columns;
 		return this.lgColumns || this.columns;
 	}
 

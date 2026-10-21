@@ -15,12 +15,20 @@
  *   from either, which the item needs, since it reads the menu's variables. That
  *   those resolve is what src/components/subcomponent-variables.test.ts checks.
  * - --semantics-*, --primitives-* : CSS variables (validated against variables.css)
- * - --components-* : the component layer is gone; using one is an error.
+ * - --components-* : tokens of one component that a theme sets, so they live
+ *   in variables.css rather than in the component's :host. Validated against
+ *   variables.css, and named after a component in the folder that reads them,
+ *   so the layer cannot grow back into overrides shared between components.
+ *
+ * It also fails on a px length in an @container or @media condition, or in a
+ * matchMedia() string: with page zoom, Safari measures a container in zoomed
+ * pixels. What the check catches and what it misses is in lib/query-px.js.
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { findQueryPx } from './lib/query-px.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -188,6 +196,13 @@ function validate() {
     const prefixes = prefixesByFolder.get(folder) ?? new Set();
     return [...prefixes].some((prefix) => varName.startsWith(`--_${prefix}-`));
   };
+  // The component a --components-* token is named after: the longest name that
+  // matches, so --components-button-group-* belongs to button-group, not button.
+  const allComponentPrefixes = [...new Set([...prefixesByFolder.values()].flatMap((prefixes) => [...prefixes]))]
+    .sort((a, b) => b.length - a.length);
+  const componentOf = (varName) => allComponentPrefixes.find((prefix) => varName.startsWith(`--components-${prefix}-`));
+  const namesAComponent = (varName) => componentOf(varName) !== undefined;
+  const hasOwnComponentPrefix = (varName, folder) => (prefixesByFolder.get(folder) ?? new Set()).has(componentOf(varName));
   const prefixError = (file, varName) => ({
     file,
     variable: varName,
@@ -244,11 +259,26 @@ function validate() {
           break;
 
         case 'components':
-          errors.push({
-            file: relativePath,
-            variable: varName,
-            message: `"${varName}": there is no component layer. Use a local --_{component}-* variable in :host, or a semantics token when components share the value`,
-          });
+          stats.styleVars++;
+          if (!namesAComponent(varName)) {
+            errors.push({
+              file: relativePath,
+              variable: varName,
+              message: `"${varName}" does not start with the name of a component (--components-{tag without nldd-}-…)`,
+            });
+          } else if (!hasOwnComponentPrefix(varName, folder)) {
+            errors.push({
+              file: relativePath,
+              variable: varName,
+              message: `"${varName}" is the token of another component. A --components-* token is read only by the component it is named after; share a value through a semantics token`,
+            });
+          } else if (!variables.has(varName)) {
+            errors.push({
+              file: relativePath,
+              variable: varName,
+              message: `Variable "${varName}" is not defined in variables.css`,
+            });
+          }
           break;
 
         case 'unknown':
@@ -261,6 +291,27 @@ function validate() {
           });
           break;
       }
+    }
+  }
+
+  // A px length in a query condition or matchMedia(); see lib/query-px.js.
+  const queryFiles = [];
+  const walkQueries = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) walkQueries(fullPath);
+      else if (/\.(ts|js|css)$/.test(entry.name) && !/\.(stories|test)\.[tj]s$/.test(entry.name)) queryFiles.push(fullPath);
+    }
+  };
+  walkQueries(path.join(ROOT_DIR, 'src'));
+  for (const filePath of queryFiles) {
+    const source = fs.readFileSync(filePath, 'utf8');
+    for (const { line, text } of findQueryPx(source)) {
+      errors.push({
+        file: `${path.relative(ROOT_DIR, filePath)}:${line}`,
+        variable: text,
+        message: `"${text}" has a px length. Write the condition in rem (40rem, not 640px): with page zoom, Safari measures a container in zoomed pixels`,
+      });
     }
   }
 

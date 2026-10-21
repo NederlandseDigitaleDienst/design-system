@@ -10,7 +10,7 @@ export const tableStyles = css`
 		--_table-corner-radius: var(--semantics-tables-corner-radius);
 		--_table-column-gap: var(--semantics-tables-column-gap);
 		--_table-background-color: var(--semantics-surfaces-base-background-color);
-		--_table-border-color: var(--semantics-surfaces-base-border-color);
+		--_table-border-color: var(--semantics-surfaces-base-highlight-border-color);
 		/* Shared so the focus-visible rule can compose the focus ring over the
 		   border ring with var(...) instead of repeating the inset literal. */
 		--_table-border-shadow: inset 0 0 0 var(--semantics-tables-border-width) var(--_table-border-color);
@@ -40,7 +40,7 @@ export const tableStyles = css`
 	/* Default surface is base; tinted is opt-in. */
 	:host([background="tinted"]) {
 		--_table-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_table-border-color: var(--semantics-surfaces-tinted-border-color);
+		--_table-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 	}
 
 	/* Keyboard focus while the table scrolls (it gains tabindex in JS): the

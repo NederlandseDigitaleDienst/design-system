@@ -22,7 +22,7 @@ const MEDIA = 'sample-images/butterfly-1200.jpg';
  * `main-background` is standaard `accent`; met `base` krijgt het vlak zonder
  * media een rand zodat de vorm zichtbaar blijft op de base-surface. Zet
  * binnenin `color="inherit"` op title en rich-text voor gegarandeerd contrast
- * op de filled-kleuren.
+ * op het accentvlak.
  */
 export default {
 	title: 'Components/Layout/Page Sections/Hero',
@@ -66,8 +66,8 @@ export default {
 		mainBackground: {
 			name: 'main-background',
 			control: 'select',
-			options: ['base', 'accent', 'lintblauw', 'donkerblauw', 'hemelblauw', 'lichtblauw', 'paars', 'violet', 'robijnrood', 'roze', 'rood', 'oranje', 'donkergeel', 'geel', 'donkerbruin', 'bruin', 'donkergroen', 'groen', 'mosgroen', 'mintgroen'],
-			description: 'Vlakkleur van het paneel: base of een filled-category',
+			options: ['accent', 'base'],
+			description: 'Vlakkleur van het paneel: accent, de kleur van het thema, of base',
 			table: { defaultValue: { summary: 'accent' } },
 		},
 		mainWidth: {
@@ -194,7 +194,6 @@ export const MetAfgerondeHoek = {
 					corner
 					layout="contained"
 					main-position=${position}
-					main-background="donkerblauw"
 				>
 					<img
 						slot="media"
@@ -209,7 +208,6 @@ export const MetAfgerondeHoek = {
 					corner
 					layout="contained"
 					main-width=${width}
-					main-background="donkerblauw"
 				>
 					<img
 						slot="media"
@@ -221,7 +219,6 @@ export const MetAfgerondeHoek = {
 			`)}
 			<nldd-hero
 				corner
-				main-background="donkerblauw"
 			>
 				${cornerContent('Zonder media')}
 			</nldd-hero>
@@ -245,7 +242,6 @@ export const AfgerondeHoekZonderMedia = {
 					<nldd-container gap="24">
 						<nldd-hero
 							corner
-							main-background="lintblauw"
 						>
 							<nldd-title
 								color="inherit"
@@ -256,7 +252,6 @@ export const AfgerondeHoekZonderMedia = {
 						</nldd-hero>
 						<nldd-hero
 							corner
-							main-background="lintblauw"
 						>
 							<nldd-title
 								color="inherit"
@@ -296,7 +291,6 @@ export const AfgerondeHoekGekozen = {
 					corner=${corner}
 					layout="contained"
 					main-position=${OPPOSITE_CORNER[corner]}
-					main-background="donkerblauw"
 				>
 					<img
 						slot="media"
@@ -318,7 +312,6 @@ export const AllePosities = {
 				<nldd-hero
 					layout="contained"
 					main-position=${position}
-					main-background="donkerblauw"
 				>
 					<img
 						slot="media"
@@ -357,7 +350,6 @@ export const Overlap = {
 				['Weinig tekst', null],
 			].map(([title, body]) => html`
 				<nldd-hero
-					main-background="donkerblauw"
 					main-position=${args.mainPosition}
 					main-width=${args.mainWidth === 'auto' ? nothing : args.mainWidth}
 					overlap-size=${args.overlapSize || nothing}
@@ -400,7 +392,6 @@ export const VolleStrook = {
 				layout="contained"
 				main-position="bottom-left"
 				main-width="full"
-				main-background="lintblauw"
 			>
 				<img
 					slot="media"
@@ -419,7 +410,6 @@ export const VolleStrook = {
 				layout="contained"
 				main-position="top-left"
 				main-width="full"
-				main-background="lintblauw"
 			>
 				<img
 					slot="media"
@@ -447,7 +437,7 @@ export const VolleStrook = {
 export const ZonderMedia = {
 	render: () => html`
 		<nldd-container gap="24">
-			<nldd-hero main-background="hemelblauw">
+			<nldd-hero>
 				<nldd-title
 					color="inherit"
 					size="2"
@@ -477,7 +467,6 @@ export const MetRichText = {
 	render: () => html`
 		<nldd-hero
 			main-position="bottom-left"
-			main-background="oranje"
 		>
 			<img
 				slot="media"

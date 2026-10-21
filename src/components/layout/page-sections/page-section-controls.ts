@@ -49,8 +49,8 @@ export const pageSectionArgs = {
 export const pageSectionArgTypes = {
 	background: {
 		control: { type: 'select' },
-		options: ['inherit', 'base', 'tinted'],
-		description: 'Oppervlak: "inherit" laat het oppervlak van de ouder doorschijnen, "base" en "tinted" tekenen een eigen oppervlak dat naar de inhoud cascadeert',
+		options: ['inherit', 'base', 'tinted', 'accent-tinted'],
+		description: 'Oppervlak: "inherit" laat het oppervlak van de ouder doorschijnen, "base", "tinted" en "accent-tinted" tekenen een eigen oppervlak dat naar de inhoud cascadeert',
 		table: { defaultValue: { summary: 'inherit' } },
 	},
 	width: {

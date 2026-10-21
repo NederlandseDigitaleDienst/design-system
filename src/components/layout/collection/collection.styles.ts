@@ -1,10 +1,10 @@
 import { css, unsafeCSS } from 'lit';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
-const smMax = unsafeCSS(breakpoints.smMax);
-const mdMin = unsafeCSS(breakpoints.mdMin);
-const mdMax = unsafeCSS(breakpoints.mdMax);
-const lgMin = unsafeCSS(breakpoints.lgMin);
+const smMax = unsafeCSS(queryBreakpoints.smMax);
+const mdMin = unsafeCSS(queryBreakpoints.mdMin);
+const mdMax = unsafeCSS(queryBreakpoints.mdMax);
+const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 
 export const collectionStyles = css`
 	:host {

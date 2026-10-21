@@ -773,12 +773,15 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 ### `<nldd-checkbox>`
 
+On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
+
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
+| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `decorative` | `boolean` | Renders the box without the input: no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row that is itself the checkbox; putting a real input in there would nest a control inside a control. |
 | `indeterminate` | `boolean` | Indeterminate state (takes precedence over checked visually) |
@@ -805,6 +808,7 @@ A checkbox with an inline label for use in forms. Form-associated: participates 
 | `checked` | `boolean` | Checked state |
 | `indeterminate` | `boolean` | Indeterminate state |
 | `disabled` | `boolean` | Disabled state |
+| `color` | `'inherit'` | 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
 | `value` | `string` | Value for form submission |
 | `name` | `string` | Name for form submission |
 | `label` | `string` | Label text for the checkbox |
@@ -1115,7 +1119,7 @@ A password input field with visibility toggle and validation states.
 
 ### `<nldd-radio-button>`
 
-WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role="radiogroup" aria-labelledby="options-label"> <legend id="options-label">Kies een optie</legend> <nldd-radio-button name="options" value="1" accessible-label="Optie 1"></nldd-radio-button> <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button> </fieldset>
+WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and a name of its own. A screen reader counts the options from that container, so a bare <fieldset> (which is a group, not a radiogroup) leaves them uncounted. nldd-radio-button-group does this for you. Radio buttons with the same name, in the same form and the same tree, form one group the way native radios do: checking one unchecks the others, the arrow keys move between them, Tab stops at the group once, and a screen reader hears each one's place in it. The element itself is the radio, because an input per shadow root would leave every button a group of one. The shape is all this component draws. A radio with a label beside it is nldd-radio-button-field. <fieldset role="radiogroup" aria-labelledby="options-label"> <legend id="options-label">Kies een optie</legend> <nldd-radio-button name="options" value="1" accessible-label="Optie 1"></nldd-radio-button> <nldd-radio-button name="options" value="2" accessible-label="Optie 2"></nldd-radio-button> </fieldset> On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
 
 **Attributes**
 
@@ -1123,6 +1127,7 @@ WAI-ARIA: put the buttons of one group in a container with role="radiogroup" and
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
+| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `decorative` | `boolean` | Renders the shape only: no role, no focus, no name/value, nothing announced. For a control that owns the state elsewhere, such as a list row or an nldd-radio-button-field that is itself the radio; putting a second radio in there would nest a control inside a control. |
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. |
@@ -1148,6 +1153,7 @@ A radio button with an inline label. Use inside nldd-radio-button-group, which s
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
+| `color` | `'inherit'` | 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
 | `value` | `string` | Value for form submission |
 | `name` | `string` | Radio group name for form submission; ties the fields of one group together. Set automatically by nldd-radio-button-group. |
 | `required` | `boolean` | Required state. What it asks is whether anything in the group is checked, as a native radio does. Set automatically by nldd-radio-button-group. |
@@ -1309,7 +1315,7 @@ A numeric control with increment and decrement buttons.
 
 ### `<nldd-switch>`
 
-A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility.
+A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage — it combines the switch with a visible label. Direct use of nldd-switch requires an accessible-label attribute for screen reader accessibility. On a selected row of nldd-list-item a checked control takes the colors of the row: the row sets `--context-selected-indicator-color` and `--context-selected-contrast-color`, because the accent can fall below 3:1 on the gray of a selected row.
 
 **Attributes**
 
@@ -1317,6 +1323,7 @@ A toggle control for on/off settings. Prefer nldd-switch-field for labeled usage
 | --- | --- | --- |
 | `checked` | `boolean` | Whether the switch is on/off |
 | `disabled` | `boolean` | Disabled state |
+| `color` | `'inherit'` | 'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent. |
 | `no-tab` | `boolean` | Takes the control out of the tab order (tabindex="-1"), for a control owned by a roving container (a row of an nldd-list, where the arrow keys move between rows) that manages focus itself. Still mouse- and script-focusable. |
 | `size` | `string` | Switch size: 'xs' \| 'sm' (default: 'sm') |
 | `name` | `string` | Name for form submission; nothing is submitted when the switch is off |
@@ -1341,6 +1348,7 @@ A switch toggle with an inline label for use in forms.
 | --- | --- | --- |
 | `checked` | `boolean` | Checked state |
 | `disabled` | `boolean` | Disabled state |
+| `color` | `'inherit'` | 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside. |
 | `value` | `string` | Value for form submission |
 | `name` | `string` | Name for form submission |
 | `label` | `string` | Label text for the switch |
@@ -1627,7 +1635,7 @@ Use a box to visually group related components in a distinct, contained region. 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'tinted'\|'base'\|'critical'` | Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `critical`: a region whose actions are destructive or irreversible (a "danger zone"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger — color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used. |
+| `background` | `'tinted'\|'base'\|'accent-tinted'\|'critical'` | Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `accent-tinted`: a tint of the theme's accent, with the contrast of `tinted`, for a box that belongs to the service rather than to the page. - `critical`: a region whose actions are destructive or irreversible (a "danger zone"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger — color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used. |
 
 **Slots**
 
@@ -1643,7 +1651,7 @@ A visually bounded card with optional header, body and footer sections. The card
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'base'\|'tinted'` | Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface |
+| `background` | `'base'\|'tinted'\|'accent-tinted'` | Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface, `accent-tinted` for a tint of the theme's accent with the contrast of `tinted` |
 | `accessible-label` | `string` | Accessible name of the card; with `href`/`button` it names the link or button, otherwise the card region |
 | `translations` | `object` | Override translation keys (e.g. the "opent in nieuw tabblad" announcement) |
 | `href` | `string` | Makes the whole card a link to this URL (empty = no link) |
@@ -1661,7 +1669,7 @@ A visually bounded card with optional header, body and footer sections. The card
 
 ### `<nldd-collection>`
 
-A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. Use horizontal scroll for items that together serve one purpose, such as the events of one agenda; it is not a carousel for unrelated highlights, which the design guidelines advise against. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.
+A container for displaying collections of items. Supports grid, stack, lanes and horizontal scroll layouts. Use it for a set of equal blocks, usually `nldd-card`s, instead of a CSS grid of your own: the collection sets the columns from `item-min-width` and the available width, and the gap per breakpoint. A grid keeps as many columns as fit, also when there are fewer items, so a page of results lines up with the next. For a fixed set of a few cards without paging, such as three points on a landing page, use `nldd-container layout="grid"` instead: its empty columns collapse, so the cards fill the row. In grid and stack modes, items are paginated via a load-more button. In horizontal scroll, the prev/next controls and the edge fade appear only when the items overflow the container. Use horizontal scroll for items that together serve one purpose, such as the events of one agenda; it is not a carousel for unrelated highlights, which the design guidelines advise against. With `lazy-load`, the next items are automatically loaded when the load-more button comes into view.
 
 **Attributes**
 
@@ -1761,7 +1769,7 @@ A section that spans the full width without horizontal padding. Useful for backg
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -1780,19 +1788,19 @@ A section that spans the full width without horizontal padding. Useful for backg
 
 ### `<nldd-hero>`
 
-The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width="full"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout="overlap"`), so the image keeps its height whatever the content. `layout="contained"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. `main-background` gives the panel a surface color from the filled categories. Those carry a pure white or black content color along, so components with `color="inherit"` (title, rich-text) are guaranteed to keep their contrast.
+The section that says what a page is for: it names the main goal of what you can find there, draws the eye and is the visual welcome. It has a media area and a text panel (the main) that can stand in eight positions. The areas are rectangular; `corner` rounds one corner of each. Use it on pages where a visitor first has to know where they are, such as a home or a topic page; where the title already does that, a section with a title is enough. The image in a hero sets the mood and is never the main content, so the panel always stands on it. Over an image the panel keeps a section gap from its edges, so it reads as a panel on the image rather than a frame cut out of it; with `main-width="full"` it is a strip across the whole image, the same gap from the sides. On mobile the image comes first and the panel below it, indented by the section gap and overlapping the image by 48px. For an image beside text without that relation, use a section with an image beside text instead. Without media the main fills the whole area; with `main-background="base"` that area gets a border so it stays visible on the base surface. The hero is the head of a page and sits right under the top bar, so on md and lg its top padding is half that of the other page sections: the full distance is meant to separate two sections, and under the top bar it reads as a gap. On sm the top keeps the full distance, as the other sections do. The bottom keeps the full distance to the section below. Set `padding-top` to place a hero elsewhere. By default the panel falls over the bottom of the image and runs on below it (`layout="overlap"`), so the image keeps its height whatever the content. `layout="contained"` keeps the panel on the image, for a short panel or one that stands at the top or along a side. The height of a hero comes from its image: `media-aspect-ratio`, or a fixed `media-height`. The `height` of the other page sections is not used here: as a minimum height for the whole hero it stretched the panel once that sat below the image. A hero given `height` says so in development. The panel takes the accent color of the theme, closest to its reference color in both modes, with a pure white or black content color, so components with `color="inherit"` (title, rich-text) are guaranteed to keep their contrast. `main-background="base"` gives it the base surface instead. A Rijkshuisstijl color per hero is gone: the theme picks the color for the whole site, and a hero given one says so in development.
 
 **Attributes**
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'` | Surface behind the hero (section API) |
+| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface behind the hero (section API) |
 | `width` | `string` | Body max-width; 'full' removes the bound (section API) |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
 | `padding-block` | `string` | Block padding override, also per edge and responsive (section API) |
 | `corner` | `string` | Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' \| 'top-right' \| 'bottom-left' \| 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. With media it applies with `layout="contained"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width="full"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. Without media the panel is the whole hero: the corner applies in every layout and position, at half the radius, and the hero chooses top-right, or top-left for a panel on the right. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg, and is never more than a third of the shortest side of the area it rounds, so a low hero keeps a corner rather than a drop. Says so in development when the chosen corner sits under the panel, or with `width="full"` |
 | `layout` | `'contained'\|'overlap'` | How the panel relates to the image (default: 'overlap'). 'contained' keeps it on the image, in any of the eight positions; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development |
-| `main-background` | `string` | Surface color of the panel: 'base' (the base surface) or a category color — 'accent' (default) or a Rijkshuisstijl color such as 'lintblauw'\|'donkerblauw'\|'oranje' |
+| `main-background` | `'accent'\|'base'` | Surface color of the panel: 'accent' (default), the accent color of the theme, or 'base', the base surface |
 | `main-width` | `string` | Width of the panel (default: 'auto'). 'auto' follows the content, between 480px and 640px and never wider than the image allows: a short title gets a narrow panel, a paragraph runs on to a readable line length. 'full' makes a strip across the whole image, at the top or the bottom, and is ignored with 'left'/'right'. Any CSS width (e.g. '560px', '60%') sets it exactly on md and lg, still never wider than the image allows; an invalid value falls back to 'auto' |
 | `main-position` | `'top-left'\|'top-center'\|'top-right'\|'bottom-left'\|'bottom-center'\|'bottom-right'\|'left'\|'right'` | Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height |
 | `overlap-size` | `string` | With layout="overlap": how far the panel falls over the bottom of the image, any CSS length (default: 160px). The overlap stays the same whatever the height of the image; a panel shorter than this ends inside the image |
@@ -1844,7 +1852,7 @@ A section with two equal columns side by side. The columns wrap automatically wh
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -1872,7 +1880,7 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2108,7 +2116,7 @@ A basic section with responsive padding and gap based on container size. Contain
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2197,7 +2205,7 @@ A section with 2/3 main content on the left and a 1/3 sidebar on the right. The 
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `background` | `'inherit'\|'base'\|'tinted'` | Surface background ('inherit' default; 'base'/'tinted' paint and cascade a surface). |
+| `background` | `'inherit'\|'base'\|'tinted'\|'accent-tinted'` | Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface). |
 | `width` | `string` | Body max-width: 'full' removes the constraint so the section spans the full available width. Any CSS length (e.g. '480px') overrides the default max-width. |
 | `height` | `string` | Minimum section height (any CSS length, e.g. '400px', '100dvh') (mirrors width, which sets the body max-width). |
 | `grow` | `boolean` | Takes the height the page has left, so the footer sits at the bottom of a short page. Without it, nldd-page lets its last section grow. |
@@ -2599,7 +2607,7 @@ Shows the state of something, or how much of it there is: a status, a number of 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `size` | `string` | Size: 'sm' \| 'md' (default: 'md') |
-| `color` | `string` | Semantic ('critical' \| 'accent' \| 'neutral' \| 'warning' \| 'success'), a Rijkshuisstijl color ('lintblauw' \| 'hemelblauw' \| 'oranje' \| …), or 'inherit' to fill in the content color around it: the `--context-content-color` channel a list item, table row or menu sets, falling back to `currentColor`. Default: 'critical' |
+| `color` | `'critical'\|'accent'\|'neutral'\|'warning'\|'success'\|'inherit'` | The meaning of the badge, the same set as nldd-status-bar, or 'inherit' to fill in the content color around it: the `--context-content-color` channel a list item, table row or menu sets, falling back to `currentColor`. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development. |
 | `custom-color` | `string` | A color of its own, as any CSS color value ('#a90061', 'oklch(0.6 0.2 20)', 'var(--brand-cable-blue)'). For a color the system cannot know: the jacket of a cable, a color someone picked. It wins over `color`. Whatever it paints, the text and icon on top become white or black, whichever contrasts. The text on it is black or white, picked on the relative luminance of the fill, so it clears 4.5:1 whatever color you hand it. |
 | `pulse` | `boolean` | Grows a ring out of the badge and fades it, for something happening right now (a live connection, an outage). Respects `prefers-reduced-motion`. |
 | `text` | `string` | Text (takes precedence over number) |
@@ -2783,7 +2791,7 @@ Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `value` | `number` | Share of the parent's total (default 0; <=0 hides segment) |
-| `color` | `string` | Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. |
+| `color` | `string` | Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track. |
 | `name` | `string` | Name for screenreader text (optional) |
 | `tooltip-text` | `string` | Override of the auto-generated tooltip text |
 
@@ -2821,7 +2829,7 @@ Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circul
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `value` | `number` | Share of the parent's total (default 0; <=0 hides segment) |
-| `color` | `string` | Color (semantic or Rijkskleur). Default 'accent'. |
+| `color` | `string` | Color (semantic or Rijkskleur). Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track. |
 | `name` | `string` | Optional name used in the combined tooltip + screenreader text |
 
 ### `<nldd-status-bar>`
@@ -3006,7 +3014,7 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `radio` | `boolean` | Makes the whole row one radio of a group: the action becomes a `role="radio"` button carrying `aria-checked`, and activation sets `checked` (never clears it) and fires `change`. Put the rows in an `nldd-list type="radiogroup"`, which is what makes them a set. Wins over `button`, loses to `href` and `checkbox`. The arrow keys move focus without checking, where a native radio group and `nldd-radio-button-group` check as they go: a row can carry more than a label, so stepping past one should not commit it. |
 | `accessible-label` | `string` | Accessible name of the row's action (its link, button, checkbox or radio), for a row whose text does not say enough on its own. It replaces the content of the whole row for assistive technology, the supporting text and a status included, so set it only when the row has no text of its own, or put everything that matters in it. The hint for another website or a new tab is added to it. |
 | `reorderable` | `boolean` | Set by the parent `nldd-list` when its own `reorderable` is on (with `type="list"`); consumers do not set this. Serves as a CSS hook for drag handle visibility. |
-| `selected` | `boolean` | Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`. |
+| `selected` | `boolean` | Marks the item as selected: it is one of the rows you picked. Selection is consumer-managed; the list never sets it. A selected row sets `--context-selected-indicator-color` and `--context-selected-contrast-color` to its text and fill color, so a checked nldd-checkbox, nldd-radio-button or nldd-switch in it takes the colors of the row: on its gray the accent can fall below 3:1. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value; in a `listbox` parent it drives `aria-selected`. |
 | `checked` | `boolean` | Checked state of a `checkbox` or `radio` row. A checkbox row toggles it on activation, a radio row only ever sets it |
 | `expanded` | `boolean` | Disclosure state. Drives the `children` group's visibility AND supplies `aria-expanded` — to the row's own control when the row is interactive, or to the segment marked `disclosure`. Written once either way; the item DEV-warns when there is nowhere for it to live. |
 | `current` | `boolean` | Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs. |

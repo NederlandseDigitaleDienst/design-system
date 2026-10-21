@@ -203,7 +203,7 @@ export const EigenSheetTitelbalk = {
 export const SmalleContainer = {
 	render: () => html`
 		${triggerStyle}
-		<div style="max-width: 600px; margin-inline: auto; padding: 16px; outline: 1px dashed var(--semantics-surfaces-tinted-border-color);">
+		<div style="max-width: 600px; margin-inline: auto; padding: 16px; outline: 1px dashed var(--semantics-surfaces-tinted-highlight-border-color);">
 			<nldd-sidebar-section
 				@open=${reflectExpanded(true)}
 				@close=${reflectExpanded(false)}
@@ -226,7 +226,7 @@ export const SmalleContainer = {
 
 export const ZonderInklappen = {
 	render: () => html`
-		<div style="max-width: 600px; margin-inline: auto; padding: 16px; outline: 1px dashed var(--semantics-surfaces-tinted-border-color);">
+		<div style="max-width: 600px; margin-inline: auto; padding: 16px; outline: 1px dashed var(--semantics-surfaces-tinted-highlight-border-color);">
 			<nldd-sidebar-section no-collapse>
 				<nldd-container slot="sidebar" padding="16">${sidebar}</nldd-container>
 				${main}

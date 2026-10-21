@@ -1,8 +1,8 @@
 import { css, unsafeCSS } from 'lit';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { inheritedTextReset } from '../../../assets/styles/shadow-resets.js';
 
-const mdMin = unsafeCSS(breakpoints.mdMin);
+const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 
 export const modalDialogStyles = css`
 	:host {

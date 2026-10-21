@@ -1,14 +1,44 @@
 import '../src/assets/styles/rijksoverheid-fonts.css';
 import '../src/assets/styles/variables.css';
+import '../src/assets/styles/themes.css';
 import '../src/components/content/rich-text/rich-text.css';
 import '../src/components/forms/form-section/form-section.css';
 import '../src/components/forms/form/form.css';
 import './preview.css';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
+import references from '../scripts/reference-colors.json';
+import { DEFAULT_THEME, themesByHue } from '../scripts/lib/themes.js';
+
+// `theme` is taken by addon-themes for light and dark, so the accent theme
+// gets its own global. It sets data-nldd-theme on <html>, as a site does.
+const withNlddTheme = (story, context) => {
+	const theme = context.globals.nlddTheme;
+	if (theme && theme !== DEFAULT_THEME) document.documentElement.dataset.nlddTheme = theme;
+	else delete document.documentElement.dataset.nlddTheme;
+	return story();
+};
 
 /** @type { import('@storybook/web-components-vite').Preview } */
 const preview = {
+	globalTypes: {
+		nlddTheme: {
+			description: 'Thema',
+			toolbar: {
+				title: 'Thema',
+				icon: 'paintbrush',
+				dynamicTitle: true,
+				items: [
+					{ value: DEFAULT_THEME, title: `${DEFAULT_THEME} (standaard)` },
+					...themesByHue(references).map(({ name }) => ({ value: name, title: name })),
+				],
+			},
+		},
+	},
+	initialGlobals: {
+		nlddTheme: DEFAULT_THEME,
+	},
 	decorators: [
+		withNlddTheme,
 		withThemeByDataAttribute({
 			themes: {
 				light: 'light',

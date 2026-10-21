@@ -12,6 +12,8 @@ import '../cells/cell/cell.js';
 import '../../content/avatar/avatar.js';
 import '../../content/tag/tag.js';
 import '../../inputs/radio-button/radio-button.js';
+import '../../inputs/checkbox/checkbox.js';
+import { loadTokens } from '../../../test-tokens.js';
 
 describe('nldd-list-item', () => {
 	let el: HTMLElement;
@@ -1416,6 +1418,27 @@ describe('nldd-list-item – what goes in a row', () => {
 		await waitForUpdate(el.querySelector('nldd-list-item') as HTMLElement);
 		await nextFrames();
 		expect(nestedWarnings(warn)).toHaveLength(1);
+	});
+
+	it('gives a checked control on a selected row the content color, which the accent can fall below 3:1 against', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			el = await fixture(`<nldd-list>
+				<nldd-list-item checkbox checked>
+					<nldd-cell><nldd-checkbox decorative checked></nldd-checkbox></nldd-cell>
+					<nldd-text-cell text="Dossier D-318"></nldd-text-cell>
+				</nldd-list-item>
+				<nldd-checkbox checked></nldd-checkbox>
+			</nldd-list>`);
+			const row = el.querySelector('nldd-list-item') as HTMLElement;
+			await waitForUpdate(row);
+			const fill = (checkbox: Element) => getComputedStyle(checkbox).getPropertyValue('--_checkbox-is-selected-background-color');
+			const onRow = fill(row.querySelector('nldd-checkbox') as Element);
+			expect(onRow).toBe(getComputedStyle(row).getPropertyValue('--semantics-list-items-is-selected-content-color'));
+			expect(onRow).not.toBe(fill(el.querySelector(':scope > nldd-checkbox') as Element));
+		} finally {
+			unloadTokens();
+		}
 	});
 
 	it('does not warn about a decorative glyph, or controls in a row without an action', async () => {

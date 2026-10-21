@@ -348,7 +348,7 @@ export const documentTabBarItemStyles = css`
 	.document-tab-bar__item-normal {
 		display: contents;
 
-		@container (max-width: 200px) {
+		@container (max-width: 12.5rem) {
 			display: none;
 		}
 	}
@@ -356,7 +356,7 @@ export const documentTabBarItemStyles = css`
 	.document-tab-bar__item-short {
 		display: none;
 
-		@container (max-width: 200px) {
+		@container (max-width: 12.5rem) {
 			display: contents;
 		}
 	}

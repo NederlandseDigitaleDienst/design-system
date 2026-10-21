@@ -248,6 +248,27 @@ describe('nldd-hero', () => {
 		}
 	});
 
+	it('gives a Rijkshuisstijl color for the panel the accent instead, and points to a theme in development', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const unloadTokens = loadTokens();
+		try {
+			const panelColor = async (attributes: string) => {
+				el = await fixture(`<nldd-hero ${attributes}></nldd-hero>`);
+				await waitForUpdate(el);
+				const color = getComputedStyle(el).getPropertyValue('--_hero-main-background-color');
+				cleanup(el);
+				return color;
+			};
+			const accent = await panelColor('');
+			expect(accent).not.toBe('');
+			expect(await panelColor('main-background="donkerblauw"')).toBe(accent);
+			expect(warn.mock.calls.some(([message]) => String(message).includes('data-nldd-theme'))).toBe(true);
+		} finally {
+			unloadTokens();
+			warn.mockRestore();
+		}
+	});
+
 	describe('layout="overlap"', () => {
 		const overlapWarnings = (warn: MockInstance<typeof console.warn>) => warn.mock.calls
 			.map(([message]) => String(message))
@@ -365,6 +386,18 @@ describe('nldd-hero', () => {
 			el.setAttribute('padding-top', '48');
 			await waitForUpdate(el);
 			expect(getComputedStyle(hero).paddingTop).toBe('48px');
+		} finally {
+			unloadTokens();
+		}
+	});
+
+	it('has the full section padding on top on sm', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			el = await fixture('<nldd-hero style="width: 375px"></nldd-hero>');
+			await waitForUpdate(el);
+			const hero = el.shadowRoot!.querySelector('.hero')!;
+			expect(getComputedStyle(hero).paddingTop).toBe(getComputedStyle(hero).paddingBottom);
 		} finally {
 			unloadTokens();
 		}

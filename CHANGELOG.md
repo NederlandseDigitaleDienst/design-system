@@ -9,6 +9,42 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Themes for 17 Rijkshuisstijl colors.** Set `data-nldd-theme` on `<html>` and buttons, selections, links, the focus ring, the hero and the badge take that color instead of lintblauw, in light and dark mode. The ribbon and the logo stay lintblauw.
+- **A favicon and touch icon in the color of your theme.** The field behind the ribbon takes the theme color, so the tab and the home screen match the site. They ship as `@nldd/design-system/favicon/geel/` and so on.
+
+### Added
+
+- **A stylesheet per theme.** Import `@nldd/design-system/themes/geel.css` and set `data-nldd-theme="geel"` on `<html>`. `@nldd/design-system/themes` holds all of them, for a site that switches without a reload. Lintblauw is the default and needs no file. A theme sets the accent scale, the tokens per role and, for cool colors, a gray with a hint of the theme color. The "Thema's" page in Storybook explains what each role does.
+- **A favicon and touch icon per theme.** `@nldd/design-system/favicon/geel/favicon.svg` and `…/geel/touch-icon.png`, and the same for every theme, have the field behind the ribbon in the theme color. The ribbon stays lintblauw and the coat of arms white. Without a theme, `@nldd/design-system/favicon.svg` and `touch-icon.png` stay as they are.
+- **Surface tokens in the theme color.** `--semantics-surfaces-accent-tinted-*` is a tint of the theme color with the contrast of `tinted`. `--semantics-surfaces-accent-filled-*` is the panel of the hero, with `--semantics-content-on-accent-filled-*` for the text on it.
+- **`background="accent-tinted"` on `nldd-box`, `nldd-card` and the page sections.** The area takes the tint of the theme color.
+- **`color="inherit"` on `nldd-checkbox`, `nldd-radio-button` and `nldd-switch`, and on their fields.** A checked control takes the text color of the area it sits on, and the color of that area for its mark. Use it on the accent panel of the hero, where the theme color would not stand out.
+- **A `--components-*` layer, only for what a theme sets.** A theme reaches `:root`, not the styles of a component, so the few values a theme changes for one component live in `variables.css` as `--components-{component}-*`: the accent badge and status bar, the icon of the accent banner, the mention in the text editor and the current tab of the tab bar. It is not the old component layer: a component reads only its own tokens, and the style check fails on any other. Everything else stays a local variable or a semantics token.
+
+### Changed
+
+- **`--semantics-controls-is-highlighted-*` is now `--semantics-controls-is-selected-*`.** It is the color of a checked, selected or current control, so the name says that, as `--semantics-buttons-*-is-selected-*` already did. The highlighted item of a menu or mention list, where the keyboard or pointer is, reads `--semantics-list-items-is-highlighted-*` instead, like the highlighted row of a list, and that token has its own values now. If your own CSS reads one of these tokens, rename it.
+- **Categories are for telling groups apart; surfaces are for areas.** Only the tag and the progress bar and circle read `--semantics-categories-*` now. The banner draws on `--semantics-surfaces-{tinted,accent-tinted,success-tinted,warning-tinted,critical-tinted}-*`, new for success, warning and critical; `nldd-box background="critical"` takes a surface too. The badge, status bar, date picker and image keep their colors in their own styles, and a mention in the text editor reads `--components-text-editor-mention-*`, which a theme can set. The neutral and accent banner are one step lighter, on the same tint as `background="tinted"`, and the warning and success icons of the banner are a lighter orange and green in light mode.
+- **The `reference` category style is gone.** `--semantics-categories-{color}-reference-*` drew the panel of the hero, which now reads `--semantics-surfaces-accent-filled-*` and `--semantics-content-on-accent-filled-*`. No component used it anymore. If your own CSS reads one of these tokens, take the accent-filled surface for the theme color, or the `filled` style of the color.
+- **The surface border tokens are called `highlight-border`, as everywhere else.** `--semantics-surfaces-border-width` is now `--semantics-surfaces-highlight-border-width`, and `--semantics-surfaces-base-border-color` and `--semantics-surfaces-tinted-border-color` are now `-highlight-border-color`. The components follow by themselves. If your own CSS reads one of these tokens, rename it.
+- **Warning is a lighter orange on the badge and the status bar.** They take orange step 300 instead of 400 (700 instead of 600 in dark mode), which reads clearer next to black text. Their border stays at 3:1 against the page.
+- **The focus ring is lighter in dark mode.** It takes the color of the button when that reaches 4.5:1 against the page, so with the default theme it is lintblauw 650 instead of 600.
+- **A checked control has a mark in the color of the page in dark mode.** The check of a checkbox, the dot of a radio button and the knob of a switch were white and now read as a cut-out of the page. The new `--semantics-controls-is-selected-mark-color` sets that color.
+- **The accent badge and status bar match the accent button in dark mode.** They take lintblauw 650 with white text instead of 400 with black text.
+- **The wordmark of `nldd-top-navigation-bar` stands where the printed logo has it.** On md and lg it is 10px from the ribbon instead of 8px, so the first letter is as far from the ribbon as in the logo. On a small screen a wordmark taller than the ribbon keeps 16px from the top instead of 12px.
+
+### Fixed
+
+- **Components switch to their narrow layout when you zoom in Safari.** With page zoom, Safari measured the width of a container that takes its size from the layout in zoomed pixels, so a list 537px wide counted as wider than 641px and kept its desktop layout, with a column of one word per line. The breakpoints in the component styles are now in rem (`40rem` instead of `640px`), which scale with the zoom, and so are the thresholds of their own in rich text, the split sections, the progress bar, pagination and the document tab bar. The style check now fails on a px length in a query condition. At the default font size of 16px nothing changes; with a larger default font size the narrow layout comes earlier. `@nldd/design-system/breakpoints` adds `queryBreakpoints` (the rem values), and `breakpointPx()` and `rootFontSize()` for a width you measure in script; `breakpoints` keeps its px values. A `hide-below` or `hide-above` with a px value of your own still has the problem in Safari: write it in rem.
+- **On a small screen `nldd-hero` keeps the full distance at the top again.** Half the distance (8px) put the hero too close to the top bar on mobile, so there it is 16px again, as for the other page sections. On md and lg the top stays at half.
+
+### Breaking
+
+- **`nldd-badge` no longer takes a Rijkshuisstijl color.** `color` is the same set as `nldd-status-bar`, plus `inherit`: `critical` (the default), `accent`, `neutral`, `warning`, `success` and `inherit`. A badge is a signal, not a category, and a color of its own clashed with the theme. A badge with `color="hemelblauw"` or another named color now gets the accent, and says so in the console during development. Pick the color for the whole site with a theme, or use `custom-color` for a color of its own.
+- **`nldd-hero` no longer takes a Rijkshuisstijl color for its panel.** `main-background` is `accent` (the default) or `base`. A color per hero came before themes. A theme now picks the color for the whole site. A hero with `main-background="donkerblauw"` or another named color gets the accent instead, and says so in the console during development. To keep the color, set the theme on `<html>` (`data-nldd-theme="donkerblauw"`, with `@nldd/design-system/themes/donkerblauw.css`) and remove the attribute. Without a theme the accent is lintblauw.
+
 ## [0.9.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.8.100...v0.9.0) (2026-10-19)
 
 ### Highlights

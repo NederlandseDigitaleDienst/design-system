@@ -114,22 +114,22 @@ describe('nldd-text-cell', () => {
 	// A named breakpoint is static CSS in the adopted stylesheet rather than an
 	// injected <style>: that is what lets a consumer keep 'unsafe-inline' out of
 	// its style-src.
-	it('resolves a named breakpoint for hide-below (lg → max-width 1007px)', async () => {
+	it('resolves a named breakpoint for hide-below (lg → max-width 62.9375rem)', async () => {
 		el = await fixture('<nldd-text-cell hide-below="lg"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(adoptedCss(el)).toContain('max-width: 1007px');
+		expect(adoptedCss(el)).toContain('max-width: 62.9375rem');
 	});
 
-	it('resolves a named breakpoint for hide-below (md → max-width 640px)', async () => {
+	it('resolves a named breakpoint for hide-below (md → max-width 40rem)', async () => {
 		el = await fixture('<nldd-text-cell hide-below="md"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(adoptedCss(el)).toContain('max-width: 640px');
+		expect(adoptedCss(el)).toContain('max-width: 40rem');
 	});
 
-	it('resolves a named breakpoint for hide-above (md → min-width 1008px)', async () => {
+	it('resolves a named breakpoint for hide-above (md → min-width 63rem)', async () => {
 		el = await fixture('<nldd-text-cell hide-above="md"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(adoptedCss(el)).toContain('min-width: 1008px');
+		expect(adoptedCss(el)).toContain('min-width: 63rem');
 	});
 
 	it('injects no <style> for a named breakpoint', async () => {

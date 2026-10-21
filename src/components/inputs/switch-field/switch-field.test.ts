@@ -169,3 +169,19 @@ describe('nldd-switch-field – label click', () => {
 		expect(deepActiveElement()).toBe(inner.shadowRoot!.querySelector('.switch__input'));
 	});
 });
+
+describe('nldd-switch-field – color="inherit"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('passes the color to its switch and draws its label in the surrounding text color', async () => {
+		el = await fixture(`<div style="color: rgb(255, 255, 255);"><nldd-switch-field color="inherit" label="Meldingen"></nldd-switch-field></div>`);
+		const field = el.querySelector('nldd-switch-field') as HTMLElement;
+		await waitForUpdate(field);
+		expect(field.shadowRoot!.querySelector('nldd-switch')!.getAttribute('color')).toBe('inherit');
+		expect(getComputedStyle(field.shadowRoot!.querySelector('.switch-field__label')!).color).toBe('rgb(255, 255, 255)');
+	});
+});

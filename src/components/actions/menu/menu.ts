@@ -14,7 +14,7 @@ import '../../content/icon/icon.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { isKeyboardMode, isTouchMode } from '../../../utilities/input-modality.js';
-import { breakpoints } from '../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 
 
@@ -1233,7 +1233,7 @@ export class NLDDMenu extends LitElement {
 			// Use the shared breakpoint constant so the JS-side threshold can't
 			// drift from the CSS-side one (spacer.styles.ts and friends pull
 			// from the same source).
-			NLDDMenu._drillInModeQuery = matchMedia(`(pointer: coarse), (max-width: ${breakpoints.smMax})`);
+			NLDDMenu._drillInModeQuery = matchMedia(`(pointer: coarse), (max-width: ${queryBreakpoints.smMax})`);
 		}
 		return NLDDMenu._drillInModeQuery;
 	}

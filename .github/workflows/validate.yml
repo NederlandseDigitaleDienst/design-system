@@ -88,6 +88,16 @@ jobs:
           git diff --exit-code skills/nldd-design-build/patterns/ \
             || (echo "::error::skills/nldd-design-build/patterns/ is verouderd. Draai 'npm run generate:skill-patterns' en commit het resultaat." && exit 1)
 
+      # The theme stylesheets are generated from the palettes, so a change to a
+      # reference color or a step rule that did not reach them is drift.
+      - name: Check theme stylesheets are in sync
+        shell: bash
+        run: |
+          set -e
+          npm run generate:themes
+          test -z "$(git status --porcelain src/assets/styles/themes src/assets/styles/themes.css src/assets/favicon)" \
+            || (echo "::error::De themabestanden zijn verouderd. Draai 'npm run generate:themes' en commit het resultaat." && exit 1)
+
       # The manifest is committed rather than built on publish, so a change to a
       # component's public API is visible in the diff of a pull request.
       - name: Check custom elements manifest is in sync

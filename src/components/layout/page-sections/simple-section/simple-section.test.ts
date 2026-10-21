@@ -89,6 +89,14 @@ describe('PageSectionMixin (via nldd-simple-section)', () => {
 		);
 	});
 
+	it('paints the accent-tinted surface and cascades it', async () => {
+		el = await fixture('<nldd-simple-section background="accent-tinted"></nldd-simple-section>');
+		await waitForUpdate(el);
+		const token = 'var(--semantics-surfaces-accent-tinted-background-color)';
+		expect(el.style.backgroundColor).toBe(token);
+		expect(el.style.getPropertyValue('--context-parent-background-color')).toBe(token);
+	});
+
 	it('strips block padding with padding-block="0"', async () => {
 		el = await fixture('<nldd-simple-section padding-block="0"></nldd-simple-section>');
 		await waitForUpdate(el);

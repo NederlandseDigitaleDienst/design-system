@@ -16,10 +16,10 @@ export const bannerStyles = css`
 	:host {
 		--_banner-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_banner-padding: var(--primitives-space-12);
-		--_banner-background-color: var(--semantics-categories-neutral-tinted-background-color);
-		--_banner-border-color: var(--semantics-categories-neutral-tinted-highlight-border-color);
+		--_banner-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_banner-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_banner-border-width: var(--primitives-border-width-thin);
-		--_banner-icon-color: var(--semantics-categories-neutral-tinted-content-color);
+		--_banner-icon-color: var(--primitives-color-neutral-750);
 		--_banner-icon-size: var(--primitives-space-32);
 		--_banner-content-color: var(--semantics-content-color);
 		--_banner-text-icon-offset: calc((var(--_banner-icon-size) - var(--primitives-font-size-100) * var(--primitives-line-height-tight)) / 2);
@@ -56,27 +56,27 @@ export const bannerStyles = css`
 	}
 
 	:host([variant="accent"]) {
-		--_banner-background-color: var(--semantics-categories-accent-tinted-background-color);
-		--_banner-border-color: var(--semantics-categories-accent-tinted-highlight-border-color);
-		--_banner-icon-color: var(--semantics-categories-accent-tinted-content-color);
+		--_banner-background-color: var(--semantics-surfaces-accent-tinted-background-color);
+		--_banner-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
+		--_banner-icon-color: var(--components-banner-accent-icon-color);
 	}
 
 	:host([variant="success"]) {
-		--_banner-background-color: var(--semantics-categories-success-tinted-background-color);
-		--_banner-border-color: var(--semantics-categories-success-tinted-highlight-border-color);
-		--_banner-icon-color: var(--semantics-categories-success-tinted-content-color);
+		--_banner-background-color: var(--semantics-surfaces-success-tinted-background-color);
+		--_banner-border-color: var(--semantics-surfaces-success-tinted-highlight-border-color);
+		--_banner-icon-color: light-dark(var(--primitives-color-success-550), var(--primitives-color-success-650));
 	}
 
 	:host([variant="warning"]) {
-		--_banner-background-color: var(--semantics-categories-warning-tinted-background-color);
-		--_banner-border-color: var(--semantics-categories-warning-tinted-highlight-border-color);
-		--_banner-icon-color: var(--semantics-categories-warning-tinted-content-color);
+		--_banner-background-color: var(--semantics-surfaces-warning-tinted-background-color);
+		--_banner-border-color: var(--semantics-surfaces-warning-tinted-highlight-border-color);
+		--_banner-icon-color: light-dark(var(--primitives-color-warning-450), var(--primitives-color-warning-650));
 	}
 
 	:host([variant="critical"]) {
-		--_banner-background-color: var(--semantics-categories-critical-tinted-background-color);
-		--_banner-border-color: var(--semantics-categories-critical-tinted-highlight-border-color);
-		--_banner-icon-color: var(--semantics-categories-critical-tinted-content-color);
+		--_banner-background-color: var(--semantics-surfaces-critical-tinted-background-color);
+		--_banner-border-color: var(--semantics-surfaces-critical-tinted-highlight-border-color);
+		--_banner-icon-color: var(--primitives-color-critical-600);
 	}
 
 	/* # Block */

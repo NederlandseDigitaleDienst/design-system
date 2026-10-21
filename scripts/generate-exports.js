@@ -70,6 +70,10 @@ const exports = {
 	// Opt-in FOUC guard — hides the page until custom elements upgrade. Kept out
 	// of ./styles because hiding the body is opinionated; import it explicitly.
 	'./styles/fouc': './dist/css/fouc.css',
+	// The themes: one stylesheet per accent color, or all of them for a site that
+	// switches at runtime. Each one only applies under data-nldd-theme on <html>.
+	'./themes': './dist/css/themes.css',
+	'./themes/*': './dist/css/themes/*',
 	// The font files themselves, for a site that serves them without a bundler
 	// (a static site that only publishes its own folder): a build step copies
 	// them from here instead of a copy living in every repository. Their terms
@@ -81,6 +85,8 @@ const exports = {
 	// map answers nothing that is not listed in it.
 	'./favicon.svg': './dist/favicon.svg',
 	'./touch-icon.png': './dist/touch-icon.png',
+	// The same marks per theme: favicon/geel/favicon.svg and touch-icon.png.
+	'./favicon/*': './dist/favicon/*',
 	// Breakpoints for consumers that drive matchMedia / layout logic from the
 	// same source as CSS. Replaced the ./tokens aggregator, which only ever
 	// re-exported this one module.

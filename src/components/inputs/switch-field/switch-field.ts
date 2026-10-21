@@ -6,6 +6,7 @@
  * @element nldd-switch-field
  * @attr {boolean} checked - Checked state
  * @attr {boolean} disabled - Disabled state
+ * @attr {'inherit'} color - 'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.
  * @attr {string} value - Value for form submission
  * @attr {string} name - Name for form submission
  * @attr {string} label - Label text for the switch
@@ -15,6 +16,7 @@
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
 import { LitElement } from 'lit';
+import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { customElement, property } from 'lit/decorators.js';
 import { switchFieldStyles } from './switch-field.styles.js';
 import { switchFieldTemplate } from './switch-field.template.js';
@@ -40,6 +42,10 @@ export class NLDDSwitchField extends DescribedBy(LitElement) {
 
 	@property({ type: String })
 	name = '';
+
+	/** 'inherit' draws the control and its label in the surrounding text color. */
+	@property({ reflect: true, converter: reflectNonDefault('') })
+	color: '' | 'inherit' = '';
 
 	@property({ type: String })
 	label = '';

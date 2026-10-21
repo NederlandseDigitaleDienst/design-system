@@ -36,7 +36,7 @@
  * @element nldd-progress-circle-segment-indicator
  *
  * @attr {number} value - Share of the parent's total (default 0; <=0 hides segment)
- * @attr {string} color - Color (semantic or Rijkskleur). Default 'accent'.
+ * @attr {string} color - Color (semantic or Rijkskleur). Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track.
  * @attr {string} name - Optional name used in the combined tooltip + screenreader text
  */
 import { LitElement, nothing } from 'lit';

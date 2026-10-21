@@ -24,15 +24,7 @@ import '../../content/text/text.js';
  * ```
  */
 const SEMANTIC_COLORS = ['critical', 'accent', 'neutral', 'warning', 'success'];
-const RIJKSLEUREN = [
-	'lintblauw', 'donkerblauw', 'hemelblauw', 'lichtblauw',
-	'paars', 'violet',
-	'robijnrood', 'roze', 'rood', 'oranje',
-	'donkergeel', 'geel',
-	'donkerbruin', 'bruin',
-	'donkergroen', 'groen', 'mosgroen', 'mintgroen',
-];
-const COLORS = [...SEMANTIC_COLORS, ...RIJKSLEUREN, 'inherit'];
+const COLORS = [...SEMANTIC_COLORS, 'inherit'];
 
 export default {
 	title: 'Components/Status & Feedback/Badge',

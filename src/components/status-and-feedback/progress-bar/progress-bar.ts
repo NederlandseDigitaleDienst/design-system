@@ -36,7 +36,7 @@
  * @element nldd-progress-bar-segment-indicator
  *
  * @attr {number} value - Share of the parent's total (default 0; <=0 hides segment)
- * @attr {string} color - Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'.
+ * @attr {string} color - Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track.
  * @attr {string} name - Name for screenreader text (optional)
  * @attr {string} tooltip-text - Override of the auto-generated tooltip text
  */

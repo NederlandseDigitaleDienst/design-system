@@ -1,10 +1,10 @@
 import { css, unsafeCSS } from 'lit';
-import { breakpoints } from '../../../../assets/styles/breakpoints.js';
+import { queryBreakpoints } from '../../../../assets/styles/breakpoints.js';
 
-const smMax = unsafeCSS(breakpoints.smMax);
-const mdMin = unsafeCSS(breakpoints.mdMin);
-const mdMax = unsafeCSS(breakpoints.mdMax);
-const lgMin = unsafeCSS(breakpoints.lgMin);
+const smMax = unsafeCSS(queryBreakpoints.smMax);
+const mdMin = unsafeCSS(queryBreakpoints.mdMin);
+const mdMax = unsafeCSS(queryBreakpoints.mdMax);
+const lgMin = unsafeCSS(queryBreakpoints.lgMin);
 
 export const sidebarSectionStyles = css`
 	:host {
@@ -168,7 +168,7 @@ export const sidebarSectionStyles = css`
 		box-sizing: border-box;
 		border-radius: var(--semantics-surfaces-corner-radius);
 		background-color: var(--_sidebar-section-sidebar-box-background-color);
-		box-shadow: inset 0 0 0 var(--semantics-surfaces-border-width) var(--_sidebar-section-sidebar-box-border-color);
+		box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--_sidebar-section-sidebar-box-border-color);
 
 		@container (min-width: ${lgMin}) {
 			position: sticky;

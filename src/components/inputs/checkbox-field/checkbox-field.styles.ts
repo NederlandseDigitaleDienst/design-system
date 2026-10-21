@@ -30,6 +30,13 @@ export const checkboxFieldStyles = css`
 	}
 
 
+	/* ## Colors */
+
+	:host([color="inherit"]) .checkbox-field__label {
+		color: inherit;
+	}
+
+
 	/* # Elements */
 
 	.checkbox-field__control {
