@@ -537,15 +537,32 @@ const LIST_HIGHLIGHT = '--semantics-list-items-is-highlighted-';
 // The text on the selected fill, and on the highlighted row of a list or menu,
 // which starts out as the same fill but is its own token.
 /**
+ * Light colors whose highlighted row in light mode takes a darker step of the
+ * theme color instead of near-black: the step closest to the reference that
+ * reaches 3:1 on the page, with white text. A dark mint still reads as the
+ * theme color; a dark light blue or yellow does not, so those stay near-black.
+ */
+export const LIGHT_HIGHLIGHT_IN_COLOR = ['mintgroen'];
+
+/**
  * The steps of the highlighted row of a list or menu for a theme: the
  * selection, or the button in a status theme, whose selection is gray but whose
  * highlight marks a place, not a state.
  */
 export function listHighlightSteps(palette, ref, grounds, name) {
-	if (STATUS_THEMES.includes(name) && !STATUS_SELECTION_IN_COLOR.includes(name)) return buttonSteps(palette, ref, grounds, name);
+	if (STATUS_THEMES.includes(name)) return buttonSteps(palette, ref, grounds, name);
 	const steps = selectionSteps(palette, ref, grounds, name);
-	if (STATUS_SELECTION_IN_COLOR.includes(name)) steps.light = NEAR_BLACK_SELECTION;
+	if (LIGHT_HIGHLIGHT_IN_COLOR.includes(name)) steps.light = selectedSteps(palette, ref, grounds).light;
 	return steps;
+}
+
+/** The highlighted row's declarations: its fill per state and the text on it. */
+function listHighlightTokens(steps, color) {
+	const both = (fn) => pair(fn(steps.light, 'light'), fn(steps.dark, 'dark'));
+	return [
+		...SELECTED_TOKENS.filter(([token]) => token.startsWith(LIST_HIGHLIGHT)).map(([token, , offset]) => [token, both((m) => accent(m.at(offset), m.color ?? color))]),
+		[`${LIST_HIGHLIGHT}content-color`, both((m, mode) => textColor(mode, m.text, m.color ?? color))],
+	];
 }
 
 const HIGHLIGHT_TEXT_TOKENS = [
@@ -744,14 +761,13 @@ export function themeCss(name, palette, ref, { grounds, neutral, order } = {}) {
 		lines.push([MARK_TOKEN, pair(markColor('light', 'white'), markColor('dark', 'black'))]);
 		// The highlighted row of a list or menu marks where you are, not a
 		// state, so it takes the theme color of the button.
-		const highlight = listHighlightSteps(palette, ref, grounds, name);
-		const both = (fn) => pair(fn(highlight.light, 'light'), fn(highlight.dark, 'dark'));
-		for (const [token, , offset] of SELECTED_TOKENS) if (isListHighlight(token)) lines.push([token, both((m) => accent(m.at(offset), name))]);
-		lines.push([`${LIST_HIGHLIGHT}content-color`, both((m, mode) => textColor(mode, m.text, name))]);
+		lines.push(...listHighlightTokens(listHighlightSteps(palette, ref, grounds, name), name));
 	} else {
 		const steps = selectionSteps(palette, ref, grounds, name);
 		if (STATUS_SELECTION_IN_COLOR.includes(name)) steps.light = NEAR_BLACK_SELECTION;
-		lines.push(...selectionTokens(steps, name));
+		const ownHighlight = STATUS_SELECTION_IN_COLOR.includes(name) || LIGHT_HIGHLIGHT_IN_COLOR.includes(name);
+		lines.push(...selectionTokens(steps, name).filter(([token]) => !ownHighlight || !token.startsWith(LIST_HIGHLIGHT)));
+		if (ownHighlight) lines.push(...listHighlightTokens(listHighlightSteps(palette, ref, grounds, name), name));
 	}
 	if (neutral) {
 		// The hex, not the rounded oklch: it is the value generate-palette.py

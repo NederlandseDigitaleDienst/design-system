@@ -145,10 +145,10 @@
 
 	/* ## List items */
 
-	--semantics-list-items-is-highlighted-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-mintgroen-800));
-	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-mintgroen-750));
-	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-mintgroen-700));
-	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-mintgroen-0));
+	--semantics-list-items-is-highlighted-background-color: light-dark(var(--primitives-color-mintgroen-550), var(--primitives-color-mintgroen-800));
+	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-mintgroen-600), var(--primitives-color-mintgroen-750));
+	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-mintgroen-650), var(--primitives-color-mintgroen-700));
+	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-mintgroen-0);
 
 
 	/* # Components */
