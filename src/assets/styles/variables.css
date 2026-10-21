@@ -958,7 +958,7 @@
 	--semantics-surfaces-accent-tinted-background-color: light-dark(var(--primitives-color-accent-25), var(--primitives-color-accent-75));
 	--semantics-surfaces-accent-tinted-highlight-border-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-200));
 	--semantics-surfaces-accent-filled-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-250));
-	--semantics-surfaces-accent-filled-highlight-border-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-200));
+	--semantics-surfaces-accent-filled-highlight-border-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-accent-300));
 	--semantics-surfaces-success-tinted-background-color: light-dark(var(--primitives-color-success-50), var(--primitives-color-success-75));
 	--semantics-surfaces-success-tinted-highlight-border-color: light-dark(var(--primitives-color-success-100), var(--primitives-color-success-150));
 	--semantics-surfaces-warning-tinted-background-color: light-dark(var(--primitives-color-warning-50), var(--primitives-color-warning-75));

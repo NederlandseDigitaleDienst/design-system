@@ -174,6 +174,19 @@ for (const { name, hex } of themes) {
 		assert.ok(contrast(palette.get(steps.dark.step).dark, surfaces.dark.base) >= 4.5, 'dark');
 	});
 
+	test(`${name}: the border of the button stands out more from the page than its fill`, () => {
+		const steps = buttonSteps(palette, hex, grounds, name);
+		for (const mode of ['light', 'dark']) {
+			const m = steps[mode];
+			const page = grounds.page[mode][0];
+			for (const offset of [0, 50, 100]) {
+				const fill = palette.get(m.at(offset))[mode];
+				const border = palette.get(Math.min(1000, m.at(offset) + 50))[mode];
+				assert.ok(contrast(border, page) >= contrast(fill, page), `${mode} +${offset}: border ${contrast(border, page).toFixed(2)}, fill ${contrast(fill, page).toFixed(2)}`);
+			}
+		}
+	});
+
 	test(`${name}: button text reaches 4.5:1 in every state`, () => {
 		for (const { mode, offset, role, ratio } of buttonContrasts(palette, buttonSteps(palette, hex, grounds, name))) {
 			assert.ok(ratio >= 4.5, `${role} ${mode} +${offset}: ${ratio.toFixed(2)}`);

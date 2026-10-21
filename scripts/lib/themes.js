@@ -137,6 +137,14 @@ function closestStep(palette, ref, mode) {
 
 const clamp = (step) => Math.min(1000, Math.max(0, step));
 
+/**
+ * The border of a fill in one state: a step further from the page than the
+ * fill, whichever way its hover and active go. A higher step is darker in light
+ * mode and lighter in dark mode, so the border always adds contrast against
+ * the page around it, also on a light fill with black text.
+ */
+const outward = (m, offset) => clamp(m.at(offset) + 50);
+
 /** White when it reaches 4.5:1, otherwise black. */
 export function textOn(hex) {
 	if (contrast(hex, WHITE) >= MIN_TEXT_CONTRAST) return 'white';
@@ -307,7 +315,7 @@ export function buttonTokens(steps, color = 'accent') {
 	for (const [state, offset] of states) {
 		tokens.push([`${prefix}${state}background-color`, both((m) => accent(m.at(offset), color))]);
 		if (!state) tokens.push([`${prefix}divider-color`, both((m) => accent(m.divider, color))]);
-		tokens.push([`${prefix}${state}highlight-border-color`, both((m) => accent(m.at(offset + 50), color))]);
+		tokens.push([`${prefix}${state}highlight-border-color`, both((m) => accent(outward(m, offset), color))]);
 		tokens.push([`${prefix}${state}content-color`, both((m, mode) => textColor(mode, m.text, color))]);
 		tokens.push([`${prefix}${state}content-secondary-color`, both((m) => accent(m.secondary, color))]);
 	}
@@ -323,7 +331,7 @@ const BADGE_PROPS = ['background-color', 'highlight-border-color', 'content-colo
 export function badgeTokens(steps, color = 'accent') {
 	const { light: l, dark: d } = steps;
 	const both = (fn) => pair(fn(l, 'light'), fn(d, 'dark'));
-	const values = [both((m) => accent(m.step, color)), both((m) => accent(m.at(50), color)), both((m, mode) => textColor(mode, m.text, color))];
+	const values = [both((m) => accent(m.step, color)), both((m) => accent(outward(m, 0), color)), both((m, mode) => textColor(mode, m.text, color))];
 	return BADGE_PROPS.map((prop, i) => [`--components-badge-accent-${prop}`, values[i]]);
 }
 
@@ -380,7 +388,7 @@ export function areaTokens(steps, color = 'accent') {
 	const text = both((m, mode) => textColor(mode, m.text, color));
 	return [
 		['--semantics-surfaces-accent-filled-background-color', both((m) => accent(m.step, color))],
-		['--semantics-surfaces-accent-filled-highlight-border-color', both((m) => accent(m.at(50), color))],
+		['--semantics-surfaces-accent-filled-highlight-border-color', both((m) => accent(outward(m, 0), color))],
 		['--semantics-content-on-accent-filled-color', text],
 		['--semantics-content-on-accent-filled-secondary-color', text],
 	];
@@ -585,8 +593,9 @@ const markColor = (mode, text) => {
 /** The selected fill's declarations, with the text and mark color on it. */
 export function selectionTokens(steps, color = 'accent') {
 	const { light: l, dark: d } = steps;
-	const fill = (m, offset) => accent(m.at(offset), m.color ?? color);
-	const tokens = SELECTED_TOKENS.map(([token, , offset]) => [token, pair(fill(l, offset), fill(d, offset))]);
+	// A border token's offset is its fill's plus one step; it goes outward.
+	const fill = (m, offset, token) => accent(token.includes('highlight-border') ? outward(m, offset - 50) : m.at(offset), m.color ?? color);
+	const tokens = SELECTED_TOKENS.map(([token, , offset]) => [token, pair(fill(l, offset, token), fill(d, offset, token))]);
 	const text = pair(textColor('light', l.text, l.color ?? color), textColor('dark', d.text, d.color ?? color));
 	const mark = pair(markColor('light', l.text), markColor('dark', d.text));
 	return [...tokens, ...HIGHLIGHT_TEXT_TOKENS.map((token) => [token, text]), [MARK_TOKEN, mark]];
@@ -607,7 +616,7 @@ export function tabBarTokens(steps, color = 'accent') {
 		['is-active-', 100],
 	].flatMap(([state, offset]) => [
 		[`--components-tab-bar-is-current-${state}background-color`, fill(offset)],
-		[`--components-tab-bar-is-current-${state}highlight-border-color`, fill(offset + 50)],
+		[`--components-tab-bar-is-current-${state}highlight-border-color`, value((m) => accent(outward(m, offset), m.color ?? color))],
 		[`--components-tab-bar-is-current-${state}content-color`, text],
 	]);
 }

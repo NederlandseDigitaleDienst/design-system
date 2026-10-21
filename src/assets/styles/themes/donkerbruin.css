@@ -71,7 +71,7 @@
 	/* ## Surfaces */
 
 	--semantics-surfaces-accent-filled-background-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-250));
-	--semantics-surfaces-accent-filled-highlight-border-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-200));
+	--semantics-surfaces-accent-filled-highlight-border-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-300));
 
 
 	/* ## Content */
