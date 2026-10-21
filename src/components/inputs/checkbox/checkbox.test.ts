@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
+import { loadTokens } from '../../../test-tokens.js';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDCheckbox } from './checkbox.js';
 import './checkbox.js';
@@ -278,4 +279,33 @@ describe('nldd-checkbox – color="inherit"', () => {
 		expect(getComputedStyle(box).backgroundColor).toBe('rgb(255, 255, 255)');
 		expect(getComputedStyle(icon).color).toBe('rgb(24, 69, 118)');
 	});
+
+	// Without a surface color the mark is white or black, whichever reads on
+	// the text color the box is filled with.
+	it.each([
+		['white', 'rgb(255, 255, 255)', [0, 0, 0]],
+		['dark blue', 'rgb(24, 69, 118)', [255, 255, 255]],
+	])('draws the mark in black or white on %s text when no surface color is set', async (_name, text, mark) => {
+		const unloadTokens = loadTokens();
+		try {
+			el = await fixture(`
+				<div style="color: ${text};">
+					<nldd-checkbox color="inherit" checked accessible-label="Afgerond"></nldd-checkbox>
+				</div>`);
+			const checkbox = el.querySelector('nldd-checkbox') as NLDDCheckbox;
+			await waitForUpdate(checkbox);
+			const icon = checkbox.shadowRoot!.querySelector('.checkbox__check-icon') as Element;
+			expect(toRgb(getComputedStyle(icon).color)).toEqual(mark);
+		} finally {
+			unloadTokens();
+		}
+	});
 });
+
+// The computed color can come back as color(xyz …); a canvas reads it as RGB.
+function toRgb(color: string): number[] {
+	const context = document.createElement('canvas').getContext('2d')!;
+	context.fillStyle = color;
+	context.fillRect(0, 0, 1, 1);
+	return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+}
