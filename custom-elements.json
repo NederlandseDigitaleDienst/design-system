@@ -37342,7 +37342,7 @@
               },
               "default": "'accent'",
               "fieldName": "color",
-              "description": "Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'."
+              "description": "Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track."
             },
             {
               "name": "name",
@@ -37729,7 +37729,7 @@
               },
               "default": "'accent'",
               "fieldName": "color",
-              "description": "Color (semantic or Rijkskleur). Default 'accent'."
+              "description": "Color (semantic or Rijkskleur). Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track."
             },
             {
               "name": "name",

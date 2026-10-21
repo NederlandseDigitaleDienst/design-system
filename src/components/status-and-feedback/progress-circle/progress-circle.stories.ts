@@ -206,7 +206,7 @@ export const MeerdereSegmenten = {
 			></nldd-progress-circle-segment-indicator>
 			<nldd-progress-circle-segment-indicator
 				value="30"
-				color="accent"
+				color="hemelblauw"
 				name="Verwerken"
 			></nldd-progress-circle-segment-indicator>
 		</nldd-progress-circle>
@@ -228,7 +228,7 @@ export const VariantDistribution = {
 			variant="distribution"
 			size="80"
 			max="500"
-			text="Opslag (500 GB)"
+			text="Opslag (350 van 500 GB)"
 		>
 			<nldd-progress-circle-segment-indicator
 				value="200"
@@ -245,18 +245,13 @@ export const VariantDistribution = {
 				color="paars"
 				name="Documenten"
 			></nldd-progress-circle-segment-indicator>
-			<nldd-progress-circle-segment-indicator
-				value="150"
-				color="neutral"
-				name="Vrij"
-			></nldd-progress-circle-segment-indicator>
 		</nldd-progress-circle>
 	`,
 	parameters: {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'In de `distribution`-variant zijn de segmenten categorieën binnen een totaal, geen voortgang. Net als progress meten ze tegen `max`; hier vult de `Vrij`-categorie (150) het restant aan tot 500, zodat de cirkel helemaal gevuld is. Gaps tussen segmenten zijn 2px. Tooltip toont alle categorieën met percentages.',
+				story: 'In de `distribution`-variant zijn de segmenten categorieën binnen een totaal, geen voortgang. Net als progress meten ze tegen `max`: hier 350 van 500 GB, dus de rest blijft lege track. Gebruik Rijkshuisstijlkleuren om de segmenten te onderscheiden, geen `neutral`, want die valt weg tegen de track. Gaps tussen segmenten zijn 2px. Tooltip toont alle categorieën met percentages.',
 			},
 		},
 	},

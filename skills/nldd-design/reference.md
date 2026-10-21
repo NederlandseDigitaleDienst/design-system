@@ -2791,7 +2791,7 @@ Exports both NLDDProgressBar and NLDDProgressBarSegmentIndicator. A progress bar
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `value` | `number` | Share of the parent's total (default 0; <=0 hides segment) |
-| `color` | `string` | Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. |
+| `color` | `string` | Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track. |
 | `name` | `string` | Name for screenreader text (optional) |
 | `tooltip-text` | `string` | Override of the auto-generated tooltip text |
 
@@ -2829,7 +2829,7 @@ Exports both NLDDProgressCircle and NLDDProgressCircleSegmentIndicator. A circul
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `value` | `number` | Share of the parent's total (default 0; <=0 hides segment) |
-| `color` | `string` | Color (semantic or Rijkskleur). Default 'accent'. |
+| `color` | `string` | Color (semantic or Rijkskleur). Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track. |
 | `name` | `string` | Optional name used in the combined tooltip + screenreader text |
 
 ### `<nldd-status-bar>`
