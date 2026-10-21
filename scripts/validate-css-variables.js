@@ -23,8 +23,9 @@
  * It also fails on a px length in an @container or @media condition. With
  * page zoom, Safari measures a container that takes its width from the layout
  * in zoomed pixels, so a px condition keeps the wide layout; rem scales along.
- * The check reads a condition on one line, up to its opening brace, so a
- * condition spread over more lines is not caught.
+ * The same goes for a px length written out in a matchMedia() string. The
+ * check reads a condition on one line, up to its opening brace, so a condition
+ * spread over more lines is not caught.
  */
 
 import fs from 'fs';
@@ -298,6 +299,8 @@ function validate() {
   // brace on the same line, so a mention in a comment does not count. A value
   // built at runtime (`${below}`) carries no literal and passes.
   const QUERY_PX = /@(container|media)\b[^{\n;*`]*?\b\d+(\.\d+)?px\b[^{\n;*`]*\{/g;
+  // The same in a matchMedia() string written out in script.
+  const MATCH_MEDIA_PX = /matchMedia\(\s*['"`][^'"`]*?\b\d+(\.\d+)?px\b[^'"`]*['"`]\s*\)/g;
   const queryFiles = [];
   const walkQueries = (dir) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -309,7 +312,7 @@ function validate() {
   walkQueries(path.join(ROOT_DIR, 'src'));
   for (const filePath of queryFiles) {
     const source = fs.readFileSync(filePath, 'utf8');
-    for (const match of source.matchAll(QUERY_PX)) {
+    for (const match of [...source.matchAll(QUERY_PX), ...source.matchAll(MATCH_MEDIA_PX)]) {
       const line = source.slice(0, match.index).split('\n').length;
       errors.push({
         file: `${path.relative(ROOT_DIR, filePath)}:${line}`,

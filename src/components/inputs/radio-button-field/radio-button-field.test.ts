@@ -245,3 +245,19 @@ describe('nldd-radio-button-field grouped by name', () => {
 		expect(found.map((field) => field.getAttribute('tabindex'))).toEqual(['0', '-1']);
 	});
 });
+
+describe('nldd-radio-button-field – color="inherit"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('passes the color to its radio-button and draws its label in the surrounding text color', async () => {
+		el = await fixture(`<div style="color: rgb(255, 255, 255);"><nldd-radio-button-field color="inherit" label="Team Uitvoering"></nldd-radio-button-field></div>`);
+		const field = el.querySelector('nldd-radio-button-field') as HTMLElement;
+		await waitForUpdate(field);
+		expect(field.shadowRoot!.querySelector('nldd-radio-button')!.getAttribute('color')).toBe('inherit');
+		expect(getComputedStyle(field.shadowRoot!.querySelector('.radio-button-field__label')!).color).toBe('rgb(255, 255, 255)');
+	});
+});
