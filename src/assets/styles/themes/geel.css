@@ -83,10 +83,10 @@
 
 	/* ## Categories */
 
-	--semantics-categories-accent-filled-background-color: var(--semantics-categories-geel-filled-background-color);
-	--semantics-categories-accent-filled-highlight-border-color: var(--semantics-categories-geel-filled-highlight-border-color);
-	--semantics-categories-accent-filled-content-color: var(--semantics-categories-geel-filled-content-color);
-	--semantics-categories-accent-filled-content-secondary-color: var(--semantics-categories-geel-filled-content-secondary-color);
+	--semantics-categories-accent-filled-background-color: light-dark(var(--primitives-color-neutral-925), var(--semantics-categories-geel-filled-background-color));
+	--semantics-categories-accent-filled-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--semantics-categories-geel-filled-highlight-border-color));
+	--semantics-categories-accent-filled-content-color: light-dark(var(--primitives-color-neutral-0), var(--semantics-categories-geel-filled-content-color));
+	--semantics-categories-accent-filled-content-secondary-color: light-dark(var(--primitives-color-neutral-0), var(--semantics-categories-geel-filled-content-secondary-color));
 	--semantics-categories-accent-tinted-background-color: var(--semantics-categories-geel-tinted-background-color);
 	--semantics-categories-accent-tinted-highlight-border-color: var(--semantics-categories-geel-tinted-highlight-border-color);
 	--semantics-categories-accent-tinted-content-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-geel-900));

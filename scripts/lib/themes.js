@@ -409,6 +409,17 @@ export function buttonContrasts(palette, steps) {
 	return result;
 }
 
+/**
+ * Colors whose filled category (the progress bar and circle, a filled tag) is
+ * near-black in light mode, like their selection: a light yellow bar barely
+ * stands out from a white page. A site that wants it in color picks `color="geel"` or
+ * `color="donkergeel"`, whose filled step is darker. Dark mode keeps the theme
+ * color.
+ */
+export const LIGHT_NEAR_BLACK_FILLED = ['geel', 'donkergeel'];
+// The near-black of the selection, per filled property, with white text.
+const NEAR_BLACK_FILLED_STEPS = { 'background-color': 925, 'highlight-border-color': 1000, 'content-color': 0, 'content-secondary-color': 0 };
+
 const CATEGORY_TOKENS = ['filled', 'tinted'].flatMap((variant) =>
 	['background-color', 'highlight-border-color', 'content-color', 'content-secondary-color'].map((prop) => `${variant}-${prop}`),
 );
@@ -723,7 +734,11 @@ export function themeCss(name, palette, ref, { grounds, neutral, order } = {}) {
 		// The text and icon on the tint (tag, banner) follow the accent text.
 		const tintText = DARK_ACCENT_TEXT_STEPS.has(name) && /^tinted-content/.test(token);
 		// In light mode that is the accent text, near-black for yellow.
-		lines.push([`--semantics-categories-accent-${token}`, tintText ? `light-dark(${accent(750)}, ${accent(DARK_ACCENT_TEXT_STEPS.get(name), name)})` : own]);
+		const nearBlackInLight = LIGHT_NEAR_BLACK_FILLED.includes(name) && token.startsWith('filled');
+		const value = tintText
+			? `light-dark(${accent(750)}, ${accent(DARK_ACCENT_TEXT_STEPS.get(name), name)})`
+			: nearBlackInLight ? `light-dark(${accent(NEAR_BLACK_FILLED_STEPS[token.replace('filled-', '')], 'neutral')}, ${own})` : own;
+		lines.push([`--semantics-categories-accent-${token}`, value]);
 	}
 	lines.push(...buttonTokens(buttonSteps(palette, ref, grounds, name), name));
 	lines.push(...areaTokens(areaSteps(palette, ref), name));
