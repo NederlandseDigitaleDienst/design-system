@@ -20,18 +20,15 @@
  *   variables.css, and named after a component in the folder that reads them,
  *   so the layer cannot grow back into overrides shared between components.
  *
- * It also fails on a px length in an @container or @media condition. With
- * page zoom, Safari measures a container that takes its width from the layout
- * in zoomed pixels, so a px condition keeps the wide layout; rem scales along.
- * The same goes for a px length written out in a matchMedia() string. The
- * check reads a condition on one line, up to its opening brace, and stops at a
- * `*` so a comment does not count. A condition spread over more lines, or one
- * with a calc() that multiplies, is therefore not caught.
+ * It also fails on a px length in an @container or @media condition, or in a
+ * matchMedia() string: with page zoom, Safari measures a container in zoomed
+ * pixels. What the check catches and what it misses is in lib/query-px.js.
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { findQueryPx } from './lib/query-px.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -297,12 +294,7 @@ function validate() {
     }
   }
 
-  // A px length in a query condition: the condition runs up to the opening
-  // brace on the same line, so a mention in a comment does not count. A value
-  // built at runtime (`${below}`) carries no literal and passes.
-  const QUERY_PX = /@(container|media)\b[^{\n;*`]*?\b\d+(\.\d+)?px\b[^{\n;*`]*\{/g;
-  // The same in a matchMedia() string written out in script.
-  const MATCH_MEDIA_PX = /matchMedia\(\s*['"`][^'"`]*?\b\d+(\.\d+)?px\b[^'"`]*['"`]\s*\)/g;
+  // A px length in a query condition or matchMedia(); see lib/query-px.js.
   const queryFiles = [];
   const walkQueries = (dir) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -314,12 +306,11 @@ function validate() {
   walkQueries(path.join(ROOT_DIR, 'src'));
   for (const filePath of queryFiles) {
     const source = fs.readFileSync(filePath, 'utf8');
-    for (const match of [...source.matchAll(QUERY_PX), ...source.matchAll(MATCH_MEDIA_PX)]) {
-      const line = source.slice(0, match.index).split('\n').length;
+    for (const { line, text } of findQueryPx(source)) {
       errors.push({
         file: `${path.relative(ROOT_DIR, filePath)}:${line}`,
-        variable: match[0],
-        message: `"${match[0].replace(/\s+/g, ' ').trim()}" has a px length. Write the condition in rem (40rem, not 640px): with page zoom, Safari measures a container in zoomed pixels`,
+        variable: text,
+        message: `"${text}" has a px length. Write the condition in rem (40rem, not 640px): with page zoom, Safari measures a container in zoomed pixels`,
       });
     }
   }
