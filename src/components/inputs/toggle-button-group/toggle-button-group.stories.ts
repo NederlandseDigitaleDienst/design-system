@@ -507,3 +507,48 @@ export const MetIconen = {
 	},
 },
 };
+
+export const MetSneltoetsen = {
+	name: 'Met shortcuts',
+	render: () => html`
+	<nldd-toggle-button-group
+		type="button"
+		aria-label="Tekst opmaken"
+	>
+		<nldd-toggle-button
+			value="bold"
+			accessible-label="Vet"
+			icon="bold"
+			shortcut="Ctrl+B"
+			shortcut-mac="Cmd+B"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			value="italic"
+			accessible-label="Cursief"
+			icon="italic"
+			shortcut="Ctrl+I"
+			shortcut-mac="Cmd+I"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			value="underlined"
+			accessible-label="Onderstreept"
+			icon="underlined"
+			shortcut="Ctrl+U"
+			shortcut-mac="Cmd+U"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			value="bullet-list"
+			accessible-label="Opsomming"
+			icon="bullet-list"
+		></nldd-toggle-button>
+	</nldd-toggle-button-group>
+`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Elke knop heeft zijn eigen `shortcut`, en een knop zonder sneltoets kan ernaast staan.',
+			},
+		},
+	},
+};

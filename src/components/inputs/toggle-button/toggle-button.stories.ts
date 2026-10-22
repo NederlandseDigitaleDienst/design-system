@@ -817,3 +817,41 @@ export const TypeRadio = {
 	},
 },
 };
+
+export const MetSneltoets = {
+	name: 'Met shortcut',
+	render: () => html`
+	<nldd-container
+		layout="row"
+		gap="8"
+	>
+		<nldd-toggle-button
+			variant="icon"
+			icon="bold"
+			text="Vet"
+			shortcut="Ctrl+B"
+			shortcut-mac="Cmd+B"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			variant="icon"
+			icon="italic"
+			text="Cursief"
+			shortcut="Ctrl+I"
+			shortcut-mac="Cmd+I"
+		></nldd-toggle-button>
+		<nldd-toggle-button
+			text="Voorbeeld"
+			shortcut="Ctrl+Shift+P"
+			shortcut-mac="Cmd+Shift+P"
+		></nldd-toggle-button>
+	</nldd-container>
+`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Met `shortcut` staat de sneltoets in de tooltip, achter de tekst. Bij een knop met zichtbare tekst toont de tooltip alleen de toetsen.',
+			},
+		},
+	},
+};
