@@ -11,24 +11,17 @@ import {
 	focusRingTokens,
 	badgeTokens,
 	tabBarTokens,
+	tabSteps,
 	statusBarTokens,
 	contrast,
 	luminance,
-	NEAR_BLACK_INTERACTION,
 	NEAR_BLACK_STEPS,
-	DARK_LINK_STEPS,
-	LIGHT_LINK_IN_COLOR,
-	ACCENT_TEXT_IN_COLOR,
 	NEAR_WHITE_STEPS,
 	parsePalettes,
-	selectedSteps,
 	selectionSteps,
 	listHighlightSteps,
 	selectionTokens,
-	STATUS_DARK_SELECTION,
-	STATUS_SELECTION_IN_COLOR,
-	STATUS_THEMES,
-	BANNER_ICON_STEPS,
+	THEMES,
 	STATUS_IN_COLOR,
 	STATUS_TINT_IN_DARK,
 	tokenDefaults,
@@ -65,6 +58,7 @@ const grounds = selectionGrounds(neutral);
 
 // The selected fill and its states must reach 3:1 on every ground, with
 // 4.5:1 for --primitives-color-neutral-0 on it (white in light, black in dark).
+const SELECTED_OFFSETS = [0, 50, 100];
 const assertSelectedFill = (palette, mode, steps) => {
 	for (const step of steps) {
 		const fill = palette.get(step)[mode];
@@ -116,6 +110,8 @@ test('every reference color but the neutral and the default becomes a theme', ()
 
 for (const { name, hex } of themes) {
 	const palette = palettes.get(name);
+	const theme = THEMES[name] ?? {};
+	const status = theme.kind === 'status';
 
 	test(`${name}: the interaction accent keeps its contrast`, () => {
 		for (const { role, light, dark, min } of interaction) {
@@ -124,20 +120,15 @@ for (const { name, hex } of themes) {
 		}
 	});
 
-	if (STATUS_THEMES.includes(name) && !STATUS_SELECTION_IN_COLOR.includes(name)) {
-		test(`${name}: the gray selection reaches 3:1 on every ground, with 4.5:1 text`, () => {
-			assertSelectedFill(neutral, 'light', [750, 800, 850].map((step) => NEAR_BLACK_STEPS.get(step)));
-			assertSelectedFill(neutral, 'dark', [0, 50, 100].map(STATUS_DARK_SELECTION.at));
-		});
-	} else {
-		test(`${name}: the selection is the button, or near-black where a light button does not stand out`, () => {
-			const steps = selectionSteps(palette, hex, grounds, name);
-			const button = buttonSteps(palette, hex, grounds, name);
-			assert.equal(steps.dark.step, button.dark.step);
-			if (steps.light.color !== 'neutral') assert.equal(steps.light.step, button.light.step);
-			assertSelection(palette, steps);
-		});
-	}
+	test(`${name}: the selection is the button or a gray, and a gray reaches 3:1 on every ground`, () => {
+		const steps = selectionSteps(palette, hex, grounds, name);
+		const button = buttonSteps(palette, hex, grounds, name);
+		for (const mode of ['light', 'dark']) {
+			if (steps[mode].color === 'neutral') assertSelectedFill(neutral, mode, SELECTED_OFFSETS.map(steps[mode].at));
+			else assert.equal(steps[mode].step, button[mode].step, mode);
+		}
+		assertSelection(palette, steps);
+	});
 
 	test(`${name}: text on the accent area reaches 4.5:1`, () => {
 		const area = areaSteps(palette, hex);
@@ -164,9 +155,9 @@ for (const { name, hex } of themes) {
 		}
 	});
 
-	if (ACCENT_TEXT_IN_COLOR.has(name)) {
+	if (theme.accentText) {
 		test(`${name}: accent text in the theme color reaches 4.5:1 on the page`, () => {
-			const modes = ACCENT_TEXT_IN_COLOR.get(name);
+			const modes = theme.accentText;
 			for (const [mode, steps] of [['light', [600, 650, 700]], ['dark', [650, 700, 750]]].filter(([mode]) => modes[mode])) {
 				for (const step of steps) for (const ground of grounds.page[mode]) assert.ok(contrast(palette.get(step)[mode], ground) >= 4.5, `${mode} ${step}`);
 			}
@@ -175,8 +166,10 @@ for (const { name, hex } of themes) {
 
 	test(`${name}: the focus ring reaches 4.5:1 against the base surface of its halo`, () => {
 		const steps = focusRingSteps(palette, hex, grounds, name);
-		assert.ok(contrast(palette.get(steps.light.step).light, surfaces.light.base) >= 4.5, 'light');
-		assert.ok(contrast(palette.get(steps.dark.step).dark, surfaces.dark.base) >= 4.5, 'dark');
+		for (const mode of ['light', 'dark']) {
+			const scale = steps[mode].color === 'neutral' ? neutral : palette;
+			assert.ok(contrast(scale.get(steps[mode].step)[mode], surfaces[mode].base) >= 4.5, mode);
+		}
 	});
 
 	test(`${name}: the border of the button stands out more from the page than its fill`, () => {
@@ -214,7 +207,7 @@ for (const { name, hex } of themes) {
 		}
 	});
 
-	if (NEAR_BLACK_INTERACTION.includes(name)) {
+	if (theme.kind) {
 		test(`${name}: every near-black step is darker than the accent step it replaces`, () => {
 			const gray = themeNeutral(name);
 			for (const [step, replacement] of NEAR_BLACK_STEPS) {
@@ -223,13 +216,13 @@ for (const { name, hex } of themes) {
 		});
 
 		test(`${name}: links are lintblauw in light mode (red stays red), and reach 4.5:1 in dark mode`, () => {
-			const lightLink = LIGHT_LINK_IN_COLOR.includes(name) ? name : 'lintblauw';
+			const lightLink = theme.lightLinkInColor ? name : 'lintblauw';
 			assert.match(themeCss(name, palette, hex, { grounds }), new RegExp(`--semantics-links-color: (light-dark\\()?var\\(--primitives-color-${lightLink}-600\\)`));
-			if (LIGHT_LINK_IN_COLOR.includes(name)) {
+			if (theme.lightLinkInColor) {
 				for (const step of [600, 650, 700]) for (const ground of grounds.page.light) assert.ok(contrast(palette.get(step).light, ground) >= 4.5, `light ${step}`);
 			}
-			if (DARK_LINK_STEPS.has(name)) {
-				const step = DARK_LINK_STEPS.get(name);
+			if (theme.darkLink) {
+				const step = theme.darkLink;
 				for (const offset of [0, 50, 100]) {
 					const link = palette.get(Math.min(1000, step + offset)).dark;
 					for (const ground of grounds.page.dark) assert.ok(contrast(link, ground) >= 4.5, `+${offset} on ${ground}`);
@@ -238,7 +231,7 @@ for (const { name, hex } of themes) {
 		});
 	}
 
-	if (STATUS_THEMES.includes(name)) {
+	if (status) {
 		test(`${name}: every near-white step is lighter than the gray step it replaces in dark mode`, () => {
 			const gray = themeNeutral(name);
 			for (const [step, replacement] of NEAR_WHITE_STEPS) {
@@ -252,14 +245,14 @@ for (const { name, hex } of themes) {
 				.filter((prop) => !prop.startsWith('--primitives-color-accent-'));
 			assert.ok(ownColor.length > 0);
 			for (const prop of ownColor) {
-				const kept = ['--semantics-buttons-accent-filled-', '--semantics-surfaces-accent-filled-', '--semantics-content-on-accent-filled-', '--semantics-categories-accent-', '--components-progress-bar-accent-', '--components-progress-circle-accent-', '--semantics-steps-progress-', '--semantics-steps-is-past-', '--components-badge-accent-', '--semantics-tabs-is-current-', '--components-status-bar-accent-', '--semantics-list-items-is-highlighted-', '--semantics-focus-ring-', ...(DARK_LINK_STEPS.has(name) ? ['--semantics-links-'] : []), ...(ACCENT_TEXT_IN_COLOR.has(name) ? ['--semantics-content-accent-color', '--semantics-buttons-accent-transparent-'] : []), ...(STATUS_SELECTION_IN_COLOR.includes(name) ? ['--semantics-controls-is-selected-', '--semantics-buttons-neutral-', '--semantics-list-items-is-highlighted-', '--components-date-picker-day-is-today-is-selected-'] : [])];
+				const kept = ['--semantics-buttons-accent-filled-', '--semantics-surfaces-accent-filled-', '--semantics-content-on-accent-filled-', '--semantics-categories-accent-', '--components-progress-bar-accent-', '--components-progress-circle-accent-', '--semantics-steps-progress-', '--semantics-steps-is-past-', '--components-badge-accent-', '--semantics-tabs-is-current-', '--components-status-bar-accent-', '--semantics-list-items-is-highlighted-', '--semantics-focus-ring-', ...(theme.darkLink ? ['--semantics-links-'] : []), ...(theme.accentText ? ['--semantics-content-accent-color', '--semantics-buttons-accent-transparent-'] : []), ...(theme.darkSelectionInColor ? ['--semantics-controls-is-selected-', '--semantics-buttons-neutral-', '--semantics-list-items-is-highlighted-', '--components-date-picker-day-is-today-is-selected-'] : [])];
 				assert.ok(kept.some((prefix) => prop.startsWith(prefix)), prop);
 			}
 			assert.match(rule, new RegExp(`--semantics-categories-accent-tinted-background-color: var\\(--semantics-categories-${name}-`));
 		});
 	}
 
-	if (STATUS_THEMES.includes(name)) {
+	if (status) {
 		test(`${name}: a token on the accent scale stays as it was, unless it takes the theme color on purpose`, () => {
 			const rule = themeCss(name, palette, hex, { grounds, defaults });
 			const written = new Map([...rule.matchAll(/^\t(--[\w-]+): (.+);$/gm)].map((m) => [m[1], m[2]]));
@@ -295,21 +288,15 @@ for (const { name, hex } of themes) {
 		}
 	});
 
-	if (BANNER_ICON_STEPS.has(name)) {
+	if (theme.bannerIcon) {
 		test(`${name}: the accent banner icon reaches 3:1 on the accent-tinted surface`, () => {
 			const surface = { light: 25, dark: 75 };
-			for (const [mode, step] of Object.entries(BANNER_ICON_STEPS.get(name))) {
+			for (const [mode, step] of Object.entries(theme.bannerIcon)) {
 				const ratio = contrast(palette.get(step)[mode], palette.get(surface[mode])[mode]);
 				assert.ok(ratio >= 3, `${mode}: ${ratio.toFixed(2)}`);
 			}
 		});
 	}
-
-	test(`${name}: the light focus ring reaches 4.5:1 on the base background`, () => {
-		const { step, color } = focusRingSteps(palette, hex, grounds, name).light;
-		const ratio = contrast((color === 'neutral' ? neutral : palette).get(step).light, surfaces.light.base);
-		assert.ok(ratio >= 4.5, ratio.toFixed(2));
-	});
 
 	test(`${name}: the accent scale is the theme's own scale`, () => {
 		const rule = themeCss(name, palette, hex, { grounds, defaults });
@@ -356,7 +343,7 @@ test('the default accent badge in variables.css follows the same rule as a theme
 
 test('the default current tab in variables.css follows the same rule as a theme', () => {
 	const variables = readFileSync(new URL('../../src/assets/styles/variables.css', import.meta.url), 'utf8');
-	for (const [prop, value] of tabBarTokens(selectionSteps(palettes.get('lintblauw'), '#154273', grounds, 'lintblauw'))) {
+	for (const [prop, value] of tabBarTokens(tabSteps(palettes.get('lintblauw'), '#154273', grounds, 'lintblauw'))) {
 		assert.ok(variables.includes(`\t${prop}: ${value};`), prop);
 	}
 });
