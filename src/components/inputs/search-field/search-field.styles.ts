@@ -18,7 +18,8 @@ export const searchFieldStyles = css`
 		--_search-field-text-font: var(--semantics-input-fields-md-text-font);
 		--_search-field-end-padding-right: calc((var(--_search-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
 		--_search-field-end-gap: var(--primitives-space-6);
-		--_search-field-shortcut-padding-right: var(--primitives-space-12);
+		--_search-field-shortcut-size: var(--primitives-space-20);
+		--_search-field-shortcut-padding-right: calc((var(--_search-field-min-size) - var(--_search-field-shortcut-size)) / 2 - var(--semantics-input-fields-border-width));
 		--_search-field-button-focus-z-index: 1;
 
 		${inheritedTextReset}
@@ -45,7 +46,6 @@ export const searchFieldStyles = css`
 		--_search-field-text-font: var(--semantics-input-fields-sm-text-font);
 		--_search-field-end-padding-right: calc((var(--_search-field-min-size) - var(--semantics-controls-xs-min-size)) / 2 - var(--semantics-input-fields-border-width));
 		--_search-field-end-gap: var(--primitives-space-4);
-		--_search-field-shortcut-padding-right: var(--primitives-space-8);
 	}
 
 
