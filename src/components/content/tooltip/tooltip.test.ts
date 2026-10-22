@@ -1,6 +1,7 @@
 import { _setOSOverride } from '../../../utilities/os.js';
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, onTestFinished } from 'vitest';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTooltip } from './tooltip.js';
 import './tooltip.js';
 
@@ -412,6 +413,22 @@ describe('nldd-tooltip – aria-describedby', () => {
 			const keys = body.querySelector('nldd-keyboard-shortcut')!;
 			expect(keys.getAttribute('keys')).toBe('Ctrl+S');
 			expect(keys.getAttribute('mac-keys')).toBe('Cmd+S');
+		});
+
+		it('puts the keys on the baseline of the text', async () => {
+			const removeTokens = loadTokens();
+			onTestFinished(removeTokens);
+			el = await fixture<NLDDTooltip>('<nldd-tooltip text="Link" shortcut="Ctrl+K" open><button>Link</button></nldd-tooltip>');
+			await waitForUpdate(el);
+			const glyphBottom = (node: Element) => {
+				const range = document.createRange();
+				range.selectNodeContents(node);
+				return range.getBoundingClientRect().bottom;
+			};
+			const text = el.shadowRoot!.querySelector('.tooltip__text')!;
+			const key = el.shadowRoot!.querySelector('nldd-keyboard-shortcut')!.shadowRoot!.querySelector('.keyboard-shortcut__key')!;
+			expect(glyphBottom(text)).toBeGreaterThan(0);
+			expect(glyphBottom(key)).toBeCloseTo(glyphBottom(text), 1);
 		});
 
 		it('adds the shortcut to the description of a light-DOM trigger', async () => {

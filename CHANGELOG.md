@@ -21,6 +21,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **`nldd-keyboard-shortcut` with `appearance="simple"` sits on the baseline of the text around it.** It was centered on the line, like the keycaps of `box`, and so stood a fraction off plain text. The keycaps stay centered.
 - **The secondary text on an accent button keeps its contrast in every state.** In the themes with black text on a light button (geel, donkergeel, lichtblauw, mintgroen and paars) a hovered, pressed or open button got darker while its supporting text and shortcut kept the same color, down to 2.9:1 when open and pressed. That color now moves along with the button and stays above 4.5:1. The other themes do not change.
 - **`nldd-activity-indicator` takes its space during the delay.** It was 0px high until it faded in after a second, so the content around it shifted twice. It now takes the size of the circle, and of the label with `show-text`, from the start, and gives it up once `complete` is set. Give a parent that sizes to its content a `min-height` for the content you expect, so the area does not change height when the content arrives, such as `<nldd-container min-height="240px">`; the indicator fills it and centers itself.
 
