@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import './container.js';
 import '../../content/rich-text/rich-text.js';
@@ -65,6 +65,10 @@ export default {
 		smColumnCount: undefined,
 		mdColumnCount: undefined,
 		lgColumnCount: undefined,
+		width: '',
+		minWidth: '',
+		maxWidth: '',
+		minHeight: '',
 		gap: undefined,
 		smGap: undefined,
 		mdGap: undefined,
@@ -141,6 +145,27 @@ export default {
 			table: { defaultValue: { summary: '(geen)' } },
 		},
 
+		width: {
+			control: 'text',
+			description: '`full`, `fit-content` of een CSS-lengte (bijv. `480px`)',
+			table: { defaultValue: { summary: 'full' } },
+		},
+		minWidth: {
+			name: 'min-width',
+			control: 'text',
+			description: 'Minimale breedte als CSS-lengte (bijv. `280px`)',
+		},
+		maxWidth: {
+			name: 'max-width',
+			control: 'text',
+			description: 'Maximale breedte als CSS-lengte (bijv. `480px`)',
+		},
+		minHeight: {
+			name: 'min-height',
+			control: 'text',
+			description: 'Minimale hoogte als CSS-lengte (bijv. `240px`), inclusief padding',
+		},
+
 		gap: sizeControl('Gap tussen kinderen'),
 		smGap: { name: 'sm-gap', ...sizeControl('Gap bij sm') },
 		mdGap: { name: 'md-gap', ...sizeControl('Gap bij md') },
@@ -205,6 +230,10 @@ export const Standaard = {
 			sm-column-count=${ifDefined(args.smColumnCount)}
 			md-column-count=${ifDefined(args.mdColumnCount)}
 			lg-column-count=${ifDefined(args.lgColumnCount)}
+			width=${args.width || nothing}
+			min-width=${args.minWidth || nothing}
+			max-width=${args.maxWidth || nothing}
+			min-height=${args.minHeight || nothing}
 			gap=${ifDefined(args.gap)}
 			sm-gap=${ifDefined(args.smGap)}
 			md-gap=${ifDefined(args.mdGap)}
@@ -572,7 +601,8 @@ export const Uitlijning = {
 			padding="16"
 			horizontal-alignment="center"
 			vertical-alignment="center"
-			style="outline: 1px dashed var(--primitives-color-neutral-150); min-height: 200px;"
+			min-height="200px"
+			style="outline: 1px dashed var(--primitives-color-neutral-150);"
 		>
 			<nldd-rich-text><p>Gecentreerd</p></nldd-rich-text>
 			<nldd-rich-text><p>Op beide assen</p></nldd-rich-text>

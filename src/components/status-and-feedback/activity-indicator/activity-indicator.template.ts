@@ -28,30 +28,28 @@ export function activityIndicatorTemplate(component: NLDDActivityIndicator) {
 		</div>
 		${renderBackdrop ? html`<div class="activity-indicator__backdrop" aria-hidden="true"></div>` : nothing}
 		<div class="activity-indicator">
-			<slot name="indicator">
-				<svg class="activity-indicator__circle"
-					viewBox="0 0 24 24"
-					fill="none"
-					aria-hidden="true"
-					focusable="false"
-				>
-					<circle class="activity-indicator__track"
-						cx="12"
-						cy="12"
-						r="9"
-					></circle>
-					<circle class="activity-indicator__indicator"
-						cx="12"
-						cy="12"
-						r="9"
-						pathLength="100"
-					></circle>
-				</svg>
-				<span class=${classMap({
+			<svg class="activity-indicator__circle"
+				viewBox="0 0 24 24"
+				fill="none"
+				aria-hidden="true"
+				focusable="false"
+			>
+				<circle class="activity-indicator__track"
+					cx="12"
+					cy="12"
+					r="9"
+				></circle>
+				<circle class="activity-indicator__indicator"
+					cx="12"
+					cy="12"
+					r="9"
+					pathLength="100"
+				></circle>
+			</svg>
+			<span class=${classMap({
 				'activity-indicator__text': true,
 				'activity-indicator__text--visually-hidden': !component.showText,
 			})}>${text}</span>
-			</slot>
 		</div>
 	`;
 }

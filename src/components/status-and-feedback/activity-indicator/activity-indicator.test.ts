@@ -1,5 +1,6 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDActivityIndicator } from './activity-indicator.js';
 import './activity-indicator.js';
 
@@ -268,17 +269,37 @@ describe('nldd-activity-indicator', () => {
 		expect(el.shadowRoot!.querySelector('.activity-indicator__content')!.hasAttribute('inert')).toBe(false);
 	});
 
-	it('renders a custom indicator from the indicator slot', async () => {
-		el = await fixture(`
-			<nldd-activity-indicator timing="instant">
-				<span slot="indicator" data-testid="custom">Custom</span>
-			</nldd-activity-indicator>
-		`);
-		await waitForUpdate(el);
-		// slot="indicator" is not default-slot content, so the host stays standalone.
-		expect(el.hasAttribute('has-content')).toBe(false);
-		const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="indicator"]')!;
-		expect(slot.assignedElements().length).toBe(1);
-		expect(slot.assignedElements()[0].getAttribute('data-testid')).toBe('custom');
+	describe('layout', () => {
+		let removeTokens: () => void;
+		beforeAll(() => { removeTokens = loadTokens(); });
+		afterAll(() => removeTokens());
+
+		it('holds its size during the delay and gives it up once complete', async () => {
+			el = await fixture('<div><nldd-activity-indicator show-text style="--_activity-indicator-fade-duration: 0s"></nldd-activity-indicator></div>');
+			const indicator = el.querySelector<NLDDActivityIndicator>('nldd-activity-indicator')!;
+			await waitForUpdate(indicator);
+			expect(indicator.hasAttribute('loading')).toBe(false);
+			expect(indicator.getBoundingClientRect().height).toBeGreaterThan(32);
+			indicator.complete = true;
+			await waitForUpdate(indicator);
+			expect(indicator.getBoundingClientRect().height).toBe(0);
+		});
+
+		it.each([
+			['16', 'xs'],
+			['20', 'xs'],
+			['24', 'sm'],
+			['28', 'sm'],
+			['32', 'md'],
+			['96', 'md'],
+		])('sizes the label to the circle: size %s uses body-%s', async (size, font) => {
+			el = await fixture(`<div><nldd-activity-indicator size="${size}" show-text></nldd-activity-indicator><span style="font: var(--primitives-font-body-${font}-regular-flat)">Laden</span></div>`);
+			const indicator = el.querySelector<NLDDActivityIndicator>('nldd-activity-indicator')!;
+			await waitForUpdate(indicator);
+			const label = indicator.shadowRoot!.querySelector('.activity-indicator__text')!;
+			const probe = el.querySelector('span')!;
+			expect(getComputedStyle(probe).fontSize).not.toBe('');
+			expect(getComputedStyle(label).fontSize).toBe(getComputedStyle(probe).fontSize);
+		});
 	});
 });

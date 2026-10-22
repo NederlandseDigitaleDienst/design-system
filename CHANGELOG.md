@@ -9,6 +9,23 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **The design guidelines have a section for house-style choices.** It holds the choices where more than one way works and the system picked one, so it looks the same everywhere. The first: a button that opens a menu with more actions shows the horizontal ellipsis (`icon="more"`), as the overflow menus of the components do. Turn your own vertical "kebab" back to that.
+- **`nldd-container` takes a `min-height`.** It reserves the room that content still on its way will take, padding included, and `vertical-alignment` places the children within it. Before, `vertical-alignment` had no height to work with unless you set one in your own CSS.
+
+### Changed
+
+- **The label of `nldd-activity-indicator` grows with `size`.** It is body-xs at 16 and 20, body-sm at 24 and 28, and body-md from 32, so the circle and its label keep the same proportion everywhere. At the default size of 32 a visible label (`show-text`) is 18px instead of 16px. A larger indicator gives a larger label; the surrounding text does not change it.
+
+### Fixed
+
+- **`nldd-activity-indicator` takes its space during the delay.** It was 0px high until it faded in after a second, so the content around it shifted twice. It now takes the size of the circle, and of the label with `show-text`, from the start, and gives it up once `complete` is set. Give a parent that sizes to its content a `min-height` for the content you expect, so the area does not change height when the content arrives, such as `<nldd-container min-height="240px">`; the indicator fills it and centers itself.
+
+### Breaking
+
+- **The `indicator` slot of `nldd-activity-indicator` is gone.** The activity indicator is for loading of unknown length; a progress bar or circle in its slot lost the label and announced itself twice. When you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` directly instead of inside the activity indicator.
+
 ## [0.10.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.9.0...v0.10.0) (2026-10-21)
 
 ### Highlights

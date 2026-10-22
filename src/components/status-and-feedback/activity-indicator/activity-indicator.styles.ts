@@ -21,7 +21,7 @@ export const activityIndicatorStyles = css`
 		--_activity-indicator-pulse-easing: ease-in-out;
 		--_activity-indicator-max-width: var(--primitives-area-240);
 		--_activity-indicator-gap: var(--primitives-space-4);
-		--_activity-indicator-text-font: var(--primitives-font-body-sm-regular-flat);
+		--_activity-indicator-text-font: var(--primitives-font-body-md-regular-flat);
 		--_activity-indicator-backdrop-blur: 3px;
 		--_activity-indicator-overlay-panel-padding: var(--primitives-space-12);
 		--_activity-indicator-overlay-panel-corner-radius: var(--primitives-corner-radius-md);
@@ -54,10 +54,10 @@ export const activityIndicatorStyles = css`
 
 	/* ## Sizes (icon scale) */
 
-	:host([size="16"]) { --_activity-indicator-circle-size: var(--primitives-space-16); }
-	:host([size="20"]) { --_activity-indicator-circle-size: var(--primitives-space-20); }
-	:host([size="24"]) { --_activity-indicator-circle-size: var(--primitives-space-24); }
-	:host([size="28"]) { --_activity-indicator-circle-size: var(--primitives-space-28); }
+	:host([size="16"]) { --_activity-indicator-circle-size: var(--primitives-space-16); --_activity-indicator-text-font: var(--primitives-font-body-xs-regular-flat); }
+	:host([size="20"]) { --_activity-indicator-circle-size: var(--primitives-space-20); --_activity-indicator-text-font: var(--primitives-font-body-xs-regular-flat); }
+	:host([size="24"]) { --_activity-indicator-circle-size: var(--primitives-space-24); --_activity-indicator-text-font: var(--primitives-font-body-sm-regular-flat); }
+	:host([size="28"]) { --_activity-indicator-circle-size: var(--primitives-space-28); --_activity-indicator-text-font: var(--primitives-font-body-sm-regular-flat); }
 	:host([size="40"]) { --_activity-indicator-circle-size: var(--primitives-space-40); }
 	:host([size="44"]) { --_activity-indicator-circle-size: var(--primitives-space-44); }
 	:host([size="48"]) { --_activity-indicator-circle-size: var(--primitives-space-48); }
@@ -68,18 +68,16 @@ export const activityIndicatorStyles = css`
 
 
 	/* # Block
-	   Stacks the default circle + label as a centered column. width:100% +
-	   max-width gives a slotted progress-bar a width to fill; the fixed-size
-	   circle and the label stay centered via align-items. */
+	   Stacks the circle + label as a centered column; max-width wraps a long
+	   label. */
 
 	.activity-indicator {
 		/* position:relative so it paints above the absolutely-positioned backdrop
-		   (both are z-index:auto; the backdrop comes first in the DOM). Hidden by
-		   default; the loading host attribute fades it (and the backdrop) in and
-		   out — opacity + display via transition-behavior: allow-discrete, with a
-		   starting-style for the entry. */
+		   (both are z-index:auto; the backdrop comes first in the DOM). Laid out
+		   but invisible during the delay, so the host holds its size until complete. */
 		position: relative;
-		display: none;
+		display: flex;
+		visibility: hidden;
 		opacity: 0;
 		pointer-events: none;
 		width: 100%;
@@ -87,15 +85,19 @@ export const activityIndicatorStyles = css`
 		flex-direction: column;
 		align-items: center;
 		gap: var(--_activity-indicator-gap);
-		transition-property: opacity, display;
+		transition-property: opacity, visibility, display;
 		transition-duration: var(--_activity-indicator-fade-duration);
 		transition-timing-function: var(--_activity-indicator-fade-easing);
 		transition-behavior: allow-discrete;
 	}
 
 	:host([loading]) .activity-indicator {
-		display: flex;
+		visibility: visible;
 		opacity: 1;
+	}
+
+	:host([complete]) .activity-indicator {
+		display: none;
 	}
 
 	@starting-style {
@@ -162,13 +164,6 @@ export const activityIndicatorStyles = css`
 			opacity: 0;
 		}
 	}
-
-	/* display:contents so the default circle + label (or a slotted override)
-	   are direct flex items of the block. */
-	slot {
-		display: contents;
-	}
-
 
 	/* # Elements */
 

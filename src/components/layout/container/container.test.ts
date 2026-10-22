@@ -213,6 +213,24 @@ describe('nldd-container', () => {
 		expect(el.getAttribute('width')).toBe('fit-content');
 	});
 
+	it('puts min-height in a custom property and removes it when cleared', async () => {
+		el = await fixture('<nldd-container min-height="240px"></nldd-container>');
+		await waitForUpdate(el);
+		expect(el.style.getPropertyValue('--_container-min-height')).toBe('240px');
+		el.removeAttribute('min-height');
+		await waitForUpdate(el);
+		expect(el.style.getPropertyValue('--_container-min-height')).toBe('');
+	});
+
+	it('centers its children within min-height with vertical-alignment', async () => {
+		el = await fixture('<nldd-container min-height="240px" vertical-alignment="center"><div style="height: 40px"></div></nldd-container>');
+		await waitForUpdate(el);
+		const host = el.getBoundingClientRect();
+		const child = el.querySelector('div')!.getBoundingClientRect();
+		expect(host.height).toBe(240);
+		expect(child.top - host.top).toBe(100);
+	});
+
 	it('clears a width that is not a length, so the default rule applies again', async () => {
 		el = await fixture('<nldd-container width="480px"></nldd-container>');
 		await waitForUpdate(el);

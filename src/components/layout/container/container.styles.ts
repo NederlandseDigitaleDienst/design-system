@@ -20,6 +20,7 @@ export const containerStyles = css`
 		--_container-width: 100%;
 		--_container-min-width: auto;
 		--_container-max-width: none;
+		--_container-min-height: auto;
 		--_container-justify-content: initial;
 		--_container-justify-items: initial;
 		--_container-align-items: initial;
@@ -82,6 +83,7 @@ export const containerStyles = css`
 	.container {
 		container-type: inline-size;
 		box-sizing: border-box;
+		min-height: var(--_container-min-height);
 		padding-top: var(--_container-padding-top);
 		padding-right: var(--_container-padding-right);
 		padding-bottom: var(--_container-padding-bottom);
@@ -134,6 +136,11 @@ export const containerStyles = css`
 		container-type: normal;
 	}
 
+	:host([min-height]) .container {
+		display: flex;
+		flex-direction: column;
+	}
+
 
 	/* # Inner — actual layout */
 
@@ -145,6 +152,12 @@ export const containerStyles = css`
 		justify-items: var(--_container-justify-items);
 		align-items: var(--_container-align-items);
 		gap: var(--_container-gap);
+	}
+
+	:host([min-height]) .container__inner {
+		flex-grow: 1;
+		flex-shrink: 1;
+		flex-basis: auto;
 	}
 
 	:host([layout="row"]) .container__inner {
