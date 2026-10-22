@@ -672,6 +672,23 @@ describe('nldd-toggle-button – selected-icon', () => {
 			expect(tooltip.getAttribute('shortcut-mac')).toBe('Cmd+B');
 		});
 
+		it('shows a tooltip with the shortcut for a text-only toggle', async () => {
+			el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Vet" shortcut="Ctrl+B"></nldd-toggle-button>');
+			await waitForUpdate(el);
+			el.shadowRoot!.querySelector('button')!.focus();
+			const tooltip = el.shadowRoot!.querySelector<NLDDTooltip>('nldd-tooltip')!;
+			await waitForUpdate(tooltip);
+			expect(tooltip._visible).toBe(true);
+		});
+
+		it('shows the text and the shortcut when variant="icon" falls back to the placeholder', async () => {
+			el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon" text="Favoriet" shortcut="Ctrl+B"></nldd-toggle-button>');
+			await waitForUpdate(el);
+			const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
+			expect(tooltip.getAttribute('text')).toBe('Favoriet');
+			expect(tooltip.getAttribute('shortcut')).toBe('Ctrl+B');
+		});
+
 		it('moves a visible text into the aria-label once a shortcut joins it', async () => {
 			_setOSOverride('windows');
 			el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Vet" shortcut="Ctrl+B"></nldd-toggle-button>');

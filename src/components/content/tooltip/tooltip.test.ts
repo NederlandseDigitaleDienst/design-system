@@ -405,6 +405,14 @@ describe('nldd-tooltip – aria-describedby', () => {
 	describe('shortcut', () => {
 		afterEach(() => _setOSOverride(null));
 
+		it('opens with only a shortcut, without text', async () => {
+			el = await fixture<NLDDTooltip>('<nldd-tooltip shortcut="Ctrl+B"><button>Vet</button></nldd-tooltip>');
+			await waitForUpdate(el);
+			el.querySelector('button')!.focus();
+			await waitForUpdate(el);
+			expect((el as NLDDTooltip)._visible).toBe(true);
+		});
+
 		it('shows the shortcut after the text', async () => {
 			el = await fixture<NLDDTooltip>('<nldd-tooltip text="Opslaan" shortcut="Ctrl+S" shortcut-mac="Cmd+S"><button>Opslaan</button></nldd-tooltip>');
 			await waitForUpdate(el);

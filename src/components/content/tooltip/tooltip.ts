@@ -247,9 +247,15 @@ export class NLDDTooltip extends LitElement {
 		return this.shadowRoot?.querySelector('.tooltip') ?? null;
 	}
 
+	/** Whether there is anything to show: the text, or a shortcut on a device
+	 *  that shows one. */
+	private get _hasContent(): boolean {
+		return Boolean(this.text || shortcutLabel(this));
+	}
+
 	_handleTriggerEnter(): void {
 		if (this.timing === 'never') return;
-		if (!this.text) return;
+		if (!this._hasContent) return;
 		if (coarsePointerQuery.matches) return;
 		if (this._hideTimeout) {
 			clearTimeout(this._hideTimeout);
@@ -277,7 +283,7 @@ export class NLDDTooltip extends LitElement {
 
 	_handleFocusIn(): void {
 		if (this.timing === 'never') return;
-		if (!this.text) return;
+		if (!this._hasContent) return;
 		// Touch taps can focus elements with explicit `tabindex` (e.g. tab-bar's
 		// roving-tabindex pattern on iOS, Android `<button>` focus-on-tap).
 		// Suppress the tooltip in that case — it's not a keyboard intent.

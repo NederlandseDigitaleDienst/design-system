@@ -31,9 +31,9 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 	const ariaLabel = name ? [name, shortcutWords].filter(Boolean).join(' ') : nothing;
 
 	/* Tooltip surfaces the off-screen label when an icon is visible but
-	 * no text is. accessible-label takes precedence; text is the fallback
+	 * no text is, the placeholder of variant="icon" included. accessible-label takes precedence; text is the fallback
 	 * (e.g. variant="icon" + text="Bold" → tooltip shows "Bold"). */
-	const isIconOnlyDisplay = showIcon && !showText;
+	const isIconOnlyDisplay = (showIcon || component.variant === 'icon') && !showText;
 	const tooltipText = isIconOnlyDisplay ? (component.accessibleLabel || component.text || '') : '';
 
 	/* Always render the icon area so the slot stays in shadow DOM for
