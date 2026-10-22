@@ -604,6 +604,10 @@ export const GrootteLg = {
 export const MetSneltoets = {
 	name: 'Met shortcut',
 	render: () => html`
+	<nldd-container
+		gap="16"
+		horizontal-alignment="left"
+	>
 		<nldd-segmented-control
 			type="checkbox"
 			variant="icon"
@@ -629,6 +633,30 @@ export const MetSneltoets = {
 				icon="strikethrough"
 			></nldd-segmented-control-item>
 		</nldd-segmented-control>
+		<nldd-segmented-control
+			value="list"
+			accessible-label="Weergave"
+		>
+			<nldd-segmented-control-item
+				value="list"
+				text="Lijst"
+				shortcut="Ctrl+1"
+				shortcut-mac="Cmd+1"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="kaarten"
+				text="Kaarten"
+				shortcut="Ctrl+2"
+				shortcut-mac="Cmd+2"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="agenda"
+				text="Agenda"
+				shortcut="Ctrl+3"
+				shortcut-mac="Cmd+3"
+			></nldd-segmented-control-item>
+		</nldd-segmented-control>
+	</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
 };
