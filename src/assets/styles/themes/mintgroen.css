@@ -119,23 +119,23 @@
 	--semantics-buttons-accent-filled-is-hovered-background-color: light-dark(var(--primitives-color-mintgroen-250), var(--primitives-color-mintgroen-750));
 	--semantics-buttons-accent-filled-is-hovered-highlight-border-color: light-dark(var(--primitives-color-mintgroen-300), var(--primitives-color-mintgroen-800));
 	--semantics-buttons-accent-filled-is-hovered-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-mintgroen-800), var(--primitives-color-mintgroen-200));
 	--semantics-buttons-accent-filled-is-active-background-color: light-dark(var(--primitives-color-mintgroen-300), var(--primitives-color-mintgroen-700));
 	--semantics-buttons-accent-filled-is-active-highlight-border-color: light-dark(var(--primitives-color-mintgroen-350), var(--primitives-color-mintgroen-750));
 	--semantics-buttons-accent-filled-is-active-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-mintgroen-850), var(--primitives-color-mintgroen-150));
 	--semantics-buttons-accent-filled-is-expanded-background-color: light-dark(var(--primitives-color-mintgroen-300), var(--primitives-color-mintgroen-700));
 	--semantics-buttons-accent-filled-is-expanded-highlight-border-color: light-dark(var(--primitives-color-mintgroen-350), var(--primitives-color-mintgroen-750));
 	--semantics-buttons-accent-filled-is-expanded-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-mintgroen-850), var(--primitives-color-mintgroen-150));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-background-color: light-dark(var(--primitives-color-mintgroen-350), var(--primitives-color-mintgroen-650));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-highlight-border-color: light-dark(var(--primitives-color-mintgroen-400), var(--primitives-color-mintgroen-700));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-mintgroen-900), var(--primitives-color-mintgroen-100));
 	--semantics-buttons-accent-filled-is-expanded-is-active-background-color: light-dark(var(--primitives-color-mintgroen-400), var(--primitives-color-mintgroen-600));
 	--semantics-buttons-accent-filled-is-expanded-is-active-highlight-border-color: light-dark(var(--primitives-color-mintgroen-450), var(--primitives-color-mintgroen-650));
 	--semantics-buttons-accent-filled-is-expanded-is-active-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-mintgroen-950), var(--primitives-color-mintgroen-50));
 
 
 	/* ## Focus ring */

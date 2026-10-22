@@ -471,23 +471,23 @@
 	--semantics-buttons-accent-filled-is-hovered-background-color: light-dark(var(--primitives-color-lichtblauw-250), var(--primitives-color-lichtblauw-750));
 	--semantics-buttons-accent-filled-is-hovered-highlight-border-color: light-dark(var(--primitives-color-lichtblauw-300), var(--primitives-color-lichtblauw-800));
 	--semantics-buttons-accent-filled-is-hovered-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
-	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-750), var(--primitives-color-lichtblauw-250));
+	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-800), var(--primitives-color-lichtblauw-200));
 	--semantics-buttons-accent-filled-is-active-background-color: light-dark(var(--primitives-color-lichtblauw-300), var(--primitives-color-lichtblauw-700));
 	--semantics-buttons-accent-filled-is-active-highlight-border-color: light-dark(var(--primitives-color-lichtblauw-350), var(--primitives-color-lichtblauw-750));
 	--semantics-buttons-accent-filled-is-active-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
-	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-750), var(--primitives-color-lichtblauw-250));
+	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-850), var(--primitives-color-lichtblauw-150));
 	--semantics-buttons-accent-filled-is-expanded-background-color: light-dark(var(--primitives-color-lichtblauw-300), var(--primitives-color-lichtblauw-700));
 	--semantics-buttons-accent-filled-is-expanded-highlight-border-color: light-dark(var(--primitives-color-lichtblauw-350), var(--primitives-color-lichtblauw-750));
 	--semantics-buttons-accent-filled-is-expanded-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
-	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-750), var(--primitives-color-lichtblauw-250));
+	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-850), var(--primitives-color-lichtblauw-150));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-background-color: light-dark(var(--primitives-color-lichtblauw-350), var(--primitives-color-lichtblauw-650));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-highlight-border-color: light-dark(var(--primitives-color-lichtblauw-400), var(--primitives-color-lichtblauw-700));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
-	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-750), var(--primitives-color-lichtblauw-250));
+	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-900), var(--primitives-color-lichtblauw-100));
 	--semantics-buttons-accent-filled-is-expanded-is-active-background-color: light-dark(var(--primitives-color-lichtblauw-400), var(--primitives-color-lichtblauw-600));
 	--semantics-buttons-accent-filled-is-expanded-is-active-highlight-border-color: light-dark(var(--primitives-color-lichtblauw-450), var(--primitives-color-lichtblauw-650));
 	--semantics-buttons-accent-filled-is-expanded-is-active-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
-	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-750), var(--primitives-color-lichtblauw-250));
+	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-lichtblauw-950), var(--primitives-color-lichtblauw-50));
 
 
 	/* ## Focus ring */
@@ -647,23 +647,23 @@
 	--semantics-buttons-accent-filled-is-hovered-background-color: light-dark(var(--primitives-color-paars-800), var(--primitives-color-paars-650));
 	--semantics-buttons-accent-filled-is-hovered-highlight-border-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-700));
 	--semantics-buttons-accent-filled-is-hovered-content-color: var(--primitives-color-paars-0);
-	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-paars-300), var(--primitives-color-paars-50));
+	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-paars-250), var(--primitives-color-paars-50));
 	--semantics-buttons-accent-filled-is-active-background-color: light-dark(var(--primitives-color-paars-750), var(--primitives-color-paars-700));
 	--semantics-buttons-accent-filled-is-active-highlight-border-color: light-dark(var(--primitives-color-paars-800), var(--primitives-color-paars-750));
 	--semantics-buttons-accent-filled-is-active-content-color: var(--primitives-color-paars-0);
-	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-paars-300), var(--primitives-color-paars-50));
+	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-paars-200), var(--primitives-color-paars-50));
 	--semantics-buttons-accent-filled-is-expanded-background-color: light-dark(var(--primitives-color-paars-750), var(--primitives-color-paars-700));
 	--semantics-buttons-accent-filled-is-expanded-highlight-border-color: light-dark(var(--primitives-color-paars-800), var(--primitives-color-paars-750));
 	--semantics-buttons-accent-filled-is-expanded-content-color: var(--primitives-color-paars-0);
-	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-paars-300), var(--primitives-color-paars-50));
+	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-paars-200), var(--primitives-color-paars-50));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-background-color: light-dark(var(--primitives-color-paars-700), var(--primitives-color-paars-750));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-highlight-border-color: light-dark(var(--primitives-color-paars-750), var(--primitives-color-paars-800));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-color: var(--primitives-color-paars-0);
-	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-paars-300), var(--primitives-color-paars-50));
+	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-paars-150), var(--primitives-color-paars-50));
 	--semantics-buttons-accent-filled-is-expanded-is-active-background-color: light-dark(var(--primitives-color-paars-650), var(--primitives-color-paars-800));
 	--semantics-buttons-accent-filled-is-expanded-is-active-highlight-border-color: light-dark(var(--primitives-color-paars-700), var(--primitives-color-paars-850));
 	--semantics-buttons-accent-filled-is-expanded-is-active-content-color: var(--primitives-color-paars-0);
-	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-paars-300), var(--primitives-color-paars-50));
+	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-paars-100), var(--primitives-color-paars-50));
 
 
 	/* ## Focus ring */
@@ -1753,23 +1753,23 @@
 	--semantics-buttons-accent-filled-is-hovered-background-color: light-dark(var(--primitives-color-donkergeel-250), var(--primitives-color-donkergeel-750));
 	--semantics-buttons-accent-filled-is-hovered-highlight-border-color: light-dark(var(--primitives-color-donkergeel-300), var(--primitives-color-donkergeel-800));
 	--semantics-buttons-accent-filled-is-hovered-content-color: light-dark(var(--primitives-color-donkergeel-1000), var(--primitives-color-donkergeel-0));
-	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-donkergeel-750), var(--primitives-color-donkergeel-250));
+	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-donkergeel-800), var(--primitives-color-donkergeel-200));
 	--semantics-buttons-accent-filled-is-active-background-color: light-dark(var(--primitives-color-donkergeel-300), var(--primitives-color-donkergeel-700));
 	--semantics-buttons-accent-filled-is-active-highlight-border-color: light-dark(var(--primitives-color-donkergeel-350), var(--primitives-color-donkergeel-750));
 	--semantics-buttons-accent-filled-is-active-content-color: light-dark(var(--primitives-color-donkergeel-1000), var(--primitives-color-donkergeel-0));
-	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-donkergeel-750), var(--primitives-color-donkergeel-250));
+	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-donkergeel-850), var(--primitives-color-donkergeel-150));
 	--semantics-buttons-accent-filled-is-expanded-background-color: light-dark(var(--primitives-color-donkergeel-300), var(--primitives-color-donkergeel-700));
 	--semantics-buttons-accent-filled-is-expanded-highlight-border-color: light-dark(var(--primitives-color-donkergeel-350), var(--primitives-color-donkergeel-750));
 	--semantics-buttons-accent-filled-is-expanded-content-color: light-dark(var(--primitives-color-donkergeel-1000), var(--primitives-color-donkergeel-0));
-	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-donkergeel-750), var(--primitives-color-donkergeel-250));
+	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-donkergeel-850), var(--primitives-color-donkergeel-150));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-background-color: light-dark(var(--primitives-color-donkergeel-350), var(--primitives-color-donkergeel-650));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-highlight-border-color: light-dark(var(--primitives-color-donkergeel-400), var(--primitives-color-donkergeel-700));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-color: light-dark(var(--primitives-color-donkergeel-1000), var(--primitives-color-donkergeel-0));
-	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-donkergeel-750), var(--primitives-color-donkergeel-250));
+	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-donkergeel-900), var(--primitives-color-donkergeel-100));
 	--semantics-buttons-accent-filled-is-expanded-is-active-background-color: light-dark(var(--primitives-color-donkergeel-400), var(--primitives-color-donkergeel-600));
 	--semantics-buttons-accent-filled-is-expanded-is-active-highlight-border-color: light-dark(var(--primitives-color-donkergeel-450), var(--primitives-color-donkergeel-650));
 	--semantics-buttons-accent-filled-is-expanded-is-active-content-color: light-dark(var(--primitives-color-donkergeel-1000), var(--primitives-color-donkergeel-0));
-	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-donkergeel-750), var(--primitives-color-donkergeel-250));
+	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-donkergeel-950), var(--primitives-color-donkergeel-50));
 	--semantics-buttons-accent-transparent-content-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-donkergeel-800));
 	--semantics-buttons-accent-transparent-content-secondary-color: light-dark(var(--primitives-color-accent-550), var(--primitives-color-donkergeel-800));
 	--semantics-buttons-accent-transparent-is-hovered-content-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-donkergeel-850));
@@ -1955,23 +1955,23 @@
 	--semantics-buttons-accent-filled-is-hovered-background-color: light-dark(var(--primitives-color-geel-150), var(--primitives-color-geel-850));
 	--semantics-buttons-accent-filled-is-hovered-highlight-border-color: light-dark(var(--primitives-color-geel-200), var(--primitives-color-geel-900));
 	--semantics-buttons-accent-filled-is-hovered-content-color: light-dark(var(--primitives-color-geel-1000), var(--primitives-color-geel-0));
-	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-geel-650), var(--primitives-color-geel-350));
+	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-geel-700), var(--primitives-color-geel-300));
 	--semantics-buttons-accent-filled-is-active-background-color: light-dark(var(--primitives-color-geel-200), var(--primitives-color-geel-800));
 	--semantics-buttons-accent-filled-is-active-highlight-border-color: light-dark(var(--primitives-color-geel-250), var(--primitives-color-geel-850));
 	--semantics-buttons-accent-filled-is-active-content-color: light-dark(var(--primitives-color-geel-1000), var(--primitives-color-geel-0));
-	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-geel-650), var(--primitives-color-geel-350));
+	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-geel-750), var(--primitives-color-geel-250));
 	--semantics-buttons-accent-filled-is-expanded-background-color: light-dark(var(--primitives-color-geel-200), var(--primitives-color-geel-800));
 	--semantics-buttons-accent-filled-is-expanded-highlight-border-color: light-dark(var(--primitives-color-geel-250), var(--primitives-color-geel-850));
 	--semantics-buttons-accent-filled-is-expanded-content-color: light-dark(var(--primitives-color-geel-1000), var(--primitives-color-geel-0));
-	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-geel-650), var(--primitives-color-geel-350));
+	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-geel-750), var(--primitives-color-geel-250));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-background-color: light-dark(var(--primitives-color-geel-250), var(--primitives-color-geel-750));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-highlight-border-color: light-dark(var(--primitives-color-geel-300), var(--primitives-color-geel-800));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-color: light-dark(var(--primitives-color-geel-1000), var(--primitives-color-geel-0));
-	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-geel-650), var(--primitives-color-geel-350));
+	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-geel-800), var(--primitives-color-geel-200));
 	--semantics-buttons-accent-filled-is-expanded-is-active-background-color: light-dark(var(--primitives-color-geel-300), var(--primitives-color-geel-700));
 	--semantics-buttons-accent-filled-is-expanded-is-active-highlight-border-color: light-dark(var(--primitives-color-geel-350), var(--primitives-color-geel-750));
 	--semantics-buttons-accent-filled-is-expanded-is-active-content-color: light-dark(var(--primitives-color-geel-1000), var(--primitives-color-geel-0));
-	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-geel-650), var(--primitives-color-geel-350));
+	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-geel-850), var(--primitives-color-geel-150));
 	--semantics-buttons-accent-transparent-content-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-geel-900));
 	--semantics-buttons-accent-transparent-content-secondary-color: light-dark(var(--primitives-color-accent-550), var(--primitives-color-geel-900));
 	--semantics-buttons-accent-transparent-is-hovered-content-color: light-dark(var(--primitives-color-accent-800), var(--primitives-color-geel-950));
@@ -3029,23 +3029,23 @@
 	--semantics-buttons-accent-filled-is-hovered-background-color: light-dark(var(--primitives-color-mintgroen-250), var(--primitives-color-mintgroen-750));
 	--semantics-buttons-accent-filled-is-hovered-highlight-border-color: light-dark(var(--primitives-color-mintgroen-300), var(--primitives-color-mintgroen-800));
 	--semantics-buttons-accent-filled-is-hovered-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-hovered-content-secondary-color: light-dark(var(--primitives-color-mintgroen-800), var(--primitives-color-mintgroen-200));
 	--semantics-buttons-accent-filled-is-active-background-color: light-dark(var(--primitives-color-mintgroen-300), var(--primitives-color-mintgroen-700));
 	--semantics-buttons-accent-filled-is-active-highlight-border-color: light-dark(var(--primitives-color-mintgroen-350), var(--primitives-color-mintgroen-750));
 	--semantics-buttons-accent-filled-is-active-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-active-content-secondary-color: light-dark(var(--primitives-color-mintgroen-850), var(--primitives-color-mintgroen-150));
 	--semantics-buttons-accent-filled-is-expanded-background-color: light-dark(var(--primitives-color-mintgroen-300), var(--primitives-color-mintgroen-700));
 	--semantics-buttons-accent-filled-is-expanded-highlight-border-color: light-dark(var(--primitives-color-mintgroen-350), var(--primitives-color-mintgroen-750));
 	--semantics-buttons-accent-filled-is-expanded-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-expanded-content-secondary-color: light-dark(var(--primitives-color-mintgroen-850), var(--primitives-color-mintgroen-150));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-background-color: light-dark(var(--primitives-color-mintgroen-350), var(--primitives-color-mintgroen-650));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-highlight-border-color: light-dark(var(--primitives-color-mintgroen-400), var(--primitives-color-mintgroen-700));
 	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-expanded-is-hovered-content-secondary-color: light-dark(var(--primitives-color-mintgroen-900), var(--primitives-color-mintgroen-100));
 	--semantics-buttons-accent-filled-is-expanded-is-active-background-color: light-dark(var(--primitives-color-mintgroen-400), var(--primitives-color-mintgroen-600));
 	--semantics-buttons-accent-filled-is-expanded-is-active-highlight-border-color: light-dark(var(--primitives-color-mintgroen-450), var(--primitives-color-mintgroen-650));
 	--semantics-buttons-accent-filled-is-expanded-is-active-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
-	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-mintgroen-750), var(--primitives-color-mintgroen-250));
+	--semantics-buttons-accent-filled-is-expanded-is-active-content-secondary-color: light-dark(var(--primitives-color-mintgroen-950), var(--primitives-color-mintgroen-50));
 
 
 	/* ## Focus ring */

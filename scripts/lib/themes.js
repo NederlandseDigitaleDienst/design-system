@@ -165,12 +165,20 @@ function buttonMode(palette, step, mode, offsets) {
 	const toText = text === 'white' ? -darker : darker;
 	let away = -toText;
 	if (step + away * offsets.room < 0 || step + away * offsets.room > 1000) away = -away;
+	const at = (offset) => clamp(step + away * offset);
+	const secondary = clamp(step + toText * offsets.secondary);
 	return {
 		step,
 		text,
-		at: (offset) => clamp(step + away * offset),
+		at,
 		divider: clamp(step + toText * offsets.divider),
-		secondary: clamp(step + toText * offsets.secondary),
+		secondary,
+		// Where the scale runs out, states move toward the text, and so toward
+		// the secondary color; it then moves along to keep its distance.
+		secondaryAt: (offset) => {
+			const along = clamp(at(offset) + toText * offsets.secondary);
+			return toText > 0 ? Math.max(secondary, along) : Math.min(secondary, along);
+		},
 	};
 }
 
@@ -317,7 +325,7 @@ export function buttonTokens(steps, color = 'accent') {
 		if (!state) tokens.push([`${prefix}divider-color`, both((m) => accent(m.divider, color))]);
 		tokens.push([`${prefix}${state}highlight-border-color`, both((m) => accent(outward(m, offset), color))]);
 		tokens.push([`${prefix}${state}content-color`, both((m, mode) => textColor(mode, m.text, color))]);
-		tokens.push([`${prefix}${state}content-secondary-color`, both((m) => accent(m.secondary, color))]);
+		tokens.push([`${prefix}${state}content-secondary-color`, both((m) => accent(m.secondaryAt(offset), color))]);
 	}
 	return tokens;
 }
@@ -403,8 +411,8 @@ export function buttonContrasts(palette, steps) {
 		for (const offset of [0, 50, 100, 150, 200]) {
 			const background = palette.get(m.at(offset))[mode];
 			result.push({ mode, offset, role: 'content', ratio: contrast(background, text) });
+			result.push({ mode, offset, role: 'secondary', ratio: contrast(background, palette.get(m.secondaryAt(offset))[mode]) });
 		}
-		result.push({ mode, offset: 0, role: 'secondary', ratio: contrast(palette.get(m.step)[mode], palette.get(m.secondary)[mode]) });
 	}
 	return result;
 }
