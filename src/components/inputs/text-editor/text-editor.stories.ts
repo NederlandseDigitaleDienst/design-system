@@ -255,11 +255,15 @@ function toolbarEditor(editor: unknown) {
 						<nldd-segmented-control-item
 							value="bold"
 							text="Vet"
+							shortcut="Ctrl+B"
+							shortcut-mac="Cmd+B"
 							icon="bold"
 						></nldd-segmented-control-item>
 						<nldd-segmented-control-item
 							value="italic"
 							text="Cursief"
+							shortcut="Ctrl+I"
+							shortcut-mac="Cmd+I"
 							icon="italic"
 						></nldd-segmented-control-item>
 						<nldd-segmented-control-item

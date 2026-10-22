@@ -31,6 +31,8 @@
  * @attr {boolean} disabled - Disabled state
  * @attr {string} text - Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon")
  * @attr {string} icon - Icon name for nldd-icon
+ * @attr {string} shortcut - Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable.
+ * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {string} appearance - Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.
  * @attr {string} size - Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.
  * @attr {string} variant - Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.
@@ -58,6 +60,7 @@ import {
 import './../../content/icon/icon.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
+import { shortcutLabel } from '../../../utilities/shortcut.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 
 export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
@@ -115,6 +118,18 @@ export class NLDDSegmentedControlItem extends LitElement {
 	 *  icon-and-text variants show a placeholder icon when neither is provided. */
 	@property({ type: String })
 	icon = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	shortcut = '';
+
+	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
+	shortcutMac = '';
+
+	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
+	shortcutWindows = '';
+
+	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
+	shortcutLinux = '';
 
 	/** Set by nldd-segmented-control in radio mode: this item's place in the
 	 *  group, which it cannot count by itself. */
@@ -181,7 +196,8 @@ export class NLDDSegmentedControlItem extends LitElement {
 		}
 		this.setAttribute('role', 'radio');
 		this.setAttribute('aria-checked', String(this.selected));
-		this._appliedRadioLabel = setOwnedAttribute(this, 'aria-label', this.text, this._appliedRadioLabel);
+		const radioLabel = [this.text, shortcutLabel(this)].filter(Boolean).join(' ');
+		this._appliedRadioLabel = setOwnedAttribute(this, 'aria-label', radioLabel, this._appliedRadioLabel);
 		if (this.disabled) this.setAttribute('aria-disabled', 'true');
 		else this.removeAttribute('aria-disabled');
 

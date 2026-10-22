@@ -600,3 +600,35 @@ export const GrootteLg = {
 `,
 	parameters: { controls: { disable: true } },
 };
+
+export const MetSneltoets = {
+	name: 'Met shortcut',
+	render: () => html`
+		<nldd-segmented-control
+			type="checkbox"
+			variant="icon"
+			accessible-label="Nadruk"
+		>
+			<nldd-segmented-control-item
+				value="bold"
+				text="Vet"
+				icon="bold"
+				shortcut="Ctrl+B"
+				shortcut-mac="Cmd+B"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="italic"
+				text="Cursief"
+				icon="italic"
+				shortcut="Ctrl+I"
+				shortcut-mac="Cmd+I"
+			></nldd-segmented-control-item>
+			<nldd-segmented-control-item
+				value="strikethrough"
+				text="Doorhalen"
+				icon="strikethrough"
+			></nldd-segmented-control-item>
+		</nldd-segmented-control>
+	`,
+	parameters: { controls: { disable: true } },
+};

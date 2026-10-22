@@ -15420,6 +15420,46 @@
               "attribute": "icon"
             },
             {
+              "kind": "field",
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutMac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-mac",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutWindows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-windows",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutLinux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-linux",
+              "reflects": true
+            },
+            {
               "kind": "method",
               "name": "focus",
               "return": {
@@ -15544,6 +15584,40 @@
               "default": "''",
               "description": "Icon name for nldd-icon",
               "fieldName": "icon"
+            },
+            {
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcut",
+              "description": "Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name (\"Vet Cmd B\"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable."
+            },
+            {
+              "name": "shortcut-mac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutMac",
+              "description": "/ shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-windows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutWindows"
+            },
+            {
+              "name": "shortcut-linux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutLinux"
             }
           ],
           "superclass": {
