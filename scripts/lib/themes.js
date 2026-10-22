@@ -634,9 +634,9 @@ export function tabBarTokens(steps, color = 'accent') {
 		['is-hovered-', 50],
 		['is-active-', 100],
 	].flatMap(([state, offset]) => [
-		[`--components-tab-bar-is-current-${state}background-color`, fill(offset)],
-		[`--components-tab-bar-is-current-${state}highlight-border-color`, value((m) => accent(outward(m, offset), m.color ?? color))],
-		[`--components-tab-bar-is-current-${state}content-color`, text],
+		[`--semantics-tabs-is-current-${state}background-color`, fill(offset)],
+		[`--semantics-tabs-is-current-${state}highlight-border-color`, value((m) => accent(outward(m, offset), m.color ?? color))],
+		[`--semantics-tabs-is-current-${state}content-color`, text],
 	]);
 }
 
@@ -650,6 +650,12 @@ export const NEAR_WHITE_STEPS = new Map([
 	[800, 1000], [850, 1000], [900, 1000], [925, 1000], [950, 1000], [975, 1000], [1000, 1000],
 ]);
 
+/**
+ * What an accent step stood for before the accent scale became the theme color
+ * in every theme: gray in a status theme, near-black for the dark steps of
+ * yellow in light mode. The scale itself no longer bends; the tokens that
+ * relied on this keep it, written out (see withLegacyAccent).
+ */
 const accentStep = (name, step) => {
 	const status = STATUS_THEMES.includes(name);
 	const own = status ? accent(step, 'neutral') : accent(step, name);
@@ -672,6 +678,7 @@ const SECTIONS = [
 	['### Accent', '--primitives-color-accent-'],
 	['# Semantics', null],
 	['## Surfaces', '--semantics-surfaces-'],
+	['## Text', '--semantics-text-'],
 	['## Content', '--semantics-content-'],
 	['## Categories', '--semantics-categories-'],
 	['## Links', '--semantics-links-'],
@@ -679,12 +686,19 @@ const SECTIONS = [
 	['## Buttons', '--semantics-buttons-'],
 	['## Focus ring', '--semantics-focus-ring-'],
 	['## List items', '--semantics-list-items-'],
+	['## Steps', '--semantics-steps-'],
+	['## Tabs', '--semantics-tabs-'],
 	['# Components', null],
 	['## Badge', '--components-badge-'],
 	['## Banner', '--components-banner-'],
+	['## Card', '--components-card-'],
+	['## Code editor', '--components-code-editor-'],
+	['## Date picker', '--components-date-picker-'],
+	['## Inline dialog', '--components-inline-dialog-'],
+	['## Menu bar item', '--components-menu-bar-item-'],
+	['## Notification', '--components-notification-'],
 	['## Text editor', '--components-text-editor-'],
 	['## Status bar', '--components-status-bar-'],
-	['## Tab bar', '--components-tab-bar-'],
 ];
 
 /**
@@ -714,16 +728,93 @@ function groupBySection(lines, order) {
 }
 
 /** The position of each custom property in variables.css. */
+/** The semantics and components tokens of variables.css with their default value. */
+export function tokenDefaults(css) {
+	const defaults = new Map();
+	for (const [, token, value] of css.matchAll(/^\t(--(?:semantics|components)-[\w-]+):\s*(.+);$/gm)) {
+		if (!defaults.has(token)) defaults.set(token, value);
+	}
+	return defaults;
+}
+
+/** The light and dark part of a value: the two halves of a top-level light-dark(), or the value twice. */
+function splitModes(value) {
+	const inner = value.match(/^light-dark\((.*)\)$/s)?.[1];
+	if (!inner) return [value, value];
+	let depth = 0;
+	for (let i = 0; i < inner.length; i++) {
+		if (inner[i] === '(') depth++;
+		else if (inner[i] === ')') depth--;
+		else if (inner[i] === ',' && depth === 0) return [inner.slice(0, i).trim(), inner.slice(i + 1).trim()];
+	}
+	return [value, value];
+}
+
+const legacyStep = (name, step, mode) => {
+	const [light, dark] = splitModes(accentStep(name, step));
+	const legacy = mode === 'light' ? light : dark;
+	// Where the step already was the theme color, it stays a reference to the scale.
+	return legacy === accent(step, name) ? accent(step) : legacy;
+};
+
+/** A value with each accent step written out as what it stood for before, in the given modes. */
+export function withLegacyAccent(name, value, modes = ['light', 'dark']) {
+	const [light, dark] = splitModes(value);
+	const resolve = (part, mode) => (modes.includes(mode)
+		? part.replace(/var\(--primitives-color-accent-(\d+)\)/g, (_, step) => legacyStep(name, Number(step), mode))
+		: part);
+	return pair(resolve(light, 'light'), resolve(dark, 'dark'));
+}
+
+/**
+ * Status-theme tokens on a light tint that take the theme color in dark mode
+ * only: in light mode light red reads as pink, so there they stay gray. The
+ * accent-tinted surface is not among them: in dark mode it would match the
+ * critical-tinted one, and an accent banner would read as an error.
+ */
+export const STATUS_TINT_IN_DARK = new Set([
+	'--components-card-is-hovered-background-color',
+	'--components-card-is-hovered-border-color',
+	'--components-card-is-active-background-color',
+	'--components-card-is-active-border-color',
+	'--components-text-editor-drag-ghost-background-color',
+]);
+
+/**
+ * Status-theme tokens that take the theme color in both modes: they point
+ * something out without reading as a message. The fill of the current step
+ * sits inside a ring in the theme color, selected text sits under the text,
+ * and a link badge or mention is a link, as red as the links of the theme.
+ */
+export const STATUS_IN_COLOR = new Set([
+	'--semantics-steps-is-current-background-color',
+	'--semantics-text-selection-background-color',
+	'--components-code-editor-caret-color',
+	'--components-text-editor-caret-color',
+	'--components-text-editor-drop-cursor-color',
+	'--components-text-editor-link-badge-content-color',
+	'--components-text-editor-link-badge-background-color',
+	'--components-text-editor-link-badge-highlight-border-color',
+	'--components-text-editor-link-badge-is-hovered-background-color',
+	'--components-text-editor-link-badge-is-active-background-color',
+	'--components-text-editor-link-badge-is-hovered-highlight-border-color',
+	'--components-text-editor-link-badge-is-active-highlight-border-color',
+	'--components-text-editor-mention-background-color',
+	'--components-text-editor-mention-content-color',
+	'--components-text-editor-mention-is-selected-background-color',
+	'--components-text-editor-mention-is-selected-content-color',
+]);
+
 export function propertyOrder(css) {
 	const order = new Map();
 	for (const [, prop] of css.matchAll(/^\t(--[\w-]+):/gm)) if (!order.has(prop)) order.set(prop, order.size);
 	return order;
 }
 
-export function themeCss(name, palette, ref, { grounds, neutral, order } = {}) {
+export function themeCss(name, palette, ref, { grounds, neutral, order, defaults = new Map() } = {}) {
 	const lines = [];
 	for (const step of palette.keys()) {
-		lines.push([`--primitives-color-accent-${step}`, accentStep(name, step)]);
+		lines.push([`--primitives-color-accent-${step}`, accent(step, name)]);
 	}
 	if (NEAR_BLACK_INTERACTION.includes(name)) {
 		LINK_TOKENS.forEach(([token, light, dark], index) => {
@@ -799,6 +890,32 @@ export function themeCss(name, palette, ref, { grounds, neutral, order } = {}) {
 		const ownHighlight = STATUS_SELECTION_IN_COLOR.includes(name) || LIGHT_HIGHLIGHT_IN_COLOR.includes(name);
 		lines.push(...selectionTokens(steps, name).filter(([token]) => !ownHighlight || !token.startsWith(LIST_HIGHLIGHT)));
 		if (ownHighlight) lines.push(...listHighlightTokens(listHighlightSteps(palette, ref, grounds, name), name));
+	}
+	// Everything this theme writes keeps what its accent steps stood for. The
+	// defaults that read the accent scale do too, unless a rule above lets them
+	// take the theme color.
+	const written = new Set(lines.map(([token]) => token));
+	const status = STATUS_THEMES.includes(name);
+	for (const line of lines) {
+		if (!line[0].startsWith('--primitives-')) line[1] = withLegacyAccent(name, line[1]);
+	}
+	// The range between two selected days is a tint of the selection, so it is
+	// gray in a mode where the selection is gray or near-black. A selection
+	// must not read as an error, so in a status theme it stays gray.
+	const range = '--components-date-picker-day-is-in-range-background-color';
+	const grayLight = status || selectionSteps(palette, ref, grounds, name).light === NEAR_BLACK_SELECTION;
+	const grayDark = status && !STATUS_SELECTION_IN_COLOR.includes(name);
+	if (defaults.has(range) && (grayLight || grayDark)) {
+		const [light, dark] = splitModes(defaults.get(range));
+		const gray = (part) => part.replaceAll('--primitives-color-accent-', '--primitives-color-neutral-');
+		lines.push([range, pair(grayLight ? gray(light) : light, grayDark ? gray(dark) : dark)]);
+		written.add(range);
+	}
+	for (const [token, value] of defaults) {
+		if (written.has(token) || !/--primitives-color-accent-\d/.test(value)) continue;
+		if (status && STATUS_IN_COLOR.has(token)) continue;
+		const kept = withLegacyAccent(name, value, status && STATUS_TINT_IN_DARK.has(token) ? ['light'] : ['light', 'dark']);
+		if (kept !== value) lines.push([token, kept]);
 	}
 	if (neutral) {
 		// The hex, not the rounded oklch: it is the value generate-palette.py

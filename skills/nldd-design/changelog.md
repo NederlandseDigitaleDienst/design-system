@@ -23,16 +23,23 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **The selected document of `nldd-document-tab-bar` and its dismiss button darken on hover and darken further when pressed**, like the current tab of `nldd-tab-bar`. The tab had no hover color of its own, and the dismiss button turned lighter.
+- **In rood, robijnrood and oranje a few accents take the theme color.** The selected document in `nldd-document-tab-bar` (now the same color as the current tab of `nldd-tab-bar`), the fill of the current step in `nldd-step-bar` and `nldd-step-cell`, selected text in the code and text editor, the caret of the code and text editor, and a link badge and a mention in the text editor, selected or not, are in the theme color now, in light and dark mode. The hover of `nldd-card` stays gray in light mode, where light red reads as pink, and takes the theme color in dark mode. The accent-tinted surface of a banner, box or card and the icons of a notification, inline dialog or banner stay gray: in red they would read as a message.
 - **The label of `nldd-activity-indicator` grows with `size`.** It is body-xs at 16 and 20, body-sm at 24 and 28, and body-md from 32, so the circle and its label keep the same proportion everywhere. At the default size of 32 a visible label (`show-text`) is 18px instead of 16px. A larger indicator gives a larger label; the surrounding text does not change it.
 
 ### Fixed
 
+- **The range in `nldd-date-picker` is a tint of the selected days.** Where those are gray or near-black, as in geel, donkergeel, lichtblauw, mintgroen and roze in light mode and in the status themes, the range is a light gray instead of a light tint of the theme color, so the selection reads as one piece. The range is also a step darker in light mode and a step lighter in dark mode, so it stands out from the page.
+- **The current step of `nldd-step-bar` and `nldd-step-cell` has a visible fill in dark mode.** It was as dark as the page; it is now a step lighter, with the number still at 4.5:1.
+- **`nldd-step-cell` takes the theme color, like `nldd-step-bar`.** It read the accent scale directly, which in themes such as rood, oranje and geel gave a near-black or very light marker and line where the step bar shows the theme color. It now reads `--semantics-content-accent-color`. With the default theme nothing changes.
 - **`nldd-keyboard-shortcut` with `appearance="simple"` sits on the baseline of the text around it.** It was centered on the line, like the keycaps of `box`, and so stood a fraction off plain text. The keycaps stay centered.
 - **The secondary text on an accent button keeps its contrast in every state.** In the themes with black text on a light button (geel, donkergeel, lichtblauw, mintgroen and paars) a hovered, pressed or open button got darker while its supporting text and shortcut kept the same color, down to 2.9:1 when open and pressed. That color now moves along with the button and stays above 4.5:1. The other themes do not change.
 - **`nldd-activity-indicator` takes its space during the delay.** It was 0px high until it faded in after a second, so the content around it shifted twice. It now takes the size of the circle, and of the label with `show-text`, from the start, and gives it up once `complete` is set. Give a parent that sizes to its content a `min-height` for the content you expect, so the area does not change height when the content arrives, such as `<nldd-container min-height="240px">`; the indicator fills it and centers itself.
 
 ### Breaking
 
+- **`--components-tab-bar-is-current-*` is now `--semantics-tabs-is-current-*`.** `nldd-document-tab-bar` reads the same tokens for its selected document, so two components share them. If your theme sets these tokens, rename them.
+- **`--primitives-color-accent-*` is the theme color in every theme.** In rood, robijnrood and oranje the accent scale used to be gray, and in geel and donkergeel its dark steps were near-black in light mode. Those choices now sit in the semantics and components tokens that need them, and every component reads such a token instead of the scale. If your own CSS reads `--primitives-color-accent-*`, it now gets the theme color in those themes; read a semantics token to follow what the theme decides.
 - **The `indicator` slot of `nldd-activity-indicator` is gone.** The activity indicator is for loading of unknown length; a progress bar or circle in its slot lost the label and announced itself twice. When you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` directly instead of inside the activity indicator.
 
 ## [0.10.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.9.0...v0.10.0) (2026-10-21)

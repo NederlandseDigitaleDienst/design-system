@@ -270,26 +270,26 @@ export const tabBarItemStyles = css`
 	}
 
 	:host([current]) .tab-bar__item {
-		--_tab-bar-item-highlight-border-color: var(--components-tab-bar-is-current-highlight-border-color);
+		--_tab-bar-item-highlight-border-color: var(--semantics-tabs-is-current-highlight-border-color);
 
-		background-color: var(--components-tab-bar-is-current-background-color);
-		color: var(--components-tab-bar-is-current-content-color);
+		background-color: var(--semantics-tabs-is-current-background-color);
+		color: var(--semantics-tabs-is-current-content-color);
 	}
 
 	@media (hover: hover) {
 		:host([current]) .tab-bar__item:hover {
-			--_tab-bar-item-highlight-border-color: var(--components-tab-bar-is-current-is-hovered-highlight-border-color);
+			--_tab-bar-item-highlight-border-color: var(--semantics-tabs-is-current-is-hovered-highlight-border-color);
 
-			background-color: var(--components-tab-bar-is-current-is-hovered-background-color);
-			color: var(--components-tab-bar-is-current-is-hovered-content-color);
+			background-color: var(--semantics-tabs-is-current-is-hovered-background-color);
+			color: var(--semantics-tabs-is-current-is-hovered-content-color);
 		}
 	}
 
 	:host([current]) .tab-bar__item:active {
-		--_tab-bar-item-highlight-border-color: var(--components-tab-bar-is-current-is-active-highlight-border-color);
+		--_tab-bar-item-highlight-border-color: var(--semantics-tabs-is-current-is-active-highlight-border-color);
 
-		background-color: var(--components-tab-bar-is-current-is-active-background-color);
-		color: var(--components-tab-bar-is-current-is-active-content-color);
+		background-color: var(--semantics-tabs-is-current-is-active-background-color);
+		color: var(--semantics-tabs-is-current-is-active-content-color);
 	}
 
 	@media (forced-colors: active) {

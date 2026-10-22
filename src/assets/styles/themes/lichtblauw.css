@@ -151,6 +151,19 @@
 	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-lichtblauw-0));
 
 
+	/* ## Tabs */
+
+	--semantics-tabs-is-current-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-lichtblauw-800));
+	--semantics-tabs-is-current-highlight-border-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-lichtblauw-850));
+	--semantics-tabs-is-current-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-lichtblauw-0));
+	--semantics-tabs-is-current-is-hovered-background-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-lichtblauw-750));
+	--semantics-tabs-is-current-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-lichtblauw-800));
+	--semantics-tabs-is-current-is-hovered-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-lichtblauw-0));
+	--semantics-tabs-is-current-is-active-background-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-lichtblauw-700));
+	--semantics-tabs-is-current-is-active-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-lichtblauw-750));
+	--semantics-tabs-is-current-is-active-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-lichtblauw-0));
+
+
 	/* # Components */
 
 	/* ## Badge */
@@ -160,23 +173,15 @@
 	--components-badge-accent-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
 
 
+	/* ## Date picker */
+
+	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-accent-150));
+
+
 	/* ## Status bar */
 
 	--components-status-bar-accent-background-color: light-dark(var(--primitives-color-lichtblauw-200), var(--primitives-color-lichtblauw-800));
 	--components-status-bar-accent-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
 	--components-status-bar-accent-is-hovered-background-color: light-dark(var(--primitives-color-lichtblauw-250), var(--primitives-color-lichtblauw-750));
 	--components-status-bar-accent-is-active-background-color: light-dark(var(--primitives-color-lichtblauw-300), var(--primitives-color-lichtblauw-700));
-
-
-	/* ## Tab bar */
-
-	--components-tab-bar-is-current-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-lichtblauw-800));
-	--components-tab-bar-is-current-highlight-border-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-lichtblauw-850));
-	--components-tab-bar-is-current-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-lichtblauw-0));
-	--components-tab-bar-is-current-is-hovered-background-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-lichtblauw-750));
-	--components-tab-bar-is-current-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-lichtblauw-800));
-	--components-tab-bar-is-current-is-hovered-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-lichtblauw-0));
-	--components-tab-bar-is-current-is-active-background-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-lichtblauw-700));
-	--components-tab-bar-is-current-is-active-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-lichtblauw-750));
-	--components-tab-bar-is-current-is-active-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-lichtblauw-0));
 }

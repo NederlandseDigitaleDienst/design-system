@@ -151,6 +151,19 @@
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-hemelblauw-0);
 
 
+	/* ## Tabs */
+
+	--semantics-tabs-is-current-background-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
+	--semantics-tabs-is-current-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
+	--semantics-tabs-is-current-content-color: var(--primitives-color-hemelblauw-0);
+	--semantics-tabs-is-current-is-hovered-background-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
+	--semantics-tabs-is-current-is-hovered-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-600), var(--primitives-color-hemelblauw-800));
+	--semantics-tabs-is-current-is-hovered-content-color: var(--primitives-color-hemelblauw-0);
+	--semantics-tabs-is-current-is-active-background-color: light-dark(var(--primitives-color-hemelblauw-600), var(--primitives-color-hemelblauw-800));
+	--semantics-tabs-is-current-is-active-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-650), var(--primitives-color-hemelblauw-850));
+	--semantics-tabs-is-current-is-active-content-color: var(--primitives-color-hemelblauw-0);
+
+
 	/* # Components */
 
 	/* ## Badge */
@@ -166,17 +179,4 @@
 	--components-status-bar-accent-content-color: var(--primitives-color-hemelblauw-0);
 	--components-status-bar-accent-is-hovered-background-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
 	--components-status-bar-accent-is-active-background-color: light-dark(var(--primitives-color-hemelblauw-600), var(--primitives-color-hemelblauw-800));
-
-
-	/* ## Tab bar */
-
-	--components-tab-bar-is-current-background-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
-	--components-tab-bar-is-current-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
-	--components-tab-bar-is-current-content-color: var(--primitives-color-hemelblauw-0);
-	--components-tab-bar-is-current-is-hovered-background-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
-	--components-tab-bar-is-current-is-hovered-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-600), var(--primitives-color-hemelblauw-800));
-	--components-tab-bar-is-current-is-hovered-content-color: var(--primitives-color-hemelblauw-0);
-	--components-tab-bar-is-current-is-active-background-color: light-dark(var(--primitives-color-hemelblauw-600), var(--primitives-color-hemelblauw-800));
-	--components-tab-bar-is-current-is-active-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-650), var(--primitives-color-hemelblauw-850));
-	--components-tab-bar-is-current-is-active-content-color: var(--primitives-color-hemelblauw-0);
 }

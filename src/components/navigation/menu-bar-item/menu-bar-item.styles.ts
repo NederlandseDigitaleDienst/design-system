@@ -13,7 +13,7 @@ export const menuBarItemStyles = css`
 		--_menu-bar-item-indicator-z-index: 0;
 		--_menu-bar-item-content-z-index: 1;
 		--_menu-bar-item-focus-z-index: 1;
-		--_menu-bar-item-content-color: var(--primitives-color-accent-750);
+		--_menu-bar-item-content-color: var(--components-menu-bar-item-content-color);
 		--_menu-bar-item-font: var(--primitives-font-body-md-medium-flat);
 		--_menu-bar-item-is-hovered-indicator-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
 		--_menu-bar-item-is-expanded-indicator-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-250));

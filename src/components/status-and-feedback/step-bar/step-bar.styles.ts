@@ -28,7 +28,7 @@ export const stepBarStyles = css`
 		--_step-bar-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		--_step-bar-marker-content-color: var(--semantics-content-secondary-color);
 		--_step-bar-progress-content-color: var(--semantics-content-contrast-color);
-		--_step-bar-current-fill-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
+		--_step-bar-current-fill-color: var(--semantics-steps-is-current-background-color);
 		--_step-bar-icon-size: var(--primitives-space-16);
 		--_step-bar-title-color: var(--semantics-content-secondary-color);
 		--_step-bar-current-title-color: var(--semantics-content-color);

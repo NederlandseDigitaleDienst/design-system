@@ -45,10 +45,10 @@ export const cardStyles = css`
 	:host([background="accent-tinted"]) {
 		--_card-background-color: var(--semantics-surfaces-accent-tinted-background-color);
 		--_card-border-color: var(--semantics-surfaces-accent-tinted-highlight-border-color);
-		--_card-is-hovered-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-100));
-		--_card-is-hovered-border-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-250));
-		--_card-is-active-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-150));
-		--_card-is-active-border-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-300));
+		--_card-is-hovered-background-color: var(--components-card-is-hovered-background-color);
+		--_card-is-hovered-border-color: var(--components-card-is-hovered-border-color);
+		--_card-is-active-background-color: var(--components-card-is-active-background-color);
+		--_card-is-active-border-color: var(--components-card-is-active-border-color);
 	}
 
 

@@ -28,6 +28,9 @@ import {
 	STATUS_DARK_SELECTION,
 	STATUS_SELECTION_IN_COLOR,
 	STATUS_THEMES,
+	STATUS_IN_COLOR,
+	STATUS_TINT_IN_DARK,
+	tokenDefaults,
 	selectionGrounds,
 	textOn,
 	themeColors,
@@ -36,6 +39,7 @@ import {
 
 const css = readFileSync(new URL('../../src/assets/styles/colors.generated.css', import.meta.url), 'utf8');
 const references = JSON.parse(readFileSync(new URL('../reference-colors.json', import.meta.url), 'utf8'));
+const defaults = tokenDefaults(readFileSync(new URL('../../src/assets/styles/variables.css', import.meta.url), 'utf8'));
 const palettes = parsePalettes(css);
 const themes = themeColors(references);
 
@@ -243,15 +247,57 @@ for (const { name, hex } of themes) {
 
 		test(`${name}: only the button, the hero, the badge, the status bar, the current tab, the focus ring and the category keep the theme color`, () => {
 			const rule = themeCss(name, palette, hex, { grounds });
-			const ownColor = [...rule.matchAll(new RegExp(`^\\t(--[\\w-]+): .*--(?:primitives-color|semantics-categories)-${name}-`, 'gm'))].map((m) => m[1]);
+			const ownColor = [...rule.matchAll(new RegExp(`^\\t(--[\\w-]+): .*--(?:primitives-color|semantics-categories)-${name}-`, 'gm'))].map((m) => m[1])
+				.filter((prop) => !prop.startsWith('--primitives-color-accent-'));
 			assert.ok(ownColor.length > 0);
 			for (const prop of ownColor) {
-				const kept = ['--semantics-buttons-accent-filled-', '--semantics-surfaces-accent-filled-', '--semantics-content-on-accent-filled-', '--semantics-categories-accent-', '--components-badge-accent-', '--components-tab-bar-is-current-', '--components-status-bar-accent-', '--semantics-list-items-is-highlighted-', '--semantics-focus-ring-', ...(DARK_LINK_STEPS.has(name) ? ['--semantics-links-'] : []), ...(ACCENT_TEXT_IN_COLOR.has(name) ? ['--semantics-content-accent-color', '--semantics-buttons-accent-transparent-'] : []), ...(STATUS_SELECTION_IN_COLOR.includes(name) ? ['--semantics-controls-is-selected-', '--semantics-buttons-neutral-', '--semantics-list-items-is-highlighted-'] : [])];
+				const kept = ['--semantics-buttons-accent-filled-', '--semantics-surfaces-accent-filled-', '--semantics-content-on-accent-filled-', '--semantics-categories-accent-', '--components-badge-accent-', '--semantics-tabs-is-current-', '--components-status-bar-accent-', '--semantics-list-items-is-highlighted-', '--semantics-focus-ring-', ...(DARK_LINK_STEPS.has(name) ? ['--semantics-links-'] : []), ...(ACCENT_TEXT_IN_COLOR.has(name) ? ['--semantics-content-accent-color', '--semantics-buttons-accent-transparent-'] : []), ...(STATUS_SELECTION_IN_COLOR.includes(name) ? ['--semantics-controls-is-selected-', '--semantics-buttons-neutral-', '--semantics-list-items-is-highlighted-'] : [])];
 				assert.ok(kept.some((prefix) => prop.startsWith(prefix)), prop);
 			}
 			assert.match(rule, new RegExp(`--semantics-categories-accent-tinted-background-color: var\\(--semantics-categories-${name}-`));
 		});
 	}
+
+	if (STATUS_THEMES.includes(name)) {
+		test(`${name}: a token on the accent scale stays as it was, unless it takes the theme color on purpose`, () => {
+			const rule = themeCss(name, palette, hex, { grounds, defaults });
+			const written = new Map([...rule.matchAll(/^\t(--[\w-]+): (.+);$/gm)].map((m) => [m[1], m[2]]));
+			for (const [token, value] of defaults) {
+				if (!/--primitives-color-accent-\d/.test(value)) continue;
+				assert.ok(written.has(token) || STATUS_IN_COLOR.has(token), `${token} falls through to the theme color`);
+			}
+			for (const token of STATUS_IN_COLOR) assert.ok(!written.has(token), `${token} is written, so it keeps its gray`);
+		});
+
+		test(`${name}: a light tint is gray in light mode and the theme color in dark mode`, () => {
+			const rule = themeCss(name, palette, hex, { grounds, defaults });
+			for (const token of STATUS_TINT_IN_DARK) {
+				const value = rule.match(new RegExp(`^\\t${token}: (.+);$`, 'm'))?.[1];
+				assert.ok(value, `${token} is not written`);
+				const [, light, dark] = value.match(/^light-dark\((var\([^)]+\)), (var\([^)]+\))\)$/) ?? [];
+				assert.match(light ?? '', /--primitives-color-neutral-/, `${token} light`);
+				assert.match(dark ?? '', /--primitives-color-accent-/, `${token} dark`);
+			}
+		});
+	}
+
+	test(`${name}: the range in the date picker is gray where the selection is`, () => {
+		const rule = themeCss(name, palette, hex, { grounds, defaults });
+		const value = (token) => rule.match(new RegExp(`^\\t${token}: (.+);$`, 'm'))?.[1] ?? defaults.get(token);
+		const modes = (v) => v.match(/^light-dark\((var\([^)]+\)), (var\([^)]+\))\)$/)?.slice(1) ?? [v, v];
+		const selected = modes(value('--semantics-controls-is-selected-indicator-color'));
+		const range = modes(value('--components-date-picker-day-is-in-range-background-color'));
+		for (const i of [0, 1]) {
+			assert.equal(range[i].includes('-neutral-'), selected[i].includes('-neutral-'), `${i ? 'dark' : 'light'}: selected ${selected[i]}, range ${range[i]}`);
+		}
+	});
+
+	test(`${name}: the accent scale is the theme's own scale`, () => {
+		const rule = themeCss(name, palette, hex, { grounds, defaults });
+		for (const step of palette.keys()) {
+			assert.match(rule, new RegExp(`--primitives-color-accent-${step}: var\\(--primitives-color-${name}-${step}\\);`));
+		}
+	});
 
 	test(`${name}: the stylesheet scopes everything to its attribute`, () => {
 		const rule = themeCss(name, palette, hex, { grounds });

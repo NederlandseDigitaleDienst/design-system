@@ -43,7 +43,7 @@ const baseTheme = EditorView.theme({
 	// equal specificity — otherwise CM's light base theme paints the focused
 	// selection lavender, unreadable on a dark surface.
 	'&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-		backgroundColor: 'light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-250))',
+		backgroundColor: 'var(--semantics-text-selection-background-color)',
 	},
 	'.cm-gutters': {
 		border: 'none',

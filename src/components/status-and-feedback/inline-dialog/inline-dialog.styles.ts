@@ -41,7 +41,7 @@ export const inlineDialogStyles = css`
 	}
 
 	:host([icon-color="accent"]) {
-		--_inline-dialog-icon-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
+		--_inline-dialog-icon-color: var(--components-inline-dialog-icon-color);
 	}
 
 	:host([icon-color="critical"]) {

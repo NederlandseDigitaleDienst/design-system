@@ -151,6 +151,19 @@
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-mosgroen-0);
 
 
+	/* ## Tabs */
+
+	--semantics-tabs-is-current-background-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
+	--semantics-tabs-is-current-highlight-border-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
+	--semantics-tabs-is-current-content-color: var(--primitives-color-mosgroen-0);
+	--semantics-tabs-is-current-is-hovered-background-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
+	--semantics-tabs-is-current-is-hovered-highlight-border-color: light-dark(var(--primitives-color-mosgroen-600), var(--primitives-color-mosgroen-700));
+	--semantics-tabs-is-current-is-hovered-content-color: var(--primitives-color-mosgroen-0);
+	--semantics-tabs-is-current-is-active-background-color: light-dark(var(--primitives-color-mosgroen-600), var(--primitives-color-mosgroen-700));
+	--semantics-tabs-is-current-is-active-highlight-border-color: light-dark(var(--primitives-color-mosgroen-650), var(--primitives-color-mosgroen-750));
+	--semantics-tabs-is-current-is-active-content-color: var(--primitives-color-mosgroen-0);
+
+
 	/* # Components */
 
 	/* ## Badge */
@@ -166,17 +179,4 @@
 	--components-status-bar-accent-content-color: var(--primitives-color-mosgroen-0);
 	--components-status-bar-accent-is-hovered-background-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
 	--components-status-bar-accent-is-active-background-color: light-dark(var(--primitives-color-mosgroen-600), var(--primitives-color-mosgroen-700));
-
-
-	/* ## Tab bar */
-
-	--components-tab-bar-is-current-background-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
-	--components-tab-bar-is-current-highlight-border-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
-	--components-tab-bar-is-current-content-color: var(--primitives-color-mosgroen-0);
-	--components-tab-bar-is-current-is-hovered-background-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
-	--components-tab-bar-is-current-is-hovered-highlight-border-color: light-dark(var(--primitives-color-mosgroen-600), var(--primitives-color-mosgroen-700));
-	--components-tab-bar-is-current-is-hovered-content-color: var(--primitives-color-mosgroen-0);
-	--components-tab-bar-is-current-is-active-background-color: light-dark(var(--primitives-color-mosgroen-600), var(--primitives-color-mosgroen-700));
-	--components-tab-bar-is-current-is-active-highlight-border-color: light-dark(var(--primitives-color-mosgroen-650), var(--primitives-color-mosgroen-750));
-	--components-tab-bar-is-current-is-active-content-color: var(--primitives-color-mosgroen-0);
 }
