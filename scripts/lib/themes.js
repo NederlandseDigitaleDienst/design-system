@@ -505,7 +505,7 @@ export const ACCENT_TEXT_IN_COLOR = new Map([
  * A dark-mode focus ring step picked by eye for one color: orange takes the
  * step of its links and accent text.
  */
-export const DARK_FOCUS_STEPS = new Map([['oranje', 650]]);
+export const DARK_FOCUS_STEPS = new Map([['oranje', 700], ['rood', 700], ['robijnrood', 700], ['geel', 750], ['donkergeel', 750]]);
 
 /**
  * Colors whose focus ring is near-black in light mode, the same as their
@@ -514,7 +514,7 @@ export const DARK_FOCUS_STEPS = new Map([['oranje', 650]]);
  */
 export const NEAR_BLACK_FOCUS = ['geel', 'donkergeel', 'lichtblauw', 'roze'];
 
-/** Colors whose finished steps stay near-black in light mode, as their selection. */
+/** Colors whose steps and progress follow their gray or near-black selection in light mode. */
 export const NEAR_BLACK_PROGRESS = ['geel', 'donkergeel'];
 
 
@@ -534,7 +534,7 @@ export function focusRingSteps(palette, ref, grounds, name) {
 		.filter((step) => contrast(palette.get(step).light, grounds.page.light[0]) >= MIN_TEXT_CONTRAST)
 		.sort((a, b) => Math.abs(a - lightButton) - Math.abs(b - lightButton) || a - b)[0];
 	return {
-		light: NEAR_BLACK_FOCUS.includes(name) ? { step: NEAR_BLACK_SELECTION.step, color: 'neutral' } : { step: lightStep, own: true },
+		light: NEAR_BLACK_FOCUS.includes(name) ? { step: GRAY_SELECTION.get(name) ?? NEAR_BLACK_SELECTION.step, color: 'neutral' } : { step: lightStep, own: true },
 		dark: { step: DARK_FOCUS_STEPS.get(name) ?? (fits ? button : 600), own: true },
 	};
 }
@@ -583,6 +583,15 @@ const SELECTED_TOKENS = [
 // steps in light mode.
 /** A near-black selection, from the theme's gray, with white text. */
 const NEAR_BLACK_SELECTION = { step: 925, text: 'white', color: 'neutral', at: (offset) => Math.min(1000, 925 + offset / 2) };
+
+/**
+ * Colors whose light-mode selection, current tab and focus ring are a lighter
+ * gray than near-black: the step, with white text, that still reaches 3:1 on
+ * every ground.
+ */
+export const GRAY_SELECTION = new Map([['roze', 650], ['lichtblauw', 650], ['mintgroen', 650], ['oranje', 700], ['rood', 700], ['robijnrood', 700], ['geel', 750], ['donkergeel', 750]]);
+
+const grayLightSelection = (step) => ({ step, text: 'white', color: 'neutral', at: (offset) => step + offset });
 
 /**
  * The selected fill (a checked checkbox, a selected tab or segment) is the
@@ -912,10 +921,12 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 	};
 	const category = (prop) => lines.find(([token]) => token === `--semantics-categories-accent-filled-${prop}`)[1];
 	const darkButton = buttonSteps(palette, ref, grounds, name).dark.step;
+	// Where the steps take the gray of the selection, so does the progress.
+	const grayProgress = NEAR_BLACK_PROGRESS.includes(name) && GRAY_SELECTION.get(name);
 	for (const component of ['progress-bar', 'progress-circle']) {
 		lines.push(
-			[`--components-${component}-accent-background-color`, pair(resolve(category('background-color'), 'light'), accent(darkButton, name))],
-			[`--components-${component}-accent-highlight-border-color`, pair(resolve(category('highlight-border-color'), 'light'), accent(clamp(darkButton + 50), name))],
+			[`--components-${component}-accent-background-color`, pair(grayProgress ? accent(grayProgress, 'neutral') : resolve(category('background-color'), 'light'), accent(darkButton, name))],
+			[`--components-${component}-accent-highlight-border-color`, pair(grayProgress ? accent(grayProgress + 50, 'neutral') : resolve(category('highlight-border-color'), 'light'), accent(clamp(darkButton + 50), name))],
 		);
 	}
 	lines.push(...buttonTokens(buttonSteps(palette, ref, grounds, name), name));
@@ -953,9 +964,21 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 		const [light, dark] = splitModes(defaults.get('--components-banner-accent-icon-color') ?? accent(700));
 		lines.push(['--components-banner-accent-icon-color', pair(steps.light ? accent(steps.light) : light, steps.dark ? accent(steps.dark) : dark)]);
 	}
+	if (NEAR_BLACK_PROGRESS.includes(name) && GRAY_SELECTION.has(name)) {
+		// The accent banner icon takes the gray of the selection too.
+		const banner = '--components-banner-accent-icon-color';
+		const current = lines.find(([token]) => token === banner)?.[1] ?? defaults.get(banner) ?? accent(700);
+		const gray = pair(accent(GRAY_SELECTION.get(name), 'neutral'), splitModes(current)[1]);
+		const line = lines.find(([token]) => token === banner);
+		if (line) line[1] = gray;
+		else lines.push([banner, gray]);
+	}
 	lines.push(...statusBarTokens(buttonSteps(palette, ref, grounds, name), name));
 	lines.push(...focusRingTokens(focusRingSteps(palette, ref, grounds, name), name));
-	lines.push(...tabBarTokens(selectionSteps(palette, ref, grounds, name), name));
+	const tabSteps = selectionSteps(palette, ref, grounds, name);
+	// Only a near-black tab turns gray; oranje keeps its orange tab.
+	if (GRAY_SELECTION.has(name) && tabSteps.light === NEAR_BLACK_SELECTION) tabSteps.light = grayLightSelection(GRAY_SELECTION.get(name));
+	lines.push(...tabBarTokens(tabSteps, name));
 	if (STATUS_THEMES.includes(name) && !STATUS_SELECTION_IN_COLOR.includes(name)) {
 		// A status theme's selection stays in its gray accent: near-black with
 		// white text in light mode, light gray with black text in dark mode.
@@ -963,7 +986,10 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 		for (const [token, light, offset] of SELECTED_TOKENS) {
 			if (isListHighlight(token)) continue;
 			// The legacy accent stops at 975, one step short of a ring around it.
-			const lightValue = token.startsWith('--components-') ? accent(NEAR_BLACK_SELECTION.at(offset), 'neutral') : accent(light);
+			const gray = GRAY_SELECTION.has(name) && grayLightSelection(GRAY_SELECTION.get(name));
+			const lightValue = gray
+				? accent(token.includes('highlight-border') ? outward(gray, offset - 50) : gray.at(offset), 'neutral')
+				: token.startsWith('--components-') ? accent(NEAR_BLACK_SELECTION.at(offset), 'neutral') : accent(light);
 			lines.push([token, `light-dark(${lightValue}, ${accent(STATUS_DARK_SELECTION.at(offset), 'neutral')})`]);
 		}
 		const text = pair(textColor('light', 'white', 'neutral'), textColor('dark', 'black', 'neutral'));
@@ -975,6 +1001,7 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 	} else {
 		const steps = selectionSteps(palette, ref, grounds, name);
 		if (STATUS_SELECTION_IN_COLOR.includes(name)) steps.light = NEAR_BLACK_SELECTION;
+		if (GRAY_SELECTION.has(name)) steps.light = grayLightSelection(GRAY_SELECTION.get(name));
 		const ownHighlight = STATUS_SELECTION_IN_COLOR.includes(name) || LIGHT_HIGHLIGHT_IN_COLOR.includes(name);
 		lines.push(...selectionTokens(steps, name).filter(([token]) => !ownHighlight || !token.startsWith(LIST_HIGHLIGHT)));
 		if (ownHighlight) lines.push(...listHighlightTokens(listHighlightSteps(palette, ref, grounds, name), name));
@@ -1002,9 +1029,9 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 	if (NEAR_BLACK_PROGRESS.includes(name) && !stands(button.light.step)) {
 		const accentText = lines.find(([token]) => token === '--semantics-content-accent-color')?.[1]
 			?? withLegacyAccent(name, defaults.get('--semantics-content-accent-color') ?? accent(750));
-		progressLight = splitModes(accentText)[0];
+		progressLight = GRAY_SELECTION.has(name) ? accent(GRAY_SELECTION.get(name), 'neutral') : splitModes(accentText)[0];
 		pastLight = progressLight;
-		pastTextLight = splitModes(withLegacyAccent(name, defaults.get('--semantics-steps-is-past-content-color') ?? accent(0)))[0];
+		pastTextLight = GRAY_SELECTION.has(name) ? textColor('light', 'white', 'neutral') : splitModes(withLegacyAccent(name, defaults.get('--semantics-steps-is-past-content-color') ?? accent(0)))[0];
 	} else if (!stands(button.light.step)) {
 		const step = [...palette.keys()].filter(stands).sort((a, b) => Math.abs(a - button.light.step) - Math.abs(b - button.light.step))[0];
 		progressLight = accent(step, name);
@@ -1017,7 +1044,7 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 	// The range between two selected days is a tint of the selection, so it is
 	// gray in a mode where the selection is gray or near-black. A selection
 	// must not read as an error, so in a status theme it stays gray.
-	const grayLight = status || selectionSteps(palette, ref, grounds, name).light === NEAR_BLACK_SELECTION;
+	const grayLight = status || GRAY_SELECTION.has(name) || selectionSteps(palette, ref, grounds, name).light === NEAR_BLACK_SELECTION;
 	const grayDark = status && !STATUS_SELECTION_IN_COLOR.includes(name);
 	for (const range of ['--components-date-picker-day-is-in-range-background-color', '--components-date-picker-day-is-in-range-is-hovered-background-color', '--components-date-picker-day-is-today-is-in-range-border-color']) {
 		if (!defaults.has(range) || !(grayLight || grayDark)) continue;
