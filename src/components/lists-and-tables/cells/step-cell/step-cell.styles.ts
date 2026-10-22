@@ -16,7 +16,8 @@ export const stepCellStyles = css`
 		--_step-cell-marker-z-index: 1;
 		--_step-cell-ring-thickness: var(--semantics-surfaces-ring-thickness);
 		--_step-cell-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
-		--_step-cell-marker-content-color: var(--semantics-steps-progress-content-color);
+		--_step-cell-past-fill-color: var(--semantics-steps-is-past-background-color);
+		--_step-cell-marker-content-color: var(--semantics-steps-is-past-content-color);
 		--_step-cell-future-content-color: var(--semantics-content-secondary-color);
 		--_step-cell-current-fill-color: var(--semantics-steps-is-current-background-color);
 		--_step-cell-current-content-color: var(--semantics-content-accent-color);
@@ -45,6 +46,7 @@ export const stepCellStyles = css`
 
 	:host([level="minor"]) {
 		--_step-cell-marker-size: var(--primitives-space-10);
+		--_step-cell-past-fill-color: var(--_step-cell-track-color);
 	}
 
 	:host([size="md"][level="minor"]) {
@@ -176,7 +178,8 @@ export const stepCellStyles = css`
 
 	:host([status="past"]) .step-cell__marker,
 	:host(:not([status])) .step-cell__marker {
-		background-color: var(--_step-cell-track-color);
+		border-color: var(--_step-cell-past-fill-color);
+		background-color: var(--_step-cell-past-fill-color);
 	}
 
 	:host([status="current"]) .step-cell__marker {

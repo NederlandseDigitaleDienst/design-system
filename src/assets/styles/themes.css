@@ -154,7 +154,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-700));
-	--semantics-steps-progress-content-color: var(--primitives-color-donkerblauw-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-700));
+	--semantics-steps-is-past-content-color: var(--primitives-color-donkerblauw-0);
 
 
 	/* ## Tabs */
@@ -358,7 +359,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
-	--semantics-steps-progress-content-color: var(--primitives-color-hemelblauw-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
+	--semantics-steps-is-past-content-color: var(--primitives-color-hemelblauw-0);
 
 
 	/* ## Tabs */
@@ -562,7 +564,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-lichtblauw-400), var(--primitives-color-lichtblauw-800));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-lichtblauw-200), var(--primitives-color-lichtblauw-800));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
 
 
 	/* ## Tabs */
@@ -776,7 +779,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
-	--semantics-steps-progress-content-color: var(--primitives-color-paars-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
+	--semantics-steps-is-past-content-color: var(--primitives-color-paars-0);
 
 
 	/* ## Tabs */
@@ -980,7 +984,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-600));
-	--semantics-steps-progress-content-color: var(--primitives-color-violet-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-600));
+	--semantics-steps-is-past-content-color: var(--primitives-color-violet-0);
 
 
 	/* ## Tabs */
@@ -1195,7 +1200,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-robijnrood-550), var(--primitives-color-robijnrood-500));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-robijnrood-0), var(--primitives-color-robijnrood-1000));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-robijnrood-550), var(--primitives-color-robijnrood-500));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-robijnrood-0), var(--primitives-color-robijnrood-1000));
 
 
 	/* ## Tabs */
@@ -1437,7 +1443,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-roze-400), var(--primitives-color-roze-750));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-roze-1000), var(--primitives-color-roze-0));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-roze-250), var(--primitives-color-roze-750));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-roze-1000), var(--primitives-color-roze-0));
 
 
 	/* ## Tabs */
@@ -1660,7 +1667,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-rood-0), var(--primitives-color-rood-1000));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-rood-0), var(--primitives-color-rood-1000));
 
 
 	/* ## Tabs */
@@ -1911,7 +1919,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-oranje-400), var(--primitives-color-oranje-600));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-oranje-1000), var(--primitives-color-oranje-0));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-oranje-400), var(--primitives-color-oranje-600));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-oranje-1000), var(--primitives-color-oranje-0));
 
 
 	/* ## Tabs */
@@ -2160,7 +2169,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-donkergeel-800));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-donkergeel-0));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-donkergeel-800));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-donkergeel-0));
 
 
 	/* ## Tabs */
@@ -2411,7 +2421,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-geel-900));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-geel-0));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-geel-900));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-geel-0));
 
 
 	/* ## Tabs */
@@ -2648,7 +2659,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
-	--semantics-steps-progress-content-color: var(--primitives-color-donkerbruin-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
+	--semantics-steps-is-past-content-color: var(--primitives-color-donkerbruin-0);
 
 
 	/* ## Tabs */
@@ -2847,7 +2859,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-bruin-500), var(--primitives-color-bruin-600));
-	--semantics-steps-progress-content-color: var(--primitives-color-bruin-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-bruin-500), var(--primitives-color-bruin-600));
+	--semantics-steps-is-past-content-color: var(--primitives-color-bruin-0);
 
 
 	/* ## Tabs */
@@ -3051,7 +3064,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-650));
-	--semantics-steps-progress-content-color: var(--primitives-color-donkergroen-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-650));
+	--semantics-steps-is-past-content-color: var(--primitives-color-donkergroen-0);
 
 
 	/* ## Tabs */
@@ -3250,7 +3264,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-groen-500), var(--primitives-color-groen-600));
-	--semantics-steps-progress-content-color: var(--primitives-color-groen-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-groen-500), var(--primitives-color-groen-600));
+	--semantics-steps-is-past-content-color: var(--primitives-color-groen-0);
 
 
 	/* ## Tabs */
@@ -3454,7 +3469,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
-	--semantics-steps-progress-content-color: var(--primitives-color-mosgroen-0);
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
+	--semantics-steps-is-past-content-color: var(--primitives-color-mosgroen-0);
 
 
 	/* ## Tabs */
@@ -3658,7 +3674,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-mintgroen-400), var(--primitives-color-mintgroen-800));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-mintgroen-200), var(--primitives-color-mintgroen-800));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
 
 
 	/* ## Tabs */

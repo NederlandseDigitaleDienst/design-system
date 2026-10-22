@@ -154,7 +154,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-mintgroen-400), var(--primitives-color-mintgroen-800));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-mintgroen-200), var(--primitives-color-mintgroen-800));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
 
 
 	/* ## Tabs */

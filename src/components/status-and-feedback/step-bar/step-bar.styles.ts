@@ -27,7 +27,8 @@ export const stepBarStyles = css`
 		--_step-bar-ring-thickness: var(--semantics-surfaces-ring-thickness);
 		--_step-bar-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		--_step-bar-marker-content-color: var(--semantics-content-secondary-color);
-		--_step-bar-progress-content-color: var(--semantics-steps-progress-content-color);
+		--_step-bar-past-fill-color: var(--semantics-steps-is-past-background-color);
+		--_step-bar-progress-content-color: var(--semantics-steps-is-past-content-color);
 		--_step-bar-current-fill-color: var(--semantics-steps-is-current-background-color);
 		--_step-bar-current-content-color: var(--semantics-content-accent-color);
 		--_step-bar-icon-size: var(--primitives-space-16);
@@ -195,7 +196,7 @@ export const stepBarItemStyles = css`
 	}
 
 	.step-bar__item.is-past .step-bar__item-marker {
-		background-color: var(--_step-bar-progress-color);
+		background-color: var(--_step-bar-past-fill-color);
 		color: var(--_step-bar-progress-content-color);
 	}
 

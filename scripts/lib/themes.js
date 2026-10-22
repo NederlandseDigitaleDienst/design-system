@@ -987,34 +987,33 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 	for (const line of lines) {
 		if (!line[0].startsWith('--primitives-')) line[1] = withLegacyAccent(name, line[1]);
 	}
-	// The line, ring and finished marker of a step take the button step, which
-	// matches the progress and the banner icon. In light mode a button that does
-	// not stand out 3:1 on the page gives way to the step nearest to it that
-	// does; in geel and donkergeel that is a dark yellow, so they keep the
-	// near-black accent text.
+	// The line and ring of a step take the button step, which matches the
+	// progress and the banner icon. In light mode a button that does not stand
+	// out 3:1 on the page gives way to the step nearest to it that does; in geel
+	// and donkergeel that is a dark yellow, so they keep the near-black accent
+	// text. A finished marker carries its check, so it is the button itself,
+	// with the text of the button.
 	const button = buttonSteps(palette, ref, grounds, name);
 	const stands = (step) => grounds.page.light.every((ground) => contrast(palette.get(step).light, ground) >= 3);
 	const buttonText = splitModes(lines.find(([token]) => token === '--semantics-buttons-accent-filled-content-color')?.[1] ?? accent(0, name));
-	let progressLight;
-	let progressTextLight;
-	if (stands(button.light.step)) {
-		progressLight = accent(button.light.step, name);
-		progressTextLight = buttonText[0];
-	} else if (NEAR_BLACK_PROGRESS.includes(name)) {
+	let progressLight = accent(button.light.step, name);
+	let pastLight = progressLight;
+	let pastTextLight = buttonText[0];
+	if (NEAR_BLACK_PROGRESS.includes(name) && !stands(button.light.step)) {
 		const accentText = lines.find(([token]) => token === '--semantics-content-accent-color')?.[1]
 			?? withLegacyAccent(name, defaults.get('--semantics-content-accent-color') ?? accent(750));
 		progressLight = splitModes(accentText)[0];
-		progressTextLight = splitModes(withLegacyAccent(name, defaults.get('--semantics-steps-progress-content-color') ?? accent(0)))[0];
-	} else {
+		pastLight = progressLight;
+		pastTextLight = splitModes(withLegacyAccent(name, defaults.get('--semantics-steps-is-past-content-color') ?? accent(0)))[0];
+	} else if (!stands(button.light.step)) {
 		const step = [...palette.keys()].filter(stands).sort((a, b) => Math.abs(a - button.light.step) - Math.abs(b - button.light.step))[0];
 		progressLight = accent(step, name);
-		progressTextLight = textColor('light', textOn(palette.get(step).light), name);
 	}
-	lines.push(['--semantics-steps-progress-color', pair(progressLight, accent(button.dark.step, name))]);
-	written.add('--semantics-steps-progress-color');
-	// The check on a finished marker is the text of whatever fills it.
-	lines.push(['--semantics-steps-progress-content-color', pair(progressTextLight, buttonText[1])]);
-	written.add('--semantics-steps-progress-content-color');
+	const dark = accent(button.dark.step, name);
+	lines.push(['--semantics-steps-progress-color', pair(progressLight, dark)]);
+	lines.push(['--semantics-steps-is-past-background-color', pair(pastLight, dark)]);
+	lines.push(['--semantics-steps-is-past-content-color', pair(pastTextLight, buttonText[1])]);
+	for (const token of ['--semantics-steps-progress-color', '--semantics-steps-is-past-background-color', '--semantics-steps-is-past-content-color']) written.add(token);
 	// The range between two selected days is a tint of the selection, so it is
 	// gray in a mode where the selection is gray or near-black. A selection
 	// must not read as an error, so in a status theme it stays gray.

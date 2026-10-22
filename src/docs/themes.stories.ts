@@ -2,13 +2,13 @@ import { html } from 'lit';
 import '../components/index.js';
 
 /**
- * Veel controls op één pagina, om een thema of een wijziging in de tokens in
- * één keer te bekijken. Wissel het thema en licht/donker in de toolbar.
+ * Many controls on one page, light and dark side by side, to check a theme or
+ * a token change at a glance. Each theme is its own story.
  */
 export default {
-	title: 'Docs/Overzicht controls',
+	title: "Docs/Thema's",
 	parameters: {
-		layout: 'padded',
+		layout: 'fullscreen',
 		controls: { disable: true },
 	},
 };
@@ -34,32 +34,19 @@ const row = (content: unknown) => html`
 	</nldd-container>
 `;
 
-export const Overzicht = {
-	render: () => html`
+const overview = (scheme: 'light' | 'dark') => html`
 	<nldd-container gap="40">
 		${section('Knoppen', html`
 			${row(html`
 				<nldd-button appearance="primary" text="Opslaan" shortcut="Ctrl+S" shortcut-mac="Cmd+S"></nldd-button>
 				<nldd-button appearance="secondary" text="Annuleer"></nldd-button>
-				<nldd-button appearance="neutral-base" text="Bewerken"></nldd-button>
-				<nldd-button appearance="neutral-transparent" text="Meer"></nldd-button>
 				<nldd-button appearance="accent-transparent" text="Details"></nldd-button>
 				<nldd-button appearance="critical-tinted" text="Verwijderen"></nldd-button>
-				<nldd-button appearance="destructive" text="Definitief verwijderen"></nldd-button>
-			`)}
-			${row(html`
-				<nldd-button appearance="primary" text="Open" expandable expanded></nldd-button>
-				<nldd-button text="Open" expandable expanded></nldd-button>
 				<nldd-button appearance="primary" text="Versturen" loading></nldd-button>
-				<nldd-button text="Uitgeschakeld" disabled></nldd-button>
-				<nldd-button text="Met ondersteunende tekst" supporting-text="Aanvraag A-1042"></nldd-button>
 			`)}
 			${row(html`
 				<nldd-icon-button appearance="primary" icon="plus" text="Toevoegen"></nldd-icon-button>
 				<nldd-icon-button icon="edit" text="Bewerken"></nldd-icon-button>
-				<nldd-icon-button appearance="neutral-transparent" icon="more" text="Meer opties" shortcut="Alt+M"></nldd-icon-button>
-				<nldd-icon-button appearance="neutral-transparent" icon="more" text="Meer opties" expandable expanded></nldd-icon-button>
-				<nldd-icon-button appearance="critical-transparent" icon="trash" text="Verwijderen"></nldd-icon-button>
 				<nldd-split-button appearance="primary" text="Bewaar" shortcut="Ctrl+S" shortcut-mac="Cmd+S">
 					<nldd-menu slot="popup">
 						<nldd-menu-item text="Bewaar als concept"></nldd-menu-item>
@@ -94,7 +81,7 @@ export const Overzicht = {
 				<nldd-checkbox accessible-label="Niet aangevinkt"></nldd-checkbox>
 				<nldd-checkbox indeterminate accessible-label="Deels"></nldd-checkbox>
 				<nldd-checkbox checked disabled accessible-label="Uitgeschakeld"></nldd-checkbox>
-				<nldd-radio-button-group name="overzicht" accessible-label="Keuze">
+				<nldd-radio-button-group name=${`overzicht-${scheme}`} accessible-label="Keuze">
 					<nldd-radio-button value="1" checked accessible-label="Optie 1"></nldd-radio-button>
 					<nldd-radio-button value="2" accessible-label="Optie 2"></nldd-radio-button>
 				</nldd-radio-button-group>
@@ -104,9 +91,8 @@ export const Overzicht = {
 		`)}
 
 		${section('Menu\'s', html`
-			<nldd-text>Een menu is een popover: er staat er één tegelijk open. Klik op een knop om het te openen.</nldd-text>
 			${row(html`
-				<nldd-button text="Bewerken" expandable>
+				<nldd-button appearance="primary" text="Bewerken" expandable>
 					<nldd-menu slot="popup">
 						<nldd-menu-item text="Maak ongedaan" icon="undo" shortcut="Ctrl+Z" shortcut-mac="Cmd+Z"></nldd-menu-item>
 						<nldd-menu-item text="Voer opnieuw uit" icon="redo" shortcut="Ctrl+Y" shortcut-mac="Cmd+Shift+Z" disabled></nldd-menu-item>
@@ -130,7 +116,7 @@ export const Overzicht = {
 						</nldd-menu-group>
 					</nldd-menu>
 				</nldd-button>
-				<nldd-icon-button appearance="neutral-transparent" icon="more" text="Meer opties">
+				<nldd-icon-button icon="more" text="Meer opties">
 					<nldd-menu slot="popup">
 						<nldd-menu-item text="Aanvraag A-1042" details="Dakisolatie"></nldd-menu-item>
 						<nldd-menu-item text="Aanvraag A-1043" details="Warmtepomp"></nldd-menu-item>
@@ -143,21 +129,6 @@ export const Overzicht = {
 					</nldd-menu>
 				</nldd-icon-button>
 			`)}
-		`)}
-
-		${section('Velden', html`
-			<nldd-container gap="12" max-width="480px">
-				<nldd-text-field placeholder="Naam" accessible-label="Naam"></nldd-text-field>
-				<nldd-search-field placeholder="Zoek een aanvraag" shortcut="/"></nldd-search-field>
-				<nldd-number-field value="3" accessible-label="Aantal"></nldd-number-field>
-				<nldd-dropdown>
-					<select aria-label="Status">
-						<option>In behandeling</option>
-						<option>Afgerond</option>
-					</select>
-				</nldd-dropdown>
-				<nldd-text-field value="Ongeldige waarde" invalid accessible-label="Ongeldig"></nldd-text-field>
-			</nldd-container>
 		`)}
 
 		${section('Datum', html`
@@ -184,6 +155,41 @@ export const Overzicht = {
 				of ga naar
 				<nldd-link href="https://www.rijksoverheid.nl" text="Rijksoverheid"></nldd-link>
 			</nldd-text>
+		`)}
+
+		${section('Tijdlijn', html`
+			<nldd-list dividers="never" accessible-label="Voortgang aanvraag" style="max-width: 420px;">
+				<nldd-list-item>
+					<nldd-step-cell status="past" size="md" position="first" icon="check-mark"></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell text="Gegevens" supporting-text="Afgerond"></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-step-cell status="past" size="md" level="minor"></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-text-cell text="Contactgegevens"></nldd-text-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-step-cell status="past" size="md" level="minor"></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-text-cell text="Bankrekening"></nldd-text-cell>
+				</nldd-list-item>
+				<nldd-list-item aria-current="step">
+					<nldd-step-cell status="current" size="md" text="2"></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell text="Controle" supporting-text="Huidige stap"></nldd-title-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-step-cell status="future" size="md" level="minor"></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-text-cell text="Bijlagen"></nldd-text-cell>
+				</nldd-list-item>
+				<nldd-list-item>
+					<nldd-step-cell status="future" size="md" position="last" text="3"></nldd-step-cell>
+					<nldd-spacer-cell size="12"></nldd-spacer-cell>
+					<nldd-title-cell text="Bevestigen" supporting-text="Nog te doen"></nldd-title-cell>
+				</nldd-list-item>
+			</nldd-list>
 		`)}
 
 		${section('Status', html`
@@ -219,6 +225,52 @@ export const Overzicht = {
 				</nldd-card>
 			</nldd-container>
 		`)}
+
+		${section('Velden', html`
+			<nldd-container gap="12" max-width="480px">
+				<nldd-text-field placeholder="Naam" accessible-label="Naam"></nldd-text-field>
+				<nldd-search-field placeholder="Zoek een aanvraag" shortcut="/"></nldd-search-field>
+				<nldd-number-field value="3" accessible-label="Aantal"></nldd-number-field>
+				<nldd-dropdown>
+					<select aria-label="Status">
+						<option>In behandeling</option>
+						<option>Afgerond</option>
+					</select>
+				</nldd-dropdown>
+				<nldd-text-field value="Ongeldige waarde" invalid accessible-label="Ongeldig"></nldd-text-field>
+			</nldd-container>
+		`)}
 	</nldd-container>
-`,
-};
+`;
+
+const sideBySide = () => html`
+	<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));">
+		${(['light', 'dark'] as const).map((scheme) => html`
+			<div style="color-scheme: ${scheme}; padding: var(--primitives-space-24); background-color: var(--semantics-surfaces-base-background-color); color: var(--semantics-content-color);">
+				${overview(scheme)}
+			</div>
+		`)}
+	</div>
+`;
+
+// One story per theme, in the order of the toolbar, so a theme is one click.
+const theme = (nlddTheme: string) => ({ render: sideBySide, globals: { nlddTheme } });
+
+export const Lintblauw = theme('lintblauw');
+export const Paars = theme('paars');
+export const Roze = theme('roze');
+export const Violet = theme('violet');
+export const Robijnrood = theme('robijnrood');
+export const Rood = theme('rood');
+export const Donkerbruin = theme('donkerbruin');
+export const Oranje = theme('oranje');
+export const Donkergeel = theme('donkergeel');
+export const Bruin = theme('bruin');
+export const Geel = theme('geel');
+export const Mosgroen = theme('mosgroen');
+export const Groen = theme('groen');
+export const Donkergroen = theme('donkergroen');
+export const Mintgroen = theme('mintgroen');
+export const Lichtblauw = theme('lichtblauw');
+export const Donkerblauw = theme('donkerblauw');
+export const Hemelblauw = theme('hemelblauw');

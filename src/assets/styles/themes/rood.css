@@ -170,7 +170,8 @@
 	/* ## Steps */
 
 	--semantics-steps-progress-color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500));
-	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-rood-0), var(--primitives-color-rood-1000));
+	--semantics-steps-is-past-background-color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500));
+	--semantics-steps-is-past-content-color: light-dark(var(--primitives-color-rood-0), var(--primitives-color-rood-1000));
 
 
 	/* ## Tabs */
