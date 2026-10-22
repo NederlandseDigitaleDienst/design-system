@@ -449,8 +449,8 @@ describe('nldd-step-cell theme color', () => {
 		if (el) cleanup(el);
 	});
 
-	it('follows the accent content color a theme sets, like nldd-step-bar', async () => {
-		el = await fixture('<div style="--semantics-content-accent-color: rgb(200, 0, 0)"><nldd-step-cell></nldd-step-cell></div>');
+	it('follows the steps color a theme sets, like nldd-step-bar', async () => {
+		el = await fixture('<div style="--semantics-steps-progress-color: rgb(200, 0, 0)"><nldd-step-cell></nldd-step-cell></div>');
 		const cell = el.querySelector<NLDDStepCell>('nldd-step-cell')!;
 		await waitForUpdate(cell);
 		const probe = document.createElement('span');

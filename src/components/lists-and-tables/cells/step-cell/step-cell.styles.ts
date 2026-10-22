@@ -11,14 +11,15 @@ export const stepCellStyles = css`
 		--_step-cell-marker-corner-radius: var(--primitives-corner-radius-full);
 
 		--_step-cell-line-width: var(--primitives-space-2);
-		--_step-cell-track-color: var(--semantics-content-accent-color);
+		--_step-cell-track-color: var(--semantics-steps-progress-color);
 		--_step-cell-future-fill-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
 		--_step-cell-marker-z-index: 1;
 		--_step-cell-ring-thickness: var(--semantics-surfaces-ring-thickness);
 		--_step-cell-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
-		--_step-cell-marker-content-color: var(--semantics-content-contrast-color);
+		--_step-cell-marker-content-color: var(--semantics-steps-progress-content-color);
 		--_step-cell-future-content-color: var(--semantics-content-secondary-color);
 		--_step-cell-current-fill-color: var(--semantics-steps-is-current-background-color);
+		--_step-cell-current-content-color: var(--semantics-content-accent-color);
 		--_step-cell-icon-size: calc(var(--_step-cell-marker-size) * 2 / 3);
 		--_step-cell-marker-offset: 0px;
 		--_step-cell-marker-center: 50%;
@@ -180,7 +181,7 @@ export const stepCellStyles = css`
 
 	:host([status="current"]) .step-cell__marker {
 		background-color: var(--_step-cell-current-fill-color);
-		color: var(--_step-cell-track-color);
+		color: var(--_step-cell-current-content-color);
 	}
 
 	:host([status="future"]) .step-cell__marker {

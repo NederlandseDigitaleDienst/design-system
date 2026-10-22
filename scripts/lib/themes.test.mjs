@@ -28,6 +28,7 @@ import {
 	STATUS_DARK_SELECTION,
 	STATUS_SELECTION_IN_COLOR,
 	STATUS_THEMES,
+	BANNER_ICON_STEPS,
 	STATUS_IN_COLOR,
 	STATUS_TINT_IN_DARK,
 	tokenDefaults,
@@ -245,13 +246,13 @@ for (const { name, hex } of themes) {
 			}
 		});
 
-		test(`${name}: only the button, the hero, the badge, the status bar, the current tab, the focus ring and the category keep the theme color`, () => {
+		test(`${name}: only the button, the hero, the badge, the status bar, the current tab, the focus ring, the category, the progress and the steps keep the theme color`, () => {
 			const rule = themeCss(name, palette, hex, { grounds });
 			const ownColor = [...rule.matchAll(new RegExp(`^\\t(--[\\w-]+): .*--(?:primitives-color|semantics-categories)-${name}-`, 'gm'))].map((m) => m[1])
 				.filter((prop) => !prop.startsWith('--primitives-color-accent-'));
 			assert.ok(ownColor.length > 0);
 			for (const prop of ownColor) {
-				const kept = ['--semantics-buttons-accent-filled-', '--semantics-surfaces-accent-filled-', '--semantics-content-on-accent-filled-', '--semantics-categories-accent-', '--components-badge-accent-', '--semantics-tabs-is-current-', '--components-status-bar-accent-', '--semantics-list-items-is-highlighted-', '--semantics-focus-ring-', ...(DARK_LINK_STEPS.has(name) ? ['--semantics-links-'] : []), ...(ACCENT_TEXT_IN_COLOR.has(name) ? ['--semantics-content-accent-color', '--semantics-buttons-accent-transparent-'] : []), ...(STATUS_SELECTION_IN_COLOR.includes(name) ? ['--semantics-controls-is-selected-', '--semantics-buttons-neutral-', '--semantics-list-items-is-highlighted-'] : [])];
+				const kept = ['--semantics-buttons-accent-filled-', '--semantics-surfaces-accent-filled-', '--semantics-content-on-accent-filled-', '--semantics-categories-accent-', '--components-progress-bar-accent-', '--components-progress-circle-accent-', '--semantics-steps-progress-', '--components-badge-accent-', '--semantics-tabs-is-current-', '--components-status-bar-accent-', '--semantics-list-items-is-highlighted-', '--semantics-focus-ring-', ...(DARK_LINK_STEPS.has(name) ? ['--semantics-links-'] : []), ...(ACCENT_TEXT_IN_COLOR.has(name) ? ['--semantics-content-accent-color', '--semantics-buttons-accent-transparent-'] : []), ...(STATUS_SELECTION_IN_COLOR.includes(name) ? ['--semantics-controls-is-selected-', '--semantics-buttons-neutral-', '--semantics-list-items-is-highlighted-', '--components-date-picker-day-is-today-is-selected-'] : [])];
 				assert.ok(kept.some((prefix) => prop.startsWith(prefix)), prop);
 			}
 			assert.match(rule, new RegExp(`--semantics-categories-accent-tinted-background-color: var\\(--semantics-categories-${name}-`));
@@ -286,10 +287,28 @@ for (const { name, hex } of themes) {
 		const value = (token) => rule.match(new RegExp(`^\\t${token}: (.+);$`, 'm'))?.[1] ?? defaults.get(token);
 		const modes = (v) => v.match(/^light-dark\((var\([^)]+\)), (var\([^)]+\))\)$/)?.slice(1) ?? [v, v];
 		const selected = modes(value('--semantics-controls-is-selected-indicator-color'));
-		const range = modes(value('--components-date-picker-day-is-in-range-background-color'));
-		for (const i of [0, 1]) {
-			assert.equal(range[i].includes('-neutral-'), selected[i].includes('-neutral-'), `${i ? 'dark' : 'light'}: selected ${selected[i]}, range ${range[i]}`);
+		for (const token of ['--components-date-picker-day-is-in-range-background-color', '--components-date-picker-day-is-in-range-is-hovered-background-color', '--components-date-picker-day-is-today-is-in-range-border-color']) {
+			const range = modes(value(token));
+			for (const i of [0, 1]) {
+				assert.equal(range[i].includes('-neutral-'), selected[i].includes('-neutral-'), `${token} ${i ? 'dark' : 'light'}: selected ${selected[i]}, range ${range[i]}`);
+			}
 		}
+	});
+
+	if (BANNER_ICON_STEPS.has(name)) {
+		test(`${name}: the accent banner icon reaches 3:1 on the accent-tinted surface`, () => {
+			const surface = { light: 25, dark: 75 };
+			for (const [mode, step] of Object.entries(BANNER_ICON_STEPS.get(name))) {
+				const ratio = contrast(palette.get(step)[mode], palette.get(surface[mode])[mode]);
+				assert.ok(ratio >= 3, `${mode}: ${ratio.toFixed(2)}`);
+			}
+		});
+	}
+
+	test(`${name}: the light focus ring reaches 4.5:1 on the base background`, () => {
+		const { step, color } = focusRingSteps(palette, hex, grounds, name).light;
+		const ratio = contrast((color === 'neutral' ? neutral : palette).get(step).light, surfaces.light.base);
+		assert.ok(ratio >= 4.5, ratio.toFixed(2));
 	});
 
 	test(`${name}: the accent scale is the theme's own scale`, () => {

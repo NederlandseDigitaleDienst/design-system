@@ -140,7 +140,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-donkerbruin-600));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
 
 
 	/* ## List items */
@@ -149,6 +149,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-650));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-donkerbruin-850), var(--primitives-color-donkerbruin-700));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-donkerbruin-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
+	--semantics-steps-progress-content-color: var(--primitives-color-donkerbruin-0);
 
 
 	/* ## Tabs */
@@ -171,6 +177,23 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-650));
 	--components-badge-accent-content-color: var(--primitives-color-donkerbruin-0);
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-donkerbruin-900), var(--primitives-color-donkerbruin-750));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-650));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-650));
 
 
 	/* ## Status bar */

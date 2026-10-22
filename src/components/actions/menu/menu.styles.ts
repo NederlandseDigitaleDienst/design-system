@@ -247,7 +247,7 @@ export const menuItemStyles = css`
 	/* ## Destructive */
 
 	:host([destructive]) {
-		--_menu-item-is-highlighted-background-color: light-dark(var(--primitives-color-critical-600), var(--primitives-color-critical-650));
+		--_menu-item-is-highlighted-background-color: light-dark(var(--primitives-color-critical-550), var(--primitives-color-critical-650));
 		--_menu-item-is-highlighted-content-color: var(--primitives-color-neutral-0);
 		--context-content-color: var(--_menu-item-is-destructive-content-color);
 		--context-content-secondary-color: var(--_menu-item-is-destructive-content-color);

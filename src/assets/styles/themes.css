@@ -140,7 +140,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-donkerblauw-700));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-700));
 
 
 	/* ## List items */
@@ -149,6 +149,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-donkerblauw-650), var(--primitives-color-donkerblauw-750));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-donkerblauw-700), var(--primitives-color-donkerblauw-800));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-donkerblauw-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-700));
+	--semantics-steps-progress-content-color: var(--primitives-color-donkerblauw-0);
 
 
 	/* ## Tabs */
@@ -171,6 +177,28 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-700));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-donkerblauw-650), var(--primitives-color-donkerblauw-750));
 	--components-badge-accent-content-color: var(--primitives-color-donkerblauw-0);
+
+
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-600), var(--primitives-color-accent-700));
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-donkerblauw-750), var(--primitives-color-donkerblauw-850));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-700));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-donkerblauw-650), var(--primitives-color-donkerblauw-750));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-700));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-donkerblauw-650), var(--primitives-color-donkerblauw-750));
 
 
 	/* ## Status bar */
@@ -316,7 +344,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-hemelblauw-700));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
 
 
 	/* ## List items */
@@ -325,6 +353,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-hemelblauw-600), var(--primitives-color-hemelblauw-800));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-hemelblauw-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
+	--semantics-steps-progress-content-color: var(--primitives-color-hemelblauw-0);
 
 
 	/* ## Tabs */
@@ -347,6 +381,28 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
 	--components-badge-accent-content-color: var(--primitives-color-hemelblauw-0);
+
+
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-700));
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-hemelblauw-650), var(--primitives-color-hemelblauw-850));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-hemelblauw-700));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-hemelblauw-550), var(--primitives-color-hemelblauw-750));
 
 
 	/* ## Status bar */
@@ -492,7 +548,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-lichtblauw-800));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-925), var(--primitives-color-lichtblauw-800));
 
 
 	/* ## List items */
@@ -501,6 +557,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-lichtblauw-750));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-lichtblauw-700));
 	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-lichtblauw-0));
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-lichtblauw-400), var(--primitives-color-lichtblauw-800));
+	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
 
 
 	/* ## Tabs */
@@ -525,9 +587,29 @@
 	--components-badge-accent-content-color: light-dark(var(--primitives-color-lichtblauw-1000), var(--primitives-color-lichtblauw-0));
 
 
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-400), var(--primitives-color-accent-700));
+
+
 	/* ## Date picker */
 
 	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-accent-150));
+	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
+	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-lichtblauw-650));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-lichtblauw-350), var(--primitives-color-lichtblauw-800));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-lichtblauw-450), var(--primitives-color-lichtblauw-850));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-lichtblauw-350), var(--primitives-color-lichtblauw-800));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-lichtblauw-450), var(--primitives-color-lichtblauw-850));
 
 
 	/* ## Status bar */
@@ -625,6 +707,13 @@
 	--semantics-categories-accent-tinted-content-secondary-color: var(--semantics-categories-paars-tinted-content-secondary-color);
 
 
+	/* ## Links */
+
+	--semantics-links-color: light-dark(var(--primitives-color-paars-650), var(--primitives-color-paars-700));
+	--semantics-links-is-hovered-color: light-dark(var(--primitives-color-paars-700), var(--primitives-color-paars-750));
+	--semantics-links-is-active-color: light-dark(var(--primitives-color-paars-750), var(--primitives-color-paars-800));
+
+
 	/* ## Controls */
 
 	--semantics-controls-is-selected-indicator-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
@@ -673,7 +762,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-paars-600));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
 
 
 	/* ## List items */
@@ -682,6 +771,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-paars-800), var(--primitives-color-paars-650));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-paars-750), var(--primitives-color-paars-700));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-paars-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
+	--semantics-steps-progress-content-color: var(--primitives-color-paars-0);
 
 
 	/* ## Tabs */
@@ -704,6 +799,28 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-paars-900), var(--primitives-color-paars-650));
 	--components-badge-accent-content-color: var(--primitives-color-paars-0);
+
+
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-700));
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-paars-700), var(--primitives-color-paars-750));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-paars-900), var(--primitives-color-paars-650));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-paars-900), var(--primitives-color-paars-650));
 
 
 	/* ## Status bar */
@@ -849,7 +966,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-violet-600));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-600));
 
 
 	/* ## List items */
@@ -858,6 +975,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-violet-700), var(--primitives-color-violet-650));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-violet-750), var(--primitives-color-violet-700));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-violet-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-600));
+	--semantics-steps-progress-content-color: var(--primitives-color-violet-0);
 
 
 	/* ## Tabs */
@@ -880,6 +1003,23 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-600));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-violet-700), var(--primitives-color-violet-650));
 	--components-badge-accent-content-color: var(--primitives-color-violet-0);
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-violet-800), var(--primitives-color-violet-750));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-600));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-violet-700), var(--primitives-color-violet-650));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-600));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-violet-700), var(--primitives-color-violet-650));
 
 
 	/* ## Status bar */
@@ -1041,7 +1181,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid var(--primitives-color-robijnrood-600);
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-robijnrood-550), var(--primitives-color-robijnrood-600));
 
 
 	/* ## List items */
@@ -1050,6 +1190,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-robijnrood-600), var(--primitives-color-robijnrood-450));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-robijnrood-650), var(--primitives-color-robijnrood-400));
 	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-robijnrood-0), var(--primitives-color-robijnrood-1000));
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-robijnrood-550), var(--primitives-color-robijnrood-500));
+	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-robijnrood-0), var(--primitives-color-robijnrood-1000));
 
 
 	/* ## Tabs */
@@ -1090,6 +1236,9 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-150));
+	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
+	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-neutral-450));
+	--components-date-picker-day-is-today-is-selected-border-color: var(--primitives-color-neutral-1000);
 
 
 	/* ## Inline dialog */
@@ -1105,6 +1254,18 @@
 	/* ## Notification */
 
 	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-350));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-robijnrood-600), var(--primitives-color-robijnrood-500));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-robijnrood-650), var(--primitives-color-robijnrood-550));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-robijnrood-600), var(--primitives-color-robijnrood-500));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-robijnrood-650), var(--primitives-color-robijnrood-550));
 
 
 	/* ## Text editor */
@@ -1207,6 +1368,13 @@
 	--semantics-categories-accent-tinted-content-secondary-color: var(--semantics-categories-roze-tinted-content-secondary-color);
 
 
+	/* ## Links */
+
+	--semantics-links-color: light-dark(var(--primitives-color-roze-600), var(--primitives-color-roze-800));
+	--semantics-links-is-hovered-color: light-dark(var(--primitives-color-roze-650), var(--primitives-color-roze-850));
+	--semantics-links-is-active-color: light-dark(var(--primitives-color-roze-700), var(--primitives-color-roze-900));
+
+
 	/* ## Controls */
 
 	--semantics-controls-is-selected-indicator-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-roze-750));
@@ -1255,7 +1423,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-roze-750));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-925), var(--primitives-color-roze-750));
 
 
 	/* ## List items */
@@ -1264,6 +1432,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-roze-800));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-roze-850));
 	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-roze-0));
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-roze-400), var(--primitives-color-roze-750));
+	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-roze-1000), var(--primitives-color-roze-0));
 
 
 	/* ## Tabs */
@@ -1288,9 +1462,29 @@
 	--components-badge-accent-content-color: light-dark(var(--primitives-color-roze-1000), var(--primitives-color-roze-0));
 
 
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-700));
+
+
 	/* ## Date picker */
 
 	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-accent-150));
+	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
+	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-roze-900));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-roze-350), var(--primitives-color-roze-750));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-roze-450), var(--primitives-color-roze-800));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-roze-350), var(--primitives-color-roze-750));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-roze-450), var(--primitives-color-roze-800));
 
 
 	/* ## Status bar */
@@ -1452,7 +1646,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid var(--primitives-color-rood-600);
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-600));
 
 
 	/* ## List items */
@@ -1461,6 +1655,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-rood-600), var(--primitives-color-rood-450));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-rood-650), var(--primitives-color-rood-400));
 	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-rood-0), var(--primitives-color-rood-1000));
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500));
+	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-rood-0), var(--primitives-color-rood-1000));
 
 
 	/* ## Tabs */
@@ -1501,6 +1701,9 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-150));
+	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
+	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-neutral-450));
+	--components-date-picker-day-is-today-is-selected-border-color: var(--primitives-color-neutral-1000);
 
 
 	/* ## Inline dialog */
@@ -1516,6 +1719,18 @@
 	/* ## Notification */
 
 	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-350));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-rood-600), var(--primitives-color-rood-550));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-rood-550), var(--primitives-color-rood-500));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-rood-600), var(--primitives-color-rood-550));
 
 
 	/* ## Text editor */
@@ -1682,7 +1897,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: light-dark(var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-850), var(--primitives-color-oranje-650)), var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-900), var(--primitives-color-oranje-650)));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-oranje-500), var(--primitives-color-oranje-650));
 
 
 	/* ## List items */
@@ -1691,6 +1906,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-oranje-350), var(--primitives-color-oranje-650));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-oranje-300), var(--primitives-color-oranje-700));
 	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-oranje-1000), var(--primitives-color-oranje-0));
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-oranje-400), var(--primitives-color-oranje-600));
+	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-oranje-1000), var(--primitives-color-oranje-0));
 
 
 	/* ## Tabs */
@@ -1731,6 +1952,9 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-accent-150));
+	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
+	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-oranje-750));
 
 
 	/* ## Inline dialog */
@@ -1746,6 +1970,18 @@
 	/* ## Notification */
 
 	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-350));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-oranje-400), var(--primitives-color-oranje-600));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-oranje-450), var(--primitives-color-oranje-650));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-oranje-400), var(--primitives-color-oranje-600));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-oranje-450), var(--primitives-color-oranje-650));
 
 
 	/* ## Text editor */
@@ -1910,7 +2146,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: light-dark(var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-850), var(--primitives-color-donkergeel-800)), var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-donkergeel-800)));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-925), var(--primitives-color-donkergeel-800));
 
 
 	/* ## List items */
@@ -1919,6 +2155,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-donkergeel-750));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-donkergeel-700));
 	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-donkergeel-0));
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-donkergeel-800));
+	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-donkergeel-0));
 
 
 	/* ## Tabs */
@@ -1956,6 +2198,9 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-accent-150));
+	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
+	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-donkergeel-650));
 
 
 	/* ## Inline dialog */
@@ -1971,6 +2216,18 @@
 	/* ## Notification */
 
 	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-350));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-donkergeel-800));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-donkergeel-850));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-donkergeel-800));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-donkergeel-850));
 
 
 	/* ## Text editor */
@@ -2140,7 +2397,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: light-dark(var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-850), var(--primitives-color-geel-900)), var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-geel-900)));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-neutral-925), var(--primitives-color-geel-900));
 
 
 	/* ## List items */
@@ -2149,6 +2406,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-geel-850));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-neutral-975), var(--primitives-color-geel-800));
 	--semantics-list-items-is-highlighted-content-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-geel-0));
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-geel-900));
+	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-geel-0));
 
 
 	/* ## Tabs */
@@ -2186,6 +2449,9 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-accent-150));
+	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
+	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-geel-750));
 
 
 	/* ## Inline dialog */
@@ -2201,6 +2467,18 @@
 	/* ## Notification */
 
 	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-350));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-geel-900));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-geel-950));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-geel-900));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-geel-950));
 
 
 	/* ## Text editor */
@@ -2356,7 +2634,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-donkerbruin-600));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
 
 
 	/* ## List items */
@@ -2365,6 +2643,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-650));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-donkerbruin-850), var(--primitives-color-donkerbruin-700));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-donkerbruin-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
+	--semantics-steps-progress-content-color: var(--primitives-color-donkerbruin-0);
 
 
 	/* ## Tabs */
@@ -2387,6 +2671,23 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-650));
 	--components-badge-accent-content-color: var(--primitives-color-donkerbruin-0);
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-donkerbruin-900), var(--primitives-color-donkerbruin-750));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-650));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-donkerbruin-750), var(--primitives-color-donkerbruin-600));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-donkerbruin-800), var(--primitives-color-donkerbruin-650));
 
 
 	/* ## Status bar */
@@ -2532,7 +2833,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-bruin-600));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-bruin-500), var(--primitives-color-bruin-600));
 
 
 	/* ## List items */
@@ -2541,6 +2842,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-bruin-550), var(--primitives-color-bruin-650));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-bruin-600), var(--primitives-color-bruin-700));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-bruin-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-bruin-500), var(--primitives-color-bruin-600));
+	--semantics-steps-progress-content-color: var(--primitives-color-bruin-0);
 
 
 	/* ## Tabs */
@@ -2563,6 +2870,28 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-bruin-500), var(--primitives-color-bruin-600));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-bruin-550), var(--primitives-color-bruin-650));
 	--components-badge-accent-content-color: var(--primitives-color-bruin-0);
+
+
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-bruin-650), var(--primitives-color-bruin-750));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-bruin-500), var(--primitives-color-bruin-600));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-bruin-550), var(--primitives-color-bruin-650));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-bruin-500), var(--primitives-color-bruin-600));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-bruin-550), var(--primitives-color-bruin-650));
 
 
 	/* ## Status bar */
@@ -2708,7 +3037,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-donkergroen-650));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-650));
 
 
 	/* ## List items */
@@ -2717,6 +3046,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-donkergroen-750), var(--primitives-color-donkergroen-700));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-donkergroen-800), var(--primitives-color-donkergroen-750));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-donkergroen-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-650));
+	--semantics-steps-progress-content-color: var(--primitives-color-donkergroen-0);
 
 
 	/* ## Tabs */
@@ -2739,6 +3074,23 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-650));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-donkergroen-750), var(--primitives-color-donkergroen-700));
 	--components-badge-accent-content-color: var(--primitives-color-donkergroen-0);
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-donkergroen-850), var(--primitives-color-donkergroen-800));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-650));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-donkergroen-750), var(--primitives-color-donkergroen-700));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-donkergroen-650));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-donkergroen-750), var(--primitives-color-donkergroen-700));
 
 
 	/* ## Status bar */
@@ -2884,7 +3236,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-groen-600));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-groen-500), var(--primitives-color-groen-600));
 
 
 	/* ## List items */
@@ -2893,6 +3245,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-groen-550), var(--primitives-color-groen-650));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-groen-600), var(--primitives-color-groen-700));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-groen-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-groen-500), var(--primitives-color-groen-600));
+	--semantics-steps-progress-content-color: var(--primitives-color-groen-0);
 
 
 	/* ## Tabs */
@@ -2915,6 +3273,28 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-groen-500), var(--primitives-color-groen-600));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-groen-550), var(--primitives-color-groen-650));
 	--components-badge-accent-content-color: var(--primitives-color-groen-0);
+
+
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-groen-650), var(--primitives-color-groen-750));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-groen-500), var(--primitives-color-groen-600));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-groen-550), var(--primitives-color-groen-650));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-groen-500), var(--primitives-color-groen-600));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-groen-550), var(--primitives-color-groen-650));
 
 
 	/* ## Status bar */
@@ -3060,7 +3440,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-mosgroen-600));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
 
 
 	/* ## List items */
@@ -3069,6 +3449,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-mosgroen-600), var(--primitives-color-mosgroen-700));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-mosgroen-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
+	--semantics-steps-progress-content-color: var(--primitives-color-mosgroen-0);
 
 
 	/* ## Tabs */
@@ -3091,6 +3477,28 @@
 	--components-badge-accent-background-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
 	--components-badge-accent-highlight-border-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
 	--components-badge-accent-content-color: var(--primitives-color-mosgroen-0);
+
+
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
+
+
+	/* ## Date picker */
+
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-mosgroen-650), var(--primitives-color-mosgroen-750));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-mosgroen-600));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-mosgroen-550), var(--primitives-color-mosgroen-650));
 
 
 	/* ## Status bar */
@@ -3236,7 +3644,7 @@
 
 	/* ## Focus ring */
 
-	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-accent-600), var(--primitives-color-mintgroen-800));
+	--semantics-focus-ring-outline: var(--primitives-border-width-regular) solid light-dark(var(--primitives-color-mintgroen-500), var(--primitives-color-mintgroen-800));
 
 
 	/* ## List items */
@@ -3245,6 +3653,12 @@
 	--semantics-list-items-is-highlighted-is-hovered-background-color: light-dark(var(--primitives-color-mintgroen-600), var(--primitives-color-mintgroen-750));
 	--semantics-list-items-is-highlighted-is-active-background-color: light-dark(var(--primitives-color-mintgroen-650), var(--primitives-color-mintgroen-700));
 	--semantics-list-items-is-highlighted-content-color: var(--primitives-color-mintgroen-0);
+
+
+	/* ## Steps */
+
+	--semantics-steps-progress-color: light-dark(var(--primitives-color-mintgroen-400), var(--primitives-color-mintgroen-800));
+	--semantics-steps-progress-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
 
 
 	/* ## Tabs */
@@ -3269,9 +3683,29 @@
 	--components-badge-accent-content-color: light-dark(var(--primitives-color-mintgroen-1000), var(--primitives-color-mintgroen-0));
 
 
+	/* ## Banner */
+
+	--components-banner-accent-icon-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-800));
+
+
 	/* ## Date picker */
 
 	--components-date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-accent-150));
+	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
+	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
+	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-1000), var(--primitives-color-mintgroen-650));
+
+
+	/* ## Progress bar */
+
+	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-mintgroen-350), var(--primitives-color-mintgroen-800));
+	--components-progress-bar-accent-highlight-border-color: light-dark(var(--primitives-color-mintgroen-450), var(--primitives-color-mintgroen-850));
+
+
+	/* ## Progress circle */
+
+	--components-progress-circle-accent-background-color: light-dark(var(--primitives-color-mintgroen-350), var(--primitives-color-mintgroen-800));
+	--components-progress-circle-accent-highlight-border-color: light-dark(var(--primitives-color-mintgroen-450), var(--primitives-color-mintgroen-850));
 
 
 	/* ## Status bar */
