@@ -44,6 +44,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { keyboardShortcutStyles } from './keyboard-shortcut.styles.js';
 import { template } from './keyboard-shortcut.template.js';
 import { detectOS, type OS } from '../../../utilities/os.js';
+import { resolveKeys, parseKeys } from '../../../utilities/shortcut.js';
 
 type Size = 'sm' | 'md' | 'inherit';
 type Color = 'neutral' | 'inherit';
@@ -106,23 +107,11 @@ export class NLDDKeyboardShortcut extends LitElement {
 	}
 
 	get _resolvedKeys(): string {
-		const os = this._resolvedOS;
-		if (os === 'mac' && this.macKeys) return this.macKeys;
-		if (os === 'windows' && this.windowsKeys) return this.windowsKeys;
-		if (os === 'linux' && this.linuxKeys) return this.linuxKeys;
-		return this.keys;
+		return resolveKeys(this, this._resolvedOS);
 	}
 
 	get _parsedKeys(): string[] {
-		const spec = this._resolvedKeys;
-		if (!spec) return [];
-		// '+++' encodes a literal '+' key between separators: Ctrl+++a → [Ctrl, +, a]
-		const MARKER = '\u0000';
-		return spec
-			.replace(/\+\+\+/g, `+${MARKER}+`)
-			.split('+')
-			.map(k => k.trim().replace(new RegExp(MARKER, 'g'), '+'))
-			.filter(Boolean);
+		return parseKeys(this._resolvedKeys);
 	}
 
 	override render() {

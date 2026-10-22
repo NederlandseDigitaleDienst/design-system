@@ -563,6 +563,28 @@ export const buttonStyles = css`
 		--_button-block-padding: var(--primitives-space-4);
 	}
 
+	.button__shortcut {
+		display: flex;
+		flex-shrink: 0;
+		color: var(--_button-secondary-content-color);
+	}
+
+	.button:hover .button__shortcut {
+		@media (hover: hover) {
+			color: var(--_button-is-hovered-secondary-content-color);
+		}
+	}
+
+	.button:active .button__shortcut {
+		color: var(--_button-is-active-secondary-content-color);
+	}
+
+	@media (any-hover: none) {
+		.button__shortcut {
+			display: none;
+		}
+	}
+
 	.button__start-icon,
 	.button__end-icon {
 		display: flex;

@@ -18,6 +18,7 @@ export const searchFieldStyles = css`
 		--_search-field-text-font: var(--semantics-input-fields-md-text-font);
 		--_search-field-end-padding-right: calc((var(--_search-field-min-size) - var(--semantics-controls-sm-min-size)) / 2 - var(--semantics-input-fields-border-width));
 		--_search-field-end-gap: var(--primitives-space-6);
+		--_search-field-shortcut-padding-right: var(--primitives-space-12);
 		--_search-field-button-focus-z-index: 1;
 
 		${inheritedTextReset}
@@ -44,6 +45,7 @@ export const searchFieldStyles = css`
 		--_search-field-text-font: var(--semantics-input-fields-sm-text-font);
 		--_search-field-end-padding-right: calc((var(--_search-field-min-size) - var(--semantics-controls-xs-min-size)) / 2 - var(--semantics-input-fields-border-width));
 		--_search-field-end-gap: var(--primitives-space-4);
+		--_search-field-shortcut-padding-right: var(--primitives-space-8);
 	}
 
 
@@ -111,6 +113,22 @@ export const searchFieldStyles = css`
 		color: var(--semantics-content-color);
 		font: var(--_search-field-text-font);
 		appearance: none;
+	}
+
+	.search-field__shortcut {
+		display: flex;
+		flex-shrink: 0;
+		padding-right: var(--_search-field-shortcut-padding-right);
+	}
+
+	.search-field:focus-within .search-field__shortcut {
+		display: none;
+	}
+
+	@media (any-hover: none) {
+		.search-field__shortcut {
+			display: none;
+		}
 	}
 
 	.search-field__input::placeholder {

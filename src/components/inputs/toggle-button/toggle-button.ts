@@ -28,6 +28,8 @@
  * @attr {string} selected-icon - Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one, or with `variant="text"` where the icon does not render, they fill, so the state always shows.
  * @attr {'text' | 'icon' | 'icon-and-text'} variant - What renders: text, icon, or both. Unset → auto-detect from text/icon attributes.
  * @attr {string} accessible-label - Accessible label; required for icon-only usage
+ * @attr {string} shortcut - Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable.
+ * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {boolean} required - Required state. Set by nldd-toggle-button-group.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
@@ -48,6 +50,7 @@ import { toggleButtonTemplate } from './toggle-button.template.js';
 import './../../content/icon/icon.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { shortcutLabel } from '../../../utilities/shortcut.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
 export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
@@ -116,6 +119,18 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	shortcut = '';
+
+	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
+	shortcutMac = '';
+
+	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
+	shortcutWindows = '';
+
+	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
+	shortcutLinux = '';
 
 	/** Whether an icon is present via attribute or slot. */
 	get _hasIcon(): boolean {
@@ -205,7 +220,8 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 		}
 		this.setAttribute('role', 'radio');
 		this.setAttribute('aria-checked', String(this.selected));
-		this._appliedRadioLabel = setOwnedAttribute(this, 'aria-label', this.accessibleLabel || this.text, this._appliedRadioLabel);
+		const radioLabel = [this.accessibleLabel || this.text, shortcutLabel(this)].filter(Boolean).join(' ');
+		this._appliedRadioLabel = setOwnedAttribute(this, 'aria-label', radioLabel, this._appliedRadioLabel);
 		if (this.disabled) this.setAttribute('aria-disabled', 'true');
 		else this.removeAttribute('aria-disabled');
 

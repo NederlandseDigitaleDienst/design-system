@@ -2,6 +2,8 @@ import { html, nothing } from 'lit';
 import type { NLDDButton } from './button.js';
 import { linkRel } from '../../../utilities/link-rel.js';
 import { linkHintKey } from '../../../utilities/link-hint.js';
+import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
+import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;
@@ -22,6 +24,19 @@ function renderContent(component: NLDDButton) {
 				<span class="button__text">${component.text ? component.text : html`<slot name="text"></slot>`}</span>
 				${component.supportingText ? html`<span class="button__supporting-text">${component.supportingText}</span>` : nothing}
 			</span>
+			${hasShortcut(component) ? html`
+				<span class="button__shortcut">
+					<nldd-keyboard-shortcut
+						size="inherit"
+						appearance="simple"
+						color="inherit"
+						keys=${component.shortcut || nothing}
+						mac-keys=${component.shortcutMac || nothing}
+						windows-keys=${component.shortcutWindows || nothing}
+						linux-keys=${component.shortcutLinux || nothing}
+					></nldd-keyboard-shortcut>
+				</span>
+			` : nothing}
 			${component.endIcon ? html`
 				<span class="button__end-icon">
 					<nldd-icon icon=${component.endIcon}></nldd-icon>
@@ -69,8 +84,11 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 	// hint must live inside it; otherwise `nothing` leaves the name content-derived
 	// and the visually-hidden span below appends the hint (it also reaches slotted
 	// text, which can't be read into a string here).
-	const ariaLabel = baseAriaLabel
-		? [baseAriaLabel, linkHint].filter(Boolean).join(', ')
+	// Without an aria-label the shortcut reaches the name through the content,
+	// as in nldd-menu-item; with one it has to be added to it.
+	const namedAriaLabel = baseAriaLabel ? [baseAriaLabel, shortcutLabel(this)].filter(Boolean).join(' ') : '';
+	const ariaLabel = namedAriaLabel
+		? [namedAriaLabel, linkHint].filter(Boolean).join(', ')
 		: nothing;
 	const renderLinkHint = !!linkHint && !baseAriaLabel;
 

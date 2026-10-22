@@ -9,6 +9,10 @@ export function template(this: NLDDSplitButton) {
 				size=${this.size}
 				text=${this.text}
 				start-icon=${this.icon || nothing}
+				shortcut=${this.shortcut || nothing}
+				shortcut-mac=${this.shortcutMac || nothing}
+				shortcut-windows=${this.shortcutWindows || nothing}
+				shortcut-linux=${this.shortcutLinux || nothing}
 				horizontal-alignment="left"
 				width="full"
 				no-highlight-border

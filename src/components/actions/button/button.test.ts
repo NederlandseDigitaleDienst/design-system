@@ -1,3 +1,4 @@
+import { _setOSOverride } from '../../../utilities/os.js';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
@@ -1032,4 +1033,32 @@ describe('nldd-button – on a colored surface', () => {
 			expect(await surface()).toBe(resting);
 		});
 	}
+
+	describe('shortcut', () => {
+		afterEach(() => _setOSOverride(null));
+
+		it('shows the shortcut right after the text', async () => {
+			el = await fixture<NLDDButton>('<nldd-button text="Opslaan" shortcut="Ctrl+S" shortcut-mac="Cmd+S"></nldd-button>');
+			await waitForUpdate(el);
+			const shortcut = el.shadowRoot!.querySelector('.button__shortcut')!;
+			expect(shortcut.previousElementSibling!.classList.contains('button__text-area')).toBe(true);
+			const keys = shortcut.querySelector('nldd-keyboard-shortcut')!;
+			expect(keys.getAttribute('keys')).toBe('Ctrl+S');
+			expect(keys.getAttribute('mac-keys')).toBe('Cmd+S');
+		});
+
+		it('adds the shortcut to an aria-label, which replaces the content as the name', async () => {
+			_setOSOverride('windows');
+			el = await fixture<NLDDButton>('<nldd-button text="Opslaan" accessible-label="Aanvraag opslaan" shortcut="Ctrl+S"></nldd-button>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('button')!.getAttribute('aria-label')).toBe('Aanvraag opslaan Ctrl S');
+		});
+
+		it('renders no shortcut without the attribute', async () => {
+			el = await fixture<NLDDButton>('<nldd-button text="Opslaan"></nldd-button>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('.button__shortcut')).toBeNull();
+			expect(el.shadowRoot!.querySelector('button')!.hasAttribute('aria-label')).toBe(false);
+		});
+	});
 });

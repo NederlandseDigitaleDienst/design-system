@@ -17,6 +17,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
+- **`nldd-button`, `nldd-icon-button`, `nldd-toggle-button`, `nldd-split-button` and `nldd-search-field` show a keyboard shortcut.** Set `shortcut` (and `shortcut-mac`, `shortcut-windows` or `shortcut-linux` where the keys differ), as on `nldd-menu-item`. The icon button and the toggle button show it in their tooltip after the text, the button and the main action of the split button right after the text, and the search field at the right end while it is empty and has no focus. The shortcut is part of the accessible name, or of the description in the search field, and is hidden on a touch-only device. It only shows the keys: binding them is up to your app. Keep it on the button for the few main actions of a screen. `nldd-tooltip` takes the same attributes.
 - **The design guidelines have a section for house-style choices.** It holds the choices where more than one way works and the system picked one, so it looks the same everywhere. The first: a button that opens a menu with more actions shows the horizontal ellipsis (`icon="more"`), as the overflow menus of the components do. Turn your own vertical "kebab" back to that.
 - **`nldd-container` takes a `min-height`.** It reserves the room that content still on its way will take, padding included, and `vertical-alignment` places the children within it. Before, `vertical-alignment` had no height to work with unless you set one in your own CSS.
 
@@ -26,6 +27,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **The secondary text on an accent button keeps its contrast in every state.** In the themes with black text on a light button (geel, donkergeel, lichtblauw, mintgroen and paars) a hovered, pressed or open button got darker while its supporting text and shortcut kept the same color, down to 2.9:1 when open and pressed. That color now moves along with the button and stays above 4.5:1. The other themes do not change.
 - **`nldd-activity-indicator` takes its space during the delay.** It was 0px high until it faded in after a second, so the content around it shifted twice. It now takes the size of the circle, and of the label with `show-text`, from the start, and gives it up once `complete` is set. Give a parent that sizes to its content a `min-height` for the content you expect, so the area does not change height when the content arrives, such as `<nldd-container min-height="240px">`; the indicator fills it and centers itself.
 
 ### Breaking

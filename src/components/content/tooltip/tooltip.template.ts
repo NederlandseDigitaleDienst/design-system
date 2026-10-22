@@ -1,6 +1,7 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import type { NLDDTooltip } from './tooltip.js';
+import { hasShortcut } from '../../../utilities/shortcut.js';
 
 export function tooltipTemplate(component: NLDDTooltip): TemplateResult {
 	/* The slot is not the clickable thing: the trigger the consumer slots in is,
@@ -22,7 +23,22 @@ export function tooltipTemplate(component: NLDDTooltip): TemplateResult {
 			@mouseenter=${component._handleTooltipEnter}
 			@mouseleave=${component._handleTooltipLeave}
 		>
-			<div class="tooltip__body">${component.text}</div>
+			<div class="tooltip__body">
+				${component.text ? html`<span class="tooltip__text">${component.text}</span>` : ''}
+				${hasShortcut(component) ? html`
+					<span class="tooltip__shortcut">
+						<nldd-keyboard-shortcut
+							size="inherit"
+							appearance="simple"
+							color="inherit"
+							keys=${component.shortcut || nothing}
+							mac-keys=${component.shortcutMac || nothing}
+							windows-keys=${component.shortcutWindows || nothing}
+							linux-keys=${component.shortcutLinux || nothing}
+						></nldd-keyboard-shortcut>
+					</span>
+				` : ''}
+			</div>
 		</div>
 	`;
 }

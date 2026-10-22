@@ -24,6 +24,8 @@
  * @attr {string} start-icon - Icon name for the start icon (before text)
  * @attr {string} end-icon - Icon name for the end icon (after text)
  * @attr {string} accessible-label - Accessible label for the button, overrides text for screen readers
+ * @attr {string} shortcut - Keyboard shortcut hint shown right after the text, e.g. 'Cmd+S'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name, as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. Keep it for the few main actions of a screen (save, search); a hint on every button is noise.
+ * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {string} href - When set, renders an <a> element instead of <button>
  * @attr {string} target - Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden "opens in new tab" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
@@ -189,6 +191,18 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	/** Accessible label forwarded to the inner <button> or <a>. Use when visible text alone lacks context. */
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	shortcut = '';
+
+	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
+	shortcutMac = '';
+
+	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
+	shortcutWindows = '';
+
+	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
+	shortcutLinux = '';
 
 	/** When set, renders an <a> element instead of <button>. */
 	@property({ type: String, reflect: true })

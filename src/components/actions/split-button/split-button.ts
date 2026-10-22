@@ -28,6 +28,8 @@
  * @attr {string} width - Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space
  * @attr {string} text - Button text for the primary action
  * @attr {string} icon - Icon name shown before the text on the primary action button
+ * @attr {string} shortcut - Keyboard shortcut hint for the primary action, shown right after its text, e.g. 'Cmd+S'. Forwarded to the inner nldd-button; display only, wire up the handling in your app.
+ * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
  * @attr {object} translations - Translations; unset keys fall back to Dutch
  *
  * @slot - A single `nldd-menu` or `nldd-popover` that the chevron opens.
@@ -73,6 +75,18 @@ export class NLDDSplitButton extends LitElement {
 	/** Button text for the primary action. */
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	shortcut = '';
+
+	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
+	shortcutMac = '';
+
+	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
+	shortcutWindows = '';
+
+	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
+	shortcutLinux = '';
 
 	/** Icon name shown before the text on the primary action button. */
 	@property({ type: String })

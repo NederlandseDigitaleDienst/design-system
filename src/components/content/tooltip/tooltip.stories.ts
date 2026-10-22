@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './tooltip.js';
 import '../../actions/button/button.js';
 import '../../actions/icon-button/icon-button.js';
@@ -32,6 +32,25 @@ export default {
 			control: 'text',
 			description: 'Tooltip tekst',
 		},
+		shortcut: {
+			control: 'text',
+			description: 'Sneltoets achter de tekst, bijvoorbeeld `Ctrl+S`. Alleen weergave: de toets zelf koppel je in je app.',
+		},
+		shortcutMac: {
+			name: 'shortcut-mac',
+			control: 'text',
+			description: 'Sneltoets op macOS (en iOS), als die afwijkt van `shortcut`.',
+		},
+		shortcutWindows: {
+			name: 'shortcut-windows',
+			control: 'text',
+			description: 'Sneltoets op Windows, als die afwijkt van `shortcut`.',
+		},
+		shortcutLinux: {
+			name: 'shortcut-linux',
+			control: 'text',
+			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
+		},
 		placement: {
 			control: 'select',
 			options: ['top', 'bottom', 'left', 'right'],
@@ -47,6 +66,10 @@ export default {
 	},
 	args: {
 		text: 'Aanvraag A-1042 is in behandeling',
+		shortcut: '',
+		shortcutMac: '',
+		shortcutWindows: '',
+		shortcutLinux: '',
 		placement: 'bottom',
 		timing: 'delay',
 	},
@@ -61,6 +84,10 @@ export const Standaard = {
 		>
 			<nldd-tooltip
 				text=${args.text}
+				shortcut=${args.shortcut || nothing}
+				shortcut-mac=${args.shortcutMac || nothing}
+				shortcut-windows=${args.shortcutWindows || nothing}
+				shortcut-linux=${args.shortcutLinux || nothing}
 				placement=${args.placement}
 				timing=${args.timing}
 			>

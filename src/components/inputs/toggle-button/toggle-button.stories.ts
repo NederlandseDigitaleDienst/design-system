@@ -74,6 +74,25 @@ export default {
 			description: 'Icoon in plaats van <code>icon</code> zolang de knop aan staat. Met een vlak vult het vlak; bij de transparante appearances draagt alleen het icoon de toestand.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		shortcut: {
+			control: 'text',
+			description: 'Sneltoets in de tooltip, bijvoorbeeld `Ctrl+B`. Hoort ook bij de toegankelijke naam. Alleen weergave: de toets zelf koppel je in je app.',
+		},
+		shortcutMac: {
+			name: 'shortcut-mac',
+			control: 'text',
+			description: 'Sneltoets op macOS (en iOS), als die afwijkt van `shortcut`.',
+		},
+		shortcutWindows: {
+			name: 'shortcut-windows',
+			control: 'text',
+			description: 'Sneltoets op Windows, als die afwijkt van `shortcut`.',
+		},
+		shortcutLinux: {
+			name: 'shortcut-linux',
+			control: 'text',
+			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
+		},
 		type: {
 			control: 'select',
 			options: ['button', 'checkbox', 'radio'],
@@ -119,6 +138,10 @@ export default {
 		text: 'Favoriet',
 		icon: '',
 		selectedIcon: '',
+		shortcut: '',
+		shortcutMac: '',
+		shortcutWindows: '',
+		shortcutLinux: '',
 		type: 'button',
 		selected: false,
 		accessibleLabel: '',
@@ -141,6 +164,10 @@ const Template = (args: Record<string, any>) => html`
 		text=${args.text}
 		icon=${args.icon}
 		selected-icon=${args.selectedIcon || nothing}
+		shortcut=${args.shortcut || nothing}
+		shortcut-mac=${args.shortcutMac || nothing}
+		shortcut-windows=${args.shortcutWindows || nothing}
+		shortcut-linux=${args.shortcutLinux || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
 	></nldd-toggle-button>
 `;
