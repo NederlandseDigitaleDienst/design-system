@@ -1,3 +1,4 @@
+import { _setOSOverride } from '../../../utilities/os.js';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDSegmentedControl, NLDDSegmentedControlItem } from './segmented-control.js';
@@ -714,5 +715,44 @@ describe('nldd-segmented-control – appearance', () => {
 		expect(items.every((item) => item.appearance === 'neutral-base')).toBe(true);
 		expect(getComputedStyle(el).backgroundColor).not.toBe(tintedTrack);
 		expect(selectedFill(el)).toBe(tintedFill);
+	});
+});
+
+describe('nldd-segmented-control-item shortcut', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		_setOSOverride(null);
+		if (el) cleanup(el);
+	});
+
+	it('adds the shortcut to the name and the tooltip of an icon checkbox item', async () => {
+		_setOSOverride('mac');
+		el = await fixture<NLDDSegmentedControl>(`
+			<nldd-segmented-control type="checkbox" variant="icon" accessible-label="Nadruk">
+				<nldd-segmented-control-item value="bold" text="Vet" icon="bold" shortcut="Ctrl+B" shortcut-mac="Cmd+B"></nldd-segmented-control-item>
+			</nldd-segmented-control>
+		`);
+		const item = el.querySelector<NLDDSegmentedControlItem>('nldd-segmented-control-item')!;
+		await waitForUpdate(item);
+		expect(item.shadowRoot!.querySelector('input')!.getAttribute('aria-label')).toBe('Vet Cmd B');
+		const tooltip = item.shadowRoot!.querySelector('nldd-tooltip')!;
+		expect(tooltip.getAttribute('text')).toBe('Vet');
+		expect(tooltip.getAttribute('shortcut-mac')).toBe('Cmd+B');
+	});
+
+	it('names a radio item with its shortcut and keeps a tooltip for a visible text', async () => {
+		_setOSOverride('windows');
+		el = await fixture<NLDDSegmentedControl>(`
+			<nldd-segmented-control accessible-label="Weergave">
+				<nldd-segmented-control-item value="list" text="Lijst" shortcut="Ctrl+1"></nldd-segmented-control-item>
+			</nldd-segmented-control>
+		`);
+		const item = el.querySelector<NLDDSegmentedControlItem>('nldd-segmented-control-item')!;
+		await waitForUpdate(item);
+		expect(item.getAttribute('aria-label')).toBe('Lijst Ctrl 1');
+		expect(item.shadowRoot!.querySelector('nldd-tooltip')!.hasAttribute('text')).toBe(false);
+		// Announced once, in the name: the tooltip in the shadow root adds no description.
+		expect(item.hasAttribute('aria-describedby')).toBe(false);
 	});
 });

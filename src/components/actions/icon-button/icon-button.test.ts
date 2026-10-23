@@ -1,3 +1,4 @@
+import { _setOSOverride } from '../../../utilities/os.js';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
@@ -781,4 +782,31 @@ describe('nldd-icon-button – on a colored surface', () => {
 			expect(await surface()).toBe(resting);
 		});
 	}
+
+	describe('shortcut', () => {
+		afterEach(() => _setOSOverride(null));
+
+		it('adds the shortcut to the accessible name and hands it to the tooltip', async () => {
+			_setOSOverride('mac');
+			el = await fixture<NLDDIconButton>('<nldd-icon-button text="Presentatiemodus" icon="play" shortcut="Alt+P" shortcut-mac="Option+P"></nldd-icon-button>');
+			await waitForUpdate(el);
+			const button = el.shadowRoot!.querySelector('button')!;
+			expect(button.getAttribute('aria-label')).toBe('Presentatiemodus Option P');
+			const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
+			expect(tooltip.getAttribute('text')).toBe('Presentatiemodus');
+			expect(tooltip.getAttribute('shortcut')).toBe('Alt+P');
+			expect(tooltip.getAttribute('shortcut-mac')).toBe('Option+P');
+			// The tooltip sits in the shadow root, so it adds no description: the
+			// shortcut is announced once, in the name.
+			expect(button.hasAttribute('aria-describedby')).toBe(false);
+		});
+
+		it('keeps a tooltip for the shortcut when lg shows the text', async () => {
+			el = await fixture<NLDDIconButton>('<nldd-icon-button size="lg" text="Presentatiemodus" icon="play" shortcut="Alt+P"></nldd-icon-button>');
+			await waitForUpdate(el);
+			const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
+			expect(tooltip.hasAttribute('text')).toBe(false);
+			expect(tooltip.getAttribute('shortcut')).toBe('Alt+P');
+		});
+	});
 });

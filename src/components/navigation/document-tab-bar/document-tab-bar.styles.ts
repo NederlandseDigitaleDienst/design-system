@@ -24,8 +24,8 @@ export const documentTabBarStyles = css`
 		--_document-tab-bar-overflow-button-reserve: 52px; /* Used for overflowButtonReserve. Overflow button width + spacing */
 		--_document-tab-bar-dismiss-button-is-hovered-background-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-250));
 		--_document-tab-bar-dismiss-button-is-active-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
-		--_document-tab-bar-dismiss-button-is-selected-is-hovered-background-color: light-dark(var(--primitives-color-accent-650), var(--primitives-color-accent-600));
-		--_document-tab-bar-dismiss-button-is-selected-is-active-background-color: light-dark(var(--primitives-color-accent-600), var(--primitives-color-accent-550));
+		--_document-tab-bar-dismiss-button-is-selected-is-hovered-background-color: var(--semantics-tabs-is-current-is-hovered-background-color);
+		--_document-tab-bar-dismiss-button-is-selected-is-active-background-color: var(--semantics-tabs-is-current-is-active-background-color);
 		--_document-tab-bar-tab-title-font: var(--primitives-font-body-sm-medium-flat);
 
 		${inheritedTextReset}
@@ -203,12 +203,12 @@ export const documentTabBarStyles = css`
 	}
 
 	.document-tab-bar__drag-clone.is-selected .document-tab-bar__item-tab {
-		background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+		background-color: var(--semantics-tabs-is-current-background-color);
 	}
 
 	.document-tab-bar__drag-clone.is-selected .document-tab-bar__item-text,
 	.document-tab-bar__drag-clone.is-selected .document-tab-bar__item-supporting-text {
-		color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+		color: var(--semantics-tabs-is-current-content-color);
 	}
 
 	.document-tab-bar__drag-clone .document-tab-bar__item-supporting-text {
@@ -246,9 +246,9 @@ export const documentTabBarItemStyles = css`
 		--_document-tab-bar-item-highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
 		--_document-tab-bar-item-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-hovered-highlight-border-color);
 		--_document-tab-bar-item-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-active-highlight-border-color);
-		--_document-tab-bar-item-is-selected-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-highlight-border-color);
-		--_document-tab-bar-item-is-selected-is-hovered-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-highlight-border-color);
-		--_document-tab-bar-item-is-selected-is-active-highlight-border-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-highlight-border-color);
+		--_document-tab-bar-item-is-selected-highlight-border-color: var(--semantics-tabs-is-current-highlight-border-color);
+		--_document-tab-bar-item-is-selected-is-hovered-highlight-border-color: var(--semantics-tabs-is-current-is-hovered-highlight-border-color);
+		--_document-tab-bar-item-is-selected-is-active-highlight-border-color: var(--semantics-tabs-is-current-is-active-highlight-border-color);
 
 		--_document-tab-bar-item-secondary-content-color: var(--semantics-buttons-neutral-tinted-content-secondary-color);
 		--_document-tab-bar-item-tab-title-font: var(--primitives-font-body-sm-medium-flat);
@@ -316,22 +316,23 @@ export const documentTabBarItemStyles = css`
 	}
 
 	:host([selected]) .document-tab-bar__item-tab {
-		background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+		background-color: var(--semantics-tabs-is-current-background-color);
 		--_document-tab-bar-item-highlight-border-color: var(--_document-tab-bar-item-is-selected-highlight-border-color);
-		--_document-tab-bar-item-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-selected-content-secondary-color);
+		--_document-tab-bar-item-secondary-content-color: var(--semantics-tabs-is-current-content-color);
 	}
 
 	@media (hover: hover) {
 		:host([selected]) .document-tab-bar__item-tab:hover {
-			background-color: var(--semantics-buttons-neutral-tinted-is-selected-background-color);
+			background-color: var(--semantics-tabs-is-current-is-hovered-background-color);
 			--_document-tab-bar-item-highlight-border-color: var(--_document-tab-bar-item-is-selected-is-hovered-highlight-border-color);
-			--_document-tab-bar-item-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-hovered-content-secondary-color);
+			--_document-tab-bar-item-secondary-content-color: var(--semantics-tabs-is-current-is-hovered-content-color);
 		}
 	}
 
 	:host([selected]) .document-tab-bar__item-tab:active {
+		background-color: var(--semantics-tabs-is-current-is-active-background-color);
 		--_document-tab-bar-item-highlight-border-color: var(--_document-tab-bar-item-is-selected-is-active-highlight-border-color);
-		--_document-tab-bar-item-secondary-content-color: var(--semantics-buttons-neutral-tinted-is-selected-is-active-content-secondary-color);
+		--_document-tab-bar-item-secondary-content-color: var(--semantics-tabs-is-current-is-active-content-color);
 	}
 
 	/* ## Focus */
@@ -374,7 +375,7 @@ export const documentTabBarItemStyles = css`
 	}
 
 	:host([selected]) .document-tab-bar__item-text {
-		color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+		color: var(--semantics-tabs-is-current-content-color);
 	}
 
 	.document-tab-bar__item-short-text {
@@ -387,7 +388,7 @@ export const documentTabBarItemStyles = css`
 	}
 
 	:host([selected]) .document-tab-bar__item-short-text {
-		color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+		color: var(--semantics-tabs-is-current-content-color);
 	}
 
 
@@ -444,7 +445,7 @@ export const documentTabBarItemStyles = css`
 	}
 
 	:host([selected]) .document-tab-bar__item-dismiss-button {
-		color: var(--semantics-buttons-neutral-tinted-is-selected-content-color);
+		color: var(--semantics-tabs-is-current-content-color);
 	}
 
 	@media (hover: hover) {

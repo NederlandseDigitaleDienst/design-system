@@ -11,6 +11,7 @@ export const codeEditorStyles = css`
 
 	:host {
 		--_code-editor-caret-width: var(--primitives-border-width-regular);
+		--_code-editor-caret-color: var(--components-code-editor-caret-color);
 		--_code-editor-corner-radius: 0;
 		--_code-editor-background-color: transparent;
 		--_code-editor-border-color: transparent;
@@ -111,7 +112,7 @@ export const codeEditorStyles = css`
 	/* Accent caret. The doubled class is purely for specificity — it outweighs
 	   CodeMirror's theme cursor color without depending on an attribute. */
 	:host .cm-cursor.cm-cursor {
-		border-left-color: var(--primitives-color-accent-600);
+		border-left-color: var(--_code-editor-caret-color);
 		border-left-width: var(--_code-editor-caret-width);
 	}
 

@@ -441,3 +441,21 @@ describe('nldd-step-cell – where the dot stands', () => {
 		expect(cell.hasAttribute('data-marker-offset')).toBe(true);
 	});
 });
+
+describe('nldd-step-cell theme color', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('follows the steps color a theme sets, like nldd-step-bar', async () => {
+		el = await fixture('<div style="--semantics-steps-progress-color: rgb(200, 0, 0)"><nldd-step-cell></nldd-step-cell></div>');
+		const cell = el.querySelector<NLDDStepCell>('nldd-step-cell')!;
+		await waitForUpdate(cell);
+		const probe = document.createElement('span');
+		probe.style.color = 'var(--_step-cell-track-color)';
+		cell.shadowRoot!.append(probe);
+		expect(getComputedStyle(probe).color).toBe('rgb(200, 0, 0)');
+	});
+});

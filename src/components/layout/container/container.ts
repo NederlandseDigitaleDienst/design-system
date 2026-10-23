@@ -68,6 +68,7 @@
  * @attr {string} width - 'full' (default, fills the parent) | 'fit-content' | a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it.
  * @attr {string} min-width - Minimum width as a CSS length (e.g. '280px')
  * @attr {string} max-width - Maximum width as a CSS length (e.g. '480px')
+ * @attr {string} min-height - Minimum height as a CSS length (e.g. '240px'), padding included. Reserves the room that content still on its way will take; vertical-alignment then places the children within it.
  * @attr {string} gap - Gap between children. One distance for all of them, so it fits children of one kind; for a stack of different kinds, space each seam with nldd-spacer instead.
  * @attr {string} sm-gap - Gap at sm breakpoint
  * @attr {string} md-gap - Gap at md breakpoint
@@ -185,6 +186,9 @@ export class NLDDContainer extends LitElement {
 
 	@property({ type: String, reflect: true, attribute: 'max-width' })
 	maxWidth = '';
+
+	@property({ type: String, reflect: true, attribute: 'min-height' })
+	minHeight = '';
 
 	@property({ type: String, reflect: true })
 	gap: PaddingSize | undefined = undefined;
@@ -309,6 +313,9 @@ export class NLDDContainer extends LitElement {
 
 		if (this.maxWidth) this.style.setProperty('--_container-max-width', this.maxWidth);
 		else this.style.removeProperty('--_container-max-width');
+
+		if (this.minHeight) this.style.setProperty('--_container-min-height', this.minHeight);
+		else this.style.removeProperty('--_container-min-height');
 	}
 
 	private writeCustomProperties(): void {

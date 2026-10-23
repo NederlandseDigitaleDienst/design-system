@@ -41,6 +41,10 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `start-icon` | `string` | Icon name for the start icon (before text) |
 | `end-icon` | `string` | Icon name for the end icon (after text) |
 | `accessible-label` | `string` | Accessible label for the button, overrides text for screen readers |
+| `shortcut` | `string` | Keyboard shortcut hint shown right after the text, e.g. 'Cmd+S'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name, as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. Keep it for the few main actions of a screen (save, search); a hint on every button is noise. |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden "opens in new tab" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
@@ -123,6 +127,10 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `icon` | `string` | Icon name for the nldd-icon element. Defaults to a placeholder icon when neither this attribute nor the icon slot is set. |
 | `accessible-label` | `string` | Accessible label for screen readers. Overrides text as aria-label and title tooltip. Use when the visible text alone lacks context for screen readers (e.g. text "Toon", accessible-label "Toon wachtwoord"). The text is still shown visually in lg size regardless. |
 | `tooltip-timing` | `string` | Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button). |
+| `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip after the text, e.g. 'Alt+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Presentatiemodus Alt P"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
@@ -232,6 +240,10 @@ A split button combines a primary action button with a dropdown trigger. The mai
 | `width` | `string` | Width mode: 'full' (stretches to container) or any CSS length; the main action button fills the available space |
 | `text` | `string` | Button text for the primary action |
 | `icon` | `string` | Icon name shown before the text on the primary action button |
+| `shortcut` | `string` | Keyboard shortcut hint for the primary action, shown right after its text, e.g. 'Cmd+S'. Forwarded to the inner nldd-button; display only, wire up the handling in your app. |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `translations` | `object` | Translations; unset keys fall back to Dutch |
 
 **Slots**
@@ -482,7 +494,7 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `keys` | `string` | Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P'). Use '+++' for a literal '+' key: 'Ctrl+++' becomes 'Ctrl' + '+'. For more complex cases (a combo with several '+' keys, for instance) use the default slot with your own <kbd> elements instead of the keys attribute. |
+| `keys` | `string` | Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P'). End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++' works too). For more complex cases, such as a combo with several '+' keys, use the default slot with your own <kbd> elements instead of the keys attribute. |
 | `mac-keys` | `string` | Optional override for macOS (iPhone/iPad/iPod included). |
 | `windows-keys` | `string` | Optional override for Windows. |
 | `linux-keys` | `string` | Optional override for Linux/ChromeOS. |
@@ -620,6 +632,10 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `text` | `string` | Tooltip text |
+| `shortcut` | `string` | Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable. |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `open` | `boolean` | Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior. |
 | `placement` | `string` | Position: 'top' \| 'bottom' \| 'left' \| 'right' (default: 'bottom'; automatically 'top' on touch devices) |
 | `timing` | `string` | When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant. |
@@ -1206,6 +1222,10 @@ A search input with a leading search icon, an optional dismiss button, and an op
 | `placeholder` | `string` | Placeholder text for the input |
 | `accessible-label` | `string` | Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen'). |
 | `show-search-button` | `boolean` | When set, shows a search button on the right |
+| `shortcut` | `string` | Keyboard shortcut hint shown at the right end of the empty field, e.g. 'Cmd+K' or '/'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up focusing the field in your app. Hidden while the field has focus or a value, and on touch-only devices. Joins the field's description for screen readers. |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `disabled` | `boolean` | Disabled state |
@@ -1269,6 +1289,10 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 | `disabled` | `boolean` | Disabled state |
 | `text` | `string` | Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon") |
 | `icon` | `string` | Icon name for nldd-icon |
+| `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `appearance` | `string` | Visual style: 'neutral-tinted' \| 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control. |
 | `size` | `string` | Control size: 'sm' \| 'md' \| 'lg' (default: 'md'). Set by nldd-segmented-control. |
 | `variant` | `string` | Content type: 'text' \| 'icon' \| 'icon-and-text' (default: 'text'). Set by nldd-segmented-control. |
@@ -1517,6 +1541,10 @@ A selectable button that toggles between selected and unselected. Available as a
 | `selected-icon` | `string` | Icon shown instead of `icon` while selected, such as `check-mark` for `plus` or `heart-filled` for `heart`. The appearances with a surface fill it when on, as without one. The transparent appearances have no surface to fill: with a selected-icon they stay quiet when on and the change of shape says it is on; without one, or with `variant="text"` where the icon does not render, they fill, so the state always shows. |
 | `variant` | `'text' \| 'icon' \| 'icon-and-text'` | What renders: text, icon, or both. Unset → auto-detect from text/icon attributes. |
 | `accessible-label` | `string` | Accessible label; required for icon-only usage |
+| `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 
@@ -1716,6 +1744,7 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 | `width` | `string` | 'full' (default, fills the parent) \| 'fit-content' \| a CSS length (e.g. '480px'). A container narrower than its parent stays where its parent puts it; use the parent's horizontal-alignment to move it. A 'fit-content' container takes its width from its content, so it cannot measure itself: its breakpoint padding, gap and column count follow the container around it. |
 | `min-width` | `string` | Minimum width as a CSS length (e.g. '280px') |
 | `max-width` | `string` | Maximum width as a CSS length (e.g. '480px') |
+| `min-height` | `string` | Minimum height as a CSS length (e.g. '240px'), padding included. Reserves the room that content still on its way will take; vertical-alignment then places the children within it. |
 | `gap` | `string` | Gap between children. One distance for all of them, so it fits children of one kind; for a stack of different kinds, space each seam with nldd-spacer instead. |
 | `sm-gap` | `string` | Gap at sm breakpoint |
 | `md-gap` | `string` | Gap at md breakpoint |
@@ -2577,7 +2606,7 @@ A toolbar for page and container headings with optional navigation and action bu
 
 ### `<nldd-activity-indicator>`
 
-Layout placeholder that fills its parent and centers an indeterminate activity indicator. By default the indicator is held back for 1000ms so brief loading states don't flash; once the delay passes it fades in. Set `timing="instant"` to skip the delay (the fade-in still plays) — this is what embedding components such as `nldd-button` use for their loading state. The default indicator is a simple icon-sized circle that follows the shared `--context-content-color` channel (set by list-item / table / menu on their content), falling back to `currentColor` wherever that channel is unset (buttons, rich-text, standalone) — so a spinner inside a cell tracks the row's state-aware content color, while embedders relying on currentColor are unaffected. An optional label sits below (hidden unless `show-text` is set). Drop a `<nldd-progress-circle>`, `<nldd-progress-bar>` or any element in the `indicator` slot to override it. Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled icon glyph has), so a standalone spinner lines up with an icon or an `icon-aligned` `nldd-avatar` on the same grid — no extra option needed (unlike `nldd-avatar`, which fills edge-to-edge and opts in via `icon-aligned`). Overlay mode: put content in the default slot and the indicator wraps it — it becomes a `position: relative` container, renders the spinner over a dimming backdrop (opt out with `no-backdrop`), and makes the content `inert` so its controls can't be focused or clicked. Toggle loading with `complete` (`?complete=${!isLoading}`). With no slotted content it stays the standalone placeholder described above. Reconnect behavior: every `connectedCallback` resets the timer and hides the indicator again. If a consumer toggles the element via a conditional render (remove + re-insert) the indicator disappears and re-fades after another delay. Keep the element mounted and toggle visibility / `hidden` instead if you want the timer to run only once. Accessibility: while connected and not `complete` the host is a polite live region (`role="status"`). The label (`text`, or the translated "Laden" fallback) always renders as the region's content — visually hidden when `show-text` is off (the default) — so assistive tech announces the loading state when the indicator appears. Set `complete` (or unmount) to clear it.
+Layout placeholder that fills its parent and centers an indeterminate activity indicator. By default the indicator is held back for 1000ms so brief loading states don't flash; once the delay passes it fades in. Set `timing="instant"` to skip the delay (the fade-in still plays) — this is what embedding components such as `nldd-button` use for their loading state. Sizing: fills its parent where the parent lets it (a flex column such as `nldd-container`, a grid, or a fixed height) and centers itself there. Where the parent has no height of its own, give it one: a `min-height` matching the content you expect, such as `<nldd-container min-height="240px">`. As a safety net the host already takes the indicator's size (circle, plus the label with `show-text`) during the delay, so nothing shifts when it fades in; once `complete` is set it gives that space up. Label size follows `size`, not the surrounding text, so the circle and its label keep the same proportion everywhere: body-xs at 16 and 20, body-sm at 24 and 28, body-md from 32. Keep the label short; a longer explanation belongs in the area as regular text. The default indicator is a simple icon-sized circle that follows the shared `--context-content-color` channel (set by list-item / table / menu on their content), falling back to `currentColor` wherever that channel is unset (buttons, rich-text, standalone) — so a spinner inside a cell tracks the row's state-aware content color, while embedders relying on currentColor are unaffected. An optional label sits below (hidden unless `show-text` is set). The indicator is always indeterminate; when you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` instead. Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled icon glyph has), so a standalone spinner lines up with an icon or an `icon-aligned` `nldd-avatar` on the same grid — no extra option needed (unlike `nldd-avatar`, which fills edge-to-edge and opts in via `icon-aligned`). Overlay mode: put content in the default slot and the indicator wraps it — it becomes a `position: relative` container, renders the spinner over a dimming backdrop (opt out with `no-backdrop`), and makes the content `inert` so its controls can't be focused or clicked. Toggle loading with `complete` (`?complete=${!isLoading}`). With no slotted content it stays the standalone placeholder described above. Reconnect behavior: every `connectedCallback` resets the timer and hides the indicator again. If a consumer toggles the element via a conditional render (remove + re-insert) the indicator disappears and re-fades after another delay. Keep the element mounted and toggle visibility / `hidden` instead if you want the timer to run only once. Accessibility: while connected and not `complete` the host is a polite live region (`role="status"`). The label (`text`, or the translated "Laden" fallback) always renders as the region's content — visually hidden when `show-text` is off (the default) — so assistive tech announces the loading state when the indicator appears. Set `complete` (or unmount) to clear it.
 
 **Attributes**
 
@@ -2596,7 +2625,6 @@ Layout placeholder that fills its parent and centers an indeterminate activity i
 | Slot | Description |
 | --- | --- |
 | _(default)_ | Content to wrap (overlay mode); made inert while loading. Leave empty for the standalone placeholder. |
-| `indicator` | Optional custom indicator; overrides the default circle (and its visually-hidden label). Consumers replacing it supply their own indicator semantics; the host's role="status" still marks the loading region. |
 
 ### `<nldd-badge>`
 

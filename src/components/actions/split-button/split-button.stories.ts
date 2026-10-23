@@ -59,6 +59,25 @@ export default {
 			options: ['', ...ICONS],
 			description: 'Icoonnaam links van de tekst op de primaire actieknop',
 		},
+		shortcut: {
+			control: 'text',
+			description: 'Sneltoets achter de tekst van de hoofdactie, bijvoorbeeld `Ctrl+S`. Alleen weergave: de toets zelf koppel je in je app.',
+		},
+		shortcutMac: {
+			name: 'shortcut-mac',
+			control: 'text',
+			description: 'Sneltoets op macOS (en iOS), als die afwijkt van `shortcut`.',
+		},
+		shortcutWindows: {
+			name: 'shortcut-windows',
+			control: 'text',
+			description: 'Sneltoets op Windows, als die afwijkt van `shortcut`.',
+		},
+		shortcutLinux: {
+			name: 'shortcut-linux',
+			control: 'text',
+			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Disabled state',
@@ -73,6 +92,10 @@ export default {
 		width: '',
 		text: 'Bewaar',
 		icon: '',
+		shortcut: '',
+		shortcutMac: '',
+		shortcutWindows: '',
+		shortcutLinux: '',
 		disabled: false,
 	},
 };
@@ -96,13 +119,17 @@ const menu = html`
 	</nldd-menu>
 `;
 
-const Template = ({ appearance, size, width, text, icon, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, text, icon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, disabled }: Record<string, any>) => html`
 	<nldd-split-button
 		appearance=${appearance}
 		size=${size}
 		width=${width || nothing}
 		text=${text}
 		icon=${icon || nothing}
+		shortcut=${shortcut || nothing}
+		shortcut-mac=${shortcutMac || nothing}
+		shortcut-windows=${shortcutWindows || nothing}
+		shortcut-linux=${shortcutLinux || nothing}
 		?disabled=${disabled}
 		@action-click=${action('action-click')}
 		@menu-click=${action('menu-click')}

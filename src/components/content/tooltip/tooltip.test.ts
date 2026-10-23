@@ -1,5 +1,7 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { _setOSOverride } from '../../../utilities/os.js';
+import { describe, it, expect, afterEach, onTestFinished } from 'vitest';
 import { fixture, cleanup, waitForUpdate, until } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDTooltip } from './tooltip.js';
 import './tooltip.js';
 
@@ -400,4 +402,49 @@ describe('nldd-tooltip – aria-describedby', () => {
 		expect(description.getBoundingClientRect().bottom).toBeLessThanOrEqual(2);
 	});
 
+	describe('shortcut', () => {
+		afterEach(() => _setOSOverride(null));
+
+		it('opens with only a shortcut, without text', async () => {
+			el = await fixture<NLDDTooltip>('<nldd-tooltip shortcut="Ctrl+B"><button>Vet</button></nldd-tooltip>');
+			await waitForUpdate(el);
+			el.querySelector('button')!.focus();
+			await waitForUpdate(el);
+			expect((el as NLDDTooltip)._visible).toBe(true);
+		});
+
+		it('shows the shortcut after the text', async () => {
+			el = await fixture<NLDDTooltip>('<nldd-tooltip text="Opslaan" shortcut="Ctrl+S" shortcut-mac="Cmd+S"><button>Opslaan</button></nldd-tooltip>');
+			await waitForUpdate(el);
+			const body = el.shadowRoot!.querySelector('.tooltip__body')!;
+			expect(body.querySelector('.tooltip__text')!.textContent).toBe('Opslaan');
+			const keys = body.querySelector('nldd-keyboard-shortcut')!;
+			expect(keys.getAttribute('keys')).toBe('Ctrl+S');
+			expect(keys.getAttribute('mac-keys')).toBe('Cmd+S');
+		});
+
+		it('puts the keys on the baseline of the text', async () => {
+			const removeTokens = loadTokens();
+			onTestFinished(removeTokens);
+			el = await fixture<NLDDTooltip>('<nldd-tooltip text="Link" shortcut="Ctrl+K" open><button>Link</button></nldd-tooltip>');
+			await waitForUpdate(el);
+			const glyphBottom = (node: Element) => {
+				const range = document.createRange();
+				range.selectNodeContents(node);
+				return range.getBoundingClientRect().bottom;
+			};
+			const text = el.shadowRoot!.querySelector('.tooltip__text')!;
+			const key = el.shadowRoot!.querySelector('nldd-keyboard-shortcut')!.shadowRoot!.querySelector('.keyboard-shortcut__key')!;
+			expect(glyphBottom(text)).toBeGreaterThan(0);
+			expect(glyphBottom(key)).toBeCloseTo(glyphBottom(text), 1);
+		});
+
+		it('adds the shortcut to the description of a light-DOM trigger', async () => {
+			_setOSOverride('windows');
+			el = await fixture<NLDDTooltip>('<nldd-tooltip text="Opslaan" shortcut="Ctrl+S"><button>Opslaan</button></nldd-tooltip>');
+			await waitForUpdate(el);
+			const id = el.querySelector('button')!.getAttribute('aria-describedby')!;
+			expect(document.getElementById(id)!.textContent).toBe('Opslaan Ctrl S');
+		});
+	});
 });

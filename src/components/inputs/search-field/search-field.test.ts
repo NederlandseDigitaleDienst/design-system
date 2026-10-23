@@ -286,4 +286,44 @@ describe('nldd-search-field – dismiss', () => {
 		const input = el.shadowRoot!.querySelector('input')!;
 		expect(input.getAttribute('spellcheck')).toBe('false');
 	});
+
+	describe('shortcut', () => {
+		it('shows the shortcut at the end of the empty field and describes the input with it', async () => {
+			el = await fixture<NLDDSearchField>('<nldd-search-field placeholder="Zoek" shortcut="/"></nldd-search-field>');
+			await waitForUpdate(el);
+			const hint = el.shadowRoot!.querySelector('.search-field__shortcut')!;
+			expect(hint.querySelector('nldd-keyboard-shortcut')!.getAttribute('keys')).toBe('/');
+			const input = el.shadowRoot!.querySelector('input') as HTMLInputElement & { ariaDescribedByElements: Element[] | null };
+			expect(input.ariaDescribedByElements).toContain(hint);
+		});
+
+		it('adds the shortcut to the help text of a form field instead of replacing it', async () => {
+			el = await fixture<NLDDSearchField>('<nldd-search-field placeholder="Zoek" shortcut="/"></nldd-search-field>');
+			const help = document.createElement('span');
+			document.body.append(help);
+			el.describedByElements = [help];
+			await waitForUpdate(el);
+			const hint = el.shadowRoot!.querySelector('.search-field__shortcut')!;
+			const input = el.shadowRoot!.querySelector('input') as HTMLInputElement & { ariaDescribedByElements: Element[] | null };
+			expect(input.ariaDescribedByElements).toEqual([help, hint]);
+			help.remove();
+		});
+
+		it('drops the shortcut once the field has a value', async () => {
+			el = await fixture<NLDDSearchField>('<nldd-search-field placeholder="Zoek" shortcut="/"></nldd-search-field>');
+			await waitForUpdate(el);
+			(el as NLDDSearchField).value = 'dakisolatie';
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('.search-field__shortcut')).toBeNull();
+			const input = el.shadowRoot!.querySelector('input') as HTMLInputElement & { ariaDescribedByElements: Element[] | null };
+			expect(input.ariaDescribedByElements ?? []).toHaveLength(0);
+		});
+
+		it('hides the shortcut while the field has focus', async () => {
+			el = await fixture<NLDDSearchField>('<nldd-search-field placeholder="Zoek" shortcut="/"></nldd-search-field>');
+			await waitForUpdate(el);
+			el.shadowRoot!.querySelector('input')!.focus();
+			expect(getComputedStyle(el.shadowRoot!.querySelector('.search-field__shortcut')!).display).toBe('none');
+		});
+	});
 });

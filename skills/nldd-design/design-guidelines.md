@@ -79,3 +79,9 @@ Een verzameling ontwerprichtlijnen en interface-principes. Raadpleeg ze wanneer 
 
 - **`<title>`-tags: begin met het specifieke en concrete, eindig met het algemene.** Homepage: `website-titel: subtitel`. Vervolgpagina's: `pagina-titel · website-titel` (met `&middot;` als scheidingsteken). Bij een browserscherm vol tabs zoekt de gebruiker op de eerste woorden, die moeten onderscheidend zijn.
 - **Gebruik hyphens (`-`) in URLs, geen underscores (`_`).** Zoekmachines interpreteren hyphens als woordscheiders; underscores worden als deel van één woord gelezen. Hyphens zijn ook beter leesbaar voor mensen die de URL lezen of voorlezen.
+
+## Huisstijlkeuzes
+
+De richtlijnen hierboven gaan over wat beter werkt. Deze sectie gaat over keuzes waar meer dan één manier goed is en het systeem er één heeft gekozen, zodat het overal hetzelfde is. Wil je het anders, open dan een issue in plaats van per scherm iets anders te kiezen.
+
+- **Meer opties is een horizontale ellipsis.** Gebruik `icon="more"`, de drie puntjes naast elkaar, voor elke knop die een menu met meer acties opent. De overflow-menu's van de componenten doen dat ook. De verticale variant (de "kebab") komt uit Android. iOS en macOS gebruiken de horizontale, en die lijn volgen we.

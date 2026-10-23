@@ -465,6 +465,46 @@
             },
             {
               "kind": "field",
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutMac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-mac",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutWindows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-windows",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutLinux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-linux",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "href",
               "type": {
                 "text": "string | undefined"
@@ -742,6 +782,42 @@
               "default": "''",
               "description": "Accessible label for the button, overrides text for screen readers",
               "fieldName": "accessibleLabel"
+            },
+            {
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcut",
+              "description": "Keyboard shortcut hint shown right after the text, e.g. 'Cmd+S'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name, as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. Keep it for the few main actions of a screen (save, search); a hint on every button is noise."
+            },
+            {
+              "name": "shortcut-mac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutMac",
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-windows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-linux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "href",
@@ -1069,6 +1145,46 @@
             },
             {
               "kind": "field",
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutMac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-mac",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutWindows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-windows",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutLinux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-linux",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "href",
               "type": {
                 "text": "string | undefined"
@@ -1292,6 +1408,42 @@
               "default": "'delay'",
               "description": "Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button).",
               "fieldName": "tooltipTiming"
+            },
+            {
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcut",
+              "description": "Keyboard shortcut hint shown in the tooltip after the text, e.g. 'Alt+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name (\"Presentatiemodus Alt P\"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable."
+            },
+            {
+              "name": "shortcut-mac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutMac",
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-windows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-linux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "href",
@@ -2263,6 +2415,46 @@
             },
             {
               "kind": "field",
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutMac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-mac",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutWindows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-windows",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutLinux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-linux",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "icon",
               "type": {
                 "text": "string"
@@ -2336,6 +2528,42 @@
               "default": "''",
               "description": "Button text for the primary action",
               "fieldName": "text"
+            },
+            {
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcut",
+              "description": "Keyboard shortcut hint for the primary action, shown right after its text, e.g. 'Cmd+S'. Forwarded to the inner nldd-button; display only, wire up the handling in your app."
+            },
+            {
+              "name": "shortcut-mac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutMac",
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-windows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-linux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "icon",
@@ -4576,7 +4804,7 @@
               },
               "default": "''",
               "fieldName": "keys",
-              "description": "Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P'). Use '+++' for a literal '+' key: 'Ctrl+++' becomes 'Ctrl' + '+'. For more complex cases (a combo with several '+' keys, for instance) use the default slot with your own <kbd> elements instead of the keys attribute."
+              "description": "Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P'). End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++' works too). For more complex cases, such as a combo with several '+' keys, use the default slot with your own <kbd> elements instead of the keys attribute."
             },
             {
               "name": "mac-keys",
@@ -5582,6 +5810,46 @@
             },
             {
               "kind": "field",
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutMac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-mac",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutWindows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-windows",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutLinux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-linux",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "open",
               "type": {
                 "text": "boolean"
@@ -5621,6 +5889,42 @@
               "default": "''",
               "fieldName": "text",
               "description": "Tooltip text"
+            },
+            {
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcut",
+              "description": "Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable."
+            },
+            {
+              "name": "shortcut-mac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutMac",
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-windows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-linux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "open",
@@ -14419,6 +14723,46 @@
             },
             {
               "kind": "field",
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutMac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-mac",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutWindows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-windows",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutLinux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-linux",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "translations",
               "type": {
                 "text": "Partial<NLDDSearchFieldTranslations>"
@@ -14801,6 +15145,42 @@
               "description": "When set, shows a search button on the right"
             },
             {
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcut",
+              "description": "Keyboard shortcut hint shown at the right end of the empty field, e.g. 'Cmd+K' or '/'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up focusing the field in your app. Hidden while the field has focus or a value, and on touch-only devices. Joins the field's description for screen readers."
+            },
+            {
+              "name": "shortcut-mac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutMac",
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-windows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-linux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
+            },
+            {
               "name": "translations",
               "type": {
                 "text": "Partial<NLDDSearchFieldTranslations>"
@@ -15050,6 +15430,46 @@
               "attribute": "icon"
             },
             {
+              "kind": "field",
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutMac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-mac",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutWindows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-windows",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutLinux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-linux",
+              "reflects": true
+            },
+            {
               "kind": "method",
               "name": "focus",
               "return": {
@@ -15174,6 +15594,42 @@
               "default": "''",
               "description": "Icon name for nldd-icon",
               "fieldName": "icon"
+            },
+            {
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcut",
+              "description": "Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name (\"Vet Cmd B\"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable."
+            },
+            {
+              "name": "shortcut-mac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutMac",
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-windows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-linux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             }
           ],
           "superclass": {
@@ -22008,6 +22464,46 @@
             },
             {
               "kind": "field",
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutMac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-mac",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutWindows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-windows",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shortcutLinux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shortcut-linux",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "invalid",
               "type": {
                 "text": "boolean"
@@ -22381,6 +22877,42 @@
               "default": "''",
               "fieldName": "accessibleLabel",
               "description": "Accessible label; required for icon-only usage"
+            },
+            {
+              "name": "shortcut",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcut",
+              "description": "Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name (\"Vet Cmd B\"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable."
+            },
+            {
+              "name": "shortcut-mac",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutMac",
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-windows",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
+            },
+            {
+              "name": "shortcut-linux",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "invalid",
@@ -23632,6 +24164,16 @@
             },
             {
               "kind": "field",
+              "name": "minHeight",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "min-height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "gap",
               "type": {
                 "text": "PaddingSize | undefined"
@@ -24038,6 +24580,15 @@
               "default": "''",
               "fieldName": "maxWidth",
               "description": "Maximum width as a CSS length (e.g. '480px')"
+            },
+            {
+              "name": "min-height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "minHeight",
+              "description": "Minimum height as a CSS length (e.g. '240px'), padding included. Reserves the room that content still on its way will take; vertical-alignment then places the children within it."
             },
             {
               "name": "gap",
@@ -35695,7 +36246,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Layout placeholder that fills its parent and centers an indeterminate activity indicator. By default the indicator is held back for 1000ms so brief loading states don't flash; once the delay passes it fades in. Set `timing=\"instant\"` to skip the delay (the fade-in still plays) — this is what embedding components such as `nldd-button` use for their loading state. The default indicator is a simple icon-sized circle that follows the shared `--context-content-color` channel (set by list-item / table / menu on their content), falling back to `currentColor` wherever that channel is unset (buttons, rich-text, standalone) — so a spinner inside a cell tracks the row's state-aware content color, while embedders relying on currentColor are unaffected. An optional label sits below (hidden unless `show-text` is set). Drop a `<nldd-progress-circle>`, `<nldd-progress-bar>` or any element in the `indicator` slot to override it. Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled icon glyph has), so a standalone spinner lines up with an icon or an `icon-aligned` `nldd-avatar` on the same grid — no extra option needed (unlike `nldd-avatar`, which fills edge-to-edge and opts in via `icon-aligned`). Overlay mode: put content in the default slot and the indicator wraps it — it becomes a `position: relative` container, renders the spinner over a dimming backdrop (opt out with `no-backdrop`), and makes the content `inert` so its controls can't be focused or clicked. Toggle loading with `complete` (`?complete=${!isLoading}`). With no slotted content it stays the standalone placeholder described above. Reconnect behavior: every `connectedCallback` resets the timer and hides the indicator again. If a consumer toggles the element via a conditional render (remove + re-insert) the indicator disappears and re-fades after another delay. Keep the element mounted and toggle visibility / `hidden` instead if you want the timer to run only once. Accessibility: while connected and not `complete` the host is a polite live region (`role=\"status\"`). The label (`text`, or the translated \"Laden\" fallback) always renders as the region's content — visually hidden when `show-text` is off (the default) — so assistive tech announces the loading state when the indicator appears. Set `complete` (or unmount) to clear it.",
+          "description": "Layout placeholder that fills its parent and centers an indeterminate activity indicator. By default the indicator is held back for 1000ms so brief loading states don't flash; once the delay passes it fades in. Set `timing=\"instant\"` to skip the delay (the fade-in still plays) — this is what embedding components such as `nldd-button` use for their loading state. Sizing: fills its parent where the parent lets it (a flex column such as `nldd-container`, a grid, or a fixed height) and centers itself there. Where the parent has no height of its own, give it one: a `min-height` matching the content you expect, such as `<nldd-container min-height=\"240px\">`. As a safety net the host already takes the indicator's size (circle, plus the label with `show-text`) during the delay, so nothing shifts when it fades in; once `complete` is set it gives that space up. Label size follows `size`, not the surrounding text, so the circle and its label keep the same proportion everywhere: body-xs at 16 and 20, body-sm at 24 and 28, body-md from 32. Keep the label short; a longer explanation belongs in the area as regular text. The default indicator is a simple icon-sized circle that follows the shared `--context-content-color` channel (set by list-item / table / menu on their content), falling back to `currentColor` wherever that channel is unset (buttons, rich-text, standalone) — so a spinner inside a cell tracks the row's state-aware content color, while embedders relying on currentColor are unaffected. An optional label sits below (hidden unless `show-text` is set). The indicator is always indeterminate; when you know the progress, show `nldd-progress-bar` or `nldd-progress-circle` instead. Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled icon glyph has), so a standalone spinner lines up with an icon or an `icon-aligned` `nldd-avatar` on the same grid — no extra option needed (unlike `nldd-avatar`, which fills edge-to-edge and opts in via `icon-aligned`). Overlay mode: put content in the default slot and the indicator wraps it — it becomes a `position: relative` container, renders the spinner over a dimming backdrop (opt out with `no-backdrop`), and makes the content `inert` so its controls can't be focused or clicked. Toggle loading with `complete` (`?complete=${!isLoading}`). With no slotted content it stays the standalone placeholder described above. Reconnect behavior: every `connectedCallback` resets the timer and hides the indicator again. If a consumer toggles the element via a conditional render (remove + re-insert) the indicator disappears and re-fades after another delay. Keep the element mounted and toggle visibility / `hidden` instead if you want the timer to run only once. Accessibility: while connected and not `complete` the host is a polite live region (`role=\"status\"`). The label (`text`, or the translated \"Laden\" fallback) always renders as the region's content — visually hidden when `show-text` is off (the default) — so assistive tech announces the loading state when the indicator appears. Set `complete` (or unmount) to clear it.",
           "name": "NLDDActivityIndicator",
           "members": [
             {
@@ -35847,10 +36398,6 @@
             {
               "name": "",
               "description": "Content to wrap (overlay mode); made inert while loading. Leave empty for the standalone placeholder."
-            },
-            {
-              "name": "indicator",
-              "description": "Optional custom indicator; overrides the default circle (and its visually-hidden label). Consumers replacing it supply their own indicator semantics; the host's role=\"status\" still marks the loading region."
             }
           ]
         }
@@ -40556,6 +41103,192 @@
           "declaration": {
             "name": "ScrollModeController",
             "module": "src/utilities/scroll-mode-controller.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/shortcut.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "hasShortcut",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "hint",
+              "type": {
+                "text": "ShortcutHint"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "resolveKeys",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "spec",
+              "type": {
+                "text": "KeysPerOS"
+              }
+            },
+            {
+              "name": "os",
+              "type": {
+                "text": "OS"
+              }
+            }
+          ],
+          "description": "The key spec for this OS, with `keys` as the fallback."
+        },
+        {
+          "kind": "function",
+          "name": "parseKeys",
+          "return": {
+            "type": {
+              "text": "string[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "spec",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Splits 'Ctrl+Shift+P' into keys; a trailing '++' ('Ctrl++') or '+++' is a literal '+' key."
+        },
+        {
+          "kind": "function",
+          "name": "shortcutsAvailable",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "description": "Whether a keyboard shortcut can be used on this device, so a hint for it is worth showing."
+        },
+        {
+          "kind": "class",
+          "description": "Renders the host again when shortcuts become available or unavailable, such\nas when a pointer is attached or removed, so a shortcut in its accessible\nname follows the visible hint. Pass `onChange` for work that a render does\nnot redo.",
+          "name": "ShortcutAvailabilityController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_query",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onChange",
+              "type": {
+                "text": "() => void"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "shortcutLabel",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "hint",
+              "type": {
+                "text": "ShortcutHint"
+              }
+            }
+          ],
+          "description": "The shortcut as words for an accessible name (\"Ctrl Z\"), matching how\nnldd-menu-item is announced. Empty without a shortcut, and where\nshortcutsAvailable() says the key cannot be pressed, as the hint is hidden\nthere too. Read when the component renders; ShortcutAvailabilityController\nrenders it again when that changes."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "hasShortcut",
+          "declaration": {
+            "name": "hasShortcut",
+            "module": "src/utilities/shortcut.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveKeys",
+          "declaration": {
+            "name": "resolveKeys",
+            "module": "src/utilities/shortcut.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseKeys",
+          "declaration": {
+            "name": "parseKeys",
+            "module": "src/utilities/shortcut.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "shortcutsAvailable",
+          "declaration": {
+            "name": "shortcutsAvailable",
+            "module": "src/utilities/shortcut.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ShortcutAvailabilityController",
+          "declaration": {
+            "name": "ShortcutAvailabilityController",
+            "module": "src/utilities/shortcut.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "shortcutLabel",
+          "declaration": {
+            "name": "shortcutLabel",
+            "module": "src/utilities/shortcut.ts"
           }
         }
       ]

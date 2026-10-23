@@ -49,7 +49,7 @@ export const notificationStyles = css`
 	}
 
 	:host([variant="accent"]) {
-		--_notification-icon-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-350));
+		--_notification-icon-color: var(--components-notification-icon-color);
 	}
 
 	:host([variant="success"]) {

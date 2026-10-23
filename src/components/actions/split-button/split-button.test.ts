@@ -186,4 +186,12 @@ describe('nldd-split-button – on a colored surface', () => {
 
 		expect(getComputedStyle(el.shadowRoot!.querySelector('.split-button')!).backgroundColor).toBe('rgb(255, 255, 255)');
 	});
+
+	it('forwards the shortcut to the main action', async () => {
+		el = await fixture('<nldd-split-button text="Bewaar" shortcut="Ctrl+S" shortcut-mac="Cmd+S"></nldd-split-button>');
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('nldd-button')!;
+		expect(button.getAttribute('shortcut')).toBe('Ctrl+S');
+		expect(button.getAttribute('shortcut-mac')).toBe('Cmd+S');
+	});
 });

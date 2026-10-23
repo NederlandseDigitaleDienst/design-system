@@ -1,5 +1,6 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDSegmentedControl, NLDDSegmentedControlItem } from './segmented-control.js';
+import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/tooltip/tooltip.js';
 
 export function segmentedControlTemplate(component: NLDDSegmentedControl): TemplateResult {
@@ -28,6 +29,12 @@ export function segmentedControlItemTemplate(component: NLDDSegmentedControlItem
 	 * placeholder whenever the consumer provided no icon. */
 	const showPlaceholder = isIcon || component.variant === 'icon-and-text';
 	const labelText = component.text || nothing;
+	/* The shortcut joins the name the way nldd-menu-item announces it; a visible
+	 * text then has to move into the aria-label, since that replaces the content. */
+	const shortcutWords = shortcutLabel(component);
+	const checkboxLabel = (isIcon || shortcutWords) && component.text
+		? [component.text, shortcutWords].filter(Boolean).join(' ')
+		: nothing;
 
 	const content = html`
 		<span class="segmented-control__item-icon"
@@ -57,14 +64,24 @@ export function segmentedControlItemTemplate(component: NLDDSegmentedControlItem
 					.checked=${component.selected}
 					?disabled=${component.disabled}
 					?required=${component.required}
-					aria-label=${isIcon ? labelText : nothing}
+					aria-label=${checkboxLabel}
 					@change=${component._handleChange}
 				>
 				${content}
 			</label>`;
 
-	if (isIcon && labelText) {
-		return html`<nldd-tooltip text=${labelText}>${label}</nldd-tooltip>`;
+	if ((isIcon && labelText) || hasShortcut(component)) {
+		return html`
+			<nldd-tooltip
+				text=${isIcon ? labelText : nothing}
+				shortcut=${component.shortcut || nothing}
+				shortcut-mac=${component.shortcutMac || nothing}
+				shortcut-windows=${component.shortcutWindows || nothing}
+				shortcut-linux=${component.shortcutLinux || nothing}
+			>
+				${label}
+			</nldd-tooltip>
+		`;
 	}
 	return label;
 }

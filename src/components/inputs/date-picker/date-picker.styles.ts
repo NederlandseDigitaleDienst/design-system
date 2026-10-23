@@ -32,12 +32,17 @@ export const datePickerStyles = css`
 		--_date-picker-day-indicator-inset: var(--primitives-space-2);
 		--_date-picker-day-indicator-size: calc(var(--_date-picker-day-size) - var(--_date-picker-day-indicator-inset) * 2);
 		--_date-picker-day-indicator-corner-radius: var(--_date-picker-day-corner-radius);
-		--_date-picker-day-is-in-range-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-75));
+		--_date-picker-day-is-in-range-background-color: var(--components-date-picker-day-is-in-range-background-color);
+		--_date-picker-day-is-in-range-is-hovered-background-color: var(--components-date-picker-day-is-in-range-is-hovered-background-color);
 		--_date-picker-day-is-in-range-content-color: var(--semantics-content-color);
 		--_date-picker-day-is-today-border-color: light-dark(var(--primitives-color-neutral-250), var(--primitives-color-neutral-400));
+		--_date-picker-day-is-today-is-in-range-border-color: var(--components-date-picker-day-is-today-is-in-range-border-color);
+		--_date-picker-day-is-today-is-selected-border-color: var(--components-date-picker-day-is-today-is-selected-border-color);
 		--_date-picker-day-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-150));
 		--_date-picker-day-is-selected-background-color: var(--semantics-controls-is-selected-indicator-color);
 		--_date-picker-day-is-selected-content-color: var(--semantics-controls-is-selected-contrast-color);
+		--_date-picker-day-is-selected-is-hovered-background-color: var(--semantics-controls-is-selected-is-hovered-indicator-color);
+		--_date-picker-day-is-selected-is-hovered-content-color: var(--semantics-controls-is-selected-is-hovered-contrast-color);
 		--_date-picker-day-is-outside-month-content-color: var(--semantics-content-secondary-color);
 		--_date-picker-day-is-unavailable-content-color: var(--semantics-content-secondary-color);
 
@@ -258,12 +263,24 @@ export const datePickerStyles = css`
 		border: var(--primitives-border-width-regular) solid var(--_date-picker-day-is-today-border-color);
 	}
 
+	.date-picker__day.is-today.is-in-range .date-picker__day-indicator {
+		border-color: var(--_date-picker-day-is-today-is-in-range-border-color);
+	}
+
+	.date-picker__day.is-today.is-selected .date-picker__day-indicator {
+		border-color: var(--_date-picker-day-is-today-is-selected-border-color);
+	}
+
 	/* Touch reports a hover after a tap and keeps it until you touch something
 	   else, so a day stays lit long after you picked it. Only pointers that can
 	   really hover. */
 	@media (hover: hover) {
 		.date-picker__day:hover .date-picker__day-indicator {
 			background-color: var(--_date-picker-day-is-hovered-background-color);
+		}
+
+		.date-picker__day.is-in-range:hover .date-picker__day-indicator {
+			background-color: var(--_date-picker-day-is-in-range-is-hovered-background-color);
 		}
 	}
 
@@ -299,11 +316,18 @@ export const datePickerStyles = css`
 		color: var(--_date-picker-day-is-selected-content-color);
 	}
 
-	/* Repeated for :hover, which carries a pseudo-class and would otherwise
-	   outweigh the plain selected rule. */
-	.date-picker__day.is-selected .date-picker__day-indicator,
-	.date-picker__day.is-selected:hover .date-picker__day-indicator {
+	.date-picker__day.is-selected .date-picker__day-indicator {
 		background-color: var(--_date-picker-day-is-selected-background-color);
+	}
+
+	@media (hover: hover) {
+		.date-picker__day.is-selected:hover {
+			color: var(--_date-picker-day-is-selected-is-hovered-content-color);
+		}
+
+		.date-picker__day.is-selected:hover .date-picker__day-indicator {
+			background-color: var(--_date-picker-day-is-selected-is-hovered-background-color);
+		}
 	}
 
 	.date-picker__day.is-unavailable {

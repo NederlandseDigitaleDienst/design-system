@@ -16,7 +16,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { neutralReference, parsePalettes, propertyOrder, selectionGrounds, themeColors, themeCss } from './lib/themes.js';
+import { neutralReference, parsePalettes, propertyOrder, selectionGrounds, themeColors, themeCss, tokenDefaults } from './lib/themes.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const STYLES = join(ROOT, 'src/assets/styles');
@@ -43,12 +43,14 @@ mkdirSync(OUTPUT_DIR, { recursive: true });
 
 const coolgray = references.find((c) => c.neutral).hex;
 const grounds = selectionGrounds(palettes.get('coolgray'));
-const order = propertyOrder(readFileSync(join(STYLES, 'variables.css'), 'utf8'));
+const variablesCss = readFileSync(join(STYLES, 'variables.css'), 'utf8');
+const order = propertyOrder(variablesCss);
+const defaults = tokenDefaults(variablesCss);
 const neutralScale = (hex) =>
 	execFileSync('python3', [join(ROOT, 'scripts/generate-palette.py'), neutralReference(coolgray, hex), 'neutral', '--neutral'], { encoding: 'utf8' });
 
 const rules = themeColors(references).map(({ name, hex }) => {
-	const css = themeCss(name, palettes.get(name), hex, { grounds, neutral: neutralScale(hex), order });
+	const css = themeCss(name, palettes.get(name), hex, { grounds, neutral: neutralScale(hex), order, defaults });
 	writeFileSync(join(OUTPUT_DIR, `${name}.css`), header(`NLDD theme "${name}": set data-nldd-theme="${name}" on <html>.`) + css);
 	return css;
 });

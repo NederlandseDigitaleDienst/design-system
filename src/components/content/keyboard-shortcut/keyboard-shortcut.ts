@@ -14,9 +14,9 @@
  *
  * @element nldd-keyboard-shortcut
  * @attr {string} keys - Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P').
- *   Use '+++' for a literal '+' key: 'Ctrl+++' becomes 'Ctrl' + '+'. For more
- *   complex cases (a combo with several '+' keys, for instance) use the default
- *   slot with your own <kbd> elements instead of the keys attribute.
+ *   End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++'
+ *   works too). For more complex cases, such as a combo with several '+' keys,
+ *   use the default slot with your own <kbd> elements instead of the keys attribute.
  * @attr {string} mac-keys - Optional override for macOS (iPhone/iPad/iPod included).
  * @attr {string} windows-keys - Optional override for Windows.
  * @attr {string} linux-keys - Optional override for Linux/ChromeOS.
@@ -44,6 +44,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { keyboardShortcutStyles } from './keyboard-shortcut.styles.js';
 import { template } from './keyboard-shortcut.template.js';
 import { detectOS, type OS } from '../../../utilities/os.js';
+import { resolveKeys, parseKeys } from '../../../utilities/shortcut.js';
 
 type Size = 'sm' | 'md' | 'inherit';
 type Color = 'neutral' | 'inherit';
@@ -106,23 +107,11 @@ export class NLDDKeyboardShortcut extends LitElement {
 	}
 
 	get _resolvedKeys(): string {
-		const os = this._resolvedOS;
-		if (os === 'mac' && this.macKeys) return this.macKeys;
-		if (os === 'windows' && this.windowsKeys) return this.windowsKeys;
-		if (os === 'linux' && this.linuxKeys) return this.linuxKeys;
-		return this.keys;
+		return resolveKeys(this, this._resolvedOS);
 	}
 
 	get _parsedKeys(): string[] {
-		const spec = this._resolvedKeys;
-		if (!spec) return [];
-		// '+++' encodes a literal '+' key between separators: Ctrl+++a → [Ctrl, +, a]
-		const MARKER = '\u0000';
-		return spec
-			.replace(/\+\+\+/g, `+${MARKER}+`)
-			.split('+')
-			.map(k => k.trim().replace(new RegExp(MARKER, 'g'), '+'))
-			.filter(Boolean);
+		return parseKeys(this._resolvedKeys);
 	}
 
 	override render() {

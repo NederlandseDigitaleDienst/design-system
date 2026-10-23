@@ -19,6 +19,10 @@
  * @attr {string} icon - Icon name for the nldd-icon element. Defaults to a placeholder icon when neither this attribute nor the icon slot is set.
  * @attr {string} accessible-label - Accessible label for screen readers. Overrides text as aria-label and title tooltip. Use when the visible text alone lacks context for screen readers (e.g. text "Toon", accessible-label "Toon wachtwoord"). The text is still shown visually in lg size regardless.
  * @attr {string} tooltip-timing - Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button).
+ * @attr {string} shortcut - Keyboard shortcut hint shown in the tooltip after the text, e.g. 'Alt+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Presentatiemodus Alt P"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable.
+ * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
+ * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
+ * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {string} href - When set, renders an <a> element instead of <button>
  * @attr {string} target - Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
  * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
@@ -46,6 +50,7 @@ import { template } from './icon-button.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddIconButtonTranslations } from './icon-button.i18n.js';
 import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
+import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 
@@ -180,6 +185,18 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	@property({ reflect: true, attribute: 'tooltip-timing', converter: reflectNonDefault<'delay' | 'instant' | 'never'>('delay') })
 	tooltipTiming: 'delay' | 'instant' | 'never' = 'delay';
 
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	shortcut = '';
+
+	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
+	shortcutMac = '';
+
+	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
+	shortcutWindows = '';
+
+	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
+	shortcutLinux = '';
+
 	/** When set, renders an <a> element instead of <button>. */
 	@property({ type: String, reflect: true })
 	href: string | undefined = undefined;
@@ -208,6 +225,9 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	 * button and turns clicks into open/close. Not private: the template module
 	 * binds its handlers. */
 	_popup = new PopupAnchorController(this);
+
+	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
+	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
 	override updated(changedProperties: Map<string, unknown>): void {
 		if (changedProperties.has('width')) {

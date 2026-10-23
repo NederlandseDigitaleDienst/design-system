@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import type { NLDDIconButton } from './icon-button.js';
 import { linkRel } from '../../../utilities/link-rel.js';
 import { linkHintKey } from '../../../utilities/link-hint.js';
+import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/tooltip/tooltip.js';
 
 function renderContent(component: NLDDIconButton) {
@@ -33,7 +34,9 @@ export function template(this: NLDDIconButton) {
 	// would override). Only the <a> path (href) navigates.
 	const hintKey = linkHintKey(this.href, this.target);
 	const linkHint = hintKey ? this._t(`components.icon-button.${hintKey}`) : '';
-	const baseLabel = this.accessibleLabel || this.text || '';
+	// The shortcut joins the name the way nldd-menu-item announces it
+	// ("Presentatiemodus Alt P"); the tooltip only shows it.
+	const baseLabel = [this.accessibleLabel || this.text, shortcutLabel(this)].filter(Boolean).join(' ');
 	const label = [baseLabel, linkHint].filter(Boolean).join(', ') || nothing;
 	const content = renderContent(this);
 
@@ -125,11 +128,15 @@ export function template(this: NLDDIconButton) {
 	// The indicator is a sibling of the control (and of the tooltip wrapper),
 	// overlaid via the host's position:relative — keeping its live region out
 	// of any interactive ancestor.
-	const control = tooltipText && this.tooltipTiming !== 'never'
+	const control = (tooltipText || hasShortcut(this)) && this.tooltipTiming !== 'never'
 		? html`
 			<nldd-tooltip
-				text=${tooltipText}
+				text=${tooltipText || nothing}
 				timing=${this.tooltipTiming}
+				shortcut=${this.shortcut || nothing}
+				shortcut-mac=${this.shortcutMac || nothing}
+				shortcut-windows=${this.shortcutWindows || nothing}
+				shortcut-linux=${this.shortcutLinux || nothing}
 			>
 				${renderButton()}
 			</nldd-tooltip>

@@ -139,6 +139,25 @@ export default {
 				defaultValue: { summary: '(geen)' },
 			},
 		},
+		shortcut: {
+			control: 'text',
+			description: 'Sneltoets direct achter de tekst, bijvoorbeeld `Ctrl+S`. Alleen voor de paar hoofdacties van een scherm. Alleen weergave: de toets zelf koppel je in je app.',
+		},
+		shortcutMac: {
+			name: 'shortcut-mac',
+			control: 'text',
+			description: 'Sneltoets op macOS (en iOS), als die afwijkt van `shortcut`.',
+		},
+		shortcutWindows: {
+			name: 'shortcut-windows',
+			control: 'text',
+			description: 'Sneltoets op Windows, als die afwijkt van `shortcut`.',
+		},
+		shortcutLinux: {
+			name: 'shortcut-linux',
+			control: 'text',
+			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
+		},
 		type: {
 			control: 'select',
 			options: ['button', 'submit', 'reset'],
@@ -198,6 +217,10 @@ export default {
 		singleLine: false,
 		startIcon: '',
 		endIcon: '',
+		shortcut: '',
+		shortcutMac: '',
+		shortcutWindows: '',
+		shortcutLinux: '',
 		type: 'button',
 		href: '',
 		target: '',
@@ -208,7 +231,7 @@ export default {
 	},
 };
 
-const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, type, href, target, accessibleLabel, loading, loadingText, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, accessibleLabel, loading, loadingText, disabled }: Record<string, any>) => html`
 	<nldd-button
 		appearance=${appearance}
 		size=${size}
@@ -222,6 +245,10 @@ const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expa
 		target=${target || nothing}
 		start-icon=${startIcon || nothing}
 		end-icon=${endIcon || nothing}
+		shortcut=${shortcut || nothing}
+		shortcut-mac=${shortcutMac || nothing}
+		shortcut-windows=${shortcutWindows || nothing}
+		shortcut-linux=${shortcutLinux || nothing}
 		popup-type=${popupType || nothing}
 		accessible-label=${accessibleLabel || nothing}
 		?expandable=${expandable}
@@ -875,4 +902,30 @@ export const OpKleurvlak = {
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
+};
+
+export const MetSneltoets = {
+	name: 'Met shortcut',
+	render: () => html`
+		<nldd-container
+			layout="row"
+			gap="8"
+		>
+			<nldd-button
+				appearance="primary"
+				text="Opslaan"
+				shortcut="Ctrl+S"
+				shortcut-mac="Cmd+S"
+			></nldd-button>
+			<nldd-button
+				text="Zoeken"
+				start-icon="search"
+				shortcut="Ctrl+K"
+				shortcut-mac="Cmd+K"
+			></nldd-button>
+		</nldd-container>
+	`,
+	parameters: {
+		controls: { disable: true },
+	},
 };

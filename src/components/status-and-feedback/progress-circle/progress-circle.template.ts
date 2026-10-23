@@ -144,7 +144,7 @@ export function progressCircleTemplate(component: NLDDProgressCircle, onSlotChan
 								result="edge"
 							></feComposite>
 							<feFlood class="progress-circle__flood"
-								style=${styleMap({ floodColor: `var(--semantics-categories-${color}-filled-highlight-border-color)` })}
+								style=${styleMap({ floodColor: color === 'accent' ? 'var(--components-progress-circle-accent-highlight-border-color)' : `var(--semantics-categories-${color}-filled-highlight-border-color)` })}
 								result="flood"
 							></feFlood>
 							<feComposite

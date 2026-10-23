@@ -3,6 +3,7 @@ import type { NLDDSearchField } from './search-field.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import './../../content/icon/icon.js';
+import { hasShortcut } from '../../../utilities/shortcut.js';
 
 export function searchFieldTemplate(component: NLDDSearchField): TemplateResult {
 	const buttonSize = component.size === 'sm' ? 'xs' : 'sm';
@@ -35,6 +36,17 @@ export function searchFieldTemplate(component: NLDDSearchField): TemplateResult 
 					@change=${component._handleChange}
 					@keydown=${component._handleKeydown}
 				>
+				${hasShortcut(component) && !component.value ? html`
+					<span class="search-field__shortcut">
+						<nldd-keyboard-shortcut
+							size="sm"
+							keys=${component.shortcut || nothing}
+							mac-keys=${component.shortcutMac || nothing}
+							windows-keys=${component.shortcutWindows || nothing}
+							linux-keys=${component.shortcutLinux || nothing}
+						></nldd-keyboard-shortcut>
+					</span>
+				` : nothing}
 			</label>
 			${hasEnd ? html`
 				<div class="search-field__input-fade"></div>

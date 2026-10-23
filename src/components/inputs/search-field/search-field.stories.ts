@@ -23,6 +23,10 @@ export default {
 		size: 'md',
 		width: '',
 		placeholder: 'Zoeken',
+		shortcut: '',
+		shortcutMac: '',
+		shortcutWindows: '',
+		shortcutLinux: '',
 		accessibleLabel: '',
 		showSearchButton: false,
 		invalid: false,
@@ -50,6 +54,25 @@ export default {
 			control: 'text',
 			description: 'Placeholdertekst',
 			table: { defaultValue: { summary: 'Zoeken' } },
+		},
+		shortcut: {
+			control: 'text',
+			description: 'Sneltoets rechts in het lege veld, bijvoorbeeld `/` of `Ctrl+K`. Verdwijnt bij focus en zodra er een waarde staat. Alleen weergave: de toets zelf koppel je in je app.',
+		},
+		shortcutMac: {
+			name: 'shortcut-mac',
+			control: 'text',
+			description: 'Sneltoets op macOS (en iOS), als die afwijkt van `shortcut`.',
+		},
+		shortcutWindows: {
+			name: 'shortcut-windows',
+			control: 'text',
+			description: 'Sneltoets op Windows, als die afwijkt van `shortcut`.',
+		},
+		shortcutLinux: {
+			name: 'shortcut-linux',
+			control: 'text',
+			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
 		},
 		accessibleLabel: {
 			name: 'accessible-label',
@@ -108,11 +131,15 @@ export default {
 	},
 };
 
-const Template = ({ size, width, placeholder, accessibleLabel, showSearchButton, invalid, disabled, name, value, required, minlength, maxlength, pattern, noSpellcheck }: Record<string, any>) => html`
+const Template = ({ size, width, placeholder, shortcut, shortcutMac, shortcutWindows, shortcutLinux, accessibleLabel, showSearchButton, invalid, disabled, name, value, required, minlength, maxlength, pattern, noSpellcheck }: Record<string, any>) => html`
 	<nldd-search-field
 		size=${size}
 		width=${width}
 		placeholder=${placeholder}
+		shortcut=${shortcut || nothing}
+		shortcut-mac=${shortcutMac || nothing}
+		shortcut-windows=${shortcutWindows || nothing}
+		shortcut-linux=${shortcutLinux || nothing}
 		accessible-label=${accessibleLabel}
 		?show-search-button=${showSearchButton}
 		?invalid=${invalid}
@@ -194,4 +221,10 @@ export const AlleToestanden = {
 	</nldd-container>
 `,
 	parameters: { controls: { disable: true } },
+};
+
+export const MetSneltoets = {
+	name: 'Met shortcut',
+	render: Template,
+	args: { shortcut: '/', placeholder: 'Zoek een aanvraag' },
 };

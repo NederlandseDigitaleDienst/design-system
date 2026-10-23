@@ -18,7 +18,7 @@ export const stepBarStyles = css`
 		--_step-bar-compact-bar-corner-radius: var(--primitives-corner-radius-full);
 		--_step-bar-track-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
 		--_step-bar-compact-bar-height: var(--primitives-space-6);
-		--_step-bar-progress-color: var(--semantics-content-accent-color);
+		--_step-bar-progress-color: var(--semantics-steps-progress-color);
 		--_step-bar-item-gap: var(--primitives-space-4);
 		--_step-bar-marker-size: var(--primitives-space-24);
 		--_step-bar-track-thickness: var(--primitives-space-2);
@@ -27,8 +27,10 @@ export const stepBarStyles = css`
 		--_step-bar-ring-thickness: var(--semantics-surfaces-ring-thickness);
 		--_step-bar-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		--_step-bar-marker-content-color: var(--semantics-content-secondary-color);
-		--_step-bar-progress-content-color: var(--semantics-content-contrast-color);
-		--_step-bar-current-fill-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
+		--_step-bar-past-fill-color: var(--semantics-steps-is-past-background-color);
+		--_step-bar-progress-content-color: var(--semantics-steps-is-past-content-color);
+		--_step-bar-current-fill-color: var(--semantics-steps-is-current-background-color);
+		--_step-bar-current-content-color: var(--semantics-content-accent-color);
 		--_step-bar-icon-size: var(--primitives-space-16);
 		--_step-bar-title-color: var(--semantics-content-secondary-color);
 		--_step-bar-current-title-color: var(--semantics-content-color);
@@ -194,14 +196,14 @@ export const stepBarItemStyles = css`
 	}
 
 	.step-bar__item.is-past .step-bar__item-marker {
-		background-color: var(--_step-bar-progress-color);
+		background-color: var(--_step-bar-past-fill-color);
 		color: var(--_step-bar-progress-content-color);
 	}
 
 	.step-bar__item.is-current .step-bar__item-marker {
 		border: var(--_step-bar-track-thickness) solid var(--_step-bar-progress-color);
 		background-color: var(--_step-bar-current-fill-color);
-		color: var(--_step-bar-progress-color);
+		color: var(--_step-bar-current-content-color);
 	}
 
 	.step-bar__item-icon {

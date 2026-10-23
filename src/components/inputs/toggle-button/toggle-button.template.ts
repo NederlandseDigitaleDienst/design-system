@@ -1,5 +1,6 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDToggleButton } from './toggle-button.js';
+import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/tooltip/tooltip.js';
 
 
@@ -22,14 +23,17 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 	/* When variant="icon" hides a provided text, fall the text back to
 	 * aria-label so screen readers still announce the button. Explicit
 	 * accessible-label always wins. */
-	const ariaLabel = component.accessibleLabel
-		|| (component.variant === 'icon' && component.text ? component.text : '')
-		|| nothing;
+	const shortcutWords = shortcutLabel(component);
+	const name = component.accessibleLabel
+		|| ((component.variant === 'icon' || shortcutWords) && component.text ? component.text : '');
+	/* The shortcut joins the name the way nldd-menu-item announces it; a visible
+	 * text then has to move into the aria-label, since that replaces the content. */
+	const ariaLabel = name ? [name, shortcutWords].filter(Boolean).join(' ') : nothing;
 
 	/* Tooltip surfaces the off-screen label when an icon is visible but
-	 * no text is. accessible-label takes precedence; text is the fallback
+	 * no text is, the placeholder of variant="icon" included. accessible-label takes precedence; text is the fallback
 	 * (e.g. variant="icon" + text="Bold" → tooltip shows "Bold"). */
-	const isIconOnlyDisplay = showIcon && !showText;
+	const isIconOnlyDisplay = (showIcon || component.variant === 'icon') && !showText;
 	const tooltipText = isIconOnlyDisplay ? (component.accessibleLabel || component.text || '') : '';
 
 	/* Always render the icon area so the slot stays in shadow DOM for
@@ -113,8 +117,18 @@ export function toggleButtonTemplate(component: NLDDToggleButton): TemplateResul
 		`;
 	}
 
-	if (tooltipText) {
-		return html`<nldd-tooltip text=${tooltipText}>${result}</nldd-tooltip>`;
+	if (tooltipText || hasShortcut(component)) {
+		return html`
+			<nldd-tooltip
+				text=${tooltipText || nothing}
+				shortcut=${component.shortcut || nothing}
+				shortcut-mac=${component.shortcutMac || nothing}
+				shortcut-windows=${component.shortcutWindows || nothing}
+				shortcut-linux=${component.shortcutLinux || nothing}
+			>
+				${result}
+			</nldd-tooltip>
+		`;
 	}
 	return result;
 }

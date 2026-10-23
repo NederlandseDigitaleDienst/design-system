@@ -8,6 +8,9 @@ export const textEditorStyles = css`
 
 	:host {
 		--_text-editor-caret-width: var(--primitives-border-width-regular);
+		--_text-editor-caret-color: var(--components-text-editor-caret-color);
+		--_text-editor-drop-cursor-color: var(--components-text-editor-drop-cursor-color);
+		--_text-editor-drag-ghost-background-color: var(--components-text-editor-drag-ghost-background-color);
 		--_text-editor-caret-ring-width: var(--primitives-border-width-thin);
 		--_text-editor-corner-radius: 0;
 		--_text-editor-background-color: transparent;
@@ -57,13 +60,13 @@ export const textEditorStyles = css`
 		--_text-editor-annotation-badge-size: 1.5em;
 		--_text-editor-annotation-badge-font-scale: 0.62;
 		--_text-editor-link-badge-size: calc(1em + 2 * var(--_text-editor-token-block-padding-fit));
-		--_text-editor-link-badge-content-color: var(--primitives-color-accent-700);
-		--_text-editor-link-badge-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-75));
-		--_text-editor-link-badge-highlight-border-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
-		--_text-editor-link-badge-is-hovered-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
-		--_text-editor-link-badge-is-active-background-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
-		--_text-editor-link-badge-is-hovered-highlight-border-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-200));
-		--_text-editor-link-badge-is-active-highlight-border-color: light-dark(var(--primitives-color-accent-200), var(--primitives-color-accent-250));
+		--_text-editor-link-badge-content-color: var(--components-text-editor-link-badge-content-color);
+		--_text-editor-link-badge-background-color: var(--components-text-editor-link-badge-background-color);
+		--_text-editor-link-badge-highlight-border-color: var(--components-text-editor-link-badge-highlight-border-color);
+		--_text-editor-link-badge-is-hovered-background-color: var(--components-text-editor-link-badge-is-hovered-background-color);
+		--_text-editor-link-badge-is-active-background-color: var(--components-text-editor-link-badge-is-active-background-color);
+		--_text-editor-link-badge-is-hovered-highlight-border-color: var(--components-text-editor-link-badge-is-hovered-highlight-border-color);
+		--_text-editor-link-badge-is-active-highlight-border-color: var(--components-text-editor-link-badge-is-active-highlight-border-color);
 		--_text-editor-mention-icon-size: 0.95em;
 		--_text-editor-mention-token-background-color: var(--components-text-editor-mention-background-color);
 		--_text-editor-mention-token-content-color: var(--components-text-editor-mention-content-color);
@@ -152,7 +155,7 @@ export const textEditorStyles = css`
 		/* accent-700: it keeps a >=525 lightness gap from both the base and tinted
 		   surfaces in light and dark (accent-600 fell just short on white), so the
 		   caret stays clearly visible without washing out. */
-		border-left-color: var(--primitives-color-accent-700);
+		border-left-color: var(--_text-editor-caret-color);
 		border-left-width: var(--_text-editor-caret-width);
 		/* CodeMirror centers its own 1.2px caret with a -0.6px margin. Ours is wider,
 		   so recenter it on the insertion point from its own width. */
@@ -532,7 +535,7 @@ export const textEditorStyles = css`
 		position: absolute;
 		width: var(--primitives-border-width-regular);
 		border-radius: var(--primitives-border-width-thin);
-		background-color: var(--primitives-color-accent-600);
+		background-color: var(--_text-editor-drop-cursor-color);
 		box-shadow: 0 0 0 var(--primitives-border-width-thin) var(--semantics-surfaces-base-background-color);
 		pointer-events: none;
 		z-index: 4;
@@ -544,7 +547,7 @@ export const textEditorStyles = css`
 		max-width: 24ch;
 		padding: 0 var(--primitives-space-4);
 		border-radius: var(--_text-editor-token-corner-radius);
-		background-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-250));
+		background-color: var(--_text-editor-drag-ghost-background-color);
 		color: var(--_text-editor-content-color);
 		font: var(--_text-editor-font);
 		white-space: nowrap;

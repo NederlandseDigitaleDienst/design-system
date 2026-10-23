@@ -7,15 +7,27 @@
  * `timing="instant"` to skip the delay (the fade-in still plays) — this is
  * what embedding components such as `nldd-button` use for their loading state.
  *
+ * Sizing: fills its parent where the parent lets it (a flex column such as
+ * `nldd-container`, a grid, or a fixed height) and centers itself there. Where
+ * the parent has no height of its own, give it one: a `min-height` matching
+ * the content you expect, such as `<nldd-container min-height="240px">`. As a
+ * safety net the host already takes the indicator's size (circle, plus the
+ * label with `show-text`) during the delay, so nothing shifts when it fades
+ * in; once `complete` is set it gives that space up.
+ *
+ * Label size follows `size`, not the surrounding text, so the circle and its
+ * label keep the same proportion everywhere: body-xs at 16 and 20, body-sm at
+ * 24 and 28, body-md from 32. Keep the label short; a longer explanation
+ * belongs in the area as regular text.
+ *
  * The default indicator is a simple icon-sized circle that follows the shared
  * `--context-content-color` channel (set by list-item / table / menu on their
  * content), falling back to `currentColor` wherever that channel is unset
  * (buttons, rich-text, standalone) — so a spinner inside a cell tracks the
  * row's state-aware content color, while embedders relying on currentColor are
  * unaffected. An optional label sits below (hidden unless `show-text` is set).
- * Drop a
- * `<nldd-progress-circle>`, `<nldd-progress-bar>` or any element in the
- * `indicator` slot to override it.
+ * The indicator is always indeterminate; when you know the progress, show
+ * `nldd-progress-bar` or `nldd-progress-circle` instead.
  *
  * Icon alignment: the visible ring already sits at 5/6 of its box (the SVG's
  * r=9 plus a 2-unit stroke in a 24 view-box, the same optical inset a filled
@@ -55,13 +67,8 @@
  *
  * @slot - Content to wrap (overlay mode); made inert while loading. Leave empty
  *   for the standalone placeholder.
- * @slot indicator - Optional custom indicator; overrides the default circle (and
- *   its visually-hidden label). Consumers replacing it supply their own indicator
- *   semantics; the host's role="status" still marks the loading region.
  *
- * @migration The custom-indicator override moved from the default slot to the
- *   `indicator` slot, since the default slot now holds wrapped content:
- *   `<nldd-progress-bar slot="indicator">`.
+ * @migration The `indicator` slot has been removed. Show a known progress with `nldd-progress-bar` or `nldd-progress-circle` directly, without the activity indicator around it.
  */
 import { LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';

@@ -1,3 +1,4 @@
+import { _setOSOverride } from '../../../utilities/os.js';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDToggleButton } from './toggle-button.js';
@@ -656,5 +657,53 @@ describe('nldd-toggle-button – selected-icon', () => {
 	it('fills when on without a selected-icon', async () => {
 		el = await fixture<NLDDToggleButton>('<nldd-toggle-button appearance="neutral-transparent" text="Vet" icon="bold" selected></nldd-toggle-button>');
 		expect(await surface()).not.toBe('rgba(0, 0, 0, 0)');
+	});
+
+	describe('shortcut', () => {
+		afterEach(() => _setOSOverride(null));
+
+		it('adds the shortcut to the name and the tooltip of an icon toggle', async () => {
+			_setOSOverride('mac');
+			el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon" icon="bold" text="Vet" shortcut="Ctrl+B" shortcut-mac="Cmd+B"></nldd-toggle-button>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('button')!.getAttribute('aria-label')).toBe('Vet Cmd B');
+			const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
+			expect(tooltip.getAttribute('text')).toBe('Vet');
+			expect(tooltip.getAttribute('shortcut-mac')).toBe('Cmd+B');
+			// Announced once, in the name: the tooltip in the shadow root adds no description.
+			expect(el.shadowRoot!.querySelector('button')!.hasAttribute('aria-describedby')).toBe(false);
+		});
+
+		it('shows a tooltip with the shortcut for a text-only toggle', async () => {
+			el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Vet" shortcut="Ctrl+B"></nldd-toggle-button>');
+			await waitForUpdate(el);
+			el.shadowRoot!.querySelector('button')!.focus();
+			const tooltip = el.shadowRoot!.querySelector<NLDDTooltip>('nldd-tooltip')!;
+			await waitForUpdate(tooltip);
+			expect(tooltip._visible).toBe(true);
+		});
+
+		it('shows the text and the shortcut when variant="icon" falls back to the placeholder', async () => {
+			el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon" text="Favoriet" shortcut="Ctrl+B"></nldd-toggle-button>');
+			await waitForUpdate(el);
+			const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
+			expect(tooltip.getAttribute('text')).toBe('Favoriet');
+			expect(tooltip.getAttribute('shortcut')).toBe('Ctrl+B');
+		});
+
+		it('moves a visible text into the aria-label once a shortcut joins it', async () => {
+			_setOSOverride('windows');
+			el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Vet" shortcut="Ctrl+B"></nldd-toggle-button>');
+			await waitForUpdate(el);
+			expect(el.shadowRoot!.querySelector('button')!.getAttribute('aria-label')).toBe('Vet Ctrl B');
+			expect(el.shadowRoot!.querySelector('nldd-tooltip')!.hasAttribute('text')).toBe(false);
+		});
+
+		it('names a radio toggle with its shortcut', async () => {
+			_setOSOverride('windows');
+			el = await fixture<NLDDToggleButton>('<nldd-toggle-button type="radio" text="Lijst" shortcut="Ctrl+L"></nldd-toggle-button>');
+			await waitForUpdate(el);
+			expect(el.getAttribute('aria-label')).toBe('Lijst Ctrl L');
+		});
 	});
 });

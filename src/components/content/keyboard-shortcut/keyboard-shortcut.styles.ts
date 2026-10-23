@@ -49,6 +49,8 @@ export const keyboardShortcutStyles = css`
 	:host([appearance="simple"]) {
 		--_keyboard-shortcut-font-family: var(--primitives-font-family-body);
 		--_keyboard-shortcut-font-size: var(--primitives-font-size-100);
+
+		vertical-align: baseline;
 	}
 
 	:host([appearance="simple"][size="sm"]) {
@@ -63,6 +65,7 @@ export const keyboardShortcutStyles = css`
 		display: none;
 	}
 
+	/* Same query as shortcutsAvailable() in utilities/shortcut.ts. */
 	@media (any-hover: none) {
 		:host(:not([always-visible])) {
 			display: none;

@@ -108,6 +108,25 @@ export default {
 				defaultValue: { summary: 'icon-placeholder' },
 			},
 		},
+		shortcut: {
+			control: 'text',
+			description: 'Sneltoets die in de tooltip achter de tekst staat, bijvoorbeeld `Alt+P`. Hoort ook bij de toegankelijke naam. Alleen weergave: de toets zelf koppel je in je app.',
+		},
+		shortcutMac: {
+			name: 'shortcut-mac',
+			control: 'text',
+			description: 'Sneltoets op macOS (en iOS), als die afwijkt van `shortcut`.',
+		},
+		shortcutWindows: {
+			name: 'shortcut-windows',
+			control: 'text',
+			description: 'Sneltoets op Windows, als die afwijkt van `shortcut`.',
+		},
+		shortcutLinux: {
+			name: 'shortcut-linux',
+			control: 'text',
+			description: 'Sneltoets op Linux en ChromeOS, als die afwijkt van `shortcut`.',
+		},
 		type: {
 			control: 'select',
 			options: ['button', 'submit', 'reset'],
@@ -172,6 +191,10 @@ export default {
 		popupType: '',
 		text: 'Annuleer',
 		icon: 'dismiss',
+		shortcut: '',
+		shortcutMac: '',
+		shortcutWindows: '',
+		shortcutLinux: '',
 		type: 'button',
 		href: '',
 		target: '',
@@ -183,7 +206,7 @@ export default {
 	},
 };
 
-const Template = ({ appearance, size, width, hideLgText, expandable, expanded, popupType, text, icon, type, href, target, accessibleLabel, tooltipTiming, loading, loadingText, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, width, hideLgText, expandable, expanded, popupType, text, icon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, accessibleLabel, tooltipTiming, loading, loadingText, disabled }: Record<string, any>) => html`
 	<nldd-icon-button
 		appearance=${appearance}
 		size=${size}
@@ -191,6 +214,10 @@ const Template = ({ appearance, size, width, hideLgText, expandable, expanded, p
 		?hide-lg-text=${hideLgText}
 		icon=${icon}
 		text=${text}
+		shortcut=${shortcut || nothing}
+		shortcut-mac=${shortcutMac || nothing}
+		shortcut-windows=${shortcutWindows || nothing}
+		shortcut-linux=${shortcutLinux || nothing}
 		popup-type=${popupType || nothing}
 		?expandable=${expandable}
 		?expanded=${expanded}
@@ -707,4 +734,32 @@ export const OpKleurvlak = {
 		</nldd-container>
 	`,
 	parameters: { controls: { disable: true } },
+};
+
+export const MetSneltoets = {
+	name: 'Met shortcut',
+	render: () => html`
+		<nldd-container
+			layout="row"
+			gap="8"
+		>
+			<nldd-icon-button
+				appearance="neutral-transparent"
+				icon="play"
+				text="Presentatiemodus"
+				shortcut="Alt+P"
+				shortcut-mac="Option+P"
+			></nldd-icon-button>
+			<nldd-icon-button
+				appearance="neutral-transparent"
+				icon="full-screen"
+				text="Volledig scherm"
+				shortcut="F11"
+				shortcut-mac="Ctrl+Cmd+F"
+			></nldd-icon-button>
+		</nldd-container>
+	`,
+	parameters: {
+		controls: { disable: true },
+	},
 };

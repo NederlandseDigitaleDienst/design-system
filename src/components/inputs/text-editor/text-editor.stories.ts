@@ -255,11 +255,15 @@ function toolbarEditor(editor: unknown) {
 						<nldd-segmented-control-item
 							value="bold"
 							text="Vet"
+							shortcut="Ctrl+B"
+							shortcut-mac="Cmd+B"
 							icon="bold"
 						></nldd-segmented-control-item>
 						<nldd-segmented-control-item
 							value="italic"
 							text="Cursief"
+							shortcut="Ctrl+I"
+							shortcut-mac="Cmd+I"
 							icon="italic"
 						></nldd-segmented-control-item>
 						<nldd-segmented-control-item
@@ -276,12 +280,16 @@ function toolbarEditor(editor: unknown) {
 							type="checkbox"
 							value="bold"
 							text="Vet"
+							shortcut="Ctrl+B"
+							shortcut-mac="Cmd+B"
 							icon="bold"
 						></nldd-menu-item>
 						<nldd-menu-item
 							type="checkbox"
 							value="italic"
 							text="Cursief"
+							shortcut="Ctrl+I"
+							shortcut-mac="Cmd+I"
 							icon="italic"
 						></nldd-menu-item>
 						<nldd-menu-item
@@ -301,6 +309,8 @@ function toolbarEditor(editor: unknown) {
 						variant="icon"
 						icon="code"
 						accessible-label="Code"
+						shortcut="Ctrl+E"
+						shortcut-mac="Cmd+E"
 						@change=${(event: CustomEvent) => editorOf(event.currentTarget as Element)?.runCommand('inlineCode')}
 					></nldd-toggle-button>
 					<nldd-menu-item
@@ -308,6 +318,8 @@ function toolbarEditor(editor: unknown) {
 						type="checkbox"
 						value="inlineCode"
 						text="Code"
+						shortcut="Ctrl+E"
+						shortcut-mac="Cmd+E"
 						icon="code"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -320,6 +332,8 @@ function toolbarEditor(editor: unknown) {
 						variant="icon"
 						icon="link"
 						accessible-label="Link"
+						shortcut="Ctrl+K"
+						shortcut-mac="Cmd+K"
 						@change=${onLink}
 					></nldd-toggle-button>
 					<nldd-menu-item
@@ -327,6 +341,8 @@ function toolbarEditor(editor: unknown) {
 						type="checkbox"
 						value="link"
 						text="Link"
+						shortcut="Ctrl+K"
+						shortcut-mac="Cmd+K"
 						icon="link"
 					></nldd-menu-item>
 				</nldd-toolbar-item>
@@ -420,12 +436,16 @@ function toolbarEditor(editor: unknown) {
 						<nldd-icon-button
 							icon="indent-increase"
 							text="Meer inspringen"
+							shortcut="Ctrl+]"
+							shortcut-mac="Cmd+]"
 							@click=${onIndent}
 						></nldd-icon-button>
 						<nldd-button-bar-divider></nldd-button-bar-divider>
 						<nldd-icon-button
 							icon="indent-decrease"
 							text="Minder inspringen"
+							shortcut="Ctrl+["
+							shortcut-mac="Cmd+["
 							@click=${onOutdent}
 						></nldd-icon-button>
 					</nldd-button-bar>
@@ -436,11 +456,15 @@ function toolbarEditor(editor: unknown) {
 						<nldd-menu-item
 							value="indent"
 							text="Meer inspringen"
+							shortcut="Ctrl+]"
+							shortcut-mac="Cmd+]"
 							icon="indent-increase"
 						></nldd-menu-item>
 						<nldd-menu-item
 							value="outdent"
 							text="Minder inspringen"
+							shortcut="Ctrl+["
+							shortcut-mac="Cmd+["
 							icon="indent-decrease"
 						></nldd-menu-item>
 					</nldd-menu-group>
@@ -558,18 +582,24 @@ function toolbarEditor(editor: unknown) {
 						<nldd-icon-button
 							icon="copy"
 							text="Kopieer"
+							shortcut="Ctrl+C"
+							shortcut-mac="Cmd+C"
 							@click=${onCopy}
 						></nldd-icon-button>
 						<nldd-button-bar-divider></nldd-button-bar-divider>
 						<nldd-icon-button
 							icon="cut"
 							text="Knip"
+							shortcut="Ctrl+X"
+							shortcut-mac="Cmd+X"
 							@click=${onCut}
 						></nldd-icon-button>
 						<nldd-button-bar-divider></nldd-button-bar-divider>
 						<nldd-icon-button
 							icon="paste"
 							text="Plak"
+							shortcut="Ctrl+V"
+							shortcut-mac="Cmd+V"
 							@click=${onPaste}
 						></nldd-icon-button>
 					</nldd-button-bar>
@@ -580,16 +610,22 @@ function toolbarEditor(editor: unknown) {
 						<nldd-menu-item
 							value="copy"
 							text="Kopieer"
+							shortcut="Ctrl+C"
+							shortcut-mac="Cmd+C"
 							icon="copy"
 						></nldd-menu-item>
 						<nldd-menu-item
 							value="cut"
 							text="Knip"
+							shortcut="Ctrl+X"
+							shortcut-mac="Cmd+X"
 							icon="cut"
 						></nldd-menu-item>
 						<nldd-menu-item
 							value="paste"
 							text="Plak"
+							shortcut="Ctrl+V"
+							shortcut-mac="Cmd+V"
 							icon="paste"
 						></nldd-menu-item>
 					</nldd-menu-group>
@@ -602,12 +638,16 @@ function toolbarEditor(editor: unknown) {
 						<nldd-icon-button
 							icon="undo"
 							text="Maak ongedaan"
+							shortcut="Ctrl+Z"
+							shortcut-mac="Cmd+Z"
 							@click=${onUndo}
 						></nldd-icon-button>
 						<nldd-button-bar-divider></nldd-button-bar-divider>
 						<nldd-icon-button
 							icon="redo"
 							text="Voer opnieuw uit"
+							shortcut="Ctrl+Y"
+							shortcut-mac="Cmd+Shift+Z"
 							@click=${onRedo}
 						></nldd-icon-button>
 					</nldd-button-bar>
@@ -618,11 +658,15 @@ function toolbarEditor(editor: unknown) {
 						<nldd-menu-item
 							value="undo"
 							text="Maak ongedaan"
+							shortcut="Ctrl+Z"
+							shortcut-mac="Cmd+Z"
 							icon="undo"
 						></nldd-menu-item>
 						<nldd-menu-item
 							value="redo"
 							text="Voer opnieuw uit"
+							shortcut="Ctrl+Y"
+							shortcut-mac="Cmd+Shift+Z"
 							icon="redo"
 						></nldd-menu-item>
 					</nldd-menu-group>

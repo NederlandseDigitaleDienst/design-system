@@ -10,6 +10,10 @@
  * @attr {string} placeholder - Placeholder text for the input
  * @attr {string} accessible-label - Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen').
  * @attr {boolean} show-search-button - When set, shows a search button on the right
+ * @attr {string} shortcut - Keyboard shortcut hint shown at the right end of the empty field, e.g. 'Cmd+K' or '/'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up focusing the field in your app. Hidden while the field has focus or a value, and on touch-only devices. Joins the field's description for screen readers.
+ * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
+ * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
+ * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  * @attr {boolean} disabled - Disabled state
@@ -36,7 +40,9 @@ import type { NLDDSearchFieldTranslations } from './search-field.i18n.js';
 import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import './../../content/icon/icon.js';
-import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { DescribedBy, applyDescribedBy } from '../../../utilities/described-by-mixin.js';
+import { ShortcutAvailabilityController, shortcutsAvailable } from '../../../utilities/shortcut.js';
+import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import { translate } from '../../../utilities/translations.js';
 
 export type SearchFieldSize = 'sm' | 'md';
@@ -56,6 +62,9 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 
 	private _initialValue = '';
+
+	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
+	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<SearchFieldSize>('md') })
 	size: SearchFieldSize = 'md';
@@ -80,6 +89,18 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 	@property({ type: Boolean, reflect: true, attribute: 'show-search-button' })
 	showSearchButton = false;
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	shortcut = '';
+
+	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
+	shortcutMac = '';
+
+	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
+	shortcutWindows = '';
+
+	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
+	shortcutLinux = '';
 
 	/** Override one or more translation keys. Unset keys fall back to Dutch. */
 	@property({ type: Object })
@@ -131,6 +152,10 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	override updated(changed: PropertyValues): void {
+		// Runs after the DescribedBy controller, so the shortcut hint is added to
+		// the help and error texts of an nldd-form-field instead of replacing them.
+		const hint = shortcutsAvailable() ? this.shadowRoot?.querySelector('.search-field__shortcut') : null;
+		if (hint) applyDescribedBy(this.describedTarget(), [...this.describedByElements, hint], true);
 		if (changed.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {

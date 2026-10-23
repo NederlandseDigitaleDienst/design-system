@@ -6,6 +6,10 @@
  *
  * @element nldd-tooltip
  * @attr {string} text - Tooltip text
+ * @attr {string} shortcut - Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable.
+ * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
+ * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
+ * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
  * @attr {string} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
  * @attr {string} timing - When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant.
@@ -51,6 +55,8 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tooltipStyles } from './tooltip.styles.js';
 import { tooltipTemplate } from './tooltip.template.js';
 import { isTouchMode } from '../../../utilities/input-modality.js';
+import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
+import '../keyboard-shortcut/keyboard-shortcut.js';
 
 type Placement = 'top' | 'bottom' | 'left' | 'right';
 type Timing = 'instant' | 'delay' | 'never';
@@ -72,6 +78,18 @@ export class NLDDTooltip extends LitElement {
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	text = '';
+
+	@property({ reflect: true, converter: reflectNonDefault<string>('') })
+	shortcut = '';
+
+	@property({ reflect: true, attribute: 'shortcut-mac', converter: reflectNonDefault<string>('') })
+	shortcutMac = '';
+
+	@property({ reflect: true, attribute: 'shortcut-windows', converter: reflectNonDefault<string>('') })
+	shortcutWindows = '';
+
+	@property({ reflect: true, attribute: 'shortcut-linux', converter: reflectNonDefault<string>('') })
+	shortcutLinux = '';
 
 	/** Programmatically force the tooltip visible regardless of hover/focus. */
 	@property({ type: Boolean, reflect: true })
@@ -96,6 +114,8 @@ export class NLDDTooltip extends LitElement {
 	private _descriptionEl: HTMLSpanElement | null = null;
 	private _currentTrigger: Element | null = null;
 	private _boundSlotChange = () => this._syncAriaDescribedBy();
+	/** Refreshes the description when shortcuts become available or unavailable, for the shortcut in it. */
+	private _shortcutAvailability = new ShortcutAvailabilityController(this, () => this._syncAriaDescribedBy());
 	private _positionVersion = 0;
 
 	override connectedCallback(): void {
@@ -150,7 +170,8 @@ export class NLDDTooltip extends LitElement {
 				}
 			}
 		}
-		if (changed.has('text') || changed.has('timing')) {
+		if (changed.has('text') || changed.has('timing') || changed.has('shortcut')
+			|| changed.has('shortcutMac') || changed.has('shortcutWindows') || changed.has('shortcutLinux')) {
 			this._syncAriaDescribedBy();
 		}
 		if (changed.has('text') && this._visible) {
@@ -191,7 +212,8 @@ export class NLDDTooltip extends LitElement {
 		// announce the redundant tooltip text (the primary use-case for
 		// `timing='never'` is `.timing=${isShort ? 'delay' : 'never'}` in
 		// document-tab-bar, where the full label is already visible inline).
-		if (this.text && this.timing !== 'never') {
+		const description = [this.text, shortcutLabel(this)].filter(Boolean).join(' ');
+		if (description && this.timing !== 'never') {
 			if (!this._descriptionEl) {
 				this._descriptionEl = document.createElement('span');
 				this._descriptionEl.id = this._tooltipId;
@@ -210,8 +232,10 @@ export class NLDDTooltip extends LitElement {
 				});
 				document.body.appendChild(this._descriptionEl);
 			}
-			this._descriptionEl.textContent = this.text;
-			trigger.setAttribute('aria-describedby', this._tooltipId);
+			// Hover and focus sync too; write only what changed, so nothing is
+			// re-announced.
+			if (this._descriptionEl.textContent !== description) this._descriptionEl.textContent = description;
+			if (trigger.getAttribute('aria-describedby') !== this._tooltipId) trigger.setAttribute('aria-describedby', this._tooltipId);
 		} else {
 			trigger.removeAttribute('aria-describedby');
 			this._descriptionEl?.remove();
@@ -229,9 +253,18 @@ export class NLDDTooltip extends LitElement {
 		return this.shadowRoot?.querySelector('.tooltip') ?? null;
 	}
 
+	/** Whether there is anything to show: the text, or a shortcut on a device
+	 *  that shows one. */
+	private get _hasContent(): boolean {
+		return Boolean(this.text || shortcutLabel(this));
+	}
+
 	_handleTriggerEnter(): void {
 		if (this.timing === 'never') return;
-		if (!this.text) return;
+		// Whether a shortcut shows depends on the pointer, which can change
+		// without a property change; refresh the description with it.
+		this._syncAriaDescribedBy();
+		if (!this._hasContent) return;
 		if (coarsePointerQuery.matches) return;
 		if (this._hideTimeout) {
 			clearTimeout(this._hideTimeout);
@@ -259,7 +292,8 @@ export class NLDDTooltip extends LitElement {
 
 	_handleFocusIn(): void {
 		if (this.timing === 'never') return;
-		if (!this.text) return;
+		this._syncAriaDescribedBy();
+		if (!this._hasContent) return;
 		// Touch taps can focus elements with explicit `tabindex` (e.g. tab-bar's
 		// roving-tabindex pattern on iOS, Android `<button>` focus-on-tap).
 		// Suppress the tooltip in that case — it's not a keyboard intent.

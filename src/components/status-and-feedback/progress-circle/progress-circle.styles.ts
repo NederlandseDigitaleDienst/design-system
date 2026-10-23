@@ -110,7 +110,7 @@ export const progressCircleStyles = css`
 	/* ## Arc color per variant */
 
 	.progress-circle__segment-indicator--neutral { stroke: var(--semantics-categories-neutral-filled-background-color); }
-	.progress-circle__segment-indicator--accent { stroke: var(--semantics-categories-accent-filled-background-color); }
+	.progress-circle__segment-indicator--accent { stroke: var(--components-progress-circle-accent-background-color); }
 	.progress-circle__segment-indicator--success { stroke: var(--semantics-categories-success-filled-background-color); }
 	.progress-circle__segment-indicator--warning { stroke: var(--semantics-categories-warning-filled-background-color); }
 	.progress-circle__segment-indicator--critical { stroke: var(--semantics-categories-critical-filled-background-color); }
@@ -180,8 +180,8 @@ export const progressCircleStyles = css`
 	/* # Indeterminate fill + border color follow the color variant; default accent (blue) */
 
 	:host {
-		--_progress-circle-indeterminate-background-color: var(--semantics-categories-accent-filled-background-color);
-		--_progress-circle-indeterminate-border-color: var(--semantics-categories-accent-filled-highlight-border-color);
+		--_progress-circle-indeterminate-background-color: var(--components-progress-circle-accent-background-color);
+		--_progress-circle-indeterminate-border-color: var(--components-progress-circle-accent-highlight-border-color);
 	}
 
 	:host([color="neutral"]) { --_progress-circle-indeterminate-background-color: var(--semantics-categories-neutral-filled-background-color); --_progress-circle-indeterminate-border-color: var(--semantics-categories-neutral-filled-highlight-border-color); }

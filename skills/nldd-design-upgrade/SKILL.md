@@ -14,13 +14,13 @@ Je gebruikt deze skill als een applicatie al op `@nldd/design-system` draait en 
 
 Een upgrade zit daar precies tussenin: de componenten kloppen al, maar de API onder je code is bewogen. De vaardigheid is dezelfde als bij een migratie, alleen met een kleinere delta en één extra valkuil, hieronder.
 
-## Het versienummer zegt niets, de changelog alles
+## Het versienummer waarschuwt, de changelog vertelt
 
-Dit is het belangrijkste dat je over dit systeem moet weten voordat je upgradet. Dit project brengt **alles** uit als patch: `feat`, `fix`, `refactor`, `docs` en ook een breaking change. Dat is een bewuste keuze in `.releaserc.json`, geen standaardgedrag van semantic-release, dat normaal een minor voor een `feat` en een major voor een breaking change zou geven. Reken hier dus niet op de semver-conventie die je elders gewend bent.
+Zolang de major 0 is, geeft een breaking change een nieuwe minor en is elke andere release een patch: `feat`, `fix`, `refactor` en `docs`. Zo leest npm het ook: `^0.9.0` neemt 0.9.x mee, maar niet 0.10.0. Een breaking change komt dus nooit ongevraagd binnen; die haal je zelf op door de minor te verhogen.
 
-Gevolg: er is geen major- of minor-signaal. `0.8.80` naar `0.8.90` ziet uit als tien onschuldige patches en kan een verwijderd attribuut bevatten.
+Dat geldt vanaf 0.9.0. Daarvoor kwam alles uit als patch, ook een breaking change: `0.8.80` naar `0.8.90` ziet eruit als tien onschuldige patches en kan een verwijderd attribuut bevatten.
 
-Leun daarom nooit op het versienummer om te beoordelen of een sprong veilig is. Gebruik [`changelog.md`](../nldd-design/changelog.md) als je upgradepad.
+Een nieuwe minor zegt alleen dát er iets breekt, niet wat. Gebruik daarom [`changelog.md`](../nldd-design/changelog.md) als je upgradepad.
 
 ## Werkwijze
 
@@ -30,11 +30,11 @@ Leun daarom nooit op het versienummer om te beoordelen of een sprong veilig is. 
 4. **Lees `Highlights`, `Added` en `Changed`** voor nieuwe componenten of attributen die je oudere, omslachtigere code kunnen vervangen.
 5. **Verifieer tegen [`reference.md`](../nldd-design/reference.md)** of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij exact deze release.
 
-Vuistregel: ga niet meer dan een handvol patches in één sprong omhoog zonder de tussenliggende `Breaking` secties te lezen.
+Vuistregel: lees bij elke nieuwe minor de `Breaking` sectie van die versie, en ga onder 0.9.0 niet meer dan een handvol patches in één sprong omhoog zonder de tussenliggende `Breaking` secties te lezen.
 
 ## Wat er stil misgaat
 
-Wat een upgrade breekt, faalt zonder foutmelding. Een onbekend attribuut, een verdwenen CSS-variabele of een hernoemd slot rendert gewoon niets of valt terug op een default. Componenten waarschuwen in een dev-build wel over een verkeerde compositie, maar juist deze drie zien ze niet aankomen. Na een upgrade is "het ziet er nog goed uit" daarom geen bewijs.
+Wat een upgrade breekt, faalt zonder foutmelding. Een onbekend attribuut, een verdwenen CSS-variabele of een hernoemd of verwijderd slot rendert gewoon niets of valt terug op een default: inhoud met `slot="indicator"` verdwijnt bijvoorbeeld stil sinds die slot van `nldd-activity-indicator` weg is. Componenten waarschuwen in een dev-build wel over een verkeerde compositie, maar juist deze drie zien ze niet aankomen. Na een upgrade is "het ziet er nog goed uit" daarom geen bewijs.
 
 - **Hernoemde CSS-variabelen zijn de meest gemiste val.** Je eigen overrides verwijzen dan naar een naam die niet meer bestaat, zonder foutmelding, alleen een stille terugval op de default. Zoek je CSS door op de variabelenamen uit de `Breaking` entries. Dit is ook meteen waarom een variabele geen publieke API is: ze horen bij de componenten en bewegen met ze mee. Kom je ze in je eigen CSS tegen, dan is elke plek die je nu repareert er een die je bij de volgende release weer kunt tegenkomen, tenzij je die vervangt door een component of een attribuut.
 - **Controleer de versie die je echt draait**, niet de versie in `package.json`. Een `^0.8.44` in `package.json` met een lockfile van maanden oud draait iets anders dan je denkt. `npm ls @nldd/design-system` geeft het antwoord.
