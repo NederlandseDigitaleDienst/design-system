@@ -45,21 +45,6 @@ const notify = (scheme: 'light' | 'dark') => {
 
 const overview = (scheme: 'light' | 'dark') => html`
 	<nldd-container gap="40">
-		${section('Tijdelijk: bijna-zwart in light', html`
-			${row(html`
-				<nldd-text color="accent">Accenttekst</nldd-text>
-				<nldd-button appearance="accent-transparent" text="Details"></nldd-button>
-				<nldd-tag color="accent" text="Dakisolatie"></nldd-tag>
-			`)}
-			<nldd-menu-bar accessible-label="Menubalk">
-				<nldd-menu-bar-item text="Aanvragen" current></nldd-menu-bar-item>
-				<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
-			</nldd-menu-bar>
-			<nldd-banner variant="accent" text="Mijn Dienst is vernieuwd"></nldd-banner>
-			<nldd-inline-dialog icon="info-circle-filled" icon-color="accent" text="Nog geen aanvragen"></nldd-inline-dialog>
-			${row(html`<nldd-button text="Toon notification" @click=${() => notify(scheme)}></nldd-button>`)}
-		`)}
-
 		${section('Knoppen', html`
 			${row(html`
 				<nldd-button appearance="primary" text="Opslaan" shortcut="Ctrl+S" shortcut-mac="Cmd+S"></nldd-button>
