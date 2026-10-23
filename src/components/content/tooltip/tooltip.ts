@@ -7,7 +7,9 @@
  * @element nldd-tooltip
  * @attr {string} text - Tooltip text
  * @attr {string} shortcut - Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable.
- * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
+ * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
+ * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
+ * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {boolean} open - Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior.
  * @attr {string} placement - Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)
  * @attr {string} timing - When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant.

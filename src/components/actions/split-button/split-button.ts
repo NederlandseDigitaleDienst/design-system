@@ -29,7 +29,9 @@
  * @attr {string} text - Button text for the primary action
  * @attr {string} icon - Icon name shown before the text on the primary action button
  * @attr {string} shortcut - Keyboard shortcut hint for the primary action, shown right after its text, e.g. 'Cmd+S'. Forwarded to the inner nldd-button; display only, wire up the handling in your app.
- * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
+ * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
+ * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
+ * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {object} translations - Translations; unset keys fall back to Dutch
  *
  * @slot - A single `nldd-menu` or `nldd-popover` that the chevron opens.

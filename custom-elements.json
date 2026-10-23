@@ -799,7 +799,7 @@
               },
               "default": "''",
               "fieldName": "shortcutMac",
-              "description": "/ shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`)."
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-windows",
@@ -807,7 +807,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutWindows"
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-linux",
@@ -815,7 +816,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutLinux"
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "href",
@@ -1423,7 +1425,7 @@
               },
               "default": "''",
               "fieldName": "shortcutMac",
-              "description": "/ shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`)."
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-windows",
@@ -1431,7 +1433,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutWindows"
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-linux",
@@ -1439,7 +1442,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutLinux"
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "href",
@@ -2541,7 +2545,7 @@
               },
               "default": "''",
               "fieldName": "shortcutMac",
-              "description": "/ shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`)."
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-windows",
@@ -2549,7 +2553,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutWindows"
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-linux",
@@ -2557,7 +2562,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutLinux"
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "icon",
@@ -5900,7 +5906,7 @@
               },
               "default": "''",
               "fieldName": "shortcutMac",
-              "description": "/ shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`)."
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-windows",
@@ -5908,7 +5914,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutWindows"
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-linux",
@@ -5916,7 +5923,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutLinux"
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "open",
@@ -15152,7 +15160,7 @@
               },
               "default": "''",
               "fieldName": "shortcutMac",
-              "description": "/ shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`)."
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-windows",
@@ -15160,7 +15168,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutWindows"
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-linux",
@@ -15168,7 +15177,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutLinux"
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "translations",
@@ -15601,7 +15611,7 @@
               },
               "default": "''",
               "fieldName": "shortcutMac",
-              "description": "/ shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`)."
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-windows",
@@ -15609,7 +15619,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutWindows"
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-linux",
@@ -15617,7 +15628,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutLinux"
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             }
           ],
           "superclass": {
@@ -22882,7 +22894,7 @@
               },
               "default": "''",
               "fieldName": "shortcutMac",
-              "description": "/ shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`)."
+              "description": "Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-windows",
@@ -22890,7 +22902,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutWindows"
+              "fieldName": "shortcutWindows",
+              "description": "Override of `shortcut` on Windows (falls back to `shortcut`)."
             },
             {
               "name": "shortcut-linux",
@@ -22898,7 +22911,8 @@
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "shortcutLinux"
+              "fieldName": "shortcutLinux",
+              "description": "Override of `shortcut` on Linux (falls back to `shortcut`)."
             },
             {
               "name": "invalid",

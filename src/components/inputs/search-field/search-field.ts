@@ -11,7 +11,9 @@
  * @attr {string} accessible-label - Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen').
  * @attr {boolean} show-search-button - When set, shows a search button on the right
  * @attr {string} shortcut - Keyboard shortcut hint shown at the right end of the empty field, e.g. 'Cmd+K' or '/'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up focusing the field in your app. Hidden while the field has focus or a value, and on touch-only devices. Joins the field's description for screen readers.
- * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
+ * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
+ * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
+ * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  * @attr {boolean} disabled - Disabled state

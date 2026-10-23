@@ -42,7 +42,9 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `end-icon` | `string` | Icon name for the end icon (after text) |
 | `accessible-label` | `string` | Accessible label for the button, overrides text for screen readers |
 | `shortcut` | `string` | Keyboard shortcut hint shown right after the text, e.g. 'Cmd+S'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name, as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. Keep it for the few main actions of a screen (save, search); a hint on every button is noise. |
-| `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden "opens in new tab" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
@@ -126,7 +128,9 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `accessible-label` | `string` | Accessible label for screen readers. Overrides text as aria-label and title tooltip. Use when the visible text alone lacks context for screen readers (e.g. text "Toon", accessible-label "Toon wachtwoord"). The text is still shown visually in lg size regardless. |
 | `tooltip-timing` | `string` | Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button). |
 | `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip after the text, e.g. 'Alt+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Presentatiemodus Alt P"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
-| `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
@@ -237,7 +241,9 @@ A split button combines a primary action button with a dropdown trigger. The mai
 | `text` | `string` | Button text for the primary action |
 | `icon` | `string` | Icon name shown before the text on the primary action button |
 | `shortcut` | `string` | Keyboard shortcut hint for the primary action, shown right after its text, e.g. 'Cmd+S'. Forwarded to the inner nldd-button; display only, wire up the handling in your app. |
-| `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `translations` | `object` | Translations; unset keys fall back to Dutch |
 
 **Slots**
@@ -627,7 +633,9 @@ A wrapper that shows a tooltip on hover or focus of its child element. It uses `
 | --- | --- | --- |
 | `text` | `string` | Tooltip text |
 | `shortcut` | `string` | Keyboard shortcut hint shown after the text, e.g. 'Cmd+P'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key. Joins the description of a light-DOM trigger. Hidden on touch-only devices, where it isn't invokable. |
-| `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `open` | `boolean` | Forces the tooltip visible, whatever hover or focus does. Use it for programmatic feedback ("Copied", for instance). Reset it to false to restore the hover behavior. |
 | `placement` | `string` | Position: 'top' \| 'bottom' \| 'left' \| 'right' (default: 'bottom'; automatically 'top' on touch devices) |
 | `timing` | `string` | When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant. |
@@ -1215,7 +1223,9 @@ A search input with a leading search icon, an optional dismiss button, and an op
 | `accessible-label` | `string` | Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen'). |
 | `show-search-button` | `boolean` | When set, shows a search button on the right |
 | `shortcut` | `string` | Keyboard shortcut hint shown at the right end of the empty field, e.g. 'Cmd+K' or '/'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up focusing the field in your app. Hidden while the field has focus or a value, and on touch-only devices. Joins the field's description for screen readers. |
-| `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 | `disabled` | `boolean` | Disabled state |
@@ -1280,7 +1290,9 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 | `text` | `string` | Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon") |
 | `icon` | `string` | Icon name for nldd-icon |
 | `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
-| `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `appearance` | `string` | Visual style: 'neutral-tinted' \| 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control. |
 | `size` | `string` | Control size: 'sm' \| 'md' \| 'lg' (default: 'md'). Set by nldd-segmented-control. |
 | `variant` | `string` | Content type: 'text' \| 'icon' \| 'icon-and-text' (default: 'text'). Set by nldd-segmented-control. |
@@ -1530,7 +1542,9 @@ A selectable button that toggles between selected and unselected. Available as a
 | `variant` | `'text' \| 'icon' \| 'icon-and-text'` | What renders: text, icon, or both. Unset → auto-detect from text/icon attributes. |
 | `accessible-label` | `string` | Accessible label; required for icon-only usage |
 | `shortcut` | `string` | Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable. |
-| `shortcut-mac` | `string` | / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`). |
+| `shortcut-mac` | `string` | Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`). |
+| `shortcut-windows` | `string` | Override of `shortcut` on Windows (falls back to `shortcut`). |
+| `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `required` | `boolean` | Required state. Set by nldd-toggle-button-group. |
 | `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
 

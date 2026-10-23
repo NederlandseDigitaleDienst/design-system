@@ -32,7 +32,9 @@
  * @attr {string} text - Text label (shown for variant "text" and "icon-and-text"; used as aria-label and tooltip for variant "icon")
  * @attr {string} icon - Icon name for nldd-icon
  * @attr {string} shortcut - Keyboard shortcut hint shown in the tooltip, e.g. 'Cmd+B'. Display only (rendered via nldd-keyboard-shortcut): it does not bind the key, wire up the handling in your app. Part of the accessible name ("Vet Cmd B"), as in nldd-menu-item. Hidden on touch-only devices, where it isn't invokable.
- * @attr {string} shortcut-mac / shortcut-windows / shortcut-linux - Per-OS overrides for `shortcut`, picked by detected OS (falls back to `shortcut`).
+ * @attr {string} shortcut-mac - Override of `shortcut` on macOS, where the keys differ (falls back to `shortcut`).
+ * @attr {string} shortcut-windows - Override of `shortcut` on Windows (falls back to `shortcut`).
+ * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {string} appearance - Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.
  * @attr {string} size - Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.
  * @attr {string} variant - Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.
