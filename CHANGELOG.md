@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.11.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.10.0...v0.11.0) (2026-10-23)
+
 ### Highlights
 
 - **Improved themes.** The focus ring, the steps, the progress, the banner icon and the selection sit closer to the theme color where contrast allows it, everything that marks something reaches 3:1 in dark mode, and the near-black selections in the light and status themes are a softer gray.
