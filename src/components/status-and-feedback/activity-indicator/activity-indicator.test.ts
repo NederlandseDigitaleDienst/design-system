@@ -133,6 +133,24 @@ describe('nldd-activity-indicator', () => {
 		}
 	});
 
+	it('fades out when complete is set, and only then gives up its space', async () => {
+		const unloadTokens = loadTokens();
+		try {
+			el = await fixture<NLDDActivityIndicator>('<nldd-activity-indicator timing="instant"></nldd-activity-indicator>');
+			const indicator = el.shadowRoot!.querySelector<HTMLElement>('.activity-indicator')!;
+			await new Promise((resolve) => setTimeout(resolve, 600));
+			expect(getComputedStyle(indicator).opacity).toBe('1');
+			(el as unknown as NLDDActivityIndicator).complete = true;
+			await (el as unknown as NLDDActivityIndicator).updateComplete;
+			// display: none waits for the fade (transition-behavior: allow-discrete).
+			expect(getComputedStyle(indicator).display).toBe('flex');
+			await new Promise((resolve) => setTimeout(resolve, 600));
+			expect(getComputedStyle(indicator).display).toBe('none');
+		} finally {
+			unloadTokens();
+		}
+	});
+
 	it('connects with complete already set: no role, no indicator', async () => {
 		vi.useFakeTimers();
 		try {
