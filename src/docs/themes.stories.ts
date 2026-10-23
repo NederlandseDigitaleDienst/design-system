@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import '../components/index.js';
+import { NLDDNotification } from '../components/status-and-feedback/notification/notification.js';
 
 /**
  * Many controls on one page, light and dark side by side, to check a theme or
@@ -34,8 +35,31 @@ const row = (content: unknown) => html`
 	</nldd-container>
 `;
 
+// A notification places itself outside the column, so it takes the column's
+// scheme from the button that raised it.
+const notify = (scheme: 'light' | 'dark') => {
+	NLDDNotification.show({ text: 'Aanvraag A-1042 is opgeslagen', supportingText: 'Je vindt hem terug in Mijn Dienst.', variant: 'accent' });
+	const shown = document.querySelectorAll('nldd-notification');
+	(shown[shown.length - 1] as HTMLElement | undefined)?.style.setProperty('color-scheme', scheme);
+};
+
 const overview = (scheme: 'light' | 'dark') => html`
 	<nldd-container gap="40">
+		${section('Tijdelijk: bijna-zwart in light', html`
+			${row(html`
+				<nldd-text color="accent">Accenttekst</nldd-text>
+				<nldd-button appearance="accent-transparent" text="Details"></nldd-button>
+				<nldd-tag color="accent" text="Dakisolatie"></nldd-tag>
+			`)}
+			<nldd-menu-bar accessible-label="Menubalk">
+				<nldd-menu-bar-item text="Aanvragen" current></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
+			</nldd-menu-bar>
+			<nldd-banner variant="accent" text="Mijn Dienst is vernieuwd"></nldd-banner>
+			<nldd-inline-dialog icon="info-circle-filled" icon-color="accent" text="Nog geen aanvragen"></nldd-inline-dialog>
+			${row(html`<nldd-button text="Toon notification" @click=${() => notify(scheme)}></nldd-button>`)}
+		`)}
+
 		${section('Knoppen', html`
 			${row(html`
 				<nldd-button appearance="primary" text="Opslaan" shortcut="Ctrl+S" shortcut-mac="Cmd+S"></nldd-button>
@@ -209,6 +233,8 @@ const overview = (scheme: 'light' | 'dark') => html`
 			`)}
 			<nldd-banner variant="accent" text="Mijn Dienst is vernieuwd" supporting-text="Bekijk wat er veranderd is."></nldd-banner>
 			<nldd-banner variant="critical" text="Er ging iets mis" supporting-text="Probeer het later opnieuw."></nldd-banner>
+			<nldd-inline-dialog icon="info-circle-filled" icon-color="accent" text="Nog geen aanvragen" supporting-text="Een nieuwe aanvraag verschijnt hier."></nldd-inline-dialog>
+			${row(html`<nldd-button text="Toon notification" @click=${() => notify(scheme)}></nldd-button>`)}
 		`)}
 
 		${section('Kaarten', html`
