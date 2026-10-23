@@ -50,6 +50,7 @@ import { template } from './icon-button.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddIconButtonTranslations } from './icon-button.i18n.js';
 import { PopupAnchorController } from '../../../utilities/popup-anchor-controller.js';
+import { HoverCapabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 
@@ -224,6 +225,9 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	 * button and turns clicks into open/close. Not private: the template module
 	 * binds its handlers. */
 	_popup = new PopupAnchorController(this);
+
+	/** Renders again when a pointer is attached or removed, for the shortcut in the accessible name. */
+	private _hoverCapability = new HoverCapabilityController(this);
 
 	override updated(changedProperties: Map<string, unknown>): void {
 		if (changedProperties.has('width')) {

@@ -62,7 +62,7 @@ import {
 import './../../content/icon/icon.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
-import { shortcutLabel } from '../../../utilities/shortcut.js';
+import { HoverCapabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 
 export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
@@ -140,6 +140,9 @@ export class NLDDSegmentedControlItem extends LitElement {
 
 	/** The aria-label this item wrote on itself, so it only takes back its own. */
 	private _appliedRadioLabel: string | null = null;
+
+	/** Renders again when a pointer is attached or removed, for the shortcut in the accessible name. */
+	private _hoverCapability = new HoverCapabilityController(this);
 
 	override connectedCallback(): void {
 		super.connectedCallback();

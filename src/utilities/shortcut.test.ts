@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest';
-import { hasShortcut, parseKeys, resolveKeys, shortcutLabel } from './shortcut.js';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { HoverCapabilityController, hasShortcut, parseKeys, resolveKeys, shortcutLabel } from './shortcut.js';
 import { _setOSOverride } from './os.js';
 
 const hint = (overrides: Partial<Parameters<typeof shortcutLabel>[0]> = {}) => ({
@@ -31,6 +31,21 @@ describe('shortcut', () => {
 	it('knows whether any shortcut is set', () => {
 		expect(hasShortcut(hint())).toBe(false);
 		expect(hasShortcut(hint({ shortcutLinux: 'Alt+P' }))).toBe(true);
+	});
+
+	it('renders the host again when the pointer capability changes, until it disconnects', () => {
+		const listeners = new Set<() => void>();
+		const query = { matches: false, addEventListener: (_: string, fn: () => void) => listeners.add(fn), removeEventListener: (_: string, fn: () => void) => listeners.delete(fn) };
+		vi.stubGlobal('matchMedia', () => query);
+		const host = { addController: vi.fn(), removeController: vi.fn(), requestUpdate: vi.fn(), updateComplete: Promise.resolve(true) };
+		const controller = new HoverCapabilityController(host);
+		expect(host.addController).toHaveBeenCalledWith(controller);
+		controller.hostConnected();
+		listeners.forEach((fn) => fn());
+		expect(host.requestUpdate).toHaveBeenCalledTimes(1);
+		controller.hostDisconnected();
+		expect(listeners.size).toBe(0);
+		vi.unstubAllGlobals();
 	});
 
 	it('spells the shortcut as words for an accessible name', () => {

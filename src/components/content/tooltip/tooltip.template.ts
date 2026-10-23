@@ -24,7 +24,7 @@ export function tooltipTemplate(component: NLDDTooltip): TemplateResult {
 			@mouseleave=${component._handleTooltipLeave}
 		>
 			<div class="tooltip__body">
-				${component.text ? html`<span class="tooltip__text">${component.text}</span>` : ''}
+				${component.text ? html`<span class="tooltip__text">${component.text}</span>` : nothing}
 				${hasShortcut(component) ? html`
 					<span class="tooltip__shortcut">
 						<nldd-keyboard-shortcut
@@ -37,7 +37,7 @@ export function tooltipTemplate(component: NLDDTooltip): TemplateResult {
 							linux-keys=${component.shortcutLinux || nothing}
 						></nldd-keyboard-shortcut>
 					</span>
-				` : ''}
+				` : nothing}
 			</div>
 		</div>
 	`;

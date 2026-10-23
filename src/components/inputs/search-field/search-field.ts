@@ -41,7 +41,7 @@ import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy, applyDescribedBy } from '../../../utilities/described-by-mixin.js';
-import { canHover } from '../../../utilities/shortcut.js';
+import { HoverCapabilityController, canHover } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import { translate } from '../../../utilities/translations.js';
 
@@ -62,6 +62,9 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 
 	private _initialValue = '';
+
+	/** Renders again when a pointer is attached or removed, for the shortcut in the accessible name. */
+	private _hoverCapability = new HoverCapabilityController(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<SearchFieldSize>('md') })
 	size: SearchFieldSize = 'md';

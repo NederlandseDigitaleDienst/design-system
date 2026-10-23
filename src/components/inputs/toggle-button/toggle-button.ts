@@ -52,7 +52,7 @@ import { toggleButtonTemplate } from './toggle-button.template.js';
 import './../../content/icon/icon.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { shortcutLabel } from '../../../utilities/shortcut.js';
+import { HoverCapabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
 export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
@@ -174,6 +174,9 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** The aria-label this button wrote on itself, so it only takes back its own. */
 	private _appliedRadioLabel: string | null = null;
+
+	/** Renders again when a pointer is attached or removed, for the shortcut in the accessible name. */
+	private _hoverCapability = new HoverCapabilityController(this);
 
 	override firstUpdated(): void {
 		this._initialSelected = this.selected;

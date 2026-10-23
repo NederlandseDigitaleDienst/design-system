@@ -1,3 +1,4 @@
+import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { detectOS } from './os.js';
 import type { OS } from './os.js';
 
@@ -41,23 +42,48 @@ export function parseKeys(spec: string): string[] {
 		.replace(/\+\+\+/g, `+${MARKER}+`)
 		.replace(/\+\+$/, `+${MARKER}`)
 		.split('+')
-		.map(k => k.trim().replace(new RegExp(MARKER, 'g'), '+'))
+		.map(k => k.trim().split(MARKER).join('+'))
 		.filter(Boolean);
 }
 
+const TOUCH_ONLY_QUERY = '(any-hover: none)';
+
 /** Whether the device can hover, the same test that hides nldd-keyboard-shortcut on touch-only devices. */
 export function canHover(): boolean {
-	return typeof matchMedia !== 'function' || !matchMedia('(any-hover: none)').matches;
+	return typeof matchMedia !== 'function' || !matchMedia(TOUCH_ONLY_QUERY).matches;
+}
+
+/**
+ * Renders the host again when a pointer that can hover is attached or
+ * removed, so a shortcut in its accessible name follows the visible hint.
+ * Pass `onChange` for work that a render does not redo.
+ */
+export class HoverCapabilityController implements ReactiveController {
+	private _query = typeof matchMedia === 'function' ? matchMedia(TOUCH_ONLY_QUERY) : null;
+	private _onChange: () => void;
+
+	constructor(host: ReactiveControllerHost, onChange?: () => void) {
+		this._onChange = onChange ?? (() => host.requestUpdate());
+		host.addController(this);
+	}
+
+	private _handleChange = () => this._onChange();
+
+	hostConnected(): void {
+		this._query?.addEventListener('change', this._handleChange);
+	}
+
+	hostDisconnected(): void {
+		this._query?.removeEventListener('change', this._handleChange);
+	}
 }
 
 /**
  * The shortcut as words for an accessible name ("Ctrl Z"), matching how
  * nldd-menu-item is announced. Empty without a shortcut, and on a touch-only
  * device, where the hint is hidden because the key cannot be pressed.
- *
- * Read when the component renders: if a pointer is attached or removed later,
- * the visible hint follows its media query at once, but the accessible name
- * keeps the old text until the component renders again.
+ * Read when the component renders; HoverCapabilityController renders it again
+ * when the pointer changes.
  */
 export function shortcutLabel(hint: ShortcutHint): string {
 	if (!hasShortcut(hint) || !canHover()) return '';

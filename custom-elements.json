@@ -41181,6 +41181,49 @@
           "description": "Whether the device can hover, the same test that hides nldd-keyboard-shortcut on touch-only devices."
         },
         {
+          "kind": "class",
+          "description": "Renders the host again when a pointer that can hover is attached or\nremoved, so a shortcut in its accessible name follows the visible hint.\nPass `onChange` for work that a render does not redo.",
+          "name": "HoverCapabilityController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_query",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onChange",
+              "type": {
+                "text": "() => void"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        },
+        {
           "kind": "function",
           "name": "shortcutLabel",
           "return": {
@@ -41196,7 +41239,7 @@
               }
             }
           ],
-          "description": "The shortcut as words for an accessible name (\"Ctrl Z\"), matching how\nnldd-menu-item is announced. Empty without a shortcut, and on a touch-only\ndevice, where the hint is hidden because the key cannot be pressed.\n\nRead when the component renders: if a pointer is attached or removed later,\nthe visible hint follows its media query at once, but the accessible name\nkeeps the old text until the component renders again."
+          "description": "The shortcut as words for an accessible name (\"Ctrl Z\"), matching how\nnldd-menu-item is announced. Empty without a shortcut, and on a touch-only\ndevice, where the hint is hidden because the key cannot be pressed.\nRead when the component renders; HoverCapabilityController renders it again\nwhen the pointer changes."
         }
       ],
       "exports": [
@@ -41229,6 +41272,14 @@
           "name": "canHover",
           "declaration": {
             "name": "canHover",
+            "module": "src/utilities/shortcut.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HoverCapabilityController",
+          "declaration": {
+            "name": "HoverCapabilityController",
             "module": "src/utilities/shortcut.ts"
           }
         },

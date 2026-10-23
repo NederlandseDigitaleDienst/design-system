@@ -55,7 +55,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tooltipStyles } from './tooltip.styles.js';
 import { tooltipTemplate } from './tooltip.template.js';
 import { isTouchMode } from '../../../utilities/input-modality.js';
-import { shortcutLabel } from '../../../utilities/shortcut.js';
+import { HoverCapabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../keyboard-shortcut/keyboard-shortcut.js';
 
 type Placement = 'top' | 'bottom' | 'left' | 'right';
@@ -114,6 +114,8 @@ export class NLDDTooltip extends LitElement {
 	private _descriptionEl: HTMLSpanElement | null = null;
 	private _currentTrigger: Element | null = null;
 	private _boundSlotChange = () => this._syncAriaDescribedBy();
+	/** Refreshes the description when a pointer is attached or removed, for the shortcut in it. */
+	private _hoverCapability = new HoverCapabilityController(this, () => this._syncAriaDescribedBy());
 	private _positionVersion = 0;
 
 	override connectedCallback(): void {
