@@ -19,7 +19,7 @@ here; consult the commit history if you need that level of detail.
 
 - **Improved themes.** The focus ring, the steps, the progress, the banner icon and the selection sit closer to the theme color where contrast allows it, everything that marks something reaches 3:1 in dark mode, and the near-black selections in the light and status themes are a softer gray.
 - **Compare themes at a glance.** Under Docs/Thema's in Storybook every theme has its own page with the controls in light and dark mode side by side, so switching themes is one click.
-- **Keyboard shortcuts on six components.** `nldd-button`, `nldd-icon-button`, `nldd-toggle-button`, `nldd-segmented-control-item`, `nldd-split-button` and `nldd-search-field` show the shortcut of their action, as menu items already did: after the text, in the tooltip, or at the end of the search field.
+- **Keyboard shortcuts on seven components.** `nldd-button`, `nldd-icon-button`, `nldd-toggle-button`, `nldd-segmented-control-item`, `nldd-split-button`, `nldd-search-field` and `nldd-tooltip` show the shortcut of an action, as menu items already did: after the text, in the tooltip, or at the end of the search field.
 
 ### Added
 

@@ -4,7 +4,8 @@ import type { OS } from './os.js';
 
 /**
  * The shortcut hint attributes that nldd-menu-item, nldd-tooltip, nldd-button,
- * nldd-icon-button and nldd-search-field share: `shortcut` plus a per-OS
+ * nldd-icon-button, nldd-toggle-button, nldd-segmented-control-item,
+ * nldd-split-button and nldd-search-field share: `shortcut` plus a per-OS
  * override. Display only; the application binds the key.
  */
 export interface ShortcutHint {
