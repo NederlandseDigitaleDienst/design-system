@@ -58,7 +58,7 @@ const overview = (scheme: 'light' | 'dark') => html`
 				<nldd-icon-button icon="edit" text="Bewerken"></nldd-icon-button>
 				<nldd-split-button appearance="primary" text="Bewaar" shortcut="Ctrl+S" shortcut-mac="Cmd+S">
 					<nldd-menu>
-						<nldd-menu-item text="Bewaar als concept" icon="edit"></nldd-menu-item>
+						<nldd-menu-item text="Bewaar als concept"></nldd-menu-item>
 						<nldd-menu-item text="Bewaar en sluit" shortcut="Ctrl+Shift+S" shortcut-mac="Cmd+Shift+S"></nldd-menu-item>
 						<nldd-menu-divider></nldd-menu-divider>
 						<nldd-menu-item text="Verwijder concept" icon="trash" destructive></nldd-menu-item>
