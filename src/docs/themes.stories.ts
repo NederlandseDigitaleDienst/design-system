@@ -148,6 +148,11 @@ const overview = (scheme: 'light' | 'dark') => html`
 		`)}
 
 		${section('Navigatie', html`
+			<nldd-menu-bar accessible-label="Menubalk">
+				<nldd-menu-bar-item text="Aanvragen" current></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Dossiers"></nldd-menu-bar-item>
+				<nldd-menu-bar-item text="Instellingen"></nldd-menu-bar-item>
+			</nldd-menu-bar>
 			<nldd-tab-bar accessible-label="Aanvragen">
 				<nldd-tab-bar-item text="Open" current></nldd-tab-bar-item>
 				<nldd-tab-bar-item text="Afgerond"></nldd-tab-bar-item>
