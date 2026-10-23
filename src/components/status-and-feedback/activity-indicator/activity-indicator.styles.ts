@@ -54,10 +54,10 @@ export const activityIndicatorStyles = css`
 
 	/* ## Sizes (icon scale) */
 
-	:host([size="16"]) { --_activity-indicator-circle-size: var(--primitives-space-16); --_activity-indicator-text-font: var(--primitives-font-body-xs-regular-flat); }
-	:host([size="20"]) { --_activity-indicator-circle-size: var(--primitives-space-20); --_activity-indicator-text-font: var(--primitives-font-body-xs-regular-flat); }
-	:host([size="24"]) { --_activity-indicator-circle-size: var(--primitives-space-24); --_activity-indicator-text-font: var(--primitives-font-body-sm-regular-flat); }
-	:host([size="28"]) { --_activity-indicator-circle-size: var(--primitives-space-28); --_activity-indicator-text-font: var(--primitives-font-body-sm-regular-flat); }
+	:host([size="16"]) { --_activity-indicator-circle-size: var(--primitives-space-16); }
+	:host([size="20"]) { --_activity-indicator-circle-size: var(--primitives-space-20); }
+	:host([size="24"]) { --_activity-indicator-circle-size: var(--primitives-space-24); }
+	:host([size="28"]) { --_activity-indicator-circle-size: var(--primitives-space-28); }
 	:host([size="40"]) { --_activity-indicator-circle-size: var(--primitives-space-40); }
 	:host([size="44"]) { --_activity-indicator-circle-size: var(--primitives-space-44); }
 	:host([size="48"]) { --_activity-indicator-circle-size: var(--primitives-space-48); }
@@ -65,6 +65,16 @@ export const activityIndicatorStyles = css`
 	:host([size="64"]) { --_activity-indicator-circle-size: var(--primitives-space-64); }
 	:host([size="80"]) { --_activity-indicator-circle-size: var(--primitives-space-80); }
 	:host([size="96"]) { --_activity-indicator-circle-size: var(--primitives-space-96); }
+
+	:host([size="16"]),
+	:host([size="20"]) {
+		--_activity-indicator-text-font: var(--primitives-font-body-xs-regular-flat);
+	}
+
+	:host([size="24"]),
+	:host([size="28"]) {
+		--_activity-indicator-text-font: var(--primitives-font-body-sm-regular-flat);
+	}
 
 
 	/* # Block

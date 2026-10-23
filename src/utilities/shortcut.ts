@@ -52,6 +52,10 @@ export function canHover(): boolean {
  * The shortcut as words for an accessible name ("Ctrl Z"), matching how
  * nldd-menu-item is announced. Empty without a shortcut, and on a touch-only
  * device, where the hint is hidden because the key cannot be pressed.
+ *
+ * Read when the component renders: if a pointer is attached or removed later,
+ * the visible hint follows its media query at once, but the accessible name
+ * keeps the old text until the component renders again.
  */
 export function shortcutLabel(hint: ShortcutHint): string {
 	if (!hasShortcut(hint) || !canHover()) return '';
