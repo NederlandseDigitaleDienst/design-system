@@ -22,6 +22,7 @@ describe('shortcut', () => {
 		expect(parseKeys('Ctrl + +')).toEqual(['Ctrl', '+']);
 		expect(parseKeys('Ctrl + Shift + P')).toEqual(['Ctrl', 'Shift', 'P']);
 		expect(parseKeys('Page Up')).toEqual(['Page Up']);
+		expect(parseKeys('Page Down+Ctrl')).toEqual(['Page Down', 'Ctrl']);
 		expect(parseKeys('')).toEqual([]);
 	});
 
