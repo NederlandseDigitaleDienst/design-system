@@ -494,7 +494,7 @@ Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined containe
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `keys` | `string` | Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P'). End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++' works too). For more complex cases (a combo with several '+' keys, for instance) use the default slot with your own <kbd> elements instead of the keys attribute. |
+| `keys` | `string` | Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P'). End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++' works too). For more complex cases, such as a combo with several '+' keys, use the default slot with your own <kbd> elements instead of the keys attribute. |
 | `mac-keys` | `string` | Optional override for macOS (iPhone/iPad/iPod included). |
 | `windows-keys` | `string` | Optional override for Windows. |
 | `linux-keys` | `string` | Optional override for Linux/ChromeOS. |
