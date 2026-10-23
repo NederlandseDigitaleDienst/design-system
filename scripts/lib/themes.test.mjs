@@ -12,6 +12,7 @@ import {
 	badgeTokens,
 	tabBarTokens,
 	tabSteps,
+	nearestStandingStep,
 	statusBarTokens,
 	contrast,
 	luminance,
@@ -295,6 +296,13 @@ for (const { name, hex } of themes) {
 				const ratio = contrast(palette.get(step)[mode], palette.get(surface[mode])[mode]);
 				assert.ok(ratio >= 3, `${mode}: ${ratio.toFixed(2)}`);
 			}
+		});
+	}
+
+	if (theme.menuBarIndicator) {
+		test(`${name}: the menu bar indicator reaches 3:1 on the page`, () => {
+			const step = nearestStandingStep(palette, buttonSteps(palette, hex, grounds, name).light.step, grounds);
+			for (const ground of grounds.page.light) assert.ok(contrast(palette.get(step).light, ground) >= 3, ground);
 		});
 	}
 

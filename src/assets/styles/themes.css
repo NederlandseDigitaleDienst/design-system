@@ -190,6 +190,21 @@
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-donkerblauw-750), var(--primitives-color-donkerblauw-850));
 
 
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-600), var(--primitives-color-accent-700));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-600), var(--primitives-color-accent-700));
+
+
 	/* ## Progress bar */
 
 	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-donkerblauw-600), var(--primitives-color-donkerblauw-700));
@@ -393,6 +408,21 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-hemelblauw-650), var(--primitives-color-hemelblauw-850));
+
+
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-700));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-hemelblauw-500), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-700));
 
 
 	/* ## Progress bar */
@@ -601,6 +631,21 @@
 	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
 	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-800), var(--primitives-color-lichtblauw-650));
+
+
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-400), var(--primitives-color-accent-700));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-lichtblauw-400), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-400), var(--primitives-color-accent-700));
 
 
 	/* ## Progress bar */
@@ -815,6 +860,21 @@
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-paars-700), var(--primitives-color-paars-750));
 
 
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-700));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-850), var(--primitives-color-accent-700));
+
+
 	/* ## Progress bar */
 
 	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-paars-850), var(--primitives-color-paars-600));
@@ -1013,6 +1073,11 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-violet-800), var(--primitives-color-violet-750));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-accent-750));
 
 
 	/* ## Progress bar */
@@ -1249,17 +1314,18 @@
 
 	/* ## Inline dialog */
 
-	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-950));
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Menu bar item */
 
 	--components-menu-bar-item-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Notification */
 
-	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-350));
+	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Progress bar */
@@ -1480,6 +1546,21 @@
 	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
 	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-800), var(--primitives-color-roze-900));
+
+
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-700));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-roze-400), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-700));
 
 
 	/* ## Progress bar */
@@ -1716,17 +1797,18 @@
 
 	/* ## Inline dialog */
 
-	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-950));
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Menu bar item */
 
 	--components-menu-bar-item-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Notification */
 
-	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-350));
+	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Progress bar */
@@ -1968,17 +2050,18 @@
 
 	/* ## Inline dialog */
 
-	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-950));
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Menu bar item */
 
 	--components-menu-bar-item-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Notification */
 
-	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-350));
+	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Progress bar */
@@ -2215,17 +2298,18 @@
 
 	/* ## Inline dialog */
 
-	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-650));
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-donkergeel-800));
 
 
 	/* ## Menu bar item */
 
 	--components-menu-bar-item-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-750));
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-750));
 
 
 	/* ## Notification */
 
-	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-350));
+	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-donkergeel-800));
 
 
 	/* ## Progress bar */
@@ -2467,17 +2551,18 @@
 
 	/* ## Inline dialog */
 
-	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-650));
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-geel-900));
 
 
 	/* ## Menu bar item */
 
 	--components-menu-bar-item-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-750));
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-750));
 
 
 	/* ## Notification */
 
-	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-350));
+	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-geel-900));
 
 
 	/* ## Progress bar */
@@ -2895,6 +2980,21 @@
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-bruin-650), var(--primitives-color-bruin-750));
 
 
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-bruin-500), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
+
+
 	/* ## Progress bar */
 
 	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-bruin-500), var(--primitives-color-bruin-600));
@@ -3093,6 +3193,11 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-donkergroen-850), var(--primitives-color-donkergroen-800));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-donkergroen-700), var(--primitives-color-accent-750));
 
 
 	/* ## Progress bar */
@@ -3300,6 +3405,21 @@
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-groen-650), var(--primitives-color-groen-750));
 
 
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-groen-500), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
+
+
 	/* ## Progress bar */
 
 	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-groen-500), var(--primitives-color-groen-600));
@@ -3503,6 +3623,21 @@
 	/* ## Date picker */
 
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-mosgroen-650), var(--primitives-color-mosgroen-750));
+
+
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-mosgroen-500), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-500), var(--primitives-color-accent-600));
 
 
 	/* ## Progress bar */
@@ -3711,6 +3846,21 @@
 	--components-date-picker-day-is-in-range-is-hovered-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-accent-200));
 	--components-date-picker-day-is-today-is-in-range-border-color: light-dark(var(--primitives-color-neutral-300), var(--primitives-color-accent-450));
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-800), var(--primitives-color-mintgroen-650));
+
+
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-800));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-mintgroen-400), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-800));
 
 
 	/* ## Progress bar */

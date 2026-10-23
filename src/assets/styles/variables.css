@@ -1741,17 +1741,18 @@
 
 	/* ## Inline dialog */
 
-	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
+	--components-inline-dialog-icon-color: var(--primitives-color-accent-700);
 
 
 	/* ## Menu bar item */
 
 	--components-menu-bar-item-content-color: var(--primitives-color-accent-750);
+	--components-menu-bar-item-is-current-indicator-color: var(--primitives-color-accent-750);
 
 
 	/* ## Notification */
 
-	--components-notification-icon-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-350));
+	--components-notification-icon-color: var(--primitives-color-accent-700);
 
 
 	/* ## Text editor */

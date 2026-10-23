@@ -219,17 +219,18 @@
 
 	/* ## Inline dialog */
 
-	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-950));
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Menu bar item */
 
 	--components-menu-bar-item-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Notification */
 
-	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-350));
+	--components-notification-icon-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-neutral-975));
 
 
 	/* ## Progress bar */

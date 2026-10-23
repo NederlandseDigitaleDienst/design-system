@@ -200,6 +200,21 @@
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-neutral-800), var(--primitives-color-roze-900));
 
 
+	/* ## Inline dialog */
+
+	--components-inline-dialog-icon-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-700));
+
+
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-roze-400), var(--primitives-color-accent-750));
+
+
+	/* ## Notification */
+
+	--components-notification-icon-color: light-dark(var(--primitives-color-accent-450), var(--primitives-color-accent-700));
+
+
 	/* ## Progress bar */
 
 	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-roze-350), var(--primitives-color-roze-750));

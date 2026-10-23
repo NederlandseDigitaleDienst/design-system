@@ -185,6 +185,11 @@
 	--components-date-picker-day-is-today-is-selected-border-color: light-dark(var(--primitives-color-violet-800), var(--primitives-color-violet-750));
 
 
+	/* ## Menu bar item */
+
+	--components-menu-bar-item-is-current-indicator-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-accent-750));
+
+
 	/* ## Progress bar */
 
 	--components-progress-bar-accent-background-color: light-dark(var(--primitives-color-violet-650), var(--primitives-color-violet-600));

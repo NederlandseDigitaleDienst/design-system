@@ -160,6 +160,9 @@ export function textOn(hex) {
  *   accent tag, accent banner icon, mention) of a yellow theme.
  * - `bannerIcon`: the accent banner icon per mode, closer to the theme color
  *   and still 3:1 on the accent-tinted surface.
+ * - `menuBarIndicator`: the light-mode line under the current item of a menu
+ *   bar is the line of the steps, the step nearest to the button that stands
+ *   out 3:1 on the page, instead of the color of its text.
  * - `linkOffset`: how far the links move from their default steps per mode; a
  *   positive offset is darker in light mode and lighter in dark mode.
  * - `darkLink`: in a yellow or status theme, whose links are lintblauw in light
@@ -178,23 +181,23 @@ export function textOn(hex) {
  */
 export const THEMES = {
 	lintblauw: { darkButton: 650 },
-	paars: { darkButton: 600, bannerIcon: { light: 850 }, linkOffset: { light: 50, dark: 50 } },
-	roze: { bannerIcon: { light: 450 }, linkOffset: { dark: 150 }, graySelection: 650, focusFollowsSelection: true },
-	violet: { darkButton: 600 },
+	paars: { darkButton: 600, bannerIcon: { light: 850 }, linkOffset: { light: 50, dark: 50 }, menuBarIndicator: true },
+	roze: { bannerIcon: { light: 450 }, menuBarIndicator: true, linkOffset: { dark: 150 }, graySelection: 650, focusFollowsSelection: true },
+	violet: { darkButton: 600, menuBarIndicator: true },
 	robijnrood: { kind: 'status', darkLink: 600, lightLinkInColor: true, accentText: { light: true, dark: true }, graySelection: 700, darkFocus: 700 },
 	rood: { kind: 'status', darkLink: 600, lightLinkInColor: true, accentText: { light: true, dark: true }, graySelection: 700, darkFocus: 700 },
 	donkerbruin: { darkButton: 600 },
 	oranje: { kind: 'status', darkLink: 650, accentText: { dark: true }, graySelection: 700, darkSelectionInColor: true, darkFocus: 700 },
 	donkergeel: { kind: 'yellow', darkText: 800, darkLink: 800, graySelection: 750, focusFollowsSelection: true, darkFocus: 750 },
-	bruin: { darkButton: 600, bannerIcon: { light: 500, dark: 600 } },
+	bruin: { darkButton: 600, bannerIcon: { light: 500, dark: 600 }, menuBarIndicator: true },
 	geel: { kind: 'yellow', darkText: 900, darkLink: 900, graySelection: 750, focusFollowsSelection: true, darkFocus: 750 },
-	mosgroen: { darkButton: 600, bannerIcon: { light: 500, dark: 600 } },
-	groen: { darkButton: 600, bannerIcon: { light: 500, dark: 600 } },
-	donkergroen: { darkButton: 650 },
-	mintgroen: { bannerIcon: { light: 450, dark: 800 }, graySelection: 650, ownHighlight: true },
-	lichtblauw: { bannerIcon: { light: 400 }, graySelection: 650, focusFollowsSelection: true },
-	donkerblauw: { darkButton: 700, bannerIcon: { light: 600 } },
-	hemelblauw: { darkButton: 700, bannerIcon: { light: 500 } },
+	mosgroen: { darkButton: 600, bannerIcon: { light: 500, dark: 600 }, menuBarIndicator: true },
+	groen: { darkButton: 600, bannerIcon: { light: 500, dark: 600 }, menuBarIndicator: true },
+	donkergroen: { darkButton: 650, menuBarIndicator: true },
+	mintgroen: { bannerIcon: { light: 450, dark: 800 }, graySelection: 650, ownHighlight: true, menuBarIndicator: true },
+	lichtblauw: { bannerIcon: { light: 400 }, graySelection: 650, focusFollowsSelection: true, menuBarIndicator: true },
+	donkerblauw: { darkButton: 700, bannerIcon: { light: 600 }, menuBarIndicator: true },
+	hemelblauw: { darkButton: 700, bannerIcon: { light: 500 }, menuBarIndicator: true },
 };
 
 const themeOf = (name) => THEMES[name] ?? {};
@@ -248,6 +251,11 @@ export function selectionGrounds(gray) {
 
 /** Whether a light-mode fill stands out 3:1 from the page. */
 const standsOut = (palette, step, grounds) => grounds.page.light.every((ground) => contrast(palette.get(step).light, ground) >= 3);
+
+/** The light-mode step nearest to `step` that stands out 3:1 from the page. */
+export const nearestStandingStep = (palette, step, grounds) => [...palette.keys()]
+	.filter((s) => standsOut(palette, s, grounds))
+	.sort((a, b) => Math.abs(a - step) - Math.abs(b - step))[0];
 
 const SELECTED_STATES = [0, 50, 100];
 
@@ -869,12 +877,22 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 		...tabBarTokens(tabSteps(palette, ref, grounds, name), name),
 	);
 
-	const banner = '--components-banner-accent-icon-color';
+	// The accent icon of a banner, inline dialog and notification is one color.
+	const icon = '--components-banner-accent-icon-color';
+	let iconValue;
 	if (yellow) {
-		lines.push([banner, pair(accent(selection.light.step, 'neutral'), accent(theme.darkText, name))]);
+		iconValue = pair(accent(selection.light.step, 'neutral'), accent(theme.darkText, name));
 	} else if (theme.bannerIcon) {
-		const [light, dark] = splitModes(defaults.get(banner) ?? accent(700));
-		lines.push([banner, pair(theme.bannerIcon.light ? accent(theme.bannerIcon.light) : light, theme.bannerIcon.dark ? accent(theme.bannerIcon.dark) : dark)]);
+		const [light, dark] = splitModes(defaults.get(icon) ?? accent(700));
+		iconValue = pair(theme.bannerIcon.light ? accent(theme.bannerIcon.light) : light, theme.bannerIcon.dark ? accent(theme.bannerIcon.dark) : dark);
+	}
+	if (iconValue) {
+		for (const token of [icon, '--components-inline-dialog-icon-color', '--components-notification-icon-color']) lines.push([token, iconValue]);
+	}
+
+	if (theme.menuBarIndicator) {
+		const indicator = '--components-menu-bar-item-is-current-indicator-color';
+		lines.push([indicator, pair(accent(nearestStandingStep(palette, button.light.step, grounds), name), splitModes(defaults.get(indicator) ?? accent(750))[1])]);
 	}
 
 	const ownHighlight = status || theme.ownHighlight;
@@ -893,8 +911,7 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 		line = past = accent(selection.light.step, 'neutral');
 		pastText = textColor('light', 'white', 'neutral');
 	} else if (!standsOut(palette, button.light.step, grounds)) {
-		const step = [...palette.keys()].filter((s) => standsOut(palette, s, grounds)).sort((a, b) => Math.abs(a - button.light.step) - Math.abs(b - button.light.step))[0];
-		line = accent(step, name);
+		line = accent(nearestStandingStep(palette, button.light.step, grounds), name);
 	}
 	const dark = accent(button.dark.step, name);
 	lines.push(
