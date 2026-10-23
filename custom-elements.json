@@ -41172,18 +41172,18 @@
         },
         {
           "kind": "function",
-          "name": "canHover",
+          "name": "shortcutsAvailable",
           "return": {
             "type": {
               "text": "boolean"
             }
           },
-          "description": "Whether the device can hover, the same test that hides nldd-keyboard-shortcut on touch-only devices."
+          "description": "Whether a keyboard shortcut can be used on this device, so a hint for it is worth showing."
         },
         {
           "kind": "class",
-          "description": "Renders the host again when a pointer that can hover is attached or\nremoved, so a shortcut in its accessible name follows the visible hint.\nPass `onChange` for work that a render does not redo.",
-          "name": "HoverCapabilityController",
+          "description": "Renders the host again when shortcuts become available or unavailable, such\nas when a pointer is attached or removed, so a shortcut in its accessible\nname follows the visible hint. Pass `onChange` for work that a render does\nnot redo.",
+          "name": "ShortcutAvailabilityController",
           "members": [
             {
               "kind": "field",
@@ -41239,7 +41239,7 @@
               }
             }
           ],
-          "description": "The shortcut as words for an accessible name (\"Ctrl Z\"), matching how\nnldd-menu-item is announced. Empty without a shortcut, and on a touch-only\ndevice, where the hint is hidden because the key cannot be pressed.\nRead when the component renders; HoverCapabilityController renders it again\nwhen the pointer changes."
+          "description": "The shortcut as words for an accessible name (\"Ctrl Z\"), matching how\nnldd-menu-item is announced. Empty without a shortcut, and where\nshortcutsAvailable() says the key cannot be pressed, as the hint is hidden\nthere too. Read when the component renders; ShortcutAvailabilityController\nrenders it again when that changes."
         }
       ],
       "exports": [
@@ -41269,17 +41269,17 @@
         },
         {
           "kind": "js",
-          "name": "canHover",
+          "name": "shortcutsAvailable",
           "declaration": {
-            "name": "canHover",
+            "name": "shortcutsAvailable",
             "module": "src/utilities/shortcut.ts"
           }
         },
         {
           "kind": "js",
-          "name": "HoverCapabilityController",
+          "name": "ShortcutAvailabilityController",
           "declaration": {
-            "name": "HoverCapabilityController",
+            "name": "ShortcutAvailabilityController",
             "module": "src/utilities/shortcut.ts"
           }
         },

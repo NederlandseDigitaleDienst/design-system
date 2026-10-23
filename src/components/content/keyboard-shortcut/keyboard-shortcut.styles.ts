@@ -65,6 +65,7 @@ export const keyboardShortcutStyles = css`
 		display: none;
 	}
 
+	/* Same query as shortcutsAvailable() in utilities/shortcut.ts. */
 	@media (any-hover: none) {
 		:host(:not([always-visible])) {
 			display: none;

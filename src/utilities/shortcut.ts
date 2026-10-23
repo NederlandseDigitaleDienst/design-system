@@ -49,20 +49,24 @@ export function parseKeys(spec: string): string[] {
 		.filter(Boolean);
 }
 
-const TOUCH_ONLY_QUERY = '(any-hover: none)';
+// A browser cannot tell whether there is a keyboard. A device whose pointers
+// cannot hover is touch-only and most likely has none; nldd-keyboard-shortcut
+// hides itself on the same media query.
+const NO_SHORTCUTS_QUERY = '(any-hover: none)';
 
-/** Whether the device can hover, the same test that hides nldd-keyboard-shortcut on touch-only devices. */
-export function canHover(): boolean {
-	return typeof matchMedia !== 'function' || !matchMedia(TOUCH_ONLY_QUERY).matches;
+/** Whether a keyboard shortcut can be used on this device, so a hint for it is worth showing. */
+export function shortcutsAvailable(): boolean {
+	return typeof matchMedia !== 'function' || !matchMedia(NO_SHORTCUTS_QUERY).matches;
 }
 
 /**
- * Renders the host again when a pointer that can hover is attached or
- * removed, so a shortcut in its accessible name follows the visible hint.
- * Pass `onChange` for work that a render does not redo.
+ * Renders the host again when shortcuts become available or unavailable, such
+ * as when a pointer is attached or removed, so a shortcut in its accessible
+ * name follows the visible hint. Pass `onChange` for work that a render does
+ * not redo.
  */
-export class HoverCapabilityController implements ReactiveController {
-	private _query = typeof matchMedia === 'function' ? matchMedia(TOUCH_ONLY_QUERY) : null;
+export class ShortcutAvailabilityController implements ReactiveController {
+	private _query = typeof matchMedia === 'function' ? matchMedia(NO_SHORTCUTS_QUERY) : null;
 	private _onChange: () => void;
 
 	constructor(host: ReactiveControllerHost, onChange?: () => void) {
@@ -83,13 +87,13 @@ export class HoverCapabilityController implements ReactiveController {
 
 /**
  * The shortcut as words for an accessible name ("Ctrl Z"), matching how
- * nldd-menu-item is announced. Empty without a shortcut, and on a touch-only
- * device, where the hint is hidden because the key cannot be pressed.
- * Read when the component renders; HoverCapabilityController renders it again
- * when the pointer changes.
+ * nldd-menu-item is announced. Empty without a shortcut, and where
+ * shortcutsAvailable() says the key cannot be pressed, as the hint is hidden
+ * there too. Read when the component renders; ShortcutAvailabilityController
+ * renders it again when that changes.
  */
 export function shortcutLabel(hint: ShortcutHint): string {
-	if (!hasShortcut(hint) || !canHover()) return '';
+	if (!hasShortcut(hint) || !shortcutsAvailable()) return '';
 	const spec = resolveKeys({
 		keys: hint.shortcut,
 		macKeys: hint.shortcutMac,

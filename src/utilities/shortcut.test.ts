@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { HoverCapabilityController, hasShortcut, parseKeys, resolveKeys, shortcutLabel } from './shortcut.js';
+import { ShortcutAvailabilityController, hasShortcut, parseKeys, resolveKeys, shortcutLabel } from './shortcut.js';
 import { _setOSOverride } from './os.js';
 
 const hint = (overrides: Partial<Parameters<typeof shortcutLabel>[0]> = {}) => ({
@@ -41,7 +41,7 @@ describe('shortcut', () => {
 		const query = { matches: false, addEventListener: (_: string, fn: () => void) => listeners.add(fn), removeEventListener: (_: string, fn: () => void) => listeners.delete(fn) };
 		vi.stubGlobal('matchMedia', () => query);
 		const host = { addController: vi.fn(), removeController: vi.fn(), requestUpdate: vi.fn(), updateComplete: Promise.resolve(true) };
-		const controller = new HoverCapabilityController(host);
+		const controller = new ShortcutAvailabilityController(host);
 		expect(host.addController).toHaveBeenCalledWith(controller);
 		controller.hostConnected();
 		listeners.forEach((fn) => fn());

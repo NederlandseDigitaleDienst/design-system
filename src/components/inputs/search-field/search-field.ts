@@ -41,7 +41,7 @@ import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy, applyDescribedBy } from '../../../utilities/described-by-mixin.js';
-import { HoverCapabilityController, canHover } from '../../../utilities/shortcut.js';
+import { ShortcutAvailabilityController, shortcutsAvailable } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 import { translate } from '../../../utilities/translations.js';
 
@@ -63,8 +63,8 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _initialValue = '';
 
-	/** Renders again when a pointer is attached or removed, for the shortcut in the accessible name. */
-	private _hoverCapability = new HoverCapabilityController(this);
+	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
+	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<SearchFieldSize>('md') })
 	size: SearchFieldSize = 'md';
@@ -154,7 +154,7 @@ export class NLDDSearchField extends DescribedBy(FormAssociated(LitElement)) {
 	override updated(changed: PropertyValues): void {
 		// Runs after the DescribedBy controller, so the shortcut hint is added to
 		// the help and error texts of an nldd-form-field instead of replacing them.
-		const hint = canHover() ? this.shadowRoot?.querySelector('.search-field__shortcut') : null;
+		const hint = shortcutsAvailable() ? this.shadowRoot?.querySelector('.search-field__shortcut') : null;
 		if (hint) applyDescribedBy(this.describedTarget(), [...this.describedByElements, hint], true);
 		if (changed.has('width')) {
 			const w = this.width;

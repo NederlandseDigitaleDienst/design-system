@@ -52,7 +52,7 @@ import { PopupAnchorController } from '../../../utilities/popup-anchor-controlle
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { HoverCapabilityController } from '../../../utilities/shortcut.js';
+import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 
 type Appearance =
 	| 'primary'
@@ -230,8 +230,8 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	 * binds its handlers. */
 	_popup = new PopupAnchorController(this);
 
-	/** Renders again when a pointer is attached or removed, for the shortcut in the accessible name. */
-	private _hoverCapability = new HoverCapabilityController(this);
+	/** Renders again when shortcuts become available or unavailable, for the shortcut in the accessible name. */
+	private _shortcutAvailability = new ShortcutAvailabilityController(this);
 
 	override updated(changedProperties: Map<string, unknown>): void {
 		if (changedProperties.has('maxWidth')) {
