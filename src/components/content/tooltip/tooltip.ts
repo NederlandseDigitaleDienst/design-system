@@ -257,6 +257,9 @@ export class NLDDTooltip extends LitElement {
 
 	_handleTriggerEnter(): void {
 		if (this.timing === 'never') return;
+		// Whether a shortcut shows depends on the pointer, which can change
+		// without a property change; refresh the description with it.
+		this._syncAriaDescribedBy();
 		if (!this._hasContent) return;
 		if (coarsePointerQuery.matches) return;
 		if (this._hideTimeout) {
@@ -285,6 +288,7 @@ export class NLDDTooltip extends LitElement {
 
 	_handleFocusIn(): void {
 		if (this.timing === 'never') return;
+		this._syncAriaDescribedBy();
 		if (!this._hasContent) return;
 		// Touch taps can focus elements with explicit `tabindex` (e.g. tab-bar's
 		// roving-tabindex pattern on iOS, Android `<button>` focus-on-tap).

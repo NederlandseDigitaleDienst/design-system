@@ -297,6 +297,18 @@ describe('nldd-search-field – dismiss', () => {
 			expect(input.ariaDescribedByElements).toContain(hint);
 		});
 
+		it('adds the shortcut to the help text of a form field instead of replacing it', async () => {
+			el = await fixture<NLDDSearchField>('<nldd-search-field placeholder="Zoek" shortcut="/"></nldd-search-field>');
+			const help = document.createElement('span');
+			document.body.append(help);
+			el.describedByElements = [help];
+			await waitForUpdate(el);
+			const hint = el.shadowRoot!.querySelector('.search-field__shortcut')!;
+			const input = el.shadowRoot!.querySelector('input') as HTMLInputElement & { ariaDescribedByElements: Element[] | null };
+			expect(input.ariaDescribedByElements).toEqual([help, hint]);
+			help.remove();
+		});
+
 		it('drops the shortcut once the field has a value', async () => {
 			el = await fixture<NLDDSearchField>('<nldd-search-field placeholder="Zoek" shortcut="/"></nldd-search-field>');
 			await waitForUpdate(el);

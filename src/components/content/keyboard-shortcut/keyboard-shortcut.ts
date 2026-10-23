@@ -14,7 +14,8 @@
  *
  * @element nldd-keyboard-shortcut
  * @attr {string} keys - Keys separated by '+' (e.g. 'Cmd+K' or 'Ctrl+Shift+P').
- *   Use '+++' for a literal '+' key: 'Ctrl+++' becomes 'Ctrl' + '+'. For more
+ *   End with '++' for a literal '+' key: 'Ctrl++' becomes 'Ctrl' + '+' ('Ctrl+++'
+ *   works too). For more
  *   complex cases (a combo with several '+' keys, for instance) use the default
  *   slot with your own <kbd> elements instead of the keys attribute.
  * @attr {string} mac-keys - Optional override for macOS (iPhone/iPad/iPod included).

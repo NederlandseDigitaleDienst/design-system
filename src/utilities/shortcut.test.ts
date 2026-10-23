@@ -13,9 +13,12 @@ const hint = (overrides: Partial<Parameters<typeof shortcutLabel>[0]> = {}) => (
 describe('shortcut', () => {
 	afterEach(() => _setOSOverride(null));
 
-	it('splits keys on "+" and reads "+++" as a literal plus key', () => {
+	it('splits keys on "+" and reads a trailing "++" or "+++" as a literal plus key', () => {
 		expect(parseKeys('Ctrl+Shift+P')).toEqual(['Ctrl', 'Shift', 'P']);
 		expect(parseKeys('Ctrl+++')).toEqual(['Ctrl', '+']);
+		expect(parseKeys('Ctrl++')).toEqual(['Ctrl', '+']);
+		expect(parseKeys('Ctrl+Shift++')).toEqual(['Ctrl', 'Shift', '+']);
+		expect(parseKeys('+')).toEqual(['+']);
 		expect(parseKeys('')).toEqual([]);
 	});
 
