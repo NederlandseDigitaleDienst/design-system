@@ -217,7 +217,7 @@ for (const { name, hex } of themes) {
 		});
 
 		test(`${name}: links are lintblauw in light mode (red stays red), and reach 4.5:1 in dark mode`, () => {
-			const lightLink = theme.lightLinkInColor ? name : 'lintblauw';
+			const lightLink = theme.lightLinkInColor ? 'accent' : 'lintblauw';
 			assert.match(themeCss(name, palette, hex, { grounds }), new RegExp(`--semantics-links-color: (light-dark\\()?var\\(--primitives-color-${lightLink}-600\\)`));
 			if (theme.lightLinkInColor) {
 				for (const step of [600, 650, 700]) for (const ground of grounds.page.light) assert.ok(contrast(palette.get(step).light, ground) >= 4.5, `light ${step}`);
@@ -242,7 +242,7 @@ for (const { name, hex } of themes) {
 
 		test(`${name}: only the button, the hero, the badge, the status bar, the current tab, the focus ring, the category, the progress and the steps keep the theme color`, () => {
 			const rule = themeCss(name, palette, hex, { grounds });
-			const ownColor = [...rule.matchAll(new RegExp(`^\\t(--[\\w-]+): .*--(?:primitives-color|semantics-categories)-${name}-`, 'gm'))].map((m) => m[1])
+			const ownColor = [...rule.matchAll(new RegExp(`^\\t(--[\\w-]+): .*(?:--primitives-color-accent-|--semantics-categories-${name}-)`, 'gm'))].map((m) => m[1])
 				.filter((prop) => !prop.startsWith('--primitives-color-accent-'));
 			assert.ok(ownColor.length > 0);
 			for (const prop of ownColor) {

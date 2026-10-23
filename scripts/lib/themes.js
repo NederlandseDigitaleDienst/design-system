@@ -424,8 +424,8 @@ export function focusRingSteps(palette, ref, grounds, name) {
 		.filter((step) => contrast(palette.get(step).light, grounds.page.light[0]) >= MIN_TEXT_CONTRAST)
 		.sort((a, b) => Math.abs(a - button.light.step) - Math.abs(b - button.light.step) || a - b)[0];
 	return {
-		light: theme.focusFollowsSelection ? { step: selectionSteps(palette, ref, grounds, name).light.step, color: 'neutral' } : { step: lightStep, own: true },
-		dark: { step: theme.darkFocus ?? (fits ? button.dark.step : 600), own: true },
+		light: theme.focusFollowsSelection ? { step: selectionSteps(palette, ref, grounds, name).light.step, color: 'neutral' } : { step: lightStep },
+		dark: { step: theme.darkFocus ?? (fits ? button.dark.step : 600) },
 	};
 }
 
@@ -557,7 +557,7 @@ export function areaTokens(steps, color = 'accent') {
 
 /** The `--semantics-focus-ring-outline` declaration. */
 export function focusRingTokens(steps, color = 'accent') {
-	const value = (mode) => accent(steps[mode].step, steps[mode].color ?? (steps[mode].own ? color : 'accent'));
+	const value = (mode) => accent(steps[mode].step, steps[mode].color ?? color);
 	return [['--semantics-focus-ring-outline', `var(--primitives-border-width-regular) solid ${pair(value('light'), value('dark'))}`]];
 }
 
@@ -610,7 +610,7 @@ export function selectionTokens(steps, color = 'accent') {
 }
 
 /** The highlighted row's declarations: its fill per state and the text on it. */
-function listHighlightTokens(steps, color) {
+function listHighlightTokens(steps, color = 'accent') {
 	return [
 		...SELECTED_TOKENS.filter(([token]) => token.startsWith(LIST_HIGHLIGHT)).map(([token, , offset]) => [token, both(steps, (m) => accent(m.at(offset), m.color ?? color))]),
 		[`${LIST_HIGHLIGHT}content-color`, both(steps, (m, mode) => textColor(mode, m.text, m.color ?? color))],
@@ -646,13 +646,13 @@ function linkTokens(name) {
 	if (theme.kind) {
 		return LINK_TOKENS.map(([token, light, dark], index) => {
 			const darkValue = theme.darkLink
-				? accent(Math.min(1000, theme.darkLink + index * 50 + offset.dark), name)
+				? accent(Math.min(1000, theme.darkLink + index * 50 + offset.dark))
 				: accent(dark, DEFAULT_THEME);
-			return [token, pair(accent(light + offset.light, theme.lightLinkInColor ? name : DEFAULT_THEME), darkValue)];
+			return [token, pair(accent(light + offset.light, theme.lightLinkInColor ? 'accent' : DEFAULT_THEME), darkValue)];
 		});
 	}
 	if (!theme.linkOffset) return [];
-	return LINK_TOKENS.map(([token, light, dark]) => [token, pair(accent(light + offset.light, name), accent(dark + offset.dark, name))]);
+	return LINK_TOKENS.map(([token, light, dark]) => [token, pair(accent(light + offset.light), accent(dark + offset.dark))]);
 }
 
 const CATEGORY_TOKENS = ['filled', 'tinted'].flatMap((variant) =>
@@ -674,7 +674,7 @@ function categoryTokens(name) {
 	return CATEGORY_TOKENS.map((token) => {
 		const own = `var(--semantics-categories-${name}-${token})`;
 		let value = own;
-		if (isYellow(name) && token.startsWith('tinted-content')) value = pair(grayAccent(name, 750, 'light'), accent(theme.darkText, name));
+		if (isYellow(name) && token.startsWith('tinted-content')) value = pair(grayAccent(name, 750, 'light'), accent(theme.darkText));
 		else if (isYellow(name) && token.startsWith('filled')) value = pair(accent(NEAR_BLACK_FILLED_STEPS[token.replace('filled-', '')], 'neutral'), own);
 		return [`--semantics-categories-accent-${token}`, value];
 	});
@@ -691,8 +691,8 @@ function accentTextTokens(name, button) {
 	const transparent = '--semantics-buttons-accent-transparent-';
 	if (theme.accentText) {
 		const value = (light, dark) => pair(
-			theme.accentText.light ? accent(light, name) : grayAccent(name, light, 'light'),
-			theme.accentText.dark ? accent(dark, name) : grayAccent(name, dark, 'dark'),
+			theme.accentText.light ? accent(light) : grayAccent(name, light, 'light'),
+			theme.accentText.dark ? accent(dark) : grayAccent(name, dark, 'dark'),
 		);
 		return [
 			['--semantics-content-accent-color', value(600, 650)],
@@ -703,7 +703,7 @@ function accentTextTokens(name, button) {
 		];
 	}
 	if (!isYellow(name)) return [];
-	const value = (light, offset) => pair(grayAccent(name, light, 'light'), accent(Math.min(1000, theme.darkText + offset), name));
+	const value = (light, offset) => pair(grayAccent(name, light, 'light'), accent(Math.min(1000, theme.darkText + offset)));
 	return [
 		['--semantics-content-accent-color', value(750, 0)],
 		['--components-text-editor-mention-content-color', value(750, 0)],
@@ -711,8 +711,8 @@ function accentTextTokens(name, button) {
 		[`${transparent}is-hovered-content-color`, value(800, 50)],
 		[`${transparent}is-active-content-color`, value(850, 100)],
 		...['', 'is-hovered-', 'is-active-'].map((state) => [`${transparent}${state}content-secondary-color`, value(550, 0)]),
-		['--components-text-editor-mention-is-selected-background-color', both(button, (m) => accent(m.step, name))],
-		['--components-text-editor-mention-is-selected-content-color', both(button, (m, mode) => textColor(mode, m.text, name))],
+		['--components-text-editor-mention-is-selected-background-color', both(button, (m) => accent(m.step))],
+		['--components-text-editor-mention-is-selected-content-color', both(button, (m, mode) => textColor(mode, m.text, 'accent'))],
 	];
 }
 
@@ -859,29 +859,29 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 		for (let token = part.match(/^var\((--semantics-[\w-]+)\)$/); token && defaults.has(token[1]); token = part.match(/^var\((--semantics-[\w-]+)\)$/)) {
 			part = splitModes(defaults.get(token[1]))[0];
 		}
-		return part;
+		return part.replaceAll(`--primitives-color-${name}-`, '--primitives-color-accent-');
 	};
 	for (const component of ['progress-bar', 'progress-circle']) {
 		lines.push(
-			[`--components-${component}-accent-background-color`, pair(yellow ? accent(selection.light.step, 'neutral') : lightCategory('background-color'), accent(button.dark.step, name))],
-			[`--components-${component}-accent-highlight-border-color`, pair(yellow ? accent(selection.light.step + 50, 'neutral') : lightCategory('highlight-border-color'), accent(clamp(button.dark.step + 50), name))],
+			[`--components-${component}-accent-background-color`, pair(yellow ? accent(selection.light.step, 'neutral') : lightCategory('background-color'), accent(button.dark.step))],
+			[`--components-${component}-accent-highlight-border-color`, pair(yellow ? accent(selection.light.step + 50, 'neutral') : lightCategory('highlight-border-color'), accent(clamp(button.dark.step + 50)))],
 		);
 	}
 	lines.push(
-		...buttonTokens(button, name),
-		...areaTokens(areaSteps(palette, ref), name),
-		...badgeTokens(button, name),
-		...statusBarTokens(button, name),
+		...buttonTokens(button),
+		...areaTokens(areaSteps(palette, ref)),
+		...badgeTokens(button),
+		...statusBarTokens(button),
 		...accentTextTokens(name, button),
-		...focusRingTokens(focusRingSteps(palette, ref, grounds, name), name),
-		...tabBarTokens(tabSteps(palette, ref, grounds, name), name),
+		...focusRingTokens(focusRingSteps(palette, ref, grounds, name)),
+		...tabBarTokens(tabSteps(palette, ref, grounds, name)),
 	);
 
 	// The accent icon of a banner, inline dialog and notification is one color.
 	const icon = '--components-banner-accent-icon-color';
 	let iconValue;
 	if (yellow) {
-		iconValue = pair(accent(selection.light.step, 'neutral'), accent(theme.darkText, name));
+		iconValue = pair(accent(selection.light.step, 'neutral'), accent(theme.darkText));
 	} else if (theme.bannerIcon) {
 		const [light, dark] = splitModes(defaults.get(icon) ?? accent(700));
 		iconValue = pair(theme.bannerIcon.light ? accent(theme.bannerIcon.light) : light, theme.bannerIcon.dark ? accent(theme.bannerIcon.dark) : dark);
@@ -892,32 +892,32 @@ export function themeCss(name, palette, ref, { grounds, neutral, order, defaults
 
 	if (theme.menuBarIndicator) {
 		const indicator = '--components-menu-bar-item-is-current-indicator-color';
-		lines.push([indicator, pair(accent(nearestStandingStep(palette, button.light.step, grounds), name), splitModes(defaults.get(indicator) ?? accent(750))[1])]);
+		lines.push([indicator, pair(accent(nearestStandingStep(palette, button.light.step, grounds)), splitModes(defaults.get(indicator) ?? accent(750))[1])]);
 	}
 
 	const ownHighlight = status || theme.ownHighlight;
-	lines.push(...selectionTokens(selection, name).filter(([token]) => !ownHighlight || !token.startsWith(LIST_HIGHLIGHT)));
-	if (ownHighlight) lines.push(...listHighlightTokens(listHighlightSteps(palette, ref, grounds, name), name));
+	lines.push(...selectionTokens(selection).filter(([token]) => !ownHighlight || !token.startsWith(LIST_HIGHLIGHT)));
+	if (ownHighlight) lines.push(...listHighlightTokens(listHighlightSteps(palette, ref, grounds, name)));
 
 	// The line and ring of a step take the button step, which matches the
 	// progress and the banner icon. In light mode a button that does not stand
 	// out 3:1 on the page gives way to the step nearest to it that does; a
 	// yellow theme's follow its selection. A finished marker carries its check,
 	// so it is the button itself, with the text of the button.
-	let line = accent(button.light.step, name);
+	let line = accent(button.light.step);
 	let past = line;
-	let pastText = textColor('light', button.light.text, name);
+	let pastText = textColor('light', button.light.text, 'accent');
 	if (yellow && !standsOut(palette, button.light.step, grounds)) {
 		line = past = accent(selection.light.step, 'neutral');
 		pastText = textColor('light', 'white', 'neutral');
 	} else if (!standsOut(palette, button.light.step, grounds)) {
-		line = accent(nearestStandingStep(palette, button.light.step, grounds), name);
+		line = accent(nearestStandingStep(palette, button.light.step, grounds));
 	}
-	const dark = accent(button.dark.step, name);
+	const dark = accent(button.dark.step);
 	lines.push(
 		['--semantics-steps-progress-color', pair(line, dark)],
 		['--semantics-steps-is-past-background-color', pair(past, dark)],
-		['--semantics-steps-is-past-content-color', pair(pastText, textColor('dark', button.dark.text, name))],
+		['--semantics-steps-is-past-content-color', pair(pastText, textColor('dark', button.dark.text, 'accent'))],
 	);
 
 	// The range between two selected days is a tint of the selection, so it is
