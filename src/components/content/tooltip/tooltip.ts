@@ -232,8 +232,10 @@ export class NLDDTooltip extends LitElement {
 				});
 				document.body.appendChild(this._descriptionEl);
 			}
-			this._descriptionEl.textContent = description;
-			trigger.setAttribute('aria-describedby', this._tooltipId);
+			// Hover and focus sync too; write only what changed, so nothing is
+			// re-announced.
+			if (this._descriptionEl.textContent !== description) this._descriptionEl.textContent = description;
+			if (trigger.getAttribute('aria-describedby') !== this._tooltipId) trigger.setAttribute('aria-describedby', this._tooltipId);
 		} else {
 			trigger.removeAttribute('aria-describedby');
 			this._descriptionEl?.remove();

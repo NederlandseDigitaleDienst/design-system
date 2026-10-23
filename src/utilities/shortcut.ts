@@ -36,9 +36,11 @@ export function resolveKeys(spec: KeysPerOS, os: OS): string {
 /** Splits 'Ctrl+Shift+P' into keys; a trailing '++' ('Ctrl++') or '+++' is a literal '+' key. */
 export function parseKeys(spec: string): string[] {
 	if (!spec) return [];
-	if (spec.trim() === '+') return ['+'];
+	// Spaces around a '+' are spacing, not part of a key: 'Ctrl + +' is 'Ctrl++'.
+	const compact = spec.trim().replace(/\s*\+\s*/g, '+');
+	if (compact === '+') return ['+'];
 	const MARKER = '\u0000';
-	return spec
+	return compact
 		.replace(/\+\+\+/g, `+${MARKER}+`)
 		.replace(/\+\+$/, `+${MARKER}`)
 		.split('+')
