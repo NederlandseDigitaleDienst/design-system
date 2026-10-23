@@ -752,5 +752,7 @@ describe('nldd-segmented-control-item shortcut', () => {
 		await waitForUpdate(item);
 		expect(item.getAttribute('aria-label')).toBe('Lijst Ctrl 1');
 		expect(item.shadowRoot!.querySelector('nldd-tooltip')!.hasAttribute('text')).toBe(false);
+		// Announced once, in the name: the tooltip in the shadow root adds no description.
+		expect(item.hasAttribute('aria-describedby')).toBe(false);
 	});
 });

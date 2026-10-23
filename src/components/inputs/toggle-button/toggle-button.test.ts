@@ -670,6 +670,8 @@ describe('nldd-toggle-button – selected-icon', () => {
 			const tooltip = el.shadowRoot!.querySelector('nldd-tooltip')!;
 			expect(tooltip.getAttribute('text')).toBe('Vet');
 			expect(tooltip.getAttribute('shortcut-mac')).toBe('Cmd+B');
+			// Announced once, in the name: the tooltip in the shadow root adds no description.
+			expect(el.shadowRoot!.querySelector('button')!.hasAttribute('aria-describedby')).toBe(false);
 		});
 
 		it('shows a tooltip with the shortcut for a text-only toggle', async () => {

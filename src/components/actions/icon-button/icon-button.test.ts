@@ -796,6 +796,9 @@ describe('nldd-icon-button – on a colored surface', () => {
 			expect(tooltip.getAttribute('text')).toBe('Presentatiemodus');
 			expect(tooltip.getAttribute('shortcut')).toBe('Alt+P');
 			expect(tooltip.getAttribute('shortcut-mac')).toBe('Option+P');
+			// The tooltip sits in the shadow root, so it adds no description: the
+			// shortcut is announced once, in the name.
+			expect(button.hasAttribute('aria-describedby')).toBe(false);
 		});
 
 		it('keeps a tooltip for the shortcut when lg shows the text', async () => {
