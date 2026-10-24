@@ -263,7 +263,7 @@ const overview = (scheme: 'light' | 'dark') => html`
 `;
 
 const sideBySide = () => html`
-	<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));">
+	<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));">
 		${(['light', 'dark'] as const).map((scheme) => html`
 			<div style="color-scheme: ${scheme}; padding: var(--primitives-space-24); background-color: var(--semantics-surfaces-base-background-color); color: var(--semantics-content-color);">
 				${overview(scheme)}
