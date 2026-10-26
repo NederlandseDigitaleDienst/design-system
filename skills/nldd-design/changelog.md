@@ -45,7 +45,6 @@ here; consult the commit history if you need that level of detail.
 - **A read-only `nldd-text-editor` or `nldd-code-editor` shows no caret**, like a native read-only field. You can still select and copy.
 - **The text of a disabled `nldd-text-editor` or `nldd-code-editor` can no longer be selected**, like a native disabled field. A drag that started beside the editor still selected it, and the text turned darker.
 - **A selection in `nldd-text-editor` is as tall as the line, like the code, mention and annotation tokens.** It took the height of what it started on: the letters, so it ran thinner than a token beside it, or a token, so it ran taller than the text after it. A mention in a wider selection has the selection color behind its rounded corners, which showed white. A mention selected on its own keeps its rounded corners. A partly selected inline code is gray over its full height and keeps its border and rounded end, like a fully selected one. The gray ran only as tall as the letters and squared off the end.
-- **The mention colors are semantics tokens now**, since the editor and the rich text share them: `--components-text-editor-mention-*` became `--semantics-mentions-*`, with a `highlight-border-color` for its edge and an `is-hovered` and `is-active` background for a mention that is a link. The themes that ship with the system moved along. If your own theme set the old names, rename them.
 
 ### Fixed
 
@@ -59,6 +58,7 @@ here; consult the commit history if you need that level of detail.
 ### Breaking
 
 - **The icon alias `chart-line` is now `line-chart`**, next to the new `bar-chart` for `chart-bar-x-axis`. Replace `icon="chart-line"` with `icon="line-chart"`, or use the icon's own name, `chart-line-x-y-axis`.
+- **`--components-text-editor-mention-*` is now `--semantics-mentions-*`**, since the editor and the rich text share the mention colors. It adds a `highlight-border-color` for the edge and an `is-hovered` and `is-active` background for a mention that is a link. The themes that ship with the system moved along. A theme of your own that sets the old names loses its mention colors without an error, so rename them.
 
 ## [0.11.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.10.0...v0.11.0) (2026-10-23)
 

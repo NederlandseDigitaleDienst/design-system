@@ -591,6 +591,20 @@ index 3333333..4444444 100644
 		expect([parsed.added, parsed.removed]).toEqual([2, 2]);
 	});
 
+	it('waarschuwt in development als regels buiten de telling van hun @@-kop vallen', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			const parsed = parseUnifiedDiff('@@ -1 +1 @@\n-a\n+b\n+te veel');
+			expect(parsed.lines.map((l) => l.text)).toEqual(['a', 'b']);
+			expect(warn).toHaveBeenCalledTimes(1);
+			warn.mockClear();
+			parseUnifiedDiff(`@@ -1 +1 @@\n-a\n+b\ndiff --git a/c b/c\n--- a/c\n+++ b/c\n@@ -1 +1 @@\n-c\n+d`);
+			expect(warn).not.toHaveBeenCalled();
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
 	it('nummert een nieuw en een verwijderd bestand zoals git', () => {
 		const created = parseUnifiedDiff('--- /dev/null\n+++ b/nieuw.ts\n@@ -0,0 +1,2 @@\n+a\n+b');
 		expect(created.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([['added', null, 1], ['added', null, 2]]);

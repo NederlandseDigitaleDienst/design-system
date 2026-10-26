@@ -61,6 +61,10 @@ export function parseUnifiedDiff(raw: string): ParsedDiff {
 	let hunk: string | null = null;
 	let added = 0;
 	let removed = 0;
+	// Lines past a hunk's counts that are not the header of a next file: a tool
+	// that wrote the counts wrong loses them, which development should hear about.
+	let seenHunk = false;
+	let dropped = 0;
 	for (const line of source) {
 		const header = HUNK_RE.exec(line);
 		if (header) {
@@ -69,9 +73,13 @@ export function parseUnifiedDiff(raw: string): ParsedDiff {
 			newNumber = Number(header[3]);
 			newLeft = header[4] === undefined ? 1 : Number(header[4]);
 			hunk = line;
+			seenHunk = true;
 			continue;
 		}
-		if (oldLeft <= 0 && newLeft <= 0) continue;
+		if (oldLeft <= 0 && newLeft <= 0) {
+			if (seenHunk && line !== '' && !line.startsWith('\\') && !FILE_HEADER_RE.test(line)) dropped++;
+			continue;
+		}
 		if (line.startsWith('\\')) continue;
 		const sign = line[0];
 		const text = line.slice(1);
@@ -90,6 +98,9 @@ export function parseUnifiedDiff(raw: string): ParsedDiff {
 			newLeft--;
 		}
 		hunk = null;
+	}
+	if (dropped > 0 && import.meta.env?.DEV) {
+		console.warn(`<nldd-code-viewer>: ${dropped} line(s) of the diff fall outside the line counts of their @@ header and are not shown. Check the counts in the hunk headers.`);
 	}
 	return { doc: lines.map((line) => line.text).join('\n'), lines, added, removed };
 }
@@ -222,7 +233,9 @@ export function diffExtensions(parsed: ParsedDiff, labels: DiffLabels): Extensio
 	});
 
 	const lineAt = (view: EditorView, block: BlockInfo): DiffLine | undefined => lines[view.state.doc.lineAt(block.from).number - 1];
-	const widest = (pick: (line: DiffLine) => number | null): string => String(Math.max(0, ...lines.map((line) => pick(line) ?? 0)));
+	// A reduce, not Math.max(...): spreading a very long diff runs past the
+	// engine's argument limit.
+	const widest = (pick: (line: DiffLine) => number | null): string => String(lines.reduce((max, line) => Math.max(max, pick(line) ?? 0), 0));
 	const numberGutter = (name: string, pick: (line: DiffLine) => number | null): Extension => gutter({
 		class: `cm-diff-gutter cm-diff-${name}-gutter`,
 		lineMarker: (view, block) => {
