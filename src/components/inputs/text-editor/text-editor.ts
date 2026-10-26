@@ -95,6 +95,7 @@ import { orderedListRenumber } from './text-editor.ordered-list.js';
 import { dragToMove, dragMovePlugin } from './text-editor.drag.js';
 import { linkOpenBadge } from './text-editor.links.js';
 import { stableCursor } from './text-editor.cursor.js';
+import { focusSelectionGuard } from './text-editor.focus-selection.js';
 import {
 	toggleInlineWrap,
 	indentListItems as cmIndentListItems,
@@ -346,6 +347,9 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			// the direction it arrived from unless that direction means something (a
 			// widget, a line wrap). See text-editor.cursor.ts.
 			stableCursor,
+			// Safari can stretch the selection to the start when focus comes back
+			// from a toolbar. See text-editor.focus-selection.ts.
+			focusSelectionGuard(),
 			dropCursor(),
 			dragToMove,
 			// Prec.highest so this beats the markdown language's deleteMarkupBackward,
