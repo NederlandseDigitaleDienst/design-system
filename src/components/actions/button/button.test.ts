@@ -15,6 +15,9 @@ describe('nldd-button', () => {
 
 	afterEach(() => {
 		if (el) cleanup(el);
+		// A spy on console.warn outlives its test otherwise, and the next spyOn
+		// hands back the same one, calls of the earlier test included.
+		vi.restoreAllMocks();
 	});
 
 	it('verstuurt het formulier waar het `form`-attribuut naar wijst, ook een nldd-form', async () => {
