@@ -23,7 +23,8 @@ export function codeViewerTemplate(component: NLDDCodeViewer): TemplateResult {
 	// <slot> stays the declarative content source and the copy source.
 	// Render the copy button only when it can actually work (not no-copy, and a
 	// secure context with a Clipboard API); otherwise it'd be a dead button.
-	return html`<div class="code-viewer"></div><slot @slotchange=${component._onSlotChange}></slot>${!component._canCopy ? nothing : html`
+	const summary = component._diffSummary;
+	return html`${summary ? html`<div class="code-viewer__diff-summary">${summary}</div>` : nothing}<div class="code-viewer"></div><slot @slotchange=${component._onSlotChange}></slot>${!component._canCopy ? nothing : html`
 		<div class="code-viewer__actions">
 			<div class="code-viewer__copy-button">
 				<nldd-tooltip

@@ -3714,11 +3714,129 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/content/code-viewer/code-viewer.diff.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "parseUnifiedDiff",
+          "return": {
+            "type": {
+              "text": "ParsedDiff"
+            }
+          },
+          "parameters": [
+            {
+              "name": "raw",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parse a unified diff. File headers before the first hunk (`diff --git`,\n`index`, `---`, `+++` and the like) are left out: the file name belongs to\nthe page around the viewer. So is `\\ No newline at end of file`. Without any\n`@@` header, the numbers start at 1."
+        },
+        {
+          "kind": "function",
+          "name": "pairChangedLines",
+          "return": {
+            "type": {
+              "text": "Array<[number, number]>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "lines",
+              "type": {
+                "text": "DiffLine[]"
+              }
+            }
+          ],
+          "description": "The removed and added lines that are one change: within a hunk, a run of\nremoved lines directly followed by a run of added lines, paired in order.\nIndices are into `lines`."
+        },
+        {
+          "kind": "function",
+          "name": "diffExtensions",
+          "return": {
+            "type": {
+              "text": "Extension"
+            }
+          },
+          "parameters": [
+            {
+              "name": "parsed",
+              "type": {
+                "text": "ParsedDiff"
+              }
+            },
+            {
+              "name": "labels",
+              "type": {
+                "text": "DiffLabels"
+              }
+            }
+          ],
+          "description": "Line colors, gutters, hunk headers and line labels for a parsed diff."
+        },
+        {
+          "kind": "function",
+          "name": "wordExtensions",
+          "return": {
+            "type": {
+              "text": "Promise<Extension>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "parsed",
+              "type": {
+                "text": "ParsedDiff"
+              }
+            }
+          ],
+          "description": "Marks on the words that differ between each paired removed and added line.\nLoads"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "parseUnifiedDiff",
+          "declaration": {
+            "name": "parseUnifiedDiff",
+            "module": "src/components/content/code-viewer/code-viewer.diff.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pairChangedLines",
+          "declaration": {
+            "name": "pairChangedLines",
+            "module": "src/components/content/code-viewer/code-viewer.diff.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "diffExtensions",
+          "declaration": {
+            "name": "diffExtensions",
+            "module": "src/components/content/code-viewer/code-viewer.diff.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "wordExtensions",
+          "declaration": {
+            "name": "wordExtensions",
+            "module": "src/components/content/code-viewer/code-viewer.diff.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/content/code-viewer/code-viewer.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. The viewer grows with its content. Set `max-height` to show a long file in a frame of its own: the block grows up to that height and scrolls beyond it. A scroller that overflows, in either direction, is a tab stop with a role and a name, so the keyboard reaches what a pointer can scroll to. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.",
+          "description": "A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. The viewer grows with its content. Set `max-height` to show a long file in a frame of its own: the block grows up to that height and scrolls beyond it. A scroller that overflows, in either direction, is a tab stop with a role and a name, so the keyboard reaches what a pointer can scroll to. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Set `diff` when the content is a unified diff, as git and pull request tools hand it out. The viewer shows the code it changes: an added line green and a removed line red, a column with the old and one with the new line number, a column with the `+` or `−`, and the `@@` header of each hunk between them. Within a removed line that is directly followed by an added one, the words that differ are marked, unless more than half of the line changed. File headers before the first hunk are left out: name the file in the page around the viewer. `language` still highlights the code. A screen reader hears a summary first (\"2 regels toegevoegd, 1 regel verwijderd\") and \"Toegevoegd\" or \"Verwijderd\" with the line number before each changed line. A selection copies the code; the copy button copies the diff. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.",
           "name": "NLDDCodeViewer",
           "members": [
             {
@@ -3740,6 +3858,17 @@
               },
               "default": "''",
               "attribute": "language",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "diff",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The content is a unified diff.",
+              "attribute": "diff",
               "reflects": true
             },
             {
@@ -3829,6 +3958,15 @@
               "default": "''",
               "fieldName": "language",
               "description": "Grammar to highlight with. Empty disables highlighting."
+            },
+            {
+              "name": "diff",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked.",
+              "fieldName": "diff"
             },
             {
               "name": "no-copy",
@@ -19451,6 +19589,26 @@
           "declaration": {
             "name": "orderedListRenumber",
             "module": "src/components/inputs/text-editor/text-editor.ordered-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.selection.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "lineHighSelection"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "lineHighSelection",
+          "declaration": {
+            "name": "lineHighSelection",
+            "module": "src/components/inputs/text-editor/text-editor.selection.ts"
           }
         }
       ]

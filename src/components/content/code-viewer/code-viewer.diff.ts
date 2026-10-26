@@ -1,0 +1,256 @@
+import { Decoration, EditorView, GutterMarker, WidgetType, gutter, gutterLineClass, type BlockInfo } from '@codemirror/view';
+import { RangeSet, type Extension, type Range } from '@codemirror/state';
+
+/* A unified diff, as git and every pull request tool hand it out, shown as the
+ * code it changes: each line without its +, - or space, two columns with the
+ * old and the new line number, a column with the sign, and a header between
+ * hunks. The document holds only the code, so the grammar highlights it and a
+ * selection copies code. The copy button copies the diff itself. */
+
+export type DiffLineKind = 'added' | 'removed' | 'context';
+
+export interface DiffLine {
+	kind: DiffLineKind;
+	text: string;
+	oldNumber: number | null;
+	newNumber: number | null;
+	/** The `@@` header of the hunk this line opens, if it opens one. */
+	hunk: string | null;
+}
+
+export interface ParsedDiff {
+	/** The code: every line of the diff without its first character. */
+	doc: string;
+	lines: DiffLine[];
+	added: number;
+	removed: number;
+}
+
+const HUNK_RE = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/;
+
+/** Parse a unified diff. File headers before the first hunk (`diff --git`,
+ *  `index`, `---`, `+++` and the like) are left out: the file name belongs to
+ *  the page around the viewer. So is `\ No newline at end of file`. Without any
+ *  `@@` header, the numbers start at 1. */
+export function parseUnifiedDiff(raw: string): ParsedDiff {
+	const source = raw.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n');
+	const hasHunks = source.some((line) => HUNK_RE.test(line));
+	const lines: DiffLine[] = [];
+	let inHunk = !hasHunks;
+	let oldNumber = 1;
+	let newNumber = 1;
+	let hunk: string | null = null;
+	let added = 0;
+	let removed = 0;
+	for (const line of source) {
+		const header = HUNK_RE.exec(line);
+		if (header) {
+			inHunk = true;
+			oldNumber = Number(header[1]);
+			newNumber = Number(header[2]);
+			hunk = line;
+			continue;
+		}
+		if (!inHunk || line.startsWith('\\')) continue;
+		const sign = line[0];
+		const text = line.slice(1);
+		if (sign === '+') {
+			lines.push({ kind: 'added', text, oldNumber: null, newNumber: newNumber++, hunk });
+			added++;
+		} else if (sign === '-') {
+			lines.push({ kind: 'removed', text, oldNumber: oldNumber++, newNumber: null, hunk });
+			removed++;
+		} else {
+			// A space, or an empty line where a tool dropped the trailing space.
+			lines.push({ kind: 'context', text, oldNumber: oldNumber++, newNumber: newNumber++, hunk });
+		}
+		hunk = null;
+	}
+	return { doc: lines.map((line) => line.text).join('\n'), lines, added, removed };
+}
+
+/** The removed and added lines that are one change: within a hunk, a run of
+ *  removed lines directly followed by a run of added lines, paired in order.
+ *  Indices are into `lines`. */
+export function pairChangedLines(lines: DiffLine[]): Array<[number, number]> {
+	const pairs: Array<[number, number]> = [];
+	let i = 0;
+	while (i < lines.length) {
+		if (lines[i].kind !== 'removed') {
+			i++;
+			continue;
+		}
+		const removedFrom = i;
+		while (i < lines.length && lines[i].kind === 'removed' && (i === removedFrom || !lines[i].hunk)) i++;
+		const addedFrom = i;
+		while (i < lines.length && lines[i].kind === 'added' && !lines[i].hunk) i++;
+		for (let k = 0; k < Math.min(addedFrom - removedFrom, i - addedFrom); k++) {
+			pairs.push([removedFrom + k, addedFrom + k]);
+		}
+	}
+	return pairs;
+}
+
+export interface DiffLabels {
+	addedLine(number: number): string;
+	removedLine(number: number): string;
+}
+
+class NumberMarker extends GutterMarker {
+	constructor(readonly text: string) {
+		super();
+	}
+
+	override eq(other: NumberMarker): boolean {
+		return other.text === this.text;
+	}
+
+	override toDOM(): Node {
+		return document.createTextNode(this.text);
+	}
+}
+
+class LineClassMarker extends GutterMarker {
+	constructor(readonly className: string) {
+		super();
+		this.elementClass = className;
+	}
+
+	override eq(other: LineClassMarker): boolean {
+		return other.className === this.className;
+	}
+}
+
+/* What a screen reader says before a changed line: the gutters are hidden
+ * from it, and a color says nothing. Not in the document, so not in a copy. */
+class LineLabelWidget extends WidgetType {
+	constructor(readonly text: string) {
+		super();
+	}
+
+	override eq(other: LineLabelWidget): boolean {
+		return other.text === this.text;
+	}
+
+	toDOM(): HTMLElement {
+		const label = document.createElement('span');
+		label.className = 'cm-diff-line-label';
+		label.textContent = `${this.text}: `;
+		return label;
+	}
+}
+
+/* The `@@` header between hunks. A screen reader skips it: the label on each
+ * changed line already says where it is. */
+class HunkWidget extends WidgetType {
+	constructor(readonly header: string) {
+		super();
+	}
+
+	override eq(other: HunkWidget): boolean {
+		return other.header === this.header;
+	}
+
+	toDOM(): HTMLElement {
+		const row = document.createElement('div');
+		row.className = 'cm-diff-hunk';
+		row.setAttribute('aria-hidden', 'true');
+		row.textContent = this.header;
+		return row;
+	}
+}
+
+const lineClass: Record<DiffLineKind, string> = {
+	added: 'cm-diff-added',
+	removed: 'cm-diff-removed',
+	context: 'cm-diff-context',
+};
+
+const SIGN: Record<DiffLineKind, string> = { added: '+', removed: '−', context: '' };
+
+/** Line colors, gutters, hunk headers and line labels for a parsed diff. */
+export function diffExtensions(parsed: ParsedDiff, labels: DiffLabels): Extension {
+	const { lines } = parsed;
+	if (lines.length === 0) return [];
+	const lineStarts: number[] = [];
+	let pos = 0;
+	for (const line of lines) {
+		lineStarts.push(pos);
+		pos += line.text.length + 1;
+	}
+
+	const decorations: Range<Decoration>[] = [];
+	const gutterClasses: Range<GutterMarker>[] = [];
+	lines.forEach((line, i) => {
+		const from = lineStarts[i];
+		if (line.hunk) decorations.push(Decoration.widget({ widget: new HunkWidget(line.hunk), block: true, side: -1 }).range(from));
+		decorations.push(Decoration.line({ class: lineClass[line.kind] }).range(from));
+		if (line.kind === 'added') decorations.push(Decoration.widget({ widget: new LineLabelWidget(labels.addedLine(line.newNumber!)), side: -1 }).range(from));
+		if (line.kind === 'removed') decorations.push(Decoration.widget({ widget: new LineLabelWidget(labels.removedLine(line.oldNumber!)), side: -1 }).range(from));
+		gutterClasses.push(new LineClassMarker(lineClass[line.kind]).range(from));
+	});
+
+	const lineAt = (view: EditorView, block: BlockInfo): DiffLine | undefined => lines[view.state.doc.lineAt(block.from).number - 1];
+	const widest = (pick: (line: DiffLine) => number | null): string => String(Math.max(0, ...lines.map((line) => pick(line) ?? 0)));
+	const numberGutter = (name: string, pick: (line: DiffLine) => number | null): Extension => gutter({
+		class: `cm-diff-gutter cm-diff-${name}-gutter`,
+		lineMarker: (view, block) => {
+			const line = lineAt(view, block);
+			const number = line ? pick(line) : null;
+			return number === null ? null : new NumberMarker(String(number));
+		},
+		initialSpacer: () => new NumberMarker(widest(pick)),
+	});
+
+	return [
+		EditorView.decorations.of(Decoration.set(decorations, true)),
+		gutterLineClass.of(RangeSet.of(gutterClasses, true)),
+		numberGutter('old', (line) => line.oldNumber),
+		numberGutter('new', (line) => line.newNumber),
+		gutter({
+			class: 'cm-diff-gutter cm-diff-sign-gutter',
+			lineMarker: (view, block) => {
+				const line = lineAt(view, block);
+				return line && line.kind !== 'context' ? new NumberMarker(SIGN[line.kind]) : null;
+			},
+			initialSpacer: () => new NumberMarker('+'),
+		}),
+	];
+}
+
+/** Above this share of a line changed, marking the words says less than
+ *  marking none: the whole line is new. */
+const WORD_MARK_LIMIT = 0.5;
+
+const removedWord = Decoration.mark({ class: 'cm-diff-removed-word' });
+const addedWord = Decoration.mark({ class: 'cm-diff-added-word' });
+
+/** Marks on the words that differ between each paired removed and added line.
+ *  Loads @codemirror/merge on first use, so a viewer without a diff never
+ *  fetches it. */
+export async function wordExtensions(parsed: ParsedDiff): Promise<Extension> {
+	const pairs = pairChangedLines(parsed.lines);
+	if (pairs.length === 0) return [];
+	const { presentableDiff } = await import('@codemirror/merge');
+	const lineStarts: number[] = [];
+	let pos = 0;
+	for (const line of parsed.lines) {
+		lineStarts.push(pos);
+		pos += line.text.length + 1;
+	}
+	const marks: Range<Decoration>[] = [];
+	for (const [r, a] of pairs) {
+		const before = parsed.lines[r].text;
+		const after = parsed.lines[a].text;
+		const changes = presentableDiff(before, after);
+		const changedBefore = changes.reduce((sum, c) => sum + c.toA - c.fromA, 0);
+		const changedAfter = changes.reduce((sum, c) => sum + c.toB - c.fromB, 0);
+		if (changes.length === 0) continue;
+		if (changedBefore + changedAfter > (before.length + after.length) * WORD_MARK_LIMIT) continue;
+		for (const change of changes) {
+			if (change.toA > change.fromA) marks.push(removedWord.range(lineStarts[r] + change.fromA, lineStarts[r] + change.toA));
+			if (change.toB > change.fromB) marks.push(addedWord.range(lineStarts[a] + change.fromB, lineStarts[a] + change.toB));
+		}
+	}
+	return marks.length ? EditorView.decorations.of(Decoration.set(marks, true)) : [];
+}

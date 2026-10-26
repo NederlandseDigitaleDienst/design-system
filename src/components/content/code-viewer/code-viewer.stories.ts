@@ -57,6 +57,11 @@ export default {
 			description: 'Grammar voor syntax-highlighting. Bij "(geen)" wordt de inhoud raw gerenderd.',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		diff: {
+			control: 'boolean',
+			description: 'De inhoud is een unified diff: toegevoegde regels groen, verwijderde rood, met oude en nieuwe regelnummers en de gewijzigde woorden gemarkeerd.',
+			table: { defaultValue: { summary: false } },
+		},
 		copy: {
 			control: 'boolean',
 			description: 'Toon de kopieerknop rechtsboven. Klik kopieert de raw slot-tekst naar het klembord.',
@@ -73,6 +78,7 @@ export default {
 		maxHeight: '',
 		content: DEFAULT_CONTENT,
 		language: '',
+		diff: false,
 		copy: true,
 		wrap: false,
 	},
@@ -83,6 +89,7 @@ const Template = (args: Record<string, any>) => html`
 		appearance=${args.appearance}
 		max-height=${args.maxHeight || nothing}
 		language=${args.language || nothing}
+		?diff=${args.diff}
 		?no-copy=${!args.copy}
 		?wrap=${args.wrap}
 	>${args.content}</nldd-code-viewer>
@@ -179,6 +186,36 @@ function isEligible(person, threshold = 32502) {
   if (person.income > threshold) return false;
   return person.age >= 18 && person.insured;
 }`,
+	},
+};
+
+
+/**
+ * Met `diff` toont de viewer een unified diff als de code die hij wijzigt. Waar
+ * een verwijderde regel direct door een toegevoegde wordt gevolgd, zijn de
+ * woorden gemarkeerd die verschillen. De kopieerknop kopieert de diff.
+ */
+export const Diff = {
+	render: Template,
+	args: {
+		diff: true,
+		language: 'typescript',
+		content: `diff --git a/src/aanvraag.ts b/src/aanvraag.ts
+--- a/src/aanvraag.ts
++++ b/src/aanvraag.ts
+@@ -1,5 +1,6 @@
+ const aanvraag = {
+   id: 'A-1042',
+   onderwerp: 'Dakisolatie',
+-  status: 'nieuw',
++  status: 'in behandeling',
++  team: 'Uitvoering',
+ };
+@@ -20,3 +21,3 @@
+ export function toonAanvraag(aanvraag) {
+-  return \`Aanvraag \${aanvraag.id}\`;
++  return \`Aanvraag \${aanvraag.id}, \${aanvraag.status}\`;
+ }`,
 	},
 };
 

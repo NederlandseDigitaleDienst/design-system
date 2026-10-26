@@ -19,6 +19,19 @@
  * plain. Grammars are loaded lazily on first use, so a page that never sets
  * `language` ships zero grammar code.
  *
+ * ## Diff
+ * Set `diff` when the content is a unified diff, as git and pull request tools
+ * hand it out. The viewer shows the code it changes: an added line green and a
+ * removed line red, a column with the old and one with the new line number, a
+ * column with the `+` or `−`, and the `@@` header of each hunk between them.
+ * Within a removed line that is directly followed by an added one, the words
+ * that differ are marked, unless more than half of the line changed. File
+ * headers before the first hunk are left out: name the file in the page around
+ * the viewer. `language` still highlights the code. A screen reader hears a
+ * summary first ("2 regels toegevoegd, 1 regel verwijderd") and "Toegevoegd" or
+ * "Verwijderd" with the line number before each changed line. A selection
+ * copies the code; the copy button copies the diff.
+ *
  * ### Theming
  * Token colors are the `--semantics-code-syntax-*` custom properties
  * (shared with the editor via the CodeMirror highlight style). Override them
@@ -28,6 +41,7 @@
  *
  * @attr {'box-tinted'|'box-base'|'simple'} appearance - Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.
  * @attr {string} language - Grammar to highlight with. Empty disables highlighting.
+ * @attr {boolean} diff - The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked.
  * @attr {boolean} no-copy - Hide the copy-to-clipboard button (shown by default).
  * @attr {boolean} wrap - Wrap long lines instead of horizontal scroll
  * @attr {string} max-height - Tallest the block may get, as a CSS length (e.g. '400px', '50vh'). Beyond it the content scrolls vertically. Unset means no cap.
@@ -46,6 +60,7 @@ import { loadLanguage } from '../../../utilities/codemirror/languages.js';
 import { codeViewerStyles } from './code-viewer.styles.js';
 import { codeViewerTemplate } from './code-viewer.template.js';
 import { nlddCodeViewerTranslations } from './code-viewer.i18n.js';
+import { diffExtensions, parseUnifiedDiff, wordExtensions, type ParsedDiff } from './code-viewer.diff.js';
 import type { NLDDCodeViewerTranslations } from './code-viewer.i18n.js';
 import { onColorSchemeChange, forceScrollLayerRepaint } from '../../../utilities/color-scheme-repaint.js';
 import '../../actions/icon-button/icon-button.js';
@@ -80,6 +95,10 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
 	language = '';
 
+	/** The content is a unified diff. */
+	@property({ type: Boolean, reflect: true })
+	diff = false;
+
 	/** Hide the copy-to-clipboard button (shown by default). */
 	@property({ type: Boolean, reflect: true, attribute: 'no-copy' })
 	noCopy = false;
@@ -108,7 +127,12 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 
 	private _languageCompartment = new Compartment();
 	private _wrapCompartment = new Compartment();
+	private _diffCompartment = new Compartment();
+	private _wordCompartment = new Compartment();
 	private _languagePending: Promise<void> = Promise.resolve();
+	private _wordsPending: Promise<void> = Promise.resolve();
+	/** The parsed diff on screen, or null without `diff`. */
+	_parsedDiff: ParsedDiff | null = null;
 	private _unsubscribeScheme?: () => void;
 	private _resizeObserver?: ResizeObserver;
 	private _mutationObserver?: MutationObserver;
@@ -147,6 +171,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			} as unknown as Record<string, string>),
 			this._wrapCompartment.of(this.wrap ? EditorView.lineWrapping : []),
 			this._languageCompartment.of([]),
+			this._diffCompartment.of(this._parsedDiff ? this._diffExtension(this._parsedDiff) : []),
+			this._wordCompartment.of([]),
 		];
 	}
 
@@ -169,7 +195,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	 * detach/reattach re-mount from the live slotted text so changed content
 	 * (swapped while detached) shows, rather than the doc captured on disconnect. */
 	protected override getRemountDoc(): string {
-		return this._getRawText();
+		this._parsedDiff = this.diff ? parseUnifiedDiff(this._getRawText()) : null;
+		return this._parsedDiff?.doc ?? this._getRawText();
 	}
 
 	override connectedCallback(): void {
@@ -200,7 +227,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		// Suppress the copy button up front where the Clipboard API can't work, so
 		// the reserved actions space is dropped on the first paint too.
 		this._copyUnavailable = !this.noCopy && !isClipboardAvailable();
-		this.mountEditor(this._getRawText());
+		this._parsedDiff = this.diff ? parseUnifiedDiff(this._getRawText()) : null;
+		this.mountEditor(this._parsedDiff?.doc ?? this._getRawText());
 		this.onEditorMounted();
 	}
 
@@ -242,6 +270,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		// onEditorMounted again, not firstUpdated).
 		this._observeSlotText();
 		if (this.language) this._applyLanguage();
+		this._applyWords();
 		this._updateScrollable();
 	}
 
@@ -264,6 +293,11 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		// The region label follows a language switch, which re-renders without measuring.
 		if (this._isScrollable) this.view.scrollDOM.setAttribute('aria-label', this._t('components.code-viewer.region-label'));
 		if (changed.has('language')) this._applyLanguage();
+		if (changed.has('diff') && changed.get('diff') !== undefined) this._applyContent();
+		// The line labels follow a language switch of the texts.
+		if (changed.has('translations') && changed.get('translations') !== undefined && this._parsedDiff) {
+			this.reconfigure(this._diffCompartment, this._diffExtension(this._parsedDiff));
+		}
 		if (changed.has('wrap')) {
 			this.reconfigure(this._wrapCompartment, this.wrap ? EditorView.lineWrapping : []);
 			this._updateScrollable();
@@ -283,12 +317,64 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	}
 
 	_onSlotChange(): void {
-		this.setDoc(this._getRawText());
-		this._updateScrollable();
+		this._applyContent();
 	}
 
-	public _t(key: keyof NLDDCodeViewerTranslations): string {
-		return translate(this.translations, nlddCodeViewerTranslations, key);
+	/* The slot holds the source. Without `diff` it is the document; with it, the
+	 * document is the code the diff changes, and the diff decorations come along
+	 * in the same transaction, so no line is ever drawn against the wrong text. */
+	private _applyContent(): void {
+		const view = this.view;
+		if (!view) return;
+		const raw = this._getRawText();
+		this._parsedDiff = this.diff ? parseUnifiedDiff(raw) : null;
+		const doc = this._parsedDiff?.doc ?? raw;
+		view.dispatch({
+			changes: view.state.doc.toString() === doc ? undefined : { from: 0, to: view.state.doc.length, insert: doc },
+			effects: [
+				this._diffCompartment.reconfigure(this._parsedDiff ? this._diffExtension(this._parsedDiff) : []),
+				this._wordCompartment.reconfigure([]),
+			],
+		});
+		this._applyWords();
+		this._updateScrollable();
+		this.requestUpdate();
+	}
+
+	private _diffExtension(parsed: ParsedDiff) {
+		return diffExtensions(parsed, {
+			addedLine: (number) => this._t('components.code-viewer.added-line-label', { number }),
+			removedLine: (number) => this._t('components.code-viewer.removed-line-label', { number }),
+		});
+	}
+
+	private _applyWords(): void {
+		const parsed = this._parsedDiff;
+		if (!parsed) return;
+		this._wordsPending = wordExtensions(parsed).then(
+			(words) => {
+				// The content may have changed while the diff module was loading.
+				if (this._parsedDiff === parsed) this.reconfigure(this._wordCompartment, words);
+			},
+			() => {},
+		);
+	}
+
+	/** The summary a screen reader hears before a diff. */
+	public get _diffSummary(): string {
+		const parsed = this._parsedDiff;
+		if (!parsed) return '';
+		const noun = (count: number) => this._t(count === 1 ? 'components.code-viewer.line-singular-lowercase' : 'components.code-viewer.line-plural-lowercase');
+		return this._t('components.code-viewer.diff-summary-text', {
+			added: parsed.added,
+			addedNoun: noun(parsed.added),
+			removed: parsed.removed,
+			removedNoun: noun(parsed.removed),
+		});
+	}
+
+	public _t(key: keyof NLDDCodeViewerTranslations, vars?: Record<string, string | number>): string {
+		return translate(this.translations, nlddCodeViewerTranslations, key, vars);
 	}
 
 	/* Lazy grammar loading is async; surface the in-flight load through
@@ -297,6 +383,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	override async getUpdateComplete(): Promise<boolean> {
 		const result = await super.getUpdateComplete();
 		await this._languagePending;
+		await this._wordsPending;
 		return result;
 	}
 
