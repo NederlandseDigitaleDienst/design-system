@@ -1,3 +1,16 @@
+# Changelog
+
+All notable changes to the NLDD Designsysteem are documented here.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Versions are bumped automatically by semantic-release on merge to main —
+the type of conventional-commit determines the release. Conventional types
+`chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
+here; consult the commit history if you need that level of detail.
+
+## [0.12.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.11.0...v0.12.0) (2026-10-26)
+
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
   Kopie van de root CHANGELOG.md (onderhouden door semantic-release).
