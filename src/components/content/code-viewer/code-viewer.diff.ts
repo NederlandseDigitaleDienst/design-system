@@ -26,43 +26,53 @@ export interface ParsedDiff {
 	removed: number;
 }
 
-const HUNK_RE = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/;
+const HUNK_RE = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/;
 
-/** Parse a unified diff. File headers before the first hunk (`diff --git`,
- *  `index`, `---`, `+++` and the like) are left out: the file name belongs to
- *  the page around the viewer. So is `\ No newline at end of file`. Without any
- *  `@@` header, the numbers start at 1. */
+/** Parse a unified diff. File headers (`diff --git`, `index`, `---`, `+++` and
+ *  the like) are left out: the file name belongs to the page around the viewer.
+ *  So is `\ No newline at end of file`. A hunk ends where its `@@` header says
+ *  it does, so the headers of a next file in a multi-file diff are not taken for
+ *  code; their name is lost, though, so give each file a viewer of its own.
+ *  Without any `@@` header, every line is code and the numbers start at 1. */
 export function parseUnifiedDiff(raw: string): ParsedDiff {
 	const source = raw.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n');
 	const hasHunks = source.some((line) => HUNK_RE.test(line));
 	const lines: DiffLine[] = [];
-	let inHunk = !hasHunks;
 	let oldNumber = 1;
 	let newNumber = 1;
+	// Lines the current hunk still holds on each side; Infinity without headers.
+	let oldLeft = hasHunks ? 0 : Infinity;
+	let newLeft = hasHunks ? 0 : Infinity;
 	let hunk: string | null = null;
 	let added = 0;
 	let removed = 0;
 	for (const line of source) {
 		const header = HUNK_RE.exec(line);
 		if (header) {
-			inHunk = true;
 			oldNumber = Number(header[1]);
-			newNumber = Number(header[2]);
+			oldLeft = header[2] === undefined ? 1 : Number(header[2]);
+			newNumber = Number(header[3]);
+			newLeft = header[4] === undefined ? 1 : Number(header[4]);
 			hunk = line;
 			continue;
 		}
-		if (!inHunk || line.startsWith('\\')) continue;
+		if (oldLeft <= 0 && newLeft <= 0) continue;
+		if (line.startsWith('\\')) continue;
 		const sign = line[0];
 		const text = line.slice(1);
 		if (sign === '+') {
 			lines.push({ kind: 'added', text, oldNumber: null, newNumber: newNumber++, hunk });
+			newLeft--;
 			added++;
 		} else if (sign === '-') {
 			lines.push({ kind: 'removed', text, oldNumber: oldNumber++, newNumber: null, hunk });
+			oldLeft--;
 			removed++;
 		} else {
 			// A space, or an empty line where a tool dropped the trailing space.
 			lines.push({ kind: 'context', text, oldNumber: oldNumber++, newNumber: newNumber++, hunk });
+			oldLeft--;
+			newLeft--;
 		}
 		hunk = null;
 	}

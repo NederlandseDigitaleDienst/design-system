@@ -564,6 +564,40 @@ describe('parseUnifiedDiff', () => {
 		expect(parsed.lines.map((l) => [l.oldNumber, l.newNumber])).toEqual([[1, 1], [2, null], [null, 2]]);
 	});
 
+	it('neemt de koppen van een volgend bestand niet voor code', () => {
+		const parsed = parseUnifiedDiff(`diff --git a/a.ts b/a.ts
+index 1111111..2222222 100644
+--- a/a.ts
++++ b/a.ts
+@@ -1,2 +1,2 @@
+ een
+-twee
++drie
+diff --git a/b.ts b/b.ts
+index 3333333..4444444 100644
+--- a/b.ts
++++ b/b.ts
+@@ -10 +10 @@
+-oud
++nieuw`);
+		expect(parsed.doc).toBe('een\ntwee\ndrie\noud\nnieuw');
+		expect(parsed.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([
+			['context', 1, 1],
+			['removed', 2, null],
+			['added', null, 2],
+			['removed', 10, null],
+			['added', null, 10],
+		]);
+		expect([parsed.added, parsed.removed]).toEqual([2, 2]);
+	});
+
+	it('nummert een nieuw en een verwijderd bestand zoals git', () => {
+		const created = parseUnifiedDiff('--- /dev/null\n+++ b/nieuw.ts\n@@ -0,0 +1,2 @@\n+a\n+b');
+		expect(created.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([['added', null, 1], ['added', null, 2]]);
+		const deleted = parseUnifiedDiff('--- a/oud.ts\n+++ /dev/null\n@@ -1,2 +0,0 @@\n-a\n-b');
+		expect(deleted.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([['removed', 1, null], ['removed', 2, null]]);
+	});
+
 	it('paart verwijderde en direct volgende toegevoegde regels op volgorde', () => {
 		expect(pairChangedLines(parseUnifiedDiff(DIFF).lines)).toEqual([[1, 2], [5, 6]]);
 	});
@@ -628,6 +662,19 @@ describe('nldd-code-viewer diff', () => {
 		} finally {
 			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
 		}
+	});
+
+	it('leest de inhoud als diff zodra diff aan gaat', async () => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer></nldd-code-viewer>');
+		el.textContent = DIFF;
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(root.querySelector('.cm-diff-added')).toBeNull();
+		el.diff = true;
+		await el.updateComplete;
+		expect(root.querySelector('.cm-diff-added')).not.toBeNull();
+		expect(root.querySelector('.code-viewer__diff-summary')!.textContent).toBe('3 regels toegevoegd, 2 regels verwijderd');
+		expect([...root.querySelectorAll('.cm-line')].some((line) => line.textContent!.startsWith('@@'))).toBe(false);
 	});
 
 	it('toont de diff als gewone tekst zodra diff uit gaat', async () => {

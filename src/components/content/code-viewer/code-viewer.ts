@@ -26,8 +26,9 @@
  * column with the `+` or `−`, and the `@@` header of each hunk between them.
  * Within a removed line that is directly followed by an added one, the words
  * that differ are marked, unless more than half of the line changed. File
- * headers before the first hunk are left out: name the file in the page around
- * the viewer. `language` still highlights the code. A screen reader hears a
+ * headers (`diff --git`, `---`, `+++`) are left out: name the file in the page
+ * around the viewer, and give each file of a multi-file diff a viewer of its
+ * own. `language` still highlights the code. A screen reader hears a
  * summary first ("2 regels toegevoegd, 1 regel verwijderd") and "Toegevoegd" or
  * "Verwijderd" with the line number before each changed line. A selection
  * copies the code; the copy button copies the diff.
