@@ -32,6 +32,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A new line in a quote in `nldd-text-editor` is as tall as the rest of the quote right away.** The quote size sat on the text, so a line with only its `> ` had the height of plain text and grew at the first letter. It sits on the line now.
 - **A toolbar button in `nldd-text-editor` acts on the selected lines only, in Safari too.** When focus came back to the editor after a click on a toolbar control, Safari could stretch the selection to the start of the document. The editor took that as the new selection, so a list or heading button right after it changed every line from the top down to the selection. The editor now keeps its own selection in that case. A selection you make yourself, with the mouse or the keyboard, is never touched.
 
 ## [0.11.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.10.0...v0.11.0) (2026-10-23)

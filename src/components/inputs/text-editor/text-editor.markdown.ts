@@ -40,6 +40,7 @@ const MARK_NODES = new Set([
 ]);
 
 const dimDeco = Decoration.mark({ class: 'cm-md-mark' });
+const quoteRow = Decoration.line({ class: 'cm-md-quote-row' });
 const classDecoCache: Record<string, Decoration> = {};
 function classDeco(cls: string): Decoration {
 	// inclusiveEnd so a formatting run (heading, bold, …) wraps a trailing widget at
@@ -170,6 +171,15 @@ function buildMarkDecorations(view: EditorView): DecorationSet {
 				if (node.name === 'URL' && !inLinkContext(node.node)) {
 					ranges.push(classDeco('cm-md-autolink').range(node.from, node.to));
 					return;
+				}
+				// The quote size goes on its lines too, so a line with only its `> `
+				// is as tall as one with text: the size of a line is that of its line box.
+				if (node.name === 'Blockquote' && node.node.parent?.name !== 'Blockquote') {
+					for (let pos = node.from; pos <= node.to; ) {
+						const line = view.state.doc.lineAt(pos);
+						ranges.push(quoteRow.range(line.from));
+						pos = line.to + 1;
+					}
 				}
 				const cls = NODE_CLASS[node.name];
 				if (cls) {

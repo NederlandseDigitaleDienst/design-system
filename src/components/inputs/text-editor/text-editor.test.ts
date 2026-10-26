@@ -66,6 +66,14 @@ describe('nldd-text-editor', () => {
 		cleanup(el2);
 	});
 
+	it('geeft een citaatregel met alleen "> " de hoogte van een citaatregel met tekst', async () => {
+		const el2 = await withValue('> Eerste regel\n> \n> Derde regel');
+		const lines = [...el2.shadowRoot!.querySelectorAll('.cm-line')].map((l) => l.getBoundingClientRect().height);
+		expect(lines[1]).toBe(lines[0]);
+		expect(lines[1]).toBe(lines[2]);
+		cleanup(el2);
+	});
+
 	it('toont het opsommingsteken dat er staat, gedimd', async () => {
 		for (const marker of ['-', '*', '+']) {
 			const el2 = await withValue(`${marker} item`);

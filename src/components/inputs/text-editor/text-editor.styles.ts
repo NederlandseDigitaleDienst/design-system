@@ -407,6 +407,10 @@ export const textEditorStyles = css`
 		font-size: var(--primitives-font-size-200);
 	}
 
+	.cm-md-quote-row {
+		font-size: var(--primitives-font-size-200);
+	}
+
 		/* Markers: dimmed (secondary color, not opacity, so contrast holds) and
 	   monospace at the 16px marker size — tidy, and a fixed-width leading prefix. */
 	.cm-md-mark {
