@@ -1079,7 +1079,7 @@ export const Annotaties = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Annotaties leven buiten de markdown (de tekst blijft schoon); de consumer levert ze via de `annotations`-property. Elke annotatie ankert op een teken-offset (met de geciteerde tekst voor her-ankeren) en rendert als een lichte tint plus een dashed underline, met een telbadge aan het einde. Eén kleur voor alle annotaties: het type komt uit de pane van de consumer, niet uit de kleur. Annotaties op dezelfde tekst mergen tot een onderstreping met een gecombineerde telling.',
+				story: 'Annotaties leven buiten de markdown (de tekst blijft schoon); de consumer levert ze via de `annotations`-property. Elke annotatie ankert op een teken-offset (met de geciteerde tekst voor her-ankeren) en rendert als een lichte tint met een telbadge aan het einde. Eén kleur voor alle annotaties: het type komt uit de pane van de consumer, niet uit de kleur. Annotaties op dezelfde tekst mergen tot één vlak met een gecombineerde telling.',
 			},
 		},
 	},

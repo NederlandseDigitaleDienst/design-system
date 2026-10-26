@@ -418,17 +418,15 @@ export const textEditorStyles = css`
 
 
 	/* # Annotation overlay
-	   A light body tint + a dashed underline mark the annotated text; a solid
-	   badge (the nub) sits at the end carrying the count. One role for all
-	   annotations — the type is communicated by the consumer's pane, not color.
-	   The dashed line is a non-color cue (with the badge) for accessibility. */
+	   A light body tint marks the annotated text; a solid badge (the nub) sits at
+	   the end carrying the count, the cue that does not rest on color. One role
+	   for all annotations — the type is communicated by the consumer's pane. */
 
 	/* One cohesive yellow block: the light tint with rounded corners and a reserved
 	   space on the right for the solid nub (which lives inside this run, so it
-	   shares the tint and wraps with the text). The dashed underline stays as a
-	   non-color cue. box-decoration-break keeps the tint + rounding on every
-	   wrapped fragment; padding-block extends the tint without growing the line
-	   (vertical padding on an inline box is visual only). */
+	   shares the tint and wraps with the text). box-decoration-break keeps the
+	   tint + rounding on every wrapped fragment; padding-block extends the tint
+	   without growing the line (vertical padding on an inline box is visual only). */
 	.cm-annotation {
 		background-color: var(--_text-editor-annotation-token-background-color);
 		border-radius: var(--_text-editor-token-corner-radius);

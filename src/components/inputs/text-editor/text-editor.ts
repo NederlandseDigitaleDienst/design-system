@@ -27,8 +27,8 @@
  * text) writes at the same clean offsets getSelection() reads. An @-mention typeahead
  * (mentionSource) collapses to an atomic token, further typeahead lists on their
  * own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay
- * (annotations) marks ranges with a dashed underline, light tint and a count badge
- * without touching the underlying text.
+ * (annotations) marks ranges with a light tint and a count badge without touching
+ * the underlying text.
  *
  * To show the value, render the markdown into nldd-rich-text, which uses the
  * same type, bold and code as the editor. A mention is stored as
