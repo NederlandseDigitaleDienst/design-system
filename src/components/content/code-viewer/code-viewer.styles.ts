@@ -32,6 +32,8 @@ export const codeViewerStyles = css`
 		--_code-viewer-diff-removed-word-content-color: light-dark(var(--primitives-color-critical-1000), var(--primitives-color-critical-975));
 		--_code-viewer-diff-removed-sign-color: light-dark(var(--primitives-color-critical-750), var(--primitives-color-critical-800));
 		--_code-viewer-diff-gutter-color: var(--semantics-content-secondary-color);
+		--_code-viewer-diff-row-content-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-neutral-975));
+		--_code-viewer-diff-row-number-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
 		--_code-viewer-diff-gutter-inline-padding: var(--primitives-space-8);
 
 		${inheritedTextReset}
@@ -175,7 +177,7 @@ export const codeViewerStyles = css`
 	/* A diff row is three steps from the tinted surface (25 to 100, 75 to 200), so
 	   its text takes three steps more as well. Only on the row. */
 	:host([diff]) .cm-line:is(.cm-diff-added, .cm-diff-removed) {
-		color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-neutral-975));
+		color: var(--_code-viewer-diff-row-content-color);
 		--semantics-code-syntax-comment-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
 		--semantics-code-syntax-punctuation-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-neutral-975));
 		--semantics-code-syntax-keyword-color: var(--primitives-color-donkergeel-800);
@@ -204,7 +206,7 @@ export const codeViewerStyles = css`
 	}
 
 	:is(.cm-diff-old-gutter, .cm-diff-new-gutter) .cm-gutterElement:is(.cm-diff-added, .cm-diff-removed) {
-		color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
+		color: var(--_code-viewer-diff-row-number-color);
 	}
 
 	.cm-diff-sign-gutter .cm-diff-added {

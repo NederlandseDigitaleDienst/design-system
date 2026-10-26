@@ -12,6 +12,7 @@ export const textEditorStyles = css`
 		--_text-editor-drop-cursor-color: var(--components-text-editor-drop-cursor-color);
 		--_text-editor-drag-ghost-background-color: var(--components-text-editor-drag-ghost-background-color);
 		--_text-editor-caret-ring-width: var(--primitives-border-width-thin);
+		--_text-editor-caret-ring-color: var(--semantics-surfaces-base-background-color);
 		--_text-editor-corner-radius: 0;
 		--_text-editor-background-color: transparent;
 		--_text-editor-highlight-border-color: transparent;
@@ -21,9 +22,21 @@ export const textEditorStyles = css`
 		   its width plus its ring. Without it the edge carets are clipped. */
 		--_text-editor-padding-inline: calc(var(--_text-editor-caret-width) + var(--_text-editor-caret-ring-width));
 		--_text-editor-content-color: var(--semantics-content-color);
+		--_text-editor-mark-color: var(--semantics-content-secondary-color);
+		--_text-editor-link-color: var(--semantics-links-color);
+		--_text-editor-strong-font-weight: var(--primitives-font-weight-body-bold);
+		--_text-editor-heading-1-font: var(--primitives-font-display-1-sm);
+		--_text-editor-heading-2-font: var(--primitives-font-display-2-sm);
+		--_text-editor-heading-3-font: var(--primitives-font-display-3-sm);
+		--_text-editor-heading-4-font: var(--primitives-font-display-4-sm);
+		--_text-editor-heading-5-font: var(--primitives-font-display-5-sm);
+		--_text-editor-heading-6-font: var(--primitives-font-display-6-sm);
+		--_text-editor-quote-font-size: var(--primitives-font-size-200);
 		--_text-editor-font: var(--primitives-font-body-md-regular-snug);
 		--_text-editor-code-font: var(--primitives-font-monospace-sm-regular-snug);
 		--_text-editor-code-font-size: var(--semantics-code-inline-font-size);
+		--_text-editor-code-font-family: var(--primitives-font-family-monospace);
+		--_text-editor-code-font-weight: var(--primitives-font-weight-body-regular);
 		/* The scale of --semantics-code-inline-font-size, and the JetBrains Mono box
 		   (ascent 1020 + descent 300 per 1000), to size inline code like a token. */
 		--_text-editor-code-scale: 0.85;
@@ -67,6 +80,8 @@ export const textEditorStyles = css`
 		   that swallows the white (mark-1000) badge number. */
 		--_text-editor-annotation-token-is-selected-badge-background-color: var(--primitives-color-mark-450);
 		--_text-editor-annotation-token-is-selected-badge-highlight-border-color: var(--primitives-color-mark-500);
+		--_text-editor-annotation-token-is-selected-content-color: var(--primitives-color-neutral-950);
+		--_text-editor-annotation-badge-font-family: var(--primitives-font-family-body);
 		--_text-editor-annotation-badge-size: 1.5em;
 		--_text-editor-annotation-badge-font-scale: 0.62;
 		--_text-editor-link-badge-size: calc(1em + 2 * var(--_text-editor-token-block-padding-fit));
@@ -81,6 +96,7 @@ export const textEditorStyles = css`
 		--_text-editor-mention-icon-size: 0.95em;
 		--_text-editor-mention-token-background-color: var(--semantics-mentions-background-color);
 		--_text-editor-selection-color: var(--semantics-text-selection-background-color);
+		--_text-editor-selection-content-color: var(--primitives-color-neutral-1000);
 		--_text-editor-mention-token-highlight-border-color: var(--semantics-mentions-highlight-border-color);
 		--_text-editor-mention-token-content-color: var(--semantics-mentions-content-color);
 		--_text-editor-mention-token-is-selected-background-color: var(--semantics-mentions-is-selected-background-color);
@@ -183,7 +199,7 @@ export const textEditorStyles = css`
 		/* A thin surface-colored ring, like the drop cursor, so the caret stays legible
 		   even over a tinted token (annotation, inline code) where the accent alone can
 		   blend in. Blinks with the caret (opacity covers the shadow too). */
-		box-shadow: 0 0 0 var(--_text-editor-caret-ring-width) var(--semantics-surfaces-base-background-color);
+		box-shadow: 0 0 0 var(--_text-editor-caret-ring-width) var(--_text-editor-caret-ring-color);
 	}
 
 	:host .cm-scroller {
@@ -206,34 +222,34 @@ export const textEditorStyles = css`
 	   prefix a predictable width for the hanging indent (see --_text-editor-marker-advance). */
 
 	.cm-md-h1 {
-		font: var(--primitives-font-display-1-sm);
+		font: var(--_text-editor-heading-1-font);
 	}
 
 	.cm-md-h2 {
-		font: var(--primitives-font-display-2-sm);
+		font: var(--_text-editor-heading-2-font);
 	}
 
 	.cm-md-h3 {
-		font: var(--primitives-font-display-3-sm);
+		font: var(--_text-editor-heading-3-font);
 	}
 
 	.cm-md-h4 {
-		font: var(--primitives-font-display-4-sm);
+		font: var(--_text-editor-heading-4-font);
 	}
 
 	.cm-md-h5 {
-		font: var(--primitives-font-display-5-sm);
+		font: var(--_text-editor-heading-5-font);
 	}
 
 	.cm-md-h6 {
-		font: var(--primitives-font-display-6-sm);
+		font: var(--_text-editor-heading-6-font);
 	}
 
 	:is(.cm-md-h1, .cm-md-h2, .cm-md-h3, .cm-md-h4, .cm-md-h5, .cm-md-h6) .cm-md-mark {
 		font-size: var(--_text-editor-heading-marker-scale);
 	}
 	.cm-md-strong {
-		font-weight: var(--primitives-font-weight-body-bold);
+		font-weight: var(--_text-editor-strong-font-weight);
 	}
 	.cm-md-emphasis {
 		font-style: italic;
@@ -251,9 +267,9 @@ export const textEditorStyles = css`
 		   otherwise jump by the padding depending on the direction it arrives from. */
 		/* line-height is left to inherit from the block, so a fixed snug line-height
 		   won't make the chip overflow inside a tight heading. */
-		font-family: var(--primitives-font-family-monospace);
+		font-family: var(--_text-editor-code-font-family);
 		font-size: var(--_text-editor-code-font-size);
-		font-weight: var(--primitives-font-weight-body-regular);
+		font-weight: var(--_text-editor-code-font-weight);
 		box-shadow: inset 0 0 0 var(--_text-editor-token-highlight-border-width) var(--_text-editor-code-token-highlight-border-color);
 		background-color: var(--_text-editor-code-token-background-color);
 		border-radius: var(--_text-editor-token-corner-radius);
@@ -420,11 +436,11 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-link {
-		color: var(--semantics-links-color);
+		color: var(--_text-editor-link-color);
 	}
 
 	.cm-md-url {
-		color: var(--semantics-content-secondary-color);
+		color: var(--_text-editor-mark-color);
 	}
 
 	/* The markdown highlight style tints the URL token (teal); make its span inherit
@@ -437,7 +453,7 @@ export const textEditorStyles = css`
 	   and override the highlight-style URL tint (teal) on its token span so the
 	   whole address is the link color, not just the mark wrapper. */
 	.cm-md-autolink {
-		color: var(--semantics-links-color);
+		color: var(--_text-editor-link-color);
 	}
 
 	.cm-md-autolink span {
@@ -445,20 +461,20 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-quote {
-		color: var(--semantics-content-color);
+		color: var(--_text-editor-content-color);
 		font-style: italic;
-		font-size: var(--primitives-font-size-200);
+		font-size: var(--_text-editor-quote-font-size);
 	}
 
 	.cm-md-quote-row {
-		font-size: var(--primitives-font-size-200);
+		font-size: var(--_text-editor-quote-font-size);
 	}
 
 		/* Markers: dimmed (secondary color, not opacity, so contrast holds) and
 	   monospace at the 16px marker size — tidy, and a fixed-width leading prefix. */
 	.cm-md-mark {
-		color: var(--semantics-content-secondary-color);
-		font-family: var(--primitives-font-family-monospace);
+		color: var(--_text-editor-mark-color);
+		font-family: var(--_text-editor-code-font-family);
 		font-size: var(--_text-editor-marker-font-size);
 	}
 
@@ -501,7 +517,7 @@ export const textEditorStyles = css`
 	   mono advance and the hanging indent lines up exactly. */
 	.cm-md-listprefix,
 	.cm-md-listprefix * {
-		font-family: var(--primitives-font-family-monospace);
+		font-family: var(--_text-editor-code-font-family);
 		font-size: var(--_text-editor-marker-font-size);
 	}
 
@@ -544,15 +560,15 @@ export const textEditorStyles = css`
 	.cm-annotation.is-selected,
 	.cm-annotation .is-selected {
 		background-color: var(--_text-editor-annotation-token-is-selected-background-color);
-		color: var(--primitives-color-neutral-950);
+		color: var(--_text-editor-annotation-token-is-selected-content-color);
 	}
 
 	.cm-content ::selection {
-		color: var(--primitives-color-neutral-1000);
+		color: var(--_text-editor-selection-content-color);
 	}
 
 	.cm-annotation ::selection {
-		color: var(--primitives-color-neutral-950);
+		color: var(--_text-editor-annotation-token-is-selected-content-color);
 	}
 
 	.cm-annotation-badge {
@@ -576,7 +592,7 @@ export const textEditorStyles = css`
 		   than it looks and scales with the token in headings. */
 		vertical-align: middle;
 		transform: translateY(-0.11em);
-		font-family: var(--primitives-font-family-body);
+		font-family: var(--_text-editor-annotation-badge-font-family);
 		font-size: calc(var(--_text-editor-annotation-badge-font-scale) * 1em);
 		font-weight: 700;
 		line-height: 1;
@@ -637,7 +653,7 @@ export const textEditorStyles = css`
 		width: var(--primitives-border-width-regular);
 		border-radius: var(--primitives-border-width-thin);
 		background-color: var(--_text-editor-drop-cursor-color);
-		box-shadow: 0 0 0 var(--primitives-border-width-thin) var(--semantics-surfaces-base-background-color);
+		box-shadow: 0 0 0 var(--primitives-border-width-thin) var(--_text-editor-caret-ring-color);
 		pointer-events: none;
 		z-index: 4;
 	}
