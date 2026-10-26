@@ -386,6 +386,9 @@ export const aliases = {
 	// lightning
 	'energy': 'lightning',
 
+	// lightning-filled
+	'energy-filled': 'lightning-filled',
+
 	// link
 	'url': 'link',
 	'hyperlink': 'link',
