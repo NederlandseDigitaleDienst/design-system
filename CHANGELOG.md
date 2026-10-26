@@ -19,7 +19,8 @@ here; consult the commit history if you need that level of detail.
 
 - **`nldd-text-editor` can hide its formatting marks.** With `syntax="hidden"` the text reads close to the result, and the marks come back where you are editing.
 - **`nldd-code-viewer` shows a diff.** Give it a unified diff and `diff`, and it shows the code with added lines green, removed lines red, the old and new line numbers, and the changed words marked.
-- **Seven new icons:** `book-with-bookmark` (alias `git-repository`), `chart-bar-x-axis`, `color-chart` (alias `themes`), `creditcard`, `lightning-filled`, `rss` and `wrench`. `lightning` is redrawn as an outline, next to the new `lightning-filled`.
+- **Fixes in `nldd-text-editor`.** It tells assistive tech when it is read-only or required, a toolbar button in Safari acts on the selected lines only, a long document is styled fully once parsed, and a value set while it has focus no longer counts as an edit. See Fixed for the rest.
+- **7 new icons:** `book-with-bookmark` (alias `git-repository`), `chart-bar-x-axis`, `color-chart` (alias `themes`), `creditcard`, `lightning-filled`, `rss` and `wrench`. `lightning` is redrawn as an outline, next to the new `lightning-filled`.
 
 ### Added
 
