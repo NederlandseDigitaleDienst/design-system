@@ -15,6 +15,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Changed
+
+- **`nldd-text-editor` looks closer to the result in `nldd-rich-text`.** Bold is the same semibold, inline code and code blocks take the same size and the same tinted background, and the list bullets take the text color instead of a dimmed one. The markers themselves (`**`, `#`, `>`, `---`) stay visible and dimmed, and a link stays without an underline, since the badge beside it already marks it.
+
 ### Fixed
 
 - **A toolbar button in `nldd-text-editor` acts on the selected lines only, in Safari too.** When focus came back to the editor after a click on a toolbar control, Safari could stretch the selection to the start of the document. The editor took that as the new selection, so a list or heading button right after it changed every line from the top down to the selection. The editor now keeps its own selection in that case. A selection you make yourself, with the mouse or the keyboard, is never touched.

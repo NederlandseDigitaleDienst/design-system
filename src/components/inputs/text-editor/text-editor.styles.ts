@@ -22,14 +22,14 @@ export const textEditorStyles = css`
 		--_text-editor-padding-inline: calc(var(--_text-editor-caret-width) + var(--_text-editor-caret-ring-width));
 		--_text-editor-content-color: var(--semantics-content-color);
 		--_text-editor-font: var(--primitives-font-body-md-regular-snug);
-		--_text-editor-code-font: var(--primitives-font-monospace-md-regular-snug);
-		--_text-editor-code-font-size: calc(var(--primitives-font-size-90) / var(--primitives-font-size-100) * 1em);
+		--_text-editor-code-font: var(--primitives-font-monospace-sm-regular-snug);
+		--_text-editor-code-font-size: var(--semantics-code-inline-font-size);
 		--_text-editor-marker-font-size: var(--primitives-font-size-90);
 		/* JetBrains Mono advance (600/1000 em) at the marker size; leading
 		   list/quote markers are mono so the hanging indent equals their width. */
 		--_text-editor-marker-advance: calc(0.6 * var(--_text-editor-marker-font-size));
 		--_text-editor-bullet-size: 0.45em;
-		--_text-editor-bullet-color: var(--semantics-content-secondary-color);
+		--_text-editor-bullet-color: var(--semantics-content-color);
 		--_text-editor-heading-marker-scale: 75%;
 		--_text-editor-token-corner-radius: var(--primitives-corner-radius-sm);
 		--_text-editor-token-block-padding: 0.15em;
@@ -39,7 +39,7 @@ export const textEditorStyles = css`
 		   adjacent lines never overlap. 1lh and em resolve on the token, so it adapts
 		   to a heading's tighter line. (~1.2em is the text's own box.) */
 		--_text-editor-token-block-padding-fit: max(0em, (1lh - 1.2em) / 2);
-		--_text-editor-code-token-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+		--_text-editor-code-token-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_text-editor-code-token-is-selected-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
 		--_text-editor-code-block-inline-padding: var(--_text-editor-token-inline-padding);
 		--_text-editor-code-block-block-padding: var(--_text-editor-token-block-padding);
@@ -213,7 +213,7 @@ export const textEditorStyles = css`
 		font-size: var(--_text-editor-heading-marker-scale);
 	}
 	.cm-md-strong {
-		font-weight: bold;
+		font-weight: var(--primitives-font-weight-body-bold);
 	}
 	.cm-md-emphasis {
 		font-style: italic;
