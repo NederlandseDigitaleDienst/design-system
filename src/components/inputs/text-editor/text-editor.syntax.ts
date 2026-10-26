@@ -22,6 +22,19 @@ export function enclosingNode(
 	return null;
 }
 
+/** Whether the parse moved on between two states. The tree is parsed in the
+ *  background, so a decoration built from it must be built again when it has
+ *  caught up, not only when the text, the viewport or the selection changes. */
+export function treeAdvanced(before: EditorState, after: EditorState): boolean {
+	return syntaxTree(before) !== syntaxTree(after);
+}
+
+/** Whether the line at `lineFrom` is a thematic break (`---`, `* * *`). Its
+ *  characters look like a bullet to a regular expression; to the tree they are not. */
+export function isRuleLine(state: EditorState, lineFrom: number): boolean {
+	return enclosingNamed(state, lineFrom, 1, 'HorizontalRule') !== null;
+}
+
 /** `enclosingNode` for the common case: a node that goes by one of these names. */
 export function enclosingNamed(
 	state: EditorState,

@@ -19206,6 +19206,54 @@
         },
         {
           "kind": "function",
+          "name": "treeAdvanced",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "before",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "after",
+              "type": {
+                "text": "EditorState"
+              }
+            }
+          ],
+          "description": "Whether the parse moved on between two states. The tree is parsed in the\nbackground, so a decoration built from it must be built again when it has\ncaught up, not only when the text, the viewport or the selection changes."
+        },
+        {
+          "kind": "function",
+          "name": "isRuleLine",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "lineFrom",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Whether the line at `lineFrom` is a thematic break (`---`, `* * *`). Its\ncharacters look like a bullet to a regular expression; to the tree they are not."
+        },
+        {
+          "kind": "function",
           "name": "enclosingNamed",
           "return": {
             "type": {
@@ -19247,6 +19295,22 @@
           "name": "enclosingNode",
           "declaration": {
             "name": "enclosingNode",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "treeAdvanced",
+          "declaration": {
+            "name": "treeAdvanced",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isRuleLine",
+          "declaration": {
+            "name": "isRuleLine",
             "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
           }
         },

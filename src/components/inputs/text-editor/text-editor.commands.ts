@@ -2,10 +2,10 @@ import type { EditorView } from '@codemirror/view';
 import { EditorSelection } from '@codemirror/state';
 import type { SyntaxNode } from '@lezer/common';
 import { EMPHASIS_MARKERS, heldEmphasisField, holdEmphasis, repairChangesFor } from './text-editor.emphasis.js';
-import { enclosingNamed } from './text-editor.syntax.js';
+import { enclosingNamed, isRuleLine } from './text-editor.syntax.js';
 
 /* Markdown editing operations for the headless command API. Each works on the
- * current selection (multi-range aware) and leaves focus on the editor, so a
+ * main selection and leaves focus on the editor, so a
  * consumer toolbar can drive formatting without owning any editor internals. */
 
 export type HeadingLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -500,7 +500,7 @@ export function readActiveFormats(view: EditorView): TextEditorActiveFormats {
 		link: realLinkAt(view, pos) !== null,
 		// Lists from the line's own marker. (Resolving the tree at a line-end caret
 		// can spill into the next line and flip-flop the toolbar state.)
-		bulletList: !codeBlock && /^\s*[-*+]\s/.test(lineText),
+		bulletList: !codeBlock && /^\s*[-*+]\s/.test(lineText) && !isRuleLine(state, lineStart),
 		orderedList: !codeBlock && /^\s*\d+[.)]\s/.test(lineText),
 		taskList: !codeBlock && TASK_RE.test(lineText),
 		// Quote from the Blockquote node at the line's *start* — that catches lazy

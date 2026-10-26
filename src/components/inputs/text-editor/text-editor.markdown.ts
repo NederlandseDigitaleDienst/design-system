@@ -7,7 +7,7 @@ import type { SyntaxNode } from '@lezer/common';
 import { MENTION_HREF_PREFIX, unescapeMentionLabel, decodeMentionId } from './text-editor.mentions.js';
 import { inLinkContext } from './text-editor.links.js';
 import { heldEmphasis, heldEmphasisField } from './text-editor.emphasis.js';
-import { enclosingNamed, enclosingNode } from './text-editor.syntax.js';
+import { enclosingNamed, enclosingNode, isRuleLine, treeAdvanced } from './text-editor.syntax.js';
 import '../../content/icon/icon.js';
 
 /* Hybrid markdown rendering: the document stays plain markdown text, but the
@@ -120,21 +120,13 @@ function linkTextRange(link: SyntaxNode): { from: number; to: number } | null {
 	return to > from ? { from, to } : null;
 }
 
-// A mention link (`[@Naam](user:id)`) gets a token on its @Naam text; a normal
-// link is colored across its whole range. Either way the markers and URL are
-// still visited as children and dimmed.
+// A normal link is colored across its whole range; a mention link is replaced by
+// its token (mentionChipField). The markers and URL are still visited as
+// children and dimmed.
 function decorateLink(state: EditorState, link: SyntaxNode, ranges: Range<Decoration>[]): void {
-	let url: SyntaxNode | null = null;
-	for (let child = link.firstChild; child; child = child.nextSibling) {
-		if (child.name === 'URL') { url = child; break; }
-	}
-	const isMention = url !== null && state.sliceDoc(url.from, url.to).startsWith(MENTION_HREF_PREFIX);
-	if (isMention) {
-		const text = linkTextRange(link);
-		if (text) ranges.push(classDeco('cm-md-mention').range(text.from, text.to));
-	} else {
-		ranges.push(classDeco('cm-md-link').range(link.from, link.to));
-	}
+	const url = link.getChild('URL');
+	if (url && state.sliceDoc(url.from, url.to).startsWith(MENTION_HREF_PREFIX)) return;
+	ranges.push(classDeco('cm-md-link').range(link.from, link.to));
 }
 
 // Inline/content styling — no layout change, so a viewport-scoped plugin.
@@ -231,7 +223,7 @@ const markDecorationPlugin = ViewPlugin.fromClass(
 
 		update(update: ViewUpdate): void {
 			// selectionSet too: the selected slice of a code span is tinted darker.
-			if (update.docChanged || update.viewportChanged || update.selectionSet) {
+			if (update.docChanged || update.viewportChanged || update.selectionSet || treeAdvanced(update.startState, update.state)) {
 				this.decorations = buildMarkDecorations(update.view);
 			}
 		}
@@ -274,7 +266,7 @@ function buildHangingIndent(state: EditorState): DecorationSet {
 		const match = HANGING_RE.exec(text);
 		// Code-block lines are literal text: a leading marker isn't a list/quote, so it
 		// gets no hanging indent.
-		if (match && match[1].length && !inCodeBlock(state, from)) {
+		if (match && match[1].length && !inCodeBlock(state, from) && !isRuleLine(state, from)) {
 			const length = match[1].length;
 			ranges.push(hangingLineDeco(length).range(from));
 			ranges.push(prefixMonoDeco.range(from, from + length));
@@ -286,7 +278,7 @@ function buildHangingIndent(state: EditorState): DecorationSet {
 
 const hangingIndentField = StateField.define<DecorationSet>({
 	create: (state) => buildHangingIndent(state),
-	update: (value, tr) => (tr.docChanged ? buildHangingIndent(tr.state) : value),
+	update: (value, tr) => (tr.docChanged || treeAdvanced(tr.startState, tr.state) ? buildHangingIndent(tr.state) : value),
 	provide: (field) => EditorView.decorations.from(field),
 });
 
@@ -369,7 +361,7 @@ const mentionChipField = StateField.define<DecorationSet>({
 	// Rebuild on doc changes and on selection changes (the latter drives the
 	// selected/darker state of a covered mention).
 	update: (value, tr) => {
-		if (tr.docChanged) return buildMentionChips(tr.state);
+		if (tr.docChanged || treeAdvanced(tr.startState, tr.state)) return buildMentionChips(tr.state);
 		if (tr.startState.selection.eq(tr.state.selection)) return value;
 		return coverageChanged(value, tr.startState.selection.main, tr.state.selection.main)
 			? buildMentionChips(tr.state)

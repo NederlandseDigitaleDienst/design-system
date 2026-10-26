@@ -3,6 +3,7 @@ import { syntaxTree } from '@codemirror/language';
 import { Facet, Prec, RangeSetBuilder, type EditorState, type Extension } from '@codemirror/state';
 import type { SyntaxNodeRef } from '@lezer/common';
 import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
+import { treeAdvanced } from './text-editor.syntax.js';
 
 /* Spellchecking is on for the running text and off for what the editor knows
  * is not running text: code, the address of a link, a mention. CodeMirror turns
@@ -62,7 +63,7 @@ const exclusionMarks = ViewPlugin.fromClass(
 		}
 
 		update(update: ViewUpdate) {
-			if (update.docChanged || update.viewportChanged || syntaxTree(update.state) !== syntaxTree(update.startState)) {
+			if (update.docChanged || update.viewportChanged || treeAdvanced(update.startState, update.state)) {
 				this.decorations = exclusions(update.view);
 			}
 		}

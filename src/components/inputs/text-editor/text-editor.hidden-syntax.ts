@@ -3,6 +3,7 @@ import { Prec, StateField, type EditorState, type Range } from '@codemirror/stat
 import { syntaxTree } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
 import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
+import { treeAdvanced } from './text-editor.syntax.js';
 
 /* syntax="hidden": the formatting marks of bold, italic, strikethrough, inline
  * code, links and headings are hidden, a bullet reads as a dot, a quote as a
@@ -92,7 +93,7 @@ function buildHiddenFences(state: EditorState): DecorationSet {
 
 const hiddenFences = StateField.define<DecorationSet>({
 	create: buildHiddenFences,
-	update: (value, tr) => (tr.docChanged || tr.selection || tr.reconfigured ? buildHiddenFences(tr.state) : value),
+	update: (value, tr) => (tr.docChanged || tr.selection || tr.reconfigured || treeAdvanced(tr.startState, tr.state) ? buildHiddenFences(tr.state) : value),
 	provide: (field) => EditorView.decorations.from(field),
 });
 
@@ -190,7 +191,7 @@ class HiddenSyntaxPlugin {
 
 	update(update: ViewUpdate): void {
 		this.observeLayer();
-		if (update.docChanged || update.selectionSet || update.viewportChanged || update.transactions.some((tr) => tr.reconfigured)) {
+		if (update.docChanged || update.selectionSet || update.viewportChanged || treeAdvanced(update.startState, update.state) || update.transactions.some((tr) => tr.reconfigured)) {
 			this.decorations = buildHidden(update.view);
 		}
 	}

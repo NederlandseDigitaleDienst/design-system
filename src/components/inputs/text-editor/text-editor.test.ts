@@ -74,6 +74,29 @@ describe('nldd-text-editor', () => {
 		cleanup(el2);
 	});
 
+	it('meldt read-only en verplicht aan hulptechnologie, ook na een wijziging', async () => {
+		const el2 = await withValue('tekst');
+		const content = () => el2.shadowRoot!.querySelector('.cm-content')!;
+		expect(content().getAttribute('aria-readonly')).toBeNull();
+		expect(content().getAttribute('aria-required')).toBeNull();
+		(el2 as unknown as { readonly: boolean; required: boolean }).readonly = true;
+		(el2 as unknown as { readonly: boolean; required: boolean }).required = true;
+		await el2.updateComplete;
+		expect(content().getAttribute('aria-readonly')).toBe('true');
+		expect(content().getAttribute('aria-required')).toBe('true');
+		cleanup(el2);
+	});
+
+	it('leest een regel met streepjes als scheidingslijn, niet als opsomming', async () => {
+		const el2 = await withValue('Tekst\n\n- - -\n\nSlot.');
+		const api = el2 as unknown as { view: { dispatch(spec: unknown): void; state: { doc: { toString(): string } } }; getState(): { active: { bulletList: boolean } } };
+		api.view.dispatch({ selection: { anchor: api.view.state.doc.toString().indexOf('- - -') + 1 } });
+		expect(api.getState().active.bulletList).toBe(false);
+		const rule = [...el2.shadowRoot!.querySelectorAll('.cm-line')].find((l) => l.textContent === '- - -') as HTMLElement;
+		expect(rule.style.textIndent).toBe('');
+		cleanup(el2);
+	});
+
 	it('toont het opsommingsteken dat er staat, gedimd', async () => {
 		for (const marker of ['-', '*', '+']) {
 			const el2 = await withValue(`${marker} item`);

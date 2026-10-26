@@ -481,6 +481,10 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		const attrs: Record<string, string> = { autocorrect: 'on', autocapitalize: 'sentences' };
 		if (this.accessibleLabel) attrs['aria-label'] = this.accessibleLabel;
 		if (this.inputId) attrs['id'] = this.inputId;
+		// Not editable either way, so it is read-only to assistive tech; required
+		// mirrors the constraint, as the code editor does.
+		if (this.readonly || this.disabled) attrs['aria-readonly'] = 'true';
+		if (this.required) attrs['aria-required'] = 'true';
 		return EditorView.contentAttributes.of(attrs);
 	}
 
@@ -543,7 +547,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			if (changed.has('placeholder')) {
 				this.reconfigure(this._placeholderCompartment, this._placeholderExtension());
 			}
-			if (changed.has('accessibleLabel') || changed.has('inputId')) {
+			if (changed.has('accessibleLabel') || changed.has('inputId') || changed.has('readonly') || changed.has('disabled') || changed.has('required')) {
 				this.reconfigure(this._attrsCompartment, this._attrsExtension());
 			}
 			if (changed.has('syntax')) {

@@ -11,7 +11,7 @@ import { RangeSetBuilder, type EditorState } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
 import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
-import { enclosingNode } from './text-editor.syntax.js';
+import { enclosingNode, treeAdvanced } from './text-editor.syntax.js';
 import { textCaretBox } from './text-editor.caret.js';
 import '../../content/icon/icon.js';
 
@@ -212,7 +212,7 @@ export function linkOpenBadge(label: OpenInNewTabLabel): ViewPlugin<{ decoration
 			}
 
 			update(update: ViewUpdate): void {
-				if (update.docChanged || update.viewportChanged || update.transactions.some((tr) => tr.effects.some((e) => e.is(relabel)))) {
+				if (update.docChanged || update.viewportChanged || treeAdvanced(update.startState, update.state) || update.transactions.some((tr) => tr.effects.some((e) => e.is(relabel)))) {
 					this.decorations = buildBadges(update.view, label);
 				}
 			}

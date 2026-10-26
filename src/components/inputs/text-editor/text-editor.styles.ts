@@ -40,7 +40,6 @@ export const textEditorStyles = css`
 		--_text-editor-rule-color: var(--semantics-dividers-color);
 		--_text-editor-heading-marker-scale: 75%;
 		--_text-editor-token-corner-radius: var(--primitives-corner-radius-sm);
-		--_text-editor-token-block-padding: 0.15em;
 		--_text-editor-token-inline-padding: 0.3em;
 		/* Vertical padding for an inline token that inherits the block font (tint,
 		   mention): fills the line up to its line-height, never past it, so tokens on
@@ -325,10 +324,6 @@ export const textEditorStyles = css`
 		background-color: var(--_text-editor-code-token-is-selected-background-color);
 	}
 
-	.cm-md-mention {
-		color: var(--semantics-content-accent-color);
-		font-weight: 600;
-	}
 
 	.cm-md-mention-token {
 		padding-block: var(--_text-editor-token-block-padding-fit);
