@@ -53,6 +53,9 @@ export const aliases = {
 	// book-badge-plus
 	'new-book': 'book-badge-plus',
 
+	// book-with-bookmark
+	'git-repository': 'book-with-bookmark',
+
 	// bookmark-filled
 	'bookmarked': 'bookmark-filled',
 
@@ -80,10 +83,11 @@ export const aliases = {
 	'license': 'certificate',
 	'diploma': 'certificate',
 
-	// chart-x-y-axis-line
-	'analytics': 'chart-x-y-axis-line',
-	'chart-line': 'chart-x-y-axis-line',
-	'graph': 'chart-x-y-axis-line',
+	// chart-line-x-y-axis
+	'analytics': 'chart-line-x-y-axis',
+	'chart-line': 'chart-line-x-y-axis',
+	'graph': 'chart-line-x-y-axis',
+	'chart-x-y-axis-line': 'chart-line-x-y-axis',
 
 	// check-list
 	'tasks': 'check-list',
@@ -165,6 +169,9 @@ export const aliases = {
 	'backup-in-cloud': 'cloud-arrow-up',
 	'deploy': 'cloud-arrow-up',
 	'upload-to-cloud': 'cloud-arrow-up',
+
+	// color-chart
+	'themes': 'color-chart',
 
 	// cpu
 	'processor': 'cpu',

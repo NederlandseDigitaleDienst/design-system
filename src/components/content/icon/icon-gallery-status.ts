@@ -27,6 +27,10 @@
 // caret-down), which quietly moves new icons into the updated set.
 
 export const NEW_ICONS = new Set([
+	'book-with-bookmark',
+	'chart-bar-x-axis',
+	'color-chart',
+	'creditcard',
 	'file-markdown',
 	'file-odf',
 	'file-odg',
@@ -34,21 +38,26 @@ export const NEW_ICONS = new Set([
 	'file-ods',
 	'file-odt',
 	'file-pdf',
+	'lightning-filled',
 	'microscope',
 	'power-plug-socket',
+	'rss',
 	'share-network',
 	'subscript',
 	'superscript',
+	'wrench',
 ]);
 
 export const UPDATED_ICONS = new Set([
 	'bold',
+	'chart-line-x-y-axis',
 	'heading-1',
 	'heading-2',
 	'heading-3',
 	'heading-4',
 	'heading-5',
 	'heading-6',
+	'lightning',
 	'numbered-list',
 	'square-1',
 	'strikethrough',
