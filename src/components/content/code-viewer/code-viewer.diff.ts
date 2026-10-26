@@ -193,16 +193,22 @@ const lineClass: Record<DiffLineKind, string> = {
 
 const SIGN: Record<DiffLineKind, string> = { added: '+', removed: '−', context: '' };
 
+/** Where each line starts in the document. */
+function lineOffsets(lines: DiffLine[]): number[] {
+	const starts: number[] = [];
+	let pos = 0;
+	for (const line of lines) {
+		starts.push(pos);
+		pos += line.text.length + 1;
+	}
+	return starts;
+}
+
 /** Line colors, gutters, hunk headers and line labels for a parsed diff. */
 export function diffExtensions(parsed: ParsedDiff, labels: DiffLabels): Extension {
 	const { lines } = parsed;
 	if (lines.length === 0) return [];
-	const lineStarts: number[] = [];
-	let pos = 0;
-	for (const line of lines) {
-		lineStarts.push(pos);
-		pos += line.text.length + 1;
-	}
+	const lineStarts = lineOffsets(lines);
 
 	const decorations: Range<Decoration>[] = [];
 	const gutterClasses: Range<GutterMarker>[] = [];
@@ -257,12 +263,7 @@ export async function wordExtensions(parsed: ParsedDiff): Promise<Extension> {
 	const pairs = pairChangedLines(parsed.lines);
 	if (pairs.length === 0) return [];
 	const { presentableDiff } = await import('@codemirror/merge');
-	const lineStarts: number[] = [];
-	let pos = 0;
-	for (const line of parsed.lines) {
-		lineStarts.push(pos);
-		pos += line.text.length + 1;
-	}
+	const lineStarts = lineOffsets(parsed.lines);
 	const marks: Range<Decoration>[] = [];
 	for (const [r, a] of pairs) {
 		const before = parsed.lines[r].text;

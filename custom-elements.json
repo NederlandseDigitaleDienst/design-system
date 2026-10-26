@@ -3732,7 +3732,7 @@
               }
             }
           ],
-          "description": "Parse a unified diff. File headers (`diff --git`, `index`, `---`, `+++` and\nthe like) are left out: the file name belongs to the page around the viewer.\nSo is `\\ No newline at end of file`. A hunk ends where its `@@` header says\nit does, so the headers of a next file in a multi-file diff are not taken for\ncode; their name is lost, though, so give each file a viewer of its own.\nWithout any `@@` header, every line is code and the numbers start at 1."
+          "description": "Parse a unified diff. File headers (`diff --git`, `index`, `---`, `+++` and\nthe like) are left out: the file name belongs to the page around the viewer.\nSo is `\\ No newline at end of file`. A hunk ends where its `@@` header says\nit does, so the headers of a next file in a multi-file diff are not taken for\ncode; their name is lost, though, so give each file a viewer of its own.\nWithout any `@@` header, every line after the file header is code and the\nnumbers start at 1."
         },
         {
           "kind": "function",

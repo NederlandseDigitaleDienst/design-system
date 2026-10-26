@@ -357,7 +357,10 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 				// The content may have changed while the diff module was loading.
 				if (this._parsedDiff === parsed) this.reconfigure(this._wordCompartment, words);
 			},
-			() => {},
+			// The diff still shows without them, so a failed load is no error.
+			(error) => {
+				if (import.meta.env?.DEV) console.warn('<nldd-code-viewer>: the word marks of a diff need @codemirror/merge, which did not load, so the diff shows without them.', error);
+			},
 		);
 	}
 

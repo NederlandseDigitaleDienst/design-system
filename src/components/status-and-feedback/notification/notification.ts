@@ -94,6 +94,9 @@ import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/button/button.js';
 
+/** The arrival keyframes: from the right, and from the top on a small screen. */
+const ARRIVALS = new Set(['notification-arrive', 'notification-arrive-from-top']);
+
 export type NotificationVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 
 const DEFAULT_ICONS: Record<NotificationVariant, string> = {
@@ -351,7 +354,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 	/** Once in, it stays in: every move to another overlay would otherwise
 	 *  replay the arrival. */
 	private _onAnimationEnd = (e: AnimationEvent): void => {
-		if (e.target !== this || !e.animationName.startsWith('notification-arrive')) return;
+		if (e.target !== this || !ARRIVALS.has(e.animationName)) return;
 		this.toggleAttribute('data-arrived', true);
 	};
 
