@@ -79,6 +79,8 @@ export const codeEditorStyles = css`
 	:host([disabled]) .code-editor {
 		opacity: var(--primitives-opacity-disabled);
 		pointer-events: none;
+		-webkit-user-select: none;
+		user-select: none;
 	}
 
 	/* Focus ring only on the input-field variant. The simple variant relies on a

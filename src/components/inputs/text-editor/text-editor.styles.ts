@@ -135,6 +135,8 @@ export const textEditorStyles = css`
 	:host([disabled]) .text-editor {
 		opacity: var(--primitives-opacity-disabled);
 		pointer-events: none;
+		-webkit-user-select: none;
+		user-select: none;
 	}
 
 	/* Focus ring only on the input-field variant; simple relies on the accent caret and
