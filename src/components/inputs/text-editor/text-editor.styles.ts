@@ -62,6 +62,7 @@ export const textEditorStyles = css`
 		--_text-editor-annotation-badge-size: 1.5em;
 		--_text-editor-annotation-badge-font-scale: 0.62;
 		--_text-editor-link-badge-size: calc(1em + 2 * var(--_text-editor-token-block-padding-fit));
+		--_text-editor-link-badge-gap: 0.1em;
 		--_text-editor-link-badge-content-color: var(--components-text-editor-link-badge-content-color);
 		--_text-editor-link-badge-background-color: var(--components-text-editor-link-badge-background-color);
 		--_text-editor-link-badge-highlight-border-color: var(--components-text-editor-link-badge-highlight-border-color);
@@ -575,6 +576,7 @@ export const textEditorStyles = css`
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
+		margin-inline: var(--_text-editor-link-badge-gap);
 		min-width: var(--_text-editor-link-badge-size);
 		height: var(--_text-editor-link-badge-size);
 		border-radius: var(--primitives-corner-radius-full);
