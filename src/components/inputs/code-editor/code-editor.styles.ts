@@ -109,6 +109,11 @@ export const codeEditorStyles = css`
 		tab-size: 2;
 	}
 
+	/* Read-only, like a native read-only field: select and copy, but no caret. */
+	:host([readonly]) .cm-cursorLayer {
+		visibility: hidden;
+	}
+
 	/* Accent caret. The doubled class is purely for specificity — it outweighs
 	   CodeMirror's theme cursor color without depending on an attribute. */
 	:host .cm-cursor.cm-cursor {

@@ -161,6 +161,11 @@ export const textEditorStyles = css`
 		min-height: calc(var(--_text-editor-rows) * 1lh);
 	}
 
+	/* Read-only, like a native read-only field: select and copy, but no caret. */
+	:host([readonly]) .cm-nldd-cursorLayer {
+		visibility: hidden;
+	}
+
 	/* Prominent accent caret in both variants (the input-field variant additionally has the focus
 	   ring). The doubled class is purely for specificity — it outweighs
 	   CodeMirror's theme cursor color without depending on an attribute. */
