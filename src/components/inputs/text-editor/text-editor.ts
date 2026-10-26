@@ -76,28 +76,28 @@ import { FormAssociated, type FormValue } from '../../../utilities/form-associat
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import {
 	EditorView,
-	keymap,
 	drawSelection,
 	dropCursor,
 	placeholder as cmPlaceholder,
 } from '@codemirror/view';
 import { Compartment, EditorState, Prec, Transaction, type Extension } from '@codemirror/state';
-import { defaultKeymap, deleteCharBackward, deleteCharForward, history, historyKeymap, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
+import { history, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
 import { NLDDCodeMirrorElement } from '../../../utilities/codemirror/codemirror-element.js';
 import { nlddCodeMirrorTheme } from '../../../utilities/codemirror/theme.js';
-import { markdownEditing, mentionRangeAt, mentionRangeEndingAt, mentionRangeStartingAt } from './text-editor.markdown.js';
+import { markdownEditing } from './text-editor.markdown.js';
+import { mentionInsert, mentionToken, mentionRangeAt } from './text-editor.mention.js';
 import {
 	typeaheads as typeaheadExtension,
-	mentionInsert,
-	mentionToken,
 	type MentionSource,
 	type MentionInsertedDetail,
 	type Typeahead,
 	type TypeaheadChoice,
 } from './text-editor.mentions.js';
 import { repairHeldEmphasis } from './text-editor.emphasis.js';
-import { spellcheck, leaveDeletionToBrowser } from './text-editor.spellcheck.js';
-import { annotations as annotationExtension, setAnnotations, pasteAnnotations, currentAnnotations, type Annotation } from './text-editor.annotations.js';
+import { spellcheck } from './text-editor.spellcheck.js';
+import { annotations as annotationExtension, setAnnotations, currentAnnotations, type Annotation } from './text-editor.annotations.js';
+import { AnnotationClipboard } from './text-editor.clipboard.js';
+import { textEditorKeymap } from './text-editor.keymap.js';
 import { orderedListRenumber } from './text-editor.ordered-list.js';
 import { dragToMove, dragMovePlugin } from './text-editor.drag.js';
 import { linkOpenBadge } from './text-editor.links.js';
@@ -118,7 +118,6 @@ import {
 	toggleQuote as cmToggleQuote,
 	toggleLink as cmToggleLink,
 	toggleCodeBlock as cmToggleCodeBlock,
-	clearListMarkerBackward,
 	readActiveFormats,
 	EMPTY_FORMATS,
 	type HeadingLevel,
@@ -365,32 +364,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			focusSelectionGuard(),
 			dropCursor(),
 			dragToMove,
-			// Prec.highest so this beats the markdown language's deleteMarkupBackward,
-			// which would otherwise leave alignment whitespace when a non-first list
-			// marker is backspaced. Falls through (returns false) off a list marker.
-			Prec.highest(keymap.of([{ key: 'Backspace', run: clearListMarkerBackward }])),
-			keymap.of([
-				{ key: 'Mod-b', run: (view) => { toggleInlineWrap(view, '**', 'StrongEmphasis'); return true; } },
-				{ key: 'Mod-i', run: (view) => { toggleInlineWrap(view, '*', 'Emphasis'); return true; } },
-				{ key: 'Mod-e', run: (view) => { toggleInlineWrap(view, '`', 'InlineCode'); return true; } },
-				{ key: 'Mod-k', run: (view) => { cmToggleLink(view); return true; } },
-				// A mention deletes in two steps: the first Backspace/Delete next to it
-				// selects the whole token, the second removes it.
-				{ key: 'Backspace', run: (view) => this._selectMentionBeforeDelete(view, -1) },
-				{ key: 'Delete', run: (view) => this._selectMentionBeforeDelete(view, 1) },
-				// Cmd/Ctrl+] and +[ nest and un-nest list items. defaultKeymap binds them
-				// to indentMore/indentLess, whose four-space indent turns plain text into
-				// an indented code block. Consumed here in every case: off a list item
-				// they do nothing, which beats a code block nobody asked for.
-				{ key: 'Mod-]', run: (view) => { cmIndentListItems(view); return true; } },
-				{ key: 'Mod-[', run: (view) => { cmOutdentListItems(view); return true; } },
-				// The browser deletes where the editor has nothing to add, so the
-				// spelling marks on the line stay (see leaveDeletionToBrowser).
-				{ key: 'Backspace', run: (view) => !leaveDeletionToBrowser(view, 'Backspace') && deleteCharBackward(view), shift: deleteCharBackward },
-				{ key: 'Delete', run: (view) => !leaveDeletionToBrowser(view, 'Delete') && deleteCharForward(view) },
-				...defaultKeymap.filter((binding) => binding.key !== 'Backspace' && binding.key !== 'Delete'),
-				...historyKeymap,
-			]),
+			textEditorKeymap,
 			this._placeholderCompartment.of(this._placeholderExtension()),
 			this._wrapCompartment.of(this.wrap ? EditorView.lineWrapping : []),
 			this._editableCompartment.of(this._editableExtension()),
@@ -426,20 +400,17 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 				// Native Cmd/Ctrl+X/C/V go through these DOM events, not the toolbar's
 				// methods, so mirror the annotation-carrying logic here too.
 				cut: (_event, view) => {
-					const { from, to } = view.state.selection.main;
-					this._cutBuffer = from === to
-						? null
-						: { text: stripSentinels(view.state.sliceDoc(from, to)), anns: this._annotationsInSelection() };
+					this._clipboard.rememberCut(view);
 					return false; // let CodeMirror perform the actual cut (clipboard + delete)
 				},
 				copy: () => {
-					this._cutBuffer = null; // a plain copy must not carry a pending cut's annotations
+					this._clipboard.forget();
 					return false;
 				},
-				paste: (event) => {
+				paste: (event, view) => {
 					const raw = event.clipboardData?.getData('text/plain');
 					if (raw === undefined) return false; // no clipboard data — let CodeMirror handle it
-					this._pasteText(stripSentinels(raw));
+					this._clipboard.paste(view, raw);
 					event.preventDefault();
 					return true;
 				},
@@ -575,21 +546,6 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		});
 	}
 
-	// Two-step mention deletion: select the token on the first key, remove on the
-	// second. dir -1 = Backspace (token ends at the caret), +1 = Delete (starts).
-	private _selectMentionBeforeDelete(view: EditorView, dir: -1 | 1): boolean {
-		const sel = view.state.selection.main;
-		// A non-empty selection (e.g. an already-selected mention) → let the default
-		// command delete it.
-		if (!sel.empty) return false;
-		const range =
-			dir < 0 ? mentionRangeEndingAt(view.state, sel.head) : mentionRangeStartingAt(view.state, sel.head);
-		if (!range) return false; // not next to a mention → normal backspace/delete
-		view.dispatch({ selection: { anchor: range.from, head: range.to } });
-		return true;
-	}
-
-
 	/* # Headless command API */
 
 	toggleBold(): void {
@@ -687,33 +643,16 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		this._emitState();
 	}
 
-	/** Text and annotations of the last cut, so a same-editor paste can move the
-	 *  annotations along with their text. Cleared by copy and by a matching paste. */
-	private _cutBuffer: { text: string; anns: { id: string; from: number; to: number }[] } | null = null;
-
-	/** The annotations lying fully inside the current selection, offset relative to
-	 *  the selection's clean start. */
-	private _annotationsInSelection(): { id: string; from: number; to: number }[] {
-		if (!this.view) return [];
-		const { from, to } = this.view.state.selection.main;
-		const doc = this.view.state.doc.toString();
-		const cleanFrom = docToClean(doc, from);
-		const cleanTo = docToClean(doc, to);
-		return currentAnnotations(this.view.state)
-			.filter((a) => a.from >= cleanFrom && a.to <= cleanTo)
-			.map((a) => ({ id: a.id, from: a.from - cleanFrom, to: a.to - cleanFrom }));
-	}
+	/** Carries the annotations of a cut along to a paste of the same text. */
+	private _clipboard = new AnnotationClipboard();
 
 	/** Copy the current selection to the clipboard, sentinel-free. No-op when the
 	 *  selection is empty or the clipboard is unavailable (e.g. permission denied). */
 	async copy(): Promise<void> {
 		if (!this.view) return;
-		const { from, to } = this.view.state.selection.main;
-		if (from === to) return;
-		const text = stripSentinels(this.view.state.sliceDoc(from, to));
-		// A copy is a plain-text copy: forget any pending cut so its annotations don't
-		// bleed onto the next paste.
-		this._cutBuffer = null;
+		if (this.view.state.selection.main.empty) return;
+		const text = this._clipboard.selectedText(this.view);
+		this._clipboard.forget();
 		try { await navigator.clipboard.writeText(text); } catch { /* clipboard blocked */ }
 		// The await can outlive the element (disconnect destroys the view), so guard.
 		this.view?.focus();
@@ -725,10 +664,9 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	async cut(): Promise<void> {
 		// Cut mutates (it removes the selection), so it's a no-op on a read-only editor.
 		if (!this.view || this.view.state.readOnly) return;
-		const { from, to } = this.view.state.selection.main;
-		if (from === to) return;
-		const text = stripSentinels(this.view.state.sliceDoc(from, to));
-		this._cutBuffer = { text, anns: this._annotationsInSelection() };
+		if (this.view.state.selection.main.empty) return;
+		const text = this._clipboard.selectedText(this.view);
+		this._clipboard.rememberCut(this.view);
 		try { await navigator.clipboard.writeText(text); } catch { /* clipboard blocked */ }
 		if (!this.view) return;
 		this.view.dispatch(this.view.state.replaceSelection(''));
@@ -743,7 +681,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		if (!this.view) return;
 		let raw: string;
 		try { raw = await navigator.clipboard.readText(); } catch { return; /* clipboard blocked */ }
-		this._pasteText(stripSentinels(raw));
+		if (this.view) this._clipboard.paste(this.view, raw);
 		this.view?.focus();
 	}
 
@@ -779,28 +717,6 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			userEvent: 'input',
 		});
 		this.view.focus();
-	}
-
-	/** Insert `text` at the selection, re-attaching the cut annotations when it matches
-	 *  a cut made in this editor (a move, one-shot). Shared by the toolbar's paste()
-	 *  and the native Cmd/Ctrl+V handler. */
-	private _pasteText(text: string): void {
-		// Paste mutates; refuse it on a read-only editor (covers the toolbar paste()
-		// and the native Cmd/Ctrl+V handler that both funnel through here).
-		if (!this.view || !text || this.view.state.readOnly) return;
-		const buffer = this._cutBuffer;
-		// Normalize line endings on both sides: a Windows/other-app clipboard may hand
-		// back CRLF where the cut buffer holds LF, and an exact compare would then miss
-		// the match and silently drop the carried annotations.
-		const sameText = (a: string, b: string): boolean => a.replace(/\r\n/g, '\n') === b.replace(/\r\n/g, '\n');
-		const carry = !!(buffer && sameText(buffer.text, text) && buffer.anns.length > 0);
-		const at = docToClean(this.view.state.doc.toString(), this.view.state.selection.main.from);
-		// input.paste, like CodeMirror's own paste: history groups it as one step and
-		// a transaction filter can tell a paste from typing.
-		const spec = { ...this.view.state.replaceSelection(text), userEvent: 'input.paste' };
-		this.view.dispatch(carry ? { ...spec, effects: pasteAnnotations.of({ at, anns: buffer!.anns }) } : spec);
-		// One-shot: a second paste of the same cut would duplicate the ids, so drop it.
-		if (carry) this._cutBuffer = null;
 	}
 
 	/** Escape hatch: run a command by name, so a toolbar can carry the name in its

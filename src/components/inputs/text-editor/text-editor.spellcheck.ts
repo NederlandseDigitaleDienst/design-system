@@ -2,7 +2,7 @@ import { Decoration, EditorView, ViewPlugin, type DecorationSet, type ViewUpdate
 import { syntaxTree } from '@codemirror/language';
 import { Facet, Prec, RangeSetBuilder, type EditorState, type Extension } from '@codemirror/state';
 import type { SyntaxNodeRef } from '@lezer/common';
-import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
+import { isMentionLink } from './text-editor.mention.js';
 import { treeAdvanced } from './text-editor.syntax.js';
 
 /* Spellchecking is on for the running text and off for what the editor knows
@@ -21,9 +21,7 @@ export const spellcheckExclusions = Facet.define<(node: SyntaxNodeRef, state: Ed
 const NOT_PROSE = new Set(['InlineCode', 'FencedCode', 'CodeBlock', 'URL', 'Autolink']);
 
 function isMention(node: SyntaxNodeRef, state: EditorState): boolean {
-	if (node.name !== 'Link') return false;
-	const url = node.node.getChild('URL');
-	return url !== null && state.sliceDoc(url.from, url.to).startsWith(MENTION_HREF_PREFIX);
+	return node.name === 'Link' && isMentionLink(state, node.node);
 }
 
 const builtIn = spellcheckExclusions.of((node, state) => NOT_PROSE.has(node.name) || isMention(node, state));

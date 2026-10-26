@@ -10,7 +10,7 @@ import {
 import { RangeSetBuilder, type EditorState } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
-import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
+import { isMentionHref } from './text-editor.mention.js';
 import { enclosingNode, treeAdvanced } from './text-editor.syntax.js';
 import { textCaretBox } from './text-editor.caret.js';
 import '../../content/icon/icon.js';
@@ -128,13 +128,13 @@ function hrefOf(state: EditorState, link: SyntaxNode, refs: () => Map<string, st
 	for (let child = link.firstChild; child; child = child.nextSibling) {
 		if (child.name === 'URL') {
 			const href = state.sliceDoc(child.from, child.to);
-			return href && !href.startsWith(MENTION_HREF_PREFIX) && isSafeHref(href) ? href : null;
+			return href && !isMentionHref(href) && isSafeHref(href) ? href : null;
 		}
 		if (child.name === 'LinkLabel') label = normaliseLabel(state.sliceDoc(child.from, child.to));
 	}
 	if (label) {
 		const href = refs().get(label);
-		return href && !href.startsWith(MENTION_HREF_PREFIX) && isSafeHref(href) ? href : null;
+		return href && !isMentionHref(href) && isSafeHref(href) ? href : null;
 	}
 	return null;
 }
@@ -157,7 +157,7 @@ export function inLinkContext(node: SyntaxNode): boolean {
  *  Rejects mentions and unsafe schemes, mirroring the Markdown-link path. */
 function bareHref(state: EditorState, node: SyntaxNode): string | null {
 	const raw = state.sliceDoc(node.from, node.to);
-	if (!raw || raw.startsWith(MENTION_HREF_PREFIX)) return null;
+	if (!raw || isMentionHref(raw)) return null;
 	let href = raw;
 	// An already-schemed URL (https://, mailto:, …) is taken as-is; only GFM's
 	// scheme-less autolink forms need one added.

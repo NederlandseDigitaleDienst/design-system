@@ -1,8 +1,9 @@
 import type { EditorView } from '@codemirror/view';
-import { EditorSelection } from '@codemirror/state';
+import { EditorSelection, type EditorState } from '@codemirror/state';
 import type { SyntaxNode } from '@lezer/common';
 import { EMPHASIS_MARKERS, heldEmphasisField, holdEmphasis, repairChangesFor } from './text-editor.emphasis.js';
-import { enclosingNamed, isRuleLine } from './text-editor.syntax.js';
+import { enclosingNamed, inCodeBlock, isRuleLine } from './text-editor.syntax.js';
+import { isMentionLink } from './text-editor.mention.js';
 
 /* Markdown editing operations for the headless command API. Each works on the
  * main selection and leaves focus on the editor, so a
@@ -183,12 +184,9 @@ function mapSelectedLines(view: EditorView, transform: (text: string) => string)
 }
 
 function everySelectedLine(view: EditorView, predicate: (text: string) => boolean): boolean {
-	const { state } = view;
-	const { from, to } = state.selection.main;
-	const first = state.doc.lineAt(from).number;
-	const last = state.doc.lineAt(to).number;
+	const { first, last } = selectedLines(view);
 	for (let i = first; i <= last; i++) {
-		if (!predicate(state.doc.line(i).text)) return false;
+		if (!predicate(view.state.doc.line(i).text)) return false;
 	}
 	return true;
 }
@@ -287,6 +285,20 @@ export function setList(view: EditorView, type: ListType): void {
 	dispatchLineChanges(view, changes);
 }
 
+/** The nearest list item above line `lineNumber` whose indent `accepts`: the
+ *  item a line is nested under, or would be. A blank line is skipped (a loose
+ *  list); a line that is no list item ends the list, and then there is none. */
+function precedingItem(state: EditorState, lineNumber: number, accepts: (indent: number) => boolean): RegExpMatchArray | null {
+	for (let j = lineNumber - 1; j >= 1; j--) {
+		const text = state.doc.line(j).text;
+		if (text.trim() === '') continue;
+		const prev = text.match(LIST_STRIP_RE);
+		if (!prev) return null;
+		if (accepts(prev[1].length)) return prev;
+	}
+	return null;
+}
+
 /** Nest the selected list item(s) under the nearest preceding item at the same
  *  level, indenting only as far as that parent's content column. That keeps the
  *  item a valid nested list — 4+ spaces with no parent would parse as an indented
@@ -303,16 +315,8 @@ export function indentListItems(view: EditorView): void {
 		const match = line.text.match(LIST_STRIP_RE);
 		if (!match) continue;
 		const indent = match[1].length;
-		// Walk up to the nearest list item at this level or shallower — the item we
-		// nest under. A blank line is skipped (loose lists); a non-list line ends it.
-		let parentContentColumn = -1;
-		for (let j = i - 1; j >= 1; j--) {
-			const text = state.doc.line(j).text;
-			if (text.trim() === '') continue;
-			const prev = text.match(LIST_STRIP_RE);
-			if (!prev) break;
-			if (prev[1].length <= indent) { parentContentColumn = prev[0].length; break; }
-		}
+		// The nearest item at this level or shallower is the one to nest under.
+		const parentContentColumn = precedingItem(state, i, (p) => p <= indent)?.[0].length ?? -1;
 		if (parentContentColumn > indent) {
 			changes.push({ from: line.from, insert: ' '.repeat(parentContentColumn - indent) });
 		}
@@ -340,17 +344,9 @@ export function outdentListItems(view: EditorView): void {
 		if (!match) continue;
 		const indent = match[1].length;
 		if (indent === 0) continue;
-		// The item this one is nested under: the nearest preceding shallower list
-		// item. A blank line is skipped (loose lists); a non-list line ends the
-		// list, so an orphan indent falls back to column 0.
-		let targetIndent = 0;
-		for (let j = i - 1; j >= 1; j--) {
-			const text = state.doc.line(j).text;
-			if (text.trim() === '') continue;
-			const prev = text.match(LIST_STRIP_RE);
-			if (!prev) break;
-			if (prev[1].length < indent) { targetIndent = prev[1].length; break; }
-		}
+		// The item this one is nested under is the nearest shallower one; an orphan
+		// indent falls back to column 0.
+		const targetIndent = precedingItem(state, i, (p) => p < indent)?.[1].length ?? 0;
 		changes.push({ from: line.from, to: line.from + (indent - targetIndent) });
 	}
 	if (changes.length) view.dispatch({ changes });
@@ -365,14 +361,8 @@ export function canIndentListItem(view: EditorView): boolean {
 	const match = line.text.match(LIST_STRIP_RE);
 	if (!match) return false;
 	const indent = match[1].length;
-	for (let j = line.number - 1; j >= 1; j--) {
-		const text = state.doc.line(j).text;
-		if (text.trim() === '') continue;
-		const prev = text.match(LIST_STRIP_RE);
-		if (!prev) return false;
-		if (prev[1].length <= indent) return prev[0].length > indent;
-	}
-	return false;
+	const parent = precedingItem(state, line.number, (p) => p <= indent);
+	return parent !== null && parent[0].length > indent;
 }
 
 /** Whether the list item at the caret is nested (indented) and so can be outdented. */
@@ -400,7 +390,7 @@ export function clearListMarkerBackward(view: EditorView): boolean {
 	const marker = line.text.match(/^(\s*)(?:\d+[.)]|[-*+])\s/);
 	if (!marker || sel.head !== line.from + marker[0].length) return false;
 	// A leading marker in a code block is literal text, not a list.
-	if (enclosing(view, line.from, 'FencedCode') || enclosing(view, line.from, 'CodeBlock')) return false;
+	if (inCodeBlock(state, line.from)) return false;
 	const from = line.from + marker[1].length; // keep the item's own indent
 	view.dispatch({
 		changes: { from, to: line.from + marker[0].length },
@@ -426,11 +416,7 @@ export function toggleQuote(view: EditorView): void {
 // so they don't count as a "link" for the link button.
 function realLinkAt(view: EditorView, pos: number): SyntaxNode | null {
 	const link = enclosing(view, pos, 'Link');
-	if (!link) return null;
-	for (let child = link.firstChild; child; child = child.nextSibling) {
-		if (child.name === 'URL' && view.state.sliceDoc(child.from, child.to).startsWith('user:')) return null;
-	}
-	return link;
+	return link && !isMentionLink(view.state, link) ? link : null;
 }
 
 export function toggleLink(view: EditorView, href = ''): void {
@@ -490,7 +476,7 @@ export function readActiveFormats(view: EditorView): TextEditorActiveFormats {
 	// In a code block a leading marker is literal text, not a list/heading — the
 	// regex-based checks below would otherwise report it. (The syntax-tree checks,
 	// like bold or quote, already ignore code content.)
-	const codeBlock = enclosing(view, lineStart, 'FencedCode') !== null || enclosing(view, lineStart, 'CodeBlock') !== null;
+	const codeBlock = inCodeBlock(state, lineStart);
 	return {
 		bold: has('StrongEmphasis'),
 		italic: has('Emphasis'),

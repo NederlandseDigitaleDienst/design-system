@@ -2,8 +2,8 @@ import { Decoration, EditorView, ViewPlugin, WidgetType, type DecorationSet, typ
 import { Prec, StateField, type EditorState, type Range } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
-import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
-import { treeAdvanced } from './text-editor.syntax.js';
+import { isMentionLink } from './text-editor.mention.js';
+import { forEachLineStart, treeAdvanced } from './text-editor.syntax.js';
 
 /* syntax="hidden": the formatting marks of bold, italic, strikethrough, inline
  * code, links and headings are hidden, a bullet reads as a dot, a quote as a
@@ -140,11 +140,7 @@ function buildHidden(view: EditorView): DecorationSet {
 					// The outermost quote is the construct; a nested one lies inside it.
 					const outer = outermostQuote(node.node);
 					if (outer !== node.node || revealed(outer.from, outer.to)) return;
-					for (let pos = outer.from; pos <= outer.to; ) {
-						const line = state.doc.lineAt(pos);
-						ranges.push(quoteLine.range(line.from));
-						pos = line.to + 1;
-					}
+					forEachLineStart(state, outer.from, outer.to, (lineFrom) => ranges.push(quoteLine.range(lineFrom)));
 					return;
 				}
 				if (!parent) return;
@@ -171,7 +167,7 @@ function buildHidden(view: EditorView): DecorationSet {
 				if (node.name === 'Link') {
 					const url = node.node.getChild('URL');
 					const marks = node.node.getChildren('LinkMark');
-					if (!url || marks.length < 2 || state.sliceDoc(url.from, url.to).startsWith(MENTION_HREF_PREFIX)) return;
+					if (!url || marks.length < 2 || isMentionLink(state, node.node)) return;
 					if (!revealed(node.from, node.to)) {
 						ranges.push(hideMark.range(marks[0].from, marks[0].to), hideMark.range(marks[1].from, node.to));
 					}

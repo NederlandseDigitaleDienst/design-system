@@ -1,6 +1,7 @@
 import { EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
 import { StateEffect, StateField, type Extension } from '@codemirror/state';
 import { stripSentinels, docToClean } from './text-editor.annotation-sentinels.js';
+import { MENTION_TOKEN_RE } from './text-editor.mention.js';
 import { annotationMove } from './text-editor.annotations.js';
 
 /* Drag-to-move for selected text. The editor lives in a shadow DOM, where the
@@ -213,7 +214,7 @@ class DragMove {
 		const ghost = document.createElement('div');
 		ghost.className = 'cm-drag-ghost';
 		// Show a mention as plain @Name — drop the markdown link wrapper and user id.
-		ghost.textContent = stripSentinels(this.view.state.sliceDoc(from, to)).replace(/\[(@[^\]]*)\]\(user:[^)]*\)/g, '$1');
+		ghost.textContent = stripSentinels(this.view.state.sliceDoc(from, to)).replace(MENTION_TOKEN_RE, '$1');
 		this.view.dom.appendChild(ghost);
 		this.ghost = ghost;
 	}
