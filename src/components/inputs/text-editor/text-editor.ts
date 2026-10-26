@@ -33,8 +33,8 @@
  * To show the value, render the markdown into nldd-rich-text, which uses the
  * same type, bold and code as the editor. A mention is stored as
  * `[@Name](user:id)`: turn it into `<a href="…" data-mention>Name</a>` (or a
- * `span` when there is no page for the person), without the `@`, and it reads
- * as the same token there.
+ * `span` when there is no page for the person), without the `@`. A link reads
+ * as the same token there; a span keeps the color and the icon without the tint.
  *
  * @element nldd-text-editor
  *

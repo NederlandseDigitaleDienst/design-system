@@ -1247,6 +1247,7 @@
 
 	--semantics-mentions-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-75));
 	--semantics-mentions-content-color: var(--primitives-color-accent-700);
+	--semantics-mentions-highlight-border-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
 	--semantics-mentions-is-hovered-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
 	--semantics-mentions-is-active-background-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
 	--semantics-mentions-is-selected-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-400));

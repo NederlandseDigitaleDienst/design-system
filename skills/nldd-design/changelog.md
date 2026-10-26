@@ -28,12 +28,12 @@ here; consult the commit history if you need that level of detail.
 ### Added
 
 - **`nldd-text-editor` takes `syntax="hidden"`.** The marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden, and a `---` line reads as a divider. Where the caret or the selection touches a construct, its marks come back, so you edit the markdown as it is. The markers of lists, quotes and code blocks stay, since they carry the structure. Read-only and disabled hide every mark, which gives a clean read view. The value is plain markdown either way, and `visible` stays the default.
-- **`nldd-rich-text` shows a mention the way `nldd-text-editor` does.** Give an element `data-mention` and it becomes the same tinted token with the @ icon in front of the name: `<a href="…" data-mention>Anouk de Vries</a>` for a person with a page to go to, `<span data-mention>` for one without. Write the name without the `@`; the rich text draws it. The editor stores a mention as `[@Name](user:id)`, which a markdown renderer turns into a link that goes nowhere, so turn it into this markup when you render the value.
+- **`nldd-rich-text` shows a mention the way `nldd-text-editor` does.** Give an element `data-mention` and the name takes the mention color with the @ icon in front of it. `<a href="…" data-mention>Anouk de Vries</a>`, for a person with a page to go to, becomes the same tinted token with a thin edge as in the editor; the tint says you can follow it. `<span data-mention>`, for one without, keeps the color and the icon without the tint. Write the name without the `@`; the rich text draws it. The editor stores a mention as `[@Name](user:id)`, which a markdown renderer turns into a link that goes nowhere, so turn it into this markup when you render the value.
 
 ### Changed
 
 - **`nldd-text-editor` looks closer to the result in `nldd-rich-text`.** Bold is the same semibold, inline code and code blocks take the same size and the same tinted background, and the list bullets take the text color instead of a dimmed one. The markers themselves (`**`, `#`, `>`, `---`) stay visible and dimmed, and a link stays without an underline, since the badge beside it already marks it.
-- **The mention colors are semantics tokens now**, since the editor and the rich text share them: `--components-text-editor-mention-*` became `--semantics-mentions-*`, with an `is-hovered` and `is-active` background for a mention that is a link. The themes that ship with the system moved along. If your own theme set the old names, rename them.
+- **The mention colors are semantics tokens now**, since the editor and the rich text share them: `--components-text-editor-mention-*` became `--semantics-mentions-*`, with a `highlight-border-color` for its edge and an `is-hovered` and `is-active` background for a mention that is a link. The themes that ship with the system moved along. If your own theme set the old names, rename them.
 
 ### Fixed
 

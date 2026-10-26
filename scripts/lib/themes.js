@@ -751,6 +751,7 @@ export const STATUS_IN_COLOR = new Set([
 	'--components-text-editor-link-badge-is-active-highlight-border-color',
 	'--semantics-mentions-background-color',
 	'--semantics-mentions-content-color',
+	'--semantics-mentions-highlight-border-color',
 	'--semantics-mentions-is-hovered-background-color',
 	'--semantics-mentions-is-active-background-color',
 	'--semantics-mentions-is-selected-background-color',
