@@ -440,8 +440,9 @@ nldd-rich-text i {
 /* # Code */
 
 nldd-rich-text code {
-	padding: var(--primitives-space-4);
+	padding: var(--primitives-space-2) var(--primitives-space-4);
 	border-radius: var(--semantics-controls-xs-corner-radius);
+	box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--semantics-surfaces-tinted-highlight-border-color);
 	background-color: var(--semantics-surfaces-tinted-background-color);
 	font-family: var(--primitives-font-family-monospace);
 	font-size: var(--semantics-code-inline-font-size);
@@ -484,6 +485,7 @@ nldd-rich-text pre {
 nldd-rich-text pre > code {
 	padding: 0;
 	border-radius: 0;
+	box-shadow: none;
 	background-color: transparent;
 	font: inherit;
 }
