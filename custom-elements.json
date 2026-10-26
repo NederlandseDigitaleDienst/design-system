@@ -18514,6 +18514,27 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.hidden-syntax.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "hiddenSyntax",
+          "description": "The syntax=\"hidden\" extension. Highest precedence, so hiding a mark wins over\nthe dimmed styling the markdown decorations give it."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "hiddenSyntax",
+          "declaration": {
+            "name": "hiddenSyntax",
+            "module": "src/components/inputs/text-editor/text-editor.hidden-syntax.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.labels.ts",
       "declarations": [
         {
@@ -19387,6 +19408,16 @@
             },
             {
               "kind": "field",
+              "name": "syntax",
+              "type": {
+                "text": "TextEditorSyntax"
+              },
+              "default": "'visible'",
+              "attribute": "syntax",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "accessibleLabel",
               "type": {
                 "text": "string"
@@ -20129,6 +20160,15 @@
               "default": "'simple'",
               "fieldName": "appearance",
               "description": "'simple' (default, bare) | 'input-field' (framed surface)"
+            },
+            {
+              "name": "syntax",
+              "type": {
+                "text": "TextEditorSyntax"
+              },
+              "default": "'visible'",
+              "fieldName": "syntax",
+              "description": "'visible' (default): every formatting mark stays in view, dimmed. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A `---` line reads as a divider until the caret is on it. The markers of lists, quotes and code blocks stay, since they carry the structure. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
               "name": "accessible-label",

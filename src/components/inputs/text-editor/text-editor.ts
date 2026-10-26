@@ -50,6 +50,7 @@
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
  * @attr {string} appearance - 'simple' (default, bare) | 'input-field' (framed surface)
+ * @attr {string} syntax - 'visible' (default): every formatting mark stays in view, dimmed. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A `---` line reads as a divider until the caret is on it. The markers of lists, quotes and code blocks stay, since they carry the structure. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
  *
  * @prop {MentionSource} mentionSource - Consumer-supplied @-mention candidate source (property only). Without it, @-typeahead is inert.
@@ -102,6 +103,7 @@ import { dragToMove, dragMovePlugin } from './text-editor.drag.js';
 import { linkOpenBadge } from './text-editor.links.js';
 import { stableCursor } from './text-editor.cursor.js';
 import { focusSelectionGuard } from './text-editor.focus-selection.js';
+import { hiddenSyntax } from './text-editor.hidden-syntax.js';
 import {
 	toggleInlineWrap,
 	indentListItems as cmIndentListItems,
@@ -133,6 +135,7 @@ import { translate } from '../../../utilities/translations.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 export type TextEditorAppearance = 'input-field' | 'simple';
+export type TextEditorSyntax = 'visible' | 'hidden';
 export type { HeadingLevel, ListType, TextEditorState, TextEditorActiveFormats } from './text-editor.commands.js';
 export type {
 	MentionCandidate,
@@ -201,6 +204,9 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 
 	@property({ reflect: true, converter: reflectNonDefault<TextEditorAppearance>('simple') })
 	appearance: TextEditorAppearance = 'simple';
+
+	@property({ reflect: true, converter: reflectNonDefault<TextEditorSyntax>('visible') })
+	syntax: TextEditorSyntax = 'visible';
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
@@ -279,6 +285,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	private _attrsCompartment = new Compartment();
 	private _spellcheckCompartment = new Compartment();
 	private _historyCompartment = new Compartment();
+	private _syntaxCompartment = new Compartment();
 
 
 	/**
@@ -389,6 +396,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			this._editableCompartment.of(this._editableExtension()),
 			this._attrsCompartment.of(this._attrsExtension()),
 			this._spellcheckCompartment.of(this.noSpellcheck ? [] : spellcheck()),
+			this._syntaxCompartment.of(this.syntax === 'hidden' ? hiddenSyntax() : []),
 			EditorView.updateListener.of((u) => {
 				if (u.docChanged) this._onDocChanged();
 				if (u.docChanged || u.selectionSet) this._emitState();
@@ -537,6 +545,9 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			}
 			if (changed.has('accessibleLabel') || changed.has('inputId')) {
 				this.reconfigure(this._attrsCompartment, this._attrsExtension());
+			}
+			if (changed.has('syntax')) {
+				this.reconfigure(this._syntaxCompartment, this.syntax === 'hidden' ? hiddenSyntax() : []);
 			}
 			if (changed.has('noSpellcheck')) {
 				this.reconfigure(this._spellcheckCompartment, this.noSpellcheck ? [] : spellcheck());

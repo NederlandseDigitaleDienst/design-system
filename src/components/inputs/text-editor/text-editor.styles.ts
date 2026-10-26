@@ -30,6 +30,8 @@ export const textEditorStyles = css`
 		--_text-editor-marker-advance: calc(0.6 * var(--_text-editor-marker-font-size));
 		--_text-editor-bullet-size: 0.45em;
 		--_text-editor-bullet-color: var(--semantics-content-color);
+		--_text-editor-rule-thickness: var(--semantics-dividers-thickness);
+		--_text-editor-rule-color: var(--semantics-dividers-color);
 		--_text-editor-heading-marker-scale: 75%;
 		--_text-editor-token-corner-radius: var(--primitives-corner-radius-sm);
 		--_text-editor-token-block-padding: 0.15em;
@@ -236,6 +238,17 @@ export const textEditorStyles = css`
 		font-weight: var(--primitives-font-weight-body-regular);
 		background-color: var(--_text-editor-code-token-background-color);
 		border-radius: var(--_text-editor-token-corner-radius);
+	}
+
+	.cm-md-code-bare {
+		padding-inline: var(--_text-editor-token-inline-padding);
+	}
+
+	.cm-md-rule {
+		display: inline-block;
+		border-top: var(--_text-editor-rule-thickness) solid var(--_text-editor-rule-color);
+		width: 100%;
+		vertical-align: middle;
 	}
 
 	/* :host beats the shared theme's ".cm-line { padding: 0 }" reset (equal

@@ -15,8 +15,13 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-text-editor` can hide its formatting marks.** With `syntax="hidden"` the text reads close to the result, and the marks come back where you are editing.
+
 ### Added
 
+- **`nldd-text-editor` takes `syntax="hidden"`.** The marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden, and a `---` line reads as a divider. Where the caret or the selection touches a construct, its marks come back, so you edit the markdown as it is. The markers of lists, quotes and code blocks stay, since they carry the structure. Read-only and disabled hide every mark, which gives a clean read view. The value is plain markdown either way, and `visible` stays the default.
 - **`nldd-rich-text` shows a mention the way `nldd-text-editor` does.** Give an element `data-mention` and it becomes the same tinted token with the @ icon in front of the name: `<a href="…" data-mention>Anouk de Vries</a>` for a person with a page to go to, `<span data-mention>` for one without. Write the name without the `@`; the rich text draws it. The editor stores a mention as `[@Name](user:id)`, which a markdown renderer turns into a link that goes nowhere, so turn it into this markup when you render the value.
 
 ### Changed

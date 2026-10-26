@@ -714,6 +714,7 @@ export default {
 	},
 	args: {
 		appearance: 'simple',
+		syntax: 'visible',
 		value: SAMPLE,
 		placeholder: '',
 		rows: 8,
@@ -732,6 +733,12 @@ export default {
 			options: ['simple', 'input-field'],
 			description: 'Visuele stijl. "simple" is kaal zonder focusring; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
 			table: { defaultValue: { summary: 'simple' } },
+		},
+		syntax: {
+			control: 'select',
+			options: ['visible', 'hidden'],
+			description: 'Opmaaktekens. "visible" laat ze gedimd staan; "hidden" verbergt ze en toont ze waar de cursor of selectie een constructie raakt.',
+			table: { defaultValue: { summary: 'visible' } },
 		},
 		value: {
 			control: 'text',
@@ -794,6 +801,7 @@ export default {
 
 const Template = ({
 	appearance,
+	syntax,
 	value,
 	placeholder,
 	rows,
@@ -808,6 +816,7 @@ const Template = ({
 }: Record<string, any>) => html`
 	<nldd-text-editor
 		appearance=${appearance as string}
+		syntax=${syntax as string}
 		.value=${value || ''}
 		placeholder=${placeholder || nothing}
 		rows=${rows as number}
@@ -1220,6 +1229,45 @@ export const MetWerkbalk = {
 		docs: {
 			description: {
 				story: 'De editor is headless. Deze toolbar is opgebouwd uit DS-componenten — `nldd-toolbar` met icon-`nldd-segmented-control`s (nadruk vet/cursief, code, citaat, en een exclusieve lijst-keuze geen/opsomming/genummerd) en een uitklapbare `nldd-button` met een `nldd-menu` voor de tekststijl (Paragraaf/Kop 1/…). Tweerichtings gekoppeld: de controls sturen de editor (`runCommand`, `setList`, `setHeading`) en het `nldd-text-editor-state`-event zet hun actieve staat. Sneltoetsen Cmd/Ctrl+B/I/E/K werken ook.',
+			},
+		},
+	},
+};
+
+const HIDDEN_SYNTAX_SAMPLE = [
+	'# Projectupdate toegankelijkheid',
+	'',
+	'We verbeteren het **burgerportaal** met [@Anouk de Vries](user:1). De `WCAG 2.2`-criteria zijn *leidend*, zie de [WCAG-richtlijn](https://www.w3.org/TR/WCAG22/), en wat ~~niet meer~~ geldt halen we weg.',
+	'',
+	'## Actiepunten',
+	'',
+	'- **Contrast** op de knoppen verhogen',
+	'- Focus-states nalopen met [@Bram Jansen](user:2)',
+	'- Screenreader-tests *inplannen* voor de livegang',
+	'',
+	'---',
+	'',
+	'### Planning',
+	'',
+	'Voer de check uit met `npm run test:a11y` en meld het **resultaat** aan *team Uitvoering*.',
+].join('\n');
+
+export const VerborgenOpmaak = {
+	render: () => toolbarEditor(html`
+		<nldd-text-editor
+			appearance="simple"
+			syntax="hidden"
+			rows="15"
+			accessible-label="Tekst"
+			.value=${HIDDEN_SYNTAX_SAMPLE}
+			.mentionSource=${mixedSource}
+		></nldd-text-editor>
+	`),
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Met `syntax="hidden"` zijn de tekens van vet, cursief, doorhalen, inline code, links en de `#` van koppen verborgen, en is `---` een scheidingslijn. Waar de cursor of selectie een constructie raakt, komen de tekens terug, zodat je de markdown bewerkt zoals hij is. De markers van lijsten, citaten en codeblokken blijven staan. De waarde blijft gewone markdown.',
 			},
 		},
 	},
