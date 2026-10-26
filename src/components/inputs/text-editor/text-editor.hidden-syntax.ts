@@ -73,11 +73,15 @@ const hideLine = Decoration.replace({ block: true });
 
 /** The fence lines of every code block the selection does not touch. Taking a
  *  whole line out is a block decoration, which only a state field may give. */
+// A code block sits at the top level, in a list item or in a quote; nothing
+// else can hold one, so the walk does not descend into it.
+const FENCE_CONTAINERS = new Set(['Document', 'Blockquote', 'BulletList', 'OrderedList', 'ListItem']);
+
 function buildHiddenFences(state: EditorState): DecorationSet {
 	const ranges: Range<Decoration>[] = [];
 	syntaxTree(state).iterate({
 		enter: (node) => {
-			if (node.name !== 'FencedCode') return;
+			if (node.name !== 'FencedCode') return FENCE_CONTAINERS.has(node.name);
 			if (touchesSelection(state, node.from, node.to)) return false;
 			const fences = node.node.getChildren('CodeMark').map((mark) => state.doc.lineAt(mark.from));
 			const first = state.doc.lineAt(node.from).number;
@@ -91,9 +95,30 @@ function buildHiddenFences(state: EditorState): DecorationSet {
 	return Decoration.set(ranges, true);
 }
 
+/** The code blocks the selection touches, as a key: a caret that moves within
+ *  a block, or between lines of text, leaves the fences as they are. */
+function touchedFences(state: EditorState): string {
+	const touched: number[] = [];
+	for (const range of state.selection.ranges) {
+		syntaxTree(state).iterate({
+			from: range.from,
+			to: range.to,
+			enter: (node) => {
+				if (node.name === 'FencedCode') touched.push(node.from);
+				return node.name !== 'FencedCode' && FENCE_CONTAINERS.has(node.name);
+			},
+		});
+	}
+	return touched.join(',');
+}
+
 const hiddenFences = StateField.define<DecorationSet>({
 	create: buildHiddenFences,
-	update: (value, tr) => (tr.docChanged || tr.selection || tr.reconfigured || treeAdvanced(tr.startState, tr.state) ? buildHiddenFences(tr.state) : value),
+	update: (value, tr) => {
+		if (tr.docChanged || tr.reconfigured || treeAdvanced(tr.startState, tr.state)) return buildHiddenFences(tr.state);
+		if (tr.selection && touchedFences(tr.startState) !== touchedFences(tr.state)) return buildHiddenFences(tr.state);
+		return value;
+	},
 	provide: (field) => EditorView.decorations.from(field),
 });
 

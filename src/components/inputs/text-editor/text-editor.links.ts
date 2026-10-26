@@ -123,7 +123,7 @@ export function isSafeHref(href: string): boolean {
 /** The link's destination, or null for a mention, an unsafe scheme, or a link
  *  without a resolvable URL. Handles both inline links (`[text](url)`) and
  *  reference-style links (`[text][ref]`), resolving the latter against `refs`. */
-function hrefOf(state: EditorState, link: SyntaxNode, refs: Map<string, string>): string | null {
+function hrefOf(state: EditorState, link: SyntaxNode, refs: () => Map<string, string>): string | null {
 	let label: string | null = null;
 	for (let child = link.firstChild; child; child = child.nextSibling) {
 		if (child.name === 'URL') {
@@ -133,7 +133,7 @@ function hrefOf(state: EditorState, link: SyntaxNode, refs: Map<string, string>)
 		if (child.name === 'LinkLabel') label = normaliseLabel(state.sliceDoc(child.from, child.to));
 	}
 	if (label) {
-		const href = refs.get(label);
+		const href = refs().get(label);
 		return href && !href.startsWith(MENTION_HREF_PREFIX) && isSafeHref(href) ? href : null;
 	}
 	return null;
@@ -171,7 +171,9 @@ function bareHref(state: EditorState, node: SyntaxNode): string | null {
 function buildBadges(view: EditorView, label: OpenInNewTabLabel): DecorationSet {
 	const builder = new RangeSetBuilder<Decoration>();
 	const tree = syntaxTree(view.state);
-	const refs = referenceDefs(view.state);
+	// Looked up only when a reference-style link asks: most documents have none.
+	let defs: Map<string, string> | null = null;
+	const refs = () => (defs ??= referenceDefs(view.state));
 	// side -1 draws the badge before the caret, so the caret at the link end sits
 	// to the RIGHT of the badge — text typed there lands after it, not wedged
 	// between the link and the badge.
@@ -228,7 +230,7 @@ export function linkEndsAt(state: EditorState, pos: number): boolean {
 	let refs: Map<string, string> | null = null;
 	return enclosingNode(state, pos, -1, (node) => {
 		if (node.to !== pos) return false;
-		if (node.name === 'Link') return hrefOf(state, node, (refs ??= referenceDefs(state))) !== null;
+		if (node.name === 'Link') return hrefOf(state, node, () => (refs ??= referenceDefs(state))) !== null;
 		return node.name === 'URL' && !inLinkContext(node) && bareHref(state, node) !== null;
 	}) !== null;
 }

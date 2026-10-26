@@ -316,11 +316,15 @@ class MentionWidget extends WidgetType {
 	}
 }
 
+const CODE_NODES = new Set(['FencedCode', 'CodeBlock', 'InlineCode']);
+
 function buildMentionChips(state: EditorState): DecorationSet {
 	const ranges: Range<Decoration>[] = [];
 	const sel = state.selection.main;
 	syntaxTree(state).iterate({
 		enter: (node) => {
+			// Code holds no links; its text is often the longest part of a document.
+			if (CODE_NODES.has(node.name)) return false;
 			if (node.name !== 'Link') return;
 			const link = node.node;
 			let url: SyntaxNode | null = null;
