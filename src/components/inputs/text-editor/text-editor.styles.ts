@@ -24,6 +24,10 @@ export const textEditorStyles = css`
 		--_text-editor-font: var(--primitives-font-body-md-regular-snug);
 		--_text-editor-code-font: var(--primitives-font-monospace-sm-regular-snug);
 		--_text-editor-code-font-size: var(--semantics-code-inline-font-size);
+		/* The scale of --semantics-code-inline-font-size, and the JetBrains Mono box
+		   (ascent 1020 + descent 300 per 1000), to size inline code like a token. */
+		--_text-editor-code-scale: 0.85;
+		--_text-editor-code-content-height: 1.32em;
 		--_text-editor-marker-font-size: var(--primitives-font-size-90);
 		/* JetBrains Mono advance (600/1000 em) at the marker size; leading
 		   list/quote markers are mono so the hanging indent equals their width. */
@@ -42,9 +46,12 @@ export const textEditorStyles = css`
 		   to a heading's tighter line. (~1.2em is the text's own box.) */
 		--_text-editor-token-block-padding-fit: max(0em, (1lh - 1.2em) / 2);
 		--_text-editor-code-token-background-color: var(--semantics-surfaces-tinted-background-color);
+		--_text-editor-code-token-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_text-editor-token-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
 		--_text-editor-code-token-is-selected-background-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-300));
-		--_text-editor-code-block-inline-padding: var(--_text-editor-token-inline-padding);
-		--_text-editor-code-block-block-padding: var(--_text-editor-token-block-padding);
+		--_text-editor-code-block-inline-padding: var(--primitives-space-16);
+		--_text-editor-code-block-block-padding: var(--primitives-space-16);
+		--_text-editor-code-block-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_text-editor-annotation-token-background-color: light-dark(var(--primitives-color-mark-75), var(--primitives-color-mark-150));
 		--_text-editor-annotation-token-is-selected-background-color: light-dark(var(--primitives-color-mark-200), var(--primitives-color-mark-400));
 		--_text-editor-annotation-token-badge-content-color: var(--primitives-color-mark-1000);
@@ -72,6 +79,7 @@ export const textEditorStyles = css`
 		--_text-editor-link-badge-is-active-highlight-border-color: var(--components-text-editor-link-badge-is-active-highlight-border-color);
 		--_text-editor-mention-icon-size: 0.95em;
 		--_text-editor-mention-token-background-color: var(--semantics-mentions-background-color);
+		--_text-editor-mention-token-highlight-border-color: var(--semantics-mentions-highlight-border-color);
 		--_text-editor-mention-token-content-color: var(--semantics-mentions-content-color);
 		--_text-editor-mention-token-is-selected-background-color: var(--semantics-mentions-is-selected-background-color);
 		--_text-editor-mention-token-is-selected-content-color: var(--semantics-mentions-is-selected-content-color);
@@ -228,7 +236,7 @@ export const textEditorStyles = css`
 	/* The selected run is darkened with a decoration (see cm-md-code-selected
 	   below), since drawSelection hides the native selection. */
 	.cm-md-code {
-		padding-block: var(--_text-editor-token-block-padding-fit);
+		padding-block: max(0em, (1lh / var(--_text-editor-code-scale) - var(--_text-editor-code-content-height)) / 2);
 		/* No inline padding: the tint hugs the backticks, which are the visible bounds
 		   anyway. A padded mark has no coordsAt hook, so the caret at its edge would
 		   otherwise jump by the padding depending on the direction it arrives from. */
@@ -237,6 +245,7 @@ export const textEditorStyles = css`
 		font-family: var(--primitives-font-family-monospace);
 		font-size: var(--_text-editor-code-font-size);
 		font-weight: var(--primitives-font-weight-body-regular);
+		box-shadow: inset 0 0 0 var(--_text-editor-token-highlight-border-width) var(--_text-editor-code-token-highlight-border-color);
 		background-color: var(--_text-editor-code-token-background-color);
 		border-radius: var(--_text-editor-token-corner-radius);
 	}
@@ -255,22 +264,41 @@ export const textEditorStyles = css`
 	/* :host beats the shared theme's ".cm-line { padding: 0 }" reset (equal
 	   specificity otherwise wins on source order), same as .cm-content above —
 	   without it the block padding never lands and the surface reads cramped. */
+	/* The block is drawn line by line, so its edge is too: the sides on every
+	   line, the top on the first and the bottom on the last. */
 	:host .cm-md-codeblock {
+		--_text-editor-code-block-edge: var(--_text-editor-token-highlight-border-width);
+
 		padding-inline: var(--_text-editor-code-block-inline-padding);
+		box-shadow:
+			inset var(--_text-editor-code-block-edge) 0 0 var(--_text-editor-code-token-highlight-border-color),
+			inset calc(-1 * var(--_text-editor-code-block-edge)) 0 0 var(--_text-editor-code-token-highlight-border-color);
 		font: var(--_text-editor-code-font);
 		background-color: var(--_text-editor-code-token-background-color);
 	}
 
 	:host .cm-md-codeblock-first {
 		padding-top: var(--_text-editor-code-block-block-padding);
-		border-start-start-radius: var(--_text-editor-token-corner-radius);
-		border-start-end-radius: var(--_text-editor-token-corner-radius);
+		box-shadow:
+			inset var(--_text-editor-code-block-edge) 0 0 var(--_text-editor-code-token-highlight-border-color),
+			inset calc(-1 * var(--_text-editor-code-block-edge)) 0 0 var(--_text-editor-code-token-highlight-border-color),
+			inset 0 var(--_text-editor-code-block-edge) 0 var(--_text-editor-code-token-highlight-border-color);
+		border-start-start-radius: var(--_text-editor-code-block-corner-radius);
+		border-start-end-radius: var(--_text-editor-code-block-corner-radius);
 	}
 
 	:host .cm-md-codeblock-last {
 		padding-bottom: var(--_text-editor-code-block-block-padding);
-		border-end-start-radius: var(--_text-editor-token-corner-radius);
-		border-end-end-radius: var(--_text-editor-token-corner-radius);
+		box-shadow:
+			inset var(--_text-editor-code-block-edge) 0 0 var(--_text-editor-code-token-highlight-border-color),
+			inset calc(-1 * var(--_text-editor-code-block-edge)) 0 0 var(--_text-editor-code-token-highlight-border-color),
+			inset 0 calc(-1 * var(--_text-editor-code-block-edge)) 0 var(--_text-editor-code-token-highlight-border-color);
+		border-end-start-radius: var(--_text-editor-code-block-corner-radius);
+		border-end-end-radius: var(--_text-editor-code-block-corner-radius);
+	}
+
+	:host .cm-md-codeblock-first.cm-md-codeblock-last {
+		box-shadow: inset 0 0 0 var(--_text-editor-code-block-edge) var(--_text-editor-code-token-highlight-border-color);
 	}
 
 	/* Selected slice of a code span — drawSelection hides the native ::selection,
@@ -306,6 +334,7 @@ export const textEditorStyles = css`
 		   halved), so the icon sits equally clear left, top and bottom; the right keeps
 		   the normal token inset around the name. */
 		padding-inline: max(0em, (max(1.2em, 1lh) - var(--_text-editor-mention-icon-size)) / 2) var(--_text-editor-token-inline-padding);
+		box-shadow: inset 0 0 0 var(--_text-editor-token-highlight-border-width) var(--_text-editor-mention-token-highlight-border-color);
 		color: var(--_text-editor-mention-token-content-color);
 		background-color: var(--_text-editor-mention-token-background-color);
 		border-radius: var(--_text-editor-token-corner-radius);
@@ -334,6 +363,7 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-mention-token[data-selected] {
+		box-shadow: none;
 		color: var(--_text-editor-mention-token-is-selected-content-color);
 		background-color: var(--_text-editor-mention-token-is-selected-background-color);
 	}
