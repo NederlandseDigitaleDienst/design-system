@@ -147,7 +147,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	}
 
 	protected getEditorParent(): HTMLElement | null | undefined {
-		return this.shadowRoot?.querySelector('.code-viewer') as HTMLElement | null;
+		return this.shadowRoot?.querySelector('.code-viewer__codemirror') as HTMLElement | null;
 	}
 
 	protected buildExtensions(): Extension[] {

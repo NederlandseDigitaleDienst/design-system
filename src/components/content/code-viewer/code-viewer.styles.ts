@@ -65,7 +65,7 @@ export const codeViewerStyles = css`
 	}
 
 
-	/* # Block — CodeMirror (read-only) mounts into .code-viewer */
+	/* # Block — the frame; CodeMirror (read-only) mounts into __codemirror */
 
 	.code-viewer {
 		box-sizing: border-box;
@@ -120,6 +120,12 @@ export const codeViewerStyles = css`
 	:host([max-height]) .code-viewer {
 		display: flex;
 		max-height: var(--_code-viewer-max-height);
+		flex-direction: column;
+	}
+
+	:host([max-height]) .code-viewer__codemirror {
+		display: flex;
+		min-height: 0;
 		flex-direction: column;
 	}
 
