@@ -6,7 +6,8 @@
  * page and stays there — this one floats, stacks, and goes away.
  *
  * It places itself. Write it wherever it belongs in your code and it moves to
- * one shared area: top right from md, full width across the top below that.
+ * one shared area: top right from md, where it slides in from the right, and
+ * full width across the top below that, where it drops in from the top.
  * Nothing about the position is settable, so notifications from anywhere in an
  * application land in the same place and stack in the same order.
  *
@@ -350,7 +351,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 	/** Once in, it stays in: every move to another overlay would otherwise
 	 *  replay the arrival. */
 	private _onAnimationEnd = (e: AnimationEvent): void => {
-		if (e.target !== this || e.animationName !== 'notification-arrive') return;
+		if (e.target !== this || !e.animationName.startsWith('notification-arrive')) return;
 		this.toggleAttribute('data-arrived', true);
 	};
 

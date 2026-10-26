@@ -1,5 +1,6 @@
 import { isKeyboardMode } from '../../../utilities/input-modality.js';
 import type { NLDDNotification } from './notification.js';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 
 /**
  * The one place every notification ends up, wherever a consumer wrote it.
@@ -32,6 +33,19 @@ const AREA_ID = 'nldd-notifications-area';
  *  behind the last one that does, and stack another copy of the same shadow on
  *  the same spot. Three cards is enough to say "there is more". */
 const MAX_DEPTH = 2;
+
+/** Below md the area spans the top, inset on both sides. Its style is inline,
+ *  where a media query cannot go, so the query is watched here. */
+const small = typeof matchMedia === 'function' ? matchMedia(`(max-width: ${queryBreakpoints.smMax})`) : null;
+
+function applyWidth(area: HTMLElement): void {
+	area.style.left = small?.matches ? 'max(var(--semantics-overlays-inset), env(safe-area-inset-left))' : 'auto';
+}
+
+small?.addEventListener('change', () => {
+	const area = document.getElementById(AREA_ID);
+	if (area) applyWidth(area);
+});
 
 let frontObserver: ResizeObserver | null = null;
 let expanded = false;
@@ -159,6 +173,7 @@ function ensureArea(label: string): HTMLElement {
 		right: max(var(--semantics-overlays-inset), env(safe-area-inset-right));
 		bottom: auto;
 		left: auto;
+		width: auto;
 		display: grid;
 		align-content: start;
 		align-items: start;
@@ -171,6 +186,7 @@ function ensureArea(label: string): HTMLElement {
 		padding: 0;
 		color: inherit;
 	`;
+	applyWidth(area);
 	// The stack itself catches no clicks, only the notifications in it, so the
 	// empty space beside them stays part of the page.
 	area.addEventListener('pointerdown', () => {}, { passive: true });
