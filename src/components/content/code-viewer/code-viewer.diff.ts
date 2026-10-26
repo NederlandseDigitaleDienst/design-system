@@ -27,16 +27,31 @@ export interface ParsedDiff {
 }
 
 const HUNK_RE = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/;
+const FILE_HEADER_RE = /^(diff |index |--- |\+\+\+ |new file|deleted file|similarity |rename |old mode|new mode)/;
+
+/** Without `@@` headers every line is code, so file headers in front of it would
+ *  read as a removed and an added line. They are taken off when they hold the
+ *  `---` and `+++` pair that only a file header has; a code line that happens to
+ *  start with `---` stays. */
+function withoutLeadingFileHeader(source: string[]): string[] {
+	let end = 0;
+	while (end < source.length && FILE_HEADER_RE.test(source[end])) end++;
+	const head = source.slice(0, end);
+	const hasPair = head.some((line, i) => line.startsWith('--- ') && head[i + 1]?.startsWith('+++ '));
+	return hasPair ? source.slice(end) : source;
+}
 
 /** Parse a unified diff. File headers (`diff --git`, `index`, `---`, `+++` and
  *  the like) are left out: the file name belongs to the page around the viewer.
  *  So is `\ No newline at end of file`. A hunk ends where its `@@` header says
  *  it does, so the headers of a next file in a multi-file diff are not taken for
  *  code; their name is lost, though, so give each file a viewer of its own.
- *  Without any `@@` header, every line is code and the numbers start at 1. */
+ *  Without any `@@` header, every line after the file header is code and the
+ *  numbers start at 1. */
 export function parseUnifiedDiff(raw: string): ParsedDiff {
-	const source = raw.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n');
-	const hasHunks = source.some((line) => HUNK_RE.test(line));
+	const all = raw.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n');
+	const hasHunks = all.some((line) => HUNK_RE.test(line));
+	const source = hasHunks ? all : withoutLeadingFileHeader(all);
 	const lines: DiffLine[] = [];
 	let oldNumber = 1;
 	let newNumber = 1;
@@ -253,9 +268,9 @@ export async function wordExtensions(parsed: ParsedDiff): Promise<Extension> {
 		const before = parsed.lines[r].text;
 		const after = parsed.lines[a].text;
 		const changes = presentableDiff(before, after);
+		if (changes.length === 0) continue;
 		const changedBefore = changes.reduce((sum, c) => sum + c.toA - c.fromA, 0);
 		const changedAfter = changes.reduce((sum, c) => sum + c.toB - c.fromB, 0);
-		if (changes.length === 0) continue;
 		if (changedBefore + changedAfter > (before.length + after.length) * WORD_MARK_LIMIT) continue;
 		for (const change of changes) {
 			if (change.toA > change.fromA) marks.push(removedWord.range(lineStarts[r] + change.fromA, lineStarts[r] + change.toA));

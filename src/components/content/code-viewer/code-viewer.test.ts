@@ -598,6 +598,13 @@ index 3333333..4444444 100644
 		expect(deleted.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([['removed', 1, null], ['removed', 2, null]]);
 	});
 
+	it('laat zonder @@-kop de bestandskop weg, maar niet een coderegel die met --- begint', () => {
+		const headed = parseUnifiedDiff('diff --git a/a.sql b/a.sql\n--- a/a.sql\n+++ b/a.sql\n-oud\n+nieuw');
+		expect(headed.lines.map((l) => [l.kind, l.text])).toEqual([['removed', 'oud'], ['added', 'nieuw']]);
+		const code = parseUnifiedDiff('--- commentaar\n+nieuw');
+		expect(code.lines.map((l) => [l.kind, l.text])).toEqual([['removed', '-- commentaar'], ['added', 'nieuw']]);
+	});
+
 	it('paart verwijderde en direct volgende toegevoegde regels op volgorde', () => {
 		expect(pairChangedLines(parseUnifiedDiff(DIFF).lines)).toEqual([[1, 2], [5, 6]]);
 	});
