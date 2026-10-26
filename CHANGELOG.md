@@ -9,6 +9,14 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **The caret of `nldd-code-editor` is whole at the start of a line.** See Fixed.
+
+### Fixed
+
+- **The caret of `nldd-code-editor` is no longer clipped at the start of a line.** Without a frame the editor had no room at its left edge, so part of the caret fell off at the first position of every line. It now has the room of the caret and sits centered on the insertion point, as in `nldd-text-editor`. The text moves 2px to the right; with `appearance="input-field"` nothing changes.
+
 ## [0.13.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.12.0...v0.13.0) (2026-10-27)
 
 ### Highlights
@@ -59,23 +67,6 @@ here; consult the commit history if you need that level of detail.
 - **The "+N" of `nldd-avatar-group` fits its disc at every size.** It had a fixed font size, so at size 16 the number ran past the disc, and with two or three digits the "+" fell under the avatar before it.
 
 ## [0.12.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.11.0...v0.12.0) (2026-10-26)
-
-<!--
-  GEGENEREERD BESTAND — niet handmatig bewerken.
-  Kopie van de root CHANGELOG.md (onderhouden door semantic-release).
-  Hergenereren: npm run generate:skill-docs
--->
-
-# Changelog
-
-All notable changes to the NLDD Designsysteem are documented here.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Versions are bumped automatically by semantic-release on merge to main —
-the type of conventional-commit determines the release. Conventional types
-`chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
-here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
