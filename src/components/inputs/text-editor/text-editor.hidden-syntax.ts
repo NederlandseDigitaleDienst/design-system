@@ -1,5 +1,5 @@
 import { Decoration, EditorView, ViewPlugin, WidgetType, type DecorationSet, type ViewUpdate } from '@codemirror/view';
-import { Prec, type EditorState, type Range } from '@codemirror/state';
+import { Prec, StateField, type EditorState, type Range } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
 
@@ -10,7 +10,9 @@ import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
  * only the picture changes. A read-only or disabled editor has no caret to
  * reveal anything, so there every mark is hidden.
  *
- * Lists, quotes and code blocks keep their markers: those carry the structure. */
+ * A code block loses its fence lines (the ``` above and below), since its own
+ * tint and edge already say what it is. Lists and quotes keep their markers:
+ * those carry the structure. */
 
 /** The marks hidden inside inline constructs, by the construct they belong to. */
 const INLINE_MARKS: Record<string, readonly string[]> = {
@@ -46,11 +48,41 @@ function revealsAnything(state: EditorState): boolean {
 	return !state.readOnly && state.facet(EditorView.editable);
 }
 
+function touchesSelection(state: EditorState, from: number, to: number): boolean {
+	return revealsAnything(state) && state.selection.ranges.some((range) => range.from <= to && range.to >= from);
+}
+
+const hideLine = Decoration.replace({ block: true });
+
+/** The fence lines of every code block the selection does not touch. Taking a
+ *  whole line out is a block decoration, which only a state field may give. */
+function buildHiddenFences(state: EditorState): DecorationSet {
+	const ranges: Range<Decoration>[] = [];
+	syntaxTree(state).iterate({
+		enter: (node) => {
+			if (node.name !== 'FencedCode') return;
+			if (touchesSelection(state, node.from, node.to)) return false;
+			const fences = node.node.getChildren('CodeMark').map((mark) => state.doc.lineAt(mark.from));
+			const first = state.doc.lineAt(node.from).number;
+			const last = state.doc.lineAt(node.to).number;
+			// A block with no lines of its own would vanish with its fences.
+			if (last - first + 1 <= fences.length) return false;
+			for (const line of fences) ranges.push(hideLine.range(line.from, line.to));
+			return false;
+		},
+	});
+	return Decoration.set(ranges, true);
+}
+
+const hiddenFences = StateField.define<DecorationSet>({
+	create: buildHiddenFences,
+	update: (value, tr) => (tr.docChanged || tr.selection || tr.reconfigured ? buildHiddenFences(tr.state) : value),
+	provide: (field) => EditorView.decorations.from(field),
+});
+
 function buildHidden(view: EditorView): DecorationSet {
 	const { state } = view;
-	const live = revealsAnything(state);
-	const revealed = (from: number, to: number): boolean =>
-		live && state.selection.ranges.some((range) => range.from <= to && range.to >= from);
+	const revealed = (from: number, to: number): boolean => touchesSelection(state, from, to);
 	const ranges: Range<Decoration>[] = [];
 	for (const { from, to } of view.visibleRanges) {
 		syntaxTree(state).iterate({
@@ -158,5 +190,5 @@ class HiddenSyntaxPlugin {
 /** The syntax="hidden" extension. Highest precedence, so hiding a mark wins over
  *  the dimmed styling the markdown decorations give it. */
 export function hiddenSyntax() {
-	return Prec.highest(ViewPlugin.fromClass(HiddenSyntaxPlugin, { decorations: (plugin) => plugin.decorations }));
+	return [Prec.highest(ViewPlugin.fromClass(HiddenSyntaxPlugin, { decorations: (plugin) => plugin.decorations })), hiddenFences];
 }

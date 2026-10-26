@@ -20168,7 +20168,7 @@
               },
               "default": "'visible'",
               "fieldName": "syntax",
-              "description": "'visible' (default): every formatting mark stays in view, dimmed. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A `---` line reads as a divider until the caret is on it. The markers of lists, quotes and code blocks stay, since they carry the structure. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
+              "description": "'visible' (default): every formatting mark stays in view, dimmed. 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A `---` line reads as a divider until the caret is on it, and a code block loses its ``` fence lines until the caret is in it, since its own tint and edge already say what it is. The markers of lists and quotes stay, since they carry the structure. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
               "name": "accessible-label",

@@ -1249,7 +1249,12 @@ const HIDDEN_SYNTAX_SAMPLE = [
 	'',
 	'### Planning',
 	'',
-	'Voer de check uit met `npm run test:a11y` en meld het **resultaat** aan *team Uitvoering*.',
+	'Voer de check uit met `npm run test:a11y` en meld het **resultaat** aan *team Uitvoering*:',
+	'',
+	'```bash',
+	'npm ci',
+	'npm run test:a11y',
+	'```',
 ].join('\n');
 
 export const VerborgenOpmaak = {
@@ -1267,7 +1272,7 @@ export const VerborgenOpmaak = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `syntax="hidden"` zijn de tekens van vet, cursief, doorhalen, inline code, links en de `#` van koppen verborgen, en is `---` een scheidingslijn. Waar de cursor of selectie een constructie raakt, komen de tekens terug, zodat je de markdown bewerkt zoals hij is. De markers van lijsten, citaten en codeblokken blijven staan. De waarde blijft gewone markdown.',
+				story: 'Met `syntax="hidden"` zijn de tekens van vet, cursief, doorhalen, inline code, links en de `#` van koppen verborgen, is `---` een scheidingslijn en verliest een codeblok zijn ```-regels. Waar de cursor of selectie een constructie raakt, komen de tekens terug, zodat je de markdown bewerkt zoals hij is. De markers van lijsten en citaten blijven staan. De waarde blijft gewone markdown.',
 			},
 		},
 	},

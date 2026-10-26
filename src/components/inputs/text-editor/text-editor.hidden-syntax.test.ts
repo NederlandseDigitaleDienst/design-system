@@ -15,6 +15,10 @@ const DOC = [
 	'',
 	'---',
 	'',
+	'```bash',
+	'npm ci',
+	'```',
+	'',
 	'Slot.',
 ].join('\n');
 
@@ -95,6 +99,27 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		expect(line(el, 4).querySelector('.cm-md-rule')).not.toBeNull();
 		caret(el, DOC.indexOf('---') + 1);
 		expect(line(el, 4).textContent).toBe('---');
+	});
+
+	it('takes the fence lines of a code block out until the caret is in it', async () => {
+		el = await make();
+		caret(el, DOC.indexOf('Slot'));
+		const lines = () => [...el.view.contentDOM.querySelectorAll('.cm-line')].map((l) => l.textContent);
+		expect(lines()).not.toContain('```bash');
+		expect(lines()).toContain('npm ci');
+		caret(el, DOC.indexOf('npm ci') + 2);
+		expect(lines()).toContain('```bash');
+		expect(lines()).toContain('```');
+	});
+
+	it('keeps the fences of a code block with no lines of its own', async () => {
+		el = await make();
+		el.value = 'Tekst\n\n```\n```\n\nSlot.';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		caret(el, el.view.state.doc.length);
+		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')].map((l) => l.textContent);
+		expect(lines.filter((t) => t === '```')).toHaveLength(2);
 	});
 
 	it('hides every mark when read-only, the selection included', async () => {
