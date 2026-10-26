@@ -74,6 +74,60 @@ describe('nldd-text-editor', () => {
 		cleanup(el2);
 	});
 
+	it('markeert een vermelding als geselecteerd zodra de selectie hem helemaal bevat', async () => {
+		const el2 = await withValue('Met [@Anouk](user:1) en meer.');
+		const view = (el2 as unknown as { view: { contentDOM: HTMLElement; dispatch(spec: unknown): void; state: { doc: { toString(): string } } } }).view;
+		const doc = view.state.doc.toString();
+		const from = doc.indexOf('[@');
+		const to = doc.indexOf(')', from) + 1;
+		const selected = () => view.contentDOM.querySelector('.cm-md-mention-token')!.getAttribute('data-selected');
+		view.dispatch({ selection: { anchor: from, head: to } });
+		expect(selected()).toBe('alone');
+		view.dispatch({ selection: { anchor: from - 2, head: to + 2 } });
+		expect(selected()).toBe('within');
+		view.dispatch({ selection: { anchor: from, head: to + 2 } });
+		expect(selected()).toBe('within');
+		view.dispatch({ selection: { anchor: from + 1, head: to + 2 } });
+		expect(selected()).toBeNull();
+		cleanup(el2);
+	});
+
+	it('tekent de selectie zo hoog als de regel, of hij nu bij tekst of bij een token begint', async () => {
+		const el2 = await withValue('Focus nalopen met [@Bram](user:2)\nVolgende regel met tekst.');
+		const view = (el2 as unknown as { view: { dom: HTMLElement; defaultLineHeight: number; dispatch(spec: unknown): void; state: { doc: { toString(): string; length: number } } } }).view;
+		const doc = view.state.doc.toString();
+		const mention = doc.indexOf('[@');
+		const frame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		const heights = () => [...view.dom.querySelectorAll('.cm-selectionBackground')].map((p) => Math.round(p.getBoundingClientRect().height));
+		for (const anchor of [mention, mention - 3]) {
+			view.dispatch({ selection: { anchor, head: doc.length } });
+			await frame();
+			const line = Math.round(view.defaultLineHeight);
+			expect(heights().length).toBeGreaterThan(0);
+			expect(heights().every((h) => h === line)).toBe(true);
+		}
+		cleanup(el2);
+	});
+
+	it('tekent een deels geselecteerde inline code zo hoog als de code, met zijn rand en ronde kant aan de rand van de code', async () => {
+		const el2 = await withValue('De `WCAG 2.2`-criteria zijn leidend');
+		const view = (el2 as unknown as { view: { contentDOM: HTMLElement; dispatch(spec: unknown): void } }).view;
+		const slice = () => view.contentDOM.querySelector<HTMLElement>('.cm-md-code .cm-md-code-selected')!;
+		view.dispatch({ selection: { anchor: 0, head: 9 } });
+		await el2.updateComplete;
+		const code = view.contentDOM.querySelector('.cm-md-code')!.getBoundingClientRect();
+		const box = slice().getBoundingClientRect();
+		expect(box.top).toBeCloseTo(code.top, 0);
+		expect(box.bottom).toBeCloseTo(code.bottom, 0);
+		expect(slice().classList.contains('cm-md-code-selected-start')).toBe(true);
+		expect(slice().classList.contains('cm-md-code-selected-end')).toBe(false);
+		view.dispatch({ selection: { anchor: 9, head: 20 } });
+		await el2.updateComplete;
+		expect(slice().classList.contains('cm-md-code-selected-start')).toBe(false);
+		expect(slice().classList.contains('cm-md-code-selected-end')).toBe(true);
+		cleanup(el2);
+	});
+
 	it('ziet een waarde die van buitenaf komt terwijl hij focus heeft niet als een bewerking bij blur', async () => {
 		const el2 = await withValue('tekst');
 		const view = (el2 as unknown as { view: { contentDOM: HTMLElement } }).view;

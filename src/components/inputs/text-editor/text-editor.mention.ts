@@ -68,8 +68,17 @@ export function isMentionLink(state: EditorState, link: SyntaxNode): boolean {
 /* @-mentions collapse fully: the whole `[@Naam](user:id)` token is replaced by
  * an atomic token widget — the syntax is hidden, the id is protected, and the
  * cursor steps over it (backspace removes the whole mention). */
+/** How a selection covers a mention: not at all, exactly (the mention alone), or
+ *  as part of a wider selection. */
+type MentionCoverage = 'none' | 'alone' | 'within';
+
+function mentionCoverage(sel: { from: number; to: number }, from: number, to: number): MentionCoverage {
+	if (sel.from === sel.to || sel.from > from || sel.to < to) return 'none';
+	return sel.from === from && sel.to === to ? 'alone' : 'within';
+}
+
 class MentionWidget extends WidgetType {
-	constructor(readonly label: string, readonly id: string, readonly selected: boolean) {
+	constructor(readonly label: string, readonly id: string, readonly selected: MentionCoverage) {
 		super();
 	}
 
@@ -84,7 +93,7 @@ class MentionWidget extends WidgetType {
 		// A name someone chose, not the writer's spelling to correct. Safari
 		// ignores this inside the editor, hence the name in CSS below.
 		token.setAttribute('spellcheck', 'false');
-		if (this.selected) token.setAttribute('data-selected', '');
+		if (this.selected !== 'none') token.setAttribute('data-selected', this.selected);
 		// The @ is rendered as the DS 'at' icon — a separate, vertically-centered
 		// prefix that aligns cleanly with the name.
 		const at = document.createElement('nldd-icon');
@@ -114,7 +123,7 @@ function buildMentionChips(state: EditorState): DecorationSet {
 			if (!text) return;
 			const label = unescapeMentionLabel(state.sliceDoc(text.from, text.to).replace(/^@/, ''));
 			const id = decodeMentionId(state.sliceDoc(url.from, url.to).slice(MENTION_HREF_PREFIX.length));
-			const selected = !sel.empty && sel.from <= link.from && sel.to >= link.to;
+			const selected = mentionCoverage(sel, link.from, link.to);
 			ranges.push(Decoration.replace({ widget: new MentionWidget(label, id, selected) }).range(link.from, link.to));
 		},
 	});
@@ -128,8 +137,7 @@ function buildMentionChips(state: EditorState): DecorationSet {
 function coverageChanged(chips: DecorationSet, before: { from: number; to: number }, after: { from: number; to: number }): boolean {
 	let changed = false;
 	chips.between(0, 1e9, (from, to) => {
-		const covers = (sel: { from: number; to: number }): boolean => sel.from !== sel.to && sel.from <= from && sel.to >= to;
-		if (covers(before) !== covers(after)) {
+		if (mentionCoverage(before, from, to) !== mentionCoverage(after, from, to)) {
 			changed = true;
 			return false;
 		}

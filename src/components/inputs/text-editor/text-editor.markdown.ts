@@ -174,7 +174,9 @@ function buildMarkDecorations(view: EditorView): DecorationSet {
 						if (!sel.empty && cls === 'cm-md-code') {
 							const f = Math.max(node.from, sel.from);
 							const t = Math.min(node.to, sel.to);
-							if (t > f) ranges.push(classDeco('cm-md-code-selected').range(f, t));
+							// At the token's own edge the slice takes over its border and corner.
+							const edges = (f === node.from ? ' cm-md-code-selected-start' : '') + (t === node.to ? ' cm-md-code-selected-end' : '');
+							if (t > f) ranges.push(classDeco(`cm-md-code-selected${edges}`).range(f, t));
 						}
 					}
 				} else if (MARK_NODES.has(node.name)) {

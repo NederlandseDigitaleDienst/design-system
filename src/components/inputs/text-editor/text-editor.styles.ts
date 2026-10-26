@@ -80,6 +80,7 @@ export const textEditorStyles = css`
 		--_text-editor-link-badge-is-active-highlight-border-color: var(--components-text-editor-link-badge-is-active-highlight-border-color);
 		--_text-editor-mention-icon-size: 0.95em;
 		--_text-editor-mention-token-background-color: var(--semantics-mentions-background-color);
+		--_text-editor-selection-color: var(--semantics-text-selection-background-color);
 		--_text-editor-mention-token-highlight-border-color: var(--semantics-mentions-highlight-border-color);
 		--_text-editor-mention-token-content-color: var(--semantics-mentions-content-color);
 		--_text-editor-mention-token-is-selected-background-color: var(--semantics-mentions-is-selected-background-color);
@@ -316,6 +317,29 @@ export const textEditorStyles = css`
 		background-color: transparent;
 	}
 
+	.cm-md-code .cm-md-code-selected {
+		--_text-editor-code-slice-start: 0px;
+		--_text-editor-code-slice-end: 0px;
+		padding-block: max(0em, (1lh / var(--_text-editor-code-scale) - var(--_text-editor-code-content-height)) / 2);
+		box-shadow:
+			inset 0 var(--_text-editor-token-highlight-border-width) 0 var(--_text-editor-code-token-highlight-border-color),
+			inset 0 calc(-1 * var(--_text-editor-token-highlight-border-width)) 0 var(--_text-editor-code-token-highlight-border-color),
+			inset var(--_text-editor-code-slice-start) 0 0 var(--_text-editor-code-token-highlight-border-color),
+			inset calc(-1 * var(--_text-editor-code-slice-end)) 0 0 var(--_text-editor-code-token-highlight-border-color);
+	}
+
+	.cm-md-code .cm-md-code-selected-start {
+		--_text-editor-code-slice-start: var(--_text-editor-token-highlight-border-width);
+		border-start-start-radius: var(--_text-editor-token-corner-radius);
+		border-end-start-radius: var(--_text-editor-token-corner-radius);
+	}
+
+	.cm-md-code .cm-md-code-selected-end {
+		--_text-editor-code-slice-end: var(--_text-editor-token-highlight-border-width);
+		border-start-end-radius: var(--_text-editor-token-corner-radius);
+		border-end-end-radius: var(--_text-editor-token-corner-radius);
+	}
+
 	/* Whole code block selected: the line background (its padding-inline, the
 	   first/last line's block padding, and the rounded corners) takes the selected
 	   tint, so the block lights up edge to edge — the padding included, like a
@@ -326,6 +350,7 @@ export const textEditorStyles = css`
 
 
 	.cm-md-mention-token {
+		position: relative;
 		padding-block: var(--_text-editor-token-block-padding-fit);
 		/* Left space equals the @ icon's vertical inset (token height minus the icon,
 		   halved), so the icon sits equally clear left, top and bottom; the right keeps
@@ -357,6 +382,22 @@ export const textEditorStyles = css`
 	   editor despite spellcheck="false", and it cannot see this. */
 	.cm-md-mention-token-name::after {
 		content: attr(data-label);
+	}
+
+	/* CodeMirror draws no selection under a token, so its rounded corners showed
+	   white. A selected token puts the selection color behind itself, in the
+	   selection layer's stacking (the scroller), so the corners take it. */
+	.cm-md-mention-token[data-selected="within"]::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background-color: var(--_text-editor-selection-color);
+	}
+
+	/* A mention selected on its own keeps its rounded corners: the selection is the token. */
+	:host .cm-editor:has(.cm-md-mention-token[data-selected="alone"]) .cm-selectionLayer {
+		visibility: hidden;
 	}
 
 	.cm-md-mention-token[data-selected] {
