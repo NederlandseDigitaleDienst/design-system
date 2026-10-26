@@ -4,15 +4,16 @@ import { syntaxTree } from '@codemirror/language';
 import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
 
 /* syntax="hidden": the formatting marks of bold, italic, strikethrough, inline
- * code, links and headings are hidden, and a `---` line reads as a divider.
+ * code, links and headings are hidden, a bullet reads as a dot and a `---` line
+ * as a divider.
  * Where the caret or the selection touches a construct, its marks come back,
  * so what you edit is the markdown as it is. The document stays plain markdown;
  * only the picture changes. A read-only or disabled editor has no caret to
  * reveal anything, so there every mark is hidden.
  *
  * A code block loses its fence lines (the ``` above and below), since its own
- * tint and edge already say what it is. Lists and quotes keep their markers:
- * those carry the structure. */
+ * tint and edge already say what it is. A numbered list and a quote keep their
+ * markers: those carry the structure. */
 
 /** The marks hidden inside inline constructs, by the construct they belong to. */
 const INLINE_MARKS: Record<string, readonly string[]> = {
@@ -22,6 +23,9 @@ const INLINE_MARKS: Record<string, readonly string[]> = {
 };
 
 const hideMark = Decoration.replace({});
+// The character stays, in its mono width, so a wrapped line still aligns; a dot
+// is drawn over it (see .cm-md-bullet).
+const bullet = Decoration.mark({ class: 'cm-md-bullet' });
 // With its backticks hidden, inline code gets room inside its tint as padding on
 // the text. Not as a widget: Safari measured the selection wrong beside one.
 const bareCode = Decoration.mark({ class: 'cm-md-code-bare' });
@@ -95,6 +99,14 @@ function buildHidden(view: EditorView): DecorationSet {
 					return false;
 				}
 				if (!parent) return;
+				// A bullet only once it is a real list item, followed by a space, so
+				// typing "-" does not flash a dot before a list exists. Its character
+				// shows on the line the caret is on.
+				if (node.name === 'ListMark' && /^[-*+]$/.test(state.sliceDoc(node.from, node.to)) && /^[ \t]/.test(state.sliceDoc(node.to, node.to + 1))) {
+					const line = state.doc.lineAt(node.from);
+					if (!revealed(line.from, line.to)) ranges.push(bullet.range(node.from, node.to));
+					return;
+				}
 				if (node.name === 'HeaderMark' && parent.name.startsWith('ATXHeading')) {
 					const end = state.sliceDoc(node.to, node.to + 1) === ' ' ? node.to + 1 : node.to;
 					if (!revealed(parent.from, parent.to)) ranges.push(hideMark.range(node.from, end));

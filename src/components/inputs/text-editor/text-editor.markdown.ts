@@ -191,14 +191,10 @@ function buildMarkDecorations(view: EditorView): DecorationSet {
 							if (t > f) ranges.push(classDeco('cm-md-code-selected').range(f, t));
 						}
 					}
-				} else if (node.name === 'ListMark' && /^[-*+]$/.test(view.state.sliceDoc(node.from, node.to)) && /^[ \t]/.test(view.state.sliceDoc(node.to, node.to + 1))) {
-					// A bullet marker (- * +) renders as a styled filled dot, but only once
-					// it's a real list item — immediately followed by a space. A lone "-"
-					// (before the space) falls through to the dimmed literal mark below, so
-					// typing "-" no longer flashes a bullet before a list exists. Ordered
-					// markers (1.) and other syntax also stay dimmed literal text.
-					ranges.push(classDeco('cm-md-mark cm-md-bullet').range(node.from, node.to));
 				} else if (MARK_NODES.has(node.name)) {
+					// A bullet marker (- * +) is dimmed literal text like the other marks,
+					// so the character you typed is the one you see. syntax="hidden" draws
+					// a dot in its place (see text-editor.hidden-syntax.ts).
 					ranges.push(dimDeco.range(node.from, node.to));
 				}
 			},

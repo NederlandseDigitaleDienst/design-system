@@ -66,14 +66,14 @@ describe('nldd-text-editor', () => {
 		cleanup(el2);
 	});
 
-	it('toont een bullet alleen bij "- " (met spatie), niet bij een los streepje', async () => {
-		const withSpace = await withValue('- item');
-		expect(withSpace.shadowRoot!.querySelector('.cm-md-bullet')).not.toBeNull();
-		cleanup(withSpace);
-
-		const noSpace = await withValue('-');
-		expect(noSpace.shadowRoot!.querySelector('.cm-md-bullet')).toBeNull();
-		cleanup(noSpace);
+	it('toont het opsommingsteken dat er staat, gedimd', async () => {
+		for (const marker of ['-', '*', '+']) {
+			const el2 = await withValue(`${marker} item`);
+			const mark = el2.shadowRoot!.querySelector('.cm-line .cm-md-mark');
+			expect(mark?.textContent).toBe(marker);
+			expect(el2.shadowRoot!.querySelector('.cm-md-bullet')).toBeNull();
+			cleanup(el2);
+		}
 	});
 
 	it('focus() verlegt de focus naar de interne editor', async () => {

@@ -417,9 +417,8 @@ export const textEditorStyles = css`
 		font-size: 1em;
 	}
 
-	/* Bullet-list marker: hide the literal dash (its box keeps the mono advance so
-	   wrapped lines still align under the text) and draw a filled dot in its place.
-	   Fully styleable via --_text-editor-bullet-size / --_text-editor-bullet-color above. */
+	/* A bullet with syntax="hidden": the character keeps its mono advance, so a
+	   wrapped line still aligns under the text, and a dot is drawn over it. */
 	.cm-md-bullet {
 		position: relative;
 		color: transparent;

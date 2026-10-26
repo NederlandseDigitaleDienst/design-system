@@ -13,6 +13,10 @@ const DOC = [
 	'',
 	'Het **burgerportaal** met `WCAG` en *nadruk*, ~~weg~~ en de [richtlijn](https://example.com) voor [@Anouk](user:1).',
 	'',
+	'- Eerste punt',
+	'* Tweede punt',
+	'1. Genummerd',
+	'',
 	'---',
 	'',
 	'```bash',
@@ -96,9 +100,9 @@ describe('nldd-text-editor syntax="hidden"', () => {
 	it('draws a --- line as a divider until the caret is on it', async () => {
 		el = await make();
 		caret(el, DOC.indexOf('Slot'));
-		expect(line(el, 4).querySelector('.cm-md-rule')).not.toBeNull();
+		expect(line(el, 8).querySelector('.cm-md-rule')).not.toBeNull();
 		caret(el, DOC.indexOf('---') + 1);
-		expect(line(el, 4).textContent).toBe('---');
+		expect(line(el, 8).textContent).toBe('---');
 	});
 
 	it('takes the fence lines of a code block out until the caret is in it', async () => {
@@ -120,6 +124,28 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		caret(el, el.view.state.doc.length);
 		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')].map((l) => l.textContent);
 		expect(lines.filter((t) => t === '```')).toHaveLength(2);
+	});
+
+	it('draws a bullet as a dot and shows its character on the line the caret is on', async () => {
+		el = await make();
+		caret(el, DOC.indexOf('Slot'));
+		const dash = line(el, 4);
+		const star = line(el, 5);
+		expect(dash.querySelector('.cm-md-bullet')?.textContent).toBe('-');
+		expect(star.querySelector('.cm-md-bullet')?.textContent).toBe('*');
+		expect(line(el, 6).querySelector('.cm-md-bullet')).toBeNull();
+		caret(el, DOC.indexOf('Tweede') + 2);
+		expect(line(el, 4).querySelector('.cm-md-bullet')).not.toBeNull();
+		expect(line(el, 5).querySelector('.cm-md-bullet')).toBeNull();
+	});
+
+	it('draws no dot for a dash that is not a list item yet', async () => {
+		el = await make();
+		el.value = 'Tekst\n\n-';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		caret(el, 0);
+		expect(el.view.contentDOM.querySelector('.cm-md-bullet')).toBeNull();
 	});
 
 	it('hides every mark when read-only, the selection included', async () => {
