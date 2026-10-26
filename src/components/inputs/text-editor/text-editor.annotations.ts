@@ -409,7 +409,7 @@ const annotationClipboard: Extension = [
  *  tint/badge rendering with a caret stop on each side of every edge. `countLabel`
  *  builds each badge's accessible label (count + quote, singular/plural), so the
  *  host can localize it. */
-// Prec.low keeps the tint the INNERMOST mark, so it hugs the raw text and inherits
+// Prec.highest keeps the tint the INNERMOST mark, so it hugs the raw text and inherits
 // its font (a heading, bold, etc.) — the token then scales with whatever it marks,
 // instead of sitting at the base font size as an outer wrapper.
 export function annotations(countLabel: AnnotationCountLabel): Extension {

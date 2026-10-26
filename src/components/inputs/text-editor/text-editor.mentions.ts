@@ -8,7 +8,7 @@ import {
 } from '@codemirror/autocomplete';
 import { EditorView, ViewPlugin, keymap, showTooltip, tooltips, type Tooltip } from '@codemirror/view';
 import { Prec, StateEffect, StateField, type EditorState, type Extension } from '@codemirror/state';
-import { enclosingNamed } from './text-editor.syntax.js';
+import { inCode } from './text-editor.syntax.js';
 import '../../content/avatar/avatar.js';
 import '../../content/icon/icon.js';
 
@@ -64,13 +64,6 @@ function patternsFor(triggers: readonly TypeaheadTrigger[]): RegExp[] {
 		.filter((pattern): pattern is RegExp => pattern !== null);
 }
 
-/** Code is quoted verbatim, so a trigger in a fenced block, an indented block
- *  or a backtick span is not a typeahead and must not open the list. */
-const CODE_NODES = new Set(['FencedCode', 'CodeBlock', 'InlineCode']);
-
-function inCode(state: EditorState, pos: number): boolean {
-	return enclosingNamed(state, pos, 1, CODE_NODES) !== null;
-}
 
 /** The typeahead query at `pos` for one of `triggers`, or null when the text
  *  before the caret is not one. `from` is the trigger, `query` the typed text
@@ -175,46 +168,6 @@ export interface TypeaheadChoice {
 	to: number;
 }
 
-/** Href prefix that marks a markdown link as a mention. */
-export const MENTION_HREF_PREFIX = 'user:';
-
-/** The markdown-compatible token stored for a mention (degrades to a plain link).
- *  The label's link-text delimiters are backslash-escaped and the id is
- *  percent-encoded, so a crafted candidate (e.g. a display name sourced from user
- *  data) can't break out of `[label](user:id)` into arbitrary markdown — a stray
- *  `]` or `)` would otherwise start a second, attacker-shaped link. The render
- *  layer reverses both via `unescapeMentionLabel` / `decodeMentionId`. */
-export function mentionToken(candidate: TypeaheadCandidate): string {
-	const label = candidate.text.replace(/[[\]\\]/g, (c) => '\\' + c);
-	// encodeURIComponent leaves ( ) < > ! * ' . - _ ~ intact, but ")" closes a
-	// markdown link destination — encode the parens and angle brackets on top of it
-	// (decodeURIComponent reverses all of it).
-	const id = encodeURIComponent(candidate.id).replace(
-		/[()<>]/g,
-		(c) => '%' + c.charCodeAt(0).toString(16).toUpperCase(),
-	);
-	return `[@${label}](${MENTION_HREF_PREFIX}${id})`;
-}
-
-/** What the built-in mention writes: the token and a space to go on typing. */
-export function mentionInsert(candidate: TypeaheadCandidate): string {
-	return `${mentionToken(candidate)} `;
-}
-
-/** Reverse `mentionToken`'s label escaping for display. */
-export function unescapeMentionLabel(label: string): string {
-	return label.replace(/\\([[\]\\])/g, '$1');
-}
-
-/** Reverse `mentionToken`'s id encoding. Falls back to the raw text when it isn't
- *  valid percent-encoding (e.g. a token authored by hand before this encoding). */
-export function decodeMentionId(id: string): string {
-	try {
-		return decodeURIComponent(id);
-	} catch {
-		return id;
-	}
-}
 
 function defaultInsert(trigger: string): (candidate: TypeaheadCandidate) => string {
 	return (candidate) => `${trigger}${candidate.text} `;

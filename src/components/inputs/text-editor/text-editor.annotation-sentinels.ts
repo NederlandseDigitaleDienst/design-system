@@ -19,7 +19,7 @@ export const ANNOTATION_SENTINEL = '⁠';
 
 /** Remove every sentinel from a string (doc text -> clean value). */
 export function stripSentinels(text: string): string {
-	return text.split(ANNOTATION_SENTINEL).join('');
+	return text.includes(ANNOTATION_SENTINEL) ? text.split(ANNOTATION_SENTINEL).join('') : text;
 }
 
 /** Whether `text` contains a sentinel. */
@@ -30,7 +30,7 @@ export function hasSentinel(text: string): boolean {
 /** Doc-offset positions of every sentinel in `doc`. */
 export function sentinelPositions(doc: string): number[] {
 	const out: number[] = [];
-	for (let i = 0; i < doc.length; i++) if (doc[i] === ANNOTATION_SENTINEL) out.push(i);
+	for (let i = doc.indexOf(ANNOTATION_SENTINEL); i !== -1; i = doc.indexOf(ANNOTATION_SENTINEL, i + 1)) out.push(i);
 	return out;
 }
 
@@ -42,8 +42,13 @@ export interface CleanGroup {
 
 /** Number of sentinels at doc positions strictly before `docPos`. */
 export function sentinelsBefore(doc: string, docPos: number): number {
+	// Most documents carry no annotation at all; the native search says so at once.
+	let i = doc.indexOf(ANNOTATION_SENTINEL);
 	let n = 0;
-	for (let i = 0; i < docPos && i < doc.length; i++) if (doc[i] === ANNOTATION_SENTINEL) n++;
+	while (i !== -1 && i < docPos) {
+		n++;
+		i = doc.indexOf(ANNOTATION_SENTINEL, i + 1);
+	}
 	return n;
 }
 

@@ -361,6 +361,64 @@ nldd-rich-text a {
 }
 
 
+/* # Mention */
+
+nldd-rich-text [data-mention] {
+	--_rich-text-mention-icon-size: 0.95em;
+	--_rich-text-mention-inline-padding: 0.3em;
+
+	color: var(--semantics-mentions-content-color);
+	font-weight: var(--primitives-font-weight-body-bold);
+	white-space: nowrap;
+
+	/* The DS 'at' icon as a mask, so it takes the text color without an element. */
+	&::before {
+		content: '';
+		display: inline-block;
+		margin-inline-end: 0.1em;
+		background-color: currentColor;
+		width: var(--_rich-text-mention-icon-size);
+		height: var(--_rich-text-mention-icon-size);
+		vertical-align: -0.16em;
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16 12c0 2.73 1.3 3.5 2 3.5s2-.77 2-3.5a8 8 0 1 0-5.93 7.73l.52 1.93A10 10 0 1 1 22 12c0 3.27-1.7 5.5-4 5.5-1.36 0-2.5-.78-3.22-2.08A4.3 4.3 0 0 1 11.5 17C9 17 7 14.76 7 12s2-5 4.5-5c.92 0 1.78.31 2.5.84V7h2zm-4.5-3C10.3 9 9 10.14 9 12s1.31 3 2.5 3 2.5-1.14 2.5-3-1.31-3-2.5-3'/%3E%3C/svg%3E") center / contain no-repeat;
+
+		@media (forced-colors: active) {
+			forced-color-adjust: none;
+			background-color: CanvasText;
+		}
+	}
+}
+
+nldd-rich-text a[data-mention] {
+	padding-block: max(0em, (1lh - 1.2em) / 2);
+	padding-inline: max(0em, (max(1.2em, 1lh) - var(--_rich-text-mention-icon-size)) / 2) var(--_rich-text-mention-inline-padding);
+	border-radius: var(--primitives-corner-radius-sm);
+	box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--semantics-mentions-highlight-border-color);
+	background-color: var(--semantics-mentions-background-color);
+	color: var(--semantics-mentions-content-color);
+	text-decoration: none;
+	cursor: default;
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+
+	&:hover {
+		background-color: var(--semantics-mentions-is-hovered-background-color);
+		color: var(--semantics-mentions-content-color);
+	}
+
+	&:active {
+		background-color: var(--semantics-mentions-is-active-background-color);
+		color: var(--semantics-mentions-content-color);
+	}
+
+	@media (forced-colors: active) {
+		&::before {
+			background-color: LinkText;
+		}
+	}
+}
+
+
 /* # Strong and Bold */
 
 nldd-rich-text strong,
@@ -382,8 +440,9 @@ nldd-rich-text i {
 /* # Code */
 
 nldd-rich-text code {
-	padding: var(--primitives-space-4);
+	padding: var(--primitives-space-2) var(--primitives-space-4);
 	border-radius: var(--semantics-controls-xs-corner-radius);
+	box-shadow: inset 0 0 0 var(--semantics-surfaces-highlight-border-width) var(--semantics-surfaces-tinted-highlight-border-color);
 	background-color: var(--semantics-surfaces-tinted-background-color);
 	font-family: var(--primitives-font-family-monospace);
 	font-size: var(--semantics-code-inline-font-size);
@@ -426,6 +485,7 @@ nldd-rich-text pre {
 nldd-rich-text pre > code {
 	padding: 0;
 	border-radius: 0;
+	box-shadow: none;
 	background-color: transparent;
 	font: inherit;
 }

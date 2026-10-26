@@ -100,6 +100,13 @@
 	--semantics-links-is-active-color: light-dark(var(--primitives-color-lintblauw-700), var(--primitives-color-accent-1000));
 
 
+	/* ## Mentions */
+
+	--semantics-mentions-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-900));
+	--semantics-mentions-is-selected-background-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-900));
+	--semantics-mentions-is-selected-content-color: light-dark(var(--primitives-color-accent-1000), var(--primitives-color-accent-0));
+
+
 	/* ## Controls */
 
 	--semantics-controls-is-selected-indicator-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-accent-900));
@@ -242,9 +249,6 @@
 
 	/* ## Text editor */
 
-	--components-text-editor-mention-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-900));
-	--components-text-editor-mention-is-selected-background-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-900));
-	--components-text-editor-mention-is-selected-content-color: light-dark(var(--primitives-color-accent-1000), var(--primitives-color-accent-0));
 	--components-text-editor-caret-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-700));
 	--components-text-editor-drop-cursor-color: light-dark(var(--primitives-color-neutral-850), var(--primitives-color-accent-600));
 	--components-text-editor-link-badge-content-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-700));

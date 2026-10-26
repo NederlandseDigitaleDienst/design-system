@@ -79,6 +79,8 @@ export const codeEditorStyles = css`
 	:host([disabled]) .code-editor {
 		opacity: var(--primitives-opacity-disabled);
 		pointer-events: none;
+		-webkit-user-select: none;
+		user-select: none;
 	}
 
 	/* Focus ring only on the input-field variant. The simple variant relies on a
@@ -107,6 +109,11 @@ export const codeEditorStyles = css`
 		padding-right: var(--_code-editor-padding-inline);
 		min-height: calc(var(--_code-editor-rows) * 1lh);
 		tab-size: 2;
+	}
+
+	/* Read-only, like a native read-only field: select and copy, but no caret. */
+	:host([readonly]) .cm-cursorLayer {
+		visibility: hidden;
 	}
 
 	/* Accent caret. The doubled class is purely for specificity — it outweighs

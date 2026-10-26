@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './text-editor.js';
-import { mentionToken, unescapeMentionLabel, decodeMentionId } from './text-editor.mentions.js';
+import { mentionToken, unescapeMentionLabel, decodeMentionId } from './text-editor.mention.js';
 import { isSafeHref } from './text-editor.links.js';
 
 type TextEditorEl = HTMLElement & { value: string; updateComplete: Promise<boolean> };
@@ -66,14 +66,112 @@ describe('nldd-text-editor', () => {
 		cleanup(el2);
 	});
 
-	it('toont een bullet alleen bij "- " (met spatie), niet bij een los streepje', async () => {
-		const withSpace = await withValue('- item');
-		expect(withSpace.shadowRoot!.querySelector('.cm-md-bullet')).not.toBeNull();
-		cleanup(withSpace);
+	it('geeft een citaatregel met alleen "> " de hoogte van een citaatregel met tekst', async () => {
+		const el2 = await withValue('> Eerste regel\n> \n> Derde regel');
+		const lines = [...el2.shadowRoot!.querySelectorAll('.cm-line')].map((l) => l.getBoundingClientRect().height);
+		expect(lines[1]).toBe(lines[0]);
+		expect(lines[1]).toBe(lines[2]);
+		cleanup(el2);
+	});
 
-		const noSpace = await withValue('-');
-		expect(noSpace.shadowRoot!.querySelector('.cm-md-bullet')).toBeNull();
-		cleanup(noSpace);
+	it('markeert een vermelding als geselecteerd zodra de selectie hem helemaal bevat', async () => {
+		const el2 = await withValue('Met [@Anouk](user:1) en meer.');
+		const view = (el2 as unknown as { view: { contentDOM: HTMLElement; dispatch(spec: unknown): void; state: { doc: { toString(): string } } } }).view;
+		const doc = view.state.doc.toString();
+		const from = doc.indexOf('[@');
+		const to = doc.indexOf(')', from) + 1;
+		const selected = () => view.contentDOM.querySelector('.cm-md-mention-token')!.getAttribute('data-selected');
+		view.dispatch({ selection: { anchor: from, head: to } });
+		expect(selected()).toBe('alone');
+		view.dispatch({ selection: { anchor: from - 2, head: to + 2 } });
+		expect(selected()).toBe('within');
+		view.dispatch({ selection: { anchor: from, head: to + 2 } });
+		expect(selected()).toBe('within');
+		view.dispatch({ selection: { anchor: from + 1, head: to + 2 } });
+		expect(selected()).toBeNull();
+		cleanup(el2);
+	});
+
+	it('tekent de selectie zo hoog als de regel, of hij nu bij tekst of bij een token begint', async () => {
+		const el2 = await withValue('Focus nalopen met [@Bram](user:2)\nVolgende regel met tekst.');
+		const view = (el2 as unknown as { view: { dom: HTMLElement; defaultLineHeight: number; dispatch(spec: unknown): void; state: { doc: { toString(): string; length: number } } } }).view;
+		const doc = view.state.doc.toString();
+		const mention = doc.indexOf('[@');
+		const frame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		const heights = () => [...view.dom.querySelectorAll('.cm-selectionBackground')].map((p) => Math.round(p.getBoundingClientRect().height));
+		for (const anchor of [mention, mention - 3]) {
+			view.dispatch({ selection: { anchor, head: doc.length } });
+			await frame();
+			const line = Math.round(view.defaultLineHeight);
+			expect(heights().length).toBeGreaterThan(0);
+			expect(heights().every((h) => h === line)).toBe(true);
+		}
+		cleanup(el2);
+	});
+
+	it('tekent een deels geselecteerde inline code zo hoog als de code, met zijn rand en ronde kant aan de rand van de code', async () => {
+		const el2 = await withValue('De `WCAG 2.2`-criteria zijn leidend');
+		const view = (el2 as unknown as { view: { contentDOM: HTMLElement; dispatch(spec: unknown): void } }).view;
+		const slice = () => view.contentDOM.querySelector<HTMLElement>('.cm-md-code .cm-md-code-selected')!;
+		view.dispatch({ selection: { anchor: 0, head: 9 } });
+		await el2.updateComplete;
+		const code = view.contentDOM.querySelector('.cm-md-code')!.getBoundingClientRect();
+		const box = slice().getBoundingClientRect();
+		expect(box.top).toBeCloseTo(code.top, 0);
+		expect(box.bottom).toBeCloseTo(code.bottom, 0);
+		expect(slice().classList.contains('cm-md-code-selected-start')).toBe(true);
+		expect(slice().classList.contains('cm-md-code-selected-end')).toBe(false);
+		view.dispatch({ selection: { anchor: 9, head: 20 } });
+		await el2.updateComplete;
+		expect(slice().classList.contains('cm-md-code-selected-start')).toBe(false);
+		expect(slice().classList.contains('cm-md-code-selected-end')).toBe(true);
+		cleanup(el2);
+	});
+
+	it('ziet een waarde die van buitenaf komt terwijl hij focus heeft niet als een bewerking bij blur', async () => {
+		const el2 = await withValue('tekst');
+		const view = (el2 as unknown as { view: { contentDOM: HTMLElement } }).view;
+		let changes = 0;
+		el2.addEventListener('change', () => { changes++; });
+		view.contentDOM.dispatchEvent(new FocusEvent('focus'));
+		(el2 as unknown as { value: string }).value = 'andere tekst';
+		await (el2 as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+		view.contentDOM.dispatchEvent(new FocusEvent('blur'));
+		expect(changes).toBe(0);
+		cleanup(el2);
+	});
+
+	it('meldt read-only en verplicht aan hulptechnologie, ook na een wijziging', async () => {
+		const el2 = await withValue('tekst');
+		const content = () => el2.shadowRoot!.querySelector('.cm-content')!;
+		expect(content().getAttribute('aria-readonly')).toBeNull();
+		expect(content().getAttribute('aria-required')).toBeNull();
+		(el2 as unknown as { readonly: boolean; required: boolean }).readonly = true;
+		(el2 as unknown as { readonly: boolean; required: boolean }).required = true;
+		await el2.updateComplete;
+		expect(content().getAttribute('aria-readonly')).toBe('true');
+		expect(content().getAttribute('aria-required')).toBe('true');
+		cleanup(el2);
+	});
+
+	it('leest een regel met streepjes als scheidingslijn, niet als opsomming', async () => {
+		const el2 = await withValue('Tekst\n\n- - -\n\nSlot.');
+		const api = el2 as unknown as { view: { dispatch(spec: unknown): void; state: { doc: { toString(): string } } }; getState(): { active: { bulletList: boolean } } };
+		api.view.dispatch({ selection: { anchor: api.view.state.doc.toString().indexOf('- - -') + 1 } });
+		expect(api.getState().active.bulletList).toBe(false);
+		const rule = [...el2.shadowRoot!.querySelectorAll('.cm-line')].find((l) => l.textContent === '- - -') as HTMLElement;
+		expect(rule.style.textIndent).toBe('');
+		cleanup(el2);
+	});
+
+	it('toont het opsommingsteken dat er staat, gedimd', async () => {
+		for (const marker of ['-', '*', '+']) {
+			const el2 = await withValue(`${marker} item`);
+			const mark = el2.shadowRoot!.querySelector('.cm-line .cm-md-mark');
+			expect(mark?.textContent).toBe(marker);
+			expect(el2.shadowRoot!.querySelector('.cm-md-bullet')).toBeNull();
+			cleanup(el2);
+		}
 	});
 
 	it('focus() verlegt de focus naar de interne editor', async () => {

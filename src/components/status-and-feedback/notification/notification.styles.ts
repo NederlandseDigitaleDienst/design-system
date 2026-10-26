@@ -181,12 +181,30 @@ export const notificationStyles = css`
 		}
 	}
 
+	@keyframes notification-arrive-from-top {
+		from {
+			opacity: 0;
+			transform: translateY(calc(-100% - max(var(--semantics-overlays-inset), env(safe-area-inset-top))));
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
 
 	/* # Responsive */
 
+	/* Full width at the top, so it drops in from there rather than crossing the screen. */
 	@media (max-width: ${smMax}) {
 		:host {
 			width: 100%;
+		}
+
+		@media (prefers-reduced-motion: no-preference) {
+			:host {
+				animation-name: notification-arrive-from-top;
+			}
 		}
 	}
 `;

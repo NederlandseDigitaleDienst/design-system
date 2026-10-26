@@ -27,8 +27,14 @@
  * text) writes at the same clean offsets getSelection() reads. An @-mention typeahead
  * (mentionSource) collapses to an atomic token, further typeahead lists on their
  * own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay
- * (annotations) marks ranges with a dashed underline, light tint and a count badge
- * without touching the underlying text.
+ * (annotations) marks ranges with a light tint and a count badge without touching
+ * the underlying text.
+ *
+ * To show the value, render the markdown into nldd-rich-text, which uses the
+ * same type, bold and code as the editor. A mention is stored as
+ * `[@Name](user:id)`: turn it into `<a href="…" data-mention>Name</a>` (or a
+ * `span` when there is no page for the person), without the `@`. A link reads
+ * as the same token there; a span keeps the color and the icon without the tint.
  *
  * @element nldd-text-editor
  *
@@ -44,6 +50,7 @@
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
  * @attr {string} appearance - 'simple' (default, bare) | 'input-field' (framed surface)
+ * @attr {string} syntax - 'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its ``` fence lines until the caret is in it, since its own tint and edge already say what it is. The numbers of a numbered list stay: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
  *
  * @prop {MentionSource} mentionSource - Consumer-supplied @-mention candidate source (property only). Without it, @-typeahead is inert.
@@ -63,38 +70,35 @@
  * @fires nldd-text-editor-annotation-click - When an annotation's count badge is clicked (detail: { ids: string[], rect: DOMRect }); rect is the badge's viewport box so a consumer can anchor its own note UI to it
  */
 import { relabel } from './text-editor.labels.js';
-import { LitElement, type PropertyValues } from 'lit';
+import { type PropertyValues } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
-import {
-	EditorView,
-	keymap,
-	drawSelection,
-	dropCursor,
-	placeholder as cmPlaceholder,
-} from '@codemirror/view';
-import { Compartment, EditorState, Prec, Transaction, type Extension } from '@codemirror/state';
-import { defaultKeymap, deleteCharBackward, deleteCharForward, history, historyKeymap, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
-import { NLDDCodeMirrorElement } from '../../../utilities/codemirror/codemirror-element.js';
+import { EditorView, drawSelection, dropCursor } from '@codemirror/view';
+import { Compartment, Prec, Transaction, type Extension } from '@codemirror/state';
+import { history, undo as cmUndo, redo as cmRedo, undoDepth, redoDepth } from '@codemirror/commands';
+import { NLDDCodeMirrorInput } from '../../../utilities/codemirror/codemirror-input.js';
 import { nlddCodeMirrorTheme } from '../../../utilities/codemirror/theme.js';
-import { markdownEditing, mentionRangeAt, mentionRangeEndingAt, mentionRangeStartingAt } from './text-editor.markdown.js';
+import { markdownEditing } from './text-editor.markdown.js';
+import { mentionInsert, mentionToken, mentionRangeAt } from './text-editor.mention.js';
 import {
 	typeaheads as typeaheadExtension,
-	mentionInsert,
-	mentionToken,
 	type MentionSource,
 	type MentionInsertedDetail,
 	type Typeahead,
 	type TypeaheadChoice,
 } from './text-editor.mentions.js';
 import { repairHeldEmphasis } from './text-editor.emphasis.js';
-import { spellcheck, leaveDeletionToBrowser } from './text-editor.spellcheck.js';
-import { annotations as annotationExtension, setAnnotations, pasteAnnotations, currentAnnotations, type Annotation } from './text-editor.annotations.js';
+import { spellcheck } from './text-editor.spellcheck.js';
+import { annotations as annotationExtension, setAnnotations, currentAnnotations, type Annotation } from './text-editor.annotations.js';
+import { AnnotationClipboard } from './text-editor.clipboard.js';
+import { textEditorKeymap } from './text-editor.keymap.js';
 import { orderedListRenumber } from './text-editor.ordered-list.js';
 import { dragToMove, dragMovePlugin } from './text-editor.drag.js';
 import { linkOpenBadge } from './text-editor.links.js';
 import { stableCursor } from './text-editor.cursor.js';
+import { focusSelectionGuard } from './text-editor.focus-selection.js';
+import { hiddenSyntax } from './text-editor.hidden-syntax.js';
+import { lineHighSelection } from './text-editor.selection.js';
 import {
 	toggleInlineWrap,
 	indentListItems as cmIndentListItems,
@@ -109,7 +113,6 @@ import {
 	toggleQuote as cmToggleQuote,
 	toggleLink as cmToggleLink,
 	toggleCodeBlock as cmToggleCodeBlock,
-	clearListMarkerBackward,
 	readActiveFormats,
 	EMPTY_FORMATS,
 	type HeadingLevel,
@@ -121,11 +124,11 @@ import { textEditorStyles } from './text-editor.styles.js';
 import { textEditorTemplate } from './text-editor.template.js';
 import { stripSentinels, docToClean, cleanToDoc, sentinelPositions } from './text-editor.annotation-sentinels.js';
 import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './text-editor.i18n.js';
-import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 export type TextEditorAppearance = 'input-field' | 'simple';
+export type TextEditorSyntax = 'visible' | 'hidden';
 export type { HeadingLevel, ListType, TextEditorState, TextEditorActiveFormats } from './text-editor.commands.js';
 export type {
 	MentionCandidate,
@@ -141,43 +144,9 @@ export { DEFAULT_TYPEAHEAD_QUERY } from './text-editor.mentions.js';
 export type { Annotation } from './text-editor.annotations.js';
 
 @customElement('nldd-text-editor')
-export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorElement)) {
-
-	static override shadowRootOptions = {
-		...LitElement.shadowRootOptions,
-		delegatesFocus: true,
-	};
+export class NLDDTextEditor extends NLDDCodeMirrorInput {
 
 	static override styles = textEditorStyles;
-
-	/** Says this is the control an nldd-form-field is about, so the field can
-	 *  find it, name it and move focus into it. See nldd-form-field. */
-	static isFormInput = true;
-
-	private _initialValue = '';
-	private _valueAtFocus = '';
-	private _accessibleLabelWarned = false;
-
-	@property({ type: String })
-	value = '';
-
-	@property({ type: String, attribute: 'input-id' })
-	inputId = '';
-
-	@property({ reflect: true, converter: reflectNonDefault<string>('') })
-	placeholder = '';
-
-	@property({ type: Boolean, reflect: true })
-	disabled = false;
-
-	@property({ reflect: true, converter: reflectNonDefault('') })
-	name = '';
-
-	@property({ type: Boolean, reflect: true })
-	readonly = false;
-
-	@property({ type: Boolean, reflect: true })
-	required = false;
 
 	/** Turns spellchecking off. On by default, without code, URLs and mentions. */
 	@property({ type: Boolean, reflect: true, attribute: 'no-spellcheck' })
@@ -186,17 +155,14 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@property({ type: Boolean, reflect: true })
 	wrap = true;
 
-	@property({ type: Number })
-	rows = 6;
-
 	@property({ reflect: true, converter: reflectNonDefault<ResizeMode>('auto') })
 	resize: ResizeMode = 'auto';
 
 	@property({ reflect: true, converter: reflectNonDefault<TextEditorAppearance>('simple') })
 	appearance: TextEditorAppearance = 'simple';
 
-	@property({ type: String, attribute: 'accessible-label' })
-	accessibleLabel = '';
+	@property({ reflect: true, converter: reflectNonDefault<TextEditorSyntax>('visible') })
+	syntax: TextEditorSyntax = 'visible';
 
 	/** Consumer-supplied @-mention source: called with the text typed after `@`
 	 *  and returns (a promise of) candidates. Property only (set via JS); without
@@ -266,25 +232,12 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	@query('.text-editor')
 	private _container!: HTMLElement;
 
-	private _editableCompartment = new Compartment();
+	protected readonly rowsProperty = '--_text-editor-rows';
+
 	private _wrapCompartment = new Compartment();
-	private _placeholderCompartment = new Compartment();
-	private _attrsCompartment = new Compartment();
 	private _spellcheckCompartment = new Compartment();
 	private _historyCompartment = new Compartment();
-
-
-	/**
-	 * Marks the control as invalid.
-	 *
-	 * Announced and not drawn. What is wrong belongs in an
-	 * nldd-validation-list, in words: a red ring around a single
-	 * checkbox or radio would say the option is wrong, while it is the question
-	 * that is unanswered. `aria-invalid` still goes on the control, because
-	 * choosing not to show something is not a reason to keep quiet about it.
-	 */
-	@property({ type: Boolean, reflect: true })
-	invalid = false;
+	private _syntaxCompartment = new Compartment();
 
 	protected getEditorParent(): HTMLElement | null | undefined {
 		return this._container;
@@ -342,57 +295,26 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			Prec.highest(linkOpenBadge((url) => this._t('components.text-editor.open-in-new-tab-label', { url }))),
 			this._historyCompartment.of(history()),
 			drawSelection(),
+			// As tall as the line, like the tokens. See text-editor.selection.ts.
+			lineHighSelection,
 			// Draws the caret in drawSelection's place, on a side that does not depend on
 			// the direction it arrived from unless that direction means something (a
 			// widget, a line wrap). See text-editor.cursor.ts.
 			stableCursor,
+			// Safari can stretch the selection to the start when focus comes back
+			// from a toolbar. See text-editor.focus-selection.ts.
+			focusSelectionGuard(),
 			dropCursor(),
 			dragToMove,
-			// Prec.highest so this beats the markdown language's deleteMarkupBackward,
-			// which would otherwise leave alignment whitespace when a non-first list
-			// marker is backspaced. Falls through (returns false) off a list marker.
-			Prec.highest(keymap.of([{ key: 'Backspace', run: clearListMarkerBackward }])),
-			keymap.of([
-				{ key: 'Mod-b', run: (view) => { toggleInlineWrap(view, '**', 'StrongEmphasis'); return true; } },
-				{ key: 'Mod-i', run: (view) => { toggleInlineWrap(view, '*', 'Emphasis'); return true; } },
-				{ key: 'Mod-e', run: (view) => { toggleInlineWrap(view, '`', 'InlineCode'); return true; } },
-				{ key: 'Mod-k', run: (view) => { cmToggleLink(view); return true; } },
-				// A mention deletes in two steps: the first Backspace/Delete next to it
-				// selects the whole token, the second removes it.
-				{ key: 'Backspace', run: (view) => this._selectMentionBeforeDelete(view, -1) },
-				{ key: 'Delete', run: (view) => this._selectMentionBeforeDelete(view, 1) },
-				// Cmd/Ctrl+] and +[ nest and un-nest list items. defaultKeymap binds them
-				// to indentMore/indentLess, whose four-space indent turns plain text into
-				// an indented code block. Consumed here in every case: off a list item
-				// they do nothing, which beats a code block nobody asked for.
-				{ key: 'Mod-]', run: (view) => { cmIndentListItems(view); return true; } },
-				{ key: 'Mod-[', run: (view) => { cmOutdentListItems(view); return true; } },
-				// The browser deletes where the editor has nothing to add, so the
-				// spelling marks on the line stay (see leaveDeletionToBrowser).
-				{ key: 'Backspace', run: (view) => !leaveDeletionToBrowser(view, 'Backspace') && deleteCharBackward(view), shift: deleteCharBackward },
-				{ key: 'Delete', run: (view) => !leaveDeletionToBrowser(view, 'Delete') && deleteCharForward(view) },
-				...defaultKeymap.filter((binding) => binding.key !== 'Backspace' && binding.key !== 'Delete'),
-				...historyKeymap,
-			]),
-			this._placeholderCompartment.of(this._placeholderExtension()),
+			textEditorKeymap,
+			...this.inputExtensions(),
 			this._wrapCompartment.of(this.wrap ? EditorView.lineWrapping : []),
-			this._editableCompartment.of(this._editableExtension()),
-			this._attrsCompartment.of(this._attrsExtension()),
 			this._spellcheckCompartment.of(this.noSpellcheck ? [] : spellcheck()),
+			this._syntaxCompartment.of(this.syntax === 'hidden' ? hiddenSyntax() : []),
 			EditorView.updateListener.of((u) => {
-				if (u.docChanged) this._onDocChanged();
 				if (u.docChanged || u.selectionSet) this._emitState();
 			}),
 			EditorView.domEventHandlers({
-				focus: () => {
-					this._valueAtFocus = this.value;
-				},
-				blur: (_event, view) => {
-					// An emphasis held together while it was being typed is closed
-					// properly first, so the committed value renders the way it looked.
-					repairHeldEmphasis(view);
-					if (this.value !== this._valueAtFocus) this._emitChange();
-				},
 				// Triple-click selects the whole paragraph (the doc line), like macOS.
 				// CM's own triple-click stops at the visual line, which under wrapping is
 				// just one wrapped row.
@@ -408,35 +330,22 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 				// Native Cmd/Ctrl+X/C/V go through these DOM events, not the toolbar's
 				// methods, so mirror the annotation-carrying logic here too.
 				cut: (_event, view) => {
-					const { from, to } = view.state.selection.main;
-					this._cutBuffer = from === to
-						? null
-						: { text: stripSentinels(view.state.sliceDoc(from, to)), anns: this._annotationsInSelection() };
+					this._clipboard.rememberCut(view);
 					return false; // let CodeMirror perform the actual cut (clipboard + delete)
 				},
 				copy: () => {
-					this._cutBuffer = null; // a plain copy must not carry a pending cut's annotations
+					this._clipboard.forget();
 					return false;
 				},
-				paste: (event) => {
+				paste: (event, view) => {
 					const raw = event.clipboardData?.getData('text/plain');
 					if (raw === undefined) return false; // no clipboard data — let CodeMirror handle it
-					this._pasteText(stripSentinels(raw));
+					this._clipboard.paste(view, raw);
 					event.preventDefault();
 					return true;
 				},
 			}),
 		];
-	}
-
-	private _editableExtension(): Extension {
-		const editable = !this.disabled;
-		const readOnly = this.disabled || this.readonly;
-		return [EditorView.editable.of(editable), EditorState.readOnly.of(readOnly)];
-	}
-
-	private _placeholderExtension(): Extension {
-		return this.placeholder ? cmPlaceholder(this.placeholder) : [];
 	}
 
 	/**
@@ -454,34 +363,33 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		if (focused) view.focus();
 	}
 
-	private _attrsExtension(): Extension {
-		// Autocorrect and autocapitalize follow the user's own settings, as on an
-		// <input> or a <textarea>, also with no-spellcheck: CodeMirror's "off" is
-		// not what a text field does. And with them off, CodeMirror turns the
-		// period macOS puts after a double space back into a space by writing the
-		// line anew, which cost the spelling marks on it.
-		const attrs: Record<string, string> = { autocorrect: 'on', autocapitalize: 'sentences' };
-		if (this.accessibleLabel) attrs['aria-label'] = this.accessibleLabel;
-		if (this.inputId) attrs['id'] = this.inputId;
-		return EditorView.contentAttributes.of(attrs);
+	// Autocorrect and autocapitalize follow the user's own settings, as on an
+	// <input> or a <textarea>, also with no-spellcheck: CodeMirror's "off" is
+	// not what a text field does. And with them off, CodeMirror turns the
+	// period macOS puts after a double space back into a space by writing the
+	// line anew, which cost the spelling marks on it.
+	protected override contentAttributes(): Record<string, string> {
+		return { autocorrect: 'on', autocapitalize: 'sentences' };
 	}
 
-	override firstUpdated(): void {
-		this._initialValue = this.value;
-		this.style.setProperty('--_text-editor-rows', String(this.rows));
-		// The sentinels are the overlay's own; a value that carries one (an editor
-		// whose text was round-tripped through another) hands it back stripped.
-		this.mountEditor(stripSentinels(this.value));
-		this.onEditorMounted();
+	/** The document carries annotation sentinels; the value never does. A value
+	 *  that carries one (text round-tripped through another editor) hands it
+	 *  back stripped, too. */
+	protected override docToValue(doc: string): string {
+		return stripSentinels(doc);
+	}
+
+	/** An emphasis held together while it was being typed is closed properly
+	 *  first, so the committed value renders the way it looked. */
+	protected override beforeChangeCheck(view: EditorView): void {
+		repairHeldEmphasis(view);
 	}
 
 	/* Runs on the initial mount and on every re-mount after a detach/reattach
 	 * (e.g. Vue <KeepAlive>): the view — with its scroller and content DOM — is
 	 * rebuilt, so the click forwarders and annotation state must be (re)applied. */
 	protected override onEditorMounted(): void {
-		// A press on the scroller's own padding (outside .cm-content) doesn't
-		// place a caret; forward it to the nearest line.
-		this.view?.scrollDOM.addEventListener('pointerdown', this._onScrollerPointerDown);
+		super.onEditorMounted();
 		// Clicking a mention selects the whole token (capture, to beat CM's own
 		// caret placement).
 		this.view?.contentDOM.addEventListener('pointerdown', this._onMentionPointerDown, true);
@@ -489,8 +397,6 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		// the tinted text itself stays plain-clickable for caret placement.
 		this.view?.contentDOM.addEventListener('click', this._onAnnotationBadgeClick);
 		this._syncAnnotations();
-		this.commitFormValue();
-		this._checkAccessibleLabel();
 		// Emit one state snapshot on mount so a consumer's toolbar initializes to the
 		// real state (e.g. undo/redo disabled with no history yet) instead of its
 		// default, without waiting for the first edit or selection change.
@@ -498,46 +404,30 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	}
 
 	override updated(changed: PropertyValues): void {
-		if (changed.has('rows')) {
-			this.style.setProperty('--_text-editor-rows', String(this.rows));
+		super.updated(changed);
+		if (!this.view) return;
+		// A render after setTranslations() or a new `translations`: the labels
+		// drawn inside the document follow when their text changed.
+		const labels = this._labelSignature();
+		if (labels !== this._labels) {
+			if (this._labels !== null) this.view.dispatch({ effects: relabel.of(null) });
+			this._labels = labels;
 		}
-		if (this.view) {
-			// A render after setTranslations() or a new `translations`: the labels
-			// drawn inside the document follow when their text changed.
-			const labels = this._labelSignature();
-			if (labels !== this._labels) {
-				if (this._labels !== null) this.view.dispatch({ effects: relabel.of(null) });
-				this._labels = labels;
-			}
-			if (changed.has('value')) {
-				// Only push an external value change into the document; a value that just
-				// mirrors the current (sentinel-stripped) doc must not trigger a rewrite,
-				// which would strip the sentinels the filter then re-adds (caret churn).
-				if (stripSentinels(this.doc) !== this.value) this.setDoc(stripSentinels(this.value));
-				this.commitFormValue();
-			}
-			if (changed.has('disabled') || changed.has('readonly')) {
-				this.reconfigure(this._editableCompartment, this._editableExtension());
-			}
-			if (changed.has('wrap')) {
-				this.reconfigure(this._wrapCompartment, this.wrap ? EditorView.lineWrapping : []);
-			}
-			if (changed.has('placeholder')) {
-				this.reconfigure(this._placeholderCompartment, this._placeholderExtension());
-			}
-			if (changed.has('accessibleLabel') || changed.has('inputId')) {
-				this.reconfigure(this._attrsCompartment, this._attrsExtension());
-			}
-			if (changed.has('noSpellcheck')) {
-				this.reconfigure(this._spellcheckCompartment, this.noSpellcheck ? [] : spellcheck());
-				this._redrawForSpellcheck();
-			}
-			if (changed.has('annotations') || changed.has('annotatable')) {
-				this._syncAnnotations();
-			}
+		if (changed.has('wrap')) {
+			this.reconfigure(this._wrapCompartment, this.wrap ? EditorView.lineWrapping : []);
 		}
-		this._checkAccessibleLabel();
+		if (changed.has('syntax')) {
+			this.reconfigure(this._syntaxCompartment, this.syntax === 'hidden' ? hiddenSyntax() : []);
+		}
+		if (changed.has('noSpellcheck')) {
+			this.reconfigure(this._spellcheckCompartment, this.noSpellcheck ? [] : spellcheck());
+			this._redrawForSpellcheck();
+		}
+		if (changed.has('annotations') || changed.has('annotatable')) {
+			this._syncAnnotations();
+		}
 	}
+
 
 	private _syncAnnotations(): void {
 		// Annotations only render when the consumer opts in via `annotatable`.
@@ -549,21 +439,6 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			annotations: Transaction.addToHistory.of(false),
 		});
 	}
-
-	// Two-step mention deletion: select the token on the first key, remove on the
-	// second. dir -1 = Backspace (token ends at the caret), +1 = Delete (starts).
-	private _selectMentionBeforeDelete(view: EditorView, dir: -1 | 1): boolean {
-		const sel = view.state.selection.main;
-		// A non-empty selection (e.g. an already-selected mention) → let the default
-		// command delete it.
-		if (!sel.empty) return false;
-		const range =
-			dir < 0 ? mentionRangeEndingAt(view.state, sel.head) : mentionRangeStartingAt(view.state, sel.head);
-		if (!range) return false; // not next to a mention → normal backspace/delete
-		view.dispatch({ selection: { anchor: range.from, head: range.to } });
-		return true;
-	}
-
 
 	/* # Headless command API */
 
@@ -662,33 +537,16 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		this._emitState();
 	}
 
-	/** Text and annotations of the last cut, so a same-editor paste can move the
-	 *  annotations along with their text. Cleared by copy and by a matching paste. */
-	private _cutBuffer: { text: string; anns: { id: string; from: number; to: number }[] } | null = null;
-
-	/** The annotations lying fully inside the current selection, offset relative to
-	 *  the selection's clean start. */
-	private _annotationsInSelection(): { id: string; from: number; to: number }[] {
-		if (!this.view) return [];
-		const { from, to } = this.view.state.selection.main;
-		const doc = this.view.state.doc.toString();
-		const cleanFrom = docToClean(doc, from);
-		const cleanTo = docToClean(doc, to);
-		return currentAnnotations(this.view.state)
-			.filter((a) => a.from >= cleanFrom && a.to <= cleanTo)
-			.map((a) => ({ id: a.id, from: a.from - cleanFrom, to: a.to - cleanFrom }));
-	}
+	/** Carries the annotations of a cut along to a paste of the same text. */
+	private _clipboard = new AnnotationClipboard();
 
 	/** Copy the current selection to the clipboard, sentinel-free. No-op when the
 	 *  selection is empty or the clipboard is unavailable (e.g. permission denied). */
 	async copy(): Promise<void> {
 		if (!this.view) return;
-		const { from, to } = this.view.state.selection.main;
-		if (from === to) return;
-		const text = stripSentinels(this.view.state.sliceDoc(from, to));
-		// A copy is a plain-text copy: forget any pending cut so its annotations don't
-		// bleed onto the next paste.
-		this._cutBuffer = null;
+		if (this.view.state.selection.main.empty) return;
+		const text = this._clipboard.selectedText(this.view);
+		this._clipboard.forget();
 		try { await navigator.clipboard.writeText(text); } catch { /* clipboard blocked */ }
 		// The await can outlive the element (disconnect destroys the view), so guard.
 		this.view?.focus();
@@ -700,10 +558,9 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 	async cut(): Promise<void> {
 		// Cut mutates (it removes the selection), so it's a no-op on a read-only editor.
 		if (!this.view || this.view.state.readOnly) return;
-		const { from, to } = this.view.state.selection.main;
-		if (from === to) return;
-		const text = stripSentinels(this.view.state.sliceDoc(from, to));
-		this._cutBuffer = { text, anns: this._annotationsInSelection() };
+		if (this.view.state.selection.main.empty) return;
+		const text = this._clipboard.selectedText(this.view);
+		this._clipboard.rememberCut(this.view);
 		try { await navigator.clipboard.writeText(text); } catch { /* clipboard blocked */ }
 		if (!this.view) return;
 		this.view.dispatch(this.view.state.replaceSelection(''));
@@ -718,7 +575,7 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 		if (!this.view) return;
 		let raw: string;
 		try { raw = await navigator.clipboard.readText(); } catch { return; /* clipboard blocked */ }
-		this._pasteText(stripSentinels(raw));
+		if (this.view) this._clipboard.paste(this.view, raw);
 		this.view?.focus();
 	}
 
@@ -754,28 +611,6 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			userEvent: 'input',
 		});
 		this.view.focus();
-	}
-
-	/** Insert `text` at the selection, re-attaching the cut annotations when it matches
-	 *  a cut made in this editor (a move, one-shot). Shared by the toolbar's paste()
-	 *  and the native Cmd/Ctrl+V handler. */
-	private _pasteText(text: string): void {
-		// Paste mutates; refuse it on a read-only editor (covers the toolbar paste()
-		// and the native Cmd/Ctrl+V handler that both funnel through here).
-		if (!this.view || !text || this.view.state.readOnly) return;
-		const buffer = this._cutBuffer;
-		// Normalize line endings on both sides: a Windows/other-app clipboard may hand
-		// back CRLF where the cut buffer holds LF, and an exact compare would then miss
-		// the match and silently drop the carried annotations.
-		const sameText = (a: string, b: string): boolean => a.replace(/\r\n/g, '\n') === b.replace(/\r\n/g, '\n');
-		const carry = !!(buffer && sameText(buffer.text, text) && buffer.anns.length > 0);
-		const at = docToClean(this.view.state.doc.toString(), this.view.state.selection.main.from);
-		// input.paste, like CodeMirror's own paste: history groups it as one step and
-		// a transaction filter can tell a paste from typing.
-		const spec = { ...this.view.state.replaceSelection(text), userEvent: 'input.paste' };
-		this.view.dispatch(carry ? { ...spec, effects: pasteAnnotations.of({ at, anns: buffer!.anns }) } : spec);
-		// One-shot: a second paste of the same cut would duplicate the ids, so drop it.
-		if (carry) this._cutBuffer = null;
 	}
 
 	/** Escape hatch: run a command by name, so a toolbar can carry the name in its
@@ -937,15 +772,6 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 
 	/* # Internals */
 
-	private _onScrollerPointerDown = (event: PointerEvent): void => {
-		if (event.target !== this.view?.scrollDOM) return;
-		// No caret to move on a read-only/disabled view — leave the press alone, like
-		// the drag path (which early-returns on state.readOnly).
-		if (this.view.state.readOnly) return;
-		this.focusFromPoint(event.clientX, event.clientY);
-		event.preventDefault();
-	};
-
 	private _onMentionPointerDown = (event: PointerEvent): void => {
 		const token = (event.target as HTMLElement | null)?.closest?.('.cm-md-mention-token');
 		if (!token || !this.view) return;
@@ -981,53 +807,6 @@ export class NLDDTextEditor extends DescribedBy(FormAssociated(NLDDCodeMirrorEle
 			composed: true,
 		}));
 	};
-
-	private _onDocChanged(): void {
-		// The document carries annotation sentinels; the exposed value never does.
-		const text = stripSentinels(this.doc);
-		if (text === this.value) return;
-		this.value = text;
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('input', {
-			detail: { value: text },
-			bubbles: true,
-			composed: true,
-		}));
-	}
-
-	private _emitChange(): void {
-		this.commitFormValue();
-		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value: this.value },
-			bubbles: true,
-			composed: true,
-		}));
-	}
-
-	private _checkAccessibleLabel(): void {
-		if (this._accessibleLabelWarned) return;
-		if (this.accessibleLabel || this.inputId) return;
-		this._accessibleLabelWarned = true;
-		console.warn('<nldd-text-editor>: No accessible-label or input-id provided. Use nldd-form-field for labeled usage, or set accessible-label for screen reader accessibility (WCAG SC 4.1.2).');
-	}
-
-	override formValue(): FormValue {
-		return this.value;
-	}
-
-	formResetCallback(): void {
-		this.value = this._initialValue;
-	}
-
-
-	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') this.value = state;
-	}
-
-	/** CodeMirror builds the textbox; the host is only its container. */
-	override describedTarget(): Element | null {
-		return this.shadowRoot?.querySelector('.cm-content') ?? null;
-	}
 
 	override render() {
 		return textEditorTemplate(this);

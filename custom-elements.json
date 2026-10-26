@@ -3714,11 +3714,129 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/content/code-viewer/code-viewer.diff.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "parseUnifiedDiff",
+          "return": {
+            "type": {
+              "text": "ParsedDiff"
+            }
+          },
+          "parameters": [
+            {
+              "name": "raw",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parse a unified diff. File headers (`diff --git`, `index`, `---`, `+++` and\nthe like) are left out: the file name belongs to the page around the viewer.\nSo is `\\ No newline at end of file`. A hunk ends where its `@@` header says\nit does, so the headers of a next file in a multi-file diff are not taken for\ncode; their name is lost, though, so give each file a viewer of its own.\nWithout any `@@` header, every line after the file header is code and the\nnumbers start at 1."
+        },
+        {
+          "kind": "function",
+          "name": "pairChangedLines",
+          "return": {
+            "type": {
+              "text": "Array<[number, number]>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "lines",
+              "type": {
+                "text": "DiffLine[]"
+              }
+            }
+          ],
+          "description": "The removed and added lines that are one change: within a hunk, a run of\nremoved lines directly followed by a run of added lines, paired in order.\nIndices are into `lines`."
+        },
+        {
+          "kind": "function",
+          "name": "diffExtensions",
+          "return": {
+            "type": {
+              "text": "Extension"
+            }
+          },
+          "parameters": [
+            {
+              "name": "parsed",
+              "type": {
+                "text": "ParsedDiff"
+              }
+            },
+            {
+              "name": "labels",
+              "type": {
+                "text": "DiffLabels"
+              }
+            }
+          ],
+          "description": "Line colors, gutters, hunk headers and line labels for a parsed diff."
+        },
+        {
+          "kind": "function",
+          "name": "wordExtensions",
+          "return": {
+            "type": {
+              "text": "Promise<Extension>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "parsed",
+              "type": {
+                "text": "ParsedDiff"
+              }
+            }
+          ],
+          "description": "Marks on the words that differ between each paired removed and added line.\nLoads"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "parseUnifiedDiff",
+          "declaration": {
+            "name": "parseUnifiedDiff",
+            "module": "src/components/content/code-viewer/code-viewer.diff.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pairChangedLines",
+          "declaration": {
+            "name": "pairChangedLines",
+            "module": "src/components/content/code-viewer/code-viewer.diff.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "diffExtensions",
+          "declaration": {
+            "name": "diffExtensions",
+            "module": "src/components/content/code-viewer/code-viewer.diff.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "wordExtensions",
+          "declaration": {
+            "name": "wordExtensions",
+            "module": "src/components/content/code-viewer/code-viewer.diff.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/content/code-viewer/code-viewer.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. The viewer grows with its content. Set `max-height` to show a long file in a frame of its own: the block grows up to that height and scrolls beyond it. A scroller that overflows, in either direction, is a tab stop with a role and a name, so the keyboard reaches what a pointer can scroll to. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.",
+          "description": "A read-only block of code/text built on a non-editable CodeMirror 6 view. Visually pairs with nldd-code-editor (same engine, same token palette). Whitespace is preserved; long lines scroll horizontally by default. Set `wrap` to break long lines onto the next visual line. The viewer grows with its content. Set `max-height` to show a long file in a frame of its own: the block grows up to that height and scrolls beyond it. A scroller that overflows, in either direction, is a tab stop with a role and a name, so the keyboard reaches what a pointer can scroll to. Set `language` to one of the supported grammars (yaml, json, javascript, typescript, css, html, xml, bash, markdown, rust, gherkin, toml, sql, python) to highlight the content. Without `language` the content renders plain. Grammars are loaded lazily on first use, so a page that never sets `language` ships zero grammar code. Set `diff` when the content is a unified diff, as git and pull request tools hand it out. The viewer shows the code it changes: an added line green and a removed line red, a column with the old and one with the new line number, a column with the `+` or `−`, and the `@@` header of each hunk between them. Within a removed line that is directly followed by an added one, the words that differ are marked, unless more than half of the line changed. File headers (`diff --git`, `---`, `+++`) are left out: name the file in the page around the viewer, and give each file of a multi-file diff a viewer of its own. `language` still highlights the code. A screen reader hears a summary first (\"2 regels toegevoegd, 1 regel verwijderd\") and \"Toegevoegd\" or \"Verwijderd\" with the line number before each changed line. A selection copies the code; the copy button copies the diff. Token colors are the `--semantics-code-syntax-*` custom properties (shared with the editor via the CodeMirror highlight style). Override them per-instance to swap the theme.",
           "name": "NLDDCodeViewer",
           "members": [
             {
@@ -3740,6 +3858,17 @@
               },
               "default": "''",
               "attribute": "language",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "diff",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The content is a unified diff.",
+              "attribute": "diff",
               "reflects": true
             },
             {
@@ -3829,6 +3958,15 @@
               "default": "''",
               "fieldName": "language",
               "description": "Grammar to highlight with. Empty disables highlighting."
+            },
+            {
+              "name": "diff",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The content is a unified diff: shown with line colors, old and new line numbers, and the changed words marked.",
+              "fieldName": "diff"
             },
             {
               "name": "no-copy",
@@ -4909,7 +5047,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-rich-text-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. The headings keep one size on every width, the one they have on a phone. A heading in running text sits in a column as wide as a line of reading, on any screen, so its relation to the text beside it does not change and it has no reason to grow. Growing, an h2 on a wide screen was more than twice the size of the text, and an article broke into blocks at every heading. Page and section titles do grow: use nldd-title for those. Children are placed in three zones. A child belongs to the text unless it is listed, so it reads at the `main` size and is never wider than a line: text (headings, paragraphs, lists, blockquote, div/section) and every component that is not named below, such as nldd-box, nldd-card, nldd-banner, nldd-list and a button, and code (pre, nldd-code-viewer), which scrolls inside its block when a line is longer. Media, tables and a step bar (img, figure, video, iframe, table, nldd-table, nldd-image, nldd-step-bar) get the `wide` accent. What needs the room gets the `full` span: hr, nldd-collection and nldd-container. A child takes the room it needs inside its zone (`justify-self: start`), so the room is available without being forced. Overridable per child with `data-rich-text-width=\"main\" | \"wide\" | \"full\"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical.",
+          "description": "A container for rich text content that automatically applies responsive typography. Uses no shadow DOM so styles apply to all nested elements. Import nldd-rich-text.css globally in your application. The rich text lays out its direct children in a grid: the vertical rhythm between headings, paragraphs and lists, and the width zones below, apply to those children only. A single wrapper `div` without `class`, `style`, `role` or `data-rich-text-width`, as a markdown renderer or a component root produces it, is passed through with `display: contents`, so its children count as direct. Any other wrapper becomes a single grid item, and the paragraphs inside it lose their spacing. The headings keep one size on every width, the one they have on a phone. A heading in running text sits in a column as wide as a line of reading, on any screen, so its relation to the text beside it does not change and it has no reason to grow. Growing, an h2 on a wide screen was more than twice the size of the text, and an article broke into blocks at every heading. Page and section titles do grow: use nldd-title for those. Children are placed in three zones. A child belongs to the text unless it is listed, so it reads at the `main` size and is never wider than a line: text (headings, paragraphs, lists, blockquote, div/section) and every component that is not named below, such as nldd-box, nldd-card, nldd-banner, nldd-list and a button, and code (pre, nldd-code-viewer), which scrolls inside its block when a line is longer. Media, tables and a step bar (img, figure, video, iframe, table, nldd-table, nldd-image, nldd-step-bar) get the `wide` accent. What needs the room gets the `full` span: hr, nldd-collection and nldd-container. A child takes the room it needs inside its zone (`justify-self: start`), so the room is available without being forced. Overridable per child with `data-rich-text-width=\"main\" | \"wide\" | \"full\"`. In the left-aligned layout, wide and full read as a bleed to the right; with `centered` they are symmetrical. An element with `data-mention` reads as a mention: the name in the mention color with the @ icon in front of it. Use `<a href=\"…\" data-mention>` when the person has a page to go to: it becomes the tinted token nldd-text-editor shows, and the tint is what says you can follow it. Use `<span data-mention>` when not: it keeps the color and the icon, without the tint. Write the name without the `@`: the rich text draws it. A mention in the editor's value, `[@Name](user:id)`, comes out of a markdown renderer as a link to `user:id`, which goes nowhere, so turn it into one of these yourself.",
           "name": "NLDDRichText",
           "members": [
             {
@@ -8642,93 +8780,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "shadowRootOptions",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
-            },
-            {
-              "kind": "field",
-              "name": "isFormInput",
-              "type": {
-                "text": "boolean"
-              },
-              "static": true,
-              "default": "true",
-              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "inputId",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "input-id"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "placeholder",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "wrap",
               "type": {
                 "text": "boolean"
@@ -8736,15 +8787,6 @@
               "default": "false",
               "attribute": "wrap",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "6",
-              "attribute": "rows"
             },
             {
               "kind": "field",
@@ -8788,80 +8830,6 @@
             },
             {
               "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "invalid",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
-              "attribute": "invalid",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "formValue",
-              "return": {
-                "type": {
-                  "text": "FormValue"
-                }
-              },
-              "description": "The value submitted under `name`; `null` submits nothing. Override.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "describedTarget",
-              "return": {
-                "type": {
-                  "text": "Element | null"
-                }
-              },
-              "description": "CodeMirror builds the textbox; the host is only its container.",
-              "inheritedFrom": {
-                "name": "DescribedBy",
-                "module": "src/utilities/described-by-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "describedByElements",
               "type": {
                 "text": "readonly Element[]"
@@ -8871,6 +8839,20 @@
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
               }
             },
             {
@@ -8893,6 +8875,20 @@
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
               }
             },
             {
@@ -9007,82 +9003,207 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "input",
-              "description": "When the content changes (detail: { value })"
             },
             {
-              "name": "change",
-              "description": "When the content is committed on blur (detail: { value })"
-            }
-          ],
-          "attributes": [
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
             {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "value",
-              "description": "Editor content"
+              "attribute": "value",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
-              "name": "input-id",
+              "kind": "field",
+              "name": "inputId",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "inputId",
-              "description": "Sets the id on the editable element. Set automatically by nldd-form-field."
+              "attribute": "input-id",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "placeholder",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "placeholder",
-              "description": "Placeholder text shown while empty"
+              "attribute": "placeholder",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "name",
-              "description": "Field name for form submission"
+              "attribute": "name",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "readonly",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "readonly",
-              "description": "Readonly state (focusable and selectable, not editable)"
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "required",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "required",
-              "description": "Required state"
+              "attribute": "required",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "attribute": "rows",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "attribute": "invalid",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            }
+          ],
+          "attributes": [
             {
               "name": "wrap",
               "type": {
@@ -9091,15 +9212,6 @@
               "default": "false",
               "fieldName": "wrap",
               "description": "Wrap long lines instead of horizontal scroll"
-            },
-            {
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "6",
-              "fieldName": "rows",
-              "description": "Minimum visible rows (the floor in every resize mode). Default: 6."
             },
             {
               "name": "resize",
@@ -9138,12 +9250,120 @@
               "description": "Show a line-number gutter"
             },
             {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Editor content"
+            },
+            {
+              "name": "input-id",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "inputId",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Sets the id on the editable element. Set automatically by nldd-form-field."
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "placeholder",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Placeholder text shown while empty"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Disabled state"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Field name for form submission"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Readonly state (focusable and selectable, not editable)"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Required state"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "fieldName": "rows",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Minimum visible rows (the floor in every resize mode). Default: 6."
+            },
+            {
               "name": "accessible-label",
               "type": {
                 "text": "string"
               },
               "default": "''",
               "fieldName": "accessibleLabel",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
               "description": "Accessible label forwarded to the editor. Set automatically by nldd-form-field."
             },
             {
@@ -9153,25 +9373,29 @@
               },
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
-              "fieldName": "invalid"
-            }
-          ],
-          "mixins": [
-            {
-              "name": "DescribedBy",
-              "module": "/src/utilities/described-by-mixin.js"
-            },
-            {
-              "name": "FormAssociated",
-              "module": "/src/utilities/form-associated-mixin.js"
+              "fieldName": "invalid",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "NLDDCodeMirrorElement",
-            "module": "/src/utilities/codemirror/codemirror-element.js"
+            "name": "NLDDCodeMirrorInput",
+            "module": "/src/utilities/codemirror/codemirror-input.js"
           },
           "tagName": "nldd-code-editor",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "input",
+              "description": "When the content changes (detail: { value })"
+            },
+            {
+              "name": "change",
+              "description": "When the content is committed on blur (detail: { value })"
+            }
+          ]
         }
       ],
       "exports": [
@@ -17821,6 +18045,127 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.clipboard.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AnnotationClipboard",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cut",
+              "type": {
+                "text": "{ text: string; anns: CarriedAnnotation[] } | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "annotationsInSelection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CarriedAnnotation[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "view",
+                  "type": {
+                    "text": "EditorView"
+                  }
+                }
+              ],
+              "description": "The annotations lying fully inside the selection, offset from its clean start."
+            },
+            {
+              "kind": "method",
+              "name": "selectedText",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "view",
+                  "type": {
+                    "text": "EditorView"
+                  }
+                }
+              ],
+              "description": "The selection as clipboard text, without sentinels."
+            },
+            {
+              "kind": "method",
+              "name": "rememberCut",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "view",
+                  "type": {
+                    "text": "EditorView"
+                  }
+                }
+              ],
+              "description": "Remember a cut of the selection; an empty selection cuts nothing."
+            },
+            {
+              "kind": "method",
+              "name": "forget",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "A copy is plain text: a pending cut's annotations must not ride along."
+            },
+            {
+              "kind": "method",
+              "name": "paste",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "view",
+                  "type": {
+                    "text": "EditorView"
+                  }
+                },
+                {
+                  "name": "raw",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Put `raw` at the selection. When it is the text of the last cut, its\nannotations come along, once: a second paste would duplicate their ids."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AnnotationClipboard",
+          "declaration": {
+            "name": "AnnotationClipboard",
+            "module": "src/components/inputs/text-editor/text-editor.clipboard.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.commands.ts",
       "declarations": [
         {
@@ -18489,6 +18834,77 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.focus-selection.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "focusSelectionGuard",
+          "return": {
+            "type": {
+              "text": "Extension"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "focusSelectionGuard",
+          "declaration": {
+            "name": "focusSelectionGuard",
+            "module": "src/components/inputs/text-editor/text-editor.focus-selection.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.hidden-syntax.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "hiddenSyntax",
+          "description": "The syntax=\"hidden\" extension. Highest precedence, so hiding a mark wins over\nthe dimmed styling the markdown decorations give it."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "hiddenSyntax",
+          "declaration": {
+            "name": "hiddenSyntax",
+            "module": "src/components/inputs/text-editor/text-editor.hidden-syntax.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.keymap.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "textEditorKeymap",
+          "type": {
+            "text": "Extension"
+          },
+          "default": "[ // Prec.highest so this beats the markdown language's deleteMarkupBackward, // which would otherwise leave alignment whitespace when a non-first list // marker is backspaced. Falls through (returns false) off a list marker. Prec.highest(keymap.of([{ key: 'Backspace', run: clearListMarkerBackward }])), keymap.of([ { key: 'Mod-b', run: (view) => { toggleInlineWrap(view, '**', 'StrongEmphasis'); return true; } }, { key: 'Mod-i', run: (view) => { toggleInlineWrap(view, '*', 'Emphasis'); return true; } }, { key: 'Mod-e', run: (view) => { toggleInlineWrap(view, '`', 'InlineCode'); return true; } }, { key: 'Mod-k', run: (view) => { toggleLink(view); return true; } }, // A mention deletes in two steps: the first Backspace/Delete next to it // selects the whole token, the second removes it. { key: 'Backspace', run: (view) => selectMentionBeforeDelete(view, -1) }, { key: 'Delete', run: (view) => selectMentionBeforeDelete(view, 1) }, // Cmd/Ctrl+] and +[ nest and un-nest list items. defaultKeymap binds them // to indentMore/indentLess, whose four-space indent turns plain text into // an indented code block. Consumed here in every case: off a list item // they do nothing, which beats a code block nobody asked for. { key: 'Mod-]', run: (view) => { indentListItems(view); return true; } }, { key: 'Mod-[', run: (view) => { outdentListItems(view); return true; } }, // The browser deletes where the editor has nothing to add, so the // spelling marks on the line stay (see leaveDeletionToBrowser). { key: 'Backspace', run: (view) => !leaveDeletionToBrowser(view, 'Backspace') && deleteCharBackward(view), shift: deleteCharBackward }, { key: 'Delete', run: (view) => !leaveDeletionToBrowser(view, 'Delete') && deleteCharForward(view) }, ...defaultKeymap.filter((binding) => binding.key !== 'Backspace' && binding.key !== 'Delete'), ...historyKeymap, ]), ]",
+          "description": "The editor's keys: the formatting shortcuts, the two-step mention delete, list\nnesting, and CodeMirror's defaults and history with Backspace and Delete taken\nover."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "textEditorKeymap",
+          "declaration": {
+            "name": "textEditorKeymap",
+            "module": "src/components/inputs/text-editor/text-editor.keymap.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.labels.ts",
       "declarations": [
         {
@@ -18668,80 +19084,8 @@
           "type": {
             "text": "Extension"
           },
-          "default": "[ markdown({ extensions: GFM }), markDecorationPlugin, heldEmphasis, hangingIndentField, // Prec.highest keeps the mention chip the innermost decoration, so it nests inside // a heading/bold run and inherits its font (scaling with it) instead of sitting at // the base size as an outer sibling. Prec.highest(mentionChipField), mentionAtomicRanges, ]",
+          "default": "[ markdown({ extensions: GFM }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
           "description": "Markdown language (with GFM) plus the hybrid inline-styling decorations."
-        },
-        {
-          "kind": "function",
-          "name": "mentionRangeAt",
-          "return": {
-            "type": {
-              "text": "{ from: number; to: number } | null"
-            }
-          },
-          "parameters": [
-            {
-              "name": "state",
-              "type": {
-                "text": "EditorState"
-              }
-            },
-            {
-              "name": "pos",
-              "type": {
-                "text": "number"
-              }
-            }
-          ],
-          "description": "The mention whose collapsed token contains `pos` (used to select it on click)."
-        },
-        {
-          "kind": "function",
-          "name": "mentionRangeEndingAt",
-          "return": {
-            "type": {
-              "text": "{ from: number; to: number } | null"
-            }
-          },
-          "parameters": [
-            {
-              "name": "state",
-              "type": {
-                "text": "EditorState"
-              }
-            },
-            {
-              "name": "pos",
-              "type": {
-                "text": "number"
-              }
-            }
-          ],
-          "description": "A mention token ending exactly at `pos` (cursor just after it — backspace)."
-        },
-        {
-          "kind": "function",
-          "name": "mentionRangeStartingAt",
-          "return": {
-            "type": {
-              "text": "{ from: number; to: number } | null"
-            }
-          },
-          "parameters": [
-            {
-              "name": "state",
-              "type": {
-                "text": "EditorState"
-              }
-            },
-            {
-              "name": "pos",
-              "type": {
-                "text": "number"
-              }
-            }
-          ],
-          "description": "A mention token starting exactly at `pos` (cursor just before it — delete)."
         }
       ],
       "exports": [
@@ -18752,76 +19096,13 @@
             "name": "markdownEditing",
             "module": "src/components/inputs/text-editor/text-editor.markdown.ts"
           }
-        },
-        {
-          "kind": "js",
-          "name": "mentionRangeAt",
-          "declaration": {
-            "name": "mentionRangeAt",
-            "module": "src/components/inputs/text-editor/text-editor.markdown.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "mentionRangeEndingAt",
-          "declaration": {
-            "name": "mentionRangeEndingAt",
-            "module": "src/components/inputs/text-editor/text-editor.markdown.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "mentionRangeStartingAt",
-          "declaration": {
-            "name": "mentionRangeStartingAt",
-            "module": "src/components/inputs/text-editor/text-editor.markdown.ts"
-          }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/inputs/text-editor/text-editor.mentions.ts",
+      "path": "src/components/inputs/text-editor/text-editor.mention.ts",
       "declarations": [
-        {
-          "kind": "variable",
-          "name": "DEFAULT_TYPEAHEAD_QUERY",
-          "type": {
-            "text": "string"
-          },
-          "default": "'[\\\\p{L}\\\\p{M}\\\\p{N}_.+-]*'",
-          "description": "What may follow a trigger when a list says nothing else: letters in any\nscript and with any accent, digits, `_`, `.`, `+` and `-`. A name like\n`józef` reaches the source whole, and so does the `+1` of `:+1:`. A space\nends the query, as it ends a mention in most systems."
-        },
-        {
-          "kind": "function",
-          "name": "typeaheadQueryAt",
-          "return": {
-            "type": {
-              "text": "{ from: number; to: number; query: string; trigger: string } | null"
-            }
-          },
-          "parameters": [
-            {
-              "name": "state",
-              "type": {
-                "text": "EditorState"
-              }
-            },
-            {
-              "name": "pos",
-              "type": {
-                "text": "number"
-              }
-            },
-            {
-              "name": "triggers",
-              "type": {
-                "text": "readonly TypeaheadTrigger[]"
-              }
-            }
-          ],
-          "description": "The typeahead query at `pos` for one of `triggers`, or null when the text\nbefore the caret is not one. `from` is the trigger, `query` the typed text\nwithout it. Both the completion source and the reopen-on-delete path go\nthrough this, so they cannot disagree about what counts as a query."
-        },
         {
           "kind": "variable",
           "name": "MENTION_HREF_PREFIX",
@@ -18904,6 +19185,310 @@
           "description": "Reverse `mentionToken`'s id encoding. Falls back to the raw text when it isn't\nvalid percent-encoding (e.g. a token authored by hand before this encoding)."
         },
         {
+          "kind": "variable",
+          "name": "MENTION_TOKEN_RE",
+          "default": "new RegExp(`\\\\[(@[^\\\\]]*)\\\\]\\\\(${MENTION_HREF_PREFIX}[^)]*\\\\)`, 'g')",
+          "description": "A stored mention in running text, with its `@Naam` as the first group."
+        },
+        {
+          "kind": "function",
+          "name": "isMentionHref",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Whether an address is a mention's (`user:id`), not a place to go."
+        },
+        {
+          "kind": "function",
+          "name": "isMentionLink",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "link",
+              "type": {
+                "text": "SyntaxNode"
+              }
+            }
+          ],
+          "description": "Whether a `Link` node is a mention."
+        },
+        {
+          "kind": "variable",
+          "name": "mentionTokens",
+          "type": {
+            "text": "Extension"
+          },
+          "default": "[Prec.highest(mentionChipField), mentionAtomicRanges]",
+          "description": "The mention token: the chip that replaces the whole link, and the atomic range\nthe caret steps over. Prec.highest keeps the chip the innermost decoration, so\nit nests inside a heading or bold run and scales with its font."
+        },
+        {
+          "kind": "function",
+          "name": "mentionRangeAt",
+          "return": {
+            "type": {
+              "text": "{ from: number; to: number } | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "pos",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The mention whose collapsed token contains `pos` (used to select it on click)."
+        },
+        {
+          "kind": "function",
+          "name": "mentionRangeEndingAt",
+          "return": {
+            "type": {
+              "text": "{ from: number; to: number } | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "pos",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "A mention token ending exactly at `pos` (cursor just after it — backspace)."
+        },
+        {
+          "kind": "function",
+          "name": "mentionRangeStartingAt",
+          "return": {
+            "type": {
+              "text": "{ from: number; to: number } | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "pos",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "A mention token starting exactly at `pos` (cursor just before it — delete)."
+        },
+        {
+          "kind": "function",
+          "name": "selectMentionBeforeDelete",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "view",
+              "type": {
+                "text": "EditorView"
+              }
+            },
+            {
+              "name": "dir",
+              "type": {
+                "text": "-1 | 1"
+              }
+            }
+          ],
+          "description": "Two-step mention delete: the first Backspace (`dir` -1) or Delete (1) next\nto a mention selects the whole token, the second removes it. False when\nthere is a selection already or no mention at the caret, so the normal\ndelete runs."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MENTION_HREF_PREFIX",
+          "declaration": {
+            "name": "MENTION_HREF_PREFIX",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mentionToken",
+          "declaration": {
+            "name": "mentionToken",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mentionInsert",
+          "declaration": {
+            "name": "mentionInsert",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "unescapeMentionLabel",
+          "declaration": {
+            "name": "unescapeMentionLabel",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "decodeMentionId",
+          "declaration": {
+            "name": "decodeMentionId",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MENTION_TOKEN_RE",
+          "declaration": {
+            "name": "MENTION_TOKEN_RE",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isMentionHref",
+          "declaration": {
+            "name": "isMentionHref",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isMentionLink",
+          "declaration": {
+            "name": "isMentionLink",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mentionTokens",
+          "declaration": {
+            "name": "mentionTokens",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mentionRangeAt",
+          "declaration": {
+            "name": "mentionRangeAt",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mentionRangeEndingAt",
+          "declaration": {
+            "name": "mentionRangeEndingAt",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mentionRangeStartingAt",
+          "declaration": {
+            "name": "mentionRangeStartingAt",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "selectMentionBeforeDelete",
+          "declaration": {
+            "name": "selectMentionBeforeDelete",
+            "module": "src/components/inputs/text-editor/text-editor.mention.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.mentions.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "DEFAULT_TYPEAHEAD_QUERY",
+          "type": {
+            "text": "string"
+          },
+          "default": "'[\\\\p{L}\\\\p{M}\\\\p{N}_.+-]*'",
+          "description": "What may follow a trigger when a list says nothing else: letters in any\nscript and with any accent, digits, `_`, `.`, `+` and `-`. A name like\n`józef` reaches the source whole, and so does the `+1` of `:+1:`. A space\nends the query, as it ends a mention in most systems."
+        },
+        {
+          "kind": "function",
+          "name": "typeaheadQueryAt",
+          "return": {
+            "type": {
+              "text": "{ from: number; to: number; query: string; trigger: string } | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "pos",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "triggers",
+              "type": {
+                "text": "readonly TypeaheadTrigger[]"
+              }
+            }
+          ],
+          "description": "The typeahead query at `pos` for one of `triggers`, or null when the text\nbefore the caret is not one. `from` is the trigger, `query` the typed text\nwithout it. Both the completion source and the reopen-on-delete path go\nthrough this, so they cannot disagree about what counts as a query."
+        },
+        {
           "kind": "function",
           "name": "typeaheads",
           "return": {
@@ -18949,46 +19534,6 @@
           "name": "typeaheadQueryAt",
           "declaration": {
             "name": "typeaheadQueryAt",
-            "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "MENTION_HREF_PREFIX",
-          "declaration": {
-            "name": "MENTION_HREF_PREFIX",
-            "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "mentionToken",
-          "declaration": {
-            "name": "mentionToken",
-            "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "mentionInsert",
-          "declaration": {
-            "name": "mentionInsert",
-            "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "unescapeMentionLabel",
-          "declaration": {
-            "name": "unescapeMentionLabel",
-            "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "decodeMentionId",
-          "declaration": {
-            "name": "decodeMentionId",
             "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
           }
         },
@@ -19044,6 +19589,26 @@
           "declaration": {
             "name": "orderedListRenumber",
             "module": "src/components/inputs/text-editor/text-editor.ordered-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.selection.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "lineHighSelection"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "lineHighSelection",
+          "declaration": {
+            "name": "lineHighSelection",
+            "module": "src/components/inputs/text-editor/text-editor.selection.ts"
           }
         }
       ]
@@ -19159,6 +19724,155 @@
           "description": "The innermost node at `pos` that `match` accepts, looking outward from there.\n`side` decides which node a position between two of them belongs to: -1 the\none that ends there, 1 the one that starts there. Null when none matches."
         },
         {
+          "kind": "variable",
+          "name": "CODE_BLOCK_NODES",
+          "type": {
+            "text": "ReadonlySet<string>"
+          },
+          "default": "new Set(['FencedCode', 'CodeBlock'])",
+          "description": "The nodes whose text is code, quoted as it is: no list, quote or link in it."
+        },
+        {
+          "kind": "variable",
+          "name": "CODE_NODES",
+          "type": {
+            "text": "ReadonlySet<string>"
+          },
+          "default": "new Set([...CODE_BLOCK_NODES, 'InlineCode'])"
+        },
+        {
+          "kind": "function",
+          "name": "inCodeBlock",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "pos",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Whether `pos` sits in a fenced or indented code block, where a leading `-`,\n`1.` or `>` is literal code."
+        },
+        {
+          "kind": "function",
+          "name": "inCode",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "pos",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Whether `pos` sits in any code, the backtick span included."
+        },
+        {
+          "kind": "function",
+          "name": "forEachLineStart",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "from",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "to",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "each",
+              "type": {
+                "text": "(lineFrom: number) => void"
+              }
+            }
+          ],
+          "description": "Call `each` with the start of every line from `from` to `to`."
+        },
+        {
+          "kind": "function",
+          "name": "treeAdvanced",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "before",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "after",
+              "type": {
+                "text": "EditorState"
+              }
+            }
+          ],
+          "description": "Whether the parse moved on between two states. The tree is parsed in the\nbackground, so a decoration built from it must be built again when it has\ncaught up, not only when the text, the viewport or the selection changes."
+        },
+        {
+          "kind": "function",
+          "name": "isRuleLine",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "lineFrom",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Whether the line at `lineFrom` is a thematic break (`---`, `* * *`). Its\ncharacters look like a bullet to a regular expression; to the tree they are not."
+        },
+        {
           "kind": "function",
           "name": "enclosingNamed",
           "return": {
@@ -19193,6 +19907,24 @@
             }
           ],
           "description": "`enclosingNode` for the common case: a node that goes by one of these names."
+        },
+        {
+          "kind": "function",
+          "name": "linkTextRange",
+          "return": {
+            "type": {
+              "text": "{ from: number; to: number } | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "link",
+              "type": {
+                "text": "SyntaxNode"
+              }
+            }
+          ],
+          "description": "The text of a `[text](url)` link, between its brackets; null when it is empty."
         }
       ],
       "exports": [
@@ -19206,9 +19938,73 @@
         },
         {
           "kind": "js",
+          "name": "CODE_BLOCK_NODES",
+          "declaration": {
+            "name": "CODE_BLOCK_NODES",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CODE_NODES",
+          "declaration": {
+            "name": "CODE_NODES",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "inCodeBlock",
+          "declaration": {
+            "name": "inCodeBlock",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "inCode",
+          "declaration": {
+            "name": "inCode",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "forEachLineStart",
+          "declaration": {
+            "name": "forEachLineStart",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "treeAdvanced",
+          "declaration": {
+            "name": "treeAdvanced",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isRuleLine",
+          "declaration": {
+            "name": "isRuleLine",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "enclosingNamed",
           "declaration": {
             "name": "enclosingNamed",
+            "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "linkTextRange",
+          "declaration": {
+            "name": "linkTextRange",
             "module": "src/components/inputs/text-editor/text-editor.syntax.ts"
           }
         }
@@ -19220,96 +20016,9 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `appearance=\"simple\"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `appearance=\"input-field\"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a dashed underline, light tint and a count badge without touching the underlying text.",
+          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `appearance=\"simple\"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `appearance=\"input-field\"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.",
           "name": "NLDDTextEditor",
           "members": [
-            {
-              "kind": "field",
-              "name": "shadowRootOptions",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
-            },
-            {
-              "kind": "field",
-              "name": "isFormInput",
-              "type": {
-                "text": "boolean"
-              },
-              "static": true,
-              "default": "true",
-              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "inputId",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "input-id"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "placeholder",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "required",
-              "reflects": true
-            },
             {
               "kind": "field",
               "name": "noSpellcheck",
@@ -19333,15 +20042,6 @@
             },
             {
               "kind": "field",
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "6",
-              "attribute": "rows"
-            },
-            {
-              "kind": "field",
               "name": "resize",
               "type": {
                 "text": "ResizeMode"
@@ -19362,12 +20062,13 @@
             },
             {
               "kind": "field",
-              "name": "accessibleLabel",
+              "name": "syntax",
               "type": {
-                "text": "string"
+                "text": "TextEditorSyntax"
               },
-              "default": "''",
-              "attribute": "accessible-label"
+              "default": "'visible'",
+              "attribute": "syntax",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -19431,17 +20132,6 @@
               "default": "{}",
               "description": "Override translation keys for the editor's assistive-tech strings (the\nopen-in-new-tab link badge and the annotation count badge). Unset keys fall\nback to Dutch.",
               "attribute": "translations"
-            },
-            {
-              "kind": "field",
-              "name": "invalid",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
-              "attribute": "invalid",
-              "reflects": true
             },
             {
               "kind": "method",
@@ -19768,60 +20458,6 @@
               "description": "The annotations currently in the editor, in CLEAN coordinates, each quote\nre-sliced from the current text — so a consumer can persist positions that\nmoved with edits (read this on save, then write the anchors back)."
             },
             {
-              "kind": "method",
-              "name": "formValue",
-              "return": {
-                "type": {
-                  "text": "FormValue"
-                }
-              },
-              "description": "The value submitted under `name`; `null` submits nothing. Override.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "describedTarget",
-              "return": {
-                "type": {
-                  "text": "Element | null"
-                }
-              },
-              "description": "CodeMirror builds the textbox; the host is only its container.",
-              "inheritedFrom": {
-                "name": "DescribedBy",
-                "module": "src/utilities/described-by-mixin.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "describedByElements",
               "type": {
@@ -19832,6 +20468,20 @@
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
               }
             },
             {
@@ -19854,6 +20504,20 @@
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
               }
             },
             {
@@ -19968,6 +20632,204 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "inputId",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "input-id",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "attribute": "rows",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "attribute": "invalid",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             }
           ],
           "events": [
@@ -19998,69 +20860,6 @@
           ],
           "attributes": [
             {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value",
-              "description": "Editor content (markdown)"
-            },
-            {
-              "name": "input-id",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "inputId",
-              "description": "Sets the id on the editable element. Set automatically by nldd-form-field."
-            },
-            {
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "placeholder",
-              "description": "Placeholder text shown while empty"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "name",
-              "description": "Field name for form submission"
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Readonly state (focusable and selectable, not editable)"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "required",
-              "description": "Required state"
-            },
-            {
               "name": "no-spellcheck",
               "type": {
                 "text": "boolean"
@@ -20077,15 +20876,6 @@
               "default": "true",
               "fieldName": "wrap",
               "description": "Wrap long lines (default true; prose wraps)"
-            },
-            {
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "6",
-              "fieldName": "rows",
-              "description": "Minimum visible rows (the floor in every resize mode). Default: 6."
             },
             {
               "name": "resize",
@@ -20106,13 +20896,13 @@
               "description": "'simple' (default, bare) | 'input-field' (framed surface)"
             },
             {
-              "name": "accessible-label",
+              "name": "syntax",
               "type": {
-                "text": "string"
+                "text": "TextEditorSyntax"
               },
-              "default": "''",
-              "fieldName": "accessibleLabel",
-              "description": "Accessible label forwarded to the editor. Set automatically by nldd-form-field."
+              "default": "'visible'",
+              "fieldName": "syntax",
+              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its ``` fence lines until the caret is in it, since its own tint and edge already say what it is. The numbers of a numbered list stay: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
               "name": "annotatable",
@@ -20133,28 +20923,139 @@
               "fieldName": "translations"
             },
             {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Editor content (markdown)"
+            },
+            {
+              "name": "input-id",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "inputId",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Sets the id on the editable element. Set automatically by nldd-form-field."
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "placeholder",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Placeholder text shown while empty"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Disabled state"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Field name for form submission"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Readonly state (focusable and selectable, not editable)"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Required state"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "fieldName": "rows",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Minimum visible rows (the floor in every resize mode). Default: 6."
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Accessible label forwarded to the editor. Set automatically by nldd-form-field."
+            },
+            {
               "name": "invalid",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
-              "fieldName": "invalid"
-            }
-          ],
-          "mixins": [
-            {
-              "name": "DescribedBy",
-              "module": "/src/utilities/described-by-mixin.js"
-            },
-            {
-              "name": "FormAssociated",
-              "module": "/src/utilities/form-associated-mixin.js"
+              "fieldName": "invalid",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "NLDDCodeMirrorElement",
-            "module": "/src/utilities/codemirror/codemirror-element.js"
+            "name": "NLDDCodeMirrorInput",
+            "module": "/src/utilities/codemirror/codemirror-input.js"
           },
           "tagName": "nldd-text-editor",
           "customElement": true
@@ -37533,7 +38434,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A short message that arrives over the interface and leaves on its own: a save that worked, a request that failed. Not a banner, which stands in the page and stays there — this one floats, stacks, and goes away. It places itself. Write it wherever it belongs in your code and it moves to one shared area: top right from md, full width across the top below that. Nothing about the position is settable, so notifications from anywhere in an application land in the same place and stack in the same order. A modal overlay is the one thing that moves it. An nldd-sheet, nldd-window or nldd-modal-dialog paints in the browser's top layer, above the whole page and out of reach of any z-index, and while one is open everything outside it is inert. So the area goes in: into the topmost overlay that is open, and back down as they close. A notification already on screen travels with it, and one raised from inside a sheet is readable and reachable where it is raised. More than one is a deck, not a list: the front one is readable and the older ones peek out below it, so a burst of messages takes the room of roughly one. The newest is in front. Behind it a notification is a bare surface, cut to the height of the one in front; dismiss the front and it slides up into the place that came free while its message fades in, because it was standing there all along. Under the front notification sits a strip as wide as the deck and as tall as the deck is when it fans out. Pointing at it fans the deck out to fill it, which is the only hint that there is more here than the message you can read; clicking it, or moving focus into the area, lays the whole deck out as a list. Clicking or tabbing away puts it back. The notification itself is not a button: a click on the message you are reading does nothing. Only the front of the deck counts down, and only while the deck is closed: open means someone is reading. The rest wait, so nothing disappears from under the one you are reading. `critical` never leaves on its own: a failure is worth reading, and the count-down would take it away while you were. That also keeps this within WCAG 2.2.1, which allows a time limit when what disappears is not essential. The clock pauses while a pointer moves over the notification and while focus is inside it, and resumes where it left off rather than starting over. A pointer that merely happens to rest where the notification appears does not count: it never moved, so nobody is reading. role follows the variant: `critical` becomes role=\"alert\", the rest role=\"status\". Focus never moves on its own. Escape dismisses the notification that focus is in. `NLDDNotification.show({ text, supportingText, variant, icon, duration, actions })` raises a notification without an element to manage: it creates one, shows it, and removes it once it is dismissed. An action is `{ text, onClick }`, at most 2, and a click on one also takes the notification away. It returns a handle with `dismiss()` and `update(options)`. An update changes the message, puts the notification in front and starts its clock over, so a status that changes often is one notification that keeps up instead of a new one sliding in each time; one that has already left arrives again. Use `show()` from a framework. Because a notification places itself, an element that a framework rendered is no longer where that framework left it: a keyed list (`v-for` with a `:key`) then fails on its next render, and a removed row leaves its notification on screen.",
+          "description": "A short message that arrives over the interface and leaves on its own: a save that worked, a request that failed. Not a banner, which stands in the page and stays there — this one floats, stacks, and goes away. It places itself. Write it wherever it belongs in your code and it moves to one shared area: top right from md, where it slides in from the right, and full width across the top below that, where it drops in from the top. Nothing about the position is settable, so notifications from anywhere in an application land in the same place and stack in the same order. A modal overlay is the one thing that moves it. An nldd-sheet, nldd-window or nldd-modal-dialog paints in the browser's top layer, above the whole page and out of reach of any z-index, and while one is open everything outside it is inert. So the area goes in: into the topmost overlay that is open, and back down as they close. A notification already on screen travels with it, and one raised from inside a sheet is readable and reachable where it is raised. More than one is a deck, not a list: the front one is readable and the older ones peek out below it, so a burst of messages takes the room of roughly one. The newest is in front. Behind it a notification is a bare surface, cut to the height of the one in front; dismiss the front and it slides up into the place that came free while its message fades in, because it was standing there all along. Under the front notification sits a strip as wide as the deck and as tall as the deck is when it fans out. Pointing at it fans the deck out to fill it, which is the only hint that there is more here than the message you can read; clicking it, or moving focus into the area, lays the whole deck out as a list. Clicking or tabbing away puts it back. The notification itself is not a button: a click on the message you are reading does nothing. Only the front of the deck counts down, and only while the deck is closed: open means someone is reading. The rest wait, so nothing disappears from under the one you are reading. `critical` never leaves on its own: a failure is worth reading, and the count-down would take it away while you were. That also keeps this within WCAG 2.2.1, which allows a time limit when what disappears is not essential. The clock pauses while a pointer moves over the notification and while focus is inside it, and resumes where it left off rather than starting over. A pointer that merely happens to rest where the notification appears does not count: it never moved, so nobody is reading. role follows the variant: `critical` becomes role=\"alert\", the rest role=\"status\". Focus never moves on its own. Escape dismisses the notification that focus is in. `NLDDNotification.show({ text, supportingText, variant, icon, duration, actions })` raises a notification without an element to manage: it creates one, shows it, and removes it once it is dismissed. An action is `{ text, onClick }`, at most 2, and a click on one also takes the notification away. It returns a handle with `dismiss()` and `update(options)`. An update changes the message, puts the notification in front and starts its clock over, so a status that changes often is one notification that keeps up instead of a new one sliding in each time; one that has already left arrives again. Use `show()` from a framework. Because a notification places itself, an element that a framework rendered is no longer where that framework left it: a keyed list (`v-for` with a `:key`) then fails on its next render, and a removed row leaves its notification on screen.",
           "name": "NLDDNotification",
           "members": [
             {
@@ -39031,6 +39932,672 @@
           "declaration": {
             "name": "focusAutofocusTarget",
             "module": "src/utilities/autofocus.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/codemirror/codemirror-input.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Shared base for the CodeMirror editors that are form controls\n(nldd-code-editor, nldd-text-editor). nldd-code-viewer is not one, so this\nsits between NLDDCodeMirrorElement and the two editors.\n\nIt owns what a form control needs and both editors did the same way: the\nvalue and its `input`/`change` events, editable and read-only, the\nplaceholder, the textbox attributes (label, id, aria-readonly,\naria-required), form association and reset, a press on the padding that\nstarts editing, and the warning for a missing label. A subclass adds its own\nextensions after `inputExtensions()` and can shape three things:\n`docToValue()`, `contentAttributes()` and `beforeChangeCheck()`.",
+          "name": "NLDDCodeMirrorInput",
+          "members": [
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "inputId",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "input-id"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "attribute": "rows"
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "attribute": "invalid",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_initialValue",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_valueAtFocus",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_accessibleLabelWarned",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_editableCompartment",
+              "privacy": "private",
+              "default": "new Compartment()"
+            },
+            {
+              "kind": "field",
+              "name": "_placeholderCompartment",
+              "privacy": "private",
+              "default": "new Compartment()"
+            },
+            {
+              "kind": "field",
+              "name": "_attrsCompartment",
+              "privacy": "private",
+              "default": "new Compartment()"
+            },
+            {
+              "kind": "field",
+              "name": "rowsProperty",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "description": "The custom property the visible row count goes into, named after the tag."
+            },
+            {
+              "kind": "method",
+              "name": "docToValue",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "doc",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value for a document. Default: the document itself."
+            },
+            {
+              "kind": "method",
+              "name": "contentAttributes",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Record<string, string>"
+                }
+              },
+              "description": "Attributes of the content element beyond label, id, aria-readonly and\naria-required. Default: none."
+            },
+            {
+              "kind": "method",
+              "name": "beforeChangeCheck",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_view",
+                  "type": {
+                    "text": "EditorView"
+                  }
+                }
+              ],
+              "description": "Runs on blur, before the value is compared with the one at focus, so a\nsubclass can settle the document first. Default: nothing."
+            },
+            {
+              "kind": "method",
+              "name": "inputExtensions",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Extension[]"
+                }
+              },
+              "description": "The extensions every input needs. A subclass puts these in its own\n`buildExtensions()`, next to what is its own."
+            },
+            {
+              "kind": "method",
+              "name": "_editableExtension",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Extension"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_placeholderExtension",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Extension"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_attrsExtension",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Extension"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshContentAttributes",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Build the textbox attributes again, after something `contentAttributes()`\nreads has changed."
+            },
+            {
+              "kind": "method",
+              "name": "onEditorMounted",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onDocChanged",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_emitChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_onScrollerPointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_checkAccessibleLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "CodeMirror builds the textbox; the host is only its container.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByElements",
+              "type": {
+                "text": "readonly Element[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_customValidity",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "input-id",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "inputId"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "fieldName": "rows"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel"
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "fieldName": "invalid"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DescribedBy",
+              "module": "/src/utilities/described-by-mixin.js"
+            },
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "NLDDCodeMirrorElement",
+            "module": "/src/utilities/codemirror/codemirror-element.js"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDCodeMirrorInput",
+          "declaration": {
+            "name": "NLDDCodeMirrorInput",
+            "module": "src/utilities/codemirror/codemirror-input.ts"
           }
         }
       ]

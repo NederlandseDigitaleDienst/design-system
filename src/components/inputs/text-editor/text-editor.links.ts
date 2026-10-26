@@ -10,8 +10,8 @@ import {
 import { RangeSetBuilder, type EditorState } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
-import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
-import { enclosingNode } from './text-editor.syntax.js';
+import { isMentionHref } from './text-editor.mention.js';
+import { enclosingNode, treeAdvanced } from './text-editor.syntax.js';
 import { textCaretBox } from './text-editor.caret.js';
 import '../../content/icon/icon.js';
 
@@ -123,18 +123,18 @@ export function isSafeHref(href: string): boolean {
 /** The link's destination, or null for a mention, an unsafe scheme, or a link
  *  without a resolvable URL. Handles both inline links (`[text](url)`) and
  *  reference-style links (`[text][ref]`), resolving the latter against `refs`. */
-function hrefOf(state: EditorState, link: SyntaxNode, refs: Map<string, string>): string | null {
+function hrefOf(state: EditorState, link: SyntaxNode, refs: () => Map<string, string>): string | null {
 	let label: string | null = null;
 	for (let child = link.firstChild; child; child = child.nextSibling) {
 		if (child.name === 'URL') {
 			const href = state.sliceDoc(child.from, child.to);
-			return href && !href.startsWith(MENTION_HREF_PREFIX) && isSafeHref(href) ? href : null;
+			return href && !isMentionHref(href) && isSafeHref(href) ? href : null;
 		}
 		if (child.name === 'LinkLabel') label = normaliseLabel(state.sliceDoc(child.from, child.to));
 	}
 	if (label) {
-		const href = refs.get(label);
-		return href && !href.startsWith(MENTION_HREF_PREFIX) && isSafeHref(href) ? href : null;
+		const href = refs().get(label);
+		return href && !isMentionHref(href) && isSafeHref(href) ? href : null;
 	}
 	return null;
 }
@@ -157,7 +157,7 @@ export function inLinkContext(node: SyntaxNode): boolean {
  *  Rejects mentions and unsafe schemes, mirroring the Markdown-link path. */
 function bareHref(state: EditorState, node: SyntaxNode): string | null {
 	const raw = state.sliceDoc(node.from, node.to);
-	if (!raw || raw.startsWith(MENTION_HREF_PREFIX)) return null;
+	if (!raw || isMentionHref(raw)) return null;
 	let href = raw;
 	// An already-schemed URL (https://, mailto:, …) is taken as-is; only GFM's
 	// scheme-less autolink forms need one added.
@@ -171,7 +171,9 @@ function bareHref(state: EditorState, node: SyntaxNode): string | null {
 function buildBadges(view: EditorView, label: OpenInNewTabLabel): DecorationSet {
 	const builder = new RangeSetBuilder<Decoration>();
 	const tree = syntaxTree(view.state);
-	const refs = referenceDefs(view.state);
+	// Looked up only when a reference-style link asks: most documents have none.
+	let defs: Map<string, string> | null = null;
+	const refs = () => (defs ??= referenceDefs(view.state));
 	// side -1 draws the badge before the caret, so the caret at the link end sits
 	// to the RIGHT of the badge — text typed there lands after it, not wedged
 	// between the link and the badge.
@@ -212,7 +214,7 @@ export function linkOpenBadge(label: OpenInNewTabLabel): ViewPlugin<{ decoration
 			}
 
 			update(update: ViewUpdate): void {
-				if (update.docChanged || update.viewportChanged || update.transactions.some((tr) => tr.effects.some((e) => e.is(relabel)))) {
+				if (update.docChanged || update.viewportChanged || treeAdvanced(update.startState, update.state) || update.transactions.some((tr) => tr.effects.some((e) => e.is(relabel)))) {
 					this.decorations = buildBadges(update.view, label);
 				}
 			}
@@ -228,7 +230,7 @@ export function linkEndsAt(state: EditorState, pos: number): boolean {
 	let refs: Map<string, string> | null = null;
 	return enclosingNode(state, pos, -1, (node) => {
 		if (node.to !== pos) return false;
-		if (node.name === 'Link') return hrefOf(state, node, (refs ??= referenceDefs(state))) !== null;
+		if (node.name === 'Link') return hrefOf(state, node, () => (refs ??= referenceDefs(state))) !== null;
 		return node.name === 'URL' && !inLinkContext(node) && bareHref(state, node) !== null;
 	}) !== null;
 }

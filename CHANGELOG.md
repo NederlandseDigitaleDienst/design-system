@@ -1,3 +1,9 @@
+<!--
+  GEGENEREERD BESTAND — niet handmatig bewerken.
+  Kopie van de root CHANGELOG.md (onderhouden door semantic-release).
+  Hergenereren: npm run generate:skill-docs
+-->
+
 # Changelog
 
 All notable changes to the NLDD Designsysteem are documented here.
@@ -8,6 +14,45 @@ Versions are bumped automatically by semantic-release on merge to main —
 the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
+
+### Highlights
+
+- **`nldd-text-editor` can hide its formatting marks.** With `syntax="hidden"` the text reads close to the result, and the marks come back where you are editing.
+- **`nldd-code-viewer` shows a diff.** Give it a unified diff and `diff`, and it shows the code with added lines green, removed lines red, the old and new line numbers, and the changed words marked.
+- **Fixes in `nldd-text-editor`.** It tells assistive tech when it is read-only or required, a toolbar button in Safari acts on the selected lines only, a long document is styled fully once parsed, and a value set while it has focus no longer counts as an edit. See Fixed for the rest.
+- **7 new icons:** `book-with-bookmark` (alias `git-repository`), `chart-bar-x-axis`, `color-chart` (alias `themes`), `creditcard`, `lightning-filled`, `rss` and `wrench`. `lightning` is redrawn as an outline, next to the new `lightning-filled`.
+
+### Added
+
+- **Icons `book-with-bookmark`, `chart-bar-x-axis`, `color-chart`, `creditcard`, `lightning-filled`, `rss` and `wrench`.** `git-repository` is an alias of `book-with-bookmark`, `themes` of `color-chart`, `bar-chart` of `chart-bar-x-axis` and `energy-filled` of `lightning-filled`.
+- **`nldd-text-editor` takes `syntax="hidden"`.** The marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden, a bullet reads as a dot, a quote as a line on the left, a `---` line reads as a divider, and a code block loses its ``` fence lines. Where the caret or the selection touches a construct, its marks come back, so you edit the markdown as it is. The numbers of a numbered list stay, since they are content. Read-only and disabled hide every mark, which gives a clean read view. The value is plain markdown either way, and `visible` stays the default.
+- **`nldd-code-viewer` takes `diff`.** The content is then a unified diff, as git and pull request tools hand it out. The viewer shows the code it changes: an added line green and a removed line red, a column with the old and one with the new line number, a column with the `+` or `−`, and the `@@` header of each hunk between them. Where a removed line is directly followed by an added one, the words that differ are marked, unless more than half of the line changed. File headers are left out, so name the file in the page around the viewer and give each file of a multi-file diff a viewer of its own. `language` still highlights the code. A screen reader hears a summary first and "Added" or "Removed" with the line number before each changed line. A selection copies the code, the copy button the diff. The word marks use `@codemirror/merge`, a new dependency that loads only when a viewer has `diff`.
+- **`nldd-rich-text` shows a mention the way `nldd-text-editor` does.** Give an element `data-mention` and the name takes the mention color with the @ icon in front of it. `<a href="…" data-mention>Anouk de Vries</a>`, for a person with a page to go to, becomes the same tinted token with a thin edge as in the editor; the tint says you can follow it. `<span data-mention>`, for one without, keeps the color and the icon without the tint. Write the name without the `@`; the rich text draws it. The editor stores a mention as `[@Name](user:id)`, which a markdown renderer turns into a link that goes nowhere, so turn it into this markup when you render the value.
+
+### Changed
+
+- **`lightning` is an outline now**, the counterpart of the new `lightning-filled`. It was a filled bolt; use `lightning-filled` for that.
+- **The line chart icon is called `chart-line-x-y-axis`**, next to `chart-bar-x-axis`. The old name `chart-x-y-axis-line` stays as an alias, so `icon="chart-x-y-axis-line"` keeps working, as do `analytics` and `graph`.
+- **On a small screen, `nldd-notification` spans the top and drops in from there.** Below md it was meant to be full width but stayed as narrow as its text, and it slid in from the right across the whole screen. It now fills the width minus the inset on both sides, also in a sheet or dialog, and comes in from the top.
+- **`nldd-text-editor` looks closer to the result in `nldd-rich-text`.** Bold is the same semibold, inline code and code blocks take the same size and the same tinted background, and a bullet shows the character you typed (`-`, `*` or `+`), dimmed like the other marks, instead of a dot that hid which one it was. Inline code and a mention take a thin edge, so they stay visible on a tinted surface. A code block has the room, the rounded corners and the edge of a code block in the rich text. The markers themselves (`**`, `#`, `>`, `---`) stay visible and dimmed, and a link stays without an underline, since the badge beside it already marks it.
+- **Inline code in `nldd-rich-text` is as low as marked text.** Both are formatting of the text, so their tint hugs the letters: inline code has 2px above and below instead of 4px, and no longer reaches past the line. It takes the thin edge of a code block too, so it stays visible on a tinted surface. A mention, which is a thing rather than formatting, keeps the tint that fills the line.
+- **A read-only `nldd-text-editor` or `nldd-code-editor` shows no caret**, like a native read-only field. You can still select and copy.
+- **The text of a disabled `nldd-text-editor` or `nldd-code-editor` can no longer be selected**, like a native disabled field. A drag that started beside the editor still selected it, and the text turned darker.
+- **A selection in `nldd-text-editor` is as tall as the line, like the code, mention and annotation tokens.** It took the height of what it started on: the letters, so it ran thinner than a token beside it, or a token, so it ran taller than the text after it. A mention in a wider selection has the selection color behind its rounded corners, which showed white. A mention selected on its own keeps its rounded corners. A partly selected inline code is gray over its full height and keeps its border and rounded end, like a fully selected one. The gray ran only as tall as the letters and squared off the end.
+
+### Fixed
+
+- **`nldd-text-editor` tells assistive tech when it is read-only or required.** It set neither `aria-readonly` nor `aria-required`; `nldd-code-editor` did. Both now share that code, so they stay alike.
+- **A line of spaced dashes in `nldd-text-editor` reads as a divider, not as a bullet.** `- - -` and `* * *` are a thematic break in markdown, but the editor took them for a list item: the list button lit up and the line got a hanging indent.
+- **`nldd-text-editor` styles a long document fully once it is parsed.** The parse runs in the background; most decorations were only drawn again on the next edit, so a long document could show part of its formatting until you typed.
+- **A value set on `nldd-text-editor` while it has focus no longer counts as an edit on blur.** The editor fired `change` for it; `nldd-code-editor` already did not.
+- **A new line in a quote in `nldd-text-editor` is as tall as the rest of the quote right away.** The quote size sat on the text, so a line with only its `> ` had the height of plain text and grew at the first letter. It sits on the line now.
+- **A toolbar button in `nldd-text-editor` acts on the selected lines only, in Safari too.** When focus came back to the editor after a click on a toolbar control, Safari could stretch the selection to the start of the document. The editor took that as the new selection, so a list or heading button right after it changed every line from the top down to the selection. The editor now keeps its own selection in that case. A selection you make yourself, with the mouse or the keyboard, is never touched.
+
+### Breaking
+
+- **The icon alias `chart-line` is now `line-chart`**, next to the new `bar-chart` for `chart-bar-x-axis`. Replace `icon="chart-line"` with `icon="line-chart"`, or use the icon's own name, `chart-line-x-y-axis`.
+- **`--components-text-editor-mention-*` is now `--semantics-mentions-*`**, since the editor and the rich text share the mention colors. It adds a `highlight-border-color` for the edge and an `is-hovered` and `is-active` background for a mention that is a link. The themes that ship with the system moved along. A theme of your own that sets the old names loses its mention colors without an error, so rename them.
 
 ## [0.11.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.10.0...v0.11.0) (2026-10-23)
 

@@ -19,11 +19,12 @@ export function codeViewerTemplate(component: NLDDCodeViewer): TemplateResult {
 		: copyState === 'failure'
 			? component._t('components.code-viewer.copy-failure-text')
 			: '';
-	// CodeMirror (read-only) mounts into and owns .code-viewer; the hidden
-	// <slot> stays the declarative content source and the copy source.
+	// CodeMirror (read-only) mounts into and owns .code-viewer__codemirror; the
+	// hidden <slot> stays the declarative content source and the copy source.
 	// Render the copy button only when it can actually work (not no-copy, and a
 	// secure context with a Clipboard API); otherwise it'd be a dead button.
-	return html`<div class="code-viewer"></div><slot @slotchange=${component._onSlotChange}></slot>${!component._canCopy ? nothing : html`
+	const summary = component._diffSummary;
+	return html`<div class="code-viewer">${summary ? html`<div class="code-viewer__diff-summary">${summary}</div>` : nothing}<div class="code-viewer__codemirror"></div><slot @slotchange=${component._onSlotChange}></slot>${!component._canCopy ? nothing : html`
 		<div class="code-viewer__actions">
 			<div class="code-viewer__copy-button">
 				<nldd-tooltip
@@ -47,5 +48,5 @@ export function codeViewerTemplate(component: NLDDCodeViewer): TemplateResult {
 				aria-live="polite"
 			>${liveRegionText}</div>
 		</div>
-	`}`;
+	`}</div>`;
 }

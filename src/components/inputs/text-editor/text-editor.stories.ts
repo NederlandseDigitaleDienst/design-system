@@ -38,9 +38,27 @@ const reconcile = (el: Element, keys: string[], values: string[]) => {
 	const desired = new Set(values);
 	keys.forEach((key) => { if (desired.has(key) !== Boolean(active[key])) editor.runCommand(key); });
 };
+const listTypeOf = (value: string) => (value === 'numbered' ? 'ordered' : value);
+const currentList = (editor: any): string => {
+	const active = editor.getState().active;
+	return active.taskList ? 'task' : active.orderedList ? 'numbered' : active.bulletList ? 'bullet' : 'none';
+};
 const onListChange = (event: CustomEvent) => {
-	const value = event.detail.value as string;
-	editorOf(event.currentTarget as Element)?.setList(value === 'numbered' ? 'ordered' : value);
+	editorOf(event.currentTarget as Element)?.setList(listTypeOf(event.detail.value as string));
+};
+// A second click on the list that is on turns it off, like the other toggles.
+// A radio does not change on that click, so the list is read at pointerdown,
+// before a click on another item has switched it.
+let listAtPointerDown: string | null = null;
+const onListPointerDown = (event: PointerEvent) => {
+	const editor = editorOf(event.currentTarget as Element);
+	listAtPointerDown = editor ? currentList(editor) : null;
+};
+const onListClick = (event: MouseEvent) => {
+	const item = (event.target as Element).closest('nldd-segmented-control-item') as any;
+	const editor = editorOf(event.currentTarget as Element);
+	if (editor && item && item.value !== 'none' && item.value === listAtPointerDown) editor.setList('none');
+	listAtPointerDown = null;
 };
 const HEADING_LABELS = ['Paragraaf', 'Kop 1', 'Kop 2', 'Kop 3', 'Kop 4', 'Kop 5', 'Kop 6'];
 const onHeadingSelect = (event: Event) => {
@@ -81,7 +99,10 @@ const runOverflowAction = (editor: any, action: string): void => {
 		editor.runCommand('setHeading', Number(value));
 		return;
 	}
-	if (name === 'list') { editor.runCommand('setList', value === 'numbered' ? 'ordered' : value); return; }
+	if (name === 'list') {
+		editor.runCommand('setList', value !== 'none' && value === currentList(editor) ? 'none' : listTypeOf(value));
+		return;
+	}
 	editor.runCommand(name);
 };
 
@@ -376,6 +397,8 @@ function toolbarEditor(editor: unknown) {
 						value="none"
 						accessible-label="Lijst"
 						@change=${onListChange}
+						@pointerdown=${onListPointerDown}
+						@click=${onListClick}
 					>
 						<nldd-segmented-control-item
 							value="none"
@@ -691,6 +714,7 @@ export default {
 	},
 	args: {
 		appearance: 'simple',
+		syntax: 'visible',
 		value: SAMPLE,
 		placeholder: '',
 		rows: 8,
@@ -709,6 +733,12 @@ export default {
 			options: ['simple', 'input-field'],
 			description: 'Visuele stijl. "simple" is kaal zonder focusring; "input-field" voegt rand, vulling, padding, hoeken en focusring toe.',
 			table: { defaultValue: { summary: 'simple' } },
+		},
+		syntax: {
+			control: 'select',
+			options: ['visible', 'hidden'],
+			description: 'Opmaaktekens. "visible" laat ze gedimd staan; "hidden" verbergt ze en toont ze waar de cursor of selectie een constructie raakt.',
+			table: { defaultValue: { summary: 'visible' } },
 		},
 		value: {
 			control: 'text',
@@ -771,6 +801,7 @@ export default {
 
 const Template = ({
 	appearance,
+	syntax,
 	value,
 	placeholder,
 	rows,
@@ -785,6 +816,7 @@ const Template = ({
 }: Record<string, any>) => html`
 	<nldd-text-editor
 		appearance=${appearance as string}
+		syntax=${syntax as string}
 		.value=${value || ''}
 		placeholder=${placeholder || nothing}
 		rows=${rows as number}
@@ -1047,7 +1079,7 @@ export const Annotaties = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Annotaties leven buiten de markdown (de tekst blijft schoon); de consumer levert ze via de `annotations`-property. Elke annotatie ankert op een teken-offset (met de geciteerde tekst voor her-ankeren) en rendert als een lichte tint plus een dashed underline, met een telbadge aan het einde. Eén kleur voor alle annotaties: het type komt uit de pane van de consumer, niet uit de kleur. Annotaties op dezelfde tekst mergen tot een onderstreping met een gecombineerde telling.',
+				story: 'Annotaties leven buiten de markdown (de tekst blijft schoon); de consumer levert ze via de `annotations`-property. Elke annotatie ankert op een teken-offset (met de geciteerde tekst voor her-ankeren) en rendert als een lichte tint met een telbadge aan het einde. Eén kleur voor alle annotaties: het type komt uit de pane van de consumer, niet uit de kleur. Annotaties op dezelfde tekst mergen tot één vlak met een gecombineerde telling.',
 			},
 		},
 	},
@@ -1118,37 +1150,40 @@ export const AnnotatiesMaken = {
 	},
 };
 
+const MIXED_USERS = [
+	{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
+	{ id: '2', text: 'Bram Jansen', supportingText: 'Communicatie' },
+	{ id: '3', text: 'Chen Wei', supportingText: 'Data' },
+	{ id: '4', text: 'Dewi Pratama', supportingText: 'Juridisch' },
+];
+const mixedSource = (query: string) =>
+	MIXED_USERS.filter((user) => user.text.toLowerCase().includes(query.toLowerCase()));
+const MIXED_SAMPLE = [
+	'# Projectupdate toegankelijkheid',
+	'',
+	'We verbeteren het **burgerportaal** met [@Anouk de Vries](user:1). De `WCAG 2.2`-criteria zijn leidend, zie de [WCAG-richtlijn](https://www.w3.org/TR/WCAG22/).',
+	'',
+	'## Actiepunten',
+	'',
+	'- Contrast op de knoppen verhogen',
+	'- Focus-states nalopen met [@Bram Jansen](user:2)',
+	'- Screenreader-tests inplannen voor de livegang',
+	'',
+	'> Let op: de deadline is volgende week vrijdag.',
+	'',
+	'Voer de toegankelijkheidscheck uit met:',
+	'',
+	'```bash',
+	'npm run test:a11y',
+	'```',
+	'',
+	'Noem iemand met `@` of selecteer tekst voor een annotatie.',
+].join('\n');
+
 export const Gemengd = {
 	render: () => {
-		const users = [
-			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
-			{ id: '2', text: 'Bram Jansen', supportingText: 'Communicatie' },
-			{ id: '3', text: 'Chen Wei', supportingText: 'Data' },
-			{ id: '4', text: 'Dewi Pratama', supportingText: 'Juridisch' },
-		];
-		const source = (query: string) =>
-			users.filter((user) => user.text.toLowerCase().includes(query.toLowerCase()));
-		const sample = [
-			'# Projectupdate toegankelijkheid',
-			'',
-			'We verbeteren het **burgerportaal** met [@Anouk de Vries](user:1). De `WCAG 2.2`-criteria zijn leidend, zie de [WCAG-richtlijn](https://www.w3.org/TR/WCAG22/).',
-			'',
-			'## Actiepunten',
-			'',
-			'- Contrast op de knoppen verhogen',
-			'- Focus-states nalopen met [@Bram Jansen](user:2)',
-			'- Screenreader-tests inplannen voor de livegang',
-			'',
-			'> Let op: de deadline is volgende week vrijdag.',
-			'',
-			'Voer de toegankelijkheidscheck uit met:',
-			'',
-			'```bash',
-			'npm run test:a11y',
-			'```',
-			'',
-			'Noem iemand met `@` of selecteer tekst voor een annotatie.',
-		].join('\n');
+		const sample = MIXED_SAMPLE;
+		const source = mixedSource;
 		const at = (needle: string) => {
 			const start = sample.indexOf(needle);
 			return { start, end: start + needle.length, quote: needle };
@@ -1194,6 +1229,52 @@ export const MetWerkbalk = {
 		docs: {
 			description: {
 				story: 'De editor is headless. Deze toolbar is opgebouwd uit DS-componenten — `nldd-toolbar` met icon-`nldd-segmented-control`s (nadruk vet/cursief, code, citaat, en een exclusieve lijst-keuze geen/opsomming/genummerd) en een uitklapbare `nldd-button` met een `nldd-menu` voor de tekststijl (Paragraaf/Kop 1/…). Tweerichtings gekoppeld: de controls sturen de editor (`runCommand`, `setList`, `setHeading`) en het `nldd-text-editor-state`-event zet hun actieve staat. Sneltoetsen Cmd/Ctrl+B/I/E/K werken ook.',
+			},
+		},
+	},
+};
+
+const HIDDEN_SYNTAX_SAMPLE = [
+	'# Projectupdate toegankelijkheid',
+	'',
+	'We verbeteren het **burgerportaal** met [@Anouk de Vries](user:1). De `WCAG 2.2`-criteria zijn *leidend*, zie de [WCAG-richtlijn](https://www.w3.org/TR/WCAG22/), en wat ~~niet meer~~ geldt halen we weg.',
+	'',
+	'## Actiepunten',
+	'',
+	'- **Contrast** op de knoppen verhogen',
+	'- Focus-states nalopen met [@Bram Jansen](user:2)',
+	'- Screenreader-tests *inplannen* voor de livegang',
+	'',
+	'> Let op: de deadline is volgende week vrijdag.',
+	'',
+	'---',
+	'',
+	'### Planning',
+	'',
+	'Voer de check uit met `npm run test:a11y` en meld het **resultaat** aan *team Uitvoering*:',
+	'',
+	'```bash',
+	'npm ci',
+	'npm run test:a11y',
+	'```',
+].join('\n');
+
+export const VerborgenOpmaak = {
+	render: () => toolbarEditor(html`
+		<nldd-text-editor
+			appearance="simple"
+			syntax="hidden"
+			rows="15"
+			accessible-label="Tekst"
+			.value=${HIDDEN_SYNTAX_SAMPLE}
+			.mentionSource=${mixedSource}
+		></nldd-text-editor>
+	`),
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Met `syntax="hidden"` zijn de tekens van vet, cursief, doorhalen, inline code, links en de `#` van koppen verborgen, is een opsommingsteken een bolletje, een citaat een lijn links, is `---` een scheidingslijn en verliest een codeblok zijn ```-regels. Waar de cursor of selectie een constructie raakt, komen de tekens terug, zodat je de markdown bewerkt zoals hij is. De nummers van een genummerde lijst blijven staan. De waarde blijft gewone markdown.',
 			},
 		},
 	},

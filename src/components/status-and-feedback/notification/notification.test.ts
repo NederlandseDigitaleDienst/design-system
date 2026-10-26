@@ -278,6 +278,23 @@ describe('nldd-notification in a modal overlay', () => {
 		return Math.round(r.top) === 16 && Math.round(document.documentElement.clientWidth - r.right) === 16;
 	}
 
+	it('spans the top of a small screen, inset on both sides, on the page and in a sheet', async () => {
+		// The test page is narrower than md, which is what this is about.
+		expect(document.documentElement.clientWidth).toBeLessThan(640);
+		const spans = () => {
+			const r = region()!.getBoundingClientRect();
+			return [Math.round(r.left), Math.round(document.documentElement.clientWidth - r.right)];
+		};
+		const note = await raise();
+		expect(spans()).toEqual([16, 16]);
+		expect(Math.round(note.getBoundingClientRect().width)).toBe(Math.round(region()!.getBoundingClientRect().width));
+
+		sheet = await openSheet();
+		await raise();
+		expect(region()!.parentElement).toBe(sheet);
+		expect(spans()).toEqual([16, 16]);
+	});
+
 	it('reaches the first notification raised while a sheet is open, instead of leaving it behind the sheet', async () => {
 		sheet = await openSheet();
 		const note = await raise();

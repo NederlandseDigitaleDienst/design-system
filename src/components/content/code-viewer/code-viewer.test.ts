@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
 import type { NLDDCodeViewer } from './code-viewer.js';
 import './code-viewer.js';
+import { pairChangedLines, parseUnifiedDiff } from './code-viewer.diff.js';
 
 describe('nldd-code-viewer', () => {
 	let el: HTMLElement;
@@ -523,5 +524,186 @@ describe('nldd-code-viewer', () => {
 		await waitForUpdate(el);
 		(el as unknown as { focus(): void }).focus();
 		expect(el.shadowRoot!.activeElement).toBeNull();
+	});
+});
+
+const DIFF = `diff --git a/aanvraag.ts b/aanvraag.ts
+--- a/aanvraag.ts
++++ b/aanvraag.ts
+@@ -1,4 +1,5 @@
+ const aanvraag = {
+-  status: 'nieuw',
++  status: 'in behandeling',
++  team: 'Uitvoering',
+ };
+@@ -20,2 +21,2 @@
+-const a = 1;
++const totaalAnders = 'Dossier D-318';
+\\ No newline at end of file`;
+
+describe('parseUnifiedDiff', () => {
+	it('telt de oude en nieuwe regelnummers vanaf de @@-koppen en laat de bestandskoppen weg', () => {
+		const parsed = parseUnifiedDiff(DIFF);
+		expect(parsed.doc.split('\n')[0]).toBe('const aanvraag = {');
+		expect(parsed.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([
+			['context', 1, 1],
+			['removed', 2, null],
+			['added', null, 2],
+			['added', null, 3],
+			['context', 3, 4],
+			['removed', 20, null],
+			['added', null, 21],
+		]);
+		expect(parsed.lines[0].hunk).toBe('@@ -1,4 +1,5 @@');
+		expect(parsed.lines[5].hunk).toBe('@@ -20,2 +21,2 @@');
+		expect([parsed.added, parsed.removed]).toEqual([3, 2]);
+	});
+
+	it('begint zonder @@-kop bij regel 1', () => {
+		const parsed = parseUnifiedDiff(' a\n-b\n+c');
+		expect(parsed.lines.map((l) => [l.oldNumber, l.newNumber])).toEqual([[1, 1], [2, null], [null, 2]]);
+	});
+
+	it('neemt de koppen van een volgend bestand niet voor code', () => {
+		const parsed = parseUnifiedDiff(`diff --git a/a.ts b/a.ts
+index 1111111..2222222 100644
+--- a/a.ts
++++ b/a.ts
+@@ -1,2 +1,2 @@
+ een
+-twee
++drie
+diff --git a/b.ts b/b.ts
+index 3333333..4444444 100644
+--- a/b.ts
++++ b/b.ts
+@@ -10 +10 @@
+-oud
++nieuw`);
+		expect(parsed.doc).toBe('een\ntwee\ndrie\noud\nnieuw');
+		expect(parsed.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([
+			['context', 1, 1],
+			['removed', 2, null],
+			['added', null, 2],
+			['removed', 10, null],
+			['added', null, 10],
+		]);
+		expect([parsed.added, parsed.removed]).toEqual([2, 2]);
+	});
+
+	it('waarschuwt in development als regels buiten de telling van hun @@-kop vallen', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		try {
+			const parsed = parseUnifiedDiff('@@ -1 +1 @@\n-a\n+b\n+te veel');
+			expect(parsed.lines.map((l) => l.text)).toEqual(['a', 'b']);
+			expect(warn).toHaveBeenCalledTimes(1);
+			warn.mockClear();
+			parseUnifiedDiff(`@@ -1 +1 @@\n-a\n+b\ndiff --git a/c b/c\n--- a/c\n+++ b/c\n@@ -1 +1 @@\n-c\n+d`);
+			expect(warn).not.toHaveBeenCalled();
+		} finally {
+			warn.mockRestore();
+		}
+	});
+
+	it('nummert een nieuw en een verwijderd bestand zoals git', () => {
+		const created = parseUnifiedDiff('--- /dev/null\n+++ b/nieuw.ts\n@@ -0,0 +1,2 @@\n+a\n+b');
+		expect(created.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([['added', null, 1], ['added', null, 2]]);
+		const deleted = parseUnifiedDiff('--- a/oud.ts\n+++ /dev/null\n@@ -1,2 +0,0 @@\n-a\n-b');
+		expect(deleted.lines.map((l) => [l.kind, l.oldNumber, l.newNumber])).toEqual([['removed', 1, null], ['removed', 2, null]]);
+	});
+
+	it('laat zonder @@-kop de bestandskop weg, maar niet een coderegel die met --- begint', () => {
+		const headed = parseUnifiedDiff('diff --git a/a.sql b/a.sql\n--- a/a.sql\n+++ b/a.sql\n-oud\n+nieuw');
+		expect(headed.lines.map((l) => [l.kind, l.text])).toEqual([['removed', 'oud'], ['added', 'nieuw']]);
+		const code = parseUnifiedDiff('--- commentaar\n+nieuw');
+		expect(code.lines.map((l) => [l.kind, l.text])).toEqual([['removed', '-- commentaar'], ['added', 'nieuw']]);
+	});
+
+	it('paart verwijderde en direct volgende toegevoegde regels op volgorde', () => {
+		expect(pairChangedLines(parseUnifiedDiff(DIFF).lines)).toEqual([[1, 2], [5, 6]]);
+	});
+});
+
+describe('nldd-code-viewer diff', () => {
+	let el: NLDDCodeViewer;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const mount = async (content = DIFF) => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer diff></nldd-code-viewer>');
+		el.textContent = content;
+		await waitForUpdate(el);
+		await el.updateComplete;
+		return el.shadowRoot!;
+	};
+
+	it('toont de code zonder de tekens en kleurt toegevoegde en verwijderde regels', async () => {
+		const root = await mount();
+		const lines = [...root.querySelectorAll('.cm-line')];
+		expect(lines[1].classList.contains('cm-diff-removed')).toBe(true);
+		expect(lines[2].classList.contains('cm-diff-added')).toBe(true);
+		expect(root.querySelector('.cm-content')!.textContent).not.toContain('+++');
+		expect(root.querySelectorAll('.cm-diff-hunk')).toHaveLength(2);
+	});
+
+	it('toont oude en nieuwe regelnummers in twee kolommen', async () => {
+		const root = await mount();
+		const numbers = (name: string) => [...root.querySelectorAll(`.cm-diff-${name}-gutter .cm-gutterElement`)].map((n) => n.textContent).filter(Boolean);
+		expect(numbers('old')).toContain('20');
+		expect(numbers('new')).toContain('21');
+		expect(numbers('sign')).toEqual(expect.arrayContaining(['+', '−']));
+	});
+
+	it('vertelt een screenreader wat er veranderd is', async () => {
+		const root = await mount();
+		expect(root.querySelector('.code-viewer__diff-summary')!.textContent).toBe('3 regels toegevoegd, 2 regels verwijderd');
+		const labels = [...root.querySelectorAll('.cm-diff-line-label')].map((n) => n.textContent);
+		expect(labels).toContain('Verwijderd, regel 2: ');
+		expect(labels).toContain('Toegevoegd, regel 3: ');
+		expect(root.querySelector('.cm-gutters')!.getAttribute('aria-hidden')).toBe('true');
+	});
+
+	it('markeert de gewijzigde woorden, maar niet als het grootste deel van de regel anders is', async () => {
+		const root = await mount();
+		const words = [...root.querySelectorAll('.cm-diff-removed-word, .cm-diff-added-word')].map((n) => n.textContent);
+		expect(words).toEqual(['nieuw', 'in behandeling']);
+	});
+
+	it('kopieert de diff zelf', async () => {
+		const writeText = vi.fn().mockResolvedValue(undefined);
+		const originalClipboard = navigator.clipboard;
+		Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+		try {
+			await mount();
+			el._onCopyClick();
+			await waitForUpdate(el);
+			expect(writeText).toHaveBeenCalledWith(DIFF);
+		} finally {
+			Object.defineProperty(navigator, 'clipboard', { value: originalClipboard, configurable: true });
+		}
+	});
+
+	it('leest de inhoud als diff zodra diff aan gaat', async () => {
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer></nldd-code-viewer>');
+		el.textContent = DIFF;
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(root.querySelector('.cm-diff-added')).toBeNull();
+		el.diff = true;
+		await el.updateComplete;
+		expect(root.querySelector('.cm-diff-added')).not.toBeNull();
+		expect(root.querySelector('.code-viewer__diff-summary')!.textContent).toBe('3 regels toegevoegd, 2 regels verwijderd');
+		expect([...root.querySelectorAll('.cm-line')].some((line) => line.textContent!.startsWith('@@'))).toBe(false);
+	});
+
+	it('toont de diff als gewone tekst zodra diff uit gaat', async () => {
+		const root = await mount();
+		el.diff = false;
+		await el.updateComplete;
+		expect(root.querySelector('.cm-diff-added')).toBeNull();
+		expect(root.querySelector('.code-viewer__diff-summary')).toBeNull();
+		expect(root.querySelector('.cm-content')!.textContent).toContain('@@ -1,4 +1,5 @@');
 	});
 });
