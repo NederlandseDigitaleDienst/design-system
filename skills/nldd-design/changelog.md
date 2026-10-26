@@ -4,6 +4,12 @@
   Hergenereren: npm run generate:skill-docs
 -->
 
+<!--
+  GEGENEREERD BESTAND — niet handmatig bewerken.
+  Kopie van de root CHANGELOG.md (onderhouden door semantic-release).
+  Hergenereren: npm run generate:skill-docs
+-->
+
 # Changelog
 
 All notable changes to the NLDD Designsysteem are documented here.
@@ -15,9 +21,14 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Added
+
+- **`nldd-rich-text` shows a mention the way `nldd-text-editor` does.** Give an element `data-mention` and it becomes the same tinted token with the @ icon in front of the name: `<a href="…" data-mention>Anouk de Vries</a>` for a person with a page to go to, `<span data-mention>` for one without. Write the name without the `@`; the rich text draws it. The editor stores a mention as `[@Name](user:id)`, which a markdown renderer turns into a link that goes nowhere, so turn it into this markup when you render the value.
+
 ### Changed
 
 - **`nldd-text-editor` looks closer to the result in `nldd-rich-text`.** Bold is the same semibold, inline code and code blocks take the same size and the same tinted background, and the list bullets take the text color instead of a dimmed one. The markers themselves (`**`, `#`, `>`, `---`) stay visible and dimmed, and a link stays without an underline, since the badge beside it already marks it.
+- **The mention colors are semantics tokens now**, since the editor and the rich text share them: `--components-text-editor-mention-*` became `--semantics-mentions-*`, with an `is-hovered` and `is-active` background for a mention that is a link. The themes that ship with the system moved along. If your own theme set the old names, rename them.
 
 ### Fixed
 

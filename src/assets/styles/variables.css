@@ -1243,6 +1243,15 @@
 	--semantics-links-is-hovered-color: light-dark(var(--primitives-color-accent-650), var(--primitives-color-accent-700));
 	--semantics-links-is-active-color: light-dark(var(--primitives-color-accent-700), var(--primitives-color-accent-750));
 
+	/* ## Mentions */
+
+	--semantics-mentions-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-75));
+	--semantics-mentions-content-color: var(--primitives-color-accent-700);
+	--semantics-mentions-is-hovered-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-100));
+	--semantics-mentions-is-active-background-color: light-dark(var(--primitives-color-accent-100), var(--primitives-color-accent-150));
+	--semantics-mentions-is-selected-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-400));
+	--semantics-mentions-is-selected-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-accent-1000));
+
 	/* ## Blockquotes */
 
 	--semantics-blockquotes-max-width: var(--primitives-area-720);
@@ -1757,10 +1766,6 @@
 
 	/* ## Text editor */
 
-	--components-text-editor-mention-background-color: light-dark(var(--primitives-color-accent-50), var(--primitives-color-accent-75));
-	--components-text-editor-mention-content-color: var(--primitives-color-accent-700);
-	--components-text-editor-mention-is-selected-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-400));
-	--components-text-editor-mention-is-selected-content-color: light-dark(var(--primitives-color-accent-0), var(--primitives-color-accent-1000));
 	--components-text-editor-caret-color: var(--primitives-color-accent-700);
 	--components-text-editor-drop-cursor-color: var(--primitives-color-accent-600);
 	--components-text-editor-drag-ghost-background-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-250));

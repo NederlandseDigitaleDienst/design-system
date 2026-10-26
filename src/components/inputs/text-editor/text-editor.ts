@@ -30,6 +30,12 @@
  * (annotations) marks ranges with a dashed underline, light tint and a count badge
  * without touching the underlying text.
  *
+ * To show the value, render the markdown into nldd-rich-text, which uses the
+ * same type, bold and code as the editor. A mention is stored as
+ * `[@Name](user:id)`: turn it into `<a href="…" data-mention>Name</a>` (or a
+ * `span` when there is no page for the person), without the `@`, and it reads
+ * as the same token there.
+ *
  * @element nldd-text-editor
  *
  * @attr {string} value - Editor content (markdown)

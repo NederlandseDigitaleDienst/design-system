@@ -706,13 +706,13 @@ function accentTextTokens(name, button) {
 	const value = (light, offset) => pair(grayAccent(name, light, 'light'), accent(Math.min(1000, theme.darkText + offset)));
 	return [
 		['--semantics-content-accent-color', value(750, 0)],
-		['--components-text-editor-mention-content-color', value(750, 0)],
+		['--semantics-mentions-content-color', value(750, 0)],
 		[`${transparent}content-color`, value(750, 0)],
 		[`${transparent}is-hovered-content-color`, value(800, 50)],
 		[`${transparent}is-active-content-color`, value(850, 100)],
 		...['', 'is-hovered-', 'is-active-'].map((state) => [`${transparent}${state}content-secondary-color`, value(550, 0)]),
-		['--components-text-editor-mention-is-selected-background-color', both(button, (m) => accent(m.step))],
-		['--components-text-editor-mention-is-selected-content-color', both(button, (m, mode) => textColor(mode, m.text, 'accent'))],
+		['--semantics-mentions-is-selected-background-color', both(button, (m) => accent(m.step))],
+		['--semantics-mentions-is-selected-content-color', both(button, (m, mode) => textColor(mode, m.text, 'accent'))],
 	];
 }
 
@@ -749,10 +749,12 @@ export const STATUS_IN_COLOR = new Set([
 	'--components-text-editor-link-badge-is-active-background-color',
 	'--components-text-editor-link-badge-is-hovered-highlight-border-color',
 	'--components-text-editor-link-badge-is-active-highlight-border-color',
-	'--components-text-editor-mention-background-color',
-	'--components-text-editor-mention-content-color',
-	'--components-text-editor-mention-is-selected-background-color',
-	'--components-text-editor-mention-is-selected-content-color',
+	'--semantics-mentions-background-color',
+	'--semantics-mentions-content-color',
+	'--semantics-mentions-is-hovered-background-color',
+	'--semantics-mentions-is-active-background-color',
+	'--semantics-mentions-is-selected-background-color',
+	'--semantics-mentions-is-selected-content-color',
 ]);
 
 const DATE_RANGE_TOKENS = [
@@ -773,6 +775,7 @@ const SECTIONS = [
 	['## Content', '--semantics-content-'],
 	['## Categories', '--semantics-categories-'],
 	['## Links', '--semantics-links-'],
+	['## Mentions', '--semantics-mentions-'],
 	['## Controls', '--semantics-controls-'],
 	['## Buttons', '--semantics-buttons-'],
 	['## Focus ring', '--semantics-focus-ring-'],

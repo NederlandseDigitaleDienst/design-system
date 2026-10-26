@@ -282,6 +282,19 @@ export const InlineElementen = {
 	`,
 };
 
+export const Vermeldingen = {
+	render: (args: Record<string, any>) => html`
+		<nldd-rich-text
+			color=${args.color || nothing}
+			spacing=${args.spacing}
+			?centered=${args.centered}
+		>
+				<h3>Notitie bij Aanvraag A-1042</h3>
+				<p><a href="#" data-mention>Anouk de Vries</a> heeft de offerte gecontroleerd. <span data-mention>Bram Jansen</span> neemt het besluit over de hoogte van de bijdrage.</p>
+			</nldd-rich-text>
+	`,
+};
+
 export const Citaat = {
 	render: (args: Record<string, any>) => html`
 		<nldd-rich-text

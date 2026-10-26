@@ -36,6 +36,15 @@
  * left-aligned layout, wide and full read as a bleed to the right; with
  * `centered` they are symmetrical.
  *
+ * ## Mentions
+ * An element with `data-mention` reads as a mention, the way nldd-text-editor
+ * shows one: a tinted token with the @ icon in front of the name. Use
+ * `<a href="…" data-mention>` when the person has a page to go to and
+ * `<span data-mention>` when not, and write the name without the `@`: the rich
+ * text draws it. A mention in the editor's value, `[@Name](user:id)`, comes out
+ * of a markdown renderer as a link to `user:id`, which goes nowhere, so turn it
+ * into one of these yourself.
+ *
  * @element nldd-rich-text
  *
  * @attr {string} color - 'content' (the default) takes the system's own content

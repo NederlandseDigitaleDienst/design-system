@@ -68,10 +68,10 @@ export const textEditorStyles = css`
 		--_text-editor-link-badge-is-hovered-highlight-border-color: var(--components-text-editor-link-badge-is-hovered-highlight-border-color);
 		--_text-editor-link-badge-is-active-highlight-border-color: var(--components-text-editor-link-badge-is-active-highlight-border-color);
 		--_text-editor-mention-icon-size: 0.95em;
-		--_text-editor-mention-token-background-color: var(--components-text-editor-mention-background-color);
-		--_text-editor-mention-token-content-color: var(--components-text-editor-mention-content-color);
-		--_text-editor-mention-token-is-selected-background-color: var(--components-text-editor-mention-is-selected-background-color);
-		--_text-editor-mention-token-is-selected-content-color: var(--components-text-editor-mention-is-selected-content-color);
+		--_text-editor-mention-token-background-color: var(--semantics-mentions-background-color);
+		--_text-editor-mention-token-content-color: var(--semantics-mentions-content-color);
+		--_text-editor-mention-token-is-selected-background-color: var(--semantics-mentions-is-selected-background-color);
+		--_text-editor-mention-token-is-selected-content-color: var(--semantics-mentions-is-selected-content-color);
 		--_text-editor-rows: 6;
 
 		${inheritedTextReset}
