@@ -38,9 +38,27 @@ const reconcile = (el: Element, keys: string[], values: string[]) => {
 	const desired = new Set(values);
 	keys.forEach((key) => { if (desired.has(key) !== Boolean(active[key])) editor.runCommand(key); });
 };
+const listTypeOf = (value: string) => (value === 'numbered' ? 'ordered' : value);
+const currentList = (editor: any): string => {
+	const active = editor.getState().active;
+	return active.taskList ? 'task' : active.orderedList ? 'numbered' : active.bulletList ? 'bullet' : 'none';
+};
 const onListChange = (event: CustomEvent) => {
-	const value = event.detail.value as string;
-	editorOf(event.currentTarget as Element)?.setList(value === 'numbered' ? 'ordered' : value);
+	editorOf(event.currentTarget as Element)?.setList(listTypeOf(event.detail.value as string));
+};
+// A second click on the list that is on turns it off, like the other toggles.
+// A radio does not change on that click, so the list is read at pointerdown,
+// before a click on another item has switched it.
+let listAtPointerDown: string | null = null;
+const onListPointerDown = (event: PointerEvent) => {
+	const editor = editorOf(event.currentTarget as Element);
+	listAtPointerDown = editor ? currentList(editor) : null;
+};
+const onListClick = (event: MouseEvent) => {
+	const item = (event.target as Element).closest('nldd-segmented-control-item') as any;
+	const editor = editorOf(event.currentTarget as Element);
+	if (editor && item && item.value !== 'none' && item.value === listAtPointerDown) editor.setList('none');
+	listAtPointerDown = null;
 };
 const HEADING_LABELS = ['Paragraaf', 'Kop 1', 'Kop 2', 'Kop 3', 'Kop 4', 'Kop 5', 'Kop 6'];
 const onHeadingSelect = (event: Event) => {
@@ -81,7 +99,10 @@ const runOverflowAction = (editor: any, action: string): void => {
 		editor.runCommand('setHeading', Number(value));
 		return;
 	}
-	if (name === 'list') { editor.runCommand('setList', value === 'numbered' ? 'ordered' : value); return; }
+	if (name === 'list') {
+		editor.runCommand('setList', value !== 'none' && value === currentList(editor) ? 'none' : listTypeOf(value));
+		return;
+	}
 	editor.runCommand(name);
 };
 
@@ -376,6 +397,8 @@ function toolbarEditor(editor: unknown) {
 						value="none"
 						accessible-label="Lijst"
 						@change=${onListChange}
+						@pointerdown=${onListPointerDown}
+						@click=${onListClick}
 					>
 						<nldd-segmented-control-item
 							value="none"
@@ -1118,37 +1141,40 @@ export const AnnotatiesMaken = {
 	},
 };
 
+const MIXED_USERS = [
+	{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
+	{ id: '2', text: 'Bram Jansen', supportingText: 'Communicatie' },
+	{ id: '3', text: 'Chen Wei', supportingText: 'Data' },
+	{ id: '4', text: 'Dewi Pratama', supportingText: 'Juridisch' },
+];
+const mixedSource = (query: string) =>
+	MIXED_USERS.filter((user) => user.text.toLowerCase().includes(query.toLowerCase()));
+const MIXED_SAMPLE = [
+	'# Projectupdate toegankelijkheid',
+	'',
+	'We verbeteren het **burgerportaal** met [@Anouk de Vries](user:1). De `WCAG 2.2`-criteria zijn leidend, zie de [WCAG-richtlijn](https://www.w3.org/TR/WCAG22/).',
+	'',
+	'## Actiepunten',
+	'',
+	'- Contrast op de knoppen verhogen',
+	'- Focus-states nalopen met [@Bram Jansen](user:2)',
+	'- Screenreader-tests inplannen voor de livegang',
+	'',
+	'> Let op: de deadline is volgende week vrijdag.',
+	'',
+	'Voer de toegankelijkheidscheck uit met:',
+	'',
+	'```bash',
+	'npm run test:a11y',
+	'```',
+	'',
+	'Noem iemand met `@` of selecteer tekst voor een annotatie.',
+].join('\n');
+
 export const Gemengd = {
 	render: () => {
-		const users = [
-			{ id: '1', text: 'Anouk de Vries', supportingText: 'Beleid' },
-			{ id: '2', text: 'Bram Jansen', supportingText: 'Communicatie' },
-			{ id: '3', text: 'Chen Wei', supportingText: 'Data' },
-			{ id: '4', text: 'Dewi Pratama', supportingText: 'Juridisch' },
-		];
-		const source = (query: string) =>
-			users.filter((user) => user.text.toLowerCase().includes(query.toLowerCase()));
-		const sample = [
-			'# Projectupdate toegankelijkheid',
-			'',
-			'We verbeteren het **burgerportaal** met [@Anouk de Vries](user:1). De `WCAG 2.2`-criteria zijn leidend, zie de [WCAG-richtlijn](https://www.w3.org/TR/WCAG22/).',
-			'',
-			'## Actiepunten',
-			'',
-			'- Contrast op de knoppen verhogen',
-			'- Focus-states nalopen met [@Bram Jansen](user:2)',
-			'- Screenreader-tests inplannen voor de livegang',
-			'',
-			'> Let op: de deadline is volgende week vrijdag.',
-			'',
-			'Voer de toegankelijkheidscheck uit met:',
-			'',
-			'```bash',
-			'npm run test:a11y',
-			'```',
-			'',
-			'Noem iemand met `@` of selecteer tekst voor een annotatie.',
-		].join('\n');
+		const sample = MIXED_SAMPLE;
+		const source = mixedSource;
 		const at = (needle: string) => {
 			const start = sample.indexOf(needle);
 			return { start, end: start + needle.length, quote: needle };
