@@ -83,9 +83,12 @@ export const aliases = {
 	'license': 'certificate',
 	'diploma': 'certificate',
 
+	// chart-bar-x-axis
+	'bar-chart': 'chart-bar-x-axis',
+
 	// chart-line-x-y-axis
 	'analytics': 'chart-line-x-y-axis',
-	'chart-line': 'chart-line-x-y-axis',
+	'line-chart': 'chart-line-x-y-axis',
 	'graph': 'chart-line-x-y-axis',
 	'chart-x-y-axis-line': 'chart-line-x-y-axis',
 
