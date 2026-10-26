@@ -148,6 +148,41 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		expect(el.view.contentDOM.querySelector('.cm-md-bullet')).toBeNull();
 	});
 
+	it('draws a quote as a line, and shows every > instead while the caret is in it, in the same place', async () => {
+		el = await make();
+		el.value = 'Tekst\n\n> Eerste regel\n> Tweede regel\n\nSlot.';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		const lines = () => [...el.view.contentDOM.querySelectorAll('.cm-line')].slice(2, 4);
+		const hidden = (l: Element) => l.querySelector('.cm-md-quote-mark-hidden') !== null;
+		const ruled = (l: Element) => l.classList.contains('cm-md-quote-line');
+		const textLeft = (l: Element) => {
+			const range = document.createRange();
+			const node = [...l.querySelectorAll('*'), l].flatMap((e) => [...e.childNodes]).find((n) => n.nodeType === 3 && /[A-Z]/.test(n.textContent ?? ''))!;
+			const at = node.textContent!.search(/[A-Z]/);
+			range.setStart(node, at);
+			range.setEnd(node, at + 1);
+			return range.getBoundingClientRect().left;
+		};
+		caret(el, el.view.state.doc.length);
+		expect(lines().map(ruled)).toEqual([true, true]);
+		expect(lines().map(hidden)).toEqual([true, true]);
+		const left = lines().map(textLeft);
+		caret(el, el.value.indexOf('Tweede'));
+		expect(lines().map(ruled)).toEqual([false, false]);
+		expect(lines().map(hidden)).toEqual([false, false]);
+		expect(lines().map(textLeft)).toEqual(left);
+	});
+
+	it('keeps hiding the marks of bold inside a quote the caret is in', async () => {
+		el = await make();
+		el.value = '> Een **vet** woord\n> en meer\n\nSlot.';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		caret(el, el.value.indexOf('meer'));
+		expect(el.view.contentDOM.querySelector('.cm-line')!.textContent).toBe('> Een vet woord');
+	});
+
 	it('hides every mark when read-only, the selection included', async () => {
 		el = await make('syntax="hidden" readonly');
 		caret(el, DOC.indexOf('burgerportaal') + 3);

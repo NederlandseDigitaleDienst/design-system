@@ -1,19 +1,20 @@
 import { Decoration, EditorView, ViewPlugin, WidgetType, type DecorationSet, type ViewUpdate } from '@codemirror/view';
 import { Prec, StateField, type EditorState, type Range } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
+import type { SyntaxNode } from '@lezer/common';
 import { MENTION_HREF_PREFIX } from './text-editor.mentions.js';
 
 /* syntax="hidden": the formatting marks of bold, italic, strikethrough, inline
- * code, links and headings are hidden, a bullet reads as a dot and a `---` line
- * as a divider.
+ * code, links and headings are hidden, a bullet reads as a dot, a quote as a
+ * line on the left and a `---` line as a divider.
  * Where the caret or the selection touches a construct, its marks come back,
  * so what you edit is the markdown as it is. The document stays plain markdown;
  * only the picture changes. A read-only or disabled editor has no caret to
  * reveal anything, so there every mark is hidden.
  *
  * A code block loses its fence lines (the ``` above and below), since its own
- * tint and edge already say what it is. A numbered list and a quote keep their
- * markers: those carry the structure. */
+ * tint and edge already say what it is. A numbered list keeps its numbers:
+ * those are content. */
 
 /** The marks hidden inside inline constructs, by the construct they belong to. */
 const INLINE_MARKS: Record<string, readonly string[]> = {
@@ -26,6 +27,11 @@ const hideMark = Decoration.replace({});
 // The character stays, in its mono width, so a wrapped line still aligns; a dot
 // is drawn over it (see .cm-md-bullet).
 const bullet = Decoration.mark({ class: 'cm-md-bullet' });
+// A quote reads as a line on the left. Its `>` keeps its width, so the text
+// starts in the same place whether the line or the marks show. The whole quote
+// is the construct: the caret anywhere in it shows every `>` and drops the line.
+const quoteLine = Decoration.line({ class: 'cm-md-quote-line' });
+const quoteMark = Decoration.mark({ class: 'cm-md-quote-mark-hidden' });
 // With its backticks hidden, inline code gets room inside its tint as padding on
 // the text. Not as a widget: Safari measured the selection wrong beside one.
 const bareCode = Decoration.mark({ class: 'cm-md-code-bare' });
@@ -47,6 +53,12 @@ class RuleWidget extends WidgetType {
 	}
 }
 const rule = Decoration.replace({ widget: new RuleWidget() });
+
+function outermostQuote(node: SyntaxNode): SyntaxNode {
+	let outer = node;
+	for (let up = node.parent; up; up = up.parent) if (up.name === 'Blockquote') outer = up;
+	return outer;
+}
 
 function revealsAnything(state: EditorState): boolean {
 	return !state.readOnly && state.facet(EditorView.editable);
@@ -98,7 +110,24 @@ function buildHidden(view: EditorView): DecorationSet {
 					if (!revealed(node.from, node.to)) ranges.push(rule.range(node.from, node.to));
 					return false;
 				}
+				if (node.name === 'Blockquote') {
+					// The outermost quote is the construct; a nested one lies inside it.
+					const outer = outermostQuote(node.node);
+					if (outer !== node.node || revealed(outer.from, outer.to)) return;
+					for (let pos = outer.from; pos <= outer.to; ) {
+						const line = state.doc.lineAt(pos);
+						ranges.push(quoteLine.range(line.from));
+						pos = line.to + 1;
+					}
+					return;
+				}
 				if (!parent) return;
+				if (node.name === 'QuoteMark') {
+					const outer = outermostQuote(node.node);
+					const end = state.sliceDoc(node.to, node.to + 1) === ' ' ? node.to + 1 : node.to;
+					if (!revealed(outer.from, outer.to)) ranges.push(quoteMark.range(node.from, end));
+					return;
+				}
 				// A bullet only once it is a real list item, followed by a space, so
 				// typing "-" does not flash a dot before a list exists. Its character
 				// shows on the line the caret is on.

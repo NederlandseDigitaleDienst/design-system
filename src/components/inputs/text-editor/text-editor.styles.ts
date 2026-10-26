@@ -35,6 +35,8 @@ export const textEditorStyles = css`
 		--_text-editor-bullet-size: 0.45em;
 		--_text-editor-bullet-color: var(--semantics-content-color);
 		--_text-editor-rule-thickness: var(--semantics-dividers-thickness);
+		--_text-editor-quote-border-width: var(--primitives-border-width-regular);
+		--_text-editor-quote-border-color: var(--semantics-content-color);
 		--_text-editor-rule-color: var(--semantics-dividers-color);
 		--_text-editor-heading-marker-scale: 75%;
 		--_text-editor-token-corner-radius: var(--primitives-corner-radius-sm);
@@ -415,6 +417,17 @@ export const textEditorStyles = css`
 
 	.cm-md-code .cm-md-mark {
 		font-size: 1em;
+	}
+
+	/* A shadow, not a border, so the line takes no room and the text stays put
+	   when the quote shows its marks instead. */
+	.cm-md-quote-line {
+		box-shadow: inset var(--_text-editor-quote-border-width) 0 0 var(--_text-editor-quote-border-color);
+	}
+
+	:host .cm-md-quote-mark-hidden,
+	:host .cm-md-quote-mark-hidden * {
+		color: transparent;
 	}
 
 	/* A bullet with syntax="hidden": the character keeps its mono advance, so a

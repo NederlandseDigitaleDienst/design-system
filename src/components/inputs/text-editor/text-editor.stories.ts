@@ -1245,6 +1245,8 @@ const HIDDEN_SYNTAX_SAMPLE = [
 	'- Focus-states nalopen met [@Bram Jansen](user:2)',
 	'- Screenreader-tests *inplannen* voor de livegang',
 	'',
+	'> Let op: de deadline is volgende week vrijdag.',
+	'',
 	'---',
 	'',
 	'### Planning',
@@ -1272,7 +1274,7 @@ export const VerborgenOpmaak = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Met `syntax="hidden"` zijn de tekens van vet, cursief, doorhalen, inline code, links en de `#` van koppen verborgen, is een opsommingsteken een bolletje, is `---` een scheidingslijn en verliest een codeblok zijn ```-regels. Waar de cursor of selectie een constructie raakt, komen de tekens terug, zodat je de markdown bewerkt zoals hij is. De nummers van een genummerde lijst en de markers van citaten blijven staan. De waarde blijft gewone markdown.',
+				story: 'Met `syntax="hidden"` zijn de tekens van vet, cursief, doorhalen, inline code, links en de `#` van koppen verborgen, is een opsommingsteken een bolletje, een citaat een lijn links, is `---` een scheidingslijn en verliest een codeblok zijn ```-regels. Waar de cursor of selectie een constructie raakt, komen de tekens terug, zodat je de markdown bewerkt zoals hij is. De nummers van een genummerde lijst blijven staan. De waarde blijft gewone markdown.',
 			},
 		},
 	},
