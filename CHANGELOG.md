@@ -32,9 +32,10 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
-- **`nldd-text-editor` tells assistive tech when it is read-only or required.** It set neither `aria-readonly` nor `aria-required`; `nldd-code-editor` did.
+- **`nldd-text-editor` tells assistive tech when it is read-only or required.** It set neither `aria-readonly` nor `aria-required`; `nldd-code-editor` did. Both now share that code, so they stay alike.
 - **A line of spaced dashes in `nldd-text-editor` reads as a divider, not as a bullet.** `- - -` and `* * *` are a thematic break in markdown, but the editor took them for a list item: the list button lit up and the line got a hanging indent.
 - **`nldd-text-editor` styles a long document fully once it is parsed.** The parse runs in the background; most decorations were only drawn again on the next edit, so a long document could show part of its formatting until you typed.
+- **A value set on `nldd-text-editor` while it has focus no longer counts as an edit on blur.** The editor fired `change` for it; `nldd-code-editor` already did not.
 - **A new line in a quote in `nldd-text-editor` is as tall as the rest of the quote right away.** The quote size sat on the text, so a line with only its `> ` had the height of plain text and grew at the first letter. It sits on the line now.
 - **A toolbar button in `nldd-text-editor` acts on the selected lines only, in Safari too.** When focus came back to the editor after a click on a toolbar control, Safari could stretch the selection to the start of the document. The editor took that as the new selection, so a list or heading button right after it changed every line from the top down to the selection. The editor now keeps its own selection in that case. A selection you make yourself, with the mouse or the keyboard, is never touched.
 

@@ -8642,93 +8642,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "shadowRootOptions",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
-            },
-            {
-              "kind": "field",
-              "name": "isFormInput",
-              "type": {
-                "text": "boolean"
-              },
-              "static": true,
-              "default": "true",
-              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "inputId",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "input-id"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "placeholder",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "wrap",
               "type": {
                 "text": "boolean"
@@ -8736,15 +8649,6 @@
               "default": "false",
               "attribute": "wrap",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "6",
-              "attribute": "rows"
             },
             {
               "kind": "field",
@@ -8788,80 +8692,6 @@
             },
             {
               "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
-            },
-            {
-              "kind": "field",
-              "name": "invalid",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
-              "attribute": "invalid",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "formValue",
-              "return": {
-                "type": {
-                  "text": "FormValue"
-                }
-              },
-              "description": "The value submitted under `name`; `null` submits nothing. Override.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "describedTarget",
-              "return": {
-                "type": {
-                  "text": "Element | null"
-                }
-              },
-              "description": "CodeMirror builds the textbox; the host is only its container.",
-              "inheritedFrom": {
-                "name": "DescribedBy",
-                "module": "src/utilities/described-by-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "describedByElements",
               "type": {
                 "text": "readonly Element[]"
@@ -8871,6 +8701,20 @@
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
               }
             },
             {
@@ -8893,6 +8737,20 @@
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
               }
             },
             {
@@ -9007,82 +8865,207 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
-            }
-          ],
-          "events": [
-            {
-              "name": "input",
-              "description": "When the content changes (detail: { value })"
             },
             {
-              "name": "change",
-              "description": "When the content is committed on blur (detail: { value })"
-            }
-          ],
-          "attributes": [
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
             {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "value",
-              "description": "Editor content"
+              "attribute": "value",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
-              "name": "input-id",
+              "kind": "field",
+              "name": "inputId",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "inputId",
-              "description": "Sets the id on the editable element. Set automatically by nldd-form-field."
+              "attribute": "input-id",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "placeholder",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "placeholder",
-              "description": "Placeholder text shown while empty"
+              "attribute": "placeholder",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "fieldName": "name",
-              "description": "Field name for form submission"
+              "attribute": "name",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "readonly",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "readonly",
-              "description": "Readonly state (focusable and selectable, not editable)"
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
             {
+              "kind": "field",
               "name": "required",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "required",
-              "description": "Required state"
+              "attribute": "required",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "attribute": "rows",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "attribute": "invalid",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            }
+          ],
+          "attributes": [
             {
               "name": "wrap",
               "type": {
@@ -9091,15 +9074,6 @@
               "default": "false",
               "fieldName": "wrap",
               "description": "Wrap long lines instead of horizontal scroll"
-            },
-            {
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "6",
-              "fieldName": "rows",
-              "description": "Minimum visible rows (the floor in every resize mode). Default: 6."
             },
             {
               "name": "resize",
@@ -9138,12 +9112,120 @@
               "description": "Show a line-number gutter"
             },
             {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Editor content"
+            },
+            {
+              "name": "input-id",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "inputId",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Sets the id on the editable element. Set automatically by nldd-form-field."
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "placeholder",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Placeholder text shown while empty"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Disabled state"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Field name for form submission"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Readonly state (focusable and selectable, not editable)"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Required state"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "fieldName": "rows",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Minimum visible rows (the floor in every resize mode). Default: 6."
+            },
+            {
               "name": "accessible-label",
               "type": {
                 "text": "string"
               },
               "default": "''",
               "fieldName": "accessibleLabel",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
               "description": "Accessible label forwarded to the editor. Set automatically by nldd-form-field."
             },
             {
@@ -9153,25 +9235,29 @@
               },
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
-              "fieldName": "invalid"
-            }
-          ],
-          "mixins": [
-            {
-              "name": "DescribedBy",
-              "module": "/src/utilities/described-by-mixin.js"
-            },
-            {
-              "name": "FormAssociated",
-              "module": "/src/utilities/form-associated-mixin.js"
+              "fieldName": "invalid",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "NLDDCodeMirrorElement",
-            "module": "/src/utilities/codemirror/codemirror-element.js"
+            "name": "NLDDCodeMirrorInput",
+            "module": "/src/utilities/codemirror/codemirror-input.js"
           },
           "tagName": "nldd-code-editor",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "input",
+              "description": "When the content changes (detail: { value })"
+            },
+            {
+              "name": "change",
+              "description": "When the content is committed on blur (detail: { value })"
+            }
+          ]
         }
       ],
       "exports": [
@@ -19777,93 +19863,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "shadowRootOptions",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
-            },
-            {
-              "kind": "field",
-              "name": "isFormInput",
-              "type": {
-                "text": "boolean"
-              },
-              "static": true,
-              "default": "true",
-              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "inputId",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "input-id"
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "placeholder",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "noSpellcheck",
               "type": {
                 "text": "boolean"
@@ -19882,15 +19881,6 @@
               "default": "true",
               "attribute": "wrap",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "6",
-              "attribute": "rows"
             },
             {
               "kind": "field",
@@ -19921,15 +19911,6 @@
               "default": "'visible'",
               "attribute": "syntax",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "accessibleLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -19993,17 +19974,6 @@
               "default": "{}",
               "description": "Override translation keys for the editor's assistive-tech strings (the\nopen-in-new-tab link badge and the annotation count badge). Unset keys fall\nback to Dutch.",
               "attribute": "translations"
-            },
-            {
-              "kind": "field",
-              "name": "invalid",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
-              "attribute": "invalid",
-              "reflects": true
             },
             {
               "kind": "method",
@@ -20330,60 +20300,6 @@
               "description": "The annotations currently in the editor, in CLEAN coordinates, each quote\nre-sliced from the current text — so a consumer can persist positions that\nmoved with edits (read this on save, then write the anchors back)."
             },
             {
-              "kind": "method",
-              "name": "formValue",
-              "return": {
-                "type": {
-                  "text": "FormValue"
-                }
-              },
-              "description": "The value submitted under `name`; `null` submits nothing. Override.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formResetCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formStateRestoreCallback",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "File | string | FormData | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "describedTarget",
-              "return": {
-                "type": {
-                  "text": "Element | null"
-                }
-              },
-              "description": "CodeMirror builds the textbox; the host is only its container.",
-              "inheritedFrom": {
-                "name": "DescribedBy",
-                "module": "src/utilities/described-by-mixin.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "describedByElements",
               "type": {
@@ -20394,6 +20310,20 @@
               "inheritedFrom": {
                 "name": "DescribedBy",
                 "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
               }
             },
             {
@@ -20416,6 +20346,20 @@
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
               }
             },
             {
@@ -20530,6 +20474,204 @@
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field.",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "inputId",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "input-id",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "attribute": "rows",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "attribute": "invalid",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             }
           ],
           "events": [
@@ -20560,69 +20702,6 @@
           ],
           "attributes": [
             {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "value",
-              "description": "Editor content (markdown)"
-            },
-            {
-              "name": "input-id",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "inputId",
-              "description": "Sets the id on the editable element. Set automatically by nldd-form-field."
-            },
-            {
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "placeholder",
-              "description": "Placeholder text shown while empty"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "description": "Disabled state"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "name",
-              "description": "Field name for form submission"
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "description": "Readonly state (focusable and selectable, not editable)"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "required",
-              "description": "Required state"
-            },
-            {
               "name": "no-spellcheck",
               "type": {
                 "text": "boolean"
@@ -20639,15 +20718,6 @@
               "default": "true",
               "fieldName": "wrap",
               "description": "Wrap long lines (default true; prose wraps)"
-            },
-            {
-              "name": "rows",
-              "type": {
-                "text": "number"
-              },
-              "default": "6",
-              "fieldName": "rows",
-              "description": "Minimum visible rows (the floor in every resize mode). Default: 6."
             },
             {
               "name": "resize",
@@ -20677,15 +20747,6 @@
               "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its ``` fence lines until the caret is in it, since its own tint and edge already say what it is. The numbers of a numbered list stay: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
-              "name": "accessible-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "accessibleLabel",
-              "description": "Accessible label forwarded to the editor. Set automatically by nldd-form-field."
-            },
-            {
               "name": "annotatable",
               "type": {
                 "text": "boolean"
@@ -20704,28 +20765,139 @@
               "fieldName": "translations"
             },
             {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Editor content (markdown)"
+            },
+            {
+              "name": "input-id",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "inputId",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Sets the id on the editable element. Set automatically by nldd-form-field."
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "placeholder",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Placeholder text shown while empty"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Disabled state"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Field name for form submission"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Readonly state (focusable and selectable, not editable)"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Required state"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "fieldName": "rows",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Minimum visible rows (the floor in every resize mode). Default: 6."
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              },
+              "description": "Accessible label forwarded to the editor. Set automatically by nldd-form-field."
+            },
+            {
               "name": "invalid",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
               "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.",
-              "fieldName": "invalid"
-            }
-          ],
-          "mixins": [
-            {
-              "name": "DescribedBy",
-              "module": "/src/utilities/described-by-mixin.js"
-            },
-            {
-              "name": "FormAssociated",
-              "module": "/src/utilities/form-associated-mixin.js"
+              "fieldName": "invalid",
+              "inheritedFrom": {
+                "name": "NLDDCodeMirrorInput",
+                "module": "src/utilities/codemirror/codemirror-input.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "NLDDCodeMirrorElement",
-            "module": "/src/utilities/codemirror/codemirror-element.js"
+            "name": "NLDDCodeMirrorInput",
+            "module": "/src/utilities/codemirror/codemirror-input.js"
           },
           "tagName": "nldd-text-editor",
           "customElement": true
@@ -39602,6 +39774,672 @@
           "declaration": {
             "name": "focusAutofocusTarget",
             "module": "src/utilities/autofocus.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/codemirror/codemirror-input.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Shared base for the CodeMirror editors that are form controls\n(nldd-code-editor, nldd-text-editor). nldd-code-viewer is not one, so this\nsits between NLDDCodeMirrorElement and the two editors.\n\nIt owns what a form control needs and both editors did the same way: the\nvalue and its `input`/`change` events, editable and read-only, the\nplaceholder, the textbox attributes (label, id, aria-readonly,\naria-required), form association and reset, a press on the padding that\nstarts editing, and the warning for a missing label. A subclass adds its own\nextensions after `inputExtensions()` and can shape three things:\n`docToValue()`, `contentAttributes()` and `beforeChangeCheck()`.",
+          "name": "NLDDCodeMirrorInput",
+          "members": [
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true, }"
+            },
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "inputId",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "input-id"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "attribute": "rows"
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "attribute": "invalid",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_initialValue",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_valueAtFocus",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_accessibleLabelWarned",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_editableCompartment",
+              "privacy": "private",
+              "default": "new Compartment()"
+            },
+            {
+              "kind": "field",
+              "name": "_placeholderCompartment",
+              "privacy": "private",
+              "default": "new Compartment()"
+            },
+            {
+              "kind": "field",
+              "name": "_attrsCompartment",
+              "privacy": "private",
+              "default": "new Compartment()"
+            },
+            {
+              "kind": "field",
+              "name": "rowsProperty",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "description": "The custom property the visible row count goes into, named after the tag."
+            },
+            {
+              "kind": "method",
+              "name": "docToValue",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "doc",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value for a document. Default: the document itself."
+            },
+            {
+              "kind": "method",
+              "name": "contentAttributes",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Record<string, string>"
+                }
+              },
+              "description": "Attributes of the content element beyond label, id, aria-readonly and\naria-required. Default: none."
+            },
+            {
+              "kind": "method",
+              "name": "beforeChangeCheck",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_view",
+                  "type": {
+                    "text": "EditorView"
+                  }
+                }
+              ],
+              "description": "Runs on blur, before the value is compared with the one at focus, so a\nsubclass can settle the document first. Default: nothing."
+            },
+            {
+              "kind": "method",
+              "name": "inputExtensions",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Extension[]"
+                }
+              },
+              "description": "The extensions every input needs. A subclass puts these in its own\n`buildExtensions()`, next to what is its own."
+            },
+            {
+              "kind": "method",
+              "name": "_editableExtension",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Extension"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_placeholderExtension",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Extension"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_attrsExtension",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Extension"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshContentAttributes",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Build the textbox attributes again, after something `contentAttributes()`\nreads has changed."
+            },
+            {
+              "kind": "method",
+              "name": "onEditorMounted",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onDocChanged",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_emitChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_onScrollerPointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_checkAccessibleLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "CodeMirror builds the textbox; the host is only its container.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByElements",
+              "type": {
+                "text": "readonly Element[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_customValidity",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "input-id",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "inputId"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "6",
+              "fieldName": "rows"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel"
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the control as invalid.\n\nAnnounced and not drawn. What is wrong belongs in an\nnldd-validation-list, in words: a red ring around a single\ncheckbox or radio would say the option is wrong, while it is the question\nthat is unanswered. `aria-invalid` still goes on the control, because\nchoosing not to show something is not a reason to keep quiet about it.",
+              "fieldName": "invalid"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DescribedBy",
+              "module": "/src/utilities/described-by-mixin.js"
+            },
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "NLDDCodeMirrorElement",
+            "module": "/src/utilities/codemirror/codemirror-element.js"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDCodeMirrorInput",
+          "declaration": {
+            "name": "NLDDCodeMirrorInput",
+            "module": "src/utilities/codemirror/codemirror-input.ts"
           }
         }
       ]

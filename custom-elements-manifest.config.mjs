@@ -14,7 +14,9 @@
 import { nlddFileLevelJsdoc } from './scripts/lib/cem-nldd-jsdoc.js';
 
 export default {
-	globs: ['src/components/**/*.ts', 'src/utilities/*.ts'],
+	// The editors inherit their form API from the CodeMirror input base, so the
+	// manifest has to read that file to list it on them.
+	globs: ['src/components/**/*.ts', 'src/utilities/*.ts', 'src/utilities/codemirror/codemirror-input.ts'],
 	// The sibling files hold styles, markup and translations. They declare no
 	// element, so analysing them only pads the manifest.
 	exclude: [

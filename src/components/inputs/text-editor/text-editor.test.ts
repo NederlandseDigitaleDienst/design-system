@@ -74,6 +74,19 @@ describe('nldd-text-editor', () => {
 		cleanup(el2);
 	});
 
+	it('ziet een waarde die van buitenaf komt terwijl hij focus heeft niet als een bewerking bij blur', async () => {
+		const el2 = await withValue('tekst');
+		const view = (el2 as unknown as { view: { contentDOM: HTMLElement } }).view;
+		let changes = 0;
+		el2.addEventListener('change', () => { changes++; });
+		view.contentDOM.dispatchEvent(new FocusEvent('focus'));
+		(el2 as unknown as { value: string }).value = 'andere tekst';
+		await (el2 as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+		view.contentDOM.dispatchEvent(new FocusEvent('blur'));
+		expect(changes).toBe(0);
+		cleanup(el2);
+	});
+
 	it('meldt read-only en verplicht aan hulptechnologie, ook na een wijziging', async () => {
 		const el2 = await withValue('tekst');
 		const content = () => el2.shadowRoot!.querySelector('.cm-content')!;
