@@ -17,8 +17,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **`nldd-file-field` takes a dropped file.** A drop goes through the same input as a pick, `accept` and `multiple` hold for it, and a file dropped next to the field no longer makes the browser leave the page.
 - **`nldd-text-editor` checks tasks and highlights code.** With `syntax="hidden"` a task is a box you check with a click or Cmd/Ctrl+Enter, and a code block is highlighted in its language, with the language and a copy button on its first line, as in `nldd-code-viewer`.
+- **`nldd-file-field` takes a dropped file.** A drop goes through the same input as a pick, `accept` and `multiple` hold for it, and a file dropped next to the field no longer makes the browser leave the page.
 - **`nldd-avatar-group` fits its container.** Where there is no room for every avatar, it shows as many as fit and puts the rest behind "+N". The "+N" scales with the group and shows an ellipsis with the count in a tooltip where the number does not fit, and on a small screen the list behind it has a title bar with the name of the group and a close button.
 - **New icons**: `check-mark-square`, the checked sibling of `square`, and file icons for images: `file-gif`, `file-heic`, `file-jpg`, `file-png`, `file-svg`, `file-tiff` and `file-webp`.
 
