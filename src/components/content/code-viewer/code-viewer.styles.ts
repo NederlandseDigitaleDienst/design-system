@@ -117,7 +117,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) {
-		--_code-viewer-actions-area-padding: 0;
+		--_code-viewer-actions-area-padding: var(--primitives-space-0);
 	}
 
 	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) .code-viewer .cm-scroller .cm-content {

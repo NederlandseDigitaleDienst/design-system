@@ -33,6 +33,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **The copy button of `nldd-code-viewer` with `appearance="simple"` is no longer cut off at the bottom** with one or two lines of code. The viewer is at least as high as the button again; its minimum height was an invalid `calc()` in the simple appearance.
 - **A quote in `nldd-text-editor` with `syntax="hidden"` no longer shows a line along its bottom on iOS.** The bar on the left was an inset shadow with an offset, which iOS Safari draws with a hairline at the bottom of a line whose height is not a whole pixel. It is now a gradient, and takes no space as before.
 - **Line numbers in `nldd-code-viewer` and `nldd-code-editor` no longer run through the code.** The gutters stay in place when a long line scrolls sideways, but they were transparent, so the code showed through them. They now take the surface of the viewer or editor, with a thin divider on their right edge, drawn as a gradient for the same reason, that takes the green or red of an added or removed line in a diff. The divider takes no space, so the code stays where it was, and the + and − of a diff have room on both sides. The border around the viewer and the editor now lies over the content, so the gutters and the colored rows of a diff no longer cover it.
 - **The "+N" of `nldd-avatar-group` fits its disc at every size.** It had a fixed font size, so at size 16 the number ran past the disc, and with two or three digits the "+" fell under the avatar before it.

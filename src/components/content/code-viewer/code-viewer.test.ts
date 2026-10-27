@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
 import type { NLDDCodeViewer } from './code-viewer.js';
 import './code-viewer.js';
+import { loadTokens } from '../../../test-tokens.js';
 import { pairChangedLines, parseUnifiedDiff } from './code-viewer.diff.js';
 
 describe('nldd-code-viewer', () => {
@@ -705,5 +706,15 @@ describe('nldd-code-viewer diff', () => {
 		expect(root.querySelector('.cm-diff-added')).toBeNull();
 		expect(root.querySelector('.code-viewer__diff-summary')).toBeNull();
 		expect(root.querySelector('.cm-content')!.textContent).toContain('@@ -1,4 +1,5 @@');
+	});
+	it('maakt een simple viewer met kopieerknop minstens zo hoog als de knop', async () => {
+		const removeTokens = loadTokens();
+		el = await fixture<NLDDCodeViewer>('<nldd-code-viewer appearance="simple" language="javascript" code="const a = 1;"></nldd-code-viewer>');
+		await waitForUpdate(el);
+		await nextFrames();
+		const frame = el.shadowRoot!.querySelector('.code-viewer')!.getBoundingClientRect();
+		const button = el.shadowRoot!.querySelector('nldd-icon-button')!.getBoundingClientRect();
+		expect(frame.bottom).toBeGreaterThanOrEqual(button.bottom - 0.01);
+		removeTokens();
 	});
 });
