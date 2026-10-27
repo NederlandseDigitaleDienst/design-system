@@ -14,6 +14,15 @@ export default {
 	},
 };
 
+const EDITOR_VALUE = [
+	'Bespreek de **toegankelijkheid** met [@Anouk de Vries](user:1) en [@Bram Jansen](user:2).',
+	'De `WCAG 2.2`-criteria zijn *leidend*, zie de [richtlijn](https://www.w3.org/TR/WCAG22/).',
+	'',
+	'- Contrast op de knoppen verhogen',
+	'',
+	'> Let op: de deadline is volgende week.',
+].join('\n');
+
 const section = (title: string, content: unknown) => html`
 	<nldd-container gap="12">
 		<nldd-title
@@ -257,6 +266,19 @@ const overview = (scheme: 'light' | 'dark') => html`
 					</select>
 				</nldd-dropdown>
 				<nldd-text-field value="Ongeldige waarde" invalid accessible-label="Ongeldig"></nldd-text-field>
+			</nldd-container>
+		`)}
+
+		${section('Tekst', html`
+			<nldd-container gap="12" max-width="480px">
+				<nldd-text-editor
+					appearance="input-field"
+					accessible-label="Notitie"
+					.value=${EDITOR_VALUE}
+				></nldd-text-editor>
+				<nldd-rich-text>
+					<p>Bespreek dit met <a href="#" data-mention>Anouk de Vries</a> en <span data-mention>Bram Jansen</span>, zie de <a href="#">richtlijn</a>.</p>
+				</nldd-rich-text>
 			</nldd-container>
 		`)}
 	</nldd-container>
