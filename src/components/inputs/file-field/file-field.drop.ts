@@ -12,7 +12,7 @@
 export type DragState = 'none' | 'page' | 'over' | 'rejected';
 
 /** Why a drop is refused. */
-export type DropRejection = 'type' | 'count';
+export type DropRejection = 'type' | 'count' | 'folder';
 
 export interface DropTarget extends HTMLElement {
 	/** @internal */

@@ -134,6 +134,8 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.audio-file-lowercase': 'audio file',
 	'components.file-field.list-lowercase-text': '{items} or {last}',
 	'components.file-field.too-many-files-error-text': 'Drag one file',
+	'components.file-field.folder-error-text': 'Drag a file, not a folder',
+	'components.file-field.folder-multiple-error-text': 'Drag files, not a folder',
 	'components.file-field.file-count-text': '{count} files',
 	'components.file-field.file-chosen-text': '{name} chosen',
 	'components.file-field.clear-action': 'Clear selection',

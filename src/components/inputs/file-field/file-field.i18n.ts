@@ -18,6 +18,8 @@ export const nlddFileFieldTranslations = {
 	'components.file-field.audio-file-lowercase': 'geluidsbestand',
 	'components.file-field.list-lowercase-text': '{items} of {last}',
 	'components.file-field.too-many-files-error-text': 'Sleep één bestand',
+	'components.file-field.folder-error-text': 'Sleep een bestand, geen map',
+	'components.file-field.folder-multiple-error-text': 'Sleep bestanden, geen map',
 	'components.file-field.file-count-text': '{count} bestanden',
 	'components.file-field.file-chosen-text': '{name} gekozen',
 	'components.file-field.clear-action': 'Wis selectie',

@@ -223,6 +223,23 @@ describe('nldd-file-field', () => {
 			expect(browseText(el)).toBe('Elk bestand moet een PNG, JPG of WEBP zijn');
 		});
 
+		it('gives the field back after a few seconds, and keeps the message for a screen reader', async () => {
+			el = await fixture<NLDDFileField>('<nldd-file-field accept=".pdf"></nldd-file-field>');
+			await waitForUpdate(el);
+			vi.useFakeTimers();
+			try {
+				drag(el, 'drop', transfer(png('foto.png')));
+				await el.updateComplete;
+				expect(shownText(el)).toBe('Het bestand moet een PDF zijn');
+				vi.advanceTimersByTime(4000);
+				await el.updateComplete;
+				expect(shownText(el)).toBe('Bestand kiezen of sleep het hierheen');
+				expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Het bestand moet een PDF zijn');
+			} finally {
+				vi.useRealTimers();
+			}
+		});
+
 		it('refuses more than one file without multiple', async () => {
 			el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
 			await waitForUpdate(el);

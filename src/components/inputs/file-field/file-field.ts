@@ -16,11 +16,13 @@
  * so it fires the same `change` with the same detail and submits the same way as
  * a pick. `accept` and `multiple` hold for a drop too, which the native input
  * does not do: a drop that does not fit is refused as a whole, the previous
- * choice stays, and the field says why until the next action: "Sleep één
+ * choice stays, and the field says why for a few seconds: "Sleep één
  * bestand", or what `accept` takes, named from it ("Het bestand moet een PDF
  * zijn"; "Dit bestandstype past niet" where a type in it has no name). A
- * dropped folder is refused as well: it arrives as a file without a type that
- * cannot be read.
+ * dropped folder is refused as well ("Sleep een bestand, geen map"): it
+ * arrives as a file without a type that cannot be read, and only the drop
+ * tells it apart, not the drag. The message stays for a few seconds and then
+ * gives way to the field again.
  *
  * While files are dragged over the page, every field marks itself as a place
  * to put them, and the field under the pointer says it will take them (a field
@@ -82,6 +84,9 @@ import {
 import { textMeasurer, truncateMiddle } from './file-field.truncate.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+
+/** How long the message of a refused drop stays in the field. */
+const REJECTION_MS = 4000;
 
 /** The word for a family of types in `accept`, such as `image/*`. */
 const FAMILY_KEYS = {
@@ -162,13 +167,14 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	_nameTruncated = false;
 
 	private _resizeObserver?: ResizeObserver;
+	private _rejectionTimer?: ReturnType<typeof setTimeout>;
 	private _observedValue?: Element;
 
 	/** @internal What a screen reader hears after a drop that was taken. */
 	@state()
 	_announcement = '';
 
-	/** @internal Why the last drop was refused; stays until the next action. */
+	/** @internal Why the last drop was refused; shown for a few seconds. */
 	@state()
 	_rejection: DropRejection | null = null;
 
@@ -221,6 +227,11 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** @internal */
 	public _rejectionText(reason: DropRejection): string {
 		if (reason === 'count') return this._t('components.file-field.too-many-files-error-text');
+		if (reason === 'folder') {
+			return this.multiple
+				? this._t('components.file-field.folder-multiple-error-text')
+				: this._t('components.file-field.folder-error-text');
+		}
 		const names = acceptNames(this.accept);
 		if (!names) return this._t('components.file-field.wrong-file-type-error-text');
 		const named = names.map((name) => (typeof name === 'string'
@@ -259,6 +270,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		super.disconnectedCallback();
 		unwatchDrags(this);
 		this._resizeObserver?.disconnect();
+		clearTimeout(this._rejectionTimer);
 		this._observedValue = undefined;
 		this.removeEventListener('dragover', this._handleDragOver);
 		this.removeEventListener('drop', this._handleDrop);
@@ -350,7 +362,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	private _judge(transfer: DataTransfer, files?: File[]): DropRejection | null {
 		if (files) {
 			if (!this.multiple && files.length > 1) return 'count';
-			if (holdsFolder(transfer)) return 'type';
+			if (holdsFolder(transfer)) return 'folder';
 			return files.every((file) => fileMatches(this.accept, file)) ? null : 'type';
 		}
 		const items = Array.from(transfer.items).filter((item) => item.kind === 'file');
@@ -385,6 +397,15 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		const rejection = this._judge(e.dataTransfer, files);
 		if (rejection) {
 			this._rejection = rejection;
+			// Shown for a while, then the field reads as itself again: the message
+			// takes the place of "Bestand kiezen", and a field that kept it looked
+			// as if it no longer did anything. The status line keeps it for a
+			// screen reader.
+			clearTimeout(this._rejectionTimer);
+			this._rejectionTimer = setTimeout(() => {
+				this._announcement = this._rejectionText(rejection);
+				this._rejection = null;
+			}, REJECTION_MS);
 			return;
 		}
 		if (this._input) this._input.files = e.dataTransfer.files;
@@ -397,6 +418,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	};
 
 	private _clearRejection = (): void => {
+		clearTimeout(this._rejectionTimer);
 		this._rejection = null;
 		this._announcement = '';
 	};

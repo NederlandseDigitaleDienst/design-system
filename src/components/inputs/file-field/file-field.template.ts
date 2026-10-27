@@ -84,6 +84,7 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 		{ content: dragText, kind: 'drag', active: dragging && component._drag === 'page' },
 		{ content: dropText, kind: 'drop', active: dragging && component._drag === 'over' },
 		{ content: component._rejectionText('type'), kind: 'rejected', active: rejection === 'type' },
+		{ content: component._rejectionText('folder'), kind: 'rejected', active: rejection === 'folder' },
 	];
 	if (!component.multiple) {
 		variants.push({ content: component._rejectionText('count'), kind: 'rejected', active: rejection === 'count' });
@@ -158,6 +159,7 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 	const nameVariants: Variant[] = [
 		{ content: files.length === 1 ? renderName(component, files[0].name) : component._valueLabel(), active: !refused },
 		{ content: component._rejectionText('type'), kind: 'rejected', active: refused === 'type' },
+		{ content: component._rejectionText('folder'), kind: 'rejected', active: refused === 'folder' },
 	];
 	if (!component.multiple) {
 		nameVariants.push({ content: component._rejectionText('count'), kind: 'rejected', active: refused === 'count' });

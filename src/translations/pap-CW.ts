@@ -134,6 +134,8 @@ export const papCW: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.audio-file-lowercase': 'archivo di zonido',
 	'components.file-field.list-lowercase-text': '{items} òf {last}',
 	'components.file-field.too-many-files-error-text': 'Hala un archivo',
+	'components.file-field.folder-error-text': 'Hala un archivo, no un mapa',
+	'components.file-field.folder-multiple-error-text': 'Hala archivonan, no un mapa',
 	'components.file-field.file-count-text': '{count} archivo',
 	'components.file-field.file-chosen-text': '{name} skohé',
 	'components.file-field.clear-action': 'Limpia selekshon',
