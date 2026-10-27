@@ -57,13 +57,19 @@ function setState(button: HTMLElement, labels: CodeCopyLabels, state: 'idle' | '
 	button.nextElementSibling!.textContent = state === 'idle' ? '' : text;
 }
 
+/** The timer that ends "Gekopieerd", per button, so a button the editor
+ *  removes does not have its state set after it is gone. */
+const feedbackTimers = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
+
 class CopyButton extends WidgetType {
-	constructor(readonly lineFrom: number, readonly focusable: boolean) {
+	/** `label` is the text of the button when the widget is made, so a button
+	 *  whose text has changed is drawn again rather than kept. */
+	constructor(readonly lineFrom: number, readonly focusable: boolean, readonly label: string) {
 		super();
 	}
 
 	eq(other: CopyButton): boolean {
-		return other.lineFrom === this.lineFrom && other.focusable === this.focusable;
+		return other.lineFrom === this.lineFrom && other.focusable === this.focusable && other.label === this.label;
 	}
 
 	toDOM(view: EditorView): HTMLElement {
@@ -85,15 +91,14 @@ class CopyButton extends WidgetType {
 		wrap.className = 'cm-md-code-copy-wrap';
 		wrap.append(button, status);
 		setState(button, labels, 'idle');
-		let timer: ReturnType<typeof setTimeout> | undefined;
 		// Keep the caret where it is: a press on the button is not a place in the text.
 		button.addEventListener('mousedown', (event) => event.preventDefault());
 		button.addEventListener('click', async () => {
-			clearTimeout(timer);
+			clearTimeout(feedbackTimers.get(wrap));
 			try {
 				await navigator.clipboard.writeText(codeOf(view.state, view.state.doc.lineAt(view.posAtDOM(button)).from));
 				setState(button, labels, 'success');
-				timer = setTimeout(() => setState(button, labels, 'idle'), FEEDBACK_MS);
+				feedbackTimers.set(wrap, setTimeout(() => setState(button, labels, 'idle'), FEEDBACK_MS));
 			} catch {
 				// Stays until the reader moves on, as in nldd-code-viewer.
 				setState(button, labels, 'failure');
@@ -108,6 +113,10 @@ class CopyButton extends WidgetType {
 		return wrap;
 	}
 
+	destroy(dom: HTMLElement): void {
+		clearTimeout(feedbackTimers.get(dom));
+	}
+
 	// The button handles its own events; the editor leaves them alone.
 	ignoreEvent(): boolean {
 		return true;
@@ -118,13 +127,14 @@ function buildButtons(state: EditorState): DecorationSet {
 	if (!clipboardAvailable()) return Decoration.none;
 	const ranges: Range<Decoration>[] = [];
 	const focusable = state.readOnly;
+	const label = state.facet(codeCopyLabels).copy();
 	syntaxTree(state).iterate({
 		enter: (node) => {
 			if (node.name !== 'FencedCode') return undefined;
 			const line = state.doc.lineAt(node.from);
 			ranges.push(
 				head.range(line.from),
-				Decoration.widget({ widget: new CopyButton(line.from, focusable), side: 1 }).range(line.to),
+				Decoration.widget({ widget: new CopyButton(line.from, focusable, label), side: 1 }).range(line.to),
 			);
 			return false;
 		},
@@ -134,20 +144,15 @@ function buildButtons(state: EditorState): DecorationSet {
 
 const head = Decoration.line({ class: 'cm-md-code-head' });
 
+function clearFailures(_event: Event, view: EditorView): boolean {
+	const labels = view.state.facet(codeCopyLabels);
+	for (const button of view.dom.querySelectorAll<HTMLElement>('.cm-md-code-copy[data-state="failure"]')) setState(button, labels, 'idle');
+	return false;
+}
+
 /** In an editable editor the button has no focus, so a failure clears at the
  *  next press in the editor instead of on blur. */
-const clearFailure = EditorView.domEventHandlers({
-	mousedown(_event, view) {
-		const labels = view.state.facet(codeCopyLabels);
-		for (const button of view.dom.querySelectorAll<HTMLElement>('.cm-md-code-copy[data-state="failure"]')) setState(button, labels, 'idle');
-		return false;
-	},
-	keydown(_event, view) {
-		const labels = view.state.facet(codeCopyLabels);
-		for (const button of view.dom.querySelectorAll<HTMLElement>('.cm-md-code-copy[data-state="failure"]')) setState(button, labels, 'idle');
-		return false;
-	},
-});
+const clearFailure = EditorView.domEventHandlers({ mousedown: clearFailures, keydown: clearFailures });
 
 /** A copy button on the opening line of each code block. */
 export function codeCopy(labels: CodeCopyLabels): Extension {
