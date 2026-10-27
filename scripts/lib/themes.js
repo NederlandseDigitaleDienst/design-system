@@ -685,6 +685,9 @@ function categoryTokens(name) {
  * the default steps (red is the same as critical text, orange is brown in
  * light mode), a yellow theme near-black in light mode and `darkText` in dark
  * mode. A selected mention in a yellow theme takes the button, like the badge.
+ * Selected text in a yellow theme is lighter in both modes: at the step
+ * of the other themes a saturated yellow reads as mustard, and the text on it
+ * keeps far more than 4.5:1 either way.
  */
 function accentTextTokens(name, button) {
 	const theme = themeOf(name);
@@ -712,6 +715,7 @@ function accentTextTokens(name, button) {
 		[`${transparent}is-active-content-color`, value(850, 100)],
 		...['', 'is-hovered-', 'is-active-'].map((state) => [`${transparent}${state}content-secondary-color`, value(550, 0)]),
 		['--semantics-mentions-is-selected-background-color', both(button, (m) => accent(m.step))],
+		['--semantics-text-selection-background-color', pair(accent(75), accent(300))],
 		['--semantics-mentions-is-selected-content-color', both(button, (m, mode) => textColor(mode, m.text, 'accent'))],
 	];
 }

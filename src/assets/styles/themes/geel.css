@@ -74,6 +74,11 @@
 	--semantics-surfaces-accent-filled-highlight-border-color: light-dark(var(--primitives-color-accent-150), var(--primitives-color-accent-950));
 
 
+	/* ## Text */
+
+	--semantics-text-selection-background-color: light-dark(var(--primitives-color-accent-75), var(--primitives-color-accent-300));
+
+
 	/* ## Content */
 
 	--semantics-content-accent-color: light-dark(var(--primitives-color-neutral-925), var(--primitives-color-accent-900));
