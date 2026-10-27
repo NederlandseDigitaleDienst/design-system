@@ -154,6 +154,10 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	private _resizeObserver?: ResizeObserver;
 	private _observedValue?: Element;
 
+	/** @internal What a screen reader hears after a drop that was taken. */
+	@state()
+	_announcement = '';
+
 	/** @internal Why the last drop was refused; stays until the next action. */
 	@state()
 	_rejection: DropRejection | null = null;
@@ -186,14 +190,22 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/**
-	 * The change button sits where the chosen file is, so on its own it says
-	 * "change" without what; the field name is the part that tells.
+	 * The change button is where focus lands after a pick, so its name says for
+	 * which field and which file is chosen, as a native file input does. The
+	 * visible text comes first, so a voice command with it still finds the
+	 * button (WCAG 2.5.3).
 	 *
 	 * @internal
 	 */
 	public _changeAccessibleLabel(): string {
-		const change = this._t('components.file-field.to-change-action');
-		return this.accessibleLabel ? `${change}, ${this.accessibleLabel}` : '';
+		return [this._t('components.file-field.to-change-action'), this.accessibleLabel, this._valueLabel()]
+			.filter(Boolean)
+			.join(', ');
+	}
+
+	/** @internal The cross says which file it clears. */
+	public _clearAccessibleLabel(): string {
+		return `${this._t('components.file-field.clear-action')}, ${this._valueLabel()}`;
 	}
 
 	/** @internal */
@@ -294,7 +306,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** @internal */
 	public _handleChoose(): void {
-		this._rejection = null;
+		this._clearRejection();
 		this._input?.click();
 	}
 
@@ -329,7 +341,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** @internal Called by the shared window listeners in file-field.drop.ts. */
 	public _setDrag(state: DragState, transfer: DataTransfer | null): void {
 		if (this.disabled) state = 'none';
-		if (state !== 'none' && this._drag === 'none') this._rejection = null;
+		if (state !== 'none' && this._drag === 'none') this._clearRejection();
 		this._dragRejection = state === 'over' && transfer ? this._judge(transfer) : null;
 		this._drag = this._dragRejection ? 'rejected' : state;
 	}
@@ -355,15 +367,19 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		if (this._input) this._input.files = e.dataTransfer.files;
 		this._files = files;
 		this._rejection = null;
+		// A pick moves focus to the change button, which names the file; a drop
+		// moves nothing, so it is said.
+		this._announcement = this._t('components.file-field.file-chosen-text', { name: this._valueLabel() });
 		this._commit();
 	};
 
 	private _clearRejection = (): void => {
 		this._rejection = null;
+		this._announcement = '';
 	};
 
 	private _handleKeydown = (e: KeyboardEvent): void => {
-		if (e.key === 'Escape') this._rejection = null;
+		if (e.key === 'Escape') this._clearRejection();
 	};
 
 	/** @internal */

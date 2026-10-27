@@ -167,8 +167,63 @@ export const fileFieldStyles = css`
 		padding-left: calc(var(--_file-field-validation-icon-size) + var(--_file-field-validation-icon-area-padding-right));
 	}
 
-	:is(.file-field__browse, .file-field__replace) .file-field__value {
-		align-self: center;
+	.file-field__value.is-sentence {
+		padding-block: var(--primitives-space-8);
+		white-space: normal;
+		overflow-wrap: anywhere;
+		text-wrap: balance;
+	}
+
+	.file-field__layers {
+		display: grid;
+		min-width: 0;
+		flex-grow: 1;
+		align-self: stretch;
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.file-field__row {
+		display: flex;
+		min-width: 0;
+		align-items: center;
+	}
+
+	.file-field__row,
+	.file-field__replace {
+		grid-area: 1 / 1;
+	}
+
+	.file-field__row:not(.is-active),
+	.file-field__replace:not(.is-active) {
+		visibility: hidden;
+	}
+
+	.file-field__stack {
+		display: grid;
+		min-width: 0;
+		grid-template-columns: minmax(0, 1fr);
+		align-items: center;
+	}
+
+	.file-field__stack-item {
+		grid-area: 1 / 1;
+		min-width: 0;
+	}
+
+	.file-field__stack-item:not(.is-active) {
+		visibility: hidden;
+	}
+
+	.file-field__stack-item.is-rejected {
+		white-space: normal;
+		overflow-wrap: anywhere;
+		text-wrap: balance;
+	}
+
+	@media (hover: none) {
+		.file-field__stack-item:is(.is-drag, .is-drop, .is-rejected) {
+			display: none;
+		}
 	}
 
 	.file-field__browse-action {
@@ -184,10 +239,6 @@ export const fileFieldStyles = css`
 		color: var(--semantics-content-color);
 	}
 
-	.file-field.is-drag-over .file-field__file-icon {
-		display: none;
-	}
-
 	.file-field__value {
 		box-sizing: border-box;
 		min-width: 0;
@@ -201,18 +252,16 @@ export const fileFieldStyles = css`
 		overflow: hidden;
 	}
 
-	.file-field__value.is-drag {
-		--_file-field-text-font: var(--_file-field-browse-action-font);
+	.file-field__stack-item:is(.is-drag, .is-drop, .is-rejected) {
+		font: var(--_file-field-browse-action-font);
 	}
 
-	.file-field__value.is-rejected {
-		--_file-field-value-color: var(--_file-field-rejected-color);
-		--_file-field-text-font: var(--_file-field-browse-action-font);
+	.file-field__stack-item.is-drop {
+		color: var(--_file-field-browse-action-color);
 	}
 
-	.file-field__value.is-drop {
-		--_file-field-value-color: var(--_file-field-browse-action-color);
-		--_file-field-text-font: var(--_file-field-browse-action-font);
+	.file-field__stack-item.is-rejected {
+		color: var(--_file-field-rejected-color);
 	}
 
 	.file-field__hint {
@@ -220,7 +269,6 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__value.has-file {
-		display: flex;
 		padding-left: var(--primitives-space-8);
 	}
 
@@ -266,7 +314,7 @@ export const fileFieldStyles = css`
 		align-items: center;
 	}
 
-	.file-field__actions:not(:nth-last-child(2)) {
+	.file-field__actions:not(:last-child) {
 		padding-right: var(--primitives-space-0);
 	}
 
@@ -311,6 +359,10 @@ export const fileFieldStyles = css`
 
 		.file-field.is-drag-over::before {
 			border-color: Highlight;
+		}
+
+		.file-field.is-drag-rejected::before {
+			border-style: dashed;
 		}
 	}
 `;

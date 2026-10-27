@@ -133,6 +133,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.list-or-text': 'of',
 	'components.file-field.too-many-files-error-text': 'Sleep ien bestân',
 	'components.file-field.file-count-text': '{count} bestannen',
+	'components.file-field.file-chosen-text': '{name} keazen',
 	'components.file-field.clear-action': 'Seleksje wiskje',
 	'components.file-field.required-error-text': 'Kies in bestân',
 	'components.number-field.decrement-action': 'Ferleegje',

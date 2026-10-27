@@ -19,9 +19,16 @@ const txt = (name: string) => new File(['x'], name, { type: 'text/plain' });
 const pdf = (name: string) => new File(['x'], name, { type: 'application/pdf' });
 const png = (name: string) => new File(['x'], name, { type: 'image/png' });
 
-const browseText = (el: NLDDFileField) => el.shadowRoot!.querySelector('.file-field__browse')!.textContent!.replace(/\s+/g, ' ').trim();
+/** The text the field shows: of all the texts laid over each other in one
+ *  place, the active one, in the active layer. */
+const shownText = (el: NLDDFileField) => {
+	const root = el.shadowRoot!;
+	const scope = root.querySelector('.file-field__browse') ?? root.querySelector('.file-field__layers > .is-active')!;
+	return scope.querySelector('.file-field__stack-item.is-active')!.textContent!.replace(/\s+/g, ' ').trim();
+};
+const browseText = shownText;
 const fullName = (el: NLDDFileField) => el.shadowRoot!.querySelector('.file-field__full-name')!.textContent;
-const valueText = (el: NLDDFileField) => el.shadowRoot!.querySelector('.file-field__value')!.textContent!.replace(/\s+/g, ' ').trim();
+const valueText = shownText;
 
 function transfer(...files: File[]): DataTransfer {
 	const data = new DataTransfer();
@@ -170,7 +177,8 @@ describe('nldd-file-field', () => {
 		const buttons = el.shadowRoot!.querySelectorAll('nldd-button');
 		expect(buttons.length).toBe(1);
 		expect(buttons[0].getAttribute('text')).toBe('Wijzigen');
-		expect(buttons[0].getAttribute('accessible-label')).toBe('Wijzigen, Bijlage');
+		expect(buttons[0].getAttribute('accessible-label')).toBe('Wijzigen, Bijlage, rapport.pdf');
+		expect(el.shadowRoot!.querySelector('nldd-icon-button')!.getAttribute('accessible-label')).toBe('Wis selectie, rapport.pdf');
 	});
 
 	describe('drag and drop', () => {
@@ -186,6 +194,7 @@ describe('nldd-file-field', () => {
 			expect(el.files.map((f) => f.name)).toEqual(['rapport.pdf']);
 			expect(el.shadowRoot!.querySelector('input')!.files!.length).toBe(1);
 			expect(el.formValue()).toBeInstanceOf(File);
+			expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('rapport.pdf gekozen');
 		});
 
 		it('refuses a drop that accept rules out, keeps the previous file and says why', async () => {
@@ -266,18 +275,19 @@ describe('nldd-file-field', () => {
 			await waitForUpdate(el);
 			choose(el, pdf('rapport.pdf'));
 			await waitForUpdate(el);
-			const replaceText = () => el.shadowRoot!.querySelector('.file-field__replace')!.textContent!.trim();
+			const replaceText = () => shownText(el);
+			const rowActive = () => el.shadowRoot!.querySelector('.file-field__row')!.classList.contains('is-active');
 			drag(document.body, 'dragover', transfer(pdf('nieuw.pdf')));
 			await waitForUpdate(el);
 			expect(replaceText()).toBe('Sleep hierheen om te vervangen');
-			expect(el.shadowRoot!.querySelector('.file-field__actions')).toBeNull();
+			expect(rowActive()).toBe(false);
 			drag(el, 'dragover', transfer(pdf('nieuw.pdf')));
 			await waitForUpdate(el);
 			expect(replaceText()).toBe('Zet hier neer om te vervangen');
 			drag(el, 'drop', transfer(pdf('nieuw.pdf')));
 			await waitForUpdate(el);
 			expect(fullName(el)).toBe('nieuw.pdf');
-			expect(el.shadowRoot!.querySelector('.file-field__actions')).not.toBeNull();
+			expect(rowActive()).toBe(true);
 		});
 
 		it('leaves a drop alone that an editable field takes', async () => {
@@ -334,5 +344,21 @@ describe('nldd-file-field', () => {
 			expect(tooltip(el).getAttribute('timing')).toBe('never');
 			expect(shown(el)).toBe('rapport.pdf');
 		});
+	});
+
+	it('keeps its height when the text changes, however narrow it is', async () => {
+		const unload = loadTokens();
+		el = await fixture<NLDDFileField>('<nldd-file-field accept=".png,.jpg,image/webp" style="width: 160px"></nldd-file-field>');
+		await waitForUpdate(el);
+		const height = () => el.getBoundingClientRect().height;
+		const resting = height();
+		drag(document.body, 'dragover', transfer(png('foto.png')));
+		await waitForUpdate(el);
+		expect(height()).toBe(resting);
+		drag(el, 'dragover', transfer(pdf('rapport.pdf')));
+		await waitForUpdate(el);
+		expect(shownText(el)).toBe('Het bestand moet een PNG, JPG of WEBP zijn');
+		expect(height()).toBe(resting);
+		unload();
 	});
 });

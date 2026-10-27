@@ -19,6 +19,7 @@ export const nlddFileFieldTranslations = {
 	'components.file-field.list-or-text': 'of',
 	'components.file-field.too-many-files-error-text': 'Sleep één bestand',
 	'components.file-field.file-count-text': '{count} bestanden',
+	'components.file-field.file-chosen-text': '{name} gekozen',
 	'components.file-field.clear-action': 'Wis selectie',
 	'components.file-field.required-error-text': 'Kies een bestand',
 };

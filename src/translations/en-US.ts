@@ -135,6 +135,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.list-or-text': 'or',
 	'components.file-field.too-many-files-error-text': 'Drag one file',
 	'components.file-field.file-count-text': '{count} files',
+	'components.file-field.file-chosen-text': '{name} chosen',
 	'components.file-field.clear-action': 'Clear selection',
 	'components.file-field.required-error-text': 'Choose a file',
 	'components.number-field.decrement-action': 'Decrease',

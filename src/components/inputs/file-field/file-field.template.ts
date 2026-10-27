@@ -48,39 +48,76 @@ function renderValidationIcon(component: NLDDFileField): TemplateResult | typeof
 	`;
 }
 
+type Kind = 'drag' | 'drop' | 'rejected';
+
+interface Variant {
+	content: TemplateResult | string;
+	active: boolean;
+	kind?: Kind;
+}
+
+/**
+ * Every text a place in the field can show, laid over each other in one grid
+ * cell with only the active one visible. The place is as tall as the longest of
+ * them all the time, so the field keeps its height when the text changes: a
+ * sentence that wraps in a narrow or zoomed field does not move the target
+ * under a pointer that is dragging a file. The texts that only a drag brings
+ * (`kind`) are left out on a device without hover, where nothing is dragged.
+ */
+function renderStack(variants: Variant[]): TemplateResult {
+	return html`
+		<span class="file-field__stack">${variants.map((variant) => html`
+			<span class=${classMap({
+				'file-field__stack-item': true,
+				'is-active': variant.active,
+				[`is-${variant.kind}`]: !!variant.kind,
+			})}>${variant.content}</span>
+		`)}</span>
+	`;
+}
+
+/** The texts of a drag and of a refused drop, one active at most. */
+function dragVariants(component: NLDDFileField, dragText: string, dropText: string): Variant[] {
+	const rejection = component._dragRejection ?? component._rejection;
+	const dragging = !rejection && component._drag !== 'none';
+	const variants: Variant[] = [
+		{ content: dragText, kind: 'drag', active: dragging && component._drag === 'page' },
+		{ content: dropText, kind: 'drop', active: dragging && component._drag === 'over' },
+		{ content: component._rejectionText('type'), kind: 'rejected', active: rejection === 'type' },
+	];
+	if (!component.multiple) {
+		variants.push({ content: component._rejectionText('count'), kind: 'rejected', active: rejection === 'count' });
+	}
+	return variants;
+}
+
 /** The empty field is one button over the whole surface, read as one sentence:
  *  "Bestand kiezen of sleep het hierheen". The validation icon sits inside it,
  *  so a press on the icon opens the dialog too. */
 function renderBrowse(component: NLDDFileField): TemplateResult {
-	const rejection = component._dragRejection ?? component._rejection;
-	let content: TemplateResult;
-	if (component._drag === 'over') {
-		content = renderMessage(component.multiple
-			? component._t('components.file-field.drop-here-multiple-text')
-			: component._t('components.file-field.drop-here-text'), 'drop');
-	} else if (rejection) {
-		content = renderMessage(component._rejectionText(rejection), 'rejected');
-	} else if (component._drag === 'page') {
-		content = renderMessage(component.multiple
+	const drags = dragVariants(
+		component,
+		component.multiple
 			? component._t('components.file-field.drag-here-multiple-text')
-			: component._t('components.file-field.drag-here-text'), 'drag');
-	} else {
-		content = html`<span class="file-field__value"><span class="file-field__browse-action">${component._chooseLabel()}</span> <span class="file-field__hint">${component.multiple
-			? component._t('components.file-field.drop-hint-multiple-text')
-			: component._t('components.file-field.drop-hint-text')}</span></span>`;
-	}
+			: component._t('components.file-field.drag-here-text'),
+		component.multiple
+			? component._t('components.file-field.drop-here-multiple-text')
+			: component._t('components.file-field.drop-here-text'),
+	);
+	const sentence = html`<span class="file-field__browse-action">${component._chooseLabel()}</span> <span class="file-field__hint">${component.multiple
+		? component._t('components.file-field.drop-hint-multiple-text')
+		: component._t('components.file-field.drop-hint-text')}</span>`;
 	return html`
 		<button class="file-field__browse"
 			type="button"
 			aria-label=${component._chooseAccessibleLabel() || component._chooseLabel()}
 			?disabled=${component.disabled}
 			@click=${component._handleChoose}
-		>${content}${renderValidationIcon(component)}</button>
+		><span class="file-field__value is-sentence">${renderStack([
+			{ content: sentence, active: !drags.some((variant) => variant.active) },
+			...drags,
+		])}</span>${renderValidationIcon(component)}</button>
 	`;
-}
-
-function renderMessage(text: string, kind?: 'drag' | 'drop' | 'rejected'): TemplateResult {
-	return html`<span class=${classMap({ 'file-field__value': true, [`is-${kind}`]: !!kind })}>${text}</span>`;
 }
 
 /** A name as it fits: cut in the middle once measured, before that cut by CSS
@@ -101,37 +138,66 @@ function renderName(component: NLDDFileField, name: string): TemplateResult {
 	`;
 }
 
-/** A field with a file while files are dragged: one sentence in the middle, as
- *  in an empty field, saying a drop replaces what is there. The buttons go,
- *  since nothing can be pressed while dragging. */
-function renderReplace(component: NLDDFileField): TemplateResult {
-	let content: TemplateResult;
-	if (component._dragRejection) {
-		content = renderMessage(component._rejectionText(component._dragRejection), 'rejected');
-	} else if (component._drag === 'over') {
-		content = renderMessage(component._t('components.file-field.replace-drop-text'), 'drop');
-	} else {
-		content = renderMessage(component._t('components.file-field.replace-drag-text'), 'drag');
-	}
-	return html`<div class="file-field__replace">${content}${renderValidationIcon(component)}</div>`;
-}
-
-function renderValue(component: NLDDFileField): TemplateResult {
+/**
+ * A field with a file: the row with its name and buttons, and over it, in the
+ * same place, the sentences of a drag, saying a drop replaces what is there.
+ * While files are dragged the row gives way to them; nothing can be pressed
+ * then. A drop that was refused says why in place of the name, with the
+ * buttons still there.
+ */
+function renderChosen(component: NLDDFileField): TemplateResult {
 	const files = component.files;
-	const rejection = component._dragRejection ?? component._rejection;
-	if (rejection) return renderMessage(component._rejectionText(rejection), 'rejected');
+	const buttonSize = component.size === 'sm' ? 'xs' : 'sm';
+	const dragging = component._drag !== 'none';
+	const refused = component._rejection;
+	const drags = dragVariants(
+		component,
+		component._t('components.file-field.replace-drag-text'),
+		component._t('components.file-field.replace-drop-text'),
+	).map((variant) => ({ ...variant, active: variant.active && dragging }));
+	const nameVariants: Variant[] = [
+		{ content: files.length === 1 ? renderName(component, files[0].name) : component._valueLabel(), active: !refused },
+		{ content: component._rejectionText('type'), kind: 'rejected', active: refused === 'type' },
+	];
+	if (!component.multiple) {
+		nameVariants.push({ content: component._rejectionText('count'), kind: 'rejected', active: refused === 'count' });
+	}
 	return html`
-		<nldd-icon class="file-field__file-icon" icon=${fileIcon(files)} aria-hidden="true"></nldd-icon>
-		<span class="file-field__value has-file">
-			${files.length === 1 ? renderName(component, files[0].name) : component._valueLabel()}
-		</span>
+		<div class="file-field__layers">
+			<div class=${classMap({ 'file-field__row': true, 'is-active': !dragging })}>
+				<nldd-icon class="file-field__file-icon" icon=${fileIcon(files)} aria-hidden="true"></nldd-icon>
+				<span class="file-field__value has-file">${renderStack(nameVariants)}</span>
+				<div class="file-field__actions">
+					<nldd-button
+						appearance="neutral-tinted"
+						size=${buttonSize}
+						text=${component._t('components.file-field.to-change-action')}
+						accessible-label=${component._changeAccessibleLabel() || nothing}
+						?disabled=${component.disabled}
+						@click=${component._handleChoose}
+					></nldd-button>
+					<nldd-icon-button
+						appearance="neutral-transparent"
+						size=${buttonSize}
+						icon="dismiss"
+						text=${component._t('components.file-field.clear-action')}
+						accessible-label=${component._clearAccessibleLabel()}
+						?disabled=${component.disabled}
+						@click=${component._handleClear}
+					></nldd-icon-button>
+				</div>
+				${renderValidationIcon(component)}
+			</div>
+			<div class=${classMap({ 'file-field__replace': true, 'is-active': dragging })}>
+				<span class="file-field__value is-sentence">${renderStack(drags)}</span>
+				${renderValidationIcon(component)}
+			</div>
+		</div>
 	`;
 }
 
 export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
-	const buttonSize = component.size === 'sm' ? 'xs' : 'sm';
 	const hasFiles = component.files.length > 0;
-	const dragging = component._drag !== 'none';
 
 	return html`
 		<div class=${classMap({
@@ -149,31 +215,10 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 				aria-label=${component.accessibleLabel || nothing}
 				@change=${component._handleInputChange}
 			>
-			${!hasFiles ? renderBrowse(component) : dragging ? renderReplace(component) : renderValue(component)}
-			${hasFiles && !dragging ? html`
-				<div class="file-field__actions">
-					<nldd-button
-						appearance="neutral-tinted"
-						size=${buttonSize}
-						text=${component._t('components.file-field.to-change-action')}
-						accessible-label=${component._changeAccessibleLabel() || nothing}
-						?disabled=${component.disabled}
-						@click=${component._handleChoose}
-					></nldd-button>
-					<nldd-icon-button
-						appearance="neutral-transparent"
-						size=${buttonSize}
-						icon="dismiss"
-						text=${component._t('components.file-field.clear-action')}
-						?disabled=${component.disabled}
-						@click=${component._handleClear}
-					></nldd-icon-button>
-				</div>
-			` : nothing}
-			${hasFiles && !dragging ? renderValidationIcon(component) : nothing}
+			${hasFiles ? renderChosen(component) : renderBrowse(component)}
 			<span class="file-field__status" role="status">${component._rejection
 				? component._rejectionText(component._rejection)
-				: ''}</span>
+				: component._announcement}</span>
 		</div>
 	`;
 }
