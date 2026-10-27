@@ -11,8 +11,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
-- **`nldd-text-editor` checks tasks and highlights code.** With `syntax="hidden"` a task is a box you check with a click or Cmd/Ctrl+Enter, and a code block is highlighted in its language, with the language and a copy button on its first line, as in `nldd-code-viewer`.
-- **`nldd-file-field` takes a dropped file.** A drop goes through the same input as a pick, `accept` and `multiple` hold for it, and a file dropped next to the field no longer makes the browser leave the page.
+- **`nldd-text-editor` checks tasks and highlights code.** With `syntax="hidden"` a task is a box you check with a click or Cmd/Ctrl+Enter, and a code block is highlighted in its language, with the language and a copy button on its first line, as in `nldd-code-viewer`. Mentions stand out in dark mode, and a selection no longer runs over the border.
+- **`nldd-file-field` has a fresh design and takes a dropped file.** Empty, the whole field is one button that reads "Bestand kiezen of sleep het hierheen". A chosen file shows with the icon of its format and its name cut in the middle. A drop goes through the same input as a pick, `accept` and `multiple` hold for it, and a file dropped next to the field no longer makes the browser leave the page.
 - **`nldd-avatar-group` fits its container.** Where there is no room for every avatar, it shows as many as fit and puts the rest behind "+N". The "+N" scales with the group and shows an ellipsis with the count in a tooltip where the number does not fit, and on a small screen the list behind it has a title bar with the name of the group and a close button.
 - **New icons**: `check-mark-square`, the checked sibling of `square`, and file icons for images: `file-gif`, `file-heic`, `file-jpg`, `file-png`, `file-svg`, `file-tiff` and `file-webp`.
 
@@ -49,6 +49,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A selection in `nldd-text-editor` stops at the text and no longer covers the border.** The border of the input-field appearance was drawn under the content, so a selection over several lines ran over it on the right. It now lies over the content, as in `nldd-code-viewer` and `nldd-code-editor`, and each line of a selection stops where the text does, short of the padding.
 - **What a component moves out of its place keeps the color scheme and language of that place.** A submenu on a small screen, the overflow menus of `nldd-menu-bar` and `nldd-document-tab-bar`, the menu sheet of `nldd-top-navigation-bar`, the description of `nldd-tooltip` and an `nldd-notification` that joins the shared area all live in `<body>` while they show, and took its color scheme and language: a submenu in a dark part of the page turned light, and a screen reader read an English menu with Dutch pronunciation. They now carry the `color-scheme` and `lang` of where they came from. A `lang` or `color-scheme` you set on the element yourself stays.
 - **The copy button of `nldd-code-viewer` with `appearance="simple"` is no longer cut off at the bottom** with one or two lines of code. The viewer is at least as high as the button again; its minimum height was an invalid `calc()` in the simple appearance.
 - **A quote in `nldd-text-editor` with `syntax="hidden"` no longer shows a line along its bottom on iOS.** The bar on the left was an inset shadow with an offset, which iOS Safari draws with a hairline at the bottom of a line whose height is not a whole pixel. It is now a gradient, and takes no space as before.
