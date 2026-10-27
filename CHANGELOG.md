@@ -9,6 +9,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.13.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.12.0...v0.13.0) (2026-10-27)
+
 ### Highlights
 
 - **`nldd-text-editor` checks tasks and highlights code.** With `syntax="hidden"` a task is a box you check with a click or Cmd/Ctrl+Enter, and a code block is highlighted in its language, with the language and a copy button on its first line, as in `nldd-code-viewer`. Mentions stand out in dark mode, and a selection no longer runs over the border.
