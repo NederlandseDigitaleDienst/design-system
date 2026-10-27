@@ -39,7 +39,9 @@ export function carryContext(element: HTMLElement, origin: Element | null): void
 		const scheme = getComputedStyle(origin).colorScheme;
 		if (scheme && scheme !== 'normal') {
 			element.style.colorScheme = scheme;
-			next.scheme = scheme;
+			// What the element reports back, not what was written: the two can be
+			// serialized differently, and the next call compares against this.
+			next.scheme = element.style.colorScheme;
 		} else {
 			if (previous.scheme) element.style.removeProperty('color-scheme');
 			next.scheme = null;

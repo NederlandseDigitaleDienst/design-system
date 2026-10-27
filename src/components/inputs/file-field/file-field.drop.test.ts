@@ -20,6 +20,13 @@ describe('file-field drop', () => {
 		expect(fileMatches('.pdf', png)).toBe(false);
 	});
 
+	it('goes by the extension for a file without a type, as the dialog does', () => {
+		const heic = new File(['x'], 'foto.heic', { type: '' });
+		expect(fileMatches('image/*', heic)).toBe(true);
+		expect(fileMatches('image/heic', heic)).toBe(true);
+		expect(fileMatches('application/pdf', heic)).toBe(false);
+	});
+
 	it('rules a dragged type out only when it is sure', () => {
 		expect(typeRuledOut('.pdf', 'image/png')).toBe(true);
 		expect(typeRuledOut('.pdf', '')).toBe(false);

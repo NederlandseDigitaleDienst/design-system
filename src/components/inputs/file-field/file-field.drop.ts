@@ -93,7 +93,9 @@ export function fileMatches(accept: string, file: File): boolean {
 	const list = tokens(accept);
 	if (list.length === 0) return true;
 	const name = file.name.toLowerCase();
-	const type = file.type.toLowerCase();
+	// Some platforms give HEIC and other less common formats no type, where the
+	// file dialog still goes by the extension; so does this.
+	const type = file.type.toLowerCase() || EXTENSION_TYPES[name.slice(name.lastIndexOf('.') + 1)]?.[0] || '';
 	return list.some((token) => (token.startsWith('.') ? name.endsWith(token) : typeMatches(token, type)));
 }
 

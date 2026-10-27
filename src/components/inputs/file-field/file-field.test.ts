@@ -290,6 +290,16 @@ describe('nldd-file-field', () => {
 			expect(rowActive()).toBe(true);
 		});
 
+		it('takes a dragover on its inner elements before the window refuses it', async () => {
+			el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
+			await waitForUpdate(el);
+			const inner = el.shadowRoot!.querySelector('.file-field__sentence')!;
+			const over = drag(inner, 'dragover', transfer(pdf('rapport.pdf')));
+			await waitForUpdate(el);
+			expect(over.defaultPrevented).toBe(true);
+			expect(el.shadowRoot!.querySelector('.file-field')!.classList.contains('is-drag-over')).toBe(true);
+		});
+
 		it('leaves a drop alone that an editable field takes', async () => {
 			el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
 			await waitForUpdate(el);

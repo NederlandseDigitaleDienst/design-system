@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './text-editor.js';
+import { toggleTasks } from './text-editor.tasks.js';
 
 type View = {
 	focus(): void;
@@ -88,6 +89,14 @@ describe('nldd-text-editor – taken', () => {
 		expect(el.value).toBe('- [x] Een\n- [x] Twee\n- [ ] Drie');
 		modEnter(el);
 		expect(el.value).toBe('- [ ] Een\n- [ ] Twee\n- [ ] Drie');
+	});
+
+	it('laat Mod-Enter door aan andere bindingen als er op de geselecteerde regels geen taak staat', async () => {
+		el = await editor('Gewone tekst\n- Geen taak');
+		el.view.focus();
+		el.view.dispatch({ selection: { anchor: 0, head: el.view.state.doc.length } });
+		expect(toggleTasks(el.view as unknown as Parameters<typeof toggleTasks>[0])).toBe(false);
+		expect(el.value).toBe('Gewone tekst\n- Geen taak');
 	});
 
 	it('laat een vakje met rust in een editor die alleen-lezen is', async () => {
