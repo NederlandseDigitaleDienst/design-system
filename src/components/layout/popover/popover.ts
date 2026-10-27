@@ -22,6 +22,11 @@
  * For a custom focus target inside the popover, put `autofocus` on the child you
  * want. Without it the popover host itself takes focus.
  *
+ * On sm the popover is a bottom sheet that closes with Escape or a tap outside
+ * it. Where that is not enough, give its content a title bar of its own, as in a
+ * sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The
+ * popover catches the dismiss of that bar and closes. It draws no bar itself.
+ *
  * @element nldd-popover
  *
  * @attr {string} width - Width as a CSS length (default: 320px). A content-based size (`fit-content`, `min-content`, `max-content`, `auto`) is refused: the popover is an inline-size container so slotted components can adapt to it, and its width cannot then come from that same content. Such a value is ignored, with a warning in DEV.
@@ -61,6 +66,7 @@ import { nlddPopoverTranslations, type NLDDPopoverTranslations } from './popover
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
+import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -140,6 +146,7 @@ export class NLDDPopover extends LitElement {
 		this.addEventListener('beforetoggle', this._handleBeforeToggle);
 		this.addEventListener('toggle', this._handleToggle);
 		this.addEventListener('keydown', this._handleKeydown);
+		this.addEventListener('dismiss', this._handleDismiss);
 		document.addEventListener('pointerdown', this._handleDocumentPointerdown, true);
 		document.addEventListener('pointercancel', this._handlePointerCancel, true);
 		document.addEventListener('click', this._handleDocumentClickCapture, true);
@@ -164,6 +171,7 @@ export class NLDDPopover extends LitElement {
 		this.removeEventListener('beforetoggle', this._handleBeforeToggle);
 		this.removeEventListener('toggle', this._handleToggle);
 		this.removeEventListener('keydown', this._handleKeydown);
+		this.removeEventListener('dismiss', this._handleDismiss);
 		document.removeEventListener('pointerdown', this._handleDocumentPointerdown, true);
 		document.removeEventListener('pointercancel', this._handlePointerCancel, true);
 		document.removeEventListener('click', this._handleDocumentClickCapture, true);
@@ -277,7 +285,16 @@ export class NLDDPopover extends LitElement {
 		console.warn(`<nldd-popover>: No accessible-label provided. Screen readers will announce this popover as "${this._t('components.popover.accessible-label')}". Set accessible-label to a unique, descriptive name.`);
 	}
 
-	hide(): void {
+	private _handleDismiss = (e: Event): void => {
+		// Only a title bar's dismiss closes the popover, not that of a token or
+		// banner inside it. See nldd-sheet.
+		if (isDismissFromTitleBar(e)) {
+			e.stopPropagation();
+			this.hide();
+		}
+	};
+
+		hide(): void {
 		if (!this._isOpen) return;
 		(this as HTMLElement).hidePopover();
 	}

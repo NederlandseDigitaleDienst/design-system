@@ -2,7 +2,7 @@
  * True when a bubbling `dismiss` event originates from an `nldd-top-title-bar`'s
  * close button.
  *
- * Overlay containers (`nldd-sheet`, `nldd-window`) listen for bubbling `dismiss`
+ * Overlay containers (`nldd-sheet`, `nldd-window`, `nldd-popover`) listen for bubbling `dismiss`
  * events to close themselves. But nested components fire their own `dismiss` for
  * their own element — an `nldd-token`'s remove button, an `nldd-banner`, an
  * `nldd-document-tab-bar` — and those must NOT close the container. Only the
