@@ -17,9 +17,9 @@ export const codeEditorStyles = css`
 		--_code-editor-gutter-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		--_code-editor-gutter-border-width: var(--semantics-dividers-thickness);
 		--_code-editor-gutter-border-color: var(--semantics-dividers-color);
-		--_code-editor-frame-z-index: 1;
-		--_code-editor-border-color: transparent;
-		--_code-editor-border-shadow: none;
+		--_code-editor-input-field-border-z-index: 1;
+		--_code-editor-input-field-border-color: transparent;
+		--_code-editor-input-field-border-shadow: none;
 		--_code-editor-padding-block: 0px;
 		--_code-editor-padding-inline: 0px;
 		--_code-editor-content-color: var(--semantics-content-color);
@@ -56,8 +56,8 @@ export const codeEditorStyles = css`
 		   surface + border + control padding, not the tinted surface. */
 		--_code-editor-background-color: var(--semantics-input-fields-background-color);
 		--_code-editor-gutter-background-color: var(--_code-editor-background-color);
-		--_code-editor-border-color: var(--semantics-input-fields-border-color);
-		--_code-editor-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_code-editor-border-color);
+		--_code-editor-input-field-border-color: var(--semantics-input-fields-border-color);
+		--_code-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_code-editor-input-field-border-color);
 		--_code-editor-padding-block: var(--semantics-controls-md-inline-padding);
 		--_code-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 	}
@@ -86,9 +86,9 @@ export const codeEditorStyles = css`
 		content: '';
 		position: absolute;
 		inset: 0;
-		z-index: var(--_code-editor-frame-z-index);
+		z-index: var(--_code-editor-input-field-border-z-index);
 		border-radius: inherit;
-		box-shadow: var(--_code-editor-border-shadow);
+		box-shadow: var(--_code-editor-input-field-border-shadow);
 		pointer-events: none;
 	}
 

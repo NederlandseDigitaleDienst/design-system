@@ -12,9 +12,9 @@ export const codeViewerStyles = css`
 	:host {
 		--_code-viewer-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_code-viewer-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_code-viewer-border-width: var(--semantics-surfaces-highlight-border-width);
-		--_code-viewer-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
-		--_code-viewer-border-shadow: inset 0 0 0 var(--_code-viewer-border-width) var(--_code-viewer-border-color);
+		--_code-viewer-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_code-viewer-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_code-viewer-highlight-border-shadow: inset 0 0 0 var(--_code-viewer-highlight-border-width) var(--_code-viewer-highlight-border-color);
 		--_code-viewer-block-padding: var(--primitives-space-16);
 		--_code-viewer-inline-padding: var(--primitives-space-16);
 		--_code-viewer-content-color: var(--semantics-content-color);
@@ -22,7 +22,7 @@ export const codeViewerStyles = css`
 		--_code-viewer-actions-area-padding: var(--primitives-space-8);
 		--_code-viewer-actions-area-size: calc(var(--semantics-controls-md-min-size) + var(--_code-viewer-actions-area-padding) * 2);
 		--_code-viewer-actions-z-index: 1;
-		--_code-viewer-frame-z-index: 1;
+		--_code-viewer-highlight-border-z-index: 1;
 		--_code-viewer-max-height: none;
 		--_code-viewer-diff-added-background-color: light-dark(var(--primitives-color-success-100), var(--primitives-color-success-200));
 		--_code-viewer-diff-added-word-background-color: light-dark(var(--primitives-color-success-250), var(--primitives-color-success-450));
@@ -58,13 +58,13 @@ export const codeViewerStyles = css`
 
 	:host([appearance="box-base"]) {
 		--_code-viewer-background-color: var(--semantics-surfaces-base-background-color);
-		--_code-viewer-border-color: var(--semantics-surfaces-base-highlight-border-color);
+		--_code-viewer-highlight-border-color: var(--semantics-surfaces-base-highlight-border-color);
 	}
 
 	:host([appearance="simple"]) {
 		--_code-viewer-corner-radius: 0;
 		--_code-viewer-background-color: transparent;
-		--_code-viewer-border-color: transparent;
+		--_code-viewer-highlight-border-color: transparent;
 		--_code-viewer-block-padding: 0;
 		--_code-viewer-inline-padding: 0;
 	}
@@ -92,9 +92,9 @@ export const codeViewerStyles = css`
 		content: '';
 		position: absolute;
 		inset: 0;
-		z-index: var(--_code-viewer-frame-z-index);
+		z-index: var(--_code-viewer-highlight-border-z-index);
 		border-radius: inherit;
-		box-shadow: var(--_code-viewer-border-shadow);
+		box-shadow: var(--_code-viewer-highlight-border-shadow);
 		pointer-events: none;
 	}
 
@@ -320,7 +320,7 @@ export const codeViewerStyles = css`
 
 	@media (forced-colors: active) {
 		:host .code-viewer {
-			border: var(--_code-viewer-border-width) solid CanvasText;
+			border: var(--_code-viewer-highlight-border-width) solid CanvasText;
 		}
 
 		:host([appearance="simple"]) .code-viewer {

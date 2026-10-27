@@ -15,9 +15,9 @@ export const textEditorStyles = css`
 		--_text-editor-caret-ring-color: var(--semantics-surfaces-base-background-color);
 		--_text-editor-corner-radius: 0;
 		--_text-editor-background-color: transparent;
-		--_text-editor-highlight-border-color: transparent;
-		--_text-editor-highlight-border-shadow: none;
-		--_text-editor-frame-z-index: 1;
+		--_text-editor-input-field-border-color: transparent;
+		--_text-editor-input-field-border-shadow: none;
+		--_text-editor-input-field-border-z-index: 1;
 		--_text-editor-padding-block: 0px;
 		/* Room for the caret's own ink at the first and last position of a line:
 		   its width plus its ring. Without it the edge carets are clipped. */
@@ -131,8 +131,8 @@ export const textEditorStyles = css`
 	:host([appearance="input-field"]) {
 		--_text-editor-corner-radius: var(--primitives-corner-radius-lg);
 		--_text-editor-background-color: var(--semantics-input-fields-background-color);
-		--_text-editor-highlight-border-color: var(--semantics-input-fields-border-color);
-		--_text-editor-highlight-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_text-editor-highlight-border-color);
+		--_text-editor-input-field-border-color: var(--semantics-input-fields-border-color);
+		--_text-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_text-editor-input-field-border-color);
 		--_text-editor-padding-block: var(--semantics-controls-md-inline-padding);
 		--_text-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 	}
@@ -161,9 +161,9 @@ export const textEditorStyles = css`
 		content: '';
 		position: absolute;
 		inset: 0;
-		z-index: var(--_text-editor-frame-z-index);
+		z-index: var(--_text-editor-input-field-border-z-index);
 		border-radius: inherit;
-		box-shadow: var(--_text-editor-highlight-border-shadow);
+		box-shadow: var(--_text-editor-input-field-border-shadow);
 		pointer-events: none;
 	}
 
