@@ -31,6 +31,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.toolbar.link-hint-external-new-tab-lowercase-label': 'another website, opens in a new tab',
 	'components.avatar-group.overflow-label': 'Show {count} more',
 	'components.avatar-group.overflow-popover-label': 'Other names',
+	'components.avatar-group.overflow-close': 'Close',
 	'components.avatar.link-hint-new-tab-lowercase-label': 'opens in a new tab',
 	'components.avatar.link-hint-external-lowercase-label': 'another website',
 	'components.avatar.link-hint-external-new-tab-lowercase-label': 'another website, opens in a new tab',

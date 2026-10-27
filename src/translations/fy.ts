@@ -34,6 +34,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.toolbar.link-hint-external-new-tab-lowercase-label': 'oare webside, iepenet yn in nij ljepblêd',
 	'components.avatar-group.overflow-label': 'Noch {count} sjen litte',
 	'components.avatar-group.overflow-popover-label': 'Oare nammen',
+	'components.avatar-group.overflow-close': 'Slút',
 	'components.avatar.link-hint-new-tab-lowercase-label': 'iepenet yn in nij ljepblêd',
 	'components.avatar.link-hint-external-lowercase-label': 'oare webside',
 	'components.avatar.link-hint-external-new-tab-lowercase-label': 'oare webside, iepenet yn in nij ljepblêd',

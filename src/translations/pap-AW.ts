@@ -36,6 +36,7 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.toolbar.link-hint-external-new-tab-lowercase-label': 'otro sitio web, ta habri den un tab nobo',
 	'components.avatar-group.overflow-label': 'Mustra {count} mas',
 	'components.avatar-group.overflow-popover-label': 'Otro nomber',
+	'components.avatar-group.overflow-close': 'Cera',
 	'components.avatar.link-hint-new-tab-lowercase-label': 'ta habri den un tab nobo',
 	'components.avatar.link-hint-external-lowercase-label': 'otro sitio web',
 	'components.avatar.link-hint-external-new-tab-lowercase-label': 'otro sitio web, ta habri den un tab nobo',

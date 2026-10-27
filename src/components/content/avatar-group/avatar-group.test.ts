@@ -1,5 +1,6 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import '../../../assets/styles/variables.css';
 import './avatar-group.js';
 
 describe('nldd-avatar-group', () => {
@@ -93,4 +94,102 @@ describe('nldd-avatar-group', () => {
 	// No assertions on the sizes and the overlap: the test document carries no
 	// design tokens, so every --_* that resolves to one computes to nothing
 	// here. Those are checked in Storybook (Sizes and Overlap stories).
+	const groupWith = (size: string, extra: number) => fixture(`
+		<nldd-avatar-group size="${size}" max="1">
+			${Array.from({ length: extra + 1 }, (_, i) => `<nldd-avatar name="Persoon ${i}" decorative></nldd-avatar>`).join('')}
+		</nldd-avatar-group>
+	`);
+
+	it('toont het aantal als het in de schijf past', async () => {
+		el = await groupWith('40', 12);
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('.avatar-group__overflow-button')!;
+		expect(button.textContent!.trim()).toBe('+12');
+		expect(el.shadowRoot!.querySelector('nldd-tooltip')).toBeNull();
+	});
+
+	it('toont een ellipsis met het aantal in een tooltip als het niet past', async () => {
+		el = await groupWith('32', 12);
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('.avatar-group__overflow-button')!;
+		expect(button.textContent!.trim()).toBe('');
+		expect(button.querySelector('nldd-icon')!.getAttribute('icon')).toBe('ellipsis');
+		expect(button.getAttribute('aria-label')).toContain('12');
+		expect(el.shadowRoot!.querySelector('nldd-tooltip')!.getAttribute('text')).toContain('12');
+	});
+	const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+	const groupIn = async (width: number, attrs: string, count: number) => {
+		const group = await fixture(`
+			<div style="width: ${width}px">
+				<nldd-avatar-group ${attrs}>
+					${Array.from({ length: count }, (_, i) => `<nldd-avatar name="Persoon ${i}" decorative></nldd-avatar>`).join('')}
+				</nldd-avatar-group>
+			</div>
+		`);
+		await nextFrame();
+		const inner = group.querySelector('nldd-avatar-group') as HTMLElement & { updateComplete: Promise<boolean> };
+		await inner.updateComplete;
+		return { wrapper: group, el: inner };
+	};
+
+	const overflowText = (group: HTMLElement) =>
+		group.shadowRoot!.querySelector('.avatar-group__overflow-button')?.getAttribute('aria-label') ?? null;
+
+	it('toont minder avatars als de container te smal is', async () => {
+		// 40px per avatar, 8px overlap: 100px holds one avatar and the button.
+		const { wrapper, el: group } = await groupIn(100, 'max="4"', 6);
+		el = wrapper;
+		expect(overflowText(group)).toContain('5');
+		expect(group.getBoundingClientRect().width).toBeLessThanOrEqual(100);
+	});
+
+	it('toont er weer meer als de container groeit, tot max', async () => {
+		const { wrapper, el: group } = await groupIn(100, 'max="4"', 6);
+		el = wrapper;
+		wrapper.style.width = '600px';
+		await nextFrame();
+		await group.updateComplete;
+		expect(overflowText(group)).toContain('2');
+	});
+
+	it('past zich ook zonder max aan de breedte aan', async () => {
+		const { wrapper, el: group } = await groupIn(140, '', 6);
+		el = wrapper;
+		// 140px holds four discs (8 + 4 × 32 = 136): three avatars and the button.
+		expect(overflowText(group)).toContain('3');
+		wrapper.style.width = '600px';
+		await nextFrame();
+		await group.updateComplete;
+		expect(overflowText(group)).toBeNull();
+	});
+	it('waarschuwt bij klikbare avatars onder maat 32', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<nldd-avatar-group size="28">
+				<nldd-avatar name="Jan Jansen" href="#"></nldd-avatar>
+				<nldd-avatar name="Piet Pietersen" href="#"></nldd-avatar>
+			</nldd-avatar-group>
+		`);
+		await waitForUpdate(el);
+		expect(warn.mock.calls.some(([m]) => String(m).includes('<nldd-avatar-group size="28">'))).toBe(true);
+		warn.mockClear();
+		(el as HTMLElement).setAttribute('size', '32');
+		await waitForUpdate(el);
+		expect(warn.mock.calls.some(([m]) => String(m).includes('nldd-avatar-group'))).toBe(false);
+		warn.mockRestore();
+	});
+
+	it('geeft de lijst een titelbalk met de naam van de groep', async () => {
+		el = await fixture(`
+			<nldd-avatar-group max="1" accessible-label="Redactie">
+				<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
+				<nldd-avatar name="Piet Pietersen" decorative></nldd-avatar>
+			</nldd-avatar-group>
+		`);
+		await waitForUpdate(el);
+		const bar = el.shadowRoot!.querySelector('nldd-popover nldd-top-title-bar')!;
+		expect(bar.getAttribute('text')).toBe('Redactie');
+		expect(bar.getAttribute('dismiss-text')).toBe('Sluit');
+	});
 });

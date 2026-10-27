@@ -3101,7 +3101,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shows several avatars as one group: they overlap, and each one gets a ring in the surface color so they stay apart where they meet. The ring uses the same mechanism as the badge, so on a colored surface you hand the color over through `--context-parent-background-color`. Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to do with a dead image, when to fall back to initials, and how to show its name as a tooltip; a loose image would have to reproduce all of that and cannot do the last one. Set `decorative` when the names already stand beside the group as text; otherwise give every avatar a name, because the group itself describes nobody. The size applies to the whole group: it is imposed on the avatars, a slotted `img` included. That keeps the row on one line whatever a consumer hands over.",
+          "description": "Shows several avatars as one group: they overlap, and each one gets a ring in the surface color so they stay apart where they meet. The ring uses the same mechanism as the badge, so on a colored surface you hand the color over through `--context-parent-background-color`. Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to do with a dead image, when to fall back to initials, and how to show its name as a tooltip; a loose image would have to reproduce all of that and cannot do the last one. Set `decorative` when the names already stand beside the group as text; otherwise give every avatar a name, because the group itself describes nobody. The size applies to the whole group: it is imposed on the avatars, a slotted `img` included. That keeps the row on one line whatever a consumer hands over. Avatars that are links or buttons need size 32 or larger: they overlap, so each keeps only part of its width as a target (WCAG 2.5.8). On sm the list behind the button is a bottom sheet with a title bar, which names the group (its `accessible-label`) and closes it. The row never overflows its container. Where there is no room for every avatar, the group shows as many as fit and puts the rest behind the \"+N\" button, as `max` does; `max` is then the most it shows, not a fixed count.",
           "name": "NLDDAvatarGroup",
           "members": [
             {
@@ -3164,7 +3164,7 @@
               },
               "default": "undefined",
               "fieldName": "max",
-              "description": "Shows at most this many avatars; the rest go behind a \"+N\" button that opens them as a list of names"
+              "description": "Shows at most this many avatars; the rest go behind a \"+N\" button that opens them as a list of names. A longer number is set smaller, and where it no longer fits the disc the button shows an ellipsis with the count in a tooltip (a number shows from size 24 with one digit, 40 with two, 56 with three and 80 with four)"
             },
             {
               "name": "accessible-label",
@@ -3559,7 +3559,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it",
+              "description": "Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8)",
               "fieldName": "href"
             },
             {
@@ -30043,7 +30043,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id=\"info-trigger\" popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" anchor=\"info-trigger\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus.",
+          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id=\"info-trigger\" popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" anchor=\"info-trigger\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On sm the popover is a bottom sheet that closes with Escape or a tap outside it. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
           "name": "NLDDPopover",
           "members": [
             {
@@ -40804,7 +40804,7 @@
               }
             }
           ],
-          "description": "True when a bubbling `dismiss` event originates from an `nldd-top-title-bar`'s\nclose button.\n\nOverlay containers (`nldd-sheet`, `nldd-window`) listen for bubbling `dismiss`\nevents to close themselves. But nested components fire their own `dismiss` for\ntheir own element — an `nldd-token`'s remove button, an `nldd-banner`, an\n`nldd-document-tab-bar` — and those must NOT close the container. Only the\ncontainer's own top-title-bar dismiss should. This shared check keeps that rule\nidentical across every overlay container.\n\nLimitation: it matches ANY nldd-top-title-bar in the composed path, not\nspecifically the container's own. That is correct for today's one-title-bar-per\n-container usage; a nested composition with more than one title bar (a sheet\ninside a sheet, each with its own) would need the inner container to\nstopPropagation on its own dismiss so it doesn't also reach the outer one."
+          "description": "True when a bubbling `dismiss` event originates from an `nldd-top-title-bar`'s\nclose button.\n\nOverlay containers (`nldd-sheet`, `nldd-window`, `nldd-popover`) listen for bubbling `dismiss`\nevents to close themselves. But nested components fire their own `dismiss` for\ntheir own element — an `nldd-token`'s remove button, an `nldd-banner`, an\n`nldd-document-tab-bar` — and those must NOT close the container. Only the\ncontainer's own top-title-bar dismiss should. This shared check keeps that rule\nidentical across every overlay container.\n\nLimitation: it matches ANY nldd-top-title-bar in the composed path, not\nspecifically the container's own. That is correct for today's one-title-bar-per\n-container usage; a nested composition with more than one title bar (a sheet\ninside a sheet, each with its own) would need the inner container to\nstopPropagation on its own dismiss so it doesn't also reach the outer one."
         }
       ],
       "exports": [

@@ -1,4 +1,7 @@
-import { css } from 'lit';
+import { css, unsafeCSS } from 'lit';
+import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
+
+const mdMin = unsafeCSS(queryBreakpoints.mdMin);
 
 export const avatarGroupStyles = css`
 	:host {
@@ -11,6 +14,8 @@ export const avatarGroupStyles = css`
 	:host {
 		--_avatar-group-size: var(--primitives-space-40);
 		--_avatar-group-overlap-size: calc(var(--_avatar-group-size) * 0.2);
+		--_avatar-group-width: calc(var(--_avatar-group-discs) * (var(--_avatar-group-size) - var(--_avatar-group-overlap-size)) + var(--_avatar-group-overlap-size));
+		--_avatar-group-min-width: calc(2 * (var(--_avatar-group-size) - var(--_avatar-group-overlap-size)) + var(--_avatar-group-overlap-size));
 		--_avatar-group-ring-thickness: var(--semantics-surfaces-ring-thickness);
 		--_avatar-group-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
 		--_avatar-group-corner-radius: var(--primitives-corner-radius-full);
@@ -18,8 +23,15 @@ export const avatarGroupStyles = css`
 		--_avatar-group-overflow-hover-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
 		--_avatar-group-overflow-content-color: var(--semantics-content-secondary-color);
 		--_avatar-group-overflow-font: var(--primitives-font-body-xs-medium-flat);
+		--_avatar-group-overflow-font-scale: 0.235;
+		--_avatar-group-overflow-font-offset: 5.5px;
+		--_avatar-group-overflow-digits-scale: 1;
+		--_avatar-group-overflow-icon-scale: 0.5;
 
 		display: inline-flex;
+		width: var(--_avatar-group-width);
+		min-width: min(var(--_avatar-group-width), var(--_avatar-group-min-width));
+		max-width: 100%;
 		vertical-align: middle;
 	}
 
@@ -78,6 +90,21 @@ export const avatarGroupStyles = css`
 		justify-content: center;
 		color: var(--_avatar-group-overflow-content-color);
 		font: var(--_avatar-group-overflow-font);
+		/* The offset makes the count relatively larger on a small disc and smaller on a large one. */
+		font-size: calc((var(--_avatar-group-overflow-font-scale) * var(--_avatar-group-size) + var(--_avatar-group-overflow-font-offset)) * var(--_avatar-group-overflow-digits-scale));
+		line-height: 1;
+	}
+
+	.avatar-group__overflow-button--digits-3 {
+		--_avatar-group-overflow-digits-scale: 0.8;
+	}
+
+	.avatar-group__overflow-button--digits-4 {
+		--_avatar-group-overflow-digits-scale: 0.7;
+	}
+
+	.avatar-group__overflow-icon {
+		width: calc(var(--_avatar-group-overflow-icon-scale) * var(--_avatar-group-size));
 	}
 
 	/* The smallest step the neutral scale has, one notch off the resting fill.
@@ -91,6 +118,14 @@ export const avatarGroupStyles = css`
 	.avatar-group__overflow-button:focus-visible {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
+	}
+
+
+	/* Anchored on md and up, the list needs no bar to close it. */
+	@media (min-width: ${mdMin}) {
+		.avatar-group__overflow-title-bar {
+			display: none;
+		}
 	}
 
 

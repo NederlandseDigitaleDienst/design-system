@@ -15,6 +15,28 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-avatar-group` fits its container.** Where there is no room for every avatar, it shows as many as fit and puts the rest behind the "+N" button.
+- **The "+N" of `nldd-avatar-group` scales with the group.** Where the number does not fit the disc, the button shows an ellipsis with the count in a tooltip.
+- **On a small screen the list behind "+N" has a title bar** with the name of the group and a close button.
+
+### Added
+
+- **`nldd-popover` closes on the dismiss of a title bar inside it**, as `nldd-sheet` does. Give its content an `nldd-top-title-bar` with a `dismiss-text` where Escape or a tap outside is not enough to close it on a small screen. A `dismiss` from anything else, a token or a banner, leaves it open.
+- **Warnings in development for a link or button avatar that is too small a target (WCAG 2.5.8).** `nldd-avatar` warns under size 24. `nldd-avatar-group` warns under size 32 when its avatars are links or buttons: they overlap, so each keeps only part of its width as a target.
+
+### Changed
+
+- **`nldd-avatar-group` never overflows its container.** It measures the width it has and shows as many avatars as fit, with the rest behind the button. `max` is now the most it shows, not a fixed count; without `max` the group fits as well. A group that ran out of a narrow container before now shows fewer avatars there.
+- **The "+N" of `nldd-avatar-group` scales with `size`**, a little larger relative to a small disc and smaller to a large one. A number of three or four digits is set smaller. Where it still does not fit, the button shows an ellipsis with "Nog 12 tonen" in a tooltip: a number shows from size 24 with one digit, 40 with two, 56 with three and 80 with four. The count is always in the accessible name.
+- **The list behind "+N" has a title bar on a small screen**, where it is a bottom sheet: the `accessible-label` of the group (or "Overige namen") and "Sluit". A long list scrolls under the bar. On md and up the list is anchored and has no bar.
+- **A page in `nldd-popover` shrinks to the height limit and scrolls itself**, as in `nldd-sheet`, so a sticky header stays in view. Short content keeps the popover as high as its content. Other content scrolls the popover as before.
+
+### Fixed
+
+- **The "+N" of `nldd-avatar-group` fits its disc at every size.** It had a fixed font size, so at size 16 the number ran past the disc, and with two or three digits the "+" fell under the avatar before it.
+
 ## [0.12.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.11.0...v0.12.0) (2026-10-26)
 
 <!--
