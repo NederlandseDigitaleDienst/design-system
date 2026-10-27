@@ -5,13 +5,32 @@ import '../../forms/form-field/form-field.js';
 import '../../layout/container/container.js';
 
 /**
- * Een bestandskiezer die als één control leest: een knop strak in de hoek van een
- * getint vlak, het gekozen bestand ernaast, en een kruisje om het weer te wissen.
- * Eronder zit een verborgen `<input type="file">`, want een bestandsdialoog opent
- * alleen vanuit een gebruikersgebaar op een echte input.
+ * Een bestandskiezer die als één control leest. Leeg is het hele getinte vlak één
+ * knop, met één zin in het midden: "Bestand kiezen of
+ * sleep het hierheen", het eerste deel in de accentkleur. Waar je ook in het vlak
+ * klikt, de bestandsdialoog gaat open. Is er een bestand gekozen, dan toont het vlak het icoon van het formaat, de naam, een
+ * knop "Wijzigen" en een kruisje om het weer te wissen. Eronder zit een verborgen
+ * `<input type="file">`, want een bestandsdialoog opent alleen vanuit een
+ * gebruikersgebaar op een echte input.
  *
  * Het vlak lijkt bewust niet op een invoerveld. Een rand met veldsemantiek belooft
- * dat je erin kunt typen, terwijl je hier alleen op een knop kunt drukken.
+ * dat je erin kunt typen, terwijl je hier alleen kunt klikken of een bestand kunt
+ * neerzetten.
+ *
+ * ## Slepen
+ * Je kunt een bestand op het hele veld laten vallen. Een drop gaat door dezelfde
+ * input als een keuze, dus hij geeft hetzelfde `change`-event en wordt op dezelfde
+ * manier ingediend. `accept` en `multiple` gelden ook voor een drop: past hij
+ * niet, dan blijft de vorige keuze staan en zegt het veld waarom, tot de volgende
+ * actie.
+ *
+ * Zolang er bestanden boven de pagina hangen, krijgt elk veld een dikkere,
+ * donkerdere rand, en zegt een leeg veld "Sleep het bestand hierheen". Een veld
+ * met een bestand zegt dan "Sleep hierheen om te vervangen", zonder zijn knoppen. Het veld onder de pointer kleurt in de accentkleur en zegt
+ * dat het ze aanneemt, of kleurt rood als het aantal of het type niet past. Een bestand dat naast
+ * het veld valt, opent de browser niet meer; een drop die een andere dropzone of
+ * een bewerkbaar veld afhandelt, laat het veld met rust. Op een apparaat zonder
+ * hover kun je niet slepen, dus daar valt de hint weg.
  *
  * ## Gebruik
  * ```html
@@ -122,7 +141,7 @@ export const Standaard = ({
 `;
 
 /**
- * Met `multiple` verandert het knoplabel mee en worden gekozen bestanden
+ * Met `multiple` verandert de zin mee en worden gekozen bestanden
  * samengevat als "3 bestanden". Het kruisje wist ze allemaal tegelijk.
  *
  * Ze worden bewust niet één voor één gelijst: elke keuze vervangt de hele
@@ -166,10 +185,7 @@ export const InEenFormulierveld = {
 };
 
 /**
- * Beide maten naast elkaar. De knop houdt zijn eigen getinte achtergrond en staat
- * daardoor vanzelf een tint donkerder in het vlak; dat markeert hem als het ding
- * waarop je drukt. Vlak en knop delen dezelfde hoekradius, en omdat de rand van
- * het vlak een inset-schaduw is en geen echte rand, vallen die hoeken samen.
+ * Beide maten naast elkaar.
  */
 export const Grootten = {
 	render: () => html`

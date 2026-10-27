@@ -24,6 +24,7 @@ here; consult the commit history if you need that level of detail.
 - **`nldd-avatar-group` fits its container.** Where there is no room for every avatar, it shows as many as fit and puts the rest behind the "+N" button.
 - **The "+N" of `nldd-avatar-group` scales with the group.** Where the number does not fit the disc, the button shows an ellipsis with the count in a tooltip.
 - **On a small screen the list behind "+N" has a title bar** with the name of the group and a close button.
+- **`nldd-file-field` takes a dropped file.** A drop goes through the same input as a pick, `accept` and `multiple` hold for it, and a file dropped next to the field no longer makes the browser leave the page.
 
 ### Added
 
@@ -34,6 +35,7 @@ here; consult the commit history if you need that level of detail.
 - **Icon `check-mark-square`.** `check-mark-circle-filled` is the new name of `check-circle-filled`, in line with the other check marks; the old name stays as an alias.
 - **`nldd-popover` closes on the dismiss of a title bar inside it**, as `nldd-sheet` does. Give its content an `nldd-top-title-bar` with a `dismiss-text` where Escape or a tap outside is not enough to close it on a small screen. A `dismiss` from anything else, a token or a banner, leaves it open.
 - **Warnings in development for a link or button avatar that is too small a target (WCAG 2.5.8).** `nldd-avatar` warns under size 24. `nldd-avatar-group` warns under size 32 when its avatars are links or buttons: they overlap, so each keeps only part of its width as a target.
+- **`nldd-file-field` takes files by drag and drop**, on the whole field. A drop fires the same `change` with the same `{ files }` and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which a native file input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why ("Dit bestandstype kan hier niet", "Sleep één bestand") until the next action, announced to a screen reader. While files are dragged over the page, every field takes a thicker, darker border to show it is a place to put them, and an empty one reads "Sleep het bestand hierheen". A field that has a file says "Sleep hierheen om te vervangen" instead, and leaves out its buttons while the drag lasts. The field under the pointer turns accent and says it will take them, or turns critical and refuses already when the number of files or their type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone, an editable field or a native file input takes is left alone.
 
 ### Changed
 
@@ -49,6 +51,7 @@ here; consult the commit history if you need that level of detail.
 - **The panel of a `nldd-hero` with `corner` stops before the rounded corner of the image** when both are on the same edge. A wide panel ran over the curve; now it ends at the panel's padding past it. With the corner on the other edge the panel is as wide as before.
 - **On mobile the panel of a `nldd-hero` with `corner` stands under the image, as wide as it.** It overlapped the image and was indented on both sides, so the rounded corner and the panel read as two shapes. Without `corner` the panel still overlaps the image as before.
 - **A page in `nldd-popover` shrinks to the height limit and scrolls itself**, as in `nldd-sheet`, so a sticky header stays in view. Short content keeps the popover as high as its content. Other content scrolls the popover as before.
+- **`nldd-file-field` shows the chosen file with the icon of its format**, such as `file-pdf` or `file-png` (`file` for a format without one, `file-on-file` for several), and cuts a long name short in the middle, measured to the width it has, so its start and its end stay in view ("Screenshot 20…at 13.12.21.png"). A name that is cut short shows whole in a tooltip, and a screen reader reads it whole. Empty, the whole surface is one button with one sentence centered in it, "Bestand kiezen of sleep het hierheen", its first part accented. The whole surface lights up on hover, like a button, and a press anywhere on it opens the file dialog; it replaces the `nldd-button` in the corner and the "Geen bestand gekozen" text, whose translation key `components.file-field.no-file-chosen-text` is gone. On a device without hover, where nothing can be dragged, the hint is left out. Once there is a file, "Wijzigen" stands beside the cross, and focus moves along with it.
 
 ### Fixed
 

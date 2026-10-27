@@ -11376,11 +11376,284 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/file-field/file-field.drop.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "fileMatches",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "file",
+              "type": {
+                "text": "File"
+              }
+            }
+          ],
+          "description": "Whether a dropped file fits `accept`, judged on its name and its type, the\nway the file dialog filters. An empty `accept` takes everything."
+        },
+        {
+          "kind": "function",
+          "name": "typeRuledOut",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Whether a dragged file of `type` can be ruled out against `accept` before the\ndrop. Only a certain mismatch counts: an empty type or an extension this\nmodule has no type for leaves the answer to the drop."
+        },
+        {
+          "kind": "function",
+          "name": "carriesFiles",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "transfer",
+              "type": {
+                "text": "DataTransfer | null"
+              }
+            }
+          ],
+          "description": "Whether a drag carries files, as opposed to text or a link."
+        },
+        {
+          "kind": "function",
+          "name": "watchDrags",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "DropTarget"
+              }
+            }
+          ],
+          "description": "Registers a field with the shared window listeners, which exist while at\nleast one field is connected."
+        },
+        {
+          "kind": "function",
+          "name": "unwatchDrags",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "DropTarget"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "fileMatches",
+          "declaration": {
+            "name": "fileMatches",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "typeRuledOut",
+          "declaration": {
+            "name": "typeRuledOut",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "carriesFiles",
+          "declaration": {
+            "name": "carriesFiles",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "watchDrags",
+          "declaration": {
+            "name": "watchDrags",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "unwatchDrags",
+          "declaration": {
+            "name": "unwatchDrags",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/file-field/file-field.truncate.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "splitName",
+          "return": {
+            "type": {
+              "text": "[string, string]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Splits a name at its last dot. A leading dot (\".env\") is no extension."
+        },
+        {
+          "kind": "function",
+          "name": "splitForTruncation",
+          "return": {
+            "type": {
+              "text": "[string, string]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The split of the first render, done by CSS: a start that is cut short when it\ndoes not fit, and an end, the last characters and the extension, that stays."
+        },
+        {
+          "kind": "function",
+          "name": "truncateMiddle",
+          "return": {
+            "type": {
+              "text": "{ text: string; truncated: boolean }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "measure",
+              "type": {
+                "text": "(text: string) => number"
+              }
+            }
+          ],
+          "description": "The name as it fits `width`, measured with `measure`: whole when it fits,\notherwise as many characters as fit, half from the start and half from the\nend, around an ellipsis and before the extension."
+        },
+        {
+          "kind": "function",
+          "name": "textMeasurer",
+          "return": {
+            "type": {
+              "text": "{ measure: (text: string) => number; done: () => void }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "container",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Measures text the way `container` renders it, with a hidden span in it.\nCanvas text metrics drift from the page by a character or two (kerning,\nfont features), which shows as a second, CSS ellipsis. Call `done` after."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "splitName",
+          "declaration": {
+            "name": "splitName",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "splitForTruncation",
+          "declaration": {
+            "name": "splitForTruncation",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "truncateMiddle",
+          "declaration": {
+            "name": "truncateMiddle",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "textMeasurer",
+          "declaration": {
+            "name": "textMeasurer",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/file-field/file-field.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A file picker that reads as one control: an nldd-button flush in the corner of a tinted surface, the chosen file next to it, and a dismiss button to clear it again. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press a button, so it uses button and surface colors instead of `--semantics-input-fields-*`. The button keeps its own tinted background and therefore sits a shade darker in the surface, which is what marks it as the thing to press. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event.",
+          "description": "A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, \"Bestand kiezen of sleep het hierheen\", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view (\"Screenshot 20…at 13.12.21.png\"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why (\"Dit bestandstype kan hier niet\", \"Sleep één bestand\") until the next action. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event.",
           "name": "NLDDFileField",
           "members": [
             {
