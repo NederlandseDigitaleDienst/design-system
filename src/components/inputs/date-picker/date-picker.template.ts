@@ -157,7 +157,7 @@ function renderColumnHeaders(component: NLDDDatePicker): TemplateResult {
 					scope="col"
 					abbr=${component._t('components.date-picker.week-number-column-label')}
 				>
-					${component._t('components.date-picker.week-number-column-short-label')}
+					${component._t('components.date-picker.week-number-column-short-lowercase-label')}
 				</th>
 			` : nothing}
 			${component._weekdays.map((day) => html`

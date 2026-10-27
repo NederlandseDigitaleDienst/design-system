@@ -207,7 +207,7 @@ export class NLDDProgressBar extends LitElement {
 		if (this.accessibleLabel) return this.accessibleLabel;
 		if (this.indeterminate) return this._t('components.progress-bar.loading-label');
 
-		const completedSuffix = this._t('components.progress-bar.completed-suffix-text');
+		const completedSuffix = this._t('components.progress-bar.completed-suffix-lowercase-text');
 		const totalPrefix = this._t('components.progress-bar.total-prefix-text');
 
 		// Single-segment case
