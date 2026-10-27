@@ -147,7 +147,7 @@ describe('nldd-file-field', () => {
 
 	it('takes an override for a translation key', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
-		el.translations = { 'components.file-field.drop-hint-text': 'or drag it here' };
+		el.translations = { 'components.file-field.drop-hint-lowercase-text': 'or drag it here' };
 		await waitForUpdate(el);
 		expect(browseText(el)).toBe('Bestand kiezen or drag it here');
 	});

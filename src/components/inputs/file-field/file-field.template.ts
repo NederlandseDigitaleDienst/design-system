@@ -105,8 +105,8 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 			: component._t('components.file-field.drop-here-text'),
 	);
 	const sentence = html`<span class="file-field__browse-action">${component._chooseLabel()}</span> <span class="file-field__hint">${component.multiple
-		? component._t('components.file-field.drop-hint-multiple-text')
-		: component._t('components.file-field.drop-hint-text')}</span>`;
+		? component._t('components.file-field.drop-hint-multiple-lowercase-text')
+		: component._t('components.file-field.drop-hint-lowercase-text')}</span>`;
 	return html`
 		<button class="file-field__browse"
 			type="button"

@@ -80,6 +80,13 @@ import { textMeasurer, truncateMiddle } from './file-field.truncate.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
 
+/** The word for a family of types in `accept`, such as `image/*`. */
+const FAMILY_KEYS = {
+	image: 'components.file-field.image-lowercase',
+	video: 'components.file-field.video-lowercase',
+	audio: 'components.file-field.audio-file-lowercase',
+} as const;
+
 @customElement('nldd-file-field')
 export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
@@ -215,10 +222,10 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		if (!names) return this._t('components.file-field.wrong-file-type-error-text');
 		const named = names.map((name) => (typeof name === 'string'
 			? name
-			: this._t(`components.file-field.${name.family}-type-text`)));
+			: this._t(FAMILY_KEYS[name.family])));
 		const types = named.length === 1
 			? named[0]
-			: `${named.slice(0, -1).join(', ')} ${this._t('components.file-field.list-or-text')} ${named[named.length - 1]}`;
+			: this._t('components.file-field.list-lowercase-text', { items: named.slice(0, -1).join(', '), last: named[named.length - 1] });
 		return this.multiple
 			? this._t('components.file-field.files-type-error-text', { types })
 			: this._t('components.file-field.file-type-error-text', { types });
@@ -236,7 +243,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this._resizeObserver ??= new ResizeObserver(() => this._fitName());
 		this._resizeObserver.observe(this);
 		// The first measurement can run in the fallback font.
-		void document.fonts?.ready.then(() => this._fitName());
+		void document.fonts?.ready.then(() => {
+			if (this.isConnected) this._fitName();
+		});
 		this.addEventListener('dragover', this._handleDragOver);
 		this.addEventListener('drop', this._handleDrop);
 		this.addEventListener('pointerdown', this._clearRejection);
@@ -289,10 +298,13 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		const width = value.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
 		if (width <= 0) return;
 		const { measure, done } = textMeasurer(name);
-		const { text, truncated } = truncateMiddle(this._files[0].name, width, measure);
-		done();
-		this._fittedName = text;
-		this._nameTruncated = truncated;
+		try {
+			const { text, truncated } = truncateMiddle(this._files[0].name, width, measure);
+			this._fittedName = text;
+			this._nameTruncated = truncated;
+		} finally {
+			done();
+		}
 	}
 
 	override willUpdate(changed: PropertyValues): void {

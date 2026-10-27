@@ -28,7 +28,7 @@ export const fileFieldStyles = css`
 		--_file-field-drop-background-color: var(--semantics-surfaces-accent-tinted-background-color);
 		--_file-field-rejected-color: var(--semantics-content-critical-color);
 		--_file-field-rejected-background-color: var(--semantics-surfaces-critical-tinted-background-color);
-		--_file-field-file-icon-size: var(--semantics-input-fields-md-validation-icon-size);
+		--_file-field-file-icon-size: var(--primitives-space-24);
 		--_file-field-actions-gap: var(--primitives-space-4);
 		--_file-field-browse-action-color: var(--semantics-controls-is-selected-indicator-color);
 		--_file-field-browse-is-hovered-highlight-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-250));
@@ -61,7 +61,7 @@ export const fileFieldStyles = css`
 		--_file-field-text-font: var(--semantics-input-fields-sm-text-font);
 		--_file-field-clear-button-padding-right: calc((var(--_file-field-min-size) - var(--semantics-controls-xs-min-size)) / 2);
 		--_file-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
-		--_file-field-file-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
+		--_file-field-file-icon-size: var(--primitives-space-20);
 		--_file-field-browse-action-font: var(--semantics-buttons-sm-primary-text-font);
 	}
 
