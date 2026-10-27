@@ -73,7 +73,8 @@ class CopyButton extends WidgetType {
 	}
 
 	toDOM(view: EditorView): HTMLElement {
-		const labels = view.state.facet(codeCopyLabels);
+		// Read when an event comes, not when the button is made, as clearFailures does.
+		const labels = () => view.state.facet(codeCopyLabels);
 		const button = document.createElement('button');
 		button.type = 'button';
 		button.className = 'cm-md-code-copy';
@@ -90,25 +91,25 @@ class CopyButton extends WidgetType {
 		const wrap = document.createElement('span');
 		wrap.className = 'cm-md-code-copy-wrap';
 		wrap.append(button, status);
-		setState(button, labels, 'idle');
+		setState(button, labels(), 'idle');
 		// Keep the caret where it is: a press on the button is not a place in the text.
 		button.addEventListener('mousedown', (event) => event.preventDefault());
 		button.addEventListener('click', async () => {
 			clearTimeout(feedbackTimers.get(wrap));
 			try {
 				await navigator.clipboard.writeText(codeOf(view.state, view.state.doc.lineAt(view.posAtDOM(button)).from));
-				setState(button, labels, 'success');
-				feedbackTimers.set(wrap, setTimeout(() => setState(button, labels, 'idle'), FEEDBACK_MS));
+				setState(button, labels(), 'success');
+				feedbackTimers.set(wrap, setTimeout(() => setState(button, labels(), 'idle'), FEEDBACK_MS));
 			} catch {
 				// Stays until the reader moves on, as in nldd-code-viewer.
-				setState(button, labels, 'failure');
+				setState(button, labels(), 'failure');
 			}
 		});
 		button.addEventListener('blur', () => {
-			if (button.dataset.state === 'failure') setState(button, labels, 'idle');
+			if (button.dataset.state === 'failure') setState(button, labels(), 'idle');
 		});
 		button.addEventListener('keydown', (event) => {
-			if (event.key === 'Escape' && button.dataset.state === 'failure') setState(button, labels, 'idle');
+			if (event.key === 'Escape' && button.dataset.state === 'failure') setState(button, labels(), 'idle');
 		});
 		return wrap;
 	}

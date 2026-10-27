@@ -28,12 +28,14 @@ export const taskLabels = Facet.define<TaskLabels, TaskLabels>({
 });
 
 class TaskBox extends WidgetType {
-	constructor(readonly checked: boolean, readonly labels: TaskLabels) {
+	/** `label` is what a screen reader reads for the box, so a box whose text
+	 *  has changed is drawn again rather than kept. */
+	constructor(readonly checked: boolean, readonly label: string) {
 		super();
 	}
 
 	eq(other: TaskBox): boolean {
-		return other.checked === this.checked;
+		return other.checked === this.checked && other.label === this.label;
 	}
 
 	toDOM(): HTMLElement {
@@ -46,7 +48,7 @@ class TaskBox extends WidgetType {
 		icon.setAttribute('aria-hidden', 'true');
 		const label = document.createElement('span');
 		label.className = 'cm-md-task-box-label';
-		label.textContent = this.checked ? this.labels.done() : this.labels.open();
+		label.textContent = this.label;
 		box.append(icon, label);
 		return box;
 	}
@@ -60,7 +62,8 @@ class TaskBox extends WidgetType {
 
 /** The box that replaces the `[ ]` or `[x]` of a task. */
 export function taskBox(state: EditorState, checked: boolean): Decoration {
-	return Decoration.replace({ widget: new TaskBox(checked, state.facet(taskLabels)) });
+	const labels = state.facet(taskLabels);
+	return Decoration.replace({ widget: new TaskBox(checked, checked ? labels.done() : labels.open()) });
 }
 
 /** Every task marker in the document: where it is and whether it is checked. */

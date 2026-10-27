@@ -361,6 +361,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** @internal Called by the shared window listeners in file-field.drop.ts. */
 	public _setDrag(state: DragState, transfer: DataTransfer | null): void {
 		if (this.disabled) state = 'none';
+		// Called on every dragover on the page; only over the field is there
+		// anything to judge.
+		if (state !== 'over' && state === this._drag) return;
 		if (state !== 'none' && this._drag === 'none') this._clearRejection();
 		this._dragRejection = state === 'over' && transfer ? this._judge(transfer) : null;
 		this._drag = this._dragRejection ? 'rejected' : state;

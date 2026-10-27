@@ -96,6 +96,16 @@ describe('nldd-text-editor – taken', () => {
 		expect(el.value).toBe('Taken\n\n- [ ] Open');
 	});
 
+	it('tekent een vakje opnieuw als zijn tekst voor een screenreader verandert', async () => {
+		el = await hidden('- [ ] Open');
+		(el as unknown as { translations: Record<string, string> }).translations = { 'components.text-editor.task-open-label': 'Task, open' };
+		await el.updateComplete;
+		el.value = 'Taken\n\n- [ ] Open nu';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		expect(boxes(el)[0].textContent).toBe('Task, open');
+	});
+
 	it('maakt geen vakje van [ ] in een codeblok', async () => {
 		el = await hidden('```\n- [ ] geen taak\n```');
 		expect(boxes(el).length).toBe(0);
