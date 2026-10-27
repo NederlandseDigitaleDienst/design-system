@@ -151,7 +151,7 @@ const Template = (args: Record<string, any>) => html`
 			<p>De Nederlandse Digitale Dienst maakt regels begrijpelijk en uitvoerbaar.</p>
 		</nldd-rich-text>
 		<nldd-spacer size="16"></nldd-spacer>
-		<nldd-button-group orientation="horizontal">
+		<nldd-button-group>
 			<nldd-button
 				appearance="inherit-filled"
 				text="Bekijk de regels"

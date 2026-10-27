@@ -34,7 +34,7 @@ De volgorde volgt het gedachteproces en niet de database, zie de [ontwerprichtli
 
 **Eén primaire actie, zonder "Annuleer" ernaast.** Een uitweg pal naast de knop die verstuurt kost bij een misklik alles wat er is ingevuld. Heeft het formulier een uitweg nodig, zet die dan op afstand, bijvoorbeeld in de titelbalk. Zie de [ontwerprichtlijnen](?path=/docs/docs-ontwerprichtlijnen--docs#invoer-en-formulieren).
 
-**Zet de actie in een button group, ook als het er één is.** De [`nldd-button-group`](?path=/docs/components-actions-button-group--docs) kijkt naar de eigen breedte: boven de sm-grens een rij, daaronder gestapeld over de volle breedte. Dat scheelt je een `width="full"` die je in een breder formulier weer niet wilt, en komt er later een tweede knop bij, dan hoeft er niets te veranderen.
+**Zet de actie in een button group, ook als het er één is.** De [`nldd-button-group`](?path=/docs/components-actions-button-group--docs) kijkt naar de eigen breedte: een rij, en bij 480px of smaller gestapeld over de volle breedte. Dat scheelt je een `width="full"` die je in een breder formulier weer niet wilt, en komt er later een tweede knop bij, dan hoeft er niets te veranderen.
 
 **De knop hoort in het formulier.** Binnen `nldd-form` verstuurt `type="submit"` het formulier zelf, met de validatie en de foutafhandeling die daarbij horen. Moet de knop er toch buiten staan, bijvoorbeeld in een sticky footer, geef het [`nldd-form`](?path=/docs/components-forms-form--docs) dan een `id` en de knop een `form` die daarnaar wijst. Zonder een van die twee is het een knop zonder formulier, en die doet niets.
 

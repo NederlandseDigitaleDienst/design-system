@@ -21,7 +21,7 @@ import '../../layout/container/container.js';
  *     <p>Inhoud van de kaart.</p>
  *   </nldd-container>
  *   <nldd-container slot="footer" padding-inline="16" padding-bottom="16">
- *     <nldd-button-group orientation="horizontal">
+ *     <nldd-button-group>
  *       <nldd-button appearance="primary" text="Bewerken"></nldd-button>
  *     </nldd-button-group>
  *   </nldd-container>
@@ -103,7 +103,7 @@ export const Standaard = (args: Record<string, any>) => html`
 			padding-inline="16"
 			padding-bottom="16"
 		>
-			<nldd-button-group orientation="horizontal">
+			<nldd-button-group>
 				<nldd-button
 					appearance="primary"
 					text="Bewerken"
@@ -169,7 +169,7 @@ export const VasteHoogte = () => html`
 			padding-inline="16"
 			padding-bottom="16"
 		>
-			<nldd-button-group orientation="horizontal">
+			<nldd-button-group>
 				<nldd-button
 					appearance="primary"
 					text="Bekijken"
@@ -231,7 +231,7 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 			padding-inline="16"
 			padding-bottom="16"
 		>
-			<nldd-button-group orientation="horizontal">
+			<nldd-button-group>
 				<nldd-button
 					appearance="secondary"
 					text="Markeer"

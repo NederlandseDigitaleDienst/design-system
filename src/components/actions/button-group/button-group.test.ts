@@ -51,6 +51,34 @@ describe('nldd-button-group', () => {
 		expect(Math.round(inner.getBoundingClientRect().width)).toBe(400);
 	});
 
+	it('houdt de rij in een container tussen 480px en de sm-breakpoint', async () => {
+		el = await fixture(`
+			<div style="width: 560px;">
+				<nldd-button-group>
+					<nldd-button text="Bewaar"></nldd-button>
+					<nldd-button text="Annuleer"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		await settled(el.querySelector('nldd-button-group')!);
+		const buttons = [...el.querySelectorAll('nldd-button')] as HTMLElement[];
+		expect(new Set(buttons.map((button) => button.offsetTop)).size).toBe(1);
+	});
+
+	it('stapelt vanaf 480px en smaller', async () => {
+		el = await fixture(`
+			<div style="width: 480px;">
+				<nldd-button-group>
+					<nldd-button text="Bewaar"></nldd-button>
+					<nldd-button text="Annuleer"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		await settled(el.querySelector('nldd-button-group')!);
+		const buttons = [...el.querySelectorAll('nldd-button')] as HTMLElement[];
+		expect(new Set(buttons.map((button) => button.offsetTop)).size).toBe(2);
+	});
+
 	it('houdt een eigen richting aan, ook op een smalle container', async () => {
 		el = await fixture(`
 			<div style="width: 400px;">

@@ -1,7 +1,4 @@
-import { css, unsafeCSS } from 'lit';
-import { queryBreakpoints } from '../../../assets/styles/breakpoints.ts';
-
-const smMax = unsafeCSS(queryBreakpoints.smMax);
+import { css } from 'lit';
 
 export const buttonGroupStyles = css`
 	:host {
@@ -46,15 +43,17 @@ export const buttonGroupStyles = css`
 	}
 
 	/* ## Auto
-	   Auto is the default: a row, and stacked over the full width on a narrow
-	   container, where two labels beside each other leave no room for either.
+	   Auto is the default: a row, and stacked over the full width in a container
+	   of 30rem (480px) or less, the width of a phone, where two labels beside each
+	   other leave no room for either. Not the sm breakpoint: a card or a dialog
+	   between 480px and 640px still has room for a row.
 
 	   Auto is matched as "neither of the other two" rather than as itself: the
 	   attribute reflects only when it is not the default, so auto is written out
 	   OR absent, and a rule that named it would have needed a second selector
 	   beside it everywhere. */
 
-	@container (max-width: ${smMax}) {
+	@container (max-width: 30rem) {
 		:host(:not([orientation="horizontal"], [orientation="vertical"])) .button-group {
 			flex-direction: column;
 			--context-button-width: 100%;

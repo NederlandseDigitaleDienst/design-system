@@ -3,9 +3,10 @@
  *
  * A container for grouping related buttons together, in a row or stacked.
  *
- * `auto`, the default, is a row on a container wide enough for one and a stack
- * over the full width below the sm breakpoint, where two labels beside each
- * other leave no room for either. The group is its own container, so it follows
+ * `auto`, the default, is a row, and a stack over the full width in a container
+ * of 30rem (480px) or less, the width of a phone, where two labels beside each
+ * other leave no room for either. A card or a dialog between 480px and the
+ * sm breakpoint keeps its row. The group is its own container, so it follows
  * the width it was given rather than the width of the window: the same group is
  * a row in a page and a stack in a sheet beside it.
  *
