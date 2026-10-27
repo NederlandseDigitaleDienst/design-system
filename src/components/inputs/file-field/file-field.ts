@@ -16,12 +16,15 @@
  * so it fires the same `change` with the same detail and submits the same way as
  * a pick. `accept` and `multiple` hold for a drop too, which the native input
  * does not do: a drop that does not fit is refused as a whole, the previous
- * choice stays, and the field says why ("Dit bestandstype kan hier niet",
- * "Sleep één bestand") until the next action. While files are dragged over the
- * page, every field marks itself as a place to put them, and the field under the
- * pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when
- * the number or the type rules them out. A file dropped next to a field no longer makes the
- * browser open it and leave the page; a drop that another drop zone or an
+ * choice stays, and the field says why until the next action: "Sleep één
+ * bestand", or what `accept` takes, named from it ("Het bestand moet een PDF
+ * zijn"; "Dit bestandstype past niet" where a type in it has no name).
+ *
+ * While files are dragged over the page, every field marks itself as a place
+ * to put them, and the field under the pointer says it will take them (a field
+ * with a file: that they replace it), or turns critical and refuses already
+ * when the number or the type rules them out. A file dropped next to a field no
+ * longer makes the browser open it and leave the page; a drop that another drop zone or an
  * editable field takes is left alone. On a device without hover there is no
  * dragging, so the field there drops the hint.
  *
@@ -64,6 +67,7 @@ import { fileFieldStyles } from './file-field.styles.js';
 import { fileFieldTemplate } from './file-field.template.js';
 import { nlddFileFieldTranslations, type NLDDFileFieldTranslations } from './file-field.i18n.js';
 import {
+	acceptNames,
 	carriesFiles,
 	fileMatches,
 	typeRuledOut,
@@ -194,9 +198,18 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** @internal */
 	public _rejectionText(reason: DropRejection): string {
-		return reason === 'count'
-			? this._t('components.file-field.too-many-files-error-text')
-			: this._t('components.file-field.wrong-file-type-error-text');
+		if (reason === 'count') return this._t('components.file-field.too-many-files-error-text');
+		const names = acceptNames(this.accept);
+		if (!names) return this._t('components.file-field.wrong-file-type-error-text');
+		const named = names.map((name) => (typeof name === 'string'
+			? name
+			: this._t(`components.file-field.${name.family}-type-text`)));
+		const types = named.length === 1
+			? named[0]
+			: `${named.slice(0, -1).join(', ')} ${this._t('components.file-field.list-or-text')} ${named[named.length - 1]}`;
+		return this.multiple
+			? this._t('components.file-field.files-type-error-text', { types })
+			: this._t('components.file-field.file-type-error-text', { types });
 	}
 
 	/** @internal */

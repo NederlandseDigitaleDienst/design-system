@@ -198,12 +198,20 @@ describe('nldd-file-field', () => {
 			await waitForUpdate(el);
 			expect(listener).not.toHaveBeenCalled();
 			expect(el.files.map((f) => f.name)).toEqual(['rapport.pdf']);
-			expect(valueText(el)).toBe('Dit bestandstype kan hier niet');
-			expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Dit bestandstype kan hier niet');
+			expect(valueText(el)).toBe('Het bestand moet een PDF zijn');
+			expect(el.shadowRoot!.querySelector('[role="status"]')!.textContent).toBe('Het bestand moet een PDF zijn');
 
 			el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 			await waitForUpdate(el);
 			expect(fullName(el)).toBe('rapport.pdf');
+		});
+
+		it('names the types accept takes, and says each file with multiple', async () => {
+			el = await fixture<NLDDFileField>('<nldd-file-field multiple accept=".png,.jpg,image/webp"></nldd-file-field>');
+			await waitForUpdate(el);
+			drag(el, 'drop', transfer(pdf('rapport.pdf')));
+			await waitForUpdate(el);
+			expect(browseText(el)).toBe('Elk bestand moet een PNG, JPG of WEBP zijn');
 		});
 
 		it('refuses more than one file without multiple', async () => {
@@ -235,7 +243,7 @@ describe('nldd-file-field', () => {
 			drag(el, 'dragover', transfer(png('foto.png')));
 			await waitForUpdate(el);
 			expect(el.shadowRoot!.querySelector('.file-field')!.classList.contains('is-drag-rejected')).toBe(true);
-			expect(valueText(el)).toBe('Dit bestandstype kan hier niet');
+			expect(valueText(el)).toBe('Het bestand moet een PDF zijn');
 		});
 
 		it('marks itself while files are dragged elsewhere on the page, and keeps them from opening there', async () => {

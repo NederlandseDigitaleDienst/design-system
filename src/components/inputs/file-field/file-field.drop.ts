@@ -44,6 +44,40 @@ const EXTENSION_TYPES: Record<string, string[]> = {
 	xlsx: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
 };
 
+/** How an extension is named to a person: one name for the spellings of one
+ *  format. Any other extension is named in capitals. */
+const EXTENSION_NAMES: Record<string, string> = { jpeg: 'JPG', tif: 'TIFF' };
+
+/** A file kind of `accept`, named for a person: a format ("PDF") or a family
+ *  of types (`image`, `video`, `audio`) that a translation names. */
+export type AcceptName = string | { family: 'image' | 'video' | 'audio' };
+
+/** What `accept` takes, named for a person, for the message on a drop of the
+ *  wrong type. Null when any part has no name (an `application/vnd…` type),
+ *  so the message does not list half of what is allowed. */
+export function acceptNames(accept: string): AcceptName[] | null {
+	const names: AcceptName[] = [];
+	const add = (name: AcceptName) => {
+		if (!names.some((known) => JSON.stringify(known) === JSON.stringify(name))) names.push(name);
+	};
+	for (const token of tokens(accept)) {
+		if (token.startsWith('.')) {
+			const extension = token.slice(1);
+			add(EXTENSION_NAMES[extension] ?? extension.toUpperCase());
+			continue;
+		}
+		const family = /^(image|video|audio)\/\*$/.exec(token)?.[1] as 'image' | 'video' | 'audio' | undefined;
+		if (family) {
+			add({ family });
+			continue;
+		}
+		const extension = Object.keys(EXTENSION_TYPES).find((key) => EXTENSION_TYPES[key].includes(token));
+		if (!extension) return null;
+		add(EXTENSION_NAMES[extension] ?? extension.toUpperCase());
+	}
+	return names.length > 0 ? names : null;
+}
+
 function tokens(accept: string): string[] {
 	return accept.split(',').map((token) => token.trim().toLowerCase()).filter(Boolean);
 }
