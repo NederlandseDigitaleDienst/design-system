@@ -20,6 +20,12 @@ describe('file-field drop', () => {
 		expect(fileMatches('.pdf', png)).toBe(false);
 	});
 
+	it('takes either spelling of a format', () => {
+		expect(fileMatches('.jpg', new File(['x'], 'foto.JPEG', { type: 'image/jpeg' }))).toBe(true);
+		expect(fileMatches('.tiff', new File(['x'], 'scan.tif', { type: 'image/tiff' }))).toBe(true);
+		expect(fileMatches('.jpg', new File(['x'], 'foto.png', { type: 'image/png' }))).toBe(false);
+	});
+
 	it('goes by the extension for a file without a type, as the dialog does', () => {
 		const heic = new File(['x'], 'foto.heic', { type: '' });
 		expect(fileMatches('image/*', heic)).toBe(true);

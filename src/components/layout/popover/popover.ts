@@ -294,7 +294,7 @@ export class NLDDPopover extends LitElement {
 		}
 	};
 
-		hide(): void {
+	hide(): void {
 		if (!this._isOpen) return;
 		(this as HTMLElement).hidePopover();
 	}

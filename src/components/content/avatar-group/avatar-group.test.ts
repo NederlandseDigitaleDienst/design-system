@@ -153,6 +153,21 @@ describe('nldd-avatar-group', () => {
 		expect(overflowText(group)).toContain('2');
 	});
 
+	it('komt tot rust in een container die zo breed is als de groep', async () => {
+		// fit-content takes its width from the group, the group its fit from the
+		// width: a loop if the width followed the avatars that are shown.
+		const { wrapper, el: group } = await groupIn(100, 'max="4"', 6);
+		el = wrapper;
+		wrapper.style.width = 'fit-content';
+		wrapper.style.maxWidth = '100px';
+		await nextFrame();
+		await group.updateComplete;
+		const first = overflowText(group);
+		for (let i = 0; i < 5; i++) await nextFrame();
+		expect(overflowText(group)).toBe(first);
+		expect((group as unknown as { isUpdatePending: boolean }).isUpdatePending).toBe(false);
+	});
+
 	it('past zich ook zonder max aan de breedte aan', async () => {
 		const { wrapper, el: group } = await groupIn(140, '', 6);
 		el = wrapper;

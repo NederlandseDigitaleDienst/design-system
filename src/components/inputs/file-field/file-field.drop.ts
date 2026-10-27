@@ -78,6 +78,12 @@ export function acceptNames(accept: string): AcceptName[] | null {
 	return names.length > 0 ? names : null;
 }
 
+/** One spelling per format, so `.jpg` in `accept` takes a `.jpeg` file, as the
+ *  file dialog does, which filters on the format and not on the letters. */
+function sameFormat(extension: string): string {
+	return { jpeg: 'jpg', tif: 'tiff' }[extension] ?? extension;
+}
+
 function tokens(accept: string): string[] {
 	return accept.split(',').map((token) => token.trim().toLowerCase()).filter(Boolean);
 }
@@ -96,7 +102,8 @@ export function fileMatches(accept: string, file: File): boolean {
 	// Some platforms give HEIC and other less common formats no type, where the
 	// file dialog still goes by the extension; so does this.
 	const type = file.type.toLowerCase() || EXTENSION_TYPES[name.slice(name.lastIndexOf('.') + 1)]?.[0] || '';
-	return list.some((token) => (token.startsWith('.') ? name.endsWith(token) : typeMatches(token, type)));
+	const extension = sameFormat(name.slice(name.lastIndexOf('.') + 1));
+	return list.some((token) => (token.startsWith('.') ? sameFormat(token.slice(1)) === extension : typeMatches(token, type)));
 }
 
 /** Whether a dragged file of `type` can be ruled out against `accept` before the

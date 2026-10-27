@@ -90,7 +90,7 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 
 	private _resizeObserver = new ResizeObserver(([entry]) => this._measureFit(entry.contentRect.width));
 
-		/** The trigger and its popover have to agree on an id, and two groups on a
+	/** The trigger and its popover have to agree on an id, and two groups on a
 	 *  page must not open each other's list. */
 	private readonly _id = Math.random().toString(36).slice(2, 9);
 
