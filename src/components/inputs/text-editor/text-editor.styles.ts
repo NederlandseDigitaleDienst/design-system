@@ -44,6 +44,11 @@ export const textEditorStyles = css`
 		--_text-editor-code-content-height: 1.32em;
 		--_text-editor-marker-font-size: var(--primitives-font-size-90);
 		--_text-editor-task-box-size: 1.7em;
+		--_text-editor-code-copy-gap: var(--primitives-space-4);
+		--_text-editor-code-copy-font: var(--semantics-buttons-sm-primary-text-font);
+		--_text-editor-code-copy-content-color: var(--semantics-buttons-accent-transparent-content-color);
+		--_text-editor-code-copy-is-hovered-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-color);
+		--_text-editor-code-copy-is-active-content-color: var(--semantics-buttons-accent-transparent-is-active-content-color);
 		--_text-editor-task-box-shift: -0.11em;
 		/* JetBrains Mono advance (600/1000 em) at the marker size; leading
 		   list/quote markers are mono so the hanging indent equals their width. */
@@ -539,6 +544,58 @@ export const textEditorStyles = css`
 	}
 
 	.cm-md-task-box-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	/* The opening line of a code block is its head: the language on the left,
+	   the copy button on the right edge of the block. */
+	.cm-md-code-head {
+		position: relative;
+	}
+
+	.cm-md-code-copy-wrap {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		translate: 0 -50%;
+	}
+
+	.cm-md-code-copy {
+		display: inline-flex;
+		gap: var(--_text-editor-code-copy-gap);
+		align-items: center;
+		border: none;
+		border-radius: var(--_text-editor-token-corner-radius);
+		background: none;
+		padding: 0;
+		color: var(--_text-editor-code-copy-content-color);
+		font: var(--_text-editor-code-copy-font);
+	}
+
+	.cm-md-code-copy:hover {
+		color: var(--_text-editor-code-copy-is-hovered-content-color);
+	}
+
+	.cm-md-code-copy:active {
+		color: var(--_text-editor-code-copy-is-active-content-color);
+	}
+
+	.cm-md-code-copy:focus-visible {
+		outline: var(--semantics-focus-ring-outline);
+		outline-offset: var(--semantics-focus-ring-outline-offset);
+		box-shadow: var(--semantics-focus-ring-box-shadow);
+	}
+
+	.cm-md-code-copy-icon {
+		width: 1.1em;
+	}
+
+	.cm-md-code-copy-status {
 		position: absolute;
 		width: 1px;
 		height: 1px;

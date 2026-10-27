@@ -14,9 +14,9 @@ import { taskBox } from './text-editor.tasks.js';
  * only the picture changes. A read-only or disabled editor has no caret to
  * reveal anything, so there every mark is hidden.
  *
- * A code block loses its fence lines (the ``` above and below), since its own
- * tint and edge already say what it is; a language on the opening fence stays,
- * as a label above the block. A numbered list keeps its numbers, in the color
+ * A code block loses its closing fence line, since its own tint and edge
+ * already say what it is. Its opening line stays as the head of the block, with
+ * the language as a label and a copy button, and only its backticks go. A numbered list keeps its numbers, in the color
  * of the text: those are content. */
 
 /** The marks hidden inside inline constructs, by the construct they belong to. */
@@ -112,11 +112,15 @@ function buildHiddenFences(state: EditorState): DecorationSet {
 			const last = state.doc.lineAt(node.to).number;
 			// A block with no lines of its own would vanish with its fences.
 			if (last - first + 1 <= fences.length) return false;
+			// The opening line stays, as the head of the block: the language on the
+			// left, the copy button on the right (text-editor.code-copy.ts). Only its
+			// backticks go.
 			const info = node.node.getChild('CodeInfo');
+			const open = node.node.getChild('CodeMark')!;
 			for (const [index, line] of fences.entries()) {
-				if (index === 0 && info) {
-					const open = node.node.getChild('CodeMark')!;
-					ranges.push(hideFence.range(open.from, info.from), codeLanguage.range(info.from, info.to));
+				if (index === 0) {
+					ranges.push(hideFence.range(open.from, info ? info.from : open.to));
+					if (info) ranges.push(codeLanguage.range(info.from, info.to));
 				} else {
 					ranges.push(hideLine.range(line.from, line.to));
 				}

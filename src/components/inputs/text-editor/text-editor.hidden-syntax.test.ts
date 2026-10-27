@@ -44,6 +44,13 @@ function line(el: El, n: number): Element {
 
 const frame = (): Promise<void> => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 
+/** The text of a line without the copy button on the head of a code block. */
+function lineText(line: Element): string {
+	const copy = line.cloneNode(true) as Element;
+	copy.querySelector('.cm-md-code-copy-wrap')?.remove();
+	return copy.textContent ?? '';
+}
+
 describe('nldd-text-editor syntax="hidden"', () => {
 	let el: El;
 	afterEach(() => cleanup(el));
@@ -108,7 +115,7 @@ describe('nldd-text-editor syntax="hidden"', () => {
 	it('takes the fence lines of a code block out until the caret is in it', async () => {
 		el = await make();
 		caret(el, DOC.indexOf('Slot'));
-		const lines = () => [...el.view.contentDOM.querySelectorAll('.cm-line')].map((l) => l.textContent);
+		const lines = () => [...el.view.contentDOM.querySelectorAll('.cm-line')].map(lineText);
 		expect(lines()).not.toContain('```bash');
 		expect(lines()).toContain('npm ci');
 		caret(el, DOC.indexOf('npm ci') + 2);
@@ -122,7 +129,7 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		await el.updateComplete;
 		await waitForUpdate(el);
 		caret(el, el.view.state.doc.length);
-		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')].map((l) => l.textContent);
+		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')].map(lineText);
 		expect(lines.filter((t) => t === '```')).toHaveLength(2);
 	});
 

@@ -28,7 +28,12 @@
  * editor. A screen reader reads "Taak, open" or "Taak, afgerond" in its place.
  *
  * A code block that names its language after the backticks is highlighted in
- * it, as in nldd-code-viewer; the grammar loads with the first such block. Commands keep focus on the editor. An inline toggle wraps
+ * it, as in nldd-code-viewer; the grammar loads with the first such block. Its
+ * opening line is the head of the block, with a "Kopieer" button at the right
+ * edge that copies the code without its fences and says "Gekopieerd" or
+ * "Kopiëren mislukt", as the code viewer does. In an editable editor the button
+ * is no tab stop (select and copy is the keyboard route); read-only or disabled
+ * it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps
  * the selected text (whitespace at its edges stays outside the markers), unwraps
  * a run the caret is in, and with the caret at the very end of a run steps out
  * of it. Bold that a typed space has broken (`**woord **`) keeps its styling
@@ -60,7 +65,7 @@
  * @attr {number} rows - Minimum visible rows (the floor in every resize mode). Default: 6.
  * @attr {string} resize - 'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)
  * @attr {string} appearance - 'simple' (default, bare) | 'input-field' (framed surface)
- * @attr {string} syntax - 'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its ``` fence lines until the caret is in it, since its own tint and edge already say what it is; a language on the opening fence stays, as a label above the block. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
+ * @attr {string} syntax - 'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way.
  * @attr {string} accessible-label - Accessible label forwarded to the editor. Set automatically by nldd-form-field.
  *
  * @prop {MentionSource} mentionSource - Consumer-supplied @-mention candidate source (property only). Without it, @-typeahead is inert.
@@ -69,7 +74,7 @@
  * @prop {Typeahead[]} typeaheads - Your own typeahead lists next to the @-mention (property only): each a trigger character (`#`, `:`, `/`), a `source` that returns candidates for the text typed after it, an optional `query` (a regular expression for what may follow the trigger, such as a space in a full name), an optional `emptyText` (what to say when there are no candidates, instead of the translated default) and an optional `insert` that decides what a choice writes (by default the trigger, the text and a space). Lists on one trigger are merged in order. A candidate is `{ id, text, supportingText? }` and can carry an `avatar` (its row then takes two lines, the supporting text under the text), an `icon` or a `symbol` for its row.
  * @attr {boolean} annotatable - Enable the annotation overlay (off by default). Annotations only render when this is set.
  * @prop {Annotation[]} annotations - Consumer-supplied annotation overlay (property only). Anchored by offset and mapped through edits; the text stays clean. Requires `annotatable`. Assign a NEW array to apply changes (Lit dirty-checks by identity, so in-place mutation like `.push()` won't re-render): `editor.annotations = [...editor.annotations, next]`.
- * @attr {object} translations - Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge and the label of a task's box). Unset keys fall back to Dutch.
+ * @attr {object} translations - Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch.
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
  *
  * @fires input - When the content changes (detail: { value })
@@ -136,6 +141,7 @@ import { stripSentinels, docToClean, cleanToDoc, sentinelPositions } from './tex
 import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './text-editor.i18n.js';
 import { translate } from '../../../utilities/translations.js';
 import { tasks } from './text-editor.tasks.js';
+import { codeCopy } from './text-editor.code-copy.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 export type TextEditorAppearance = 'input-field' | 'simple';
@@ -272,6 +278,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			'components.text-editor.annotation-plural-lowercase',
 			'components.text-editor.task-open-label',
 			'components.text-editor.task-done-label',
+			'components.text-editor.code-copy-action',
 		].map((key) => this._t(key as keyof NLDDTextEditorTranslations)).join('\n');
 	}
 
@@ -306,6 +313,12 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			// Prec.highest so the badge nests inside a heading/bold run and scales with
 			// it, like the mention and annotation, instead of staying at the base size.
 			Prec.highest(linkOpenBadge((url) => this._t('components.text-editor.open-in-new-tab-label', { url }))),
+			// A copy button on the head of each code block. See text-editor.code-copy.ts.
+			codeCopy({
+				copy: () => this._t('components.text-editor.code-copy-action'),
+				success: () => this._t('components.text-editor.code-copy-success-text'),
+				failure: () => this._t('components.text-editor.code-copy-failure-text'),
+			}),
 			// Checking a task by click and Cmd/Ctrl+Enter. See text-editor.tasks.ts.
 			tasks({
 				open: () => this._t('components.text-editor.task-open-label'),
