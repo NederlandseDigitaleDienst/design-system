@@ -484,8 +484,13 @@ export const textEditorStyles = css`
 
 	/* A shadow, not a border, so the line takes no room and the text stays put
 	   when the quote shows its marks instead. */
+	/* A gradient, not an inset shadow with an offset: iOS Safari leaves a hairline
+	   of such a shadow along the bottom of a line with a fractional height. */
 	.cm-md-quote-line {
-		box-shadow: inset var(--_text-editor-quote-border-width) 0 0 var(--_text-editor-quote-border-color);
+		background-image: linear-gradient(var(--_text-editor-quote-border-color), var(--_text-editor-quote-border-color));
+		background-repeat: no-repeat;
+		background-position: left;
+		background-size: var(--_text-editor-quote-border-width) 100%;
 	}
 
 	:host .cm-md-quote-mark-hidden,

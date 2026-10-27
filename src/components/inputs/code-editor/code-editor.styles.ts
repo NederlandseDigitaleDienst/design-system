@@ -131,10 +131,14 @@ export const codeEditorStyles = css`
 		tab-size: 2;
 	}
 
-	/* The gutter stays put while the code scrolls sideways under it. */
+	/* The gutter stays put while the code scrolls sideways under it. The
+	   divider is a gradient: an inset shadow with an offset leaves a hairline on iOS. */
 	:host .cm-gutters.cm-gutters {
-		box-shadow: inset calc(-1 * var(--_code-editor-gutter-border-width)) 0 var(--_code-editor-gutter-border-color);
 		background-color: var(--_code-editor-gutter-background-color);
+		background-image: linear-gradient(var(--_code-editor-gutter-border-color), var(--_code-editor-gutter-border-color));
+		background-repeat: no-repeat;
+		background-position: right;
+		background-size: var(--_code-editor-gutter-border-width) 100%;
 	}
 
 	/* Read-only, like a native read-only field: select and copy, but no caret. */

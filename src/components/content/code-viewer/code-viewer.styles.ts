@@ -171,10 +171,14 @@ export const codeViewerStyles = css`
 		padding-right: var(--_code-viewer-actions-area-size);
 	}
 
-	/* The gutters stay put while the code scrolls sideways under them. */
+	/* The gutters stay put while the code scrolls sideways under them. The
+	   divider is a gradient: an inset shadow with an offset leaves a hairline on iOS. */
 	:host .cm-gutters.cm-gutters {
-		box-shadow: inset calc(-1 * var(--_code-viewer-gutter-border-width)) 0 var(--_code-viewer-gutter-border-color);
 		background-color: var(--_code-viewer-background-color);
+		background-image: linear-gradient(var(--_code-viewer-gutter-border-color), var(--_code-viewer-gutter-border-color));
+		background-repeat: no-repeat;
+		background-position: right;
+		background-size: var(--_code-viewer-gutter-border-width) 100%;
 	}
 
 	:host([diff]) .cm-gutters {
@@ -230,13 +234,19 @@ export const codeViewerStyles = css`
 		color: var(--_code-viewer-diff-row-number-color);
 	}
 
+	.cm-diff-sign-gutter :is(.cm-diff-added, .cm-diff-removed) {
+		background-repeat: no-repeat;
+		background-position: right;
+		background-size: var(--_code-viewer-gutter-border-width) 100%;
+	}
+
 	.cm-diff-sign-gutter .cm-diff-added {
-		box-shadow: inset calc(-1 * var(--_code-viewer-gutter-border-width)) 0 var(--_code-viewer-diff-added-word-background-color);
+		background-image: linear-gradient(var(--_code-viewer-diff-added-word-background-color), var(--_code-viewer-diff-added-word-background-color));
 		color: var(--_code-viewer-diff-added-sign-color);
 	}
 
 	.cm-diff-sign-gutter .cm-diff-removed {
-		box-shadow: inset calc(-1 * var(--_code-viewer-gutter-border-width)) 0 var(--_code-viewer-diff-removed-word-background-color);
+		background-image: linear-gradient(var(--_code-viewer-diff-removed-word-background-color), var(--_code-viewer-diff-removed-word-background-color));
 		color: var(--_code-viewer-diff-removed-sign-color);
 	}
 
