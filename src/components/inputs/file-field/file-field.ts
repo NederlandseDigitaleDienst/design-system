@@ -18,7 +18,9 @@
  * does not do: a drop that does not fit is refused as a whole, the previous
  * choice stays, and the field says why until the next action: "Sleep één
  * bestand", or what `accept` takes, named from it ("Het bestand moet een PDF
- * zijn"; "Dit bestandstype past niet" where a type in it has no name).
+ * zijn"; "Dit bestandstype past niet" where a type in it has no name). A
+ * dropped folder is refused as well: it arrives as a file without a type that
+ * cannot be read.
  *
  * While files are dragged over the page, every field marks itself as a place
  * to put them, and the field under the pointer says it will take them (a field
@@ -69,6 +71,7 @@ import { nlddFileFieldTranslations, type NLDDFileFieldTranslations } from './fil
 import {
 	acceptNames,
 	carriesFiles,
+	holdsFolder,
 	fileMatches,
 	typeRuledOut,
 	unwatchDrags,
@@ -278,9 +281,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/** Cuts the chosen name in the middle to the width it has. Without a width
-	 *  (a hidden field), it keeps the CSS cut of the first render. */
+	 *  (a hidden field), it falls back to the CSS cut of the first render. */
 	private _fitName(): void {
-		const value = this.shadowRoot?.querySelector<HTMLElement>('.file-field__value.has-file');
+		const value = this.shadowRoot?.querySelector<HTMLElement>('.file-field__value');
 		const name = this.shadowRoot?.querySelector<HTMLElement>('.file-field__name');
 		if (this._files.length !== 1 || !value || !name) {
 			this._fittedName = null;
@@ -296,7 +299,11 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 		const style = getComputedStyle(value);
 		const width = value.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-		if (width <= 0) return;
+		if (width <= 0) {
+			this._fittedName = null;
+			this._nameTruncated = false;
+			return;
+		}
 		const { measure, done } = textMeasurer(name);
 		try {
 			const { text, truncated } = truncateMiddle(this._files[0].name, width, measure);
@@ -343,6 +350,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	private _judge(transfer: DataTransfer, files?: File[]): DropRejection | null {
 		if (files) {
 			if (!this.multiple && files.length > 1) return 'count';
+			if (holdsFolder(transfer)) return 'type';
 			return files.every((file) => fileMatches(this.accept, file)) ? null : 'type';
 		}
 		const items = Array.from(transfer.items).filter((item) => item.kind === 'file');
@@ -455,7 +463,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/** The button that opens the dialog: the whole surface while the field is
 	 *  empty, "Wijzigen" once it has a file. */
 	private _chooseButton(): HTMLElement | null {
-		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse, nldd-button') ?? null;
+		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse-button, nldd-button') ?? null;
 	}
 
 	/**

@@ -23,8 +23,8 @@ const png = (name: string) => new File(['x'], name, { type: 'image/png' });
  *  place, the active one, in the active layer. */
 const shownText = (el: NLDDFileField) => {
 	const root = el.shadowRoot!;
-	const scope = root.querySelector('.file-field__browse') ?? root.querySelector('.file-field__layers > .is-active')!;
-	return scope.querySelector('.file-field__stack-item.is-active')!.textContent!.replace(/\s+/g, ' ').trim();
+	const scope = root.querySelector('.file-field__browse-button') ?? root.querySelector('.file-field__chosen-area > .is-active')!;
+	return scope.querySelector('.file-field__text.is-active')!.textContent!.replace(/\s+/g, ' ').trim();
 };
 const browseText = shownText;
 const fullName = (el: NLDDFileField) => el.shadowRoot!.querySelector('.file-field__full-name')!.textContent;
@@ -59,10 +59,10 @@ describe('nldd-file-field', () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage"></nldd-file-field>');
 		await waitForUpdate(el);
 		expect(browseText(el)).toBe('Bestand kiezen of sleep het hierheen');
-		expect(el.shadowRoot!.querySelector('.file-field__browse')!.getAttribute('aria-label')).toBe('Bestand kiezen, Bijlage');
+		expect(el.shadowRoot!.querySelector('.file-field__browse-button')!.getAttribute('aria-label')).toBe('Bestand kiezen, Bijlage');
 		expect(el.shadowRoot!.querySelector('nldd-icon-button')).toBeNull();
 		const click = vi.spyOn(el.shadowRoot!.querySelector('input')!, 'click').mockImplementation(() => {});
-		el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse')!.click();
+		el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!.click();
 		expect(click).toHaveBeenCalledOnce();
 	});
 
@@ -166,7 +166,7 @@ describe('nldd-file-field', () => {
 	it('keeps the validation icon inside the button while empty, so a press on it opens the dialog too', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field invalid></nldd-file-field>');
 		await waitForUpdate(el);
-		expect(el.shadowRoot!.querySelector('.file-field__browse .file-field__validation-icon-area')).not.toBeNull();
+		expect(el.shadowRoot!.querySelector('.file-field__browse-button .file-field__validation-icon-area')).not.toBeNull();
 	});
 
 	it('trades the choose button for a change button once a file is chosen', async () => {
@@ -276,7 +276,7 @@ describe('nldd-file-field', () => {
 			choose(el, pdf('rapport.pdf'));
 			await waitForUpdate(el);
 			const replaceText = () => shownText(el);
-			const rowActive = () => el.shadowRoot!.querySelector('.file-field__row')!.classList.contains('is-active');
+			const rowActive = () => el.shadowRoot!.querySelector('.file-field__chosen-file')!.classList.contains('is-active');
 			drag(document.body, 'dragover', transfer(pdf('nieuw.pdf')));
 			await waitForUpdate(el);
 			expect(replaceText()).toBe('Sleep hierheen om te vervangen');
@@ -333,6 +333,16 @@ describe('nldd-file-field', () => {
 			expect(tooltip(el).getAttribute('text')).toBe(long);
 			expect(tooltip(el).getAttribute('timing')).toBe('delay');
 			expect(fullName(el)).toBe(long);
+		});
+
+		it('falls back to the CSS cut while it has no width, instead of keeping an old one', async () => {
+			el = await fixture<NLDDFileField>('<nldd-file-field style="width: 280px"></nldd-file-field>');
+			await waitForUpdate(el);
+			choose(el, txt(long));
+			await vi.waitFor(() => expect(shown(el)).toContain('…'));
+			el.style.display = 'none';
+			await vi.waitFor(() => expect(el.shadowRoot!.querySelector('.file-field__name-end')).not.toBeNull());
+			expect(tooltip(el).getAttribute('timing')).toBe('never');
 		});
 
 		it('stays whole without a tooltip where it fits', async () => {

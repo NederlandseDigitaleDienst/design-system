@@ -111,6 +111,12 @@ export function typeRuledOut(accept: string, type: string): boolean {
 	});
 }
 
+/** Whether a drop holds a folder. It arrives as a File without type or
+ *  extension, which the field could not read, so it is refused. */
+export function holdsFolder(transfer: DataTransfer): boolean {
+	return Array.from(transfer.items).some((item) => item.kind === 'file' && item.webkitGetAsEntry?.()?.isDirectory);
+}
+
 /** Whether a drag carries files, as opposed to text or a link. */
 export function carriesFiles(transfer: DataTransfer | null): boolean {
 	return !!transfer && Array.from(transfer.types).includes('Files');
@@ -128,11 +134,12 @@ function takesDropItself(path: EventTarget[]): boolean {
 
 const targets = new Set<DropTarget>();
 
-/* Dragover fires every few hundred milliseconds at most while the pointer is on
- * the page, even when it stands still. A drag that leaves the window or is
- * canceled sends no reliable event in every browser, so the page state ends
- * when dragover stops coming. */
-const DRAG_TIMEOUT_MS = 500;
+/* Dragover keeps firing while the pointer is on the page, even when it stands
+ * still: about every 50ms in Chrome, every 350ms in Firefox. A drag that leaves
+ * the window or is canceled sends no reliable event in every browser, so the
+ * page state ends when dragover stops coming, with room for a late event. A
+ * drop or dragend ends it at once. */
+const DRAG_TIMEOUT_MS = 1000;
 let endTimer: ReturnType<typeof setTimeout> | undefined;
 
 function end(): void {

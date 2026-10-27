@@ -66,11 +66,11 @@ interface Variant {
  */
 function renderStack(variants: Variant[]): TemplateResult {
 	return html`
-		<span class="file-field__stack">${variants.map((variant) => html`
+		<span class="file-field__texts">${variants.map((variant) => html`
 			<span class=${classMap({
-				'file-field__stack-item': true,
+				'file-field__text': true,
 				'is-active': variant.active,
-				[`is-${variant.kind}`]: !!variant.kind,
+				[`file-field__text--${variant.kind}`]: !!variant.kind,
 			})}>${variant.content}</span>
 		`)}</span>
 	`;
@@ -108,12 +108,12 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 		? component._t('components.file-field.drop-hint-multiple-lowercase-text')
 		: component._t('components.file-field.drop-hint-lowercase-text')}</span>`;
 	return html`
-		<button class="file-field__browse"
+		<button class="file-field__browse-button"
 			type="button"
 			aria-label=${component._chooseAccessibleLabel() || component._chooseLabel()}
 			?disabled=${component.disabled}
 			@click=${component._handleChoose}
-		><span class="file-field__value is-sentence">${renderStack([
+		><span class="file-field__sentence">${renderStack([
 			{ content: sentence, active: !drags.some((variant) => variant.active) },
 			...drags,
 		])}</span>${renderValidationIcon(component)}</button>
@@ -163,10 +163,10 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 		nameVariants.push({ content: component._rejectionText('count'), kind: 'rejected', active: refused === 'count' });
 	}
 	return html`
-		<div class="file-field__layers">
-			<div class=${classMap({ 'file-field__row': true, 'is-active': !dragging })}>
+		<div class="file-field__chosen-area">
+			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !dragging })}>
 				<nldd-icon class="file-field__file-icon" icon=${fileIcon(files)} aria-hidden="true"></nldd-icon>
-				<span class="file-field__value has-file">${renderStack(nameVariants)}</span>
+				<span class="file-field__value">${renderStack(nameVariants)}</span>
 				<div class="file-field__actions">
 					<nldd-button
 						appearance="neutral-tinted"
@@ -188,8 +188,8 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 				</div>
 				${renderValidationIcon(component)}
 			</div>
-			<div class=${classMap({ 'file-field__replace': true, 'is-active': dragging })}>
-				<span class="file-field__value is-sentence">${renderStack(drags)}</span>
+			<div class=${classMap({ 'file-field__replace-area': true, 'is-active': dragging })}>
+				<span class="file-field__sentence">${renderStack(drags)}</span>
 				${renderValidationIcon(component)}
 			</div>
 		</div>

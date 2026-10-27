@@ -91,11 +91,11 @@ export const fileFieldStyles = css`
 		pointer-events: none;
 	}
 
-	.file-field:not([class*="is-drag-"]):has(> .file-field__browse:hover) {
+	.file-field:not([class*="is-drag-"]):has(> .file-field__browse-button:hover) {
 		--_file-field-highlight-border-color: var(--_file-field-browse-is-hovered-highlight-border-color);
 	}
 
-	.file-field:not([class*="is-drag-"]):has(> .file-field__browse:active) {
+	.file-field:not([class*="is-drag-"]):has(> .file-field__browse-button:active) {
 		--_file-field-highlight-border-color: var(--_file-field-browse-is-active-highlight-border-color);
 	}
 
@@ -124,8 +124,8 @@ export const fileFieldStyles = css`
 		display: none;
 	}
 
-	.file-field__browse,
-	.file-field__replace {
+	.file-field__browse-button,
+	.file-field__replace-area {
 		box-sizing: border-box;
 		display: flex;
 		margin: 0;
@@ -144,37 +144,37 @@ export const fileFieldStyles = css`
 		text-align: center;
 	}
 
-	.file-field:not([class*="is-drag-"]) > .file-field__browse:hover {
+	.file-field:not([class*="is-drag-"]) > .file-field__browse-button:hover {
 		background-color: var(--_file-field-browse-is-hovered-background-color);
 	}
 
-	.file-field:not([class*="is-drag-"]) > .file-field__browse:active {
+	.file-field:not([class*="is-drag-"]) > .file-field__browse-button:active {
 		background-color: var(--_file-field-browse-is-active-background-color);
 	}
 
-	.file-field__browse:focus-visible {
+	.file-field__browse-button:focus-visible {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
 		box-shadow: var(--semantics-focus-ring-box-shadow);
 	}
 
-	.file-field__browse:focus:not(:focus-visible) {
+	.file-field__browse-button:focus:not(:focus-visible) {
 		outline: none;
 	}
 
-	:host([valid]) :is(.file-field__browse, .file-field__replace),
-	:host([invalid]) :is(.file-field__browse, .file-field__replace) {
+	:host([valid]) :is(.file-field__browse-button, .file-field__replace-area),
+	:host([invalid]) :is(.file-field__browse-button, .file-field__replace-area) {
 		padding-left: calc(var(--_file-field-validation-icon-size) + var(--_file-field-validation-icon-area-padding-right));
 	}
 
-	.file-field__value.is-sentence {
+	.file-field__sentence {
 		padding-block: var(--primitives-space-8);
 		white-space: normal;
 		overflow-wrap: anywhere;
 		text-wrap: balance;
 	}
 
-	.file-field__layers {
+	.file-field__chosen-area {
 		display: grid;
 		min-width: 0;
 		flex-grow: 1;
@@ -182,46 +182,46 @@ export const fileFieldStyles = css`
 		grid-template-columns: minmax(0, 1fr);
 	}
 
-	.file-field__row {
+	.file-field__chosen-file {
 		display: flex;
 		min-width: 0;
 		align-items: center;
 	}
 
-	.file-field__row,
-	.file-field__replace {
+	.file-field__chosen-file,
+	.file-field__replace-area {
 		grid-area: 1 / 1;
 	}
 
-	.file-field__row:not(.is-active),
-	.file-field__replace:not(.is-active) {
+	.file-field__chosen-file:not(.is-active),
+	.file-field__replace-area:not(.is-active) {
 		visibility: hidden;
 	}
 
-	.file-field__stack {
+	.file-field__texts {
 		display: grid;
 		min-width: 0;
 		grid-template-columns: minmax(0, 1fr);
 		align-items: center;
 	}
 
-	.file-field__stack-item {
+	.file-field__text {
 		grid-area: 1 / 1;
 		min-width: 0;
 	}
 
-	.file-field__stack-item:not(.is-active) {
+	.file-field__text:not(.is-active) {
 		visibility: hidden;
 	}
 
-	.file-field__stack-item.is-rejected {
+	.file-field__text--rejected {
 		white-space: normal;
 		overflow-wrap: anywhere;
 		text-wrap: balance;
 	}
 
 	@media (hover: none) {
-		.file-field__stack-item:is(.is-drag, .is-drop, .is-rejected) {
+		:is(.file-field__text--drag, .file-field__text--drop, .file-field__text--rejected) {
 			display: none;
 		}
 	}
@@ -239,7 +239,8 @@ export const fileFieldStyles = css`
 		color: var(--semantics-content-color);
 	}
 
-	.file-field__value {
+	.file-field__value,
+	.file-field__sentence {
 		box-sizing: border-box;
 		min-width: 0;
 		padding-right: var(--_file-field-inline-padding);
@@ -247,20 +248,23 @@ export const fileFieldStyles = css`
 		flex-grow: 1;
 		color: var(--_file-field-value-color);
 		font: var(--_file-field-text-font);
+	}
+
+	.file-field__value {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
 	}
 
-	.file-field__stack-item:is(.is-drag, .is-drop, .is-rejected) {
+	:is(.file-field__text--drag, .file-field__text--drop, .file-field__text--rejected) {
 		font: var(--_file-field-browse-action-font);
 	}
 
-	.file-field__stack-item.is-drop {
+	.file-field__text--drop {
 		color: var(--_file-field-browse-action-color);
 	}
 
-	.file-field__stack-item.is-rejected {
+	.file-field__text--rejected {
 		color: var(--_file-field-rejected-color);
 	}
 
@@ -268,7 +272,7 @@ export const fileFieldStyles = css`
 		color: var(--semantics-content-secondary-color);
 	}
 
-	.file-field__value.has-file {
+	.file-field__value {
 		padding-left: var(--primitives-space-8);
 	}
 
