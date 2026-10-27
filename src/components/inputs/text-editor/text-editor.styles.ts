@@ -17,6 +17,7 @@ export const textEditorStyles = css`
 		--_text-editor-background-color: transparent;
 		--_text-editor-highlight-border-color: transparent;
 		--_text-editor-highlight-border-shadow: none;
+		--_text-editor-frame-z-index: 1;
 		--_text-editor-padding-block: 0px;
 		/* Room for the caret's own ink at the first and last position of a line:
 		   its width plus its ring. Without it the edge carets are clipped. */
@@ -137,7 +138,6 @@ export const textEditorStyles = css`
 		display: flex;
 		position: relative;
 		border-radius: var(--_text-editor-corner-radius);
-		box-shadow: var(--_text-editor-highlight-border-shadow);
 		background-color: var(--_text-editor-background-color);
 		min-height: 0;
 		flex-direction: column;
@@ -146,6 +146,22 @@ export const textEditorStyles = css`
 		flex-basis: auto;
 		color: var(--_text-editor-content-color);
 		font: var(--_text-editor-font);
+	}
+
+	/* The border ring lies over the content, so a selection or a block that runs
+	   to the edge cannot cover it. Inset, it takes no layout space. */
+	.text-editor::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: var(--_text-editor-frame-z-index);
+		border-radius: inherit;
+		box-shadow: var(--_text-editor-highlight-border-shadow);
+		pointer-events: none;
+	}
+
+	.text-editor .cm-editor {
+		isolation: isolate;
 	}
 
 	:host([disabled]) .text-editor {
@@ -160,7 +176,7 @@ export const textEditorStyles = css`
 	:host([appearance="input-field"]) .text-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_text-editor-highlight-border-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow);
 	}
 
 
