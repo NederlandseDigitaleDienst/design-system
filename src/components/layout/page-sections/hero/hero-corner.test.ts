@@ -254,4 +254,43 @@ describe('nldd-hero – corner', () => {
 		await hero('corner layout="contained" main-width="full"');
 		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('corner'))).toBe(false);
 	});
+	it('zet het paneel op mobiel onder de afbeelding, even breed', async () => {
+		await hero('corner="top-left" layout="contained" main-position="bottom-left"', 375);
+		const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+		const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+		expect(main.top).toBeCloseTo(media.bottom, 0);
+		expect(main.left).toBeCloseTo(media.left, 0);
+		expect(main.right).toBeCloseTo(media.right, 0);
+	});
+
+	it('laat het paneel op mobiel zonder corner over de afbeelding vallen', async () => {
+		await hero('layout="contained" main-position="bottom-left"', 375);
+		const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+		const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+		expect(main.top).toBeLessThan(media.bottom);
+		expect(main.left).toBeGreaterThan(media.left);
+	});
+	it('geeft het paneel meer padding langs de twee kanten van zijn afgeronde hoek', async () => {
+		await hero('corner="top-left" layout="contained" main-position="bottom-right"');
+		expect(el.getAttribute('data-main-corner')).toBe('top-left');
+		const style = getComputedStyle(el.shadowRoot!.querySelector('.hero__main')!);
+		const [top, right, bottom, left] = [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft].map(parseFloat);
+		expect(top).toBeGreaterThan(bottom);
+		expect(left).toBeGreaterThan(right);
+	});
+	it('laat een paneel langs de rand van de hoek niet over de boog lopen', async () => {
+		await hero('corner layout="contained" main-position="top-right" main-width="90%"');
+		expect(el.getAttribute('data-media-corner')).toBe('top-left');
+		const media = el.shadowRoot!.querySelector('.hero__media')!;
+		const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+		const radius = parseFloat(getComputedStyle(media).borderTopLeftRadius);
+		expect(main.left).toBeGreaterThan(media.getBoundingClientRect().left + radius);
+	});
+
+	it('laat het paneel doorlopen als de hoek aan de overkant zit', async () => {
+		await hero('corner="bottom-left" layout="contained" main-position="top-right" main-width="90%"');
+		const media = el.shadowRoot!.querySelector('.hero__media')!.getBoundingClientRect();
+		const main = el.shadowRoot!.querySelector('.hero__main')!.getBoundingClientRect();
+		expect(main.width).toBeCloseTo(media.width * 0.9, 0);
+	});
 });

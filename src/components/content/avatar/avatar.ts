@@ -36,7 +36,7 @@
  * @attr {string} accessible-label - Name of the link or button; without it `name` is used
  * @attr {boolean} decorative - Hides the avatar from assistive software (use when the name already stands beside it as text)
  * @attr {string} tooltip-timing - When the name appears as a tooltip on hover or focus: `delay` (the default, after 700ms), `instant`, or `never`. An avatar shows no text, so without a tooltip the name is readable by assistive software only. A `decorative` avatar shows none regardless: there the name already stands beside it as text
- * @attr {string} href - Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it
+ * @attr {string} href - Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8)
  * @attr {boolean} no-tab - Takes the control out of the tab order (tabindex="-1"), for an avatar that is a link or a button inside a roving container (a row of an nldd-list). Does nothing on a decorative avatar.
  * @attr {boolean} button - Makes the avatar a button; ignored when `href` is set
  * @attr {string} target - Link target for href (e.g. '_blank'); completes rel and announces "Opens in a new tab". An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
@@ -167,6 +167,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	}
 
 	private _warnedLabel = false;
+	private _warnedTargetSize = false;
 
 	/** Set when the image errors, so the template falls through to the next
 	 *  content step. Not private: the template module reads it. */
@@ -259,6 +260,16 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 			}
 			else if (!missing) {
 				this._warnedLabel = false;
+			}
+			// WCAG 2.5.8: a target under 24px passes only with room around it, which
+			// the avatar cannot measure. `full` takes its size from the container.
+			const small = this.isInteractive && Number(this.size) < 24;
+			if (small && !this._warnedTargetSize) {
+				this._warnedTargetSize = true;
+				console.warn(`<nldd-avatar size="${this.size}">: a link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.`);
+			}
+			else if (!small) {
+				this._warnedTargetSize = false;
 			}
 		}
 		// The shape does not resize when only its content does, so the

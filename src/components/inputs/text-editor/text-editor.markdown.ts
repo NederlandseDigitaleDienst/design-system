@@ -8,6 +8,7 @@ import { isMentionLink, mentionTokens } from './text-editor.mention.js';
 import { inLinkContext } from './text-editor.links.js';
 import { heldEmphasis, heldEmphasisField } from './text-editor.emphasis.js';
 import { forEachLineStart, inCodeBlock, isRuleLine, treeAdvanced } from './text-editor.syntax.js';
+import { nestedLanguages } from '../../../utilities/codemirror/languages.js';
 
 /* Hybrid markdown rendering: the document stays plain markdown text, but the
  * formatting is shown inline (bold is bold, headings are larger, links are
@@ -223,7 +224,8 @@ const markDecorationPlugin = ViewPlugin.fromClass(
  * advance (--_text-editor-marker-advance). The indent uses that same product, so the first
  * line's text and every wrapped line line up — no per-line measurement, and it
  * holds in both the sans and mono body fonts. Layout-affecting → a StateField. */
-const HANGING_RE = /^(\s*(?:[-*+]|\d+[.)])\s+|\s*>+\s?)/;
+// A task's box belongs to the prefix, so its text wraps under the text, not under the box.
+const HANGING_RE = /^(\s*(?:[-*+]\s+(?:\[[ xX]\]\s+)?|\d+[.)]\s+)|\s*>+\s?)/;
 const prefixMonoDeco = Decoration.mark({ class: 'cm-md-listprefix' });
 const hangingLineCache: Record<number, Decoration> = {};
 function hangingLineDeco(length: number): Decoration {
@@ -262,7 +264,9 @@ const hangingIndentField = StateField.define<DecorationSet>({
 
 /** Markdown language (with GFM) plus the hybrid inline-styling decorations. */
 export const markdownEditing: Extension = [
-	markdown({ extensions: GFM }),
+	// A code block that names its language is highlighted in it, as in the code
+	// viewer; the grammar loads when the first such block appears.
+	markdown({ extensions: GFM, codeLanguages: nestedLanguages }),
 	markDecorationPlugin,
 	heldEmphasis,
 	hangingIndentField,

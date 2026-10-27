@@ -106,6 +106,9 @@ export const aliases = {
 	'valid': 'check-mark-circle',
 	'done': 'check-mark-circle',
 
+	// check-mark-circle-filled
+	'check-circle-filled': 'check-mark-circle-filled',
+
 	// check-mark-circle-light
 	'done-light': 'check-mark-circle-light',
 
@@ -278,6 +281,16 @@ export const aliases = {
 	// file-badge-plus
 	'new-document': 'file-badge-plus',
 
+	// file-gif
+	'gif-document': 'file-gif',
+
+	// file-heic
+	'heic-document': 'file-heic',
+
+	// file-jpg
+	'jpg-document': 'file-jpg',
+	'jpeg-document': 'file-jpg',
+
 	// file-markdown
 	'markdown-document': 'file-markdown',
 
@@ -298,9 +311,16 @@ export const aliases = {
 
 	// file-on-file
 	'documents': 'file-on-file',
+	'files': 'file-on-file',
 
 	// file-pdf
 	'pdf-document': 'file-pdf',
+
+	// file-png
+	'png-document': 'file-png',
+
+	// file-svg
+	'svg-document': 'file-svg',
 
 	// file-text
 	'text-document': 'file-text',
@@ -316,6 +336,13 @@ export const aliases = {
 
 	// file-text-on-file-text
 	'text-documents': 'file-text-on-file-text',
+
+	// file-tiff
+	'tiff-document': 'file-tiff',
+	'tif-document': 'file-tiff',
+
+	// file-webp
+	'webp-document': 'file-webp',
 
 	// square-1
 	'primary': 'square-1',

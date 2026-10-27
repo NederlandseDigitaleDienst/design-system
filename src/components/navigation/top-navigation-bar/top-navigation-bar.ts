@@ -45,6 +45,7 @@ import { NLDDMenuBar } from '../menu-bar/menu-bar.js';
 import '../../content/icon/icon.js';
 import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
+import { carryContext } from '../../../utilities/carried-context.js';
 
 /** Minimal typed interface for nldd-sheet API. */
 interface Sheet extends HTMLElement {
@@ -609,6 +610,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 			});
 		}
 		this._resetSheetToRoot();
+		if (this._globalMenuSheet) carryContext(this._globalMenuSheet, this);
 		// Defer show() so the current click event completes before the modal backdrop appears
 		requestAnimationFrame(() => {
 			this._globalMenuSheet?.show();

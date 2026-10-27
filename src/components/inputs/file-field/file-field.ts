@@ -1,18 +1,41 @@
 /**
  * Nederlandse Digitale Dienst File Field Component (Lit + TypeScript)
  *
- * A file picker that reads as one control: an nldd-button flush in the corner of
- * a tinted surface, the chosen file next to it, and a dismiss button to clear it
- * again. It wraps a hidden native `<input type="file">`, which is what makes the
- * picker open at all — a file dialog only opens from a user gesture on a real
- * input.
+ * A file picker that reads as one control. Empty, the whole tinted surface is
+ * one button with one sentence centered in it, "Bestand kiezen of sleep het
+ * hierheen", its first part accented, so a press anywhere on it opens the file
+ * dialog. Once a file is chosen, the surface shows it with the icon of its
+ * format, its name, a button to choose another and a dismiss button to clear it
+ * again. A long name is cut in the middle, so its start and its end stay in
+ * view ("Screenshot 20…at 13.12.21.png"); it then shows whole in a tooltip, and
+ * a screen reader reads it whole either way. It wraps a hidden native
+ * `<input type="file">`, which is what makes the picker open at all — a file
+ * dialog only opens from a user gesture on a real input.
+ *
+ * Files can be dropped on the whole field. A drop goes through the same input,
+ * so it fires the same `change` with the same detail and submits the same way as
+ * a pick. `accept` and `multiple` hold for a drop too, which the native input
+ * does not do: a drop that does not fit is refused as a whole, the previous
+ * choice stays, and the field says why for a few seconds: "Sleep één
+ * bestand", or what `accept` takes, named from it ("Het bestand moet een PDF
+ * zijn"; "Dit bestandstype past niet" where a type in it has no name). A
+ * dropped folder is refused as well ("Sleep een bestand, geen map"): it
+ * arrives as a file without a type that cannot be read, and only the drop
+ * tells it apart, not the drag. The message stays for a few seconds and then
+ * gives way to the field again.
+ *
+ * While files are dragged over the page, every field marks itself as a place
+ * to put them, and the field under the pointer says it will take them (a field
+ * with a file: that they replace it), or turns critical and refuses already
+ * when the number or the type rules them out. A file dropped next to a field no
+ * longer makes the browser open it and leave the page; a drop that another drop zone or an
+ * editable field takes is left alone. On a device without hover there is no
+ * dragging, so the field there drops the hint.
  *
  * The surface deliberately does not look like an input field. A border with
- * field semantics promises you can type into it; here you can only press a
- * button, so it uses button and surface colors instead of
- * `--semantics-input-fields-*`. The button keeps its own tinted background and
- * therefore sits a shade darker in the surface, which is what marks it as the
- * thing to press.
+ * field semantics promises you can type into it; here you can only press it or
+ * drop a file on it, so it has the border of a tinted surface instead of
+ * `--semantics-input-fields-*`.
  *
  * Several files are summarized, not listed: "3 bestanden" with a single cross
  * that clears all of them. Every pick replaces the whole FileList, and rebuilding
@@ -47,8 +70,30 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { fileFieldStyles } from './file-field.styles.js';
 import { fileFieldTemplate } from './file-field.template.js';
 import { nlddFileFieldTranslations, type NLDDFileFieldTranslations } from './file-field.i18n.js';
+import {
+	acceptNames,
+	carriesFiles,
+	holdsFolder,
+	fileMatches,
+	typeRuledOut,
+	unwatchDrags,
+	watchDrags,
+	type DragState,
+	type DropRejection,
+} from './file-field.drop.js';
+import { textMeasurer, truncateMiddle } from './file-field.truncate.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+
+/** How long the message of a refused drop stays in the field. */
+const REJECTION_MS = 4000;
+
+/** The word for a family of types in `accept`, such as `image/*`. */
+const FAMILY_KEYS = {
+	image: 'components.file-field.image-lowercase',
+	video: 'components.file-field.video-lowercase',
+	audio: 'components.file-field.audio-file-lowercase',
+} as const;
 
 @customElement('nldd-file-field')
 export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
@@ -104,6 +149,35 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		return this._files;
 	}
 
+	/** @internal Where a dragged file is, seen from this field. */
+	@state()
+	_drag: DragState = 'none';
+
+	/** @internal Why the file under the pointer would be refused. */
+	@state()
+	_dragRejection: DropRejection | null = null;
+
+	/** @internal The chosen name cut in the middle to fit, or null before it is
+	 *  measured, while CSS cuts it with its end in view. */
+	@state()
+	_fittedName: string | null = null;
+
+	/** @internal Whether the name is cut short, and so shows whole in a tooltip. */
+	@state()
+	_nameTruncated = false;
+
+	private _resizeObserver?: ResizeObserver;
+	private _rejectionTimer?: ReturnType<typeof setTimeout>;
+	private _observedValue?: Element;
+
+	/** @internal What a screen reader hears after a drop that was taken. */
+	@state()
+	_announcement = '';
+
+	/** @internal Why the last drop was refused; shown for a few seconds. */
+	@state()
+	_rejection: DropRejection | null = null;
+
 	@query('.file-field__input')
 	private _input!: HTMLInputElement;
 
@@ -131,20 +205,139 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		return `${this._chooseLabel()}, ${this.accessibleLabel}`;
 	}
 
+	/**
+	 * The change button is where focus lands after a pick, so its name says for
+	 * which field and which file is chosen, as a native file input does. The
+	 * visible text comes first, so a voice command with it still finds the
+	 * button (WCAG 2.5.3).
+	 *
+	 * @internal
+	 */
+	public _changeAccessibleLabel(): string {
+		return [this._t('components.file-field.to-change-action'), this.accessibleLabel, this._valueLabel()]
+			.filter(Boolean)
+			.join(', ');
+	}
+
+	/** @internal The cross says which file it clears. */
+	public _clearAccessibleLabel(): string {
+		return `${this._t('components.file-field.clear-action')}, ${this._valueLabel()}`;
+	}
+
+	/** @internal */
+	public _rejectionText(reason: DropRejection): string {
+		if (reason === 'count') return this._t('components.file-field.too-many-files-error-text');
+		if (reason === 'folder') {
+			return this.multiple
+				? this._t('components.file-field.folder-multiple-error-text')
+				: this._t('components.file-field.folder-error-text');
+		}
+		const names = acceptNames(this.accept);
+		if (!names) return this._t('components.file-field.wrong-file-type-error-text');
+		const named = names.map((name) => (typeof name === 'string'
+			? name
+			: this._t(FAMILY_KEYS[name.family])));
+		const types = named.length === 1
+			? named[0]
+			: this._t('components.file-field.list-lowercase-text', { items: named.slice(0, -1).join(', '), last: named[named.length - 1] });
+		return this.multiple
+			? this._t('components.file-field.files-type-error-text', { types })
+			: this._t('components.file-field.file-type-error-text', { types });
+	}
+
 	/** @internal */
 	public _valueLabel(): string {
-		if (this._files.length === 0) return this._t('components.file-field.no-file-chosen-text');
 		if (this._files.length === 1) return this._files[0].name;
 		return this._t('components.file-field.file-count-text', { count: this._files.length });
 	}
 
+	override connectedCallback(): void {
+		super.connectedCallback();
+		watchDrags(this);
+		this._resizeObserver ??= new ResizeObserver(() => this._fitName());
+		this._resizeObserver.observe(this);
+		// The first measurement can run in the fallback font.
+		void document.fonts?.ready.then(() => {
+			if (this.isConnected) this._fitName();
+		});
+		this.addEventListener('dragover', this._handleDragOver);
+		this.addEventListener('drop', this._handleDrop);
+		this.addEventListener('pointerdown', this._clearRejection);
+		this.addEventListener('keydown', this._handleKeydown);
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		unwatchDrags(this);
+		this._resizeObserver?.disconnect();
+		clearTimeout(this._rejectionTimer);
+		this._observedValue = undefined;
+		this.removeEventListener('dragover', this._handleDragOver);
+		this.removeEventListener('drop', this._handleDrop);
+		this.removeEventListener('pointerdown', this._clearRejection);
+		this.removeEventListener('keydown', this._handleKeydown);
+	}
+
+	override updated(changed: PropertyValues): void {
+		// Dragging hides the name, so it is measured again once it is back.
+		if (changed.has('_files') || changed.has('size') || changed.has('_drag')) void this._fitNameAfterRender();
+	}
+
+	/** Measures once the buttons beside the name have rendered and taken their
+	 *  width, and after this update rather than in it, where a state change
+	 *  would start another. */
+	private async _fitNameAfterRender(): Promise<void> {
+		const buttons = this.shadowRoot?.querySelectorAll<HTMLElement & { updateComplete?: Promise<boolean> }>('nldd-button, nldd-icon-button') ?? [];
+		await Promise.all(Array.from(buttons, (button) => button.updateComplete));
+		this._fitName();
+	}
+
+	/** Cuts the chosen name in the middle to the width it has. Without a width
+	 *  (a hidden field), it falls back to the CSS cut of the first render. */
+	private _fitName(): void {
+		const value = this.shadowRoot?.querySelector<HTMLElement>('.file-field__value');
+		const name = this.shadowRoot?.querySelector<HTMLElement>('.file-field__name');
+		if (this._files.length !== 1 || !value || !name) {
+			this._fittedName = null;
+			this._nameTruncated = false;
+			return;
+		}
+		// The buttons beside the name take their width after their own render, so
+		// the width of the name itself is watched, not only the host's.
+		if (value !== this._observedValue) {
+			if (this._observedValue) this._resizeObserver?.unobserve(this._observedValue);
+			this._resizeObserver?.observe(value);
+			this._observedValue = value;
+		}
+		const style = getComputedStyle(value);
+		const width = value.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+		if (width <= 0) {
+			this._fittedName = null;
+			this._nameTruncated = false;
+			return;
+		}
+		const { measure, done } = textMeasurer(name);
+		try {
+			const { text, truncated } = truncateMiddle(this._files[0].name, width, measure);
+			this._fittedName = text;
+			this._nameTruncated = truncated;
+		} finally {
+			done();
+		}
+	}
+
 	override willUpdate(changed: PropertyValues): void {
+		if (changed.has('_files')) {
+			this._fittedName = null;
+			this._nameTruncated = false;
+		}
 		if (changed.has('required')) this._updateValidity();
 		if (changed.has('accessibleLabel')) this.internals.ariaLabel = this.accessibleLabel || null;
 	}
 
 	/** @internal */
 	public _handleChoose(): void {
+		this._clearRejection();
 		this._input?.click();
 	}
 
@@ -152,9 +345,87 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	public _handleInputChange(e: Event): void {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
+		// The choose button gives way to the change button once there is a file,
+		// and the other way round, so focus would land on the body.
+		const hadFocus = this.matches(':focus-within');
 		this._files = input.files ? Array.from(input.files) : [];
+		this._rejection = null;
 		this._commit();
+		if (hadFocus) void this.updateComplete.then(() => this.focus());
 	}
+
+	// — Drag and drop ————————————————————————————————————————————————————————
+
+	/** Why a drag or drop would be refused: too many files for a field without
+	 *  `multiple`, or a type `accept` rules out. With `files` the drop is judged
+	 *  on names and types; without, a drag only on what it shows before the drop. */
+	private _judge(transfer: DataTransfer, files?: File[]): DropRejection | null {
+		if (files) {
+			if (!this.multiple && files.length > 1) return 'count';
+			if (holdsFolder(transfer)) return 'folder';
+			return files.every((file) => fileMatches(this.accept, file)) ? null : 'type';
+		}
+		const items = Array.from(transfer.items).filter((item) => item.kind === 'file');
+		if (!this.multiple && items.length > 1) return 'count';
+		return items.some((item) => typeRuledOut(this.accept, item.type)) ? 'type' : null;
+	}
+
+	/** @internal Called by the shared window listeners in file-field.drop.ts. */
+	public _setDrag(state: DragState, transfer: DataTransfer | null): void {
+		if (this.disabled) state = 'none';
+		// Called on every dragover on the page; only over the field is there
+		// anything to judge.
+		if (state !== 'over' && state === this._drag) return;
+		if (state !== 'none' && this._drag === 'none') this._clearRejection();
+		this._dragRejection = state === 'over' && transfer ? this._judge(transfer) : null;
+		this._drag = this._dragRejection ? 'rejected' : state;
+	}
+
+	private _handleDragOver = (e: DragEvent): void => {
+		if (this.disabled || !e.dataTransfer || !carriesFiles(e.dataTransfer)) return;
+		// Left unhandled, the window listener refuses the drop with a no-drop cursor.
+		if (this._judge(e.dataTransfer)) return;
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
+	};
+
+	private _handleDrop = (e: DragEvent): void => {
+		if (!e.dataTransfer || !carriesFiles(e.dataTransfer)) return;
+		e.preventDefault();
+		if (this.disabled) return;
+		const files = Array.from(e.dataTransfer.files);
+		const rejection = this._judge(e.dataTransfer, files);
+		if (rejection) {
+			this._rejection = rejection;
+			// Shown for a while, then the field reads as itself again: the message
+			// takes the place of "Bestand kiezen", and a field that kept it looked
+			// as if it no longer did anything. The status line keeps it for a
+			// screen reader.
+			clearTimeout(this._rejectionTimer);
+			this._rejectionTimer = setTimeout(() => {
+				this._announcement = this._rejectionText(rejection);
+				this._rejection = null;
+			}, REJECTION_MS);
+			return;
+		}
+		if (this._input) this._input.files = e.dataTransfer.files;
+		this._files = files;
+		this._rejection = null;
+		// A pick moves focus to the change button, which names the file; a drop
+		// moves nothing, so it is said.
+		this._announcement = this._t('components.file-field.file-chosen-text', { name: this._valueLabel() });
+		this._commit();
+	};
+
+	private _clearRejection = (): void => {
+		clearTimeout(this._rejectionTimer);
+		this._rejection = null;
+		this._announcement = '';
+	};
+
+	private _handleKeydown = (e: KeyboardEvent): void => {
+		if (e.key === 'Escape') this._clearRejection();
+	};
 
 	/** @internal */
 	public _handleClear(): void {
@@ -214,20 +485,25 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		this.commitFormValue();
 	}
 
+	/** The button that opens the dialog: the whole surface while the field is
+	 *  empty, "Wijzigen" once it has a file. */
+	private _chooseButton(): HTMLElement | null {
+		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse-button, nldd-button') ?? null;
+	}
+
 	/**
 	 * Delegates focus to the choose button rather than the hidden input: an input
 	 * that is `display: none` cannot take focus, and the button is what a user
 	 * sees as the control.
 	 */
 	override focus(options?: FocusOptions): void {
-		const button = this.shadowRoot?.querySelector('nldd-button') as HTMLElement | null;
-		button?.focus(options);
+		this._chooseButton()?.focus(options);
 	}
 
 	/** The file input is display:none and therefore not in the accessibility tree.
 	 *  What a screen reader meets is the button, so the description goes there. */
 	override describedTarget(): Element | null {
-		return this.shadowRoot?.querySelector('nldd-button') ?? null;
+		return this._chooseButton();
 	}
 
 	override render() {

@@ -16,6 +16,7 @@ import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { isKeyboardMode, isTouchMode } from '../../../utilities/input-modality.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
+import { carryContext, releaseContext } from '../../../utilities/carried-context.js';
 
 
 /** Makes `host` a list item while its menu is a navigation menu, and takes
@@ -1341,6 +1342,7 @@ export class NLDDMenu extends LitElement {
 			// Captured at open-time so a viewport flip during navigation
 			// doesn't leave the chain in an inconsistent state.
 			if (wasDrillIn) {
+				releaseContext(submenu);
 				if (drillInOriginalParent && drillInOriginalParent.isConnected) {
 					drillInOriginalParent.insertBefore(submenu, drillInNextSibling);
 				} else {
@@ -1424,6 +1426,7 @@ export class NLDDMenu extends LitElement {
 		if (wasDrillIn) {
 			drillInOriginalParent = submenu.parentElement;
 			drillInNextSibling = submenu.nextSibling;
+			carryContext(submenu, drillInOriginalParent);
 			document.body.appendChild(submenu);
 		}
 

@@ -14,8 +14,12 @@ export const codeEditorStyles = css`
 		--_code-editor-caret-color: var(--components-code-editor-caret-color);
 		--_code-editor-corner-radius: 0;
 		--_code-editor-background-color: transparent;
-		--_code-editor-border-color: transparent;
-		--_code-editor-border-shadow: none;
+		--_code-editor-gutter-background-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_code-editor-gutter-border-width: var(--semantics-dividers-thickness);
+		--_code-editor-gutter-border-color: var(--semantics-dividers-color);
+		--_code-editor-input-field-border-z-index: 1;
+		--_code-editor-input-field-border-color: transparent;
+		--_code-editor-input-field-border-shadow: none;
 		--_code-editor-padding-block: 0px;
 		--_code-editor-padding-inline: 0px;
 		--_code-editor-content-color: var(--semantics-content-color);
@@ -51,8 +55,9 @@ export const codeEditorStyles = css`
 		/* Match the other input fields (text-field, textarea): the input-field
 		   surface + border + control padding, not the tinted surface. */
 		--_code-editor-background-color: var(--semantics-input-fields-background-color);
-		--_code-editor-border-color: var(--semantics-input-fields-border-color);
-		--_code-editor-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_code-editor-border-color);
+		--_code-editor-gutter-background-color: var(--_code-editor-background-color);
+		--_code-editor-input-field-border-color: var(--semantics-input-fields-border-color);
+		--_code-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_code-editor-input-field-border-color);
 		--_code-editor-padding-block: var(--semantics-controls-md-inline-padding);
 		--_code-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 	}
@@ -65,7 +70,6 @@ export const codeEditorStyles = css`
 		display: flex;
 		position: relative;
 		border-radius: var(--_code-editor-corner-radius);
-		box-shadow: var(--_code-editor-border-shadow);
 		background-color: var(--_code-editor-background-color);
 		min-height: 0;
 		flex-direction: column;
@@ -74,6 +78,22 @@ export const codeEditorStyles = css`
 		flex-basis: auto;
 		color: var(--_code-editor-content-color);
 		font: var(--_code-editor-font);
+	}
+
+	/* The border ring lies over the content, so the sticky gutter cannot cover
+	   it. Inset, it takes no layout space. */
+	.code-editor::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: var(--_code-editor-input-field-border-z-index);
+		border-radius: inherit;
+		box-shadow: var(--_code-editor-input-field-border-shadow);
+		pointer-events: none;
+	}
+
+	.code-editor .cm-editor {
+		isolation: isolate;
 	}
 
 	:host([disabled]) .code-editor {
@@ -88,7 +108,7 @@ export const codeEditorStyles = css`
 	:host([appearance="input-field"]) .code-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_code-editor-border-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow);
 	}
 
 
@@ -109,6 +129,16 @@ export const codeEditorStyles = css`
 		padding-right: var(--_code-editor-padding-inline);
 		min-height: calc(var(--_code-editor-rows) * 1lh);
 		tab-size: 2;
+	}
+
+	/* The gutter stays put while the code scrolls sideways under it. The
+	   divider is a gradient: an inset shadow with an offset leaves a hairline on iOS. */
+	:host .cm-gutters.cm-gutters {
+		background-color: var(--_code-editor-gutter-background-color);
+		background-image: linear-gradient(var(--_code-editor-gutter-border-color), var(--_code-editor-gutter-border-color));
+		background-repeat: no-repeat;
+		background-position: right;
+		background-size: var(--_code-editor-gutter-border-width) 100%;
 	}
 
 	/* Read-only, like a native read-only field: select and copy, but no caret. */

@@ -15,8 +15,9 @@ export const textEditorStyles = css`
 		--_text-editor-caret-ring-color: var(--semantics-surfaces-base-background-color);
 		--_text-editor-corner-radius: 0;
 		--_text-editor-background-color: transparent;
-		--_text-editor-highlight-border-color: transparent;
-		--_text-editor-highlight-border-shadow: none;
+		--_text-editor-input-field-border-color: transparent;
+		--_text-editor-input-field-border-shadow: none;
+		--_text-editor-input-field-border-z-index: 1;
 		--_text-editor-padding-block: 0px;
 		/* Room for the caret's own ink at the first and last position of a line:
 		   its width plus its ring. Without it the edge carets are clipped. */
@@ -42,6 +43,13 @@ export const textEditorStyles = css`
 		--_text-editor-code-scale: 0.85;
 		--_text-editor-code-content-height: 1.32em;
 		--_text-editor-marker-font-size: var(--primitives-font-size-90);
+		--_text-editor-task-box-size: 1.7em;
+		--_text-editor-code-copy-gap: var(--primitives-space-4);
+		--_text-editor-code-copy-font: var(--semantics-buttons-sm-primary-text-font);
+		--_text-editor-code-copy-content-color: var(--semantics-buttons-accent-transparent-content-color);
+		--_text-editor-code-copy-is-hovered-content-color: var(--semantics-buttons-accent-transparent-is-hovered-content-color);
+		--_text-editor-code-copy-is-active-content-color: var(--semantics-buttons-accent-transparent-is-active-content-color);
+		--_text-editor-task-box-shift: -0.11em;
 		/* JetBrains Mono advance (600/1000 em) at the marker size; leading
 		   list/quote markers are mono so the hanging indent equals their width. */
 		--_text-editor-marker-advance: calc(0.6 * var(--_text-editor-marker-font-size));
@@ -123,8 +131,8 @@ export const textEditorStyles = css`
 	:host([appearance="input-field"]) {
 		--_text-editor-corner-radius: var(--primitives-corner-radius-lg);
 		--_text-editor-background-color: var(--semantics-input-fields-background-color);
-		--_text-editor-highlight-border-color: var(--semantics-input-fields-border-color);
-		--_text-editor-highlight-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_text-editor-highlight-border-color);
+		--_text-editor-input-field-border-color: var(--semantics-input-fields-border-color);
+		--_text-editor-input-field-border-shadow: inset 0 0 0 var(--semantics-input-fields-border-width) var(--_text-editor-input-field-border-color);
 		--_text-editor-padding-block: var(--semantics-controls-md-inline-padding);
 		--_text-editor-padding-inline: var(--semantics-controls-md-inline-padding);
 	}
@@ -137,7 +145,6 @@ export const textEditorStyles = css`
 		display: flex;
 		position: relative;
 		border-radius: var(--_text-editor-corner-radius);
-		box-shadow: var(--_text-editor-highlight-border-shadow);
 		background-color: var(--_text-editor-background-color);
 		min-height: 0;
 		flex-direction: column;
@@ -146,6 +153,22 @@ export const textEditorStyles = css`
 		flex-basis: auto;
 		color: var(--_text-editor-content-color);
 		font: var(--_text-editor-font);
+	}
+
+	/* The border ring lies over the content, so a selection or a block that runs
+	   to the edge cannot cover it. Inset, it takes no layout space. */
+	.text-editor::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: var(--_text-editor-input-field-border-z-index);
+		border-radius: inherit;
+		box-shadow: var(--_text-editor-input-field-border-shadow);
+		pointer-events: none;
+	}
+
+	.text-editor .cm-editor {
+		isolation: isolate;
 	}
 
 	:host([disabled]) .text-editor {
@@ -160,7 +183,7 @@ export const textEditorStyles = css`
 	:host([appearance="input-field"]) .text-editor:focus-within {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_text-editor-highlight-border-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow);
 	}
 
 
@@ -484,13 +507,113 @@ export const textEditorStyles = css`
 
 	/* A shadow, not a border, so the line takes no room and the text stays put
 	   when the quote shows its marks instead. */
+	/* A gradient, not an inset shadow with an offset: iOS Safari leaves a hairline
+	   of such a shadow along the bottom of a line with a fractional height. */
 	.cm-md-quote-line {
-		box-shadow: inset var(--_text-editor-quote-border-width) 0 0 var(--_text-editor-quote-border-color);
+		background-image: linear-gradient(var(--_text-editor-quote-border-color), var(--_text-editor-quote-border-color));
+		background-repeat: no-repeat;
+		background-position: left;
+		background-size: var(--_text-editor-quote-border-width) 100%;
 	}
 
 	:host .cm-md-quote-mark-hidden,
 	:host .cm-md-quote-mark-hidden * {
 		color: transparent;
+	}
+
+	/* A task's box, in a width the hanging indent counts on (TASK_BOX_WIDTH in
+	   text-editor.hidden-syntax.ts), so wrapped lines line up under the text. */
+	/* No height of its own, so a box a little taller than the text does not
+	   make its line taller than the others; the icon is centered on it. */
+	.cm-md-task-box {
+		display: inline-flex;
+		width: 2.5ch;
+		height: 0;
+		vertical-align: middle;
+		justify-content: flex-start;
+		align-items: center;
+		color: var(--_text-editor-content-color);
+	}
+
+	/* Up from the middle of the x-height to the middle of the capitals: next to
+	   a line with capitals and ascenders, that is where the eye puts its middle. */
+	.cm-md-task-box-icon {
+		flex-shrink: 0;
+		width: var(--_text-editor-task-box-size);
+		translate: 0 var(--_text-editor-task-box-shift);
+	}
+
+	.cm-md-task-box-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	/* The opening line of a code block is its head: the language on the left,
+	   the copy button on the right edge of the block. */
+	.cm-md-code-head {
+		position: relative;
+	}
+
+	.cm-md-code-copy-wrap {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		translate: 0 -50%;
+	}
+
+	.cm-md-code-copy {
+		display: inline-flex;
+		gap: var(--_text-editor-code-copy-gap);
+		align-items: center;
+		border: none;
+		border-radius: var(--_text-editor-token-corner-radius);
+		background: none;
+		padding: 0;
+		color: var(--_text-editor-code-copy-content-color);
+		font: var(--_text-editor-code-copy-font);
+	}
+
+	.cm-md-code-copy:hover {
+		color: var(--_text-editor-code-copy-is-hovered-content-color);
+	}
+
+	.cm-md-code-copy:active {
+		color: var(--_text-editor-code-copy-is-active-content-color);
+	}
+
+	.cm-md-code-copy:focus-visible {
+		outline: var(--semantics-focus-ring-outline);
+		outline-offset: var(--semantics-focus-ring-outline-offset);
+		box-shadow: var(--semantics-focus-ring-box-shadow);
+	}
+
+	.cm-md-code-copy-icon {
+		width: 1.1em;
+	}
+
+	.cm-md-code-copy-status {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	.cm-md-code-language {
+		color: var(--_text-editor-mark-color);
+		font-family: var(--_text-editor-code-font-family);
+		font-size: var(--_text-editor-marker-font-size);
+	}
+
+	.cm-md-ordinal,
+	.cm-md-ordinal .cm-md-mark,
+	.cm-md-mark .cm-md-ordinal {
+		color: var(--_text-editor-content-color);
 	}
 
 	/* A bullet with syntax="hidden": the character keeps its mono advance, so a

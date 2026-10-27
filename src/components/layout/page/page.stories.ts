@@ -94,7 +94,7 @@ const header = html`
 
 const footer = html`
 	<nldd-container padding="16">
-		<nldd-button-group orientation="horizontal">
+		<nldd-button-group>
 			<nldd-button
 				appearance="primary"
 				text="Bewaar"

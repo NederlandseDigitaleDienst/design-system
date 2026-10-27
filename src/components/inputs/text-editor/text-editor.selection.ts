@@ -6,14 +6,23 @@ import { ViewPlugin, type EditorView } from '@codemirror/view';
  * height), and for the first and last row of a selection over several lines
  * something in between. So after every drawing, each piece of one row is set
  * to the line height, centered on its row. A piece over several whole lines,
- * or one taller already (a heading), is left as it is. */
+ * or one taller already (a heading), is left as it is.
+ *
+ * And no wider than the text. A line selected to its end is drawn to the
+ * right edge of the content, its padding included, since CodeMirror only takes
+ * off the padding of a line. Each piece stops where the text column does, as a
+ * selection on macOS stops short of the margin. */
 
 function rowHeightPieces(view: EditorView): void {
 	const layer = view.dom.querySelector('.cm-selectionLayer');
 	if (!layer) return;
 	const height = view.defaultLineHeight;
+	const content = view.contentDOM;
+	const textRight = content.getBoundingClientRect().right - (parseFloat(getComputedStyle(content).paddingRight) || 0);
 	for (const piece of layer.querySelectorAll<HTMLElement>('.cm-selectionBackground')) {
 		const box = piece.getBoundingClientRect();
+		const overhang = box.right - textRight;
+		if (overhang > 0.25) piece.style.width = `${Math.max(0, (parseFloat(piece.style.width) || box.width) - overhang)}px`;
 		if (box.height >= height * 1.25) continue;
 		const pos = view.posAtCoords({ x: box.left + 1, y: box.top + box.height / 2 }, false);
 		const row = view.coordsAtPos(pos, 1) ?? view.coordsAtPos(pos, -1);

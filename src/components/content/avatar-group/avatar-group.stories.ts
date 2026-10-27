@@ -129,6 +129,65 @@ export const MetMax = {
 	},
 };
 
+const avatars = (count: number) => Array.from({ length: count }, (_, i) => html`
+	<nldd-avatar
+		name=${`Persoon ${i + 1}`}
+		decorative
+	></nldd-avatar>
+`);
+
+export const Aantallen = {
+	render: () => html`
+		<nldd-container gap="16">
+			${['16', '24', '40', '56'].map(size => html`
+				<nldd-container
+					layout="wrap"
+					gap="24"
+					vertical-alignment="center"
+				>
+					${[2, 13, 101].map(count => html`
+						<nldd-avatar-group
+							size=${size}
+							max="1"
+						>
+							${avatars(count + 1)}
+						</nldd-avatar-group>
+					`)}
+				</nldd-container>
+			`)}
+		</nldd-container>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Een langer getal staat kleiner. Past het niet meer in de schijf, dan toont de knop een ellipsis met het aantal in een tooltip: een getal van één cijfer vanaf 24px, van twee vanaf 40px, van drie vanaf 56px en van vier vanaf 80px. Het aantal staat altijd in de toegankelijke naam.',
+			},
+		},
+	},
+};
+
+export const PastInDeBreedte = {
+	render: () => html`
+		<div style="resize: horizontal; overflow: hidden; width: 320px; min-width: 80px; max-width: 100%; padding: 8px; border: 1px dashed currentColor;">
+			<nldd-avatar-group
+				max="8"
+				accessible-label="Redactie"
+			>
+				${avatars(12)}
+			</nldd-avatar-group>
+		</div>
+	`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'De rij loopt nooit uit zijn container. Is er geen ruimte voor alle avatars, dan toont de groep er zoveel als passen en gaat de rest achter de knop, zoals bij `max`. `max` is dan het meeste dat hij toont.',
+			},
+		},
+	},
+};
+
 export const MetAfbeeldingen = {
 	render: () => html`
 		<nldd-avatar-group accessible-label="Redactie">

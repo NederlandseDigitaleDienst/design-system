@@ -59,7 +59,7 @@ export const nlddDatePickerTranslations = {
 	// The short form goes in the column heading, the full one rides along as an
 	// abbr for screen readers.
 	'components.date-picker.week-number-column-label': 'Weeknummer',
-	'components.date-picker.week-number-column-short-label': 'wk',
+	'components.date-picker.week-number-column-short-lowercase-label': 'wk',
 	'components.date-picker.week-number-label': 'Week {week}',
 
 	// The full accessible name of a cell. '31' on its own tells a screen reader

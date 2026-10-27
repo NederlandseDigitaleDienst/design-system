@@ -129,7 +129,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row on a container wide enough for one and a stack over the full width below the sm breakpoint, where two labels beside each other leave no room for either. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one.",
+          "description": "A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row, and a stack over the full width in a container of 30rem (480px) or less, the width of a phone, where two labels beside each other leave no room for either. A card or a dialog between 480px and the sm breakpoint keeps its row. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one.",
           "name": "NLDDButtonGroup",
           "members": [
             {
@@ -3101,7 +3101,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shows several avatars as one group: they overlap, and each one gets a ring in the surface color so they stay apart where they meet. The ring uses the same mechanism as the badge, so on a colored surface you hand the color over through `--context-parent-background-color`. Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to do with a dead image, when to fall back to initials, and how to show its name as a tooltip; a loose image would have to reproduce all of that and cannot do the last one. Set `decorative` when the names already stand beside the group as text; otherwise give every avatar a name, because the group itself describes nobody. The size applies to the whole group: it is imposed on the avatars, a slotted `img` included. That keeps the row on one line whatever a consumer hands over.",
+          "description": "Shows several avatars as one group: they overlap, and each one gets a ring in the surface color so they stay apart where they meet. The ring uses the same mechanism as the badge, so on a colored surface you hand the color over through `--context-parent-background-color`. Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to do with a dead image, when to fall back to initials, and how to show its name as a tooltip; a loose image would have to reproduce all of that and cannot do the last one. Set `decorative` when the names already stand beside the group as text; otherwise give every avatar a name, because the group itself describes nobody. The size applies to the whole group: it is imposed on the avatars, a slotted `img` included. That keeps the row on one line whatever a consumer hands over. Avatars that are links or buttons need size 32 or larger: they overlap, so each keeps only part of its width as a target (WCAG 2.5.8). On sm the list behind the button is a bottom sheet with a title bar, which names the group (its `accessible-label`) and closes it. The row never overflows its container. Where there is no room for every avatar, the group shows as many as fit and puts the rest behind the \"+N\" button, as `max` does; `max` is then the most it shows, not a fixed count.",
           "name": "NLDDAvatarGroup",
           "members": [
             {
@@ -3164,7 +3164,7 @@
               },
               "default": "undefined",
               "fieldName": "max",
-              "description": "Shows at most this many avatars; the rest go behind a \"+N\" button that opens them as a list of names"
+              "description": "Shows at most this many avatars; the rest go behind a \"+N\" button that opens them as a list of names. A longer number is set smaller, and where it no longer fits the disc the button shows an ellipsis with the count in a tooltip (a number shows from size 24 with one digit, 40 with two, 56 with three and 80 with four)"
             },
             {
               "name": "accessible-label",
@@ -3559,7 +3559,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it",
+              "description": "Makes the avatar a link to this URL; the shape itself becomes the link, so the hit area and the focus ring follow it. As a link or a button the avatar needs size 24 or larger (WCAG 2.5.8)",
               "fieldName": "href"
             },
             {
@@ -11376,11 +11376,336 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/file-field/file-field.drop.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "acceptNames",
+          "return": {
+            "type": {
+              "text": "AcceptName[] | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "What `accept` takes, named for a person, for the message on a drop of the\nwrong type. Null when any part has no name (an `application/vnd…` type),\nso the message does not list half of what is allowed."
+        },
+        {
+          "kind": "function",
+          "name": "fileMatches",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "file",
+              "type": {
+                "text": "File"
+              }
+            }
+          ],
+          "description": "Whether a dropped file fits `accept`, judged on its name and its type, the\nway the file dialog filters. An empty `accept` takes everything."
+        },
+        {
+          "kind": "function",
+          "name": "typeRuledOut",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Whether a dragged file of `type` can be ruled out against `accept` before the\ndrop. Only a certain mismatch counts: an empty type or an extension this\nmodule has no type for leaves the answer to the drop."
+        },
+        {
+          "kind": "function",
+          "name": "holdsFolder",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "transfer",
+              "type": {
+                "text": "DataTransfer"
+              }
+            }
+          ],
+          "description": "Whether a drop holds a folder. It arrives as a File without type or\nextension, which the field could not read, so it is refused."
+        },
+        {
+          "kind": "function",
+          "name": "carriesFiles",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "transfer",
+              "type": {
+                "text": "DataTransfer | null"
+              }
+            }
+          ],
+          "description": "Whether a drag carries files, as opposed to text or a link."
+        },
+        {
+          "kind": "function",
+          "name": "watchDrags",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "DropTarget"
+              }
+            }
+          ],
+          "description": "Registers a field with the shared window listeners, which exist while at\nleast one field is connected."
+        },
+        {
+          "kind": "function",
+          "name": "unwatchDrags",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "DropTarget"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "acceptNames",
+          "declaration": {
+            "name": "acceptNames",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fileMatches",
+          "declaration": {
+            "name": "fileMatches",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "typeRuledOut",
+          "declaration": {
+            "name": "typeRuledOut",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "holdsFolder",
+          "declaration": {
+            "name": "holdsFolder",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "carriesFiles",
+          "declaration": {
+            "name": "carriesFiles",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "watchDrags",
+          "declaration": {
+            "name": "watchDrags",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "unwatchDrags",
+          "declaration": {
+            "name": "unwatchDrags",
+            "module": "src/components/inputs/file-field/file-field.drop.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/file-field/file-field.truncate.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "splitName",
+          "return": {
+            "type": {
+              "text": "[string, string]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Splits a name at its last dot. A leading dot (\".env\") is no extension."
+        },
+        {
+          "kind": "function",
+          "name": "splitForTruncation",
+          "return": {
+            "type": {
+              "text": "[string, string]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The split of the first render, done by CSS: a start that is cut short when it\ndoes not fit, and an end, the last characters and the extension, that stays."
+        },
+        {
+          "kind": "function",
+          "name": "truncateMiddle",
+          "return": {
+            "type": {
+              "text": "{ text: string; truncated: boolean }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "measure",
+              "type": {
+                "text": "(text: string) => number"
+              }
+            }
+          ],
+          "description": "The name as it fits `width`, measured with `measure`: whole when it fits,\notherwise as many characters as fit, half from the start and half from the\nend, around an ellipsis and before the extension."
+        },
+        {
+          "kind": "function",
+          "name": "textMeasurer",
+          "return": {
+            "type": {
+              "text": "{ measure: (text: string) => number; done: () => void }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "container",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Measures text the way `container` renders it, with a hidden span in it.\nCanvas text metrics drift from the page by a character or two (kerning,\nfont features), which shows as a second, CSS ellipsis. Call `done` after."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "splitName",
+          "declaration": {
+            "name": "splitName",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "splitForTruncation",
+          "declaration": {
+            "name": "splitForTruncation",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "truncateMiddle",
+          "declaration": {
+            "name": "truncateMiddle",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "textMeasurer",
+          "declaration": {
+            "name": "textMeasurer",
+            "module": "src/components/inputs/file-field/file-field.truncate.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/file-field/file-field.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A file picker that reads as one control: an nldd-button flush in the corner of a tinted surface, the chosen file next to it, and a dismiss button to clear it again. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press a button, so it uses button and surface colors instead of `--semantics-input-fields-*`. The button keeps its own tinted background and therefore sits a shade darker in the surface, which is what marks it as the thing to press. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event.",
+          "description": "A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, \"Bestand kiezen of sleep het hierheen\", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view (\"Screenshot 20…at 13.12.21.png\"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: \"Sleep één bestand\", or what `accept` takes, named from it (\"Het bestand moet een PDF zijn\"; \"Dit bestandstype past niet\" where a type in it has no name). A dropped folder is refused as well (\"Sleep een bestand, geen map\"): it arrives as a file without a type that cannot be read, and only the drop tells it apart, not the drag. The message stays for a few seconds and then gives way to the field again. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event.",
           "name": "NLDDFileField",
           "members": [
             {
@@ -18166,6 +18491,52 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.code-copy.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "codeCopyLabels"
+        },
+        {
+          "kind": "function",
+          "name": "codeCopy",
+          "return": {
+            "type": {
+              "text": "Extension"
+            }
+          },
+          "parameters": [
+            {
+              "name": "labels",
+              "type": {
+                "text": "CodeCopyLabels"
+              }
+            }
+          ],
+          "description": "A copy button on the opening line of each code block."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "codeCopyLabels",
+          "declaration": {
+            "name": "codeCopyLabels",
+            "module": "src/components/inputs/text-editor/text-editor.code-copy.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "codeCopy",
+          "declaration": {
+            "name": "codeCopy",
+            "module": "src/components/inputs/text-editor/text-editor.code-copy.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.commands.ts",
       "declarations": [
         {
@@ -19084,7 +19455,7 @@
           "type": {
             "text": "Extension"
           },
-          "default": "[ markdown({ extensions: GFM }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
+          "default": "[ // A code block that names its language is highlighted in it, as in the code // viewer; the grammar loads when the first such block appears. markdown({ extensions: GFM, codeLanguages: nestedLanguages }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
           "description": "Markdown language (with GFM) plus the hybrid inline-styling decorations."
         }
       ],
@@ -20012,11 +20383,116 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.tasks.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "taskLabels",
+          "description": "The texts a screen reader reads in place of a box."
+        },
+        {
+          "kind": "function",
+          "name": "taskBox",
+          "return": {
+            "type": {
+              "text": "Decoration"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "The box that replaces the `[ ]` or `[x]` of a task."
+        },
+        {
+          "kind": "function",
+          "name": "toggleTasks",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "view",
+              "type": {
+                "text": "EditorView"
+              }
+            }
+          ],
+          "description": "Checks or unchecks the tasks on the lines of the selection. False when no\nline there is a task, so the key does what it would otherwise do."
+        },
+        {
+          "kind": "function",
+          "name": "tasks",
+          "return": {
+            "type": {
+              "text": "Extension"
+            }
+          },
+          "parameters": [
+            {
+              "name": "labels",
+              "type": {
+                "text": "TaskLabels"
+              }
+            }
+          ],
+          "description": "Checking a task by click and by Cmd/Ctrl+Enter, with the texts a screen\nreader reads for a box."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "taskLabels",
+          "declaration": {
+            "name": "taskLabels",
+            "module": "src/components/inputs/text-editor/text-editor.tasks.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "taskBox",
+          "declaration": {
+            "name": "taskBox",
+            "module": "src/components/inputs/text-editor/text-editor.tasks.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toggleTasks",
+          "declaration": {
+            "name": "toggleTasks",
+            "module": "src/components/inputs/text-editor/text-editor.tasks.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tasks",
+          "declaration": {
+            "name": "tasks",
+            "module": "src/components/inputs/text-editor/text-editor.tasks.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `appearance=\"simple\"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `appearance=\"input-field\"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.",
+          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `appearance=\"simple\"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `appearance=\"input-field\"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax=\"hidden\"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads \"Taak, open\" or \"Taak, afgerond\" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Its opening line is the head of the block, with a \"Kopieer\" button at the right edge that copies the code without its fences and says \"Gekopieerd\" or \"Kopiëren mislukt\", as the code viewer does. In an editable editor the button is no tab stop (select and copy is the keyboard route); read-only or disabled it can be focused. Without a secure context there is no button. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.",
           "name": "NLDDTextEditor",
           "members": [
             {
@@ -20902,7 +21378,7 @@
               },
               "default": "'visible'",
               "fieldName": "syntax",
-              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its ``` fence lines until the caret is in it, since its own tint and edge already say what it is. The numbers of a numbered list stay: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
+              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
               "name": "annotatable",
@@ -20919,7 +21395,7 @@
                 "text": "Partial<NLDDTextEditorTranslations>"
               },
               "default": "{}",
-              "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge and the annotation count badge). Unset keys fall back to Dutch.",
+              "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge, the label of a task's box and the copy button of a code block). Unset keys fall back to Dutch.",
               "fieldName": "translations"
             },
             {
@@ -26984,7 +27460,7 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. With media it applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top. Without media the panel is the whole hero: the corner applies in every layout and position, at half the radius, and the hero chooses top-right, or top-left for a panel on the right. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg, and is never more than a third of the shortest side of the area it rounds, so a low hero keeps a corner rather than a drop. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
+              "description": "Rounds one corner of the media area, in the shape language of the Rijkshuisstijl: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right', or empty (or 'auto') to let the hero choose a corner the panel leaves free. With media it applies with `layout=\"contained\"` and the panel in a corner or along a side; with overlap or a centered panel the hero stays rectangular and says so in development. The panel stands against the edge of the image, so a `main-width` in percent (33.33%, 50%) is a share of the image, and gets a corner at half the radius, the one pointing into the image, with more padding along its two sides so the content keeps its distance to the curve. A panel along the same edge as the rounded corner of the image stops before the curve, at the panel's padding from it; a panel along a full side, a `main-width=\"full\"` strip and the panel on mobile stay square. On mobile a bottom corner moves to the top, and the panel stands under the image, as wide as it, instead of overlapping it. Without media the panel is the whole hero: the corner applies in every layout and position, at half the radius, and the hero chooses top-right, or top-left for a panel on the right. The radius comes from the ribbon width: 1.5X on sm, 2X on md and lg, and is never more than a third of the shortest side of the area it rounds, so a low hero keeps a corner rather than a drop. Says so in development when the chosen corner sits under the panel, or with `width=\"full\"`",
               "fieldName": "corner"
             },
             {
@@ -30043,7 +30519,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id=\"info-trigger\" popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" anchor=\"info-trigger\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus.",
+          "description": "A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover=\"auto\") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id=\"info-trigger\" popovertarget=\"info-popover\">Info</nldd-button> <nldd-popover id=\"info-popover\" anchor=\"info-trigger\" accessible-label=\"Info\"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On sm the popover is a bottom sheet that closes with Escape or a tap outside it. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.",
           "name": "NLDDPopover",
           "members": [
             {
@@ -37703,7 +38179,7 @@
               },
               "default": "''",
               "fieldName": "icon",
-              "description": "Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled"
+              "description": "Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled"
             },
             {
               "name": "text",
@@ -38543,7 +39019,7 @@
               },
               "default": "''",
               "fieldName": "icon",
-              "description": "Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled"
+              "description": "Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled"
             },
             {
               "name": "text",
@@ -39938,6 +40414,72 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/carried-context.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "carryContext",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "origin",
+              "type": {
+                "text": "Element | null"
+              }
+            }
+          ],
+          "description": "Gives `element` the color scheme and language of `origin`. Call it each\ntime the element shows, since the page around the origin may have changed."
+        },
+        {
+          "kind": "function",
+          "name": "releaseContext",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Takes back what `carryContext` wrote, for an element returned to its place."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "carryContext",
+          "declaration": {
+            "name": "carryContext",
+            "module": "src/utilities/carried-context.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "releaseContext",
+          "declaration": {
+            "name": "releaseContext",
+            "module": "src/utilities/carried-context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/codemirror/codemirror-input.ts",
       "declarations": [
         {
@@ -40804,7 +41346,7 @@
               }
             }
           ],
-          "description": "True when a bubbling `dismiss` event originates from an `nldd-top-title-bar`'s\nclose button.\n\nOverlay containers (`nldd-sheet`, `nldd-window`) listen for bubbling `dismiss`\nevents to close themselves. But nested components fire their own `dismiss` for\ntheir own element — an `nldd-token`'s remove button, an `nldd-banner`, an\n`nldd-document-tab-bar` — and those must NOT close the container. Only the\ncontainer's own top-title-bar dismiss should. This shared check keeps that rule\nidentical across every overlay container.\n\nLimitation: it matches ANY nldd-top-title-bar in the composed path, not\nspecifically the container's own. That is correct for today's one-title-bar-per\n-container usage; a nested composition with more than one title bar (a sheet\ninside a sheet, each with its own) would need the inner container to\nstopPropagation on its own dismiss so it doesn't also reach the outer one."
+          "description": "True when a bubbling `dismiss` event originates from an `nldd-top-title-bar`'s\nclose button.\n\nOverlay containers (`nldd-sheet`, `nldd-window`, `nldd-popover`) listen for bubbling `dismiss`\nevents to close themselves. But nested components fire their own `dismiss` for\ntheir own element — an `nldd-token`'s remove button, an `nldd-banner`, an\n`nldd-document-tab-bar` — and those must NOT close the container. Only the\ncontainer's own top-title-bar dismiss should. This shared check keeps that rule\nidentical across every overlay container.\n\nLimitation: it matches ANY nldd-top-title-bar in the composed path, not\nspecifically the container's own. That is correct for today's one-title-bar-per\n-container usage; a nested composition with more than one title bar (a sheet\ninside a sheet, each with its own) would need the inner container to\nstopPropagation on its own dismiss so it doesn't also reach the outer one."
         }
       ],
       "exports": [

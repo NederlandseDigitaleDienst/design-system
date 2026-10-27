@@ -23,6 +23,7 @@ import { nlddMenuBarTranslations } from './menu-bar.i18n.js';
 import '../menu-bar-item/menu-bar-item.js';
 import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import '../../actions/menu/menu.js';
+import { carryContext } from '../../../utilities/carried-context.js';
 
 /**
  * Minimal typed interface for nldd-menu.
@@ -295,6 +296,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 			this._overflowMenu.hidePopover();
 		} else {
 			this._populateOverflowMenu();
+			carryContext(this._overflowMenu, this);
 			this._overflowMenu.showPopover();
 		}
 	};

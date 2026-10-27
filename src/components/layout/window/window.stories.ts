@@ -220,7 +220,7 @@ export const MetFooter = {
 					padding-inline="16"
 					padding-bottom="16"
 				>
-					<nldd-button-group orientation="horizontal">
+					<nldd-button-group>
 						<nldd-button
 							appearance="primary"
 							text="Bewaar"

@@ -12,9 +12,9 @@ export const codeViewerStyles = css`
 	:host {
 		--_code-viewer-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_code-viewer-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_code-viewer-border-width: var(--semantics-surfaces-highlight-border-width);
-		--_code-viewer-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
-		--_code-viewer-border-shadow: inset 0 0 0 var(--_code-viewer-border-width) var(--_code-viewer-border-color);
+		--_code-viewer-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_code-viewer-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
+		--_code-viewer-highlight-border-shadow: inset 0 0 0 var(--_code-viewer-highlight-border-width) var(--_code-viewer-highlight-border-color);
 		--_code-viewer-block-padding: var(--primitives-space-16);
 		--_code-viewer-inline-padding: var(--primitives-space-16);
 		--_code-viewer-content-color: var(--semantics-content-color);
@@ -22,6 +22,7 @@ export const codeViewerStyles = css`
 		--_code-viewer-actions-area-padding: var(--primitives-space-8);
 		--_code-viewer-actions-area-size: calc(var(--semantics-controls-md-min-size) + var(--_code-viewer-actions-area-padding) * 2);
 		--_code-viewer-actions-z-index: 1;
+		--_code-viewer-highlight-border-z-index: 1;
 		--_code-viewer-max-height: none;
 		--_code-viewer-diff-added-background-color: light-dark(var(--primitives-color-success-100), var(--primitives-color-success-200));
 		--_code-viewer-diff-added-word-background-color: light-dark(var(--primitives-color-success-250), var(--primitives-color-success-450));
@@ -35,6 +36,8 @@ export const codeViewerStyles = css`
 		--_code-viewer-diff-row-content-color: light-dark(var(--primitives-color-neutral-950), var(--primitives-color-neutral-975));
 		--_code-viewer-diff-row-number-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
 		--_code-viewer-diff-gutter-inline-padding: var(--primitives-space-8);
+		--_code-viewer-gutter-border-width: var(--semantics-dividers-thickness);
+		--_code-viewer-gutter-border-color: var(--semantics-dividers-color);
 
 		${inheritedTextReset}
 		display: flex;
@@ -55,13 +58,13 @@ export const codeViewerStyles = css`
 
 	:host([appearance="box-base"]) {
 		--_code-viewer-background-color: var(--semantics-surfaces-base-background-color);
-		--_code-viewer-border-color: var(--semantics-surfaces-base-highlight-border-color);
+		--_code-viewer-highlight-border-color: var(--semantics-surfaces-base-highlight-border-color);
 	}
 
 	:host([appearance="simple"]) {
 		--_code-viewer-corner-radius: 0;
 		--_code-viewer-background-color: transparent;
-		--_code-viewer-border-color: transparent;
+		--_code-viewer-highlight-border-color: transparent;
 		--_code-viewer-block-padding: 0;
 		--_code-viewer-inline-padding: 0;
 	}
@@ -73,11 +76,6 @@ export const codeViewerStyles = css`
 		box-sizing: border-box;
 		position: relative;
 		border-radius: var(--_code-viewer-corner-radius);
-		/* Inner box-shadow paints the border ring inside the radius
-		   without taking layout space — matches nldd-box / nldd-banner.
-		   appearance="simple" suppresses the ring via --_code-viewer-border-color. The
-		   forced-colors fallback at the bottom restores a real border. */
-		box-shadow: var(--_code-viewer-border-shadow);
 		background-color: var(--_code-viewer-background-color);
 		min-width: 0;
 		overflow: hidden;
@@ -86,6 +84,22 @@ export const codeViewerStyles = css`
 		flex-basis: auto;
 		color: var(--_code-viewer-content-color);
 		font: var(--_code-viewer-font);
+	}
+
+	/* The border ring lies over the content, so the sticky gutters and the
+	   colored diff rows cannot cover it. Inset, it takes no layout space. */
+	.code-viewer::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: var(--_code-viewer-highlight-border-z-index);
+		border-radius: inherit;
+		box-shadow: var(--_code-viewer-highlight-border-shadow);
+		pointer-events: none;
+	}
+
+	.code-viewer .cm-editor {
+		isolation: isolate;
 	}
 
 	/* The scroller spans the whole box, so the padding sits on the content
@@ -103,7 +117,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) {
-		--_code-viewer-actions-area-padding: 0;
+		--_code-viewer-actions-area-padding: var(--primitives-space-0);
 	}
 
 	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) .code-viewer .cm-scroller .cm-content {
@@ -116,7 +130,7 @@ export const codeViewerStyles = css`
 	.code-viewer:has(.cm-scroller:focus-visible) {
 		outline: var(--semantics-focus-ring-outline);
 		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow), var(--_code-viewer-border-shadow);
+		box-shadow: var(--semantics-focus-ring-box-shadow);
 	}
 
 	:host([max-height]) .code-viewer {
@@ -157,6 +171,16 @@ export const codeViewerStyles = css`
 		padding-right: var(--_code-viewer-actions-area-size);
 	}
 
+	/* The gutters stay put while the code scrolls sideways under them. The
+	   divider is a gradient: an inset shadow with an offset leaves a hairline on iOS. */
+	:host .cm-gutters.cm-gutters {
+		background-color: var(--_code-viewer-background-color);
+		background-image: linear-gradient(var(--_code-viewer-gutter-border-color), var(--_code-viewer-gutter-border-color));
+		background-repeat: no-repeat;
+		background-position: right;
+		background-size: var(--_code-viewer-gutter-border-width) 100%;
+	}
+
 	:host([diff]) .cm-gutters {
 		color: var(--_code-viewer-diff-gutter-color);
 	}
@@ -171,6 +195,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([diff]) .cm-diff-sign-gutter .cm-gutterElement {
+		padding-inline: var(--_code-viewer-diff-gutter-inline-padding);
 		text-align: center;
 	}
 
@@ -209,11 +234,19 @@ export const codeViewerStyles = css`
 		color: var(--_code-viewer-diff-row-number-color);
 	}
 
+	.cm-diff-sign-gutter :is(.cm-diff-added, .cm-diff-removed) {
+		background-repeat: no-repeat;
+		background-position: right;
+		background-size: var(--_code-viewer-gutter-border-width) 100%;
+	}
+
 	.cm-diff-sign-gutter .cm-diff-added {
+		background-image: linear-gradient(var(--_code-viewer-diff-added-word-background-color), var(--_code-viewer-diff-added-word-background-color));
 		color: var(--_code-viewer-diff-added-sign-color);
 	}
 
 	.cm-diff-sign-gutter .cm-diff-removed {
+		background-image: linear-gradient(var(--_code-viewer-diff-removed-word-background-color), var(--_code-viewer-diff-removed-word-background-color));
 		color: var(--_code-viewer-diff-removed-sign-color);
 	}
 
@@ -287,7 +320,7 @@ export const codeViewerStyles = css`
 
 	@media (forced-colors: active) {
 		:host .code-viewer {
-			border: var(--_code-viewer-border-width) solid CanvasText;
+			border: var(--_code-viewer-highlight-border-width) solid CanvasText;
 		}
 
 		:host([appearance="simple"]) .code-viewer {

@@ -57,6 +57,7 @@ import { tooltipTemplate } from './tooltip.template.js';
 import { isTouchMode } from '../../../utilities/input-modality.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../keyboard-shortcut/keyboard-shortcut.js';
+import { carryContext } from '../../../utilities/carried-context.js';
 
 type Placement = 'top' | 'bottom' | 'left' | 'right';
 type Timing = 'instant' | 'delay' | 'never';
@@ -232,6 +233,7 @@ export class NLDDTooltip extends LitElement {
 				});
 				document.body.appendChild(this._descriptionEl);
 			}
+			carryContext(this._descriptionEl, this);
 			// Hover and focus sync too; write only what changed, so nothing is
 			// re-announced.
 			if (this._descriptionEl.textContent !== description) this._descriptionEl.textContent = description;

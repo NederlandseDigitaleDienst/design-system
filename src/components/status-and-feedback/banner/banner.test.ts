@@ -54,7 +54,7 @@ describe('nldd-banner', () => {
 
 	it.each([
 		['neutral', 'info-circle-filled'],
-		['success', 'check-circle-filled'],
+		['success', 'check-mark-circle-filled'],
 		['warning', 'exclamation-triangle-filled'],
 		['critical', 'exclamation-circle-filled'],
 		['accent', 'info-circle-filled'],

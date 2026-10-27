@@ -3,6 +3,7 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './text-editor.js';
 import { mentionToken, unescapeMentionLabel, decodeMentionId } from './text-editor.mention.js';
 import { isSafeHref } from './text-editor.links.js';
+import { loadTokens } from '../../../test-tokens.js';
 
 type TextEditorEl = HTMLElement & { value: string; updateComplete: Promise<boolean> };
 
@@ -107,6 +108,26 @@ describe('nldd-text-editor', () => {
 			expect(heights().every((h) => h === line)).toBe(true);
 		}
 		cleanup(el2);
+	});
+
+	it('laat een selectie tot het eind van een regel stoppen bij de tekst, niet in de padding', async () => {
+		const removeTokens = loadTokens();
+		const el2 = await fixture<TextEditorEl>('<nldd-text-editor appearance="input-field" accessible-label="Tekst" style="width: 320px"></nldd-text-editor>');
+		el2.value = 'Een eerste regel\nEen tweede regel\nDerde';
+		await el2.updateComplete;
+		await waitForUpdate(el2);
+		const view = (el2 as unknown as { view: { dom: HTMLElement; contentDOM: HTMLElement; dispatch(spec: unknown): void; state: { doc: { length: number } } } }).view;
+		view.dispatch({ selection: { anchor: 4, head: view.state.doc.length - 2 } });
+		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		const content = view.contentDOM;
+		const padding = parseFloat(getComputedStyle(content).paddingRight);
+		const textRight = content.getBoundingClientRect().right - padding;
+		const rights = [...view.dom.querySelectorAll('.cm-selectionBackground')].map((p) => p.getBoundingClientRect().right);
+		expect(padding).toBeGreaterThan(0);
+		expect(rights.length).toBeGreaterThan(0);
+		expect(Math.max(...rights)).toBeLessThanOrEqual(textRight + 0.5);
+		cleanup(el2);
+		removeTokens();
 	});
 
 	it('tekent een deels geselecteerde inline code zo hoog als de code, met zijn rand en ronde kant aan de rand van de code', async () => {

@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import './popover.js';
+import '../../navigation/top-title-bar/top-title-bar.js';
 import type { NLDDPopover } from './popover.js';
 
 describe('nldd-popover', () => {
@@ -905,5 +906,29 @@ describe('nldd-popover onder een knop', () => {
 		await userEvent.tripleClick(popover.querySelector('p')!);
 		expect(window.getSelection()?.toString().trim()).toBe('Aanvraag A-1042 is in behandeling');
 		popover.hidePopover();
+	});
+	it('sluit op de dismiss van een titelbalk erin, niet op die van iets anders', async () => {
+		const wrapper = await fixture(`
+			<div>
+				<button id="trigger-dismiss">Trigger</button>
+				<nldd-popover anchor="trigger-dismiss" accessible-label="Test">
+					<nldd-top-title-bar text="Test" dismiss-text="Sluit"></nldd-top-title-bar>
+					<span class="other"></span>
+				</nldd-popover>
+			</div>
+		`);
+		el = wrapper;
+		const popover = wrapper.querySelector('nldd-popover') as NLDDPopover;
+		await waitForUpdate(popover);
+		popover.show();
+		await waitForUpdate(popover);
+
+		wrapper.querySelector('.other')!.dispatchEvent(new CustomEvent('dismiss', { bubbles: true, composed: true }));
+		await waitForUpdate(popover);
+		expect(popover.open).toBe(true);
+
+		wrapper.querySelector('nldd-top-title-bar')!.dispatchEvent(new CustomEvent('dismiss', { bubbles: true, composed: true }));
+		await waitForUpdate(popover);
+		expect(popover.open).toBe(false);
 	});
 });

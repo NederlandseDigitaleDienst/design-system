@@ -22,7 +22,7 @@ export default {
 		orientation: {
 			control: 'select',
 			options: ['auto', 'horizontal', 'vertical'],
-			description: 'Richting: `auto` is een rij, en gestapeld over de volle breedte zodra de groep zelf smaller is dan de sm-grens.',
+			description: 'Richting: `auto` is een rij, en gestapeld over de volle breedte zodra de groep zelf 480px of smaller is.',
 			table: { defaultValue: { summary: 'auto' } },
 		},
 	},
@@ -139,7 +139,9 @@ export const MaximaalDrieKnoppen = {
 
 /**
  * `auto` kijkt naar de breedte van de groep zelf, niet naar die van het venster.
- * Onder de sm-grens staan de knoppen onder elkaar over de volle breedte.
+ * Bij 480px of smaller, de breedte van een telefoon, staan de knoppen onder
+ * elkaar over de volle breedte. Een kaart of dialoog tussen 480px en de
+ * sm-grens houdt zijn rij.
  */
 export const InEenSmalleContainer = {
 	name: 'In een smalle container',

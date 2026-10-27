@@ -51,6 +51,19 @@ describe('nldd-notification', () => {
 		expect(el.parentElement).toBe(region);
 	});
 
+	it('neemt color-scheme en lang van zijn plek mee naar de regio', async () => {
+		const section = await fixture('<section lang="en" style="color-scheme: dark"><nldd-notification text="Saved"></nldd-notification></section>');
+		// It has left the section by now: it moves itself within a microtask.
+		await Promise.resolve();
+		const region = document.getElementById('nldd-notifications-area');
+		const notification = region!.querySelector('nldd-notification') as NLDDNotification;
+		expect(notification.parentElement).toBe(region);
+		expect(getComputedStyle(notification).colorScheme).toBe('dark');
+		expect(notification.getAttribute('lang')).toBe('en');
+		notification.remove();
+		cleanup(section);
+	});
+
 	it('kondigt een fout aan met role alert en de rest met role status', async () => {
 		el = await maak('<nldd-notification text="Mislukt" variant="critical"></nldd-notification>');
 		expect(el.getAttribute('role')).toBe('alert');
@@ -63,7 +76,7 @@ describe('nldd-notification', () => {
 
 	it('kiest een gevuld icoon per variant', async () => {
 		el = await maak('<nldd-notification text="Opgeslagen" variant="success"></nldd-notification>');
-		expect(el._resolvedIcon).toBe('check-circle-filled');
+		expect(el._resolvedIcon).toBe('check-mark-circle-filled');
 	});
 
 	it('verdwijnt vanzelf als hij bovenaan staat', async () => {

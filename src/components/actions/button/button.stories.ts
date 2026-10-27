@@ -851,7 +851,7 @@ export const OpKleurvlak = {
 	render: () => html`
 		<nldd-container gap="16">
 			<div style="background: var(--semantics-categories-donkerblauw-filled-background-color); color: var(--semantics-categories-donkerblauw-filled-content-color); --context-parent-background-color: var(--semantics-categories-donkerblauw-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-button-group orientation="horizontal">
+				<nldd-button-group>
 					<nldd-button
 						appearance="inherit-filled"
 						text="Inherit filled"
@@ -876,7 +876,7 @@ export const OpKleurvlak = {
 				</nldd-button-group>
 			</div>
 			<div style="background: var(--semantics-categories-oranje-filled-background-color); color: var(--semantics-categories-oranje-filled-content-color); --context-parent-background-color: var(--semantics-categories-oranje-filled-background-color); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-button-group orientation="horizontal">
+				<nldd-button-group>
 					<nldd-button
 						appearance="inherit-filled"
 						text="Inherit filled"
@@ -888,7 +888,7 @@ export const OpKleurvlak = {
 				</nldd-button-group>
 			</div>
 			<div style="background: oklch(0.45 0.12 300); color: oklch(1 0 0); padding: 24px; border-radius: var(--primitives-corner-radius-md);">
-				<nldd-button-group orientation="horizontal">
+				<nldd-button-group>
 					<nldd-button
 						appearance="inherit-filled"
 						text="Zonder context (flip)"

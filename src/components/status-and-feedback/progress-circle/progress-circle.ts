@@ -242,7 +242,7 @@ export class NLDDProgressCircle extends LitElement {
 		if (this.accessibleLabel) return this.accessibleLabel;
 		if (this.indeterminate) return this._t('components.progress-circle.loading-label');
 
-		const completedSuffix = this._t('components.progress-circle.completed-suffix-text');
+		const completedSuffix = this._t('components.progress-circle.completed-suffix-lowercase-text');
 		const totalPrefix = this._t('components.progress-circle.total-prefix-text');
 
 		if (!this._hasSegmentIndicators) {

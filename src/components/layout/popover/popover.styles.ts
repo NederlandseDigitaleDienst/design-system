@@ -53,8 +53,21 @@ export const popoverStyles = css`
 		}
 	}
 
+	/* A column, as in nldd-sheet, so a page inside shrinks to the height limit
+	   and scrolls itself, keeping a sticky header in view. Only while open:
+	   closed, the popover API hides it with display. */
+	:host(:popover-open) {
+		display: flex;
+		flex-direction: column;
+	}
+
 	:host([hidden]) {
 		display: none;
+	}
+
+	::slotted(nldd-page) {
+		min-height: 0;
+		flex-shrink: 1;
 	}
 
 	:host(:not(:popover-open)) {

@@ -325,7 +325,7 @@ const meldVerwijderd = () => {
 export const VanuitCode = {
 	name: 'Vanuit code',
 	render: () => html`
-		<nldd-button-group orientation="horizontal">
+		<nldd-button-group>
 			<nldd-button
 				text="Verwijder aanvraag"
 				@click=${meldVerwijderd}
