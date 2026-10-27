@@ -35,6 +35,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **Line numbers in `nldd-code-viewer` and `nldd-code-editor` no longer run through the code.** The gutters stay in place when a long line scrolls sideways, but they were transparent, so the code showed through them. They now take the surface of the viewer or editor, with a thin divider on their right edge that takes the green or red of an added or removed line in a diff. The divider takes no space, so the code stays where it was, and the + and − of a diff have room on both sides. The border around the viewer and the editor now lies over the content, so the gutters and the colored rows of a diff no longer cover it.
 - **The "+N" of `nldd-avatar-group` fits its disc at every size.** It had a fixed font size, so at size 16 the number ran past the disc, and with two or three digits the "+" fell under the avatar before it.
 
 ## [0.12.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.11.0...v0.12.0) (2026-10-26)
