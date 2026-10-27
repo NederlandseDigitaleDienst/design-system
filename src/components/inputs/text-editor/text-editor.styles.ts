@@ -43,6 +43,8 @@ export const textEditorStyles = css`
 		--_text-editor-code-scale: 0.85;
 		--_text-editor-code-content-height: 1.32em;
 		--_text-editor-marker-font-size: var(--primitives-font-size-90);
+		--_text-editor-task-box-size: 1.7em;
+		--_text-editor-task-box-shift: -0.11em;
 		/* JetBrains Mono advance (600/1000 em) at the marker size; leading
 		   list/quote markers are mono so the hanging indent equals their width. */
 		--_text-editor-marker-advance: calc(0.6 * var(--_text-editor-marker-font-size));
@@ -512,6 +514,49 @@ export const textEditorStyles = css`
 	:host .cm-md-quote-mark-hidden,
 	:host .cm-md-quote-mark-hidden * {
 		color: transparent;
+	}
+
+	/* A task's box, in a width the hanging indent counts on (TASK_BOX_WIDTH in
+	   text-editor.hidden-syntax.ts), so wrapped lines line up under the text. */
+	/* No height of its own, so a box a little taller than the text does not
+	   make its line taller than the others; the icon is centered on it. */
+	.cm-md-task-box {
+		display: inline-flex;
+		width: 2.5ch;
+		height: 0;
+		vertical-align: middle;
+		justify-content: flex-start;
+		align-items: center;
+		color: var(--_text-editor-content-color);
+	}
+
+	/* Up from the middle of the x-height to the middle of the capitals: next to
+	   a line with capitals and ascenders, that is where the eye puts its middle. */
+	.cm-md-task-box-icon {
+		flex-shrink: 0;
+		width: var(--_text-editor-task-box-size);
+		translate: 0 var(--_text-editor-task-box-shift);
+	}
+
+	.cm-md-task-box-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	.cm-md-code-language {
+		color: var(--_text-editor-mark-color);
+		font-family: var(--_text-editor-code-font-family);
+		font-size: var(--_text-editor-marker-font-size);
+	}
+
+	.cm-md-ordinal,
+	.cm-md-ordinal .cm-md-mark,
+	.cm-md-mark .cm-md-ordinal {
+		color: var(--_text-editor-content-color);
 	}
 
 	/* A bullet with syntax="hidden": the character keeps its mono advance, so a

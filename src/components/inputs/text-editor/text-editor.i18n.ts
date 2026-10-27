@@ -14,6 +14,9 @@ export const nlddTextEditorTranslations = {
 	// without matches. A list's own emptyText overrides both.
 	'components.text-editor.typeahead-start-typing-text': 'Typ om te zoeken',
 	'components.text-editor.typeahead-no-results-text': 'Niets gevonden',
+	// Read by a screen reader in place of a task's box, `- [ ]` and `- [x]`.
+	'components.text-editor.task-open-label': 'Taak, open',
+	'components.text-editor.task-done-label': 'Taak, afgerond',
 };
 
 export type NLDDTextEditorTranslations = typeof nlddTextEditorTranslations;

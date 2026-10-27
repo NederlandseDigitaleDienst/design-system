@@ -11,17 +11,25 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
+- **Tasks in `nldd-text-editor` are boxes you check.** With `syntax="hidden"` the box of `- [ ]` stands in the place of the bullet and a click checks it; Cmd/Ctrl+Enter checks the tasks on the selected lines, and a screen reader reads whether a task is open or done.
+- **Code blocks in `nldd-text-editor` are highlighted in their language**, as in `nldd-code-viewer`.
+- **New icon `check-mark-square`**, the checked sibling of `square`.
 - **`nldd-avatar-group` fits its container.** Where there is no room for every avatar, it shows as many as fit and puts the rest behind the "+N" button.
 - **The "+N" of `nldd-avatar-group` scales with the group.** Where the number does not fit the disc, the button shows an ellipsis with the count in a tooltip.
 - **On a small screen the list behind "+N" has a title bar** with the name of the group and a close button.
 
 ### Added
 
+- **`nldd-text-editor` checks tasks.** With `syntax="hidden"` a task item reads as a square or a checked square in the place of its bullet, and a long task wraps under its text. Like every other mark, the markdown (`- [ ]`) comes back on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, all at once, in both syntax modes. The box is no tab stop, so Tab still leaves the editor, and a screen reader reads "Taak, open" or "Taak, afgerond" in its place (`translations` overrides both).
+- **`nldd-text-editor` highlights a code block in the language named after its opening backticks**, such as `python`, with the palette of `nldd-code-viewer` and the same languages and aliases (`js`, `ts`, `py`, `sh`, `yml` and so on). The grammar loads when the first block that needs it appears.
+- **Icon `check-mark-square`.** `check-mark-circle-filled` is the new name of `check-circle-filled`, in line with the other check marks; the old name stays as an alias.
 - **`nldd-popover` closes on the dismiss of a title bar inside it**, as `nldd-sheet` does. Give its content an `nldd-top-title-bar` with a `dismiss-text` where Escape or a tap outside is not enough to close it on a small screen. A `dismiss` from anything else, a token or a banner, leaves it open.
 - **Warnings in development for a link or button avatar that is too small a target (WCAG 2.5.8).** `nldd-avatar` warns under size 24. `nldd-avatar-group` warns under size 32 when its avatars are links or buttons: they overlap, so each keeps only part of its width as a target.
 
 ### Changed
 
+- **With `syntax="hidden"`, `nldd-text-editor` keeps the language of a code block** as a label in the secondary color above the block, where the whole opening fence line, language included, was hidden. The numbers of a numbered list take the color of the text instead of the dimmed color of a mark: they are content.
+- **Icon `check-mark-extra-small` is redrawn** so it sits in the same place as the check in `check-mark-square`.
 - **`nldd-avatar-group` never overflows its container.** It measures the width it has and shows as many avatars as fit, with the rest behind the button. `max` is now the most it shows, not a fixed count; without `max` the group fits as well. A group that ran out of a narrow container before now shows fewer avatars there.
 - **The "+N" of `nldd-avatar-group` scales with `size`**, a little larger relative to a small disc and smaller to a large one. A number of three or four digits is set smaller. Where it still does not fit, the button shows an ellipsis with "Nog 12 tonen" in a tooltip: a number shows from size 24 with one digit, 40 with two, 56 with three and 80 with four. The count is always in the accessible name.
 - **The list behind "+N" has a title bar on a small screen**, where it is a bottom sheet: the `accessible-label` of the group (or "Overige namen") and "Sluit". A long list scrolls under the bar. On md and up the list is anchored and has no bar.

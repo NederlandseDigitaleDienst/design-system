@@ -135,6 +135,8 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.text-editor.annotation-plural-lowercase': 'annotations',
 	'components.text-editor.typeahead-start-typing-text': 'Type to search',
 	'components.text-editor.typeahead-no-results-text': 'Nothing found',
+	'components.text-editor.task-open-label': 'Task, open',
+	'components.text-editor.task-done-label': 'Task, done',
 	'components.time-field.default-label': 'Time',
 	'components.time-field.to-pick-time-action': 'Choose time',
 	'components.time-field.cancel-action': 'Cancel',

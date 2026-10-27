@@ -4,6 +4,7 @@ import { syntaxTree } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
 import { isMentionLink } from './text-editor.mention.js';
 import { forEachLineStart, treeAdvanced } from './text-editor.syntax.js';
+import { taskBox } from './text-editor.tasks.js';
 
 /* syntax="hidden": the formatting marks of bold, italic, strikethrough, inline
  * code, links and headings are hidden, a bullet reads as a dot, a quote as a
@@ -14,8 +15,9 @@ import { forEachLineStart, treeAdvanced } from './text-editor.syntax.js';
  * reveal anything, so there every mark is hidden.
  *
  * A code block loses its fence lines (the ``` above and below), since its own
- * tint and edge already say what it is. A numbered list keeps its numbers:
- * those are content. */
+ * tint and edge already say what it is; a language on the opening fence stays,
+ * as a label above the block. A numbered list keeps its numbers, in the color
+ * of the text: those are content. */
 
 /** The marks hidden inside inline constructs, by the construct they belong to. */
 const INLINE_MARKS: Record<string, readonly string[]> = {
@@ -28,6 +30,24 @@ const hideMark = Decoration.replace({});
 // The character stays, in its mono width, so a wrapped line still aligns; a dot
 // is drawn over it (see .cm-md-bullet).
 const bullet = Decoration.mark({ class: 'cm-md-bullet' });
+// A task reads as its box alone, in the place of the bullet: the bullet and the
+// space after it are taken out, and the line's hanging indent shrinks with them.
+const TASK_PREFIX_RE = /^(\s*)[-*+]\s+\[[ xX]\](\s+)/;
+/** The width of the box in mono advances; matches .cm-md-task-box. */
+const TASK_BOX_WIDTH = 2.5;
+// !important: CodeMirror joins this style with the full-prefix indent of the
+// list into one style attribute, where that one comes last and would win.
+const taskIndentCache: Record<number, Decoration> = {};
+function taskIndent(length: number): Decoration {
+	return (taskIndentCache[length] ??= Decoration.line({
+		attributes: {
+			style: `text-indent:calc(${length} * var(--_text-editor-marker-advance) * -1) !important;padding-left:calc(${length} * var(--_text-editor-marker-advance)) !important`,
+		},
+	}));
+}
+// The number of a numbered list is content, so it takes the color of the text
+// rather than the dimmed color of a mark. Only the color: the mono width stays.
+const ordinal = Decoration.mark({ class: 'cm-md-ordinal' });
 // A quote reads as a line on the left. Its `>` keeps its width, so the text
 // starts in the same place whether the line or the marks show. The whole quote
 // is the construct: the caret anywhere in it shows every `>` and drops the line.
@@ -70,6 +90,10 @@ function touchesSelection(state: EditorState, from: number, to: number): boolean
 }
 
 const hideLine = Decoration.replace({ block: true });
+const hideFence = Decoration.replace({});
+// The language of a code block is information, not markup: its fence line stays
+// as a label in the secondary color, with only the backticks taken out.
+const codeLanguage = Decoration.mark({ class: 'cm-md-code-language' });
 
 /** The fence lines of every code block the selection does not touch. Taking a
  *  whole line out is a block decoration, which only a state field may give. */
@@ -88,7 +112,15 @@ function buildHiddenFences(state: EditorState): DecorationSet {
 			const last = state.doc.lineAt(node.to).number;
 			// A block with no lines of its own would vanish with its fences.
 			if (last - first + 1 <= fences.length) return false;
-			for (const line of fences) ranges.push(hideLine.range(line.from, line.to));
+			const info = node.node.getChild('CodeInfo');
+			for (const [index, line] of fences.entries()) {
+				if (index === 0 && info) {
+					const open = node.node.getChild('CodeMark')!;
+					ranges.push(hideFence.range(open.from, info.from), codeLanguage.range(info.from, info.to));
+				} else {
+					ranges.push(hideLine.range(line.from, line.to));
+				}
+			}
 			return false;
 		},
 	});
@@ -155,7 +187,22 @@ function buildHidden(view: EditorView): DecorationSet {
 				// shows on the line the caret is on.
 				if (node.name === 'ListMark' && /^[-*+]$/.test(state.sliceDoc(node.from, node.to)) && /^[ \t]/.test(state.sliceDoc(node.to, node.to + 1))) {
 					const line = state.doc.lineAt(node.from);
-					if (!revealed(line.from, line.to)) ranges.push(bullet.range(node.from, node.to));
+					if (revealed(line.from, line.to)) return;
+					const task = TASK_PREFIX_RE.exec(line.text);
+					const marker = task && node.node.parent?.getChild('Task')?.getChild('TaskMarker');
+					if (task && marker) {
+						ranges.push(
+							taskIndent(task[1].length + TASK_BOX_WIDTH + task[2].length).range(line.from),
+							hideMark.range(node.from, marker.from),
+							taskBox(state, /x/i.test(state.sliceDoc(marker.from, marker.to))).range(marker.from, marker.to),
+						);
+						return;
+					}
+					ranges.push(bullet.range(node.from, node.to));
+					return;
+				}
+				if (node.name === 'ListMark' && /^\d+[.)]$/.test(state.sliceDoc(node.from, node.to))) {
+					ranges.push(ordinal.range(node.from, node.to));
 					return;
 				}
 				if (node.name === 'HeaderMark' && parent.name.startsWith('ATXHeading')) {

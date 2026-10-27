@@ -19084,7 +19084,7 @@
           "type": {
             "text": "Extension"
           },
-          "default": "[ markdown({ extensions: GFM }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
+          "default": "[ // A code block that names its language is highlighted in it, as in the code // viewer; the grammar loads when the first such block appears. markdown({ extensions: GFM, codeLanguages: nestedLanguages }), markDecorationPlugin, heldEmphasis, hangingIndentField, mentionTokens, ]",
           "description": "Markdown language (with GFM) plus the hybrid inline-styling decorations."
         }
       ],
@@ -20012,11 +20012,116 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/text-editor/text-editor.tasks.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "taskLabels",
+          "description": "The texts a screen reader reads in place of a box."
+        },
+        {
+          "kind": "function",
+          "name": "taskBox",
+          "return": {
+            "type": {
+              "text": "Decoration"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "EditorState"
+              }
+            },
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "The box that replaces the `[ ]` or `[x]` of a task."
+        },
+        {
+          "kind": "function",
+          "name": "toggleTasks",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "view",
+              "type": {
+                "text": "EditorView"
+              }
+            }
+          ],
+          "description": "Checks or unchecks the tasks on the lines of the selection. False when no\nline there is a task, so the key does what it would otherwise do."
+        },
+        {
+          "kind": "function",
+          "name": "tasks",
+          "return": {
+            "type": {
+              "text": "Extension"
+            }
+          },
+          "parameters": [
+            {
+              "name": "labels",
+              "type": {
+                "text": "TaskLabels"
+              }
+            }
+          ],
+          "description": "Checking a task by click and by Cmd/Ctrl+Enter, with the texts a screen\nreader reads for a box."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "taskLabels",
+          "declaration": {
+            "name": "taskLabels",
+            "module": "src/components/inputs/text-editor/text-editor.tasks.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "taskBox",
+          "declaration": {
+            "name": "taskBox",
+            "module": "src/components/inputs/text-editor/text-editor.tasks.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toggleTasks",
+          "declaration": {
+            "name": "toggleTasks",
+            "module": "src/components/inputs/text-editor/text-editor.tasks.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tasks",
+          "declaration": {
+            "name": "tasks",
+            "module": "src/components/inputs/text-editor/text-editor.tasks.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/text-editor/text-editor.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `appearance=\"simple\"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `appearance=\"input-field\"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.",
+          "description": "A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the document stays plain markdown text, but formatting is shown inline (bold is bold, headings are larger, links are colored) while the syntax markers stay visible, only dimmed — the iA Writer / Kirby approach. No WYSIWYG tree, so the data stays portable. Default `appearance=\"simple\"` is bare (no frame, no focus ring) for use inside a composition (e.g. a message field) that owns its chrome and focus; the caret is a prominent accent. `appearance=\"input-field\"` adds a framed surface + focus Headless: there is no built-in toolbar. A consumer drives formatting via the command methods (toggleBold/toggleItalic/toggleInlineCode/toggleStrikethrough/ toggleHeading/toggleBulletList/toggleTaskList/toggleQuote/toggleLink/runCommand to toggle, and setHeading/setList for picker-style \"set\" semantics), reads the active formats with getState(), listens to the nldd-text-editor-state event to render toggle states, and forwards padding clicks with focusFromPoint(). Cmd/Ctrl+B/I/E/K are bound out of the box. With `syntax=\"hidden\"` a task item (`- [ ]`, `- [x]`) reads as a box in the place of its bullet, and like every other mark shows its markdown on the line the caret is on. A click on the box checks or unchecks it without moving the caret. Cmd/Ctrl+Enter does the same for the tasks on the lines of the selection, in both syntax modes. The box is no tab stop: Tab leaves the editor. A screen reader reads \"Taak, open\" or \"Taak, afgerond\" in its place. A code block that names its language after the backticks is highlighted in it, as in nldd-code-viewer; the grammar loads with the first such block. Commands keep focus on the editor. An inline toggle wraps the selected text (whitespace at its edges stays outside the markers), unwraps a run the caret is in, and with the caret at the very end of a run steps out of it. Bold that a typed space has broken (`**woord **`) keeps its styling while the caret is inside; the space moves outside the markers when the caret leaves. insertAtCursor(text) puts text at the caret and replaceRange(from, to, text) writes at the same clean offsets getSelection() reads. An @-mention typeahead (mentionSource) collapses to an atomic token, further typeahead lists on their own trigger (typeaheads) write what you tell them to, and a W3C-style annotation overlay (annotations) marks ranges with a light tint and a count badge without touching the underlying text. To show the value, render the markdown into nldd-rich-text, which uses the same type, bold and code as the editor. A mention is stored as `[@Name](user:id)`: turn it into `<a href=\"…\" data-mention>Name</a>` (or a `span` when there is no page for the person), without the `@`. A link reads as the same token there; a span keeps the color and the icon without the tint.",
           "name": "NLDDTextEditor",
           "members": [
             {
@@ -20902,7 +21007,7 @@
               },
               "default": "'visible'",
               "fieldName": "syntax",
-              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its ``` fence lines until the caret is in it, since its own tint and edge already say what it is. The numbers of a numbered list stay: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
+              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its ``` fence lines until the caret is in it, since its own tint and edge already say what it is; a language on the opening fence stays, as a label above the block. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
               "name": "annotatable",
@@ -20919,7 +21024,7 @@
                 "text": "Partial<NLDDTextEditorTranslations>"
               },
               "default": "{}",
-              "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge and the annotation count badge). Unset keys fall back to Dutch.",
+              "description": "Override the editor's assistive-tech strings (the open-in-new-tab link badge, the annotation count badge and the label of a task's box). Unset keys fall back to Dutch.",
               "fieldName": "translations"
             },
             {
@@ -37703,7 +37808,7 @@
               },
               "default": "''",
               "fieldName": "icon",
-              "description": "Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled"
+              "description": "Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled"
             },
             {
               "name": "text",
@@ -38543,7 +38648,7 @@
               },
               "default": "''",
               "fieldName": "icon",
-              "description": "Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled"
+              "description": "Icon override. Default per variant: neutral → info-circle-filled, accent → info-circle-filled, success → check-mark-circle-filled, warning → exclamation-triangle-filled, critical → exclamation-circle-filled"
             },
             {
               "name": "text",
@@ -39932,6 +40037,72 @@
           "declaration": {
             "name": "focusAutofocusTarget",
             "module": "src/utilities/autofocus.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/carried-context.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "carryContext",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "origin",
+              "type": {
+                "text": "Element | null"
+              }
+            }
+          ],
+          "description": "Gives `element` the color scheme and language of `origin`. Call it each\ntime the element shows, since the page around the origin may have changed."
+        },
+        {
+          "kind": "function",
+          "name": "releaseContext",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Takes back what `carryContext` wrote, for an element returned to its place."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "carryContext",
+          "declaration": {
+            "name": "carryContext",
+            "module": "src/utilities/carried-context.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "releaseContext",
+          "declaration": {
+            "name": "releaseContext",
+            "module": "src/utilities/carried-context.ts"
           }
         }
       ]

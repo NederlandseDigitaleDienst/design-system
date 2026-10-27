@@ -1,4 +1,4 @@
-import { LanguageSupport, StreamLanguage } from '@codemirror/language';
+import { LanguageDescription, LanguageSupport, StreamLanguage } from '@codemirror/language';
 
 /* Lazy per-language loading: each grammar is a separate dynamic import, so a
  * page only downloads the grammars it actually renders (mirrors how the old
@@ -45,3 +45,25 @@ export function loadLanguage(name: string): Promise<LanguageSupport> | undefined
 	}
 	return pending;
 }
+
+/** Other names a code block may give for a supported language, as people write
+ *  them after the backticks. */
+const ALIASES: Record<string, string[]> = {
+	javascript: ['js', 'jsx', 'mjs', 'cjs'],
+	typescript: ['ts', 'tsx'],
+	python: ['py'],
+	bash: ['sh', 'shell', 'zsh', 'console'],
+	yaml: ['yml'],
+	markdown: ['md'],
+	html: ['htm'],
+	rust: ['rs'],
+};
+
+/** The supported languages as CodeMirror language descriptions, for a parser
+ *  that highlights code nested in another language (a code block in markdown).
+ *  Each one loads its grammar only when a block names it. */
+export const nestedLanguages: LanguageDescription[] = Object.keys(loaders).map((name) => LanguageDescription.of({
+	name,
+	alias: ALIASES[name] ?? [],
+	load: () => loadLanguage(name)!,
+}));

@@ -135,6 +135,8 @@ export const papAW: Partial<Record<TranslationKey, string>> = {
 	'components.text-editor.annotation-plural-lowercase': 'anotacionnan',
 	'components.text-editor.typeahead-start-typing-text': 'Tecla pa busca',
 	'components.text-editor.typeahead-no-results-text': 'No a haya nada',
+	'components.text-editor.task-open-label': 'Tarea, habri',
+	'components.text-editor.task-done-label': 'Tarea, kla',
 	'components.time-field.default-label': 'Ora',
 	'components.time-field.to-pick-time-action': 'Scoge un ora',
 	'components.time-field.cancel-action': 'Cancela',

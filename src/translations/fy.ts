@@ -133,6 +133,8 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.text-editor.annotation-plural-lowercase': 'annotaasjes',
 	'components.text-editor.typeahead-start-typing-text': 'Typ om te sykjen',
 	'components.text-editor.typeahead-no-results-text': 'Neat fûn',
+	'components.text-editor.task-open-label': 'Taak, iepen',
+	'components.text-editor.task-done-label': 'Taak, ôfrûne',
 	'components.time-field.default-label': 'Tiid',
 	'components.time-field.to-pick-time-action': 'Tiid kieze',
 	'components.time-field.cancel-action': 'Annulearje',
