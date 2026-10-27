@@ -58,6 +58,7 @@ import { nlddDocumentTabBarTranslations } from './document-tab-bar.i18n.js';
 import './../../actions/menu/menu.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
+import { carryContext } from '../../../utilities/carried-context.js';
 
 // Pointer movement threshold in px before drag mode activates.
 // Distinguishes a click (select) from a drag (reorder).
@@ -756,6 +757,9 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 		menu.id = `${this._id}-menu`;
 		menu.addEventListener('toggle', (event: Event) => {
 			this._menuOpen = (event as ToggleEvent).newState === 'open';
+		});
+		menu.addEventListener('beforetoggle', (event: Event) => {
+			if ((event as ToggleEvent).newState === 'open') carryContext(menu, this);
 		});
 		document.body.appendChild(menu);
 		this._menu = menu;

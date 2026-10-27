@@ -93,6 +93,7 @@ import { nlddNotificationTranslations } from './notification.i18n.js';
 import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/button/button.js';
+import { carryContext } from '../../../utilities/carried-context.js';
 
 /** The arrival keyframes: from the right, and from the top on a small screen. */
 const ARRIVALS = new Set(['notification-arrive', 'notification-arrive-from-top']);
@@ -275,6 +276,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 			const area = document.getElementById('nldd-notifications-area');
 			if (this.parentElement === area) return;
 			this._moving = true;
+			carryContext(this, this.parentElement);
 			joinArea(this, this._t('components.notification.region-label'));
 			this._moving = false;
 		});
