@@ -76,7 +76,7 @@ describe('nldd-notification', () => {
 
 	it('kiest een gevuld icoon per variant', async () => {
 		el = await maak('<nldd-notification text="Opgeslagen" variant="success"></nldd-notification>');
-		expect(el._resolvedIcon).toBe('check-circle-filled');
+		expect(el._resolvedIcon).toBe('check-mark-circle-filled');
 	});
 
 	it('verdwijnt vanzelf als hij bovenaan staat', async () => {

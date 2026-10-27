@@ -106,6 +106,9 @@ export const aliases = {
 	'valid': 'check-mark-circle',
 	'done': 'check-mark-circle',
 
+	// check-mark-circle-filled
+	'check-circle-filled': 'check-mark-circle-filled',
+
 	// check-mark-circle-light
 	'done-light': 'check-mark-circle-light',
 

@@ -29,6 +29,7 @@
 export const NEW_ICONS = new Set([
 	'book-with-bookmark',
 	'chart-bar-x-axis',
+	'check-mark-square',
 	'color-chart',
 	'creditcard',
 	'file-markdown',
@@ -51,6 +52,8 @@ export const NEW_ICONS = new Set([
 export const UPDATED_ICONS = new Set([
 	'bold',
 	'chart-line-x-y-axis',
+	'check-mark-circle-filled',
+	'check-mark-extra-small',
 	'heading-1',
 	'heading-2',
 	'heading-3',
