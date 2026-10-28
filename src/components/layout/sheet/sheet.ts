@@ -252,16 +252,22 @@ export class NLDDSheet extends LitElement {
 	 *  the backdrop being read as a backdrop click. */
 	private _pointerDownOnBackdrop = false;
 
+	/** Whether the release before a click was on the backdrop too. A press on the
+	 *  backdrop and a release in the sheet fire their click on the element both
+	 *  share, the dialog, so the click alone cannot tell (WCAG 2.5.2). */
+	private _pointerUpOnBackdrop = false;
+
 	_handleDialogPointerDown(e: PointerEvent): void {
 		this._pointerDownOnBackdrop = e.target === this._dialog;
 	}
 
+	_handleDialogPointerUp(e: PointerEvent): void {
+		this._pointerUpOnBackdrop = e.target === this._dialog;
+	}
+
 	_handleDialogClick(e: MouseEvent): void {
-		// Close only on a genuine backdrop click: the press AND the release land
-		// on the dialog itself (its dismiss area), not on content. e.target is the
-		// dialog when the release is on the backdrop; the pointerdown flag confirms
-		// the press started there too, so a drag out of the sheet doesn't dismiss.
-		if (e.target === this._dialog && this._pointerDownOnBackdrop) {
+		// Close only when the press and the release both land on the backdrop.
+		if (e.target === this._dialog && this._pointerDownOnBackdrop && this._pointerUpOnBackdrop) {
 			this.hide();
 		}
 	}

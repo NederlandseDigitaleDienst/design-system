@@ -195,11 +195,36 @@ describe('nldd-sheet – backdrop klik', () => {
 		const down = new PointerEvent('pointerdown', { bubbles: true });
 		Object.defineProperty(down, 'target', { value: dialog });
 		el._handleDialogPointerDown(down);
+		const up = new PointerEvent('pointerup', { bubbles: true });
+		Object.defineProperty(up, 'target', { value: dialog });
+		el._handleDialogPointerUp(up);
 		const event = new MouseEvent('click', { bubbles: true });
 		Object.defineProperty(event, 'target', { value: dialog });
 		el._handleDialogClick(event);
 
 		expect(hideSpy).toHaveBeenCalledOnce();
+	});
+
+	it('does not hide() when the press is on the backdrop and the release inside the sheet', async () => {
+		el = await fixture<NLDDSheet>('<nldd-sheet><input></nldd-sheet>');
+		await waitForUpdate(el);
+		el.show();
+
+		const hideSpy = vi.spyOn(el, 'hide');
+		const dialog = el.shadowRoot!.querySelector('dialog')!;
+		const body = el.shadowRoot!.querySelector('.sheet__body')!;
+		const down = new PointerEvent('pointerdown', { bubbles: true });
+		Object.defineProperty(down, 'target', { value: dialog });
+		el._handleDialogPointerDown(down);
+		// The release lands in the sheet; the click resolves to the dialog they share.
+		const up = new PointerEvent('pointerup', { bubbles: true });
+		Object.defineProperty(up, 'target', { value: body });
+		el._handleDialogPointerUp(up);
+		const event = new MouseEvent('click', { bubbles: true });
+		Object.defineProperty(event, 'target', { value: dialog });
+		el._handleDialogClick(event);
+
+		expect(hideSpy).not.toHaveBeenCalled();
 	});
 
 	it('does not hide() when the press started inside the sheet and the release lands on the backdrop', async () => {
