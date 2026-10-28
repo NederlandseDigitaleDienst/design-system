@@ -275,6 +275,24 @@ describe('nldd-list-item – expanded', () => {
 		expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('`expanded` needs somewhere to live'));
 	});
 
+	it('says a closed branch is collapsed from the start, before anything is pressed', async () => {
+		el = await fixture<HTMLElement>(
+			`<nldd-list type="tree" accessible-label="X">
+				<nldd-list-item>
+					<nldd-list-item-segment button disclosure accessible-label="Ministeries in- of uitklappen"></nldd-list-item-segment>
+					<nldd-text-cell text="Ministeries"></nldd-text-cell>
+					<nldd-list-item slot="children"><nldd-text-cell text="Financiën"></nldd-text-cell></nldd-list-item>
+				</nldd-list-item>
+			</nldd-list>`,
+		);
+		await waitForUpdate(el);
+		const item = el.querySelector('nldd-list-item')!;
+		const seg = el.querySelector('nldd-list-item-segment')!;
+		await waitForUpdate(item);
+		await waitForUpdate(seg);
+		expect(seg.shadowRoot!.querySelector('.list-item-segment')!.getAttribute('aria-expanded')).toBe('false');
+	});
+
 	// In a tree, child rows are DOM children of the row, so an unscoped relay
 	// pushed the parent's expanded state into the chevron of every collapsed child
 	// row as well, which then pointed down while the branch was closed.
