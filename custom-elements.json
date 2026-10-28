@@ -39231,6 +39231,134 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/navigation/top-navigation-bar/top-navigation-bar.menu-sheet.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The menu of a narrow nldd-top-navigation-bar: a sheet from the left with the\nitems of the global menu bar as a navigation list, and a level of its own for\nevery submenu.\n\nIt is built on the first open, from modules loaded only then, and appended\nto document.body. The rows are read from the menu bar on every open and on\nevery step between levels, so the sheet shows what the bar holds at that\nmoment. The menu bar and its submenus are only read, never moved, so the\npopovers they serve on a wide screen stay intact.",
+          "name": "TopNavigationMenuSheet",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_sheet",
+              "type": {
+                "text": "Sheet | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_stack",
+              "type": {
+                "text": "SheetLevel[]"
+              },
+              "privacy": "private",
+              "default": "[]",
+              "description": "The last entry is the visible level. Reset to the root on every open,\nso a reopened sheet starts at the top wherever you drilled to before."
+            },
+            {
+              "kind": "field",
+              "name": "_menuText",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "button",
+                  "type": {
+                    "text": "NLDDMenuBarItem | null"
+                  }
+                }
+              ],
+              "description": "Open the sheet at its root level. `button` is the bar's menu button,\nwhich says `expanded` while the sheet is open."
+            },
+            {
+              "kind": "method",
+              "name": "applyTexts",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Take over the bar's texts after a change of translations."
+            },
+            {
+              "kind": "method",
+              "name": "remove",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_create",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Sheet"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_back",
+              "privacy": "private",
+              "description": "Back button: one level up, with focus on the row that opened the level\n(the APG menu pattern), not on the first one."
+            },
+            {
+              "kind": "method",
+              "name": "_render",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "moveFocus",
+                  "default": "false"
+                },
+                {
+                  "name": "focusOpenerText",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Render the top of the stack: the title bar with its back button, and the\nrows. With `moveFocus` after a step down or back, focus lands on the row\nthat opened the level going back, else on the first row."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TopNavigationMenuSheet",
+          "declaration": {
+            "name": "TopNavigationMenuSheet",
+            "module": "src/components/navigation/top-navigation-bar/top-navigation-bar.menu-sheet.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/navigation/top-navigation-bar/top-navigation-bar.ts",
       "declarations": [
         {
