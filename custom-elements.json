@@ -22952,8 +22952,42 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/inputs/time-field/time-field.ts",
+      "path": "src/components/inputs/time-field/time-field.times.ts",
       "declarations": [
+        {
+          "kind": "function",
+          "name": "toMinutes",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "time",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "fromMinutes",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "total",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
         {
           "kind": "function",
           "name": "parseTime",
@@ -23001,8 +23035,225 @@
           "description": "The nearest time that falls on the step, counted from `base`. Input exactly\nin between rounds up.\n\nNever rolls over the edge of the day: if rounding up would pass 23:59, step\nback instead. Rolling over to 00:00 silently shifts the day, and a consumer\nwho puts this field next to a date field then has a bug nobody sees\ncoming."
         },
         {
+          "kind": "function",
+          "name": "resolveRules",
+          "return": {
+            "type": {
+              "text": "TimeRules"
+            }
+          },
+          "parameters": [
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "commitText",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "rules",
+              "type": {
+                "text": "TimeRules"
+              }
+            },
+            {
+              "name": "round",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "The time a typed text commits to: a real time within the bounds, or ''.\nRounding to the step only on commit, not while typing: otherwise \"09:1\"\njumps to 09:00 before anyone can type the 5."
+        },
+        {
+          "kind": "function",
+          "name": "startingPoint",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "rules",
+              "type": {
+                "text": "TimeRules"
+              }
+            },
+            {
+              "name": "now",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "Where the arrow keys and the picker start on an empty field: `min` if there\nis one, otherwise `now` rounded to the step. Starting at midnight would be a\nlong climb from any realistic goal. Past `max` it lands on the last step at\nor before it: a max that does not fall on the step is not in the wheel, and\na value the wheel does not hold shows up as an empty selection."
+        },
+        {
+          "kind": "function",
+          "name": "shift",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "from",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "direction",
+              "type": {
+                "text": "1 | -1"
+              }
+            },
+            {
+              "name": "rules",
+              "type": {
+                "text": "TimeRules"
+              }
+            }
+          ],
+          "description": "One step up or down from `from`, kept within the day and the bounds. From a\ntime that does not fall on the step, the first press moves onto the grid, so\na second press does not land between two valid values again."
+        },
+        {
+          "kind": "function",
+          "name": "checkText",
+          "return": {
+            "type": {
+              "text": "TimeProblem | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "rules",
+              "type": {
+                "text": "TimeRules"
+              }
+            }
+          ],
+          "description": "The problem with a typed text, or null when it is empty or a valid time."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toMinutes",
+          "declaration": {
+            "name": "toMinutes",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fromMinutes",
+          "declaration": {
+            "name": "fromMinutes",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseTime",
+          "declaration": {
+            "name": "parseTime",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "roundToStep",
+          "declaration": {
+            "name": "roundToStep",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveRules",
+          "declaration": {
+            "name": "resolveRules",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "commitText",
+          "declaration": {
+            "name": "commitText",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "startingPoint",
+          "declaration": {
+            "name": "startingPoint",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "shift",
+          "declaration": {
+            "name": "shift",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "checkText",
+          "declaration": {
+            "name": "checkText",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/time-field/time-field.ts",
+      "declarations": [
+        {
           "kind": "class",
-          "description": "A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. \"Klaar\" and Enter keep the choice, and so does a click outside once you have picked something. Cancel and Escape put the old time back. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.",
+          "description": "A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid time or nothing, so an empty field and one with text that is no time both read as ''. `validity` tells them apart: `badInput` for text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside `min` / `max`. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. \"Klaar\" and Enter keep the choice, and so does a click outside once you have picked something. Cancel and Escape put the old time back. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.",
           "name": "NLDDTimeField",
           "members": [
             {
@@ -23225,6 +23476,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What `value` cannot say. It holds a valid time or nothing, so text that is\nno time, a time outside min/max and an empty field all read as ''. The\nfield tells them apart for the form; when to show it stays the caller's.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "formResetCallback",
               "return": {
                 "type": {
@@ -23349,20 +23614,6 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
-              "inheritedFrom": {
-                "name": "FormAssociated",
-                "module": "src/utilities/form-associated-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "ownValidity",
-              "return": {
-                "type": {
-                  "text": "OwnValidity | null"
-                }
-              },
-              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -23630,7 +23881,7 @@
           "name": "parseTime",
           "declaration": {
             "name": "parseTime",
-            "module": "src/components/inputs/time-field/time-field.ts"
+            "module": "./time-field.times.js"
           }
         },
         {
@@ -23638,7 +23889,7 @@
           "name": "roundToStep",
           "declaration": {
             "name": "roundToStep",
-            "module": "src/components/inputs/time-field/time-field.ts"
+            "module": "./time-field.times.js"
           }
         },
         {
