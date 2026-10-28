@@ -10235,6 +10235,268 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/date-field/date-field.dates.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "RANGE_SEPARATOR",
+          "type": {
+            "text": "string"
+          },
+          "default": "'/'",
+          "description": "ISO 8601 writes an interval as start/end, so the value needs no invention."
+        },
+        {
+          "kind": "function",
+          "name": "parseDate",
+          "return": {
+            "type": {
+              "text": "string | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "raw",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Read a typed date generously. Deliberately not a mask: reformatting per\nkeystroke moves the caret, breaks backspace mid-value and confuses screen\nreaders, so we accept what people type and normalize once on commit.\nAccepts 12-3-2026, 12/03/2026, 12.03.2026, 12032026 and ISO yyyy-mm-dd."
+        },
+        {
+          "kind": "function",
+          "name": "formatDisplay",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "iso",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "ISO to the Dutch notation shown on screen."
+        },
+        {
+          "kind": "function",
+          "name": "splitValue",
+          "return": {
+            "type": {
+              "text": "string[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "count",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The ends of a value: one for a date, two for a period. A missing end is ''.\nA period read as one date keeps its start, and a date read as a period\nbecomes its start with an open end."
+        },
+        {
+          "kind": "function",
+          "name": "joinValue",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "ends",
+              "type": {
+                "text": "string[]"
+              }
+            }
+          ],
+          "description": "The value made of its ends: '' when all are empty, else start/end."
+        },
+        {
+          "kind": "function",
+          "name": "resolveBounds",
+          "return": {
+            "type": {
+              "text": "Bounds"
+            }
+          },
+          "parameters": [
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "commitText",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "bounds",
+              "type": {
+                "text": "Bounds"
+              }
+            }
+          ],
+          "description": "The date a typed text commits to: a real date within the bounds, or ''.\nA date the calendar would refuse must not commit when typed either.\nISO strings compare lexically, so `<` and `>` are the date order."
+        },
+        {
+          "kind": "function",
+          "name": "sortEnds",
+          "return": {
+            "type": {
+              "text": "string[] | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "ends",
+              "type": {
+                "text": "string[]"
+              }
+            }
+          ],
+          "description": "The ends with the earlier date first, or null when they are in order\nalready or one is empty. A period typed backwards (\"van 2027 t/m 2026\")\notherwise stays backwards, while the calendar sorts a dragged one."
+        },
+        {
+          "kind": "function",
+          "name": "checkEnds",
+          "return": {
+            "type": {
+              "text": "EndsProblem | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "texts",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "name": "bounds",
+              "type": {
+                "text": "Bounds"
+              }
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "The first problem in the typed texts, or null. A required period with only\na start is missing its end; an empty start is the native input's to report."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RANGE_SEPARATOR",
+          "declaration": {
+            "name": "RANGE_SEPARATOR",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseDate",
+          "declaration": {
+            "name": "parseDate",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatDisplay",
+          "declaration": {
+            "name": "formatDisplay",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "splitValue",
+          "declaration": {
+            "name": "splitValue",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "joinValue",
+          "declaration": {
+            "name": "joinValue",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveBounds",
+          "declaration": {
+            "name": "resolveBounds",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "commitText",
+          "declaration": {
+            "name": "commitText",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sortEnds",
+          "declaration": {
+            "name": "sortEnds",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "checkEnds",
+          "declaration": {
+            "name": "checkEnds",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/date-field/date-field.ts",
       "declarations": [
         {

@@ -107,29 +107,39 @@ function renderPicker(component: NLDDDateField): TemplateResult | typeof nothing
  * distinguishes the two inputs itself ("Periode, van"), so nldd-form-field can
  * go on setting one label and one id without knowing about periods.
  */
-function renderInput(component: NLDDDateField, end: boolean): TemplateResult {
+function renderInput(component: NLDDDateField, text: string, index: number): TemplateResult {
 	const label = component.range
-		? [component._fieldLabel, component._t(end
+		? [component._fieldLabel, component._t(index > 0
 			? 'components.date-field.range-to-lowercase-label'
 			: 'components.date-field.range-from-lowercase-label')].join(', ')
 		: component._fieldLabel;
 	return html`
 		<input class="date-field__input"
-			id=${!end ? (component.inputId || nothing) : nothing}
+			id=${index === 0 ? (component.inputId || nothing) : nothing}
 			type="text"
 			inputmode="numeric"
-			.value=${end ? component._displayEndValue : component._displayValue}
+			.value=${text}
 			placeholder=${component.placeholder || nothing}
 			?disabled=${component.disabled}
 			?readonly=${component.readonly}
 			?required=${component.required}
-			autocomplete=${!end ? (component.autocomplete || nothing) : nothing}
+			autocomplete=${index === 0 ? (component.autocomplete || nothing) : nothing}
 			aria-label=${label || nothing}
 			aria-invalid=${component.invalid ? 'true' : nothing}
-			@keydown=${(e: KeyboardEvent) => component._handleInputKeydown(e, end)}
-			@input=${(e: Event) => component._handleInput(e, end)}
-			@change=${(e: Event) => component._handleChange(e, end)}
+			@keydown=${(e: KeyboardEvent) => component._handleInputKeydown(e, index)}
+			@input=${(e: Event) => component._handleInput(e, index)}
+			@change=${(e: Event) => component._handleChange(e, index)}
 		>
+	`;
+}
+
+function renderSeparator(component: NLDDDateField): TemplateResult {
+	return html`
+		<span class="date-field__separator"
+			aria-hidden="true"
+		>
+			${component._t('components.date-field.range-to-short-lowercase-label')}
+		</span>
 	`;
 }
 
@@ -140,15 +150,10 @@ export function dateFieldTemplate(component: NLDDDateField): TemplateResult {
 			aria-label=${component.range ? component._fieldLabel : nothing}
 			@focusout=${component._handleFieldBlur}
 		>
-			${renderInput(component, false)}
-			${component.range ? html`
-				<span class="date-field__separator"
-					aria-hidden="true"
-				>
-					${component._t('components.date-field.range-to-short-lowercase-label')}
-				</span>
-				${renderInput(component, true)}
-			` : nothing}
+			${component._texts.map((text, index) => html`
+				${index > 0 ? renderSeparator(component) : nothing}
+				${renderInput(component, text, index)}
+			`)}
 			<div class="date-field__input-fade"></div>
 			${renderValidationIcon(component)}
 			${renderPicker(component)}

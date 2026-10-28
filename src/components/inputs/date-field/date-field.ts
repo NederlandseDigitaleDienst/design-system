@@ -50,7 +50,6 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
-import { toIso, resolveDateBound } from '../../../utilities/resolve-date-bound.js';
 import { dateFieldStyles } from './date-field.styles.js';
 import { dateFieldTemplate, PICKER_POPOVER_WIDTH } from './date-field.template.js';
 import { nlddDateFieldTranslations } from './date-field.i18n.js';
@@ -61,35 +60,16 @@ import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
-
-/**
- * Read a typed date generously. Deliberately not a mask: reformatting per
- * keystroke moves the caret, breaks backspace mid-value and confuses screen
- * readers, so we accept what people type and normalize once on commit.
- * Accepts 12-3-2026, 12/03/2026, 12.03.2026, 12032026 and ISO yyyy-mm-dd.
- */
-function parseDate(raw: string): string | null {
-	const trimmed = raw.trim();
-	if (trimmed === '') return null;
-	// A leading four-digit group can only be a year, so ISO is checked first.
-	const iso = /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/.exec(trimmed);
-	if (iso) return toIso(Number(iso[1]), Number(iso[2]), Number(iso[3]));
-	const dutch = /^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/.exec(trimmed);
-	if (dutch) return toIso(Number(dutch[3]), Number(dutch[2]), Number(dutch[1]));
-	const bare = /^(\d{2})(\d{2})(\d{4})$/.exec(trimmed);
-	if (bare) return toIso(Number(bare[3]), Number(bare[2]), Number(bare[1]));
-	return null;
-}
-
-/** ISO 8601 writes an interval as start/end, so the value needs no invention. */
-const RANGE_SEPARATOR = '/';
-
-/** ISO to the Dutch notation shown on screen. */
-function formatDisplay(iso: string): string {
-	const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
-	if (!match) return '';
-	return `${match[3]}-${match[2]}-${match[1]}`;
-}
+import {
+	checkEnds,
+	commitText,
+	formatDisplay,
+	joinValue,
+	resolveBounds,
+	sortEnds,
+	splitValue,
+	type EndsProblem,
+} from './date-field.dates.js';
 
 @customElement('nldd-date-field')
 export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
@@ -170,43 +150,47 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Object })
 	translations: Partial<NLDDDateFieldTranslations> = {};
 
-	/** What the user sees and types. Kept apart from `value`, which stays ISO. */
+	/**
+	 * What the user sees and types, one text per end: one for a date, two for a
+	 * period. Kept apart from `value`, which stays ISO.
+	 */
 	@state()
-	private _display = '';
+	_texts: string[] = [''];
 
-	/** The same, for the end of a period. */
-	@state()
-	private _displayEnd = '';
+	/** How many ends this field has: two for a period, one for a date. */
+	private get _endCount(): number {
+		return this.range ? 2 : 1;
+	}
 
 	/**
-	 * The two ends of `value` while range is on. `value` stays the single source
-	 * of truth - one shape in markup, as a property and in form data - and these
-	 * are only the halves it is composed from.
+	 * The ends of `value`, as ISO dates. `value` stays the single source of
+	 * truth - one shape in markup, as a property and in form data - and these
+	 * are only the ends it is composed from.
 	 */
+	private get _ends(): string[] {
+		return splitValue(this.value, this._endCount);
+	}
+
 	public get _startValue(): string {
-		return this.range ? (this.value.split(RANGE_SEPARATOR)[0] ?? '') : this.value;
+		return this._ends[0] ?? '';
 	}
 
 	public get _endValue(): string {
-		return this.range ? (this.value.split(RANGE_SEPARATOR)[1] ?? '') : '';
+		return this.range ? (this._ends[1] ?? '') : '';
 	}
 
-	private _setRange(start: string, end: string): void {
-		this.value = start === '' && end === '' ? '' : `${start}${RANGE_SEPARATOR}${end}`;
+	private _setEnd(index: number, iso: string): void {
+		const ends = this._ends;
+		ends[index] = iso;
+		this.value = joinValue(ends);
 	}
 
-	/**
-	 * Put the earlier date first when both ends are filled. Typing a period
-	 * backwards ("van 2027 t/m 2026") otherwise stays backwards, while the calendar
-	 * always sorts a dragged range - so the two input methods disagreed. Returns
-	 * whether it swapped, so the caller emits change only when something moved.
-	 */
+	/** Put the earlier date first. Returns whether it swapped, so the caller
+	 *  emits change only when something moved. */
 	private _sortRange(): boolean {
-		if (!this.range) return false;
-		const start = this._startValue;
-		const end = this._endValue;
-		if (!start || !end || start <= end) return false;
-		this._setRange(end, start);
+		const sorted = sortEnds(this._ends);
+		if (!sorted) return false;
+		this.value = joinValue(sorted);
 		return true;
 	}
 
@@ -225,24 +209,13 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/**
-	 * A typed date the calendar would refuse must not commit either. min/max are
-	 * forwarded to the calendar, which blocks out-of-range days, but typed input
-	 * bypassed that check, so a value the picker cannot produce slipped through.
-	 * The bounds may be relative (today, today+3m), so they are resolved first.
-	 * ISO strings compare lexically, so `<` / `>` are the date order.
+	 * The date a text commits to, or '' when it is unparseable or out of bounds.
+	 * Both leave the raw text standing so the user can see and fix it. min/max
+	 * go to the calendar too, but typed input bypassed that check, so a value
+	 * the picker cannot produce slipped through.
 	 */
-	private _withinBounds(iso: string): boolean {
-		const min = this.min ? resolveDateBound(this.min) : '';
-		const max = this.max ? resolveDateBound(this.max) : '';
-		if (min && iso < min) return false;
-		if (max && iso > max) return false;
-		return true;
-	}
-
-	/** The parsed date, or '' when it is unparseable or out of bounds. Both cases
-	 *  leave the raw text standing so the user can see and fix what they wrote. */
-	private _commit(parsed: string | null): string {
-		return parsed && this._withinBounds(parsed) ? parsed : '';
+	private _commit(text: string): string {
+		return commitText(text, resolveBounds(this.min, this.max));
 	}
 
 	/**
@@ -294,25 +267,18 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	override willUpdate(changed: PropertyValues): void {
-		// Reformat only when `value` moved on its own (set by a consumer, a form
-		// reset, the picker). While typing, the parse of `_display` already equals
-		// `value`, so the text is left exactly as entered.
 		if (!changed.has('value') && !changed.has('range')) return;
-		if (changed.has('range')) {
-			// value keeps one shape per mode. Entering range mode with a bare date
-			// makes it the interval's start; leaving it collapses to that start.
-			if (this.range && this.value && !this.value.includes(RANGE_SEPARATOR)) {
-				this.value = `${this.value}${RANGE_SEPARATOR}`;
-			} else if (!this.range && this.value.includes(RANGE_SEPARATOR)) {
-				this.value = this.value.split(RANGE_SEPARATOR)[0] ?? '';
-			}
-		}
-		if ((parseDate(this._display) ?? '') !== this._startValue) {
-			this._display = this._startValue === '' ? '' : formatDisplay(this._startValue);
-		}
-		if ((parseDate(this._displayEnd) ?? '') !== this._endValue) {
-			this._displayEnd = this._endValue === '' ? '' : formatDisplay(this._endValue);
-		}
+		// value has one shape per number of ends, so it follows `range`: a date
+		// becomes the start of an open period, a period collapses to its start.
+		if (changed.has('range')) this.value = joinValue(this._ends);
+		// Rewrite a text only when `value` moved on its own (a consumer, a form
+		// reset, the calendar). While typing, the text already commits to the
+		// value, so it is left exactly as entered.
+		const ends = this._ends;
+		this._texts = ends.map((iso, i) => {
+			const text = this._texts[i] ?? '';
+			return this._commit(text) === iso ? text : formatDisplay(iso);
+		});
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -412,7 +378,7 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	 * popover lands focus in the wrong place. We take over, but only after its
 	 * restoration has run, or ours would be the one overwritten.
 	 */
-	private _focusOnClose: 'trigger' | 'end' | null = null;
+	private _focusOnClose: 'trigger' | 'last-input' | null = null;
 
 	/**
 	 * Move focus to where the close intent asked for, with the caret at the end of
@@ -429,12 +395,9 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 			this._pickerTrigger?.focus();
 			return;
 		}
-		if (intent === 'end') {
-			const end = this.shadowRoot?.querySelectorAll('.date-field__input')[1] as HTMLInputElement | undefined;
-			if (!end) return;
-			end.focus();
-			const caret = end.value.length;
-			end.setSelectionRange(caret, caret);
+		if (intent === 'last-input') {
+			const inputs = this._inputs;
+			this._focusAtEnd(inputs[inputs.length - 1]);
 		}
 	}
 
@@ -502,8 +465,8 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 		const detail = (e as CustomEvent).detail as { value?: string; start?: string; end?: string };
 		if (this.range) {
 			if (typeof detail?.start !== 'string' || typeof detail?.end !== 'string') return;
-			this._setRange(detail.start, detail.end);
-			this._focusOnClose = 'end';
+			this.value = joinValue([detail.start, detail.end]);
+			this._focusOnClose = 'last-input';
 		} else {
 			if (typeof detail?.value !== 'string') return;
 			this.value = detail.value;
@@ -515,50 +478,56 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 
 	// — Actions ——————————————————————————————————————————————————————————————
 
+	private get _inputs(): HTMLInputElement[] {
+		return [...this.shadowRoot?.querySelectorAll<HTMLInputElement>('.date-field__input') ?? []];
+	}
+
+	private _focusAtEnd(input: HTMLInputElement | undefined): void {
+		if (!input) return;
+		input.focus();
+		const caret = input.value.length;
+		input.setSelectionRange(caret, caret);
+	}
+
 	/**
 	 * Backspace on an empty end field steps back to the end of the start field, so
 	 * a whole period can be cleared in one run of backspaces instead of reaching for
 	 * the mouse to move between the two inputs.
 	 */
-	public _handleInputKeydown(e: KeyboardEvent, end: boolean): void {
+	public _handleInputKeydown(e: KeyboardEvent, index: number): void {
 		// Enter first: the browser would have submitted the form from here if
 		// this input were not in a shadow root.
 		if (submitOnEnter(this, e)) return;
-		if (!this.range || !end || e.key !== 'Backspace') return;
-		const input = e.target as HTMLInputElement;
-		if (input.value !== '') return;
-		const start = this.shadowRoot?.querySelector('.date-field__input') as HTMLInputElement | null;
-		if (!start) return;
+		if (index === 0 || e.key !== 'Backspace') return;
+		if ((e.target as HTMLInputElement).value !== '') return;
 		e.preventDefault();
-		start.focus();
-		const caret = start.value.length;
-		start.setSelectionRange(caret, caret);
+		this._focusAtEnd(this._inputs[index - 1]);
 	}
 
-	public _handleInput(e: Event, end = false): void {
+	private _setText(index: number, text: string): void {
+		const texts = [...this._texts];
+		texts[index] = text;
+		this._texts = texts;
+	}
+
+	public _handleInput(e: Event, index = 0): void {
 		e.stopPropagation();
 		const text = (e.target as HTMLInputElement).value;
 		// `value` holds a real, in-range date or nothing at all, never a half-typed
 		// string and never a date the calendar would refuse.
-		const parsed = this._commit(parseDate(text));
-		if (end) this._displayEnd = text;
-		else this._display = text;
-		if (this.range) this._setRange(end ? this._startValue : parsed, end ? parsed : this._endValue);
-		else this.value = parsed;
+		this._setText(index, text);
+		this._setEnd(index, this._commit(text));
 		this._emit('input');
 	}
 
-	public _handleChange(e: Event, end = false): void {
+	public _handleChange(e: Event, index = 0): void {
 		e.stopPropagation();
 		const text = (e.target as HTMLInputElement).value;
-		const committed = this._commit(parseDate(text));
+		const committed = this._commit(text);
 		// Normalize on commit: 12/3/2026 settles as 12-03-2026. Text that is
 		// unparseable or out of bounds is left standing so the user can fix it.
-		const shown = committed ? formatDisplay(committed) : text;
-		if (end) this._displayEnd = shown;
-		else this._display = shown;
-		if (this.range) this._setRange(end ? this._startValue : committed, end ? committed : this._endValue);
-		else this.value = committed;
+		this._setText(index, committed ? formatDisplay(committed) : text);
+		this._setEnd(index, committed);
 		this._emit('change');
 	}
 
@@ -572,34 +541,21 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	 * field tells them apart for the form; when to show it stays the caller's.
 	 */
 	override ownValidity(): OwnValidity | null {
-		const texts = this.range ? [this._display, this._displayEnd] : [this._display];
-		const min = this.min ? resolveDateBound(this.min) : '';
-		const max = this.max ? resolveDateBound(this.max) : '';
-		for (const text of texts) {
-			if (!text.trim()) continue;
-			const parsed = parseDate(text);
-			if (!parsed) {
-				return { flags: { badInput: true }, message: this._t('components.date-field.bad-input-error-text') };
-			}
-			if (min && parsed < min) {
-				return {
-					flags: { rangeUnderflow: true },
-					message: this._t('components.date-field.range-underflow-error-text').replace('{date}', formatDisplay(min)),
-				};
-			}
-			if (max && parsed > max) {
-				return {
-					flags: { rangeOverflow: true },
-					message: this._t('components.date-field.range-overflow-error-text').replace('{date}', formatDisplay(max)),
-				};
-			}
+		const problem = checkEnds(this._texts, resolveBounds(this.min, this.max), this.required);
+		return problem ? { flags: { [problem.flag]: true }, message: this._problemMessage(problem) } : null;
+	}
+
+	private _problemMessage(problem: EndsProblem): string {
+		switch (problem.flag) {
+			case 'badInput':
+				return this._t('components.date-field.bad-input-error-text');
+			case 'rangeUnderflow':
+				return this._t('components.date-field.range-underflow-error-text').replace('{date}', formatDisplay(problem.bound));
+			case 'rangeOverflow':
+				return this._t('components.date-field.range-overflow-error-text').replace('{date}', formatDisplay(problem.bound));
+			case 'valueMissing':
+				return this._t('components.date-field.range-incomplete-error-text');
 		}
-		// The start input is the native target and reports itself empty; an
-		// empty end is only this field's to know.
-		if (this.range && this.required && this._display.trim() && !this._displayEnd.trim()) {
-			return { flags: { valueMissing: true }, message: this._t('components.date-field.range-incomplete-error-text') };
-		}
-		return null;
 	}
 
 	private _emit(type: 'input' | 'change'): void {
@@ -609,14 +565,6 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 			bubbles: true,
 			composed: true,
 		}));
-	}
-
-	public get _displayValue(): string {
-		return this._display;
-	}
-
-	public get _displayEndValue(): string {
-		return this._displayEnd;
 	}
 
 	override render() {

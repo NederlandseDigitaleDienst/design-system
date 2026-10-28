@@ -956,3 +956,23 @@ describe('nldd-date-field meldt wat value niet kan zeggen', () => {
 		expect(el.invalid).toBe(false);
 	});
 });
+
+describe('nldd-date-field laat getypte tekst buiten de grenzen staan', () => {
+	let el: NLDDDateField;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('keeps a date outside min/max as typed after a valid one, while value empties', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field min="2026-06-01" max="2026-06-30"></nldd-date-field>');
+		await type(el, '15-06-2026');
+		expect(el.value).toBe('2026-06-15');
+		const input = textInput(el);
+		input.value = '15-07-2026';
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		await waitForUpdate(el);
+		expect(el.value).toBe('');
+		expect(input.value).toBe('15-07-2026');
+	});
+});
