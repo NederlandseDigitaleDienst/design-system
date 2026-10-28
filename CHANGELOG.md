@@ -14,9 +14,11 @@ here; consult the commit history if you need that level of detail.
 - **A download button that saves the file.** `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-list-item` and `nldd-list-item-segment` take `download` beside `href`, and a screen reader hears that the link downloads a file.
 - **Accessibility fixes from three audits.** Focus no longer hides under a sticky header or footer of `nldd-page` (2.4.11), the steps of a narrow `nldd-step-bar` are no longer invisible tab stops (2.4.7), `nldd-sheet` no longer closes on a press that ends inside it (2.5.2), the arrow keys of `nldd-segmented-control` fire `item-change` (2.1.1), a long site name wraps (1.4.12), and the list under a search field, combo box or token field has a name (4.1.2). See Fixed and Added.
 - **The caret of `nldd-code-editor` is whole at the start of a line.** See Fixed.
+- **5 new icons:** `ear` (alias `hearing`), `ear-slash` (aliases `no-hearing` and `deaf`), `head-profile-with-brain` (aliases `brain`, `cognition` and `mind`), `lips` (alias `mouth`) and `flower`. `eyeglasses` is redrawn.
 
 ### Added
 
+- **Icons `ear`, `ear-slash`, `head-profile-with-brain`, `lips` and `flower`.** `hearing` leads to the ear, `no-hearing` and `deaf` to the crossed-out ear, `brain`, `cognition` and `mind` to the head, and `mouth` to the lips. `eyeglasses` is redrawn.
 - **A warning in development for `nldd-tab-bar` tabs with `href` but no `navigation`.** Such tabs go to another page, so the bar belongs in a nav with `aria-current="page"`; as a tablist it reported a tab selected after an arrow key while the page stayed where it was.
 - **A warning in development when the logo and the website title of `nldd-top-navigation-bar` link to the same page.** Two links to the start page side by side are two tab stops and the same link twice in a screen reader's list of links; leave out `logo-href`. A logo that goes elsewhere, such as a parent site, gets no warning.
 - **`accessible-label` on `nldd-menu`**, on the element with the menu or listbox role. Without it the menu takes the name of its anchor, and a submenu the text of the item that opens it, so the suggestions under a search field are no longer a listbox without a name (WCAG 4.1.2). The list of an `nldd-combo-box` or `nldd-token-field` takes the name of the field.
