@@ -2266,7 +2266,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is \"Zoeken\" rather than nameless (WCAG 4.1.2).",
+              "description": "Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is \"Zoeken\" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field.",
               "name": "accessible-label",
               "default": "''",
               "fieldName": "accessibleLabel"
@@ -37478,7 +37478,7 @@
               },
               "default": "''",
               "fieldName": "logoHref",
-              "description": "URL for the logo and wordmark. Without it they are not a link but an image with an accessible label."
+              "description": "URL for the logo and wordmark. Without it they are not a link but an image with an accessible label. Leave it out when `website-href` already goes to the same page: two links to the start page side by side are two tab stops and the same link twice in a screen reader's list of links."
             },
             {
               "name": "website-href",
