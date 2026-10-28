@@ -873,3 +873,86 @@ describe('nldd-date-field width="fit-content"', () => {
 		expect(rule![1]).toContain('--primitives-space-8');
 	});
 });
+
+describe('nldd-date-field meldt wat value niet kan zeggen', () => {
+	let el: NLDDDateField;
+	let form: HTMLFormElement;
+
+	afterEach(() => {
+		if (form) cleanup(form);
+		else if (el) cleanup(el);
+	});
+
+	function inputs(field: HTMLElement): HTMLInputElement[] {
+		return [...field.shadowRoot!.querySelectorAll<HTMLInputElement>('.date-field__input')];
+	}
+
+	async function typeIn(field: NLDDDateField, input: HTMLInputElement, text: string): Promise<void> {
+		input.value = text;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		input.dispatchEvent(new Event('change', { bubbles: true }));
+		await waitForUpdate(field);
+	}
+
+	it('says that text which is no date is bad input, while value stays empty', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field></nldd-date-field>');
+		await type(el, 'Test');
+		expect(el.value).toBe('');
+		expect(el.internals.validity.badInput).toBe(true);
+		expect(el.internals.validationMessage).toBe('Vul een datum in als dd-mm-jjjj');
+	});
+
+	it('is valid again once the text is a date or gone', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field></nldd-date-field>');
+		await type(el, 'Test');
+		await type(el, '12-03-2026');
+		expect(el.internals.validity.valid).toBe(true);
+		await type(el, 'Test');
+		await type(el, '');
+		expect(el.internals.validity.valid).toBe(true);
+	});
+
+	it('names the bound a typed date falls outside', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field min="2026-06-01" max="2026-06-30"></nldd-date-field>');
+		await type(el, '15-05-2026');
+		expect(el.internals.validity.rangeUnderflow).toBe(true);
+		expect(el.internals.validationMessage).toBe('Vul een datum in vanaf 01-06-2026');
+		await type(el, '15-07-2026');
+		expect(el.internals.validity.rangeOverflow).toBe(true);
+		expect(el.internals.validationMessage).toBe('Vul een datum in tot en met 30-06-2026');
+	});
+
+	it('checks both halves of a period', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field range></nldd-date-field>');
+		const [start, end] = inputs(el);
+		await typeIn(el, start, '01-07-2026');
+		await typeIn(el, end, 'Test');
+		expect(el.internals.validity.badInput).toBe(true);
+	});
+
+	it('wants both halves of a required period, and allows an open end without required', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field range required></nldd-date-field>');
+		await typeIn(el, inputs(el)[0], '01-07-2026');
+		expect(el.internals.validity.valueMissing).toBe(true);
+		expect(el.internals.validationMessage).toBe('Vul ook de einddatum in');
+		cleanup(el);
+
+		el = await fixture<NLDDDateField>('<nldd-date-field range></nldd-date-field>');
+		await typeIn(el, inputs(el)[0], '01-07-2026');
+		expect(el.internals.validity.valid).toBe(true);
+	});
+
+	it('keeps a form with text that is no date from submitting', async () => {
+		form = await fixture<HTMLFormElement>('<form><nldd-date-field name="vanaf"></nldd-date-field></form>');
+		el = form.querySelector('nldd-date-field')!;
+		await waitForUpdate(el);
+		await type(el, 'Test');
+		expect(form.checkValidity()).toBe(false);
+	});
+
+	it('does not turn itself invalid: when to show it is the caller\'s', async () => {
+		el = await fixture<NLDDDateField>('<nldd-date-field></nldd-date-field>');
+		await type(el, 'Test');
+		expect(el.invalid).toBe(false);
+	});
+});

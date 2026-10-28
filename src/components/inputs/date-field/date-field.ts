@@ -9,6 +9,15 @@
  * Error messages belong to nldd-form-field, not here. This field reflects only
  * `invalid` / `valid`, like nldd-text-field.
  *
+ * `value` holds a valid date or nothing, so an empty field and one with text
+ * that is no date both read as ''. `validity` tells them apart: `badInput` for
+ * text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside
+ * `min` / `max`, and with `range` and `required` `valueMissing` for a period
+ * with only a start. A form does not submit then, and nldd-form marks the
+ * field invalid. Without a submit, as in a filter that applies at once, the
+ * moment is yours: `field.invalid = !field.validity.valid` on `change`, with a
+ * message of your own in the nldd-form-field.
+ *
  * @element nldd-date-field
  *
  * @attr {string} value - The date as ISO (yyyy-mm-dd). With `range` an ISO 8601 interval: `yyyy-mm-dd/yyyy-mm-dd`. Empty when there is no valid date.
@@ -38,7 +47,7 @@
 
 import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
+import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toIso, resolveDateBound } from '../../../utilities/resolve-date-bound.js';
@@ -555,6 +564,42 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override formValue(): FormValue {
 		return this.value;
+	}
+
+	/**
+	 * What `value` cannot say. It holds a valid date or nothing, so text that is
+	 * no date, a date outside min/max and an empty field all read as ''. The
+	 * field tells them apart for the form; when to show it stays the caller's.
+	 */
+	override ownValidity(): OwnValidity | null {
+		const texts = this.range ? [this._display, this._displayEnd] : [this._display];
+		const min = this.min ? resolveDateBound(this.min) : '';
+		const max = this.max ? resolveDateBound(this.max) : '';
+		for (const text of texts) {
+			if (!text.trim()) continue;
+			const parsed = parseDate(text);
+			if (!parsed) {
+				return { flags: { badInput: true }, message: this._t('components.date-field.bad-input-error-text') };
+			}
+			if (min && parsed < min) {
+				return {
+					flags: { rangeUnderflow: true },
+					message: this._t('components.date-field.range-underflow-error-text').replace('{date}', formatDisplay(min)),
+				};
+			}
+			if (max && parsed > max) {
+				return {
+					flags: { rangeOverflow: true },
+					message: this._t('components.date-field.range-overflow-error-text').replace('{date}', formatDisplay(max)),
+				};
+			}
+		}
+		// The start input is the native target and reports itself empty; an
+		// empty end is only this field's to know.
+		if (this.range && this.required && this._display.trim() && !this._displayEnd.trim()) {
+			return { flags: { valueMissing: true }, message: this._t('components.date-field.range-incomplete-error-text') };
+		}
+		return null;
 	}
 
 	private _emit(type: 'input' | 'change'): void {

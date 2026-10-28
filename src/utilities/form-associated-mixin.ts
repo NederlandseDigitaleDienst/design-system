@@ -9,6 +9,12 @@ const VALIDITY_FLAGS = [
 	'stepMismatch', 'tooLong', 'tooShort', 'typeMismatch', 'valueMissing',
 ] as const satisfies readonly (keyof ValidityStateFlags)[];
 
+/** Flags a component raises itself, with the message that goes with them. */
+export interface OwnValidity {
+	flags: ValidityStateFlags;
+	message: string;
+}
+
 /** What ElementInternals accepts as a form value. */
 export type FormValue = string | File | FormData | null;
 
@@ -27,6 +33,8 @@ export interface FormAssociatedElement {
 	validationTarget(): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
 	/** Where an invalid submit points its message and puts the focus. */
 	validationAnchor(): HTMLElement | undefined;
+	/** What the component knows is wrong beyond its native control, or null. */
+	ownValidity(): OwnValidity | null;
 	/** A reason of your own, on top of the native ones. Empty clears it. */
 	setCustomValidity(message: string): void;
 	commitValidity(): void;
@@ -112,6 +120,14 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 		}
 
 		/**
+		 * What the component knows is wrong and its native control does not, such
+		 * as typed text that is no date in a text input. Override; null is valid.
+		 */
+		ownValidity(): OwnValidity | null {
+			return null;
+		}
+
+		/**
 		 * A reason the host is invalid that no attribute can express: a server that
 		 * refused the value, or an nldd-validation-list whose rule it fails. Kept
 		 * beside the native flags rather than replacing them, because
@@ -132,7 +148,8 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 		commitValidity(): void {
 			const target = this.validationTarget();
 			const custom = this._customValidity;
-			if (!target && !custom) {
+			const own = this.ownValidity();
+			if (!target && !custom && !own) {
 				this.internals.setValidity({});
 				return;
 			}
@@ -144,6 +161,10 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 					if (target.validity[sleutel]) flags[sleutel] = true;
 				}
 				message = target.validationMessage;
+			}
+			if (own) {
+				Object.assign(flags, own.flags);
+				message = own.message;
 			}
 			if (custom) {
 				flags.customError = true;
