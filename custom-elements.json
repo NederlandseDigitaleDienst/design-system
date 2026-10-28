@@ -8137,6 +8137,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -8625,6 +8639,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -8998,6 +9026,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -9879,6 +9921,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -10183,7 +10239,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field.",
+          "description": "A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.",
           "name": "NLDDDateField",
           "members": [
             {
@@ -10426,6 +10482,20 @@
                 }
               },
               "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What `value` cannot say. It holds a valid date or nothing, so text that is\nno date, a date outside min/max and an empty field all read as ''. The\nfield tells them apart for the form; when to show it stays the caller's.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -12039,6 +12109,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -12604,6 +12688,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -13211,6 +13309,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -13842,6 +13954,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -14385,6 +14511,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -15047,6 +15187,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -15626,6 +15780,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -16538,6 +16706,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -17037,6 +17219,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -17779,6 +17975,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -21110,6 +21320,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -22153,6 +22377,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -22849,6 +23087,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -24122,6 +24374,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -24728,6 +24994,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -41083,6 +41363,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -41663,6 +41957,16 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own."
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid."
             },
             {
               "kind": "method",

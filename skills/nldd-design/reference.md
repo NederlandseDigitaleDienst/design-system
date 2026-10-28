@@ -917,7 +917,7 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 
 ### `<nldd-date-field>`
 
-A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field.
+A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.
 
 **Attributes**
 
