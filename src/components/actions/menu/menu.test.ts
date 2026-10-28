@@ -2994,3 +2994,32 @@ describe('nldd-menu – variant="navigation"', () => {
 		expect(said).toContain('filter() belongs to a menu of actions');
 	});
 });
+
+describe('nldd-menu – accessible-label', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const list = (menu: Element) => menu.shadowRoot!.querySelector('.menu__list')!;
+
+	it('names the element with the listbox role', async () => {
+		el = await fixture('<nldd-menu variant="listbox" accessible-label="Zoeksuggesties"><nldd-menu-item text="Suggestie 1"></nldd-menu-item></nldd-menu>');
+		await waitForUpdate(el);
+		expect(list(el).getAttribute('role')).toBe('listbox');
+		expect(list(el).getAttribute('aria-label')).toBe('Zoeksuggesties');
+	});
+
+	it('takes the name of its anchor without one of its own', async () => {
+		el = await fixture(`
+			<div>
+				<button id="zoek-anker" aria-label="Zoeken"></button>
+				<nldd-menu variant="listbox" anchor="zoek-anker"><nldd-menu-item text="Suggestie 1"></nldd-menu-item></nldd-menu>
+			</div>
+		`);
+		const menu = el.querySelector('nldd-menu')!;
+		await waitForUpdate(menu);
+		expect(list(menu).getAttribute('aria-label')).toBe('Zoeken');
+	});
+});

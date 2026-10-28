@@ -75,6 +75,7 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 				` : nothing}
 				<div class="menu__list"
 					role=${menuRole}
+					aria-label=${this._listLabel || nothing}
 				>
 					<slot @slotchange=${this._claimItems}></slot>
 				</div>
