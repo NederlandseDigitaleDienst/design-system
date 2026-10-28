@@ -3,6 +3,8 @@ import { fixture, cleanup, waitForUpdate, installUniversalReset } from '../../..
 import { loadTokens } from '../../../test-tokens.js';
 import './menu.js';
 import '../button/button.js';
+import '../../inputs/combo-box/combo-box.js';
+import '../../inputs/token-field/token-field.js';
 
 function getButton(el: Element): HTMLElement {
 	return el.shadowRoot?.querySelector('button') as HTMLElement;
@@ -3021,5 +3023,20 @@ describe('nldd-menu – accessible-label', () => {
 		const menu = el.querySelector('nldd-menu')!;
 		await waitForUpdate(menu);
 		expect(list(menu).getAttribute('aria-label')).toBe('Zoeken');
+	});
+
+	it('takes the name of a combo box or token field it belongs to', async () => {
+		el = await fixture(`
+			<div>
+				<nldd-combo-box accessible-label="Expertise"><nldd-menu><nldd-menu-item text="Data"></nldd-menu-item></nldd-menu></nldd-combo-box>
+				<nldd-token-field accessible-label="Opdrachtgevers"><nldd-menu><nldd-menu-item text="Ministeries"></nldd-menu-item></nldd-menu></nldd-token-field>
+			</div>
+		`);
+		const [combo, token] = [...el.querySelectorAll('nldd-menu')];
+		await waitForUpdate(el.querySelector('nldd-token-field')!);
+		await waitForUpdate(combo);
+		await waitForUpdate(token);
+		expect(list(combo).getAttribute('aria-label')).toBe('Expertise');
+		expect(list(token).getAttribute('aria-label')).toBe('Opdrachtgevers');
 	});
 });

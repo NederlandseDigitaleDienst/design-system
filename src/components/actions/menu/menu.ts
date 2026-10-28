@@ -370,6 +370,22 @@ const defaultFilterFn = (query: string, item: NLDDMenuItem): boolean => {
 	return textMatch || valueMatch || aliasesMatch;
 };
 
+/** The name of what a menu hangs off. A field that anchors its list to an
+ *  element inside its own shadow root (nldd-token-field) has the name on its
+ *  host, so a nameless anchor in a shadow root asks the host. The property is
+ *  read before the attribute: nldd-form-field sets `accessibleLabel` as one. */
+function nameOfAnchor(anchor: Element): string {
+	const name = ((anchor as Element & { accessibleLabel?: string }).accessibleLabel
+		|| anchor.getAttribute('accessible-label')
+		|| anchor.getAttribute('aria-label')
+		|| anchor.getAttribute('text')
+		|| (anchor.shadowRoot ? '' : anchor.textContent)
+		|| '').trim();
+	if (name) return name;
+	const root = anchor.getRootNode();
+	return root instanceof ShadowRoot ? nameOfAnchor(root.host) : '';
+}
+
 /**
  * A floating menu component using the Popover API.
  * Positioned relative to an anchor element using Floating UI.
@@ -384,7 +400,7 @@ const defaultFilterFn = (query: string, item: NLDDMenuItem): boolean => {
  *
  * @attr {'menu'|'listbox'|'navigation'} variant - What the menu is (default 'menu'). `menu` is a menu of actions: `role="menu"` with menu items, for things you do. `listbox` is the popup of a combobox: `role="listbox"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role="list"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role="listitem"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself.
  * @attr {string} width - Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).
- * @attr {string} accessible-label - Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2).
+ * @attr {string} accessible-label - Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is "Zoeken" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field.
  * @attr {string} anchor - ID of the anchor element. Positions the menu against it AND makes it a toggle: the menu listens on document click and opens/closes itself when the click lands on the anchor. Use this for a menu hung off a button. For a menu you open yourself (a type-ahead under a text field, say), set the `anchorElement` property instead — same positioning, no toggle.
  * @attr {string} placement - Floating UI placement. Default: 'bottom-start'.
  * @attr {number} max-items - Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit).
@@ -667,12 +683,7 @@ export class NLDDMenu extends LitElement {
 		if (this.accessibleLabel) return this.accessibleLabel;
 		if (this._parentItem?.text) return this._parentItem.text;
 		const anchor = this._getAnchorEl();
-		if (!anchor) return '';
-		return (anchor.getAttribute('accessible-label')
-			|| anchor.getAttribute('aria-label')
-			|| anchor.getAttribute('text')
-			|| anchor.textContent
-			|| '').trim();
+		return anchor ? nameOfAnchor(anchor) : '';
 	}
 
 	// — Anchor ————————————————————————————————————————————————————————————————
