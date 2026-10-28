@@ -267,9 +267,12 @@ export class NLDDSheet extends LitElement {
 
 	_handleDialogClick(e: MouseEvent): void {
 		// Close only when the press and the release both land on the backdrop.
-		if (e.target === this._dialog && this._pointerDownOnBackdrop && this._pointerUpOnBackdrop) {
-			this.hide();
-		}
+		const onBackdrop = e.target === this._dialog && this._pointerDownOnBackdrop && this._pointerUpOnBackdrop;
+		// Each click gets the flags of its own gesture only: a click without one
+		// (from code, from assistive technology) would read the last gesture's.
+		this._pointerDownOnBackdrop = false;
+		this._pointerUpOnBackdrop = false;
+		if (onBackdrop) this.hide();
 	}
 
 	/**
