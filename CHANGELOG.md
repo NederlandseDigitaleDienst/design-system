@@ -27,6 +27,8 @@ here; consult the commit history if you need that level of detail.
 ### Fixed
 
 - **A date outside `min` or `max` in `nldd-date-field` stays as typed.** After a valid date, typing one outside the bounds emptied the field halfway, so you could not see what was wrong. The text now stands, `value` stays empty and `validity` says which bound it crossed.
+- **`nldd-top-navigation-bar` turns compact again after it is moved in the DOM.** Taken out and put back, it no longer watched its width, so on a narrow screen the menu bar stayed wide, without a menu button and with items running off the screen.
+- **The list in the narrow menu of `nldd-top-navigation-bar` follows the name of the menu bar.** It took that name once, when the menu was first opened, and kept it after a change of language or a label the site set later.
 - **`nldd-toolbar` keeps following its width after it is moved in the DOM.** Taken out and put back, as a framework does when it moves or keeps an element, it no longer watched its own size: items that had gone into the overflow menu stayed there on a wider screen.
 - **A time outside `min` or `max` in `nldd-time-field` stays as typed**, the same fix as in `nldd-date-field`: after a valid time, typing one outside the bounds emptied the field halfway.
 - **A form reset clears text that is no date or time** in `nldd-date-field` and `nldd-time-field`. Such text leaves `value` empty, so resetting to an empty value changed nothing and the text stayed.
