@@ -17,6 +17,9 @@ export const pageStyles = css`
 		--_page-outer-inset-bottom: var(--context-inset-bottom, 0px);
 		--_page-header-height: 0px;
 		--_page-footer-height: 0px;
+		--_page-fade-size: var(--primitives-space-24);
+		--_page-scroll-padding-top: 0px;
+		--_page-scroll-padding-bottom: 0px;
 		--_page-header-full-height: 0px;
 		/* Set from JS while the page owns the scroller. initial, not a length, so
 		   the fallback stands when the document scrolls instead. */
@@ -131,7 +134,7 @@ export const pageStyles = css`
 		opacity: 0;
 		background: linear-gradient(to bottom, color-mix(in srgb, var(--_page-background-color) 95%, transparent), transparent);
 		pointer-events: none;
-		height: var(--primitives-space-24);
+		height: var(--_page-fade-size);
 		transition: opacity var(--primitives-transition-duration-medium) var(--primitives-transition-easing-default);
 	}
 
@@ -168,6 +171,21 @@ export const pageStyles = css`
 
 	/* Nested scrolling: a sticky child is measured against this element, so the
 	   bars above the page fall outside it and only its own header counts. */
+	:host([sticky-header]) {
+		--_page-scroll-padding-top: calc(var(--_page-header-height) + var(--_page-fade-size));
+	}
+
+	:host([sticky-footer]) {
+		--_page-scroll-padding-bottom: calc(var(--_page-footer-height) + var(--_page-fade-size));
+	}
+
+	/* Focus scrolled into view clears the sticky bars and their fades (WCAG 2.4.11). */
+	:host(:not([data-scroll="root"])),
+	:host(:not([data-scroll="root"])) .page__scroll {
+		scroll-padding-top: var(--_page-scroll-padding-top);
+		scroll-padding-bottom: var(--_page-scroll-padding-bottom);
+	}
+
 	:host(:not([data-scroll="root"])) .page__scroll {
 		--context-inset-top: var(--_page-header-height);
 		--context-inset-bottom: var(--_page-footer-height);
@@ -212,7 +230,12 @@ export const pageStyles = css`
 		right: 0;
 		background: linear-gradient(to top, color-mix(in srgb, var(--_page-background-color) 95%, transparent), transparent);
 		pointer-events: none;
-		height: var(--primitives-space-24);
+		height: var(--_page-fade-size);
+		transition: opacity var(--primitives-transition-duration-medium) var(--primitives-transition-easing-default);
+	}
+
+	:host([sticky-footer]) .page__footer.is-at-end::before {
+		opacity: 0;
 	}
 
 	/* Root-scroll mode: footer sticks to the document bottom, above any bottom bars. */

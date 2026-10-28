@@ -27,7 +27,7 @@ export function pageTemplate(component: NLDDPage): TemplateResult {
 				>
 					<slot></slot>
 				</${body}>
-				<footer class="page__footer">
+				<footer class="page__footer ${component._atEnd ? 'is-at-end' : ''}">
 					<slot name="footer"></slot>
 				</footer>
 			</div>
