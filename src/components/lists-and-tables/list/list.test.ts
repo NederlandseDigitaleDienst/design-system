@@ -1,5 +1,8 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { userEvent } from 'vitest/browser';
+import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
+import '../../content/tooltip/tooltip.js';
+import '../../content/tag/tag.js';
 import './list.js';
 import '../list-item/list-item.js';
 import '../cells/text-cell/text-cell.js';
@@ -1730,5 +1733,36 @@ describe('nldd-list – empty and no-results', () => {
 
 		expect(shown(field)).toBe(true);
 		expect(shown(el.querySelector('[slot="no-results"]'))).toBe(true);
+	});
+});
+
+describe('nldd-list – a focusable element of your own in a row', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it('is reached with Tab from its row, a tag in a tooltip too', async () => {
+		el = await fixture(`
+			<div>
+				<button>Ervoor</button>
+				<nldd-list>
+					<nldd-list-item>
+						<nldd-text-cell text="Jane Doe"></nldd-text-cell>
+						<nldd-cell>
+							<nldd-tooltip text="Alleen zichtbaar voor jou">
+								<nldd-tag tabindex="0" icon="eye-slash" variant="icon"></nldd-tag>
+							</nldd-tooltip>
+						</nldd-cell>
+					</nldd-list-item>
+				</nldd-list>
+			</div>
+		`);
+		await waitForUpdate(el.querySelector('nldd-list')!);
+		el.querySelector('button')!.focus();
+		await userEvent.tab();
+		await userEvent.tab();
+		expect(deepActiveElement()).toBe(el.querySelector('nldd-tag'));
 	});
 });
