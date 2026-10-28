@@ -8,6 +8,7 @@ export function template(
 	href: string | undefined,
 	target: string | undefined,
 	rel: string | undefined,
+	download: string | undefined,
 	checked: boolean,
 	expanded: boolean | undefined,
 	current: string | undefined,
@@ -38,6 +39,7 @@ export function template(
 			href=${href ?? nothing}
 			target=${target ?? nothing}
 			rel=${linkRel(rel, target) || nothing}
+			download=${download ?? nothing}
 			aria-disabled=${disabled ? 'true' : nothing}
 			aria-expanded=${ariaExpanded}
 			aria-current=${ariaCurrent}

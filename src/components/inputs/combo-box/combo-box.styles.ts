@@ -88,6 +88,7 @@ export const comboBoxStyles = css`
 	/* # Elements */
 
 	.combo-box__input {
+		border-radius: calc(var(--_combo-box-corner-radius) - var(--semantics-input-fields-border-width));
 		box-sizing: border-box;
 		margin: 0;
 		outline: none;

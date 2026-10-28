@@ -80,6 +80,21 @@ describe('nldd-text-editor – taken', () => {
 		expect(el.value).toBe('Taken\n\n- [ ] Open');
 	});
 
+	it('vinkt een taak ook aan met een klik in de ruimte tussen het vakje en de tekst', async () => {
+		el = await hidden('- [ ] Open');
+		const prefix = boxes(el)[0].closest('.cm-md-listprefix')!;
+		prefix.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, button: 0 }));
+		expect(el.value).toBe('Taken\n\n- [x] Open');
+	});
+
+	it('geeft het vakje een vlak van een regel hoog dat geen ruimte inneemt', async () => {
+		el = await hidden('- [ ] Open');
+		const area = getComputedStyle(boxes(el)[0], '::before');
+		expect(area.content).not.toBe('none');
+		expect(area.position).toBe('absolute');
+		expect(parseFloat(area.height)).toBeGreaterThan(0);
+	});
+
 	it('wisselt met Mod-Enter de taken op de regels van de selectie, ook met zichtbare opmaak', async () => {
 		el = await editor('- [ ] Een\n- [x] Twee\n- [ ] Drie');
 		el.view.focus();

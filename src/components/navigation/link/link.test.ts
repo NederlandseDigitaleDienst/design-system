@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDLink } from './link.js';
 import './link.js';
@@ -204,5 +204,29 @@ describe('nldd-link no-tab', () => {
 		el = await fixture<NLDDLink>('<nldd-link href="/x" text="X"></nldd-link>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('a')!.hasAttribute('tabindex')).toBe(false);
+	});
+});
+
+describe('<nldd-link> with download', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	it('puts download on the link and says it downloads the file', async () => {
+		el = await fixture('<nldd-link href="/verslag.pdf" download="verslag.pdf" text="Verslag"></nldd-link>');
+		await waitForUpdate(el);
+		const a = el.shadowRoot!.querySelector('a')!;
+		expect(a.getAttribute('download')).toBe('verslag.pdf');
+		expect(a.textContent).toContain('downloadt bestand');
+	});
+
+	it('warns once that target does nothing on a download', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-link href="/verslag.pdf" target="_blank" download="verslag.pdf" text="Verslag"></nldd-link>');
+		await waitForUpdate(el);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
 	});
 });

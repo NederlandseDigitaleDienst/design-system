@@ -525,7 +525,12 @@ export const textEditorStyles = css`
 	   text-editor.hidden-syntax.ts), so wrapped lines line up under the text. */
 	/* No height of its own, so a box a little taller than the text does not
 	   make its line taller than the others; the icon is centered on it. */
+	.cm-md-listprefix:has(> .cm-md-task-box) {
+		cursor: default;
+	}
+
 	.cm-md-task-box {
+		position: relative;
 		display: inline-flex;
 		width: 2.5ch;
 		height: 0;
@@ -533,6 +538,18 @@ export const textEditorStyles = css`
 		justify-content: flex-start;
 		align-items: center;
 		color: var(--_text-editor-content-color);
+	}
+
+	/* What a press hits: one line high, from the edge of the text to where the
+	   text starts, so the space around the box counts as well. */
+	.cm-md-task-box::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: calc(-1 * var(--_text-editor-padding-inline));
+		right: 0;
+		height: 1lh;
+		translate: 0 -50%;
 	}
 
 	/* Up from the middle of the x-height to the middle of the capitals: next to

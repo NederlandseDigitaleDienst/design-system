@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDButton } from './button.js';
 import { linkRel } from '../../../utilities/link-rel.js';
-import { linkHintKey } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/keyboard-shortcut/keyboard-shortcut.js';
 
@@ -68,7 +68,8 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 
 	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
 	// Only the <a> path (href) navigates.
-	const hintKey = linkHintKey(this.href, this.target);
+	const hintKey = downloadLinkHintKey(this.href, this.target, this.download);
+	if (this.href) warnDownloadTarget(this, this.download, this.target);
 	const linkHint = hintKey ? this._t(`components.button.${hintKey}`) : '';
 
 	// `supporting-text` renders in a sibling span next to the text; the
@@ -124,6 +125,7 @@ export function template(this: NLDDButton, helpers: TemplateHelpers) {
 				href=${this.href}
 				target=${this.target || nothing}
 				rel=${resolvedRel || nothing}
+				download=${this.download ?? nothing}
 				aria-disabled=${this.disabled ? 'true' : nothing}
 				aria-label=${ariaLabel}
 				aria-haspopup=${this.popupType || nothing}

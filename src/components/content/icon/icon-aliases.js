@@ -207,6 +207,13 @@ export const aliases = {
 	// dismiss-extra-small
 	'close-extra-small': 'dismiss-extra-small',
 
+	// ear
+	'hearing': 'ear',
+
+	// ear-slash
+	'no-hearing': 'ear-slash',
+	'deaf': 'ear-slash',
+
 	// ellipsis
 	'more': 'ellipsis',
 
@@ -387,6 +394,11 @@ export const aliases = {
 	// hand-thumbs-down
 	'dislike': 'hand-thumbs-down',
 
+	// head-profile-with-brain
+	'brain': 'head-profile-with-brain',
+	'cognition': 'head-profile-with-brain',
+	'mind': 'head-profile-with-brain',
+
 	// heart-filled
 	'favorite': 'heart-filled',
 	'love': 'heart-filled',
@@ -423,6 +435,9 @@ export const aliases = {
 	// link-badge-lock
 	'secure-link': 'link-badge-lock',
 	'secure-url': 'link-badge-lock',
+
+	// lips
+	'mouth': 'lips',
 
 	// list
 	'menu': 'list',

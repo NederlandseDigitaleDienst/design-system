@@ -103,6 +103,11 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	@state()
 	_scrolled = false;
 
+	/** Scrolled to the end, so nothing runs on under the sticky footer and its
+	 *  fade has nothing to fade. @internal */
+	@state()
+	_atEnd = true;
+
 	/** What `landmarks="auto"` reads off the page's surroundings. */
 	@state()
 	private _derived: 'page' | 'region' = 'page';
@@ -328,12 +333,16 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 			// mode the document scrolls, so nothing is published and 100dvh stands.
 			if (this._isRoot) this.style.removeProperty('--_page-scroll-height');
 			else this._publish('--_page-scroll-height', `${this._scrollEl?.clientHeight ?? 0}px`);
+			// Content that grows or shrinks moves the end without a scroll event.
+			this._onScroll();
 		};
 		publish();
 		this._insetObserver = new ResizeObserver(publish);
 		this._insetObserver.observe(header);
 		this._insetObserver.observe(footer);
 		if (this._scrollEl) this._insetObserver.observe(this._scrollEl);
+		const main = this.shadowRoot?.querySelector('.page__main');
+		if (main) this._insetObserver.observe(main);
 	}
 
 	private _teardownInsetObserver() {
@@ -382,9 +391,15 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	}
 
 	private _onScroll = () => {
-		this._scrolled = this._isRoot
-			? window.scrollY > 0
-			: (((this.stickyHeader ? this._scrollEl : this) as HTMLElement | null)?.scrollTop ?? 0) > 0;
+		if (this._isRoot) {
+			const root = document.documentElement;
+			this._scrolled = window.scrollY > 0;
+			this._atEnd = window.scrollY + window.innerHeight >= root.scrollHeight - 1;
+			return;
+		}
+		const scroller = (this.stickyHeader ? this._scrollEl : this) as HTMLElement | null;
+		this._scrolled = (scroller?.scrollTop ?? 0) > 0;
+		this._atEnd = !scroller || scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 1;
 	};
 
 	// Mark the section that takes the remaining height with `data-growing`: the

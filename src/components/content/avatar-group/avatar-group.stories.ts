@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './avatar-group.js';
 import '../avatar/avatar.js';
 import '../../layout/container/container.js';
+import { LEYSTER, REMBRANDT, VAN_GOGH } from '../../../docs/story-portraits.js';
 
 /**
  * De Avatar Group toont meerdere avatars als één groep: overlappend, met een ring
@@ -190,18 +191,18 @@ export const PastInDeBreedte = {
 
 export const MetAfbeeldingen = {
 	render: () => html`
-		<nldd-avatar-group accessible-label="Redactie">
+		<nldd-avatar-group accessible-label="Schilders">
 			<nldd-avatar
-				src="https://i.pravatar.cc/80?img=12"
-				name="Jan Jansen"
+				src=${LEYSTER}
+				name="Judith Leyster"
 			></nldd-avatar>
 			<nldd-avatar
-				src="https://i.pravatar.cc/80?img=32"
-				name="Fatima El Amrani"
+				src=${REMBRANDT}
+				name="Rembrandt van Rijn"
 			></nldd-avatar>
 			<nldd-avatar
-				src="https://i.pravatar.cc/80?img=45"
-				name="Pieter de Vries"
+				src=${VAN_GOGH}
+				name="Vincent van Gogh"
 			></nldd-avatar>
 		</nldd-avatar-group>
 	`,

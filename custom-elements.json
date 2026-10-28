@@ -526,6 +526,16 @@
             },
             {
               "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
+              "attribute": "download"
+            },
+            {
+              "kind": "field",
               "name": "rel",
               "type": {
                 "text": "string | undefined"
@@ -836,6 +846,15 @@
               "default": "undefined",
               "description": "Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden \"opens in new tab\" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.",
               "fieldName": "target"
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab.",
+              "fieldName": "download"
             },
             {
               "name": "rel",
@@ -1206,6 +1225,16 @@
             },
             {
               "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
+              "attribute": "download"
+            },
+            {
+              "kind": "field",
               "name": "rel",
               "type": {
                 "text": "string | undefined"
@@ -1464,6 +1493,15 @@
               "fieldName": "target"
             },
             {
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab.",
+              "fieldName": "download"
+            },
+            {
               "name": "rel",
               "type": {
                 "text": "string | undefined"
@@ -1537,7 +1575,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/actions/menu/menu.ts",
+      "path": "src/components/actions/menu/menu-divider.ts",
       "declarations": [
         {
           "kind": "class",
@@ -1550,15 +1588,39 @@
           },
           "tagName": "nldd-menu-divider",
           "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDMenuDivider",
+          "declaration": {
+            "name": "NLDDMenuDivider",
+            "module": "src/components/actions/menu/menu-divider.ts"
+          }
         },
         {
+          "kind": "custom-element-definition",
+          "name": "nldd-menu-divider",
+          "declaration": {
+            "name": "NLDDMenuDivider",
+            "module": "src/components/actions/menu/menu-divider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu-group.ts",
+      "declarations": [
+        {
           "kind": "class",
-          "description": "A labeled group of menu items inside an nldd-menu. Wraps its slotted\nitems in `role=\"group\"` with `aria-labelledby` pointing to the group's\n`text`, providing native ARIA group semantics that a flat title element\ncan't deliver.\n\nThe group renders an automatic divider above itself, except when it's\nthe first child of the menu — so consumers don't need to manage\nseparator placement around groups themselves. Spacing above the title\nis intentionally larger than below, to bind the title visually to the\nitems it labels.\n\nUse the wrapper for grouping with a title; for ungrouped flat menus or\na divider without a title, the existing `nldd-menu-item` +\n`nldd-menu-divider` flat structure keeps working unchanged.",
+          "description": "A labeled group of menu items inside an nldd-menu. Wraps its slotted items in `role=\"group\"` with `aria-labelledby` pointing to the group's `text`, providing native ARIA group semantics that a flat title element can't deliver. The group renders an automatic divider above itself, except when it's the first child of the menu — so consumers don't need to manage separator placement around groups themselves. Spacing above the title is intentionally larger than below, to bind the title visually to the items it labels. Use the wrapper for grouping with a title; for ungrouped flat menus or a divider without a title, the existing `nldd-menu-item` + `nldd-menu-divider` flat structure keeps working unchanged.",
           "name": "NLDDMenuGroup",
           "slots": [
             {
-              "description": "nldd-menu-item children (the items belonging to this group).",
-              "name": ""
+              "name": "",
+              "description": "nldd-menu-item children (the items belonging to this group)."
             }
           ],
           "members": [
@@ -1590,6 +1652,54 @@
           },
           "tagName": "nldd-menu-group",
           "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDMenuGroup",
+          "declaration": {
+            "name": "NLDDMenuGroup",
+            "module": "src/components/actions/menu/menu-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-menu-group",
+          "declaration": {
+            "name": "NLDDMenuGroup",
+            "module": "src/components/actions/menu/menu-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu-item.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "syncListItemRole",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "MenuVariant | null"
+              }
+            }
+          ],
+          "description": "Makes `host` a list item while its menu is a navigation menu, and takes\nthat back when it is not. A `listitem` the consumer set by hand on an item\ngoes too when the variant changes back; nothing else uses that role here."
         },
         {
           "kind": "class",
@@ -1805,22 +1915,7 @@
           ],
           "events": [
             {
-              "name": "menu-item-focused",
-              "type": {
-                "text": "CustomEvent"
-              }
-            },
-            {
-              "name": "submenu-open",
-              "type": {
-                "text": "CustomEvent"
-              }
-            },
-            {
               "name": "select",
-              "type": {
-                "text": "CustomEvent"
-              },
               "description": "Fired when the item is clicked and not disabled."
             }
           ],
@@ -1974,27 +2069,690 @@
           },
           "tagName": "nldd-menu-item",
           "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "syncListItemRole",
+          "declaration": {
+            "name": "syncListItemRole",
+            "module": "src/components/actions/menu/menu-item.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDMenuItem",
+          "declaration": {
+            "name": "NLDDMenuItem",
+            "module": "src/components/actions/menu/menu-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-menu-item",
+          "declaration": {
+            "name": "NLDDMenuItem",
+            "module": "src/components/actions/menu/menu-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu.chain.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One open submenu in a chain: which menu opened it, from which item, and how\nit closes. A level has three paths:\n\n1. **Open.** Wire the submenu to its parent, register it with the root, and\n   show it: beside its item in cascade mode, in place of its parent in\n   drill-in mode.\n2. **One level back.** The submenu closed on its own (the back button,\n   ArrowLeft, Escape, light-dismiss in cascade mode). Tear down, and in\n   drill-in mode show the parent again and say where you are.\n3. **Collapse.** The whole chain goes (a select, the anchor, a tap outside,\n   a resize). Tear down without showing the parent, driven from the root's\n   registry, so it never depends on parent links that real interaction can\n   leave stale.\n\nEverything a level needs is captured here when it opens, so a viewport flip\nbetween cascade and drill-in mid-navigation cannot leave it half undone.",
+          "name": "SubmenuLevel",
+          "members": [
+            {
+              "kind": "field",
+              "name": "root",
+              "type": {
+                "text": "NLDDMenu"
+              },
+              "readonly": true,
+              "description": "The root of the chain, whose registry holds this level."
+            },
+            {
+              "kind": "field",
+              "name": "_homeParent",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Where a drill-in submenu stood before it moved to <body>."
+            },
+            {
+              "kind": "field",
+              "name": "_homeNextSibling",
+              "type": {
+                "text": "Node | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "collapse",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Close this level as part of collapsing the whole chain."
+            },
+            {
+              "kind": "field",
+              "name": "_handleToggle",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_teardown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "stepBack",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Undo what `open` did. With `stepBack`, a drill-in parent shows again and\nannounces itself; a collapse leaves it closed and silent."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SubmenuLevel",
+          "declaration": {
+            "name": "SubmenuLevel",
+            "module": "src/components/actions/menu/menu.chain.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu.pointer.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TOUCH_SCROLL_THRESHOLD_PX",
+          "type": {
+            "text": "number"
+          },
+          "default": "8",
+          "description": "How far a finger moves before a press counts as a scroll."
+        },
+        {
+          "kind": "function",
+          "name": "menuItemFromPoint",
+          "return": {
+            "type": {
+              "text": "NLDDMenuItem | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "y",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The menu-item under a point, piercing shadow boundaries.\n`document.elementFromPoint` stops at the outermost shadow host, so a menu\nnested inside another component's shadow DOM (nldd-split-button, say) would\nresolve to that host and never find the item. Descending the shadow roots\nrestores it and is a no-op for light-DOM menus."
         },
         {
           "kind": "class",
-          "description": "A floating menu component using the Popover API.\nPositioned relative to an anchor element using Floating UI.\n\nSupports filtering, keyboard navigation, and highlight management.\nUse nldd-menu-item and nldd-menu-divider as children.\n\nNote: Only type=\"button\" items are supported when used inside nldd-combo-box-field.\nRadio and checkbox types may be used in standalone menus.",
+          "description": "The pointer gestures of a menu, each with its own coordinates and listeners:\n\n1. **Press, drag and release.** A native `<select>` lets you press on one\n   option, drag to another and release to pick that one. Click events don't\n   fire across two elements, so the release is caught on document and, when\n   it lands on another enabled item, that item is selected. The click on the\n   pressed item still owns a press without a drag.\n2. **No press flash while scrolling.** On touch, pressing an item sets\n   :active and the sticky :hover lands on it, so the press highlight shows.\n   When the gesture turns into a scroll of a cramped menu, :active lingers\n   until the browser recognizes the pan. Past the threshold the host gets\n   `scroll-active`, and the styles drop the press highlight while it is set.\n   A tap never moves that far, so it keeps its brief feedback.\n3. **A tap beside the menu.** An outside touch is also how a page scroll\n   begins, so the menu only hears of it once the finger lifts without\n   having moved past the threshold.",
+          "name": "MenuPointerController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_pressedItem",
+              "type": {
+                "text": "NLDDMenuItem | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_touchStart",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{ x: 0, y: 0 }"
+            },
+            {
+              "kind": "field",
+              "name": "_outsideStart",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{ x: 0, y: 0 }"
+            },
+            {
+              "kind": "field",
+              "name": "_onOutsideTap",
+              "type": {
+                "text": "(() => void) | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handlePointerdown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleRelease",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "trackOutsideTap",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                },
+                {
+                  "name": "onTap",
+                  "type": {
+                    "text": "() => void"
+                  }
+                }
+              ],
+              "description": "Follow a touch that started outside the menu, and call `onTap` once it\nends as a tap. A scroll in between drops it."
+            },
+            {
+              "kind": "method",
+              "name": "stopOutsideTap",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleOutsideMove",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleOutsideEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleOutsideCancel",
+              "privacy": "private"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TOUCH_SCROLL_THRESHOLD_PX",
+          "declaration": {
+            "name": "TOUCH_SCROLL_THRESHOLD_PX",
+            "module": "src/components/actions/menu/menu.pointer.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "menuItemFromPoint",
+          "declaration": {
+            "name": "menuItemFromPoint",
+            "module": "src/components/actions/menu/menu.pointer.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MenuPointerController",
+          "declaration": {
+            "name": "MenuPointerController",
+            "module": "src/components/actions/menu/menu.pointer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu.safe-triangle.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "STALL_DISMISS_MS",
+          "type": {
+            "text": "number"
+          },
+          "default": "500",
+          "description": "When the cursor sits motionless inside the triangle for this long, the\nprotection drops and whatever item is under the cursor becomes interactive.\nWithout this, a paused cursor would stay protected indefinitely."
+        },
+        {
+          "kind": "variable",
+          "name": "APEX_X_OFFSET",
+          "type": {
+            "text": "number"
+          },
+          "default": "4",
+          "description": "How far the apex is pulled away from the submenu edge (to the left for a\nsubmenu on the right). Widens the wedge near the cursor so brief diagonal\nwobble doesn't pop the cursor out at the apex, and avoids the degenerate\nsingle-line wedge when the cursor crossed the opener edge at the same x as\nthe near submenu corner. Always negative: the standard placement is\nsubmenu-right, so \"left\" is the intuitive forgive direction."
+        },
+        {
+          "kind": "function",
+          "name": "rectContainsPoint",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "rect",
+              "type": {
+                "text": "DOMRect | null | undefined"
+              }
+            },
+            {
+              "name": "point",
+              "type": {
+                "text": "Point | null | undefined"
+              }
+            }
+          ],
+          "description": "True when the rect contains the point (inclusive). False for a missing rect\nor point."
+        },
+        {
+          "kind": "function",
+          "name": "pointInPolygon",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "p",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "vertices",
+              "type": {
+                "text": "Point[]"
+              }
+            }
+          ],
+          "description": "Convex point-in-polygon test via consistent edge-cross-product sign.\nVertices must be ordered (clockwise or counter-clockwise)."
+        },
+        {
+          "kind": "function",
+          "name": "wedge",
+          "return": {
+            "type": {
+              "text": "Point[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "apex",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "cursor",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "submenu",
+              "type": {
+                "text": "DOMRect"
+              }
+            }
+          ],
+          "description": "The wedge from `apex` to the submenu edge facing the cursor: the left edge\nfor a submenu on the right, the right edge when Floating UI flipped it."
+        },
+        {
+          "kind": "function",
+          "name": "apexAt",
+          "return": {
+            "type": {
+              "text": "Point"
+            }
+          },
+          "parameters": [
+            {
+              "name": "cursor",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "opener",
+              "type": {
+                "text": "DOMRect"
+              }
+            }
+          ],
+          "description": "The apex where the cursor crossed the top or bottom edge of the opener: x\nclamped to the opener so the wedge starts at its visual edge however far\npast it this sample is, then pulled away by APEX_X_OFFSET."
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "SafeTriangleController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "movingToward",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "True while the cursor is on its way to the submenu: peers stay inactive."
+            },
+            {
+              "kind": "field",
+              "name": "_listener",
+              "type": {
+                "text": "((e: MouseEvent) => void) | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_stallTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_lastPos",
+              "type": {
+                "text": "Point | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_apex",
+              "type": {
+                "text": "Point | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_overlay",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "start",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "submenu",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Start tracking for a submenu that just opened in cascade mode."
+            },
+            {
+              "kind": "method",
+              "name": "stop",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_track",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "p",
+                  "type": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "submenu",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_clearStall",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_scheduleStall",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_drawOverlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "vertices",
+                  "type": {
+                    "text": "Point[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_removeOverlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "STALL_DISMISS_MS",
+          "declaration": {
+            "name": "STALL_DISMISS_MS",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "APEX_X_OFFSET",
+          "declaration": {
+            "name": "APEX_X_OFFSET",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "rectContainsPoint",
+          "declaration": {
+            "name": "rectContainsPoint",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pointInPolygon",
+          "declaration": {
+            "name": "pointInPolygon",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "wedge",
+          "declaration": {
+            "name": "wedge",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "apexAt",
+          "declaration": {
+            "name": "apexAt",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SafeTriangleController",
+          "declaration": {
+            "name": "SafeTriangleController",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. Note: Only type=\"button\" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.",
           "name": "NLDDMenu",
           "slots": [
             {
-              "description": "nldd-menu-item and nldd-menu-divider elements.",
-              "name": ""
+              "name": "",
+              "description": "nldd-menu-item and nldd-menu-divider elements."
             },
             {
-              "description": "Free content shown above the items, outside `role=\"menu\"` (so it may hold non-menuitem content such as an avatar + name, buttons or links — reached with Tab, skipped by arrow navigation). The region is unpadded; control spacing with your own content (e.g. an `nldd-container`). Root-only: never rendered in a submenu. Example: an account identity header (nldd-identity).",
-              "name": "header"
+              "name": "header",
+              "description": "Free content shown above the items, outside `role=\"menu\"` (so it may hold non-menuitem content such as an avatar + name, buttons or links — reached with Tab, skipped by arrow navigation). The region is unpadded; control spacing with your own content (e.g. an `nldd-container`). Root-only: never rendered in a submenu. Example: an account identity header (nldd-identity)."
             },
             {
-              "description": "Free content shown below the items, outside `role=\"menu\"` (same rules as `header`; also unpadded and root-only). Example: a short note or a link.",
-              "name": "footer"
+              "name": "footer",
+              "description": "Free content shown below the items, outside `role=\"menu\"` (same rules as `header`; also unpadded and root-only). Example: a short note or a link."
             },
             {
-              "description": "Shown when no items are visible. Defaults to `nldd-inline-dialog` driven by `empty-text` / `empty-supporting-text`. Slot content overrides the default dialog entirely.",
-              "name": "empty"
+              "name": "empty",
+              "description": "Shown when no items are visible. Defaults to `nldd-inline-dialog` driven by `empty-text` / `empty-supporting-text`. Slot content overrides the default dialog entirely."
             }
           ],
           "members": [
@@ -2038,6 +2796,15 @@
               },
               "default": "null",
               "description": "The anchor as an element reference. Positions the menu exactly like the\n`anchor` attribute, but does NOT turn the anchor into a toggle — clicking\nit does not open the menu. Use this whenever you drive open/close yourself\n(`showPopover()` / `hidePopover()`), which is what nldd-combo-box and\nnldd-token-field do: their input must stay an input, not a menu button."
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -2201,7 +2968,7 @@
               "type": {
                 "text": "MenuVariant"
               },
-              "description": "What the menu is, which sets its roles and part of its keyboard. See the\n`variant` attribute in the docblock above.",
+              "description": "What the menu is (default 'menu'). `menu` is a menu of actions: `role=\"menu\"` with menu items, for things you do. `listbox` is the popup of a combobox: `role=\"listbox\"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role=\"list\"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role=\"listitem\"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself.",
               "name": "variant",
               "default": "'menu'",
               "fieldName": "variant"
@@ -2210,10 +2977,19 @@
               "type": {
                 "text": "string"
               },
-              "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
+              "description": "Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).",
               "name": "width",
               "default": "''",
               "fieldName": "width"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is \"Zoeken\" rather than nameless (WCAG 4.1.2). The list of an nldd-combo-box or nldd-token-field takes the name of the field.",
+              "name": "accessible-label",
+              "default": "''",
+              "fieldName": "accessibleLabel"
             },
             {
               "type": {
@@ -2237,7 +3013,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "Maximum number of visible items before the menu scrolls.\nSets --_menu-max-items internally. Default: 0 (no limit).",
+              "description": "Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit).",
               "name": "max-items",
               "default": "0",
               "fieldName": "maxItems"
@@ -2264,7 +3040,7 @@
               "type": {
                 "text": "Partial<NLDDMenuTranslations>"
               },
-              "description": "Override one or more translation keys.\nUnset keys fall back to the Dutch default.",
+              "description": "Override one or more translation keys.",
               "name": "translations",
               "default": "{}",
               "fieldName": "translations"
@@ -2288,18 +3064,10 @@
       "exports": [
         {
           "kind": "js",
-          "name": "NLDDMenuDivider",
+          "name": "NLDDMenuItem",
           "declaration": {
-            "name": "NLDDMenuDivider",
-            "module": "src/components/actions/menu/menu.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-menu-divider",
-          "declaration": {
-            "name": "NLDDMenuDivider",
-            "module": "src/components/actions/menu/menu.ts"
+            "name": "NLDDMenuItem",
+            "module": "./menu-item.js"
           }
         },
         {
@@ -2307,31 +3075,15 @@
           "name": "NLDDMenuGroup",
           "declaration": {
             "name": "NLDDMenuGroup",
-            "module": "src/components/actions/menu/menu.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-menu-group",
-          "declaration": {
-            "name": "NLDDMenuGroup",
-            "module": "src/components/actions/menu/menu.ts"
+            "module": "./menu-group.js"
           }
         },
         {
           "kind": "js",
-          "name": "NLDDMenuItem",
+          "name": "NLDDMenuDivider",
           "declaration": {
-            "name": "NLDDMenuItem",
-            "module": "src/components/actions/menu/menu.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-menu-item",
-          "declaration": {
-            "name": "NLDDMenuItem",
-            "module": "src/components/actions/menu/menu.ts"
+            "name": "NLDDMenuDivider",
+            "module": "./menu-divider.js"
           }
         },
         {
@@ -2619,12 +3371,22 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/actions/toolbar/toolbar.ts",
+      "path": "src/components/actions/toolbar/toolbar-item.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "One control in an nldd-toolbar, with its alternative for the overflow menu.",
           "name": "NLDDToolbarItem",
+          "slots": [
+            {
+              "name": "",
+              "description": "The control shown in the toolbar (e.g. nldd-icon-button)"
+            },
+            {
+              "name": "overflow",
+              "description": "Required: nldd-menu-item / nldd-menu-divider / nldd-menu-group children, shown in the overflow menu when this item overflows. Without them the action is gone on a narrow toolbar, and the item warns in development."
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -2678,49 +3440,98 @@
           ],
           "attributes": [
             {
+              "type": {
+                "text": "string"
+              },
+              "description": "Fluid width: a percentage (e.g. '40%') or any CSS length (e.g. '240px'). Setting it (or min-width or max-width) makes the item fluid so it grows to fill the available space.",
               "name": "width",
+              "default": "''",
+              "fieldName": "width"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "width",
-              "description": "Fluid width: a percentage (e.g. '40%') or any CSS length (e.g. '240px'). Setting it (or min-width or max-width) makes the item fluid so it grows to fill the available space."
-            },
-            {
+              "description": "Minimum (fluid) width as a CSS length (e.g. '240px'). Setting it also makes the item fluid.",
               "name": "min-width",
+              "default": "''",
+              "fieldName": "minWidth"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "minWidth",
-              "description": "Minimum (fluid) width as a CSS length (e.g. '240px'). Setting it also makes the item fluid."
-            },
-            {
+              "description": "Maximum (fluid) width as a CSS length (e.g. '480px'). Setting it also makes the item fluid.",
               "name": "max-width",
+              "default": "''",
+              "fieldName": "maxWidth"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "maxWidth",
-              "description": "Maximum (fluid) width as a CSS length (e.g. '480px'). Setting it also makes the item fluid."
-            },
-            {
+              "description": "Text label shown below the item when the toolbar has show-item-labels.",
               "name": "label",
-              "type": {
-                "text": "string"
-              },
               "default": "''",
-              "fieldName": "label",
-              "description": "Text label shown below the item when the toolbar has show-item-labels."
+              "fieldName": "label"
             },
             {
-              "name": "priority",
               "type": {
                 "text": "number"
               },
+              "description": "Overflow order: items with a lower priority move into the overflow menu first (default 0). Items sharing a priority overflow together, regardless of position.",
+              "name": "priority",
               "default": "0",
-              "fieldName": "priority",
-              "description": "Overflow order: items with a lower priority move into the overflow menu first (default 0). Items sharing a priority overflow together, regardless of position."
+              "fieldName": "priority"
+            },
+            {
+              "type": {
+                "text": "'sm'|'md'|'lg'"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md') onto the item host, so size-dependent styling can key off it.",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's show-item-labels, so the item renders its label below the control.",
+              "name": "show-item-labels"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: marks an item that grows or shrinks to fill space. Toggled synchronously during measurement, so it can appear or disappear between layout frames — do not style against it. It is not reflected as a JS property — read it with hasAttribute('fluid').",
+              "name": "fluid"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: the sole fluid item, allowed to shrink below its content. Same synchronous-toggle and property-read caveats as fluid.",
+              "name": "solo-fluid"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat.",
+              "name": "hidden"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: the item holds a control that overflows by itself (nldd-tab-bar), so it gets the width that control wants with everything shown. Same synchronous-toggle caveat.",
+              "name": "shrinkable"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: a shrinkable item narrowed down to what its control needs at least, before it would move into the overflow menu. Same synchronous-toggle caveat.",
+              "name": "shrunk"
             }
           ],
           "superclass": {
@@ -2728,22 +3539,46 @@
             "package": "lit"
           },
           "tagName": "nldd-toolbar-item",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "",
-              "description": "The control shown in the toolbar (e.g. nldd-icon-button)"
-            },
-            {
-              "name": "overflow",
-              "description": "Required: nldd-menu-item / nldd-menu-divider / nldd-menu-group children, shown in the overflow menu when this item overflows. Without them the action is gone on a narrow toolbar, and the item warns in development."
-            }
-          ]
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDToolbarItem",
+          "declaration": {
+            "name": "NLDDToolbarItem",
+            "module": "src/components/actions/toolbar/toolbar-item.ts"
+          }
         },
         {
+          "kind": "custom-element-definition",
+          "name": "nldd-toolbar-item",
+          "declaration": {
+            "name": "NLDDToolbarItem",
+            "module": "src/components/actions/toolbar/toolbar-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar-title.ts",
+      "declarations": [
+        {
           "kind": "class",
-          "description": "",
+          "description": "The title of an nldd-toolbar, with optional media before it and an action after it.",
           "name": "NLDDToolbarTitle",
+          "slots": [
+            {
+              "name": "media",
+              "description": "Optional leading image before the title: a logo, a product mark, a file-type icon. Its height is capped to the title group so it cannot stretch the row; pick the size within that yourself. With no `text` the media stands alone and carries the name, so give it one (an `alt`, or an accessible label)."
+            },
+            {
+              "name": "action",
+              "description": "Optional trailing control (e.g. an xs nldd-icon-button), shown inline after the title and tuned to sit against it. Empty by default."
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -2837,85 +3672,92 @@
           ],
           "attributes": [
             {
+              "type": {
+                "text": "string"
+              },
+              "description": "Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width.",
               "name": "width",
+              "default": "''",
+              "fieldName": "width"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "width",
-              "description": "Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width."
-            },
-            {
+              "description": "Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first.",
               "name": "min-width",
+              "default": "''",
+              "fieldName": "minWidth"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "minWidth",
-              "description": "Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first."
-            },
-            {
+              "description": "Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row).",
               "name": "max-width",
-              "type": {
-                "text": "string"
-              },
               "default": "''",
-              "fieldName": "maxWidth",
-              "description": "Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row)."
+              "fieldName": "maxWidth"
             },
             {
-              "name": "align",
               "type": {
                 "text": "TitleAlign"
               },
+              "description": "Text alignment: 'left' | 'center' (default: 'left').",
+              "name": "align",
               "default": "'left'",
-              "fieldName": "align",
-              "description": "Text alignment: 'left' | 'center' (default: 'left')."
+              "fieldName": "align"
             },
             {
+              "type": {
+                "text": "string"
+              },
+              "description": "Title text.",
               "name": "text",
+              "default": "''",
+              "fieldName": "text"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "text",
-              "description": "Title text."
-            },
-            {
+              "description": "Secondary supporting text shown below the title.",
               "name": "supporting-text",
+              "default": "''",
+              "fieldName": "supportingText"
+            },
+            {
+              "type": {
+                "text": "'sm'|'md'|'lg'"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts.",
+              "name": "size"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "supportingText",
-              "description": "Secondary supporting text shown below the title."
-            },
-            {
+              "description": "Makes the mark and the name one link, for the place this window belongs to (usually the app's own start). The `action` slot stays outside it: a control inside a link is a control you cannot reach without following the link.",
               "name": "href",
+              "default": "''",
+              "fieldName": "href"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "href",
-              "description": "Makes the mark and the name one link, for the place this window belongs to (usually the app's own start). The `action` slot stays outside it: a control inside a link is a control you cannot reach without following the link."
-            },
-            {
+              "description": "Where the link opens; only meaningful with `href`. `_blank` adds rel=\"noopener noreferrer\" and a visually hidden \"opens in a new tab\" announcement. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.",
               "name": "target",
-              "type": {
-                "text": "string"
-              },
               "default": "''",
-              "fieldName": "target",
-              "description": "Where the link opens; only meaningful with `href`. `_blank` adds rel=\"noopener noreferrer\" and a visually hidden \"opens in a new tab\" announcement. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off."
+              "fieldName": "target"
             },
             {
-              "name": "translations",
               "type": {
                 "text": "Partial<NLDDToolbarTranslations>"
               },
+              "description": "Override translation keys (the new-tab announcement); unset keys fall back to Dutch.",
+              "name": "translations",
               "default": "{}",
-              "fieldName": "translations",
-              "description": "Override translation keys (the new-tab announcement); unset keys fall back to Dutch."
+              "fieldName": "translations"
             }
           ],
           "superclass": {
@@ -2923,18 +3765,400 @@
             "package": "lit"
           },
           "tagName": "nldd-toolbar-title",
-          "customElement": true,
-          "slots": [
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDToolbarTitle",
+          "declaration": {
+            "name": "NLDDToolbarTitle",
+            "module": "src/components/actions/toolbar/toolbar-title.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-toolbar-title",
+          "declaration": {
+            "name": "NLDDToolbarTitle",
+            "module": "src/components/actions/toolbar/toolbar-title.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.layout.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "itemsOf",
+          "return": {
+            "type": {
+              "text": "OverflowItem[]"
+            }
+          },
+          "parameters": [
             {
-              "name": "media",
-              "description": "Optional leading image before the title: a logo, a product mark, a file-type icon. Its height is capped to the title group so it cannot stretch the row; pick the size within that yourself. With no `text` the media stands alone and carries the name, so give it one (an `alt`, or an accessible label)."
+              "name": "children",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            }
+          ],
+          "description": "Only the items of a list of children."
+        },
+        {
+          "kind": "function",
+          "name": "overflowOrder",
+          "return": {
+            "type": {
+              "text": "OverflowItem[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "start",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
             },
             {
-              "name": "action",
-              "description": "Optional trailing control (e.g. an xs nldd-icon-button), shown inline after the title and tuned to sit against it. Empty by default."
+              "name": "center",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            },
+            {
+              "name": "end",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            }
+          ],
+          "description": "The order in which items move into the overflow menu: the lowest priority\nfirst, then end before center before start, and within an area from the\noutside in (last first)."
+        },
+        {
+          "kind": "function",
+          "name": "groupForOverflow",
+          "return": {
+            "type": {
+              "text": "OverflowItem[][]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "items",
+              "type": {
+                "text": "OverflowItem[]"
+              }
+            }
+          ],
+          "description": "Groups items in overflow order. Items with an explicit priority that share a\nvalue form one group and overflow together regardless of their position;\nitems without a priority each form their own group."
+        },
+        {
+          "kind": "function",
+          "name": "areaWidth",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "children",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            },
+            {
+              "name": "overflowIds",
+              "type": {
+                "text": "ReadonlySet<number>"
+              }
+            },
+            {
+              "name": "widths",
+              "type": {
+                "text": "ReadonlyMap<number, number>"
+              }
+            },
+            {
+              "name": "itemGap",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "How wide an area is: its visible items and titles plus the gaps between\nthem. Items in the overflow menu take no room."
+        },
+        {
+          "kind": "function",
+          "name": "spacerZeros",
+          "return": {
+            "type": {
+              "text": "{ leftZero: boolean; rightZero: boolean }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "hostWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "itemGap",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "overflowButtonWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "startWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "centerWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "endWidth",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Whether the spacers left and right of the center give way: a spacer whose\nshare of the row is used up by its side drops to zero, so the center moves\noff-center rather than overlapping. With nothing at either side both go."
+        },
+        {
+          "kind": "function",
+          "name": "fillsRowAlone",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "children",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            }
+          ],
+          "description": "Whether the one thing left in the row fills it: a title, or a fluid item.\nThe flexible spacer then drops out, or it would claim half the row."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "itemsOf",
+          "declaration": {
+            "name": "itemsOf",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "overflowOrder",
+          "declaration": {
+            "name": "overflowOrder",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "groupForOverflow",
+          "declaration": {
+            "name": "groupForOverflow",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "areaWidth",
+          "declaration": {
+            "name": "areaWidth",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "spacerZeros",
+          "declaration": {
+            "name": "spacerZeros",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fillsRowAlone",
+          "declaration": {
+            "name": "fillsRowAlone",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.overflow-menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The overflow menu of an nldd-toolbar: an nldd-menu holding copies of the\nmenu items of everything that did not fit, and of the toolbar's own\n`overflow` slot.\n\nIt lives in the toolbar's shadow root, not in document.body. It is a popover,\nso the top layer gets it past any clipping anyway, and a menu in the body goes\ninert (visible but untouchable) when the toolbar sits in a modal dialog:\neverything outside the dialog is inert then.\n\nThe menu holds clones, because the originals stay where the consumer put\nthem. A clone's `select` never reaches listeners on its original, so it is\nsent on: every original is stamped with an id that its clone carries, and a\n`select` from a clone is dispatched again on the original.",
+          "name": "ToolbarOverflowMenu",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_counter",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the menu is open. The toolbar renders its button from this."
+            },
+            {
+              "kind": "field",
+              "name": "_menu",
+              "type": {
+                "text": "NLDDMenu | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_originals",
+              "privacy": "private",
+              "default": "new Map<string, Element>()"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "anchorTo",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "button",
+                  "type": {
+                    "text": "(HTMLElement & {\n\t\tpopoverTargetElement?: Element | null;\n\t\tpopoverTargetAction?: 'toggle' | 'show' | 'hide';\n\t}) | null"
+                  }
+                }
+              ],
+              "description": "Make `button` the menu's invoker. The browser opens and closes it\nnatively through popovertarget, and the menu keeps `popoverTargetAction`\nin step with its state ('hide' while open, 'show' while closed). The\ndefault 'toggle' becomes 'show' here, for the very first click before the\nmenu ever toggled."
+            },
+            {
+              "kind": "method",
+              "name": "fill",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "items",
+                  "type": {
+                    "text": "Element[]"
+                  }
+                }
+              ],
+              "description": "Fill the menu with copies of `items`, in this order."
+            },
+            {
+              "kind": "method",
+              "name": "_clone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "original",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Stamps the original and every descendant with an id the clone copies.\n`data-toolbar-oid` is outside the toolbar's attribute filter, so stamping\nstarts no new sync."
+            },
+            {
+              "kind": "field",
+              "name": "_forwardSelect",
+              "privacy": "private"
             }
           ]
-        },
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ToolbarOverflowMenu",
+          "declaration": {
+            "name": "ToolbarOverflowMenu",
+            "module": "src/components/actions/toolbar/toolbar.overflow-menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.ts",
+      "declarations": [
         {
           "kind": "class",
           "description": "A row of controls that belong to a whole screen or pane, with an overflow menu for what does not fit. The toolbar measures itself: as the row runs out of room, items move into that menu, the lowest `priority` first, and items that share a priority move together. So the order in the HTML says where an item sits, and `priority` says how long it stays. An item holding a control with its own overflow, such as nldd-tab-bar, first narrows down when its turn comes, so that control moves what does not fit into its own menu, and only then goes into the toolbar's menu. Every item carries its own alternative for the menu, an nldd-menu-item in its `overflow` slot. Without one the action is simply gone once the item overflows, which on a wide screen you never see; the item warns about it in development. The toolbar's own `overflow` slot holds the actions that live in the menu at every width.",
@@ -3050,15 +4274,7 @@
           "name": "NLDDToolbarItem",
           "declaration": {
             "name": "NLDDToolbarItem",
-            "module": "src/components/actions/toolbar/toolbar.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-toolbar-item",
-          "declaration": {
-            "name": "NLDDToolbarItem",
-            "module": "src/components/actions/toolbar/toolbar.ts"
+            "module": "./toolbar-item.js"
           }
         },
         {
@@ -3066,15 +4282,15 @@
           "name": "NLDDToolbarTitle",
           "declaration": {
             "name": "NLDDToolbarTitle",
-            "module": "src/components/actions/toolbar/toolbar.ts"
+            "module": "./toolbar-title.js"
           }
         },
         {
-          "kind": "custom-element-definition",
-          "name": "nldd-toolbar-title",
+          "kind": "js",
+          "name": "groupForOverflow",
           "declaration": {
-            "name": "NLDDToolbarTitle",
-            "module": "src/components/actions/toolbar/toolbar.ts"
+            "name": "groupForOverflow",
+            "module": "./toolbar.layout.js"
           }
         },
         {
@@ -8081,6 +9297,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -8569,6 +9799,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -8942,6 +10186,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -9823,6 +11081,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -10123,11 +11395,273 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/inputs/date-field/date-field.dates.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "RANGE_SEPARATOR",
+          "type": {
+            "text": "string"
+          },
+          "default": "'/'",
+          "description": "ISO 8601 writes an interval as start/end, so the value needs no invention."
+        },
+        {
+          "kind": "function",
+          "name": "parseDate",
+          "return": {
+            "type": {
+              "text": "string | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "raw",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Read a typed date generously. Deliberately not a mask: reformatting per\nkeystroke moves the caret, breaks backspace mid-value and confuses screen\nreaders, so we accept what people type and normalize once on commit.\nAccepts 12-3-2026, 12/03/2026, 12.03.2026, 12032026 and ISO yyyy-mm-dd."
+        },
+        {
+          "kind": "function",
+          "name": "formatDisplay",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "iso",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "ISO to the Dutch notation shown on screen."
+        },
+        {
+          "kind": "function",
+          "name": "splitValue",
+          "return": {
+            "type": {
+              "text": "string[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "count",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The ends of a value: one for a date, two for a period. A missing end is ''.\nA period read as one date keeps its start, and a date read as a period\nbecomes its start with an open end."
+        },
+        {
+          "kind": "function",
+          "name": "joinValue",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "ends",
+              "type": {
+                "text": "string[]"
+              }
+            }
+          ],
+          "description": "The value made of its ends: '' when all are empty, else start/end."
+        },
+        {
+          "kind": "function",
+          "name": "resolveBounds",
+          "return": {
+            "type": {
+              "text": "Bounds"
+            }
+          },
+          "parameters": [
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "commitText",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "bounds",
+              "type": {
+                "text": "Bounds"
+              }
+            }
+          ],
+          "description": "The date a typed text commits to: a real date within the bounds, or ''.\nA date the calendar would refuse must not commit when typed either.\nISO strings compare lexically, so `<` and `>` are the date order."
+        },
+        {
+          "kind": "function",
+          "name": "sortEnds",
+          "return": {
+            "type": {
+              "text": "string[] | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "ends",
+              "type": {
+                "text": "string[]"
+              }
+            }
+          ],
+          "description": "The ends with the earlier date first, or null when they are in order\nalready or one is empty. A period typed backwards (\"van 2027 t/m 2026\")\notherwise stays backwards, while the calendar sorts a dragged one."
+        },
+        {
+          "kind": "function",
+          "name": "checkEnds",
+          "return": {
+            "type": {
+              "text": "EndsProblem | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "texts",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "name": "bounds",
+              "type": {
+                "text": "Bounds"
+              }
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "The first problem in the typed texts, or null. A required period with only\na start is missing its end; an empty start is the native input's to report."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RANGE_SEPARATOR",
+          "declaration": {
+            "name": "RANGE_SEPARATOR",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseDate",
+          "declaration": {
+            "name": "parseDate",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "formatDisplay",
+          "declaration": {
+            "name": "formatDisplay",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "splitValue",
+          "declaration": {
+            "name": "splitValue",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "joinValue",
+          "declaration": {
+            "name": "joinValue",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveBounds",
+          "declaration": {
+            "name": "resolveBounds",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "commitText",
+          "declaration": {
+            "name": "commitText",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sortEnds",
+          "declaration": {
+            "name": "sortEnds",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "checkEnds",
+          "declaration": {
+            "name": "checkEnds",
+            "module": "src/components/inputs/date-field/date-field.dates.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/inputs/date-field/date-field.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field.",
+          "description": "A text field for a date, with an optional calendar in a popover. The value is always ISO (yyyy-mm-dd); on screen it shows the Dutch notation (dd-mm-yyyy). Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid date or nothing, so an empty field and one with text that is no date both read as ''. `validity` tells them apart: `badInput` for text that is no date, `rangeUnderflow` / `rangeOverflow` for a date outside `min` / `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field.",
           "name": "NLDDDateField",
           "members": [
             {
@@ -10370,6 +11904,20 @@
                 }
               },
               "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What `value` cannot say. It holds a valid date or nothing, so text that is\nno date, a date outside min/max and an empty field all read as ''. The\nfield tells them apart for the form; when to show it stays the caller's.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -11983,6 +13531,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -12548,6 +14110,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -13155,6 +14731,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -13786,6 +15376,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -14329,6 +15933,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -14991,6 +16609,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -15577,6 +17209,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -15681,7 +17327,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen').",
+              "description": "Accessible name (aria-label) of the native input. Falls back to `placeholder`, and keeps it when a value is typed. That works while the placeholder names the field ('Zoek een gebruiker'); set this when the placeholder is an example instead ('bijv. Jansen'). Without a visible label the placeholder is the only text on screen, so a name of your own starts with it: someone who works the computer by voice says what they see, and a name that leaves it out does not answer (WCAG 2.5.3).",
               "fieldName": "accessibleLabel"
             },
             {
@@ -16482,6 +18128,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -16981,6 +18641,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -17723,6 +19397,20 @@
                 }
               },
               "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -21054,6 +22742,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -22097,6 +23799,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -22396,8 +24112,42 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/inputs/time-field/time-field.ts",
+      "path": "src/components/inputs/time-field/time-field.times.ts",
       "declarations": [
+        {
+          "kind": "function",
+          "name": "toMinutes",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "time",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "fromMinutes",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "total",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
         {
           "kind": "function",
           "name": "parseTime",
@@ -22445,8 +24195,225 @@
           "description": "The nearest time that falls on the step, counted from `base`. Input exactly\nin between rounds up.\n\nNever rolls over the edge of the day: if rounding up would pass 23:59, step\nback instead. Rolling over to 00:00 silently shifts the day, and a consumer\nwho puts this field next to a date field then has a bug nobody sees\ncoming."
         },
         {
+          "kind": "function",
+          "name": "resolveRules",
+          "return": {
+            "type": {
+              "text": "TimeRules"
+            }
+          },
+          "parameters": [
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "commitText",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "rules",
+              "type": {
+                "text": "TimeRules"
+              }
+            },
+            {
+              "name": "round",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "The time a typed text commits to: a real time within the bounds, or ''.\nRounding to the step only on commit, not while typing: otherwise \"09:1\"\njumps to 09:00 before anyone can type the 5."
+        },
+        {
+          "kind": "function",
+          "name": "startingPoint",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "rules",
+              "type": {
+                "text": "TimeRules"
+              }
+            },
+            {
+              "name": "now",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "Where the arrow keys and the picker start on an empty field: `min` if there\nis one, otherwise `now` rounded to the step. Starting at midnight would be a\nlong climb from any realistic goal. Past `max` it lands on the last step at\nor before it: a max that does not fall on the step is not in the wheel, and\na value the wheel does not hold shows up as an empty selection."
+        },
+        {
+          "kind": "function",
+          "name": "shift",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "from",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "direction",
+              "type": {
+                "text": "1 | -1"
+              }
+            },
+            {
+              "name": "rules",
+              "type": {
+                "text": "TimeRules"
+              }
+            }
+          ],
+          "description": "One step up or down from `from`, kept within the day and the bounds. From a\ntime that does not fall on the step, the first press moves onto the grid, so\na second press does not land between two valid values again."
+        },
+        {
+          "kind": "function",
+          "name": "checkText",
+          "return": {
+            "type": {
+              "text": "TimeProblem | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "rules",
+              "type": {
+                "text": "TimeRules"
+              }
+            }
+          ],
+          "description": "The problem with a typed text, or null when it is empty or a valid time."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toMinutes",
+          "declaration": {
+            "name": "toMinutes",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fromMinutes",
+          "declaration": {
+            "name": "fromMinutes",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseTime",
+          "declaration": {
+            "name": "parseTime",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "roundToStep",
+          "declaration": {
+            "name": "roundToStep",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveRules",
+          "declaration": {
+            "name": "resolveRules",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "commitText",
+          "declaration": {
+            "name": "commitText",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "startingPoint",
+          "declaration": {
+            "name": "startingPoint",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "shift",
+          "declaration": {
+            "name": "shift",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "checkText",
+          "declaration": {
+            "name": "checkText",
+            "module": "src/components/inputs/time-field/time-field.times.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/time-field/time-field.ts",
+      "declarations": [
+        {
           "kind": "class",
-          "description": "A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. \"Klaar\" and Enter keep the choice, and so does a click outside once you have picked something. Cancel and Escape put the old time back. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.",
+          "description": "A text field for a time. The value is always 24-hour `HH:mm`, which is how Dutch shows it too, so unlike nldd-date-field there is nothing to convert. Typing is not masked: input is accepted generously and normalized only when the field is left. Error messages belong to nldd-form-field, not here. This field reflects only `invalid` / `valid`, like nldd-text-field. `value` holds a valid time or nothing, so an empty field and one with text that is no time both read as ''. `validity` tells them apart: `badInput` for text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside `min` / `max`. A form does not submit then, and nldd-form marks the field invalid. Without a submit, as in a filter that applies at once, the moment is yours: `field.invalid = !field.validity.valid` on `change`, with a message of your own in the nldd-form-field. What you do in the picker is a preview until you leave it. The field shows the time right away but commits it on close. \"Klaar\" and Enter keep the choice, and so does a click outside once you have picked something. Cancel and Escape put the old time back. On an empty field the wheels open at `min`, or otherwise at the current time rounded to `step`, which does not fill in the field yet.",
           "name": "NLDDTimeField",
           "members": [
             {
@@ -22662,6 +24629,20 @@
                 }
               },
               "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What `value` cannot say. It holds a valid time or nothing, so text that is\nno time, a time outside min/max and an empty field all read as ''. The\nfield tells them apart for the form; when to show it stays the caller's.",
               "inheritedFrom": {
                 "name": "FormAssociated",
                 "module": "src/utilities/form-associated-mixin.ts"
@@ -23060,7 +25041,7 @@
           "name": "parseTime",
           "declaration": {
             "name": "parseTime",
-            "module": "src/components/inputs/time-field/time-field.ts"
+            "module": "./time-field.times.js"
           }
         },
         {
@@ -23068,7 +25049,7 @@
           "name": "roundToStep",
           "declaration": {
             "name": "roundToStep",
-            "module": "src/components/inputs/time-field/time-field.ts"
+            "module": "./time-field.times.js"
           }
         },
         {
@@ -24066,6 +26047,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -24679,6 +26674,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -25054,6 +27063,16 @@
             },
             {
               "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
+              "attribute": "download"
+            },
+            {
+              "kind": "field",
               "name": "rel",
               "type": {
                 "text": "string"
@@ -25121,6 +27140,15 @@
               "default": "''",
               "fieldName": "target",
               "description": "Link target for href (e.g. '_blank'); adjusts rel automatically and adds an \"opent in nieuw tabblad\" announcement for '_blank'. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off."
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab.",
+              "fieldName": "download"
             },
             {
               "name": "rel",
@@ -34008,6 +36036,16 @@
             },
             {
               "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
+              "attribute": "download"
+            },
+            {
+              "kind": "field",
               "name": "rel",
               "type": {
                 "text": "string | undefined"
@@ -34208,6 +36246,15 @@
               "description": "Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden \"opent in nieuw tabblad\" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label.",
               "name": "target",
               "fieldName": "target"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab.",
+              "name": "download",
+              "default": "undefined",
+              "fieldName": "download"
             },
             {
               "type": {
@@ -34424,6 +36471,16 @@
             },
             {
               "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
+              "attribute": "download"
+            },
+            {
+              "kind": "field",
               "name": "rel",
               "type": {
                 "text": "string | undefined"
@@ -34632,6 +36689,15 @@
               "description": "Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden \"opens in new tab\" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.",
               "name": "target",
               "fieldName": "target"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab.",
+              "name": "download",
+              "default": "undefined",
+              "fieldName": "download"
             },
             {
               "type": {
@@ -35789,6 +37855,16 @@
             },
             {
               "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file instead of opening it; only used when href is set. Empty\nfor the name from the URL, a name to save it under.",
+              "attribute": "download"
+            },
+            {
+              "kind": "field",
               "name": "rel",
               "type": {
                 "text": "string | undefined"
@@ -35896,6 +37972,15 @@
               "default": "undefined",
               "fieldName": "target",
               "description": "Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden \"opent in nieuw tabblad\" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off."
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined",
+              "description": "Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden \"downloadt bestand\" for screen readers. Leave `target` off: a download opens no tab.",
+              "fieldName": "download"
             },
             {
               "name": "rel",
@@ -37146,6 +39231,134 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/navigation/top-navigation-bar/top-navigation-bar.menu-sheet.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The menu of a narrow nldd-top-navigation-bar: a sheet from the left with the\nitems of the global menu bar as a navigation list, and a level of its own for\nevery submenu.\n\nIt is built on the first open, from modules loaded only then, and appended\nto document.body. The rows are read from the menu bar on every open and on\nevery step between levels, so the sheet shows what the bar holds at that\nmoment. The menu bar and its submenus are only read, never moved, so the\npopovers they serve on a wide screen stay intact.",
+          "name": "TopNavigationMenuSheet",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_sheet",
+              "type": {
+                "text": "Sheet | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_stack",
+              "type": {
+                "text": "SheetLevel[]"
+              },
+              "privacy": "private",
+              "default": "[]",
+              "description": "The last entry is the visible level. Reset to the root on every open,\nso a reopened sheet starts at the top wherever you drilled to before."
+            },
+            {
+              "kind": "field",
+              "name": "_menuText",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "button",
+                  "type": {
+                    "text": "NLDDMenuBarItem | null"
+                  }
+                }
+              ],
+              "description": "Open the sheet at its root level. `button` is the bar's menu button,\nwhich says `expanded` while the sheet is open."
+            },
+            {
+              "kind": "method",
+              "name": "applyTexts",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Take over the bar's texts after a change of translations."
+            },
+            {
+              "kind": "method",
+              "name": "remove",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_create",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Sheet"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_back",
+              "privacy": "private",
+              "description": "Back button: one level up, with focus on the row that opened the level\n(the APG menu pattern), not on the first one."
+            },
+            {
+              "kind": "method",
+              "name": "_render",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "moveFocus",
+                  "default": "false"
+                },
+                {
+                  "name": "focusOpenerText",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Render the top of the stack: the title bar with its back button, and the\nrows. With `moveFocus` after a step down or back, focus lands on the row\nthat opened the level going back, else on the first row."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TopNavigationMenuSheet",
+          "declaration": {
+            "name": "TopNavigationMenuSheet",
+            "module": "src/components/navigation/top-navigation-bar/top-navigation-bar.menu-sheet.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/navigation/top-navigation-bar/top-navigation-bar.ts",
       "declarations": [
         {
@@ -37283,7 +39496,7 @@
               },
               "default": "''",
               "fieldName": "websiteTitle",
-              "description": "Name of the website or application, above the menu bar. Empty leaves the title line out."
+              "description": "Name of the website or application, above the menu bar. Empty leaves the title line out. On a narrow screen, where it has a line of its own, a long name wraps; on md and lg it sits beside the menu on one line, so keep it short enough to fit there."
             },
             {
               "name": "no-logo",
@@ -37346,7 +39559,7 @@
               },
               "default": "''",
               "fieldName": "logoHref",
-              "description": "URL for the logo and wordmark. Without it they are not a link but an image with an accessible label."
+              "description": "URL for the logo and wordmark. Without it they are not a link but an image with an accessible label. Leave it out when `website-href` already goes to the same page: two links to the start page side by side are two tab stops and the same link twice in a screen reader's list of links."
             },
             {
               "name": "website-href",
@@ -40245,7 +42458,7 @@
         },
         {
           "kind": "class",
-          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
+          "description": "Shows where you are in a process of several steps: a row of discs with a number (or a check mark on what is done), a label under each and a line connecting them. Other systems call this a stepper or a progress indicator. Mark the step you are on with `status=\"current\"`. The parent derives the rest from its position: `past` before it, `future` after. With none marked, step 1 is current. With more than one, the last one wins and a warning goes to the console in a dev build: a flow that forgets to clear the previous step still points at the furthest one. A `status=\"past\"` or `status=\"future\"` on another step overrides what is derived for that step, for flows that jump back or skip a step. One attribute, the same three values as `nldd-step-cell`, so a flow reads in one vocabulary whether it runs across or down. Horizontal only. For steps under each other, build an `nldd-list` with an `nldd-step-cell` and an `nldd-title-cell` per row: vertical steps usually carry more than a title, and a list row already does that. Below the sm breakpoint (a container query, so measured on the component itself rather than on the viewport) it folds into one line of text plus a segmented bar. The full list of steps stays in the DOM, only visually hidden, so assistive software hears no less than a wide screen shows. A step that is a link or a button is out of the tab order then: Tab would land on something you cannot see (WCAG 2.4.7). Accessibility: a `nav` with a label, holding a `role=\"list\"` with a `role=\"listitem\"` per step. The current step gets `aria-current=\"step\"`, the only notion WAI-ARIA has for this. \"Done\" and \"still to do\" do not exist as ARIA tokens and travel along as visually hidden text instead.",
           "name": "NLDDStepBar",
           "members": [
             {
@@ -40951,6 +43164,20 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -41534,6 +43761,16 @@
             },
             {
               "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid."
+            },
+            {
+              "kind": "method",
               "name": "setCustomValidity",
               "return": {
                 "type": {
@@ -41771,6 +44008,36 @@
         },
         {
           "kind": "function",
+          "name": "downloadLinkHintKey",
+          "return": {
+            "type": {
+              "text": "DownloadLinkHintKey | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string | null | undefined"
+              }
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string | null | undefined"
+              }
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string | null | undefined"
+              }
+            }
+          ],
+          "description": "The hint of a link that may carry `download`, for the components that take it."
+        },
+        {
+          "kind": "function",
           "name": "isExternalHref",
           "return": {
             "type": {
@@ -41786,6 +44053,36 @@
             }
           ],
           "description": "Whether `href` points at another origin than the page it is on."
+        },
+        {
+          "kind": "function",
+          "name": "warnDownloadTarget",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "download",
+              "type": {
+                "text": "string | null | undefined"
+              }
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string | null | undefined"
+              }
+            }
+          ],
+          "description": "In development, says once per element that `target` does nothing on a\ndownload link: the file is saved, no tab opens."
         }
       ],
       "exports": [
@@ -41799,9 +44096,25 @@
         },
         {
           "kind": "js",
+          "name": "downloadLinkHintKey",
+          "declaration": {
+            "name": "downloadLinkHintKey",
+            "module": "src/utilities/link-hint.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "isExternalHref",
           "declaration": {
             "name": "isExternalHref",
+            "module": "src/utilities/link-hint.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "warnDownloadTarget",
+          "declaration": {
+            "name": "warnDownloadTarget",
             "module": "src/utilities/link-hint.ts"
           }
         }

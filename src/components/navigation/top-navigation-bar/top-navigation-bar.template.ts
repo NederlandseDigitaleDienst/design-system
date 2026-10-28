@@ -6,6 +6,8 @@ import logoSvg from './logo.js';
 
 // # Top navigation bar template
 
+const ribbonAtTop = html`<span class="top-navigation-bar__ribbon-at-top"></span>`;
+
 function wordmarkContent(component: NLDDTopNavigationBar) {
 	return html`
 		<div class="top-navigation-bar__wordmark">
@@ -48,6 +50,7 @@ export function template(component: NLDDTopNavigationBar) {
 						<div class="top-navigation-bar__logo"
 							aria-hidden="true"
 						>
+							${ribbonAtTop}
 							${unsafeHTML(logoSvg)}
 						</div>
 						${wordmarkContent(component)}
@@ -57,6 +60,7 @@ export function template(component: NLDDTopNavigationBar) {
 						href="${safeLogoHref}"
 						aria-label="${component._t('components.top-navigation-bar.logo-label')}"
 					>
+						${ribbonAtTop}
 						<span aria-hidden="true">${unsafeHTML(logoSvg)}</span>
 					</a>
 				` : html`
@@ -64,6 +68,7 @@ export function template(component: NLDDTopNavigationBar) {
 						role="img"
 						aria-label="${component._t('components.top-navigation-bar.logo-label')}"
 					>
+						${ribbonAtTop}
 						${unsafeHTML(logoSvg)}
 					</div>
 					${component.logoTitle ? wordmarkContent(component) : nothing}

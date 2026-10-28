@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isExternalHref, linkHintKey } from './link-hint.js';
+import { downloadLinkHintKey, isExternalHref, linkHintKey } from './link-hint.js';
 
 describe('linkHintKey', () => {
 	it('gives no hint to a link on this site', () => {
@@ -19,6 +19,13 @@ describe('linkHintKey', () => {
 
 	it('says a link opens in a new tab', () => {
 		expect(linkHintKey('/overzicht', '_blank')).toBe('link-hint-new-tab-lowercase-label');
+	});
+
+	it('says a link with download downloads the file, on this site only', () => {
+		expect(downloadLinkHintKey('/verslag.pdf', null, '')).toBe('link-hint-download-lowercase-label');
+		expect(downloadLinkHintKey('/verslag.pdf', '_blank', 'verslag.pdf')).toBe('link-hint-download-lowercase-label');
+		expect(downloadLinkHintKey('https://open.overheid.nl/verslag.pdf', null, '')).toBe('link-hint-external-lowercase-label');
+		expect(downloadLinkHintKey('/verslag.pdf', null, undefined)).toBeNull();
 	});
 
 	it('makes one sentence of both', () => {

@@ -106,7 +106,11 @@ export function toggleTasks(view: EditorView): boolean {
 
 const toggleOnClick = EditorView.domEventHandlers({
 	mousedown(event, view) {
-		const box = (event.target as Element | null)?.closest?.('.cm-md-task-box');
+		// The box, or the empty space after it up to the text: the list prefix
+		// that holds the box runs exactly to where the text starts.
+		const target = event.target as Element | null;
+		const box = target?.closest?.('.cm-md-task-box')
+			?? target?.closest?.('.cm-md-listprefix')?.querySelector(':scope > .cm-md-task-box');
 		if (!box || event.button !== 0) return false;
 		event.preventDefault();
 		if (view.state.readOnly) return true;

@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
@@ -241,5 +241,29 @@ describe('nldd-card – hover', () => {
 		await waitForUpdate(el);
 		el.querySelector('button')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, button: 0 }));
 		expect(el.hasAttribute('data-action-pressed')).toBe(false);
+	});
+});
+
+describe('<nldd-card> with download', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	it('puts download on the link and says it downloads the file', async () => {
+		el = await fixture('<nldd-card href="/verslag.pdf" download="verslag.pdf" accessible-label="Verslag"></nldd-card>');
+		await waitForUpdate(el);
+		const a = el.shadowRoot!.querySelector('a')!;
+		expect(a.getAttribute('download')).toBe('verslag.pdf');
+		expect(a.getAttribute('aria-label')).toContain('downloadt bestand');
+	});
+
+	it('warns once that target does nothing on a download', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-card href="/verslag.pdf" target="_blank" download="verslag.pdf" accessible-label="Verslag"></nldd-card>');
+		await waitForUpdate(el);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
 	});
 });

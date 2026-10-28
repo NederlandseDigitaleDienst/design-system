@@ -275,6 +275,24 @@ describe('nldd-list-item – expanded', () => {
 		expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('`expanded` needs somewhere to live'));
 	});
 
+	it('says a closed branch is collapsed from the start, before anything is pressed', async () => {
+		el = await fixture<HTMLElement>(
+			`<nldd-list type="tree" accessible-label="X">
+				<nldd-list-item>
+					<nldd-list-item-segment button disclosure accessible-label="Ministeries in- of uitklappen"></nldd-list-item-segment>
+					<nldd-text-cell text="Ministeries"></nldd-text-cell>
+					<nldd-list-item slot="children"><nldd-text-cell text="Financiën"></nldd-text-cell></nldd-list-item>
+				</nldd-list-item>
+			</nldd-list>`,
+		);
+		await waitForUpdate(el);
+		const item = el.querySelector('nldd-list-item')!;
+		const seg = el.querySelector('nldd-list-item-segment')!;
+		await waitForUpdate(item);
+		await waitForUpdate(seg);
+		expect(seg.shadowRoot!.querySelector('.list-item-segment')!.getAttribute('aria-expanded')).toBe('false');
+	});
+
 	// In a tree, child rows are DOM children of the row, so an unscoped relay
 	// pushed the parent's expanded state into the chevron of every collapsed child
 	// row as well, which then pointed down while the branch was closed.
@@ -624,5 +642,29 @@ describe('nldd-list-item-segment – een uitgezette link', () => {
 			await waitForUpdate(el);
 			expect(el.shadowRoot!.querySelector('.list-item-segment__link-hint')).toBeNull();
 		});
+	});
+});
+
+describe('<nldd-list-item-segment> with download', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	it('puts download on the link and says it downloads the file', async () => {
+		el = await fixture('<nldd-list-item-segment href="/verslag.pdf" download="verslag.pdf"><nldd-text-cell text="Verslag"></nldd-text-cell></nldd-list-item-segment>');
+		await waitForUpdate(el);
+		const a = el.shadowRoot!.querySelector('a')!;
+		expect(a.getAttribute('download')).toBe('verslag.pdf');
+		expect(el.shadowRoot!.textContent).toContain('downloadt bestand');
+	});
+
+	it('warns once that target does nothing on a download', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-list-item-segment href="/verslag.pdf" target="_blank" download="verslag.pdf"><nldd-text-cell text="Verslag"></nldd-text-cell></nldd-list-item-segment>');
+		await waitForUpdate(el);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
 	});
 });

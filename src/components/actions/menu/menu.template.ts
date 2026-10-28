@@ -36,10 +36,10 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 	return html`
 		<div class="menu"
 			tabindex="-1"
-			@touchstart=${this._handleMenuTouchStart}
-			@touchmove=${this._handleMenuTouchMove}
-			@touchend=${this._handleMenuTouchEnd}
-			@touchcancel=${this._handleMenuTouchEnd}
+			@touchstart=${this._pointer.touchStart}
+			@touchmove=${this._pointer.touchMove}
+			@touchend=${this._pointer.touchEnd}
+			@touchcancel=${this._pointer.touchEnd}
 		>
 			${isRoot ? html`
 				<div class="menu__header"
@@ -75,6 +75,7 @@ export function menuTemplate(this: NLDDMenu, isEmpty: boolean, variant: MenuVari
 				` : nothing}
 				<div class="menu__list"
 					role=${menuRole}
+					aria-label=${this._listLabel || nothing}
 				>
 					<slot @slotchange=${this._claimItems}></slot>
 				</div>

@@ -1075,3 +1075,29 @@ describe('nldd-tab-bar – overloop', () => {
 		expect(hidden(items)).toEqual([false, false, false, false]);
 	});
 });
+
+describe('nldd-tab-bar – tabs with href', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const warned = (warn: { mock: { calls: unknown[][] } }) =>
+		warn.mock.calls.some(([message]) => String(message).includes('add `navigation`'));
+
+	it('warns once when tabs go to another page without navigation', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-tab-bar accessible-label="Project"><nldd-tab-bar-item text="Overzicht" href="/overzicht" current></nldd-tab-bar-item><nldd-tab-bar-item text="Metrics" href="/metrics"></nldd-tab-bar-item></nldd-tab-bar>');
+		await waitForUpdate(el);
+		expect(warned(warn)).toBe(true);
+	});
+
+	it('says nothing with navigation', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-tab-bar navigation accessible-label="Project"><nldd-tab-bar-item text="Overzicht" href="/overzicht" current></nldd-tab-bar-item></nldd-tab-bar>');
+		await waitForUpdate(el);
+		expect(warned(warn)).toBe(false);
+	});
+});

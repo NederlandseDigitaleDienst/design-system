@@ -15,6 +15,44 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **A download button that saves the file.** `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-list-item` and `nldd-list-item-segment` take `download` beside `href`, and a screen reader hears that the link downloads a file.
+- **Accessibility fixes from three audits.** Focus no longer hides under a sticky header or footer of `nldd-page` (2.4.11), the steps of a narrow `nldd-step-bar` are no longer invisible tab stops (2.4.7), `nldd-sheet` no longer closes on a press that ends inside it (2.5.2), the arrow keys of `nldd-segmented-control` fire `item-change` (2.1.1), a long site name wraps (1.4.12), and the list under a search field, combo box or token field has a name (4.1.2). See Fixed and Added.
+- **The caret of `nldd-code-editor` is whole at the start of a line.** See Fixed.
+- **5 new icons:** `ear` (alias `hearing`), `ear-slash` (aliases `no-hearing` and `deaf`), `head-profile-with-brain` (aliases `brain`, `cognition` and `mind`), `lips` (alias `mouth`) and `flower`. `eyeglasses` is redrawn.
+
+### Added
+
+- **Icons `ear`, `ear-slash`, `head-profile-with-brain`, `lips` and `flower`.** `hearing` leads to the ear, `no-hearing` and `deaf` to the crossed-out ear, `brain`, `cognition` and `mind` to the head, and `mouth` to the lips. `eyeglasses` is redrawn.
+- **A warning in development for `nldd-tab-bar` tabs with `href` but no `navigation`.** Such tabs go to another page, so the bar belongs in a nav with `aria-current="page"`; as a tablist it reported a tab selected after an arrow key while the page stayed where it was.
+- **A warning in development when the logo and the website title of `nldd-top-navigation-bar` link to the same page.** Two links to the start page side by side are two tab stops and the same link twice in a screen reader's list of links; leave out `logo-href`. A logo that goes elsewhere, such as a parent site, gets no warning.
+- **`accessible-label` on `nldd-menu`**, on the element with the menu or listbox role. Without it the menu takes the name of its anchor, and a submenu the text of the item that opens it, so the suggestions under a search field are no longer a listbox without a name (WCAG 4.1.2). The list of an `nldd-combo-box` or `nldd-token-field` takes the name of the field.
+- **`download` on `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-list-item` and `nldd-list-item-segment`.** Like `target` and `rel` it only counts with `href`, and it goes onto the link as it is: without a value the browser saves the file under the name from the URL, with one under that name. A browser ignores it for a URL on another origin and opens the file there. A screen reader hears "downloadt bestand" after the name, as it hears "opent in nieuw tabblad" for `target="_blank"`, and in development a `target` beside `download` gets a warning, since a download opens no tab. A download button opened the file in the browser before, and could only save it with a script of your own.
+- **`nldd-date-field` says what `value` cannot.** `value` holds a valid date or nothing, so text that is no date read as an empty field: a form submitted it as empty, and a site could not tell the two apart. The field now reports `badInput` for it, `rangeUnderflow` or `rangeOverflow` for a typed date outside `min` or `max`, and with `range` and `required` `valueMissing` for a period with only a start. A form no longer submits then, and `nldd-form` marks the field invalid. The field does not turn itself invalid: without a submit, as in a filter, set `invalid` from `validity` on `change`. The text stays standing, so it can be corrected.
+- **`nldd-time-field` says what `value` cannot**, as `nldd-date-field` now does. Text that is no time reports `badInput`, a typed time outside `min` or `max` `rangeUnderflow` or `rangeOverflow`, so a form no longer submits it as empty and `nldd-form` marks the field invalid. The field does not turn itself invalid: without a submit, set `invalid` from `validity` on `change`.
+
+### Fixed
+
+- **A date outside `min` or `max` in `nldd-date-field` stays as typed.** After a valid date, typing one outside the bounds emptied the field halfway, so you could not see what was wrong. The text now stands, `value` stays empty and `validity` says which bound it crossed.
+- **`nldd-top-navigation-bar` turns compact again after it is moved in the DOM.** Taken out and put back, it no longer watched its width, so on a narrow screen the menu bar stayed wide, without a menu button and with items running off the screen.
+- **The list in the narrow menu of `nldd-top-navigation-bar` follows the name of the menu bar.** It took that name once, when the menu was first opened, and kept it after a change of language or a label the site set later.
+- **`nldd-toolbar` keeps following its width after it is moved in the DOM.** Taken out and put back, as a framework does when it moves or keeps an element, it no longer watched its own size: items that had gone into the overflow menu stayed there on a wider screen.
+- **A time outside `min` or `max` in `nldd-time-field` stays as typed**, the same fix as in `nldd-date-field`: after a valid time, typing one outside the bounds emptied the field halfway.
+- **A form reset clears text that is no date or time** in `nldd-date-field` and `nldd-time-field`. Such text leaves `value` empty, so resetting to an empty value changed nothing and the text stayed.
+- **An autofilled field keeps its rounded corners.** The input inside `nldd-text-field`, `nldd-search-field`, `nldd-password-field`, `nldd-combo-box`, `nldd-date-field`, `nldd-time-field` and `nldd-multi-line-text-field` was a rectangle, drawn over the rounded border of the field. Its autofill color showed a square corner over the curve, in Safari on a phone at the left of the field. The input now follows the inner curve of the border.
+- **The end of a long line in an `nldd-code-viewer` with `appearance="simple"` no longer stays under the copy button.** Scrolled all the way to the right, the last characters sat behind the button; the line now ends beside it, with the same gap as the other appearances.
+- **The ribbon of `nldd-top-navigation-bar` no longer stays at the top in Safari when `nldd-page` is the scroller.** In Safari a piece of the ribbon sits fixed behind the logo, so it carries on when you pull the page down, and goes away as soon as the page scrolls. It only watched the document scroll, so in an app that lets `nldd-page` scroll, with `height: 100%` on `html` and `body`, it stayed at the top of the screen over the content. It now goes away when either one scrolls.
+- **A long name in `nldd-top-navigation-bar` wraps on a narrow screen**, where it has a line of its own under the ribbon. It stayed on one line and ran off the screen with wider text spacing (WCAG 1.4.12). On md and lg it sits beside the menu and stays on one line.
+- **The steps of a narrow `nldd-step-bar` are no longer tab stops you cannot see.** Below the sm breakpoint the bar folds into a line of text and a segmented bar, and keeps the steps visually hidden for screen readers. A step that was a link or a button still took focus there, so Tab landed nowhere visible, nine times in a long flow. Those steps now leave the tab order while the bar is narrow, and come back when it widens (WCAG 2.4.7).
+- **What gets focus in an `nldd-page` with a sticky header or footer is no longer hidden under them.** The page scrolls in a scroller of its own, which did not count the bars, so the browser took an element under a bar for one in view and left it there: a field at the bottom of a form in a sheet under the submit button, an option in a long list under the title bar. The scroller now keeps the height of both bars and their fade clear when it scrolls something into view (WCAG 2.4.11).
+- **The fade above a sticky footer of `nldd-page` goes away at the end of the page**, as the one under a sticky header only shows once you have scrolled: with nothing left below, there is nothing for it to fade.
+- **`nldd-sheet` no longer closes when you press on the backdrop and release inside the sheet.** A press and a release on two places fire their click on the element they share, the dialog, so the sheet read it as a press on the backdrop, and what you had typed was gone. It now closes only when the press and the release are both on the backdrop (WCAG 2.5.2). `nldd-window` already did.
+- **An arrow key in `nldd-segmented-control` fires `item-change` on the item it selects**, as a click and the space bar do. It only fired `change` on the control, so an app that listened on the item showed the new choice and never loaded it (WCAG 2.1.1).
+- **The box of a task in `nldd-text-editor` takes a press on the space around it.** Only the icon took one, so on a phone a tap just beside it placed the caret instead. It now takes the full height of the line and the space up to the text, without making the line taller; a press on the text still places the caret.
+- **A selection in `nldd-text-editor` no longer shows a strip above a quote.** A quote line is a little taller than plain text, and the selection on it sits centered, so after a selected empty line a thin strip of the page showed between the two. Each piece of a selection now runs down to the next.
+- **The caret of `nldd-code-editor` is no longer clipped at the start of a line.** Without a frame the editor had no room at its left edge, so part of the caret fell off at the first position of every line. It now has the room of the caret and sits centered on the insertion point, as in `nldd-text-editor`. The text moves 2px to the right; with `appearance="input-field"` nothing changes.
+
 ## [0.13.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.12.0...v0.13.0) (2026-10-27)
 
 ### Highlights
@@ -65,23 +103,6 @@ here; consult the commit history if you need that level of detail.
 - **The "+N" of `nldd-avatar-group` fits its disc at every size.** It had a fixed font size, so at size 16 the number ran past the disc, and with two or three digits the "+" fell under the avatar before it.
 
 ## [0.12.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.11.0...v0.12.0) (2026-10-26)
-
-<!--
-  GEGENEREERD BESTAND — niet handmatig bewerken.
-  Kopie van de root CHANGELOG.md (onderhouden door semantic-release).
-  Hergenereren: npm run generate:skill-docs
--->
-
-# Changelog
-
-All notable changes to the NLDD Designsysteem are documented here.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Versions are bumped automatically by semantic-release on merge to main —
-the type of conventional-commit determines the release. Conventional types
-`chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
-here; consult the commit history if you need that level of detail.
 
 ### Highlights
 

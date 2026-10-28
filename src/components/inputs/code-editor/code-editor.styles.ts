@@ -21,7 +21,9 @@ export const codeEditorStyles = css`
 		--_code-editor-input-field-border-color: transparent;
 		--_code-editor-input-field-border-shadow: none;
 		--_code-editor-padding-block: 0px;
-		--_code-editor-padding-inline: 0px;
+		/* Room for the caret's own ink at the first and last position of a line.
+		   Without it the edge carets are clipped. */
+		--_code-editor-padding-inline: var(--_code-editor-caret-width);
 		--_code-editor-content-color: var(--semantics-content-color);
 		--_code-editor-font: var(--primitives-font-monospace-sm-regular-snug);
 		--_code-editor-rows: 6;
@@ -151,6 +153,9 @@ export const codeEditorStyles = css`
 	:host .cm-cursor.cm-cursor {
 		border-left-color: var(--_code-editor-caret-color);
 		border-left-width: var(--_code-editor-caret-width);
+		/* CodeMirror centers its own 1.2px caret with a -0.6px margin. Ours is wider,
+		   so recenter it on the insertion point from its own width. */
+		margin-left: calc(var(--_code-editor-caret-width) / -2);
 	}
 
 	/* Resize model — rows is the floor in every mode:

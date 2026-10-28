@@ -4,9 +4,7 @@ import '../../actions/button/button.js';
 import '../../content/identity/identity.js';
 import '../../content/rich-text/rich-text.js';
 import '../../layout/container/container.js';
-
-// Self-contained SVG avatar (data URI) so the story needs no external image.
-const AVATAR = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23185FA5'/%3E%3Ctext x='20' y='25' font-family='sans-serif' font-size='14' fill='white' text-anchor='middle'%3EAV%3C/text%3E%3C/svg%3E`;
+import '../../content/avatar/avatar.js';
 
 export default {
 	title: 'Components/Actions/Menu',
@@ -697,9 +695,13 @@ export const MetHeaderEnFooter = {
 					<nldd-identity
 						text="Anouk de Vries"
 						supporting-text="anouk@example.nl"
-						avatar-src=${AVATAR}
-						avatar-alt=""
-					></nldd-identity>
+					>
+						<nldd-avatar
+							slot="avatars"
+							name="Anouk de Vries"
+							decorative
+						></nldd-avatar>
+					</nldd-identity>
 				</nldd-container>
 
 				<nldd-menu-item

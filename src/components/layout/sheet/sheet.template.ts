@@ -8,6 +8,7 @@ export function sheetTemplate(component: NLDDSheet) {
 			aria-label=${component._resolvedAccessibleLabel}
 			aria-modal="true"
 			@pointerdown=${component._handleDialogPointerDown}
+			@pointerup=${component._handleDialogPointerUp}
 			@click=${component._handleDialogClick}
 			@cancel=${component._handleCancel}
 			@close=${component._handleDialogClose}

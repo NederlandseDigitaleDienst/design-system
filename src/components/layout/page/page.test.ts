@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './page.js';
 import '../sheet/sheet.js';
 import '../split-views/side-by-side-split-view/side-by-side-split-view.js';
@@ -439,4 +440,57 @@ describe('nldd-page', () => {
 		});
 	});
 
+});
+
+describe('nldd-page – sticky bars and focus', () => {
+	let wrapper: HTMLElement;
+	let unloadTokens: () => void;
+
+	afterEach(() => {
+		if (wrapper) cleanup(wrapper);
+		unloadTokens?.();
+	});
+
+	const page = async () => {
+		unloadTokens = loadTokens();
+		wrapper = await fixture(`
+			<div style="height: 400px; display: flex">
+				<nldd-page sticky-header sticky-footer data-scroll="nested">
+					<div slot="header" style="height: 56px">Kop</div>
+					${Array.from({ length: 30 }, (_, i) => `<button style="display: block; height: 32px">Optie ${i}</button>`).join('')}
+					<div slot="footer" style="height: 64px"><button>Toepassen</button></div>
+				</nldd-page>
+			</div>
+		`);
+		const el = wrapper.querySelector('nldd-page') as HTMLElement & { updateComplete: Promise<boolean> };
+		await el.updateComplete;
+		await nextFrames();
+		await nextFrames();
+		return el;
+	};
+
+	it('scrolls a focused element clear of the footer and of the header', async () => {
+		const el = await page();
+		const buttons = [...el.querySelectorAll<HTMLButtonElement>(':scope > button')];
+		const footer = el.shadowRoot!.querySelector('.page__footer')!;
+		const header = el.shadowRoot!.querySelector('.page__header')!;
+		// The nearest scroll an arrow key or Tab does for the next row, not the
+		// centering a programmatic focus() does in Chromium.
+		buttons[15].scrollIntoView({ block: 'nearest' });
+		await nextFrames();
+		expect(buttons[15].getBoundingClientRect().bottom).toBeLessThanOrEqual(footer.getBoundingClientRect().top + 0.5);
+		buttons[3].scrollIntoView({ block: 'nearest' });
+		await nextFrames();
+		expect(buttons[3].getBoundingClientRect().top).toBeGreaterThanOrEqual(header.getBoundingClientRect().bottom - 0.5);
+	});
+
+	it('drops the fade above the footer once scrolled to the end', async () => {
+		const el = await page();
+		const footer = el.shadowRoot!.querySelector('.page__footer')!;
+		expect(footer.classList.contains('is-at-end')).toBe(false);
+		el.querySelector<HTMLButtonElement>(':scope > button:last-of-type')!.focus();
+		await nextFrames();
+		await nextFrames();
+		expect(footer.classList.contains('is-at-end')).toBe(true);
+	});
 });

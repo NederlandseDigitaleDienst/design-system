@@ -14,6 +14,7 @@ export const template = (
 	href: string | undefined,
 	target: string | undefined,
 	rel: string | undefined,
+	download: string | undefined,
 	linkHint?: string,
 	actionTabindex?: string,
 	isHighlighted = false,
@@ -56,6 +57,7 @@ export const template = (
 				href=${href}
 				target=${target ?? nothing}
 				rel=${linkRel(rel, target) || nothing}
+				download=${download ?? nothing}
 				aria-label=${ariaLabel}
 				aria-disabled=${disabled ? 'true' : nothing}
 				aria-expanded=${ariaExpanded}

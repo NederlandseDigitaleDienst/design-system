@@ -115,6 +115,7 @@ export const timeFieldStyles = css`
 	/* # Elements */
 
 	.time-field__input {
+		border-radius: calc(var(--_time-field-corner-radius) - var(--semantics-input-fields-border-width));
 		box-sizing: border-box;
 		margin: 0;
 		outline: none;

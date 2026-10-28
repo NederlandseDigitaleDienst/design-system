@@ -259,7 +259,7 @@ describe('nldd-top-navigation-bar – menu sheet items', () => {
 
 		// Opens the sheet (loads deps) and syncs the list items into it.
 		await (el as any)._onMenuButtonClick();
-		const list = (el as any)._globalMenuSheetList as HTMLElement;
+		const list = (el as any)._menuSheet.list as HTMLElement;
 		const listItems = Array.from(list.querySelectorAll('nldd-list-item')) as HTMLElement[];
 		expect(listItems.length).toBe(2);
 		await Promise.all(listItems.map(li => (li as any).updateComplete));
@@ -292,7 +292,7 @@ describe('nldd-top-navigation-bar – menu sheet items', () => {
 		await waitForUpdate(el);
 
 		await (el as any)._onMenuButtonClick();
-		const list = (el as any)._globalMenuSheetList as HTMLElement;
+		const list = (el as any)._menuSheet.list as HTMLElement;
 		const [home, over] = Array.from(list.querySelectorAll('nldd-list-item')) as HTMLElement[];
 		await waitForUpdate(over);
 
@@ -330,7 +330,7 @@ describe('nldd-top-navigation-bar – menu sheet drill-down', () => {
 		// click: it's async (it lazy-loads the sheet's dependencies) and returns a
 		// promise we can await; a synthetic click gives no handle to await on.
 		await (host as any)._onMenuButtonClick();
-		const list = (host as any)._globalMenuSheetList as HTMLElement;
+		const list = (host as any)._menuSheet.list as HTMLElement;
 		await Promise.all(
 			Array.from(list.querySelectorAll('nldd-list-item')).map(li => (li as any).updateComplete),
 		);
@@ -345,7 +345,7 @@ describe('nldd-top-navigation-bar – menu sheet drill-down', () => {
 		el = await fixture<NLDDTopNavigationBar>(drillFixture);
 		await waitForUpdate(el);
 		const list = await openSheet(el);
-		const titleBar = (el as any)._globalMenuSheetTitleBar as HTMLElement;
+		const titleBar = (el as any)._menuSheet.titleBar as HTMLElement;
 		expect(titleBar).not.toBeNull();
 
 		// Root: a link row + a submenu row with a chevron, no back button.
@@ -379,7 +379,7 @@ describe('nldd-top-navigation-bar – menu sheet drill-down', () => {
 			.shadowRoot!.querySelector<HTMLButtonElement>('button.list-item__action')!.click();
 		await waitForUpdate(el);
 		// Walk back to the root level.
-		const titleBar = (el as any)._globalMenuSheetTitleBar as HTMLElement;
+		const titleBar = (el as any)._menuSheet.titleBar as HTMLElement;
 		expect(titleBar).not.toBeNull();
 		titleBar.dispatchEvent(new CustomEvent('back', { bubbles: true, composed: true }));
 		await waitForUpdate(el);
@@ -790,4 +790,116 @@ describe('nldd-top-navigation-bar logo', () => {
 			expect(svg.getBoundingClientRect().height).toBe(logo.getBoundingClientRect().height);
 		});
 	}
+});
+
+describe('nldd-top-navigation-bar – logo and title to the same page', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const warned = (warn: { mock: { calls: unknown[][] } }) =>
+		warn.mock.calls.some(([message]) => String(message).includes('leave out `logo-href`'));
+
+	it('warns once when logo and website title link to the same page', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`<nldd-top-navigation-bar website-title="Mijn Dienst" website-href="/" logo-href="${location.origin}/"></nldd-top-navigation-bar>`);
+		(el as NLDDTopNavigationBar).websiteTitle = 'Mijn Dienst – Home';
+		await (el as NLDDTopNavigationBar).updateComplete;
+		expect(warn.mock.calls.filter(([message]) => String(message).includes('leave out `logo-href`'))).toHaveLength(1);
+	});
+
+	it('says nothing when they link to different pages', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-top-navigation-bar website-title="Mijn Dienst" website-href="/mijn-dienst" logo-href="https://www.rijksoverheid.nl"></nldd-top-navigation-bar>');
+		expect(warned(warn)).toBe(false);
+	});
+});
+
+describe('nldd-top-navigation-bar – ribbon at the top', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it.each([
+		['a logo with a wordmark and a link', 'logo-title="Mijn Dienst" logo-href="/"'],
+		['a logo with a link', 'logo-href="/"'],
+		['a logo without a link', ''],
+	])('keeps the ribbon that hides on scroll inside %s', async (_, attributes) => {
+		el = await fixture(`<nldd-top-navigation-bar ${attributes}></nldd-top-navigation-bar>`);
+		expect(el.shadowRoot!.querySelector('.top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top')).not.toBeNull();
+	});
+});
+
+describe('nldd-top-navigation-bar – moved in the DOM', () => {
+	let wrap: HTMLDivElement;
+	let removeTokens: () => void;
+
+	beforeEach(() => { removeTokens = loadTokens(); });
+	afterEach(() => {
+		if (wrap) cleanup(wrap);
+		removeTokens();
+	});
+
+	const frames = (n = 4) => new Promise<void>(r => {
+		const step = (k: number) => (k ? requestAnimationFrame(() => step(k - 1)) : r());
+		step(n);
+	});
+
+	it('still turns compact on a narrow screen after it is taken out and put back', async () => {
+		wrap = await fixture<HTMLDivElement>(`
+			<div style="width:1200px">
+				<nldd-top-navigation-bar website-title="Mijn Dienst">
+					<nldd-menu-bar slot="global">
+						<nldd-menu-bar-item text="Aanvragen" href="/aanvragen"></nldd-menu-bar-item>
+						<nldd-menu-bar-item text="Dossiers" href="/dossiers"></nldd-menu-bar-item>
+					</nldd-menu-bar>
+				</nldd-top-navigation-bar>
+			</div>
+		`);
+		const bar = wrap.querySelector('nldd-top-navigation-bar')!;
+		const menuBar = bar.querySelector('nldd-menu-bar')!;
+		await waitForUpdate(bar);
+		await frames();
+		expect(menuBar.hasAttribute('compact')).toBe(false);
+
+		bar.remove();
+		wrap.appendChild(bar);
+		await waitForUpdate(bar);
+		await frames();
+		wrap.style.width = '360px';
+		await frames(6);
+		expect(menuBar.hasAttribute('compact')).toBe(true);
+	});
+});
+
+describe('nldd-top-navigation-bar – the name of the menu sheet list', () => {
+	let el: NLDDTopNavigationBar;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		document.querySelectorAll('nldd-sheet').forEach(sheet => sheet.remove());
+	});
+
+	it('follows a label the site sets on the menu bar after the sheet was first opened', async () => {
+		el = await fixture<NLDDTopNavigationBar>(`
+			<nldd-top-navigation-bar website-title="Mijn Dienst">
+				<nldd-menu-bar slot="global">
+					<nldd-menu-bar-item text="Aanvragen" href="/aanvragen"></nldd-menu-bar-item>
+				</nldd-menu-bar>
+			</nldd-top-navigation-bar>
+		`);
+		await waitForUpdate(el);
+		await (el as any)._onMenuButtonClick();
+		const list = (el as any)._menuSheet.list as HTMLElement;
+		expect(list.getAttribute('aria-label')).toBe('Hoofdnavigatie');
+
+		el.querySelector('nldd-menu-bar')!.setAttribute('accessible-label', 'Mijn Dienst');
+		await (el as any)._onMenuButtonClick();
+		expect(list.getAttribute('aria-label')).toBe('Mijn Dienst');
+	});
 });

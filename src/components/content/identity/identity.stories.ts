@@ -4,12 +4,7 @@ import '../avatar-group/avatar-group.js';
 import '../avatar/avatar.js';
 import '../../navigation/link/link.js';
 import '../../layout/container/container.js';
-
-// A self-contained SVG avatar (data URI) for the avatar-src attribute demo, so
-// the stories don't depend on external images. Slotted avatars use nldd-avatar
-// with initials instead.
-const AVATAR_IMAGE =
-	`data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23185FA5'/%3E%3Ctext x='20' y='25' font-family='sans-serif' font-size='14' fill='white' text-anchor='middle'%3EJJ%3C/text%3E%3C/svg%3E`;
+import { VERMEER } from '../../../docs/story-portraits.js';
 
 /**
  * Een identity toont auteurs of redacteuren van content: optionele avatar(s),
@@ -93,7 +88,7 @@ export const ZonderSupportingText = {
 export const EnkeleAvatarViaAttribuut = {
 	render: () => html`
 		<nldd-identity
-			avatar-src=${AVATAR_IMAGE}
+			avatar-src=${VERMEER}
 			text="Jan Jansen"
 			supporting-text="Redacteur · 13 juli 2026"
 		></nldd-identity>

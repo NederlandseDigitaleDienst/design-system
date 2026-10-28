@@ -44,6 +44,7 @@ export default {
 		accessibleLabel: '',
 		href: '',
 		target: '',
+		download: '',
 		rel: '',
 	},
 	argTypes: {
@@ -68,6 +69,10 @@ export default {
 			mapping: { '(geen)': '' },
 			description: 'Link target (alleen gebruikt als href is gezet)',
 			table: { defaultValue: { summary: '(geen)' } },
+		},
+		download: {
+			control: 'text',
+			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
 		rel: {
 			control: 'text',
@@ -206,6 +211,7 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 	<nldd-card
 		href=${args.href || nothing}
 		target=${args.target || nothing}
+		download=${args.download || nothing}
 		rel=${args.rel || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
 		style="max-width: 360px;"

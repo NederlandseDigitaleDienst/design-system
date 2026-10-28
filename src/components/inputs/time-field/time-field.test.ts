@@ -623,3 +623,71 @@ describe('nldd-time-field – formulier', () => {
 		cleanup(form);
 	});
 });
+
+describe('nldd-time-field meldt wat value niet kan zeggen', () => {
+	let el: NLDDTimeField;
+	let form: HTMLFormElement | undefined;
+
+	afterEach(() => {
+		if (form) { cleanup(form); form = undefined; } else if (el) cleanup(el);
+	});
+
+	function input(): HTMLInputElement {
+		return el.shadowRoot!.querySelector('input')!;
+	}
+
+	async function send(text: string, commit = true): Promise<void> {
+		input().value = text;
+		input().dispatchEvent(new Event('input'));
+		await waitForUpdate(el);
+		if (!commit) return;
+		input().dispatchEvent(new Event('change'));
+		await waitForUpdate(el);
+	}
+
+	it('keeps a time outside min/max as typed after a valid one, while value empties', async () => {
+		el = await fixture<NLDDTimeField>('<nldd-time-field min="09:00" max="17:00"></nldd-time-field>');
+		await send('10:00');
+		await send('18:00', false);
+		expect(el.value).toBe('');
+		expect(input().value).toBe('18:00');
+	});
+
+	it('says that text which is no time is bad input', async () => {
+		el = await fixture<NLDDTimeField>('<nldd-time-field></nldd-time-field>');
+		await send('Test');
+		expect(el.value).toBe('');
+		expect(el.internals.validity.badInput).toBe(true);
+		expect(el.internals.validationMessage).toBe('Vul een tijd in als uu:mm');
+	});
+
+	it('names the bound a typed time falls outside', async () => {
+		el = await fixture<NLDDTimeField>('<nldd-time-field min="09:00" max="17:00"></nldd-time-field>');
+		await send('08:00');
+		expect(el.internals.validity.rangeUnderflow).toBe(true);
+		expect(el.internals.validationMessage).toBe('Vul een tijd in vanaf 09:00');
+		await send('18:00');
+		expect(el.internals.validity.rangeOverflow).toBe(true);
+		expect(el.internals.validationMessage).toBe('Vul een tijd in tot en met 17:00');
+		await send('12:00');
+		expect(el.internals.validity.valid).toBe(true);
+	});
+
+	it('keeps a form with text that is no time from submitting, and clears the text on reset', async () => {
+		form = await fixture<HTMLFormElement>('<form><nldd-time-field name="start"></nldd-time-field></form>');
+		el = form.querySelector('nldd-time-field')!;
+		await waitForUpdate(el);
+		await send('Test');
+		expect(form.checkValidity()).toBe(false);
+		form.reset();
+		await waitForUpdate(el);
+		expect(input().value).toBe('');
+		expect(form.checkValidity()).toBe(true);
+	});
+
+	it('does not turn itself invalid: when to show it is the caller\'s', async () => {
+		el = await fixture<NLDDTimeField>('<nldd-time-field></nldd-time-field>');
+		await send('Test');
+		expect(el.invalid).toBe(false);
+	});
+});

@@ -1,11 +1,12 @@
 import { html, nothing, TemplateResult } from 'lit';
 import type { NLDDCard } from './card.js';
 import { linkRel } from '../../../utilities/link-rel.js';
-import { linkHintKey } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 
 export function cardTemplate(component: NLDDCard): TemplateResult {
 	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
-	const hintKey = linkHintKey(component.href, component.target);
+	const hintKey = downloadLinkHintKey(component.href, component.target, component.download);
+	if (component.href) warnDownloadTarget(component, component.download, component.target);
 	const linkHint = hintKey ? component._t(`components.card.${hintKey}`) : '';
 	// The overlay control has no text, so its name comes from aria-label, with
 	// the link hint appended. accessible-label names the link or button when
@@ -22,6 +23,7 @@ export function cardTemplate(component: NLDDCard): TemplateResult {
 					href=${component.href}
 					target=${component.target || nothing}
 					rel=${linkRel(component.rel, component.target) || nothing}
+					download=${component.download ?? nothing}
 					aria-label=${linkLabel}
 				></a>
 			` : component.button ? html`

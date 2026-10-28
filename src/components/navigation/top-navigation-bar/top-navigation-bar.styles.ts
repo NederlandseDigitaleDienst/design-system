@@ -115,6 +115,10 @@ export const topNavigationBarStyles = css`
 		justify-content: center;
 	}
 
+	.top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top {
+		display: none;
+	}
+
 	/* WebKit only: Chrome paints nothing above the page and leaves the fixed
 	   ::after behind, so a hard pull shows a gap between it and the logo. */
 	@supports (animation-timeline: scroll()) and (font: -apple-system-body) {
@@ -135,9 +139,22 @@ export const topNavigationBarStyles = css`
 			pointer-events: none;
 		}
 
+		/* A fixed element only sees the document scroll, and nldd-page can be
+		   the scroller. This one sees that and goes visibility: hidden on scroll;
+		   the ::after inherits it. */
+		.top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top {
+			display: block;
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			animation: top-navigation-bar-ribbon-at-top linear both;
+			animation-timeline: scroll(nearest);
+			animation-range: 0 1px;
+		}
+
 		/* Safari only paints above the page while something fixed touches the
 		   top edge. This sits behind the logo, gone as soon as the page scrolls. */
-		.top-navigation-bar__logo::after {
+		.top-navigation-bar__ribbon-at-top::after {
 			content: '';
 			position: fixed;
 			top: 0;
@@ -145,7 +162,6 @@ export const topNavigationBarStyles = css`
 			width: var(--_top-navigation-bar-logo-width);
 			height: var(--_top-navigation-bar-logo-height);
 			background-color: var(--_top-navigation-bar-logo-background-color);
-			pointer-events: none;
 			animation: top-navigation-bar-ribbon-at-top linear both;
 			animation-timeline: scroll(root);
 			animation-range: 0 1px;
@@ -367,6 +383,10 @@ export const topNavigationBarStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-top: var(--primitives-space-4);
+			min-width: 0;
+			white-space: normal;
+			overflow-wrap: break-word;
+			text-align: center;
 		}
 
 		@container (min-width: ${mdMin}) {

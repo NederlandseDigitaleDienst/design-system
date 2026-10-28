@@ -291,6 +291,22 @@ describe('nldd-segmented-control – keyboard navigation', () => {
 		expect(el.value).toBe('b');
 	});
 
+	it('fires item-change on the item an arrow key selects, as a click does', async () => {
+		el = await fixture<NLDDSegmentedControl>(radioFixture('a'));
+		await waitForUpdate(el);
+		const items = el.querySelectorAll<NLDDSegmentedControlItem>('nldd-segmented-control-item');
+		const itemChange = vi.fn();
+		const change = vi.fn();
+		items[1].addEventListener('item-change', itemChange);
+		el.addEventListener('change', change);
+		pressKey('ArrowRight');
+		await waitForUpdate(el);
+		expect(itemChange).toHaveBeenCalledOnce();
+		expect(itemChange.mock.calls[0][0].detail).toEqual({ value: 'b', checked: true });
+		expect(change).toHaveBeenCalledOnce();
+		expect(el.value).toBe('b');
+	});
+
 	it('ArrowLeft selects previous item', async () => {
 		el = await fixture<NLDDSegmentedControl>(radioFixture('b'));
 		await waitForUpdate(el);

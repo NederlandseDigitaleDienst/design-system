@@ -7,6 +7,14 @@
  * the field is left. Error messages belong to nldd-form-field, not here. This
  * field reflects only `invalid` / `valid`, like nldd-text-field.
  *
+ * `value` holds a valid time or nothing, so an empty field and one with text
+ * that is no time both read as ''. `validity` tells them apart: `badInput` for
+ * text that is no time, `rangeUnderflow` / `rangeOverflow` for a time outside
+ * `min` / `max`. A form does not submit then, and nldd-form marks the field
+ * invalid. Without a submit, as in a filter that applies at once, the moment is
+ * yours: `field.invalid = !field.validity.valid` on `change`, with a message of
+ * your own in the nldd-form-field.
+ *
  * What you do in the picker is a preview until you leave it. The field shows
  * the time right away but commits it on close. "Klaar" and Enter keep the
  * choice, and so does a click outside once you have picked something. Cancel
@@ -45,7 +53,7 @@ import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { NLDDPopover } from '../../layout/popover/popover.js';
 import type { NLDDTimePicker } from '../time-picker/time-picker.js';
-import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
+import { FormAssociated, type FormValue, type OwnValidity } from '../../../utilities/form-associated-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { timeFieldStyles } from './time-field.styles.js';
@@ -53,70 +61,18 @@ import { timeFieldTemplate } from './time-field.template.js';
 import { nlddTimeFieldTranslations, type NLDDTimeFieldTranslations } from './time-field.i18n.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import {
+	checkText,
+	commitText,
+	parseTime,
+	resolveRules,
+	shift,
+	startingPoint,
+	type TimeProblem,
+	type TimeRules,
+} from './time-field.times.js';
 
-/** Minutes since midnight of the last time on a day. */
-const LAST_MINUTE_OF_DAY = 23 * 60 + 59;
-
-function toMinutes(time: string): number {
-	const [hours, minutes] = time.split(':');
-	return Number(hours) * 60 + Number(minutes);
-}
-
-function fromMinutes(total: number): string {
-	const hours = Math.floor(total / 60);
-	const minutes = total % 60;
-	return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-}
-
-function toTime(hours: number, minutes: number): string | null {
-	if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return null;
-	return fromMinutes(hours * 60 + minutes);
-}
-
-/**
- * Read a typed time generously. Deliberately not a mask: reformatting per
- * keystroke moves the caret, breaks backspace mid-value and confuses screen
- * readers, so we accept what people type and normalize once on commit.
- *
- * Accepts 9, 09, 9:30, 9.30, 9,30, 9u30, 930 and 0930. After a letter the
- * minutes may be left off ("9u" is a finished thought), after punctuation they
- * may not: "9:" is halfway through typing and should not produce a value yet.
- */
-export function parseTime(raw: string): string | null {
-	const trimmed = raw.trim();
-	if (trimmed === '') return null;
-	const withLetter = /^(\d{1,2})\s*[uh]\s*(\d{1,2})?$/i.exec(trimmed);
-	if (withLetter) return toTime(Number(withLetter[1]), Number(withLetter[2] ?? 0));
-	const withPunctuation = /^(\d{1,2})\s*[:.,]\s*(\d{1,2})$/.exec(trimmed);
-	if (withPunctuation) return toTime(Number(withPunctuation[1]), Number(withPunctuation[2]));
-	const bare = /^\d{1,4}$/.exec(trimmed);
-	if (bare) {
-		const digits = bare[0];
-		if (digits.length <= 2) return toTime(Number(digits), 0);
-		const split = digits.length === 3 ? 1 : 2;
-		return toTime(Number(digits.slice(0, split)), Number(digits.slice(split)));
-	}
-	return null;
-}
-
-/**
- * The nearest time that falls on the step, counted from `base`. Input exactly
- * in between rounds up.
- *
- * Never rolls over the edge of the day: if rounding up would pass 23:59, step
- * back instead. Rolling over to 00:00 silently shifts the day, and a consumer
- * who puts this field next to a date field then has a bug nobody sees
- * coming.
- */
-export function roundToStep(time: string, step: number, base = '00:00'): string {
-	if (step <= 1) return time;
-	const baseMinutes = toMinutes(base);
-	const steps = Math.floor((toMinutes(time) - baseMinutes) / step + 0.5);
-	let rounded = baseMinutes + steps * step;
-	while (rounded > LAST_MINUTE_OF_DAY) rounded -= step;
-	while (rounded < 0) rounded += step;
-	return fromMinutes(rounded);
-}
+export { parseTime, roundToStep } from './time-field.times.js';
 
 @customElement('nldd-time-field')
 export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
@@ -258,47 +214,29 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		return this._display;
 	}
 
-	/** The base the step counts from. `min` when there is one, so a series that
-	 *  starts at :07 also works with a step of 15, otherwise midnight. Taken from
-	 *  `<input type="time">`, which uses `min` the same way. */
-	private get _stepBase(): string {
-		return parseTime(this.min) ?? '00:00';
+	private get _rules(): TimeRules {
+		return resolveRules(this.min, this.max, this.step);
 	}
 
-	private _withinBounds(time: string): boolean {
-		const min = parseTime(this.min);
-		const max = parseTime(this.max);
-		// `HH:mm` compares lexically in the same order as it reads on the clock.
-		if (min && time < min) return false;
-		if (max && time > max) return false;
-		return true;
-	}
-
-	/** The parsed time, or '' when it is unreadable or out of bounds. In both
-	 *  cases the raw text stays put, so the user sees and can repair what they
-	 *  wrote. */
-	private _commit(parsed: string | null): string {
-		return parsed && this._withinBounds(parsed) ? parsed : '';
-	}
-
-	/** Rounding happens on commit, not on input: otherwise "09:1" jumps to 09:00
-	 *  before anyone can type the 5. */
-	private _rounded(parsed: string | null): string | null {
-		return parsed === null ? null : roundToStep(parsed, this.step, this._stepBase);
+	/** The time a text commits to, or '' when it is unreadable or out of bounds.
+	 *  In both cases the raw text stays put, so the user sees and can repair what
+	 *  they wrote. */
+	private _commit(text: string, round = false): string {
+		return commitText(text, this._rules, round);
 	}
 
 	public _handleInput(e: Event): void {
 		e.stopPropagation();
 		const text = (e.target as HTMLInputElement).value;
 		this._display = text;
-		this.value = this._commit(parseTime(text));
+		this.value = this._commit(text);
 		this._emit('input');
 	}
 
 	public _handleChange(e: Event): void {
 		e.stopPropagation();
 		const input = e.target as HTMLInputElement;
-		const committed = this._commit(this._rounded(parseTime(input.value)));
+		const committed = this._commit(input.value, true);
 		// Normalize on commit: 9u30 ends up as 09:30. Text that is unreadable or
 		// out of bounds stays put so it can be repaired.
 		const shown = committed || input.value;
@@ -326,44 +264,17 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
 		if (this.disabled || this.readonly) return;
 		e.preventDefault();
+		const rules = this._rules;
 		const current = this.value || parseTime(this._display);
 		const next = current
-			? this._shift(current, e.key === 'ArrowUp' ? 1 : -1)
-			: this._startingPoint();
+			? shift(current, e.key === 'ArrowUp' ? 1 : -1, rules)
+			: startingPoint(rules, new Date());
+		// The text is set as well: retyped text that commits to the same value
+		// (1700 for 17:00) has to settle into the notation even when value stays.
 		this._display = next;
-		this.value = this._withinBounds(next) ? next : '';
+		this.value = next;
 		this._emit('input');
 		this._emit('change');
-	}
-
-	private _startingPoint(): string {
-		const min = parseTime(this.min);
-		if (min) return min;
-		const now = new Date();
-		const rounded = roundToStep(fromMinutes(now.getHours() * 60 + now.getMinutes()), this.step, this._stepBase);
-		const max = parseTime(this.max);
-		if (!max || toMinutes(rounded) <= toMinutes(max)) return rounded;
-		// Past `max` we land on the last step at or before it, not on `max` itself:
-		// a max that does not fall on the step is not in the wheel, and a value the
-		// wheel does not hold shows up as an empty selection.
-		const step = Math.max(1, Math.round(this.step));
-		const base = toMinutes(this._stepBase);
-		return fromMinutes(base + Math.max(0, Math.floor((toMinutes(max) - base) / step)) * step);
-	}
-
-	private _shift(from: string, direction: 1 | -1): string {
-		const step = Math.max(1, Math.round(this.step));
-		const base = toMinutes(this._stepBase);
-		// From a time that does not fall on the step, move onto the grid first, so
-		// a second press does not land between two valid values again.
-		const aligned = toMinutes(roundToStep(from, step, this._stepBase));
-		const moved = aligned === toMinutes(from) || step === 1
-			? aligned + direction * step
-			: aligned;
-		const clamped = Math.min(Math.max(moved, base % step), LAST_MINUTE_OF_DAY);
-		const minMinutes = parseTime(this.min) ? toMinutes(parseTime(this.min) as string) : 0;
-		const maxMinutes = parseTime(this.max) ? toMinutes(parseTime(this.max) as string) : LAST_MINUTE_OF_DAY;
-		return fromMinutes(Math.min(Math.max(clamped, minMinutes), maxMinutes));
 	}
 
 	/**
@@ -414,12 +325,12 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  but only after that restore, otherwise ours gets overwritten. */
 	private _focusTriggerOnClose = false;
 
-	/** The value from before opening, plus how the picker was left. Together they
-	 *  decide on close whether what stands in the selection stays or falls back. */
+	/** The value from before opening, and the last thing done in the picker.
+	 *  Together they decide on close whether what stands in the selection stays
+	 *  or falls back. The last action counts: an Escape that did not close the
+	 *  popover is undone by scrolling on, and "Klaar" after it still confirms. */
 	private _valueBeforePicker = '';
-	private _pickerTouched = false;
-	private _pickerConfirmed = false;
-	private _pickerCancelled = false;
+	private _pickerState: 'untouched' | 'touched' | 'confirmed' | 'cancelled' = 'untouched';
 
 	/**
 	 * Where the wheels open while the field is empty: `min` if there is one, and
@@ -441,7 +352,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Escape is canceling, a click beside it is not. The popover only reports
 	 *  that it closed, so we catch the key ourselves, before the browser acts. */
 	private _handlePickerEscape = (e: KeyboardEvent): void => {
-		if (e.key === 'Escape') this._pickerCancelled = true;
+		if (e.key === 'Escape') this._pickerState = 'cancelled';
 	};
 
 	public _handlePopoverToggle(e: Event): void {
@@ -457,10 +368,8 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _openPicker(): void {
 		this._valueBeforePicker = this.value;
-		this._pickerTouched = false;
-		this._pickerConfirmed = false;
-		this._pickerCancelled = false;
-		this._pickerSeed = this.value || this._startingPoint();
+		this._pickerState = 'untouched';
+		this._pickerSeed = this.value || startingPoint(this._rules, new Date());
 		document.addEventListener('keydown', this._handlePickerEscape, true);
 		// Only now does the picker have dimensions: while the popover was closed it
 		// could not scroll the chosen value into view and the column sat at the top.
@@ -485,12 +394,9 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 	 */
 	private _settlePicker(): void {
 		document.removeEventListener('keydown', this._handlePickerEscape, true);
-		// Confirming beats an earlier Escape: that Escape need not have closed the
-		// popover, and then the last action is what counts.
-		if (!this._pickerConfirmed && (this._pickerCancelled || !this._pickerTouched)) {
+		if (this._pickerState === 'untouched' || this._pickerState === 'cancelled') {
 			if (this.value === this._valueBeforePicker) return;
 			this.value = this._valueBeforePicker;
-			this._display = this._valueBeforePicker;
 			this._emit('input');
 			return;
 		}
@@ -498,7 +404,6 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		// the selection, and that is exactly what you are confirming.
 		if (!this.value && this._pickerSeed) {
 			this.value = this._pickerSeed;
-			this._display = this._pickerSeed;
 			this._emit('input');
 		}
 		if (this.value !== this._valueBeforePicker) this._emit('change');
@@ -514,12 +419,8 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		e.stopPropagation();
 		const detail = (e as CustomEvent).detail as { value?: string };
 		if (typeof detail?.value !== 'string') return;
-		this._pickerTouched = true;
-		// An Escape that did not close the popover no longer counts: you are busy
-		// again.
-		this._pickerCancelled = false;
+		this._pickerState = 'touched';
 		this.value = detail.value;
-		this._display = detail.value;
 		this._emit('input');
 	}
 
@@ -533,14 +434,13 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		e.stopPropagation();
 		const detail = (e as CustomEvent).detail as { value?: string };
 		if (typeof detail?.value !== 'string') return;
-		this._pickerTouched = true;
+		this._pickerState = 'touched';
 		this.value = detail.value;
-		this._display = detail.value;
 	}
 
 	public _handlePickerConfirm(e: Event): void {
 		e.stopPropagation();
-		this._pickerConfirmed = true;
+		this._pickerState = 'confirmed';
 		this._closePicker();
 	}
 
@@ -556,7 +456,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		if (e.key !== 'Enter') return;
 		if ((e.target as HTMLElement | null)?.closest('nldd-button')) return;
 		e.preventDefault();
-		this._pickerConfirmed = true;
+		this._pickerState = 'confirmed';
 		this._closePicker();
 	}
 
@@ -567,7 +467,7 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
 	public _handlePickerDismiss(e: Event): void {
 		e.stopPropagation();
-		this._pickerCancelled = true;
+		this._pickerState = 'cancelled';
 		// Same as after a choice: focus back on the button. Without this, Annuleer,
 		// Escape and a click beside it leave focus on the input.
 		this._focusTriggerOnClose = true;
@@ -578,17 +478,37 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 		return this.value;
 	}
 
+	/**
+	 * What `value` cannot say. It holds a valid time or nothing, so text that is
+	 * no time, a time outside min/max and an empty field all read as ''. The
+	 * field tells them apart for the form; when to show it stays the caller's.
+	 */
+	override ownValidity(): OwnValidity | null {
+		const problem = checkText(this._display, this._rules);
+		return problem ? { flags: { [problem.flag]: true }, message: this._problemMessage(problem) } : null;
+	}
+
+	private _problemMessage(problem: TimeProblem): string {
+		switch (problem.flag) {
+			case 'badInput':
+				return this._t('components.time-field.bad-input-error-text');
+			case 'rangeUnderflow':
+				return this._t('components.time-field.range-underflow-error-text').replace('{time}', problem.bound);
+			case 'rangeOverflow':
+				return this._t('components.time-field.range-overflow-error-text').replace('{time}', problem.bound);
+		}
+	}
+
 	formResetCallback(): void {
-		this.value = this._initialValue;
+		// The text as well: text that is no time leaves value empty, so a reset to
+		// an empty value would not change value and the text would stay.
 		this._display = this._initialValue;
+		this.value = this._initialValue;
 		this.commitFormValue();
 	}
 
 	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') {
-			this.value = state;
-			this._display = state;
-		}
+		if (typeof state === 'string') this.value = state;
 	}
 
 	private _emit(type: 'input' | 'change'): void {
@@ -602,15 +522,15 @@ export class NLDDTimeField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override firstUpdated(): void {
 		this._initialValue = this.value;
-		if (this.value) this._display = this.value;
 		this.commitFormValue();
 	}
 
 	override willUpdate(changed: PropertyValues): void {
-		// A value set from outside (property, reset, form) has to show up in the
-		// field. Not while typing: there `_display` is the source and this would
-		// overwrite the half-typed text.
-		if (changed.has('value') && (parseTime(this._display) ?? '') !== this.value) {
+		// The one place the text follows `value`: set from outside, by a reset, by
+		// the picker. Not while typing: there the text already commits to the
+		// value, so it is left exactly as entered, and so is text outside the
+		// bounds, which commits to nothing.
+		if (changed.has('value') && this._commit(this._display) !== this.value) {
 			this._display = this.value;
 		}
 	}

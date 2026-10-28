@@ -99,6 +99,7 @@ export const searchFieldStyles = css`
 	}
 
 	.search-field__input {
+		border-radius: calc(var(--_search-field-corner-radius) - var(--semantics-input-fields-border-width));
 		box-sizing: border-box;
 		margin: 0;
 		outline: none;
