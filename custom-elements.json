@@ -3371,12 +3371,22 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/actions/toolbar/toolbar.ts",
+      "path": "src/components/actions/toolbar/toolbar-item.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "One control in an nldd-toolbar, with its alternative for the overflow menu.",
           "name": "NLDDToolbarItem",
+          "slots": [
+            {
+              "name": "",
+              "description": "The control shown in the toolbar (e.g. nldd-icon-button)"
+            },
+            {
+              "name": "overflow",
+              "description": "Required: nldd-menu-item / nldd-menu-divider / nldd-menu-group children, shown in the overflow menu when this item overflows. Without them the action is gone on a narrow toolbar, and the item warns in development."
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -3430,49 +3440,98 @@
           ],
           "attributes": [
             {
+              "type": {
+                "text": "string"
+              },
+              "description": "Fluid width: a percentage (e.g. '40%') or any CSS length (e.g. '240px'). Setting it (or min-width or max-width) makes the item fluid so it grows to fill the available space.",
               "name": "width",
+              "default": "''",
+              "fieldName": "width"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "width",
-              "description": "Fluid width: a percentage (e.g. '40%') or any CSS length (e.g. '240px'). Setting it (or min-width or max-width) makes the item fluid so it grows to fill the available space."
-            },
-            {
+              "description": "Minimum (fluid) width as a CSS length (e.g. '240px'). Setting it also makes the item fluid.",
               "name": "min-width",
+              "default": "''",
+              "fieldName": "minWidth"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "minWidth",
-              "description": "Minimum (fluid) width as a CSS length (e.g. '240px'). Setting it also makes the item fluid."
-            },
-            {
+              "description": "Maximum (fluid) width as a CSS length (e.g. '480px'). Setting it also makes the item fluid.",
               "name": "max-width",
+              "default": "''",
+              "fieldName": "maxWidth"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "maxWidth",
-              "description": "Maximum (fluid) width as a CSS length (e.g. '480px'). Setting it also makes the item fluid."
-            },
-            {
+              "description": "Text label shown below the item when the toolbar has show-item-labels.",
               "name": "label",
-              "type": {
-                "text": "string"
-              },
               "default": "''",
-              "fieldName": "label",
-              "description": "Text label shown below the item when the toolbar has show-item-labels."
+              "fieldName": "label"
             },
             {
-              "name": "priority",
               "type": {
                 "text": "number"
               },
+              "description": "Overflow order: items with a lower priority move into the overflow menu first (default 0). Items sharing a priority overflow together, regardless of position.",
+              "name": "priority",
               "default": "0",
-              "fieldName": "priority",
-              "description": "Overflow order: items with a lower priority move into the overflow menu first (default 0). Items sharing a priority overflow together, regardless of position."
+              "fieldName": "priority"
+            },
+            {
+              "type": {
+                "text": "'sm'|'md'|'lg'"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md') onto the item host, so size-dependent styling can key off it.",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's show-item-labels, so the item renders its label below the control.",
+              "name": "show-item-labels"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: marks an item that grows or shrinks to fill space. Toggled synchronously during measurement, so it can appear or disappear between layout frames — do not style against it. It is not reflected as a JS property — read it with hasAttribute('fluid').",
+              "name": "fluid"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: the sole fluid item, allowed to shrink below its content. Same synchronous-toggle and property-read caveats as fluid.",
+              "name": "solo-fluid"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute, when the item moves into the overflow menu. Same synchronous-toggle caveat.",
+              "name": "hidden"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: the item holds a control that overflows by itself (nldd-tab-bar), so it gets the width that control wants with everything shown. Same synchronous-toggle caveat.",
+              "name": "shrinkable"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: a shrinkable item narrowed down to what its control needs at least, before it would move into the overflow menu. Same synchronous-toggle caveat.",
+              "name": "shrunk"
             }
           ],
           "superclass": {
@@ -3480,22 +3539,46 @@
             "package": "lit"
           },
           "tagName": "nldd-toolbar-item",
-          "customElement": true,
-          "slots": [
-            {
-              "name": "",
-              "description": "The control shown in the toolbar (e.g. nldd-icon-button)"
-            },
-            {
-              "name": "overflow",
-              "description": "Required: nldd-menu-item / nldd-menu-divider / nldd-menu-group children, shown in the overflow menu when this item overflows. Without them the action is gone on a narrow toolbar, and the item warns in development."
-            }
-          ]
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDToolbarItem",
+          "declaration": {
+            "name": "NLDDToolbarItem",
+            "module": "src/components/actions/toolbar/toolbar-item.ts"
+          }
         },
         {
+          "kind": "custom-element-definition",
+          "name": "nldd-toolbar-item",
+          "declaration": {
+            "name": "NLDDToolbarItem",
+            "module": "src/components/actions/toolbar/toolbar-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar-title.ts",
+      "declarations": [
+        {
           "kind": "class",
-          "description": "",
+          "description": "The title of an nldd-toolbar, with optional media before it and an action after it.",
           "name": "NLDDToolbarTitle",
+          "slots": [
+            {
+              "name": "media",
+              "description": "Optional leading image before the title: a logo, a product mark, a file-type icon. Its height is capped to the title group so it cannot stretch the row; pick the size within that yourself. With no `text` the media stands alone and carries the name, so give it one (an `alt`, or an accessible label)."
+            },
+            {
+              "name": "action",
+              "description": "Optional trailing control (e.g. an xs nldd-icon-button), shown inline after the title and tuned to sit against it. Empty by default."
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -3589,85 +3672,92 @@
           ],
           "attributes": [
             {
+              "type": {
+                "text": "string"
+              },
+              "description": "Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width.",
               "name": "width",
+              "default": "''",
+              "fieldName": "width"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "width",
-              "description": "Preferred (fluid) width as a CSS length or percentage; the title grows toward it and shrinks to min-width."
-            },
-            {
+              "description": "Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first.",
               "name": "min-width",
+              "default": "''",
+              "fieldName": "minWidth"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "minWidth",
-              "description": "Minimum width as a CSS length (default: the width of its own text, up to `max-width`). Items move into the overflow menu before the title gets narrower than this; only when no item is left to move does the title truncate below it. Set `0` to let the title shrink first."
-            },
-            {
+              "description": "Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row).",
               "name": "max-width",
-              "type": {
-                "text": "string"
-              },
               "default": "''",
-              "fieldName": "maxWidth",
-              "description": "Maximum width as a CSS length (default: '240px'); the title text truncates with an ellipsis beyond it. The cap is lifted while the title is the sole toolbar element (it then stretches to fill the row)."
+              "fieldName": "maxWidth"
             },
             {
-              "name": "align",
               "type": {
                 "text": "TitleAlign"
               },
+              "description": "Text alignment: 'left' | 'center' (default: 'left').",
+              "name": "align",
               "default": "'left'",
-              "fieldName": "align",
-              "description": "Text alignment: 'left' | 'center' (default: 'left')."
+              "fieldName": "align"
             },
             {
+              "type": {
+                "text": "string"
+              },
+              "description": "Title text.",
               "name": "text",
+              "default": "''",
+              "fieldName": "text"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "text",
-              "description": "Title text."
-            },
-            {
+              "description": "Secondary supporting text shown below the title.",
               "name": "supporting-text",
+              "default": "''",
+              "fieldName": "supportingText"
+            },
+            {
+              "type": {
+                "text": "'sm'|'md'|'lg'"
+              },
+              "description": "Set by nldd-toolbar, not a consumer attribute: mirrors the toolbar's size (default: 'md'), which sets the title group height and, at 'sm', the title and supporting-text fonts.",
+              "name": "size"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "supportingText",
-              "description": "Secondary supporting text shown below the title."
-            },
-            {
+              "description": "Makes the mark and the name one link, for the place this window belongs to (usually the app's own start). The `action` slot stays outside it: a control inside a link is a control you cannot reach without following the link.",
               "name": "href",
+              "default": "''",
+              "fieldName": "href"
+            },
+            {
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "fieldName": "href",
-              "description": "Makes the mark and the name one link, for the place this window belongs to (usually the app's own start). The `action` slot stays outside it: a control inside a link is a control you cannot reach without following the link."
-            },
-            {
+              "description": "Where the link opens; only meaningful with `href`. `_blank` adds rel=\"noopener noreferrer\" and a visually hidden \"opens in a new tab\" announcement. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.",
               "name": "target",
-              "type": {
-                "text": "string"
-              },
               "default": "''",
-              "fieldName": "target",
-              "description": "Where the link opens; only meaningful with `href`. `_blank` adds rel=\"noopener noreferrer\" and a visually hidden \"opens in a new tab\" announcement. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden \"andere website\", in one sentence with the new-tab announcement when both apply; there is no way to switch it off."
+              "fieldName": "target"
             },
             {
-              "name": "translations",
               "type": {
                 "text": "Partial<NLDDToolbarTranslations>"
               },
+              "description": "Override translation keys (the new-tab announcement); unset keys fall back to Dutch.",
+              "name": "translations",
               "default": "{}",
-              "fieldName": "translations",
-              "description": "Override translation keys (the new-tab announcement); unset keys fall back to Dutch."
+              "fieldName": "translations"
             }
           ],
           "superclass": {
@@ -3675,18 +3765,400 @@
             "package": "lit"
           },
           "tagName": "nldd-toolbar-title",
-          "customElement": true,
-          "slots": [
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDToolbarTitle",
+          "declaration": {
+            "name": "NLDDToolbarTitle",
+            "module": "src/components/actions/toolbar/toolbar-title.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-toolbar-title",
+          "declaration": {
+            "name": "NLDDToolbarTitle",
+            "module": "src/components/actions/toolbar/toolbar-title.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.layout.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "itemsOf",
+          "return": {
+            "type": {
+              "text": "OverflowItem[]"
+            }
+          },
+          "parameters": [
             {
-              "name": "media",
-              "description": "Optional leading image before the title: a logo, a product mark, a file-type icon. Its height is capped to the title group so it cannot stretch the row; pick the size within that yourself. With no `text` the media stands alone and carries the name, so give it one (an `alt`, or an accessible label)."
+              "name": "children",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            }
+          ],
+          "description": "Only the items of a list of children."
+        },
+        {
+          "kind": "function",
+          "name": "overflowOrder",
+          "return": {
+            "type": {
+              "text": "OverflowItem[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "start",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
             },
             {
-              "name": "action",
-              "description": "Optional trailing control (e.g. an xs nldd-icon-button), shown inline after the title and tuned to sit against it. Empty by default."
+              "name": "center",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            },
+            {
+              "name": "end",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            }
+          ],
+          "description": "The order in which items move into the overflow menu: the lowest priority\nfirst, then end before center before start, and within an area from the\noutside in (last first)."
+        },
+        {
+          "kind": "function",
+          "name": "groupForOverflow",
+          "return": {
+            "type": {
+              "text": "OverflowItem[][]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "items",
+              "type": {
+                "text": "OverflowItem[]"
+              }
+            }
+          ],
+          "description": "Groups items in overflow order. Items with an explicit priority that share a\nvalue form one group and overflow together regardless of their position;\nitems without a priority each form their own group."
+        },
+        {
+          "kind": "function",
+          "name": "areaWidth",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "children",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            },
+            {
+              "name": "overflowIds",
+              "type": {
+                "text": "ReadonlySet<number>"
+              }
+            },
+            {
+              "name": "widths",
+              "type": {
+                "text": "ReadonlyMap<number, number>"
+              }
+            },
+            {
+              "name": "itemGap",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "How wide an area is: its visible items and titles plus the gaps between\nthem. Items in the overflow menu take no room."
+        },
+        {
+          "kind": "function",
+          "name": "spacerZeros",
+          "return": {
+            "type": {
+              "text": "{ leftZero: boolean; rightZero: boolean }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "hostWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "itemGap",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "overflowButtonWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "startWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "centerWidth",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "endWidth",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Whether the spacers left and right of the center give way: a spacer whose\nshare of the row is used up by its side drops to zero, so the center moves\noff-center rather than overlapping. With nothing at either side both go."
+        },
+        {
+          "kind": "function",
+          "name": "fillsRowAlone",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "children",
+              "type": {
+                "text": "ToolbarChild[]"
+              }
+            }
+          ],
+          "description": "Whether the one thing left in the row fills it: a title, or a fluid item.\nThe flexible spacer then drops out, or it would claim half the row."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "itemsOf",
+          "declaration": {
+            "name": "itemsOf",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "overflowOrder",
+          "declaration": {
+            "name": "overflowOrder",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "groupForOverflow",
+          "declaration": {
+            "name": "groupForOverflow",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "areaWidth",
+          "declaration": {
+            "name": "areaWidth",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "spacerZeros",
+          "declaration": {
+            "name": "spacerZeros",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fillsRowAlone",
+          "declaration": {
+            "name": "fillsRowAlone",
+            "module": "src/components/actions/toolbar/toolbar.layout.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.overflow-menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The overflow menu of an nldd-toolbar: an nldd-menu holding copies of the\nmenu items of everything that did not fit, and of the toolbar's own\n`overflow` slot.\n\nIt lives in the toolbar's shadow root, not in document.body. It is a popover,\nso the top layer gets it past any clipping anyway, and a menu in the body goes\ninert (visible but untouchable) when the toolbar sits in a modal dialog:\neverything outside the dialog is inert then.\n\nThe menu holds clones, because the originals stay where the consumer put\nthem. A clone's `select` never reaches listeners on its original, so it is\nsent on: every original is stamped with an id that its clone carries, and a\n`select` from a clone is dispatched again on the original.",
+          "name": "ToolbarOverflowMenu",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_counter",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the menu is open. The toolbar renders its button from this."
+            },
+            {
+              "kind": "field",
+              "name": "_menu",
+              "type": {
+                "text": "NLDDMenu | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_originals",
+              "privacy": "private",
+              "default": "new Map<string, Element>()"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "anchorTo",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "button",
+                  "type": {
+                    "text": "(HTMLElement & {\n\t\tpopoverTargetElement?: Element | null;\n\t\tpopoverTargetAction?: 'toggle' | 'show' | 'hide';\n\t}) | null"
+                  }
+                }
+              ],
+              "description": "Make `button` the menu's invoker. The browser opens and closes it\nnatively through popovertarget, and the menu keeps `popoverTargetAction`\nin step with its state ('hide' while open, 'show' while closed). The\ndefault 'toggle' becomes 'show' here, for the very first click before the\nmenu ever toggled."
+            },
+            {
+              "kind": "method",
+              "name": "fill",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "items",
+                  "type": {
+                    "text": "Element[]"
+                  }
+                }
+              ],
+              "description": "Fill the menu with copies of `items`, in this order."
+            },
+            {
+              "kind": "method",
+              "name": "_clone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "original",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Stamps the original and every descendant with an id the clone copies.\n`data-toolbar-oid` is outside the toolbar's attribute filter, so stamping\nstarts no new sync."
+            },
+            {
+              "kind": "field",
+              "name": "_forwardSelect",
+              "privacy": "private"
             }
           ]
-        },
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ToolbarOverflowMenu",
+          "declaration": {
+            "name": "ToolbarOverflowMenu",
+            "module": "src/components/actions/toolbar/toolbar.overflow-menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/toolbar/toolbar.ts",
+      "declarations": [
         {
           "kind": "class",
           "description": "A row of controls that belong to a whole screen or pane, with an overflow menu for what does not fit. The toolbar measures itself: as the row runs out of room, items move into that menu, the lowest `priority` first, and items that share a priority move together. So the order in the HTML says where an item sits, and `priority` says how long it stays. An item holding a control with its own overflow, such as nldd-tab-bar, first narrows down when its turn comes, so that control moves what does not fit into its own menu, and only then goes into the toolbar's menu. Every item carries its own alternative for the menu, an nldd-menu-item in its `overflow` slot. Without one the action is simply gone once the item overflows, which on a wide screen you never see; the item warns about it in development. The toolbar's own `overflow` slot holds the actions that live in the menu at every width.",
@@ -3802,15 +4274,7 @@
           "name": "NLDDToolbarItem",
           "declaration": {
             "name": "NLDDToolbarItem",
-            "module": "src/components/actions/toolbar/toolbar.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-toolbar-item",
-          "declaration": {
-            "name": "NLDDToolbarItem",
-            "module": "src/components/actions/toolbar/toolbar.ts"
+            "module": "./toolbar-item.js"
           }
         },
         {
@@ -3818,15 +4282,15 @@
           "name": "NLDDToolbarTitle",
           "declaration": {
             "name": "NLDDToolbarTitle",
-            "module": "src/components/actions/toolbar/toolbar.ts"
+            "module": "./toolbar-title.js"
           }
         },
         {
-          "kind": "custom-element-definition",
-          "name": "nldd-toolbar-title",
+          "kind": "js",
+          "name": "groupForOverflow",
           "declaration": {
-            "name": "NLDDToolbarTitle",
-            "module": "src/components/actions/toolbar/toolbar.ts"
+            "name": "groupForOverflow",
+            "module": "./toolbar.layout.js"
           }
         },
         {

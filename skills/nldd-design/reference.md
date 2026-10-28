@@ -286,6 +286,8 @@ A row of controls that belong to a whole screen or pane, with an overflow menu f
 
 ### `<nldd-toolbar-item>`
 
+One control in an nldd-toolbar, with its alternative for the overflow menu.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -311,6 +313,8 @@ A row of controls that belong to a whole screen or pane, with an overflow menu f
 | `overflow` | Required: nldd-menu-item / nldd-menu-divider / nldd-menu-group children, shown in the overflow menu when this item overflows. Without them the action is gone on a narrow toolbar, and the item warns in development. |
 
 ### `<nldd-toolbar-title>`
+
+The title of an nldd-toolbar, with optional media before it and an action after it.
 
 **Attributes**
 

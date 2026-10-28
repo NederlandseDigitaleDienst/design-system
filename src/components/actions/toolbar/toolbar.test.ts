@@ -3,6 +3,7 @@ import variablesCss from '../../../assets/styles/variables.css?raw';
 import colorsCss from '../../../assets/styles/colors.generated.css?raw';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { groupForOverflow } from './toolbar.js';
+import { spacerZeros } from './toolbar.layout.js';
 import { loadTokens } from '../../../test-tokens.js';
 import '../button/button.js';
 import '../../navigation/tab-bar/tab-bar.js';
@@ -244,7 +245,7 @@ describe('nldd-toolbar', () => {
 		// be unique there — but it does have to resolve, because the trigger
 		// anchors the menu by id.
 		[...el.querySelectorAll('nldd-toolbar')].forEach((toolbar) => {
-			const menu = (toolbar as unknown as { _menu: Element })._menu;
+			const menu = toolbar.shadowRoot!.querySelector('nldd-menu')!;
 			const root = menu.getRootNode() as ShadowRoot;
 			expect(root.getElementById(menu.id)).toBe(menu);
 		});
@@ -369,18 +370,15 @@ describe('nldd-toolbar', () => {
 		// The test env has no real layout, so force the item into overflow and
 		// build the clone menu directly.
 		const tb = el as unknown as {
-			_createMenu(): void;
 			_syncMenuItems(): void;
 			_getPrioritizedItems(): { id: number; overflowItems: Element[] }[];
 			_overflowIds: Set<number>;
-			_menu: HTMLElement;
 		};
-		tb._createMenu();
 		const child = tb._getPrioritizedItems().find(c => c.overflowItems.length > 0)!;
 		tb._overflowIds = new Set([child.id]);
 		tb._syncMenuItems();
 
-		const clone = tb._menu.querySelector('nldd-menu-item');
+		const clone = el.shadowRoot!.querySelector('nldd-menu nldd-menu-item');
 		expect(clone).not.toBeNull();
 		clone!.dispatchEvent(new CustomEvent('select', { bubbles: true, composed: true }));
 
@@ -439,26 +437,16 @@ describe('nldd-toolbar', () => {
 		expect(slot).not.toBeNull();
 	});
 
-	// ## _computeSpacerZeros
+	// ## spacerZeros
 
-	it('returns both zeros true when start and end are both empty', async () => {
-		el = await fixture('<nldd-toolbar></nldd-toolbar>');
-		await waitForUpdate(el);
-		const toolbar = el as unknown as {
-			_computeSpacerZeros: (h: number, g: number, o: number, s: number, c: number, e: number) => { leftZero: boolean; rightZero: boolean };
-		};
-		const result = toolbar._computeSpacerZeros(800, 8, 0, 0, 200, 0);
+	it('returns both zeros true when start and end are both empty', () => {
+		const result = spacerZeros(800, 8, 0, 0, 200, 0);
 		expect(result.leftZero).toBe(true);
 		expect(result.rightZero).toBe(true);
 	});
 
-	it('returns leftZero true when start overflows into center', async () => {
-		el = await fixture('<nldd-toolbar></nldd-toolbar>');
-		await waitForUpdate(el);
-		const toolbar = el as unknown as {
-			_computeSpacerZeros: (h: number, g: number, o: number, s: number, c: number, e: number) => { leftZero: boolean; rightZero: boolean };
-		};
-		const result = toolbar._computeSpacerZeros(800, 8, 0, 500, 200, 100);
+	it('returns leftZero true when start overflows into center', () => {
+		const result = spacerZeros(800, 8, 0, 500, 200, 100);
 		expect(result.leftZero).toBe(true);
 	});
 
@@ -467,7 +455,7 @@ describe('nldd-toolbar', () => {
 	it('creates a menu element on connectedCallback', async () => {
 		el = await fixture('<nldd-toolbar></nldd-toolbar>');
 		await waitForUpdate(el);
-		const toolbar = el as unknown as { _menu: Element | null };
+		const toolbar = { get _menu() { return el.shadowRoot!.querySelector('nldd-menu'); } };
 		expect(toolbar._menu).not.toBeNull();
 		expect(toolbar._menu?.tagName.toLowerCase()).toBe('nldd-menu');
 		toolbar._menu?.remove();
@@ -478,19 +466,20 @@ describe('nldd-toolbar', () => {
 		// dialog (e.g. a sheet): visible in the top layer, but unclickable.
 		el = await fixture('<nldd-toolbar></nldd-toolbar>');
 		await waitForUpdate(el);
-		const toolbar = el as unknown as { _menu: Element | null };
+		const toolbar = { get _menu() { return el.shadowRoot!.querySelector('nldd-menu'); } };
 		expect(toolbar._menu?.getRootNode()).toBe(el.shadowRoot);
 	});
 
 	it('removes menu on disconnectedCallback', async () => {
 		el = await fixture('<nldd-toolbar></nldd-toolbar>');
 		await waitForUpdate(el);
-		const toolbar = el as unknown as { _menu: Element | null };
-		const menu = toolbar._menu;
+		const host = el;
+		const menu = host.shadowRoot!.querySelector('nldd-menu');
 		expect(menu).not.toBeNull();
 		cleanup(el);
 		el = null as unknown as HTMLElement;
-		expect(toolbar._menu).toBeNull();
+		expect(menu!.isConnected).toBe(false);
+		expect(host.shadowRoot!.querySelector('nldd-menu')).toBeNull();
 	});
 
 	// ## Fluid item detection
@@ -990,5 +979,43 @@ describe('nldd-toolbar – met een tab-bar', () => {
 		expect(tabs.hasAttribute('shrunk')).toBe(false);
 		expect(action.hidden).toBe(false);
 		expect(overflowed).toBe(0);
+	});
+});
+
+describe('nldd-toolbar – moved in the DOM', () => {
+	let removeTokens: () => void;
+	let wrap: HTMLDivElement;
+
+	beforeAll(() => { removeTokens = loadTokens(); });
+	afterAll(() => removeTokens());
+	afterEach(() => { if (wrap) cleanup(wrap); });
+
+	const frames = (n = 3) => new Promise<void>(r => {
+		const step = (k: number) => (k ? requestAnimationFrame(() => step(k - 1)) : r());
+		step(n);
+	});
+
+	it('still follows its width after it is taken out and put back', async () => {
+		const items = Array.from({ length: 6 }, (_, i) => `
+			<nldd-toolbar-item slot="end">
+				<nldd-button text="Actie ${i}"></nldd-button>
+				<nldd-menu-item slot="overflow" text="Actie ${i}"></nldd-menu-item>
+			</nldd-toolbar-item>`).join('');
+		wrap = await fixture<HTMLDivElement>(`<div style="width:240px"><nldd-toolbar>${items}</nldd-toolbar></div>`);
+		const toolbar = wrap.querySelector('nldd-toolbar')!;
+		const hidden = () => [...toolbar.querySelectorAll('nldd-toolbar-item')].filter(item => item.hidden).length;
+		await new Promise(r => setTimeout(r, 50));
+		await waitForUpdate(toolbar);
+		await frames();
+		expect(hidden()).toBeGreaterThan(0);
+
+		toolbar.remove();
+		wrap.appendChild(toolbar);
+		await new Promise(r => setTimeout(r, 50));
+		await waitForUpdate(toolbar);
+		wrap.style.width = '1200px';
+		await new Promise(r => setTimeout(r, 100));
+		await frames(5);
+		expect(hidden()).toBe(0);
 	});
 });

@@ -1,5 +1,7 @@
 import { html, nothing } from 'lit';
-import type { NLDDToolbar, NLDDToolbarItem, NLDDToolbarTitle } from './toolbar.js';
+import type { NLDDToolbar } from './toolbar.js';
+import type { NLDDToolbarItem } from './toolbar-item.js';
+import type { NLDDToolbarTitle } from './toolbar-title.js';
 import type { NLDDToolbarTranslations } from './toolbar.i18n.js';
 import { linkRel } from '../../../utilities/link-rel.js';
 import { linkHintKey } from '../../../utilities/link-hint.js';
@@ -51,7 +53,7 @@ export function toolbarTitleTemplate(component: NLDDToolbarTitle) {
 
 // # Types
 export type ToolbarChild =
-	| { type: 'title'; element: Element; minWidth: string; id: number }
+	| { type: 'title'; element: Element; id: number }
 	| { type: 'item'; element: Element; label: string; id: number; priority: number; hasPriority: boolean; overflowItems: Element[]; minWidth: string; maxWidth: string; width: string; isFluid: boolean }
 	| { type: 'other'; element: Element; id: number };
 
