@@ -976,3 +976,22 @@ describe('nldd-date-field laat getypte tekst buiten de grenzen staan', () => {
 		expect(input.value).toBe('15-07-2026');
 	});
 });
+
+describe('nldd-date-field na een reset', () => {
+	let form: HTMLFormElement;
+
+	afterEach(() => {
+		if (form) cleanup(form);
+	});
+
+	it('clears text that is no date, although value was empty all along', async () => {
+		form = await fixture<HTMLFormElement>('<form><nldd-date-field name="vanaf"></nldd-date-field></form>');
+		const el = form.querySelector('nldd-date-field') as NLDDDateField;
+		await waitForUpdate(el);
+		await type(el, 'Test');
+		form.reset();
+		await waitForUpdate(el);
+		expect(textInput(el).value).toBe('');
+		expect(el.internals.validity.valid).toBe(true);
+	});
+});

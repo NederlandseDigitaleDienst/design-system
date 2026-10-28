@@ -312,6 +312,9 @@ export class NLDDDateField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	formResetCallback(): void {
+		// The texts as well: text that is no date leaves value empty, so a reset to
+		// an empty value would not change value and the text would stay.
+		this._texts = splitValue(this._initialValue, this._endCount).map(formatDisplay);
 		this.value = this._initialValue;
 	}
 
