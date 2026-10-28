@@ -15,6 +15,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A selection in `nldd-text-editor` no longer shows a strip above a quote.** A quote line is a little taller than plain text, and the selection on it sits centered, so after a selected empty line a thin strip of the page showed between the two. Each piece of a selection now runs down to the next.
 - **The caret of `nldd-code-editor` is no longer clipped at the start of a line.** Without a frame the editor had no room at its left edge, so part of the caret fell off at the first position of every line. It now has the room of the caret and sits centered on the insertion point, as in `nldd-text-editor`. The text moves 2px to the right; with `appearance="input-field"` nothing changes.
 
 ## [0.13.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.12.0...v0.13.0) (2026-10-27)

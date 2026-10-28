@@ -130,6 +130,24 @@ describe('nldd-text-editor', () => {
 		removeTokens();
 	});
 
+	it('laat geen streep tussen de stukken van een selectie, ook niet boven een hogere regel', async () => {
+		const removeTokens = loadTokens();
+		const el2 = await fixture<TextEditorEl>('<nldd-text-editor accessible-label="Tekst" style="width: 400px"></nldd-text-editor>');
+		el2.value = 'Tekst\n\n- Een punt\n\n> Een citaat';
+		await el2.updateComplete;
+		await waitForUpdate(el2);
+		const view = (el2 as unknown as { view: { dom: HTMLElement; dispatch(spec: unknown): void; state: { doc: { length: number; line(n: number): { from: number } } } } }).view;
+		view.dispatch({ selection: { anchor: view.state.doc.line(3).from, head: view.state.doc.length } });
+		await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+		const boxes = [...view.dom.querySelectorAll('.cm-selectionBackground')]
+			.map((p) => p.getBoundingClientRect())
+			.sort((a, b) => a.top - b.top);
+		expect(boxes.length).toBeGreaterThan(1);
+		for (let i = 1; i < boxes.length; i++) expect(boxes[i].top - boxes[i - 1].bottom).toBeLessThanOrEqual(0.25);
+		cleanup(el2);
+		removeTokens();
+	});
+
 	it('tekent een deels geselecteerde inline code zo hoog als de code, met zijn rand en ronde kant aan de rand van de code', async () => {
 		const el2 = await withValue('De `WCAG 2.2`-criteria zijn leidend');
 		const view = (el2 as unknown as { view: { contentDOM: HTMLElement; dispatch(spec: unknown): void } }).view;

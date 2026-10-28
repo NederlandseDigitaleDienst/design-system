@@ -11,7 +11,12 @@ import { ViewPlugin, type EditorView } from '@codemirror/view';
  * And no wider than the text. A line selected to its end is drawn to the
  * right edge of the content, its padding included, since CodeMirror only takes
  * off the padding of a line. Each piece stops where the text column does, as a
- * selection on macOS stops short of the margin. */
+ * selection on macOS stops short of the margin.
+ *
+ * And without seams. A row taller than the line height (a quote) keeps its
+ * piece centered, a little below its top, so after a piece of one plain row
+ * there was a strip of the page between the two. A piece that falls short of
+ * the next one now runs down to it. */
 
 function rowHeightPieces(view: EditorView): void {
 	const layer = view.dom.querySelector('.cm-selectionLayer');
@@ -33,6 +38,19 @@ function rowHeightPieces(view: EditorView): void {
 		const top = current + ((row.top + row.bottom) / 2 - height / 2 - box.top);
 		if (Math.abs(top - current) > 0.25) piece.style.top = `${top}px`;
 		if (Math.abs(box.height - height) > 0.25) piece.style.height = `${height}px`;
+	}
+	closeSeams(layer, height);
+}
+
+function closeSeams(layer: Element, height: number): void {
+	const pieces = [...layer.querySelectorAll<HTMLElement>('.cm-selectionBackground')]
+		.map((piece) => ({ piece, box: piece.getBoundingClientRect() }))
+		.sort((a, b) => a.box.top - b.box.top);
+	for (let i = 1; i < pieces.length; i++) {
+		const above = pieces[i - 1];
+		const gap = pieces[i].box.top - above.box.bottom;
+		// Only a seam: a wider gap is between two selections.
+		if (gap > 0.25 && gap < height / 2) above.piece.style.height = `${above.box.height + gap}px`;
 	}
 }
 
