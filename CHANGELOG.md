@@ -27,6 +27,7 @@ here; consult the commit history if you need that level of detail.
 ### Fixed
 
 - **A date outside `min` or `max` in `nldd-date-field` stays as typed.** After a valid date, typing one outside the bounds emptied the field halfway, so you could not see what was wrong. The text now stands, `value` stays empty and `validity` says which bound it crossed.
+- **`nldd-toolbar` keeps following its width after it is moved in the DOM.** Taken out and put back, as a framework does when it moves or keeps an element, it no longer watched its own size: items that had gone into the overflow menu stayed there on a wider screen.
 - **A time outside `min` or `max` in `nldd-time-field` stays as typed**, the same fix as in `nldd-date-field`: after a valid time, typing one outside the bounds emptied the field halfway.
 - **A form reset clears text that is no date or time** in `nldd-date-field` and `nldd-time-field`. Such text leaves `value` empty, so resetting to an empty value changed nothing and the text stayed.
 - **An autofilled field keeps its rounded corners.** The input inside `nldd-text-field`, `nldd-search-field`, `nldd-password-field`, `nldd-combo-box`, `nldd-date-field`, `nldd-time-field` and `nldd-multi-line-text-field` was a rectangle, drawn over the rounded border of the field. Its autofill color showed a square corner over the curve, in Safari on a phone at the left of the field. The input now follows the inner curve of the border.
