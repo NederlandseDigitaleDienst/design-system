@@ -2,7 +2,7 @@ import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toolbarTitleStyles } from './toolbar.styles.js';
-import { toolbarTitleTemplate } from './toolbar.template.js';
+import { toolbarTitleTemplate } from './toolbar-title.template.js';
 import { nlddToolbarTranslations, type NLDDToolbarTranslations } from './toolbar.i18n.js';
 import { translate } from '../../../utilities/translations.js';
 import type { Size } from './toolbar-item.js';
