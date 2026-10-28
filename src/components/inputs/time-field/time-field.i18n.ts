@@ -10,6 +10,11 @@ export const nlddTimeFieldTranslations = {
 	// not "Opslaan": this confirms a choice, it does not save a form. A consumer
 	// who puts this in a save flow can override it.
 	'components.time-field.confirm-action': 'Klaar',
+	// Validation messages the field reports to the form. {time} is a bound as
+	// HH:mm.
+	'components.time-field.bad-input-error-text': 'Vul een tijd in als uu:mm',
+	'components.time-field.range-underflow-error-text': 'Vul een tijd in vanaf {time}',
+	'components.time-field.range-overflow-error-text': 'Vul een tijd in tot en met {time}',
 };
 
 export type NLDDTimeFieldTranslations = typeof nlddTimeFieldTranslations;
