@@ -84,6 +84,7 @@ export const multiLineTextFieldStyles = css`
 	/* # Elements */
 
 	.multi-line-text-field__input {
+		border-radius: calc(var(--_multi-line-text-field-corner-radius) - var(--semantics-input-fields-border-width));
 		box-sizing: border-box;
 		display: block;
 		margin: 0;

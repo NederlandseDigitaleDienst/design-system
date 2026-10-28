@@ -142,6 +142,7 @@ export const dateFieldStyles = css`
 	/* # Elements */
 
 	.date-field__input {
+		border-radius: calc(var(--_date-field-corner-radius) - var(--semantics-input-fields-border-width));
 		box-sizing: border-box;
 		margin: 0;
 		outline: none;

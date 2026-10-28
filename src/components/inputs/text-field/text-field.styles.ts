@@ -85,6 +85,7 @@ export const textFieldStyles = css`
 	/* # Elements */
 
 	.text-field__input {
+		border-radius: calc(var(--_text-field-corner-radius) - var(--semantics-input-fields-border-width));
 		box-sizing: border-box;
 		margin: 0;
 		outline: none;

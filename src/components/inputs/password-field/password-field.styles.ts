@@ -89,6 +89,7 @@ export const passwordFieldStyles = css`
 	/* # Elements */
 
 	.password-field__input {
+		border-radius: calc(var(--_password-field-corner-radius) - var(--semantics-input-fields-border-width));
 		box-sizing: border-box;
 		margin: 0;
 		outline: none;
