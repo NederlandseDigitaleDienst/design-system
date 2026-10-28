@@ -1575,7 +1575,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/actions/menu/menu.ts",
+      "path": "src/components/actions/menu/menu-divider.ts",
       "declarations": [
         {
           "kind": "class",
@@ -1588,15 +1588,39 @@
           },
           "tagName": "nldd-menu-divider",
           "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDMenuDivider",
+          "declaration": {
+            "name": "NLDDMenuDivider",
+            "module": "src/components/actions/menu/menu-divider.ts"
+          }
         },
         {
+          "kind": "custom-element-definition",
+          "name": "nldd-menu-divider",
+          "declaration": {
+            "name": "NLDDMenuDivider",
+            "module": "src/components/actions/menu/menu-divider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu-group.ts",
+      "declarations": [
+        {
           "kind": "class",
-          "description": "A labeled group of menu items inside an nldd-menu. Wraps its slotted\nitems in `role=\"group\"` with `aria-labelledby` pointing to the group's\n`text`, providing native ARIA group semantics that a flat title element\ncan't deliver.\n\nThe group renders an automatic divider above itself, except when it's\nthe first child of the menu — so consumers don't need to manage\nseparator placement around groups themselves. Spacing above the title\nis intentionally larger than below, to bind the title visually to the\nitems it labels.\n\nUse the wrapper for grouping with a title; for ungrouped flat menus or\na divider without a title, the existing `nldd-menu-item` +\n`nldd-menu-divider` flat structure keeps working unchanged.",
+          "description": "A labeled group of menu items inside an nldd-menu. Wraps its slotted items in `role=\"group\"` with `aria-labelledby` pointing to the group's `text`, providing native ARIA group semantics that a flat title element can't deliver. The group renders an automatic divider above itself, except when it's the first child of the menu — so consumers don't need to manage separator placement around groups themselves. Spacing above the title is intentionally larger than below, to bind the title visually to the items it labels. Use the wrapper for grouping with a title; for ungrouped flat menus or a divider without a title, the existing `nldd-menu-item` + `nldd-menu-divider` flat structure keeps working unchanged.",
           "name": "NLDDMenuGroup",
           "slots": [
             {
-              "description": "nldd-menu-item children (the items belonging to this group).",
-              "name": ""
+              "name": "",
+              "description": "nldd-menu-item children (the items belonging to this group)."
             }
           ],
           "members": [
@@ -1628,6 +1652,54 @@
           },
           "tagName": "nldd-menu-group",
           "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDMenuGroup",
+          "declaration": {
+            "name": "NLDDMenuGroup",
+            "module": "src/components/actions/menu/menu-group.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-menu-group",
+          "declaration": {
+            "name": "NLDDMenuGroup",
+            "module": "src/components/actions/menu/menu-group.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu-item.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "syncListItemRole",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "MenuVariant | null"
+              }
+            }
+          ],
+          "description": "Makes `host` a list item while its menu is a navigation menu, and takes\nthat back when it is not. A `listitem` the consumer set by hand on an item\ngoes too when the variant changes back; nothing else uses that role here."
         },
         {
           "kind": "class",
@@ -1843,22 +1915,7 @@
           ],
           "events": [
             {
-              "name": "menu-item-focused",
-              "type": {
-                "text": "CustomEvent"
-              }
-            },
-            {
-              "name": "submenu-open",
-              "type": {
-                "text": "CustomEvent"
-              }
-            },
-            {
               "name": "select",
-              "type": {
-                "text": "CustomEvent"
-              },
               "description": "Fired when the item is clicked and not disabled."
             }
           ],
@@ -2012,27 +2069,690 @@
           },
           "tagName": "nldd-menu-item",
           "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "syncListItemRole",
+          "declaration": {
+            "name": "syncListItemRole",
+            "module": "src/components/actions/menu/menu-item.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDMenuItem",
+          "declaration": {
+            "name": "NLDDMenuItem",
+            "module": "src/components/actions/menu/menu-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-menu-item",
+          "declaration": {
+            "name": "NLDDMenuItem",
+            "module": "src/components/actions/menu/menu-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu.chain.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One open submenu in a chain: which menu opened it, from which item, and how\nit closes. A level has three paths:\n\n1. **Open.** Wire the submenu to its parent, register it with the root, and\n   show it: beside its item in cascade mode, in place of its parent in\n   drill-in mode.\n2. **One level back.** The submenu closed on its own (the back button,\n   ArrowLeft, Escape, light-dismiss in cascade mode). Tear down, and in\n   drill-in mode show the parent again and say where you are.\n3. **Collapse.** The whole chain goes (a select, the anchor, a tap outside,\n   a resize). Tear down without showing the parent, driven from the root's\n   registry, so it never depends on parent links that real interaction can\n   leave stale.\n\nEverything a level needs is captured here when it opens, so a viewport flip\nbetween cascade and drill-in mid-navigation cannot leave it half undone.",
+          "name": "SubmenuLevel",
+          "members": [
+            {
+              "kind": "field",
+              "name": "root",
+              "type": {
+                "text": "NLDDMenu"
+              },
+              "readonly": true,
+              "description": "The root of the chain, whose registry holds this level."
+            },
+            {
+              "kind": "field",
+              "name": "_homeParent",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "Where a drill-in submenu stood before it moved to <body>."
+            },
+            {
+              "kind": "field",
+              "name": "_homeNextSibling",
+              "type": {
+                "text": "Node | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "open",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "collapse",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Close this level as part of collapsing the whole chain."
+            },
+            {
+              "kind": "field",
+              "name": "_handleToggle",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_teardown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "stepBack",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Undo what `open` did. With `stepBack`, a drill-in parent shows again and\nannounces itself; a collapse leaves it closed and silent."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SubmenuLevel",
+          "declaration": {
+            "name": "SubmenuLevel",
+            "module": "src/components/actions/menu/menu.chain.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu.pointer.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TOUCH_SCROLL_THRESHOLD_PX",
+          "type": {
+            "text": "number"
+          },
+          "default": "8",
+          "description": "How far a finger moves before a press counts as a scroll."
+        },
+        {
+          "kind": "function",
+          "name": "menuItemFromPoint",
+          "return": {
+            "type": {
+              "text": "NLDDMenuItem | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "y",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The menu-item under a point, piercing shadow boundaries.\n`document.elementFromPoint` stops at the outermost shadow host, so a menu\nnested inside another component's shadow DOM (nldd-split-button, say) would\nresolve to that host and never find the item. Descending the shadow roots\nrestores it and is a no-op for light-DOM menus."
         },
         {
           "kind": "class",
-          "description": "A floating menu component using the Popover API.\nPositioned relative to an anchor element using Floating UI.\n\nSupports filtering, keyboard navigation, and highlight management.\nUse nldd-menu-item and nldd-menu-divider as children.\n\nNote: Only type=\"button\" items are supported when used inside nldd-combo-box-field.\nRadio and checkbox types may be used in standalone menus.",
+          "description": "The pointer gestures of a menu, each with its own coordinates and listeners:\n\n1. **Press, drag and release.** A native `<select>` lets you press on one\n   option, drag to another and release to pick that one. Click events don't\n   fire across two elements, so the release is caught on document and, when\n   it lands on another enabled item, that item is selected. The click on the\n   pressed item still owns a press without a drag.\n2. **No press flash while scrolling.** On touch, pressing an item sets\n   :active and the sticky :hover lands on it, so the press highlight shows.\n   When the gesture turns into a scroll of a cramped menu, :active lingers\n   until the browser recognizes the pan. Past the threshold the host gets\n   `scroll-active`, and the styles drop the press highlight while it is set.\n   A tap never moves that far, so it keeps its brief feedback.\n3. **A tap beside the menu.** An outside touch is also how a page scroll\n   begins, so the menu only hears of it once the finger lifts without\n   having moved past the threshold.",
+          "name": "MenuPointerController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_pressedItem",
+              "type": {
+                "text": "NLDDMenuItem | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_touchStart",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{ x: 0, y: 0 }"
+            },
+            {
+              "kind": "field",
+              "name": "_outsideStart",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{ x: 0, y: 0 }"
+            },
+            {
+              "kind": "field",
+              "name": "_onOutsideTap",
+              "type": {
+                "text": "(() => void) | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handlePointerdown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleRelease",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "trackOutsideTap",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                },
+                {
+                  "name": "onTap",
+                  "type": {
+                    "text": "() => void"
+                  }
+                }
+              ],
+              "description": "Follow a touch that started outside the menu, and call `onTap` once it\nends as a tap. A scroll in between drops it."
+            },
+            {
+              "kind": "method",
+              "name": "stopOutsideTap",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleOutsideMove",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleOutsideEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleOutsideCancel",
+              "privacy": "private"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TOUCH_SCROLL_THRESHOLD_PX",
+          "declaration": {
+            "name": "TOUCH_SCROLL_THRESHOLD_PX",
+            "module": "src/components/actions/menu/menu.pointer.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "menuItemFromPoint",
+          "declaration": {
+            "name": "menuItemFromPoint",
+            "module": "src/components/actions/menu/menu.pointer.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MenuPointerController",
+          "declaration": {
+            "name": "MenuPointerController",
+            "module": "src/components/actions/menu/menu.pointer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu.safe-triangle.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "STALL_DISMISS_MS",
+          "type": {
+            "text": "number"
+          },
+          "default": "500",
+          "description": "When the cursor sits motionless inside the triangle for this long, the\nprotection drops and whatever item is under the cursor becomes interactive.\nWithout this, a paused cursor would stay protected indefinitely."
+        },
+        {
+          "kind": "variable",
+          "name": "APEX_X_OFFSET",
+          "type": {
+            "text": "number"
+          },
+          "default": "4",
+          "description": "How far the apex is pulled away from the submenu edge (to the left for a\nsubmenu on the right). Widens the wedge near the cursor so brief diagonal\nwobble doesn't pop the cursor out at the apex, and avoids the degenerate\nsingle-line wedge when the cursor crossed the opener edge at the same x as\nthe near submenu corner. Always negative: the standard placement is\nsubmenu-right, so \"left\" is the intuitive forgive direction."
+        },
+        {
+          "kind": "function",
+          "name": "rectContainsPoint",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "rect",
+              "type": {
+                "text": "DOMRect | null | undefined"
+              }
+            },
+            {
+              "name": "point",
+              "type": {
+                "text": "Point | null | undefined"
+              }
+            }
+          ],
+          "description": "True when the rect contains the point (inclusive). False for a missing rect\nor point."
+        },
+        {
+          "kind": "function",
+          "name": "pointInPolygon",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "p",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "vertices",
+              "type": {
+                "text": "Point[]"
+              }
+            }
+          ],
+          "description": "Convex point-in-polygon test via consistent edge-cross-product sign.\nVertices must be ordered (clockwise or counter-clockwise)."
+        },
+        {
+          "kind": "function",
+          "name": "wedge",
+          "return": {
+            "type": {
+              "text": "Point[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "apex",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "cursor",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "submenu",
+              "type": {
+                "text": "DOMRect"
+              }
+            }
+          ],
+          "description": "The wedge from `apex` to the submenu edge facing the cursor: the left edge\nfor a submenu on the right, the right edge when Floating UI flipped it."
+        },
+        {
+          "kind": "function",
+          "name": "apexAt",
+          "return": {
+            "type": {
+              "text": "Point"
+            }
+          },
+          "parameters": [
+            {
+              "name": "cursor",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "opener",
+              "type": {
+                "text": "DOMRect"
+              }
+            }
+          ],
+          "description": "The apex where the cursor crossed the top or bottom edge of the opener: x\nclamped to the opener so the wedge starts at its visual edge however far\npast it this sample is, then pulled away by APEX_X_OFFSET."
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "SafeTriangleController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "movingToward",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "True while the cursor is on its way to the submenu: peers stay inactive."
+            },
+            {
+              "kind": "field",
+              "name": "_listener",
+              "type": {
+                "text": "((e: MouseEvent) => void) | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_stallTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_lastPos",
+              "type": {
+                "text": "Point | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_apex",
+              "type": {
+                "text": "Point | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_overlay",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "start",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "submenu",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Start tracking for a submenu that just opened in cascade mode."
+            },
+            {
+              "kind": "method",
+              "name": "stop",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_track",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "p",
+                  "type": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "submenu",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_clearStall",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_scheduleStall",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_drawOverlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "vertices",
+                  "type": {
+                    "text": "Point[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_removeOverlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "STALL_DISMISS_MS",
+          "declaration": {
+            "name": "STALL_DISMISS_MS",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "APEX_X_OFFSET",
+          "declaration": {
+            "name": "APEX_X_OFFSET",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "rectContainsPoint",
+          "declaration": {
+            "name": "rectContainsPoint",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pointInPolygon",
+          "declaration": {
+            "name": "pointInPolygon",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "wedge",
+          "declaration": {
+            "name": "wedge",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "apexAt",
+          "declaration": {
+            "name": "apexAt",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SafeTriangleController",
+          "declaration": {
+            "name": "SafeTriangleController",
+            "module": "src/components/actions/menu/menu.safe-triangle.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/actions/menu/menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A floating menu component using the Popover API. Positioned relative to an anchor element using Floating UI. Supports filtering, keyboard navigation, and highlight management. Use nldd-menu-item and nldd-menu-divider as children. Note: Only type=\"button\" items are supported when used inside nldd-combo-box-field. Radio and checkbox types may be used in standalone menus.",
           "name": "NLDDMenu",
           "slots": [
             {
-              "description": "nldd-menu-item and nldd-menu-divider elements.",
-              "name": ""
+              "name": "",
+              "description": "nldd-menu-item and nldd-menu-divider elements."
             },
             {
-              "description": "Free content shown above the items, outside `role=\"menu\"` (so it may hold non-menuitem content such as an avatar + name, buttons or links — reached with Tab, skipped by arrow navigation). The region is unpadded; control spacing with your own content (e.g. an `nldd-container`). Root-only: never rendered in a submenu. Example: an account identity header (nldd-identity).",
-              "name": "header"
+              "name": "header",
+              "description": "Free content shown above the items, outside `role=\"menu\"` (so it may hold non-menuitem content such as an avatar + name, buttons or links — reached with Tab, skipped by arrow navigation). The region is unpadded; control spacing with your own content (e.g. an `nldd-container`). Root-only: never rendered in a submenu. Example: an account identity header (nldd-identity)."
             },
             {
-              "description": "Free content shown below the items, outside `role=\"menu\"` (same rules as `header`; also unpadded and root-only). Example: a short note or a link.",
-              "name": "footer"
+              "name": "footer",
+              "description": "Free content shown below the items, outside `role=\"menu\"` (same rules as `header`; also unpadded and root-only). Example: a short note or a link."
             },
             {
-              "description": "Shown when no items are visible. Defaults to `nldd-inline-dialog` driven by `empty-text` / `empty-supporting-text`. Slot content overrides the default dialog entirely.",
-              "name": "empty"
+              "name": "empty",
+              "description": "Shown when no items are visible. Defaults to `nldd-inline-dialog` driven by `empty-text` / `empty-supporting-text`. Slot content overrides the default dialog entirely."
             }
           ],
           "members": [
@@ -2248,7 +2968,7 @@
               "type": {
                 "text": "MenuVariant"
               },
-              "description": "What the menu is, which sets its roles and part of its keyboard. See the\n`variant` attribute in the docblock above.",
+              "description": "What the menu is (default 'menu'). `menu` is a menu of actions: `role=\"menu\"` with menu items, for things you do. `listbox` is the popup of a combobox: `role=\"listbox\"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role=\"list\"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role=\"listitem\"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself.",
               "name": "variant",
               "default": "'menu'",
               "fieldName": "variant"
@@ -2257,7 +2977,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Explicit width, pinned exactly (sets --_menu-width and clamps min/max to it).\nLeave unset to let the menu size to its content between a minimum and a\nviewport-aware maximum of min(100vw - inset, 640px).",
+              "description": "Explicit width, pinned exactly. Without it the menu sizes to its content between a minimum and a viewport-aware maximum (min(100vw - inset, 640px)).",
               "name": "width",
               "default": "''",
               "fieldName": "width"
@@ -2293,7 +3013,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "Maximum number of visible items before the menu scrolls.\nSets --_menu-max-items internally. Default: 0 (no limit).",
+              "description": "Maximum number of visible items before scrolling. Sets --_menu-max-items internally. Default: 0 (no limit).",
               "name": "max-items",
               "default": "0",
               "fieldName": "maxItems"
@@ -2320,7 +3040,7 @@
               "type": {
                 "text": "Partial<NLDDMenuTranslations>"
               },
-              "description": "Override one or more translation keys.\nUnset keys fall back to the Dutch default.",
+              "description": "Override one or more translation keys.",
               "name": "translations",
               "default": "{}",
               "fieldName": "translations"
@@ -2344,18 +3064,10 @@
       "exports": [
         {
           "kind": "js",
-          "name": "NLDDMenuDivider",
+          "name": "NLDDMenuItem",
           "declaration": {
-            "name": "NLDDMenuDivider",
-            "module": "src/components/actions/menu/menu.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-menu-divider",
-          "declaration": {
-            "name": "NLDDMenuDivider",
-            "module": "src/components/actions/menu/menu.ts"
+            "name": "NLDDMenuItem",
+            "module": "./menu-item.js"
           }
         },
         {
@@ -2363,31 +3075,15 @@
           "name": "NLDDMenuGroup",
           "declaration": {
             "name": "NLDDMenuGroup",
-            "module": "src/components/actions/menu/menu.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-menu-group",
-          "declaration": {
-            "name": "NLDDMenuGroup",
-            "module": "src/components/actions/menu/menu.ts"
+            "module": "./menu-group.js"
           }
         },
         {
           "kind": "js",
-          "name": "NLDDMenuItem",
+          "name": "NLDDMenuDivider",
           "declaration": {
-            "name": "NLDDMenuItem",
-            "module": "src/components/actions/menu/menu.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "nldd-menu-item",
-          "declaration": {
-            "name": "NLDDMenuItem",
-            "module": "src/components/actions/menu/menu.ts"
+            "name": "NLDDMenuDivider",
+            "module": "./menu-divider.js"
           }
         },
         {

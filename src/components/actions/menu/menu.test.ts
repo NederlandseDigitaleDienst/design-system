@@ -5,6 +5,8 @@ import './menu.js';
 import '../button/button.js';
 import '../../inputs/combo-box/combo-box.js';
 import '../../inputs/token-field/token-field.js';
+import { pointInPolygon, wedge, apexAt } from './menu.safe-triangle.js';
+import { menuItemFromPoint } from './menu.pointer.js';
 
 function getButton(el: Element): HTMLElement {
 	return el.shadowRoot?.querySelector('button') as HTMLElement;
@@ -1218,17 +1220,6 @@ describe('nldd-menu typeahead and event lifecycle', () => {
 });
 
 describe('nldd-menu safe-triangle internals', () => {
-	type PolygonHelper = (
-		p: { x: number, y: number },
-		vertices: Array<{ x: number, y: number }>,
-	) => boolean;
-
-	// Static helper — reach via the constructor so the test stays honest about
-	// it being callable without an instance.
-	const pointInPolygon = (
-		(customElements.get('nldd-menu') as unknown as { _pointInPolygon: PolygonHelper })._pointInPolygon
-	).bind(customElements.get('nldd-menu')) as PolygonHelper;
-
 	it('identifies a point inside a convex wedge as inside', () => {
 		// Triangle apex at (0,0), base on x=100 between y=-50..50.
 		const wedge = [
@@ -1374,7 +1365,7 @@ describe('nldd-menu drill-in chain', () => {
 
 		const rootInternals = root as unknown as {
 			_activeSubmenu: HTMLElement | null;
-			_activeSubmenuCleanup: ((skipReshow: boolean) => void) | null;
+			_activeLevel: unknown;
 		};
 		const l2Internals = l2Menu as unknown as {
 			_parentMenu: HTMLElement | null;
@@ -1394,7 +1385,7 @@ describe('nldd-menu drill-in chain', () => {
 		// After select-chain-close, every level should have shed its
 		// parent reference and the root should have no active submenu.
 		expect(rootInternals._activeSubmenu).toBe(null);
-		expect(rootInternals._activeSubmenuCleanup).toBe(null);
+		expect(rootInternals._activeLevel).toBe(null);
 		expect(l2Internals._parentMenu).toBe(null);
 
 		// Session 2 — same chain again. If session 1 left a stale toggle
@@ -1523,7 +1514,7 @@ describe('nldd-menu drill-in chain', () => {
 
 		// Corrupt every parent/active link the old walk depended on.
 		const wipe = (m: HTMLElement) => Object.assign(m as unknown as Record<string, unknown>, {
-			_activeSubmenu: null, _parentMenu: null, _activeSubmenuCleanup: null,
+			_activeSubmenu: null, _parentMenu: null, _activeLevel: null,
 		});
 		wipe(menu); wipe(l2Menu); wipe(l3Menu);
 
@@ -2368,10 +2359,9 @@ describe('nldd-menu touch-scroll press suppression', () => {
 	});
 });
 
-describe('nldd-menu _menuItemFromPoint', () => {
+describe('nldd-menu menuItemFromPoint', () => {
 	let el: HTMLElement;
-	const fromPoint = (m: HTMLElement, x: number, y: number) =>
-		(m as unknown as { _menuItemFromPoint(x: number, y: number): Element | null })._menuItemFromPoint(x, y);
+	const fromPoint = (_m: HTMLElement, x: number, y: number) => menuItemFromPoint(x, y);
 
 	afterEach(() => {
 		if (el) cleanup(el);
@@ -3038,5 +3028,106 @@ describe('nldd-menu – accessible-label', () => {
 		await waitForUpdate(token);
 		expect(list(combo).getAttribute('aria-label')).toBe('Expertise');
 		expect(list(token).getAttribute('aria-label')).toBe('Opdrachtgevers');
+	});
+});
+
+describe('nldd-menu safe-triangle geometry', () => {
+	const rect = (left: number, top: number, right: number, bottom: number) =>
+		({ left, top, right, bottom, x: left, y: top, width: right - left, height: bottom - top }) as DOMRect;
+
+	it('runs the wedge to the submenu edge facing the cursor', () => {
+		const submenu = rect(200, 0, 300, 100);
+		expect(wedge({ x: 0, y: 50 }, { x: 10, y: 50 }, submenu)).toEqual([
+			{ x: 0, y: 50 }, { x: 200, y: 0 }, { x: 200, y: 100 },
+		]);
+		expect(wedge({ x: 400, y: 50 }, { x: 390, y: 50 }, submenu)[1]).toEqual({ x: 300, y: 0 });
+	});
+
+	it('pins the apex on the crossed edge of the opener, clamped and pulled away', () => {
+		const opener = rect(0, 40, 180, 60);
+		expect(apexAt({ x: 250, y: 70 }, opener)).toEqual({ x: 176, y: 60 });
+		expect(apexAt({ x: 90, y: 30 }, opener)).toEqual({ x: 86, y: 40 });
+	});
+});
+
+describe('nldd-menu submenu chain, one level back and peers', () => {
+	const NLDDMenuCtor = customElements.get('nldd-menu') as CustomElementConstructor;
+	let drillInSpy: ReturnType<typeof vi.spyOn> | null = null;
+
+	afterEach(() => {
+		drillInSpy?.mockRestore();
+		drillInSpy = null;
+		document.querySelectorAll('nldd-menu').forEach(m => m.remove());
+	});
+
+	function open(item: HTMLElement, submenu: HTMLElement): void {
+		item.dispatchEvent(new CustomEvent('submenu-open', { detail: { submenu, item }, bubbles: true }));
+	}
+
+	const markup = `
+		<nldd-menu>
+			<nldd-menu-item text="Bestand">
+				<nldd-menu>
+					<nldd-menu-item text="Open"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-item>
+			<nldd-menu-item text="Bewerken">
+				<nldd-menu>
+					<nldd-menu-item text="Knip"></nldd-menu-item>
+				</nldd-menu>
+			</nldd-menu-item>
+		</nldd-menu>
+	`;
+
+	it('drill-in: one level back shows the parent again and puts the submenu back under its item', async () => {
+		drillInSpy = vi.spyOn(NLDDMenuCtor.prototype as unknown as { _drillInMode: boolean }, '_drillInMode', 'get');
+		drillInSpy.mockReturnValue(true);
+		const root = await fixture<HTMLElement>(markup);
+		await waitForUpdate(root);
+		const item = root.querySelector(':scope > nldd-menu-item') as HTMLElement & { _submenuOpen: boolean };
+		const submenu = item.querySelector(':scope > nldd-menu') as HTMLElement;
+		root.showPopover();
+		await waitForUpdate(root);
+		open(item, submenu);
+		await waitForUpdate(root);
+		expect(submenu.parentElement).toBe(document.body);
+		expect(root.matches(':popover-open')).toBe(false);
+
+		submenu.hidePopover();
+		await waitForUpdate(root);
+		expect(root.matches(':popover-open')).toBe(true);
+		expect(submenu.parentElement).toBe(item);
+		expect(item._submenuOpen).toBe(false);
+
+		// And the same submenu opens again from there.
+		open(item, submenu);
+		await waitForUpdate(root);
+		expect(submenu.matches(':popover-open')).toBe(true);
+		cleanup(root);
+	});
+
+	it('cascade: opening a peer submenu closes the one that was open', async () => {
+		drillInSpy = vi.spyOn(NLDDMenuCtor.prototype as unknown as { _drillInMode: boolean }, '_drillInMode', 'get');
+		drillInSpy.mockReturnValue(false);
+		const root = await fixture<HTMLElement>(markup);
+		await waitForUpdate(root);
+		const [first, second] = [...root.querySelectorAll(':scope > nldd-menu-item')] as HTMLElement[];
+		const firstMenu = first.querySelector(':scope > nldd-menu') as HTMLElement;
+		const secondMenu = second.querySelector(':scope > nldd-menu') as HTMLElement;
+		root.showPopover();
+		await waitForUpdate(root);
+		const closed: Element[] = [];
+		root.addEventListener('submenu-close', (e) => closed.push((e as CustomEvent).detail.submenu));
+
+		open(first, firstMenu);
+		await waitForUpdate(root);
+		open(second, secondMenu);
+		await waitForUpdate(root);
+		expect(firstMenu.matches(':popover-open')).toBe(false);
+		expect(secondMenu.matches(':popover-open')).toBe(true);
+		expect(closed).toEqual([firstMenu]);
+		expect(first.shadowRoot!.querySelector('[aria-expanded="true"]')).toBeNull();
+		expect(second.shadowRoot!.querySelector('[aria-expanded="true"]')).not.toBeNull();
+		cleanup(root);
 	});
 });
