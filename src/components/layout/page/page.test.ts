@@ -464,7 +464,8 @@ describe('nldd-page – sticky bars and focus', () => {
 		`);
 		const el = wrapper.querySelector('nldd-page') as HTMLElement & { updateComplete: Promise<boolean> };
 		await el.updateComplete;
-		await nextFrames(3);
+		await nextFrames();
+		await nextFrames();
 		return el;
 	};
 
@@ -476,10 +477,10 @@ describe('nldd-page – sticky bars and focus', () => {
 		// The nearest scroll an arrow key or Tab does for the next row, not the
 		// centering a programmatic focus() does in Chromium.
 		buttons[15].scrollIntoView({ block: 'nearest' });
-		await nextFrames(2);
+		await nextFrames();
 		expect(buttons[15].getBoundingClientRect().bottom).toBeLessThanOrEqual(footer.getBoundingClientRect().top + 0.5);
 		buttons[3].scrollIntoView({ block: 'nearest' });
-		await nextFrames(2);
+		await nextFrames();
 		expect(buttons[3].getBoundingClientRect().top).toBeGreaterThanOrEqual(header.getBoundingClientRect().bottom - 0.5);
 	});
 
@@ -488,7 +489,8 @@ describe('nldd-page – sticky bars and focus', () => {
 		const footer = el.shadowRoot!.querySelector('.page__footer')!;
 		expect(footer.classList.contains('is-at-end')).toBe(false);
 		el.querySelector<HTMLButtonElement>(':scope > button:last-of-type')!.focus();
-		await nextFrames(3);
+		await nextFrames();
+		await nextFrames();
 		expect(footer.classList.contains('is-at-end')).toBe(true);
 	});
 });
