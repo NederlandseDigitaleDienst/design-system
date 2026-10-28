@@ -791,3 +791,29 @@ describe('nldd-top-navigation-bar logo', () => {
 		});
 	}
 });
+
+describe('nldd-top-navigation-bar – logo and title to the same page', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const warned = (warn: { mock: { calls: unknown[][] } }) =>
+		warn.mock.calls.some(([message]) => String(message).includes('leave out `logo-href`'));
+
+	it('warns once when logo and website title link to the same page', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`<nldd-top-navigation-bar website-title="Mijn Dienst" website-href="/" logo-href="${location.origin}/"></nldd-top-navigation-bar>`);
+		(el as NLDDTopNavigationBar).websiteTitle = 'Mijn Dienst – Home';
+		await (el as NLDDTopNavigationBar).updateComplete;
+		expect(warn.mock.calls.filter(([message]) => String(message).includes('leave out `logo-href`'))).toHaveLength(1);
+	});
+
+	it('says nothing when they link to different pages', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-top-navigation-bar website-title="Mijn Dienst" website-href="/mijn-dienst" logo-href="https://www.rijksoverheid.nl"></nldd-top-navigation-bar>');
+		expect(warned(warn)).toBe(false);
+	});
+});

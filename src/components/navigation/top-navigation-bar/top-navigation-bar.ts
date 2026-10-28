@@ -20,7 +20,7 @@
  * @attr {string} logo-subtitle - Subtitle under the wordmark title. Only visible when there is a wordmark.
  * @attr {string} logo-supporting-text-1 - First supporting line under the wordmark title. Only visible when there is a wordmark.
  * @attr {string} logo-supporting-text-2 - Second supporting line under the wordmark title. Only visible when there is a wordmark.
- * @attr {string} logo-href - URL for the logo and wordmark. Without it they are not a link but an image with an accessible label.
+ * @attr {string} logo-href - URL for the logo and wordmark. Without it they are not a link but an image with an accessible label. Leave it out when `website-href` already goes to the same page: two links to the start page side by side are two tab stops and the same link twice in a screen reader's list of links.
  * @attr {string} website-title - Name of the website or application, above the menu bar. Empty leaves the title line out. On a narrow screen, where it has a line of its own, a long name wraps; on md and lg it sits beside the menu on one line, so keep it short enough to fit there.
  * @attr {string} website-href - URL for the website title. Without it the title stays plain text.
  * @attr {string} back-href - URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself.
@@ -46,6 +46,13 @@ import '../../content/icon/icon.js';
 import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import { sanitizeUrl } from '../../../utilities/sanitize-url.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+
+/** The absolute URL an href goes to; an anchor resolves it without throwing. */
+function resolvedHref(href: string): string {
+	const anchor = document.createElement('a');
+	anchor.href = href;
+	return anchor.href;
+}
 
 /** Minimal typed interface for nldd-sheet API. */
 interface Sheet extends HTMLElement {
@@ -168,8 +175,15 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		].join('\n');
 	}
 
+	private _warnedSameHref = false;
+
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
+		if (import.meta.env?.DEV && !this._warnedSameHref && this.logoHref && this.websiteHref
+			&& resolvedHref(this.logoHref) === resolvedHref(this.websiteHref)) {
+			this._warnedSameHref = true;
+			console.warn('<nldd-top-navigation-bar>: `logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.');
+		}
 		// Not only on `translations`: setTranslations() re-renders without it.
 		const texts = this._translatedTexts();
 		if (texts !== this._appliedTexts) {
