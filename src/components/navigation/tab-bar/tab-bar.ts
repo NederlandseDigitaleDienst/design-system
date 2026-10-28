@@ -399,8 +399,19 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 			);
 	}
 
+	private _warnedHrefWithoutNavigation = false;
+
 	private _syncItems(): void {
 		const items = this._getItems();
+
+		// Links that go to another page are navigation: the current tab follows the
+		// route and is said as aria-current="page". As a tablist the bar marks a tab
+		// selected on a click and an arrow key, which a screen reader then reports
+		// for a page that never opened.
+		if (import.meta.env?.DEV && !this.navigation && !this._warnedHrefWithoutNavigation && items.some(item => item.href)) {
+			this._warnedHrefWithoutNavigation = true;
+			console.warn('<nldd-tab-bar>: tabs with `href` go to another page; add `navigation` so the bar is a nav with aria-current="page" instead of a tablist, and set `current` on the tab of the page you are on.');
+		}
 
 		items.forEach(item => {
 			item._groupVariant = this.variant;

@@ -33,6 +33,11 @@ export default {
 			description: 'Centreert de tabs in de container (host vult de rij, tabs groeperen in het midden)',
 			table: { defaultValue: { summary: false } },
 		},
+		navigation: {
+			control: 'boolean',
+			description: 'Een nav met links naar andere pagina\'s in plaats van een tablist; de huidige tab volgt de route en krijgt aria-current="page"',
+			table: { defaultValue: { summary: false } },
+		},
 		disabled: {
 			control: 'boolean',
 			description: 'Schakelt de hele balk uit: dimt hem, blokkeert muisinteractie en haalt de tabs uit de tab-volgorde',
@@ -49,6 +54,7 @@ export default {
 		variant: '',
 		size: 'md',
 		centered: false,
+		navigation: false,
 		disabled: false,
 		accessibleLabel: '',
 	},
@@ -72,11 +78,12 @@ const tabBarItems = html`
 	></nldd-tab-bar-item>
 `;
 
-const Template = ({ variant, size, centered, disabled, accessibleLabel }: Record<string, any>) => html`
+const Template = ({ variant, size, centered, navigation, disabled, accessibleLabel }: Record<string, any>) => html`
 	<nldd-tab-bar
 		variant=${variant || nothing}
 		size=${size || nothing}
 		?centered=${centered}
+		?navigation=${navigation}
 		?disabled=${disabled}
 		accessible-label=${accessibleLabel || nothing}
 	>
