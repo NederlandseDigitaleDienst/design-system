@@ -140,7 +140,8 @@ export const topNavigationBarStyles = css`
 		}
 
 		/* A fixed element only sees the document scroll, and nldd-page can be
-		   the scroller. This one sees that; the ::after inherits its visibility. */
+		   the scroller. This one sees that and goes visibility: hidden on scroll;
+		   the ::after inherits it. */
 		.top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top {
 			display: block;
 			position: absolute;
