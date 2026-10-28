@@ -93,6 +93,10 @@ export default {
 			description: 'Link target (stelt rel automatisch bij voor _blank)',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		download: {
+			control: 'text',
+			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
+		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -113,15 +117,17 @@ export default {
 		endIcon: '',
 		href: '#',
 		target: '',
+		download: '',
 		accessibleLabel: '',
 		disabled: false,
 	},
 };
 
-const Template = ({ size, text, startIcon, endIcon, href, target, accessibleLabel, disabled }: Record<string, any>) => html`
+const Template = ({ size, text, startIcon, endIcon, href, target, download, accessibleLabel, disabled }: Record<string, any>) => html`
 	<nldd-link
 		href=${href || nothing}
 		target=${target || nothing}
+		download=${download || nothing}
 		size=${size || nothing}
 		text=${text}
 		start-icon=${startIcon || nothing}

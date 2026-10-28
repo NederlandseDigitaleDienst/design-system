@@ -22,6 +22,7 @@
  * @attr {object} translations - Override translation keys (e.g. the "opent in nieuw tabblad" announcement)
  * @attr {string} href - Makes the whole card a link to this URL (empty = no link)
  * @attr {string} target - Link target for href (e.g. '_blank'); adjusts rel automatically and adds an "opent in nieuw tabblad" announcement for '_blank'. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Makes the whole card a button; ignored when `href` is set
  *
@@ -58,6 +59,11 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 
 	@property({ type: String })
 	target = '';
+
+	/** Saves the file instead of opening it; only used when href is set. Empty
+	 *  for the name from the URL, a name to save it under. */
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	@property({ type: String })
 	rel = '';

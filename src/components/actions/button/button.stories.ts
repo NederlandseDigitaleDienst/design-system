@@ -177,6 +177,10 @@ export default {
 			description: 'Link target (alleen gebruikt als href is gezet)',
 			table: { defaultValue: { summary: '(geen)' } },
 		},
+		download: {
+			control: 'text',
+			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
+		},
 		accessibleLabel: {
 			name: 'accessible-label',
 			control: 'text',
@@ -224,6 +228,7 @@ export default {
 		type: 'button',
 		href: '',
 		target: '',
+		download: '',
 		accessibleLabel: '',
 		loading: false,
 		loadingText: '',
@@ -231,7 +236,7 @@ export default {
 	},
 };
 
-const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, accessibleLabel, loading, loadingText, disabled }: Record<string, any>) => html`
+const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expandable, expanded, popupType, text, supportingText, singleLine, startIcon, endIcon, shortcut, shortcutMac, shortcutWindows, shortcutLinux, type, href, target, download, accessibleLabel, loading, loadingText, disabled }: Record<string, any>) => html`
 	<nldd-button
 		appearance=${appearance}
 		size=${size}
@@ -243,6 +248,7 @@ const Template = ({ appearance, size, horizontalAlignment, width, maxWidth, expa
 		supporting-text=${supportingText || nothing}
 		href=${href || nothing}
 		target=${target || nothing}
+		download=${download || nothing}
 		start-icon=${startIcon || nothing}
 		end-icon=${endIcon || nothing}
 		shortcut=${shortcut || nothing}

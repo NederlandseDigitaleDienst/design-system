@@ -1065,3 +1065,27 @@ describe('nldd-button – on a colored surface', () => {
 		});
 	});
 });
+
+describe('<nldd-button> with download', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	it('puts download on the link and says it downloads the file', async () => {
+		el = await fixture('<nldd-button href="/verslag.pdf" download="verslag.pdf" text="Download"></nldd-button>');
+		await waitForUpdate(el);
+		const a = el.shadowRoot!.querySelector('a')!;
+		expect(a.getAttribute('download')).toBe('verslag.pdf');
+		expect(a.textContent).toContain('downloadt bestand');
+	});
+
+	it('warns once that target does nothing on a download', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture('<nldd-button href="/verslag.pdf" target="_blank" download="verslag.pdf" text="Download"></nldd-button>');
+		await waitForUpdate(el);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
+	});
+});

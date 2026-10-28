@@ -17,7 +17,12 @@ here; consult the commit history if you need that level of detail.
 
 ### Highlights
 
+- **A download button that saves the file.** `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-list-item` and `nldd-list-item-segment` take `download` beside `href`, and a screen reader hears that the link downloads a file.
 - **The caret of `nldd-code-editor` is whole at the start of a line.** See Fixed.
+
+### Added
+
+- **`download` on `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-list-item` and `nldd-list-item-segment`.** Like `target` and `rel` it only counts with `href`, and it goes onto the link as it is: without a value the browser saves the file under the name from the URL, with one under that name. A browser ignores it for a URL on another origin and opens the file there. A screen reader hears "downloadt bestand" after the name, as it hears "opent in nieuw tabblad" for `target="_blank"`, and in development a `target` beside `download` gets a warning, since a download opens no tab. A download button opened the file in the browser before, and could only save it with a script of your own.
 
 ### Fixed
 

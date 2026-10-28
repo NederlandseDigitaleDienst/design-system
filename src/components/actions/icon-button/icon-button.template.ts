@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDIconButton } from './icon-button.js';
 import { linkRel } from '../../../utilities/link-rel.js';
-import { linkHintKey } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 import { hasShortcut, shortcutLabel } from '../../../utilities/shortcut.js';
 import '../../content/tooltip/tooltip.js';
 
@@ -32,7 +32,8 @@ export function template(this: NLDDIconButton) {
 	// The control always carries an aria-label, which wins the accessible-name
 	// cascade, so fold the hint into it rather than into a hidden span (which it
 	// would override). Only the <a> path (href) navigates.
-	const hintKey = linkHintKey(this.href, this.target);
+	const hintKey = downloadLinkHintKey(this.href, this.target, this.download);
+	if (this.href) warnDownloadTarget(this, this.download, this.target);
 	const linkHint = hintKey ? this._t(`components.icon-button.${hintKey}`) : '';
 	// The shortcut joins the name the way nldd-menu-item announces it
 	// ("Presentatiemodus Alt P"); the tooltip only shows it.
@@ -85,6 +86,7 @@ export function template(this: NLDDIconButton) {
 					href=${this.href}
 					target=${this.target || nothing}
 					rel=${resolvedRel || nothing}
+					download=${this.download ?? nothing}
 					aria-disabled=${this.disabled ? 'true' : nothing}
 					aria-label=${label}
 					aria-haspopup=${this.popupType || nothing}

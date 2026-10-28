@@ -30,6 +30,7 @@
  * @attr {string} shortcut-linux - Override of `shortcut` on Linux (falls back to `shortcut`).
  * @attr {string} href - When set, renders an <a> element instead of <button>
  * @attr {string} target - Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden "opens in new tab" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {object} translations - Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch.
  *
@@ -214,6 +215,11 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	/** Link target (e.g. '_blank'). Only used when href is set. */
 	@property({ type: String })
 	target: string | undefined = undefined;
+
+	/** Saves the file instead of opening it; only used when href is set. Empty
+	 *  for the name from the URL, a name to save it under. */
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	/**
 	 * Link rel attribute. Only used when href is set.

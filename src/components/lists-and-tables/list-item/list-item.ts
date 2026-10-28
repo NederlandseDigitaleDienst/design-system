@@ -7,7 +7,7 @@ import { template } from './list-item.template.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddListItemTranslations } from './list-item.i18n.js';
-import { linkHintKey } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
 
 export type ListItemSize = 'sm' | 'md';
@@ -165,6 +165,7 @@ const NESTED_CONTROLS = [
  * @attr {'sm'|'md'} size - Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.
  * @attr {string} href - Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action.
  * @attr {string} target - Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`.
@@ -206,6 +207,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 */
 	@property({ reflect: true })
 	target?: string;
+
+	/** Saves the file instead of opening it; only used when href is set. Empty
+	 *  for the name from the URL, a name to save it under. */
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	/** Link rel, forwarded to the `<a>` with href. With target '_blank',
 	 *  'noopener noreferrer' is added to it. */
@@ -1178,7 +1184,8 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	}
 
 	override render() {
-		const hintKey = linkHintKey(this.href, this.target);
+		const hintKey = downloadLinkHintKey(this.href, this.target, this.download);
+		if (this.href) warnDownloadTarget(this, this.download, this.target);
 		const linkHint = hintKey ? this._t(`components.list-item.${hintKey}`) : undefined;
 		// Listbox options are never separate tab stops — only the list's own
 		// search input is in the tab order, and active moves via
@@ -1198,6 +1205,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			this.href,
 			this.target,
 			this.rel,
+			this.download,
 			linkHint,
 			actionTabindex,
 			this._highlighted,

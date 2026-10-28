@@ -47,6 +47,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the button adds a visually hidden "opens in new tab" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
 
@@ -133,6 +134,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | `shortcut-linux` | `string` | Override of `shortcut` on Linux (falls back to `shortcut`). |
 | `href` | `string` | When set, renders an <a> element instead of <button> |
 | `target` | `string` | Link target (e.g. '_blank'); only used when href is set. With '_blank' the "opens in new tab" announcement is folded into the aria-label for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel attribute, used with href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `translations` | `object` | Override translation keys (e.g. the "opens in new tab" announcement); unset keys fall back to Dutch. |
 | `popovertarget` | `string` | ID of a popover element to toggle; forwarded to the inner <button> |
@@ -1686,6 +1688,7 @@ A visually bounded card with optional header, body and footer sections. The card
 | `translations` | `object` | Override translation keys (e.g. the "opent in nieuw tabblad" announcement) |
 | `href` | `string` | Makes the whole card a link to this URL (empty = no link) |
 | `target` | `string` | Link target for href (e.g. '_blank'); adjusts rel automatically and adds an "opent in nieuw tabblad" announcement for '_blank'. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel for href; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `button` | `boolean` | Makes the whole card a button; ignored when `href` is set |
 
@@ -2386,6 +2389,7 @@ Hyperlink component with two modes: 1. **Standalone (sized)**: set `size="xs"|"s
 | --- | --- | --- |
 | `href` | `string` | Link target |
 | `target` | `string` | Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `size` | `string` | Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' \| 'sm' \| 'md' \| 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap. |
 | `text` | `string` | Link text (alternative to the default slot) |
@@ -3038,6 +3042,7 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `size` | `'sm'\|'md'` | Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone. |
 | `href` | `string` | Renders the item as an `<a>` with this URL. Wins over `checkbox` and `button`; without any of the three the item is a plain container with no action. |
 | `target` | `string` | Link target forwarded to the `<a>` (e.g. '_blank'); only applies with `href`. With '_blank' a visually hidden "opens in new tab" announcement is added for assistive technology. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `button` | `boolean` | Renders the item as a `<button>`. Last of the three: `href` and `checkbox` both win over it. |
 | `checkbox` | `boolean` | Makes the whole row a `role="checkbox"` control. Wins over `button`, loses to `href`. |
@@ -3077,6 +3082,7 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 | `width` | `'fit-content'\|'full'` | `full` lets the segment grow to fill the row (default: 'fit-content') |
 | `href` | `string` | Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`. |
 | `target` | `string` | Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden "opent in nieuw tabblad" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label. |
+| `download` | `string` | Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab. |
 | `rel` | `string` | Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set |
 | `button` | `boolean` | Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it. |
 | `checkbox` | `boolean` | Makes the segment a `role="checkbox"` control. Wins over `button`, loses to `href`. |

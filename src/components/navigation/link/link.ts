@@ -19,6 +19,7 @@
  * @element nldd-link
  * @attr {string} href - Link target
  * @attr {string} target - Link target (e.g. '_blank'); adjusts rel automatically. With '_blank' the link adds a visually hidden "opent in nieuw tabblad" announcement for screen readers (WCAG 2.1 SC 3.2.2). An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off.
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel attribute; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {string} size - Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' | 'sm' | 'md' | 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap.
  * @attr {string} text - Link text (alternative to the default slot)
@@ -54,6 +55,11 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 
 	@property({ type: String })
 	target: string | undefined = undefined;
+
+	/** Saves the file instead of opening it; only used when href is set. Empty
+	 *  for the name from the URL, a name to save it under. */
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	@property({ type: String })
 	rel: string | undefined = undefined;

@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import type { NLDDLink } from './link.js';
 import { linkRel } from '../../../utilities/link-rel.js';
-import { linkHintKey } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 
 interface TemplateHelpers {
 	handleClick: (e: MouseEvent) => void;
@@ -11,7 +11,8 @@ export function template(this: NLDDLink, helpers: TemplateHelpers) {
 	const resolvedRel = linkRel(this.rel, this.target);
 	// A link to another website or a new tab says so (WCAG 2.1 SC 3.2.2).
 	// Suppressed when disabled (the <a> carries no href, so it doesn't navigate).
-	const hintKey = this.disabled ? null : linkHintKey(this.href, this.target);
+	const hintKey = this.disabled ? null : downloadLinkHintKey(this.href, this.target, this.download);
+	if (this.href) warnDownloadTarget(this, this.download, this.target);
 	const linkHint = hintKey ? this._t(`components.link.${hintKey}`) : '';
 	// aria-label wins the accessible-name cascade, so when one is set the hint
 	// must live inside it; otherwise the name is content-derived (text or slot)
@@ -31,6 +32,7 @@ export function template(this: NLDDLink, helpers: TemplateHelpers) {
 			tabindex=${this.noTab ? '-1' : (this.disabled ? '0' : nothing)}
 			target=${this.disabled ? nothing : (this.target || nothing)}
 			rel=${this.disabled ? nothing : (resolvedRel || nothing)}
+			download=${this.disabled ? nothing : (this.download ?? nothing)}
 			aria-disabled=${this.disabled ? 'true' : nothing}
 			aria-label=${ariaLabel}
 			@click=${helpers.handleClick}

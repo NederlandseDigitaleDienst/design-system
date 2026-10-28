@@ -6,7 +6,7 @@ import { listItemSegmentStyles } from './list-item-segment.styles.js';
 import { template, type ListItemSegmentControl } from './list-item-segment.template.js';
 import type { NLDDList } from '../list/list.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
-import { linkHintKey } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 import { nlddListItemSegmentTranslations } from './list-item-segment.i18n.js';
 
 export type ListItemSegmentWidth = 'fit-content' | 'full';
@@ -41,6 +41,7 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {'fit-content'|'full'} width - `full` lets the segment grow to fill the row (default: 'fit-content')
  * @attr {string} href - Renders the segment as an `<a>` with this URL. Wins over `checkbox` and `button`.
  * @attr {string} target - Link target forwarded to the `<a>`; only applies with `href`. With '_blank' a visually hidden "opent in nieuw tabblad" announcement is added. An `href` to another origin than the page (another website, a subdomain too) adds a visually hidden "andere website", in one sentence with the new-tab announcement when both apply; there is no way to switch it off. With `accessible-label` the hint goes into the label.
+ * @attr {string} download - Saves the file the link points at instead of opening it; only used with href. Without a value the browser takes the name from the URL, with one that is the file name. A browser ignores it for a URL on another origin and opens the file there. Adds a visually hidden "downloadt bestand" for screen readers. Leave `target` off: a download opens no tab.
  * @attr {string} rel - Link rel forwarded to the `<a>`, only with `href`; with target '_blank', 'noopener noreferrer' is added to whatever you set
  * @attr {boolean} button - Renders the segment as a `<button>`. Last of the three: `href` and `checkbox` both win over it.
  * @attr {boolean} checkbox - Makes the segment a `role="checkbox"` control. Wins over `button`, loses to `href`.
@@ -74,6 +75,11 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 
 	@property({ reflect: true })
 	target?: string;
+
+	/** Saves the file instead of opening it; only used when href is set. Empty
+	 *  for the name from the URL, a name to save it under. */
+	@property({ type: String })
+	download: string | undefined = undefined;
 
 	@property({ reflect: true })
 	rel?: string;
@@ -288,12 +294,14 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 		if (import.meta.env?.DEV && this.disclosure && this.expanded !== undefined) {
 			console.warn('nldd-list-item-segment: `disclosure` takes aria-expanded from the row, so the `expanded` on this action is ignored. Drop one of the two.');
 		}
-		const hintKey = this._controlType === 'link' ? linkHintKey(this.href, this.target) : null;
+		const hintKey = this._controlType === 'link' ? downloadLinkHintKey(this.href, this.target, this.download) : null;
+		if (this._controlType === 'link') warnDownloadTarget(this, this.download, this.target);
 		return template(
 			this._controlType,
 			this.href,
 			this.target,
 			this.rel,
+			this.download,
 			this.checked,
 			this.disclosure ? this._rowExpanded : this.expanded,
 			this.current ? this.currentType : undefined,
