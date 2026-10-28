@@ -367,6 +367,10 @@ export const topNavigationBarStyles = css`
 
 		@container (max-width: ${smMax}) {
 			padding-top: var(--primitives-space-4);
+			min-width: 0;
+			white-space: normal;
+			overflow-wrap: break-word;
+			text-align: center;
 		}
 
 		@container (min-width: ${mdMin}) {

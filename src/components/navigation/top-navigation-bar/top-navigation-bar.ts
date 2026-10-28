@@ -21,7 +21,7 @@
  * @attr {string} logo-supporting-text-1 - First supporting line under the wordmark title. Only visible when there is a wordmark.
  * @attr {string} logo-supporting-text-2 - Second supporting line under the wordmark title. Only visible when there is a wordmark.
  * @attr {string} logo-href - URL for the logo and wordmark. Without it they are not a link but an image with an accessible label.
- * @attr {string} website-title - Name of the website or application, above the menu bar. Empty leaves the title line out.
+ * @attr {string} website-title - Name of the website or application, above the menu bar. Empty leaves the title line out. On a narrow screen, where it has a line of its own, a long name wraps; on md and lg it sits beside the menu on one line, so keep it short enough to fit there.
  * @attr {string} website-href - URL for the website title. Without it the title stays plain text.
  * @attr {string} back-href - URL of the back button. Without it a click fires the `back-click` event, so the consumer navigates itself.
  * @attr {string} back-text - Text of the back button. The button appears as soon as back-text or back-href is set; without text it falls back to the translation ("Terug").
