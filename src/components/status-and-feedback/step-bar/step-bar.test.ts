@@ -231,3 +231,32 @@ describe('nldd-step-bar', () => {
 	});
 
 });
+
+describe('nldd-step-bar – compact view', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	const controls = (bar: Element) => [...bar.querySelectorAll('nldd-step-bar-item')]
+		.map((item) => item.shadowRoot!.querySelector('.step-bar__item-control'))
+		.filter((control): control is HTMLElement => !!control);
+
+	it('takes the hidden steps out of the tab order, and puts them back when it widens', async () => {
+		el = await fixture(`
+			<div style="width: 300px">
+				<nldd-step-bar>
+					<nldd-step-bar-item text="Gegevens" href="#gegevens"></nldd-step-bar-item>
+					<nldd-step-bar-item text="Controle" button status="current"></nldd-step-bar-item>
+					<nldd-step-bar-item text="Bevestigen"></nldd-step-bar-item>
+				</nldd-step-bar>
+			</div>
+		`);
+		const bar = el.querySelector('nldd-step-bar')!;
+		await vi.waitFor(() => expect(controls(bar).every((control) => control.getAttribute('tabindex') === '-1')).toBe(true));
+		expect(controls(bar)).toHaveLength(2);
+		el.style.width = '900px';
+		await vi.waitFor(() => expect(controls(bar).every((control) => !control.hasAttribute('tabindex'))).toBe(true));
+	});
+});

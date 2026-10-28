@@ -63,10 +63,12 @@ export function stepBarItemTemplate(component: NLDDStepBarItem): TemplateResult 
 			${component.href ? html`
 				<a class="step-bar__item-control"
 					href=${component.href}
+					tabindex=${component._compact ? '-1' : nothing}
 				>${content}</a>
 			` : component.button ? html`
 				<button class="step-bar__item-control"
 					type="button"
+					tabindex=${component._compact ? '-1' : nothing}
 				>${content}</button>
 			` : content}
 		</div>

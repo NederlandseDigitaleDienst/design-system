@@ -22,7 +22,9 @@
  * Below the sm breakpoint (a container query, so measured on the component
  * itself rather than on the viewport) it folds into one line of text plus a
  * segmented bar. The full list of steps stays in the DOM, only visually hidden,
- * so assistive software hears no less than a wide screen shows.
+ * so assistive software hears no less than a wide screen shows. A step that
+ * is a link or a button is out of the tab order then: Tab would land on
+ * something you cannot see (WCAG 2.4.7).
  *
  * Accessibility: a `nav` with a label, holding a `role="list"` with a
  * `role="listitem"` per step. The current step gets `aria-current="step"`, the
@@ -52,6 +54,7 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddStepBarTranslations, type NLDDStepBarTranslations } from './step-bar.i18n.js';
 import { stepBarStyles, stepBarItemStyles } from './step-bar.styles.js';
 import { stepBarTemplate, stepBarItemTemplate } from './step-bar.template.js';
+import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import '../../content/icon/icon.js';
 
 /** The same three names as nldd-step-cell, so one flow reads in a
@@ -108,6 +111,11 @@ export class NLDDStepBarItem extends LitElement {
 
 	@state()
 	_statusText = '';
+
+	/** Set by the parent: the compact view hides this step, so its link or
+	 *  button leaves the tab order. */
+	@state()
+	_compact = false;
 
 	/** The status that counts. An own `past` or `future` wins over the derived
 	 *  one. An own `current` is what the parent derives from, so the derived
@@ -183,9 +191,19 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 
 	private _warnedMultipleCurrent = false;
 
+	/** Whether the compact view shows: the same width the container query in
+	 *  the styles compares. */
+	@state()
+	private _compact = false;
+
+	private _resizeObserver = new ResizeObserver(([entry]) => {
+		this._compact = entry.contentRect.width <= breakpointPx('smMax');
+	});
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		this._observer.observe(this, { subtree: true, attributes: true, attributeFilter: ['status'] });
+		this._resizeObserver.observe(this);
 	}
 
 	/** `current` is no longer an attribute of this element. Watched anyway, so a
@@ -205,6 +223,7 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this._observer.disconnect();
+		this._resizeObserver.disconnect();
 	}
 
 	_onSlotChange = (e: Event): void => {
@@ -242,6 +261,7 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 			item._index = position;
 			item._derivedStatus = position < current ? 'past' : position === current ? 'current' : 'future';
 			item._statusText = this._t(`components.step-bar.status-${item.resolvedStatus}-label`);
+			item._compact = this._compact;
 		});
 	}
 
