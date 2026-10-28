@@ -16,10 +16,15 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
+- **`accessible-label` on `nldd-menu`**, on the element with the menu or listbox role. Without it the menu takes the name of its anchor, and a submenu the text of the item that opens it, so the suggestions under a search field are no longer a listbox without a name (WCAG 4.1.2).
 - **`download` on `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-list-item` and `nldd-list-item-segment`.** Like `target` and `rel` it only counts with `href`, and it goes onto the link as it is: without a value the browser saves the file under the name from the URL, with one under that name. A browser ignores it for a URL on another origin and opens the file there. A screen reader hears "downloadt bestand" after the name, as it hears "opent in nieuw tabblad" for `target="_blank"`, and in development a `target` beside `download` gets a warning, since a download opens no tab. A download button opened the file in the browser before, and could only save it with a script of your own.
 
 ### Fixed
 
+- **What gets focus in an `nldd-page` with a sticky header or footer is no longer hidden under them.** The page scrolls in a scroller of its own, which did not count the bars, so the browser took an element under a bar for one in view and left it there: a field at the bottom of a form in a sheet under the submit button, an option in a long list under the title bar. The scroller now keeps the height of both bars and their fade clear when it scrolls something into view (WCAG 2.4.11).
+- **The fade above a sticky footer of `nldd-page` goes away at the end of the page**, as the one under a sticky header only shows once you have scrolled: with nothing left below, there is nothing for it to fade.
+- **`nldd-sheet` no longer closes when you press on the backdrop and release inside the sheet.** A press and a release on two places fire their click on the element they share, the dialog, so the sheet read it as a press on the backdrop, and what you had typed was gone. It now closes only when the press and the release are both on the backdrop (WCAG 2.5.2). `nldd-window` already did.
+- **An arrow key in `nldd-segmented-control` fires `item-change` on the item it selects**, as a click and the space bar do. It only fired `change` on the control, so an app that listened on the item showed the new choice and never loaded it (WCAG 2.1.1).
 - **A selection in `nldd-text-editor` no longer shows a strip above a quote.** A quote line is a little taller than plain text, and the selection on it sits centered, so after a selected empty line a thin strip of the page showed between the two. Each piece of a selection now runs down to the next.
 - **The caret of `nldd-code-editor` is no longer clipped at the start of a line.** Without a frame the editor had no room at its left edge, so part of the caret fell off at the first position of every line. It now has the room of the caret and sits centered on the insertion point, as in `nldd-text-editor`. The text moves 2px to the right; with `appearance="input-field"` nothing changes.
 

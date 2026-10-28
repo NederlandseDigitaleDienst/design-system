@@ -2079,6 +2079,15 @@
             },
             {
               "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
               "name": "placement",
               "type": {
                 "text": "string"
@@ -2252,6 +2261,15 @@
               "name": "width",
               "default": "''",
               "fieldName": "width"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the menu or listbox for assistive technology, on the element that has the role. Without it the menu takes the name of its anchor (the `accessible-label`, `aria-label`, `text` or text of the button or field it hangs off), and a submenu the text of the item that opens it, so a listbox under a search field is \"Zoeken\" rather than nameless (WCAG 4.1.2).",
+              "name": "accessible-label",
+              "default": "''",
+              "fieldName": "accessibleLabel"
             },
             {
               "type": {
