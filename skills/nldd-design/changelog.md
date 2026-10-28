@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.13.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.0...v0.13.1) (2026-10-28)
+
 ### Highlights
 
 - **A download button that saves the file.** `nldd-button`, `nldd-icon-button`, `nldd-link`, `nldd-card`, `nldd-list-item` and `nldd-list-item-segment` take `download` beside `href`, and a screen reader hears that the link downloads a file.
