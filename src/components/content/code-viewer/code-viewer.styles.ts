@@ -20,6 +20,7 @@ export const codeViewerStyles = css`
 		--_code-viewer-content-color: var(--semantics-content-color);
 		--_code-viewer-font: var(--primitives-font-monospace-sm-regular-snug);
 		--_code-viewer-actions-area-padding: var(--primitives-space-8);
+		--_code-viewer-actions-gap: var(--primitives-space-8);
 		--_code-viewer-actions-area-size: calc(var(--semantics-controls-md-min-size) + var(--_code-viewer-actions-area-padding) * 2);
 		--_code-viewer-actions-z-index: 1;
 		--_code-viewer-highlight-border-z-index: 1;
@@ -121,7 +122,7 @@ export const codeViewerStyles = css`
 	}
 
 	:host([appearance="simple"]:not([no-copy]):not([copy-unavailable])) .code-viewer .cm-scroller .cm-content {
-		padding-right: 0;
+		padding-right: calc(var(--_code-viewer-actions-area-size) + var(--_code-viewer-actions-gap));
 	}
 
 	/* The horizontally-scrollable region is CodeMirror's scroller; it gets

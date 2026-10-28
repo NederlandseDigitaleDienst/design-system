@@ -717,4 +717,19 @@ describe('nldd-code-viewer diff', () => {
 		expect(frame.bottom).toBeGreaterThanOrEqual(button.bottom - 0.01);
 		removeTokens();
 	});
+
+	it('laat het einde van een lange regel in een simple viewer naast de kopieerknop staan', async () => {
+		const removeTokens = loadTokens();
+		el = await fixture<NLDDCodeViewer>(`<nldd-code-viewer appearance="simple" style="width: 240px">${'const greet = name;'.repeat(6)}</nldd-code-viewer>`);
+		await waitForUpdate(el);
+		await nextFrames();
+		const scroller = el.shadowRoot!.querySelector<HTMLElement>('.cm-scroller')!;
+		scroller.scrollLeft = scroller.scrollWidth;
+		const range = document.createRange();
+		range.selectNodeContents(el.shadowRoot!.querySelector('.cm-line')!);
+		const textEnd = range.getBoundingClientRect().right;
+		const button = el.shadowRoot!.querySelector('nldd-icon-button')!.getBoundingClientRect();
+		expect(button.left - textEnd).toBeGreaterThanOrEqual(8 - 0.5);
+		removeTokens();
+	});
 });
