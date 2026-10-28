@@ -24,33 +24,50 @@ function rowHeightPieces(view: EditorView): void {
 	const height = view.defaultLineHeight;
 	const content = view.contentDOM;
 	const textRight = content.getBoundingClientRect().right - (parseFloat(getComputedStyle(content).paddingRight) || 0);
-	for (const piece of layer.querySelectorAll<HTMLElement>('.cm-selectionBackground')) {
+	// All reads first, then all writes: a read after a write forces a layout, and
+	// where each piece ends up follows from what is written.
+	const reads = [...layer.querySelectorAll<HTMLElement>('.cm-selectionBackground')].map((piece) => {
 		const box = piece.getBoundingClientRect();
+		if (box.height >= height * 1.25) return { piece, box, row: null };
+		const pos = view.posAtCoords({ x: box.left + 1, y: box.top + box.height / 2 }, false);
+		return { piece, box, row: view.coordsAtPos(pos, 1) ?? view.coordsAtPos(pos, -1) };
+	});
+	const placed: Placed[] = reads.map(({ piece, box, row }) => {
 		const overhang = box.right - textRight;
 		if (overhang > 0.25) piece.style.width = `${Math.max(0, (parseFloat(piece.style.width) || box.width) - overhang)}px`;
-		if (box.height >= height * 1.25) continue;
-		const pos = view.posAtCoords({ x: box.left + 1, y: box.top + box.height / 2 }, false);
-		const row = view.coordsAtPos(pos, 1) ?? view.coordsAtPos(pos, -1);
-		if (!row) continue;
+		const at: Placed = { piece, top: box.top, height: box.height };
+		if (!row) return at;
 		// From the written value, not offsetTop: that one is rounded to whole pixels,
 		// and on a half pixel the difference never went away.
 		const current = parseFloat(piece.style.top) || 0;
 		const top = current + ((row.top + row.bottom) / 2 - height / 2 - box.top);
-		if (Math.abs(top - current) > 0.25) piece.style.top = `${top}px`;
-		if (Math.abs(box.height - height) > 0.25) piece.style.height = `${height}px`;
-	}
-	closeSeams(layer, height);
+		if (Math.abs(top - current) > 0.25) {
+			piece.style.top = `${top}px`;
+			at.top = box.top + (top - current);
+		}
+		if (Math.abs(box.height - height) > 0.25) {
+			piece.style.height = `${height}px`;
+			at.height = height;
+		}
+		return at;
+	});
+	closeSeams(placed, height);
 }
 
-function closeSeams(layer: Element, height: number): void {
-	const pieces = [...layer.querySelectorAll<HTMLElement>('.cm-selectionBackground')]
-		.map((piece) => ({ piece, box: piece.getBoundingClientRect() }))
-		.sort((a, b) => a.box.top - b.box.top);
+/** A piece of a selection and where it stands on screen once corrected. */
+interface Placed {
+	piece: HTMLElement;
+	top: number;
+	height: number;
+}
+
+function closeSeams(placed: Placed[], height: number): void {
+	const pieces = [...placed].sort((a, b) => a.top - b.top);
 	for (let i = 1; i < pieces.length; i++) {
 		const above = pieces[i - 1];
-		const gap = pieces[i].box.top - above.box.bottom;
+		const gap = pieces[i].top - (above.top + above.height);
 		// Only a seam: a wider gap is between two selections.
-		if (gap > 0.25 && gap < height / 2) above.piece.style.height = `${above.box.height + gap}px`;
+		if (gap > 0.25 && gap < height / 2) above.piece.style.height = `${above.height + gap}px`;
 	}
 }
 
