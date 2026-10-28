@@ -817,3 +817,20 @@ describe('nldd-top-navigation-bar – logo and title to the same page', () => {
 		expect(warned(warn)).toBe(false);
 	});
 });
+
+describe('nldd-top-navigation-bar – ribbon at the top', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	it.each([
+		['a logo with a wordmark and a link', 'logo-title="Mijn Dienst" logo-href="/"'],
+		['a logo with a link', 'logo-href="/"'],
+		['a logo without a link', ''],
+	])('keeps the ribbon that hides on scroll inside %s', async (_, attributes) => {
+		el = await fixture(`<nldd-top-navigation-bar ${attributes}></nldd-top-navigation-bar>`);
+		expect(el.shadowRoot!.querySelector('.top-navigation-bar__logo > .top-navigation-bar__ribbon-at-top')).not.toBeNull();
+	});
+});
