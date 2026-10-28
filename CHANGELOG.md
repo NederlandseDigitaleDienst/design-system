@@ -25,6 +25,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
+- **A date outside `min` or `max` in `nldd-date-field` stays as typed.** After a valid date, typing one outside the bounds emptied the field halfway, so you could not see what was wrong. The text now stands, `value` stays empty and `validity` says which bound it crossed.
 - **An autofilled field keeps its rounded corners.** The input inside `nldd-text-field`, `nldd-search-field`, `nldd-password-field`, `nldd-combo-box`, `nldd-date-field`, `nldd-time-field` and `nldd-multi-line-text-field` was a rectangle, drawn over the rounded border of the field. Its autofill color showed a square corner over the curve, in Safari on a phone at the left of the field. The input now follows the inner curve of the border.
 - **The end of a long line in an `nldd-code-viewer` with `appearance="simple"` no longer stays under the copy button.** Scrolled all the way to the right, the last characters sat behind the button; the line now ends beside it, with the same gap as the other appearances.
 - **The ribbon of `nldd-top-navigation-bar` no longer stays at the top in Safari when `nldd-page` is the scroller.** In Safari a piece of the ribbon sits fixed behind the logo, so it carries on when you pull the page down, and goes away as soon as the page scrolls. It only watched the document scroll, so in an app that lets `nldd-page` scroll, with `height: 100%` on `html` and `body`, it stayed at the top of the screen over the content. It now goes away when either one scrolls.
