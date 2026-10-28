@@ -219,9 +219,12 @@ export class NLDDSegmentedControlItem extends LitElement {
 		this.setAttribute('tabindex', tabbable ? '0' : '-1');
 	}
 
-	/** Checked, the way a click or the space bar does it. A radio never
-	 *  unchecks itself, so an option that is already selected says nothing. */
-	private _select(): void {
+	/** Checked, the way a click, the space bar or an arrow key in the group does
+	 *  it. A radio never unchecks itself, so an option that is already selected
+	 *  says nothing.
+	 *
+	 *  @internal */
+	public _select(): void {
 		if (this.disabled || this.selected) return;
 		this.dispatchEvent(new CustomEvent('item-change', {
 			detail: { value: this.value, checked: true },
@@ -641,15 +644,10 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		}
 
 		if (nextIndex !== currentIndex && items[nextIndex]) {
-			this.value = items[nextIndex].value;
-			this._syncItems();
-			this.commitFormValue();
 			items[nextIndex].focus();
-			this.dispatchEvent(new CustomEvent('change', {
-				detail: { value: this.value },
-				bubbles: true,
-				composed: true,
-			}));
+			// Through the item, as a click: it fires item-change, and the group
+			// answers with change, so every way of choosing sends both.
+			items[nextIndex]._select();
 		}
 	};
 
