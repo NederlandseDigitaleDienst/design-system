@@ -92,12 +92,6 @@ export const aliases = {
 	'graph': 'chart-line-x-y-axis',
 	'chart-x-y-axis-line': 'chart-line-x-y-axis',
 
-	// check-list
-	'tasks': 'check-list',
-	'todos': 'check-list',
-	'checklist': 'check-list',
-	'backlog': 'check-list',
-
 	// check-mark
 	'checked': 'check-mark',
 
@@ -712,6 +706,13 @@ export const aliases = {
 	// tag-on-tag
 	'tags': 'tag-on-tag',
 	'labels': 'tag-on-tag',
+
+	// task-list
+	'check-list': 'task-list',
+	'tasks': 'task-list',
+	'todos': 'task-list',
+	'checklist': 'task-list',
+	'backlog': 'task-list',
 
 	// terminal
 	'cli': 'terminal',

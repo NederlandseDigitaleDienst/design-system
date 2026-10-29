@@ -30,6 +30,7 @@ export const NEW_ICONS = new Set([
 	'book-with-bookmark',
 	'chart-bar-x-axis',
 	'check-mark-square',
+	'checkbox-list',
 	'color-chart',
 	'creditcard',
 	'ear',
@@ -78,6 +79,7 @@ export const UPDATED_ICONS = new Set([
 	'square-1',
 	'square-arrow-up',
 	'strikethrough',
+	'task-list',
 	'text-format-size',
 	'underlined',
 ]);

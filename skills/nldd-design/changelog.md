@@ -20,6 +20,7 @@ here; consult the commit history if you need that level of detail.
 - **Inter for sites that may not use RijksSans.** `@nldd/design-system/styles/open-font` is the same stylesheet with Inter, tuned to the x-height of RijksSans, so the components look as they were designed. `/styles/system-font` now loads it too: a site on that entry looks different after the upgrade. See Changed.
 - **Buttons that share the row.** `nldd-button-group` with `width="full"` divides the row equally, and stacks only when the labels no longer fit. See Added.
 - **A file field as a surface.** `nldd-file-field` with `variant="area"` is a tall drop surface with an upload icon, for pages where handing in files is the task. See Added.
+- **New icon: `checkbox-list`**, a list with square boxes, for a task list made of checkboxes, as the text editor inserts. `check-list` is now `task-list`, the list with round ones, as task apps show them. See Added and Changed.
 - **`nldd-text` styles inline elements as `nldd-rich-text` does**, now with mentions. See Fixed.
 
 ### Added
@@ -27,6 +28,7 @@ here; consult the commit history if you need that level of detail.
 - **`@nldd/design-system/styles/open-font`**, with Inter and JetBrains Mono in place of RijksSans and JetBrains Mono. Inter is open (SIL Open Font License) and has `size-adjust` set to the x-height of RijksSans, so the type scale, line heights and control sizes stay as designed. It comes in Latin and Latin Extended, and a page only downloads the second when it needs it. `/styles` keeps RijksSans.
 - **`width="full"` on `nldd-button-group`.** The buttons fill the row in equal shares. A button whose label does not fit its share takes the width it needs and the others share the rest, and a button that does not fit beside the others moves to a line of its own and fills it: two buttons stack, three end up as two over one. It is plain CSS, and it replaces the 480px rule of `auto` for that group. An `nldd-icon-button` keeps its own size, and with `orientation="horizontal"` the group stays a row.
 - **`variant="area"` on `nldd-file-field`**, a tall surface for a page where handing in files is the main task. Empty, it shows an upload icon, the sentence and the types it takes, named from `accept` ("Toegestaan: PDF of JPG"); with a file, the icon of its format, its name and the buttons "Wijzigen" and "Wis selectie" stacked in the middle. Both states have the same height, so the page does not move when a file is chosen. The default is `control`, the row it was.
+- **Icon `checkbox-list`**, a list whose first item is a ticked square box: the toolbar icon for the checkbox list `nldd-text-editor` inserts, beside `bullet-list` and `numbered-list`.
 - **`nldd-button-group` warns in development when a button brings a `size` of its own.** The group sets its size on every button, so that size never showed.
 - **Mentions in `nldd-text`.** An element with `data-mention` is a mention, as in `nldd-rich-text`: `<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint. `<q>` is quoted in italics.
 
@@ -36,6 +38,7 @@ here; consult the commit history if you need that level of detail.
 - **The body of `nldd-token` is lighter than its button.** It had the color of a button, so a token with a dismiss or menu button read as two buttons side by side. Now only the part you can press looks like one.
 - **The overflow button of `nldd-tab-bar` shows a chevron.** It showed the three dots that open more actions elsewhere, while it opens the tabs that do not fit, so it read the same as a toolbar's "more" button beside it.
 - **The overflow button of `nldd-avatar-group` shows that it is pressed and that its list is open**, as a button does.
+- **Icon `check-list` is now `task-list`**, the list with round boxes, as task apps show a task. `check-list` keeps working as an alias, and so do `tasks`, `todos`, `checklist` and `backlog`.
 - **Icon `square-arrow-up` (alias `share`) is redrawn.** The box is half a pixel taller at the top, so it sits a little closer under the arrow.
 
 ### Fixed
