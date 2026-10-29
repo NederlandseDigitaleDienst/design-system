@@ -222,6 +222,10 @@
       "types": "./dist/components/inputs/token-field/token-field.d.ts",
       "default": "./dist/components/inputs/token-field/token-field.js"
     },
+    "./slider": {
+      "types": "./dist/components/inputs/slider/slider.d.ts",
+      "default": "./dist/components/inputs/slider/slider.js"
+    },
     "./shell": {
       "types": "./dist/components/layout/shell/shell.d.ts",
       "default": "./dist/components/layout/shell/shell.js"
@@ -321,6 +325,10 @@
     "./page-footer": {
       "types": "./dist/components/layout/page-footer/page-footer.d.ts",
       "default": "./dist/components/layout/page-footer/page-footer.js"
+    },
+    "./task-board": {
+      "types": "./dist/components/layout/task-board/task-board.d.ts",
+      "default": "./dist/components/layout/task-board/task-board.js"
     },
     "./list": {
       "types": "./dist/components/lists-and-tables/list/list.d.ts",
@@ -455,7 +463,8 @@
       "default": "./dist/components/status-and-feedback/just-in-time-education/just-in-time-education.js"
     },
     "./styles": "./dist/css/global.css",
-    "./styles/system-font": "./dist/css/global-system-font.css",
+    "./styles/open-font": "./dist/css/global-open-font.css",
+    "./styles/system-font": "./dist/css/global-open-font.css",
     "./styles/variables": "./dist/css/variables.css",
     "./styles/tokens": "./dist/css/tokens.css",
     "./styles/fouc": "./dist/css/fouc.css",
@@ -513,7 +522,7 @@
   },
   "scripts": {
     "build": "npm run build:styles && npm run build:assets && npm run validate:styles && npm run validate:host-styles && npm run build:components",
-    "build:styles": "rm -rf dist/css dist/fonts && mkdir -p dist/css dist/fonts && cp src/assets/styles/variables.css src/assets/styles/colors.generated.css src/assets/styles/rijksoverheid-fonts.css src/assets/styles/document-reset.css src/assets/styles/fouc.css dist/css/ && cp src/assets/styles/themes.css dist/css/ && mkdir -p dist/css/themes && cp src/assets/styles/themes/*.css dist/css/themes/ && cp src/components/content/rich-text/rich-text.css src/components/forms/form/form.css src/components/forms/form-section/form-section.css dist/css/ && printf '@import \"./rijksoverheid-fonts.css\";\\n@import \"./variables.css\";\\n@import \"./document-reset.css\";\\n@import \"./rich-text.css\";\\n@import \"./form-section.css\";\\n@import \"./form.css\";\\n@import \"./fouc.css\";\\n' > dist/css/global.css && printf '@import \"./variables.css\";\\n@import \"./document-reset.css\";\\n@import \"./rich-text.css\";\\n@import \"./form-section.css\";\\n@import \"./form.css\";\\n@import \"./fouc.css\";\\n' > dist/css/global-system-font.css && printf '@import \"./rijksoverheid-fonts.css\";\\n@import \"./variables.css\";\\n' > dist/css/tokens.css && cp src/assets/fonts/*.woff2 dist/fonts/",
+    "build:styles": "rm -rf dist/css dist/fonts && mkdir -p dist/css dist/fonts && cp src/assets/styles/variables.css src/assets/styles/colors.generated.css src/assets/styles/rijksoverheid-fonts.css src/assets/styles/inter-font.css src/assets/styles/jetbrains-mono-font.css src/assets/styles/document-reset.css src/assets/styles/fouc.css dist/css/ && cp src/assets/styles/themes.css dist/css/ && mkdir -p dist/css/themes && cp src/assets/styles/themes/*.css dist/css/themes/ && cp src/components/content/rich-text/rich-text.css src/components/forms/form/form.css src/components/forms/form-section/form-section.css dist/css/ && printf '@import \"./rijksoverheid-fonts.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n@import \"./document-reset.css\";\\n@import \"./rich-text.css\";\\n@import \"./form-section.css\";\\n@import \"./form.css\";\\n@import \"./fouc.css\";\\n' > dist/css/global.css && printf '@import \"./inter-font.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n@import \"./document-reset.css\";\\n@import \"./rich-text.css\";\\n@import \"./form-section.css\";\\n@import \"./form.css\";\\n@import \"./fouc.css\";\\n' > dist/css/global-open-font.css && printf '@import \"./rijksoverheid-fonts.css\";\\n@import \"./jetbrains-mono-font.css\";\\n@import \"./variables.css\";\\n' > dist/css/tokens.css && cp src/assets/fonts/*.woff2 dist/fonts/",
     "build:assets": "mkdir -p dist/favicon && cp src/assets/favicon/favicon.svg src/assets/favicon/touch-icon.png dist/ && for theme in src/assets/favicon/*/; do cp -R \"${theme%/}\" dist/favicon/; done",
     "generate:colors": "node scripts/generate-colors.js && npm run generate:themes",
     "generate:themes": "node scripts/generate-themes.js",

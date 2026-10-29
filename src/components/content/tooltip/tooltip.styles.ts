@@ -15,9 +15,9 @@ export const tooltipStyles = css`
 		--_tooltip-max-width: var(--primitives-area-280);
 		--_tooltip-z-index: 10000;
 		--_tooltip-show-delay: 700ms;
-		--_tooltip-box-shadow: var(--primitives-box-shadows-level-2);
-		--_tooltip-background-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-750));
-		--_tooltip-content-color: var(--primitives-color-neutral-0);
+		--_tooltip-box-shadow: var(--semantics-tooltips-box-shadow);
+		--_tooltip-background-color: var(--semantics-tooltips-background-color);
+		--_tooltip-content-color: var(--semantics-tooltips-content-color);
 		--_tooltip-shortcut-gap: var(--primitives-space-8);
 		--_tooltip-hide-delay: 50; /* unitless ms, read by JavaScript */
 		--_tooltip-offset: 4; /* px, unitless — read by JS */
@@ -85,18 +85,18 @@ export const tooltipStyles = css`
 
 	.tooltip__body {
 		display: flex;
-		border-radius: var(--primitives-corner-radius-xs);
+		border-radius: var(--semantics-tooltips-corner-radius);
 		box-shadow: var(--_tooltip-box-shadow);
 		background-color: var(--_tooltip-background-color);
 		width: max-content;
 		max-width: var(--_tooltip-max-width);
-		padding-block: var(--primitives-space-4);
-		padding-inline: var(--primitives-space-8);
+		padding-block: var(--semantics-tooltips-padding-block);
+		padding-inline: var(--semantics-tooltips-padding-inline);
 		flex-wrap: wrap;
 		column-gap: var(--_tooltip-shortcut-gap);
 		align-items: baseline;
 		color: var(--_tooltip-content-color);
-		font: var(--primitives-font-body-xs-regular-tight);
+		font: var(--semantics-tooltips-font);
 		overflow-wrap: break-word;
 	}
 

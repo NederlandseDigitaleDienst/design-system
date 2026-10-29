@@ -129,7 +129,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row, and a stack over the full width in a container of 30rem (480px) or less, the width of a phone, where two labels beside each other leave no room for either. A card or a dialog between 480px and the sm breakpoint keeps its row. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one.",
+          "description": "A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row, and a stack over the full width in a container of 30rem (480px) or less, the width of a phone, where two labels beside each other leave no room for either. A card or a dialog between 480px and the sm breakpoint keeps its row. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one. With `width=\"full\"` the buttons fill the row and share it equally. A button whose label does not fit its share takes the width it needs, and the others share what is left. A button that does not fit beside the others moves to the next line and fills it: two buttons stack, three end up as two over one. That replaces the 480px rule of `auto`, and the group is no container then. With `orientation=\"horizontal\"` it stays a row, and a label that does not fit wraps instead. An `nldd-icon-button` takes no share of the row. The group sets its `size` on every button in it: buttons in one group are the same size. It holds three buttons at most and hides the rest.",
           "name": "NLDDButtonGroup",
           "members": [
             {
@@ -153,8 +153,14 @@
               "reflects": true
             },
             {
-              "kind": "method",
-              "name": "handleSlotChange"
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "Width"
+              },
+              "default": "''",
+              "attribute": "width",
+              "reflects": true
             }
           ],
           "attributes": [
@@ -165,7 +171,7 @@
               },
               "default": "'md'",
               "fieldName": "size",
-              "description": "Button group size: 'sm' | 'md' (default: 'md')"
+              "description": "Button group size, set on every button in it: 'sm' | 'md' (default: 'md')"
             },
             {
               "name": "orientation",
@@ -175,6 +181,15 @@
               "default": "'auto'",
               "fieldName": "orientation",
               "description": "Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "Width"
+              },
+              "default": "''",
+              "fieldName": "width",
+              "description": "'full': the buttons fill the row in equal shares, and a button that does not fit moves to a line of its own (default: unset, each button as wide as its label)"
             }
           ],
           "superclass": {
@@ -6667,7 +6682,7 @@
           "slots": [
             {
               "name": "",
-              "description": "The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, and `<mark>` is highlighted. This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone."
+              "description": "The text. Inline elements look as they do in nldd-rich-text: `<strong>` and `<b>` take the bold weight from the scale, `<em>` and `<i>` are italic, `<a>` is an underlined link, `<code>` sits on a tinted surface in the monospace font, `<mark>` is highlighted, `<q>` is quoted in italics, and an element with `data-mention` is a mention (`<a href=\"…\" data-mention>` as the tinted token, `<span data-mention>` without the tint; write the name without the `@`). This holds for elements directly in the text; one inside another (a link inside `<strong>`) keeps only the outer one's styling. Components such as `nldd-tag` are left alone."
             }
           ]
         }
@@ -8493,6 +8508,14 @@
         },
         {
           "kind": "js",
+          "name": "NLDDSlider",
+          "declaration": {
+            "name": "NLDDSlider",
+            "module": "./inputs/slider/slider.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "NLDDShell",
           "declaration": {
             "name": "NLDDShell",
@@ -8705,6 +8728,22 @@
           "declaration": {
             "name": "NLDDPageFooterLegalBarItem",
             "module": "./layout/page-footer/page-footer.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoard",
+          "declaration": {
+            "name": "NLDDTaskBoard",
+            "module": "./layout/task-board/task-board.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoardColumn",
+          "declaration": {
+            "name": "NLDDTaskBoardColumn",
+            "module": "./layout/task-board/task-board.js"
           }
         },
         {
@@ -13253,7 +13292,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, \"Bestand kiezen of sleep het hierheen\", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view (\"Screenshot 20…at 13.12.21.png\"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: \"Sleep één bestand\", or what `accept` takes, named from it (\"Het bestand moet een PDF zijn\"; \"Dit bestandstype past niet\" where a type in it has no name). A dropped folder is refused as well (\"Sleep een bestand, geen map\"): it arrives as a file without a type that cannot be read, and only the drop tells it apart, not the drag. The message stays for a few seconds and then gives way to the field again. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event.",
+          "description": "A file picker that reads as one control. Empty, the whole tinted surface is one button with one sentence centered in it, \"Bestand kiezen of sleep het hierheen\", its first part accented, so a press anywhere on it opens the file dialog. Once a file is chosen, the surface shows it with the icon of its format, its name, a button to choose another and a dismiss button to clear it again. A long name is cut in the middle, so its start and its end stay in view (\"Screenshot 20…at 13.12.21.png\"); it then shows whole in a tooltip, and a screen reader reads it whole either way. It wraps a hidden native `<input type=\"file\">`, which is what makes the picker open at all — a file dialog only opens from a user gesture on a real input. Files can be dropped on the whole field. A drop goes through the same input, so it fires the same `change` with the same detail and submits the same way as a pick. `accept` and `multiple` hold for a drop too, which the native input does not do: a drop that does not fit is refused as a whole, the previous choice stays, and the field says why for a few seconds: \"Sleep één bestand\", or what `accept` takes, named from it (\"Het bestand moet een PDF zijn\"; \"Dit bestandstype past niet\" where a type in it has no name). A dropped folder is refused as well (\"Sleep een bestand, geen map\"): it arrives as a file without a type that cannot be read, and only the drop tells it apart, not the drag. The message stays for a few seconds and then gives way to the field again. While files are dragged over the page, every field marks itself as a place to put them, and the field under the pointer says it will take them (a field with a file: that they replace it), or turns critical and refuses already when the number or the type rules them out. A file dropped next to a field no longer makes the browser open it and leave the page; a drop that another drop zone or an editable field takes is left alone. On a device without hover there is no dragging, so the field there drops the hint. The surface deliberately does not look like an input field. A border with field semantics promises you can type into it; here you can only press it or drop a file on it, so it has the border of a tinted surface instead of `--semantics-input-fields-*`. Several files are summarized, not listed: \"3 bestanden\" with a single cross that clears all of them. Every pick replaces the whole FileList, and rebuilding it to add or drop one file means going through DataTransfer, which does not deduplicate (even the same File object twice yields two entries) — and a File has no id, so deduplicating would come down to guessing from name, size and last-modified. A list with a cross per file would promise an edit the platform does not support. A page that does want to show the files renders its own list from the `File[]` in the change event. `variant=\"area\"` lays the same field out as a tall surface, for a page where handing in files is the main task. Empty, it shows an upload icon, the sentence and the types it takes (\"Toegestaan: PDF of JPG\"), named from `accept`; with a file, the icon of its format, its name and the buttons \"Wijzigen\" and \"Wis selectie\" stacked in the middle. Both states have the same height, so the page does not move when a file is chosen.",
           "name": "NLDDFileField",
           "members": [
             {
@@ -13265,6 +13304,16 @@
               "static": true,
               "default": "true",
               "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'control' | 'area'"
+              },
+              "default": "'control'",
+              "attribute": "variant",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -13608,6 +13657,15 @@
             }
           ],
           "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'control' | 'area'"
+              },
+              "default": "'control'",
+              "fieldName": "variant",
+              "description": "'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height"
+            },
             {
               "name": "size",
               "type": {
@@ -18365,6 +18423,630 @@
           "declaration": {
             "name": "NLDDSegmentedControl",
             "module": "src/components/inputs/segmented-control/segmented-control.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/inputs/slider/slider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter (\"a price between …\"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader (\"Prijs, minimum\"), and a press on the track moves the nearer thumb there. The thumbs do not pass each other; where they lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider, while a thumb has keyboard focus and while it is dragged; with `tooltip-timing=\"never\"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one (\"200 – 1.200\"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \\`€ ${value}\\``; without it the number is written the Dutch way. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.",
+          "name": "NLDDSlider",
+          "members": [
+            {
+              "kind": "field",
+              "name": "isFormInput",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Says this is the control an nldd-form-field is about, so the field can\nfind it, name it and move focus into it. See nldd-form-field."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "range",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "range",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "histogram",
+              "type": {
+                "text": "number[]"
+              },
+              "default": "[]",
+              "attribute": "histogram"
+            },
+            {
+              "kind": "field",
+              "name": "startIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "start-icon"
+            },
+            {
+              "kind": "field",
+              "name": "endIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "end-icon"
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "tooltipTiming",
+              "type": {
+                "text": "'instant' | 'never'"
+              },
+              "default": "'instant'",
+              "attribute": "tooltip-timing",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "invalid",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "undefined",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "startValue",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "undefined",
+              "attribute": "start-value"
+            },
+            {
+              "kind": "field",
+              "name": "endValue",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "undefined",
+              "attribute": "end-value"
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "min"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "step"
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<NLDDSliderTranslations>"
+              },
+              "default": "{}",
+              "attribute": "translations"
+            },
+            {
+              "kind": "field",
+              "name": "formatValue",
+              "type": {
+                "text": "((value: number) => string) | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "formValue",
+              "return": {
+                "type": {
+                  "text": "FormValue"
+                }
+              },
+              "description": "The value submitted under `name`; `null` submits nothing. Override.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "File | string | FormData | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Moves focus to the thumb (the start one of a range)."
+            },
+            {
+              "kind": "method",
+              "name": "describedTarget",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The element the description belongs to. Override where it differs.\n\nPublic rather than protected because TypeScript refuses to emit a\ndeclaration for an anonymous class with protected members, and a mixin\nreturns exactly that. Same reason `formValue()` is public in\nFormAssociated.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "describedByElements",
+              "type": {
+                "text": "readonly Element[]"
+              },
+              "default": "[]",
+              "description": "Set by nldd-form-field. A consumer never writes this.",
+              "inheritedFrom": {
+                "name": "DescribedBy",
+                "module": "src/utilities/described-by-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formState",
+              "return": {
+                "type": {
+                  "text": "FormValue | undefined"
+                }
+              },
+              "description": "Extra state kept for bfcache and state restore, when the submitted\nvalue alone cannot rebuild the control (a combo box submits a code but\nshows a label). Override alongside `formValue()`.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitFormValue",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Commit the value now, from the handler that changed it.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null"
+                }
+              },
+              "description": "The native control this host speaks for.\n\nThe constraint attributes are handed to a control inside the shadow\nroot, and that control is not a member of the form around the host: the\nform sees the host, the host sees the control, and without something\njoining them a `required` field submits empty. Override when the control\nis not the first one in the shadow root, or return null for a component\nthat has no native control to speak for.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validationAnchor",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | undefined"
+                }
+              },
+              "description": "Where an invalid submit points its message and puts the focus.\n\nThe native control, where the user reads and fixes it. Not when that\ncontrol is hidden, as the radio that only carries `required` is: a radio\ninside an element that is itself the radio is a control inside a control,\nand a hidden element cannot hold the message. Then it goes on this\nelement. Override where neither is what the user should land on, such as\na group that has no focus of its own.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ownValidity",
+              "return": {
+                "type": {
+                  "text": "OwnValidity | null"
+                }
+              },
+              "description": "What the component knows is wrong and its native control does not, such\nas typed text that is no date in a text input. Override; null is valid.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A reason the host is invalid that no attribute can express: a server that\nrefused the value, or an nldd-validation-list whose rule it fails. Kept\nbeside the native flags rather than replacing them, because\n`setValidity` writes the whole set at once and the two arrive from\ndifferent places at different times.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "commitValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Hands the control's verdict to the form, as the host's own.\n\nCalled on every render and from `commitFormValue`, so it follows the\nvalue for the same reason and with the same timing.",
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormAssociated",
+                "module": "src/utilities/form-associated-mixin.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "description": "While a thumb moves; detail: { value } or, with `range`, { startValue, endValue }"
+            },
+            {
+              "name": "change",
+              "description": "When a thumb is let go, or a key moved it; detail as for input"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "Size"
+              },
+              "default": "'md'",
+              "fieldName": "size",
+              "description": "Slider size: 'xs' | 'sm' | 'md' (default: 'md'), with the height of the other controls of that size. Set automatically by nldd-form-field."
+            },
+            {
+              "name": "range",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "range",
+              "description": "Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value`"
+            },
+            {
+              "name": "histogram",
+              "type": {
+                "text": "number[]"
+              },
+              "default": "[]",
+              "fieldName": "histogram",
+              "description": "Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored."
+            },
+            {
+              "name": "start-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "startIcon",
+              "description": "Icon at the start of the track, such as a quiet speaker for a volume"
+            },
+            {
+              "name": "end-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "endIcon",
+              "description": "Icon at the end of the track"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name; a range adds \"minimum\" and \"maximum\" to it for its thumbs. Set automatically by nldd-form-field."
+            },
+            {
+              "name": "tooltip-timing",
+              "type": {
+                "text": "'instant' | 'never'"
+              },
+              "default": "'instant'",
+              "fieldName": "tooltipTiming",
+              "description": "When the value shows above the thumb: 'instant' (the default: on hover, keyboard focus and while dragging) or 'never', for a slider whose value shows elsewhere, such as in fields above it"
+            },
+            {
+              "name": "invalid",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "invalid",
+              "description": "Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "description": "Disabled state"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name",
+              "description": "Name for form submission"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "value",
+              "description": "The value (default: the middle between min and max)"
+            },
+            {
+              "name": "start-value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "startValue",
+              "description": "The start of a range (default: min)"
+            },
+            {
+              "name": "end-value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "undefined",
+              "fieldName": "endValue",
+              "description": "The end of a range (default: max)"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "min",
+              "description": "Smallest value (default: 0)"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "fieldName": "max",
+              "description": "Largest value (default: 100)"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "step",
+              "description": "Step between values (default: 1)"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<NLDDSliderTranslations>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DescribedBy",
+              "module": "/src/utilities/described-by-mixin.js"
+            },
+            {
+              "name": "FormAssociated",
+              "module": "/src/utilities/form-associated-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-slider",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDSlider",
+          "declaration": {
+            "name": "NLDDSlider",
+            "module": "src/components/inputs/slider/slider.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-slider",
+          "declaration": {
+            "name": "NLDDSlider",
+            "module": "src/components/inputs/slider/slider.ts"
           }
         }
       ]
@@ -33924,6 +34606,323 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/layout/task-board/task-board-column.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One column of an `nldd-task-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here (\"Verplaatst naar In behandeling\"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board, and fades at the top or the bottom while there is more to scroll to.",
+          "name": "NLDDTaskBoardColumn",
+          "members": [
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The column's name: what a screen reader hears for it.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "description": "The column's items, in order; a hidden one does not count.",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "The column's name, shown in the header and used as its accessible name"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name in place of `text`, for a column whose header comes from the slot"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn`"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-task-board-column",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "header",
+              "description": "The header, in place of `text` and the count"
+            },
+            {
+              "name": "",
+              "description": "The items"
+            },
+            {
+              "name": "footer",
+              "description": "Right under the last item, such as a button to add one; it scrolls along with the items"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoardColumn",
+          "declaration": {
+            "name": "NLDDTaskBoardColumn",
+            "module": "src/components/layout/task-board/task-board-column.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-task-board-column",
+          "declaration": {
+            "name": "NLDDTaskBoardColumn",
+            "module": "src/components/layout/task-board/task-board-column.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/layout/task-board/task-board.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-task-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. Released outside the board, the item goes back to its place, which a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu \"Verplaatsen naar\" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. With `readonly` nothing moves: no dragging and no Alt with the arrows, while the items still work, so a card still opens. Use it for someone who may only look, or a board that is closed. `moveItem()` still moves, so your app can still show a move someone else made. An attempt to move an item, dragging it past a click or Alt with an arrow, shows \"Dit bord is alleen-lezen\" at the item, says it to a screen reader and fires `nldd-move-denied`, so your app can say why in an `nldd-notification`. Say it above the board too: only your app knows the reason, and then nobody has to try. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.",
+          "name": "NLDDTaskBoard",
+          "members": [
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "NLDDTaskBoardColumn[]"
+              },
+              "description": "The columns, in order.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "moveItem",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "toColumn",
+                  "type": {
+                    "text": "string | NLDDTaskBoardColumn"
+                  }
+                },
+                {
+                  "name": "toIndex",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "nldd-move",
+              "description": "An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)"
+            },
+            {
+              "name": "nldd-move-denied",
+              "description": "An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name of the board (default: \"Takenbord\")"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "height",
+              "description": "Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "description": "Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-task-board",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "The columns: `nldd-task-board-column`"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoardColumn",
+          "declaration": {
+            "name": "NLDDTaskBoardColumn",
+            "module": "src/components/layout/task-board/task-board.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoard",
+          "declaration": {
+            "name": "NLDDTaskBoard",
+            "module": "src/components/layout/task-board/task-board.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-task-board",
+          "declaration": {
+            "name": "NLDDTaskBoard",
+            "module": "src/components/layout/task-board/task-board.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/layout/window/window.ts",
       "declarations": [
         {
@@ -45774,6 +46773,47 @@
           "declaration": {
             "name": "spacingToValue",
             "module": "src/utilities/spacing-scale.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/tab-order.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "nextTabbableAfter",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "anchor",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "skip",
+              "optional": true,
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "The element Tab would reach after `anchor` in the page, walking the flat\ntree the way the browser builds the tab order, with `skip` and everything in\nit left out. For a control in the top layer, such as a menu that lives in\n`<body>` while it shows: Tab past its last item should go on from the\ncontrol that opened it, not from the end of the document.\n\nPositive tabindex values are not ordered first; the components use none."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "nextTabbableAfter",
+          "declaration": {
+            "name": "nextTabbableAfter",
+            "module": "src/utilities/tab-order.ts"
           }
         }
       ]

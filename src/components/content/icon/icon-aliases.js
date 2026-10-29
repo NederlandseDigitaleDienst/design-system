@@ -92,12 +92,6 @@ export const aliases = {
 	'graph': 'chart-line-x-y-axis',
 	'chart-x-y-axis-line': 'chart-line-x-y-axis',
 
-	// check-list
-	'tasks': 'check-list',
-	'todos': 'check-list',
-	'checklist': 'check-list',
-	'backlog': 'check-list',
-
 	// check-mark
 	'checked': 'check-mark',
 
@@ -713,6 +707,13 @@ export const aliases = {
 	'tags': 'tag-on-tag',
 	'labels': 'tag-on-tag',
 
+	// task-list
+	'check-list': 'task-list',
+	'tasks': 'task-list',
+	'todos': 'task-list',
+	'checklist': 'task-list',
+	'backlog': 'task-list',
+
 	// terminal
 	'cli': 'terminal',
 	'console': 'terminal',
@@ -798,6 +799,11 @@ export const aliases = {
 	// square-arrow-down
 	'save': 'square-arrow-down',
 	'import': 'square-arrow-down',
+
+	// projection-screen
+	'presentation': 'projection-screen',
+	'slides': 'projection-screen',
+	'slideshow': 'projection-screen',
 
 	// pipeline-machine-gear
 	'pipeline-runner': 'pipeline-machine-gear',

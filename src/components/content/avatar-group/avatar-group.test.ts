@@ -207,4 +207,29 @@ describe('nldd-avatar-group', () => {
 		expect(bar.getAttribute('text')).toBe('Redactie');
 		expect(bar.getAttribute('dismiss-text')).toBe('Sluit');
 	});
+
+	it('laat de knop open staan zolang de lijst open is', async () => {
+		el = await fixture(`
+			<nldd-avatar-group max="1">
+				<nldd-avatar name="Jan Jansen" decorative></nldd-avatar>
+				<nldd-avatar name="Piet Pietersen" decorative></nldd-avatar>
+			</nldd-avatar-group>
+		`);
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('.avatar-group__overflow-button') as HTMLButtonElement;
+		const popover = el.shadowRoot!.querySelector('nldd-popover') as HTMLElement;
+		const resting = getComputedStyle(button).backgroundColor;
+
+		button.click();
+		await waitForUpdate(el);
+		expect(popover.matches(':popover-open')).toBe(true);
+		expect(button.getAttribute('aria-expanded')).toBe('true');
+		const expanded = getComputedStyle(button).backgroundColor;
+		expect(expanded).not.toBe(resting);
+
+		popover.hidePopover();
+		await waitForUpdate(el);
+		expect(button.getAttribute('aria-expanded')).toBe('false');
+		expect(getComputedStyle(button).backgroundColor).toBe(resting);
+	});
 });

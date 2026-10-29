@@ -102,6 +102,57 @@ describe('nldd-menu-bar', () => {
 		expect(menu.matches(':popover-open')).toBe(false);
 	});
 
+	it('goes on after Meer opties when Tab leaves its menu, and back to it with Shift+Tab', async () => {
+		el = await fixture(`
+			<div>
+				<nldd-menu-bar>
+					<nldd-menu-bar-item text="Aanvragen" href="#a"></nldd-menu-bar-item>
+					<nldd-menu-bar-item text="Dossiers" href="#d"></nldd-menu-bar-item>
+				</nldd-menu-bar>
+				<button id="zoeken">Zoeken</button>
+			</div>
+		`);
+		const bar = el.querySelector('nldd-menu-bar') as HTMLElement;
+		await waitForUpdate(bar);
+		await nextFrames();
+		// What the overflow pass would do in a bar too narrow for both. It runs
+		// again when the menu closes, so the second open marks them again.
+		const overflow = () => {
+			for (const item of bar.querySelectorAll('nldd-menu-bar-item')) {
+				(item as HTMLElement).style.display = 'none';
+				item.setAttribute('data-overflow', 'true');
+			}
+			(bar.shadowRoot!.querySelector('.menu-bar__overflow-button') as HTMLElement).style.display = 'block';
+		};
+		overflow();
+		const trigger = bar.shadowRoot!.querySelector('.menu-bar__overflow-button nldd-menu-bar-item') as HTMLElement;
+		const toggle = () => (bar as unknown as { _toggleOverflowMenu(): void })._toggleOverflowMenu();
+		const tab = (target: Element, shiftKey = false) => target.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey, bubbles: true, composed: true, cancelable: true }));
+
+		toggle();
+		await waitForUpdate(bar);
+		const menu = (bar as unknown as { _overflowMenu: HTMLElement })._overflowMenu;
+		const items = Array.from(menu.querySelectorAll(':scope > nldd-menu-item')) as HTMLElement[];
+		await waitForUpdate(items[1]);
+		items[1].focus();
+		tab(items[1]);
+		expect(menu.matches(':popover-open')).toBe(false);
+		expect(document.activeElement).toBe(el.querySelector('#zoeken'));
+
+		await new Promise(r => setTimeout(r, 150));
+		await nextFrames();
+		overflow();
+		toggle();
+		await waitForUpdate(bar);
+		// The menu is filled anew each time it opens.
+		const first = menu.querySelector(':scope > nldd-menu-item') as HTMLElement;
+		await waitForUpdate(first);
+		first.focus();
+		tab(first, true);
+		expect(menu.matches(':popover-open')).toBe(false);
+		expect(trigger.matches(':focus-within') || bar.shadowRoot!.activeElement === trigger).toBe(true);
+	});
+
 	it('reopens after a close (reopen guard does not permanently block)', async () => {
 		el = await fixture('<nldd-menu-bar><nldd-menu-bar-item text="A"></nldd-menu-bar-item></nldd-menu-bar>');
 		await waitForUpdate(el);

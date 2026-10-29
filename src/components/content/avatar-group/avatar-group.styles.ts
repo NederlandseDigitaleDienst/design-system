@@ -21,6 +21,8 @@ export const avatarGroupStyles = css`
 		--_avatar-group-corner-radius: var(--primitives-corner-radius-full);
 		--_avatar-group-overflow-background-color: light-dark(var(--primitives-color-neutral-25), var(--primitives-color-neutral-150));
 		--_avatar-group-overflow-hover-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-200));
+		--_avatar-group-overflow-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-250));
+		--_avatar-group-overflow-expanded-hover-background-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-300));
 		--_avatar-group-overflow-content-color: var(--semantics-content-secondary-color);
 		--_avatar-group-overflow-font: var(--primitives-font-body-xs-medium-flat);
 		--_avatar-group-overflow-font-scale: 0.235;
@@ -107,12 +109,21 @@ export const avatarGroupStyles = css`
 		width: calc(var(--_avatar-group-overflow-icon-scale) * var(--_avatar-group-size));
 	}
 
-	/* The smallest step the neutral scale has, one notch off the resting fill.
+	/* Each state is the smallest step the neutral scale has, one notch further.
 	   No semantic hover token fits: the button-hover colors are meant for a
 	   control that already looks like a button, and here they read as a jump.
 	   It only has to confirm that this disc is clickable. */
 	.avatar-group__overflow-button:hover {
 		background-color: var(--_avatar-group-overflow-hover-background-color);
+	}
+
+	.avatar-group__overflow-button:active,
+	.avatar-group__overflow-button[aria-expanded="true"] {
+		background-color: var(--_avatar-group-overflow-active-background-color);
+	}
+
+	.avatar-group__overflow-button[aria-expanded="true"]:hover {
+		background-color: var(--_avatar-group-overflow-expanded-hover-background-color);
 	}
 
 	.avatar-group__overflow-button:focus-visible {

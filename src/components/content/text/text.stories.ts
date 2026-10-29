@@ -175,8 +175,8 @@ export const HorizontaleUitlijning = {
 
 /**
  * Inline elementen zien eruit zoals in `nldd-rich-text`: vet, schuin, een link,
- * `code` op een getint vlak en een gemarkeerd woord. Dat geldt voor elementen
- * direct in de tekst.
+ * `code` op een getint vlak, een gemarkeerd woord, een citaat en mentions, met
+ * en zonder link. Dat geldt voor elementen direct in de tekst.
  */
 export const InlineElementen = {
 	render: () => html`
@@ -185,6 +185,8 @@ export const InlineElementen = {
 			Zet <code>no-picker</code> om de knop weg te laten, lees meer over
 			<a href="#dakisolatie">de voorwaarden voor dakisolatie</a>, of let op de
 			<mark>gemarkeerde datum</mark>.
+			<a href="#anouk" data-mention>Anouk de Vries</a> vroeg om <q>een nieuwe offerte</q>, en
+			<span data-mention>Bram Jansen</span> kijkt mee.
 		</nldd-text>
 	`,
 };

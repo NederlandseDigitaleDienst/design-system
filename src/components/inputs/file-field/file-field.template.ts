@@ -2,6 +2,7 @@ import { html, nothing, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import type { NLDDFileField } from './file-field.js';
 import '../../actions/button/button.js';
+import '../../actions/button-group/button-group.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import '../../content/tooltip/tooltip.js';
@@ -108,16 +109,18 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 	const sentence = html`<span class="file-field__browse-action">${component._chooseLabel()}</span> <span class="file-field__hint">${component.multiple
 		? component._t('components.file-field.drop-hint-multiple-lowercase-text')
 		: component._t('components.file-field.drop-hint-lowercase-text')}</span>`;
+	const area = component.variant === 'area';
+	const types = area ? component._acceptTypes() : null;
 	return html`
 		<button class="file-field__browse-button"
 			type="button"
 			aria-label=${component._chooseAccessibleLabel() || component._chooseLabel()}
 			?disabled=${component.disabled}
 			@click=${component._handleChoose}
-		><span class="file-field__sentence">${renderStack([
+		>${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}<span class="file-field__sentence">${renderStack([
 			{ content: sentence, active: !drags.some((variant) => variant.active) },
 			...drags,
-		])}</span>${renderValidationIcon(component)}</button>
+		])}</span>${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}${renderValidationIcon(component)}</button>
 	`;
 }
 
@@ -148,6 +151,7 @@ function renderName(component: NLDDFileField, name: string): TemplateResult {
  */
 function renderChosen(component: NLDDFileField): TemplateResult {
 	const files = component.files;
+	const area = component.variant === 'area';
 	const buttonSize = component.size === 'sm' ? 'xs' : 'sm';
 	const dragging = component._drag !== 'none';
 	const refused = component._rejection;
@@ -169,28 +173,53 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 			<div class=${classMap({ 'file-field__chosen-file': true, 'is-active': !dragging })}>
 				<nldd-icon class="file-field__file-icon" icon=${fileIcon(files)} aria-hidden="true"></nldd-icon>
 				<span class="file-field__value">${renderStack(nameVariants)}</span>
-				<div class="file-field__actions">
-					<nldd-button
-						appearance="neutral-tinted"
-						size=${buttonSize}
-						text=${component._t('components.file-field.to-change-action')}
-						accessible-label=${component._changeAccessibleLabel() || nothing}
-						?disabled=${component.disabled}
-						@click=${component._handleChoose}
-					></nldd-button>
-					<nldd-icon-button
-						appearance="neutral-transparent"
-						size=${buttonSize}
-						icon="dismiss"
-						text=${component._t('components.file-field.clear-action')}
-						accessible-label=${component._clearAccessibleLabel()}
-						?disabled=${component.disabled}
-						@click=${component._handleClear}
-					></nldd-icon-button>
-				</div>
+				${area ? html`
+					<div class="file-field__actions">
+						<nldd-button-group
+							size=${component.size}
+							width="full"
+						>
+							<nldd-button
+								appearance="neutral-tinted"
+								text=${component._t('components.file-field.to-change-action')}
+								accessible-label=${component._changeAccessibleLabel() || nothing}
+								?disabled=${component.disabled}
+								@click=${component._handleChoose}
+							></nldd-button>
+							<nldd-button
+								appearance="neutral-base"
+								text=${component._t('components.file-field.clear-action')}
+								accessible-label=${component._clearAccessibleLabel()}
+								?disabled=${component.disabled}
+								@click=${component._handleClear}
+							></nldd-button>
+						</nldd-button-group>
+					</div>
+				` : html`
+					<div class="file-field__actions">
+						<nldd-button
+							appearance="neutral-tinted"
+							size=${buttonSize}
+							text=${component._t('components.file-field.to-change-action')}
+							accessible-label=${component._changeAccessibleLabel() || nothing}
+							?disabled=${component.disabled}
+							@click=${component._handleChoose}
+						></nldd-button>
+						<nldd-icon-button
+							appearance="neutral-transparent"
+							size=${buttonSize}
+							icon="dismiss"
+							text=${component._t('components.file-field.clear-action')}
+							accessible-label=${component._clearAccessibleLabel()}
+							?disabled=${component.disabled}
+							@click=${component._handleClear}
+						></nldd-icon-button>
+					</div>
+				`}
 				${renderValidationIcon(component)}
 			</div>
 			<div class=${classMap({ 'file-field__replace-area': true, 'is-active': dragging })}>
+				${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}
 				<span class="file-field__sentence">${renderStack(drags)}</span>
 				${renderValidationIcon(component)}
 			</div>
@@ -204,6 +233,7 @@ export function fileFieldTemplate(component: NLDDFileField): TemplateResult {
 	return html`
 		<div class=${classMap({
 			'file-field': true,
+			'file-field--area': component.variant === 'area',
 			'has-files': hasFiles,
 			[`is-drag-${component._drag}`]: component._drag !== 'none',
 		})}>

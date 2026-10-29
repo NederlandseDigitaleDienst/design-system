@@ -9,6 +9,7 @@ import '../../forms/form-field/form-field.js';
 import '../../forms/form-actions/form-actions.js';
 import '../../inputs/text-field/text-field.js';
 import '../../content/rich-text/rich-text.js';
+import '../../content/text/text.js';
 
 /**
  * Een non-modal floating panel verankerd aan een trigger-element.
@@ -201,7 +202,7 @@ export const Plaatsingen = {
 				placement="bottom-start"
 				accessible-label="Onder, begin"
 			>
-				<nldd-container padding="16"><nldd-rich-text><p>placement="bottom-start"</p></nldd-rich-text></nldd-container>
+				<nldd-container padding="16"><nldd-text>placement="bottom-start"</nldd-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
@@ -213,7 +214,7 @@ export const Plaatsingen = {
 				placement="top-start"
 				accessible-label="Boven, begin"
 			>
-				<nldd-container padding="16"><nldd-rich-text><p>placement="top-start"</p></nldd-rich-text></nldd-container>
+				<nldd-container padding="16"><nldd-text>placement="top-start"</nldd-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
@@ -225,7 +226,7 @@ export const Plaatsingen = {
 				placement="right"
 				accessible-label="Rechts"
 			>
-				<nldd-container padding="16"><nldd-rich-text><p>placement="right"</p></nldd-rich-text></nldd-container>
+				<nldd-container padding="16"><nldd-text>placement="right"</nldd-text></nldd-container>
 			</nldd-popover>
 
 			<nldd-button
@@ -237,7 +238,7 @@ export const Plaatsingen = {
 				placement="left"
 				accessible-label="Links"
 			>
-				<nldd-container padding="16"><nldd-rich-text><p>placement="left"</p></nldd-rich-text></nldd-container>
+				<nldd-container padding="16"><nldd-text>placement="left"</nldd-text></nldd-container>
 			</nldd-popover>
 		</div>
 	`,

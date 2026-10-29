@@ -1,0 +1,22 @@
+/**
+ * NLDD Designsysteem — code typeface
+ *
+ * JetBrains Mono, under the SIL Open Font License (see NOTICES.md). Shared by
+ * ./styles and ./styles/open-font, whichever text typeface comes with it.
+ */
+
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../fonts/JetBrainsMono[wght].woff2') format('woff2-variations');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../fonts/JetBrainsMono-Italic[wght].woff2') format('woff2-variations');
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}

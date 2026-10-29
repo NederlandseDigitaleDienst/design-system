@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate, installUniversalReset } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, installUniversalReset, until } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './menu.js';
 import '../button/button.js';
@@ -609,6 +609,45 @@ describe('nldd-menu header / footer slots', () => {
 		// The role="menu" list owns only the menu-items.
 		const listItems = sr.querySelector('.menu__list slot') as HTMLSlotElement;
 		expect(listItems.assignedElements().every((e) => e.tagName.toLowerCase() === 'nldd-menu-item')).toBe(true);
+	});
+
+	describe('hover highlight outside the items', () => {
+		const hover = (target: Element, type: 'mouseenter' | 'mouseover') =>
+			target.dispatchEvent(new MouseEvent(type, { bubbles: type === 'mouseover', composed: true }));
+
+		const highlightFirstItem = () => {
+			const item = el.querySelector('nldd-menu-item')!;
+			hover(item, 'mouseenter');
+			hover(item, 'mouseover');
+			expect(item.hasAttribute('highlighted')).toBe(true);
+			return item;
+		};
+
+		it('drops the highlight when the pointer moves onto the header or footer', async () => {
+			el = await fixture(withHeaderFooter);
+			await waitForUpdate(el);
+			for (const region of [el.querySelector('[slot="header"] span')!, el.querySelector('.signout')!]) {
+				const item = highlightFirstItem();
+				hover(region, 'mouseover');
+				expect(item.hasAttribute('highlighted')).toBe(false);
+			}
+		});
+
+		it('drops the highlight when the pointer moves onto the menu padding', async () => {
+			el = await fixture(withHeaderFooter);
+			await waitForUpdate(el);
+			const item = highlightFirstItem();
+			hover(el.shadowRoot!.querySelector('.menu__list')!, 'mouseover');
+			expect(item.hasAttribute('highlighted')).toBe(false);
+		});
+
+		it('keeps the highlight while the pointer moves within an item', async () => {
+			el = await fixture(withHeaderFooter);
+			await waitForUpdate(el);
+			const item = highlightFirstItem();
+			hover(getButton(item as HTMLElement), 'mouseover');
+			expect(item.hasAttribute('highlighted')).toBe(true);
+		});
 	});
 
 	it('collapses the header/footer region when the slot is empty', async () => {
@@ -3123,6 +3162,9 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 		await waitForUpdate(root);
 		open(second, secondMenu);
 		await waitForUpdate(root);
+		// Closing the one and opening the other settle on their own toggle
+		// events; a loaded CI runner can take more than one update for that.
+		await until(() => secondMenu.matches(':popover-open') && !firstMenu.matches(':popover-open'));
 		expect(firstMenu.matches(':popover-open')).toBe(false);
 		expect(secondMenu.matches(':popover-open')).toBe(true);
 		expect(closed).toEqual([firstMenu]);

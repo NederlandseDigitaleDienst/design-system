@@ -10,6 +10,7 @@ export const tokenStyles = css`
 	/* # Host */
 
 	:host {
+		--_token-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
 		--_token-highlight-border-color: var(--semantics-buttons-neutral-tinted-highlight-border-color);
 		--_token-focus-z-index: 1;
 
@@ -51,7 +52,7 @@ export const tokenStyles = css`
 		border: none;
 		border-radius: var(--semantics-controls-sm-corner-radius);
 		background: none;
-		background-color: var(--semantics-buttons-neutral-tinted-background-color);
+		background-color: var(--_token-background-color);
 		position: relative;
 		height: var(--semantics-controls-sm-min-size);
 		max-width: 100%;

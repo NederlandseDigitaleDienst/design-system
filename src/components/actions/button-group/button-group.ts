@@ -21,13 +21,23 @@
  * keeps its own size: a bar with a single glyph in the middle is not a bigger
  * target, only a wider one.
  *
+ * With `width="full"` the buttons fill the row and share it equally. A button
+ * whose label does not fit its share takes the width it needs, and the others
+ * share what is left. A button that does not fit beside the others moves to the
+ * next line and fills it: two buttons stack, three end up as two over one. That
+ * replaces the 480px rule of `auto`, and the group is no container then. With
+ * `orientation="horizontal"` it stays a row, and a label that does not fit wraps
+ * instead. An `nldd-icon-button` takes no share of the row.
+ *
+ * The group sets its `size` on every button in it: buttons in one group are the
+ * same size. It holds three buttons at most and hides the rest.
+ *
  * @element nldd-button-group
- * @attr {string} size - Button group size: 'sm' | 'md' (default: 'md')
+ * @attr {string} size - Button group size, set on every button in it: 'sm' | 'md' (default: 'md')
  * @attr {string} orientation - Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')
+ * @attr {string} width - 'full': the buttons fill the row in equal shares, and a button that does not fit moves to a line of its own (default: unset, each button as wide as its label)
  *
  * @slot - Default slot for buttons (max 3)
- *
- * @csspart group - The button group container
  */
 import { LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
@@ -37,6 +47,9 @@ import { template } from './button-group.template.js';
 
 type Size = 'sm' | 'md';
 type Orientation = 'auto' | 'horizontal' | 'vertical';
+type Width = '' | 'full';
+
+const MAX_BUTTONS = 3;
 
 @customElement('nldd-button-group')
 export class NLDDButtonGroup extends LitElement {
@@ -48,6 +61,9 @@ export class NLDDButtonGroup extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault<Orientation>('auto') })
 	orientation: Orientation = 'auto';
 
+	@property({ reflect: true, converter: reflectNonDefault<Width>('') })
+	width: Width = '';
+
 	@query('slot')
 	private _slot!: HTMLSlotElement;
 
@@ -56,26 +72,30 @@ export class NLDDButtonGroup extends LitElement {
 	/** Timer holding a zero-width reading before it counts as a verdict. */
 	private _collapseVerdict = 0;
 
-	handleSlotChange() {
-		const assigned = this._slot
-			.assignedElements({ flatten: true })
-			.filter((el): el is HTMLElement => el instanceof HTMLElement);
+	/** Buttons whose size the group has set, so a size of their own can be told apart. */
+	private _sized = new WeakSet<Element>();
 
-		assigned.forEach((el, index) => {
-			if (index >= 3) {
-				el.setAttribute('hidden', '');
-				if (import.meta.env?.DEV) console.warn('nldd-button-group: Only 3 buttons are allowed. Extra buttons will be hidden.');
+	/** @internal */
+	_handleSlotChange(): void {
+		const assigned = this._slot.assignedElements({ flatten: true });
+		if (import.meta.env?.DEV && assigned.length > MAX_BUTTONS) {
+			console.warn(`nldd-button-group: holds ${MAX_BUTTONS} buttons at most; the rest are hidden.`);
+		}
+		for (const el of assigned) {
+			const own = el.getAttribute('size');
+			if (import.meta.env?.DEV && own !== null && own !== this.size && !this._sized.has(el)) {
+				console.warn(`nldd-button-group: a button has size="${own}", but the group sets size="${this.size}" on all its buttons. Set the size on the group.`);
 			}
-
 			el.setAttribute('size', this.size);
-		});
+			this._sized.add(el);
+		}
 	}
 
 	override updated(changedProperties: Map<string, unknown>) {
-		if (changedProperties.has('size')) this.handleSlotChange();
+		if (changedProperties.has('size')) this._handleSlotChange();
 		// Switching to auto makes the group a container after the fact, so the
 		// question it can then fail is only worth asking from here on.
-		if (changedProperties.has('orientation')) this._watchForCollapse();
+		if (changedProperties.has('orientation') || changedProperties.has('width')) this._watchForCollapse();
 	}
 
 	override connectedCallback(): void {
@@ -91,9 +111,9 @@ export class NLDDButtonGroup extends LitElement {
 	}
 
 	/**
-	 * The group is an inline-size container while `orientation` is `auto`, so its
-	 * width has to come from its parent: a container may not size itself from its
-	 * own contents. In a parent that shrink-wraps (inline-flex, a float, a table
+	 * The group is an inline-size container while `orientation` is `auto` and
+	 * `width` is not `full`, so its width has to come from its parent: a
+	 * container may not size itself from its own contents. In a parent that shrink-wraps (inline-flex, a float, a table
 	 * cell, a flex item at `width: auto`) there is nothing to take, the group
 	 * measures zero and the buttons disappear without an error.
 	 *
@@ -112,7 +132,7 @@ export class NLDDButtonGroup extends LitElement {
 	 */
 	private _watchForCollapse(): void {
 		if (!import.meta.env?.DEV) return;
-		if (this.orientation !== 'auto') {
+		if (this.orientation !== 'auto' || this.width === 'full') {
 			this._stopWatchingForCollapse();
 			return;
 		}

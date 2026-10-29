@@ -174,6 +174,35 @@ describe('nldd-link', () => {
 		expect(el.shadowRoot!.querySelector('.link__end-icon')).not.toBeNull();
 	});
 
+	// Whitespace in the <a> renders as a gap in running text ("de disclaimer ."),
+	// so the only text besides the label is the space next to an icon.
+	describe('whitespace around the label', () => {
+		const anchorText = () => el.shadowRoot!.querySelector('a')!.textContent;
+
+		it('has none without an icon', async () => {
+			el = await fixture('<nldd-link href="#" text="de disclaimer"></nldd-link>');
+			await waitForUpdate(el);
+			expect(anchorText()).toBe('de disclaimer');
+			const stray = [...el.shadowRoot!.childNodes].filter((n) => n.nodeType === Node.TEXT_NODE);
+			expect(stray).toEqual([]);
+		});
+
+		it('has one space before an end-icon and after a start-icon', async () => {
+			el = await fixture('<nldd-link href="#" text="Label" start-icon="download" end-icon="arrow-right"></nldd-link>');
+			await waitForUpdate(el);
+			expect(anchorText()).toBe(' Label ');
+		});
+
+		it('has one space next to a slotted icon, and drops it when the icon goes', async () => {
+			el = await fixture('<nldd-link href="#" text="Label"><nldd-icon slot="end-icon" icon="arrow-right"></nldd-icon></nldd-link>');
+			await waitForUpdate(el);
+			expect(anchorText()).toBe('Label ');
+			el.querySelector('nldd-icon')!.remove();
+			await waitForUpdate(el);
+			expect(anchorText()).toBe('Label');
+		});
+	});
+
 	it('sized mode renders icons as before', async () => {
 		el = await fixture('<nldd-link href="#" size="md" text="With icon" start-icon="download"></nldd-link>');
 		await waitForUpdate(el);

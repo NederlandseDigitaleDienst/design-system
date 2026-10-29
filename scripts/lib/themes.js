@@ -565,6 +565,7 @@ export function focusRingTokens(steps, color = 'accent') {
 // from the fill.
 const SELECTED_TOKENS = [
 	['--semantics-controls-is-selected-indicator-color', 750, 0],
+	['--semantics-controls-is-selected-indicator-highlight-border-color', 800, 50],
 	['--semantics-controls-is-selected-is-hovered-indicator-color', 800, 50],
 	['--semantics-controls-is-selected-is-active-indicator-color', 850, 100],
 	['--components-date-picker-day-is-today-is-selected-border-color', 900, 150],

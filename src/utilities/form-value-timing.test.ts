@@ -9,6 +9,7 @@ import '../components/inputs/password-field/password-field.js';
 import '../components/inputs/search-field/search-field.js';
 import '../components/inputs/multi-line-text-field/multi-line-text-field.js';
 import '../components/inputs/number-field/number-field.js';
+import '../components/inputs/slider/slider.js';
 import '../components/inputs/stepper/stepper.js';
 import '../components/inputs/date-field/date-field.js';
 import '../components/inputs/combo-box/combo-box.js';
@@ -120,6 +121,17 @@ const cases: Case[] = [
 			input.dispatchEvent(new Event('change', { bubbles: true }));
 		},
 		expected: '42',
+	},
+	{
+		name: 'nldd-slider',
+		html: '<nldd-slider name="field" accessible-label="Veld"></nldd-slider>',
+		act: el => {
+			const input = innerInput(el);
+			input.value = '72';
+			input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+			input.dispatchEvent(new Event('change', { bubbles: true }));
+		},
+		expected: '72',
 	},
 	{
 		name: 'nldd-date-field',

@@ -399,3 +399,103 @@ describe('nldd-file-field', () => {
 		unload();
 	});
 });
+
+describe('nldd-file-field – variant="area"', () => {
+	let el: NLDDFileField;
+	let unloadTokens: () => void;
+
+	beforeEach(() => {
+		unloadTokens = loadTokens();
+	});
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		unloadTokens();
+	});
+
+	const area = async (attributes = '') => {
+		el = await fixture<NLDDFileField>(`<nldd-file-field variant="area" accessible-label="Bewijsstuk" style="width: 400px" ${attributes}></nldd-file-field>`);
+		await waitForUpdate(el);
+		return el.shadowRoot!;
+	};
+
+	it('leaves the attribute off for the default control', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
+		expect(el.variant).toBe('control');
+		expect(el.hasAttribute('variant')).toBe(false);
+		expect(el.shadowRoot!.querySelector('.file-field--area')).toBeNull();
+	});
+
+	it('shows the upload icon and the types accept takes, inside the one button', async () => {
+		const root = await area('accept=".pdf,.jpg"');
+		const button = root.querySelector('.file-field__browse-button')!;
+		expect(button.querySelector('.file-field__upload-icon')).not.toBeNull();
+		expect(button.querySelector('.file-field__accepted-types')!.textContent).toBe('Toegestaan: PDF of JPG');
+	});
+
+	it('leaves the accepted types out without accept', async () => {
+		const root = await area();
+		expect(root.querySelector('.file-field__accepted-types')).toBeNull();
+	});
+
+	it('stacks the file icon, the name and two text buttons once a file is chosen', async () => {
+		const root = await area();
+		choose(el, pdf('offerte.pdf'));
+		await waitForUpdate(el);
+		const buttons = [...root.querySelectorAll('.file-field__actions nldd-button')];
+		expect(buttons.map((button) => button.getAttribute('text'))).toEqual(['Wijzigen', 'Wis selectie']);
+		expect(root.querySelector('.file-field__actions nldd-icon-button')).toBeNull();
+		expect(fullName(el)).toBe('offerte.pdf');
+	});
+
+	it('colors the upload icon and the accepted types like the text while files are dragged over it', async () => {
+		const root = await area('accept=".pdf"');
+		const icon = () => root.querySelector('.file-field__browse-button .file-field__upload-icon') as HTMLElement;
+		const accent = getComputedStyle(root.querySelector('.file-field__browse-action')!).color;
+		const resting = getComputedStyle(icon()).color;
+		drag(el, 'dragover', transfer(pdf('rapport.pdf')));
+		await waitForUpdate(el);
+		expect(getComputedStyle(icon()).color).toBe(accent);
+		expect(getComputedStyle(icon()).color).not.toBe(resting);
+		expect(getComputedStyle(root.querySelector('.file-field__accepted-types')!).color).toBe(accent);
+		drag(el, 'dragover', transfer(png('foto.png')));
+		await waitForUpdate(el);
+		expect(getComputedStyle(icon()).color).toBe(getComputedStyle(root.querySelector('.file-field__text--rejected')!).color);
+		drag(el, 'dragleave', transfer(png('foto.png')));
+	});
+
+	it('shows the upload icon over the replace text when a file is dragged onto a chosen one', async () => {
+		const root = await area();
+		choose(el, pdf('offerte.pdf'));
+		await waitForUpdate(el);
+		expect(root.querySelector('.file-field__replace-area .file-field__upload-icon')).not.toBeNull();
+	});
+
+	it('keeps its spacing and centers its content, also where a hidden message would wrap', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field variant="area" accept=".jpg" style="width: 300px"></nldd-file-field>');
+		await waitForUpdate(el);
+		choose(el, new File(['x'], 'Screenshot 2026-10-27 at 18.13.29.jpg', { type: 'image/jpeg' }));
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		const box = (selector: string) => root.querySelector(selector)!.getBoundingClientRect();
+		const field = el.getBoundingClientRect();
+		const icon = box('.file-field__file-icon');
+		const value = box('.file-field__value');
+		const button = box('.file-field__actions nldd-button');
+		expect(Math.round(value.top - icon.bottom)).toBe(2);
+		expect(Math.round(button.top - value.bottom)).toBe(16);
+		expect(Math.abs((icon.top - field.top) - (field.bottom - button.bottom))).toBeLessThanOrEqual(1);
+	});
+
+	it('keeps its height when a file is chosen and cleared', async () => {
+		await area('accept=".pdf"');
+		const empty = el.getBoundingClientRect().height;
+		choose(el, pdf('offerte.pdf'));
+		await waitForUpdate(el);
+		expect(el.getBoundingClientRect().height).toBe(empty);
+		(el.shadowRoot!.querySelectorAll('.file-field__actions nldd-button')[1] as HTMLElement).click();
+		await waitForUpdate(el);
+		expect(el.files).toEqual([]);
+		expect(el.getBoundingClientRect().height).toBe(empty);
+	});
+});

@@ -418,7 +418,7 @@ function toolbarEditor(editor: unknown) {
 						<nldd-segmented-control-item
 							value="task"
 							text="Taken"
-							icon="check-list"
+							icon="checkbox-list"
 						></nldd-segmented-control-item>
 					</nldd-segmented-control>
 					<nldd-menu-group
@@ -447,7 +447,7 @@ function toolbarEditor(editor: unknown) {
 							type="radio"
 							value="list:task"
 							text="Taken"
-							icon="check-list"
+							icon="checkbox-list"
 						></nldd-menu-item>
 					</nldd-menu-group>
 				</nldd-toolbar-item>

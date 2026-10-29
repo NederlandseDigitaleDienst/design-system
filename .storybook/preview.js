@@ -1,4 +1,5 @@
 import '../src/assets/styles/rijksoverheid-fonts.css';
+import '../src/assets/styles/jetbrains-mono-font.css';
 import '../src/assets/styles/variables.css';
 import '../src/assets/styles/themes.css';
 import '../src/components/content/rich-text/rich-text.css';

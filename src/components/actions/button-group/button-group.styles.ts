@@ -1,34 +1,34 @@
 import { css } from 'lit';
 
 export const buttonGroupStyles = css`
-	:host {
-		box-sizing: border-box;
-	}
 
 
 	/* # Host */
 
 	:host {
-		--_button-group-width: 100%;
 		--_button-group-flex-direction: column;
 		--_button-group-flex-wrap: nowrap;
 		--_button-group-gap: var(--primitives-space-8);
 
+		box-sizing: border-box;
 		display: flex;
 		width: 100%;
-		justify-content: flex-start;
 	}
 
 	/* Only auto asks its own width a question, so only auto becomes a container.
 	   A container may not size itself from its contents, and a group pinned to a
 	   row or a stack would then measure zero in a parent that shrink-wraps, for
-	   a query it never runs. */
-	:host(:not([orientation="horizontal"], [orientation="vertical"])) {
+	   a query it never runs. width="full" asks what fits instead. */
+	:host(:not([orientation="horizontal"], [orientation="vertical"], [width="full"])) {
 		container-type: inline-size;
 	}
 
 	:host([size="sm"]) {
 		--_button-group-gap: var(--primitives-space-6);
+	}
+
+	:host([hidden]) {
+		display: none;
 	}
 
 	/* ## In a row
@@ -54,8 +54,8 @@ export const buttonGroupStyles = css`
 	   beside it everywhere. */
 
 	@container (max-width: 30rem) {
-		:host(:not([orientation="horizontal"], [orientation="vertical"])) .button-group {
-			flex-direction: column;
+		:host(:not([orientation="horizontal"], [orientation="vertical"], [width="full"])) .button-group {
+			--_button-group-flex-direction: column;
 			--context-button-width: 100%;
 		}
 
@@ -64,7 +64,7 @@ export const buttonGroupStyles = css`
 		   An icon-only control is the exception: its size is its icon, and a
 		   full-width bar with one glyph in the middle is not a bigger target for
 		   the thumb, just a wider one. */
-		:host(:not([orientation="horizontal"], [orientation="vertical"])) ::slotted(:not(nldd-icon-button)) {
+		:host(:not([orientation="horizontal"], [orientation="vertical"], [width="full"])) ::slotted(:not(nldd-icon-button)) {
 			display: block;
 			width: 100%;
 		}
@@ -72,10 +72,12 @@ export const buttonGroupStyles = css`
 		/* align-self as well: a column stretches its items across the full width
 		   on its own, so without this the icon button is a wide bar regardless of
 		   the width rule above. */
-		:host(:not([orientation="horizontal"], [orientation="vertical"])) ::slotted(nldd-icon-button) {
+		:host(:not([orientation="horizontal"], [orientation="vertical"], [width="full"])) ::slotted(nldd-icon-button) {
 			align-self: flex-start;
 		}
 	}
+
+	/* ## Vertical */
 
 	:host([orientation="vertical"]) .button-group {
 		--context-button-width: 100%;
@@ -90,14 +92,37 @@ export const buttonGroupStyles = css`
 		align-self: flex-start;
 	}
 
-	:host([hidden]) {
-		display: none;
+	/* ## Full width
+	   Equal shares from zero. With auto no button shrinks below its label (or the
+	   group), so one that does not fit wraps and fills the next line. */
+
+	:host([width="full"]:not([orientation="vertical"])) .button-group {
+		--context-button-width: 100%;
 	}
 
-	/* The stacking rules above set display on every slotted child at a higher
-	   specificity than this selector, so without !important a hidden button in
-	   a stacked group stays in the row. */
-	::slotted([hidden]) {
+	:host([width="full"][orientation="horizontal"]) .button-group {
+		--_button-group-flex-wrap: nowrap;
+	}
+
+	:host([width="full"]:not([orientation="vertical"])) ::slotted(:not(nldd-icon-button)) {
+		flex-grow: 1;
+		flex-shrink: 1;
+		flex-basis: 0;
+	}
+
+	:host([width="full"]:not([orientation="horizontal"], [orientation="vertical"])) ::slotted(:not(nldd-icon-button)) {
+		min-width: fit-content;
+	}
+
+	:host([width="full"]) ::slotted(nldd-icon-button) {
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
+
+	/* The stack rules set display on slotted children at a higher specificity,
+	   so without !important a hidden or a fourth button still shows. */
+	::slotted([hidden]),
+	::slotted(:nth-child(n + 4)) {
 		display: none !important;
 	}
 
@@ -106,7 +131,7 @@ export const buttonGroupStyles = css`
 
 	.button-group {
 		display: flex;
-		width: var(--_button-group-width);
+		width: 100%;
 		flex-direction: var(--_button-group-flex-direction);
 		flex-wrap: var(--_button-group-flex-wrap);
 		gap: var(--_button-group-gap);

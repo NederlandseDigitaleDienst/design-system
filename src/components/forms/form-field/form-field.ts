@@ -142,6 +142,8 @@ export class NLDDFormField extends LitElement {
 	optionalLabel = 'Optioneel';
 
 	private _childObserver: MutationObserver | null = null;
+	/** Watches the validation lists for items that come, go, show or hide. */
+	private _listObserver: MutationObserver | null = null;
 
 	/** The last label this field wrote onto the control, so it only takes back its own. */
 	private _appliedLabel: string | null = null;
@@ -172,6 +174,7 @@ export class NLDDFormField extends LitElement {
 	override disconnectedCallback() {
 		super.disconnectedCallback();
 		this._childObserver?.disconnect();
+		this._listObserver?.disconnect();
 	}
 
 	/**
@@ -345,11 +348,13 @@ export class NLDDFormField extends LitElement {
 	 * that is the control itself, a native input or a host with a role of its
 	 * own, is pointed at directly.
 	 *
-	 * The list once, not each of its items. The items come and go while you
-	 * type, and a description rewritten per keystroke is a lot of churn in
-	 * something assistive software is reading. A hidden item counts for nothing
-	 * in the description, so one reference gives exactly what is on screen, and
-	 * this never has to run again when the value changes.
+	 * The items of a validation list that are on screen, not the list. Safari
+	 * passes nothing on to VoiceOver for an element whose text sits in a
+	 * `role="list"`, which the list renders, so a reference to the list was an
+	 * empty description there. Only the visible items, because an element
+	 * referenced directly is read even while it is hidden: a met requirement
+	 * would still be read out. The references change when an item shows or
+	 * hides, which is when the description changes anyway.
 	 *
 	 * The requirements before the plain help text: what is wrong is why you are
 	 * here.
@@ -360,8 +365,14 @@ export class NLDDFormField extends LitElement {
 
 		const children = Array.from(this.children);
 		const tag = (el: Element) => el.tagName.toLowerCase();
+		const lists = children.filter(el => tag(el) === 'nldd-validation-list');
+		this._listObserver ??= new MutationObserver(() => this._syncDescription());
+		this._listObserver.disconnect();
+		for (const list of lists) {
+			this._listObserver.observe(list, { childList: true, subtree: true, attributes: true, attributeFilter: ['visible'] });
+		}
 		const describedBy = [
-			...children.filter(el => tag(el) === 'nldd-validation-list'),
+			...lists.flatMap(list => Array.from(list.children).filter(el => tag(el) === 'nldd-validation-item' && el.hasAttribute('visible'))),
 			...children.filter(el => tag(el) === 'nldd-form-field-help-text'),
 		];
 

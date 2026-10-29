@@ -115,6 +115,7 @@
 	/* ## Controls */
 
 	--semantics-controls-is-selected-indicator-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-accent-900));
+	--semantics-controls-is-selected-indicator-highlight-border-color: light-dark(var(--primitives-color-neutral-800), var(--primitives-color-accent-950));
 	--semantics-controls-is-selected-contrast-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-accent-0));
 	--semantics-controls-is-selected-is-hovered-indicator-color: light-dark(var(--primitives-color-neutral-800), var(--primitives-color-accent-850));
 	--semantics-controls-is-selected-is-hovered-contrast-color: light-dark(var(--primitives-color-neutral-0), var(--primitives-color-accent-0));

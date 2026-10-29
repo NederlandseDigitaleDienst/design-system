@@ -147,7 +147,9 @@ export default {
 			table: { defaultValue: { summary: '(geen)' } },
 		},
 		download: {
-			control: 'text',
+			control: 'select',
+			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
+			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
 		accessibleLabel: {
@@ -202,7 +204,7 @@ export default {
 		type: 'button',
 		href: '',
 		target: '',
-		download: '',
+		download: '(geen)',
 		accessibleLabel: '',
 		tooltipTiming: 'delay',
 		loading: false,
@@ -229,7 +231,7 @@ const Template = ({ appearance, size, width, hideLgText, expandable, expanded, p
 		type=${type}
 		href=${href || nothing}
 		target=${target || nothing}
-		download=${download || nothing}
+		download=${download ?? nothing}
 		?loading=${loading}
 		loading-text=${loadingText || nothing}
 		?disabled=${disabled}

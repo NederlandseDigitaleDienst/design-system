@@ -208,3 +208,221 @@ describe('nldd-button-group – gestapeld', () => {
 		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
 	});
 });
+
+describe('nldd-button-group – width="full"', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+	});
+
+	/** The fit check runs on the next frame, after the buttons have rendered. */
+	const frames = async (count = 3) => {
+		for (let i = 0; i < count; i++) await new Promise(requestAnimationFrame);
+	};
+
+	const LONG = 'Aanvraag voor dakisolatie indienen';
+
+	/** The natural width of each label, in a group that does not fill. */
+	const natural = async (labels: string[]) => {
+		const probe = await fixture<HTMLElement>(`
+			<div style="width: 1200px;">
+				<nldd-button-group orientation="horizontal">
+					${labels.map((label) => `<nldd-button text="${label}"></nldd-button>`).join('')}
+				</nldd-button-group>
+			</div>
+		`);
+		await frames();
+		const widths = [...probe.querySelectorAll('nldd-button')].map((button) => button.getBoundingClientRect().width);
+		cleanup(probe);
+		return widths;
+	};
+
+	const render = async (width: number, labels: string[], extra = '') => {
+		el = await fixture(`
+			<div style="width: ${width}px;">
+				<nldd-button-group width="full" ${extra}>
+					${labels.map((label) => `<nldd-button text="${label}"></nldd-button>`).join('')}
+				</nldd-button-group>
+			</div>
+		`);
+		await frames();
+		return [...el.querySelectorAll('nldd-button')] as HTMLElement[];
+	};
+
+	const rows = (buttons: HTMLElement[]) => new Set(buttons.map((button) => Math.round(button.getBoundingClientRect().top))).size;
+
+	it('deelt de rij in gelijke delen', async () => {
+		const buttons = await render(800, ['Bewaar', 'Annuleer']);
+		expect(rows(buttons)).toBe(1);
+		const [a, b] = buttons.map((button) => button.getBoundingClientRect().width);
+		expect(Math.abs(a - b)).toBeLessThan(1);
+		expect(a).toBeGreaterThan(350);
+	});
+
+	it('maakt een label dat niet in zijn deel past breder, en de rest deelt wat overblijft', async () => {
+		const [long, short] = await natural([LONG, 'Ja']);
+		const buttons = await render(Math.ceil(long + short + 30), [LONG, 'Ja']);
+		expect(rows(buttons)).toBe(1);
+		const [a, b] = buttons.map((button) => button.getBoundingClientRect().width);
+		expect(a).toBeGreaterThanOrEqual(long - 0.5);
+		expect(b).toBeLessThan(a);
+	});
+
+	it('zet alles onder elkaar als de labels zelfs zo niet passen', async () => {
+		const [long, short] = await natural([LONG, 'Ja']);
+		const buttons = await render(Math.floor(long + short - 20), [LONG, 'Ja']);
+		expect(rows(buttons)).toBe(2);
+		const width = el.getBoundingClientRect().width;
+		for (const button of buttons) expect(Math.round(button.getBoundingClientRect().width)).toBe(Math.round(width));
+	});
+
+	it('zet drie knoppen die niet passen als twee boven één, de onderste over de volle breedte', async () => {
+		const widths = await natural(['Bewaar', 'Annuleer', LONG]);
+		const buttons = await render(Math.floor(widths[0] + widths[1] + 40), ['Bewaar', 'Annuleer', LONG]);
+		expect(rows(buttons)).toBe(2);
+		expect(Math.round(buttons[2].getBoundingClientRect().width)).toBe(Math.round(el.getBoundingClientRect().width));
+	});
+
+	it('laat een label dat breder is dan de groep binnen de groep', async () => {
+		const buttons = await render(120, [LONG, 'Ja']);
+		expect(buttons[0].getBoundingClientRect().width).toBeLessThanOrEqual(120.5);
+	});
+
+	it('gaat terug naar een rij als de groep breder wordt', async () => {
+		const [long, short] = await natural([LONG, 'Ja']);
+		const buttons = await render(Math.floor(long + short - 20), [LONG, 'Ja']);
+		expect(rows(buttons)).toBe(2);
+		el.style.width = '1200px';
+		await frames(4);
+		expect(rows(buttons)).toBe(1);
+	});
+
+	it('laat een icoonknop zijn eigen maat in de rij', async () => {
+		el = await fixture(`
+			<div style="width: 800px;">
+				<nldd-button-group width="full">
+					<nldd-button text="Bewaar"></nldd-button>
+					<nldd-icon-button icon="share" text="Delen"></nldd-icon-button>
+				</nldd-button-group>
+			</div>
+		`);
+		await frames();
+		const icon = el.querySelector('nldd-icon-button') as HTMLElement;
+		// The contract, not the pixels: without variables.css an icon button has
+		// no size of its own here.
+		expect(getComputedStyle(icon).flexGrow).toBe('0');
+		expect(getComputedStyle(icon).flexShrink).toBe('0');
+	});
+
+	it('blijft een rij met orientation="horizontal"', async () => {
+		const [long, short] = await natural([LONG, 'Ja']);
+		const buttons = await render(Math.floor(long + short - 20), [LONG, 'Ja'], 'orientation="horizontal"');
+		expect(rows(buttons)).toBe(1);
+	});
+
+	it('is geen container, want hij vraagt wat er past', async () => {
+		await render(800, ['Bewaar', 'Annuleer']);
+		const group = el.querySelector('nldd-button-group')!;
+		expect(getComputedStyle(group).containerType).toBe('normal');
+	});
+});
+
+describe('nldd-button-group – labels, extra knoppen, maat en richting', () => {
+	let el: HTMLElement;
+
+	afterEach(() => {
+		if (el) cleanup(el);
+		vi.restoreAllMocks();
+	});
+
+	const frames = async (count = 3) => {
+		for (let i = 0; i < count; i++) await new Promise(requestAnimationFrame);
+	};
+
+	const rows = (root: Element) => new Set([...root.querySelectorAll('nldd-button')].map((button) => Math.round(button.getBoundingClientRect().top))).size;
+
+	it('gaat terug naar een rij als een label korter wordt, niet alleen als de groep breder wordt', async () => {
+		el = await fixture(`
+			<div style="width: 160px;">
+				<nldd-button-group width="full">
+					<nldd-button text="Aanvraag voor dakisolatie indienen"></nldd-button>
+					<nldd-button text="Ja"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		await frames();
+		expect(rows(el)).toBe(2);
+		el.querySelector('nldd-button')!.setAttribute('text', 'Indienen');
+		await frames();
+		expect(rows(el)).toBe(1);
+	});
+
+	it('verbergt een vierde knop met CSS en toont hem weer zodra er plek is', async () => {
+		vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<div style="width: 800px;">
+				<nldd-button-group>
+					<nldd-button text="Een"></nldd-button>
+					<nldd-button text="Twee"></nldd-button>
+					<nldd-button text="Drie"></nldd-button>
+					<nldd-button text="Vier"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		await frames();
+		const fourth = el.querySelectorAll('nldd-button')[3] as HTMLElement;
+		expect(fourth.hasAttribute('hidden')).toBe(false);
+		expect(getComputedStyle(fourth).display).toBe('none');
+		el.querySelector('nldd-button')!.remove();
+		await frames();
+		expect(getComputedStyle(fourth).display).not.toBe('none');
+	});
+
+	it('waarschuwt als een knop een eigen maat meekrijgt, en zet toch die van de groep', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<div style="width: 800px;">
+				<nldd-button-group size="sm">
+					<nldd-button text="Een" size="md"></nldd-button>
+					<nldd-button text="Twee"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		await frames();
+		expect(warn.mock.calls.filter(([m]) => String(m).includes('size="md"'))).toHaveLength(1);
+		for (const button of el.querySelectorAll('nldd-button')) expect(button.getAttribute('size')).toBe('sm');
+	});
+
+	it('zegt niets over de maat als de groep zijn eigen maat verandert', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<div style="width: 800px;">
+				<nldd-button-group>
+					<nldd-button text="Een"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		const group = el.querySelector('nldd-button-group') as HTMLElement & { size: string };
+		await frames();
+		group.size = 'sm';
+		await frames();
+		expect(warn).not.toHaveBeenCalled();
+		expect(el.querySelector('nldd-button')!.getAttribute('size')).toBe('sm');
+	});
+
+	it('ziet ook een rij die aan de beginkant uitsteekt, op een pagina van rechts naar links', async () => {
+		el = await fixture(`
+			<div dir="rtl" style="width: 160px;">
+				<nldd-button-group width="full">
+					<nldd-button text="Aanvraag voor dakisolatie indienen"></nldd-button>
+					<nldd-button text="Ja"></nldd-button>
+				</nldd-button-group>
+			</div>
+		`);
+		await frames();
+		expect(rows(el)).toBe(2);
+	});
+
+
+});

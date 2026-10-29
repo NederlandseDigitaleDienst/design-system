@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './button-group.js';
 import '../button/button.js';
 import '../../layout/container/container.js';
@@ -11,6 +11,7 @@ export default {
 	args: {
 		size: 'md',
 		orientation: 'auto',
+		width: '',
 	},
 	argTypes: {
 		size: {
@@ -25,6 +26,13 @@ export default {
 			description: 'Richting: `auto` is een rij, en gestapeld over de volle breedte zodra de groep zelf 480px of smaller is.',
 			table: { defaultValue: { summary: 'auto' } },
 		},
+		width: {
+			control: 'select',
+			options: ['(geen)', 'full'],
+			mapping: { '(geen)': '' },
+			description: '`full`: de knoppen vullen de rij in gelijke delen, en staan onder elkaar zodra hun labels niet naast elkaar passen.',
+			table: { defaultValue: { summary: '(geen)' } },
+		},
 	},
 };
 
@@ -33,6 +41,7 @@ export const Standaard = {
 	<nldd-button-group
 		size=${args.size}
 		orientation=${args.orientation}
+		width=${args.width || nothing}
 	>
 		<nldd-button
 			appearance="primary"
@@ -84,6 +93,42 @@ export const GrootteSm = {
 		></nldd-button>
 	</nldd-button-group>
 	`,
+};
+
+/**
+ * Met `width="full"` vullen de knoppen de rij in gelijke delen. Past een label
+ * niet in zijn deel, dan wordt die knop breder en delen de andere de rest. Past
+ * ook dat niet, dan staan ze allemaal onder elkaar. Hieronder dezelfde groep
+ * in drie breedtes.
+ */
+export const BreedteFull = {
+	name: 'Breedte full',
+	render: (args: Record<string, any>) => {
+		const group = (width: string) => html`
+			<nldd-container width=${width}>
+				<nldd-button-group
+					size=${args.size}
+					width="full"
+				>
+					<nldd-button
+						appearance="primary"
+						text="Aanvraag indienen"
+					></nldd-button>
+					<nldd-button
+						appearance="secondary"
+						text="Bewaar"
+					></nldd-button>
+				</nldd-button-group>
+			</nldd-container>
+		`;
+		return html`
+			<nldd-container gap="32">
+				${group('480px')}
+				${group('300px')}
+				${group('240px')}
+			</nldd-container>
+		`;
+	},
 };
 
 export const DrieKnoppen = {

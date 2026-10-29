@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import './collection.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
-import '../../content/rich-text/rich-text.js';
+import '../../content/text/text.js';
 import '../../content/title/title.js';
 import '../card/card.js';
 import '../container/container.js';
@@ -124,9 +124,9 @@ const itemContent = (i: any) => html`
 		heading-level="3"
 	></nldd-title>
 	<nldd-spacer size="4"></nldd-spacer>
-	<nldd-rich-text spacing="flat">
-		<p>${descriptions[descriptionOrder[i % descriptionOrder.length]]}</p>
-	</nldd-rich-text>
+	<nldd-text>
+		${descriptions[descriptionOrder[i % descriptionOrder.length]]}
+	</nldd-text>
 `;
 
 /* In the card footer, so the buttons line up across a row of cards of
@@ -363,12 +363,11 @@ export const InSimpleSectie = {
 				slot="header"
 				size="4"
 			></nldd-spacer>
-			<nldd-rich-text
+			<nldd-text
 				slot="header"
-				spacing="flat"
 			>
-				<p>Tekst boven de collectie om de uitlijning te zien.</p>
-			</nldd-rich-text>
+				Tekst boven de collectie om de uitlijning te zien.
+			</nldd-text>
 			<nldd-collection layout="horizontal-scroll">
 				${scrollItems}
 			</nldd-collection>

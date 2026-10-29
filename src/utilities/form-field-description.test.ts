@@ -194,9 +194,12 @@ describe('nldd-form-field: the description reaches the control', () => {
 			const list = field.querySelector('#rules') as HTMLElement;
 			expect(getComputedStyle(list).display).not.toBe('none');
 
+			// The item and not the list: Safari passes no description on to
+			// VoiceOver from the text in a role="list", which the list renders.
+			const item = field.querySelector('#rule-unmet') as HTMLElement;
 			const target = descriptionTarget(control_);
 			expect(
-				describes(target, list),
+				describes(target, item),
 				`${name}: the description does not reach <${target.localName}>`,
 			).toBe(true);
 			expect(

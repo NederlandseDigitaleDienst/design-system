@@ -1,10 +1,9 @@
 /**
- * NLDD Designsysteem — Rijksoverheid house fonts
+ * NLDD Designsysteem — Rijksoverheid house typeface
  *
- * Split from variables.css so a build can leave them out: RijksSans is
- * restricted to Dutch government publications (see NOTICES.md). Without these
- * @font-face rules both family stacks fall through to their system entries on
- * their own, so no override is needed.
+ * Split from variables.css so a build can leave it out: RijksSans is
+ * restricted to Dutch government publications (see NOTICES.md). Anything else
+ * imports ./styles/open-font, which loads inter-font.css instead.
  */
 
 @font-face {
@@ -18,22 +17,6 @@
 @font-face {
 	font-family: 'RijksSans';
 	src: url('../fonts/RijksSansWeb-Italic.woff2') format('woff2-variations');
-	font-weight: 100 900;
-	font-style: italic;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	src: url('../fonts/JetBrainsMono[wght].woff2') format('woff2-variations');
-	font-weight: 100 900;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	src: url('../fonts/JetBrainsMono-Italic[wght].woff2') format('woff2-variations');
 	font-weight: 100 900;
 	font-style: italic;
 	font-display: swap;

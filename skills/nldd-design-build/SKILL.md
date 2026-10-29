@@ -65,10 +65,9 @@ Gebruikt de site een thema, neem dan de favicon en het touch icon van dat thema:
 
 Het logo, het lint en de huisstijlkleuren vallen onder dezelfde voorwaarden als RijksSans: uitsluitend voor de Rijksoverheid en partijen die in haar opdracht werken. Het rijkswapen mag alleen samen met het lint worden gebruikt. Zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md).
 
-RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken. De voorwaarden staan in [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, dan kun je 2 kanten op:
+RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken. De voorwaarden staan in [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, importeer dan **`@nldd/design-system/styles/open-font`** in plaats van `/styles`. Dat is dezelfde stylesheet met Inter in plaats van RijksSans. Inter is afgesteld op de x-hoogte van RijksSans, dus de typeschaal en de componenten kloppen ermee. `/styles/system-font` is een verouderde naam voor dezelfde stylesheet en verdwijnt na 1 maart 2027.
 
-1. **Importeer `@nldd/design-system/styles/system-font`** in plaats van `/styles`. Dezelfde stylesheet zonder de `@font-face`-regels. Beide familie-stacks eindigen op een systeemfont, dus de browser valt er vanzelf doorheen en je hoeft niets te overschrijven.
-2. **Blijf bij `/styles` en overschrijf de 2 familievariabelen.** Een `@font-face` waar niets naar verwijst wordt niet gedownload, dus het font komt de pagina niet binnen.
+Wil je toch een eigen letter, overschrijf dan de 2 familievariabelen. Een `@font-face` waar niets naar verwijst, wordt niet gedownload, dus Inter komt de pagina dan niet binnen. De componenten zijn afgestemd op RijksSans en Inter, dus of een andere letter past, moet je zelf beoordelen.
 
    ```css
    :root {

@@ -18,6 +18,7 @@ import { nlddDatePickerTranslations } from '../components/inputs/date-picker/dat
 import { nlddFileFieldTranslations } from '../components/inputs/file-field/file-field.i18n.js';
 import { nlddNumberFieldTranslations } from '../components/inputs/number-field/number-field.i18n.js';
 import { nlddSearchFieldTranslations } from '../components/inputs/search-field/search-field.i18n.js';
+import { nlddSliderTranslations } from '../components/inputs/slider/slider.i18n.js';
 import { nlddStepperTranslations } from '../components/inputs/stepper/stepper.i18n.js';
 import { nlddTextEditorTranslations } from '../components/inputs/text-editor/text-editor.i18n.js';
 import { nlddTimeFieldTranslations } from '../components/inputs/time-field/time-field.i18n.js';
@@ -28,6 +29,7 @@ import { nlddCollectionTranslations } from '../components/layout/collection/coll
 import { nlddPageFooterTranslations } from '../components/layout/page-footer/page-footer.i18n.js';
 import { nlddSidebarSectionTranslations } from '../components/layout/page-sections/sidebar-section/sidebar-section.i18n.js';
 import { nlddPopoverTranslations } from '../components/layout/popover/popover.i18n.js';
+import { nlddTaskBoardTranslations } from '../components/layout/task-board/task-board.i18n.js';
 import { nlddWindowTranslations } from '../components/layout/window/window.i18n.js';
 import { nlddDragHandleCellTranslations } from '../components/lists-and-tables/cells/drag-handle-cell/drag-handle-cell.i18n.js';
 import { nlddListItemSegmentTranslations } from '../components/lists-and-tables/list-item-segment/list-item-segment.i18n.js';
@@ -70,6 +72,7 @@ export const nl = {
 	...nlddFileFieldTranslations,
 	...nlddNumberFieldTranslations,
 	...nlddSearchFieldTranslations,
+	...nlddSliderTranslations,
 	...nlddStepperTranslations,
 	...nlddTextEditorTranslations,
 	...nlddTimeFieldTranslations,
@@ -80,6 +83,7 @@ export const nl = {
 	...nlddPageFooterTranslations,
 	...nlddSidebarSectionTranslations,
 	...nlddPopoverTranslations,
+	...nlddTaskBoardTranslations,
 	...nlddWindowTranslations,
 	...nlddDragHandleCellTranslations,
 	...nlddListItemSegmentTranslations,
