@@ -46779,6 +46779,47 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/tab-order.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "nextTabbableAfter",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "anchor",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "skip",
+              "optional": true,
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "The element Tab would reach after `anchor` in the page, walking the flat\ntree the way the browser builds the tab order, with `skip` and everything in\nit left out. For a control in the top layer, such as a menu that lives in\n`<body>` while it shows: Tab past its last item should go on from the\ncontrol that opened it, not from the end of the document.\n\nPositive tabindex values are not ordered first; the components use none."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "nextTabbableAfter",
+          "declaration": {
+            "name": "nextTabbableAfter",
+            "module": "src/utilities/tab-order.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/title-bar-label-controller.ts",
       "declarations": [
         {

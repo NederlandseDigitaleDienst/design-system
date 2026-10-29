@@ -55,6 +55,8 @@ here; consult the commit history if you need that level of detail.
 - **No space before the punctuation after an `nldd-link`.** Whitespace inside the link showed as a gap in running text, as in "de voorwaarden ." The space now only sits between the label and an icon.
 - **A fourth button in `nldd-button-group` shows again when one of the others is removed.** The group hid it with `hidden` and never took that away; it now hides anything past the third with CSS.
 - **The highlight in `nldd-menu` follows the pointer off the items.** Moving onto the header, the footer, a divider or the padding left the last item highlighted.
+- **Tab out of a menu goes on after the button that opened it.** A menu lives in the top layer, at the end of the page, so Tab from its last item, such as in the "Meer opties" menu of `nldd-menu-bar`, left the page and the next Tab landed on the skip link: everything after the button was skipped. Tab past the last item now closes the menu and goes on to what follows the button, and Shift+Tab before the first goes back to the button.
+- **VoiceOver in Safari reads the requirements of an `nldd-validation-list`.** A field was described by the list as a whole, and Safari passes nothing on to VoiceOver from the text in a list, so a hint such as "Minimaal 8 tekens" was read in Chromium but not in Safari. The field is now described by the items on screen. A met requirement that the list hides is not read either: an element a field points at directly is read even when it is hidden.
 
 ## [0.13.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.0...v0.13.1) (2026-10-28)
 
