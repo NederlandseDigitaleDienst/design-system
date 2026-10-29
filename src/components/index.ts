@@ -112,6 +112,7 @@ export { NLDDSheet } from './layout/sheet/sheet.js';
 export { NLDDWindow } from './layout/window/window.js';
 
 export { NLDDPageFooter, NLDDPageFooterLegalBar, NLDDPageFooterLegalBarItem } from './layout/page-footer/page-footer.js';
+export { NLDDTaskBoard, NLDDTaskBoardColumn } from './layout/task-board/task-board.js';
 
 
 // # List and Table components

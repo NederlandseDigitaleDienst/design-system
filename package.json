@@ -322,6 +322,10 @@
       "types": "./dist/components/layout/page-footer/page-footer.d.ts",
       "default": "./dist/components/layout/page-footer/page-footer.js"
     },
+    "./task-board": {
+      "types": "./dist/components/layout/task-board/task-board.d.ts",
+      "default": "./dist/components/layout/task-board/task-board.js"
+    },
     "./list": {
       "types": "./dist/components/lists-and-tables/list/list.d.ts",
       "default": "./dist/components/lists-and-tables/list/list.js"

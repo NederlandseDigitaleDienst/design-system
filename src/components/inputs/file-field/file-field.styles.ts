@@ -22,12 +22,13 @@ export const fileFieldStyles = css`
 		--_file-field-highlight-border-width: var(--semantics-surfaces-highlight-border-width);
 		--_file-field-highlight-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_file-field-background-color: var(--semantics-surfaces-tinted-background-color);
-		--_file-field-drop-border-width: var(--semantics-surfaces-ring-thickness);
-		--_file-field-page-drag-border-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-350));
-		--_file-field-drop-border-color: var(--semantics-controls-is-selected-indicator-color);
-		--_file-field-drop-background-color: var(--semantics-surfaces-accent-tinted-background-color);
+		--_file-field-drop-border-width: var(--semantics-drop-targets-border-width);
+		--_file-field-page-drag-border-color: var(--semantics-drop-targets-is-available-border-color);
+		--_file-field-drop-border-color: var(--semantics-drop-targets-is-over-border-color);
+		--_file-field-drop-background-color: var(--semantics-drop-targets-is-over-background-color);
 		--_file-field-rejected-color: var(--semantics-content-critical-color);
-		--_file-field-rejected-background-color: var(--semantics-surfaces-critical-tinted-background-color);
+		--_file-field-rejected-border-color: var(--semantics-drop-targets-is-rejected-border-color);
+		--_file-field-rejected-background-color: var(--semantics-drop-targets-is-rejected-background-color);
 		--_file-field-file-icon-size: var(--primitives-space-24);
 		--_file-field-actions-gap: var(--primitives-space-4);
 		--_file-field-browse-action-color: var(--semantics-controls-is-selected-indicator-color);
@@ -123,7 +124,7 @@ export const fileFieldStyles = css`
 
 	.file-field.is-drag-rejected {
 		--_file-field-highlight-border-width: var(--_file-field-drop-border-width);
-		--_file-field-highlight-border-color: var(--_file-field-rejected-color);
+		--_file-field-highlight-border-color: var(--_file-field-rejected-border-color);
 		--_file-field-background-color: var(--_file-field-rejected-background-color);
 	}
 

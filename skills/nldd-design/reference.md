@@ -2238,6 +2238,49 @@ A vertical split view with multiple stacked panes. The number of panes is set vi
 | `pane-2` | Second pane |
 | `pane-n` | Each subsequent pane based on the `panes` attribute |
 
+### `<nldd-task-board>`
+
+Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-task-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu "Verplaatsen naar" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `accessible-label` | `string` | Accessible name of the board (default: "Takenbord") |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| _(default)_ | The columns: `nldd-task-board-column` |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `nldd-move` | An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one) |
+
+### `<nldd-task-board-column>`
+
+One column of an `nldd-task-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here ("Verplaatst naar In behandeling"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `text` | `string` | The column's name, shown in the header and used as its accessible name |
+| `accessible-label` | `string` | Accessible name in place of `text`, for a column whose header comes from the slot |
+| `value` | `string` | What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn` |
+
+**Slots**
+
+| Slot | Description |
+| --- | --- |
+| `header` | The header, in place of `text` and the count |
+| _(default)_ | The items |
+| `footer` | Right under the last item, such as a button to add one; it scrolls along with the items |
+
 ### `<nldd-two-thirds-one-third-section>`
 
 A section with 2/3 main content on the left and a 1/3 sidebar on the right. The columns wrap automatically when they become smaller than 280px. Padding and gap adjust via container queries.

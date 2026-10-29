@@ -1586,6 +1586,19 @@
 	--semantics-grab-handles-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-200));
 	--semantics-grab-handles-grip-color: light-dark(var(--primitives-color-neutral-600), var(--primitives-color-neutral-750));
 
+	/* ## Drop targets
+	   Available while something is dragged, over under the pointer, rejected when
+	   it does not fit; the indicator is the line where a dropped item lands. */
+
+	--semantics-drop-targets-border-width: var(--semantics-surfaces-ring-thickness);
+	--semantics-drop-targets-is-available-border-color: light-dark(var(--primitives-color-neutral-200), var(--primitives-color-neutral-350));
+	--semantics-drop-targets-is-over-border-color: var(--semantics-controls-is-selected-indicator-color);
+	--semantics-drop-targets-is-over-background-color: var(--semantics-surfaces-accent-tinted-background-color);
+	--semantics-drop-targets-is-rejected-border-color: var(--semantics-content-critical-color);
+	--semantics-drop-targets-is-rejected-background-color: var(--semantics-surfaces-critical-tinted-background-color);
+	--semantics-drop-targets-placeholder-background-color: color-mix(in oklab, var(--semantics-surfaces-base-background-color) calc(var(--primitives-opacity-50) * 100%), transparent);
+	--semantics-drop-indicators-color: var(--semantics-controls-is-selected-indicator-color);
+
 	/* ## Tables */
 
 	--semantics-tables-corner-radius: var(--semantics-surfaces-corner-radius);

@@ -8724,6 +8724,22 @@
         },
         {
           "kind": "js",
+          "name": "NLDDTaskBoard",
+          "declaration": {
+            "name": "NLDDTaskBoard",
+            "module": "./layout/task-board/task-board.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoardColumn",
+          "declaration": {
+            "name": "NLDDTaskBoardColumn",
+            "module": "./layout/task-board/task-board.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "NLDDList",
           "declaration": {
             "name": "NLDDList",
@@ -33952,6 +33968,281 @@
           "declaration": {
             "name": "NLDDStackedSplitView",
             "module": "src/components/layout/split-views/stacked-split-view/stacked-split-view.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/layout/task-board/task-board-column.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One column of an `nldd-task-board`: a header and the items under it. The items are whatever you put in the column, usually an `nldd-card` each; the board moves them between columns. Without a `header` slot the column shows its `text` and the number of items. With one, the header is yours: an `nldd-title`, a button to add an item, a badge. `text` stays the column's name either way: it is what a screen reader hears when an item moves here (\"Verplaatst naar In behandeling\"), so set it, or `accessible-label`, also when the header comes from the slot. The column scrolls on its own once its items do not fit the height of the board.",
+          "name": "NLDDTaskBoardColumn",
+          "members": [
+            {
+              "kind": "field",
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The column's name: what a screen reader hears for it.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "description": "The column's items, in order; a hidden one does not count.",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "text",
+              "description": "The column's name, shown in the header and used as its accessible name"
+            },
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name in place of `text`, for a column whose header comes from the slot"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value",
+              "description": "What the column stands for in your data, such as a status; `nldd-move` reports it as `fromColumn` and `toColumn`"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-task-board-column",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "header",
+              "description": "The header, in place of `text` and the count"
+            },
+            {
+              "name": "",
+              "description": "The items"
+            },
+            {
+              "name": "footer",
+              "description": "Right under the last item, such as a button to add one; it scrolls along with the items"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoardColumn",
+          "declaration": {
+            "name": "NLDDTaskBoardColumn",
+            "module": "src/components/layout/task-board/task-board-column.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-task-board-column",
+          "declaration": {
+            "name": "NLDDTaskBoardColumn",
+            "module": "src/components/layout/task-board/task-board-column.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/layout/task-board/task-board.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Columns side by side, with items you move between them: a kanban board, or any board where an item's column is one of its values, such as a status or a team. Put `nldd-task-board-column`s in it, and the items in those, usually an `nldd-card` each. The board scrolls sideways once its columns do not fit, and a column scrolls on its own once its items do not fit the height you give the board. An item moves in three ways, and all three fire the same `nldd-move`: - **Dragging.** Pick up the whole item and drop it in a column. A press that does not move is still a click, so an item that is a link or a button keeps working. On a touch screen you hold the item a moment before it lifts, so a swipe still scrolls. - **Keyboard.** With focus on an item, or on something inside it, Alt with the up or down arrow moves it within its column, and Alt with the left or right arrow to the column beside it. - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each item a menu \"Verplaatsen naar\" with the other columns (`columns` lists them) and call `moveItem()` from it. The menu is yours; the board only moves. The board moves nothing itself. `nldd-move` says which item goes where, and your app moves it in its data, or in the DOM, in the handler: the app owns the order, so a framework that renders the columns never fights the board over them. `toIndex` is the place the item takes in `toColumn`, counted without the item itself, so `splice(fromIndex, 1)` on the one list and `splice(toIndex, 0, item)` on the other is the whole move. Move it synchronously in the handler: the board puts focus back on the item right after, and a screen reader hears where it landed.",
+          "name": "NLDDTaskBoard",
+          "members": [
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "accessible-label"
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "NLDDTaskBoardColumn[]"
+              },
+              "description": "The columns, in order.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "moveItem",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "toColumn",
+                  "type": {
+                    "text": "string | NLDDTaskBoardColumn"
+                  }
+                },
+                {
+                  "name": "toIndex",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "attribute": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "nldd-move",
+              "description": "An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "accessible-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "accessibleLabel",
+              "description": "Accessible name of the board (default: \"Takenbord\")"
+            },
+            {
+              "name": "translations",
+              "type": {
+                "text": "Partial<T>"
+              },
+              "default": "{}",
+              "fieldName": "translations",
+              "inheritedFrom": {
+                "name": "withTranslations",
+                "module": "src/utilities/with-translations.ts"
+              },
+              "description": "Override translation keys; unset keys fall back to Dutch"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "withTranslations",
+              "module": "/src/utilities/with-translations.js"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "nldd-task-board",
+          "customElement": true,
+          "slots": [
+            {
+              "name": "",
+              "description": "The columns: `nldd-task-board-column`"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoardColumn",
+          "declaration": {
+            "name": "NLDDTaskBoardColumn",
+            "module": "src/components/layout/task-board/task-board.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NLDDTaskBoard",
+          "declaration": {
+            "name": "NLDDTaskBoard",
+            "module": "src/components/layout/task-board/task-board.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "nldd-task-board",
+          "declaration": {
+            "name": "NLDDTaskBoard",
+            "module": "src/components/layout/task-board/task-board.ts"
           }
         }
       ]
