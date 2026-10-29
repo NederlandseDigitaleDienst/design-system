@@ -333,8 +333,8 @@ export const sliderStyles = css`
 	/* Shown while the pointer is over the slider, a thumb has keyboard focus or
 	   is dragged: each thumb its own, or the two of a range as one where they
 	   would overlap. */
-	.slider__control:not(.is-merged):is(:hover, .is-active, :has(.slider__input:focus-visible)) :is(.slider__tooltip--value, .slider__tooltip--start, .slider__tooltip--end),
-	.slider__control.is-merged:is(:hover, .is-active, :has(.slider__input:focus-visible)) .slider__tooltip--both {
+	.slider:not(.is-merged) .slider__control:is(:hover, .is-active, :has(.slider__input:focus-visible)) :is(.slider__tooltip--value, .slider__tooltip--start, .slider__tooltip--end),
+	.slider.is-merged .slider__control:is(:hover, .is-active, :has(.slider__input:focus-visible)) .slider__tooltip--both {
 		visibility: visible;
 		opacity: 1;
 	}

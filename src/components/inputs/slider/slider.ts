@@ -153,6 +153,8 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	private _inputs!: NodeListOf<HTMLInputElement>;
 
 	private _initial: { value?: number; startValue?: number; endValue?: number } = {};
+	/** Lays the tooltips out again when the slider or the window changes size. */
+	private _resizeObserver: ResizeObserver | null = null;
 	/** The thumb a press on the track of a range moves, until it is let go. */
 	private _trackThumb: 'start' | 'end' | null = null;
 	/** Where a press on two stacked thumbs began, until a move picks one. */
@@ -211,6 +213,19 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	override connectedCallback(): void {
 		super.connectedCallback();
 		if (!this.hasUpdated) this._initial = { value: this.value, startValue: this.startValue, endValue: this.endValue };
+		this._resizeObserver = new ResizeObserver(this._layoutTooltips);
+		this._resizeObserver.observe(this);
+		window.addEventListener('resize', this._layoutTooltips);
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this._resizeObserver?.disconnect();
+		this._resizeObserver = null;
+		window.removeEventListener('resize', this._layoutTooltips);
+		// Taken out mid-press: the release never reaches it.
+		this._stopPress();
+		this._active = false;
 	}
 
 	override formValue(): FormValue {
@@ -293,6 +308,7 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	};
 
 	private _handleTrackMove = (event: PointerEvent): void => {
+		if (!this.isConnected) return;
 		if (this._stackedPress !== null) {
 			const moved = event.clientX - this._stackedPress;
 			if (moved === 0) return;
@@ -313,13 +329,19 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	private _handlePointerUp = (): void => {
 		this._active = false;
-		this._stackedPress = null;
-		window.removeEventListener('pointermove', this._handleTrackMove);
-		if (this._trackThumb) {
-			this._trackThumb = null;
-			this._emit('change');
-		}
+		const thumb = this._trackThumb;
+		this._stopPress();
+		if (thumb) this._emit('change');
 	};
+
+	/** Ends a press: its listeners on the window, and the thumb it drags. */
+	private _stopPress(): void {
+		window.removeEventListener('pointermove', this._handleTrackMove);
+		window.removeEventListener('pointerup', this._handlePointerUp);
+		window.removeEventListener('pointercancel', this._handlePointerUp);
+		this._trackThumb = null;
+		this._stackedPress = null;
+	}
 
 	/** The value under a point of the track, the way the native thumb places it. */
 	private _valueAt(x: number): number {
@@ -364,10 +386,10 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Joins the two tooltips of a range where they would overlap, and keeps a
 	 *  tooltip inside the window at the ends of the track. */
-	private _layoutTooltips(): void {
+	private _layoutTooltips = (): void => {
 		const root = this.shadowRoot;
-		const control = root?.querySelector<HTMLElement>('.slider__control');
-		if (!root || !control) return;
+		const slider = root?.querySelector<HTMLElement>('.slider');
+		if (!root || !slider) return;
 		const tooltips = Array.from(root.querySelectorAll<HTMLElement>('.slider__tooltip'));
 		for (const tooltip of tooltips) tooltip.style.removeProperty('--_slider-tooltip-shift');
 		if (this.range && tooltips.length) {
@@ -375,7 +397,8 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 			const a = start.getBoundingClientRect();
 			const b = end.getBoundingClientRect();
 			const overlap = a.right > b.left - 4 && b.right > a.left - 4;
-			control.classList.toggle('is-merged', overlap);
+			// .slider is a static class, so a render never takes this one off.
+			slider.classList.toggle('is-merged', overlap);
 		}
 		const margin = 8;
 		for (const tooltip of tooltips) {
@@ -386,7 +409,7 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 				: rect.right > window.innerWidth - margin ? window.innerWidth - margin - rect.right : 0;
 			if (shift) tooltip.style.setProperty('--_slider-tooltip-shift', `${shift}px`);
 		}
-	}
+	};
 
 	override render() {
 		return sliderTemplate(this);

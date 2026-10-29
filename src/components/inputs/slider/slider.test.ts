@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDSlider } from './slider.js';
@@ -193,13 +193,50 @@ describe('nldd-slider', () => {
 			const unloadTokens = loadTokens();
 			el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="2000" start-value="200" end-value="1800" style="width: 400px"></nldd-slider>');
 			await waitForUpdate(el);
-			const control = el.shadowRoot!.querySelector('.slider__control')!;
-			expect(control.classList.contains('is-merged')).toBe(false);
+			const slider = el.shadowRoot!.querySelector('.slider')!;
+			expect(slider.classList.contains('is-merged')).toBe(false);
 			el.startValue = 1750;
 			await waitForUpdate(el);
-			expect(control.classList.contains('is-merged')).toBe(true);
+			expect(slider.classList.contains('is-merged')).toBe(true);
 			expect(el.shadowRoot!.querySelector('.slider__tooltip--both')!.textContent!.trim()).toBe('1.750 – 1.800');
 			unloadTokens();
 		});
+	});
+
+	it('lets go of the window when it is taken out mid-press', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="20" end-value="80" style="width: 400px"></nldd-slider>');
+		const control = el.shadowRoot!.querySelector<HTMLElement>('.slider__control')!;
+		const rect = control.getBoundingClientRect();
+		const removed: string[] = [];
+		const remove = window.removeEventListener.bind(window);
+		window.removeEventListener = ((type: string, ...rest: [EventListenerOrEventListenerObject, (boolean | EventListenerOptions)?]) => {
+			removed.push(type);
+			remove(type, ...rest);
+		}) as typeof window.removeEventListener;
+		control.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, clientX: rect.left + 200, clientY: rect.top + rect.height / 2, button: 0 }));
+		const input = vi.fn();
+		el.addEventListener('input', input);
+		const wrapper = el.parentElement!;
+		el.remove();
+		window.removeEventListener = remove;
+		expect(removed).toEqual(expect.arrayContaining(['pointermove', 'pointerup', 'pointercancel', 'resize']));
+		window.dispatchEvent(new PointerEvent('pointermove', { clientX: rect.left + 300 }));
+		expect(input).not.toHaveBeenCalled();
+		wrapper.append(el);
+		unloadTokens();
+	});
+
+	it('lays its tooltips out again when it changes size', async () => {
+		const unloadTokens = loadTokens();
+		el = await fixture<NLDDSlider>('<nldd-slider range min="0" max="100" start-value="40" end-value="60" style="width: 600px"></nldd-slider>');
+		await waitForUpdate(el);
+		const slider = el.shadowRoot!.querySelector('.slider')!;
+		expect(slider.classList.contains('is-merged')).toBe(false);
+		el.style.width = '120px';
+		await new Promise(requestAnimationFrame);
+		await new Promise(requestAnimationFrame);
+		expect(slider.classList.contains('is-merged')).toBe(true);
+		unloadTokens();
 	});
 });
