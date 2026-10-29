@@ -58,6 +58,7 @@ export default {
 		},
 	},
 	args: {
+		variant: 'control',
 		size: 'md',
 		accept: '',
 		multiple: false,
@@ -69,6 +70,12 @@ export default {
 		required: false,
 	},
 	argTypes: {
+		variant: {
+			control: 'select',
+			options: ['control', 'area'],
+			description: '`control` is een rij zo hoog als een veld; `area` is een hoog vlak, voor een pagina waar bestanden aanleveren de hoofdtaak is',
+			table: { defaultValue: { summary: 'control' } },
+		},
 		size: {
 			control: 'select',
 			options: ['md', 'sm'],
@@ -117,6 +124,7 @@ export default {
 };
 
 export const Standaard = ({
+	variant,
 	size,
 	accept,
 	multiple,
@@ -128,6 +136,7 @@ export const Standaard = ({
 	required,
 }: Record<string, unknown>) => html`
 	<nldd-file-field
+		variant=${variant === 'control' ? nothing : variant}
 		size=${size || nothing}
 		accept=${accept || nothing}
 		?multiple=${multiple}
@@ -139,6 +148,26 @@ export const Standaard = ({
 		?required=${required}
 	></nldd-file-field>
 `;
+
+/**
+ * `variant="area"` is hetzelfde veld als een hoog vlak, voor een pagina waar
+ * bestanden aanleveren de hoofdtaak is. Leeg staat er een upload-icoon boven de
+ * zin en de toegestane typen eronder, afgeleid uit `accept`. Met een bestand
+ * staan het icoon van het formaat, de naam en de knoppen "Wijzigen" en "Wis
+ * selectie" onder elkaar in het midden. Beide toestanden zijn even hoog, dus de
+ * pagina verspringt niet als je een bestand kiest.
+ */
+export const VariantArea = {
+	name: 'Variant area',
+	render: () => html`
+		<nldd-file-field
+			variant="area"
+			accept=".pdf,.jpg"
+			accessible-label="Bewijsstuk"
+		></nldd-file-field>
+	`,
+	parameters: { controls: { disable: true } },
+};
 
 /**
  * Met `multiple` verandert de zin mee en worden gekozen bestanden

@@ -46,7 +46,15 @@
  * does not support. A page that does want to show the files renders its own list
  * from the `File[]` in the change event.
  *
+ * `variant="area"` lays the same field out as a tall surface, for a page where
+ * handing in files is the main task. Empty, it shows an upload icon, the
+ * sentence and the types it takes ("Toegestaan: PDF of JPG"), named from
+ * `accept`; with a file, the icon of its format, its name and the buttons
+ * "Wijzigen" and "Wis selectie" stacked in the middle. Both states have the same
+ * height, so the page does not move when a file is chosen.
+ *
  * @element nldd-file-field
+ * @attr {string} variant - 'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height
  * @attr {string} size - Field size: 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {string} accept - Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*")
  * @attr {boolean} multiple - Allows choosing more than one file
@@ -105,6 +113,9 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	static isFormInput = true;
 
 	// Property order matches the story controls.
+	@property({ reflect: true, converter: reflectNonDefault<'control' | 'area'>('control') })
+	variant: 'control' | 'area' = 'control';
+
 	@property({ reflect: true, converter: reflectNonDefault<'md' | 'sm'>('md') })
 	size: 'md' | 'sm' = 'md';
 
@@ -224,6 +235,19 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 		return `${this._t('components.file-field.clear-action')}, ${this._valueLabel()}`;
 	}
 
+	/** @internal The types `accept` takes, named for a person ("PDF of JPG"), or
+	 *  null when a type in it has no name. */
+	public _acceptTypes(): string | null {
+		const names = acceptNames(this.accept);
+		if (!names) return null;
+		const named = names.map((name) => (typeof name === 'string'
+			? name
+			: this._t(FAMILY_KEYS[name.family])));
+		return named.length === 1
+			? named[0]
+			: this._t('components.file-field.list-lowercase-text', { items: named.slice(0, -1).join(', '), last: named[named.length - 1] });
+	}
+
 	/** @internal */
 	public _rejectionText(reason: DropRejection): string {
 		if (reason === 'count') return this._t('components.file-field.too-many-files-error-text');
@@ -232,14 +256,8 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 				? this._t('components.file-field.folder-multiple-error-text')
 				: this._t('components.file-field.folder-error-text');
 		}
-		const names = acceptNames(this.accept);
-		if (!names) return this._t('components.file-field.wrong-file-type-error-text');
-		const named = names.map((name) => (typeof name === 'string'
-			? name
-			: this._t(FAMILY_KEYS[name.family])));
-		const types = named.length === 1
-			? named[0]
-			: this._t('components.file-field.list-lowercase-text', { items: named.slice(0, -1).join(', '), last: named[named.length - 1] });
+		const types = this._acceptTypes();
+		if (!types) return this._t('components.file-field.wrong-file-type-error-text');
 		return this.multiple
 			? this._t('components.file-field.files-type-error-text', { types })
 			: this._t('components.file-field.file-type-error-text', { types });
@@ -280,7 +298,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 
 	override updated(changed: PropertyValues): void {
 		// Dragging hides the name, so it is measured again once it is back.
-		if (changed.has('_files') || changed.has('size') || changed.has('_drag')) void this._fitNameAfterRender();
+		if (changed.has('_files') || changed.has('size') || changed.has('variant') || changed.has('_drag')) void this._fitNameAfterRender();
 	}
 
 	/** Measures once the buttons beside the name have rendered and taken their

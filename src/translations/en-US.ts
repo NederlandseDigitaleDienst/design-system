@@ -146,6 +146,7 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.file-chosen-text': '{name} chosen',
 	'components.file-field.clear-action': 'Clear selection',
 	'components.file-field.required-error-text': 'Choose a file',
+	'components.file-field.accepted-types-text': 'Accepted: {types}',
 	'components.number-field.decrement-action': 'Decrease',
 	'components.number-field.increment-action': 'Increase',
 	'components.number-field.to-adjust-value-action': 'Adjust value',

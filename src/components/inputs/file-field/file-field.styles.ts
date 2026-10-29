@@ -36,6 +36,14 @@ export const fileFieldStyles = css`
 		--_file-field-browse-is-hovered-background-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-100));
 		--_file-field-browse-is-active-background-color: light-dark(var(--primitives-color-neutral-75), var(--primitives-color-neutral-150));
 		--_file-field-browse-action-font: var(--semantics-buttons-md-primary-text-font);
+		--_file-field-area-min-height: var(--primitives-area-160);
+		--_file-field-area-padding: var(--primitives-space-16);
+		--_file-field-area-gap: var(--primitives-space-2);
+		--_file-field-area-icon-size: var(--primitives-space-40);
+		--_file-field-area-actions-padding-top: var(--primitives-space-16);
+		--_file-field-area-actions-max-width: var(--primitives-area-320);
+		--_file-field-accepted-types-color: var(--semantics-content-secondary-color);
+		--_file-field-accepted-types-font: var(--primitives-font-body-sm-regular-tight);
 
 		${inheritedTextReset}
 		display: block;
@@ -63,6 +71,8 @@ export const fileFieldStyles = css`
 		--_file-field-validation-icon-size: var(--semantics-input-fields-sm-validation-icon-size);
 		--_file-field-file-icon-size: var(--primitives-space-20);
 		--_file-field-browse-action-font: var(--semantics-buttons-sm-primary-text-font);
+		--_file-field-area-icon-size: var(--primitives-space-32);
+		--_file-field-accepted-types-font: var(--primitives-font-body-xs-regular-tight);
 	}
 
 
@@ -162,8 +172,8 @@ export const fileFieldStyles = css`
 		outline: none;
 	}
 
-	:host([valid]) :is(.file-field__browse-button, .file-field__replace-area),
-	:host([invalid]) :is(.file-field__browse-button, .file-field__replace-area) {
+	:host([valid]) .file-field:not(.file-field--area) :is(.file-field__browse-button, .file-field__replace-area),
+	:host([invalid]) .file-field:not(.file-field--area) :is(.file-field__browse-button, .file-field__replace-area) {
 		padding-left: calc(var(--_file-field-validation-icon-size) + var(--_file-field-validation-icon-area-padding-right));
 	}
 
@@ -351,6 +361,72 @@ export const fileFieldStyles = css`
 	.file-field__validation-icon {
 		width: var(--_file-field-validation-icon-size);
 		height: var(--_file-field-validation-icon-size);
+	}
+
+
+
+	/* # Area */
+
+	.file-field--area {
+		min-height: var(--_file-field-area-min-height);
+	}
+
+	.file-field--area :is(.file-field__browse-button, .file-field__replace-area, .file-field__chosen-file) {
+		padding: var(--_file-field-area-padding);
+		flex-direction: column;
+		gap: var(--_file-field-area-gap);
+		align-items: center;
+		justify-content: center;
+	}
+
+	.file-field--area :is(.file-field__upload-icon, .file-field__file-icon) {
+		flex-shrink: 0;
+		margin: 0;
+		width: var(--_file-field-area-icon-size);
+		height: var(--_file-field-area-icon-size);
+	}
+
+	.file-field--area .file-field__upload-icon {
+		color: var(--_file-field-accepted-types-color);
+	}
+
+	.file-field--area.is-drag-over :is(.file-field__upload-icon, .file-field__accepted-types) {
+		color: var(--_file-field-browse-action-color);
+	}
+
+	.file-field--area.is-drag-rejected :is(.file-field__upload-icon, .file-field__accepted-types) {
+		color: var(--_file-field-rejected-color);
+	}
+
+	.file-field--area :is(.file-field__sentence, .file-field__value) {
+		padding-block: 0;
+		width: 100%;
+		flex-grow: 0;
+		text-align: center;
+	}
+
+	.file-field--area .file-field__name {
+		justify-content: center;
+	}
+
+	.file-field--area .file-field__accepted-types {
+		color: var(--_file-field-accepted-types-color);
+		font: var(--_file-field-accepted-types-font);
+	}
+
+	.file-field--area .file-field__actions {
+		width: 100%;
+		max-width: var(--_file-field-area-actions-max-width);
+		padding-top: calc(var(--_file-field-area-actions-padding-top) - var(--_file-field-area-gap));
+		padding-right: var(--primitives-space-0);
+	}
+
+	.file-field--area .file-field__validation-icon-area {
+		position: absolute;
+		top: var(--_file-field-area-padding);
+		right: var(--_file-field-area-padding);
+		height: auto;
+		padding-right: var(--primitives-space-0);
 	}
 
 
