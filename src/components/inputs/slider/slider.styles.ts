@@ -14,22 +14,25 @@ export const sliderStyles = css`
 		--_slider-start: 0;
 		--_slider-end: 0;
 		--_slider-track-height: var(--primitives-space-8);
-		--_slider-track-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
+		--_slider-track-color: light-dark(var(--primitives-color-neutral-50), var(--primitives-color-neutral-150));
+		--_slider-track-border-color: light-dark(var(--primitives-color-neutral-100), var(--primitives-color-neutral-200));
+		--_slider-track-border-width: var(--primitives-border-width-thin);
 		--_slider-fill-color: var(--context-selected-indicator-color, var(--semantics-controls-is-selected-indicator-color));
+		--_slider-fill-highlight-border-color: var(--semantics-controls-is-selected-indicator-highlight-border-color);
 		--_slider-thumb-size: var(--primitives-space-28);
 		--_slider-thumb-hit-size: var(--_slider-control-height);
 		--_slider-thumb-inset: calc((var(--_slider-thumb-hit-size) - var(--_slider-thumb-size)) / 2);
 		--_slider-thumb-background-color: var(--semantics-surfaces-base-background-color);
 		--_slider-thumb-border-width: var(--primitives-border-width-regular);
 		--_slider-thumb-border-color: light-dark(var(--primitives-color-neutral-550), var(--primitives-color-neutral-650));
-		--_slider-thumb-focus-gap-color: var(--semantics-surfaces-base-background-color);
+		--_slider-thumb-ring-thickness: var(--semantics-surfaces-ring-thickness);
+		--_slider-thumb-ring-color: var(--context-parent-background-color, var(--semantics-surfaces-base-background-color));
+		--_slider-thumb-ring-extent: calc(var(--_slider-thumb-size) / 2);
 		--_slider-thumb-is-hovered-border-color: light-dark(var(--primitives-color-neutral-650), var(--primitives-color-neutral-750));
-		--_slider-thumb-is-hovered-background-color: var(--semantics-buttons-neutral-base-is-hovered-background-color);
 		--_slider-thumb-is-active-border-color: light-dark(var(--primitives-color-neutral-750), var(--primitives-color-neutral-850));
-		--_slider-thumb-is-active-background-color: var(--semantics-buttons-neutral-base-is-active-background-color);
 		--_slider-histogram-height: var(--primitives-space-48);
 		--_slider-histogram-gap: var(--primitives-space-1);
-		--_slider-histogram-color: var(--_slider-track-color);
+		--_slider-histogram-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
 		--_slider-histogram-selected-color: color-mix(in oklab, var(--_slider-fill-color) 40%, transparent);
 		--_slider-bar-corner-radius: var(--primitives-space-2);
 		--_slider-bar-height: 0;
@@ -119,11 +122,13 @@ export const sliderStyles = css`
 
 	.slider__track {
 		inset-inline: 0;
+		box-shadow: inset 0 0 0 var(--_slider-track-border-width) var(--_slider-track-border-color);
 		background-color: var(--_slider-track-color);
 	}
 
 	.slider__fill {
 		inset-inline-start: 0;
+		box-shadow: inset 0 0 0 var(--_slider-track-border-width) var(--_slider-fill-highlight-border-color);
 		background-color: var(--_slider-fill-color);
 		width: calc(var(--_slider-thumb-size) / 2 + (100% - var(--_slider-thumb-size)) * var(--_slider-end));
 	}
@@ -218,15 +223,17 @@ export const sliderStyles = css`
 		height: 100%;
 	}
 
-	/* Focus fills the ring with the surface color as the gap of the focus ring. */
+	/* The ring is a gradient in the transparent border, not a second inset
+	   shadow: two with one outer edge let the lower bleed through the edge. */
 	.slider__input::-webkit-slider-thumb {
 		box-sizing: border-box;
 		margin-top: calc((var(--_slider-control-height) - var(--_slider-thumb-hit-size)) / 2);
-		border: var(--_slider-thumb-inset) solid transparent;
+		border: calc(var(--_slider-thumb-inset) + var(--_slider-thumb-ring-thickness)) solid transparent;
 		border-radius: 50%;
 		box-shadow: inset 0 0 0 var(--_slider-thumb-border-width) var(--_slider-thumb-border-color);
-		background-color: var(--_slider-thumb-background-color);
-		background-clip: padding-box;
+		background:
+			linear-gradient(var(--_slider-thumb-background-color), var(--_slider-thumb-background-color)) padding-box,
+			radial-gradient(circle closest-side, var(--_slider-thumb-ring-color) calc(var(--_slider-thumb-ring-extent) - 0.25px), transparent calc(var(--_slider-thumb-ring-extent) + 0.25px)) border-box;
 		pointer-events: auto;
 		width: var(--_slider-thumb-hit-size);
 		height: var(--_slider-thumb-hit-size);
@@ -235,11 +242,12 @@ export const sliderStyles = css`
 
 	.slider__input::-moz-range-thumb {
 		box-sizing: border-box;
-		border: var(--_slider-thumb-inset) solid transparent;
+		border: calc(var(--_slider-thumb-inset) + var(--_slider-thumb-ring-thickness)) solid transparent;
 		border-radius: 50%;
 		box-shadow: inset 0 0 0 var(--_slider-thumb-border-width) var(--_slider-thumb-border-color);
-		background-color: var(--_slider-thumb-background-color);
-		background-clip: padding-box;
+		background:
+			linear-gradient(var(--_slider-thumb-background-color), var(--_slider-thumb-background-color)) padding-box,
+			radial-gradient(circle closest-side, var(--_slider-thumb-ring-color) calc(var(--_slider-thumb-ring-extent) - 0.25px), transparent calc(var(--_slider-thumb-ring-extent) + 0.25px)) border-box;
 		pointer-events: auto;
 		width: var(--_slider-thumb-hit-size);
 		height: var(--_slider-thumb-hit-size);
@@ -248,35 +256,37 @@ export const sliderStyles = css`
 	@media (hover: hover) {
 		.slider__input::-webkit-slider-thumb:hover {
 			--_slider-thumb-border-color: var(--_slider-thumb-is-hovered-border-color);
-			--_slider-thumb-background-color: var(--_slider-thumb-is-hovered-background-color);
 		}
 
 		.slider__input::-moz-range-thumb:hover {
 			--_slider-thumb-border-color: var(--_slider-thumb-is-hovered-border-color);
-			--_slider-thumb-background-color: var(--_slider-thumb-is-hovered-background-color);
 		}
 	}
 
 	.slider__input:active::-webkit-slider-thumb {
 		--_slider-thumb-border-color: var(--_slider-thumb-is-active-border-color);
-		--_slider-thumb-background-color: var(--_slider-thumb-is-active-background-color);
 	}
 
 	.slider__input:active::-moz-range-thumb {
 		--_slider-thumb-border-color: var(--_slider-thumb-is-active-border-color);
-		--_slider-thumb-background-color: var(--_slider-thumb-is-active-background-color);
 	}
 
 	.slider__input:focus-visible::-webkit-slider-thumb {
+		--_slider-thumb-ring-extent: calc(var(--_slider-thumb-size) / 2 + var(--primitives-border-width-regular) + var(--_slider-thumb-ring-thickness));
 		outline: var(--semantics-focus-ring-outline);
-		outline-offset: calc(var(--semantics-focus-ring-outline-offset) - var(--_slider-thumb-inset));
-		border-color: var(--_slider-thumb-focus-gap-color);
+		outline-offset: calc(var(--_slider-thumb-inset) * -1);
+		box-shadow:
+			inset 0 0 0 var(--_slider-thumb-border-width) var(--_slider-thumb-border-color),
+			0 0 0 max(0px, calc(var(--_slider-thumb-ring-extent) - var(--_slider-thumb-hit-size) / 2)) var(--_slider-thumb-ring-color);
 	}
 
 	.slider__input:focus-visible::-moz-range-thumb {
+		--_slider-thumb-ring-extent: calc(var(--_slider-thumb-size) / 2 + var(--primitives-border-width-regular) + var(--_slider-thumb-ring-thickness));
 		outline: var(--semantics-focus-ring-outline);
-		outline-offset: calc(var(--semantics-focus-ring-outline-offset) - var(--_slider-thumb-inset));
-		border-color: var(--_slider-thumb-focus-gap-color);
+		outline-offset: calc(var(--_slider-thumb-inset) * -1);
+		box-shadow:
+			inset 0 0 0 var(--_slider-thumb-border-width) var(--_slider-thumb-border-color),
+			0 0 0 max(0px, calc(var(--_slider-thumb-ring-extent) - var(--_slider-thumb-hit-size) / 2)) var(--_slider-thumb-ring-color);
 	}
 
 
