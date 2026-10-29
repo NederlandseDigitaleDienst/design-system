@@ -55,6 +55,7 @@ export const NEW_ICONS = new Set([
 	'lips',
 	'microscope',
 	'power-plug-socket',
+	'projection-screen',
 	'rss',
 	'share-network',
 	'subscript',

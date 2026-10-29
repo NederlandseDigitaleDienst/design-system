@@ -800,6 +800,11 @@ export const aliases = {
 	'save': 'square-arrow-down',
 	'import': 'square-arrow-down',
 
+	// projection-screen
+	'presentation': 'projection-screen',
+	'slides': 'projection-screen',
+	'slideshow': 'projection-screen',
+
 	// pipeline-machine-gear
 	'pipeline-runner': 'pipeline-machine-gear',
 
