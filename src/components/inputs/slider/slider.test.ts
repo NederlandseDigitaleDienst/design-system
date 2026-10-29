@@ -74,6 +74,16 @@ describe('nldd-slider', () => {
 		form.remove();
 	});
 
+	it('keeps its value when a restored state is not a number', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider name="volume" value="30"></nldd-slider>');
+		el.formStateRestoreCallback('kapot');
+		await waitForUpdate(el);
+		expect(el._value).toBe(30);
+		el.formStateRestoreCallback('70');
+		await waitForUpdate(el);
+		expect(el._value).toBe(70);
+	});
+
 	it('moves focus to its thumb', async () => {
 		el = await fixture<NLDDSlider>('<nldd-slider></nldd-slider>');
 		el.focus();
@@ -88,16 +98,16 @@ describe('nldd-slider', () => {
 
 	it('draws a histogram from a comma-separated attribute, coloring the bars within the value', async () => {
 		el = await fixture<NLDDSlider>('<nldd-slider histogram="1, 4, 2, 8" min="0" max="100" value="50"></nldd-slider>');
-		const bars = Array.from(el.shadowRoot!.querySelectorAll<HTMLElement>('.slider__bar'));
+		const bars = Array.from(el.shadowRoot!.querySelectorAll<HTMLElement>('.slider__histogram-bar'));
 		expect(el.histogram).toEqual([1, 4, 2, 8]);
-		expect(bars.map((bar) => bar.style.getPropertyValue('--_slider-bar-height'))).toEqual(['0.125', '0.5', '0.25', '1']);
+		expect(bars.map((bar) => bar.style.getPropertyValue('--_slider-histogram-bar-height'))).toEqual(['0.125', '0.5', '0.25', '1']);
 		expect(bars.map((bar) => bar.classList.contains('is-selected'))).toEqual([true, true, false, false]);
 		expect(el.shadowRoot!.querySelector('.slider__histogram')!.getAttribute('aria-hidden')).toBe('true');
 	});
 
 	it('colors the bars between the thumbs of a range', async () => {
 		el = await fixture<NLDDSlider>('<nldd-slider range histogram="1,1,1,1,1" min="0" max="100" start-value="20" end-value="60"></nldd-slider>');
-		const bars = Array.from(el.shadowRoot!.querySelectorAll('.slider__bar'));
+		const bars = Array.from(el.shadowRoot!.querySelectorAll('.slider__histogram-bar'));
 		expect(bars.map((bar) => bar.classList.contains('is-selected'))).toEqual([false, true, true, false, false]);
 	});
 

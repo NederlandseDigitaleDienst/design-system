@@ -46,8 +46,8 @@ function histogram(component: NLDDSlider, start: number, end: number): TemplateR
 			${counts.map((count, index) => {
 				const place = (index + 0.5) / counts.length;
 				return html`
-					<span class=${classMap({ 'slider__bar': true, 'is-selected': place >= from - 1e-9 && place <= to + 1e-9 })}
-						style=${styleMap({ '--_slider-bar-height': String(count / highest) })}
+					<span class=${classMap({ 'slider__histogram-bar': true, 'is-selected': place >= from - 1e-9 && place <= to + 1e-9 })}
+						style=${styleMap({ '--_slider-histogram-bar-height': String(count / highest) })}
 					></span>
 				`;
 			})}

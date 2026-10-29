@@ -34,8 +34,8 @@ export const sliderStyles = css`
 		--_slider-histogram-gap: var(--primitives-space-1);
 		--_slider-histogram-color: light-dark(var(--primitives-color-neutral-150), var(--primitives-color-neutral-300));
 		--_slider-histogram-selected-color: color-mix(in oklab, var(--_slider-fill-color) 40%, transparent);
-		--_slider-bar-corner-radius: var(--primitives-space-2);
-		--_slider-bar-height: 0;
+		--_slider-histogram-bar-corner-radius: var(--primitives-space-2);
+		--_slider-histogram-bar-height: 0;
 		--_slider-tooltip-offset: var(--primitives-space-8);
 		--_slider-tooltip-shift: 0px;
 		--_slider-tooltip-background-color: var(--semantics-tooltips-background-color);
@@ -156,17 +156,17 @@ export const sliderStyles = css`
 		align-items: flex-end;
 	}
 
-	.slider__bar {
-		border-start-start-radius: var(--_slider-bar-corner-radius);
-		border-start-end-radius: var(--_slider-bar-corner-radius);
+	.slider__histogram-bar {
+		border-start-start-radius: var(--_slider-histogram-bar-corner-radius);
+		border-start-end-radius: var(--_slider-histogram-bar-corner-radius);
 		background-color: var(--_slider-histogram-color);
-		height: calc(var(--_slider-track-height) / 2 + var(--_slider-bar-height) * var(--_slider-histogram-height));
+		height: calc(var(--_slider-track-height) / 2 + var(--_slider-histogram-bar-height) * var(--_slider-histogram-height));
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
 	}
 
-	.slider__bar.is-selected {
+	.slider__histogram-bar.is-selected {
 		background-color: var(--_slider-histogram-selected-color);
 	}
 
@@ -199,15 +199,15 @@ export const sliderStyles = css`
 		z-index: 1;
 	}
 
-	.is-start-on-top .slider__input--start {
+	.slider__control.is-start-on-top .slider__input--start {
 		z-index: 2;
 	}
 
-	.is-stacked .slider__input::-webkit-slider-thumb {
+	.slider__control.is-stacked .slider__input::-webkit-slider-thumb {
 		pointer-events: none;
 	}
 
-	.is-stacked .slider__input::-moz-range-thumb {
+	.slider__control.is-stacked .slider__input::-moz-range-thumb {
 		pointer-events: none;
 	}
 
@@ -318,7 +318,7 @@ export const sliderStyles = css`
 		transform: translateX(calc(50% + var(--_slider-tooltip-shift)));
 	}
 
-	.has-histogram .slider__tooltip {
+	.slider__control.has-histogram .slider__tooltip {
 		bottom: calc(50% + var(--_slider-track-height) / 2 + var(--_slider-histogram-height) + var(--_slider-tooltip-offset));
 	}
 

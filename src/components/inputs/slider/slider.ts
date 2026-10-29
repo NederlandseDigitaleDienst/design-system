@@ -244,11 +244,16 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	formStateRestoreCallback(state: File | string | FormData | null): void {
-		if (typeof state === 'string') this.value = parseFloat(state);
+		// A restored state that is not a number keeps the value as it was.
+		const number = (entry: unknown) => {
+			const value = parseFloat(String(entry));
+			return Number.isFinite(value) ? value : undefined;
+		};
+		if (typeof state === 'string') this.value = number(state) ?? this.value;
 		if (state instanceof FormData && this.name) {
-			const [start, end] = state.getAll(this.name).map((entry) => parseFloat(String(entry)));
-			this.startValue = start;
-			this.endValue = end;
+			const [start, end] = state.getAll(this.name).map(number);
+			this.startValue = start ?? this.startValue;
+			this.endValue = end ?? this.endValue;
 		}
 	}
 
