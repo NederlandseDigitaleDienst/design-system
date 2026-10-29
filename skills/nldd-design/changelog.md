@@ -15,6 +15,8 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
+
 ### Highlights
 
 - **`nldd-task-board`, a board of columns to move items between.** A kanban board, or any board where an item's column is one of its values, such as a status or a team. Drag an item with the mouse or a finger, move it with Alt and the arrow keys, or call `moveItem()` from a menu of your own. All three fire `nldd-move`, and your app moves the item in its data. See Added.
