@@ -21,6 +21,7 @@ import { SubmenuLevel } from './menu.chain.js';
 import { SafeTriangleController, rectContainsPoint, type Point } from './menu.safe-triangle.js';
 import { NLDDMenuGroup } from './menu-group.js';
 import { NLDDMenuDivider } from './menu-divider.js';
+import { nextTabbableAfter } from '../../../utilities/tab-order.js';
 
 export { NLDDMenuItem } from './menu-item.js';
 export { NLDDMenuGroup } from './menu-group.js';
@@ -1214,6 +1215,7 @@ export class NLDDMenu extends LitElement {
 	// — Private handlers ——————————————————————————————————————————————————————
 
 	private _handleKeydown = (event: KeyboardEvent): void => {
+		if (event.key === 'Tab' && this._tabOut(event)) return;
 		// Only a navigation menu closes on a Tab out; see _handleFocusOut.
 		if (event.key === 'Tab' && this.variant === 'navigation') {
 			this._tabbing = true;
@@ -1312,6 +1314,29 @@ export class NLDDMenu extends LitElement {
 			}
 		}
 	};
+
+	/**
+	 * Tab past the last item, or Shift+Tab before the first, of a menu that
+	 * hangs off a control. The menu lives in the top layer, often in `<body>`,
+	 * so left to the browser that Tab goes on from the end of the document and
+	 * skips everything after the control. It closes the menu and goes on from
+	 * the control instead: to what follows it, or back to it. A submenu leaves
+	 * Tab to its root menu, which sees no focused item of its own and lets the
+	 * browser move between the items.
+	 */
+	private _tabOut(event: KeyboardEvent): boolean {
+		const anchor = this._getAnchorEl() as HTMLElement | null;
+		if (!anchor || this._isSubmenu || !(this as HTMLElement).matches(':popover-open')) return false;
+		const items = this._getVisibleItems();
+		const index = items.findIndex((item) => item.matches(':focus-within'));
+		if (index === -1 || index !== (event.shiftKey ? 0 : items.length - 1)) return false;
+		event.preventDefault();
+		event.stopPropagation();
+		const next = event.shiftKey ? anchor : nextTabbableAfter(anchor, this);
+		(this as HTMLElement).hidePopover();
+		(next ?? anchor).focus();
+		return true;
+	}
 
 	/**
 	 * A navigation menu closes when focus leaves it, the way a disclosure in a
