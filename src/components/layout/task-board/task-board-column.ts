@@ -25,7 +25,7 @@ import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { taskBoardColumnStyles } from './task-board.styles.js';
-import { taskBoardColumnTemplate } from './task-board.template.js';
+import { taskBoardColumnTemplate } from './task-board-column.template.js';
 
 @customElement('nldd-task-board-column')
 export class NLDDTaskBoardColumn extends LitElement {

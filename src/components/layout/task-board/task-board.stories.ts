@@ -277,19 +277,25 @@ export const ToestandReadonly = {
  * Voor wie niet kan slepen: een menu op elk kaartje dat `moveItem()` aanroept.
  * Het menu is van de app; het bord levert `columns` en `moveItem()`. De items
  * zijn radio-items, met de kolom waar het kaartje nu staat geselecteerd: je kiest
- * de plek van het kaartje, net zoals je een status kiest.
+ * de plek van het kaartje, net zoals je een status kiest. Zet die keuze in de
+ * handler van `nldd-move`, dan klopt hij ook na slepen of het toetsenbord.
  */
 export const ZonderSlepen = {
 	name: 'Zonder slepen',
 	render: () => {
-		// The chosen column is the item's place now, so the menu marks it.
 		const move = (event: Event) => {
 			const chosen = event.target as HTMLElement & { value: string };
-			for (const option of chosen.closest('nldd-menu')!.querySelectorAll('nldd-menu-item')) {
-				option.toggleAttribute('selected', option === chosen);
-			}
 			const item = chosen.closest('nldd-card')!;
 			(item.closest('nldd-task-board') as NLDDTaskBoard).moveItem(item, chosen.value);
+		};
+		// Every move, by the menu, by dragging or by the keyboard, marks the
+		// item's new column in its menu.
+		const moved = (event: CustomEvent<NLDDMoveEventDetail>) => {
+			onMove(event);
+			const { item, toColumn } = event.detail;
+			for (const option of item.querySelectorAll<HTMLElement & { value: string }>('nldd-menu-item')) {
+				option.toggleAttribute('selected', option.value === toColumn);
+			}
 		};
 		const columns = [['nieuw', 'Nieuw'], ['in-behandeling', 'In behandeling'], ['afgerond', 'Afgerond']];
 		const movable = (title: string, text: string, current: string) => html`
@@ -332,7 +338,7 @@ export const ZonderSlepen = {
 		return html`
 			<nldd-task-board
 				accessible-label="Aanvragen"
-				@nldd-move=${onMove}
+				@nldd-move=${moved}
 			>
 				<nldd-task-board-column
 					value="nieuw"
