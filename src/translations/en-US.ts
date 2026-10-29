@@ -154,6 +154,8 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.task-board.no-change-text': 'Dropped, place unchanged.',
 	'components.task-board.edge-text': 'Cannot move further.',
 	'components.task-board.canceled-text': 'Drag canceled.',
+	'components.task-board.readonly-text': 'This board is read-only',
+	'components.task-board.return-text': 'Back to its old place',
 	'components.number-field.decrement-action': 'Decrease',
 	'components.number-field.increment-action': 'Increase',
 	'components.number-field.to-adjust-value-action': 'Adjust value',

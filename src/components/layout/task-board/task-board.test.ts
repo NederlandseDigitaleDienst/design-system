@@ -136,6 +136,47 @@ describe('nldd-task-board', () => {
 		unloadTokens();
 	});
 
+	it('takes a fixed height, which every column fills and scrolls within', async () => {
+		el = await fixture<NLDDTaskBoard>(`
+			<nldd-task-board height="320px" style="width: 900px">
+				<nldd-task-board-column text="Nieuw">${'<div style="height: 120px">A</div>'.repeat(5)}</nldd-task-board-column>
+				<nldd-task-board-column text="Klaar"></nldd-task-board-column>
+			</nldd-task-board>
+		`);
+		const unloadTokens = loadTokens();
+		const [full, empty] = el.columns;
+		for (const column of el.columns) await waitForUpdate(column);
+		expect(el.getBoundingClientRect().height).toBe(320);
+		expect(full.getBoundingClientRect().height).toBe(320);
+		expect(empty.getBoundingClientRect().height).toBe(320);
+		el.height = 'nonsense';
+		await waitForUpdate(el);
+		expect(el.style.getPropertyValue('--_task-board-height')).toBe('');
+		unloadTokens();
+	});
+
+	it('fades a column at the side it can scroll to, and only that side', async () => {
+		el = await fixture<NLDDTaskBoard>(`
+			<nldd-task-board height="320px" style="width: 900px">
+				<nldd-task-board-column text="Nieuw">${'<div style="height: 120px">A</div>'.repeat(5)}</nldd-task-board-column>
+			</nldd-task-board>
+		`);
+		const [column] = el.columns;
+		await waitForUpdate(column);
+		await frames(3);
+		const body = column._body;
+		const classes = () => ['can-scroll-up', 'can-scroll-down'].filter((name) => body.classList.contains(name));
+		expect(classes()).toEqual(['can-scroll-down']);
+		body.scrollTop = 100;
+		body.dispatchEvent(new Event('scroll'));
+		await waitForUpdate(column);
+		expect(classes()).toEqual(['can-scroll-up', 'can-scroll-down']);
+		body.scrollTop = body.scrollHeight;
+		body.dispatchEvent(new Event('scroll'));
+		await waitForUpdate(column);
+		expect(classes()).toEqual(['can-scroll-up']);
+	});
+
 	describe('keyboard', () => {
 		it('moves an item to the next column with Alt and the right arrow, and says where', async () => {
 			let moves: NLDDMoveEventDetail[];
@@ -216,6 +257,97 @@ describe('nldd-task-board', () => {
 		});
 	});
 
+	describe('readonly', () => {
+		it('keeps a click on an item', async () => {
+			({ el } = await board());
+			el.readonly = true;
+			await waitForUpdate(el);
+			const a = el.querySelector('#a') as HTMLElement;
+			const click = vi.fn();
+			a.addEventListener('click', click);
+			const [x, y] = center(a);
+			pointer(a, 'pointerdown', x, y);
+			pointer(window, 'pointerup', x, y);
+			a.click();
+			expect(click).toHaveBeenCalledOnce();
+		});
+
+		it('moves nothing by dragging, and says so at the item, to a screen reader and to the app', async () => {
+			let moves: NLDDMoveEventDetail[];
+			({ el, moves } = await board());
+			el.readonly = true;
+			await waitForUpdate(el);
+			const a = el.querySelector('#a') as HTMLElement;
+			const denied = vi.fn();
+			el.addEventListener('nldd-move-denied', (event) => denied((event as CustomEvent).detail.item));
+			const click = vi.fn();
+			a.addEventListener('click', click);
+			const [x, y] = center(a);
+			const [tx, ty] = center(el.columns[2]);
+			pointer(a, 'pointerdown', x, y);
+			pointer(window, 'pointermove', tx, ty);
+			expect(a.hasAttribute('data-task-board-dragging')).toBe(false);
+			expect(denied).toHaveBeenCalledExactlyOnceWith(a);
+			const layers = Array.from(document.querySelectorAll<HTMLElement>('body > [aria-hidden="true"]'));
+			expect(layers.map((layer) => layer.style.cursor || layer.textContent)).toEqual(['Dit bord is alleen-lezen', 'not-allowed']);
+			pointer(window, 'pointermove', tx + 20, ty);
+			expect(denied).toHaveBeenCalledOnce();
+			pointer(window, 'pointerup', tx, ty);
+			a.click();
+			expect(click).not.toHaveBeenCalled();
+			expect(moves).toHaveLength(0);
+			expect(a.parentElement!.getAttribute('value')).toBe('nieuw');
+			await frames(3);
+			expect(announced(el)).toBe('Dit bord is alleen-lezen');
+			expect(document.querySelectorAll('body > [aria-hidden="true"]')).toHaveLength(1);
+		});
+
+		it('moves nothing with the keyboard, and says so', async () => {
+			let moves: NLDDMoveEventDetail[];
+			({ el, moves } = await board());
+			el.readonly = true;
+			await waitForUpdate(el);
+			const a = el.querySelector('#a') as HTMLElement;
+			const denied = vi.fn();
+			el.addEventListener('nldd-move-denied', denied);
+			a.focus();
+			alt(a, 'ArrowRight');
+			expect(moves).toHaveLength(0);
+			expect(denied).toHaveBeenCalledOnce();
+			await frames(3);
+			expect(announced(el)).toBe('Dit bord is alleen-lezen');
+			el.readonly = false;
+			await waitForUpdate(el);
+			expect(document.querySelectorAll('body > [aria-hidden="true"]')).toHaveLength(0);
+		});
+
+		it('still moves with moveItem()', async () => {
+			let moves: NLDDMoveEventDetail[];
+			({ el, moves } = await board());
+			el.readonly = true;
+			await waitForUpdate(el);
+			expect(el.moveItem(el.querySelector('#a') as HTMLElement, 'klaar')).toBe(true);
+			expect(moves[0]).toMatchObject({ fromColumn: 'nieuw', toColumn: 'klaar' });
+		});
+
+		it('drops a drag that is under way when it turns on', async () => {
+			let moves: NLDDMoveEventDetail[];
+			({ el, moves } = await board());
+			const a = el.querySelector('#a') as HTMLElement;
+			const [x, y] = center(a);
+			const [tx, ty] = center(el.columns[2]);
+			pointer(a, 'pointerdown', x, y);
+			pointer(window, 'pointermove', x + 10, y);
+			pointer(window, 'pointermove', tx, ty);
+			expect(a.hasAttribute('data-task-board-dragging')).toBe(true);
+			el.readonly = true;
+			await waitForUpdate(el);
+			expect(a.hasAttribute('data-task-board-dragging')).toBe(false);
+			pointer(window, 'pointerup', tx, ty);
+			expect(moves).toHaveLength(0);
+		});
+	});
+
 	describe('dragging', () => {
 		it('moves an item dragged to another column, and swallows the click that ends it', async () => {
 			let moves: NLDDMoveEventDetail[];
@@ -279,6 +411,26 @@ describe('nldd-task-board', () => {
 			expect(moves).toEqual([]);
 			await frames(3);
 			expect(announced(el)).toBe('Slepen geannuleerd.');
+		});
+
+		it('says above the copy that it goes back, once the pointer stays outside the board', async () => {
+			({ el } = await board());
+			const a = el.querySelector('#a') as HTMLElement;
+			const [x, y] = center(a);
+			const outside = el.getBoundingClientRect().bottom + 100;
+			const note = () => Array.from(document.querySelectorAll<HTMLElement>('body > [aria-hidden="true"]')).find((layer) => layer.textContent === 'Terug naar de oude plek');
+			pointer(a, 'pointerdown', x, y);
+			pointer(window, 'pointermove', x + 10, y);
+			pointer(window, 'pointermove', x, outside);
+			expect(note()).toBeUndefined();
+			await new Promise((resolve) => setTimeout(resolve, 350));
+			expect(note()).toBeDefined();
+			pointer(window, 'pointermove', x, y);
+			expect(note()).toBeUndefined();
+			pointer(window, 'pointermove', x, outside);
+			await new Promise((resolve) => setTimeout(resolve, 350));
+			pointer(window, 'pointerup', x, outside);
+			expect(note()).toBeUndefined();
 		});
 
 		it('moves an item one down when it is dropped below the next one', async () => {

@@ -45,7 +45,13 @@ export function taskBoardColumnTemplate(component: NLDDTaskBoardColumn) {
 					</span>
 				</slot>
 			</div>
-			<div class="task-board-column__body">
+			<div class=${classMap({
+				'task-board-column__body': true,
+				'can-scroll-up': component._canScrollUp,
+				'can-scroll-down': component._canScrollDown,
+			})}
+				@scroll=${component._updateScroll}
+			>
 				<div class="task-board-column__placeholder${component._returning ? ' is-returning' : ''}"
 					?hidden=${!component._placeholder}
 				></div>

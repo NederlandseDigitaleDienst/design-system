@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import './task-board.js';
 import type { NLDDTaskBoard, NLDDMoveEventDetail } from './task-board.js';
 import '../../layout/card/card.js';
@@ -51,6 +51,28 @@ export default {
 		status: { type: 'beta' },
 		controls: { disable: true },
 	},
+	args: {
+		accessibleLabel: 'Aanvragen',
+		height: '',
+		readonly: false,
+	},
+	argTypes: {
+		accessibleLabel: {
+			name: 'accessible-label',
+			control: 'text',
+			description: 'Toegankelijke naam van het bord',
+			table: { defaultValue: { summary: 'Takenbord' } },
+		},
+		height: {
+			control: 'text',
+			description: 'Vaste hoogte als CSS-lengte; elke kolom vult die en scrollt daarbinnen',
+		},
+		readonly: {
+			control: 'boolean',
+			description: 'Niets kan worden gesleept of met het toetsenbord verplaatst; de kaartjes blijven werken',
+			table: { defaultValue: { summary: false } },
+		},
+	},
 };
 
 /** Moves the item in the DOM, the way an app moves it in its data. */
@@ -82,9 +104,11 @@ const card = (title: string, text: string, tag?: string) => html`
 `;
 
 export const Standaard = {
-	render: () => html`
+	render: (args: Record<string, any>) => html`
 		<nldd-task-board
-			accessible-label="Aanvragen"
+			accessible-label=${args.accessibleLabel || nothing}
+			height=${args.height || nothing}
+			?readonly=${args.readonly}
 			@nldd-move=${onMove}
 		>
 			<nldd-task-board-column
@@ -114,6 +138,7 @@ export const Standaard = {
 			></nldd-task-board-column>
 		</nldd-task-board>
 	`,
+	parameters: { controls: { disable: false } },
 };
 
 /**
@@ -163,6 +188,87 @@ export const MetEigenKop = {
 					></nldd-button>
 				</nldd-task-board-column>
 			`)}
+		</nldd-task-board>
+	`,
+};
+
+/**
+ * Met `height` heeft het bord een vaste hoogte. Elke kolom is dan even hoog, ook
+ * een lege, zodat je ook onderin iets kunt neerzetten. Passen de kaartjes niet,
+ * dan scrollt de kolom zelf en vervaagt hij aan de kant waar meer staat. Moet het
+ * bord een pagina of een pane vullen, zet de hoogte dan in je layout, met flex of
+ * `height: 100%`.
+ */
+export const VasteHoogte = {
+	name: 'Vaste hoogte',
+	render: () => html`
+		<nldd-task-board
+			height="360px"
+			accessible-label="Aanvragen"
+			@nldd-move=${onMove}
+		>
+			<nldd-task-board-column
+				value="nieuw"
+				text="Nieuw"
+			>
+				${card('Aanvraag A-1044', 'Zonnepanelen')}
+				${card('Aanvraag A-1045', 'Spouwmuurisolatie')}
+				${card('Aanvraag A-1046', 'Vloerisolatie')}
+				${card('Aanvraag A-1047', 'Warmtepomp')}
+				${card('Aanvraag A-1048', 'Zonneboiler')}
+			</nldd-task-board-column>
+			<nldd-task-board-column
+				value="in-behandeling"
+				text="In behandeling"
+			>
+				${card('Aanvraag A-1042', 'Dakisolatie', 'Team Uitvoering')}
+			</nldd-task-board-column>
+			<nldd-task-board-column
+				value="afgerond"
+				text="Afgerond"
+			></nldd-task-board-column>
+		</nldd-task-board>
+	`,
+};
+
+/**
+ * Met `readonly` verplaatst niemand iets: geen slepen en geen Alt met de
+ * pijltjes. De kaartjes blijven werken, dus een klik opent er nog steeds een.
+ * Voor wie alleen mag kijken, of voor een bord dat is afgesloten. `moveItem()`
+ * verplaatst nog wel, zodat je app een verplaatsing van een ander kan tonen.
+ *
+ * Probeert iemand toch te verplaatsen, dan staat "Dit bord is alleen-lezen" even
+ * bij het kaartje, hoort een schermlezer hetzelfde en vuurt `nldd-move-denied`,
+ * zodat je app in een `nldd-notification` kan zeggen waarom. Zeg het ook boven
+ * het bord: alleen je app weet de reden, en dan hoeft niemand het te proberen.
+ */
+export const ToestandReadonly = {
+	name: 'Toestand readonly',
+	render: () => html`
+		<nldd-task-board
+			readonly
+			accessible-label="Aanvragen"
+			@nldd-move=${onMove}
+		>
+			<nldd-task-board-column
+				value="nieuw"
+				text="Nieuw"
+			>
+				${card('Aanvraag A-1044', 'Zonnepanelen')}
+			</nldd-task-board-column>
+			<nldd-task-board-column
+				value="in-behandeling"
+				text="In behandeling"
+			>
+				${card('Aanvraag A-1042', 'Dakisolatie', 'Team Uitvoering')}
+				${card('Dossier D-318', 'Bezwaar', 'Team Uitvoering')}
+			</nldd-task-board-column>
+			<nldd-task-board-column
+				value="afgerond"
+				text="Afgerond"
+			>
+				${card('Aanvraag A-1043', 'Warmtepomp')}
+			</nldd-task-board-column>
 		</nldd-task-board>
 	`,
 };

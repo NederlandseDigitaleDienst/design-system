@@ -12,7 +12,8 @@
  *
  * - **Dragging.** Pick up the whole item and drop it in a column. A press that
  *   does not move is still a click, so an item that is a link or a button keeps
- *   working. On a touch screen you hold the item a moment before it lifts, so a
+ *   working. Released outside the board, the item goes back to its place, which
+ *   a note above it says once it stays out a moment. On a touch screen you hold the item a moment before it lifts, so a
  *   swipe still scrolls.
  * - **Keyboard.** With focus on an item, or on something inside it, Alt with
  *   the up or down arrow moves it within its column, and Alt with the left or
@@ -20,6 +21,15 @@
  * - **`moveItem()`.** WCAG 2.5.7 asks for a way that does not drag. Give each
  *   item a menu "Verplaatsen naar" with the other columns (`columns` lists them)
  *   and call `moveItem()` from it. The menu is yours; the board only moves.
+ *
+ * With `readonly` nothing moves: no dragging and no Alt with the arrows, while
+ * the items still work, so a card still opens. Use it for someone who may only
+ * look, or a board that is closed. `moveItem()` still moves, so your app can
+ * still show a move someone else made. An attempt to move an item, dragging it
+ * past a click or Alt with an arrow, shows "Dit bord is alleen-lezen" at the
+ * item, says it to a screen reader and fires `nldd-move-denied`, so your app
+ * can say why in an `nldd-notification`. Say it above the board too: only
+ * your app knows the reason, and then nobody has to try.
  *
  * The board moves nothing itself. `nldd-move` says which item goes where, and
  * your app moves it in its data, or in the DOM, in the handler: the app owns the
@@ -32,15 +42,18 @@
  *
  * @element nldd-task-board
  * @attr {string} accessible-label - Accessible name of the board (default: "Takenbord")
+ * @attr {string} height - Fixed height as a CSS length (e.g. '480px'): every column takes it, and scrolls its items once they do not fit. To fill a page or a pane, set the height in your layout instead (flex, or `height: 100%`)
+ * @attr {boolean} readonly - Items cannot be dragged or moved with the keyboard; they still work, and `moveItem()` still moves
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch
  *
  * @slot - The columns: `nldd-task-board-column`
  *
  * @fires nldd-move - An item moves: `{ item, fromColumn, fromIndex, toColumn, toIndex }`, where a column is its `value` (or its `text` without one)
+ * @fires nldd-move-denied - An item a `readonly` board does not move was dragged or moved with the keyboard: `{ item }`
  *
  * @method moveItem(item, toColumn, toIndex?) - Moves an item to a column, given as its `value` or as the element, at `toIndex` or at the end; fires `nldd-move` and says where it landed. Returns whether it moved.
  */
-import { LitElement } from 'lit';
+import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddTaskBoardTranslations } from './task-board.i18n.js';
@@ -66,6 +79,10 @@ const TOUCH_HOLD_MS = 300;
 /** How close to an edge the pointer scrolls the board or a column, and how fast. */
 const SCROLL_EDGE = 48;
 const SCROLL_SPEED = 12;
+/** How long the note at an item a readonly board did not move stays. */
+const DENIED_MS = 1500;
+/** How long the pointer stays outside the board before the copy says it goes back. */
+const RETURN_NOTE_DELAY_MS = 300;
 
 interface Press {
 	item: HTMLElement;
@@ -74,6 +91,7 @@ interface Press {
 	startX: number;
 	startY: number;
 	timer: number;
+	denied?: boolean;
 }
 
 interface Drag {
@@ -88,6 +106,9 @@ interface Drag {
 	target: NLDDTaskBoardColumn | null;
 	index: number;
 	frame: number;
+	/** The note above the copy outside the board, and the wait before it shows. */
+	note: HTMLElement | null;
+	noteTimer: number;
 }
 
 @customElement('nldd-task-board')
@@ -96,6 +117,12 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 
 	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
+
+	@property({ type: String, reflect: true })
+	height = '';
+
+	@property({ type: Boolean, reflect: true })
+	readonly = false;
 
 	@query('.task-board')
 	private _scroller!: HTMLElement;
@@ -113,6 +140,10 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 	private _drag: Drag | null = null;
 	/** The layer that shows the grabbing cursor wherever the pointer is. */
 	private _grabbing: HTMLElement | null = null;
+	/** The note at an item a readonly board did not move, and its own cursor layer. */
+	private _deniedNote: HTMLElement | null = null;
+	private _deniedCursor: HTMLElement | null = null;
+	private _deniedTimer = 0;
 
 	/** The columns, in order. */
 	get columns(): NLDDTaskBoardColumn[] {
@@ -133,9 +164,20 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		this._scrollObserver = null;
 		this._endPress();
 		this._endDrag();
+		this._hideDenied();
 	}
 
-	protected override updated(): void {
+	protected override updated(changed: PropertyValues<this>): void {
+		if (changed.has('height')) {
+			const height = this.height;
+			if (height && CSS.supports('height', height)) this.style.setProperty('--_task-board-height', height);
+			else this.style.removeProperty('--_task-board-height');
+		}
+		if (changed.has('readonly')) {
+			this._endPress();
+			this._cancelDrag();
+			this._hideDenied();
+		}
 		if (!this._scrollObserver && this._scroller) {
 			this._scrollObserver = new ResizeObserver(() => this._updateScroll());
 			this._scrollObserver.observe(this._scroller);
@@ -255,6 +297,11 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		const from = item && this._columnOf(item);
 		if (!item || !from) return;
 		event.preventDefault();
+		if (this.readonly) {
+			this._deny(item);
+			this._deniedTimer = window.setTimeout(() => this._hideDenied(), DENIED_MS);
+			return;
+		}
 
 		const columns = this.columns;
 		const fromIndex = from.items.indexOf(item);
@@ -310,7 +357,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 
 	private _onPointerMove = (event: PointerEvent): void => {
 		const press = this._press;
-		if (press && event.pointerId === press.pointerId && !this._drag) {
+		if (press && event.pointerId === press.pointerId && !this._drag && !press.denied) {
 			const distance = Math.hypot(event.clientX - press.startX, event.clientY - press.startY);
 			if (press.pointerType === 'touch') {
 				// A finger that moves before the hold is up is scrolling.
@@ -327,12 +374,10 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 	};
 
 	private _onPointerUp = (event: PointerEvent): void => {
-		if (this._drag) {
-			this._drop();
-			// The release ends a drag, not a click on the item it started on.
-			window.addEventListener('click', this._swallowClick, { capture: true, once: true });
-			setTimeout(() => window.removeEventListener('click', this._swallowClick, { capture: true }), 0);
-		}
+		const dragged = !!this._drag;
+		const denied = this._press?.pointerId === event.pointerId && !!this._press.denied;
+		if (dragged) this._drop();
+		if (dragged || denied) this._swallowNextClick();
 		if (this._press?.pointerId === event.pointerId) this._endPress();
 	};
 
@@ -340,6 +385,12 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		if (this._drag) this._cancelDrag();
 		this._endPress();
 	};
+
+	/** The release ends a drag, or an attempt at one, not a click on the item. */
+	private _swallowNextClick(): void {
+		window.addEventListener('click', this._swallowClick, { capture: true, once: true });
+		setTimeout(() => window.removeEventListener('click', this._swallowClick, { capture: true }), 0);
+	}
 
 	private _swallowClick = (event: MouseEvent): void => {
 		event.preventDefault();
@@ -365,6 +416,11 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 
 	private _endPress(): void {
 		if (this._press?.timer) clearTimeout(this._press.timer);
+		if (this._press?.denied) {
+			this._deniedCursor?.remove();
+			this._deniedCursor = null;
+			this._deniedTimer = window.setTimeout(() => this._hideDenied(), DENIED_MS);
+		}
 		this._press = null;
 		if (!this._drag) this._stopListening();
 	}
@@ -380,6 +436,12 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		const press = this._press;
 		const from = press && this._columnOf(press.item);
 		if (!press || !from) return;
+		if (this.readonly) {
+			press.denied = true;
+			this._deny(press.item);
+			this._deniedCursor = this._cursorLayer('not-allowed');
+			return;
+		}
 		const item = press.item;
 		const rect = item.getBoundingClientRect();
 		const ghost = item.cloneNode(true) as HTMLElement;
@@ -415,18 +477,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		window.addEventListener('keydown', this._onDragKeyDown, true);
 		for (const column of this.columns) column._dropState = 'available';
 		from._placeholder = item;
-		// A style in the document does not reach into shadow roots, where a
-		// button or a link sets its own cursor. A layer over the whole viewport
-		// does: the pointer is always over it while dragging.
-		this._grabbing = document.createElement('div');
-		this._grabbing.setAttribute('aria-hidden', 'true');
-		Object.assign(this._grabbing.style, {
-			position: 'fixed',
-			inset: '0',
-			zIndex: '2147483646',
-			cursor: 'grabbing',
-		});
-		document.body.append(this._grabbing);
+		this._grabbing = this._cursorLayer('grabbing');
 		this._dragging = true;
 		this._drag = {
 			item,
@@ -440,6 +491,8 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 			target: null,
 			index: 0,
 			frame: requestAnimationFrame(this._scrollLoop),
+			note: null,
+			noteTimer: 0,
 		};
 		this._follow();
 	}
@@ -494,6 +547,32 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 			target._dropIndex = returning ? null : index;
 			target._dropState = 'over';
 		}
+		this._followReturnNote(inside);
+	}
+
+	/** Outside the board, after a moment, a note above the copy says a release
+	 *  puts the item back; the placeholder that says so may be out of view. */
+	private _followReturnNote(inside: boolean): void {
+		const drag = this._drag;
+		if (!drag) return;
+		if (inside) {
+			clearTimeout(drag.noteTimer);
+			drag.noteTimer = 0;
+			drag.note?.remove();
+			drag.note = null;
+			return;
+		}
+		if (!drag.note && !drag.noteTimer) {
+			drag.noteTimer = window.setTimeout(() => {
+				if (this._drag !== drag) return;
+				drag.note = this._note(this._t('components.task-board.return-text'));
+				this._followReturnNote(false);
+			}, RETURN_NOTE_DELAY_MS);
+		}
+		if (!drag.note) return;
+		const x = drag.x - drag.offsetX + drag.ghost.offsetWidth / 2;
+		const y = drag.y - drag.offsetY;
+		drag.note.style.transform = `translate(${x}px, ${y}px) translate(-50%, calc(-100% - var(--primitives-space-8)))`;
 	}
 
 	/** Scrolls the board sideways, and the column under the pointer, while the
@@ -541,6 +620,8 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		const drag = this._drag;
 		if (!drag) return;
 		cancelAnimationFrame(drag.frame);
+		clearTimeout(drag.noteTimer);
+		drag.note?.remove();
 		drag.ghost.remove();
 		drag.item.removeAttribute('data-task-board-dragging');
 		if (drag.target) drag.target._dropIndex = null;
@@ -557,6 +638,76 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		this._dragging = false;
 		this._drag = null;
 		if (!this._press) this._stopListening();
+	}
+
+	/** A style in the document does not reach into shadow roots, where a
+	 *  button or a link sets its own cursor. A layer over the whole viewport
+	 *  does: the pointer is always over it. */
+	private _cursorLayer(cursor: string): HTMLElement {
+		const layer = document.createElement('div');
+		layer.setAttribute('aria-hidden', 'true');
+		Object.assign(layer.style, {
+			position: 'fixed',
+			inset: '0',
+			zIndex: '2147483646',
+			cursor,
+		});
+		document.body.append(layer);
+		return layer;
+	}
+
+	// — Readonly ————————————————————————————————————————————————————————
+
+	/** Says at the item, and to a screen reader, that the board moves nothing,
+	 *  and tells the app. */
+	private _deny(item: HTMLElement): void {
+		this._hideDenied();
+		const text = this._t('components.task-board.readonly-text');
+		this._announce(text);
+		const rect = item.getBoundingClientRect();
+		const below = rect.top < SCROLL_EDGE;
+		const note = this._note(text);
+		Object.assign(note.style, {
+			top: `${below ? rect.bottom : rect.top}px`,
+			left: `${rect.left + rect.width / 2}px`,
+			transform: `translate(-50%, ${below ? 'var(--primitives-space-8)' : 'calc(-100% - var(--primitives-space-8))'})`,
+			maxWidth: `${rect.width}px`,
+		});
+		this._deniedNote = note;
+		this.dispatchEvent(new CustomEvent('nldd-move-denied', { detail: { item }, bubbles: true, composed: true }));
+	}
+
+	/** A note in the look of a tooltip, over everything, for the eye only: what
+	 *  it says, the board also says to a screen reader or in its own way. */
+	private _note(text: string): HTMLElement {
+		const note = document.createElement('div');
+		note.setAttribute('aria-hidden', 'true');
+		note.textContent = text;
+		Object.assign(note.style, {
+			position: 'fixed',
+			top: '0',
+			left: '0',
+			zIndex: '2147483647',
+			boxSizing: 'border-box',
+			width: 'max-content',
+			padding: 'var(--semantics-tooltips-padding-block) var(--semantics-tooltips-padding-inline)',
+			borderRadius: 'var(--semantics-tooltips-corner-radius)',
+			boxShadow: 'var(--semantics-tooltips-box-shadow)',
+			backgroundColor: 'var(--semantics-tooltips-background-color)',
+			color: 'var(--semantics-tooltips-content-color)',
+			font: 'var(--semantics-tooltips-font)',
+			pointerEvents: 'none',
+		});
+		document.body.append(note);
+		return note;
+	}
+
+	private _hideDenied(): void {
+		clearTimeout(this._deniedTimer);
+		this._deniedNote?.remove();
+		this._deniedNote = null;
+		this._deniedCursor?.remove();
+		this._deniedCursor = null;
 	}
 
 	override render() {

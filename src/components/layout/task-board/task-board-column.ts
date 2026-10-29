@@ -10,7 +10,7 @@
  * or `accessible-label`, also when the header comes from the slot.
  *
  * The column scrolls on its own once its items do not fit the height of the
- * board.
+ * board, and fades at the top or the bottom while there is more to scroll to.
  *
  * @element nldd-task-board-column
  * @attr {string} text - The column's name, shown in the header and used as its accessible name
@@ -61,8 +61,14 @@ export class NLDDTaskBoardColumn extends LitElement {
 	 *  the pointer, or one it could go to. */
 	@state() _dropState: 'available' | 'over' | null = null;
 
+	/** @internal Whether there is more to scroll to above or below, for the fades. */
+	@state() _canScrollUp = false;
+	@state() _canScrollDown = false;
+
 	@query('.task-board-column__body')
 	private _bodyElement!: HTMLElement;
+
+	private _resizeObserver: ResizeObserver | null = null;
 
 	@query('.task-board-column__drop-indicator')
 	private _indicator!: HTMLElement;
@@ -85,6 +91,40 @@ export class NLDDTaskBoardColumn extends LitElement {
 	/** @internal */
 	_handleSlotChange(): void {
 		this._count = this.items.length;
+		this._observeItems();
+		this._updateScroll();
+	}
+
+	/** @internal */
+	_updateScroll = (): void => {
+		const body = this._bodyElement;
+		if (!body) return;
+		this._canScrollUp = body.scrollTop > 1;
+		this._canScrollDown = body.scrollTop < body.scrollHeight - body.clientHeight - 1;
+	};
+
+	/** The body changes size with the board, and its content with the items. */
+	private _observeItems(): void {
+		if (!this._resizeObserver || !this._bodyElement) return;
+		this._resizeObserver.disconnect();
+		this._resizeObserver.observe(this._bodyElement);
+		for (const item of this.items) this._resizeObserver.observe(item);
+		const footer = this.shadowRoot?.querySelector('.task-board-column__footer');
+		if (footer) this._resizeObserver.observe(footer);
+	}
+
+	override connectedCallback(): void {
+		super.connectedCallback();
+		if (this.hasUpdated && !this._resizeObserver) {
+			this._resizeObserver = new ResizeObserver(this._updateScroll);
+			this._observeItems();
+		}
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this._resizeObserver?.disconnect();
+		this._resizeObserver = null;
 	}
 
 	/** @internal */
@@ -93,6 +133,8 @@ export class NLDDTaskBoardColumn extends LitElement {
 	}
 
 	protected override firstUpdated(): void {
+		this._resizeObserver = new ResizeObserver(this._updateScroll);
+		this._observeItems();
 		if (import.meta.env?.DEV && !this.label) {
 			console.warn('nldd-task-board-column: a column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.');
 		}

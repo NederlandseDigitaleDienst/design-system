@@ -11,10 +11,12 @@ export const taskBoardStyles = css`
 		--_task-board-fade-size: var(--primitives-space-32);
 		--_task-board-fade-left: var(--primitives-space-0);
 		--_task-board-fade-right: var(--primitives-space-0);
+		--_task-board-height: auto;
 
 		box-sizing: border-box;
 		display: block;
 		min-width: 0;
+		height: var(--_task-board-height);
 	}
 
 	:host([hidden]) {
@@ -91,6 +93,9 @@ export const taskBoardColumnStyles = css`
 		--_task-board-column-body-gap: var(--primitives-space-8);
 		--_task-board-column-body-padding: var(--primitives-space-8);
 		--_task-board-column-body-min-height: var(--primitives-space-80);
+		--_task-board-column-body-fade-size: var(--primitives-space-24);
+		--_task-board-column-body-fade-top: var(--primitives-space-0);
+		--_task-board-column-body-fade-bottom: var(--primitives-space-0);
 		--_task-board-column-placeholder-background-color: var(--semantics-drop-targets-placeholder-background-color);
 		--_task-board-column-placeholder-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_task-board-column-placeholder-border-width: var(--semantics-drop-targets-border-width);
@@ -176,6 +181,15 @@ export const taskBoardColumnStyles = css`
 		flex-direction: column;
 		flex-grow: 1;
 		gap: var(--_task-board-column-body-gap);
+		mask-image: linear-gradient(to bottom, transparent 0, black var(--_task-board-column-body-fade-top), black calc(100% - var(--_task-board-column-body-fade-bottom)), transparent 100%);
+	}
+
+	.task-board-column__body.can-scroll-up {
+		--_task-board-column-body-fade-top: var(--_task-board-column-body-fade-size);
+	}
+
+	.task-board-column__body.can-scroll-down {
+		--_task-board-column-body-fade-bottom: var(--_task-board-column-body-fade-size);
 	}
 
 	.task-board-column__footer {
