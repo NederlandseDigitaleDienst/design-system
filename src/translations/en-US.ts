@@ -147,6 +147,8 @@ export const enUS: Record<TranslationKey, string> = {
 	'components.file-field.clear-action': 'Clear selection',
 	'components.file-field.required-error-text': 'Choose a file',
 	'components.file-field.accepted-types-text': 'Accepted: {types}',
+	'components.slider.start-value-label': 'Minimum',
+	'components.slider.end-value-label': 'Maximum',
 	'components.task-board.accessible-label': 'Task board',
 	'components.task-board.moved-text': 'Moved to {column}, {position} of {total}.',
 	'components.task-board.no-change-text': 'Dropped, place unchanged.',

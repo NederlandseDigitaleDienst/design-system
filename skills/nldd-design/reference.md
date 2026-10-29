@@ -1322,6 +1322,39 @@ A horizontal group of mutually exclusive (radio) or multi-select (checkbox) opti
 | --- | --- |
 | `item-change` | When item is activated; detail: { value: string, checked: boolean } |
 
+### `<nldd-slider>`
+
+A value picked along a track, by dragging its thumb, pressing the track or with the arrow keys. With `range` it picks a range instead, with a thumb for each end. The names follow Apple's: the track, the thumb, and the minimum track, the part filled up to the thumb, or between the thumbs of a range. A slider is for a value that may be roughly right, such as a filter ("a price between …"). For a value that has to be exact, an `nldd-number-field` is easier: a thumb is hard to put on one number, the more so with a hand that is not steady. It is built on native range inputs, so the keyboard (arrows, Page Up and Page Down, Home and End), touch, the form and a screen reader work as they do for any slider. A range is two of them over each other, each with its own name for a screen reader ("Prijs, minimum"), and a press on the track moves the nearer thumb there. The thumbs do not pass each other; where they lie on one value, the first move picks one, to the left the start one. The value shows in a tooltip above the thumb while the pointer is over the slider, while a thumb has keyboard focus and while it is dragged; with `tooltip-timing="never"` it does not, for a slider whose value already shows elsewhere. Where the two tooltips of a range would overlap, they show as one ("200 – 1.200"). `formatValue` turns a number into the text of the tooltip and of what a screen reader hears, such as `(value) => \`€ ${value}\``; without it the number is written the Dutch way. `histogram` draws counts as bars above the track, such as how many results there are at each price, so the range can be chosen with the spread in view. Give one count per bucket: n counts split min to max into n equal buckets of (max - min) / n, the first count for the first bucket. Only the proportions matter (the highest count is the full height), a 0 is an empty bucket, and 20 to 40 buckets read best, whatever the `step`. A bar whose middle lies within the chosen value or range is colored. The bars are decoration for a screen reader: say what they show in the text around it. In a form a slider submits its value under `name`; a range submits both ends under it, the start first.
+
+**Attributes**
+
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `size` | `string` | Slider size: 'xs' \| 'sm' \| 'md' (default: 'md'), with the height of the other controls of that size. Set automatically by nldd-form-field. |
+| `range` | `boolean` | Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value` |
+| `histogram` | `string` | Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored. |
+| `start-icon` | `string` | Icon at the start of the track, such as a quiet speaker for a volume |
+| `end-icon` | `string` | Icon at the end of the track |
+| `accessible-label` | `string` | Accessible name; a range adds "minimum" and "maximum" to it for its thumbs. Set automatically by nldd-form-field. |
+| `tooltip-timing` | `string` | When the value shows above the thumb: 'instant' (the default: on hover, keyboard focus and while dragging) or 'never', for a slider whose value shows elsewhere, such as in fields above it |
+| `invalid` | `boolean` | Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it. |
+| `disabled` | `boolean` | Disabled state |
+| `name` | `string` | Name for form submission |
+| `value` | `number` | The value (default: the middle between min and max) |
+| `start-value` | `number` | The start of a range (default: min) |
+| `end-value` | `number` | The end of a range (default: max) |
+| `min` | `number` | Smallest value (default: 0) |
+| `max` | `number` | Largest value (default: 100) |
+| `step` | `number` | Step between values (default: 1) |
+| `translations` | `object` | Override translation keys; unset keys fall back to Dutch |
+
+**Events**
+
+| Event | Description |
+| --- | --- |
+| `input` | While a thumb moves; detail: { value } or, with `range`, { startValue, endValue } |
+| `change` | When a thumb is let go, or a key moved it; detail as for input |
+
 ### `<nldd-stepper>`
 
 A numeric control with increment and decrement buttons.

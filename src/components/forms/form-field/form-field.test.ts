@@ -5,6 +5,7 @@ import '../../inputs/text-field/text-field.js';
 import '../../inputs/password-field/password-field.js';
 import '../../inputs/multi-line-text-field/multi-line-text-field.js';
 import '../../inputs/number-field/number-field.js';
+import '../../inputs/slider/slider.js';
 import '../../inputs/search-field/search-field.js';
 import '../../inputs/date-field/date-field.js';
 import '../../inputs/time-field/time-field.js';
@@ -320,6 +321,7 @@ const SLOTTED_CONTROLS: Array<{ name: string; markup: string }> = [
 	{ name: 'password-field', markup: '<nldd-password-field></nldd-password-field>' },
 	{ name: 'multi-line-text-field', markup: '<nldd-multi-line-text-field></nldd-multi-line-text-field>' },
 	{ name: 'number-field', markup: '<nldd-number-field></nldd-number-field>' },
+	{ name: 'slider', markup: '<nldd-slider></nldd-slider>' },
 	{ name: 'search-field', markup: '<nldd-search-field></nldd-search-field>' },
 	{ name: 'date-field', markup: '<nldd-date-field></nldd-date-field>' },
 	{ name: 'time-field', markup: '<nldd-time-field></nldd-time-field>' },
@@ -417,6 +419,7 @@ describe('nldd-form-field – label click focuses the slotted control', () => {
 const NAMED_VIA_ACCESSIBLE_LABEL = [
 	'<nldd-text-field></nldd-text-field>',
 	'<nldd-number-field></nldd-number-field>',
+	'<nldd-slider></nldd-slider>',
 	'<nldd-search-field></nldd-search-field>',
 	'<nldd-combo-box></nldd-combo-box>',
 	'<nldd-token-field allow-custom></nldd-token-field>',

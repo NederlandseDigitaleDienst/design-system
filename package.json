@@ -222,6 +222,10 @@
       "types": "./dist/components/inputs/token-field/token-field.d.ts",
       "default": "./dist/components/inputs/token-field/token-field.js"
     },
+    "./slider": {
+      "types": "./dist/components/inputs/slider/slider.d.ts",
+      "default": "./dist/components/inputs/slider/slider.js"
+    },
     "./shell": {
       "types": "./dist/components/layout/shell/shell.d.ts",
       "default": "./dist/components/layout/shell/shell.js"

@@ -76,6 +76,7 @@ export { NLDDTimePicker } from './inputs/time-picker/time-picker.js';
 export { NLDDToggleButton } from './inputs/toggle-button/toggle-button.js';
 export { NLDDToggleButtonGroup } from './inputs/toggle-button-group/toggle-button-group.js';
 export { NLDDTokenField } from './inputs/token-field/token-field.js';
+export { NLDDSlider } from './inputs/slider/slider.js';
 
 
 // # Layout components
