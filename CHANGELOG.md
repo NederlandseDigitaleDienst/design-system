@@ -28,6 +28,7 @@ here; consult the commit history if you need that level of detail.
 - **The body of `nldd-token` is lighter than its button.** It had the color of a button, so a token with a dismiss or menu button read as two buttons side by side. Now only the part you can press looks like one.
 - **The overflow button of `nldd-tab-bar` shows a chevron.** It showed the three dots that open more actions elsewhere, while it opens the tabs that do not fit, so it read the same as a toolbar's "more" button beside it.
 - **The overflow button of `nldd-avatar-group` shows that it is pressed and that its list is open**, as a button does.
+- **Icon `square-arrow-up` (alias `share`) is redrawn.** The box is half a pixel taller at the top, so it sits a little closer under the arrow.
 
 ### Fixed
 

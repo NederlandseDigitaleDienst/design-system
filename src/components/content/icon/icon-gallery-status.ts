@@ -76,6 +76,7 @@ export const UPDATED_ICONS = new Set([
 	'lightning',
 	'numbered-list',
 	'square-1',
+	'square-arrow-up',
 	'strikethrough',
 	'text-format-size',
 	'underlined',
