@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import './divider.js';
-import '../../content/rich-text/rich-text.js';
+import '../../content/text/text.js';
 
 /**
  * Gebruik een scheidingslijn om secties van inhoud visueel van elkaar te scheiden.
@@ -27,11 +27,11 @@ export default {
 };
 
 export const Standaard = () => html`
-	<nldd-rich-text>
-		<p>Inhoud boven de scheidingslijn.</p>
-	</nldd-rich-text>
+	<nldd-text>
+		Inhoud boven de scheidingslijn.
+	</nldd-text>
 	<nldd-divider></nldd-divider>
-	<nldd-rich-text>
-		<p>Inhoud onder de scheidingslijn.</p>
-	</nldd-rich-text>
+	<nldd-text>
+		Inhoud onder de scheidingslijn.
+	</nldd-text>
 `;

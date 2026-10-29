@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './card.js';
 import '../../content/title/title.js';
 import '../../content/rich-text/rich-text.js';
+import '../../content/text/text.js';
 import '../../actions/button/button.js';
 import '../../actions/button-group/button-group.js';
 import '../../layout/container/container.js';
@@ -44,7 +45,7 @@ export default {
 		accessibleLabel: '',
 		href: '',
 		target: '',
-		download: '',
+		download: '(geen)',
 		rel: '',
 	},
 	argTypes: {
@@ -71,7 +72,9 @@ export default {
 			table: { defaultValue: { summary: '(geen)' } },
 		},
 		download: {
-			control: 'text',
+			control: 'select',
+			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
+			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
 		rel: {
@@ -211,7 +214,7 @@ export const KlikbareKaart = (args: Record<string, any>) => html`
 	<nldd-card
 		href=${args.href || nothing}
 		target=${args.target || nothing}
-		download=${args.download || nothing}
+		download=${args.download ?? nothing}
 		rel=${args.rel || nothing}
 		accessible-label=${args.accessibleLabel || nothing}
 		style="max-width: 360px;"
@@ -319,7 +322,7 @@ export const Vlakken = {
 			${(['base', 'tinted', 'accent-tinted'] as const).map((background) => html`
 				<nldd-card background=${background} style="max-width: 360px;">
 					<nldd-container padding="16">
-						<nldd-rich-text><p>background="${background}"${background === 'base' ? ' (default)' : ''}${background === 'accent-tinted' ? ' — een tint van de themakleur, met hetzelfde contrast als tinted' : ''}</p></nldd-rich-text>
+						<nldd-text>background="${background}"${background === 'base' ? ' (default)' : ''}${background === 'accent-tinted' ? ' — een tint van de themakleur, met hetzelfde contrast als tinted' : ''}</nldd-text>
 					</nldd-container>
 				</nldd-card>
 			`)}

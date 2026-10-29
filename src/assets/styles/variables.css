@@ -279,11 +279,9 @@
 
 	/* ## Typography */
 
-	/* Each stack ends in a system font, so the browser falls through on its own
-	   when the @font-face rules are absent (see rijksoverheid-fonts.css).
-	   Override these two to swap the bundled fonts out entirely: an @font-face
-	   nothing refers to is never downloaded. */
-	--primitives-font-family-sans-serif: RijksSans, system-ui, sans-serif;
+	/* RijksSans or Inter, whichever stylesheet loaded its @font-face (./styles
+	   or ./styles/open-font); the system font covers the moment before. */
+	--primitives-font-family-sans-serif: RijksSans, 'NLDD Inter', system-ui, sans-serif;
 	--primitives-font-family-monospace: 'JetBrains Mono', ui-monospace, Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 	--primitives-font-family-body: var(--primitives-font-family-sans-serif);
 	--primitives-font-family-display: var(--primitives-font-family-sans-serif);

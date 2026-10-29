@@ -24,7 +24,7 @@ export function tabBarTemplate(component: NLDDTabBar): TemplateResult {
 				<nldd-icon-button
 					appearance="neutral-tinted"
 					no-highlight-border
-					icon="ellipsis"
+					icon="chevron-down"
 					text=${component._t('components.tab-bar.overflow-action')}
 					size=${component.size}
 					?hide-lg-text=${component.variant !== 'icon-and-text'}

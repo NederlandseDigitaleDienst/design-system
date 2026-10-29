@@ -9,6 +9,29 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **Inter for sites that may not use RijksSans.** `@nldd/design-system/styles/open-font` is the same stylesheet with Inter, tuned to the x-height of RijksSans, so the components look as they were designed. `/styles/system-font` now loads it too: a site on that entry looks different after the upgrade. See Changed.
+- **`nldd-text` styles inline elements as `nldd-rich-text` does**, now with mentions. See Fixed.
+
+### Added
+
+- **`@nldd/design-system/styles/open-font`**, with Inter and JetBrains Mono in place of RijksSans and JetBrains Mono. Inter is open (SIL Open Font License) and has `size-adjust` set to the x-height of RijksSans, so the type scale, line heights and control sizes stay as designed. It comes in Latin and Latin Extended, and a page only downloads the second when it needs it. `/styles` keeps RijksSans.
+- **Mentions in `nldd-text`.** An element with `data-mention` is a mention, as in `nldd-rich-text`: `<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint. `<q>` is quoted in italics.
+
+### Changed
+
+- **`/styles/system-font` loads Inter.** It loaded no fonts at all, so a site fell back on the system font: SF on a Mac, Segoe UI on Windows, Roboto on Android. The components are not tuned to those, and a button or a line of text came out a different width on every system. The entry is now an alias of `/styles/open-font` and goes away after 1 March 2027; switch the import to `/styles/open-font`. A site that wants a font of its own sets `--primitives-font-family-sans-serif` and `--primitives-font-family-monospace`, and then Inter is not downloaded.
+- **The body of `nldd-token` is lighter than its button.** It had the color of a button, so a token with a dismiss or menu button read as two buttons side by side. Now only the part you can press looks like one.
+- **The overflow button of `nldd-tab-bar` shows a chevron.** It showed the three dots that open more actions elsewhere, while it opens the tabs that do not fit, so it read the same as a toolbar's "more" button beside it.
+- **The overflow button of `nldd-avatar-group` shows that it is pressed and that its list is open**, as a button does.
+
+### Fixed
+
+- **Inline elements in `nldd-text` look as they do in `nldd-rich-text`.** `code` had other padding and no border, a link had no focus ring, and with `color="inherit"` a link kept its own underline color and got no thicker line on hover.
+- **No space before the punctuation after an `nldd-link`.** Whitespace inside the link showed as a gap in running text, as in "de voorwaarden ." The space now only sits between the label and an icon.
+- **The highlight in `nldd-menu` follows the pointer off the items.** Moving onto the header, the footer, a divider or the padding left the last item highlighted.
+
 ## [0.13.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.0...v0.13.1) (2026-10-28)
 
 ### Highlights

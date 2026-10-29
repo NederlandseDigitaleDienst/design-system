@@ -36,7 +36,7 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { linkStyles } from './link.styles.js';
 import { template } from './link.template.js';
@@ -88,6 +88,17 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 	@property({ type: Boolean, reflect: true, attribute: 'no-tab' })
 	noTab = false;
 
+	/** Whether the start-icon / end-icon slots hold an icon, so the space that
+	 *  separates it from the label is only rendered next to an icon. */
+	@state() _hasStartSlot = false;
+	@state() _hasEndSlot = false;
+
+	private _handleSlotChange(e: Event): void {
+		const slot = e.target as HTMLSlotElement;
+		const filled = slot.assignedNodes().length > 0;
+		if (slot.name === 'start-icon') this._hasStartSlot = filled;
+		else this._hasEndSlot = filled;
+	}
 
 	private _handleClick(e: MouseEvent): void {
 		if (this.disabled) {
@@ -99,6 +110,7 @@ export class NLDDLink extends withTranslations(LitElement, nlddLinkTranslations)
 	override render() {
 		return template.call(this, {
 			handleClick: this._handleClick.bind(this),
+			handleSlotChange: this._handleSlotChange.bind(this),
 		});
 	}
 }

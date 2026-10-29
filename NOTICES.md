@@ -19,6 +19,23 @@ Vrij te gebruiken, herdistribueren en wijzigen, mits aan de OFL voorwaarden word
 
 ---
 
+### Inter
+
+Bestanden (de Latin- en Latin Extended-subsets uit `@fontsource-variable/inter` 5.3.0):
+
+- `src/assets/fonts/Inter-Latin[wght].woff2`
+- `src/assets/fonts/Inter-Latin-Italic[wght].woff2`
+- `src/assets/fonts/Inter-LatinExt[wght].woff2`
+- `src/assets/fonts/Inter-LatinExt-Italic[wght].woff2`
+
+Copyright © 2016 The Inter Project Authors (https://github.com/rsms/inter)
+
+Gelicentieerd onder de **SIL Open Font License, Version 1.1**: https://openfontlicense.org
+
+Vrij te gebruiken, herdistribueren en wijzigen, mits aan de OFL voorwaarden wordt voldaan. Volledige license tekst is met het font meegeleverd in de upstream Inter repository.
+
+---
+
 ### Rijksoverheid Sans (RijksSansWeb)
 
 Bestanden:

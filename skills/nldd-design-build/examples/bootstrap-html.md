@@ -10,7 +10,7 @@ import '@nldd/design-system';        // registreert alle nldd-* componenten
 import '@nldd/design-system/styles'; // CSS-variabelen + Rijksoverheid-fonts
 ```
 
-RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken, zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, importeer dan `@nldd/design-system/styles/system-font`: dezelfde stylesheet zonder de `@font-face`-regels, waarna de familie-stacks vanzelf op een systeemfont uitkomen.
+RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor partijen die in opdracht van het Rijk werken, zie [`NOTICES.md`](https://github.com/NederlandseDigitaleDienst/design-system/blob/main/NOTICES.md). Bouw je iets daarbuiten, importeer dan `@nldd/design-system/styles/open-font`: dezelfde stylesheet met Inter, afgesteld op RijksSans, in plaats van RijksSans.
 
 ```html
 <script type="module" src="/main.js"></script>

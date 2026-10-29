@@ -59,10 +59,12 @@ const exports = {
 	'./bundle': './dist/nldd.min.js',
 	...componentExports,
 	'./styles': './dist/css/global.css',
-	// Same stylesheet without the @font-face rules, for consumers that may not
-	// use the Rijksoverheid house fonts (see NOTICES.md). Both family stacks
-	// fall through to their system entries on their own.
-	'./styles/system-font': './dist/css/global-system-font.css',
+	// Same stylesheet with Inter in place of RijksSans, for consumers that may not
+	// use the Rijksoverheid house font (see NOTICES.md).
+	'./styles/open-font': './dist/css/global-open-font.css',
+	// Deprecated alias of ./styles/open-font. It used to load no fonts at all, but
+	// the components are not tuned to a system font; remove after 1 March 2027.
+	'./styles/system-font': './dist/css/global-open-font.css',
 	'./styles/variables': './dist/css/variables.css',
 	// Deprecated alias of ./styles/variables. Kept pointing at a wrapper that
 	// also imports the fonts, because that is what this entry used to ship.

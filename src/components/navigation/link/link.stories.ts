@@ -3,6 +3,7 @@ import './link.js';
 import { ICONS } from './../../content/icon/icon.js';
 import '../../layout/container/container.js';
 import '../../content/text/text.js';
+import '../../content/title/title.js';
 import '../../layout/spacer/spacer.js';
 
 /**
@@ -94,7 +95,9 @@ export default {
 			table: { defaultValue: { summary: '(geen)' } },
 		},
 		download: {
-			control: 'text',
+			control: 'select',
+			options: ['(geen)', 'download', 'download="aanvraag-A-1042.pdf"'],
+			mapping: { '(geen)': null, download: '', 'download="aanvraag-A-1042.pdf"': 'aanvraag-A-1042.pdf' },
 			description: 'Slaat het bestand op in plaats van het te openen (alleen met href); een waarde wordt de bestandsnaam',
 		},
 		accessibleLabel: {
@@ -117,7 +120,7 @@ export default {
 		endIcon: '',
 		href: '#',
 		target: '',
-		download: '',
+		download: '(geen)',
 		accessibleLabel: '',
 		disabled: false,
 	},
@@ -127,7 +130,7 @@ const Template = ({ size, text, startIcon, endIcon, href, target, download, acce
 	<nldd-link
 		href=${href || nothing}
 		target=${target || nothing}
-		download=${download || nothing}
+		download=${download ?? nothing}
 		size=${size || nothing}
 		text=${text}
 		start-icon=${startIcon || nothing}
@@ -188,9 +191,9 @@ export const InLopendeTekst = {
 					In een h2 — link erft display-grootte
 				</nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
-				<h2 style="margin: 0; font: var(--primitives-font-display-2-md);">
-					Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link>.
-				</h2>
+				<nldd-title size="2">
+					<h2>Lees meer over <nldd-link href="#voorwaarden">de voorwaarden</nldd-link>.</h2>
+				</nldd-title>
 			</nldd-container>
 			<nldd-container>
 				<nldd-text
@@ -200,9 +203,9 @@ export const InLopendeTekst = {
 					In body-md — link is body-md
 				</nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
-				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
+				<nldd-text size="md">
 					Wil je subsidie aanvragen voor dakisolatie? Bekijk dan eerst <nldd-link href="https://example.com" target="_blank">de voorwaarden voor dakisolatie</nldd-link> op de website van Mijn Dienst.
-				</p>
+				</nldd-text>
 			</nldd-container>
 			<nldd-container>
 				<nldd-text
@@ -212,9 +215,9 @@ export const InLopendeTekst = {
 					In body-sm — link is body-sm
 				</nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
-				<p style="margin: 0; font: var(--primitives-font-body-sm-regular-snug);">
+				<nldd-text size="sm">
 					Disclaimer: deze pagina is informatief. Voor juridische details zie <nldd-link href="#disclaimer">de disclaimer</nldd-link>.
-				</p>
+				</nldd-text>
 			</nldd-container>
 			<nldd-container>
 				<nldd-text
@@ -224,9 +227,11 @@ export const InLopendeTekst = {
 					Lange link wraps over regels (display: inline)
 				</nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
-				<p style="margin: 0; max-width: 280px; font: var(--primitives-font-body-md-regular-snug);">
-					Lees meer over <nldd-link href="#">de voorwaarden voor dakisolatie en wat je moet aanleveren bij je aanvraag</nldd-link> voordat je begint.
-				</p>
+				<nldd-container max-width="280px">
+					<nldd-text>
+						Lees meer over <nldd-link href="#">de voorwaarden voor dakisolatie en wat je moet aanleveren bij je aanvraag</nldd-link> voordat je begint.
+					</nldd-text>
+				</nldd-container>
 			</nldd-container>
 			<nldd-container>
 				<nldd-text
@@ -236,9 +241,9 @@ export const InLopendeTekst = {
 					Met end-icon (externe link) — natuurlijke whitespace tussen tekst en icon
 				</nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
-				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
+				<nldd-text size="md">
 					Vergelijk vooraf <nldd-link href="https://example.com" target="_blank" end-icon="square-arrow-right-top">de soorten warmtepompen</nldd-link> en wat ze kosten.
-				</p>
+				</nldd-text>
 			</nldd-container>
 			<nldd-container>
 				<nldd-text
@@ -248,9 +253,9 @@ export const InLopendeTekst = {
 					Expliciete <code>size="inherit"</code> doet hetzelfde als geen size
 				</nldd-text>
 				<nldd-spacer size="4"></nldd-spacer>
-				<p style="margin: 0; font: var(--primitives-font-body-md-regular-snug);">
+				<nldd-text size="md">
 					Lees ook <nldd-link href="#" size="inherit">de toelichting bij Aanvraag A-1042</nldd-link> voor de stand van zaken.
-				</p>
+				</nldd-text>
 			</nldd-container>
 		</nldd-container>
 	`,

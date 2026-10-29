@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import './menu.js';
 import '../../actions/button/button.js';
 import '../../content/identity/identity.js';
-import '../../content/rich-text/rich-text.js';
+import '../../content/text/text.js';
 import '../../layout/container/container.js';
 import '../../content/avatar/avatar.js';
 
@@ -675,7 +675,7 @@ export const PlatEnGroepenGemengd = {
 /**
  * De `header`- en `footer`-slots plaatsen vrije content buiten `role="menu"`:
  * hier een account-header (een `nldd-identity` in een `nldd-container` voor de
- * padding) en een kort `nldd-rich-text`-tekstje onderin. Een link in de footer
+ * padding) en een kort `nldd-text`-tekstje onderin. Een link in de footer
  * is bereikbaar met Tab (niet met de pijltjes, die alleen de menu-items
  * aflopen). "Log uit" is gewoon een menu-item. Header en footer verschijnen
  * alleen op de root-menu, nooit in een submenu.
@@ -726,9 +726,10 @@ export const MetHeaderEnFooter = {
 					slot="footer"
 					padding="16"
 				>
-					<nldd-rich-text spacing="flat">
-						<p style="font: var(--primitives-font-body-sm-regular-tight);">Je bent ingelogd als beheerder. <a href="#">Wissel van account</a>.</p>
-					</nldd-rich-text>
+					<nldd-text
+						size="sm"
+						line-height="tight"
+					>Je bent ingelogd als beheerder. <a href="#">Wissel van account</a>.</nldd-text>
 				</nldd-container>
 			</nldd-menu>
 		</nldd-button>

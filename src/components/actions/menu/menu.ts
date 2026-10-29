@@ -597,6 +597,16 @@ export class NLDDMenu extends LitElement {
 		if (item) this._activateItem(item);
 	}
 
+	/** Padding, dividers, header and footer are still inside the menu, so
+	 * mouseleave doesn't fire there: drop the highlight once the pointer is over
+	 * none of the items. */
+	private _handleMouseover = (event: MouseEvent): void => {
+		if (isTouchMode() || this.variant === 'listbox') return;
+		if (this._activeSubmenu || this._safeTriangle.movingToward) return;
+		if (event.composedPath().some((node) => node instanceof Element && node.localName === 'nldd-menu-item')) return;
+		this._clearHighlight();
+	};
+
 	private _handleMouseleave = (): void => {
 		if (this.variant !== 'listbox') this._clearHighlight();
 		this._cancelHoverOpen();
@@ -842,6 +852,7 @@ export class NLDDMenu extends LitElement {
 		this.addEventListener('keydown', this._handleKeydown);
 		this.addEventListener('focusout', this._handleFocusOut);
 		this.addEventListener('mouseenter', this._handleMenuItemMouseenter, true);
+		this.addEventListener('mouseover', this._handleMouseover);
 		this.addEventListener('mouseleave', this._handleMouseleave);
 		this.addEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.addEventListener('submenu-open', this._handleSubmenuOpen);
@@ -890,6 +901,7 @@ export class NLDDMenu extends LitElement {
 		clearTimeout(this._tabbingTimer);
 		this._tabbing = false;
 		this.removeEventListener('mouseenter', this._handleMenuItemMouseenter, true);
+		this.removeEventListener('mouseover', this._handleMouseover);
 		this.removeEventListener('mouseleave', this._handleMouseleave);
 		this.removeEventListener('menu-item-focused', this._handleMenuItemFocused);
 		this.removeEventListener('submenu-open', this._handleSubmenuOpen);

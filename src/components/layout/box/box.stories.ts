@@ -2,6 +2,7 @@ import { html } from 'lit';
 import './box.js';
 import '../container/container.js';
 import '../../content/rich-text/rich-text.js';
+import '../../content/text/text.js';
 import '../spacer/spacer.js';
 import '../../actions/button/button.js';
 
@@ -109,21 +110,21 @@ export const Vlakken = {
 		<nldd-container gap="24">
 			<nldd-box background="tinted">
 		<nldd-container padding="16">
-					<nldd-rich-text><p>background="tinted" (default) — getint vlak op een plain pagina</p></nldd-rich-text>
+					<nldd-text>background="tinted" (default) — getint vlak op een plain pagina</nldd-text>
 
 		</nldd-container>
 	</nldd-box>
 			<div style="background: var(--semantics-surfaces-tinted-background-color); padding: 24px;">
 				<nldd-box background="base">
 		<nldd-container padding="16">
-						<nldd-rich-text><p>background="base" — base-colored box op een al getinte parent. Highlight ring is +2 stappen voor extra contrast.</p></nldd-rich-text>
+						<nldd-text>background="base" — base-colored box op een al getinte parent. Highlight ring is +2 stappen voor extra contrast.</nldd-text>
 
 		</nldd-container>
 	</nldd-box>
 			</div>
 			<nldd-box background="accent-tinted">
 				<nldd-container padding="16">
-					<nldd-rich-text><p>background="accent-tinted" — een tint van de themakleur, met hetzelfde contrast als tinted</p></nldd-rich-text>
+					<nldd-text>background="accent-tinted" — een tint van de themakleur, met hetzelfde contrast als tinted</nldd-text>
 				</nldd-container>
 			</nldd-box>
 		</nldd-container>

@@ -124,34 +124,31 @@ npm run storybook
 
 ## Componenten
 
-### nldd-button
+Een component zet je neer als een gewoon HTML-element, met attributen voor tekst, uiterlijk en gedrag:
 
-| Attribuut          | Type    | Default          | Beschrijving                                                                                                                                             |
-| ------------------ | ------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `text`             | string  | `''`             | Tekst van de button                                                                                                                                      |
-| `appearance`       | string  | `neutral-tinted` | `primary`, `secondary`, `destructive`, `accent-filled`, `accent-transparent`, `neutral-tinted`, `neutral-base`, `neutral-transparent`, `critical-tinted`, `critical-transparent`, `inherit-filled`, `inherit-tinted` |
-| `size`             | string  | `md`             | `xs`, `sm`, `md`                                                                                                                                         |
-| `disabled`         | boolean | `false`          | Uitgeschakelde staat                                                                                                                                     |
-| `type`             | string  | `button`         | `button`, `submit`, `reset`                                                                                                                              |
-| `full-width`       | boolean | `false`          | Rekt de button uit over de volledige breedte van de container                                                                                             |
-| `start-icon`       | string  | `''`             | Icoon aan het begin van de button                                                                                                                        |
-| `end-icon`         | string  | `''`             | Icoon aan het einde van de button                                                                                                                        |
-| `expandable`       | boolean | `false`          | Voegt een icoon toe dat aangeeft dat de button een menu of popover opent                                                                                 |
-| `href`             | string  | `undefined`      | Rendert als link (`<a>`) in plaats van een button                                                                                                        |
-| `accessible-label` | string  | `''`             | Toegankelijk label voor schermlezers                                                                                                                     |
-| `popovertarget`    | string  | `''`             | ID van het popover-element                                                                                                                               |
+```html
+<nldd-button appearance="primary" text="Aanvraag indienen" type="submit"></nldd-button>
 
-Zie de [Storybook-documentatie](https://nederlandsedigitaledienst.github.io/design-system/) voor alle componenten.
+<nldd-button text="Opties" expandable>
+  <nldd-menu slot="popup">
+    <nldd-menu-item text="Bewerken" icon="pencil"></nldd-menu-item>
+    <nldd-menu-item text="Verwijderen" icon="trash" destructive></nldd-menu-item>
+  </nldd-menu>
+</nldd-button>
+```
+
+Alle componenten, met hun attributen, slots en events, staan in de [Storybook-documentatie](https://nederlandsedigitaledienst.github.io/design-system/). Dezelfde API staat als tekst in [`skills/nldd-design/reference.md`](./skills/nldd-design/reference.md), dat uit de code wordt gegenereerd en dus altijd klopt.
 
 ## Styling structuur
 
-CSS variabelen zijn georganiseerd in vier lagen:
+CSS variabelen zijn georganiseerd in vijf lagen:
 
 | Laag | Prefix | Beschrijving |
 | ---- | ------ | ------------ |
 | **Primitives** | `--primitives-*` | Basis waarden (kleuren, spacing, typography) |
 | **Semantics** | `--semantics-*` | Betekenisvolle variabelen (buttons, controls, surfaces) |
 | **Context** | `--context-*` | Gedeelde variabelen voor communicatie tussen componenten |
+| **Component** | `--components-{component}-*` | Waarden van één component die een thema moet kunnen zetten, met zijn tag zonder `nldd-` erin. Alleen dat component leest ze |
 | **Local** | `--_{component}-*` | Interne variabelen van één component, met zijn tag zonder `nldd-` voorop (niet bedoeld voor extern gebruik) |
 
 ```css
@@ -169,6 +166,10 @@ CSS variabelen zijn georganiseerd in vier lagen:
 /* Context — communicatie tussen componenten */
 --context-parent-background-color: var(--semantics-surfaces-base-background-color);
 
+/* Component — een waarde van één component die een thema zet. Een thema
+   bereikt alleen :root, dus de waarde staat daar en niet in het component. */
+--components-badge-accent-background-color: light-dark(var(--primitives-color-accent-750), var(--primitives-color-accent-650));
+
 /* Local — intern binnen een component, in zijn :host. Wijst naar semantics
    of primitives, en draagt de naam van het component. */
 --_box-background-color: var(--semantics-surfaces-tinted-background-color);
@@ -183,10 +184,11 @@ Mis je een component of wil je een wijziging voorstellen? [Maak een issue aan](h
 
 ## Fonts
 
-Het designsysteem gebruikt twee fonts, met verschillende licenties:
+Het designsysteem gebruikt drie fonts, met verschillende licenties:
 
-- **JetBrains Mono** (monospace) — vrij te gebruiken onder de [SIL Open Font License 1.1](https://openfontlicense.org).
-- **Rijksoverheid Sans** (`RijksSansWeb`) — auteursrechtelijk beschermd door de Staat der Nederlanden. **Uitsluitend bedoeld voor publicaties van de Rijksoverheid** of partijen die in opdracht van de Rijksoverheid werken. Voor ander gebruik is voorafgaande schriftelijke toestemming vereist; neem contact op met de Rijksvoorlichtingsdienst.
+- **Rijksoverheid Sans** (`RijksSansWeb`) — auteursrechtelijk beschermd door de Staat der Nederlanden. **Uitsluitend bedoeld voor publicaties van de Rijksoverheid** of partijen die in opdracht van de Rijksoverheid werken. Voor ander gebruik is voorafgaande schriftelijke toestemming vereist; neem contact op met de Rijksvoorlichtingsdienst. Geladen door `@nldd/design-system/styles`.
+- **Inter** — vrij te gebruiken onder de [SIL Open Font License 1.1](https://openfontlicense.org), afgesteld op de x-hoogte van RijksSans. Voor alles wat RijksSans niet mag gebruiken: importeer `@nldd/design-system/styles/open-font` in plaats van `/styles`.
+- **JetBrains Mono** (monospace) — vrij te gebruiken onder de [SIL Open Font License 1.1](https://openfontlicense.org). Geladen door allebei.
 
 Volledige licentie-informatie staat in [`NOTICES.md`](./NOTICES.md). Door de fonts mee te leveren in deze repository wordt geen licentie verleend buiten het hierboven beschreven kader.
 
@@ -263,3 +265,9 @@ De soevereine overheidscloud. Alle frontends staan in [fundament-oss/fundament](
 | TekstOntleder, dat laat zien welke tekst in een document van een mens, van AI of uit een ander document komt | geen publieke URL | [MinFin-NL/TekstOntleder](https://github.com/MinFin-NL/TekstOntleder) |
 | Regiekamer, een demo van een organisatie van AI-collega's | geen publieke URL | [MinFin-NL/regiekamer](https://github.com/MinFin-NL/regiekamer) |
 | KasVisie, een dashboard voor kasprognoses (proof of concept) | geen publieke URL | [MinFin-NL/KasVisie](https://github.com/MinFin-NL/KasVisie) |
+
+### Persoonlijke projecten
+
+| Wat | Live | Broncode |
+| --- | ---- | -------- |
+| Waggle, een persoonlijk overzicht van je bewaarde Mattermost-berichten | [waggle.rijksapp.nl](https://waggle.rijksapp.nl) | [robbertbos/waggle](https://code.overheid.nl/robbertbos/waggle) |

@@ -16,8 +16,21 @@ export const textStyles = css`
 		--_text-link-is-hovered-color: var(--semantics-links-is-hovered-color);
 		--_text-link-is-active-color: var(--semantics-links-is-active-color);
 		--_text-link-underline-offset: var(--primitives-space-2);
-		--_text-code-padding: var(--primitives-space-4);
+		--_text-link-corner-radius: var(--primitives-corner-radius-xxs);
+		--_text-link-is-hovered-inherit-thickness: var(--primitives-border-width-regular);
+		--_text-mention-color: var(--semantics-mentions-content-color);
+		--_text-mention-icon-size: 0.95em;
+		--_text-mention-inline-padding: 0.3em;
+		--_text-mention-corner-radius: var(--primitives-corner-radius-sm);
+		--_text-mention-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_text-mention-border-color: var(--semantics-mentions-highlight-border-color);
+		--_text-mention-background-color: var(--semantics-mentions-background-color);
+		--_text-mention-is-hovered-background-color: var(--semantics-mentions-is-hovered-background-color);
+		--_text-mention-is-active-background-color: var(--semantics-mentions-is-active-background-color);
+		--_text-code-padding: var(--primitives-space-2) var(--primitives-space-4);
 		--_text-code-corner-radius: var(--semantics-controls-xs-corner-radius);
+		--_text-code-border-width: var(--semantics-surfaces-highlight-border-width);
+		--_text-code-border-color: var(--semantics-surfaces-tinted-highlight-border-color);
 		--_text-code-background-color: var(--semantics-surfaces-tinted-background-color);
 		--_text-code-font-family: var(--primitives-font-family-monospace);
 		--_text-code-font-size: var(--semantics-code-inline-font-size);
@@ -87,9 +100,11 @@ export const textStyles = css`
 	}
 
 	::slotted(a) {
+		border-radius: var(--_text-link-corner-radius);
 		color: var(--_text-link-color);
 		text-decoration: underline;
 		text-underline-offset: var(--_text-link-underline-offset);
+		cursor: pointer;
 	}
 
 	::slotted(a:hover) {
@@ -100,16 +115,104 @@ export const textStyles = css`
 		color: var(--_text-link-is-active-color);
 	}
 
+	::slotted(:focus-visible) {
+		outline: var(--semantics-focus-ring-outline);
+		outline-offset: var(--semantics-focus-ring-outline-offset);
+		box-shadow: var(--semantics-focus-ring-box-shadow);
+	}
+
+	::slotted(:focus:not(:focus-visible)) {
+		outline: none;
+	}
+
 	:host([color="inherit"]) ::slotted(a) {
 		color: currentColor;
+		text-decoration-color: currentColor;
+	}
+
+	:host([color="inherit"]) ::slotted(a:hover) {
+		color: currentColor;
+		text-decoration-thickness: var(--_text-link-is-hovered-inherit-thickness);
+	}
+
+	:host([color="inherit"]) ::slotted(a:active) {
+		color: currentColor;
+	}
+
+	::slotted([data-mention]) {
+		color: var(--_text-mention-color);
+		font-weight: var(--primitives-font-weight-body-bold);
+		white-space: nowrap;
+	}
+
+	::slotted([data-mention])::before {
+		content: '';
+		display: inline-block;
+		margin-inline-end: 0.1em;
+		background-color: currentColor;
+		width: var(--_text-mention-icon-size);
+		height: var(--_text-mention-icon-size);
+		vertical-align: -0.16em;
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16 12c0 2.73 1.3 3.5 2 3.5s2-.77 2-3.5a8 8 0 1 0-5.93 7.73l.52 1.93A10 10 0 1 1 22 12c0 3.27-1.7 5.5-4 5.5-1.36 0-2.5-.78-3.22-2.08A4.3 4.3 0 0 1 11.5 17C9 17 7 14.76 7 12s2-5 4.5-5c.92 0 1.78.31 2.5.84V7h2zm-4.5-3C10.3 9 9 10.14 9 12s1.31 3 2.5 3 2.5-1.14 2.5-3-1.31-3-2.5-3'/%3E%3C/svg%3E") center / contain no-repeat;
+
+		@media (forced-colors: active) {
+			forced-color-adjust: none;
+			background-color: CanvasText;
+		}
+	}
+
+	::slotted(a[data-mention]) {
+		padding-block: max(0em, (1lh - 1.2em) / 2);
+		padding-inline: max(0em, (max(1.2em, 1lh) - var(--_text-mention-icon-size)) / 2) var(--_text-mention-inline-padding);
+		border-radius: var(--_text-mention-corner-radius);
+		box-shadow: inset 0 0 0 var(--_text-mention-border-width) var(--_text-mention-border-color);
+		background-color: var(--_text-mention-background-color);
+		color: var(--_text-mention-color);
+		text-decoration: none;
+		cursor: default;
+		-webkit-box-decoration-break: clone;
+		box-decoration-break: clone;
+	}
+
+	::slotted(a[data-mention]:hover) {
+		background-color: var(--_text-mention-is-hovered-background-color);
+		color: var(--_text-mention-color);
+	}
+
+	::slotted(a[data-mention]:active) {
+		background-color: var(--_text-mention-is-active-background-color);
+		color: var(--_text-mention-color);
+	}
+
+	:host([color="inherit"]) ::slotted(a[data-mention]) {
+		color: var(--_text-mention-color);
+	}
+
+	@media (forced-colors: active) {
+		::slotted(a[data-mention])::before {
+			background-color: LinkText;
+		}
 	}
 
 	::slotted(code) {
 		border-radius: var(--_text-code-corner-radius);
+		box-shadow: inset 0 0 0 var(--_text-code-border-width) var(--_text-code-border-color);
 		background-color: var(--_text-code-background-color);
 		padding: var(--_text-code-padding);
 		font-family: var(--_text-code-font-family);
 		font-size: var(--_text-code-font-size);
+	}
+
+	::slotted(q) {
+		font-style: italic;
+	}
+
+	::slotted(q)::before {
+		content: open-quote;
+	}
+
+	::slotted(q)::after {
+		content: close-quote;
 	}
 
 	::slotted(mark) {
