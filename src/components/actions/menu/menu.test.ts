@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { fixture, cleanup, waitForUpdate, installUniversalReset } from '../../../test-utils.js';
+import { fixture, cleanup, waitForUpdate, installUniversalReset, until } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './menu.js';
 import '../button/button.js';
@@ -3162,6 +3162,9 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 		await waitForUpdate(root);
 		open(second, secondMenu);
 		await waitForUpdate(root);
+		// Closing the one and opening the other settle on their own toggle
+		// events; a loaded CI runner can take more than one update for that.
+		await until(() => secondMenu.matches(':popover-open') && !firstMenu.matches(':popover-open'));
 		expect(firstMenu.matches(':popover-open')).toBe(false);
 		expect(secondMenu.matches(':popover-open')).toBe(true);
 		expect(closed).toEqual([firstMenu]);

@@ -565,7 +565,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		if (!drag.note && !drag.noteTimer) {
 			drag.noteTimer = window.setTimeout(() => {
 				if (this._drag !== drag) return;
-				drag.note = this._note(this._t('components.task-board.return-text'));
+				drag.note = this._note(this._t('components.task-board.drag-return-text'));
 				this._followReturnNote(false);
 			}, RETURN_NOTE_DELAY_MS);
 		}
@@ -599,7 +599,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		const { item, from, fromIndex, target, index } = drag;
 		this._endDrag();
 		if (!target) {
-			this._announce(this._t('components.task-board.canceled-text'));
+			this._announce(this._t('components.task-board.drag-canceled-text'));
 			return;
 		}
 		// Just above or just below its own place is where it already is.
@@ -613,7 +613,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 	private _cancelDrag(): void {
 		if (!this._drag) return;
 		this._endDrag();
-		this._announce(this._t('components.task-board.canceled-text'));
+		this._announce(this._t('components.task-board.drag-canceled-text'));
 	}
 
 	private _endDrag(): void {
