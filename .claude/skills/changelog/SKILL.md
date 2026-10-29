@@ -62,7 +62,7 @@ Volgorde: **`### Highlights` altijd eerst**, daarna per type. Gebruik alleen wat
 
 | Kopje | Waarvoor |
 |-------|----------|
-| `### Highlights` | Korte prozasamenvatting van de belangrijkste punten van de release. Project-specifiek; staat altijd vooraan. **Nieuwe iconen horen hier altijd (ook) in** — alle nieuwe iconen samen in één Highlights-bullet ("Two new icons."), nooit een bullet per icoon, ook bij een verder kleine release (naast hun `### Added`-regel). |
+| `### Highlights` | Korte prozasamenvatting van de belangrijkste punten van de release. Project-specifiek; staat altijd vooraan. **Nieuwe iconen horen hier altijd (ook) in** — alle nieuwe iconen samen in één Highlights-bullet ("2 new icons."), nooit een bullet per icoon, ook bij een verder kleine release (naast hun `### Added`-regel). |
 | `### Added` | Nieuwe features, componenten, tokens, icons. |
 | `### Changed` | Wijzigingen in bestaand gedrag die **niet** breaking zijn. |
 | `### Breaking` | Breaking changes: renames, verwijderde/gewijzigde API, gewijzigde import-paden. Maak prominent — het is het major-/SemVer-signaal. |
