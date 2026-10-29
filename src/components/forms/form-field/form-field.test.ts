@@ -150,7 +150,7 @@ describe('nldd-form-field', () => {
 				<nldd-form-field-help-text id="help-1">Format hint</nldd-form-field-help-text>
 				<input invalid>
 				<nldd-validation-list id="rules-1">
-					<nldd-validation-item id="rule-at" match="@">Een apenstaartje</nldd-validation-item>
+					<nldd-validation-item id="rule-at" match="@" visible>Een apenstaartje</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);
@@ -158,7 +158,7 @@ describe('nldd-form-field', () => {
 		const input = el.querySelector('input')!;
 		const order = describedBy(input);
 		// Wat er mis is staat voorop: dat is waarom je hier bent.
-		expect(order.indexOf(el.querySelector('#rules-1')!)).toBe(0);
+		expect(order.indexOf(el.querySelector('#rule-at')!)).toBe(0);
 		expect(order.indexOf(el.querySelector('#help-1')!)).toBe(1);
 	});
 
@@ -217,35 +217,44 @@ describe('nldd-form-field description wiring', () => {
 		if (el) cleanup(el);
 	});
 
-	it('points the input at the validation list', async () => {
+	it('points the input at the items of the validation list', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Email">
 				<input invalid>
 				<nldd-validation-list id="rules-1">
-					<nldd-validation-item id="rule-at" match="@">Een apenstaartje</nldd-validation-item>
+					<nldd-validation-item id="rule-at" match="@" visible>Een apenstaartje</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);
 		await waitForUpdate(el);
 		const input = el.querySelector('input')!;
-		expect(describedBy(input)).toEqual([el.querySelector('#rules-1')]);
+		expect(describedBy(input)).toEqual([el.querySelector('#rule-at')]);
 	});
 
-	it('points at the list once, not at each of its items', async () => {
+	it('points at the items on screen, and follows them as they show or hide', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Wachtwoord">
 				<input invalid>
 				<nldd-validation-list id="rules-2">
-					<nldd-validation-item id="rule-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
-					<nldd-validation-item id="rule-capital" match="[A-Z]">Een hoofdletter</nldd-validation-item>
+					<nldd-validation-item id="rule-length" minlength="8" visible>Minimaal 8 tekens</nldd-validation-item>
+					<nldd-validation-item id="rule-capital" match="[A-Z]" visible>Een hoofdletter</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);
 		await waitForUpdate(el);
-		// De items komen en gaan terwijl je typt. Een beschrijving die per
-		// toetsaanslag wordt herschreven is veel geruis in iets wat voorgelezen
-		// wordt, en een verborgen item telt toch niet mee.
-		expect(describedBy(el.querySelector('input')!)).toHaveLength(1);
+		// The items, not the list: Safari passes no description on to VoiceOver
+		// from the text in a role="list", which the list renders. Only the
+		// visible ones: an element referenced directly is read even when hidden.
+		const input = el.querySelector('input')!;
+		const length = el.querySelector('#rule-length')!;
+		const capital = el.querySelector('#rule-capital')!;
+		expect(describedBy(input)).toEqual([length, capital]);
+		length.removeAttribute('visible');
+		await waitForUpdate(el);
+		expect(describedBy(input)).toEqual([capital]);
+		length.setAttribute('visible', '');
+		await waitForUpdate(el);
+		expect(describedBy(input)).toEqual([length, capital]);
 	});
 
 	it('keeps describing the input when the control turns valid again', async () => {
@@ -253,16 +262,15 @@ describe('nldd-form-field description wiring', () => {
 			<nldd-form-field label="Email">
 				<input id="ctrl" invalid>
 				<nldd-validation-list id="rules-3">
-					<nldd-validation-item id="rule-at-2" match="@">Een apenstaartje</nldd-validation-item>
+					<nldd-validation-item id="rule-at-2" match="@" visible>Een apenstaartje</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);
 		await waitForUpdate(el);
 		el.querySelector('#ctrl')!.removeAttribute('invalid');
 		await waitForUpdate(el);
-		// De verwijzing hangt aan de lijst, niet aan de staat van het veld: die
-		// lijst bepaalt zelf wat erin staat, en leeg leest als niets.
-		expect(describedBy(el.querySelector('#ctrl')!)).toEqual([el.querySelector('#rules-3')]);
+		// The references follow what the list shows, not the state of the field.
+		expect(describedBy(el.querySelector('#ctrl')!)).toEqual([el.querySelector('#rule-at-2')]);
 	});
 
 	it('does not treat nldd-form-field-help-text as the control', async () => {
@@ -271,7 +279,7 @@ describe('nldd-form-field description wiring', () => {
 				<nldd-form-field-help-text>Help.</nldd-form-field-help-text>
 				<input id="ctrl-2" invalid>
 				<nldd-validation-list id="rules-4">
-					<nldd-validation-item id="rule-at-3" match="@">Een apenstaartje</nldd-validation-item>
+					<nldd-validation-item id="rule-at-3" match="@" visible>Een apenstaartje</nldd-validation-item>
 				</nldd-validation-list>
 			</nldd-form-field>
 		`);

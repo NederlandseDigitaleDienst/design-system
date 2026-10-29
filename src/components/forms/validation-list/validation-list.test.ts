@@ -389,10 +389,10 @@ describe('nldd-validation-list', () => {
 		expect(control.internals?.validity.valid).toBe(true);
 	});
 
-	it('staat in de beschrijving van de control, één keer', async () => {
+	it('zet zijn zichtbare items in de beschrijving van de control', async () => {
 		el = await fixture(`
 			<nldd-form-field label="Wachtwoord">
-				<nldd-text-field invalid></nldd-text-field>
+				<nldd-text-field></nldd-text-field>
 				<nldd-validation-list hint>
 					<nldd-validation-item id="password-length" minlength="8">Minimaal 8 tekens</nldd-validation-item>
 				</nldd-validation-list>
@@ -402,7 +402,7 @@ describe('nldd-validation-list', () => {
 		const inner = el.querySelector('nldd-text-field')!.shadowRoot!.querySelector('input')!;
 		const described = (inner as Element & { ariaDescribedByElements?: readonly Element[] | null })
 			.ariaDescribedByElements ?? [];
-		expect(described).toEqual([el.querySelector('nldd-validation-list')]);
+		expect(described).toEqual([el.querySelector('#password-length')]);
 	});
 
 	it('toont niets zonder `invalid`, maar blokkeert het formulier wel', async () => {
