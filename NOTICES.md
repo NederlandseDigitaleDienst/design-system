@@ -45,7 +45,7 @@ Bestanden:
 
 Auteursrecht voorbehouden door de Staat der Nederlanden (Ministerie van Algemene Zaken), conform regeling van 16 juni 2008 (Stcrt. 2008, nr. 115) en artikel 15b van de Auteurswet 1912.
 
-Het font is **uitsluitend bestemd voor gebruik in publicaties van de Rijksoverheid**, of door partijen aan wie de Rijksoverheid de huisstijl ter beschikking heeft gesteld voor werkzaamheden of diensten in opdracht van de Rijksoverheid.
+Het lettertype is **uitsluitend bestemd voor gebruik in publicaties van de Rijksoverheid**, of door partijen aan wie de Rijksoverheid de huisstijl ter beschikking heeft gesteld voor werkzaamheden of diensten in opdracht van de Rijksoverheid.
 
 Voor ander gebruik is voorafgaande schriftelijke toestemming van de Rijksoverheid vereist. Toestemming kan worden aangevraagd bij de **Rijksvoorlichtingsdienst**.
 

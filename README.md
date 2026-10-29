@@ -182,15 +182,15 @@ De kleurpaletten staan in `src/assets/styles/colors.generated.css` en worden geg
 
 Mis je een component of wil je een wijziging voorstellen? [Maak een issue aan](https://github.com/NederlandseDigitaleDienst/design-system/issues).
 
-## Fonts
+## Lettertypes
 
-Het designsysteem gebruikt drie fonts, met verschillende licenties:
+Het designsysteem gebruikt drie lettertypes, met verschillende licenties:
 
 - **Rijksoverheid Sans** (`RijksSansWeb`) — auteursrechtelijk beschermd door de Staat der Nederlanden. **Uitsluitend bedoeld voor publicaties van de Rijksoverheid** of partijen die in opdracht van de Rijksoverheid werken. Voor ander gebruik is voorafgaande schriftelijke toestemming vereist; neem contact op met de Rijksvoorlichtingsdienst. Geladen door `@nldd/design-system/styles`.
 - **Inter** — vrij te gebruiken onder de [SIL Open Font License 1.1](https://openfontlicense.org), afgesteld op de x-hoogte van RijksSans. Voor alles wat RijksSans niet mag gebruiken: importeer `@nldd/design-system/styles/open-font` in plaats van `/styles`.
 - **JetBrains Mono** (monospace) — vrij te gebruiken onder de [SIL Open Font License 1.1](https://openfontlicense.org). Geladen door allebei.
 
-Volledige licentie-informatie staat in [`NOTICES.md`](./NOTICES.md). Door de fonts mee te leveren in deze repository wordt geen licentie verleend buiten het hierboven beschreven kader.
+Volledige licentie-informatie staat in [`NOTICES.md`](./NOTICES.md). Door de fontbestanden mee te leveren in deze repository wordt geen licentie verleend buiten het hierboven beschreven kader.
 
 ## Licentie (License)
 

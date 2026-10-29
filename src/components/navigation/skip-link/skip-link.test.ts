@@ -197,7 +197,7 @@ describe('nldd-skip-link', () => {
    scroll sideways, not even at 200% text size. The skip link is on every page,
    and while it was hidden with opacity alone it kept the full width of its
    label, which counts for the page. The label here is long enough to run past
-   320px in any font, since a test document loads neither the tokens nor
+   320px in any typeface, since a test document loads neither the tokens nor
    RijksSans. */
 describe('nldd-skip-link op 320 px', () => {
 	const TEXT = 'Ga direct naar de hoofdinhoud van deze pagina en sla de navigatie over';

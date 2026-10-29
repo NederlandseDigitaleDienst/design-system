@@ -42,7 +42,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **`/styles/system-font` loads Inter.** It loaded no fonts at all, so a site fell back on the system font: SF on a Mac, Segoe UI on Windows, Roboto on Android. The components are not tuned to those, and a button or a line of text came out a different width on every system. The entry is now an alias of `/styles/open-font` and goes away after 1 March 2027; switch the import to `/styles/open-font`. A site that wants a font of its own sets `--primitives-font-family-sans-serif` and `--primitives-font-family-monospace`, and then Inter is not downloaded.
+- **`/styles/system-font` loads Inter.** It loaded no fonts at all, so a site fell back on the system typeface: SF on a Mac, Segoe UI on Windows, Roboto on Android. The components are not tuned to those, and a button or a line of text came out a different width on every system. The entry is now an alias of `/styles/open-font` and goes away after 1 March 2027; switch the import to `/styles/open-font`. A site that wants a font of its own sets `--primitives-font-family-sans-serif` and `--primitives-font-family-monospace`, and then Inter is not downloaded.
 - **The body of `nldd-token` is lighter than its button.** It had the color of a button, so a token with a dismiss or menu button read as two buttons side by side. Now only the part you can press looks like one.
 - **The overflow button of `nldd-tab-bar` shows a chevron.** It showed the three dots that open more actions elsewhere, while it opens the tabs that do not fit, so it read the same as a toolbar's "more" button beside it.
 - **The overflow button of `nldd-avatar-group` shows that it is pressed and that its list is open**, as a button does.

@@ -60,10 +60,10 @@ const exports = {
 	...componentExports,
 	'./styles': './dist/css/global.css',
 	// Same stylesheet with Inter in place of RijksSans, for consumers that may not
-	// use the Rijksoverheid house font (see NOTICES.md).
+	// use the Rijksoverheid house typeface (see NOTICES.md).
 	'./styles/open-font': './dist/css/global-open-font.css',
 	// Deprecated alias of ./styles/open-font. It used to load no fonts at all, but
-	// the components are not tuned to a system font; remove after 1 March 2027.
+	// the components are not tuned to a system typeface; remove after 1 March 2027.
 	'./styles/system-font': './dist/css/global-open-font.css',
 	'./styles/variables': './dist/css/variables.css',
 	// Deprecated alias of ./styles/variables. Kept pointing at a wrapper that
