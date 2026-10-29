@@ -65,8 +65,8 @@ export class NLDDTaskBoardColumn extends LitElement {
 	@state() _canScrollUp = false;
 	@state() _canScrollDown = false;
 
-	@query('.task-board-column__body')
-	private _bodyElement!: HTMLElement;
+	@query('.task-board-column__main')
+	private _mainElement!: HTMLElement;
 
 	private _resizeObserver: ResizeObserver | null = null;
 
@@ -84,8 +84,8 @@ export class NLDDTaskBoardColumn extends LitElement {
 	}
 
 	/** @internal The element that scrolls the items. */
-	get _body(): HTMLElement {
-		return this._bodyElement;
+	get _main(): HTMLElement {
+		return this._mainElement;
 	}
 
 	/** @internal */
@@ -97,17 +97,17 @@ export class NLDDTaskBoardColumn extends LitElement {
 
 	/** @internal */
 	_updateScroll = (): void => {
-		const body = this._bodyElement;
-		if (!body) return;
-		this._canScrollUp = body.scrollTop > 1;
-		this._canScrollDown = body.scrollTop < body.scrollHeight - body.clientHeight - 1;
+		const main = this._mainElement;
+		if (!main) return;
+		this._canScrollUp = main.scrollTop > 1;
+		this._canScrollDown = main.scrollTop < main.scrollHeight - main.clientHeight - 1;
 	};
 
-	/** The body changes size with the board, and its content with the items. */
+	/** The main area changes size with the board, and its content with the items. */
 	private _observeItems(): void {
-		if (!this._resizeObserver || !this._bodyElement) return;
+		if (!this._resizeObserver || !this._mainElement) return;
 		this._resizeObserver.disconnect();
-		this._resizeObserver.observe(this._bodyElement);
+		this._resizeObserver.observe(this._mainElement);
 		for (const item of this.items) this._resizeObserver.observe(item);
 		const footer = this.shadowRoot?.querySelector('.task-board-column__footer');
 		if (footer) this._resizeObserver.observe(footer);
@@ -150,10 +150,10 @@ export class NLDDTaskBoardColumn extends LitElement {
 		const item = this._placeholder;
 		const placeholder = this.shadowRoot?.querySelector<HTMLElement>('.task-board-column__placeholder');
 		if (!item || !placeholder) return;
-		const body = this._bodyElement.getBoundingClientRect();
+		const main = this._mainElement.getBoundingClientRect();
 		const rect = item.getBoundingClientRect();
-		placeholder.style.setProperty('--_task-board-column-placeholder-top', `${rect.top - body.top + this._bodyElement.scrollTop}px`);
-		placeholder.style.setProperty('--_task-board-column-placeholder-left', `${rect.left - body.left + this._bodyElement.scrollLeft}px`);
+		placeholder.style.setProperty('--_task-board-column-placeholder-top', `${rect.top - main.top + this._mainElement.scrollTop}px`);
+		placeholder.style.setProperty('--_task-board-column-placeholder-left', `${rect.left - main.left + this._mainElement.scrollLeft}px`);
 		placeholder.style.setProperty('--_task-board-column-placeholder-width', `${rect.width}px`);
 		placeholder.style.setProperty('--_task-board-column-placeholder-height', `${rect.height}px`);
 	}
@@ -162,15 +162,15 @@ export class NLDDTaskBoardColumn extends LitElement {
 	private _placeIndicator(): void {
 		if (this._dropIndex === null || !this._indicator) return;
 		const items = this.items;
-		const body = this._bodyElement.getBoundingClientRect();
-		const gap = parseFloat(getComputedStyle(this._bodyElement).rowGap) || 0;
+		const main = this._mainElement.getBoundingClientRect();
+		const gap = parseFloat(getComputedStyle(this._mainElement).rowGap) || 0;
 		const before = items[this._dropIndex];
 		const after = items[this._dropIndex - 1];
 		let top: number;
 		if (before) top = before.getBoundingClientRect().top - gap / 2;
 		else if (after) top = after.getBoundingClientRect().bottom + gap / 2;
-		else top = body.top + parseFloat(getComputedStyle(this._bodyElement).paddingTop);
-		this._indicator.style.setProperty('--_task-board-column-indicator-top', `${top - body.top + this._bodyElement.scrollTop}px`);
+		else top = main.top + parseFloat(getComputedStyle(this._mainElement).paddingTop);
+		this._indicator.style.setProperty('--_task-board-column-indicator-top', `${top - main.top + this._mainElement.scrollTop}px`);
 	}
 
 	override render() {

@@ -164,7 +164,7 @@ describe('nldd-task-board', () => {
 		const [column] = el.columns;
 		await waitForUpdate(column);
 		await frames(3);
-		const body = column._body;
+		const body = column._main;
 		const classes = () => ['can-scroll-up', 'can-scroll-down'].filter((name) => body.classList.contains(name));
 		expect(classes()).toEqual(['can-scroll-down']);
 		body.scrollTop = 100;
@@ -455,7 +455,7 @@ describe('nldd-task-board', () => {
 			pointer(window, 'pointermove', tx, c.getBoundingClientRect().top + 1);
 			await waitForUpdate(el.columns[1]);
 			const indicator = el.columns[1].shadowRoot!.querySelector('.task-board-column__drop-indicator')!.getBoundingClientRect();
-			const body = el.columns[1].shadowRoot!.querySelector('.task-board-column__body')!.getBoundingClientRect();
+			const body = el.columns[1].shadowRoot!.querySelector('.task-board-column__main')!.getBoundingClientRect();
 			expect(indicator.top).toBeGreaterThanOrEqual(body.top);
 			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 		});

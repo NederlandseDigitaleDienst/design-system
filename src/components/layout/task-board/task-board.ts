@@ -583,13 +583,13 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 		const board = this._scroller.getBoundingClientRect();
 		const dx = drag.x < board.left + SCROLL_EDGE ? -SCROLL_SPEED : drag.x > board.right - SCROLL_EDGE ? SCROLL_SPEED : 0;
 		if (dx) this._scroller.scrollBy({ left: dx, behavior: 'instant' });
-		const body = drag.target?._body;
-		if (body) {
-			const rect = body.getBoundingClientRect();
+		const main = drag.target?._main;
+		if (main) {
+			const rect = main.getBoundingClientRect();
 			const dy = drag.y < rect.top + SCROLL_EDGE ? -SCROLL_SPEED : drag.y > rect.bottom - SCROLL_EDGE ? SCROLL_SPEED : 0;
-			if (dy) body.scrollTop += dy;
+			if (dy) main.scrollTop += dy;
 		}
-		if (dx || body) this._follow();
+		if (dx || main) this._follow();
 		drag.frame = requestAnimationFrame(this._scrollLoop);
 	};
 

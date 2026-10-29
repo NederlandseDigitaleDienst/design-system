@@ -22,7 +22,7 @@ export function taskBoardColumnTemplate(component: NLDDTaskBoardColumn) {
 				</slot>
 			</div>
 			<div class=${classMap({
-				'task-board-column__body': true,
+				'task-board-column__main': true,
 				'can-scroll-up': component._canScrollUp,
 				'can-scroll-down': component._canScrollDown,
 			})}

@@ -90,12 +90,12 @@ export const taskBoardColumnStyles = css`
 		--_task-board-column-title-font: var(--primitives-font-body-md-bold-tight);
 		--_task-board-column-count-color: var(--semantics-content-secondary-color);
 		--_task-board-column-count-font: var(--primitives-font-body-sm-regular-tight);
-		--_task-board-column-body-gap: var(--primitives-space-8);
-		--_task-board-column-body-padding: var(--primitives-space-8);
-		--_task-board-column-body-min-height: var(--primitives-space-80);
-		--_task-board-column-body-fade-size: var(--primitives-space-24);
-		--_task-board-column-body-fade-top: var(--primitives-space-0);
-		--_task-board-column-body-fade-bottom: var(--primitives-space-0);
+		--_task-board-column-main-gap: var(--primitives-space-8);
+		--_task-board-column-main-padding: var(--primitives-space-8);
+		--_task-board-column-main-min-height: var(--primitives-space-80);
+		--_task-board-column-main-fade-size: var(--primitives-space-24);
+		--_task-board-column-main-fade-top: var(--primitives-space-0);
+		--_task-board-column-main-fade-bottom: var(--primitives-space-0);
 		--_task-board-column-placeholder-background-color: var(--semantics-drop-targets-placeholder-background-color);
 		--_task-board-column-placeholder-corner-radius: var(--semantics-surfaces-corner-radius);
 		--_task-board-column-placeholder-border-width: var(--semantics-drop-targets-border-width);
@@ -171,25 +171,25 @@ export const taskBoardColumnStyles = css`
 		font: var(--_task-board-column-count-font);
 	}
 
-	.task-board-column__body {
+	.task-board-column__main {
 		box-sizing: border-box;
 		display: flex;
 		position: relative;
-		min-height: var(--_task-board-column-body-min-height);
+		min-height: var(--_task-board-column-main-min-height);
 		overflow-y: auto;
-		padding: var(--_task-board-column-body-padding);
+		padding: var(--_task-board-column-main-padding);
 		flex-direction: column;
 		flex-grow: 1;
-		gap: var(--_task-board-column-body-gap);
-		mask-image: linear-gradient(to bottom, transparent 0, black var(--_task-board-column-body-fade-top), black calc(100% - var(--_task-board-column-body-fade-bottom)), transparent 100%);
+		gap: var(--_task-board-column-main-gap);
+		mask-image: linear-gradient(to bottom, transparent 0, black var(--_task-board-column-main-fade-top), black calc(100% - var(--_task-board-column-main-fade-bottom)), transparent 100%);
 	}
 
-	.task-board-column__body.can-scroll-up {
-		--_task-board-column-body-fade-top: var(--_task-board-column-body-fade-size);
+	.task-board-column__main.can-scroll-up {
+		--_task-board-column-main-fade-top: var(--_task-board-column-main-fade-size);
 	}
 
-	.task-board-column__body.can-scroll-down {
-		--_task-board-column-body-fade-bottom: var(--_task-board-column-body-fade-size);
+	.task-board-column__main.can-scroll-down {
+		--_task-board-column-main-fade-bottom: var(--_task-board-column-main-fade-size);
 	}
 
 	.task-board-column__footer {
