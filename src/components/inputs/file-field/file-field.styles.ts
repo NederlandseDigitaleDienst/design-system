@@ -405,6 +405,12 @@ export const fileFieldStyles = css`
 		text-align: center;
 	}
 
+	/* The surface has a fixed height and centers its content, so only the
+	   shown text takes room; a hidden one that wraps would push the rest apart. */
+	.file-field--area .file-field__text:not(.is-active) {
+		display: none;
+	}
+
 	.file-field--area .file-field__name {
 		justify-content: center;
 	}
