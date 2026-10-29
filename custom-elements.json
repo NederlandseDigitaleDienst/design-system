@@ -35281,6 +35281,20 @@
             },
             {
               "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -35359,6 +35373,18 @@
               "description": "Vertical alignment of slotted content (default: 'center')"
             },
             {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader",
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -35382,6 +35408,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "RowHeaderMixin",
+              "module": "/src/utilities/row-header-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -35479,6 +35509,20 @@
             },
             {
               "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -35548,6 +35592,18 @@
               "description": "Vertical alignment (default: 'center')"
             },
             {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader",
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -35571,6 +35627,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "RowHeaderMixin",
+              "module": "/src/utilities/row-header-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -36414,6 +36474,20 @@
             },
             {
               "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -36555,6 +36629,18 @@
               "description": "'match' | 'predictive' (default: 'predictive')"
             },
             {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader",
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -36578,6 +36664,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "RowHeaderMixin",
+              "module": "/src/utilities/row-header-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -36771,6 +36861,20 @@
             },
             {
               "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hideBelow",
               "type": {
                 "text": "string | undefined"
@@ -36921,6 +37025,18 @@
               "description": "'match' | 'predictive' (default: 'predictive')"
             },
             {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader",
+              "inheritedFrom": {
+                "name": "RowHeaderMixin",
+                "module": "src/utilities/row-header-mixin.ts"
+              }
+            },
+            {
               "name": "hide-below",
               "type": {
                 "text": "string | undefined"
@@ -36944,6 +37060,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "RowHeaderMixin",
+              "module": "/src/utilities/row-header-mixin.js"
+            },
             {
               "name": "VisibilityMixin",
               "module": "/src/utilities/visibility-mixin.js"
@@ -38079,7 +38199,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. Header: put one `<nldd-table-row slot=\"header\">` in the `header` slot. Its cells become column headers (role=\"columnheader\"). Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).",
+          "description": "Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. Header: put one `<nldd-table-row slot=\"header\">` in the `header` slot. Its cells become column headers (role=\"columnheader\"). Row headers: give the cell that says what a row is about `row-header` (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`). The row then gives it role=\"rowheader\" instead of \"cell\", so a screen reader names the row along with every other cell in it, like `<th scope=\"row\">`. The attribute goes on the cell, not as a column index on the row or table, so it survives columns hidden at a breakpoint and needs no counting. It changes the semantics only: the cell variant still decides the look. The cell above the row headers, in the header row, stays a columnheader. Headers that span rows or columns are not supported. Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).",
           "name": "NLDDTable",
           "members": [
             {
@@ -46280,6 +46400,57 @@
           "declaration": {
             "name": "resolveDateBound",
             "module": "src/utilities/resolve-date-bound.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/row-header-mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Adds the `row-header` attribute to the cells that can say what a row is\nabout: `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` and\n`nldd-description-cell`.\n\nIt is the `<th scope=\"row\">` of an `nldd-table`. The cell itself does\nnothing with it: the `nldd-table-row` around it reads the attribute and\ngives that cell `role=\"rowheader\"` instead of `role=\"cell\"`, so a screen\nreader names the row when it reads any other cell in it. The row assigns\nevery cell role already, which is why the decision stays there.\n\nIt sits on the cell rather than on the row, because a cell is what a header\nis in HTML too, and because a column index on the row breaks as soon as a\ncolumn is hidden at a breakpoint or reordered. It is a mixin so it works the\nsame on every cell variant, and the variant still decides how the cell\nlooks: a row header gets no styling of its own.\n\nIn a header row (`slot=\"header\"`) the attribute is ignored and the cell\nstays a `columnheader`. Outside an `nldd-table` it does nothing.",
+          "name": "RowHeaderMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "rowHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "row-header",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "row-header",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "rowHeader"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "Base",
+              "type": {
+                "text": "TBase"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "RowHeaderMixin",
+          "declaration": {
+            "name": "RowHeaderMixin",
+            "module": "src/utilities/row-header-mixin.ts"
           }
         }
       ]

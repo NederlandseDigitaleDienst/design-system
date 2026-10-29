@@ -4,6 +4,8 @@ import type { NLDDTable, NLDDTableRow } from './table.js';
 import './table.js';
 import '../cells/cell/cell.js';
 import '../cells/text-cell/text-cell.js';
+import '../cells/title-cell/title-cell.js';
+import '../cells/description-cell/description-cell.js';
 import '../cells/icon-cell/icon-cell.js';
 
 describe('nldd-table', () => {
@@ -334,6 +336,58 @@ describe('nldd-table-row', () => {
 		el = await fixture('<nldd-table-row slot="header"><nldd-cell></nldd-cell></nldd-table-row>');
 		await waitForUpdate(el);
 		expect(el.querySelector('nldd-cell')!.getAttribute('role')).toBe('columnheader');
+	});
+
+	it('assigns role="rowheader" to a body cell with row-header, on every cell variant', async () => {
+		el = await fixture(`<nldd-table-row>
+			<nldd-cell row-header></nldd-cell>
+			<nldd-title-cell text="A" row-header></nldd-title-cell>
+			<nldd-text-cell text="B" row-header></nldd-text-cell>
+			<nldd-description-cell row-header></nldd-description-cell>
+			<nldd-text-cell text="C"></nldd-text-cell>
+		</nldd-table-row>`);
+		await waitForUpdate(el);
+		const roles = [...el.children].map((cell) => cell.getAttribute('role'));
+		expect(roles).toEqual(['rowheader', 'rowheader', 'rowheader', 'rowheader', 'cell']);
+	});
+
+	it('reflects the rowHeader property to the row-header attribute', async () => {
+		el = await fixture('<nldd-table-row><nldd-text-cell text="A"></nldd-text-cell></nldd-table-row>');
+		const cell = el.querySelector('nldd-text-cell')!;
+		cell.rowHeader = true;
+		await cell.updateComplete;
+		await waitForUpdate(el);
+		expect(cell.hasAttribute('row-header')).toBe(true);
+		expect(cell.getAttribute('role')).toBe('rowheader');
+	});
+
+	it('switches a cell between cell and rowheader when row-header changes', async () => {
+		el = await fixture('<nldd-table-row><nldd-text-cell text="A"></nldd-text-cell></nldd-table-row>');
+		await waitForUpdate(el);
+		const cell = el.querySelector('nldd-text-cell')!;
+		cell.setAttribute('row-header', '');
+		await waitForUpdate(el);
+		expect(cell.getAttribute('role')).toBe('rowheader');
+		cell.removeAttribute('row-header');
+		await waitForUpdate(el);
+		expect(cell.getAttribute('role')).toBe('cell');
+	});
+
+	it('keeps a header-row cell a columnheader, even with row-header', async () => {
+		el = await fixture('<nldd-table-row slot="header"><nldd-text-cell text="Aanvraag" row-header></nldd-text-cell></nldd-table-row>');
+		await waitForUpdate(el);
+		expect(el.querySelector('nldd-text-cell')!.getAttribute('role')).toBe('columnheader');
+	});
+
+	it('gives a row header no styling of its own', async () => {
+		el = await fixture(`<nldd-table-row>
+			<nldd-text-cell text="A" row-header></nldd-text-cell>
+			<nldd-text-cell text="A"></nldd-text-cell>
+		</nldd-table-row>`);
+		await waitForUpdate(el);
+		const [header, plain] = [...el.children] as HTMLElement[];
+		const label = (cell: HTMLElement) => cell.shadowRoot!.querySelector('p, span, div')!;
+		expect(getComputedStyle(label(header)).fontWeight).toBe(getComputedStyle(label(plain)).fontWeight);
 	});
 
 	it('defaults a generic nldd-cell without width to width="full"', async () => {

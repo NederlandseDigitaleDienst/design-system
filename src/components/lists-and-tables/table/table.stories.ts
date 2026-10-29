@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import './table.js';
 import '../cells/text-cell/text-cell.js';
 import '../cells/cell/cell.js';
+import '../cells/title-cell/title-cell.js';
 import '../../inputs/checkbox/checkbox.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/button/button.js';
@@ -170,6 +171,46 @@ export const ZonderKop = {
 		docs: {
 			description: {
 				story: 'De header-slot is optioneel: zonder header zijn er alleen body-rijen (cellen krijgen `role="cell"`). Handig voor key-value-tabellen.',
+			},
+		},
+	},
+};
+
+export const MetRijkoppen = {
+	name: 'Met rijkoppen',
+	render: () => html`
+	<nldd-table
+		columns="minmax(160px, 1fr) minmax(120px, 1fr) 140px"
+		accessible-label="Aanvragen"
+	>
+		<nldd-table-row slot="header">
+			<nldd-text-cell text="**Aanvraag**"></nldd-text-cell>
+			<nldd-text-cell text="**Onderwerp**"></nldd-text-cell>
+			<nldd-text-cell text="**Status**"></nldd-text-cell>
+		</nldd-table-row>
+		<nldd-table-row>
+			<nldd-title-cell
+				text="Aanvraag A-1042"
+				row-header
+			></nldd-title-cell>
+			<nldd-text-cell text="Dakisolatie"></nldd-text-cell>
+			<nldd-text-cell text="In behandeling"></nldd-text-cell>
+		</nldd-table-row>
+		<nldd-table-row>
+			<nldd-title-cell
+				text="Aanvraag A-1043"
+				row-header
+			></nldd-title-cell>
+			<nldd-text-cell text="Warmtepomp"></nldd-text-cell>
+			<nldd-text-cell text="Afgerond"></nldd-text-cell>
+		</nldd-table-row>
+	</nldd-table>
+`,
+	parameters: {
+		controls: { disable: true },
+		docs: {
+			description: {
+				story: 'Zet `row-header` op de cel die zegt waar de rij over gaat. Die cel krijgt `role="rowheader"` in plaats van `role="cell"`, zodat een schermlezer bij elke andere cel in de rij ook de rij noemt. Het werkt op `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` en `nldd-description-cell`, en verandert alleen de semantiek: hoe de rijkop eruitziet kies je met de celvariant. De cel erboven in de kop blijft een `columnheader`.',
 			},
 		},
 	},

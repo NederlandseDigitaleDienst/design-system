@@ -25,11 +25,12 @@ import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js'
 import { descriptionCellStyles } from './description-cell.styles.js';
 import { template } from './description-cell.template.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
+import { RowHeaderMixin } from '../../../../utilities/row-header-mixin.js';
 
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 
 @customElement('nldd-description-cell')
-export class NLDDDescriptionCell extends VisibilityMixin(LitElement, 'cells-container') {
+export class NLDDDescriptionCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = [descriptionCellStyles];
 
 	/** 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). */

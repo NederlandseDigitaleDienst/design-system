@@ -58,6 +58,7 @@ import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js'
 import { titleCellStyles } from './title-cell.styles.js';
 import { template } from './title-cell.template.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
+import { RowHeaderMixin } from '../../../../utilities/row-header-mixin.js';
 import type { QueryMarkMode } from '../../../../utilities/render-marked.js';
 
 export type TitleCellSize = 1 | 2 | 3 | 4 | 5 | 6;
@@ -66,7 +67,7 @@ type HorizontalAlignment = 'left' | 'center' | 'right';
 type VerticalAlignment = 'top' | 'center' | 'bottom';
 
 @customElement('nldd-title-cell')
-export class NLDDTitleCell extends VisibilityMixin(LitElement, 'cells-container') {
+export class NLDDTitleCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = [titleCellStyles];
 
 	@property({ type: Number, reflect: true })

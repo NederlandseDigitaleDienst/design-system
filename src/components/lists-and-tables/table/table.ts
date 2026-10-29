@@ -16,6 +16,16 @@
  * Header: put one `<nldd-table-row slot="header">` in the `header` slot. Its
  * cells become column headers (role="columnheader").
  *
+ * Row headers: give the cell that says what a row is about `row-header`
+ * (`nldd-cell`, `nldd-title-cell`, `nldd-text-cell`, `nldd-description-cell`).
+ * The row then gives it role="rowheader" instead of "cell", so a screen
+ * reader names the row along with every other cell in it, like
+ * `<th scope="row">`. The attribute goes on the cell, not as a column index on
+ * the row or table, so it survives columns hidden at a breakpoint and needs
+ * no counting. It changes the semantics only: the cell variant still decides
+ * the look. The cell above the row headers, in the header row, stays a
+ * columnheader. Headers that span rows or columns are not supported.
+ *
  * Responsive: two complementary strategies. (1) Give columns a minimum width
  * (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it
  * scrolls horizontally when too narrow (no wrapper needed).
@@ -47,6 +57,9 @@
  * @element nldd-table-row
  *
  * @attr {boolean} selected - Highlights the row (same treatment as nldd-list-item[selected])
+ *
+ * Assigns each slotted cell its role: "columnheader" in a header row,
+ * "rowheader" for a body cell with `row-header`, "cell" otherwise.
  *
  * @slot - The row's cells (`nldd-cell` and variants), one per column
  */
@@ -313,11 +326,26 @@ export class NLDDTableRow extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	selected = false;
 
+	private _rowHeaderObserver?: MutationObserver;
+
 	override connectedCallback(): void {
 		super.connectedCallback();
 		// display:grid strips native row semantics — restore them for AT.
 		this.setAttribute('role', 'row');
 		this._syncAriaSelected();
+		// slotchange misses a cell gaining or losing `row-header` later.
+		this._rowHeaderObserver = new MutationObserver(() => this._syncCellRoles());
+		this._rowHeaderObserver.observe(this, {
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['row-header'],
+		});
+	}
+
+	override disconnectedCallback(): void {
+		super.disconnectedCallback();
+		this._rowHeaderObserver?.disconnect();
+		this._rowHeaderObserver = undefined;
 	}
 
 	override updated(changed: Map<string, unknown>): void {
@@ -348,11 +376,8 @@ export class NLDDTableRow extends LitElement {
 	private _onSlotChange(e: Event): void {
 		const slot = e.target as HTMLSlotElement;
 		const cells = slot.assignedElements();
-		const cellRole = this._isHeader ? 'columnheader' : 'cell';
+		this._syncCellRoles();
 		for (const cell of cells) {
-			// Cells need explicit roles since the grid layout drops native
-			// table semantics.
-			cell.setAttribute('role', cellRole);
 			// A generic nldd-cell defaults to width="fit-content" (reflected),
 			// which would shrink-wrap inside a grid track. Default it to fill
 			// the column. The reflected default is indistinguishable from an
@@ -364,6 +389,19 @@ export class NLDDTableRow extends LitElement {
 					cell.setAttribute('width', 'full');
 				}
 			}
+		}
+	}
+
+	/** Cells need explicit roles since the grid layout drops native table
+	 *  semantics. A header row's cells are column headers whatever they say,
+	 *  so the cell above a row-header column stays a columnheader. */
+	private _syncCellRoles(): void {
+		const slot = this.shadowRoot?.querySelector('slot');
+		for (const cell of slot?.assignedElements() ?? []) {
+			let role = 'cell';
+			if (this._isHeader) role = 'columnheader';
+			else if (cell.hasAttribute('row-header')) role = 'rowheader';
+			cell.setAttribute('role', role);
 		}
 	}
 
