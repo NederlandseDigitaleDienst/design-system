@@ -18,11 +18,14 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **Inter for sites that may not use RijksSans.** `@nldd/design-system/styles/open-font` is the same stylesheet with Inter, tuned to the x-height of RijksSans, so the components look as they were designed. `/styles/system-font` now loads it too: a site on that entry looks different after the upgrade. See Changed.
+- **Buttons that share the row.** `nldd-button-group` with `width="full"` divides the row equally, and stacks only when the labels no longer fit. See Added.
 - **`nldd-text` styles inline elements as `nldd-rich-text` does**, now with mentions. See Fixed.
 
 ### Added
 
 - **`@nldd/design-system/styles/open-font`**, with Inter and JetBrains Mono in place of RijksSans and JetBrains Mono. Inter is open (SIL Open Font License) and has `size-adjust` set to the x-height of RijksSans, so the type scale, line heights and control sizes stay as designed. It comes in Latin and Latin Extended, and a page only downloads the second when it needs it. `/styles` keeps RijksSans.
+- **`width="full"` on `nldd-button-group`.** The buttons fill the row in equal shares. A button whose label does not fit its share takes the width it needs and the others share the rest, and a button that does not fit beside the others moves to a line of its own and fills it: two buttons stack, three end up as two over one. It is plain CSS, and it replaces the 480px rule of `auto` for that group. An `nldd-icon-button` keeps its own size, and with `orientation="horizontal"` the group stays a row.
+- **`nldd-button-group` warns in development when a button brings a `size` of its own.** The group sets its size on every button, so that size never showed.
 - **Mentions in `nldd-text`.** An element with `data-mention` is a mention, as in `nldd-rich-text`: `<a href="…" data-mention>` as the tinted token, `<span data-mention>` without the tint. `<q>` is quoted in italics.
 
 ### Changed
@@ -36,6 +39,7 @@ here; consult the commit history if you need that level of detail.
 
 - **Inline elements in `nldd-text` look as they do in `nldd-rich-text`.** `code` had other padding and no border, a link had no focus ring, and with `color="inherit"` a link kept its own underline color and got no thicker line on hover.
 - **No space before the punctuation after an `nldd-link`.** Whitespace inside the link showed as a gap in running text, as in "de voorwaarden ." The space now only sits between the label and an icon.
+- **A fourth button in `nldd-button-group` shows again when one of the others is removed.** The group hid it with `hidden` and never took that away; it now hides anything past the third with CSS.
 - **The highlight in `nldd-menu` follows the pointer off the items.** Moving onto the header, the footer, a divider or the padding left the last item highlighted.
 
 ## [0.13.1](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.0...v0.13.1) (2026-10-28)

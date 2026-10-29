@@ -129,7 +129,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row, and a stack over the full width in a container of 30rem (480px) or less, the width of a phone, where two labels beside each other leave no room for either. A card or a dialog between 480px and the sm breakpoint keeps its row. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one.",
+          "description": "A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row, and a stack over the full width in a container of 30rem (480px) or less, the width of a phone, where two labels beside each other leave no room for either. A card or a dialog between 480px and the sm breakpoint keeps its row. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one. With `width=\"full\"` the buttons fill the row and share it equally. A button whose label does not fit its share takes the width it needs, and the others share what is left. A button that does not fit beside the others moves to the next line and fills it: two buttons stack, three end up as two over one. That replaces the 480px rule of `auto`, and the group is no container then. With `orientation=\"horizontal\"` it stays a row, and a label that does not fit wraps instead. An `nldd-icon-button` takes no share of the row. The group sets its `size` on every button in it: buttons in one group are the same size. It holds three buttons at most and hides the rest.",
           "name": "NLDDButtonGroup",
           "members": [
             {
@@ -153,8 +153,14 @@
               "reflects": true
             },
             {
-              "kind": "method",
-              "name": "handleSlotChange"
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "Width"
+              },
+              "default": "''",
+              "attribute": "width",
+              "reflects": true
             }
           ],
           "attributes": [
@@ -165,7 +171,7 @@
               },
               "default": "'md'",
               "fieldName": "size",
-              "description": "Button group size: 'sm' | 'md' (default: 'md')"
+              "description": "Button group size, set on every button in it: 'sm' | 'md' (default: 'md')"
             },
             {
               "name": "orientation",
@@ -175,6 +181,15 @@
               "default": "'auto'",
               "fieldName": "orientation",
               "description": "Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "Width"
+              },
+              "default": "''",
+              "fieldName": "width",
+              "description": "'full': the buttons fill the row in equal shares, and a button that does not fit moves to a line of its own (default: unset, each button as wide as its label)"
             }
           ],
           "superclass": {
