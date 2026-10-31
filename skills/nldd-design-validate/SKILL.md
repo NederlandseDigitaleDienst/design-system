@@ -33,7 +33,7 @@ Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @n
 
 ## Wat hij niet ziet
 
-In broncode meldt hij alleen wat zeker fout is, per bestand. Een waarde die pas tijdens het draaien bestaat, of een kind uit een ander component, blijft buiten beeld. Met Vite vangt de browser dat tijdens het ontwikkelen op: dezelfde regels staan dan als `[nldd] ...` in de console. Angular en server-rendered apps hebben die laag niet; lint daar ook de HTML die ze opleveren, als je die hebt. Een `<nldd-*>` in een string in `.js`, `.ts` of `.py`, zoals een inline Angular-template, leest hij alleen in die HTML.
+In broncode meldt hij alleen wat zeker fout is, per bestand. Een waarde die pas tijdens het draaien bestaat, of een kind uit een ander component, blijft buiten beeld. Met Vite vangt de browser dat tijdens het ontwikkelen op: dezelfde regels staan dan als `[nldd] ...` in de console. Angular en server-rendered apps hebben die laag niet; lint daar ook de HTML die ze opleveren, als je die hebt. Een tag in een string in `.js`, `.ts` of `.py`, zoals een inline Angular-template, leest hij alleen in die HTML.
 
 Geen meldingen betekent dus niet dat het goed is. Bedoeling, koppenstructuur en de opbouw van een pagina beoordeel je zelf, met de patronen in [`nldd-design-build`](../nldd-design-build/SKILL.md).
 
