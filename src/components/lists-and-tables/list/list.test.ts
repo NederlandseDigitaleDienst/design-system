@@ -451,13 +451,13 @@ describe('nldd-list', () => {
 	it('empty: breaks the rule when it renders a blank area', async () => {
 		el = await fixture('<nldd-list></nldd-list>');
 		await waitForUpdate(el);
-		expect(breaks('list-empty-needs-empty-slot')).toBe(true);
+		expect(breaks('list-needs-empty-slot')).toBe(true);
 	});
 
 	it('empty: is fine when the slot is filled', async () => {
 		el = await fixture('<nldd-list><nldd-inline-dialog slot="empty" text="Niets gevonden"></nldd-inline-dialog></nldd-list>');
 		await waitForUpdate(el);
-		expect(breaks('list-empty-needs-empty-slot')).toBe(false);
+		expect(breaks('list-needs-empty-slot')).toBe(false);
 	});
 
 	// The rules ask about the state the list is actually in. Rows that are all
@@ -465,14 +465,14 @@ describe('nldd-list', () => {
 	it('no-results: is fine when only that slot is filled', async () => {
 		el = await fixture('<nldd-list><nldd-inline-dialog slot="no-results" text="Niets gevonden"></nldd-inline-dialog><nldd-list-item hidden>A</nldd-list-item></nldd-list>');
 		await waitForUpdate(el);
-		expect(breaks('list-hidden-rows-need-no-results')).toBe(false);
+		expect(breaks('list-needs-no-results-slot')).toBe(false);
 	});
 
 	it('no-results: asks for that slot, not the empty one', async () => {
 		el = await fixture('<nldd-list><nldd-list-item hidden>A</nldd-list-item></nldd-list>');
 		await waitForUpdate(el);
-		expect(breaks('list-hidden-rows-need-no-results')).toBe(true);
-		expect(breaks('list-empty-needs-empty-slot')).toBe(false);
+		expect(breaks('list-needs-no-results-slot')).toBe(true);
+		expect(breaks('list-needs-empty-slot')).toBe(false);
 	});
 
 	it('empty default: slotted content replaces the default dialog', async () => {

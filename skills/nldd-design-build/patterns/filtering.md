@@ -367,12 +367,12 @@ Dit patroon is uit productiecode gedestilleerd en daarna in een tweede product o
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
-- `checkbox-row-needs-decorative`: Set `decorative`: the row is the checkbox, and this one only shows its state.
-- `clear-all-filters`: Let each nldd-token remove its own filter instead: one misclick here costs the whole selection, with no way back.
-- `filter-options-as-fields`: Make the options rows of an nldd-list, with `checkbox` on the row: the whole row is the target and there is nothing to submit.
+- `filter-no-clear-all`: Let each nldd-token remove its own filter instead: one misclick here costs the whole selection, with no way back.
+- `filter-no-options-as-fields`: Make the options rows of an nldd-list, with `checkbox` on the row: the whole row is the target and there is nothing to submit.
 - `filter-sheet-needs-done`: Set the sheet's close button to "Klaar" through `translations`: a filter works at once, so there is nothing to abort.
 - `filter-sidebar-needs-skip-link`: Put an nldd-skip-link above the filters, with an `href` to the results, so a keyboard user need not pass every filter.
 - `filter-token-needs-dismiss`: Set control="dismiss": each token is its own way back.
+- `row-checkbox-needs-decorative`: Set `decorative`: the row is the checkbox, and this one only shows its state.
 - `sidebar-section-needs-label`: Set `sidebar-label`: it names the sidebar and titles the sheet it becomes.
 - `token-strip-needs-wrap`: Set layout="wrap" on the strip: the default stacks the tokens under each other.
 - `toolbar-search-needs-limits`: Give the toolbar item a `min-width` and a `max-width`, so the field shrinks along without becoming unreadable.

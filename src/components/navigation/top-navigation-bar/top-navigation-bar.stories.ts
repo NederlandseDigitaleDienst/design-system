@@ -174,7 +174,7 @@ export const SmalScherm = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-top-navigation-bar website-title="Mijn Dienst">
-				<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Shows how the global items move into the menu sheet on a narrow screen. -->
+				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Shows how the global items move into the menu sheet on a narrow screen. -->
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
@@ -258,7 +258,7 @@ export const MeerlaagsMenu = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-top-navigation-bar website-title="Mijn Dienst">
-				<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Shows the levels of the menu sheet, which only global items open. -->
+				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Shows the levels of the menu sheet, which only global items open. -->
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
@@ -311,7 +311,7 @@ export const VeelGlobaleItems = {
 				logo-title="Mijn Dienst"
 				logo-subtitle="Aanvragen en dossiers"
 			>
-				<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Shows how the bar copes with many global items. -->
+				<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Shows how the bar copes with many global items. -->
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
@@ -398,7 +398,7 @@ export const AlleToestanden = {
 		<nldd-container gap="32">
 			<div style=${layoutArea}>
 				<nldd-top-navigation-bar website-title="Mijn Dienst (volle breedte)">
-					<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Overview of the states of the bar, the documented global slot included. -->
+					<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Overview of the states of the bar, the documented global slot included. -->
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"
@@ -457,7 +457,7 @@ export const AlleToestanden = {
 			</div>
 			<div style="${layoutArea} max-width: 400px;">
 				<nldd-top-navigation-bar website-title="Mijn Dienst (smal scherm)">
-					<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Overview of the states of the bar, the documented global slot included. -->
+					<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Overview of the states of the bar, the documented global slot included. -->
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"
@@ -514,7 +514,7 @@ export const AlleToestanden = {
 			</div>
 			<div style=${layoutArea}>
 				<nldd-top-navigation-bar logo-title="Mijn Dienst">
-					<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Overview of the states of the bar, the documented global slot included. -->
+					<!-- nldd-lint-disable-next-line top-navigation-bar-no-menu-row -- Overview of the states of the bar, the documented global slot included. -->
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"

@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatText } from './format.js';
-import { BUILT_IN_RULES, createCanonical, loadData } from './rule-data.js';
+import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
 import { applyBaseline, findFiles, readBaseline, readConfig, writeBaseline } from './project.js';
 
@@ -13,9 +13,13 @@ const USAGE = `Usage:
     --format text|json|github       default: text
     --update-baseline               accept what is there now, report only new findings
     --max-warnings <n>              exit 1 above this number of warnings
+    --select <groups or rules>      only these, comma separated
+    --ignore <groups or rules>      all but these
     --stdin --filename <name>       check a snippet instead of files
   nldd explain <rule>               what a rule checks, and why
-  nldd rules [--for <tag>] [--json] list the rules, or those about one component
+  nldd rules [--for <tag>] [--group <group>] [--json]
+                                    list the rules, or those about one component or group
+                                    groups: api, a11y, copy, structure, pattern
 `;
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
@@ -32,7 +36,7 @@ function explain(data, id) {
 		console.error(`Unknown rule: ${id}`);
 		return 2;
 	}
-	const lines = [`${rule.id}  (${rule.severity})`, '', rule.message];
+	const lines = [`${rule.id}  (${rule.group}, ${rule.severity})`, '', rule.message];
 	if (rule.see) lines.push('', `Why: ${rule.see}`);
 	if (rule.runtime) lines.push('', 'Only the running page can tell, so this runs in the browser while developing.');
 	if (rule.examples) {
@@ -43,10 +47,11 @@ function explain(data, id) {
 	return 0;
 }
 
-function listRules(data, { tag, json }) {
-	const rules = tag ? rulesAboutTag(data.rules, tag) : data.rules;
+function listRules(data, { tag, group, json }) {
+	if (group && !GROUPS.includes(group)) throw new Error(`Unknown group: ${group}. Use one of ${GROUPS.join(', ')}.`);
+	const rules = (tag ? rulesAboutTag(data.rules, tag) : data.rules).filter((rule) => !group || rule.group === group);
 	if (json) console.log(JSON.stringify(rules, null, 2));
-	else for (const rule of rules) console.log(`${rule.id}  (${rule.severity})  ${rule.message}`);
+	else for (const rule of rules) console.log(`${rule.id}  (${rule.group}, ${rule.severity})  ${rule.message}`);
 	return 0;
 }
 
@@ -77,7 +82,13 @@ async function runLint(data, paths, options) {
 	if (Number.isNaN(Number(options['max-warnings'] ?? 0))) throw new Error('--max-warnings takes a number.');
 	const root = process.cwd();
 	const started = performance.now();
-	const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES)]);
+	const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES), ...GROUPS]);
+	const list = (value) => value?.split(',').map((key) => key.trim());
+	const select = list(options.select);
+	const ignore = list(options.ignore);
+	for (const key of [...(select ?? []), ...(ignore ?? [])]) {
+		if (!known.has(key)) throw new Error(`Unknown rule or group: ${key}`);
+	}
 	const config = readConfig(root, known);
 	noteOtherVersion(root);
 	const canonical = createCanonical(data);
@@ -94,7 +105,7 @@ async function runLint(data, paths, options) {
 	const results = [];
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
-		const linter = createLinter(data, { wrappers: config.wrappers, severities: config.rules });
+		const linter = createLinter(data, { wrappers: config.wrappers, severities: resolveSeverities(data, config.rules, { select, ignore }) });
 		for (const { filename, source } of relevant) {
 			const { findings } = await linter.lintSource(source, filename);
 			results.push({ filename, source, findings });
@@ -146,6 +157,9 @@ async function main() {
 			stdin: { type: 'boolean' },
 			filename: { type: 'string', default: 'stdin.html' },
 			for: { type: 'string' },
+			group: { type: 'string' },
+			select: { type: 'string' },
+			ignore: { type: 'string' },
 			json: { type: 'boolean' },
 			version: { type: 'boolean', short: 'v' },
 			help: { type: 'boolean', short: 'h' },
@@ -163,7 +177,7 @@ async function main() {
 	const data = loadData();
 	if (command === 'lint') return runLint(data, rest, values);
 	if (command === 'explain' && rest[0]) return explain(data, rest[0]);
-	if (command === 'rules') return listRules(data, { tag: values.for, json: values.json });
+	if (command === 'rules') return listRules(data, { tag: values.for, group: values.group, json: values.json });
 	console.error(USAGE);
 	return 2;
 }

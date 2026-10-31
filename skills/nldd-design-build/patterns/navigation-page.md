@@ -440,7 +440,7 @@ De pagina [Over deze website](https://digitaledienst.overheid.nl/over/) van de N
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
+- `card-clickable-no-control`: Drop this control: the whole card already is one link and one tab stop.
+- `card-no-loose-link`: Set `href` and `accessible-label` on the card and drop this link: then each choice is one link and one tab stop.
 - `card-title-needs-level`: Set `heading-level`: the title of a card that is a choice is a heading, directly below the page title or the section heading.
-- `control-in-clickable-card`: Drop this control: the whole card already is one link and one tab stop.
-- `heading-in-navigation-row`: Use the `text` of an nldd-text-cell: a row is not a heading.
-- `loose-link-in-card`: Set `href` and `accessible-label` on the card and drop this link: then each choice is one link and one tab stop.
+- `row-navigation-no-heading`: Use the `text` of an nldd-text-cell: a row is not a heading.

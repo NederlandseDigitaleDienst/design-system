@@ -477,21 +477,21 @@ export const ToestandDisabled = {
 		layout="wrap"
 		gap="16"
 	>
-		<!-- nldd-lint-disable-next-line avoid-disabled-button -- Demo of the disabled state; the rule says when not to use it. -->
+		<!-- nldd-lint-disable-next-line button-no-disabled -- Demo of the disabled state; the rule says when not to use it. -->
 		<nldd-icon-button
 			disabled
 			appearance="accent-filled"
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
-		<!-- nldd-lint-disable-next-line avoid-disabled-button -- Demo of the disabled state; the rule says when not to use it. -->
+		<!-- nldd-lint-disable-next-line button-no-disabled -- Demo of the disabled state; the rule says when not to use it. -->
 		<nldd-icon-button
 			disabled
 			appearance="neutral-tinted"
 			icon="delete"
 			text="Verwijderen"
 		></nldd-icon-button>
-		<!-- nldd-lint-disable-next-line avoid-disabled-button -- Demo of the disabled state; the rule says when not to use it. -->
+		<!-- nldd-lint-disable-next-line button-no-disabled -- Demo of the disabled state; the rule says when not to use it. -->
 		<nldd-icon-button
 			disabled
 			appearance="critical-tinted"

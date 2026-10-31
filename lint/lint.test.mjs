@@ -221,9 +221,9 @@ describe('found in review', () => {
 
 	it('does not report on a bound value that decides the context', async () => {
 		const tabs = '<nldd-tab-bar-item href="/a" text="A"></nldd-tab-bar-item>';
-		assert.ok(!(await rulesIn(vue(`<nldd-tab-bar accessible-label="a" :navigation="n">${tabs}</nldd-tab-bar>`))).includes('tabs-with-href-need-navigation'));
-		assert.ok(!(await rulesIn(vue(`<nldd-tab-bar accessible-label="a" v-bind="o">${tabs}</nldd-tab-bar>`))).includes('tabs-with-href-need-navigation'));
-		assert.ok((await rulesIn(vue(`<nldd-tab-bar accessible-label="a">${tabs}</nldd-tab-bar>`))).includes('tabs-with-href-need-navigation'));
+		assert.ok(!(await rulesIn(vue(`<nldd-tab-bar accessible-label="a" :navigation="n">${tabs}</nldd-tab-bar>`))).includes('tab-bar-href-needs-navigation'));
+		assert.ok(!(await rulesIn(vue(`<nldd-tab-bar accessible-label="a" v-bind="o">${tabs}</nldd-tab-bar>`))).includes('tab-bar-href-needs-navigation'));
+		assert.ok((await rulesIn(vue(`<nldd-tab-bar accessible-label="a">${tabs}</nldd-tab-bar>`))).includes('tab-bar-href-needs-navigation'));
 	});
 
 	it('maps a camelCase binding to its attribute', async () => {
@@ -255,7 +255,7 @@ describe('found in review', () => {
 	it('still counts what certainly renders next to a v-for', async () => {
 		const four = '<nldd-button text="a"></nldd-button>'.repeat(4);
 		const repeated = '<nldd-button v-for="x in y" text="b"></nldd-button>';
-		assert.ok((await rulesIn(vue(`<nldd-button-group>${four}${repeated}</nldd-button-group>`))).includes('button-group-at-most-three'));
+		assert.ok((await rulesIn(vue(`<nldd-button-group>${four}${repeated}</nldd-button-group>`))).includes('button-group-max-three'));
 	});
 
 	it('allows a toggle button group in a button bar', async () => {
@@ -407,7 +407,7 @@ describe('found in review', () => {
 
 	it('treats a child component the same in :not as anywhere else', async () => {
 		assert.deepEqual(await rulesIn(vue('<nldd-avatar-group><MyAvatar /></nldd-avatar-group>')), []);
-		assert.ok((await rulesIn(vue('<nldd-avatar-group><nldd-image></nldd-image></nldd-avatar-group>'))).includes('avatar-group-holds-avatars'));
+		assert.ok((await rulesIn(vue('<nldd-avatar-group><nldd-image></nldd-image></nldd-avatar-group>'))).includes('avatar-group-no-other-children'));
 	});
 
 	it('takes false and null in JSX as off', async () => {
@@ -528,6 +528,48 @@ describe('Lit in a .ts file', () => {
 	});
 });
 
+describe('groups', () => {
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });
+	const project = (config) => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		if (config) writeFileSync(join(root, '.nldd-lint.json'), JSON.stringify(config));
+		writeFileSync(join(root, 'a.vue'), '<template><nldd-gone /><nldd-tab-bar /><nldd-title text="Klaar." /></template>');
+		return root;
+	};
+	const rulesOf = (root, ...args) =>
+		JSON.parse(run(root, 'lint', '--format', 'json', ...args, 'a.vue').stdout).findings.map(({ rule }) => rule).sort();
+
+	it('selects a group', () => {
+		assert.deepEqual(rulesOf(project(), '--select', 'a11y').includes('tab-bar-needs-name'), true);
+		assert.deepEqual(rulesOf(project(), '--select', 'a11y').includes('unknown-element'), false);
+	});
+
+	it('ignores a group, built-in rules included', () => {
+		assert.deepEqual(rulesOf(project(), '--ignore', 'api').includes('unknown-element'), false);
+	});
+
+	it('selects one rule', () => {
+		assert.deepEqual(rulesOf(project(), '--select', 'title-no-full-stop'), ['title-no-full-stop']);
+	});
+
+	it('turns a group off in the config, and a rule beats its group', () => {
+		const root = project({ rules: { a11y: 'off', 'tab-bar-needs-name': 'warn' } });
+		assert.deepEqual(rulesOf(root).includes('tab-bar-needs-name'), true);
+		assert.deepEqual(rulesOf(project({ rules: { a11y: 'off' } })).includes('tab-bar-needs-name'), false);
+	});
+
+	it('refuses what does not exist', () => {
+		assert.equal(run(project(), 'lint', '--select', 'nope', 'a.vue').status, 2);
+	});
+
+	it('lists a group', () => {
+		const { stdout } = run(project(), 'rules', '--group', 'copy');
+		assert.match(stdout, /title-no-full-stop {2}\(copy, hint\)/);
+		assert.doesNotMatch(stdout, /\(a11y, /);
+	});
+});
+
 describe('a hint', () => {
 	const hint = { id: 'try-this', severity: 'hint', context: 'nldd-pane', message: 'Have a look at the pattern.' };
 	const data = { ...DATA, rules: [hint] };
@@ -618,7 +660,7 @@ describe('nldd command', () => {
 
 	it('lists the rules about a component, also where it is only mentioned', () => {
 		const output = execFileSync(process.execPath, [cli, 'rules', '--for', 'nldd-toggle-button'], { encoding: 'utf8' });
-		assert.match(output, /no-toggle-button-in-button-bar/);
+		assert.match(output, /button-bar-no-toggle-button/);
 	});
 
 	it('refuses a level that does not exist', () => {

@@ -23,6 +23,7 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 | Wil je | Gebruik |
 |---|---|
 | Regels voor een component, vóór je het gebruikt | `npx @nldd/design-system rules --for nldd-toolbar` |
+| Eén soort regels | `... lint --select a11y` of `--ignore copy`; groepen: `api`, `a11y`, `copy`, `structure`, `pattern` |
 | Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
 | Een site die naar HTML bouwt (Astro, MkDocs, Hugo, Django) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
 | Zien wat een upgrade breekt | `npx @nldd/design-system@latest lint` op je huidige code |
@@ -40,7 +41,7 @@ Geen meldingen betekent dus niet dat het goed is. Bedoeling, koppenstructuur en 
 Pas de code aan. Gaat de regel hier echt niet op, onderdruk hem dan met een reden:
 
 ```html
-<!-- nldd-lint-disable-next-line list-item-holds-cells -- de rij wordt verderop vervangen -->
+<!-- nldd-lint-disable-next-line list-item-no-other-children -- de rij wordt verderop vervangen -->
 ```
 
 Past hij structureel niet, dan is dat een voorstel: zie [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md).

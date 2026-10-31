@@ -15,9 +15,19 @@ De aanvrager zegt wat er mis is en beslist over de gevolgen. Jij schrijft de reg
 - Gaat het om bedoeling, tekst of een hele pagina? Dan is het proza in het patroon of de ontwerprichtlijnen. Stop hier.
 - Anders: een regel.
 
-## 2. Schrijf `src/rules/<id>.yaml`
+## 2. Schrijf `src/rules/<groep>/<id>.yaml`
 
-Altijd daar, ook als de regel over meer componenten gaat. De bestandsnaam is het id: kebab-case, beschrijft de fout, zonder componentprefix.
+Altijd daar, ook als de regel over meer componenten gaat. De eerste vraag die je met ja beantwoordt, is de groep:
+
+| Groep | Vraag |
+|---|---|
+| `api` | Bestaat dit, en heeft het effect? |
+| `a11y` | Mist hulptechnologie iets? |
+| `copy` | Klopt de tekst? |
+| `structure` | Klopt de samenstelling? |
+| `pattern` | Is er een bedoelde manier? |
+
+De bestandsnaam is het id. Begin met waar de regel over gaat (de tag zonder `nldd-`), gevolgd door `-needs-` (iets ontbreekt), `-no-` (mag niet), `-max-` (te veel) of `-goes-` (verkeerde plek): `tab-bar-needs-name`, `split-view-no-sheet`. In `api` eindigt hij op `-renamed`, `-invalid`, `-no-effect` of `-not-found`. `lint:rules` controleert de vorm.
 
 ```yaml
 severity: warn

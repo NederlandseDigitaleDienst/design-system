@@ -187,13 +187,23 @@ De linter hoort bij zijn eigen versie: hij zit in het pakket, dus een project dr
 | Feit | Enige bron | Daaruit gegenereerd |
 |------|------------|---------------------|
 | API | JSDoc en TS-types | `custom-elements.json`, `reference.md`, de ingebouwde regels |
-| Regel | `src/rules/<id>.yaml` | Linter, `reference.md`, sectie `Regels` op een patroon |
+| Regel | `src/rules/<groep>/<id>.yaml` | Linter, `reference.md`, sectie `Regels` op een patroon |
 | Patroon: hoe en waarom | `<slug>.mdx` | Storybook, skill-pagina |
 | Voorbeeld | `<slug>.html` | Story, docs, skill |
 
 Er zijn drie niveaus: `error` en `warn` kunnen CI laten falen; een `hint` nooit. Een hint zegt hoe iets bedoeld is en wijst met `see` naar het patroon of de richtlijn. Hints draaien op broncode en gebouwde pagina's, niet in de browser: daar schrijven componenten zelf `style` en `id`, en dat zou een hint voor de markup van de app aanzien.
 
-Eén regel, één bestand in `src/rules/`, ook als hij over meer componenten gaat. De bestandsnaam is het regel-ID, en dat ID is API: consumers hebben het in baselines en onderdrukkingen staan. Hernoem via `aliases`. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.mdx` hoeft niet mee te veranderen.
+Eén regel, één bestand in `src/rules/<groep>/`, ook als hij over meer componenten gaat. De bestandsnaam is het regel-ID, en dat ID is API: consumers hebben het in baselines en onderdrukkingen staan. Hernoem via `aliases`. De groep is de map en zit niet in het ID, dus een regel verhuizen breekt niets. Loop de groepen van boven naar beneden af; de eerste die past, is het:
+
+| Groep | Vraag |
+|---|---|
+| `api` | Bestaat dit, en heeft het effect? |
+| `a11y` | Mist hulptechnologie iets? |
+| `copy` | Klopt de tekst? |
+| `structure` | Klopt de samenstelling? |
+| `pattern` | Is er een bedoelde manier? |
+
+Een naam begint met waar hij over gaat: de tag zonder `nldd-`, of een begrip uit `CONCEPTS` in `scripts/check-lint-rules.js`. Daarna één van vier vormen: `-needs-` (iets ontbreekt), `-no-` (mag niet), `-max-` (te veel), `-goes-` (verkeerde plek). In `api` eindigt hij op `-renamed`, `-invalid`, `-no-effect` of `-not-found`. `lint:rules` bewaakt dit. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.mdx` hoeft niet mee te veranderen.
 
 `message` zegt wat hier fout is, in het Engels, zoals een compilerfout. Het waarom staat op de pagina waar `see` naar wijst en wordt niet overgeschreven.
 

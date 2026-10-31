@@ -260,7 +260,7 @@ const overview = (scheme: 'light' | 'dark') => html`
 				<nldd-search-field placeholder="Zoek een aanvraag" shortcut="/"></nldd-search-field>
 				<nldd-number-field value="3" accessible-label="Aantal"></nldd-number-field>
 				<nldd-dropdown>
-					<!-- nldd-lint-disable-next-line dropdown-few-options -- Specimen of every field type under a theme, not a choice someone makes. -->
+					<!-- nldd-lint-disable-next-line dropdown-no-few-options -- Specimen of every field type under a theme, not a choice someone makes. -->
 					<select aria-label="Status">
 						<option>In behandeling</option>
 						<option>Afgerond</option>

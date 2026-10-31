@@ -6,7 +6,8 @@
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import { GROUPS } from '../../lint/rule-data.js';
+import { basename, join, dirname } from 'node:path';
 import Ajv from 'ajv';
 import { parse as parseSelector, stringify } from 'css-what';
 import { parse as parseYaml } from 'yaml';
@@ -186,13 +187,21 @@ export function buildDevRules(rules, classes, tags) {
 
 export function loadRules(rulesDir, schema) {
 	const validate = new Ajv({ allErrors: true }).compile(schema);
-	const entries = readdirSync(rulesDir).filter((file) => file.endsWith('.yaml')).sort();
-	return entries.map((file) => {
+	const entries = readdirSync(rulesDir, { recursive: true }).filter((file) => file.endsWith('.yaml')).sort();
+	const seen = new Set();
+	const rules = entries.map((file) => {
+		// The map is the group and the file name is the id, so moving a rule keeps its id.
+		const group = dirname(file);
+		if (!GROUPS.includes(group)) throw new Error(`${file}: a rule goes in one of ${GROUPS.join(', ')}.`);
+		const id = basename(file, '.yaml');
+		if (seen.has(id)) throw new Error(`${file}: the id "${id}" exists in another group.`);
+		seen.add(id);
 		const rule = parseYaml(readFileSync(join(rulesDir, file), 'utf8'));
 		if (!validate(rule)) {
 			const problems = validate.errors.map((error) => `${error.instancePath} ${error.message}`);
 			throw new Error(`${file}: ${problems.join('; ')}`);
 		}
-		return { id: basename(file, '.yaml'), ...rule };
+		return { id, group, ...rule };
 	});
+	return rules.sort((a, b) => a.id.localeCompare(b.id));
 }

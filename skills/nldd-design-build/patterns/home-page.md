@@ -400,5 +400,5 @@ Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de 
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
-- `hero-not-first`: Make nldd-hero the first section, which says what the site is for.
-- `menu-row-in-top-bar`: Let the pages be the navigation: put the entries in the home as cards and lists, and keep search and language in `utility`.
+- `hero-goes-first`: Make nldd-hero the first section, which says what the site is for.
+- `top-navigation-bar-no-menu-row`: Let the pages be the navigation: put the entries in the home as cards and lists, and keep search and language in `utility`.

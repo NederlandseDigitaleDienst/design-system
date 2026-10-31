@@ -3,13 +3,13 @@ import type { DevRule } from './dev-checks.js';
 
 export const devRules: DevRule[] = [
 	{
-		"id": "avatar-group-holds-avatars",
+		"id": "avatar-group-no-other-children",
 		"message": "nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.",
 		"context": "nldd-avatar-group",
 		"report": ":has(> :not(nldd-avatar))"
 	},
 	{
-		"id": "avatar-group-target-too-small",
+		"id": "avatar-group-no-small-target",
 		"message": "Avatars that are links or buttons overlap, so each keeps too small a target (WCAG 2.5.8). Use size 32 or larger.",
 		"context": "nldd-avatar-group:is([size=\"16\"], [size=\"20\"], [size=\"24\"], [size=\"28\"])",
 		"report": ":has(> nldd-avatar:is([href]:not([href=\"\"]), [button]))"
@@ -25,18 +25,24 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "avatar-target-too-small",
+		"id": "avatar-no-small-target",
 		"message": "A link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.",
 		"context": "nldd-avatar:is([href]:not([href=\"\"]), [button]):is([size=\"16\"], [size=\"20\"])"
 	},
 	{
-		"id": "bar-split-view-children-need-slot",
+		"id": "bar-split-view-child-needs-slot",
 		"message": "Every child of nldd-bar-split-view needs a `slot`, or it does not render.",
 		"context": "nldd-bar-split-view",
 		"report": ":has(> :not([slot]))"
 	},
 	{
-		"id": "button-form-id-not-a-form",
+		"id": "button-bar-no-toggle-button",
+		"message": "The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.",
+		"context": "nldd-button-bar",
+		"report": ":has(> nldd-toggle-button)"
+	},
+	{
+		"id": "button-form-id-invalid",
 		"message": "The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.",
 		"context": "nldd-button:state(form-target-not-a-form)"
 	},
@@ -46,7 +52,12 @@ export const devRules: DevRule[] = [
 		"context": "nldd-button:state(no-form-target)"
 	},
 	{
-		"id": "button-group-at-most-three",
+		"id": "button-group-button-no-own-size",
+		"message": "A button has a size of its own, but the group sets its `size` on all its buttons. Set the size on the group.",
+		"context": "nldd-button-group:state(own-size-overwritten)"
+	},
+	{
+		"id": "button-group-max-three",
 		"message": "nldd-button-group holds three buttons at most; the rest are hidden.",
 		"context": "nldd-button-group",
 		"count": {
@@ -55,7 +66,7 @@ export const devRules: DevRule[] = [
 		}
 	},
 	{
-		"id": "button-group-zero-width",
+		"id": "button-group-needs-width",
 		"message": "The group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query while orientation is auto), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.",
 		"context": "nldd-button-group:state(no-width)"
 	},
@@ -70,9 +81,13 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "button-size-set-on-group",
-		"message": "A button has a size of its own, but the group sets its `size` on all its buttons. Set the size on the group.",
-		"context": "nldd-button-group:state(own-size-overwritten)"
+		"id": "button-submit-needs-form",
+		"message": "Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.",
+		"context": "nldd-button[type=\"submit\"]",
+		"assert": "nldd-form *, form *, [form]:not([form=\"\"])",
+		"properties": [
+			"form"
+		]
 	},
 	{
 		"id": "card-link-needs-name",
@@ -84,12 +99,12 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "code-viewer-diff-lines-dropped",
+		"id": "code-viewer-diff-lines-invalid",
 		"message": "Lines of the diff fall outside the line counts of their @@ header and are not shown. Check the counts in the hunk headers.",
 		"context": "nldd-code-viewer:state(diff-lines-dropped)"
 	},
 	{
-		"id": "code-viewer-diff-words-unavailable",
+		"id": "code-viewer-diff-needs-merge-package",
 		"message": "The word marks of a diff need @codemirror/merge, which did not load, so the diff shows without them.",
 		"context": "nldd-code-viewer:state(no-diff-words)"
 	},
@@ -110,20 +125,6 @@ export const devRules: DevRule[] = [
 		"assert": "[accessible-label]:not([accessible-label=\"\"])",
 		"properties": [
 			"accessibleLabel"
-		]
-	},
-	{
-		"id": "control-row-holds-segments",
-		"message": "Move the `href` or `button` to a segment: both together put a control in a control.",
-		"context": "nldd-list-item:is([href]:not([href=\"\"]), [button]):has(> nldd-list-item-segment)"
-	},
-	{
-		"id": "disclosure-segment-needs-button",
-		"message": "Add `button`: `disclosure` only marks which control opens the branch, and without it there is no hover, focus or keyboard.",
-		"context": "nldd-list-item-segment[disclosure]",
-		"assert": "[button]",
-		"properties": [
-			"button"
 		]
 	},
 	{
@@ -156,16 +157,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "form-action-in-button-group",
+		"id": "form-actions-needs-button-group",
 		"message": "Put the action in a nldd-button-group, also when there is only one.",
 		"context": "nldd-form-actions",
 		"assert": ":has(> nldd-button-group)",
 		"properties": []
-	},
-	{
-		"id": "form-field-list-reads-first-control",
-		"message": "More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.",
-		"context": "nldd-form-field:state(list-reads-first-control)"
 	},
 	{
 		"id": "form-field-needs-input",
@@ -173,6 +169,16 @@ export const devRules: DevRule[] = [
 		"context": "nldd-form-field:has(> :not(nldd-form-field-help-text))",
 		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
 		"properties": []
+	},
+	{
+		"id": "form-field-no-optional-and-required",
+		"message": "Drop `required`, or `optional`: the field cannot be both.",
+		"context": "nldd-form-field[optional] > [required]"
+	},
+	{
+		"id": "form-field-validation-no-multiple-controls",
+		"message": "More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.",
+		"context": "nldd-form-field:state(list-reads-first-control)"
 	},
 	{
 		"id": "form-section-needs-name",
@@ -185,27 +191,27 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "hero-corner-covered",
-		"message": "This corner sits under the panel, so the rounded corner does not show. Choose a corner the panel leaves free, or leave the value empty to let the hero choose.",
-		"context": "nldd-hero:state(corner-covered)"
-	},
-	{
-		"id": "hero-corner-full-width",
-		"message": "`corner` with width=\"full\" runs the hero to the edge of the screen. A shape with a rounded corner always keeps a margin around it; leave width=\"full\" off or drop the corner.",
-		"context": "nldd-hero:is([corner]:not([corner=\"\"]), [corner=\"\"])[width=\"full\"]"
-	},
-	{
-		"id": "hero-corner-unknown",
+		"id": "hero-corner-invalid",
 		"message": "This is not a corner, so the hero chooses one. Use \"top-left\", \"top-right\", \"bottom-left\" or \"bottom-right\", or leave the value empty.",
 		"context": "nldd-hero:state(corner-unknown)"
 	},
 	{
-		"id": "hero-corner-unsupported",
+		"id": "hero-corner-layout-no-effect",
 		"message": "`corner` only applies with layout=\"contained\" and the panel in a corner or along a side, so this hero stays rectangular. Set layout=\"contained\" and put the panel in a corner or along a side, or drop the corner.",
 		"context": "nldd-hero:state(corner-unsupported)"
 	},
 	{
-		"id": "hero-height-unused",
+		"id": "hero-corner-no-full-width",
+		"message": "`corner` with width=\"full\" runs the hero to the edge of the screen. A shape with a rounded corner always keeps a margin around it; leave width=\"full\" off or drop the corner.",
+		"context": "nldd-hero:is([corner]:not([corner=\"\"]), [corner=\"\"])[width=\"full\"]"
+	},
+	{
+		"id": "hero-corner-under-panel-no-effect",
+		"message": "This corner sits under the panel, so the rounded corner does not show. Choose a corner the panel leaves free, or leave the value empty to let the hero choose.",
+		"context": "nldd-hero:state(corner-covered)"
+	},
+	{
+		"id": "hero-height-no-effect",
 		"message": "`height` is not used on a hero, whose height comes from its image. Use `media-height` for a fixed height, or `media-aspect-ratio`.",
 		"context": "nldd-hero[height]:not([height=\"\"])"
 	},
@@ -215,7 +221,7 @@ export const devRules: DevRule[] = [
 		"context": "nldd-hero:state(invalid-main-width)"
 	},
 	{
-		"id": "hero-overlap-panel-too-short",
+		"id": "hero-overlap-needs-taller-panel",
 		"message": "With layout=\"overlap\" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout=\"contained\" to keep the panel on the image.",
 		"context": "nldd-hero:state(short-overlap-panel)"
 	},
@@ -248,15 +254,6 @@ export const devRules: DevRule[] = [
 		"id": "icon-not-found",
 		"message": "An icon set here does not exist. See the icon list in the reference.",
 		"context": ":state(unknown-icon)"
-	},
-	{
-		"id": "icon-segment-needs-name",
-		"message": "Give the segment an `accessible-label` that names the row: it holds only an icon.",
-		"context": "nldd-list-item-segment:is([button], [href]:not([href=\"\"])):has(> nldd-icon-cell):not(:has(> :is(nldd-text-cell, nldd-title-cell, nldd-description-cell)))",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])",
-		"properties": [
-			"accessibleLabel"
-		]
 	},
 	{
 		"id": "image-needs-alt",
@@ -301,50 +298,35 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "list-arrow-navigation-removed",
+		"id": "list-arrow-navigation-no-effect",
 		"message": "`arrow-navigation` is the default now and the attribute does nothing; remove it.",
 		"context": "nldd-list[arrow-navigation]"
 	},
 	{
-		"id": "list-control-keeps-tab-stop",
-		"message": "A control in a list-item keeps its tab stop in its own shadow root and has no `no-tab`, so the row cannot take it out of the tab order and the arrow keys skip that row. If the rows of this list are not actions themselves, it is a form: set type=\"form\" and the roving falls away. Otherwise give the component `no-tab`, or wrap the control in an nldd-list-item-segment.",
-		"context": "nldd-list:state(control-keeps-tab-stop)"
-	},
-	{
-		"id": "list-empty-needs-empty-slot",
-		"message": "No items and nothing in [slot=\"empty\"], so the list renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.",
-		"context": "nldd-list:state(empty):not(:has(> [slot=\"empty\"]))"
-	},
-	{
-		"id": "list-form-row-is-action",
+		"id": "list-form-no-action-rows",
 		"message": "type=\"form\" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments. Use type=\"list\" for rows you activate, and put the action in a cell if it belongs to a form row.",
 		"context": "nldd-list[type=\"form\"] > nldd-list-item",
 		"report": ":is([href]:not([href=\"\"]), [button], [checkbox], :has(> nldd-list-item-segment))"
 	},
 	{
-		"id": "list-hidden-rows-need-no-results",
-		"message": "Every item is hidden and nothing is in [slot=\"no-results\"], so the list renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.",
-		"context": "nldd-list:state(filtered):not(:has(> [slot=\"empty\"], > [slot=\"no-results\"]))"
-	},
-	{
-		"id": "list-item-bare-text",
-		"message": "Bare text sits directly in a row. Wrap it in a cell, or it gets none of the typography, size and alignment, and falls back to the browser's button font in a clickable row.",
-		"context": "nldd-list-item:state(bare-text)"
-	},
-	{
-		"id": "list-item-children-need-tree",
+		"id": "list-item-children-needs-tree",
 		"message": "`slot=\"children\"` nests rows, which only carries meaning in an nldd-list with type=\"tree\" or type=\"navigation\". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.",
 		"context": "nldd-list-item:has(> nldd-list-item[slot=\"children\"])",
 		"assert": "nldd-list[type=\"tree\"] *, nldd-list[type=\"navigation\"] *",
 		"properties": []
 	},
 	{
-		"id": "list-item-divider-degenerate",
+		"id": "list-item-control-no-own-tab-stop",
+		"message": "A control in a list-item keeps its tab stop in its own shadow root and has no `no-tab`, so the row cannot take it out of the tab order and the arrow keys skip that row. If the rows of this list are not actions themselves, it is a form: set type=\"form\" and the roving falls away. Otherwise give the component `no-tab`, or wrap the control in an nldd-list-item-segment.",
+		"context": "nldd-list:state(control-keeps-tab-stop)"
+	},
+	{
+		"id": "list-item-divider-invalid",
 		"message": "`divider-start` lies past the last `divider-end`, so the divider falls back to the full content width.",
 		"context": "nldd-list-item:state(degenerate-divider)"
 	},
 	{
-		"id": "list-item-expanded-in-navigation",
+		"id": "list-item-expanded-navigation-no-effect",
 		"message": "`expanded` does nothing on a row with sub-pages in an nldd-list with type=\"navigation\": they are always shown, so the attribute is ignored. Use type=\"tree\" for sections that fold away.",
 		"context": "nldd-list-item:state(expanded-in-navigation)"
 	},
@@ -354,12 +336,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-list-item:state(expanded-without-control)"
 	},
 	{
-		"id": "list-item-holds-cells",
-		"message": "A row takes cells and segments. Anything else sits outside its layout.",
-		"context": "nldd-list-item",
-		"report": ":has(> :not([slot], :is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell), nldd-list-item-segment))"
-	},
-	{
 		"id": "list-item-needs-list",
 		"message": "nldd-list-item needs a parent nldd-list, which gives the row its type and keyboard behaviour.",
 		"context": "nldd-list-item",
@@ -367,21 +343,60 @@ export const devRules: DevRule[] = [
 		"properties": []
 	},
 	{
-		"id": "list-item-nested-control",
+		"id": "list-item-no-bare-text",
+		"message": "Bare text sits directly in a row. Wrap it in a cell, or it gets none of the typography, size and alignment, and falls back to the browser's button font in a clickable row.",
+		"context": "nldd-list-item:state(bare-text)"
+	},
+	{
+		"id": "list-item-no-nested-control",
 		"message": "A control sits in a row that is its own control (href, button, checkbox or radio). A control inside a control is invalid HTML and doubles the tab stop. With more than one action, give each its own nldd-list-item-segment and leave the row without an action.",
 		"context": "nldd-list-item:state(nested-control)"
 	},
 	{
-		"id": "list-item-segment-disclosure-and-expanded",
+		"id": "list-item-no-other-children",
+		"message": "A row takes cells and segments. Anything else sits outside its layout.",
+		"context": "nldd-list-item",
+		"report": ":has(> :not([slot], :is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell), nldd-list-item-segment))"
+	},
+	{
+		"id": "list-item-segment-disclosure-needs-button",
+		"message": "Add `button`: `disclosure` only marks which control opens the branch, and without it there is no hover, focus or keyboard.",
+		"context": "nldd-list-item-segment[disclosure]",
+		"assert": "[button]",
+		"properties": [
+			"button"
+		]
+	},
+	{
+		"id": "list-item-segment-expanded-no-effect",
 		"message": "`disclosure` takes aria-expanded from the row, so the `expanded` on this action is ignored. Drop one of the two.",
 		"context": "nldd-list-item-segment[disclosure]",
 		"report": "[expanded=\"\"], [expanded]:not([expanded=\"\"])"
+	},
+	{
+		"id": "list-item-segment-icon-needs-name",
+		"message": "Give the segment an `accessible-label` that names the row: it holds only an icon.",
+		"context": "nldd-list-item-segment:is([button], [href]:not([href=\"\"])):has(> nldd-icon-cell):not(:has(> :is(nldd-text-cell, nldd-title-cell, nldd-description-cell)))",
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "list-item-segment-no-control-in-listbox",
 		"message": "A segment in a type=\"listbox\" list renders as a plain container: an `option` may not contain interactive descendants. Move the segment out of the listbox, or drive selection from the option itself.",
 		"context": "nldd-list[type=\"listbox\"] nldd-list-item-segment",
 		"report": ":is([href]:not([href=\"\"]), [button], [checkbox])"
+	},
+	{
+		"id": "list-needs-empty-slot",
+		"message": "No items and nothing in [slot=\"empty\"], so the list renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.",
+		"context": "nldd-list:state(empty):not(:has(> [slot=\"empty\"]))"
+	},
+	{
+		"id": "list-needs-no-results-slot",
+		"message": "Every item is hidden and nothing is in [slot=\"no-results\"], so the list renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.",
+		"context": "nldd-list:state(filtered):not(:has(> [slot=\"empty\"], > [slot=\"no-results\"]))"
 	},
 	{
 		"id": "list-reorderable-needs-list-type",
@@ -395,20 +410,30 @@ export const devRules: DevRule[] = [
 		"context": "nldd-menu-bar:state(unnamed)"
 	},
 	{
-		"id": "menu-filter-in-navigation",
+		"id": "menu-navigation-no-filter",
 		"message": "filter() belongs to a menu of actions or options. A navigation menu is a short list of links and is not filtered.",
 		"context": "nldd-menu[variant=\"navigation\"]:state(filtered)"
 	},
 	{
-		"id": "menu-navigation-holds-links",
+		"id": "menu-navigation-no-other-items",
 		"message": "variant=\"navigation\" is a list of links. A checkbox or radio item, or a shortcut, belongs to an action menu and has no role to live in here. Use the default variant for actions.",
 		"context": "nldd-menu[variant=\"navigation\"] nldd-menu-item",
 		"report": ":is([type]:not([type=\"\"]):not([type=\"button\"]), [shortcut]:not([shortcut=\"\"]))"
 	},
 	{
-		"id": "modal-destructive-first",
+		"id": "menu-no-late-submenu",
+		"message": "An nldd-menu child was added after mount. Submenu attachment is resolved once at firstUpdated, so this menu will not be treated as a submenu. Define the nldd-menu child before the item is connected to the DOM.",
+		"context": "nldd-menu-item:state(late-submenu)"
+	},
+	{
+		"id": "modal-dialog-destructive-goes-last",
 		"message": "Put the way out above the destructive action: reaching it should not mean passing the button to avoid.",
 		"context": "nldd-modal-dialog > [slot=\"actions\"][appearance=\"destructive\"] + [slot=\"actions\"]"
+	},
+	{
+		"id": "modal-dialog-exit-needs-primary",
+		"message": "Give the way out appearance=\"primary\": autopilot should end at the safe choice, not at the irreversible one.",
+		"context": "nldd-modal-dialog:has(> [slot=\"actions\"][appearance=\"destructive\"]):not(:has(> [slot=\"actions\"][appearance=\"primary\"])) > [slot=\"actions\"]:not([appearance=\"destructive\"])"
 	},
 	{
 		"id": "modal-dialog-needs-two-actions",
@@ -418,11 +443,6 @@ export const devRules: DevRule[] = [
 			"of": "[slot=\"actions\"]",
 			"min": 2
 		}
-	},
-	{
-		"id": "modal-way-out-not-primary",
-		"message": "Give the way out appearance=\"primary\": autopilot should end at the safe choice, not at the irreversible one.",
-		"context": "nldd-modal-dialog:has(> [slot=\"actions\"][appearance=\"destructive\"]):not(:has(> [slot=\"actions\"][appearance=\"primary\"])) > [slot=\"actions\"]:not([appearance=\"destructive\"])"
 	},
 	{
 		"id": "multi-line-text-field-needs-name",
@@ -435,28 +455,7 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "no-page-footer-in-section",
-		"message": "nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.",
-		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section) nldd-page-footer"
-	},
-	{
-		"id": "no-sheet-in-split-view",
-		"message": "Render nldd-sheet at the document root: inside a pane it is clipped by that pane.",
-		"context": "nldd-split-view-pane nldd-sheet"
-	},
-	{
-		"id": "no-sticky-header-on-website",
-		"message": "A website lets its header scroll away: a fixed one takes room from the content.",
-		"context": "nldd-page[sticky-header]:has(nldd-top-navigation-bar)"
-	},
-	{
-		"id": "no-toggle-button-in-button-bar",
-		"message": "The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.",
-		"context": "nldd-button-bar",
-		"report": ":has(> nldd-toggle-button)"
-	},
-	{
-		"id": "notification-at-most-two-actions",
+		"id": "notification-max-two-actions",
 		"message": "At most 2 actions: a message that needs three choices is a decision, and a decision belongs in a dialog that waits for it.",
 		"context": "nldd-notification",
 		"count": {
@@ -474,14 +473,9 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "optional-field-required",
-		"message": "Drop `required`, or `optional`: the field cannot be both.",
-		"context": "nldd-form-field[optional] > [required]"
-	},
-	{
-		"id": "page-footer-duplicate-id",
-		"message": "Another element already has id=\"page-footer\". Set a unique id on this instance so skip links target the right one.",
-		"context": "nldd-page-footer:state(duplicate-id)"
+		"id": "page-footer-goes-in-page",
+		"message": "nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.",
+		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section) nldd-page-footer"
 	},
 	{
 		"id": "page-footer-needs-slot",
@@ -489,12 +483,17 @@ export const devRules: DevRule[] = [
 		"context": "nldd-page > nldd-page-footer:not([slot=\"footer\"])"
 	},
 	{
-		"id": "page-second-h1",
+		"id": "page-footer-no-duplicate-id",
+		"message": "Another element already has id=\"page-footer\". Set a unique id on this instance so skip links target the right one.",
+		"context": "nldd-page-footer:state(duplicate-id)"
+	},
+	{
+		"id": "page-no-second-h1",
 		"message": "Keep one h1 on a page and make this title an h2.",
 		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero):has(nldd-title[heading-level=\"1\"], nldd-title > h1) ~ :is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero):has(nldd-title[heading-level=\"1\"], nldd-title > h1)"
 	},
 	{
-		"id": "page-second-main",
+		"id": "page-no-second-main",
 		"message": "A second page renders a main landmark, which a document may have only one of. Leave `landmarks` at \"auto\" on pages in a pane or an overlay, or set landmarks=\"region\" on the ones that are not the document's page.",
 		"context": "nldd-page:state(second-main)"
 	},
@@ -513,12 +512,12 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "popover-width-content-sized",
+		"id": "popover-width-invalid",
 		"message": "This `width` is not supported and is ignored: the popover is an inline-size query container, so its width cannot come from its own content. Give it a CSS length instead.",
 		"context": "nldd-popover:is([width=\"auto\"], [width=\"fit-content\"], [width=\"min-content\"], [width=\"max-content\"], [width^=\"fit-content(\"])"
 	},
 	{
-		"id": "progress-bar-segments-exceed-max",
+		"id": "progress-bar-segments-invalid",
 		"message": "The sum of the segment values exceeds `max`. Segments are normalized proportionally.",
 		"context": "nldd-progress-bar:state(exceeds-max)"
 	},
@@ -533,9 +532,14 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "row-more-than-one-control",
+		"id": "row-max-one-control",
 		"message": "A row is one control: keep one of `href`, `button`, `checkbox` and `radio`.",
 		"context": "nldd-list-item:is([href]:not([href=\"\"])[button], [href]:not([href=\"\"])[checkbox], [href]:not([href=\"\"])[radio], [button][checkbox], [button][radio], [checkbox][radio])"
+	},
+	{
+		"id": "row-no-control-around-segments",
+		"message": "Move the `href` or `button` to a segment: both together put a control in a control.",
+		"context": "nldd-list-item:is([href]:not([href=\"\"]), [button]):has(> nldd-list-item-segment)"
 	},
 	{
 		"id": "segmented-control-needs-name",
@@ -548,7 +552,7 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "segmented-control-required-not-enforced",
+		"id": "segmented-control-required-no-effect",
 		"message": "`required` on a checkbox group is announced but not enforced: HTML has no way to say \"at least one of these\", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.",
 		"context": "nldd-segmented-control[required]",
 		"report": "[type=\"checkbox\"]"
@@ -574,34 +578,39 @@ export const devRules: DevRule[] = [
 		"context": "nldd-sheet:state(unnamed)"
 	},
 	{
-		"id": "skip-link-no-target",
+		"id": "skip-link-needs-target",
 		"message": "No rendered element follows the skip link, so it has nothing to move focus to. Put the content it skips to right after it, or point `href` at the id of the target.",
 		"context": "nldd-skip-link:state(no-target)"
 	},
 	{
-		"id": "skip-link-target-not-focusable",
+		"id": "skip-link-target-needs-focusable",
 		"message": "The target did not take focus, so the skip link did nothing. It is probably hidden or inert.",
 		"context": "nldd-skip-link:state(target-not-focusable)"
 	},
 	{
-		"id": "split-view-no-main-page",
+		"id": "split-view-needs-main-page",
 		"message": "Set landmarks=\"page\" on the page in the pane with the main content, or the screen offers no main landmark or two.",
 		"context": "nldd-navigation-split-view:has(nldd-page)",
 		"assert": ":has(nldd-page[landmarks=\"page\"])",
 		"properties": []
 	},
 	{
-		"id": "status-bar-below-top-bar",
+		"id": "split-view-no-sheet",
+		"message": "Render nldd-sheet at the document root: inside a pane it is clipped by that pane.",
+		"context": "nldd-split-view-pane nldd-sheet"
+	},
+	{
+		"id": "status-bar-goes-above-top-bar",
 		"message": "The status bar sits below a top bar. It belongs above it, as the first thing on the screen.",
 		"context": "nldd-status-bar:state(below-top-bar)"
 	},
 	{
-		"id": "step-bar-current-moved",
+		"id": "step-bar-current-renamed",
 		"message": "`current` moved to the step. Set `status=\"current\"` on the current nldd-step-bar-item instead.",
 		"context": "nldd-step-bar[current]"
 	},
 	{
-		"id": "step-bar-one-current-step",
+		"id": "step-bar-max-one-current",
 		"message": "More than one step has `status=\"current\"`; the last one wins. Mark only the step you are on.",
 		"context": "nldd-step-bar",
 		"count": {
@@ -622,20 +631,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-step-cell:state(invalid-marker-offset)"
 	},
 	{
-		"id": "submenu-added-after-mount",
-		"message": "An nldd-menu child was added after mount. Submenu attachment is resolved once at firstUpdated, so this menu will not be treated as a submenu. Define the nldd-menu child before the item is connected to the DOM.",
-		"context": "nldd-menu-item:state(late-submenu)"
-	},
-	{
-		"id": "submit-button-needs-form",
-		"message": "Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.",
-		"context": "nldd-button[type=\"submit\"]",
-		"assert": "nldd-form *, form *, [form]:not([form=\"\"])",
-		"properties": [
-			"form"
-		]
-	},
-	{
 		"id": "switch-needs-name",
 		"message": "nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.",
 		"context": "nldd-switch",
@@ -643,6 +638,11 @@ export const devRules: DevRule[] = [
 		"properties": [
 			"accessibleLabel"
 		]
+	},
+	{
+		"id": "tab-bar-href-needs-navigation",
+		"message": "Tabs with `href` go to another page: add `navigation`, so the bar is a nav with aria-current=\"page\" instead of a tablist, and set `current` on the tab of the page you are on.",
+		"context": "nldd-tab-bar:not([navigation]):is(:has(nldd-tab-bar-item[href]:not([href=\"\"])), :state(link-tabs))"
 	},
 	{
 		"id": "tab-bar-item-selected-renamed",
@@ -668,6 +668,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "table-needs-empty-slot",
+		"message": "No rows and nothing in [slot=\"empty\"], so the table renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.",
+		"context": "nldd-table:state(empty):not(:has(> [slot=\"empty\"])), nldd-table:state(filtered):not(:has(> [slot=\"empty\"], > [slot=\"no-results\"]))"
+	},
+	{
 		"id": "table-needs-name",
 		"message": "nldd-table needs `accessible-label`: role=\"table\" takes its name from there.",
 		"context": "nldd-table",
@@ -675,16 +680,6 @@ export const devRules: DevRule[] = [
 		"properties": [
 			"accessibleLabel"
 		]
-	},
-	{
-		"id": "table-silent-empty",
-		"message": "No rows and nothing in [slot=\"empty\"], so the table renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.",
-		"context": "nldd-table:state(empty):not(:has(> [slot=\"empty\"])), nldd-table:state(filtered):not(:has(> [slot=\"empty\"], > [slot=\"no-results\"]))"
-	},
-	{
-		"id": "tabs-with-href-need-navigation",
-		"message": "Tabs with `href` go to another page: add `navigation`, so the bar is a nav with aria-current=\"page\" instead of a tablist, and set `current` on the tab of the page you are on.",
-		"context": "nldd-tab-bar:not([navigation]):is(:has(nldd-tab-bar-item[href]:not([href=\"\"])), :state(link-tabs))"
 	},
 	{
 		"id": "tag-icon-only-needs-name",
@@ -707,29 +702,29 @@ export const devRules: DevRule[] = [
 		"context": "nldd-task-board:state(invalid-move)"
 	},
 	{
+		"id": "text-editor-command-not-found",
+		"message": "runCommand() got a name that is not a command.",
+		"context": "nldd-text-editor:state(unknown-command)"
+	},
+	{
 		"id": "text-editor-typeahead-query-invalid",
 		"message": "The query of this typeahead is not a valid regular expression; the default is used.",
 		"context": "nldd-text-editor:state(invalid-typeahead-query)"
 	},
 	{
-		"id": "text-editor-unknown-command",
-		"message": "runCommand() got a name that is not a command.",
-		"context": "nldd-text-editor:state(unknown-command)"
-	},
-	{
-		"id": "text-field-keyboard-contradicts-type",
+		"id": "text-field-no-keyboard-with-type",
 		"message": "`keyboard` contradicts `type`, which already raises a keyboard of its own. Drop one of the two.",
 		"context": "nldd-text-field:state(keyboard-contradicts-type)"
-	},
-	{
-		"id": "title-custom-size-below-floor",
-		"message": "This custom size is smaller than size 1 at this breakpoint and shows as size 1. Use `size` for headings up to size 1.",
-		"context": "nldd-title:state(custom-size-below-floor)"
 	},
 	{
 		"id": "title-custom-size-invalid",
 		"message": "This is not a size the title can use, so it keeps its size from the scale at this breakpoint. Use a length such as \"96px\" or \"6rem\", not a keyword.",
 		"context": "nldd-title:state(invalid-custom-size)"
+	},
+	{
+		"id": "title-custom-size-no-effect",
+		"message": "This custom size is smaller than size 1 at this breakpoint and shows as size 1. Use `size` for headings up to size 1.",
+		"context": "nldd-title:state(custom-size-below-floor)"
 	},
 	{
 		"id": "title-subtitle-slot-renamed",
@@ -753,7 +748,7 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "toggle-button-group-required-not-enforced",
+		"id": "toggle-button-group-required-no-effect",
 		"message": "`required` on a checkbox group is announced but not enforced: HTML has no way to say \"at least one of these\", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.",
 		"context": "nldd-toggle-button-group[required]",
 		"report": ":not([type=\"radio\"], [type=\"button\"])"
@@ -778,7 +773,7 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "toolbar-control-own-size",
+		"id": "toolbar-control-no-own-size",
 		"message": "The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.",
 		"context": "nldd-toolbar:not([size=\"sm\"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size=\"sm\"], nldd-toolbar:not([size=\"lg\"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size=\"lg\"]"
 	},
@@ -790,19 +785,24 @@ export const devRules: DevRule[] = [
 		"properties": []
 	},
 	{
-		"id": "top-navigation-bar-same-href",
+		"id": "top-navigation-bar-no-same-href",
 		"message": "`logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.",
 		"context": "nldd-top-navigation-bar:state(same-href)"
 	},
 	{
-		"id": "top-title-bar-anchor-missing",
+		"id": "top-title-bar-anchor-not-found",
 		"message": "`collapse-anchor` matches nothing yet. If it never renders, the bar keeps its own title and reads it out twice.",
 		"context": "nldd-top-title-bar:state(no-anchor)"
 	},
 	{
-		"id": "validation-item-rule-and-unmet",
+		"id": "validation-item-rule-no-unmet",
 		"message": "This item has a rule of its own and is also named in `unmet`. The rule decides, and the name is ignored: it is a snapshot of the previous check and cannot be newer than the value. Drop it from `unmet`, or take the rule off the item.",
 		"context": "nldd-validation-list:state(rule-and-unmet)"
+	},
+	{
+		"id": "website-no-sticky-header",
+		"message": "A website lets its header scroll away: a fixed one takes room from the content.",
+		"context": "nldd-page[sticky-header]:has(nldd-top-navigation-bar)"
 	},
 	{
 		"id": "window-needs-name",

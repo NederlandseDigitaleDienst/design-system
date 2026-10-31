@@ -395,4 +395,4 @@ Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
-- `subpage-misses-breadcrumbs`: Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.
+- `subpage-needs-breadcrumbs`: Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.

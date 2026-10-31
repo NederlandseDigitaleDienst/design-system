@@ -55,6 +55,20 @@ function sourceFiles(directory) {
 	});
 }
 
+/** Things a rule can be about that are no single component. */
+const CONCEPTS = ['action', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'pane', 'row', 'section', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'website'];
+const NAME = /-(needs|no|max|goes)-|-(renamed|invalid|no-effect|not-found)$/;
+
+function checkName({ id }) {
+	const subjects = [...Object.keys(data.tags).map((tag) => tag.replace(/^nldd-/, '')), ...CONCEPTS];
+	if (!subjects.some((subject) => id.startsWith(`${subject}-`))) {
+		problems.push(`${id}: a name starts with what it is about, a tag without nldd- or one of ${CONCEPTS.join(', ')}.`);
+	}
+	if (!NAME.test(id)) {
+		problems.push(`${id}: a name says -needs-, -no-, -max- or -goes-, or ends in -renamed, -invalid, -no-effect or -not-found.`);
+	}
+}
+
 function checkSee(rule) {
 	if (!rule.see) return;
 	const [kind, slug] = rule.see.split('/');
@@ -147,6 +161,7 @@ for (const rule of data.rules) {
 	for (const selector of selectorsOf(rule)) {
 		for (const tokens of parse(selector)) checkTokens(tokens, rule);
 	}
+	checkName(rule);
 	checkSee(rule);
 	checkStates(rule);
 	if (!rule.runtime) await checkExamples(rule);

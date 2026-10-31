@@ -944,7 +944,7 @@ export const VermeldingenInEenOverlay = {
 				text="Notitie toevoegen"
 				@click=${open}
 			></nldd-button>
-			<!-- nldd-lint-disable-next-line modal-holds-a-form -- Tests the typeahead in a modal, next to the sheet that an app should use. -->
+			<!-- nldd-lint-disable-next-line modal-dialog-no-form -- Tests the typeahead in a modal, next to the sheet that an app should use. -->
 			<nldd-modal-dialog accessible-label="Notitie">
 				<nldd-text-editor
 					rows="6"

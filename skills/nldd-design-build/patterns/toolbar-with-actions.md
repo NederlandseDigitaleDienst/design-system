@@ -136,13 +136,13 @@ Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerd
 
 `nldd lint` controleert dit:
 
-- `toolbar-control-own-size`: The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.
+- `toolbar-control-no-own-size`: The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.
 - `toolbar-item-needs-overflow`: Give this item an alternative in `slot="overflow"`: on a narrow screen it moves to the overflow menu, and without one it is gone.
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
-- `primary-action-needs-priority`: Give the primary action the highest `priority`, so it is the last to move to the overflow.
-- `second-toolbar-needs-name`: Give each toolbar an `accessible-label` when a page has more than one.
 - `tab-bar-needs-priority`: Give the tab bar a high `priority`, so it is the last to move to the overflow.
 - `tab-bar-overflow-needs-radio-group`: Give the tab bar an nldd-menu-group in `slot="overflow"`, with a type="radio" item per tab.
-- `toolbar-one-action`: Use a plain button for a single action.
+- `toolbar-needs-two-actions`: Use a plain button for a single action.
+- `toolbar-primary-needs-priority`: Give the primary action the highest `priority`, so it is the last to move to the overflow.
+- `toolbar-second-needs-name`: Give each toolbar an `accessible-label` when a page has more than one.

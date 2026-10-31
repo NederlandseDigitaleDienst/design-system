@@ -2,6 +2,33 @@
 
 import { readFileSync } from 'node:fs';
 
+/** What a rule is about. The first that fits, top to bottom, is the group of a rule. */
+export const GROUPS = ['api', 'a11y', 'copy', 'structure', 'pattern'];
+
+/**
+ * Turns config keys and --select and --ignore into a level per rule. A key is a
+ * group or a rule, and a rule beats its group whatever the order.
+ */
+export function resolveSeverities(data, levels = {}, { select, ignore } = {}) {
+	const groupOf = new Map([
+		...Object.keys(BUILT_IN_RULES).map((id) => [id, 'api']),
+		...data.rules.map((rule) => [rule.id, rule.group]),
+	]);
+	const canonical = createCanonical(data);
+	const matches = (id, keys) => keys.some((key) => key === groupOf.get(id) || canonical(key) === id);
+	const severities = Object.fromEntries(
+		Object.entries(levels)
+			.filter(([key]) => !GROUPS.includes(key))
+			.map(([key, level]) => [canonical(key), level]),
+	);
+	for (const [id, group] of groupOf) {
+		if (!severities[id] && levels[group]) severities[id] = levels[group];
+		if (select?.length && !matches(id, select)) severities[id] = 'off';
+		if (ignore?.length && matches(id, ignore)) severities[id] = 'off';
+	}
+	return severities;
+}
+
 export function loadData() {
 	return JSON.parse(readFileSync(new URL('./data.generated.json', import.meta.url), 'utf8'));
 }
