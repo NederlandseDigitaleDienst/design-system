@@ -11,7 +11,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
 
-const EXTENSIONS = new Set(['.html', '.htm', '.vue', '.jsx', '.tsx']);
+const EXTENSIONS = new Set(['.html', '.htm', '.j2', '.jinja', '.jinja2', '.vue', '.jsx', '.tsx']);
 
 function findProject(file) {
 	let directory = dirname(file);

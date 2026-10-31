@@ -6,7 +6,7 @@ import { extname, join, relative, resolve } from 'node:path';
 
 const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
-const DEFAULT_EXTENSIONS = ['.html', '.htm', '.vue', '.jsx', '.tsx'];
+const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.vue', '.jsx', '.tsx'];
 
 function walkDirectory(directory, found) {
 	for (const entry of readdirSync(directory, { withFileTypes: true })) {

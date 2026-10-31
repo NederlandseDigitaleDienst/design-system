@@ -13,7 +13,7 @@ export { BUILT_IN_RULES, createCanonical, loadData };
 
 /** Valid on any element, so the manifest does not list them per component. */
 const GLOBAL_ATTRIBUTE =
-	/^(id|class|style|slot|hidden|lang|dir|title|role|tabindex|part|inert|draggable|contenteditable|spellcheck|translate|accesskey|autofocus|enterkeyhint|inputmode|is|nonce|popover|key|ref|exportparts|item(prop|scope|type|id|ref)|i18n(-.*)?|data-.*|aria-.*|on(?!ly$)[a-z]+)$/;
+	/^(id|class|style|slot|hidden|lang|dir|title|role|tabindex|part|inert|draggable|contenteditable|spellcheck|translate|accesskey|autofocus|enterkeyhint|inputmode|is|nonce|popover|key|ref|exportparts|item(prop|scope|type|id|ref)|i18n(-.*)?|data-.*|aria-.*|hx-.*|on(?!ly$)[a-z]+)$/;
 
 const ICON_ATTRIBUTES = new Set(['icon', 'start-icon', 'end-icon', 'selected-icon']);
 

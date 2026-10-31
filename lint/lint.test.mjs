@@ -528,6 +528,59 @@ describe('Lit in a .ts file', () => {
 	});
 });
 
+describe('Jinja and Django', () => {
+	const rulesIn = async (source, file = 'a.html.j2') => {
+		const { findings } = await createLinter(loadData()).lintSource(source, file);
+		return findings.filter(({ severity }) => severity !== 'hint').map(({ rule, line }) => [rule, line]);
+	};
+
+	it('reads a tag with a block right behind its name', async () => {
+		const source = '<nldd-form-field{% if a %} hidden{% endif %}><nldd-text-field></nldd-text-field></nldd-form-field>';
+		const field = first(parseHtml(source), 'nldd-text-field');
+		assert.equal(field.parent.name, 'nldd-form-field');
+		assert.deepEqual(await rulesIn(source), []);
+	});
+
+	it('does not know what a block in a tag sets', async () => {
+		assert.deepEqual(await rulesIn('<nldd-tab-bar {% if a %}accessible-label="b"{% endif %}></nldd-tab-bar>'), []);
+	});
+
+	it('reads a value with quotes of its own as bound', async () => {
+		assert.deepEqual(await rulesIn(`<nldd-tab-bar accessible-label="{{ a["b"] }}"></nldd-tab-bar>`), []);
+		assert.deepEqual(await rulesIn(`<nldd-tab-bar accessible-label="{% trans "Tabs" %}"></nldd-tab-bar>`), []);
+	});
+
+	it('reads an expression loose in a tag as a spread', async () => {
+		assert.deepEqual(await rulesIn('<nldd-tab-bar {{ attrs.as_html }}></nldd-tab-bar>'), []);
+	});
+
+	it('skips a comment', async () => {
+		assert.deepEqual(await rulesIn('{# <nldd-tab-bar></nldd-tab-bar> #}'), []);
+	});
+
+	it('is not fooled by a comparison between the tags', async () => {
+		assert.deepEqual(await rulesIn('{% if a <b %}<nldd-tab-bar></nldd-tab-bar>{% endif %}'), [['tab-bar-needs-name', 1]]);
+	});
+
+	it('still finds a fault on its own line, also in .html', async () => {
+		const source = '{% set a = 1 %}\n<nldd-tab-bar></nldd-tab-bar>';
+		assert.deepEqual(await rulesIn(source), [['tab-bar-needs-name', 2]]);
+		assert.deepEqual(await rulesIn(source, 'a.html'), [['tab-bar-needs-name', 2]]);
+	});
+
+	it('leaves htmx alone', async () => {
+		assert.deepEqual(await rulesIn('<nldd-button text="a" hx-get="/b" hx-swap="innerHTML"></nldd-button>', 'a.html'), []);
+	});
+});
+
+describe('sections on v-show', () => {
+	it('does not count the tabs that are not showing', async () => {
+		const section = '<nldd-simple-section v-show="a"><nldd-title heading-level="1" text="B"></nldd-title></nldd-simple-section>';
+		const { findings } = await createLinter(loadData()).lintSource(`<template>${section}${section}</template>`, 'a.vue');
+		assert.equal(findings.some(({ rule }) => rule === 'page-no-second-h1'), false);
+	});
+});
+
 describe('groups', () => {
 	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
 	const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });

@@ -25,14 +25,15 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 | Regels voor een component, vóór je het gebruikt | `npx @nldd/design-system rules --for nldd-toolbar` |
 | Eén soort regels | `... lint --select a11y` of `--ignore copy`; groepen: `api`, `a11y`, `copy`, `structure`, `pattern` |
 | Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
-| Een site die naar HTML bouwt (Astro, MkDocs, Hugo, Django) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
+| Vue, React, Angular, Django, Jinja, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.html` en `.j2` |
+| Een site die naar HTML bouwt (Astro, MkDocs, Hugo) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
 | Zien wat een upgrade breekt | `npx @nldd/design-system@latest lint` op je huidige code |
 
 Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @nldd/design-system@<versie> lint`. Zonder pin krijg je de nieuwste.
 
 ## Wat hij niet ziet
 
-In broncode meldt hij alleen wat zeker fout is, per bestand. Een waarde die pas tijdens het draaien bestaat, of een kind uit een ander component, blijft buiten beeld. Tijdens het ontwikkelen vangt de browser dat op: dezelfde regels staan dan als `[nldd] ...` in de console.
+In broncode meldt hij alleen wat zeker fout is, per bestand. Een waarde die pas tijdens het draaien bestaat, of een kind uit een ander component, blijft buiten beeld. Met Vite vangt de browser dat tijdens het ontwikkelen op: dezelfde regels staan dan als `[nldd] ...` in de console. Angular en server-rendered apps hebben die laag niet; lint daar ook de HTML die ze opleveren, als je die hebt. Een `<nldd-*>` in een string in `.js`, `.ts` of `.py`, zoals een inline Angular-template, leest hij alleen in die HTML.
 
 Geen meldingen betekent dus niet dat het goed is. Bedoeling, koppenstructuur en de opbouw van een pagina beoordeel je zelf, met de patronen in [`nldd-design-build`](../nldd-design-build/SKILL.md).
 
@@ -54,7 +55,7 @@ npx @nldd/design-system lint --update-baseline   # accepteer wat er staat; commi
 
 | Plek | Hoe |
 |---|---|
-| lint-staged | `{ "*.{html,vue,tsx}": "nldd lint" }` |
+| lint-staged | `{ "*.{html,j2,vue,tsx}": "nldd lint" }` |
 | CI | `npx @nldd/design-system lint --format github` |
 | pre-commit | Zie hieronder |
 
@@ -66,7 +67,7 @@ npx @nldd/design-system lint --update-baseline   # accepteer wat er staat; commi
       entry: nldd lint
       language: node
       additional_dependencies: ['@nldd/design-system@<versie>']
-      files: \.(html|vue|tsx|jsx)$
+      files: \.(html|j2|vue|tsx|jsx)$
 ```
 
 Configuratie is zelden nodig. Zo nodig, in `.nldd-lint.json`:

@@ -176,9 +176,11 @@ Dezelfde regels draaien op drie plekken:
 
 | Waar | Wat het ziet |
 |------|--------------|
-| Bron (`.vue`, `.tsx`, `.html`) | Vóór de commit, per bestand, alleen wat zeker fout is |
-| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Daarom leest de linter geen `.astro` of Jinja |
-| Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen |
+| Bron (`.vue`, `.tsx`, `.jsx`, `.html`, `.j2`, ook Angular, Django en htmx) | Vóór de commit, per bestand, alleen wat zeker fout is |
+| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Daarom leest de linter geen `.astro`: dat loopt via zijn output |
+| Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen. Alleen met een bundler die `import.meta.env.DEV` zet, zoals Vite; Angular en server-rendered apps hebben de eerste twee rijen |
+
+Wat een template in een tag schrijft (`{% if %}`, `{{ attrs }}`, `*ngIf`) maakt het element onzeker, nooit fout. Wijzig je de parser, draai dan `npm run lint:corpus` op elk soort consument uit de README: Vue, TSX, Angular, Jinja en gewone HTML.
 
 Een component geeft wat niet in de markup staat door met `setState`, alleen in dev. De browser krijgt de regels als gewone CSS in `src/utilities/dev-rules.generated.ts` en evalueert ze met `el.matches()`. Elke regel is een selector. Wat niet in de markup staat, stelt een component beschikbaar als feit met `setState(this, 'feit', conditie)`, een CSS custom state; de regel leest die met `:state(feit)` en krijgt `runtime: true`. Het feit beschrijft wat er is, nooit de fout: `no-width`, `invalid-max-height`. Een component bevat geen meldingstekst en weet niets van regels: `lint:rules` faalt op `console.warn` en op een state die niets zet. Een attribuut in een `assert` geldt in de browser ook als de property is gezet, want een selector ziet die niet. Een `[x]` in een selector betekent "heeft een waarde", behalve bij booleans.
 

@@ -13,11 +13,11 @@ import { compile } from 'css-select';
 import { parse } from 'css-what';
 import { BOUND, adapter, walk } from './tree.js';
 
-/** In W+ a sibling behind a condition might not render, as with `v-if` and `v-else`. */
+/** In W+ a sibling behind a condition might not show, as with `v-if`, `v-else` and tabs on `v-show`. */
 const favorableAdapter = {
 	...adapter,
 	getSiblings: (node) =>
-		adapter.getSiblings(node).filter((each) => each === node || (!each.conditional && !each.repeated)),
+		adapter.getSiblings(node).filter((each) => each === node || (!each.conditional && !each.repeated && !each.toggled)),
 };
 
 const BUILT_IN_PSEUDOS = new Set(['is', 'not', 'has', 'where', 'matches']);

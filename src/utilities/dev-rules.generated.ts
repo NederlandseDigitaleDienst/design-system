@@ -356,7 +356,7 @@ export const devRules: DevRule[] = [
 		"id": "list-item-no-other-children",
 		"message": "A row takes cells and segments. Anything else sits outside its layout.",
 		"context": "nldd-list-item",
-		"report": ":has(> :not([slot], :is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell), nldd-list-item-segment))"
+		"report": ":has(> :not([slot], :is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell), nldd-list-item-segment, input[type=\"hidden\"]))"
 	},
 	{
 		"id": "list-item-segment-disclosure-needs-button",

@@ -118,9 +118,69 @@ function parseMarkup(source, { selfClosing }) {
 	});
 }
 
+const OPENS_BLOCK = /^\{%-?\s*(if|for|with|block|macro|call|filter|autoescape|trans|blocktrans)\b/;
+const CLOSES_BLOCK = /^\{%-?\s*end/;
+
+/** Same length, so positions stay right. */
+const blank = (text) => text.replace(/[^\n]/g, ' ');
+
+/**
+ * Jinja and Django write into a tag, where an HTML parser reads them as markup:
+ * `<nldd-field{% if x %} hidden{% endif %}>` would be a tag called `nldd-field{%`.
+ * Between the quotes of a value this leaves something that reads as bound. Loose
+ * in a tag it leaves a name that cannot be an attribute, so the element counts as
+ * spread, and a whole `{% if %}` block goes: what is in it may not be there.
+ */
+function quietTemplateTags(source) {
+	const text = source.replace(/\{#[\s\S]*?#\}/g, blank);
+	let out = '';
+	let at = 0;
+	let inTag = false;
+	let quote = '';
+	let depth = 0;
+	while (at < text.length) {
+		const close = text.startsWith('{%', at) ? '%}' : text.startsWith('{{', at) ? '}}' : '';
+		const end = close ? text.indexOf(close, at) : -1;
+		if (end !== -1) {
+			const piece = text.slice(at, end + 2);
+			if (!inTag) out += piece.replace(/[<>]/g, ' ');
+			else if (quote) out += `{{${'x'.repeat(piece.length - 4)}}}`;
+			else {
+				if (close === '%}' && OPENS_BLOCK.test(piece)) depth += 1;
+				if (close === '%}' && CLOSES_BLOCK.test(piece)) depth = Math.max(0, depth - 1);
+				out += ' {%%}'.slice(0, piece.length).padEnd(piece.length);
+			}
+			at = end + 2;
+			continue;
+		}
+		const char = text[at];
+		if (!inTag) {
+			const raw = char === '<' && /^<(script|style)[\s>]/i.exec(text.slice(at, at + 8));
+			const skip = raw ? text.toLowerCase().indexOf(`</${raw[1].toLowerCase()}`, at) : text.startsWith('<!--', at) ? text.indexOf('-->', at) : -1;
+			if (skip !== -1) {
+				out += text.slice(at, skip);
+				at = skip;
+				continue;
+			}
+			inTag = char === '<' && /[a-zA-Z]/.test(text[at + 1] ?? '');
+		} else if (quote) {
+			if (char === quote) quote = '';
+		} else if (char === '"' || char === "'") {
+			quote = char;
+		} else if (char === '>') {
+			inTag = false;
+			depth = 0;
+		}
+		out += depth > 0 && inTag && char !== '\n' ? ' ' : char;
+		at += 1;
+	}
+	return out;
+}
+
 export function parseHtml(source) {
 	const root = createRoot({ closed: /<html[\s>]/i.test(source) });
-	readHtmlChildren(parseMarkup(source, { selfClosing: ANGULAR.test(source) }).children, root, { inert: true });
+	const text = /\{[%{#]/.test(source) ? quietTemplateTags(source) : source;
+	readHtmlChildren(parseMarkup(text, { selfClosing: ANGULAR.test(source) }).children, root, { inert: true });
 	return [root];
 }
 
@@ -387,6 +447,9 @@ export function applyWrappers(roots, wrappers) {
 const PARSERS = {
 	'.html': parseHtml,
 	'.htm': parseHtml,
+	'.j2': parseHtml,
+	'.jinja': parseHtml,
+	'.jinja2': parseHtml,
 	'.vue': parseVue,
 	'.md': parseMarkdown,
 	'.jsx': parseJsx,
