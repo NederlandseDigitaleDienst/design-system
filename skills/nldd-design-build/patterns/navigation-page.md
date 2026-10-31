@@ -436,7 +436,7 @@ De pagina [Over deze website](https://digitaledienst.overheid.nl/over/) van de N
 
 `nldd lint` controleert dit:
 
-- `card-link-needs-name`: A card that is a link or button needs `accessible-label`: the control has no text of its own.
+- `card-clickable-needs-name`: A card that is a link or button needs `accessible-label`: the control has no text of its own.
 
 Hints: zo is het bedoeld. Die laten niets falen.
 

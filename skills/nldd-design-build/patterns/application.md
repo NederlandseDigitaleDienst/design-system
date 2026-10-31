@@ -603,4 +603,4 @@ Hints: zo is het bedoeld. Die laten niets falen.
 - `pane-title-bar-needs-level`: Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
 - `toolbar-bottom-goes-after-main`: Put the bar with only="sm" after slot="main" in the HTML: on a phone it belongs at the bottom, within reach of a thumb.
 - `toolbar-bottom-needs-large`: Set size="lg" on the bottom bar, which puts the labels under the icons and makes the actions fit next to the sections.
-- `toolbar-main-needs-container`: Put the toolbar in an nldd-container with padding: the bar split view sets none itself.
+- `toolbar-in-pane-needs-container`: Put the toolbar in an nldd-container with padding: the bar split view sets none itself.

@@ -56,16 +56,20 @@ function sourceFiles(directory) {
 }
 
 /** Things a rule can be about that are no single component. */
-const CONCEPTS = ['action', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'pane', 'row', 'section', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'website'];
-const NAME = /-(needs|no|max|goes)-|-(renamed|invalid|no-effect|not-found)$/;
+const CONCEPTS = ['action', 'back-link', 'download', 'editor', 'filter', 'hide', 'label', 'language', 'login', 'logout', 'navigation', 'pane', 'row', 'section', 'split-view', 'status-bar', 'status-dot', 'subpage', 'toc', 'website'];
+const FORM = /-(needs|no|max|goes)-/;
+const API_ENDING = /-(renamed|invalid|no-effect|not-found)$/;
 
-function checkName({ id }) {
+function checkName({ id, group }) {
 	const subjects = [...Object.keys(data.tags).map((tag) => tag.replace(/^nldd-/, '')), ...CONCEPTS];
 	if (!subjects.some((subject) => id.startsWith(`${subject}-`))) {
 		problems.push(`${id}: a name starts with what it is about, a tag without nldd- or one of ${CONCEPTS.join(', ')}.`);
 	}
-	if (!NAME.test(id)) {
-		problems.push(`${id}: a name says -needs-, -no-, -max- or -goes-, or ends in -renamed, -invalid, -no-effect or -not-found.`);
+	if (group === 'api' && !API_ENDING.test(id)) {
+		problems.push(`${id}: a name in api ends in -renamed, -invalid, -no-effect or -not-found.`);
+	}
+	if (group !== 'api' && (!FORM.test(id) || API_ENDING.test(id))) {
+		problems.push(`${id}: a name says -needs-, -no-, -max- or -goes-, and only a name in api ends in -renamed, -invalid, -no-effect or -not-found.`);
 	}
 }
 

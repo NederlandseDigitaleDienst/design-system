@@ -344,7 +344,7 @@ De meest voorkomende compositie op dit systeem, in elk onderzocht product en in 
 - `list-item-segment-expanded-no-effect`: `disclosure` takes aria-expanded from the row, so the `expanded` on this action is ignored. Drop one of the two.
 - `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
 - `list-item-segment-no-control-in-listbox`: A segment in a type="listbox" list renders as a plain container: an `option` may not contain interactive descendants. Move the segment out of the listbox, or drive selection from the option itself.
-- `list-reorderable-needs-list-type`: `reorderable` is only valid when type="list", and is ignored here.
+- `list-reorderable-no-effect`: `reorderable` is only valid when type="list", and is ignored here.
 - `row-max-one-control`: A row is one control: keep one of `href`, `button`, `checkbox` and `radio`.
 - `row-no-control-around-segments`: Move the `href` or `button` to a segment: both together put a control in a control.
 

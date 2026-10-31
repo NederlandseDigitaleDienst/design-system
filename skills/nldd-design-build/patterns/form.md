@@ -129,10 +129,10 @@ Een form field met een invoerveld erin is een van de meest voorkomende compositi
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
-- `action-exit-no-next-to-primary`: Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.
+- `action-exit-goes-away-from-primary`: Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.
 - `form-action-goes-in-form-actions`: Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.
 - `form-field-no-manual-for-id`: Drop this: nldd-form-field finds the input among its children and connects the label, the rules and the help text itself.
 - `form-field-no-marker-in-label`: Set `optional` on the fields that may stay empty, which shows the badge, and write no marker in the label.
 - `form-field-no-own-label-alignment`: Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
-- `form-no-title`: Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
+- `form-title-goes-in-form-section`: Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.
 - `text-field-needs-type`: Set the `type` that fits, `email` or `tel`, which brings the right keyboard and validation.

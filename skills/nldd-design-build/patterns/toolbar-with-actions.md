@@ -136,7 +136,7 @@ Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerd
 
 `nldd lint` controleert dit:
 
-- `toolbar-control-no-own-size`: The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.
+- `toolbar-control-size-no-effect`: The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.
 - `toolbar-item-needs-overflow`: Give this item an alternative in `slot="overflow"`: on a narrow screen it moves to the overflow menu, and without one it is gone.
 
 Hints: zo is het bedoeld. Die laten niets falen.

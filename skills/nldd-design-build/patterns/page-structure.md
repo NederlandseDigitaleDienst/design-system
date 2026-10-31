@@ -785,14 +785,15 @@ Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagi
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
-- `avatar-in-account-needs-decorative`: Set `decorative`: the name and the text of the item are already there.
-- `avatar-in-account-needs-icon-aligned`: Set `icon-aligned` and color="inherit", so the avatar lines up with the icons next to it and takes their color.
+- `avatar-in-menu-bar-needs-decorative`: Set `decorative`: the name and the text of the item are already there.
+- `avatar-in-menu-bar-needs-icon-aligned`: Set `icon-aligned` and color="inherit", so the avatar lines up with the icons next to it and takes their color.
+- `back-link-no-vague-text`: Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.
 - `breadcrumbs-goes-in-footer`: Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
-- `link-no-vague-about`: Call it "Over deze website": "Over" could just as well be about the organization.
 - `login-link-needs-full-verb`: A link to the login screen does not log in itself, so use the full verb: "Inloggen".
 - `logout-no-link`: Make it a button: logging out happens at once.
 - `page-content-goes-in-section`: Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-needs-privacy-link`: Add a direct link "Privacy": European privacy regulators ask for one on every page.
+- `page-footer-no-vague-about`: Call it "Over deze website": "Over" could just as well be about the organization.
 - `page-needs-shell`: Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `section-no-own-background`: Use `background` on the section: it cascades the surface to what is inside it.
 - `section-no-own-columns`: Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.
@@ -800,4 +801,3 @@ Hints: zo is het bedoeld. Die laten niets falen.
 - `title-needs-level`: Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 - `top-navigation-bar-max-three-items`: Keep the bar to search, language and account: the pages together are the navigation.
 - `top-navigation-bar-utility-needs-priority`: Set content-priority="text", so "Zoeken" and "NL" stay readable on a narrow screen.
-- `top-title-bar-no-vague-back-text`: Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.

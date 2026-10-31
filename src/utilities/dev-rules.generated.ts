@@ -52,12 +52,12 @@ export const devRules: DevRule[] = [
 		"context": "nldd-button:state(no-form-target)"
 	},
 	{
-		"id": "button-group-button-no-own-size",
+		"id": "button-group-button-size-no-effect",
 		"message": "A button has a size of its own, but the group sets its `size` on all its buttons. Set the size on the group.",
 		"context": "nldd-button-group:state(own-size-overwritten)"
 	},
 	{
-		"id": "button-group-max-three",
+		"id": "button-group-max-three-buttons",
 		"message": "nldd-button-group holds three buttons at most; the rest are hidden.",
 		"context": "nldd-button-group",
 		"count": {
@@ -90,7 +90,7 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "card-link-needs-name",
+		"id": "card-clickable-needs-name",
 		"message": "A card that is a link or button needs `accessible-label`: the control has no text of its own.",
 		"context": "nldd-card:is([href]:not([href=\"\"]), [button])",
 		"assert": "[accessible-label]:not([accessible-label=\"\"])",
@@ -104,14 +104,14 @@ export const devRules: DevRule[] = [
 		"context": "nldd-code-viewer:state(diff-lines-dropped)"
 	},
 	{
-		"id": "code-viewer-diff-needs-merge-package",
-		"message": "The word marks of a diff need @codemirror/merge, which did not load, so the diff shows without them.",
-		"context": "nldd-code-viewer:state(no-diff-words)"
-	},
-	{
 		"id": "code-viewer-max-height-invalid",
 		"message": "`max-height` is not a CSS length, so it is ignored. Give it a unit, such as \"400px\" or \"50vh\".",
 		"context": "nldd-code-viewer:state(invalid-max-height)"
+	},
+	{
+		"id": "code-viewer-merge-package-not-found",
+		"message": "The word marks of a diff need @codemirror/merge, which did not load, so the diff shows without them.",
+		"context": "nldd-code-viewer:state(no-diff-words)"
 	},
 	{
 		"id": "collection-item-width-renamed",
@@ -399,7 +399,7 @@ export const devRules: DevRule[] = [
 		"context": "nldd-list:state(filtered):not(:has(> [slot=\"empty\"], > [slot=\"no-results\"]))"
 	},
 	{
-		"id": "list-reorderable-needs-list-type",
+		"id": "list-reorderable-no-effect",
 		"message": "`reorderable` is only valid when type=\"list\", and is ignored here.",
 		"context": "nldd-list[reorderable]",
 		"report": "[type]:not([type=\"\"]):not([type=\"list\"])"
@@ -619,7 +619,7 @@ export const devRules: DevRule[] = [
 		}
 	},
 	{
-		"id": "step-cell-content-needs-wide-dot",
+		"id": "step-cell-content-no-effect",
 		"message": "`text` and `icon` only fit in a full dot on a wide track (`size=\"md\"` with `level=\"major\"`); they are not shown here.",
 		"context": "nldd-step-cell:is([text]:not([text=\"\"]), [icon]:not([icon=\"\"]))",
 		"assert": "[size=\"md\"]:not([level=\"minor\"], [level=\"none\"])",
@@ -754,7 +754,7 @@ export const devRules: DevRule[] = [
 		"report": ":not([type=\"radio\"], [type=\"button\"])"
 	},
 	{
-		"id": "toggle-button-icon-needs-icon",
+		"id": "toggle-button-icon-variant-needs-icon",
 		"message": "nldd-toggle-button with variant=\"icon\" has no `icon` and no slot=\"icon\" content, so a placeholder icon is shown.",
 		"context": "nldd-toggle-button[variant=\"icon\"]",
 		"assert": "[icon]:not([icon=\"\"]), :has(> [slot=\"icon\"])",
@@ -773,7 +773,7 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "toolbar-control-no-own-size",
+		"id": "toolbar-control-size-no-effect",
 		"message": "The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.",
 		"context": "nldd-toolbar:not([size=\"sm\"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size=\"sm\"], nldd-toolbar:not([size=\"lg\"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size=\"lg\"]"
 	},
@@ -795,7 +795,7 @@ export const devRules: DevRule[] = [
 		"context": "nldd-top-title-bar:state(no-anchor)"
 	},
 	{
-		"id": "validation-item-rule-no-unmet",
+		"id": "validation-item-unmet-no-effect",
 		"message": "This item has a rule of its own and is also named in `unmet`. The rule decides, and the name is ignored: it is a snapshot of the previous check and cannot be newer than the value. Drop it from `unmet`, or take the rule off the item.",
 		"context": "nldd-validation-list:state(rule-and-unmet)"
 	},

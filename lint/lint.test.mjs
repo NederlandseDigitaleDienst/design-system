@@ -255,7 +255,7 @@ describe('found in review', () => {
 	it('still counts what certainly renders next to a v-for', async () => {
 		const four = '<nldd-button text="a"></nldd-button>'.repeat(4);
 		const repeated = '<nldd-button v-for="x in y" text="b"></nldd-button>';
-		assert.ok((await rulesIn(vue(`<nldd-button-group>${four}${repeated}</nldd-button-group>`))).includes('button-group-max-three'));
+		assert.ok((await rulesIn(vue(`<nldd-button-group>${four}${repeated}</nldd-button-group>`))).includes('button-group-max-three-buttons'));
 	});
 
 	it('allows a toggle button group in a button bar', async () => {
