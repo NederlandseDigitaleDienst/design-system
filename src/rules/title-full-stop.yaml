@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-title[text$="."]'
+message: 'Drop the full stop: a heading has none, also when it is a sentence.'
+see: ontwerprichtlijnen/copywriting
+examples:
+  passed: ['<nldd-title text="De beoordeling duurt zes weken"></nldd-title>']
+  failed: ['<nldd-title text="De beoordeling duurt zes weken."></nldd-title>']

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-bar-split-view > nldd-split-view-pane > nldd-toolbar'
+message: 'Put the toolbar in an nldd-container with padding: the bar split view sets none itself.'
+see: patronen/application
+examples:
+  passed: ['<nldd-bar-split-view><nldd-split-view-pane slot="toolbar"><nldd-container padding="8"><nldd-toolbar></nldd-toolbar></nldd-container></nldd-split-view-pane></nldd-bar-split-view>']
+  failed: ['<nldd-bar-split-view><nldd-split-view-pane slot="toolbar"><nldd-toolbar></nldd-toolbar></nldd-split-view-pane></nldd-bar-split-view>']

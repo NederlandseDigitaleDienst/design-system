@@ -80,12 +80,13 @@ export function rewriteLink(target, { patterns, tags }) {
 }
 
 function renderRules(rules) {
+	const line = (rule) => `- \`${rule.id}\`: ${rule.message}`;
+	const required = rules.filter((rule) => rule.severity !== 'hint');
+	const hints = rules.filter((rule) => rule.severity === 'hint');
 	return [
 		'## Regels',
-		'',
-		'`nldd lint` controleert dit:',
-		'',
-		...rules.map((rule) => `- \`${rule.id}\`: ${rule.message}`),
+		...(required.length ? ['', '`nldd lint` controleert dit:', '', ...required.map(line)] : []),
+		...(hints.length ? ['', 'Hints: zo is het bedoeld. Die laten niets falen.', '', ...hints.map(line)] : []),
 	];
 }
 

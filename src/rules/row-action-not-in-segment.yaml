@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-list:not([type="form"]) nldd-list-item > nldd-cell > nldd-icon-button'
+message: 'Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment button accessible-label="Acties voor Dossier D-318"><nldd-icon-cell icon="more"></nldd-icon-cell></nldd-list-item-segment></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-cell><nldd-icon-button icon="more" text="Acties"></nldd-icon-button></nldd-cell></nldd-list-item></nldd-list>']

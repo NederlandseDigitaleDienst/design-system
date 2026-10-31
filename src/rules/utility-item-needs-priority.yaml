@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-top-navigation-bar > nldd-menu-bar > nldd-menu-bar-item[icon]:not([content-priority], [icon-only])'
+message: 'Set content-priority="text", so "Zoeken" and "NL" stay readable on a narrow screen.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-top-navigation-bar website-title="Mijn Dienst"><nldd-menu-bar slot="utility"><nldd-menu-bar-item text="Zoeken" icon="magnifier" content-priority="text"></nldd-menu-bar-item></nldd-menu-bar></nldd-top-navigation-bar>']
+  failed: ['<nldd-top-navigation-bar website-title="Mijn Dienst"><nldd-menu-bar slot="utility"><nldd-menu-bar-item text="Zoeken" icon="magnifier"></nldd-menu-bar-item></nldd-menu-bar></nldd-top-navigation-bar>']

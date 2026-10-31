@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-tag + nldd-title'
+message: 'Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.'
+see: ontwerprichtlijnen/navigatie-en-structuur
+examples:
+  passed: ['<nldd-title text="Aanvraag A-1042"></nldd-title><nldd-tag text="In behandeling"></nldd-tag>']
+  failed: ['<nldd-tag text="In behandeling"></nldd-tag><nldd-title text="Aanvraag A-1042"></nldd-title>']

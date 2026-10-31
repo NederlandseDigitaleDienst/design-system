@@ -776,5 +776,28 @@ Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagi
 
 `nldd lint` controleert dit:
 
+- `language-item-needs-name`: Set an `accessible-label` such as "Taal: Nederlands (NL)": a screen reader otherwise spells out the letters.
+- `language-name-needs-lang`: Set `lang`, so a screen reader pronounces the name in that language.
 - `no-page-footer-in-section`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
 - `no-sticky-header-on-website`: A website lets its header scroll away: a fixed one takes room from the content.
+- `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
+- `page-second-h1`: Keep one h1 on a page and make this title an h2.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `about-link-too-vague`: Call it "Over deze website": "Over" could just as well be about the organization.
+- `account-avatar-needs-decorative`: Set `decorative`: the name and the text of the item are already there.
+- `account-avatar-not-aligned`: Set `icon-aligned` and color="inherit", so the avatar lines up with the icons next to it and takes their color.
+- `back-text-too-vague`: Name the page it goes to, such as "Aanvragen": it goes up a level, not back to where someone came from.
+- `breadcrumbs-not-in-footer`: Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.
+- `content-outside-section`: Put this in a section, such as nldd-simple-section, which sets the width and the white space.
+- `legal-bar-misses-privacy`: Add a direct link "Privacy": European privacy regulators ask for one on every page.
+- `login-link-imperative`: A link to the login screen does not log in itself, so use the full verb: "Inloggen".
+- `logout-is-a-link`: Make it a button: logging out happens at once.
+- `page-in-shell`: Put nldd-shell around it: the shell sets the background and decides who scrolls.
+- `section-own-background`: Use `background` on the section: it cascades the surface to what is inside it.
+- `section-own-columns`: Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.
+- `skip-link-not-around-header`: Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
+- `title-needs-level`: Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
+- `top-bar-at-most-three-items`: Keep the bar to search, language and account: the pages together are the navigation.
+- `utility-item-needs-priority`: Set content-priority="text", so "Zoeken" and "NL" stay readable on a narrow screen.

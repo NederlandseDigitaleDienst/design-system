@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-button, nldd-icon-button):is([text="OK" i], [text="Oké" i], [text="Okay" i], [text="Annuleren" i])'
+message: 'Name the action, such as "Bewaar" or "Verwijder account": this text only makes sense after reading what is around it.'
+see: ontwerprichtlijnen/copywriting
+examples:
+  passed: ['<nldd-button text="Bewaar"></nldd-button>']
+  failed: ['<nldd-button text="OK"></nldd-button>']

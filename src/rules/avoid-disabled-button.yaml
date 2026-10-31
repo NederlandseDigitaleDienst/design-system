@@ -1,0 +1,8 @@
+severity: hint
+context: 'nldd-button[disabled], nldd-icon-button[disabled]'
+message: 'Leave the action available and say afterwards what is missing and how to fix it, in this view or the next.'
+see: ontwerprichtlijnen/invoer-en-formulieren
+examples:
+  passed: ['<nldd-button text="Bewaar"></nldd-button>']
+  failed: ['<nldd-button text="Bewaar" disabled></nldd-button>']
+  cantTell: ['<nldd-button text="Bewaar" :disabled="bezig"></nldd-button>']

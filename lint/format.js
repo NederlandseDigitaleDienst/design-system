@@ -22,11 +22,33 @@ function codeFrame(sourceLine, line, column, tag) {
 
 const plural = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`;
 
-export function formatText(results, { root, files, ms, skipped }) {
+/** A hint is advice, so it gets one entry however often it applies. */
+function hintSummary(results, root, explainRule) {
+	const grouped = new Map();
+	for (const { filename, findings } of results) {
+		for (const { severity, rule, message, line } of findings) {
+			if (severity !== 'hint') continue;
+			const entry = grouped.get(rule) ?? { message, places: [] };
+			entry.places.push(`${relative(root, filename)}:${line}`);
+			grouped.set(rule, entry);
+		}
+	}
+	const lines = [];
+	for (const [rule, { message, places }] of grouped) {
+		const shown = places.slice(0, 2).join(', ');
+		const more = places.length > 2 ? `, +${places.length - 2}` : '';
+		lines.push(`  ${rule}  ${dim(`${places.length}× ${shown}${more}`)}`, `    ${message}`);
+		const see = explainRule?.(rule)?.see;
+		if (see) lines.push(dim(`    → ${see}`));
+	}
+	return lines;
+}
+
+export function formatText(results, { root, files, ms, skipped, explainRule }) {
 	const lines = [];
 	for (const { filename, source, findings } of results) {
 		const sourceLines = source.split('\n');
-		for (const finding of findings) {
+		for (const finding of findings.filter(({ severity }) => severity !== 'hint')) {
 			const { line, column, severity, rule, message, tag } = finding;
 			const location = `${relative(root, filename)}:${line}:${column}`;
 			const label = { error: red('error'), warn: yellow('warn'), hint: blue('hint') }[severity];
@@ -36,6 +58,8 @@ export function formatText(results, { root, files, ms, skipped }) {
 		}
 	}
 	const all = results.flatMap((result) => result.findings);
+	const advice = hintSummary(results, root, explainRule);
+	if (advice.length > 0) lines.push(blue('Hints'), ...advice, '');
 	const count = (level) => all.filter((finding) => finding.severity === level).length;
 	const errors = count('error');
 	const warnings = count('warn');

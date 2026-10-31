@@ -395,3 +395,10 @@ Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `
 ## Gezien in
 
 Deze compositie komt van de publieke pagina's op dit systeem, waar die naast de applicatieschermen van dezelfde producten staat. Hij reisde eerder als los voorbeeld met de skill mee, zonder live voorbeeld en zonder test. Tot deze versie heette hij de contentpagina.
+
+## Regels
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `hero-not-first`: Make nldd-hero the first section, which says what the site is for.
+- `menu-row-in-top-bar`: Let the pages be the navigation: put the entries in the home as cards and lists, and keep search and language in `utility`.

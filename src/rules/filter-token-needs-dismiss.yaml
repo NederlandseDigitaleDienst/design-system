@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-sidebar-section nldd-token:not([control="dismiss"])'
+message: 'Set control="dismiss": each token is its own way back.'
+see: patronen/filtering
+examples:
+  passed: ['<nldd-sidebar-section sidebar-label="Filters"><nldd-container layout="wrap"><nldd-token text="Status: Afgerond" control="dismiss"></nldd-token></nldd-container></nldd-sidebar-section>']
+  failed: ['<nldd-sidebar-section sidebar-label="Filters"><nldd-container layout="wrap"><nldd-token text="Status: Afgerond"></nldd-token></nldd-container></nldd-sidebar-section>']

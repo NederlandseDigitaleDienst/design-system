@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-menu-bar-item:is([text="NL"], [text="EN"], [text="DE"], [text="FR"])'
+assert: '[accessible-label]'
+message: 'Set an `accessible-label` such as "Taal: Nederlands (NL)": a screen reader otherwise spells out the letters.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-menu-bar-item text="NL" accessible-label="Taal: Nederlands (NL)"></nldd-menu-bar-item>']
+  failed: ['<nldd-menu-bar-item text="NL"></nldd-menu-bar-item>']

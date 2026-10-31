@@ -120,7 +120,19 @@ Een form field met een invoerveld erin is een van de meest voorkomende compositi
 - `form-section-needs-name`: nldd-form-section needs `text` or `supporting-text`: without either its fieldset has no accessible name, and a screen reader announces just "group" or nothing.
 - `multi-line-text-field-needs-name`: nldd-multi-line-text-field needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name.
 - `number-field-needs-name`: nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.
+- `optional-field-required`: Drop `required`, or `optional`: the field cannot be both.
 - `radio-button-group-needs-name`: nldd-radio-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
 - `segmented-control-required-not-enforced`: `required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.
+- `submit-button-needs-form`: Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.
 - `switch-needs-name`: nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.
 - `toggle-button-group-required-not-enforced`: `required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `exit-next-to-primary`: Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.
+- `field-for-and-id-by-hand`: Drop this: nldd-form-field finds the input among its children and connects the label, the rules and the help text itself.
+- `field-marker-in-label`: Set `optional` on the fields that may stay empty, which shows the badge, and write no marker in the label.
+- `field-type-missing`: Set the `type` that fits, `email` or `tel`, which brings the right keyboard and validation.
+- `form-action-outside-actions`: Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.
+- `label-alignment-per-field`: Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.
+- `title-in-form`: Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.

@@ -520,3 +520,13 @@ De inhoudsopgave vraagt wat code van jezelf. De markup staat in het voorbeeld hi
 Wat je gratis krijgt: wat bij de [paginaopbouw](page-structure.md) staat, de breedte en de witruimte van de secties, het contrast van een getint of omgekeerd vlak, de koppen die de titels renderen, en de inhoudsopgave als eigen navigatie met `aria-current="location"` op de rij die je leest.
 
 Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, een `accessible-label` op de lijst van de inhoudsopgave, een `id` op elke kop waar die naar springt, en een `accessible-label` op een kaart die een link is. De link ligt als een leeg vlak over de kaart en leest de tekst erin niet voor, dus zonder label heeft hij geen naam. Neem de titel van de kaart.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `toc-row-needs-location`: Set current-type="location": this row points at part of this page, and a screen reader otherwise calls it the current page.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `toc-heading-needs-id`: Give every h2 an `id`, so the table of contents can jump to it.

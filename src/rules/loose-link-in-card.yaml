@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-card:not([href], [button]) :is(nldd-link, nldd-button):is([text="Lees meer" i], [text="Meer lezen" i], [text="Meer informatie" i], [text="Meer info" i], [text="Bekijk" i], [text="Bekijken" i], [text="Open" i], [text="Openen" i], [text="Ga naar" i])'
+message: 'Set `href` and `accessible-label` on the card and drop this link: then each choice is one link and one tab stop.'
+see: patronen/navigation-page
+examples:
+  passed: ['<nldd-card href="/a" accessible-label="Aanvraag A-1042"><nldd-title text="Aanvraag A-1042"></nldd-title></nldd-card>']
+  failed: ['<nldd-card><nldd-title text="Aanvraag A-1042"></nldd-title><nldd-link href="/a" text="Lees meer"></nldd-link></nldd-card>']

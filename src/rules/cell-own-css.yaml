@@ -1,0 +1,7 @@
+severity: hint
+context: ':cell[style]'
+message: 'Use the attributes of the cell, such as `color`, and an nldd-spacer-cell for the space next to it.'
+see: patronen/list
+examples:
+  passed: ['<nldd-text-cell text="Aanvraag A-1042" color="secondary"></nldd-text-cell>']
+  failed: ['<nldd-text-cell text="Aanvraag A-1042" style="margin-left: 8px"></nldd-text-cell>']

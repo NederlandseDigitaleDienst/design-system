@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-list-item:is([href][button], [href][checkbox], [href][radio], [button][checkbox], [button][radio], [checkbox][radio])'
+message: 'A row is one control: keep one of `href`, `button`, `checkbox` and `radio`.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item href="/d-318"></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item href="/d-318" button></nldd-list-item></nldd-list>']

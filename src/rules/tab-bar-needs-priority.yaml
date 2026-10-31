@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-toolbar:not([size="lg"]) > nldd-toolbar-item:has(> nldd-tab-bar):not([priority])'
+message: 'Give the tab bar a high `priority`, so it is the last to move to the overflow.'
+see: patronen/toolbar-with-actions
+examples:
+  passed: ['<nldd-toolbar><nldd-toolbar-item priority="10"><nldd-tab-bar accessible-label="Secties"></nldd-tab-bar><nldd-menu-group slot="overflow" text="Secties"></nldd-menu-group></nldd-toolbar-item></nldd-toolbar>']
+  failed: ['<nldd-toolbar><nldd-toolbar-item><nldd-tab-bar accessible-label="Secties"></nldd-tab-bar><nldd-menu-group slot="overflow" text="Secties"></nldd-menu-group></nldd-toolbar-item></nldd-toolbar>']

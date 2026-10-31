@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-menu-bar-item, nldd-page-footer-legal-bar-item, nldd-list[type="navigation"] nldd-text-cell):is([text="Informatie" i], [text="Documenten" i], [text="Downloads" i], [text="Service" i], [text="Folders" i], [text="Algemeen" i])'
+message: 'Name the subject or the goal instead, such as "Ondersteuning" for "Service", so nobody has to guess what is behind it.'
+see: ontwerprichtlijnen/navigatie-en-structuur
+examples:
+  passed: ['<nldd-menu-bar-item text="Ondersteuning"></nldd-menu-bar-item>']
+  failed: ['<nldd-menu-bar-item text="Service"></nldd-menu-bar-item>']

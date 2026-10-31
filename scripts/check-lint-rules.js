@@ -27,8 +27,8 @@ const guidelineHeadings = new Set(
 	[...guidelines.matchAll(/^#+ (.+)$/gm)].map(([, heading]) => heading.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')),
 );
 
-const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => Object.keys(tag.attrs)));
-const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role']);
+const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => [...Object.keys(tag.attrs), ...Object.keys(tag.childAttrs)]));
+const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role', 'style', 'lang']);
 
 function checkTokens(tokens, rule) {
 	const ruleId = rule.id;

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-sidebar-section > [slot="sidebar"]:has(nldd-list-item[checkbox]):not(:has(nldd-skip-link))'
+message: 'Put an nldd-skip-link above the filters, with an `href` to the results, so a keyboard user need not pass every filter.'
+see: patronen/filtering
+examples:
+  passed: ['<nldd-sidebar-section sidebar-label="Filters"><nldd-container slot="sidebar"><nldd-skip-link href="#resultaten" text="Sla filters over"></nldd-skip-link><nldd-list accessible-label="Status"><nldd-list-item checkbox></nldd-list-item></nldd-list></nldd-container></nldd-sidebar-section>']
+  failed: ['<nldd-sidebar-section sidebar-label="Filters"><nldd-container slot="sidebar"><nldd-list accessible-label="Status"><nldd-list-item checkbox></nldd-list-item></nldd-list></nldd-container></nldd-sidebar-section>']

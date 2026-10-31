@@ -88,4 +88,10 @@ Modals zijn in de onderzochte producten zeldzaam, en dat is de bedoeling: zie "w
 
 `nldd lint` controleert dit:
 
+- `modal-destructive-first`: Put the way out above the destructive action: reaching it should not mean passing the button to avoid.
 - `modal-dialog-needs-two-actions`: One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.
+- `modal-way-out-not-primary`: Give the way out appearance="primary": autopilot should end at the safe choice, not at the irreversible one.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `modal-destructive-needs-alert`: Set variant="alert" on a dialog about a destructive action, which brings the icon and color that go with it.

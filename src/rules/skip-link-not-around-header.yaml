@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-page > nldd-top-navigation-bar[slot="header"], nldd-skip-link:has(nldd-top-navigation-bar):not([slot="header"])'
+message: 'Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page><nldd-skip-link slot="header"><nldd-top-navigation-bar website-title="Mijn Dienst"></nldd-top-navigation-bar></nldd-skip-link></nldd-page>']
+  failed: ['<nldd-page><nldd-top-navigation-bar slot="header" website-title="Mijn Dienst"></nldd-top-navigation-bar></nldd-page>', '<nldd-page><nldd-skip-link><nldd-top-navigation-bar website-title="Mijn Dienst"></nldd-top-navigation-bar></nldd-skip-link></nldd-page>']

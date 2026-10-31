@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-modal-dialog:has(nldd-form, :form-input)'
+message: 'Do work that needs its context in an nldd-sheet, which keeps the page visible and has room for the fields.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed: ['<nldd-sheet accessible-label="Bewerk"><nldd-form></nldd-form></nldd-sheet>']
+  failed: ['<nldd-modal-dialog text="Bewerk"><nldd-text-field accessible-label="Naam"></nldd-text-field></nldd-modal-dialog>']

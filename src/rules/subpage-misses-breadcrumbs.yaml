@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-page:has(nldd-top-navigation-bar[back-href]):has(nldd-page-footer):not(:has(nldd-page-footer nldd-breadcrumbs))'
+message: 'Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.'
+see: patronen/topic-page
+examples:
+  passed: ['<nldd-page><nldd-skip-link slot="header"><nldd-top-navigation-bar website-title="Mijn Dienst" back-text="Home" back-href="/"></nldd-top-navigation-bar></nldd-skip-link><nldd-page-footer slot="footer"><nldd-breadcrumbs slot="breadcrumbs"></nldd-breadcrumbs></nldd-page-footer></nldd-page>']
+  failed: ['<nldd-page><nldd-skip-link slot="header"><nldd-top-navigation-bar website-title="Mijn Dienst" back-text="Home" back-href="/"></nldd-top-navigation-bar></nldd-skip-link><nldd-page-footer slot="footer"></nldd-page-footer></nldd-page>']

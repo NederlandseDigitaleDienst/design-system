@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-page > :not([slot], nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero, nldd-top-navigation-bar, nldd-top-title-bar, nldd-skip-link, nldd-page-footer, nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover, nldd-notification)'
+message: 'Put this in a section, such as nldd-simple-section, which sets the width and the white space.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page><nldd-simple-section><nldd-text>Inhoud</nldd-text></nldd-simple-section></nldd-page>']
+  failed: ['<nldd-page><nldd-text>Inhoud</nldd-text></nldd-page>']

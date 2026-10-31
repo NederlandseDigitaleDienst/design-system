@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-sheet nldd-form-actions nldd-button ~ nldd-button'
+message: 'Keep one action under the form. The way out is `dismiss-text` on the title bar.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed: ['<nldd-sheet accessible-label="Bewerk"><nldd-form-actions><nldd-button-group><nldd-button text="Bewaar"></nldd-button></nldd-button-group></nldd-form-actions></nldd-sheet>']
+  failed: ['<nldd-sheet accessible-label="Bewerk"><nldd-form-actions><nldd-button-group><nldd-button text="Bewaar"></nldd-button><nldd-button text="Verwijder"></nldd-button></nldd-button-group></nldd-form-actions></nldd-sheet>']

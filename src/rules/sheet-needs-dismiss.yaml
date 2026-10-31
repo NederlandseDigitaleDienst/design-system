@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-sheet nldd-top-title-bar'
+assert: '[dismiss-text], [back-text], :has(> [slot="toolbar"])'
+message: 'Set `dismiss-text` on the title bar, so the sheet has a visible way out.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed: ['<nldd-sheet><nldd-top-title-bar text="Bewerk" dismiss-text="Annuleer"></nldd-top-title-bar></nldd-sheet>']
+  failed: ['<nldd-sheet><nldd-top-title-bar text="Bewerk"></nldd-top-title-bar></nldd-sheet>']

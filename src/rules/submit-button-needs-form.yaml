@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-button[type="submit"]'
+assert: 'nldd-form *, form *, [form]'
+message: 'Put this button in the form, or give the nldd-form an `id` and point `form` at it. As it stands it submits nothing.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form><nldd-button type="submit" text="Verstuur"></nldd-button></nldd-form>', '<nldd-button type="submit" form="aanvraag" text="Verstuur"></nldd-button>']
+  failed: ['<html><body><nldd-button type="submit" text="Verstuur"></nldd-button></body></html>']
+  cantTell: ['<nldd-button type="submit" text="Verstuur"></nldd-button>']

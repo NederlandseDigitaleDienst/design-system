@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-menu[anchor]:not(nldd-list ~ nldd-menu, nldd-table ~ nldd-menu)'
+message: 'Nest it in the `popup` slot of the button, which anchors it, opens it and needs no id: `anchor` is for a trigger without that slot.'
+see: patronen/menu-from-a-button
+examples:
+  passed: ['<nldd-button text="Acties" expandable><nldd-menu slot="popup"></nldd-menu></nldd-button>', '<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment id="acties" button accessible-label="Acties voor Dossier D-318"></nldd-list-item-segment></nldd-list-item></nldd-list><nldd-menu anchor="acties"></nldd-menu>']
+  failed: ['<nldd-button id="acties" text="Acties"></nldd-button><nldd-menu anchor="acties"></nldd-menu>']

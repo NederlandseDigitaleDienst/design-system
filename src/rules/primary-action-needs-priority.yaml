@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-toolbar-item:has(> nldd-button[appearance="primary"]):not([priority])'
+message: 'Give the primary action the highest `priority`, so it is the last to move to the overflow.'
+see: patronen/toolbar-with-actions
+examples:
+  passed: ['<nldd-toolbar-item priority="10"><nldd-button appearance="primary" text="Bewaar"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item>']
+  failed: ['<nldd-toolbar-item><nldd-button appearance="primary" text="Bewaar"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item>']

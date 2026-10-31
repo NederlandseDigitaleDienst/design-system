@@ -88,3 +88,12 @@ Wat jij nog moet doen: de toets achter een `shortcut` zelf afhandelen. Het item 
 ## Gezien in
 
 `menu > menu-item` staat in de top drie van meest gebruikte composities. De `popup`-slot is nieuwer dan de losse `anchor`, dus in bestaande code kom je beide tegen. Voor nieuwe code is de slot de route.
+
+## Regels
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `destructive-menu-item-not-last`: Put the destructive item last, behind an nldd-menu-divider, away from the actions people click through.
+- `menu-anchored-by-hand`: Nest it in the `popup` slot of the button, which anchors it, opens it and needs no id: `anchor` is for a trigger without that slot.
+- `menu-choice-by-hand`: Use type="radio" or type="checkbox" with `selected`, which gives the item the role and the state a screen reader reads out.
+- `menu-one-action`: Use a plain button for a single action.

@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-toolbar:not([size="sm"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size="sm"], nldd-toolbar:not([size="lg"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size="lg"]'
+message: 'The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.'
+see: patronen/toolbar-with-actions
+examples:
+  passed: ['<nldd-toolbar size="sm"><nldd-toolbar-item><nldd-button text="Bewaar"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>', '<nldd-toolbar size="sm"><nldd-toolbar-item><nldd-button text="Bewaar" size="sm"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>']
+  failed: ['<nldd-toolbar><nldd-toolbar-item><nldd-button text="Bewaar" size="sm"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>']

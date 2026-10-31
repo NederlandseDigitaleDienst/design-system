@@ -556,6 +556,17 @@ describe('nldd command', () => {
 		assert.match(run(root, 'lint', '--format', 'github', 'a.vue').stdout, /^::notice /);
 	});
 
+	it('summarizes a hint once, however often it applies', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, '.nldd-lint.json'), '{ "rules": { "unknown-element": "hint" } }');
+		writeFileSync(join(root, 'a.vue'), '<template><nldd-gone /><nldd-gone /><nldd-gone /></template>');
+		const { stdout } = run(root, 'lint', 'a.vue');
+		assert.equal(stdout.match(/does not exist/g).length, 1);
+		assert.match(stdout, /3× a\.vue:1, a\.vue:1, \+1/);
+		assert.match(stdout, /3 hints/);
+		assert.equal(JSON.parse(run(root, 'lint', '--format', 'json', 'a.vue').stdout).findings.length, 3);
+	});
+
 	it('keeps hints out of the baseline', () => {
 		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
 		writeFileSync(join(root, '.nldd-lint.json'), '{ "rules": { "unknown-element": "hint" } }');

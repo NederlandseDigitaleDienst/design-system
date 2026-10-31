@@ -1,0 +1,10 @@
+severity: hint
+context: 'nldd-dropdown > select:not(:has(> optgroup))'
+count:
+  of: 'option'
+  max: 15
+message: 'With many options typing is faster than scrolling: use nldd-combo-box.'
+see: ontwerprichtlijnen/invoer-en-formulieren
+examples:
+  passed: ['<nldd-dropdown accessible-label="Aanhef"><select><option>Heer</option><option>Mevrouw</option></select></nldd-dropdown>']
+  failed: ['<nldd-dropdown accessible-label="Land"><select><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option><option>A</option></select></nldd-dropdown>']

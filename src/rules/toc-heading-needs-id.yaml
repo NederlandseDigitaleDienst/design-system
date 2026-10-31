@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-sidebar-section:has(> [slot="sidebar"] nldd-list[type="navigation"]) nldd-rich-text h2:not([id])'
+message: 'Give every h2 an `id`, so the table of contents can jump to it.'
+see: patronen/content-page
+examples:
+  passed: ['<nldd-sidebar-section sidebar-label="Op deze pagina"><nldd-list slot="sidebar" type="navigation" accessible-label="Op deze pagina"></nldd-list><nldd-rich-text><h2 id="kosten">Kosten</h2></nldd-rich-text></nldd-sidebar-section>']
+  failed: ['<nldd-sidebar-section sidebar-label="Op deze pagina"><nldd-container slot="sidebar"><nldd-list type="navigation" accessible-label="Op deze pagina"></nldd-list></nldd-container><nldd-rich-text><h2>Kosten</h2></nldd-rich-text></nldd-sidebar-section>']

@@ -336,6 +336,9 @@ De meest voorkomende compositie op dit systeem, in elk onderzocht product en in 
 
 `nldd lint` controleert dit:
 
+- `control-row-holds-segments`: Move the `href` or `button` to a segment: both together put a control in a control.
+- `disclosure-segment-needs-button`: Add `button`: `disclosure` only marks which control opens the branch, and without it there is no hover, focus or keyboard.
+- `icon-segment-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
 - `list-form-row-is-action`: type="form" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments. Use type="list" for rows you activate, and put the action in a cell if it belongs to a form row.
 - `list-item-children-need-tree`: `slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree" or type="navigation". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.
 - `list-item-holds-cells`: A row takes cells and segments. Anything else sits outside its layout.
@@ -343,3 +346,14 @@ De meest voorkomende compositie op dit systeem, in elk onderzocht product en in 
 - `list-item-segment-disclosure-and-expanded`: `disclosure` takes aria-expanded from the row, so the `expanded` on this action is ignored. Drop one of the two.
 - `list-item-segment-no-control-in-listbox`: A segment in a type="listbox" list renders as a plain container: an `option` may not contain interactive descendants. Move the segment out of the listbox, or drive selection from the option itself.
 - `list-reorderable-needs-list-type`: `reorderable` is only valid when type="list", and is ignored here.
+- `row-more-than-one-control`: A row is one control: keep one of `href`, `button`, `checkbox` and `radio`.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `cell-own-css`: Use the attributes of the cell, such as `color`, and an nldd-spacer-cell for the space next to it.
+- `link-row-needs-chevron`: End the row with an nldd-icon-cell with icon="chevron-right", which says there is more behind it without the word "openen".
+- `list-hidden`: Leave the list in place and fill `slot="empty"` and `slot="no-results"`: hidden, the empty state goes with it.
+- `list-needs-name`: Give the list an `accessible-label` that says what is in it, so several of them on a page can be told apart.
+- `row-action-not-in-segment`: Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.
+- `segment-label-too-vague`: Name the row in the label, such as "Acties voor Dossier D-318": in twenty rows this says the same thing twenty times.
+- `status-dot-needs-decorative`: Set `decorative` on the dot and put the word next to it in an nldd-text-cell: the word carries the meaning.

@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-button, nldd-icon-button):is([text^="De " i], [text^="Het " i], [text^="Een " i])'
+message: 'Start with the verb or noun that carries the meaning: people scan the first words.'
+see: ontwerprichtlijnen/copywriting
+examples:
+  passed: ['<nldd-button text="Bekijk het besluit"></nldd-button>']
+  failed: ['<nldd-button text="Het besluit bekijken"></nldd-button>']

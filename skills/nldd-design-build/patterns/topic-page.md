@@ -390,3 +390,9 @@ Het geraamte van de pagina, met de header en de footer, staat bij de [paginaopbo
 Wat je gratis krijgt: wat bij de [paginaopbouw](page-structure.md) staat, en een knop met `href` die een echte link is.
 
 Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `heading-level` op elke titel, en een knoptekst die de taak noemt, want hij staat los van de kaarten en moet zonder de tekst eromheen te begrijpen zijn.
+
+## Regels
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `subpage-misses-breadcrumbs`: Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.
