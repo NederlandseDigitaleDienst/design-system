@@ -46,10 +46,23 @@ export function findViolations(root: ParentNode, rules: DevRule[] = devRules) {
 	return found;
 }
 
+/**
+ * The document plus the open shadow roots of an app's own components, which
+ * querySelectorAll does not enter. Not our own: what a component renders inside
+ * itself is its own business, and a test's.
+ */
+export function findRoots(root: ParentNode = document): ParentNode[] {
+	const roots = [root];
+	for (const element of root.querySelectorAll('*')) {
+		if (element.shadowRoot && !element.localName.startsWith('nldd-')) roots.push(...findRoots(element.shadowRoot));
+	}
+	return roots;
+}
+
 function createReporter() {
 	const reported = new WeakMap<Element, Set<string>>();
 	return () => {
-		for (const { rule, element } of findViolations(document)) {
+		for (const { rule, element } of findRoots().flatMap((root) => findViolations(root))) {
 			const seen = reported.get(element) ?? new Set();
 			if (seen.has(rule.id)) continue;
 			reported.set(element, seen.add(rule.id));
