@@ -6,6 +6,7 @@ import '../../content/title/title.js';
 import '../../layout/page/page.js';
 import '../../layout/page-sections/simple-section/simple-section.js';
 import '../../forms/form/form.js';
+import '../../forms/form-section/form-section.js';
 import '../../forms/form-field/form-field.js';
 import '../../forms/form-actions/form-actions.js';
 import '../../inputs/text-field/text-field.js';
@@ -48,20 +49,13 @@ export const Standaard = {
 		<nldd-page>
 			<nldd-skip-link slot="header">
 				<nldd-top-navigation-bar website-title="Mijn Dienst">
-					<nldd-menu-bar-item
-						slot="global"
-						text="Home"
-						current
-					></nldd-menu-bar-item>
-					<nldd-menu-bar-item
-						slot="global"
-						text="Contact"
-					></nldd-menu-bar-item>
-					<nldd-menu-bar-item
-						slot="utility"
-						text="Zoeken"
-						icon="magnifier"
-					></nldd-menu-bar-item>
+					<nldd-menu-bar slot="utility">
+						<nldd-menu-bar-item
+							text="Zoeken"
+							icon="magnifier"
+							content-priority="text"
+						></nldd-menu-bar-item>
+					</nldd-menu-bar>
 				</nldd-top-navigation-bar>
 			</nldd-skip-link>
 			<nldd-simple-section>
@@ -84,20 +78,13 @@ export const MetTekst = {
 				text="Ga naar hoofdinhoud"
 			>
 				<nldd-top-navigation-bar website-title="Mijn Dienst">
-					<nldd-menu-bar-item
-						slot="global"
-						text="Home"
-						current
-					></nldd-menu-bar-item>
-					<nldd-menu-bar-item
-						slot="global"
-						text="Aanvragen"
-					></nldd-menu-bar-item>
-					<nldd-menu-bar-item
-						slot="utility"
-						text="Zoeken"
-						icon="magnifier"
-					></nldd-menu-bar-item>
+					<nldd-menu-bar slot="utility">
+						<nldd-menu-bar-item
+							text="Zoeken"
+							icon="magnifier"
+							content-priority="text"
+						></nldd-menu-bar-item>
+					</nldd-menu-bar>
 				</nldd-top-navigation-bar>
 			</nldd-skip-link>
 			<nldd-simple-section>
@@ -128,17 +115,14 @@ export const MetHref = {
 					novalidate
 					label-alignment="right"
 				>
-					<nldd-title
-						size="3"
-						text="Contactformulier"
-						heading-level="2"
-					></nldd-title>
-					<nldd-form-field label="Naam">
-						<nldd-text-field
-							name="name"
-							autocomplete="name"
-						></nldd-text-field>
-					</nldd-form-field>
+					<nldd-form-section text="Contactformulier">
+						<nldd-form-field label="Naam">
+							<nldd-text-field
+								name="name"
+								autocomplete="name"
+							></nldd-text-field>
+						</nldd-form-field>
+					</nldd-form-section>
 					<nldd-form-actions>
 						<nldd-button-group>
 							<nldd-button

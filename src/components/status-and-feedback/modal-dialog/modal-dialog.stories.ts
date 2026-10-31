@@ -235,6 +235,7 @@ export const MetFormulier = {
 		text="Open modal dialog"
 		@click=${openNext}
 	></nldd-button>
+	<!-- nldd-lint-disable-next-line modal-holds-a-form -- Shows the left alignment a modal applies to slotted content, which a field makes visible. -->
 	<nldd-modal-dialog
 		icon="write"
 		text="Dossier D-318 hernoemen"

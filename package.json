@@ -542,6 +542,7 @@
     "validate:host-styles": "node scripts/validate-host-styles.js",
     "validate:component-api": "node scripts/validate-component-api.js",
     "validate:skill-markup": "node scripts/validate-skill-markup.js",
+    "lint:stories": "node scripts/lint-stories.js",
     "build:components": "npm run clean:components && npm run build:icons && npm run generate:translations && npm run build:components:modules && npm run build:components:bundle && npm run build:components:standalone && npm run build:exports && npm run generate:cem",
     "build:icons": "node scripts/generate-icon-registry.js && node scripts/generate-logo.js",
     "optimize:icons": "svgo --config scripts/svgo.config.mjs",

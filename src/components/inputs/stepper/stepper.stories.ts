@@ -74,10 +74,7 @@ const Template = ({ size, value, min, max, step, invalid, disabled }: Record<str
 		gap="16"
 		vertical-alignment="center"
 	>
-		<nldd-text
-			style="min-width: 2ch;"
-			.textContent=${String(value)}
-		></nldd-text>
+		<nldd-text style="min-width: 2ch;">${value}</nldd-text>
 		<nldd-stepper
 			value=${value}
 			min=${min}

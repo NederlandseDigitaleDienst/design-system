@@ -65,6 +65,10 @@ jobs:
       - name: Validate hand-written skill markup
         run: npm run validate:skill-markup
 
+      # The stories are documentation too, so they hold to the same rules.
+      - name: Lint the stories
+        run: npm run lint:stories
+
       # Guards reference.md (JSDoc-derived) against drift on every PR.
       # changelog.md is intentionally NOT guarded here: it is synced from the
       # root CHANGELOG by the release pipeline (@semantic-release/exec), so it

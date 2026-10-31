@@ -53,8 +53,8 @@ function readAttribute(element, name, value) {
 	else if (name === 'v-bind' || /^(v-bind)?:\[/.test(name)) element.spread = true;
 	else if (name === 'v-model') element.attrs.set('value', BOUND);
 	else if (name.startsWith('v-model:')) element.attrs.set(name.slice(8), BOUND);
-	else if (name.startsWith(':') || name.startsWith('v-bind:') || name.startsWith('.')) {
-		const bare = name.replace(/^(v-bind)?[:.]/, '').replace(/\.(prop|attr|camel)$/, '');
+	else if (/^(:|v-bind:|\.|\?)/.test(name)) {
+		const bare = name.replace(/^(v-bind)?[:.?]/, '').replace(/\.(prop|attr|camel)$/, '');
 		element.attrs.set(bare, BOUND);
 	} else if (/^\[(class\.|style\.|@)/.test(name)) {
 		// Angular's way to set one class, one style or an animation: no attribute.
@@ -77,6 +77,9 @@ function readHtmlChildren(children, parent, given) {
 	const templated = given.inert && children.some((node) => node.type === 'text' && TEMPLATE_TEXT.test(node.data));
 	const inherited = templated ? { ...given, conditional: true } : given;
 	if (templated) appendUnknown(parent, children[0].startIndex ?? 0);
+	// A Lit hole between the tags can render anything, or nothing.
+	const hole = given.lit && children.find((node) => node.type === 'text' && node.data.includes('${'));
+	if (hole) appendUnknown(parent, hole.startIndex ?? 0);
 	for (const node of children) {
 		if (node.type !== 'tag') continue;
 		const { name, attribs } = node;
@@ -92,6 +95,7 @@ function readHtmlChildren(children, parent, given) {
 					inherited.conditional || Object.keys(attribs).some((key) => CONDITIONAL.has(key)),
 				repeated: inherited.repeated || Object.keys(attribs).some((key) => REPEATED.has(key)),
 				inert: inherited.inert,
+				lit: inherited.lit,
 			});
 			continue;
 		}
@@ -101,7 +105,7 @@ function readHtmlChildren(children, parent, given) {
 		element.repeated ||= inherited.repeated;
 		element.opaque = isOpaqueTag(name) || name === 'template';
 		appendChild(parent, element);
-		readHtmlChildren(node.children, element, { inert: inherited.inert });
+		readHtmlChildren(node.children, element, { inert: inherited.inert, lit: inherited.lit });
 	}
 }
 
@@ -147,6 +151,75 @@ export function parseMarkdown(source) {
 	const prose = source.replace(fences, (block) => ' '.repeat(block.length));
 	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) read(match[1], match.index + 1);
 	return roots;
+}
+
+/**
+ * Finds every html`` template, also inside the holes of another. A small scanner,
+ * so that a story needs no TypeScript parser: it only tells strings, comments and
+ * templates apart.
+ */
+function litTemplates(source) {
+	const templates = [];
+	const skipString = (start) => {
+		let at = start + 1;
+		while (at < source.length && source[at] !== source[start] && source[at] !== '\n') {
+			at += source[at] === '\\' ? 2 : 1;
+		}
+		return at;
+	};
+	const readTemplate = (start, isHtml) => {
+		const holes = [];
+		let at = start;
+		while (at < source.length && source[at] !== '`') {
+			if (source[at] === '\\') at += 2;
+			else if (source.startsWith('${', at)) {
+				const end = readCode(at + 2, true);
+				holes.push([at, end + 1]);
+				at = end + 1;
+			} else at += 1;
+		}
+		if (isHtml) templates.push({ start, end: at, holes });
+		return at;
+	};
+	function readCode(start, inHole) {
+		let depth = 0;
+		let at = start;
+		while (at < source.length) {
+			const char = source[at];
+			if (char === "'" || char === '"') at = skipString(at);
+			else if (source.startsWith('//', at)) at = source.indexOf('\n', at) >>> 0;
+			else if (source.startsWith('/*', at)) at = source.indexOf('*/', at) >>> 0;
+			else if (char === '`') at = readTemplate(at + 1, source.slice(at - 4, at) === 'html');
+			else if (char === '{') depth += 1;
+			else if (char === '}') {
+				if (inHole && depth === 0) return at;
+				depth -= 1;
+			}
+			at += 1;
+		}
+		return at;
+	}
+	readCode(0, false);
+	return templates;
+}
+
+/**
+ * Lit in a .ts file. A hole gets a filler of the same length without spaces, so
+ * positions stay right, an unquoted value stays one value, and it reads as bound.
+ */
+export function parseLit(source) {
+	return litTemplates(source).flatMap(({ start, end, holes }) => {
+		let text = source.slice(start, end);
+		if (!text.includes('<nldd-')) return [];
+		for (const [from, to] of holes) {
+			const filler = `\${${'x'.repeat(to - from - 3)}}`;
+			text = text.slice(0, from - start) + filler + text.slice(to - start);
+		}
+		const root = createRoot();
+		const padded = ' '.repeat(start) + text;
+		readHtmlChildren(parseMarkup(padded, { selfClosing: false }).children, root, { lit: true });
+		return [root];
+	});
 }
 
 function jsxName(node) {
@@ -318,6 +391,7 @@ const PARSERS = {
 	'.md': parseMarkdown,
 	'.jsx': parseJsx,
 	'.tsx': parseJsx,
+	'.ts': parseLit,
 };
 
 /** @returns {Promise<import('./tree.js').TreeNode[]>} */

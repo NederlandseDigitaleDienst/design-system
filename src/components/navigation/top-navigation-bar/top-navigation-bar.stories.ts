@@ -90,6 +90,7 @@ const Template = ({
 			`}
 			<nldd-menu-bar slot="utility">
 				<nldd-menu-bar-item
+					accessible-label="Taal: Nederlands (NL)"
 					text="NL"
 					expandable
 					content-priority="icon"
@@ -101,11 +102,13 @@ const Template = ({
 							selected
 						></nldd-menu-item>
 						<nldd-menu-item
+							lang="en"
 							text="English"
 							type="radio"
 						></nldd-menu-item>
 						<nldd-menu-item
 							text="Papiamentu"
+							lang="pap"
 							type="radio"
 						></nldd-menu-item>
 					</nldd-menu>
@@ -171,6 +174,7 @@ export const SmalScherm = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-top-navigation-bar website-title="Mijn Dienst">
+				<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Shows how the global items move into the menu sheet on a narrow screen. -->
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
@@ -181,6 +185,7 @@ export const SmalScherm = {
 				</nldd-menu-bar>
 				<nldd-menu-bar slot="utility">
 					<nldd-menu-bar-item
+						accessible-label="Taal: Nederlands (NL)"
 						text="NL"
 						expandable
 						content-priority="icon"
@@ -192,11 +197,13 @@ export const SmalScherm = {
 								selected
 							></nldd-menu-item>
 							<nldd-menu-item
+								lang="en"
 								text="English"
 								type="radio"
 							></nldd-menu-item>
 							<nldd-menu-item
 								text="Papiamentu"
+								lang="pap"
 								type="radio"
 							></nldd-menu-item>
 						</nldd-menu>
@@ -251,6 +258,7 @@ export const MeerlaagsMenu = {
 	render: () => html`
 		<div style="${layoutArea} max-width: 400px;">
 			<nldd-top-navigation-bar website-title="Mijn Dienst">
+				<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Shows the levels of the menu sheet, which only global items open. -->
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
@@ -303,6 +311,7 @@ export const VeelGlobaleItems = {
 				logo-title="Mijn Dienst"
 				logo-subtitle="Aanvragen en dossiers"
 			>
+				<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Shows how the bar copes with many global items. -->
 				<nldd-menu-bar slot="global">
 					<nldd-menu-bar-item
 						text="Home"
@@ -318,6 +327,7 @@ export const VeelGlobaleItems = {
 				</nldd-menu-bar>
 				<nldd-menu-bar slot="utility">
 					<nldd-menu-bar-item
+						accessible-label="Taal: Nederlands (NL)"
 						text="NL"
 						expandable
 						content-priority="icon"
@@ -329,11 +339,13 @@ export const VeelGlobaleItems = {
 								selected
 							></nldd-menu-item>
 							<nldd-menu-item
+								lang="en"
 								text="English"
 								type="radio"
 							></nldd-menu-item>
 							<nldd-menu-item
 								text="Papiamentu"
+								lang="pap"
 								type="radio"
 							></nldd-menu-item>
 						</nldd-menu>
@@ -386,6 +398,7 @@ export const AlleToestanden = {
 		<nldd-container gap="32">
 			<div style=${layoutArea}>
 				<nldd-top-navigation-bar website-title="Mijn Dienst (volle breedte)">
+					<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Overview of the states of the bar, the documented global slot included. -->
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"
@@ -398,6 +411,7 @@ export const AlleToestanden = {
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
 						<nldd-menu-bar-item
+							accessible-label="Taal: Nederlands (NL)"
 							text="NL"
 							expandable
 							content-priority="icon"
@@ -409,6 +423,7 @@ export const AlleToestanden = {
 									selected
 								></nldd-menu-item>
 								<nldd-menu-item
+									lang="en"
 									text="English"
 									type="radio"
 								></nldd-menu-item>
@@ -442,6 +457,7 @@ export const AlleToestanden = {
 			</div>
 			<div style="${layoutArea} max-width: 400px;">
 				<nldd-top-navigation-bar website-title="Mijn Dienst (smal scherm)">
+					<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Overview of the states of the bar, the documented global slot included. -->
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"
@@ -452,6 +468,7 @@ export const AlleToestanden = {
 					</nldd-menu-bar>
 					<nldd-menu-bar slot="utility">
 						<nldd-menu-bar-item
+							accessible-label="Taal: Nederlands (NL)"
 							text="NL"
 							expandable
 							content-priority="icon"
@@ -463,6 +480,7 @@ export const AlleToestanden = {
 									selected
 								></nldd-menu-item>
 								<nldd-menu-item
+									lang="en"
 									text="English"
 									type="radio"
 								></nldd-menu-item>
@@ -496,6 +514,7 @@ export const AlleToestanden = {
 			</div>
 			<div style=${layoutArea}>
 				<nldd-top-navigation-bar logo-title="Mijn Dienst">
+					<!-- nldd-lint-disable-next-line menu-row-in-top-bar -- Overview of the states of the bar, the documented global slot included. -->
 					<nldd-menu-bar slot="global">
 						<nldd-menu-bar-item
 							text="Home"
@@ -513,6 +532,7 @@ export const AlleToestanden = {
 							content-priority="icon"
 						></nldd-menu-bar-item>
 						<nldd-menu-bar-item
+							content-priority="text"
 							text="Team Uitvoering"
 							icon="account"
 							expandable
@@ -540,6 +560,7 @@ export const AlleToestanden = {
 				>
 					<nldd-menu-bar slot="utility">
 						<nldd-menu-bar-item
+							content-priority="text"
 							text="Mijn account"
 							icon="account"
 							expandable

@@ -164,7 +164,7 @@ Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-
 
 Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `docs/CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
-Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) en de README wordt gecontroleerd met `npm run validate:skill-markup`, dat in `validate.yml` draait. Dat zijn alle regels van `nldd lint`, hints inbegrepen: dit is wat consumenten en agents overnemen. Een voorbeeld dat bewust fout is, krijgt een onderdrukking met een reden; zie Linter.
+Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) en de README wordt gecontroleerd met `npm run validate:skill-markup`, dat in `validate.yml` draait. Dat zijn alle regels van `nldd lint`, hints inbegrepen: dit is wat consumenten en agents overnemen. Hetzelfde geldt voor de Lit-templates in de stories, met `npm run lint:stories`: de documentatie volgt de eigen regels. Een voorbeeld dat bewust fout is, krijgt een onderdrukking met een reden; zie Linter.
 
 Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.mdx`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
 

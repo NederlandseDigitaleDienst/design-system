@@ -7,7 +7,7 @@ import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { createEngine } from './engine.js';
 import { parseHtml, parseJsx, parseMarkdown, parseVue } from './frontends.js';
-import { createCanonical, createLinter } from './linter.js';
+import { createCanonical, createLinter, loadData } from './linter.js';
 import { readBaseline } from './project.js';
 import { BOUND, walk } from './tree.js';
 
@@ -489,6 +489,42 @@ describe('suppressions', () => {
 	it('asks for a reason', async () => {
 		const { findings } = await lint('<template>\n<!-- nldd-lint-disable-next-line unknown-element -->\n<nldd-gone />\n</template>');
 		assert.deepEqual(findings.map((finding) => finding.rule), ['suppression-needs-reason']);
+	});
+});
+
+describe('Lit in a .ts file', () => {
+	const rulesIn = async (source) => {
+		const { findings } = await createLinter(loadData()).lintSource(source, 'a.stories.ts');
+		return findings.map(({ rule, line }) => [rule, line]);
+	};
+
+	it('finds a fault on its own line', async () => {
+		const source = "const a = 1;\nexport const B = () => html`\n\t<nldd-tab-bar></nldd-tab-bar>\n`;";
+		assert.deepEqual(await rulesIn(source), [['tab-bar-needs-name', 3]]);
+	});
+
+	it('reads a hole in a value as bound, also unquoted with spaces', async () => {
+		assert.deepEqual(await rulesIn('html`<nldd-tab-bar accessible-label=${a ? "b" : "c"}></nldd-tab-bar>`'), []);
+		assert.deepEqual(await rulesIn('html`<nldd-tab-bar accessible-label="${a}"></nldd-tab-bar>`'), []);
+	});
+
+	it('reads a hole between the tags as unknown', async () => {
+		assert.deepEqual(await rulesIn('html`<nldd-form-actions>${buttons}</nldd-form-actions>`'), []);
+	});
+
+	it('lints a template inside a hole', async () => {
+		const source = 'html`<div>${a.map(() => html`<nldd-tab-bar></nldd-tab-bar>`)}</div><nldd-pane></nldd-pane>`';
+		assert.deepEqual((await rulesIn(source)).map(([rule]) => rule).includes('tab-bar-needs-name'), true);
+	});
+
+	it('leaves listeners, booleans and properties alone', async () => {
+		const source = 'html`<nldd-button @click=${a} ?disabled=${b} .text=${c}></nldd-button><nldd-tab-bar .accessibleLabel=${c}></nldd-tab-bar>`';
+		assert.deepEqual(await rulesIn(source), []);
+	});
+
+	it('is not fooled by strings, comments and plain templates', async () => {
+		const source = "const a = 'html`<nldd-tab-bar>`'; // html`<nldd-tab-bar>`\nconst b = `<nldd-tab-bar></nldd-tab-bar>`;";
+		assert.deepEqual(await rulesIn(source), []);
 	});
 });
 

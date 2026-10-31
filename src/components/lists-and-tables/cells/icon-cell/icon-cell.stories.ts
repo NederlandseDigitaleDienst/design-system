@@ -142,7 +142,7 @@ export const BovenUitgelijnd = {
 			vertical-alignment="top"
 			size="24"
 			icon="icon-placeholder"
-			style="height: 80px; border: 1px dashed var(--primitives-color-neutral-150);"
+			class="cell-bounds cell-bounds-tall"
 		></nldd-icon-cell>
 	`,
 };

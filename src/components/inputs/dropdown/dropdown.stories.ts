@@ -63,6 +63,14 @@ export default {
 	},
 };
 
+/** A dropdown is for a long list: with fewer options, show them all (see the design guidelines). */
+const options = (selected = '') => [1, 2, 3, 4, 5, 6].map((option) => html`
+	<option
+		value="option-${option}"
+		?selected=${`option-${option}` === selected}
+	>Optie ${option}</option>
+`);
+
 const Template = ({ size, valid, invalid, disabled, width, required }: Record<string, any>) => html`
 	<nldd-dropdown
 		size=${size}
@@ -77,9 +85,7 @@ const Template = ({ size, valid, invalid, disabled, width, required }: Record<st
 			aria-label="Selecteer een optie"
 		>
 			<option value="" disabled selected>Selecteer een optie</option>
-			<option value="option-1">Optie 1</option>
-			<option value="option-2">Optie 2</option>
-			<option value="option-3">Optie 3</option>
+			${options()}
 		</select>
 	</nldd-dropdown>
 `;
@@ -98,8 +104,7 @@ export const AlleToestanden = {
 				aria-label="Selecteer een optie"
 			>
 				<option value="" disabled selected>Selecteer een optie</option>
-				<option value="option-1">Optie 1</option>
-				<option value="option-2">Optie 2</option>
+				${options()}
 			</select>
 		</nldd-dropdown>
 		<nldd-dropdown size="sm">
@@ -108,8 +113,7 @@ export const AlleToestanden = {
 				aria-label="Selecteer een optie"
 			>
 				<option value="" disabled selected>Selecteer een optie</option>
-				<option value="option-1">Optie 1</option>
-				<option value="option-2">Optie 2</option>
+				${options()}
 			</select>
 		</nldd-dropdown>
 		<nldd-dropdown size="md">
@@ -118,8 +122,7 @@ export const AlleToestanden = {
 				aria-label="Selecteer een optie"
 			>
 				<option value="" disabled selected>Selecteer een optie</option>
-				<option value="option-1">Optie 1</option>
-				<option value="option-2">Optie 2</option>
+				${options()}
 			</select>
 		</nldd-dropdown>
 		<nldd-dropdown size="md">
@@ -127,8 +130,7 @@ export const AlleToestanden = {
 				name="option-2"
 				aria-label="Selecteer een optie"
 			>
-				<option value="option-1">Optie 1</option>
-				<option value="option-2">Optie 2</option>
+				${options()}
 			</select>
 		</nldd-dropdown>
 		<nldd-dropdown
@@ -139,8 +141,7 @@ export const AlleToestanden = {
 				name="option-valid"
 				aria-label="Selecteer een optie"
 			>
-				<option value="option-1" selected>Optie 1</option>
-				<option value="option-2">Optie 2</option>
+				${options('option-1')}
 			</select>
 		</nldd-dropdown>
 		<nldd-dropdown
@@ -152,7 +153,7 @@ export const AlleToestanden = {
 				aria-label="Selecteer een optie"
 			>
 				<option value="" disabled selected>Selecteer een optie</option>
-				<option value="option-1">Optie 1</option>
+				${options()}
 			</select>
 		</nldd-dropdown>
 		<nldd-dropdown
@@ -163,8 +164,7 @@ export const AlleToestanden = {
 				name="option-4"
 				aria-label="Selecteer een optie"
 			>
-				<option value="option-1">Optie 1</option>
-				<option value="option-2">Optie 2</option>
+				${options()}
 			</select>
 		</nldd-dropdown>
 		<nldd-dropdown size="md">

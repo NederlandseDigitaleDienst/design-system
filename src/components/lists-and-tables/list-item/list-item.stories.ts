@@ -181,7 +181,7 @@ export const AlleToestanden = {
 	render: () => html`
 		<nldd-list
 			type="navigation"
-			aria-label="Staten"
+			accessible-label="Staten"
 		>
 			<nldd-list-item button>
 				<nldd-text-cell text="Interactief: rust, hover, ingedrukt"></nldd-text-cell>
@@ -250,9 +250,11 @@ export const AlsLink = {
 		<nldd-list appearance="simple">
 			<nldd-list-item href="#instellingen">
 				<nldd-text-cell text="Instellingen"></nldd-text-cell>
+				<nldd-icon-cell icon="chevron-right"></nldd-icon-cell>
 			</nldd-list-item>
 			<nldd-list-item href="#profiel">
 				<nldd-text-cell text="Profiel"></nldd-text-cell>
+				<nldd-icon-cell icon="chevron-right"></nldd-icon-cell>
 			</nldd-list-item>
 		</nldd-list>
 	`,

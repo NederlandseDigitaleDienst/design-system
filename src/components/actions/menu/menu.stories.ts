@@ -257,7 +257,6 @@ export const Links = {
 				<nldd-menu-divider></nldd-menu-divider>
 				<nldd-menu-item
 					text="Log uit"
-					href="#uitloggen"
 					icon="logout"
 				></nldd-menu-item>
 			</nldd-menu>
@@ -615,12 +614,14 @@ export const DebugVeiligeDriehoek = {
 			expandable
 			text="Open menu"
 		>
+			<!-- nldd-lint-disable-next-line unknown-attribute -- Debug story of the internal, development-only debug-safe-triangle; not public API on purpose. -->
 			<nldd-menu
 				slot="popup"
 				debug-safe-triangle
 			>
 				<nldd-menu-item text="Nieuw"></nldd-menu-item>
 				<nldd-menu-item text="Open recent">
+					<!-- nldd-lint-disable-next-line unknown-attribute -- Debug story of the internal, development-only debug-safe-triangle; not public API on purpose. -->
 					<nldd-menu debug-safe-triangle>
 						<nldd-menu-item text="Aanvraag A-1042.pdf"></nldd-menu-item>
 						<nldd-menu-item text="Notulen.docx"></nldd-menu-item>

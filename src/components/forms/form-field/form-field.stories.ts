@@ -148,6 +148,7 @@ export const Optioneel = () => html`
 export const MetEenFout = () => html`
 	<nldd-form-field label="E-mailadres">
 		<nldd-text-field
+			type="email"
 			value="jan.voorbeeld.nl"
 			invalid
 		></nldd-text-field>

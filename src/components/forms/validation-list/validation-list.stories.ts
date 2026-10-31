@@ -8,6 +8,7 @@ import '../../inputs/password-field/password-field.js';
 import '../../inputs/radio-button-group/radio-button-group.js';
 import '../../inputs/radio-button-field/radio-button-field.js';
 import '../../actions/button/button.js';
+import '../../actions/button-group/button-group.js';
 
 export default {
 	title: 'Components/Forms/Validation List',
@@ -79,7 +80,7 @@ regel herhalen zegt hetzelfde drie keer.
 export const Standaard = ({ hint, judging, for: control }: Record<string, unknown>) => html`
 	<nldd-form-field label="Wachtwoord">
 		<nldd-password-field
-			id="password"
+			id=${control ? 'password' : nothing}
 			name="password"
 			value="geheim"
 			?invalid=${judging}
@@ -100,6 +101,7 @@ export const Standaard = ({ hint, judging, for: control }: Record<string, unknow
 export const AlleenBijEenFout = () => html`
 	<nldd-form-field label="Telefoonnummer">
 		<nldd-text-field
+			type="tel"
 			name="phone"
 			value="06 twaalf"
 			invalid
@@ -226,11 +228,13 @@ export const MetFor = () => html`
 			</nldd-validation-list>
 		</nldd-form-field>
 		<nldd-form-actions>
-			<nldd-button
-				appearance="primary"
-				type="submit"
-				text="Verstuur"
-			></nldd-button>
+			<nldd-button-group>
+				<nldd-button
+					appearance="primary"
+					type="submit"
+					text="Verstuur"
+				></nldd-button>
+			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>
 `;
@@ -247,6 +251,7 @@ export const NaastHelpTekst = () => html`
 	<nldd-form>
 		<nldd-form-field label="E-mailadres">
 			<nldd-text-field
+				type="email"
 				name="email"
 				required
 			></nldd-text-field>
@@ -256,11 +261,13 @@ export const NaastHelpTekst = () => html`
 			<nldd-form-field-help-text>We sturen een bevestigingsmail naar dit adres.</nldd-form-field-help-text>
 		</nldd-form-field>
 		<nldd-form-actions>
-			<nldd-button
-				appearance="primary"
-				type="submit"
-				text="Verstuur"
-			></nldd-button>
+			<nldd-button-group>
+				<nldd-button
+					appearance="primary"
+					type="submit"
+					text="Verstuur"
+				></nldd-button>
+			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>
 `;
@@ -285,11 +292,13 @@ export const VerankerdPatroon = () => html`
 			</nldd-validation-list>
 		</nldd-form-field>
 		<nldd-form-actions>
-			<nldd-button
-				appearance="primary"
-				type="submit"
-				text="Verstuur"
-			></nldd-button>
+			<nldd-button-group>
+				<nldd-button
+					appearance="primary"
+					type="submit"
+					text="Verstuur"
+				></nldd-button>
+			</nldd-button-group>
 		</nldd-form-actions>
 	</nldd-form>
 `;

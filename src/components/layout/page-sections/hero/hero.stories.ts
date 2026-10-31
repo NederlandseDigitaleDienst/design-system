@@ -247,7 +247,7 @@ export const AfgerondeHoekZonderMedia = {
 								color="inherit"
 								size="1"
 								text="Mijn Dienst"
-								heading-level="1"
+								heading-level="2"
 							></nldd-title>
 						</nldd-hero>
 						<nldd-hero
@@ -257,7 +257,7 @@ export const AfgerondeHoekZonderMedia = {
 								color="inherit"
 								size="1"
 								text="Mijn Dienst"
-								heading-level="1"
+								heading-level="2"
 							></nldd-title>
 							<nldd-rich-text color="inherit">
 								<p>Vraag subsidie aan voor dakisolatie of een warmtepomp, en volg je aanvraag tot hij is afgerond.</p>
@@ -421,7 +421,7 @@ export const VolleStrook = {
 					size="3"
 					text="Volle bovenstrook"
 					supporting-text='main-position="top-left"'
-					heading-level="1"
+					heading-level="2"
 				></nldd-title>
 			</nldd-hero>
 		</nldd-container>
@@ -451,7 +451,7 @@ export const ZonderMedia = {
 					size="2"
 					text="Base zonder media"
 					supporting-text="Rand zodat de vorm zichtbaar blijft"
-					heading-level="1"
+					heading-level="2"
 				></nldd-title>
 			</nldd-hero>
 		</nldd-container>

@@ -118,6 +118,7 @@ export const AlleControls = {
 					text="Bewerken"
 					@select=${action('select')}
 				></nldd-menu-item>
+				<nldd-menu-divider></nldd-menu-divider>
 				<nldd-menu-item
 					text="Verwijder"
 					destructive

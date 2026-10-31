@@ -129,6 +129,7 @@ export const InEenFormulier = {
 export const ZonderText = {
 	render: () => html`
 		<nldd-form novalidate>
+			<!-- nldd-lint-disable-next-line form-section-needs-name -- Shows on purpose what a section without text looks like; an app needs text or supporting-text. -->
 			<nldd-form-section>
 				<nldd-form-field label="Naam">
 					<nldd-text-field

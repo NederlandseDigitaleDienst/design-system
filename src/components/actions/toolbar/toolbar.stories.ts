@@ -86,6 +86,7 @@ export const Standaard = {
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
+				priority="1"
 				slot="end"
 				label="Bewaar"
 			>
@@ -108,6 +109,7 @@ export const MetTitelgroep = {
 	render: (args: Record<string, any>) => html`
 		<nldd-container gap="16">
 			<nldd-toolbar
+				accessible-label="Titel links"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
 			>
@@ -142,6 +144,7 @@ export const MetTitelgroep = {
 					></nldd-menu-item>
 				</nldd-toolbar-item>
 				<nldd-toolbar-item
+					priority="1"
 					slot="end"
 					label="Bewaar"
 				>
@@ -157,6 +160,7 @@ export const MetTitelgroep = {
 				</nldd-toolbar-item>
 			</nldd-toolbar>
 			<nldd-toolbar
+				accessible-label="Titel in het midden"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
 			>
@@ -181,6 +185,7 @@ export const MetTitelgroep = {
 					align="center"
 				></nldd-toolbar-title>
 				<nldd-toolbar-item
+					priority="1"
 					slot="end"
 					label="Bewaar"
 				>
@@ -218,6 +223,7 @@ export const TitelMetMedia = {
 			     to where this window belongs; the action beside it stays its own
 			     control. -->
 			<nldd-toolbar
+				accessible-label="Titel met icoon"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
 			>
@@ -234,6 +240,7 @@ export const TitelMetMedia = {
 					></nldd-icon>
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
+					priority="1"
 					slot="end"
 					label="Bewaar"
 				>
@@ -252,6 +259,7 @@ export const TitelMetMedia = {
 			     window, so it carries the name in its alt. An nldd-icon would not
 			     do here — an icon is decoration and says nothing. -->
 			<nldd-toolbar
+				accessible-label="Alleen een merkteken"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
 			>
@@ -264,6 +272,7 @@ export const TitelMetMedia = {
 					>
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
+					priority="1"
 					slot="end"
 					label="Bewaar"
 				>
@@ -289,6 +298,7 @@ export const TitelMetActie = {
 			<!-- Short name: the title shrink-wraps (fit-content) so the xs action
 			     button sits right against it. -->
 			<nldd-toolbar
+				accessible-label="Korte naam"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
 			>
@@ -318,6 +328,7 @@ export const TitelMetActie = {
 					</nldd-icon-button>
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
+					priority="1"
 					slot="end"
 					label="Bewaar"
 				>
@@ -335,6 +346,7 @@ export const TitelMetActie = {
 			<!-- Long name: the title text truncates at the 240px default max-width;
 			     the action button stays outside the cap and remains visible. -->
 			<nldd-toolbar
+				accessible-label="Lange naam"
 				size=${args.size}
 				?show-item-labels=${args.showItemLabels}
 			>
@@ -364,6 +376,7 @@ export const TitelMetActie = {
 					</nldd-icon-button>
 				</nldd-toolbar-title>
 				<nldd-toolbar-item
+					priority="1"
 					slot="end"
 					label="Bewaar"
 				>
@@ -415,6 +428,7 @@ export const Grootten = {
 							></nldd-menu-item>
 						</nldd-toolbar-item>
 						<nldd-toolbar-item
+							priority="1"
 							slot="end"
 							label="Bewaar"
 						>
@@ -461,6 +475,7 @@ export const Grootten = {
 							></nldd-menu-item>
 						</nldd-toolbar-item>
 						<nldd-toolbar-item
+							priority="1"
 							slot="end"
 							label="Bewaar"
 						>
@@ -711,6 +726,7 @@ export const Overloop = {
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
+				priority="1"
 				slot="end"
 				label="Bewaar"
 			>
@@ -881,6 +897,7 @@ export const MetMeegroeiendItem = {
 				></nldd-menu-item>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
+				max-width="480px"
 				slot="center"
 				label="Zoeken"
 				min-width="240px"
@@ -965,6 +982,7 @@ export const MetVasteOverloopitems = {
 				</nldd-menu-group>
 			</nldd-toolbar-item>
 			<nldd-toolbar-item
+				priority="1"
 				slot="end"
 				label="Bewaar"
 			>

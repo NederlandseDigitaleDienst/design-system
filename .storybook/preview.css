@@ -19,6 +19,16 @@ body,
 	background-color: var(--semantics-surfaces-base-background-color);
 }
 
+/* Makes the bounds of a cell visible in the cell stories, which show how a cell
+   aligns within them. A cell itself takes no CSS, so this lives here. */
+.cell-bounds {
+	border: 1px dashed var(--primitives-color-neutral-150);
+}
+
+.cell-bounds-tall {
+	height: 80px;
+}
+
 /* Storybook sets 40px on the docs wrapper in its own scoped styles, which a
    plain rule cannot beat; on a phone that leaves too little room. */
 @media (max-width: 640px) {

@@ -264,6 +264,7 @@ export const MetStatusbalk = {
 			>
 				<nldd-toolbar>
 					<nldd-toolbar-item
+						max-width="480px"
 						slot="center"
 						label="Zoeken"
 						min-width="240px"
@@ -331,6 +332,14 @@ export const ResponsieveBalken = {
 			${toolbar}
 		</nldd-split-view-pane>
 		<nldd-split-view-pane
+			slot="main"
+			sm-order="2"
+			md-order="2"
+			lg-order="2"
+		>
+			${mainContent}
+		</nldd-split-view-pane>
+		<nldd-split-view-pane
 			slot="mobile-bar"
 			only="sm"
 			sm-order="3"
@@ -340,8 +349,11 @@ export const ResponsieveBalken = {
 				padding-block="12"
 				sm-padding-bottom="0"
 			>
-				<nldd-toolbar>
+				<nldd-toolbar
+					size="lg"
+				>
 					<nldd-toolbar-item
+						priority="1"
 						slot="start"
 						label="Bewaar"
 					>
@@ -366,14 +378,6 @@ export const ResponsieveBalken = {
 					</nldd-toolbar-item>
 				</nldd-toolbar>
 			</nldd-container>
-		</nldd-split-view-pane>
-		<nldd-split-view-pane
-			slot="main"
-			sm-order="2"
-			md-order="2"
-			lg-order="2"
-		>
-			${mainContent}
 		</nldd-split-view-pane>
 	</nldd-bar-split-view>
 `,
