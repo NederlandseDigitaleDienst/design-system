@@ -3087,7 +3087,14 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 	const NLDDMenuCtor = customElements.get('nldd-menu') as CustomElementConstructor;
 	let drillInSpy: ReturnType<typeof vi.spyOn> | null = null;
 
+	// A menu closes on a window resize, and the test runner's frame can resize at
+	// any moment, which took the whole chain down halfway through a test.
+	const ignoreResize = (event: Event) => event.stopImmediatePropagation();
+
+	beforeEach(() => window.addEventListener('resize', ignoreResize, { capture: true }));
+
 	afterEach(() => {
+		window.removeEventListener('resize', ignoreResize, { capture: true });
 		drillInSpy?.mockRestore();
 		drillInSpy = null;
 		document.querySelectorAll('nldd-menu').forEach(m => m.remove());
