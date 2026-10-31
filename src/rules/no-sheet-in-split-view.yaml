@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-split-view-pane nldd-sheet'
+message: 'Render nldd-sheet at the document root: inside a pane it is clipped by that pane.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed: ['<nldd-sheet accessible-label="Bewerk"></nldd-sheet>']
+  failed: ['<nldd-split-view-pane slot="main"><nldd-sheet accessible-label="Bewerk"></nldd-sheet></nldd-split-view-pane>']

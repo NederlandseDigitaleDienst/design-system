@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-form-field:has(> :not(nldd-form-field-help-text, nldd-validation-list))'
+assert: ':has(:form-input)'
+message: 'nldd-form-field holds no form input, so the label has nothing to connect to.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-field label="Naam"><nldd-text-field></nldd-text-field></nldd-form-field>']
+  failed: ['<nldd-form-field label="Naam"><nldd-button text="Kies"></nldd-button></nldd-form-field>']
+  cantTell: ['<nldd-form-field label="Naam"><MyInput /></nldd-form-field>']

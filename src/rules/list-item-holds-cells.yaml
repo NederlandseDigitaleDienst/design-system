@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-list-item'
+report: ':has(> :not([slot], :cell, nldd-list-item-segment))'
+message: 'A row takes cells and segments. Anything else sits outside its layout.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><nldd-text-cell text="Dossier D-318"></nldd-text-cell></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item><div></div></nldd-list-item></nldd-list>']

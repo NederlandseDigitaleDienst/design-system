@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-bar-split-view'
+report: ':has(> :not([slot]))'
+message: 'Every child of nldd-bar-split-view needs a `slot`, or it does not render.'
+see: patronen/application
+examples:
+  passed: ['<nldd-bar-split-view><nldd-split-view-pane slot="main"></nldd-split-view-pane></nldd-bar-split-view>']
+  failed: ['<nldd-bar-split-view><nldd-split-view-pane></nldd-split-view-pane></nldd-bar-split-view>']

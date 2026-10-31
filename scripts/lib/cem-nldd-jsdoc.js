@@ -14,15 +14,24 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { extractLeadingBlock, parseComponent } from './component-jsdoc.js';
+import { extractComponentBlocks, parseComponent } from './component-jsdoc.js';
+import { createLiteralTypeResolver } from './cem-literal-types.js';
 
 /** Ships a custom element but is not consumer-facing; the reference skips it too. */
 const INTERNAL_TAGS = new Set(['nldd-lqip-encoder']);
+
+function deprecationOf(description) {
+	return description.replace(/^@deprecated\s*/, '') || true;
+}
 
 export function nlddFileLevelJsdoc() {
 	return {
 		name: 'nldd-file-level-jsdoc',
 		packageLinkPhase({ customElementsManifest }) {
+			const literalTypes = createLiteralTypeResolver(
+				(customElementsManifest.modules ?? []).map((m) => m.path),
+			);
+
 			// Sorted by path: the analyzer emits modules in the order the file system
 			// hands them over, which differs between a macOS laptop and the Linux CI
 			// runner. Committing the manifest and checking it for drift only works if
@@ -42,11 +51,10 @@ export function nlddFileLevelJsdoc() {
 				} catch {
 					continue;
 				}
-				const block = extractLeadingBlock(source);
-				if (!block) continue;
-
 				const documented = new Map(
-					parseComponent(block, module.path, elements[0].tagName).map((c) => [c.tag, c]),
+					extractComponentBlocks(source)
+						.flatMap((block) => parseComponent(block, module.path, elements[0].tagName) ?? [])
+						.map((c) => [c.tag, c]),
 				);
 
 				for (const element of elements) {
@@ -57,6 +65,14 @@ export function nlddFileLevelJsdoc() {
 					element.members = (element.members ?? []).filter(
 						(m) => !m.name?.startsWith('_') && m.privacy !== 'private' && m.privacy !== 'protected',
 					);
+
+					// A TypeScript alias says nothing to a tool reading the manifest, so
+					// `Appearance` is spelled out next to it. Done before the JSDoc below,
+					// which can only add attributes the decorators do not have.
+					for (const attribute of element.attributes ?? []) {
+						const literals = literalTypes(module.path, element.name, attribute.fieldName);
+						if (literals) attribute.expandedType = { text: literals };
+					}
 
 					const doc = documented.get(element.tagName);
 					if (!doc) continue;
@@ -79,7 +95,22 @@ export function nlddFileLevelJsdoc() {
 					const descriptions = new Map(doc.attrs.map((a) => [a.name, a.description]));
 					for (const attribute of element.attributes ?? []) {
 						const description = descriptions.get(attribute.name);
-						if (description) attribute.description = description;
+						if (!description) continue;
+						attribute.description = description;
+						if (description.startsWith('@deprecated')) attribute.deprecated = deprecationOf(description);
+					}
+
+					// Some attributes have no decorator of their own: the form API a
+					// component forwards to its native form, or what a parent reads off
+					// its children. They are public API, so the manifest lists them too.
+					const declared = new Set((element.attributes ?? []).map((a) => a.name));
+					for (const { name, type, description, forChildren } of doc.attrs) {
+						if (declared.has(name)) continue;
+						const attribute = { name, description };
+						if (type) attribute.type = { text: type };
+						if (forChildren) attribute.forChildren = true;
+						if (description.startsWith('@deprecated')) attribute.deprecated = deprecationOf(description);
+						(element.attributes ??= []).push(attribute);
 					}
 				}
 			}

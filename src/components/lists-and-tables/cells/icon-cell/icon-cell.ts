@@ -10,6 +10,7 @@
  * @attr {'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'} color - Color variant of the icon (default: 'content')
  * @attr {string} vertical-alignment - Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')
  * @attr {string} icon - Icon name (renders `<nldd-icon>`). Takes precedence over the default slot.
+ * @attr {boolean} disclosure - Marks this icon as the chevron of a row or segment that opens and closes: the row turns it with `expanded`.
  *
  * @slot - Fallback for custom icon content when `icon` is not set.
  *

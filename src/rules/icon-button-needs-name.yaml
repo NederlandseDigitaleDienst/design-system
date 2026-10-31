@@ -1,0 +1,8 @@
+severity: error
+context: nldd-icon-button
+assert: '[text], [accessible-label]'
+message: nldd-icon-button needs `text` or `accessible-label`, otherwise it has no accessible name.
+examples:
+  passed: ['<nldd-icon-button icon="plus" text="Sluit"></nldd-icon-button>']
+  failed: ['<nldd-icon-button icon="plus"></nldd-icon-button>']
+  cantTell: ['<nldd-icon-button icon="plus" :text="label"></nldd-icon-button>']

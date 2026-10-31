@@ -56,8 +56,8 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
  *
  * Divider markers, set on a CELL inside the segment rather than on the segment itself:
- * @attr {boolean} divider-start - The row's divider starts at this cell instead of at its first text or title cell.
- * @attr {boolean} divider-end - The row's divider stops after this cell.
+ * @childattr {boolean} divider-start - The row's divider starts at this cell instead of at its first text or title cell.
+ * @childattr {boolean} divider-end - The row's divider stops after this cell.
  *
  * @slot - The cells that belong to this segment
  *

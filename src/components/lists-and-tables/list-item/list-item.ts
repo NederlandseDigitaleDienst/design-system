@@ -180,8 +180,8 @@ const NESTED_CONTROLS = [
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
  * Divider markers, set on a CELL in the row rather than on the row itself:
- * @attr {boolean} divider-start - The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.
- * @attr {boolean} divider-end - The divider stops after this cell. With several markers the line runs from the first start to the last end.
+ * @childattr {boolean} divider-start - The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.
+ * @childattr {boolean} divider-end - The divider stops after this cell. With several markers the line runs from the first start to the last end.
  *
  * @slot - Cells and segments, in source order. Anything else, bare text included, gets none of a cell's typography, size and alignment, and warns in development.
  * @slot children - Child rows of this row, in an `nldd-list type="tree"` or `type="navigation"`. In a tree they render as a `role="group"` below the row, hidden while `expanded` is false. In a navigation list they are the sub-pages: a `role="list"` inside this list item, always shown, and without the tree's keyboard. For sub-pages that fold away, use a tree. Either way the nesting IS the hierarchy, so a screen reader reads the level from it and nothing is authored. The group has no styling of its own: repeat a spacer-cell per level to indent, or show depth some other way.

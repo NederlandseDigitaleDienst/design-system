@@ -1,0 +1,7 @@
+severity: warn
+context: ':is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section) nldd-page-footer'
+message: 'nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page><nldd-page-footer slot="footer"></nldd-page-footer></nldd-page>']
+  failed: ['<nldd-simple-section><nldd-page-footer></nldd-page-footer></nldd-simple-section>']

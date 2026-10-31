@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-card:is([href], [button])'
+assert: '[accessible-label]'
+message: 'A card that is a link or button needs `accessible-label`: the control has no text of its own.'
+see: patronen/navigation-page
+examples:
+  passed: ['<nldd-card href="/a" accessible-label="Aanvraag A-1042"></nldd-card>']
+  failed: ['<nldd-card href="/a"></nldd-card>']

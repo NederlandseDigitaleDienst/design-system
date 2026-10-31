@@ -508,6 +508,8 @@
   },
   "files": [
     "dist",
+    "lint",
+    "!lint/**/*.test.mjs",
     "custom-elements.json",
     "LICENSE",
     "NOTICES.md"
@@ -527,7 +529,8 @@
     "generate:colors": "node scripts/generate-colors.js && npm run generate:themes",
     "generate:themes": "node scripts/generate-themes.js",
     "generate:component-reference": "node scripts/generate-component-reference.js",
-    "generate:cem": "cem analyze && npm run generate:vue-types",
+    "generate:cem": "cem analyze && npm run generate:vue-types && npm run generate:lint-data",
+    "generate:lint-data": "node scripts/generate-lint-data.js",
     "generate:vue-types": "node scripts/generate-vue-types.js",
     "generate:skill-changelog": "node scripts/generate-skill-changelog.js",
     "generate:skill-principles": "node scripts/generate-skill-principles.js",
@@ -557,6 +560,8 @@
     "build-storybook": "storybook build",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
+    "lint:rules": "node scripts/check-lint-rules.js",
+    "lint:corpus": "node scripts/lint-corpus.js",
     "lint:a11y": "eslint src/ --rule 'lit-a11y/*: error'",
     "changelog:draft": "node scripts/changelog-draft.mjs",
     "prepare": "pre-commit install || true",
@@ -564,7 +569,7 @@
     "pretest:run": "npm run build:icons",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:scripts": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs",
+    "test:scripts": "node --test scripts/*.test.mjs scripts/lib/*.test.mjs lint/*.test.mjs",
     "pretypecheck": "npm run build:icons",
     "typecheck": "tsc --noEmit",
     "test:vue-types": "vue-tsc --noEmit -p type-tests/vue/tsconfig.json",
@@ -586,6 +591,7 @@
     "@storybook/web-components-vite": "^10.6.0",
     "@vitest/browser-playwright": "5.0.5",
     "@vitest/coverage-v8": "5.0.5",
+    "ajv": "^8.20.0",
     "axe-core": "^4.13.0",
     "conventional-changelog": "^8.1.0",
     "conventional-changelog-conventionalcommits": "10.2.1",
@@ -602,10 +608,11 @@
     "vite": "8.3.5",
     "vitest": "5.0.5",
     "vue": "^3.5.40",
-    "vue-tsc": "^3.3.7"
+    "vue-tsc": "^3.3.7",
+    "yaml": "^2.9.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.19.0"
   },
   "keywords": [
     "design-system",
@@ -634,10 +641,19 @@
     "@codemirror/view": "^6.43.4",
     "@floating-ui/dom": "^1.7.6",
     "@lezer/highlight": "^1.2.3",
+    "css-select": "^7.0.0",
+    "css-what": "^8.0.0",
+    "htmlparser2": "^12.0.0",
     "lit": "^3.3.1"
   },
   "customElements": "custom-elements.json",
   "overrides": {
     "conventional-changelog-conventionalcommits": "10.2.1"
+  },
+  "optionalDependencies": {
+    "oxc-parser": "^0.156.0"
+  },
+  "bin": {
+    "nldd": "lint/cli.js"
   }
 }

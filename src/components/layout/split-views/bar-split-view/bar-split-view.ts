@@ -24,12 +24,12 @@
  * @attr {'inherit'|'base'|'tinted'} background - Background color variant (default: inherit)
  *
  * Responsive visibility and order per child (direct children of nldd-bar-split-view):
- * @attr {'sm'|'md'|'lg'} above - Show this panel from this breakpoint and larger
- * @attr {'sm'|'md'|'lg'} below - Show this panel up to and including this breakpoint
- * @attr {'sm'|'md'|'lg'} only - Show this panel only at this breakpoint
- * @attr {number} sm-order - Position of this panel at sm (lower comes first)
- * @attr {number} md-order - Position of this panel at md (lower comes first)
- * @attr {number} lg-order - Position of this panel at lg (lower comes first)
+ * @childattr {'sm'|'md'|'lg'} above - Show this panel from this breakpoint and larger
+ * @childattr {'sm'|'md'|'lg'} below - Show this panel up to and including this breakpoint
+ * @childattr {'sm'|'md'|'lg'} only - Show this panel only at this breakpoint
+ * @childattr {number} sm-order - Position of this panel at sm (lower comes first)
+ * @childattr {number} md-order - Position of this panel at md (lower comes first)
+ * @childattr {number} lg-order - Position of this panel at lg (lower comes first)
  *
  * @slot main - Central panel for primary content
  * @slot * - Any other unique slot name creates a bar panel
