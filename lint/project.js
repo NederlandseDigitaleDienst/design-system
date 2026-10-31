@@ -72,6 +72,16 @@ export const BASELINE_FILE = '.nldd-lint-baseline.json';
  * does not turn accepted findings into new ones. The findings in a file beyond
  * the accepted count are the new ones.
  */
+function mergeRenamed(entries, canonical) {
+	const merged = {};
+	for (const [key, count] of Object.entries(entries)) {
+		const [rule, ...tag] = key.split('|');
+		const renamed = [canonical(rule), ...tag].join('|');
+		merged[renamed] = (merged[renamed] ?? 0) + count;
+	}
+	return merged;
+}
+
 export function readBaseline(root, canonical = (id) => id) {
 	const path = join(root, BASELINE_FILE);
 	if (!existsSync(path)) return {};
@@ -79,15 +89,7 @@ export function readBaseline(root, canonical = (id) => id) {
 	return Object.fromEntries(
 		Object.entries(baseline).map(([file, entries]) => [
 			file,
-			Object.fromEntries(
-				Object.entries(entries).map(([key, count]) => {
-					const [rule, ...tag] = key.split('|');
-					return [[canonical(rule), ...tag].join('|'), count];
-				}).reduce((entries, [key, count]) => {
-					entries.push([key, count + (Object.fromEntries(entries)[key] ?? 0)]);
-					return entries;
-				}, []),
-			),
+			mergeRenamed(entries, canonical),
 		]),
 	);
 }

@@ -1,4 +1,5 @@
 severity: warn
 runtime: true
-context: 'nldd-icon:state(unknown-icon), :state(unknown-icon)'
+context: ':state(unknown-icon)'
+tags: ['nldd-icon', 'nldd-button', 'nldd-menu-item']
 message: 'An icon set here does not exist. See the icon list in the reference.'

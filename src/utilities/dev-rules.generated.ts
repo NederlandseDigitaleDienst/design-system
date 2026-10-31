@@ -233,7 +233,7 @@ export const devRules: DevRule[] = [
 	{
 		"id": "icon-not-found",
 		"message": "An icon set here does not exist. See the icon list in the reference.",
-		"context": "nldd-icon:state(unknown-icon), :state(unknown-icon)"
+		"context": ":state(unknown-icon)"
 	},
 	{
 		"id": "image-needs-alt",

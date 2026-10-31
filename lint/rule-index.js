@@ -7,7 +7,7 @@ export function selectorsOf(rule) {
 /** Every component a rule is about, so a rule on two components shows up at both. */
 export function tagsOf(rule) {
 	const named = selectorsOf(rule).flatMap((selector) => selector.match(/nldd-[a-z0-9-]+/g) ?? []);
-	return [...new Set(named)];
+	return [...new Set([...(rule.tags ?? []), ...named])];
 }
 
 export function rulesAboutTag(rules, tag) {

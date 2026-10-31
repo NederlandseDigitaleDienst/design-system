@@ -45760,6 +45760,30 @@
         },
         {
           "kind": "function",
+          "name": "hasState",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "ParentNode"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Whether anything in this root states this. False where the browser has no `:state()`."
+        },
+        {
+          "kind": "function",
           "name": "setState",
           "return": {
             "type": {
@@ -45795,6 +45819,14 @@
           "name": "internalsOf",
           "declaration": {
             "name": "internalsOf",
+            "module": "src/utilities/element-state.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hasState",
+          "declaration": {
+            "name": "hasState",
             "module": "src/utilities/element-state.ts"
           }
         },

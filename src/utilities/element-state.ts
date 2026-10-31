@@ -19,6 +19,15 @@ export function internalsOf(element: HTMLElement): ElementInternals {
 	return result;
 }
 
+/** Whether anything in this root states this. False where the browser has no `:state()`. */
+export function hasState(root: ParentNode, name: string): boolean {
+	try {
+		return root.querySelector(`:state(${name})`) !== null;
+	} catch {
+		return false;
+	}
+}
+
 /**
  * Nothing to clear means no internals: most elements never state anything, and
  * this also runs in production. A browser that has no custom states, or takes

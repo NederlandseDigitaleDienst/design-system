@@ -11,6 +11,7 @@
 	"properties": {
 		"severity": { "enum": ["error", "warn"] },
 		"runtime": { "type": "boolean", "description": "Only the running page can tell, because the selector reads a :state() a component sets. The linter skips it, and it needs no examples." },
+		"tags": { "type": "array", "items": { "type": "string" }, "description": "Components this rule is about, when the selector does not name them." },
 		"removed": { "type": "array", "items": { "type": "string" }, "description": "Attributes that are gone from this component, which is what the rule is about. A selector may name them, and being there is enough." },
 		"context": { "type": "string", "description": "CSS selector for the elements the rule applies to." },
 		"assert": { "type": "string", "description": "Selector the context element must match." },

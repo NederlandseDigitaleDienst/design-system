@@ -13,30 +13,53 @@ import { compile } from 'css-select';
 import { parse } from 'css-what';
 import { BOUND, adapter, walk } from './tree.js';
 
+/** In W+ a sibling behind a condition might not render, as with `v-if` and `v-else`. */
+const favorableAdapter = {
+	...adapter,
+	getSiblings: (node) =>
+		adapter.getSiblings(node).filter((each) => each === node || (!each.conditional && !each.repeated)),
+};
+
 const BUILT_IN_PSEUDOS = new Set(['is', 'not', 'has', 'where', 'matches']);
 
-function findFieldInput(field, isInput) {
-	let found;
-	walk(field, (node) => {
-		// One that may not render leaves the label to the next: that is the favorable reading.
-		found ??= isInput(node) && !node.conditional && !node.repeated ? node : undefined;
-	});
-	return found;
+/**
+ * Whether a field hands its label to `target`, as _findInput in nldd-form-field does:
+ * the first input in document order, helper text left out. The answer is `maybe` when
+ * something before it may or may not be an input that renders.
+ */
+function findsInput(node, target, isInput, uncertain = false) {
+	let maybe = uncertain;
+	for (const child of node.children) {
+		if (child.name === 'nldd-form-field-help-text') continue;
+		const unsure = maybe || child.conditional || child.repeated;
+		if (child === target) return maybe ? 'maybe' : 'yes';
+		if (isInput(child)) {
+			if (!unsure) return 'no';
+			maybe = true;
+		}
+		if (child.opaque) maybe = true;
+		const inside = findsInput(child, target, isInput, unsure);
+		if (inside !== 'absent') return inside;
+	}
+	return 'absent';
 }
 
 /**
- * Whether nldd-form-field hands its label to this element. In source that has to be
- * worked out; on a running page the attribute is simply there, so the browser checks
- * leave this out. Under a root that is rendered elsewhere, a field may be around it.
+ * On a running page the attribute is simply there, so the browser checks leave this
+ * out. In source it has to be worked out.
  */
-function createFieldLabelCheck(isInput, whenRootIsOpen) {
+function createFieldLabelCheck(isInput, allowMaybe) {
 	return (node) => {
 		for (let parent = node.parent; parent; parent = parent.parent) {
 			if (parent.name === 'nldd-form-field') {
-				const labeled = parent.attrs.has('label') || parent.spread;
-				return labeled && (findFieldInput(parent, isInput) === node || parent.children.some((child) => child.opaque));
+				const label = parent.attrs.get('label');
+				const unknownLabel = label === BOUND || parent.spread;
+				if (!unknownLabel && !label) return false;
+				const found = findsInput(parent, node, isInput);
+				if (found === 'yes' && !unknownLabel) return true;
+				return allowMaybe && found !== 'no';
 			}
-			if (parent.opaque) return whenRootIsOpen;
+			if (parent.opaque) return allowMaybe;
 		}
 		return false;
 	};
@@ -96,7 +119,7 @@ export function createEngine({ classes = {} } = {}) {
 		let test = cache.get(key);
 		if (!test) {
 			const query = parse(selector).map((tokens) => forWorld(tokens, classes, world === '+'));
-			test = compile(query, { adapter, pseudos, xmlMode: true });
+			test = compile(query, { adapter: world === '+' ? favorableAdapter : adapter, pseudos, xmlMode: true });
 			cache.set(key, test);
 		}
 		return test(node);
@@ -110,7 +133,7 @@ export function createEngine({ classes = {} } = {}) {
 		const { of, min, max } = rule.count;
 		const counted = node.children.filter((child) => matches(child, of, world));
 		if (world === '-') {
-			const certain = counted.filter((child) => !child.conditional && !child.repeated).length;
+			const certain = counted.filter((child) => !child.conditional && !child.repeated && !child.toggled).length;
 			return (max !== undefined && certain > max) || (min !== undefined && certain < min);
 		}
 		const open = counted.some((child) => child.repeated) || node.children.some((child) => child.opaque);

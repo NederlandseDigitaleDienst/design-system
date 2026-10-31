@@ -116,13 +116,22 @@ function checkNoWarnings() {
 	for (const [file, source] of componentSources) {
 		// Without this, a component could be imported on its own with no checks at all.
 		const registers = /@customElement\(|customElements\.define\(/.test(source);
-		if (file.includes('/components/') && registers && !source.includes('custom-element.js')) {
+		const inComponents = relative(repoRoot, file).startsWith('src/components/');
+		if (inComponents && registers && !/^import [^\n]*\/custom-element\.js';$/m.test(source)) {
 			problems.push(`${relative(repoRoot, file)}: registers a component without utilities/custom-element.js.`);
 		}
 		for (const match of source.matchAll(/console\.warn\(/g)) {
 			const line = source.slice(0, match.index).split('\n').length;
 			problems.push(`${relative(repoRoot, file)}:${line}: use a rule, not console.warn. See /rule.`);
 		}
+	}
+}
+
+/** The browser rejects a pseudo it does not know, and then silently skips the rule. */
+function checkBrowserSelectors() {
+	const generated = readFileSync(join(repoRoot, 'src/utilities/dev-rules.generated.ts'), 'utf8');
+	if (generated.includes(':named-by-field')) {
+		problems.push(`dev rules still hold :named-by-field: write it as the last option of an assert.`);
 	}
 }
 
@@ -136,6 +145,7 @@ for (const rule of data.rules) {
 }
 const patterns = await checkPatterns();
 checkNoWarnings();
+checkBrowserSelectors();
 
 if (problems.length > 0) {
 	console.error(problems.join('\n'));

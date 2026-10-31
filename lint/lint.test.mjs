@@ -289,6 +289,51 @@ describe('found in review', () => {
 		assert.equal(await isNamed(inGroup), true);
 	});
 
+	it('does not fail a control that is itself conditional in a labeled field', async () => {
+		const field = (body) => vue(`<nldd-form-field label="a">${body}</nldd-form-field>`);
+		for (const body of [
+			'<nldd-number-field v-if="x"></nldd-number-field>',
+			'<nldd-number-field v-for="x in y"></nldd-number-field>',
+			'<nldd-text-field v-if="x" accessible-label="b"></nldd-text-field><nldd-number-field v-else></nldd-number-field>',
+			'<div v-if="x"><nldd-text-field></nldd-text-field></div><nldd-number-field></nldd-number-field>',
+		]) {
+			assert.deepEqual(await rulesIn(field(body)), [], body);
+		}
+	});
+
+	it('does not take an empty label for a name', async () => {
+		const page = '<html><body><nldd-form-field label=""><nldd-number-field></nldd-number-field></nldd-form-field></body></html>';
+		assert.ok((await rulesIn(page, 'a.html')).includes('number-field-needs-name'));
+	});
+
+	it('still fails what follows a certain input, whatever comes after', async () => {
+		const page = '<html><body><nldd-form-field label="a"><nldd-text-field></nldd-text-field><nldd-number-field></nldd-number-field><slot></slot></nldd-form-field></body></html>';
+		assert.ok((await rulesIn(page, 'a.html')).includes('number-field-needs-name'));
+	});
+
+	it('skips help text when looking for the input, as the field does', async () => {
+		const page = '<html><body><nldd-form-field label="a"><nldd-form-field-help-text><input></nldd-form-field-help-text><nldd-number-field></nldd-number-field></nldd-form-field></body></html>';
+		assert.deepEqual(await rulesIn(page, 'a.html'), []);
+	});
+
+	it('takes a camelCase attribute that the browser lowercases', async () => {
+		assert.deepEqual(await rulesIn('const a = <nldd-text-field readOnly maxLength={3} />;', 'a.tsx'), []);
+	});
+
+	it('leaves the props of React itself alone', async () => {
+		assert.deepEqual(await rulesIn('const a = <nldd-button text="a" suppressHydrationWarning />;', 'a.tsx'), []);
+	});
+
+	it('does not count both sides of a v-show as certain', async () => {
+		const buttons = '<nldd-button v-show="a" text="b"></nldd-button>'.repeat(2) + '<nldd-button v-show="!a" text="c"></nldd-button>'.repeat(2);
+		assert.deepEqual(await rulesIn(vue(`<nldd-button-group>${buttons}</nldd-button-group>`)), []);
+	});
+
+	it('takes no suppression from the end of a comment', async () => {
+		const source = '<template>\n<!-- nldd-lint-disable-next-line unknown-element --->\n<nldd-gone />\n</template>';
+		assert.ok((await rulesIn(source)).includes('unknown-element'));
+	});
+
 	it('takes v-show for rendered, and a v-for for maybe nothing', async () => {
 		const page = (body) => vue(`<nldd-form-field label="a">${body}<nldd-number-field></nldd-number-field></nldd-form-field>`);
 		assert.ok((await rulesIn(page('<nldd-text-field v-show="x"></nldd-text-field>'))).includes('number-field-needs-name'));

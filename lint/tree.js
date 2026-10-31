@@ -20,6 +20,7 @@ export const BOUND = Symbol('bound');
  * @property {boolean} opaque Stands for content this file cannot see.
  * @property {boolean} conditional Rendered only some of the time.
  * @property {boolean} repeated Rendered any number of times.
+ * @property {boolean} toggled In the DOM, but maybe not visible (`v-show`).
  * @property {boolean} wrapped A framework wrapper standing in for this tag.
  * @property {boolean} templated A template language writes into the tag itself.
  */
@@ -36,6 +37,7 @@ export function createNode(name, offset = 0) {
 		opaque: false,
 		conditional: false,
 		repeated: false,
+		toggled: false,
 		wrapped: false,
 		templated: false,
 	};

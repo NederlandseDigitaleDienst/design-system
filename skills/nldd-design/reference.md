@@ -21,6 +21,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 - `button-form-id-not-found`: Nothing in this root has the id in `form`, so this button submits nothing.
 - `button-needs-name`: nldd-button needs `text` or `accessible-label`, otherwise it has no accessible name.
 - `download-target-no-effect`: `target` does nothing with `download`, which saves the file instead of opening it. Remove one of the two.
+- `icon-not-found`: An icon set here does not exist. See the icon list in the reference.
 
 **Attributes**
 
@@ -235,6 +236,7 @@ A single item within an nldd-menu.
 
 **Rules** (`nldd lint`)
 
+- `icon-not-found`: An icon set here does not exist. See the icon list in the reference.
 - `menu-navigation-holds-links`: variant="navigation" is a list of links. A checkbox or radio item, or a shortcut, belongs to an action menu and has no role to live in here. Use the default variant for actions.
 - `submenu-added-after-mount`: An nldd-menu child was added after mount. Submenu attachment is resolved once at firstUpdated, so this menu will not be treated as a submenu. Define the nldd-menu child before the item is connected to the DOM.
 

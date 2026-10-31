@@ -71,6 +71,17 @@ describe('rules in the browser', () => {
 		expect(findViolations(root).map(({ rule }) => rule.id)).toContain('icon-not-found');
 	});
 
+	it('forgets an icon that was fixed', async () => {
+		await mount('<nldd-button text="Bewaar" start-icon="bestaat-niet"></nldd-button>');
+		const button = root.firstElementChild as HTMLElement & { startIcon: string; updateComplete: Promise<boolean> };
+		await button.updateComplete;
+		await new Promise((resolve) => setTimeout(resolve, 20));
+		button.startIcon = 'plus';
+		await button.updateComplete;
+		await new Promise((resolve) => setTimeout(resolve, 20));
+		expect(findViolations(root).map(({ rule }) => rule.id)).not.toContain('icon-not-found');
+	});
+
 	it('finds the second control in a labeled field, which the field does not name', async () => {
 		await mount('<nldd-form-field label="Naam"><nldd-text-field></nldd-text-field><nldd-number-field></nldd-number-field></nldd-form-field>');
 		expect(findViolations(root).map(({ rule }) => rule.id)).toEqual(['number-field-needs-name']);

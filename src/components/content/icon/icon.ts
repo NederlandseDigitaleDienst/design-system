@@ -6,7 +6,7 @@ import { iconStyles } from './icon.styles.js';
 import { template } from './icon.template.js';
 import { aliases } from './icon-aliases.js';
 import { iconRegistry } from './icon-registry.js';
-import { setState } from '../../../utilities/element-state.js';
+import { hasState, setState } from '../../../utilities/element-state.js';
 
 export { aliases };
 
@@ -131,11 +131,13 @@ export class NLDDIcon extends LitElement {
 		}
 	}
 
+	private _wasUnknown = false;
+
 	/** A name set on a button ends up here, in a shadow root the checks stay out of. */
-	private _markHosts(): void {
+	private _syncHosts(): void {
 		let root = this.getRootNode();
 		while (root instanceof ShadowRoot && root.host.localName.startsWith('nldd-')) {
-			setState(root.host as HTMLElement, 'unknown-icon', true);
+			setState(root.host as HTMLElement, 'unknown-icon', hasState(root, 'unknown-icon'));
 			root = root.host.getRootNode();
 		}
 	}
@@ -145,7 +147,8 @@ export class NLDDIcon extends LitElement {
 		const svg = iconRegistry.get(resolvedName);
 
 		setState(this, 'unknown-icon', !svg);
-		if (!svg) this._markHosts();
+		if (!svg || this._wasUnknown) this._syncHosts();
+		this._wasUnknown = !svg;
 		return svg ?? null;
 	}
 

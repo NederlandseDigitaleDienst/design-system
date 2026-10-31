@@ -45,7 +45,7 @@ examples:
 In selectors:
 - `[href]` betekent "heeft een waarde", behalve bij booleans.
 - `:form-input` en `:cell` zijn klassen uit het manifest; schrijf geen eigen lijst tags.
-- `:named-by-field` is waar waar `nldd-form-field` het label aan dit element geeft.
+- `:named-by-field` is waar waar `nldd-form-field` het label aan dit element geeft. Zet hem als laatste optie in een `assert`: `'[accessible-label], :named-by-field'`.
 
 ### Twee bijzondere gevallen
 

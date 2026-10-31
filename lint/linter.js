@@ -59,6 +59,8 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 			// A property without an attribute, which only a binding can reach.
 		} else if (isPlainHtml && /[A-Z]/.test(name)) {
 			// HTML has no capitals, so in an .html file this is a template directive.
+		} else if (contract.attrs[name.toLowerCase()]) {
+			// `maxLength`: no such property, so it ends up as the attribute, in lowercase.
 		} else if (!GLOBAL_ATTRIBUTE.test(name.toLowerCase()) && !node.wrapped) {
 			report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
 		}
@@ -93,7 +95,7 @@ function builtInFindings(root, context) {
 	return findings;
 }
 
-const SUPPRESSION = /nldd-lint-disable-next-line\s+([\w-]+(?:\s*,\s*[\w-]+)*)(?:\s+--(?!>)\s*(\S.*?))?\s*(?:-->|\*\/|#\}|$)/;
+const SUPPRESSION = /nldd-lint-disable-next-line\s+([\w-]+(?:\s*,\s*[\w-]+)*)(?:\s+--(?!-*>)\s*(\S.*?))?\s*(?:-->|\*\/|#\}|$)/;
 
 function readSuppressions(source, canonical) {
 	const suppressed = new Map();
@@ -187,10 +189,10 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				tag: node.name,
 				...position(node.offset),
 			}))
+			.filter((finding) => !suppressed.get(finding.line)?.has(finding.rule))
 			.concat(reasons)
 			.map((finding) => ({ ...finding, severity: severities[finding.rule] ?? finding.severity }))
-			.filter((finding) => finding.severity !== 'off')
-			.filter((finding) => !suppressed.get(finding.line)?.has(finding.rule));
+			.filter((finding) => finding.severity !== 'off');
 		located.sort((a, b) => a.line - b.line || a.column - b.column);
 		return { findings: located, counts };
 	}

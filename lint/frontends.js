@@ -39,7 +39,7 @@ const PLAIN_ATTRIBUTE = /^[a-zA-Z_][\w:.-]*$/;
 function readAttribute(element, name, value) {
 	if (CONDITIONAL.has(name)) element.conditional = true;
 	else if (REPEATED.has(name)) element.repeated = true;
-	else if (name === 'v-show') return;
+	else if (name === 'v-show') element.toggled = true;
 	else if (name === 'v-bind' || /^(v-bind)?:\[/.test(name)) element.spread = true;
 	else if (name === 'v-model') element.attrs.set('value', BOUND);
 	else if (name.startsWith('v-model:')) element.attrs.set(name.slice(8), BOUND);
@@ -168,6 +168,9 @@ function staticJsxValue(value) {
 	return BOUND;
 }
 
+/** Props React keeps to itself: they never reach the element. */
+const REACT_ONLY = new Set(['key', 'ref', 'dangerouslySetInnerHTML', 'suppressHydrationWarning', 'suppressContentEditableWarning']);
+
 function readJsxAttributes(element, attributes, roots) {
 	for (const attribute of attributes) {
 		if (attribute.type === 'JSXSpreadAttribute') {
@@ -175,7 +178,7 @@ function readJsxAttributes(element, attributes, roots) {
 			continue;
 		}
 		const name = jsxName(attribute.name);
-		const isHandler = /^on[A-Z]/.test(name) || name === 'key' || name === 'ref';
+		const isHandler = /^on[A-Z]/.test(name) || REACT_ONLY.has(name);
 		const value = staticJsxValue(attribute.value);
 		if (!isHandler && value !== undefined) element.attrs.set(name === 'className' ? 'class' : name, value);
 		// An element passed as a prop renders elsewhere, so it is a tree of its own.
