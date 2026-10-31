@@ -6,7 +6,6 @@ import { FormAssociated, type FormValue } from '../form-associated-mixin.js';
 import { reflectNonDefault } from '../reflect-non-default.js';
 import { DescribedBy } from '../described-by-mixin.js';
 import { NLDDCodeMirrorElement } from './codemirror-element.js';
-import { reflectWhenSet } from '../reflect-when-set.js';
 
 /**
  * Shared base for the CodeMirror editors that are form controls
@@ -34,7 +33,7 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 	@property({ type: String })
 	value = '';
 
-	@property({ type: String, attribute: 'input-id', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'input-id' })
 	inputId = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -55,7 +54,7 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 	@property({ type: Number })
 	rows = 6;
 
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	/**

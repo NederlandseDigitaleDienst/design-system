@@ -7,85 +7,67 @@ metadata:
 
 # Controleren met `nldd lint`
 
-De linter is deterministisch en kost geen tokens, dus draai hem in plaats van zelf markup na te lopen. Hij kent de API van precies de versie die in het project staat.
+Deterministisch en zonder tokens, dus draai dit in plaats van zelf markup na te lopen.
 
 ## Werkwijze
 
-1. Draai de linter op wat je hebt gewijzigd:
-
-   ```bash
-   npx @nldd/design-system lint --format json src/views/Aanvraag.vue
-   ```
-
-   Dat werkt ook als het pakket niet in het project staat, bijvoorbeeld bij server-gerenderde HTML met de CDN-build.
-
-2. Los elke bevinding op. Een bevinding geeft `rule`, `message`, de plek, en vaak een goed voorbeeld in `example`. Is dat niet genoeg, dan geeft `npx @nldd/design-system explain <rule>` de regel, het waarom en voorbeelden.
-3. Draai de linter opnieuw, tot er niets meer staat.
-
-Een snippet controleren vóór je hem opslaat kan ook:
-
 ```bash
-echo '<nldd-icon-button icon="plus"></nldd-icon-button>' | npx @nldd/design-system lint --stdin --filename snippet.html
+npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 ```
 
-Bij een site die naar HTML bouwt (Astro, MkDocs, Hugo, Django, Jinja) lint je de gerenderde pagina's. Dat werkt voor elk framework en de linter ziet dan de hele pagina:
+1. Los elke bevinding op. Je krijgt `rule`, `message`, de plek en vaak een goed voorbeeld.
+2. Is dat niet genoeg: `npx @nldd/design-system explain <rule>`.
+3. Draai opnieuw tot er niets meer staat.
 
-```bash
-npm run build && npx @nldd/design-system lint dist
-```
+| Wil je | Gebruik |
+|---|---|
+| Regels voor een component, vóór je het gebruikt | `npx @nldd/design-system rules --for nldd-toolbar` |
+| Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
+| Een site die naar HTML bouwt (Astro, MkDocs, Hugo, Django) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
+| Zien wat een upgrade breekt | `npx @nldd/design-system@latest lint` op je huidige code |
 
-Tijdens het ontwikkelen draaien dezelfde regels ook in de browser: ze staan als `[nldd] ...` in de console. Daar ziet een regel de echte waarden en wat verschillende componenten samen renderen.
+Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @nldd/design-system@<versie> lint`. Zonder pin krijg je de nieuwste.
 
-Wat er geldt voor een component vóór je het gebruikt, vraag je op met `npx @nldd/design-system rules --for nldd-toolbar`.
+## Wat hij niet ziet
 
-## Wat je met een bevinding doet
+In broncode meldt hij alleen wat zeker fout is, per bestand. Een waarde die pas tijdens het draaien bestaat, of een kind uit een ander component, blijft buiten beeld. Tijdens het ontwikkelen vangt de browser dat op: dezelfde regels staan dan als `[nldd] ...` in de console.
 
-Pas de code aan. Onderdruk een regel alleen als hij hier echt niet opgaat, met de reden erbij:
+Geen meldingen betekent dus niet dat het goed is. Bedoeling, koppenstructuur en de opbouw van een pagina beoordeel je zelf, met de patronen in [`nldd-design-build`](../nldd-design-build/SKILL.md).
+
+## Past een regel niet?
+
+Pas de code aan. Gaat de regel hier echt niet op, onderdruk hem dan met een reden:
 
 ```html
 <!-- nldd-lint-disable-next-line list-item-holds-cells -- de rij wordt verderop vervangen -->
 ```
 
-Past een regel structureel niet, dan is dat een voorstel voor het designsysteem: zie [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md).
-
-## Wat de linter niet ziet
-
-In broncode leest hij per bestand en meldt hij alleen wat zeker fout is. Een waarde die pas bij het draaien bekend is, of een kind uit een ander component, blijft dus buiten beeld. Wat hij niet meldt is daarmee niet bewezen goed: hele pagina's, koppenstructuur en bedoeling kun je alleen zelf beoordelen, aan de hand van de patronen in [`nldd-design-build`](../nldd-design-build/SKILL.md).
-
-## Welke versie
-
-Een project draait zijn eigen versie: de linter zit in het pakket en kent precies die API. Wil je zien wat een upgrade breekt, draai dan de nieuwe versie op je huidige code:
-
-```bash
-npx @nldd/design-system@latest lint
-```
-
-Staat het pakket niet in het project, pin dan de versie die je gebruikt, zoals `@nldd/design-system@0.14.0`. Zonder pin krijg je de nieuwste.
+Past hij structureel niet, dan is dat een voorstel: zie [`nldd-design-contribute`](../nldd-design-contribute/SKILL.md).
 
 ## In een project opnemen
 
 ```bash
-npx @nldd/design-system lint --update-baseline   # accepteer wat er staat, meld alleen nieuwe bevindingen
+npx @nldd/design-system lint --update-baseline   # accepteer wat er staat; commit .nldd-lint-baseline.json
 ```
 
-Commit `.nldd-lint-baseline.json`. Daarna:
+| Plek | Hoe |
+|---|---|
+| lint-staged | `{ "*.{html,vue,tsx}": "nldd lint" }` |
+| CI | `npx @nldd/design-system lint --format github` |
+| pre-commit | Zie hieronder |
 
-- lint-staged: `{ "*.{html,vue,tsx}": "nldd lint" }`
-- CI: `npx @nldd/design-system lint --format github` geeft annotaties op de pull request.
-- pre-commit, ook in een repo zonder Node:
+```yaml
+- repo: local
+  hooks:
+    - id: nldd-lint
+      name: nldd lint
+      entry: nldd lint
+      language: node
+      additional_dependencies: ['@nldd/design-system@<versie>']
+      files: \.(html|vue|tsx|jsx)$
+```
 
-  ```yaml
-  - repo: local
-    hooks:
-      - id: nldd-lint
-        name: nldd lint
-        entry: nldd lint
-        language: node
-        additional_dependencies: ['@nldd/design-system@<versie>']
-        files: \.(html|vue|tsx|jsx)$
-  ```
-
-Andere instellingen zijn zelden nodig. Staan ze er wel, dan in `.nldd-lint.json`:
+Configuratie is zelden nodig. Zo nodig, in `.nldd-lint.json`:
 
 ```json
 {

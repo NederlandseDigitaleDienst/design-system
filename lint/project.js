@@ -3,11 +3,10 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { extname, join, relative, resolve } from 'node:path';
-import { SUPPORTED_EXTENSIONS } from './frontends.js';
 
 const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
-const DEFAULT_EXTENSIONS = SUPPORTED_EXTENSIONS.filter((extension) => extension !== '.md');
+const DEFAULT_EXTENSIONS = ['.html', '.htm', '.vue', '.jsx', '.tsx'];
 
 function walkDirectory(directory, found) {
 	for (const entry of readdirSync(directory, { withFileTypes: true })) {

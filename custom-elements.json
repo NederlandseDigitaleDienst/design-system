@@ -488,8 +488,7 @@
               },
               "default": "''",
               "description": "Accessible label forwarded to the inner <button> or <a>. Use when visible text alone lacks context.",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -1199,8 +1198,7 @@
               },
               "default": "''",
               "description": "Accessible label for screen readers. Overrides text as aria-label and title tooltip.\nThe text is still shown visually in lg size regardless.",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -4583,8 +4581,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "name",
-              "reflects": true
+              "attribute": "name"
             },
             {
               "kind": "field",
@@ -4630,8 +4627,7 @@
               },
               "default": "''",
               "description": "Accessible name of the link or button. Without it, it falls back to\n`name`. Only matters when the avatar is interactive.",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -7681,8 +7677,7 @@
               },
               "default": "''",
               "description": "Label text. When empty no label is rendered but side-alignment indent is preserved.",
-              "attribute": "label",
-              "reflects": true
+              "attribute": "label"
             },
             {
               "kind": "field",
@@ -10599,7 +10594,6 @@
               },
               "default": "''",
               "attribute": "input-id",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -10696,7 +10690,6 @@
               },
               "default": "''",
               "attribute": "accessible-label",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -11139,8 +11132,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -14131,8 +14123,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "input-id",
-              "reflects": true
+              "attribute": "input-id"
             },
             {
               "kind": "field",
@@ -14260,8 +14251,7 @@
               },
               "default": "''",
               "description": "Accessible label forwarded to the inner <textarea>. Set automatically by nldd-form-field.",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -14895,8 +14885,7 @@
               },
               "default": "''",
               "description": "Accessible label forwarded as aria-label to the native input.",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -16539,8 +16528,7 @@
               },
               "default": "''",
               "description": "Accessible name forwarded as aria-label to the group host.",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -16549,8 +16537,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-labeled-by",
-              "reflects": true
+              "attribute": "accessible-labeled-by"
             },
             {
               "kind": "field",
@@ -18353,8 +18340,7 @@
               },
               "default": "''",
               "description": "Accessible name for the group (aria-label).",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -18364,8 +18350,7 @@
               },
               "default": "''",
               "description": "ID of an external label element (aria-labelledby).",
-              "attribute": "accessible-labeled-by",
-              "reflects": true
+              "attribute": "accessible-labeled-by"
             },
             {
               "kind": "method",
@@ -20222,8 +20207,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -23918,7 +23902,6 @@
               },
               "default": "''",
               "attribute": "input-id",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -24015,7 +23998,6 @@
               },
               "default": "''",
               "attribute": "accessible-label",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -26580,8 +26562,7 @@
               },
               "default": "''",
               "description": "Accessible name forwarded as aria-label to the group host.",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -26591,8 +26572,7 @@
               },
               "default": "''",
               "description": "ID of an external label element forwarded as aria-labelledby to the group host.",
-              "attribute": "accessible-labeled-by",
-              "reflects": true
+              "attribute": "accessible-labeled-by"
             },
             {
               "kind": "field",
@@ -26884,8 +26864,7 @@
               },
               "default": "''",
               "description": "Icon name for the nldd-icon element. When not set, the icon slot is used; the\nicon and icon-and-text variants show a placeholder icon when neither is provided.",
-              "attribute": "icon",
-              "reflects": true
+              "attribute": "icon"
             },
             {
               "kind": "field",
@@ -26915,8 +26894,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -28155,8 +28133,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -34206,8 +34183,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -35595,8 +35571,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -37077,8 +37052,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "text",
-              "reflects": true
+              "attribute": "text"
             },
             {
               "kind": "field",
@@ -37087,8 +37061,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "icon",
-              "reflects": true
+              "attribute": "icon"
             },
             {
               "kind": "field",
@@ -39769,8 +39742,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -40984,8 +40956,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "href",
-              "reflects": true
+              "attribute": "href"
             },
             {
               "kind": "field",
@@ -41184,8 +41155,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",
@@ -44933,8 +44903,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "input-id",
-              "reflects": true
+              "attribute": "input-id"
             },
             {
               "kind": "field",
@@ -45002,8 +44971,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label",
-              "reflects": true
+              "attribute": "accessible-label"
             },
             {
               "kind": "field",

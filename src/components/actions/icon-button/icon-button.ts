@@ -58,7 +58,6 @@ import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { internalsOf } from '../../../utilities/element-state.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
 export type Appearance =
@@ -183,7 +182,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 
 	/** Accessible label for screen readers. Overrides text as aria-label and title tooltip.
 	 *  The text is still shown visually in lg size regardless. */
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	/** Forwarded to the inner nldd-tooltip's `timing`. Use `'never'` to

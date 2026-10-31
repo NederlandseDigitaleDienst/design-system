@@ -19,6 +19,8 @@ export interface DevRule {
 	assert?: string;
 	report?: string;
 	count?: { of: string; min?: number; max?: number };
+	/** Properties that count as the attributes `assert` asks for. */
+	properties?: string[];
 }
 
 /** Long enough for a framework to finish a render, and for most first data. */
@@ -28,7 +30,11 @@ const SETTLE_MS = 300;
 const RECHECK_MS = 2000;
 
 function isViolated(rule: DevRule, element: Element): boolean {
-	if (rule.assert) return !element.matches(rule.assert);
+	if (rule.assert) {
+		// A framework can set a property, which a selector does not see.
+		const set = rule.properties?.some((name) => (element as unknown as Record<string, unknown>)[name]);
+		return !set && !element.matches(rule.assert);
+	}
 	if (rule.report) return element.matches(rule.report);
 	if (rule.count) {
 		const { of, min, max } = rule.count;

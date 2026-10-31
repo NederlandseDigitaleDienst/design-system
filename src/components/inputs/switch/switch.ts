@@ -32,7 +32,6 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { switchStyles } from './switch.styles.js';
 import { switchTemplate } from './switch.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 export type SwitchSize = 'xs' | 'sm';
 
@@ -69,7 +68,7 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	color: '' | 'inherit' = '';
 
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ type: String })

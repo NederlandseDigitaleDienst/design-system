@@ -68,7 +68,6 @@ import { isPointerMode } from '../../../utilities/input-modality.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import { setState } from '../../../utilities/element-state.js';
 
 @customElement('nldd-popover')
@@ -109,7 +108,7 @@ export class NLDDPopover extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	centered = false;
 
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	/**

@@ -54,7 +54,6 @@ import './../../content/icon/icon.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
 export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
@@ -110,7 +109,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Icon name for the nldd-icon element. When not set, the icon slot is used; the
 	 *  icon and icon-and-text variants show a placeholder icon when neither is provided. */
-	@property({ type: String, reflect: true, converter: reflectWhenSet })
+	@property({ type: String })
 	icon = '';
 
 	/** Icon shown instead of `icon` while selected. On the transparent
@@ -121,7 +120,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonVariant | ''>('') })
 	variant: ToggleButtonVariant | '' = '';
 
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })

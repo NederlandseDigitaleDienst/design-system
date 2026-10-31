@@ -56,7 +56,6 @@ import {
 	formFieldTemplate,
 	formFieldHelpTextTemplate,
 } from './form-field.template.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import { setState } from '../../../utilities/element-state.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
@@ -119,7 +118,7 @@ export class NLDDFormField extends LitElement {
 	labelAlignment: LabelAlignment | undefined = undefined;
 
 	/** Label text. When empty no label is rendered but side-alignment indent is preserved. */
-	@property({ type: String, reflect: true, converter: reflectWhenSet })
+	@property({ type: String })
 	label = '';
 
 	/**

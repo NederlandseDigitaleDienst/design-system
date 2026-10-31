@@ -302,8 +302,6 @@ const PARSERS = {
 	'.tsx': parseJsx,
 };
 
-export const SUPPORTED_EXTENSIONS = Object.keys(PARSERS);
-
 /** @returns {Promise<import('./tree.js').TreeNode[]>} */
 export async function parseSource(source, filename) {
 	const extension = filename.slice(filename.lastIndexOf('.'));

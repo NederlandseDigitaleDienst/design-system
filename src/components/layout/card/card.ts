@@ -39,7 +39,6 @@ import { cardStyles } from './card.styles.js';
 import { cardTemplate } from './card.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddCardTranslations } from './card.i18n.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 export type CardBackground = 'base' | 'tinted' | 'accent-tinted';
 
@@ -50,7 +49,7 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	@property({ reflect: true, converter: reflectNonDefault<CardBackground>('base') })
 	background: CardBackground = 'base';
 
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel: string | undefined;
 
 	/** When set, the whole card becomes one link to this URL via an overlay anchor.

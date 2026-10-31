@@ -80,7 +80,6 @@ import { nlddAvatarTranslations } from './avatar.i18n.js';
 import { avatarStyles } from './avatar.styles.js';
 import { avatarTemplate } from './avatar.template.js';
 import '../icon/icon.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 export type AvatarType = 'person' | 'organization';
 
@@ -111,7 +110,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	@property({ type: Boolean, reflect: true, attribute: 'icon-aligned' })
 	iconAligned = false;
 
-	@property({ type: String, reflect: true, converter: reflectWhenSet })
+	@property({ type: String })
 	name = '';
 
 	@property({ type: String })
@@ -128,7 +127,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 
 	/** Accessible name of the link or button. Without it, it falls back to
 	 *  `name`. Only matters when the avatar is interactive. */
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })

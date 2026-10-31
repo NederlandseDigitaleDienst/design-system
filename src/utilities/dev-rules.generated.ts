@@ -18,7 +18,11 @@ export const devRules: DevRule[] = [
 		"id": "avatar-needs-name",
 		"message": "An avatar with `href` or `button` needs `accessible-label` or `name`, or the control has no accessible name.",
 		"context": "nldd-avatar:is([href]:not([href=\"\"]), [button])",
-		"assert": "[accessible-label]:not([accessible-label=\"\"]), [name]:not([name=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [name]:not([name=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"name"
+		]
 	},
 	{
 		"id": "avatar-target-too-small",
@@ -59,7 +63,11 @@ export const devRules: DevRule[] = [
 		"id": "button-needs-name",
 		"message": "nldd-button needs `text` or `accessible-label`, otherwise it has no accessible name.",
 		"context": "nldd-button",
-		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"]), :has(> [slot=\"text\"])"
+		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"]), :has(> [slot=\"text\"])",
+		"properties": [
+			"text",
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "button-size-set-on-group",
@@ -70,7 +78,10 @@ export const devRules: DevRule[] = [
 		"id": "card-link-needs-name",
 		"message": "A card that is a link or button needs `accessible-label`: the control has no text of its own.",
 		"context": "nldd-card:is([href]:not([href=\"\"]), [button])",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "code-viewer-diff-lines-dropped",
@@ -96,13 +107,19 @@ export const devRules: DevRule[] = [
 		"id": "combo-box-needs-name",
 		"message": "nldd-combo-box needs `accessible-label` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-combo-box",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "document-tab-bar-needs-name",
 		"message": "nldd-document-tab-bar needs `accessible-label` for a meaningful navigation landmark name; without one it falls back to a generic name.",
 		"context": "nldd-document-tab-bar",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "download-target-no-effect",
@@ -118,13 +135,18 @@ export const devRules: DevRule[] = [
 		"id": "editor-needs-name",
 		"message": "An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).",
 		"context": "nldd-code-editor, nldd-text-editor",
-		"assert": "[accessible-label]:not([accessible-label=\"\"]), [input-id]:not([input-id=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [input-id]:not([input-id=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"inputId"
+		]
 	},
 	{
 		"id": "form-action-in-button-group",
 		"message": "Put the action in a nldd-button-group, also when there is only one.",
 		"context": "nldd-form-actions",
-		"assert": ":has(> nldd-button-group)"
+		"assert": ":has(> nldd-button-group)",
+		"properties": []
 	},
 	{
 		"id": "form-field-list-reads-first-control",
@@ -135,13 +157,18 @@ export const devRules: DevRule[] = [
 		"id": "form-field-needs-input",
 		"message": "nldd-form-field holds no form input, so the label cannot name anything or move focus into it.",
 		"context": "nldd-form-field:has(> :not(nldd-form-field-help-text, nldd-validation-list))",
-		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)"
+		"assert": ":has(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea)), :state(has-input)",
+		"properties": []
 	},
 	{
 		"id": "form-section-needs-name",
 		"message": "nldd-form-section needs `text` or `supporting-text`: without either its fieldset has no accessible name, and a screen reader announces just \"group\" or nothing.",
 		"context": "nldd-form-section",
-		"assert": "[text]:not([text=\"\"]), [supporting-text]:not([supporting-text=\"\"])"
+		"assert": "[text]:not([text=\"\"]), [supporting-text]:not([supporting-text=\"\"])",
+		"properties": [
+			"text",
+			"supportingText"
+		]
 	},
 	{
 		"id": "hero-corner-covered",
@@ -192,7 +219,11 @@ export const devRules: DevRule[] = [
 		"id": "icon-button-needs-name",
 		"message": "nldd-icon-button needs `text` or `accessible-label`, otherwise it has no accessible name.",
 		"context": "nldd-icon-button",
-		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"text",
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "icon-name-renamed",
@@ -254,7 +285,8 @@ export const devRules: DevRule[] = [
 		"id": "list-item-children-need-tree",
 		"message": "`slot=\"children\"` nests rows, which only carries meaning in an nldd-list with type=\"tree\" or type=\"navigation\". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.",
 		"context": "nldd-list-item:has(> nldd-list-item[slot=\"children\"])",
-		"assert": "nldd-list[type=\"tree\"] *, nldd-list[type=\"navigation\"] *"
+		"assert": "nldd-list[type=\"tree\"] *, nldd-list[type=\"navigation\"] *",
+		"properties": []
 	},
 	{
 		"id": "list-item-divider-degenerate",
@@ -281,7 +313,8 @@ export const devRules: DevRule[] = [
 		"id": "list-item-needs-list",
 		"message": "nldd-list-item needs a parent nldd-list, which gives the row its type and keyboard behaviour.",
 		"context": "nldd-list-item",
-		"assert": "nldd-list nldd-list-item"
+		"assert": "nldd-list nldd-list-item",
+		"properties": []
 	},
 	{
 		"id": "list-item-nested-control",
@@ -335,7 +368,11 @@ export const devRules: DevRule[] = [
 		"id": "multi-line-text-field-needs-name",
 		"message": "nldd-multi-line-text-field needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-multi-line-text-field",
-		"assert": "[accessible-label]:not([accessible-label=\"\"]), [input-id]:not([input-id=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [input-id]:not([input-id=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"inputId"
+		]
 	},
 	{
 		"id": "no-page-footer-in-section",
@@ -371,7 +408,10 @@ export const devRules: DevRule[] = [
 		"id": "number-field-needs-name",
 		"message": "nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.",
 		"context": "nldd-number-field",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "page-footer-duplicate-id",
@@ -392,7 +432,10 @@ export const devRules: DevRule[] = [
 		"id": "popover-needs-name",
 		"message": "nldd-popover needs `accessible-label`, or a screen reader announces it without a name.",
 		"context": "nldd-popover",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "popover-width-content-sized",
@@ -408,13 +451,21 @@ export const devRules: DevRule[] = [
 		"id": "radio-button-group-needs-name",
 		"message": "nldd-radio-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-radio-button-group",
-		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"accessibleLabeledBy"
+		]
 	},
 	{
 		"id": "segmented-control-needs-name",
 		"message": "nldd-segmented-control needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-segmented-control",
-		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"accessibleLabeledBy"
+		]
 	},
 	{
 		"id": "segmented-control-required-not-enforced",
@@ -465,7 +516,8 @@ export const devRules: DevRule[] = [
 		"id": "step-cell-content-needs-wide-dot",
 		"message": "`text` and `icon` only fit in a full dot on a wide track (`size=\"md\"` with `level=\"major\"`); they are not shown here.",
 		"context": "nldd-step-cell:is([text]:not([text=\"\"]), [icon]:not([icon=\"\"]))",
-		"assert": "[size=\"md\"]:not([level=\"minor\"], [level=\"none\"])"
+		"assert": "[size=\"md\"]:not([level=\"minor\"], [level=\"none\"])",
+		"properties": []
 	},
 	{
 		"id": "step-cell-marker-offset-invalid",
@@ -481,7 +533,10 @@ export const devRules: DevRule[] = [
 		"id": "switch-needs-name",
 		"message": "nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.",
 		"context": "nldd-switch",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "tab-bar-item-selected-renamed",
@@ -492,19 +547,28 @@ export const devRules: DevRule[] = [
 		"id": "tab-bar-needs-name",
 		"message": "nldd-tab-bar needs `accessible-label`, so a screen reader can say what the tabs are for.",
 		"context": "nldd-tab-bar",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "table-needs-columns",
 		"message": "nldd-table needs `columns`, a CSS grid track list, or its cells do not line up.",
 		"context": "nldd-table",
-		"assert": "[columns]:not([columns=\"\"])"
+		"assert": "[columns]:not([columns=\"\"])",
+		"properties": [
+			"columns"
+		]
 	},
 	{
 		"id": "table-needs-name",
 		"message": "nldd-table needs `accessible-label`: role=\"table\" takes its name from there.",
 		"context": "nldd-table",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "table-silent-empty",
@@ -525,7 +589,11 @@ export const devRules: DevRule[] = [
 		"id": "task-board-column-needs-name",
 		"message": "nldd-task-board-column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.",
 		"context": "nldd-task-board-column",
-		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"text",
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "task-board-move-item-invalid",
@@ -567,7 +635,11 @@ export const devRules: DevRule[] = [
 		"id": "toggle-button-group-needs-name",
 		"message": "nldd-toggle-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.",
 		"context": "nldd-toggle-button-group",
-		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])"
+		"assert": "[accessible-label]:not([accessible-label=\"\"]), [accessible-labeled-by]:not([accessible-labeled-by=\"\"])",
+		"properties": [
+			"accessibleLabel",
+			"accessibleLabeledBy"
+		]
 	},
 	{
 		"id": "toggle-button-group-required-not-enforced",
@@ -579,19 +651,27 @@ export const devRules: DevRule[] = [
 		"id": "toggle-button-icon-needs-icon",
 		"message": "nldd-toggle-button with variant=\"icon\" has no `icon` and no slot=\"icon\" content, so a placeholder icon is shown.",
 		"context": "nldd-toggle-button[variant=\"icon\"]",
-		"assert": "[icon]:not([icon=\"\"]), :has(> [slot=\"icon\"])"
+		"assert": "[icon]:not([icon=\"\"]), :has(> [slot=\"icon\"])",
+		"properties": [
+			"icon"
+		]
 	},
 	{
 		"id": "toggle-button-needs-name",
 		"message": "nldd-toggle-button needs `text` or `accessible-label`, otherwise it has no accessible name.",
 		"context": "nldd-toggle-button",
-		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])"
+		"assert": "[text]:not([text=\"\"]), [accessible-label]:not([accessible-label=\"\"])",
+		"properties": [
+			"text",
+			"accessibleLabel"
+		]
 	},
 	{
 		"id": "toolbar-item-needs-overflow",
 		"message": "Give this item an alternative in `slot=\"overflow\"`: on a narrow screen it moves to the overflow menu, and without one it is gone.",
 		"context": "nldd-toolbar-item",
-		"assert": ":has(> [slot=\"overflow\"])"
+		"assert": ":has(> [slot=\"overflow\"])",
+		"properties": []
 	},
 	{
 		"id": "top-navigation-bar-same-href",

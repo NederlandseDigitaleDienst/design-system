@@ -65,7 +65,6 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
@@ -366,11 +365,11 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	name = '';
 
 	/** Accessible name for the group (aria-label). */
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	/** ID of an external label element (aria-labelledby). */
-	@property({ type: String, attribute: 'accessible-labeled-by', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-labeled-by' })
 	accessibleLabeledBy = '';
 
 	/** The name this group wrote onto its host, so it only takes back its own. */

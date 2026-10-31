@@ -60,11 +60,6 @@ export function buildContract(manifest) {
 		if (!declaration.customElement || !declaration.tagName) continue;
 		const attrs = {};
 		const childAttrs = {};
-		const reflection = new Map(
-			inheritedMembers(declaration, declarations)
-				.filter((member) => member.attribute)
-				.map((member) => [member.attribute, Boolean(member.reflects)]),
-		);
 		for (const attribute of inheritedAttributes(declaration, declarations)) {
 			const target = attribute.forChildren ? childAttrs : attrs;
 			if (target[attribute.name]) continue;
@@ -72,7 +67,6 @@ export function buildContract(manifest) {
 			const literals = attribute.expandedType?.text ?? (attribute.forChildren && attribute.type?.text);
 			if (literals && literals.includes("'")) entry.values = literalValues(literals);
 			if (attribute.deprecated) entry.deprecated = attribute.deprecated;
-			if (reflection.get(attribute.name) === false) entry.unreflected = true;
 			target[attribute.name] = entry;
 		}
 		const members = inheritedMembers(declaration, declarations);
@@ -155,6 +149,13 @@ function valueRules(tags) {
 	);
 }
 
+const toProperty = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+
+/** `[accessible-label]` in an assert also holds for the property `accessibleLabel`. */
+function propertiesIn(assert) {
+	return [...new Set([...assert.matchAll(/\[([a-z-]+)\](?!:not)|\[([a-z-]+)\]:not/g)].map((match) => toProperty(match[1] ?? match[2])))];
+}
+
 /** The rules the browser runs: plain CSS, so class pseudos become lists of tags. */
 export function buildDevRules(rules, classes, tags) {
 	// On a running page the field has set the attribute, so no exception is needed.
@@ -169,7 +170,7 @@ export function buildDevRules(rules, classes, tags) {
 			id,
 			message,
 			context: expand(context),
-			...(assert ? { assert: expand(assert) } : {}),
+			...(assert ? { assert: expand(assert), properties: propertiesIn(expand(assert)) } : {}),
 			...(report ? { report: expand(report) } : {}),
 			...(count ? { count: { ...count, of: expand(count.of) } } : {}),
 		}));

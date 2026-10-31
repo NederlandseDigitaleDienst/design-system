@@ -25,7 +25,6 @@ import { radioButtonGroupTemplate } from './radio-button-group.template.js';
 import type { NLDDRadioButtonField } from '../radio-button-field/radio-button-field.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { radioPositions } from '../../../utilities/radio-position.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 @customElement('nldd-radio-button-group')
 export class NLDDRadioButtonGroup extends LitElement {
@@ -45,10 +44,10 @@ export class NLDDRadioButtonGroup extends LitElement {
 	required = false;
 
 	/** Accessible name forwarded as aria-label to the group host. */
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
-	@property({ type: String, attribute: 'accessible-labeled-by', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-labeled-by' })
 	accessibleLabeledBy = '';
 
 	/** The name this group wrote onto its host, so it only takes back its own. */

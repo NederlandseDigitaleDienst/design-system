@@ -27,7 +27,6 @@ import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { taskBoardColumnStyles } from './task-board.styles.js';
 import { taskBoardColumnTemplate } from './task-board-column.template.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 @customElement('nldd-task-board-column')
 export class NLDDTaskBoardColumn extends LitElement {
@@ -36,7 +35,7 @@ export class NLDDTaskBoardColumn extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	text = '';
 
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ reflect: true, converter: reflectNonDefault('') })

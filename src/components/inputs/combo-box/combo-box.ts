@@ -80,7 +80,6 @@ import '../../content/icon/icon.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
@@ -159,7 +158,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Number, attribute: 'max-items' })
 	maxItems = 8;
 
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ type: Object })

@@ -54,7 +54,6 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddTabBarTranslations } from './tab-bar.i18n.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 
 // # nldd-tab-bar-item
@@ -68,7 +67,7 @@ export class NLDDTabBarItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	current = false;
 
-	@property({ type: String, reflect: true, converter: reflectWhenSet })
+	@property({ type: String })
 	href = '';
 
 	/** Set by nldd-tab-bar. Not part of the public API. */
@@ -188,7 +187,7 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	// Tracks whether the author provided an explicit accessible label

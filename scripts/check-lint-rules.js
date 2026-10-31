@@ -15,7 +15,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'css-what';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
-import { selectorsOf, tagsOf } from '../lint/rule-index.js';
+import { selectorsOf } from '../lint/rule-index.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const data = loadData();
@@ -24,20 +24,6 @@ const problems = [];
 
 const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => Object.keys(tag.attrs)));
 const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role']);
-
-/** The browser only sees attributes, so a value set as a property has to reflect. */
-function checkReflected(rule) {
-	const tags = tagsOf(rule);
-	for (const selector of selectorsOf(rule)) {
-		for (const [, name] of selector.matchAll(/\[([a-z-]+)/g)) {
-			for (const tag of tags) {
-				if (data.tags[tag]?.attrs[name]?.unreflected) {
-					problems.push(`${rule.id}: ${name} on ${tag} needs reflect: true, or the browser check misses a property.`);
-				}
-			}
-		}
-	}
-}
 
 function checkTokens(tokens, rule) {
 	const ruleId = rule.id;
@@ -146,7 +132,6 @@ for (const rule of data.rules) {
 	}
 	checkSee(rule);
 	checkStates(rule);
-	checkReflected(rule);
 	if (!rule.runtime) await checkExamples(rule);
 }
 const patterns = await checkPatterns();

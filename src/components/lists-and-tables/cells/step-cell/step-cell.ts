@@ -36,7 +36,6 @@ import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
 import { stepCellStyles } from './step-cell.styles.js';
 import { stepCellTemplate } from './step-cell.template.js';
 import '../../../content/icon/icon.js';
-import { reflectWhenSet } from '../../../../utilities/reflect-when-set.js';
 import { setState } from '../../../../utilities/element-state.js';
 
 type Status = 'past' | 'current' | 'future';
@@ -110,10 +109,10 @@ export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container')
 	@property({ reflect: true, converter: reflectNonDefault<Line>('auto') })
 	line: Line = 'auto';
 
-	@property({ type: String, reflect: true, converter: reflectWhenSet })
+	@property({ type: String })
 	text = '';
 
-	@property({ type: String, reflect: true, converter: reflectWhenSet })
+	@property({ type: String })
 	icon = '';
 
 	/** Only a whole dot in a wide lane has room to read a number in: a minor one is

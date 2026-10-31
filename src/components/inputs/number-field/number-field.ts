@@ -34,7 +34,6 @@ import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 export type NumberFieldSize = 'sm' | 'md';
 
@@ -83,7 +82,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	hideSpinButtons = false;
 
 	/** Accessible label forwarded as aria-label to the native input. */
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */

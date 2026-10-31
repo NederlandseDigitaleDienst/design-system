@@ -34,7 +34,6 @@ import { toggleButtonGroupTemplate } from './toggle-button-group.template.js';
 import type { NLDDToggleButton, ToggleButtonAppearance, ToggleButtonSize } from '../toggle-button/toggle-button.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { radioPositions } from '../../../utilities/radio-position.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 
 type GroupType = 'button' | 'checkbox' | 'radio';
 
@@ -79,11 +78,11 @@ export class NLDDToggleButtonGroup extends LitElement {
 	disabled = false;
 
 	/** Accessible name forwarded as aria-label to the group host. */
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	/** ID of an external label element forwarded as aria-labelledby to the group host. */
-	@property({ type: String, attribute: 'accessible-labeled-by', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-labeled-by' })
 	accessibleLabeledBy = '';
 
 	/** The name this group wrote onto its host, so it only takes back its own. */

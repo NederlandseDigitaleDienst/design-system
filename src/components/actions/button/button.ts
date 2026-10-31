@@ -56,7 +56,6 @@ import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import { internalsOf } from '../../../utilities/element-state.js';
-import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import { setState } from '../../../utilities/element-state.js';
 
 type Appearance =
@@ -197,7 +196,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	endIcon = '';
 
 	/** Accessible label forwarded to the inner <button> or <a>. Use when visible text alone lacks context. */
-	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
+	@property({ type: String, attribute: 'accessible-label' })
 	accessibleLabel = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
