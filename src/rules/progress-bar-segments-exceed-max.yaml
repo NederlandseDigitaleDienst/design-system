@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-progress-bar'
+context: 'nldd-progress-bar:state(exceeds-max)'
 message: 'The sum of the segment values exceeds `max`. Segments are normalized proportionally.'

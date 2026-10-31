@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-text-editor'
+context: 'nldd-text-editor:state(invalid-typeahead-query)'
 message: 'The query of this typeahead is not a valid regular expression; the default is used.'

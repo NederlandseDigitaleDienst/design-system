@@ -1095,19 +1095,16 @@ describe('nldd-menu-item with submenu', () => {
 		expect(anchorFocusSpy).not.toHaveBeenCalled();
 	});
 
-	it('warns when a nldd-menu child is added after mount', async () => {
+	it('states a nldd-menu child that is added after mount', async () => {
 		// Submenu attachment is resolved once at firstUpdated. A late addition
-		// would silently miss aria-controls / chevron / hover-open — surface
-		// it via console.warn so consumers don't chase the symptom.
+		// would silently miss aria-controls / chevron / hover-open.
 		el = await fixture('<nldd-menu-item text="Bestand"></nldd-menu-item>');
 		await waitForUpdate(el);
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const late = document.createElement('nldd-menu');
 		el.appendChild(late);
 		// MutationObserver delivers asynchronously — wait a microtask tick.
 		await new Promise(r => setTimeout(r, 0));
-		expect(warn).toHaveBeenCalled();
-		expect(warn.mock.calls[0][0]).toMatch(/added after mount/);
+		expect(el.matches(':state(late-submenu)')).toBe(true);
 	});
 });
 
@@ -3016,12 +3013,10 @@ describe('nldd-menu – variant="navigation"', () => {
 		menu.hidePopover();
 	});
 
-	it('warns about filter()', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that it was filtered', async () => {
 		const { menu } = await make('<nldd-menu-item text="Compact" type="checkbox"></nldd-menu-item>');
 		menu.filter('dak');
-		const said = warn.mock.calls.flat().join(' ');
-		expect(said).toContain('filter() belongs to a menu of actions');
+		expect(menu.matches(':state(filtered)')).toBe(true);
 	});
 });
 

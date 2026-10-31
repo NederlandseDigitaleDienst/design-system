@@ -11,7 +11,7 @@ import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
 import { translate } from '../../../utilities/translations.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';
 
@@ -324,7 +324,7 @@ export class NLDDList extends LitElement {
 			this._updateEmpty();
 		}));
 		this._updateItems();
-		this._warnArrowNav();
+		this._syncUnmanagedControls();
 
 		const toolbarSlot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="toolbar"]');
 		toolbarSlot?.addEventListener('slotchange', () => queueMicrotask(() => {
@@ -361,7 +361,7 @@ export class NLDDList extends LitElement {
 			if (!relevant) return;
 			this._updateItems();
 			this._updateEmpty();
-			this._warnUnmanagedControls();
+			this._syncUnmanagedControls();
 		});
 		this._itemsObserver.observe(this, {
 			childList: true,
@@ -407,7 +407,7 @@ export class NLDDList extends LitElement {
 		this._syncTranslatedTexts();
 		if (changed.has('reorderable') || changed.has('type')) {
 			this._updateItems();
-			this._warnArrowNav();
+			this._syncUnmanagedControls();
 		}
 		if (changed.has('appearance')) {
 			this._updateItemContext();
@@ -566,8 +566,7 @@ export class NLDDList extends LitElement {
 		// The rows are read off the slot, and a slot has nothing assigned until it
 		// has rendered. Before that they are read from the children, where they
 		// already are: judging on the slot called every list empty for one render,
-		// which hid the controls that belong to the rows and latched a warning
-		// naming the wrong state.
+		// which hid the controls that belong to the rows.
 		const items = this.hasUpdated
 			? this._getItems()
 			: Array.from(this.querySelectorAll<NLDDListItem>(':scope > nldd-list-item'));
@@ -588,36 +587,12 @@ export class NLDDList extends LitElement {
 			'is-blank',
 			this._isEmpty && !this._hasItems && !this._hasEmptyState && this.type !== 'listbox',
 		);
-		this._warnSilentEmpty();
+		// A listbox before you have typed is neither: an empty search is not an
+		// empty list. Rows that are all hidden are the no-results state.
+		const nothingShown = this._isEmpty && !(this.type === 'listbox' && !this._searchValue);
+		setState(this, 'empty', nothingShown && !this._hasItems);
+		setState(this, 'filtered', nothingShown && this._hasItems);
 	}
-
-	/**
-	 * A list with nothing in it and nothing to say about that.
-	 *
-	 * There is no default text any more, because what an empty list means is
-	 * the app's to write and a house sentence was wrong more often than right.
-	 * That leaves a real risk of a blank area with nothing in the accessibility
-	 * tree either, so the list asks the person building it rather than
-	 * answering for them. It asks about the state it is actually in: rows that
-	 * are all hidden are covered by [slot="no-results"] as well as by the
-	 * [slot="empty"] it falls back to. A listbox before you have typed is left
-	 * alone: an empty search is not an empty list.
-	 */
-	private _warnSilentEmpty() {
-		if (!import.meta.env?.DEV) return;
-		if (!this._isEmpty || this._warnedSilentEmpty) return;
-		if (this.type === 'listbox' && !this._searchValue) return;
-		if (this._hasEmptyState) return;
-		// Rows that are all hidden are the no-results state, and a slot that covers
-		// it answers the question: warning about the empty slot there would ask for
-		// a second sentence nobody will ever read.
-		if (this._hasItems && this._hasNoResultsState) return;
-		this._warnedSilentEmpty = true;
-		if (this._hasItems) reportRule('list-hidden-rows-need-no-results', this);
-		else reportRule('list-empty-needs-empty-slot', this);
-	}
-
-	private _warnedSilentEmpty = false;
 
 	// — Listbox: active-option model ————————————————————————————————————————————
 
@@ -1104,19 +1079,7 @@ export class NLDDList extends LitElement {
 		row.focus();
 	}
 
-	private _warnArrowNav() {
-		if (!import.meta.env?.DEV) return;
-		if (this.hasAttribute('arrow-navigation')) {
-			reportRule('list-arrow-navigation-removed', this);
-		}
-		this._warnUnmanagedControls();
-	}
-
-	/** Reported once per element: a list that gains rows would otherwise repeat
-	 *  the same line on every change. */
-	private readonly _warnedUnmanaged = new WeakSet<Element>();
-
-	private _unmanagedWarnScheduled = false;
+	private _unmanagedCheckScheduled = false;
 
 	/**
 	 * A control the row cannot reach: a custom element that keeps its tab stop in
@@ -1127,39 +1090,48 @@ export class NLDDList extends LitElement {
 	 * Deferred, and re-run whenever the rows change. A slotted custom element has
 	 * its shadow root the moment it connects, but Lit renders the content on the
 	 * first update, so a check that runs in `firstUpdated` looks into an empty
-	 * shadow root and finds nothing to warn about. Waiting for the element to be
-	 * defined is not enough either: it has to have rendered.
+	 * shadow root and finds nothing. Waiting for the element to be defined is not
+	 * enough either: it has to have rendered.
 	 */
-	private _warnUnmanagedControls(): void {
-		if (!import.meta.env?.DEV || !this._arrowNavActive) return;
-		if (this._unmanagedWarnScheduled) return;
-		this._unmanagedWarnScheduled = true;
+	private _syncUnmanagedControls(): void {
+		if (!import.meta.env?.DEV) return;
+		if (!this._arrowNavActive) {
+			setState(this, 'control-keeps-tab-stop', false);
+			return;
+		}
+		if (this._unmanagedCheckScheduled) return;
+		this._unmanagedCheckScheduled = true;
 		const check = async () => {
-			this._unmanagedWarnScheduled = false;
+			this._unmanagedCheckScheduled = false;
 			const rows = this._getPaintedRows();
 			await Promise.all(rows.map((row) => row.updateComplete));
+			let found = false;
 			for (const row of rows) {
-				for (const el of Array.from(row.querySelectorAll('*'))) {
-					if (el.closest('nldd-list-item') !== row) continue;
-					// A segment is managed over its own channel (`_tabbable`), so it
-					// needs no `no-tab`.
-					if (el.tagName.toLowerCase() === 'nldd-list-item-segment') continue;
-					if (!el.tagName.includes('-') || 'noTab' in el) continue;
-					if (this._warnedUnmanaged.has(el)) continue;
-					const upgraded = el as Element & { updateComplete?: Promise<unknown> };
-					if (upgraded.updateComplete) await upgraded.updateComplete;
-					if (!el.shadowRoot?.querySelector(SHADOW_TAB_STOP)) continue;
-					// Nothing hidden on the way from the row: a menu item in a closed
-					// menu is no tab stop of the row's, and the component that hides it
-					// runs its own focus. Computed style, not checkVisibility(): that one
-					// needs a laid-out box and answers false until the first layout.
-					if (this._hiddenWithin(row, el)) continue;
-					this._warnedUnmanaged.add(el);
-					reportRule('list-control-keeps-tab-stop', this, `<${el.tagName.toLowerCase()}>`);
-				}
+				if (found) break;
+				found = await this._holdsUnmanagedControl(row);
 			}
+			setState(this, 'control-keeps-tab-stop', found);
 		};
 		void check();
+	}
+
+	private async _holdsUnmanagedControl(row: NLDDListItem): Promise<boolean> {
+		for (const el of Array.from(row.querySelectorAll('*'))) {
+			if (el.closest('nldd-list-item') !== row) continue;
+			// A segment is managed over its own channel (`_tabbable`), so it
+			// needs no `no-tab`.
+			if (el.tagName.toLowerCase() === 'nldd-list-item-segment') continue;
+			if (!el.tagName.includes('-') || 'noTab' in el) continue;
+			const upgraded = el as Element & { updateComplete?: Promise<unknown> };
+			if (upgraded.updateComplete) await upgraded.updateComplete;
+			if (!el.shadowRoot?.querySelector(SHADOW_TAB_STOP)) continue;
+			// Nothing hidden on the way from the row: a menu item in a closed
+			// menu is no tab stop of the row's, and the component that hides it
+			// runs its own focus. Computed style, not checkVisibility(): that one
+			// needs a laid-out box and answers false until the first layout.
+			if (!this._hiddenWithin(row, el)) return true;
+		}
+		return false;
 	}
 
 	private _hiddenWithin(row: Element, el: Element): boolean {

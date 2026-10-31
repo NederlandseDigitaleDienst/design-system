@@ -57,7 +57,7 @@ import {
 	formFieldHelpTextTemplate,
 } from './form-field.template.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
 
@@ -271,28 +271,21 @@ export class NLDDFormField extends LitElement {
 	 * group with an "Anders" text field beside it being the case this component
 	 * is built for. But a list that reads a value would then quietly read the
 	 * wrong one, and nothing on screen would show it: the rules simply never
-	 * match. Say so once, where it can still be fixed.
+	 * match.
 	 */
 	private _adoptValidationLists(input: Element): void {
 		const lists = Array.from(this.children)
 			.filter((el): el is HTMLElement & { control: Element | null } =>
 				el.tagName.toLowerCase() === 'nldd-validation-list');
-		if (!lists.length) return;
-
 		for (const list of lists) {
 			if (!list.getAttribute('for')) list.control = input;
 		}
 
-		if (!import.meta.env?.DEV) return;
-		const controls = Array.from(this.children)
-			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && isFormInput(el));
-		if (controls.length < 2) return;
-
 		const readsValue = lists.some(list => !list.getAttribute('for') && Array.from(list.children)
 			.some(item => item.hasAttribute('match') || item.hasAttribute('minlength') || item.hasAttribute('maxlength')));
-		if (!readsValue) return;
-
-		reportRule('form-field-list-reads-first-control', this, `reads <${input.localName}>`);
+		const controls = Array.from(this.children)
+			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && isFormInput(el));
+		setState(this, 'list-reads-first-control', readsValue && controls.length > 1);
 	}
 
 	/**

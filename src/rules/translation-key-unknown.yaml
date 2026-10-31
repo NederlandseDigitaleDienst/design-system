@@ -1,4 +1,0 @@
-severity: warn
-runtime: true
-context: ':root'
-message: 'setTranslations() got keys no component knows, so they do nothing.'

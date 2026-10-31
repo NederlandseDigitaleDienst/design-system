@@ -49,7 +49,7 @@ import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { translate } from '../../../utilities/translations.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 
@@ -98,7 +98,6 @@ export class NLDDWindow extends LitElement {
 	open = false;
 
 	private _closing = false;
-	private _hasWarnedLabel = false;
 	private _titleBar = new TitleBarLabelController(this);
 
 	private get _dialog(): HTMLDialogElement | null {
@@ -179,10 +178,7 @@ export class NLDDWindow extends LitElement {
 		// New open cycle: the next close may emit again.
 		this._closeEmitted = false;
 
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this._titleBar.text && !this._hasWarnedLabel) {
-			this._hasWarnedLabel = true;
-			reportRule('window-needs-name', this);
-		}
+		setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text);
 
 		dialog.showModal();
 		this.open = true;

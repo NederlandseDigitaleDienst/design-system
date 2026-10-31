@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import type { NLDDProgressBar, NLDDProgressBarSegmentIndicator } from './progress-bar.js';
 import { INDETERMINATE_TRANSITION_MS } from './progress-bar.js';
@@ -234,7 +234,6 @@ describe('nldd-progress-bar', () => {
 	});
 
 	it('normalizes segment widths when sum exceeds max', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture(`
 			<nldd-progress-bar max="100">
 				<nldd-progress-bar-segment-indicator value="100"></nldd-progress-bar-segment-indicator>
@@ -247,8 +246,7 @@ describe('nldd-progress-bar', () => {
 		expect(segments[0]!.style.getPropertyValue('--context-progress-bar-segment-indicator-width')).toMatch(/^66\.6/);
 		// 50 / 150 ≈ 33.33%
 		expect(segments[1]!.style.getPropertyValue('--context-progress-bar-segment-indicator-width')).toMatch(/^33\.3/);
-		expect(warnSpy).toHaveBeenCalled();
-		warnSpy.mockRestore();
+		expect(el.matches(':state(exceeds-max)')).toBe(true);
 	});
 
 	it('re-syncs when a segment value changes', async () => {

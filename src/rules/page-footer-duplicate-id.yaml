@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-page-footer'
+context: 'nldd-page-footer:state(duplicate-id)'
 message: 'Another element already has id="page-footer". Set a unique id on this instance so skip links target the right one.'

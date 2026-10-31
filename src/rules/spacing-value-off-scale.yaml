@@ -1,4 +1,0 @@
-severity: warn
-runtime: true
-context: 'nldd-collection, nldd-container'
-message: 'This is not a step of the spacing scale. Nothing is written, so the default stands.'

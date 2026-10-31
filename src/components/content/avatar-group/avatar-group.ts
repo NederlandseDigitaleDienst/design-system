@@ -52,7 +52,6 @@ import '../../lists-and-tables/cells/spacer-cell/spacer-cell.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddAvatarGroupTranslations } from './avatar-group.i18n.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
 
 /** The smallest size at which a count of one, two, three and four digits fits. */
 const MIN_SIZE_FOR_COUNT = [24, 40, 56, 80];
@@ -158,8 +157,6 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 	 *  waiting for a slotchange that will not come. */
 	private _assigned: Element[] = [];
 
-	private _warnedTargetSize = false;
-
 	override willUpdate(changed: Map<string, unknown>): void {
 		if (changed.has('max') || changed.has('_fitMax') || changed.has('size')) this._recompute();
 	}
@@ -171,20 +168,6 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 
 	private _recompute(): void {
 		const assigned = this._assigned;
-		if (import.meta.env?.DEV) {
-			// Each avatar covers part of the next, so a link or button keeps only
-			// (1 - OVERLAP) of its width as a target, and the targets touch: no
-			// room for the WCAG 2.5.8 spacing exception.
-			const interactive = assigned.some(el => el.hasAttribute('href') || el.hasAttribute('button'));
-			const small = interactive && Number(this.size) * (1 - OVERLAP) < 24;
-			if (small && !this._warnedTargetSize) {
-				this._warnedTargetSize = true;
-				reportRule('avatar-group-target-too-small', this, `size="${this.size}"`);
-			}
-			else if (!small) {
-				this._warnedTargetSize = false;
-			}
-		}
 		const max = this._effectiveMax;
 		const hidden = max !== undefined && assigned.length > max
 			? assigned.slice(max)

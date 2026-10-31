@@ -54,9 +54,10 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
+import { internalsOf } from '../../../utilities/element-state.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Appearance =
 	| 'primary'
@@ -83,7 +84,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	// The inner <button> lives in the shadow root and has no form owner across
 	// the shadow boundary, so the host element must carry the association.
 	static formAssociated = true;
-	private _internals = this.attachInternals();
+	private _internals = internalsOf(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<Appearance>('neutral-tinted') })
 	appearance: Appearance = 'neutral-tinted';
@@ -231,8 +232,6 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: String })
 	rel: string | undefined = undefined;
 
-	private _warnedFormId: string | null = null;
-
 	/** Shared wiring for an overlay slotted into `popup`: anchors it to this
 	 * button and turns clicks into open/close. Not private: the template module
 	 * binds its handlers. */
@@ -317,24 +316,19 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	 */
 	private _ownerForm(): HTMLFormElement | null {
 		const id = this.getAttribute('form');
-		if (!id) return this._internals.form;
 		const root = this.getRootNode() as Document | ShadowRoot;
-		const target = 'getElementById' in root ? root.getElementById(id) : null;
-		if (target instanceof HTMLFormElement) return target;
+		const target = id && 'getElementById' in root ? root.getElementById(id) : null;
 		const rendered = (target as { form?: unknown } | null)?.form;
-		if (rendered instanceof HTMLFormElement) return rendered;
+		let form: HTMLFormElement | null = null;
+		if (target instanceof HTMLFormElement) form = target;
+		else if (rendered instanceof HTMLFormElement) form = rendered;
 		// Nothing to submit is the silent failure this attribute exists to end:
-		// the click does nothing and no error says why. Say it once per button,
-		// naming what the id found, since a typo and an nldd-form that has not
-		// rendered yet look identical from the outside.
-		// Keyed on the id, not a flag: fix a typo and point at another form that
-		// does not exist either, and that one has to be said as well.
-		if (import.meta.env?.DEV && this._warnedFormId !== id) {
-			this._warnedFormId = id;
-			if (target) reportRule('button-form-id-not-a-form', this, `form="${id}", <${target.tagName.toLowerCase()}>`);
-			else reportRule('button-form-id-not-found', this, `form="${id}"`);
-		}
-		return null;
+		// the click does nothing and no error says why. Two facts, since a typo
+		// and an nldd-form that has not rendered yet look identical from the
+		// outside.
+		setState(this, 'no-form-target', Boolean(id) && !target);
+		setState(this, 'form-target-not-a-form', Boolean(target) && !form);
+		return id ? form : this._internals.form;
 	}
 
 	/**

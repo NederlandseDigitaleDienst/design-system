@@ -96,6 +96,7 @@ import { nlddCodeMirrorTheme } from '../../../utilities/codemirror/theme.js';
 import { markdownEditing } from './text-editor.markdown.js';
 import { mentionInsert, mentionToken, mentionRangeAt } from './text-editor.mention.js';
 import {
+	hasInvalidQuery,
 	typeaheads as typeaheadExtension,
 	type MentionSource,
 	type MentionInsertedDetail,
@@ -142,7 +143,7 @@ import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './t
 import { translate } from '../../../utilities/translations.js';
 import { tasks } from './text-editor.tasks.js';
 import { codeCopy } from './text-editor.code-copy.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 export type TextEditorAppearance = 'input-field' | 'simple';
@@ -437,6 +438,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
+		if (changed.has('typeaheads')) setState(this, 'invalid-typeahead-query', hasInvalidQuery(this.typeaheads));
 		if (!this.view) return;
 		// A render after setTranslations() or a new `translations`: the labels
 		// drawn inside the document follow when their text changed.
@@ -679,7 +681,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			case 'copy': void this.copy(); break;
 			case 'cut': void this.cut(); break;
 			case 'paste': void this.paste(); break;
-			default: reportRule('text-editor-unknown-command', this, name);
+			default: setState(this, 'unknown-command', true);
 		}
 	}
 

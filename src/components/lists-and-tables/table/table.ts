@@ -61,7 +61,7 @@ import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.j
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { translate } from '../../../utilities/translations.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type TableBackground = 'base' | 'tinted';
 
@@ -188,29 +188,10 @@ export class NLDDTable extends LitElement {
 		this.classList.toggle('is-empty', isEmpty);
 		// See nldd-list: no rows and nothing slotted is not a thing on the page.
 		this.classList.toggle('is-blank', isEmpty && !noResults && !hasEmpty);
-		this._warnSilentEmpty(isEmpty, hasEmpty, rows.length > 0);
+		// Rows that are all hidden are the no-results state, not an empty table.
+		setState(this, 'empty', isEmpty && rows.length === 0);
+		setState(this, 'filtered', isEmpty && rows.length > 0);
 	}
-
-	/**
-	 * A table with no rows and nothing to say about that.
-	 *
-	 * There is no default text any more, because what an empty table means is
-	 * the app's to write and a house sentence was wrong more often than right.
-	 * That leaves a real risk of a blank area with nothing in the accessibility
-	 * tree either, so the table asks the person building it rather than
-	 * answering for them.
-	 */
-	private _warnSilentEmpty(isEmpty: boolean, hasEmpty: boolean, hasRows: boolean): void {
-		if (!import.meta.env?.DEV) return;
-		if (!isEmpty || this._warnedSilentEmpty || hasEmpty) return;
-		// Rows that are all hidden are the no-results state, and a slot that covers
-		// it answers the question.
-		if (hasRows && this.querySelector(':scope > [slot="no-results"]')) return;
-		this._warnedSilentEmpty = true;
-		reportRule('table-silent-empty', this);
-	}
-
-	private _warnedSilentEmpty = false;
 
 	/** The track list for the current width: a breakpoint override when set,
 	 *  otherwise the base `columns`. */

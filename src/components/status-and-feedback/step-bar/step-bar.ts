@@ -57,7 +57,6 @@ import { stepBarTemplate, stepBarItemTemplate } from './step-bar.template.js';
 import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import '../../content/icon/icon.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
 
 /** The same three names as nldd-step-cell, so one flow reads in a
  *  single vocabulary whether it runs horizontally or vertically. */
@@ -204,20 +203,6 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 		super.connectedCallback();
 		this._observer.observe(this, { subtree: true, attributes: true, attributeFilter: ['status'] });
 		this._resizeObserver.observe(this);
-	}
-
-	/** `current` is no longer an attribute of this element. Watched anyway, so a
-	 *  leftover one gets a hint, also when a framework sets it after the first
-	 *  render: Vue and React fall back to the attribute for an unknown property. */
-	static override get observedAttributes(): string[] {
-		return [...super.observedAttributes, 'current'];
-	}
-
-	override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
-		super.attributeChangedCallback(name, old, value);
-		if (import.meta.env?.DEV && name === 'current' && value !== null) {
-			reportRule('step-bar-current-moved', this);
-		}
 	}
 
 	override disconnectedCallback(): void {

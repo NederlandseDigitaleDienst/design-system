@@ -47,7 +47,7 @@ import { isPointerMode } from '../../../utilities/input-modality.js';
 import './../../content/icon/icon.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type DropdownSize = 'xs' | 'sm' | 'md';
 
@@ -141,13 +141,12 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		this._select = select;
 
 		if (!select) {
+			setState(this, 'unnamed-select', false);
 			this.expanded = false;
 			return;
 		}
 
-		if (import.meta.env?.DEV && !this.accessibleLabel && !select.hasAttribute("aria-label") && !select.hasAttribute("aria-labelledby") && !select.labels?.length) {
-			reportRule('dropdown-select-needs-name', this);
-		}
+		setState(this, 'unnamed-select', !this.accessibleLabel && !select.hasAttribute("aria-label") && !select.hasAttribute("aria-labelledby") && !select.labels?.length);
 
 		select.addEventListener('change', this._handleSelectChange);
 		select.addEventListener('focus', this._handleSelectFocus);

@@ -45,7 +45,7 @@ import { NLDDMenuBar } from '../menu-bar/menu-bar.js';
 import '../../content/icon/icon.js';
 import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import { TopNavigationMenuSheet } from './top-navigation-bar.menu-sheet.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 /** The absolute URL an href goes to; an anchor resolves it without throwing. */
 function resolvedHref(href: string): string {
@@ -140,15 +140,10 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		].join('\n');
 	}
 
-	private _warnedSameHref = false;
-
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
-		if (import.meta.env?.DEV && !this._warnedSameHref && this.logoHref && this.websiteHref
-			&& resolvedHref(this.logoHref) === resolvedHref(this.websiteHref)) {
-			this._warnedSameHref = true;
-			reportRule('top-navigation-bar-same-href', this);
-		}
+		setState(this, 'same-href', Boolean(this.logoHref) && Boolean(this.websiteHref)
+			&& resolvedHref(this.logoHref) === resolvedHref(this.websiteHref));
 		// Not only on `translations`: setTranslations() re-renders without it.
 		const texts = this._translatedTexts();
 		if (texts !== this._appliedTexts) {

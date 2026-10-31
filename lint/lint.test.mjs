@@ -212,6 +212,23 @@ describe('built-in rules', () => {
 	});
 });
 
+describe('a rule about a removed name', () => {
+	const rule = {
+		id: 'old-name',
+		severity: 'warn',
+		context: 'nldd-button[old-name]',
+		message: 'Use the new name.',
+		examples: { passed: [], failed: [] },
+	};
+
+	it('replaces the generic finding about that attribute', async () => {
+		const linter = createLinter({ ...DATA, rules: [rule] });
+		const { findings } = await linter.lintSource('<template><nldd-button old-name="a" nope="b" /></template>', 'a.vue');
+		assert.deepEqual(findings.map((finding) => finding.rule).sort(), ['old-name', 'unknown-attribute']);
+		assert.ok(findings.some((finding) => finding.message.includes('nope')));
+	});
+});
+
 describe('suppressions', () => {
 	const lint = (source) => createLinter(DATA).lintSource(source, 'a.vue');
 

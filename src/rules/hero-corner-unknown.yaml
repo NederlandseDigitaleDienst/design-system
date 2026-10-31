@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-hero'
+context: 'nldd-hero:state(corner-unknown)'
 message: 'This is not a corner, so the hero chooses one. Use "top-left", "top-right", "bottom-left" or "bottom-right", or leave the value empty.'

@@ -1,5 +1,5 @@
 import type { HeroLayout, HeroMainPosition } from './hero.js';
-import { reportRule } from '../../../../utilities/report-rule.js';
+import { setState } from '../../../../utilities/element-state.js';
 
 export type HeroCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
@@ -13,7 +13,6 @@ interface CornerHost extends HTMLElement {
 	layout: HeroLayout;
 	mainPosition: HeroMainPosition;
 	mainWidth: string;
-	width: string;
 	readonly _hasMedia: boolean;
 }
 
@@ -54,19 +53,11 @@ function coveredCorners(host: CornerHost, position: CornerPosition): HeroCorner[
 	return [`${vertical}-left`, `${vertical}-right`];
 }
 
-const warned = new WeakMap<HTMLElement, Set<string>>();
-
-function firstTime(host: HTMLElement, key: string): boolean {
-	const keys = warned.get(host) ?? new Set<string>();
-	if (keys.has(key)) return false;
-	keys.add(key);
-	warned.set(host, keys);
-	return true;
-}
-
 function clear(host: HTMLElement): void {
 	host.removeAttribute('data-media-corner');
 	host.removeAttribute('data-main-corner');
+	setState(host, 'corner-covered', false);
+	setState(host, 'corner-unknown', false);
 }
 
 /**
@@ -78,6 +69,7 @@ function clear(host: HTMLElement): void {
 export function applyCorner(host: CornerHost): void {
 	if (host.corner === null || host.corner === undefined) {
 		clear(host);
+		setState(host, 'corner-unsupported', false);
 		return;
 	}
 
@@ -88,15 +80,10 @@ export function applyCorner(host: CornerHost): void {
 		: 'bottom-left';
 	// Without media the panel is the whole hero, so layout and position do not
 	// come into it.
-	if (host._hasMedia && (host.layout !== 'contained' || center)) {
+	const unsupported = host._hasMedia && (host.layout !== 'contained' || center);
+	setState(host, 'corner-unsupported', unsupported);
+	if (unsupported) {
 		clear(host);
-		if (import.meta.env?.DEV) {
-			const fixes = [
-				host.layout !== 'contained' ? 'set layout="contained"' : '',
-				center ? `put the panel in a corner or along a side instead of main-position="${host.mainPosition}"` : '',
-			].filter(Boolean);
-			if (firstTime(host, `unsupported-${host.layout !== 'contained' ? 'layout' : ''}-${center ? 'center' : ''}`)) reportRule('hero-corner-unsupported', host, fixes.join(' and '));
-		}
 		return;
 	}
 
@@ -118,16 +105,8 @@ export function applyCorner(host: CornerHost): void {
 	if (mainCorner) host.setAttribute('data-main-corner', mainCorner);
 	else host.removeAttribute('data-main-corner');
 
-	if (!import.meta.env?.DEV) return;
-	if (!chosen && value !== '' && value !== 'auto') {
-		if (firstTime(host, `unknown-${value}`)) reportRule('hero-corner-unknown', host, `corner="${value}"`);
-	}
-	if (chosen && covered.includes(chosen)) {
-		if (firstTime(host, `covered-${chosen}`)) reportRule('hero-corner-covered', host, `corner="${chosen}"`);
-	}
-	if (host.width === 'full') {
-		if (firstTime(host, 'width-full')) reportRule('hero-corner-full-width', host);
-	}
+	setState(host, 'corner-covered', chosen !== null && covered.includes(chosen));
+	setState(host, 'corner-unknown', chosen === null && value !== '' && value !== 'auto');
 }
 
 const LIMITS = ['--_hero-media-corner-limit', '--_hero-main-corner-limit'] as const;

@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-skip-link'
+context: 'nldd-skip-link:state(target-not-focusable)'
 message: 'The target did not take focus, so the skip link did nothing. It is probably hidden or inert.'

@@ -1,4 +1,7 @@
 severity: warn
-runtime: true
-context: 'nldd-list'
+context: 'nldd-list[arrow-navigation]'
+removed: ['arrow-navigation']
 message: '`arrow-navigation` is the default now and the attribute does nothing; remove it.'
+examples:
+  passed: ['<nldd-list accessible-label="Aanvragen"></nldd-list>']
+  failed: ['<nldd-list accessible-label="Aanvragen" arrow-navigation></nldd-list>']

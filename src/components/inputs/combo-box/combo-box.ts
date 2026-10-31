@@ -81,7 +81,7 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
@@ -436,7 +436,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// state would wrongly suggest the input is invalid.
 		if (this.allowCustom && !this._hasVisibleMenuItems()) return;
 		if (!('showPopover' in this._menu)) {
-			reportRule('combo-box-needs-popover-api', this);
+			setState(this, 'no-popover-api', true);
 			return;
 		}
 		this._updateMenuWidth();

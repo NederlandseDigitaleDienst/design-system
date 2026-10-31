@@ -260,10 +260,9 @@ describe('<nldd-card> with download', () => {
 		expect(a.getAttribute('aria-label')).toContain('downloadt bestand');
 	});
 
-	it('warns once that target does nothing on a download', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that target does nothing on a download', async () => {
 		el = await fixture('<nldd-card href="/verslag.pdf" target="_blank" download="verslag.pdf" accessible-label="Verslag"></nldd-card>');
 		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
+		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
 });

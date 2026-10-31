@@ -1355,8 +1355,7 @@ describe('nldd-list-item – what goes in a row', () => {
 		vi.restoreAllMocks();
 	});
 
-	const strayWarnings = (warn: { mock: { calls: unknown[][] } }) =>
-		warn.mock.calls.filter(([message]) => String(message).includes('sits directly in a row'));
+	const firstRow = () => el.querySelector('nldd-list-item') as HTMLElement;
 
 	const mount = async (content: string) => {
 		el = await fixture(`<nldd-list><nldd-list-item button>${content}</nldd-list-item></nldd-list>`);
@@ -1365,52 +1364,43 @@ describe('nldd-list-item – what goes in a row', () => {
 		await nextFrames();
 	};
 
-	it('warns about bare text in a row', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states bare text in a row', async () => {
 		await mount('Dossier 2024-001');
-		expect(strayWarnings(warn)).toHaveLength(1);
-		expect(String(strayWarnings(warn)[0][0])).toContain('("Dossier 2024-001")');
+		expect(firstRow().matches(':state(bare-text)')).toBe(true);
 	});
 
-	it('does not warn about cells, segments or whitespace', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('takes cells, segments and whitespace for what they are', async () => {
 		await mount(`
 			<nldd-text-cell text="Dossier"></nldd-text-cell>
 			<nldd-cell></nldd-cell>
 		`);
-		expect(strayWarnings(warn)).toHaveLength(0);
+		expect(firstRow().matches(':state(bare-text)')).toBe(false);
 		cleanup(el);
 		el = await fixture(`<nldd-list><nldd-list-item>
 			<nldd-list-item-segment button><nldd-text-cell text="Dossier"></nldd-text-cell></nldd-list-item-segment>
 		</nldd-list-item></nldd-list>`);
 		await waitForUpdate(el.querySelector('nldd-list-item') as HTMLElement);
 		await nextFrames();
-		expect(strayWarnings(warn)).toHaveLength(0);
+		expect(firstRow().matches(':state(bare-text)')).toBe(false);
 	});
 
-	const nestedWarnings = (warn: { mock: { calls: unknown[][] } }) =>
-		warn.mock.calls.filter(([message]) => String(message).includes('is its own control'));
-
-	it('warns about a control inside a row that is its own control', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states a control inside a row that is its own control', async () => {
 		el = await fixture(`<nldd-list><nldd-list-item href="/dossier">
 			<nldd-text-cell text="Dossier"></nldd-text-cell>
 			<nldd-cell><nldd-icon-button icon="delete" accessible-label="Verwijder"></nldd-icon-button></nldd-cell>
 		</nldd-list-item></nldd-list>`);
 		await waitForUpdate(el.querySelector('nldd-list-item') as HTMLElement);
 		await nextFrames();
-		expect(nestedWarnings(warn)).toHaveLength(1);
-		expect(String(nestedWarnings(warn)[0][0])).toContain('<nldd-icon-button>');
+		expect(firstRow().matches(':state(nested-control)')).toBe(true);
 	});
 
-	it('warns about a segment in a row that is its own control', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states a segment in a row that is its own control', async () => {
 		el = await fixture(`<nldd-list><nldd-list-item button>
 			<nldd-list-item-segment button><nldd-text-cell text="Dossier"></nldd-text-cell></nldd-list-item-segment>
 		</nldd-list-item></nldd-list>`);
 		await waitForUpdate(el.querySelector('nldd-list-item') as HTMLElement);
 		await nextFrames();
-		expect(nestedWarnings(warn)).toHaveLength(1);
+		expect(firstRow().matches(':state(nested-control)')).toBe(true);
 	});
 
 	it('gives a checked control on a selected row the content color, which the accent can fall below 3:1 against', async () => {
@@ -1434,8 +1424,7 @@ describe('nldd-list-item – what goes in a row', () => {
 		}
 	});
 
-	it('does not warn about a decorative glyph, or controls in a row without an action', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('takes a decorative glyph, or controls in a row without an action, as fine', async () => {
 		el = await fixture(`<nldd-list>
 			<nldd-list-item checkbox>
 				<nldd-cell><nldd-checkbox decorative></nldd-checkbox></nldd-cell>
@@ -1449,17 +1438,9 @@ describe('nldd-list-item – what goes in a row', () => {
 		const rows = [...el.querySelectorAll('nldd-list-item')] as HTMLElement[];
 		await Promise.all(rows.map((row) => waitForUpdate(row)));
 		await nextFrames();
-		expect(nestedWarnings(warn)).toHaveLength(0);
+		for (const row of rows) expect(row.matches(':state(nested-control)')).toBe(false);
 	});
 
-	it('warns once per row', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		await mount('Eerste');
-		const row = el.querySelector('nldd-list-item') as HTMLElement;
-		row.append(document.createTextNode(' tweede'));
-		await nextFrames();
-		expect(strayWarnings(warn)).toHaveLength(1);
-	});
 });
 
 describe('<nldd-list-item> with download', () => {
@@ -1478,10 +1459,9 @@ describe('<nldd-list-item> with download', () => {
 		expect(el.shadowRoot!.textContent).toContain('downloadt bestand');
 	});
 
-	it('warns once that target does nothing on a download', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that target does nothing on a download', async () => {
 		el = await fixture('<nldd-list-item href="/verslag.pdf" target="_blank" download="verslag.pdf"><nldd-text-cell text="Verslag"></nldd-text-cell></nldd-list-item>');
 		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
+		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
 });

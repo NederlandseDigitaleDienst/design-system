@@ -44,7 +44,9 @@ examples:
 
 Neem een bestaande `console.warn` over, schrijf dan precies dezelfde conditie op, want de code is daar de waarheid.
 
-Kan een selector het niet zien (een meting, een methode die verkeerd wordt aangeroepen, een waarde die geparsed moet worden), kijk dan eerst of het component de fout onmogelijk kan maken. Zo niet, dan `runtime: true`, zonder assertie en zonder voorbeelden, met `context` op het component. Het component roept `reportRule('<id>', this)` aan. De conditie blijft in de code, de tekst staat in de regel. Een `console.warn` in een component mag niet; `lint:rules` faalt erop.
+Gaat de regel over een naam die weg is, zet die dan in `removed`, met de oude naam in het `failed`-voorbeeld: `removed: ['item-width']`. De selector mag hem dan noemen, en dat hij er staat is genoeg.
+
+Elke regel is een selector. Staat wat je wilt zien niet in de markup (een meting, een methode die verkeerd wordt aangeroepen, een waarde die geparsed moet worden), kijk dan eerst of het component de fout onmogelijk kan maken. Zo niet, dan stelt het component het feit beschikbaar met `setState(this, 'no-width', conditie)` uit `src/utilities/element-state.ts`, en leest de regel het met `:state()`: `runtime: true`, `context: 'nldd-button-group:state(no-width)'`, zonder voorbeelden. De naam is kort, kebab-case en beschrijft het feit, nooit de fout. Kan het feit weer verdwijnen, geef dan de conditie mee; bij een eenmalige gebeurtenis, zoals een methode-aanroep, zet je hem op `true`. Een component bevat geen meldingstekst en weet niets van regels. `lint:rules` faalt op een `console.warn` in een component en op een state die niets zet.
 
 ## 3. Bewijs de regel
 

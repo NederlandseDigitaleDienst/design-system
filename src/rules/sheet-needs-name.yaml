@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-sheet'
+context: 'nldd-sheet:state(unnamed)'
 message: 'No `accessible-label` and no nldd-top-title-bar with text inside. Screen readers will announce this dialog with a generic name. Give the title bar a text, or set `accessible-label`.'

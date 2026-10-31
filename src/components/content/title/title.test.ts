@@ -203,18 +203,6 @@ describe('nldd-title – overline and supporting-text', () => {
 		expect(part('supporting-text')).toBeNull();
 	});
 
-	it('warns once per page about the old subtitle slot', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture('<nldd-title text="Titel"><p slot="subtitle">Oud</p></nldd-title>');
-		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledTimes(1);
-		expect(warn.mock.calls[0][0]).toContain('slot="supporting-text"');
-		cleanup(el);
-
-		el = await fixture('<nldd-title text="Titel"><p slot="subtitle">Oud</p></nldd-title>');
-		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledTimes(1);
-	});
 });
 
 describe('nldd-title – custom-size', () => {
@@ -271,32 +259,29 @@ describe('nldd-title – custom-size', () => {
 		expect(fontFamily).toBe(textStyle().fontFamily);
 	});
 
-	it('never goes below size 1, and says so', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('never goes below size 1', async () => {
 		await title('size="1"');
 		const sizeOne = textStyle().fontSize;
 		cleanup(el);
 		await title('sm-custom-size="10px" md-custom-size="10px" lg-custom-size="10px"');
 		expect(textStyle().fontSize).toBe(sizeOne);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('smaller than size 1'))).toBe(true);
+		expect(el.matches(':state(custom-size-below-floor)')).toBe(true);
 	});
 
-	it('keeps the scale for a value that is not a length, and says so', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('keeps the scale for a value that is not a length', async () => {
 		await title('lg-custom-size="huge"');
 		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('title-custom-size-invalid') && String(call[0]).includes('"huge"'))).toBe(true);
+		expect(el.matches(':state(invalid-custom-size)')).toBe(true);
 	});
 
 	it('takes no size keyword, which cannot go inside the floor', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		for (const value of ['larger', 'xx-large', 'inherit']) {
 			await title(`lg-custom-size="${value}"`);
 			expect(el.hasAttribute('data-lg-custom-size'), value).toBe(false);
+			expect(el.matches(':state(invalid-custom-size)')).toBe(true);
 			cleanup(el);
 		}
 		el = undefined as unknown as HTMLElement;
-		expect(warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('title-custom-size-invalid'))).toHaveLength(3);
 	});
 
 	it('takes a percentage or em and still keeps the size 1 floor', async () => {

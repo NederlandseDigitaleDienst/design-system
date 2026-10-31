@@ -36,7 +36,7 @@ import {
 } from './page-footer.template.js';
 import { nlddPageFooterTranslations, type NLDDPageFooterTranslations } from './page-footer.i18n.js';
 import { translate } from '../../../utilities/translations.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 
 // # nldd-page-footer-legal-bar-item
@@ -169,14 +169,11 @@ export class NLDDPageFooter extends LitElement {
 		// in the light DOM, not one inside our shadow root. Set it on the
 		// host (don't override a consumer-provided id).
 		if (!this.id) {
-			// DEV: warn on duplicate id="page-footer" in the document — a
-			// second nldd-page-footer (SPA without cleanup, repeated layout
+			// A second nldd-page-footer (SPA without cleanup, repeated layout
 			// fragment) silently breaks HTML uniqueness (WCAG SC 4.1.1) and
 			// makes skip-links target the wrong instance. Check BEFORE
 			// setting this.id so we can't self-match.
-			if (import.meta.env?.DEV && document.getElementById('page-footer')) {
-				reportRule('page-footer-duplicate-id', this);
-			}
+			setState(this, 'duplicate-id', document.getElementById('page-footer') !== null);
 			this.id = 'page-footer';
 		}
 	}

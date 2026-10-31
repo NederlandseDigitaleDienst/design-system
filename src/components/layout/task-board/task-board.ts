@@ -60,7 +60,7 @@ import { nlddTaskBoardTranslations } from './task-board.i18n.js';
 import { taskBoardStyles } from './task-board.styles.js';
 import { taskBoardTemplate } from './task-board.template.js';
 import { NLDDTaskBoardColumn } from './task-board-column.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export { NLDDTaskBoardColumn };
 
@@ -206,7 +206,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 			? this.columns.find((column) => this._columnKey(column) === toColumn)
 			: toColumn;
 		if (!from || !to || !this.columns.includes(to)) {
-			if (import.meta.env?.DEV) reportRule('task-board-move-item-invalid', this);
+			setState(this, 'invalid-move', true);
 			return false;
 		}
 		const fromIndex = from.items.indexOf(item);

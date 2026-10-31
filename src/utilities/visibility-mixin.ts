@@ -1,7 +1,6 @@
 import { property } from 'lit/decorators.js';
 import { LitElement, type PropertyValues, type CSSResultGroup, type CSSResultOrNative } from 'lit';
 import { visibilityStyles } from './visibility-mixin.styles.js';
-import { reportRule } from './report-rule.js';
 
 type Constructor<T = LitElement> = new (...args: any[]) => T;
 
@@ -108,7 +107,6 @@ export function VisibilityMixin<TBase extends Constructor<LitElement>>(
 			const containerPrefix = containerName ? `${containerName} ` : '';
 			const rules: string[] = [];
 
-			if (this.hideBelow === 'sm') reportRule('hide-below-sm-no-effect', this);
 			const below = customThreshold(this.hideBelow);
 			if (below) {
 				rules.push(
@@ -116,7 +114,6 @@ export function VisibilityMixin<TBase extends Constructor<LitElement>>(
 				);
 			}
 
-			if (this.hideAbove === 'lg') reportRule('hide-above-lg-no-effect', this);
 			const above = customThreshold(this.hideAbove);
 			if (above) {
 				rules.push(

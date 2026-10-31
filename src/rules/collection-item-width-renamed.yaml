@@ -1,4 +1,7 @@
 severity: warn
-runtime: true
-context: 'nldd-collection'
+context: 'nldd-collection[item-width]'
+removed: ['item-width']
 message: 'The `item-width` attribute is now `item-min-width`. Rename it here and on every other nldd-collection.'
+examples:
+  passed: ['<nldd-collection item-min-width="320px"></nldd-collection>']
+  failed: ['<nldd-collection item-width="320px"></nldd-collection>']

@@ -67,7 +67,7 @@ import { onColorSchemeChange, forceScrollLayerRepaint } from '../../../utilities
 import '../../actions/icon-button/icon-button.js';
 import '../tooltip/tooltip.js';
 import { translate } from '../../../utilities/translations.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 
@@ -197,8 +197,13 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 	 * detach/reattach re-mount from the live slotted text so changed content
 	 * (swapped while detached) shows, rather than the doc captured on disconnect. */
 	protected override getRemountDoc(): string {
-		this._parsedDiff = this.diff ? parseUnifiedDiff(this._getRawText()) : null;
+		this._parseDiff(this._getRawText());
 		return this._parsedDiff?.doc ?? this._getRawText();
+	}
+
+	private _parseDiff(raw: string): void {
+		this._parsedDiff = this.diff ? parseUnifiedDiff(raw) : null;
+		setState(this, 'diff-lines-dropped', (this._parsedDiff?.dropped ?? 0) > 0);
 	}
 
 	override connectedCallback(): void {
@@ -229,7 +234,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		// Suppress the copy button up front where the Clipboard API can't work, so
 		// the reserved actions space is dropped on the first paint too.
 		this._copyUnavailable = !this.noCopy && !isClipboardAvailable();
-		this._parsedDiff = this.diff ? parseUnifiedDiff(this._getRawText()) : null;
+		this._parseDiff(this._getRawText());
 		this.mountEditor(this._parsedDiff?.doc ?? this._getRawText());
 		this.onEditorMounted();
 	}
@@ -286,10 +291,8 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 				this.style.setProperty('--_code-viewer-max-height', this.maxHeight);
 			} else {
 				this.style.removeProperty('--_code-viewer-max-height');
-				if (import.meta.env?.DEV && this.maxHeight) {
-					reportRule('code-viewer-max-height-invalid', this, `max-height="${this.maxHeight}"`);
-				}
 			}
+			setState(this, 'invalid-max-height', Boolean(this.maxHeight) && !CSS.supports('max-height', this.maxHeight));
 		}
 		if (!this.view) return;
 		// The region label follows a language switch, which re-renders without measuring.
@@ -329,7 +332,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 		const view = this.view;
 		if (!view) return;
 		const raw = this._getRawText();
-		this._parsedDiff = this.diff ? parseUnifiedDiff(raw) : null;
+		this._parseDiff(raw);
 		const doc = this._parsedDiff?.doc ?? raw;
 		view.dispatch({
 			changes: view.state.doc.toString() === doc ? undefined : { from: 0, to: view.state.doc.length, insert: doc },
@@ -357,11 +360,10 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			(words) => {
 				// The content may have changed while the diff module was loading.
 				if (this._parsedDiff === parsed) this.reconfigure(this._wordCompartment, words);
+				setState(this, 'no-diff-words', false);
 			},
 			// The diff still shows without them, so a failed load is no error.
-			(error) => {
-				if (import.meta.env?.DEV) reportRule('code-viewer-diff-words-unavailable', this, String(error));
-			},
+			() => setState(this, 'no-diff-words', true),
 		);
 	}
 

@@ -62,11 +62,8 @@ import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import { spacingToValue, type SpacingSize } from '../../../utilities/spacing-scale.js';
 import { translate } from '../../../utilities/translations.js';
-import { reportRule } from '../../../utilities/report-rule.js';
 
 type Layout = 'grid' | 'stack' | 'lanes' | 'horizontal-scroll';
-
-let warnedAboutItemWidth = false;
 
 @customElement('nldd-collection')
 export class NLDDCollection extends LitElement {
@@ -187,22 +184,6 @@ export class NLDDCollection extends LitElement {
 		this._visibleCount = this.maxItems;
 	}
 
-	// `item-width` was renamed to `item-min-width`. An unknown attribute does
-	// nothing, so without this a missed rename only shows as 280px items.
-	// Observed rather than read once, so a binding that sets it after the
-	// first render is caught too. Once per page: one search-and-replace.
-	static override get observedAttributes(): string[] {
-		return [...super.observedAttributes, 'item-width'];
-	}
-
-	override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
-		super.attributeChangedCallback(name, old, value);
-		if (import.meta.env?.DEV && name === 'item-width' && value !== null && !warnedAboutItemWidth) {
-			warnedAboutItemWidth = true;
-			reportRule('collection-item-width-renamed', this, `item-width="${value}"`);
-		}
-	}
-
 	override disconnectedCallback(): void {
 		super.disconnectedCallback();
 		this._intersectionObserver?.disconnect();
@@ -240,17 +221,15 @@ export class NLDDCollection extends LitElement {
 			changedProperties.has('mdGap') ||
 			changedProperties.has('lgGap')
 		) {
-			const plain = spacingToValue(this.gap, 'nldd-collection', 'gap');
-			const write = (name: string, size: SpacingSize | undefined, attribute: string) => {
-				const value = size === undefined
-					? plain
-					: spacingToValue(size, 'nldd-collection', attribute) ?? plain;
+			const plain = spacingToValue(this.gap);
+			const write = (name: string, size: SpacingSize | undefined) => {
+				const value = size === undefined ? plain : spacingToValue(size) ?? plain;
 				if (value === null) this.style.removeProperty(name);
 				else this.style.setProperty(name, value);
 			};
-			write('--_collection-sm-gap', this.smGap, 'sm-gap');
-			write('--_collection-md-gap', this.mdGap, 'md-gap');
-			write('--_collection-lg-gap', this.lgGap, 'lg-gap');
+			write('--_collection-sm-gap', this.smGap);
+			write('--_collection-md-gap', this.mdGap);
+			write('--_collection-lg-gap', this.lgGap);
 		}
 
 		if (this.lazyLoad && this._loadMoreBtn && !this._intersectionObserver) {

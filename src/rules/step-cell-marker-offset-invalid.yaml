@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-step-cell'
+context: 'nldd-step-cell:state(invalid-marker-offset)'
 message: '`marker-offset` is not a CSS length or percentage, so the dot falls back to `vertical-alignment`. Use a length such as "1rem" or a percentage such as "25%".'

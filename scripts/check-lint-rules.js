@@ -39,16 +39,18 @@ function checkReflected(rule) {
 	}
 }
 
-function checkTokens(tokens, ruleId) {
+function checkTokens(tokens, rule) {
+	const ruleId = rule.id;
 	for (const token of tokens) {
 		if (token.type === 'tag' && token.name.startsWith('nldd-') && !data.tags[token.name]) {
 			problems.push(`${ruleId}: selector names ${token.name}, which does not exist.`);
 		}
-		if (token.type === 'attribute' && !allAttributes.has(token.name) && !GLOBAL_IN_SELECTORS.has(token.name)) {
+		const known = allAttributes.has(token.name) || GLOBAL_IN_SELECTORS.has(token.name) || rule.removed?.includes(token.name);
+		if (token.type === 'attribute' && !known) {
 			problems.push(`${ruleId}: selector names attribute ${token.name}, which no component has.`);
 		}
 		if (token.type === 'pseudo' && Array.isArray(token.data)) {
-			for (const inner of token.data) checkTokens(inner, ruleId);
+			for (const inner of token.data) checkTokens(inner, rule);
 		}
 	}
 }
@@ -57,7 +59,7 @@ function sourceFiles(directory) {
 	return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
 		const path = join(directory, entry.name);
 		if (entry.isDirectory()) return sourceFiles(path);
-		const skip = /\.(test|stories)\.ts$|(dev-checks|report-rule)\.ts$/;
+		const skip = /\.(test|stories)\.ts$|dev-checks\.ts$/;
 		return entry.name.endsWith('.ts') && !skip.test(entry.name) ? [path] : [];
 	});
 }
@@ -86,7 +88,8 @@ async function checkExamples(rule) {
 			// An example naming something that does not exist would prove nothing.
 			const wrapped = example.startsWith('<html') ? example : `<template>${example}</template>`;
 			const { findings } = await linter.lintSource(wrapped, example.startsWith('<html') ? 'example.html' : 'example.vue');
-			for (const finding of findings) {
+			// A failed example may show a name that is gone: that is what a rename rule is about.
+			for (const finding of kind === 'failed' ? [] : findings) {
 				if (BUILT_IN_RULES[finding.rule]) problems.push(`${rule.id}: example: ${finding.message}`);
 			}
 		}
@@ -115,10 +118,13 @@ async function checkPatterns() {
 const componentSources = sourceFiles(join(repoRoot, 'src'))
 	.map((file) => [file, readFileSync(file, 'utf8')]);
 
-function checkReported(rule) {
-	const call = `reportRule('${rule.id}'`;
-	if (!componentSources.some(([, source]) => source.includes(call))) {
-		problems.push(`${rule.id}: runtime rule, but no component calls ${call}.`);
+/** A rule on a state nothing sets would never fire, and look fine. */
+function checkStates(rule) {
+	for (const [, state] of rule.context.matchAll(/:state\(([a-z-]+)\)/g)) {
+		const set = `'${state}'`;
+		if (!componentSources.some(([, source]) => source.includes('setState(') && source.includes(set))) {
+			problems.push(`${rule.id}: no component sets the state ${state}.`);
+		}
 	}
 }
 
@@ -135,11 +141,11 @@ function checkNoWarnings() {
 for (const rule of data.rules) {
 	if (rule.runtime) {
 		checkSee(rule);
-		checkReported(rule);
+		checkStates(rule);
 		continue;
 	}
 	for (const selector of selectorsOf(rule)) {
-		for (const tokens of parse(selector)) checkTokens(tokens, rule.id);
+		for (const tokens of parse(selector)) checkTokens(tokens, rule);
 	}
 	checkSee(rule);
 	checkReflected(rule);

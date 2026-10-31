@@ -18,18 +18,19 @@ describe('rules in the browser', () => {
 
 	afterEach(() => root?.remove());
 
-	for (const rule of devRules) {
-		const examples = data.rules.find(({ id }) => id === rule.id)!.examples!;
+	for (const { id, examples } of data.rules.filter((each) => each.examples)) {
+		const rule = devRules.find((each) => each.id === id)!;
 
-		it(`${rule.id} agrees with its examples`, async () => {
-			for (const example of examples.passed) {
+		it(`${id} agrees with its examples`, async () => {
+			for (const example of examples!.passed) {
 				await mount(example);
 				expect(findViolations(root, [rule]), example).toEqual([]);
 				root.remove();
 			}
-			for (const example of examples.failed) {
+			for (const example of examples!.failed) {
 				await mount(example.replace(/<\/?(html|body)>/g, ''));
-				expect(findViolations(root, [rule]).length, example).toBeGreaterThan(0);
+				// The document, not root: a notification moves itself to its area.
+				expect(findViolations(document, [rule]).length, example).toBeGreaterThan(0);
 				root.remove();
 			}
 		});

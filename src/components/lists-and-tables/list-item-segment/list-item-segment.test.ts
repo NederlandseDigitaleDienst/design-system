@@ -247,14 +247,12 @@ describe('nldd-list-item – expanded', () => {
 		expect(action(item2)!.getAttribute('aria-expanded')).toBe('true');
 	});
 
-	it('warns when expanded has nowhere to live', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		await mount('expanded');
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('`expanded` needs somewhere to live'), expect.anything());
+	it('states that expanded has nowhere to live', async () => {
+		const item = await mount('expanded');
+		expect(item.matches(':state(expanded-without-control)')).toBe(true);
 	});
 
 	it('is happy when a disclosure action carries it, and hands it the state', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<HTMLElement>(
 			`<nldd-list type="tree" accessible-label="X">
 				<nldd-list-item expanded>
@@ -270,7 +268,7 @@ describe('nldd-list-item – expanded', () => {
 		await waitForUpdate(item);
 		await waitForUpdate(seg);
 		expect(seg.shadowRoot!.querySelector('.list-item-segment')!.getAttribute('aria-expanded')).toBe('true');
-		expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('`expanded` needs somewhere to live'), expect.anything());
+		expect(item.matches(':state(expanded-without-control)')).toBe(false);
 	});
 
 	it('says a closed branch is collapsed from the start, before anything is pressed', async () => {
@@ -647,10 +645,9 @@ describe('<nldd-list-item-segment> with download', () => {
 		expect(el.shadowRoot!.textContent).toContain('downloadt bestand');
 	});
 
-	it('warns once that target does nothing on a download', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that target does nothing on a download', async () => {
 		el = await fixture('<nldd-list-item-segment href="/verslag.pdf" target="_blank" download="verslag.pdf"><nldd-text-cell text="Verslag"></nldd-text-cell></nldd-list-item-segment>');
 		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
+		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
 });

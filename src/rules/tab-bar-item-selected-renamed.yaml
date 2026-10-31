@@ -1,4 +1,7 @@
 severity: warn
-runtime: true
-context: 'nldd-tab-bar-item'
+context: 'nldd-tab-bar-item[selected]'
+removed: ['selected']
 message: '`selected` is now `current` and the old attribute does nothing; rename it.'
+examples:
+  passed: ['<nldd-tab-bar-item text="Aanvragen" current></nldd-tab-bar-item>']
+  failed: ['<nldd-tab-bar-item text="Aanvragen" selected></nldd-tab-bar-item>']

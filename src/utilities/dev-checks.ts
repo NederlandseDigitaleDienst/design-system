@@ -24,6 +24,9 @@ export interface DevRule {
 /** Long enough for a framework to finish a render, and for most first data. */
 const SETTLE_MS = 300;
 
+/** A `:state()` changes nothing a MutationObserver sees, so also look regularly. */
+const RECHECK_MS = 2000;
+
 function isViolated(rule: DevRule, element: Element): boolean {
 	if (rule.assert) return !element.matches(rule.assert);
 	if (rule.report) return element.matches(rule.report);
@@ -35,11 +38,20 @@ function isViolated(rule: DevRule, element: Element): boolean {
 	return true;
 }
 
+/** An older browser without `:state()` rejects the selector; that rule then does not run. */
+function selectAll(root: ParentNode, selector: string): NodeListOf<Element> | Element[] {
+	try {
+		return root.querySelectorAll(selector);
+	} catch {
+		return [];
+	}
+}
+
 /** @returns The rules each element breaks, per element in document order. */
 export function findViolations(root: ParentNode, rules: DevRule[] = devRules) {
 	const found: { rule: DevRule; element: Element }[] = [];
 	for (const rule of rules) {
-		for (const element of root.querySelectorAll(rule.context)) {
+		for (const element of selectAll(root, rule.context)) {
 			if (isViolated(rule, element)) found.push({ rule, element });
 		}
 	}
@@ -87,5 +99,6 @@ export function startDevChecks(): void {
 		childList: true,
 		attributes: true,
 	});
+	setInterval(report, RECHECK_MS);
 	schedule();
 }

@@ -5,7 +5,7 @@ import { iconStyles } from './icon.styles.js';
 import { template } from './icon.template.js';
 import { aliases } from './icon-aliases.js';
 import { iconRegistry } from './icon-registry.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export { aliases };
 
@@ -13,9 +13,6 @@ export const ICONS: string[] = [
 	...iconRegistry.keys(),
 	...Object.keys(aliases),
 ].sort();
-
-/** One warning per page: a missed rename is one search-and-replace, not one per icon. */
-let warnedAboutName = false;
 
 export type IconSize = 'full' | 'inherit' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
 
@@ -120,12 +117,6 @@ export class NLDDIcon extends LitElement {
 		if (!this.hasAttribute('aria-hidden')) {
 			this.setAttribute('aria-hidden', 'true');
 		}
-		// `name` was renamed to `icon`. An unknown attribute does nothing, so
-		// without this the only sign of a missed rename is a dashed circle.
-		if (import.meta.env?.DEV && this.hasAttribute('name') && !warnedAboutName) {
-			warnedAboutName = true;
-			reportRule('icon-name-renamed', this, `name="${this.getAttribute('name')}"`);
-		}
 		this._iconSvg = this._loadIcon(this.icon);
 	}
 
@@ -143,12 +134,8 @@ export class NLDDIcon extends LitElement {
 		const resolvedName = aliases[name] ?? name;
 		const svg = iconRegistry.get(resolvedName);
 
-		if (svg) {
-			return svg;
-		}
-
-		if (import.meta.env?.DEV) reportRule('icon-not-found', this, resolvedName);
-		return null;
+		setState(this, 'unknown-icon', !svg);
+		return svg ?? null;
 	}
 
 	override render() {

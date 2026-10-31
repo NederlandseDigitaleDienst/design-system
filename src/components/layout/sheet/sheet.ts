@@ -50,7 +50,7 @@ import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Placement = 'left' | 'right' | 'bottom';
 
@@ -116,24 +116,13 @@ export class NLDDSheet extends LitElement {
 			// fallback to `calc(100dvh - top-inset)`). Anything else flows
 			// through CSS.supports so typos and bogus values silently fall
 			// back to the default rather than producing a broken layout.
-			if (h && h !== 'full' && CSS.supports('height', h)) {
-				this.style.setProperty('--_sheet-height', h);
-			} else {
-				// One warning per instance for the element's lifetime (matches
-				// _hasWarnedLabel): a later distinct invalid value won't warn
-				// again. Acceptable for a dev-only nudge — not worth tracking
-				// per-value state to re-warn.
-				if (import.meta.env?.DEV && h && h !== 'full' && !this._hasWarnedHeight) {
-					this._hasWarnedHeight = true;
-					reportRule('sheet-height-invalid', this, `height="${h}"`);
-				}
-				this.style.removeProperty('--_sheet-height');
-			}
+			const custom = Boolean(h) && h !== 'full';
+			const valid = custom && CSS.supports('height', h);
+			if (valid) this.style.setProperty('--_sheet-height', h);
+			else this.style.removeProperty('--_sheet-height');
+			setState(this, 'invalid-height', custom && !valid);
 		}
 	}
-
-	private _hasWarnedLabel = false;
-	private _hasWarnedHeight = false;
 
 	private _closing = false;
 
@@ -175,11 +164,7 @@ export class NLDDSheet extends LitElement {
 		// New open cycle: the next close may emit again.
 		this._closeEmitted = false;
 
-		// Warn once per instance when the sheet has no name of its own to go by
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this._titleBar.text && !this._hasWarnedLabel) {
-			this._hasWarnedLabel = true;
-			reportRule('sheet-needs-name', this);
-		}
+		setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text);
 
 		if (this._closing) {
 			// Opened again while the close animation runs: call the close off.

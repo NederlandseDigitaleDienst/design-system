@@ -9,12 +9,11 @@
  * Which also settles what the attribute means. `gap="16"` in a component that
  * expected a CSS length wrote `--_container-gap: 16`, which is not one: the declaration
  * fell away and the gap became zero with nothing said. Anything this cannot
- * place is refused and named in dev instead, a length included — writing an
- * unplaceable value is that same silent zero.
+ * place is refused instead, a length included: writing an unplaceable value is
+ * that same silent zero.
  */
 
 /** Every step there is. `'0'` is a value, not the absence of one. */
-import { reportRule } from './report-rule.js';
 
 export const SPACING_SCALE = [
 	'0', '2', '4', '6', '8', '10', '12', '16', '20', '24',
@@ -23,42 +22,17 @@ export const SPACING_SCALE = [
 
 export type SpacingSize = (typeof SPACING_SCALE)[number];
 
-/** Anything that is not a bare number: a length, a percentage, a calc(). */
-function looksLikeLength(value: string): boolean {
-	return /[a-z%()]/i.test(value.trim());
-}
-
-const warned = new Set<string>();
-
-function firstTime(key: string): boolean {
-	if (warned.has(key)) return false;
-	warned.add(key);
-	return true;
-}
-
 /**
  * A step of the scale as the token it stands for.
  *
  * Returns null when there is nothing to set, so a caller can remove the
- * property rather than write an empty one. `element` and `attribute` are only
- * there to name the offender in a dev warning.
+ * property rather than write an empty one.
  */
-export function spacingToValue(
-	value: string | undefined,
-	element: string,
-	attribute: string,
-): string | null {
+export function spacingToValue(value: string | undefined): string | null {
 	if (value === undefined || value === '') return null;
 	const step = String(value).trim();
 	if ((SPACING_SCALE as readonly string[]).includes(step)) {
 		return step === '0' ? '0' : `var(--primitives-space-${step})`;
-	}
-	if (import.meta.env?.DEV) {
-		const detail = `<${element}> ${attribute}="${step}"; steps: ${SPACING_SCALE.join(', ')}`;
-		if (firstTime(detail)) {
-			if (looksLikeLength(step)) reportRule('spacing-value-is-length', undefined, detail);
-			else reportRule('spacing-value-off-scale', undefined, detail);
-		}
 	}
 	return null;
 }

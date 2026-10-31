@@ -72,7 +72,7 @@ function checkAttributes(node, { tags, icons, anyChildAttrs }, report) {
 		} else if (value === BOUND && contract.props.includes(toCamelCase(name))) {
 			// A property without an attribute, which only a binding can reach.
 		} else if (!GLOBAL_ATTRIBUTE.test(name.toLowerCase()) && !node.wrapped) {
-			report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`);
+			report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
 		}
 	}
 }
@@ -83,7 +83,7 @@ function checkSlot(node, tags, report) {
 	if (typeof slot !== 'string' || !slot || parent.opaque || !parent.name.startsWith('nldd-')) return;
 	const contract = tags[parent.name];
 	if (contract && !contract.anySlot && !contract.slots.includes(slot)) {
-		report('unknown-slot', `${parent.name} has no slot "${slot}".`);
+		report('unknown-slot', `${parent.name} has no slot "${slot}".`, 'slot');
 	}
 }
 
@@ -92,8 +92,8 @@ function builtInFindings(root, context) {
 	const findings = [];
 	walk(root, (node) => {
 		if (!node.name.startsWith('nldd-')) return;
-		const report = (rule, message) =>
-			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, node });
+		const report = (rule, message, attribute) =>
+			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, node, attribute });
 		const contract = tags[node.name];
 		if (!contract) {
 			report('unknown-element', `${node.name} does not exist in this version.`);
@@ -143,6 +143,15 @@ export function createLinter(data = loadData(), { wrappers = {}, severities = {}
 	const engine = createEngine({ classes: data.classes });
 	const rules = data.rules.filter((rule) => !rule.runtime && severities[rule.id] !== 'off');
 
+	/** A rule about a removed name says what to use instead; the generic finding adds nothing. */
+	function withoutCovered(findings) {
+		return findings.filter(
+			({ attribute, node }) =>
+				!attribute ||
+				!findings.some((other) => other.node === node && other.selector?.includes(`[${attribute}`)),
+		);
+	}
+
 	function lintRoots(roots) {
 		const findings = [];
 		const counts = { failed: 0, passed: 0, cantTell: 0 };
@@ -152,11 +161,17 @@ export function createLinter(data = loadData(), { wrappers = {}, severities = {}
 				for (const { node, outcome } of engine.evaluate(rule, root)) {
 					counts[outcome]++;
 					if (outcome !== 'failed') continue;
-					findings.push({ rule: rule.id, severity: rule.severity, message: rule.message, node });
+					findings.push({
+						rule: rule.id,
+						severity: rule.severity,
+						message: rule.message,
+						node,
+						selector: rule.context,
+					});
 				}
 			}
 		}
-		return { findings, counts };
+		return { findings: withoutCovered(findings), counts };
 	}
 
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
@@ -166,7 +181,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities = {}
 		const { suppressed, missingReason } = readSuppressions(source);
 		const position = createPositions(source);
 		const located = findings
-			.map(({ node, severity, ...finding }) => ({
+			.map(({ node, severity, selector, attribute, ...finding }) => ({
 				...finding,
 				severity: severities[finding.rule] ?? severity,
 				tag: node.name,

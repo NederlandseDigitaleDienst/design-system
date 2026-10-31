@@ -133,7 +133,6 @@ describe('nldd-button-group – gestapeld', () => {
 	});
 
 	it('zwijgt als de ouder zijn breedte een tel later alsnog doorgeeft', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<HTMLElement>(
 			`<div style="width: 0">
 				<nldd-button-group>
@@ -145,11 +144,10 @@ describe('nldd-button-group – gestapeld', () => {
 		await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
 		el.style.width = '320px';
 		await new Promise((resolve) => setTimeout(resolve, 400));
-		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(false);
+		expect(el.querySelector('nldd-button-group')!.matches(':state(no-width)')).toBe(false);
 	});
 
 	it('kijkt opnieuw zodra de oriëntatie op auto komt', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<HTMLElement>(
 			`<div style="display: inline-flex">
 				<nldd-button-group orientation="horizontal">
@@ -161,16 +159,15 @@ describe('nldd-button-group – gestapeld', () => {
 		await waitForUpdate(groep);
 		await new Promise((resolve) => setTimeout(resolve, 50));
 		// Vastgezet op een rij is de groep geen container, dus valt er niets in te klappen.
-		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(false);
+		expect(el.querySelector('nldd-button-group')!.matches(':state(no-width)')).toBe(false);
 
 		groep.orientation = 'auto';
 		await waitForUpdate(groep);
 		await new Promise((resolve) => setTimeout(resolve, 400));
-		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
+		expect(el.querySelector('nldd-button-group')!.matches(':state(no-width)')).toBe(true);
 	});
 
-	it('waarschuwt ook als de groep pas later in beeld komt', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('ziet het ook als de groep pas later in beeld komt', async () => {
 		el = await fixture<HTMLElement>(
 			`<div style="display: none">
 				<div style="display: inline-flex">
@@ -184,15 +181,14 @@ describe('nldd-button-group – gestapeld', () => {
 		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
 		await new Promise((resolve) => setTimeout(resolve, 50));
 		// Onzichtbaar is geen ingeklapte groep, dus daar zegt hij nog niets van.
-		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(false);
+		expect(el.querySelector('nldd-button-group')!.matches(':state(no-width)')).toBe(false);
 
 		el.style.display = 'block';
 		await new Promise((resolve) => setTimeout(resolve, 400));
-		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
+		expect(el.querySelector('nldd-button-group')!.matches(':state(no-width)')).toBe(true);
 	});
 
-	it('waarschuwt als de groep geen breedte krijgt van zijn ouder', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('ziet het als de groep geen breedte krijgt van zijn ouder', async () => {
 		el = await fixture<HTMLElement>(
 			`<div style="display: inline-flex">
 				<nldd-button-group>
@@ -202,10 +198,10 @@ describe('nldd-button-group – gestapeld', () => {
 			</div>`,
 		);
 		await waitForUpdate(el.querySelector('nldd-button-group') as HTMLElement);
-		// De waarschuwing houdt een nulmeting even vast, voor het geval de ouder
+		// De groep houdt een nulmeting even vast, voor het geval de ouder
 		// zijn breedte een frame later alsnog doorgeeft.
 		await new Promise((resolve) => setTimeout(resolve, 400));
-		expect(warn.mock.calls.some(([m]) => String(m).includes('0 wide'))).toBe(true);
+		expect(el.querySelector('nldd-button-group')!.matches(':state(no-width)')).toBe(true);
 	});
 });
 
@@ -359,7 +355,6 @@ describe('nldd-button-group – labels, extra knoppen, maat en richting', () => 
 	});
 
 	it('verbergt een vierde knop met CSS en toont hem weer zodra er plek is', async () => {
-		vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture(`
 			<div style="width: 800px;">
 				<nldd-button-group>
@@ -379,8 +374,7 @@ describe('nldd-button-group – labels, extra knoppen, maat en richting', () => 
 		expect(getComputedStyle(fourth).display).not.toBe('none');
 	});
 
-	it('waarschuwt als een knop een eigen maat meekrijgt, en zet toch die van de groep', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('ziet het als een knop een eigen maat meekrijgt, en zet toch die van de groep', async () => {
 		el = await fixture(`
 			<div style="width: 800px;">
 				<nldd-button-group size="sm">
@@ -390,12 +384,11 @@ describe('nldd-button-group – labels, extra knoppen, maat en richting', () => 
 			</div>
 		`);
 		await frames();
-		expect(warn.mock.calls.filter(([m]) => String(m).includes('size="md"'))).toHaveLength(1);
+		expect(el.querySelector('nldd-button-group')!.matches(':state(own-size-overwritten)')).toBe(true);
 		for (const button of el.querySelectorAll('nldd-button')) expect(button.getAttribute('size')).toBe('sm');
 	});
 
-	it('zegt niets over de maat als de groep zijn eigen maat verandert', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('ziet geen eigen maat als de groep zijn eigen maat verandert', async () => {
 		el = await fixture(`
 			<div style="width: 800px;">
 				<nldd-button-group>
@@ -407,7 +400,7 @@ describe('nldd-button-group – labels, extra knoppen, maat en richting', () => 
 		await frames();
 		group.size = 'sm';
 		await frames();
-		expect(warn).not.toHaveBeenCalled();
+		expect(el.querySelector('nldd-button-group')!.matches(':state(own-size-overwritten)')).toBe(false);
 		expect(el.querySelector('nldd-button')!.getAttribute('size')).toBe('sm');
 	});
 

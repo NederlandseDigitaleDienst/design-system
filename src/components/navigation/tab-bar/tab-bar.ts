@@ -55,7 +55,6 @@ import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
 
 
 // # nldd-tab-bar-item
@@ -125,9 +124,6 @@ export class NLDDTabBarItem extends LitElement {
 		const attr = this.getAttribute('variant');
 		if (attr === 'text' || attr === 'icon' || attr === 'icon-and-text') {
 			this._authorVariant = attr;
-		}
-		if (import.meta.env?.DEV && this.hasAttribute('selected')) {
-			reportRule('tab-bar-item-selected-renamed', this);
 		}
 	}
 

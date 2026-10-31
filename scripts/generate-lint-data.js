@@ -10,7 +10,7 @@ import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { aliases } from '../src/components/content/icon/icon-aliases.js';
-import { booleanAttributes, buildClasses, buildContract, buildDevRules, buildRuleMessages, loadRules, normalizeSelectors } from './lib/lint-data.js';
+import { booleanAttributes, buildClasses, buildContract, buildDevRules, loadRules, normalizeSelectors } from './lib/lint-data.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => JSON.parse(readFileSync(resolve(repoRoot, path), 'utf8'));
@@ -28,7 +28,8 @@ const classes = buildClasses(manifest);
 const rules = loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.json')).map((rule) =>
 	normalizeSelectors(rule, booleans),
 );
-const data = { tags: buildContract(manifest), classes, icons, rules };
+const tags = buildContract(manifest);
+const data = { tags, classes, icons, rules };
 
 writeFileSync(resolve(repoRoot, 'lint/data.generated.json'), `${JSON.stringify(data)}\n`);
 writeFileSync(
@@ -36,15 +37,7 @@ writeFileSync(
 	`// Generated from src/rules/ by scripts/generate-lint-data.js. Do not edit.
 import type { DevRule } from './dev-checks.js';
 
-export const devRules: DevRule[] = ${JSON.stringify(buildDevRules(rules, classes), null, '\t')};
-`,
-);
-writeFileSync(
-	resolve(repoRoot, 'src/utilities/rule-messages.generated.ts'),
-	`// Generated from src/rules/ by scripts/generate-lint-data.js. Do not edit.
-export const ruleMessages = ${JSON.stringify(buildRuleMessages(rules), null, '\t')} as const;
-
-export type RuntimeRuleId = keyof typeof ruleMessages;
+export const devRules: DevRule[] = ${JSON.stringify(buildDevRules(rules, classes, tags), null, '\t')};
 `,
 );
 console.log(`lint data: ${Object.keys(data.tags).length} tags, ${data.rules.length} rules`);

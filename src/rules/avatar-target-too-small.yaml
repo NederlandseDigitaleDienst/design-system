@@ -1,4 +1,6 @@
 severity: warn
-runtime: true
-context: 'nldd-avatar'
+context: 'nldd-avatar:is([href], [button]):is([size="16"], [size="20"])'
 message: 'A link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.'
+examples:
+  passed: ['<nldd-avatar href="/profiel" size="24" name="Team Uitvoering"></nldd-avatar>']
+  failed: ['<nldd-avatar href="/profiel" size="20" name="Team Uitvoering"></nldd-avatar>']

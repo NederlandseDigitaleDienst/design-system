@@ -307,16 +307,4 @@ describe('nldd-avatar no-tab', () => {
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('a')!.hasAttribute('tabindex')).toBe(false);
 	});
-	it('waarschuwt bij een link of knop kleiner dan 24px', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDAvatar>('<nldd-avatar name="Jan Jansen" size="20" button></nldd-avatar>');
-		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([m]) => String(m).includes('2.5.8'))).toBe(true);
-		warn.mockClear();
-		cleanup(el);
-		el = await fixture<NLDDAvatar>('<nldd-avatar name="Jan Jansen" size="20"></nldd-avatar>');
-		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([m]) => String(m).includes('2.5.8'))).toBe(false);
-		warn.mockRestore();
-	});
 });

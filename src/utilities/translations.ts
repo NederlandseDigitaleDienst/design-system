@@ -13,8 +13,6 @@
  * attribute on that element.
  */
 
-import { reportRule } from './report-rule.js';
-
 type Translations = Record<string, string>;
 
 interface Store {
@@ -40,7 +38,6 @@ const store: Store = ((globalThis as Record<symbol, unknown>)[STORE_KEY] ??= { t
  */
 export function setTranslations(translations: Translations): void {
 	store.translations = { ...translations };
-	if (import.meta.env?.DEV) warnUnknownKeys(store.translations);
 	if (typeof document !== 'undefined') rerender(document);
 }
 
@@ -76,18 +73,4 @@ function rerender(root: Document | ShadowRoot | Element): void {
 		if (el.tagName.startsWith('NLDD-')) (el as Element & { requestUpdate?: () => void }).requestUpdate?.();
 		if (el.shadowRoot) rerender(el.shadowRoot);
 	}
-}
-
-/**
- * A key no component knows does nothing, silently. That is what happens to an
- * override after a key is renamed, so in DEV it says so. The full key list is
- * loaded only here, so production bundles do not carry it.
- */
-function warnUnknownKeys(translations: Translations): void {
-	import('../translations/nl.generated.js').then(({ nl }) => {
-		const unknown = Object.keys(translations).filter((key) => !(key in nl));
-		if (unknown.length) {
-			reportRule('translation-key-unknown', undefined, unknown.join(', '));
-		}
-	}).catch(() => {});
 }

@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-image'
+context: 'nldd-image:state(no-alt)'
 message: 'A non-decorative image needs a non-empty `alt`. Set `decorative` if the image conveys no information.'

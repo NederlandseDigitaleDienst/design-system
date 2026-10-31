@@ -131,8 +131,9 @@ function requireValue(tokens, booleans) {
 
 /** Spells out in a rule that `[href]` means "has a value", in the linter and the browser alike. */
 export function normalizeSelectors(rule, booleans) {
+	const presence = new Set([...booleans, ...(rule.removed ?? [])]);
 	const normalize = (selector) =>
-		selector && stringify(parseSelector(selector).map((tokens) => requireValue(tokens, booleans)));
+		selector && stringify(parseSelector(selector).map((tokens) => requireValue(tokens, presence)));
 	const normalized = { ...rule, context: normalize(rule.context) };
 	if (rule.assert) normalized.assert = normalize(rule.assert);
 	if (rule.report) normalized.report = normalize(rule.report);
@@ -140,12 +141,25 @@ export function normalizeSelectors(rule, booleans) {
 	return normalized;
 }
 
+/** The fixed values from the manifest as rules, so the browser checks them like the linter does. */
+function valueRules(tags) {
+	return Object.entries(tags).flatMap(([tag, { attrs }]) =>
+		Object.entries(attrs)
+			.filter(([, { values }]) => values)
+			.map(([attribute, { values }]) => ({
+				id: `invalid-value-${tag.replace('nldd-', '')}-${attribute}`,
+				message: `\`${attribute}\` on ${tag} takes: ${values.filter(Boolean).join(', ')}.`,
+				context: `${tag}[${attribute}]:not(${values.map((value) => `[${attribute}="${value}"]`).join(', ')})`,
+			})),
+	);
+}
+
 /** The rules the browser runs: plain CSS, so class pseudos become lists of tags. */
-export function buildDevRules(rules, classes) {
+export function buildDevRules(rules, classes, tags) {
 	const expand = (selector) =>
 		selector && selector.replace(/:([a-z-]+)/g, (match, name) => (classes[name] ? `:is(${classes[name].join(', ')})` : match));
-	return rules
-		.filter((rule) => !rule.ref && !rule.runtime)
+	const authored = rules
+		.filter((rule) => !rule.ref)
 		.map(({ id, context, assert, report, count, message }) => ({
 			id,
 			message,
@@ -154,11 +168,7 @@ export function buildDevRules(rules, classes) {
 			...(report ? { report: expand(report) } : {}),
 			...(count ? { count: { ...count, of: expand(count.of) } } : {}),
 		}));
-}
-
-/** The texts of the rules a component reports itself, by id. */
-export function buildRuleMessages(rules) {
-	return Object.fromEntries(rules.filter((rule) => rule.runtime).map(({ id, message }) => [id, message]));
+	return [...authored, ...valueRules(tags)];
 }
 
 export function loadRules(rulesDir, schema) {

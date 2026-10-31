@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-top-navigation-bar'
+context: 'nldd-top-navigation-bar:state(same-href)'
 message: '`logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.'

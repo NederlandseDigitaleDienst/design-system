@@ -29,8 +29,9 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **Warnings that a rule covers moved to that rule,** such as a missing `accessible-label`. They now start with `[nldd]` and the id of the rule.
-- **`accessible-label` reflects** on `nldd-button`, `nldd-icon-button`, `nldd-card`, `nldd-popover` and `nldd-tab-bar`, and `href` on `nldd-tab-bar-item`. An unset value writes no attribute.
+- **Every warning is now a rule in `src/rules/`.** No component contains warning text any more. Warnings start with `[nldd]` and the id of the rule, arrive once per element, and no longer repeat the value at fault: the element is logged with it. Warnings that were always on, such as `hide-below="sm"`, now only appear while developing. An unknown key in `setTranslations` no longer warns.
+- **Custom states.** Where a fact is not in the markup, a component exposes it as `:state()`, such as `nldd-button-group:state(no-width)`. Rules read those, and styles and tests can too.
+- **`accessible-label` and several other attributes reflect,** because a rule reads them. An unset value writes no attribute. A label set as a property now counts as set, so `nldd-form-field` no longer replaces it.
 - **Node 20.19 or later**, because of the dependencies of the linter. Using the components in a browser is not affected.
 
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)

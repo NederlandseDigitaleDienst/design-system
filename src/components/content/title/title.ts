@@ -35,14 +35,11 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { titleStyles } from './title.styles.js';
 import { titleTemplate } from './title.template.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Size = 1 | 2 | 3 | 4 | 5 | 6;
 type TitleColor = 'content' | 'inherit';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-
-/** One warning per page: a missed rename is one search-and-replace, not one per title. */
-let warnedAboutSubtitle = false;
 
 type Breakpoint = 'sm' | 'md' | 'lg';
 
@@ -118,15 +115,6 @@ export class NLDDTitle extends LitElement {
 		else this._hasDefaultSlotted = hasContent;
 	};
 
-	override firstUpdated(): void {
-		// The subtitle slot was renamed to supporting-text. Content in a slot that
-		// no longer exists is not rendered and reports nothing, so say it here.
-		if (import.meta.env?.DEV && !warnedAboutSubtitle && this.querySelector(':scope > [slot="subtitle"]')) {
-			warnedAboutSubtitle = true;
-			reportRule('title-subtitle-slot-renamed', this);
-		}
-	}
-
 	/** The valid custom size per breakpoint, worked out before the first paint. */
 	private _customSizes: Partial<Record<Breakpoint, string>> = {};
 
@@ -145,6 +133,7 @@ export class NLDDTitle extends LitElement {
 		// size from the scale.
 		const own: Record<Breakpoint, string> = { sm: this.smCustomSize, md: this.mdCustomSize, lg: this.lgCustomSize };
 		this._customSizes = {};
+		let invalid = false;
 		for (const breakpoint of BREAKPOINTS) {
 			const value = (own[breakpoint] || '').trim();
 			const valid = value !== '' && isFontSize(value);
@@ -155,10 +144,9 @@ export class NLDDTitle extends LitElement {
 				this.style.removeProperty(`--_title-${breakpoint}-custom-size`);
 			}
 			this.toggleAttribute(`data-${breakpoint}-custom-size`, valid);
-			if (import.meta.env?.DEV && value !== '' && !valid) {
-				if (this._firstTime(`invalid-${breakpoint}-${value}`)) reportRule('title-custom-size-invalid', this, `${breakpoint}-custom-size="${value}"`);
-			}
+			if (value !== '' && !valid) invalid = true;
 		}
+		setState(this, 'invalid-custom-size', invalid);
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -169,18 +157,12 @@ export class NLDDTitle extends LitElement {
 		}
 	}
 
-	/** DEV-only: warnings already given, so each says it once per title. */
-	private _warned = new Set<string>();
-
-	private _firstTime(key: string): boolean {
-		if (this._warned.has(key)) return false;
-		this._warned.add(key);
-		return true;
-	}
-
-	/** DEV-only: says so when a custom size is smaller than size 1, which then shows instead. */
+	/** DEV-only: whether a custom size is smaller than size 1, which then shows instead. */
 	private _checkFloor(sizes: Partial<Record<Breakpoint, string>>): void {
-		if (!this.shadowRoot || Object.keys(sizes).length === 0) return;
+		if (!this.shadowRoot || Object.keys(sizes).length === 0) {
+			setState(this, 'custom-size-below-floor', false);
+			return;
+		}
 		const probe = document.createElement('span');
 		probe.style.position = 'absolute';
 		probe.style.visibility = 'hidden';
@@ -189,19 +171,19 @@ export class NLDDTitle extends LitElement {
 			probe.style.fontSize = value;
 			return parseFloat(getComputedStyle(probe).fontSize);
 		};
+		let below = false;
 		try {
 			for (const [breakpoint, value] of Object.entries(sizes) as [Breakpoint, string][]) {
 				// A value relative to the viewport, a container or the surrounding
 				// text resolves to something else elsewhere, so it is left to the
 				// CSS floor rather than measured here.
 				if (/%|\d(?:v[whib]|vmin|vmax|cq[whib]|cqmin|cqmax|em|ex|ch|cap|ic|lh)\b/.test(value)) continue;
-				if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) {
-					if (this._firstTime(`floor-${breakpoint}-${value}`)) reportRule('title-custom-size-below-floor', this, `"${value}" at ${breakpoint}`);
-				}
+				if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) below = true;
 			}
 		} finally {
 			probe.remove();
 		}
+		setState(this, 'custom-size-below-floor', below);
 	}
 
 	override render() {

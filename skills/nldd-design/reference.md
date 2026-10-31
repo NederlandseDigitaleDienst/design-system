@@ -385,6 +385,7 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 **Rules** (`nldd lint`)
 
 - `avatar-group-holds-avatars`: nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.
+- `avatar-group-target-too-small`: Avatars that are links or buttons overlap, so each keeps too small a target (WCAG 2.5.8). Use size 32 or larger.
 - `avatar-needs-name`: An avatar with `href` or `button` needs `accessible-label` or `name`, or the control has no accessible name.
 - `avatar-target-too-small`: A link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.
 
@@ -1616,7 +1617,6 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 **Rules** (`nldd lint`)
 
 - `text-field-keyboard-contradicts-type`: `keyboard` contradicts `type`, which already raises a keyboard of its own. Drop one of the two.
-- `text-field-unknown-token`: This is not a value the browser knows, so it is dropped silently and the field falls back to the default keyboard.
 
 **Attributes**
 
@@ -1918,8 +1918,6 @@ A container for displaying collections of items. Supports grid, stack, lanes and
 **Rules** (`nldd lint`)
 
 - `collection-item-width-renamed`: The `item-width` attribute is now `item-min-width`. Rename it here and on every other nldd-collection.
-- `spacing-value-is-length`: This is a CSS length, and these attributes take a step of the spacing scale so the rhythm holds across the page. Nothing is written, so the default stands.
-- `spacing-value-off-scale`: This is not a step of the spacing scale. Nothing is written, so the default stands.
 
 **Attributes**
 
@@ -1953,11 +1951,6 @@ A container for displaying collections of items. Supports grid, stack, lanes and
 ### `<nldd-container>`
 
 A simple layout primitive: pick a layout mode, give it a gap, optionally align contents, and add padding. Padding can be set for all sides, per axis (inline/block), or per individual side. Specificity: per side > per axis > all sides. The container owns the space around and between its children; use `nldd-spacer` only for a one-off gap between two different things. A block that is placed in more than one context gets no padding of its own: whoever places it wraps it in a container, so the inset is not counted twice. Responsive padding and gap have sm/md/lg variants. Each variant emits both an @media (viewport) and @container (layout-container) query. When inside a layout-container the @container query wins; otherwise the @media query provides the viewport-based fallback. Layout modes: - `stack` (default): block items, stacked vertically. The "what you expect from DOM flow" mode. - `row`: flex row, no wrapping. Items shrink or overflow. - `wrap`: flex row, items wrap to new lines. - `grid`: CSS grid, auto-fit columns at min 280px wide. - `columns`: CSS multi-column flow, 280px minimum column width, items don't split across column breaks. Alignment maps to the layout's natural axis: - `stack`: vertical = main-axis (justify-content), horizontal = cross-axis (align-items) - `row` / `wrap`: horizontal = main-axis, vertical = cross-axis - `grid`: horizontal = justify-items, vertical = align-items (per cell) - `columns`: alignment props have no effect (CSS multicol doesn't expose alignment) Item order is set per-child via attributes on the slotted children themselves: `<child order="3">` for a fixed position, or `<child sm-order="N">` / `<child md-order="N">` / `<child lg-order="N">` to override per breakpoint (resolved against THIS container's width via @container queries, same scope as the responsive padding/gap). The container observes slot changes and child attribute mutations and bridges these to `--_container-slot-order` / `--_container-slot-sm-order` / etc. custom properties on each child's inline style, which the container's CSS then reads via `::slotted(*)` inside @container queries. Cascade: `sm-order` falls back to `order` falls back to `0` at sm (and analogously for md/lg). No-op for `layout="columns"` (CSS multicol has no per-item ordering hook). The `column-count` attribute (1-8) forces an exact column count for `layout="grid"` (overrides auto-fit) and `layout="columns"` (overrides the natural width-driven count). `sm-column-count` / `md-column-count` / `lg-column-count` resolve against this container's OWN width via an `@container (...)` query on the host — not against the viewport. That lets a footer in a narrow sidebar choose its own column count independent of the surrounding page width. `layout="lanes"` packs items into balanced columns using native CSS grid lanes where supported, falling back to CSS multicol (column-order) elsewhere. CSS-only, no JS. Honours `gap` on both axes and `column-count`. Note that nldd-collection's lanes falls back to its own grid rather than to multicol: that component pages, and multicol redistributes the whole set every time load-more adds to it.
-
-**Rules** (`nldd lint`)
-
-- `spacing-value-is-length`: This is a CSS length, and these attributes take a step of the spacing scale so the rhythm holds across the page. Nothing is written, so the default stands.
-- `spacing-value-off-scale`: This is not a step of the spacing scale. Nothing is written, so the default stands.
 
 **Attributes**
 
@@ -2055,9 +2048,8 @@ The section that says what a page is for: it names the main goal of what you can
 - `hero-corner-covered`: This corner sits under the panel, so the rounded corner does not show. Choose a corner the panel leaves free, or leave the value empty to let the hero choose.
 - `hero-corner-full-width`: `corner` with width="full" runs the hero to the edge of the screen. A shape with a rounded corner always keeps a margin around it; leave width="full" off or drop the corner.
 - `hero-corner-unknown`: This is not a corner, so the hero chooses one. Use "top-left", "top-right", "bottom-left" or "bottom-right", or leave the value empty.
-- `hero-corner-unsupported`: `corner` only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. Change what follows, or drop the corner.
+- `hero-corner-unsupported`: `corner` only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. Set layout="contained" and put the panel in a corner or along a side, or drop the corner.
 - `hero-height-unused`: `height` is not used on a hero, whose height comes from its image. Use `media-height` for a fixed height, or `media-aspect-ratio`.
-- `hero-main-background-invalid`: `main-background` is not "accent" or "base", and falls back to "accent". A color per hero is gone: pick the color for the whole site with a theme, data-nldd-theme on <html>.
 - `hero-main-width-invalid`: `main-width` is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 640px.
 - `hero-overlap-panel-too-short`: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout="contained" to keep the panel on the image.
 
@@ -3001,10 +2993,6 @@ Layout placeholder that fills its parent and centers an indeterminate activity i
 
 Shows the state of something, or how much of it there is: a status, a number of unread messages, a dot saying something is new. What it says is decided by the system, and it changes without anyone touching it. A badge is never interactive. It shows text, a number and/or an icon; with no content it becomes a dot. Put it in a corner of another element (an icon, for instance) or on its own. For a property someone assigns to something, such as a category, a role or a certification, use `nldd-tag`. For standalone data the user works with, such as a chosen person or an active filter, use `nldd-token`.
 
-**Rules** (`nldd lint`)
-
-- `badge-color-unknown`: This `color` does not exist and falls back to "accent". For a color of its own, use `custom-color`.
-
 **Attributes**
 
 | Attribute | Type | Description |
@@ -3318,11 +3306,6 @@ One step in an `nldd-step-bar`. `status="current"` marks the step you are on; th
 
 A generic cell for wrapping arbitrary content in a list item. Controls vertical alignment and sizing without imposing content opinions. For more than a line of text, such as paragraphs or markup, put an `nldd-rich-text` in it rather than loose text in the row. `vertical-alignment="center"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment="top"`.
 
-**Rules** (`nldd lint`)
-
-- `hide-above-lg-no-effect`: hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".
-- `hide-below-sm-no-effect`: hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".
-
 **Attributes**
 
 | Attribute | Type | Description |
@@ -3345,11 +3328,6 @@ A generic cell for wrapping arbitrary content in a list item. Controls vertical 
 ### `<nldd-description-cell>`
 
 A cell component for displaying a title-description pair in lists. `vertical-alignment="center"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment="top"`.
-
-**Rules** (`nldd lint`)
-
-- `hide-above-lg-no-effect`: hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".
-- `hide-below-sm-no-effect`: hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".
 
 **Attributes**
 
@@ -3384,11 +3362,6 @@ A cell that displays a drag handle for reorderable list items. Always vertically
 ### `<nldd-icon-cell>`
 
 A cell component for displaying icons in lists with configurable alignment and size. Set `icon` to render an `nldd-icon` by name, or slot custom content as an escape hatch for non-standard iconography.
-
-**Rules** (`nldd lint`)
-
-- `hide-above-lg-no-effect`: hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".
-- `hide-below-sm-no-effect`: hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".
 
 **Attributes**
 
@@ -3557,11 +3530,6 @@ A segment inside an `nldd-list-item`: it groups a run of cells and makes just th
 
 A cell component that provides fixed horizontal spacing within list items.
 
-**Rules** (`nldd lint`)
-
-- `hide-above-lg-no-effect`: hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".
-- `hide-below-sm-no-effect`: hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".
-
 **Attributes**
 
 | Attribute | Type | Description |
@@ -3576,8 +3544,6 @@ A cell that draws steps under each other in an `nldd-list`: a vertical track wit
 
 **Rules** (`nldd lint`)
 
-- `hide-above-lg-no-effect`: hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".
-- `hide-below-sm-no-effect`: hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".
 - `step-cell-content-needs-wide-dot`: `text` and `icon` only fit in a full dot on a wide track (`size="md"` with `level="major"`); they are not shown here.
 - `step-cell-marker-offset-invalid`: `marker-offset` is not a CSS length or percentage, so the dot falls back to `vertical-alignment`. Use a length such as "1rem" or a percentage such as "25%".
 
@@ -3654,11 +3620,6 @@ Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surfa
 
 A cell component for displaying text content in lists with configurable alignment, size and color. This is the most fundamental list cell component. `vertical-alignment="center"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment="top"`. Each text region (overline, main text, supporting text) accepts either a string attribute or slotted DOM content. The slot is the source of truth: if the consumer provides slotted content, it replaces the attribute-based render for that region. Use slots when you need inline elements like `<nldd-tag>`, `<a>` or `<nldd-icon>` mixed with text. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path — slotted content is rendered as-is.
 
-**Rules** (`nldd lint`)
-
-- `hide-above-lg-no-effect`: hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".
-- `hide-below-sm-no-effect`: hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".
-
 **Attributes**
 
 | Attribute | Type | Description |
@@ -3690,11 +3651,6 @@ A cell component for displaying text content in lists with configurable alignmen
 ### `<nldd-title-cell>`
 
 A cell component for displaying a title with optional overline and supporting text in lists. `vertical-alignment="center"` (default) stretches the cell to fill the full row height and centers its content within that space. Use `min-height` to set a minimum centered region. For strict top alignment without a minimum height, use `vertical-alignment="top"`. Each text region (overline, title, supporting text) accepts either a string attribute or slotted DOM content. The slot is the source of truth: if the consumer provides slotted content, it replaces the attribute-based render for that region. Use slots when you need inline elements like `<nldd-tag>`, `<nldd-icon>` or other components mixed with text. Note that `query` highlighting and `**bold**` parsing only apply to the attribute path — slotted content is rendered as-is.
-
-**Rules** (`nldd lint`)
-
-- `hide-above-lg-no-effect`: hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".
-- `hide-below-sm-no-effect`: hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".
 
 **Attributes**
 

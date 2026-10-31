@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-list-item'
+context: 'nldd-list-item:state(degenerate-divider)'
 message: '`divider-start` lies past the last `divider-end`, so the divider falls back to the full content width.'

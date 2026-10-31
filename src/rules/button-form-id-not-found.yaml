@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-button'
+context: 'nldd-button:state(no-form-target)'
 message: 'Nothing in this root has the id in `form`, so this button submits nothing.'

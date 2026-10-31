@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-list-item'
+context: 'nldd-list-item:state(nested-control)'
 message: 'A control sits in a row that is its own control (href, button, checkbox or radio). A control inside a control is invalid HTML and doubles the tab stop. With more than one action, give each its own nldd-list-item-segment and leave the row without an action.'

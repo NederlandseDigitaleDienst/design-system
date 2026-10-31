@@ -6,7 +6,7 @@ import { listItemSegmentStyles } from './list-item-segment.styles.js';
 import { template, type ListItemSegmentControl } from './list-item-segment.template.js';
 import type { NLDDList } from '../list/list.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
-import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { nlddListItemSegmentTranslations } from './list-item-segment.i18n.js';
 import '../../../utilities/dev-checks-trigger.js';
 
@@ -290,7 +290,7 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 
 	override render() {
 		const hintKey = this._controlType === 'link' ? downloadLinkHintKey(this.href, this.target, this.download) : null;
-		if (this._controlType === 'link') warnDownloadTarget(this, this.download, this.target);
+		if (this._controlType === 'link') markDownloadTarget(this, this.download, this.target);
 		return template(
 			this._controlType,
 			this.href,

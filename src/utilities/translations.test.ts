@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../test-utils.js';
 import { setTranslations, getTranslations, translate } from './translations.js';
 import { nl } from '../translations/nl.generated.js';
@@ -133,12 +133,4 @@ describe('the translation sets', () => {
 		expect(Object.keys(nl).sort()).toEqual([...new Set(keys)].sort());
 	});
 
-	it('warns in DEV about a key no component knows', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		setTranslations({ 'components.activity-indicator.loading-label': 'Loading', 'components.buton.typo-label': 'x' });
-		await vi.waitFor(() => expect(warn).toHaveBeenCalled());
-		expect(warn.mock.calls[0][0]).toContain('components.buton.typo-label');
-		expect(warn.mock.calls[0][0]).not.toContain('activity-indicator');
-		warn.mockRestore();
-	});
 });

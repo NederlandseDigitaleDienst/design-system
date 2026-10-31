@@ -54,7 +54,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { topTitleBarStyles } from './top-title-bar.styles.js';
 import { topTitleBarTemplate } from './top-title-bar.template.js';
 import type { NLDDPage } from '../../layout/page/page.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -157,16 +157,17 @@ export class NLDDTopTitleBar extends LitElement {
 	}
 
 	private _connectAnchor(): void {
-		if (!this.collapseAnchor) return;
+		if (!this.collapseAnchor) {
+			setState(this, 'no-anchor', false);
+			return;
+		}
 
 		const root = this.getRootNode() as Document | ShadowRoot;
 		this._anchorElement = (root as Document).getElementById?.(this.collapseAnchor)
 			?? root.querySelector(`#${this.collapseAnchor}`);
 
+		setState(this, 'no-anchor', !this._anchorElement);
 		if (!this._anchorElement) {
-			if (import.meta.env?.DEV) {
-				reportRule('top-title-bar-anchor-missing', this, `collapse-anchor="${this.collapseAnchor}"`);
-			}
 			this._waitForAnchor(root);
 			return;
 		}

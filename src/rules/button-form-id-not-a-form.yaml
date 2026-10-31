@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-button'
+context: 'nldd-button:state(form-target-not-a-form)'
 message: 'The id in `form` is an element without a form, so this button submits nothing. An nldd-form only has one once it has rendered.'

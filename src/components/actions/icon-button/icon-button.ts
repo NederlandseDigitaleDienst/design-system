@@ -56,6 +56,7 @@ import { PopupAnchorController } from '../../../utilities/popup-anchor-controlle
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
+import { internalsOf } from '../../../utilities/element-state.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import '../../../utilities/dev-checks-trigger.js';
 
@@ -84,7 +85,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	// form. The inner <button> lives in the shadow root and has no form owner
 	// across the shadow boundary, so the host element must carry the association.
 	static formAssociated = true;
-	private _internals = this.attachInternals();
+	private _internals = internalsOf(this);
 
 	@property({ reflect: true, converter: reflectNonDefault<Appearance>('neutral-tinted') })
 	appearance: Appearance = 'neutral-tinted';

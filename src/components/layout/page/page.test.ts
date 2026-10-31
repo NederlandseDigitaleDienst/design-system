@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import './page.js';
@@ -413,8 +413,7 @@ describe('nldd-page', () => {
 			expect(el.shadowRoot!.querySelector('.page')!.hasAttribute('aria-label')).toBe(false);
 		});
 
-		it('warns about a second page that renders a main, hidden or not', async () => {
-			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		it('states a second page that renders a main, hidden or not', async () => {
 			el = await fixture(`
 				<div>
 					<nldd-page></nldd-page>
@@ -422,12 +421,10 @@ describe('nldd-page', () => {
 				</div>
 			`);
 			for (const page of el.querySelectorAll('nldd-page')) await waitForUpdate(page as HTMLElement);
-			expect(warn.mock.calls.filter(([message]) => String(message).includes('second page')).length).toBe(1);
-			warn.mockRestore();
+			expect([...el.querySelectorAll('nldd-page')].map((page) => page.matches(':state(second-main)'))).toEqual([false, true]);
 		});
 
-		it('says nothing when the other pages are regions', async () => {
-			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		it('is no second main when the other pages are regions', async () => {
 			el = await fixture(`
 				<nldd-side-by-side-split-view panes="2">
 					<nldd-split-view-pane slot="pane-1"><nldd-page landmarks="page"></nldd-page></nldd-split-view-pane>
@@ -435,8 +432,7 @@ describe('nldd-page', () => {
 				</nldd-side-by-side-split-view>
 			`);
 			for (const page of el.querySelectorAll('nldd-page')) await waitForUpdate(page as HTMLElement);
-			expect(warn.mock.calls.filter(([message]) => String(message).includes('second page'))).toEqual([]);
-			warn.mockRestore();
+			expect(el.querySelector('nldd-page:state(second-main)')).toBeNull();
 		});
 	});
 

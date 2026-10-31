@@ -22552,6 +22552,24 @@
         },
         {
           "kind": "function",
+          "name": "hasInvalidQuery",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "typeaheads",
+              "type": {
+                "text": "readonly Typeahead[]"
+              }
+            }
+          ],
+          "description": "Whether a list sets a `query` that is no regular expression; see queryPattern."
+        },
+        {
+          "kind": "function",
           "name": "typeaheadQueryAt",
           "return": {
             "type": {
@@ -22618,6 +22636,14 @@
           "name": "DEFAULT_TYPEAHEAD_QUERY",
           "declaration": {
             "name": "DEFAULT_TYPEAHEAD_QUERY",
+            "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hasInvalidQuery",
+          "declaration": {
+            "name": "hasInvalidQuery",
             "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
           }
         },
@@ -28443,9 +28469,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "item-width"
-            },
             {
               "name": "layout",
               "type": {
@@ -44689,9 +44712,6 @@
           ],
           "attributes": [
             {
-              "name": "current"
-            },
-            {
               "name": "accessible-label",
               "type": {
                 "text": "string"
@@ -45750,6 +45770,78 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/element-state.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "internalsOf",
+          "return": {
+            "type": {
+              "text": "ElementInternals"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "An element can attach its internals once, so everything that needs them comes here."
+        },
+        {
+          "kind": "function",
+          "name": "setState",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "on",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "Nothing to clear means no internals: most elements never state anything, and\nthis also runs in production. A browser that has no custom states, or takes\nonly dashed names, throws here; a fact is not worth breaking a render for."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "internalsOf",
+          "declaration": {
+            "name": "internalsOf",
+            "module": "src/utilities/element-state.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setState",
+          "declaration": {
+            "name": "setState",
+            "module": "src/utilities/element-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/focus-target.ts",
       "declarations": [
         {
@@ -46217,7 +46309,7 @@
         },
         {
           "kind": "function",
-          "name": "warnDownloadTarget",
+          "name": "markDownloadTarget",
           "return": {
             "type": {
               "text": "void"
@@ -46227,7 +46319,7 @@
             {
               "name": "element",
               "type": {
-                "text": "Element"
+                "text": "HTMLElement"
               }
             },
             {
@@ -46243,7 +46335,7 @@
               }
             }
           ],
-          "description": "In development, says once per element that `target` does nothing on a\ndownload link: the file is saved, no tab opens."
+          "description": "`target` does nothing on a download link: the file is saved, no tab opens."
         }
       ],
       "exports": [
@@ -46273,9 +46365,9 @@
         },
         {
           "kind": "js",
-          "name": "warnDownloadTarget",
+          "name": "markDownloadTarget",
           "declaration": {
-            "name": "warnDownloadTarget",
+            "name": "markDownloadTarget",
             "module": "src/utilities/link-hint.ts"
           }
         }
@@ -47886,7 +47978,8 @@
           "type": {
             "text": "[\n\t'0', '2', '4', '6', '8', '10', '12', '16', '20', '24',\n\t'28', '32', '40', '44', '48', '56', '64', '80', '96',\n]"
           },
-          "default": "[ '0', '2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96', ]"
+          "default": "[ '0', '2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96', ]",
+          "description": "Every step there is. `'0'` is a value, not the absence of one."
         },
         {
           "kind": "function",
@@ -47902,21 +47995,9 @@
               "type": {
                 "text": "string | undefined"
               }
-            },
-            {
-              "name": "element",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "attribute",
-              "type": {
-                "text": "string"
-              }
             }
           ],
-          "description": "A step of the scale as the token it stands for.\n\nReturns null when there is nothing to set, so a caller can remove the\nproperty rather than write an empty one. `element` and `attribute` are only\nthere to name the offender in a dev warning."
+          "description": "A step of the scale as the token it stands for.\n\nReturns null when there is nothing to set, so a caller can remove the\nproperty rather than write an empty one."
         }
       ],
       "exports": [

@@ -81,7 +81,6 @@ import { avatarTemplate } from './avatar.template.js';
 import '../icon/icon.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
 
 export type AvatarType = 'person' | 'organization';
 
@@ -169,8 +168,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 		return Boolean(this.href) || this.button;
 	}
 
-	private _warnedTargetSize = false;
-
 	/** Set when the image errors, so the template falls through to the next
 	 *  content step. Not private: the template module reads it. */
 	@state()
@@ -249,18 +246,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 			this.setAttribute('aria-hidden', 'true');
 			this.removeAttribute('role');
 			this.removeAttribute('aria-label');
-		}
-		if (import.meta.env?.DEV) {
-			// WCAG 2.5.8: a target under 24px passes only with room around it, which
-			// the avatar cannot measure. `full` takes its size from the container.
-			const small = this.isInteractive && Number(this.size) < 24;
-			if (small && !this._warnedTargetSize) {
-				this._warnedTargetSize = true;
-				reportRule('avatar-target-too-small', this, `size="${this.size}"`);
-			}
-			else if (!small) {
-				this._warnedTargetSize = false;
-			}
 		}
 		// The shape does not resize when only its content does, so the
 		// ResizeObserver won't fire — re-measure here on every change that can

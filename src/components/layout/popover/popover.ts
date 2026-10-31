@@ -69,7 +69,7 @@ import { translate } from '../../../utilities/translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -216,11 +216,7 @@ export class NLDDPopover extends LitElement {
 		// Set width via the CSS variable so media-query overrides (bottom
 		// sheet on sm) keep working. Inline `style.width` would beat them.
 		if (changed.has('width')) {
-			const contentSized = NLDDPopover.CONTENT_WIDTHS.test((this.width ?? '').trim());
-			if (contentSized && import.meta.env?.DEV) {
-				reportRule('popover-width-content-sized', this, `width="${this.width}"`);
-			}
-			if (this.width && !contentSized) {
+			if (this.width && !NLDDPopover.CONTENT_WIDTHS.test(this.width.trim())) {
 				this.style.setProperty('--_popover-default-width', this.width);
 			} else {
 				this.style.removeProperty('--_popover-default-width');
@@ -265,7 +261,7 @@ export class NLDDPopover extends LitElement {
 	show(): void {
 		const anchorEl = this._getAnchorEl();
 		if (!anchorEl) {
-			if (import.meta.env?.DEV) reportRule('popover-anchor-not-found', this);
+			setState(this, 'no-anchor', true);
 			return;
 		}
 		(this as HTMLElement).showPopover();

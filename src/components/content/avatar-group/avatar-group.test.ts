@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import '../../../assets/styles/variables.css';
 import './avatar-group.js';
@@ -178,23 +178,6 @@ describe('nldd-avatar-group', () => {
 		await group.updateComplete;
 		expect(overflowText(group)).toBeNull();
 	});
-	it('waarschuwt bij klikbare avatars onder maat 32', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture(`
-			<nldd-avatar-group size="28">
-				<nldd-avatar name="Jan Jansen" href="#"></nldd-avatar>
-				<nldd-avatar name="Piet Pietersen" href="#"></nldd-avatar>
-			</nldd-avatar-group>
-		`);
-		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([m]) => String(m).includes('avatar-group-target-too-small') && String(m).includes('size="28"'))).toBe(true);
-		warn.mockClear();
-		(el as HTMLElement).setAttribute('size', '32');
-		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([m]) => String(m).includes('avatar-group-target-too-small'))).toBe(false);
-		warn.mockRestore();
-	});
-
 	it('geeft de lijst een titelbalk met de naam van de groep', async () => {
 		el = await fixture(`
 			<nldd-avatar-group max="1" accessible-label="Redactie">

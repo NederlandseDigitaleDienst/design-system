@@ -65,7 +65,7 @@ import { findScrollModeProvider, whenScrollModeProviderDefined } from '../../../
 import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Landmarks = 'auto' | 'page' | 'region';
 
@@ -113,8 +113,6 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	@state()
 	private _derived: 'page' | 'region' = 'page';
 
-	private _warnedDuplicateMain = false;
-
 	/** True when this page renders a section instead of the document landmarks. @internal */
 	get _isRegion(): boolean {
 		return this.landmarks === 'auto' ? this._derived === 'region' : this.landmarks === 'region';
@@ -141,15 +139,11 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	 * A document has one main, and two pages claiming it is invalid HTML that
 	 * nothing on screen gives away. Hidden pages count: a pane that is collapsed
 	 * at this window width is the same markup at another. Only the page that
-	 * arrived later says it, so one mistake is one message.
+	 * arrived later is the second, so one mistake is one fact.
 	 */
-	private _warnOnSecondMain(): void {
-		if (!import.meta.env?.DEV || this._warnedDuplicateMain || this._isRegion) return;
-		const [first, ...rest] = [..._connectedPages].filter((page) => !page._isRegion);
-		const other = first === this ? undefined : first;
-		if (!other || !rest.includes(this)) return;
-		this._warnedDuplicateMain = true;
-		reportRule('page-second-main', this);
+	private _syncSecondMain(): void {
+		const [, ...rest] = [..._connectedPages].filter((page) => !page._isRegion);
+		setState(this, 'second-main', rest.includes(this));
 	}
 
 	private _scrollMode: 'nested' | 'root' = 'nested';
@@ -263,7 +257,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 
 	override updated(changed: PropertyValues) {
 		if (changed.has('stickyHeader')) this._configureScroll();
-		this._warnOnSecondMain();
+		this._syncSecondMain();
 	}
 
 	/**

@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-code-viewer'
+context: 'nldd-code-viewer:state(no-diff-words)'
 message: 'The word marks of a diff need @codemirror/merge, which did not load, so the diff shows without them.'

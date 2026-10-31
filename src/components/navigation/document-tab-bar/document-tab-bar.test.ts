@@ -252,7 +252,6 @@ describe('nldd-document-tab-bar – accessible label', () => {
 	});
 
 	it('falls back to "Tabbladen" when no accessible-label is provided', async () => {
-		vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<NLDDDocumentTabBar>('<nldd-document-tab-bar></nldd-document-tab-bar>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('.document-tab-bar__items')!.getAttribute('aria-label')).toBe('Tabbladen');

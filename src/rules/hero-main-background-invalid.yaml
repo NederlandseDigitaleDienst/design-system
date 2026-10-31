@@ -1,4 +1,0 @@
-severity: warn
-runtime: true
-context: 'nldd-hero'
-message: '`main-background` is not "accent" or "base", and falls back to "accent". A color per hero is gone: pick the color for the whole site with a theme, data-nldd-theme on <html>.'

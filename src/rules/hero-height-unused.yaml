@@ -1,4 +1,6 @@
 severity: warn
-runtime: true
-context: 'nldd-hero'
+context: 'nldd-hero[height]'
 message: '`height` is not used on a hero, whose height comes from its image. Use `media-height` for a fixed height, or `media-aspect-ratio`.'
+examples:
+  passed: ['<nldd-hero media-height="480px"></nldd-hero>']
+  failed: ['<nldd-hero height="480px"></nldd-hero>']

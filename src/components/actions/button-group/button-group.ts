@@ -45,7 +45,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { buttonGroupStyles } from './button-group.styles.js';
 import { template } from './button-group.template.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Size = 'sm' | 'md';
 type Orientation = 'auto' | 'horizontal' | 'vertical';
@@ -80,9 +80,7 @@ export class NLDDButtonGroup extends LitElement {
 		const assigned = this._slot.assignedElements({ flatten: true });
 		for (const el of assigned) {
 			const own = el.getAttribute('size');
-			if (import.meta.env?.DEV && own !== null && own !== this.size && !this._sized.has(el)) {
-				reportRule('button-size-set-on-group', this, `size="${own}" in a group with size="${this.size}"`);
-			}
+			if (own !== null && own !== this.size && !this._sized.has(el)) setState(this, 'own-size-overwritten', true);
 			el.setAttribute('size', this.size);
 			this._sized.add(el);
 		}
@@ -131,6 +129,7 @@ export class NLDDButtonGroup extends LitElement {
 		if (!import.meta.env?.DEV) return;
 		if (this.orientation !== 'auto' || this.width === 'full') {
 			this._stopWatchingForCollapse();
+			setState(this, 'no-width', false);
 			return;
 		}
 		if (this._collapseObserver) return;
@@ -141,7 +140,8 @@ export class NLDDButtonGroup extends LitElement {
 			if (!this.isConnected || this.getClientRects().length === 0) return;
 			if (!this._slot?.assignedElements({ flatten: true }).length) return;
 			if (this.getBoundingClientRect().width > 0) {
-				// It got a width, from the start or a tick late. Nothing to say.
+				// It got a width, from the start or a tick late.
+				setState(this, 'no-width', false);
 				this._stopWatchingForCollapse();
 				return;
 			}
@@ -152,7 +152,7 @@ export class NLDDButtonGroup extends LitElement {
 			this._collapseVerdict = window.setTimeout(() => {
 				if (!this.isConnected || this.getClientRects().length === 0) return;
 				if (this.getBoundingClientRect().width > 0) return;
-				reportRule('button-group-zero-width', this);
+				setState(this, 'no-width', true);
 				this._stopWatchingForCollapse();
 			}, 250);
 		});

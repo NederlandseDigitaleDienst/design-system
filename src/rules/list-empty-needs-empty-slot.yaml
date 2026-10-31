@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-list'
+context: 'nldd-list:state(empty):not(:has(> [slot="empty"]))'
 message: 'No items and nothing in [slot="empty"], so the list renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.'

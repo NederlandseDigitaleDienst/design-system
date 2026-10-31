@@ -27,7 +27,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tagStyles } from './tag.styles.js';
 import { template } from './tag.template.js';
 import './../icon/icon.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Color =
 	// Semantisch
@@ -141,10 +141,8 @@ export class NLDDTag extends LitElement {
 	override updated() {
 		// An icon-only tag with no accessible-label has no accessible name —
 		// the placeholder/icon is decorative (aria-hidden), so screen readers
-		// announce nothing. Warn in dev so consumers add a label.
-		if (import.meta.env?.DEV && this._effectiveVariant === 'icon' && !this.accessibleLabel) {
-			reportRule('tag-icon-only-needs-name', this);
-		}
+		// announce nothing.
+		setState(this, 'unnamed', this._effectiveVariant === 'icon' && !this.accessibleLabel);
 	}
 
 	override render() {

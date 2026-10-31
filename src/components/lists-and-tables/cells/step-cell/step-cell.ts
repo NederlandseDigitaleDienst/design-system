@@ -37,7 +37,7 @@ import { stepCellTemplate } from './step-cell.template.js';
 import '../../../content/icon/icon.js';
 import { reflectWhenSet } from '../../../../utilities/reflect-when-set.js';
 import '../../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../../utilities/report-rule.js';
+import { setState } from '../../../../utilities/element-state.js';
 
 type Status = 'past' | 'current' | 'future';
 type Size = 'sm' | 'md';
@@ -132,9 +132,7 @@ export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container')
 			if (valid) this.style.setProperty('--_step-cell-marker-offset', offset);
 			else this.style.removeProperty('--_step-cell-marker-offset');
 			this.toggleAttribute('data-marker-offset', valid);
-			if (import.meta.env?.DEV && offset !== '' && !valid) {
-				reportRule('step-cell-marker-offset-invalid', this, `marker-offset="${offset}"`);
-			}
+			setState(this, 'invalid-marker-offset', offset !== '' && !valid);
 		}
 	}
 

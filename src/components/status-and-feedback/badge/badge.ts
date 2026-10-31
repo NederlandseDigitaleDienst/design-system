@@ -34,7 +34,6 @@ import { template } from './badge.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddBadgeTranslations } from './badge.i18n.js';
 import './../../content/icon/icon.js';
-import { reportRule } from '../../../utilities/report-rule.js';
 
 type Color = 'critical' | 'accent' | 'neutral' | 'warning' | 'success' | 'inherit';
 const COLORS: ReadonlySet<string> = new Set<Color>(['critical', 'accent', 'neutral', 'warning', 'success', 'inherit']);
@@ -81,11 +80,7 @@ export class NLDDBadge extends withTranslations(LitElement, nlddBadgeTranslation
 	// first frame rather than as critical first.
 	override willUpdate(changed: Map<string, unknown>): void {
 		if (!changed.has('color')) return;
-		const known = COLORS.has(this.color);
-		this.toggleAttribute('data-color-fallback', !known);
-		if (import.meta.env?.DEV && !known) {
-			reportRule('badge-color-unknown', this, `color="${this.color}"; use one of: ${[...COLORS].join(', ')}`);
-		}
+		this.toggleAttribute('data-color-fallback', !COLORS.has(this.color));
 	}
 
 	override updated(changed: Map<string, unknown>): void {

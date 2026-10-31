@@ -51,7 +51,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { statusBarStyles } from './status-bar.styles.js';
 import { statusBarTemplate } from './status-bar.template.js';
 import '../../content/icon/icon.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type StatusBarVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 
@@ -92,19 +92,17 @@ export class NLDDStatusBar extends LitElement {
 	}
 
 	override firstUpdated(): void {
-		if (import.meta.env?.DEV) this._checkPlacement();
+		this._checkPlacement();
 	}
 
-	/** DEV-only: warns when a top bar comes before the status bar. Top bars in an overlay are left out, since a sheet or dialog has its own. */
+	/** Whether a top bar comes before the status bar. Top bars in an overlay are left out, since a sheet or dialog has its own. */
 	private _checkPlacement(): void {
 		const root = this.getRootNode() as Document | ShadowRoot;
 		const above = [...root.querySelectorAll('nldd-top-navigation-bar, nldd-top-title-bar')].some((bar) =>
 			!bar.closest('nldd-sheet, nldd-modal-dialog, nldd-popover, dialog')
 			&& (bar.compareDocumentPosition(this) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
 			&& !bar.contains(this));
-		if (above) {
-			reportRule('status-bar-below-top-bar', this);
-		}
+		setState(this, 'below-top-bar', above);
 	}
 
 	override updated(changed: Map<string, unknown>): void {

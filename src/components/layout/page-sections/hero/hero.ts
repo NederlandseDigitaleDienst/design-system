@@ -78,7 +78,7 @@ import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
 import { heroCornerStyles } from './hero-corner.styles.js';
 import { applyCorner, clearCornerLimits, limitCorner } from './hero-corner.js';
-import { reportRule } from '../../../../utilities/report-rule.js';
+import { setState } from '../../../../utilities/element-state.js';
 
 export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
 export type HeroMainWidth = 'auto' | 'full' | (string & {});
@@ -175,8 +175,6 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		this._overlapObserver = null;
 		this._cornerObserver?.disconnect();
 		this._cornerObserver = null;
-		// A hero that comes back is watched again, so it may warn again.
-		this._warnedOverlap = false;
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -200,15 +198,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			if (valid) this.style.setProperty('--_hero-main-width', width);
 			else this.style.removeProperty('--_hero-main-width');
 			this.toggleAttribute('data-main-width-length', valid);
-			if (import.meta.env?.DEV && length && !valid) {
-				reportRule('hero-main-width-invalid', this, `main-width="${width}"`);
-			}
-		}
-		if (import.meta.env?.DEV && changed.has('mainBackground')) {
-			const background = this.mainBackground as string;
-			if (background !== 'accent' && background !== 'base') {
-				reportRule('hero-main-background-invalid', this, `main-background="${background}"`);
-			}
+			setState(this, 'invalid-main-width', length && !valid);
 		}
 		if (changed.has('overlapSize')) {
 			const size = (this.overlapSize ?? '').trim();
@@ -230,10 +220,6 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			// The section API turns `height` into the host's min-height; a hero
 			// takes its height from its image instead.
 			this.style.removeProperty('min-height');
-			if (import.meta.env?.DEV && !this._warnedHeight) {
-				this._warnedHeight = true;
-				reportRule('hero-height-unused', this);
-			}
 		}
 		if (changed.has('mediaAspectRatio')) {
 			// Accept '16:9' as well as '16/9' (like nldd-image). Clearing the
@@ -268,18 +254,15 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		this._cornerObserver.observe(main);
 	}
 
-	/** DEV-only latch for the `height` warning. */
-	private _warnedHeight = false;
-
 	/** DEV-only: watches an overlap hero for a panel that does not reach below its image. */
 	private _overlapObserver: ResizeObserver | null = null;
-	private _warnedOverlap = false;
 
 	private _watchOverlap(): void {
 		const watch = this.layout !== 'contained' && typeof ResizeObserver !== 'undefined';
 		if (!watch) {
 			this._overlapObserver?.disconnect();
 			this._overlapObserver = null;
+			setState(this, 'short-overlap-panel', false);
 			return;
 		}
 		if (this._overlapObserver) return;
@@ -294,18 +277,11 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 	/**
 	 * In an overlap hero the panel is meant to run on below the image. When it
 	 * ends inside it, the content is shorter than `overlap-size`; the consumer
-	 * decides how far it runs on, so this only says so, in development.
+	 * decides how far it runs on, so this is only stated, in development.
 	 */
 	private _checkOverlap(media: Element, main: Element): void {
 		if (!this._hasMedia || getComputedStyle(media).position === 'static') return;
-		const falls = main.getBoundingClientRect().bottom <= media.getBoundingClientRect().bottom;
-		if (!falls) {
-			this._warnedOverlap = false;
-			return;
-		}
-		if (this._warnedOverlap) return;
-		this._warnedOverlap = true;
-		reportRule('hero-overlap-panel-too-short', this);
+		setState(this, 'short-overlap-panel', main.getBoundingClientRect().bottom <= media.getBoundingClientRect().bottom);
 	}
 
 	/** @internal Tracks the media slot so the no-media mode can collapse it. */

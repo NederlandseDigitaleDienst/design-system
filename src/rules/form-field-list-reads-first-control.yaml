@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-form-field'
+context: 'nldd-form-field:state(list-reads-first-control)'
 message: 'More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.'

@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-status-bar'
+context: 'nldd-status-bar:state(below-top-bar)'
 message: 'The status bar sits below a top bar. It belongs above it, as the first thing on the screen.'

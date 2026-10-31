@@ -216,8 +216,7 @@ describe('nldd-dropdown – accessibility', () => {
 		vi.restoreAllMocks();
 	});
 
-	it('warns when slotted select has no accessible name', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states a slotted select without an accessible name', async () => {
 		el = await fixture<NLDDDropdown>(`
 			<nldd-dropdown>
 				<select name="country">
@@ -226,14 +225,10 @@ describe('nldd-dropdown – accessibility', () => {
 			</nldd-dropdown>
 		`);
 		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('accessible name'),
-			expect.anything(),
-		);
+		expect(el.matches(':state(unnamed-select)')).toBe(true);
 	});
 
-	it('does not warn when slotted select has aria-label', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('knows a slotted select with aria-label has a name', async () => {
 		el = await fixture<NLDDDropdown>(`
 			<nldd-dropdown>
 				<select name="country" aria-label="Land">
@@ -242,7 +237,7 @@ describe('nldd-dropdown – accessibility', () => {
 			</nldd-dropdown>
 		`);
 		await waitForUpdate(el);
-		expect(warnSpy).not.toHaveBeenCalled();
+		expect(el.matches(':state(unnamed-select)')).toBe(false);
 	});
 });
 

@@ -1,6 +1,5 @@
 import { Decoration, EditorView, GutterMarker, WidgetType, gutter, gutterLineClass, type BlockInfo } from '@codemirror/view';
 import { RangeSet, type Extension, type Range } from '@codemirror/state';
-import { reportRule } from '../../../utilities/report-rule.js';
 
 /* A unified diff, as git and every pull request tool hand it out, shown as the
  * code it changes: each line without its +, - or space, two columns with the
@@ -25,6 +24,8 @@ export interface ParsedDiff {
 	lines: DiffLine[];
 	added: number;
 	removed: number;
+	/** Lines outside the counts of their hunk header, which are not shown. */
+	dropped: number;
 }
 
 const HUNK_RE = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/;
@@ -100,10 +101,7 @@ export function parseUnifiedDiff(raw: string): ParsedDiff {
 		}
 		hunk = null;
 	}
-	if (dropped > 0 && import.meta.env?.DEV) {
-		reportRule('code-viewer-diff-lines-dropped', undefined, `${dropped} line(s)`);
-	}
-	return { doc: lines.map((line) => line.text).join('\n'), lines, added, removed };
+	return { doc: lines.map((line) => line.text).join('\n'), lines, added, removed, dropped };
 }
 
 /** The removed and added lines that are one change: within a hunk, a run of

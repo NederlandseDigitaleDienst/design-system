@@ -23,7 +23,7 @@ import { NLDDMenuGroup } from './menu-group.js';
 import { NLDDMenuDivider } from './menu-divider.js';
 import { nextTabbableAfter } from '../../../utilities/tab-order.js';
 import '../../../utilities/dev-checks-trigger.js';
-import { reportRule } from '../../../utilities/report-rule.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export { NLDDMenuItem } from './menu-item.js';
 export { NLDDMenuGroup } from './menu-group.js';
@@ -1063,10 +1063,7 @@ export class NLDDMenu extends LitElement {
 	 * keystroke. Text without the query in it is shown as it is.
 	 */
 	public filter(query: string, { hide = true }: { hide?: boolean } = {}): void {
-		if (import.meta.env?.DEV && this.variant === 'navigation' && !this._warnedFilterInNavigation) {
-			this._warnedFilterInNavigation = true;
-			reportRule('menu-filter-in-navigation', this);
-		}
+		setState(this, 'filtered', true);
 		const allItems = Array.from(this.querySelectorAll('nldd-menu-item')) as NLDDMenuItem[];
 		allItems.forEach(item => {
 			const matches = !hide || !query || this.filterFn(query, item);
@@ -1460,8 +1457,6 @@ export class NLDDMenu extends LitElement {
 			item.checkColumn = checkColumn;
 		});
 	};
-
-	private _warnedFilterInNavigation = false;
 
 	private _handleBeforeToggle = (event: Event): void => {
 		if ((event as ToggleEvent).newState === 'open') this.removeAttribute('positioned');

@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-menu-item'
+context: 'nldd-menu-item:state(late-submenu)'
 message: 'An nldd-menu child was added after mount. Submenu attachment is resolved once at firstUpdated, so this menu will not be treated as a submenu. Define the nldd-menu child before the item is connected to the DOM.'
