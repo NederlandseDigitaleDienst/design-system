@@ -3087,14 +3087,18 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 	const NLDDMenuCtor = customElements.get('nldd-menu') as CustomElementConstructor;
 	let drillInSpy: ReturnType<typeof vi.spyOn> | null = null;
 
-	// A menu closes on a window resize, and the test runner's frame can resize at
-	// any moment, which took the whole chain down halfway through a test.
-	const ignoreResize = (event: Event) => event.stopImmediatePropagation();
+	// These tests drive the chain themselves, and two things outside them can take
+	// it over halfway. A menu closes on a window resize, and the runner's frame can
+	// resize at any moment. A pointer left behind by another test file enters an
+	// item as soon as it renders there, which closes the open peer and opens that
+	// item 150 ms later.
+	const ignore = (event: Event) => event.stopImmediatePropagation();
+	const outside = ['resize', 'mouseenter', 'mouseover'];
 
-	beforeEach(() => window.addEventListener('resize', ignoreResize, { capture: true }));
+	beforeEach(() => outside.forEach((type) => window.addEventListener(type, ignore, { capture: true })));
 
 	afterEach(() => {
-		window.removeEventListener('resize', ignoreResize, { capture: true });
+		outside.forEach((type) => window.removeEventListener(type, ignore, { capture: true }));
 		drillInSpy?.mockRestore();
 		drillInSpy = null;
 		document.querySelectorAll('nldd-menu').forEach(m => m.remove());
@@ -3165,7 +3169,10 @@ describe('nldd-menu submenu chain, one level back and peers', () => {
 		await waitForUpdate(root);
 		// Closing the one and opening the other settle on their own toggle
 		// events; a loaded CI runner can take more than one update for that.
-		await until(() => secondMenu.matches(':popover-open') && !firstMenu.matches(':popover-open'));
+		await until(() => secondMenu.matches(':popover-open') && !firstMenu.matches(':popover-open')).catch((error) => {
+			const open = [root, firstMenu, secondMenu].map((menu) => menu.matches(':popover-open'));
+			throw new Error(`${error.message}\nOpen (root, first, second): ${open}`);
+		});
 		expect(firstMenu.matches(':popover-open')).toBe(false);
 		expect(secondMenu.matches(':popover-open')).toBe(true);
 		expect(closed).toEqual([firstMenu]);
