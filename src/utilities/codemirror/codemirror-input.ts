@@ -7,7 +7,6 @@ import { reflectNonDefault } from '../reflect-non-default.js';
 import { DescribedBy } from '../described-by-mixin.js';
 import { NLDDCodeMirrorElement } from './codemirror-element.js';
 import { reflectWhenSet } from '../reflect-when-set.js';
-import '../dev-checks-trigger.js';
 
 /**
  * Shared base for the CodeMirror editors that are form controls

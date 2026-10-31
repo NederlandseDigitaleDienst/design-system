@@ -84,7 +84,10 @@ export function readBaseline(root, canonical = (id) => id) {
 				Object.entries(entries).map(([key, count]) => {
 					const [rule, ...tag] = key.split('|');
 					return [[canonical(rule), ...tag].join('|'), count];
-				}),
+				}).reduce((entries, [key, count]) => {
+					entries.push([key, count + (Object.fromEntries(entries)[key] ?? 0)]);
+					return entries;
+				}, []),
 			),
 		]),
 	);

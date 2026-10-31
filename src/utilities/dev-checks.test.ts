@@ -64,6 +64,27 @@ describe('rules in the browser', () => {
 		expect(findViolations(root).map(({ rule }) => rule.id)).toContain('icon-not-found');
 	});
 
+	it('keeps an unknown icon reported next to a valid one', async () => {
+		await mount('<nldd-button text="Bewaar" start-icon="bestaat-niet" end-icon="plus"></nldd-button>');
+		await (root.firstElementChild as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		await new Promise((resolve) => setTimeout(resolve, 20));
+		expect(findViolations(root).map(({ rule }) => rule.id)).toContain('icon-not-found');
+	});
+
+	it('finds the second control in a labeled field, which the field does not name', async () => {
+		await mount('<nldd-form-field label="Naam"><nldd-text-field></nldd-text-field><nldd-number-field></nldd-number-field></nldd-form-field>');
+		expect(findViolations(root).map(({ rule }) => rule.id)).toEqual(['number-field-needs-name']);
+	});
+
+	it('survives an icon in a detached link', async () => {
+		await mount('<a href="/a"><nldd-icon icon="plus"></nldd-icon></a>');
+		const link = root.firstElementChild!;
+		const icon = link.firstElementChild as HTMLElement & { icon: string; updateComplete: Promise<boolean> };
+		link.remove();
+		icon.icon = 'bestaat-niet';
+		await expect(icon.updateComplete).resolves.toBeDefined();
+	});
+
 	it('takes a consumer element that says it is an input for an input', async () => {
 		class MyInput extends HTMLElement {
 			static isFormInput = true;

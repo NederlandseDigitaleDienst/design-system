@@ -131,14 +131,21 @@ export class NLDDIcon extends LitElement {
 		}
 	}
 
+	/** A name set on a button ends up here, in a shadow root the checks stay out of. */
+	private _markHosts(): void {
+		let root = this.getRootNode();
+		while (root instanceof ShadowRoot && root.host.localName.startsWith('nldd-')) {
+			setState(root.host as HTMLElement, 'unknown-icon', true);
+			root = root.host.getRootNode();
+		}
+	}
+
 	private _loadIcon(name: string): string | null {
 		const resolvedName = aliases[name] ?? name;
 		const svg = iconRegistry.get(resolvedName);
 
-		// A name set on a button ends up here, in a shadow root the checks stay out of.
-		for (let host: HTMLElement | undefined = this; host?.localName.startsWith('nldd-'); host = (host.getRootNode() as ShadowRoot).host as HTMLElement | undefined) {
-			setState(host, 'unknown-icon', !svg);
-		}
+		setState(this, 'unknown-icon', !svg);
+		if (!svg) this._markHosts();
 		return svg ?? null;
 	}
 

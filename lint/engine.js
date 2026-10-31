@@ -15,11 +15,32 @@ import { BOUND, adapter, walk } from './tree.js';
 
 const BUILT_IN_PSEUDOS = new Set(['is', 'not', 'has', 'where', 'matches']);
 
-/** In W+ a sibling behind a condition might not render, as with `v-if` and `v-else`. */
-const favorableAdapter = {
-	...adapter,
-	getSiblings: (node) => adapter.getSiblings(node).filter((each) => each === node || !each.conditional),
-};
+function findFieldInput(field, isInput) {
+	let found;
+	walk(field, (node) => {
+		// One that may not render leaves the label to the next: that is the favorable reading.
+		found ??= isInput(node) && !node.conditional && !node.repeated ? node : undefined;
+	});
+	return found;
+}
+
+/**
+ * Whether nldd-form-field hands its label to this element. In source that has to be
+ * worked out; on a running page the attribute is simply there, so the browser checks
+ * leave this out. Under a root that is rendered elsewhere, a field may be around it.
+ */
+function createFieldLabelCheck(isInput, whenRootIsOpen) {
+	return (node) => {
+		for (let parent = node.parent; parent; parent = parent.parent) {
+			if (parent.name === 'nldd-form-field') {
+				const labeled = parent.attrs.has('label') || parent.spread;
+				return labeled && (findFieldInput(parent, isInput) === node || parent.children.some((child) => child.opaque));
+			}
+			if (parent.opaque) return whenRootIsOpen;
+		}
+		return false;
+	};
+}
 
 function classPseudos(classes) {
 	return Object.fromEntries(
@@ -43,6 +64,7 @@ function forWorld(tokens, classes, widen) {
 			return { ...token, data: token.data.map((each) => forWorld(each, classes, inner)) };
 		}
 		if (!widen) return token;
+		if (token.type === 'pseudo' && token.name === 'named-by-field') return { ...token, name: 'may-be-named-by-field' };
 		if (token.type === 'tag' || (token.type === 'pseudo' && token.name in classes)) {
 			return { type: 'pseudo', name: 'is', data: [[token], [unknown]] };
 		}
@@ -56,11 +78,13 @@ function forWorld(tokens, classes, widen) {
 	});
 }
 
-/** `:state()` only exists on a running page, so in source it is never true. */
 export function createEngine({ classes = {} } = {}) {
 	const shared = classPseudos(classes);
 	const pseudos = {
 		...shared,
+		'named-by-field': createFieldLabelCheck(shared['form-input'] ?? (() => false), false),
+		'may-be-named-by-field': createFieldLabelCheck(shared['form-input'] ?? (() => false), true),
+		// Only exists on a running page, so in source it is never true.
 		state: () => false,
 		unknown: (node) => node.opaque,
 		bound: (node, name) => node.opaque || node.spread || node.attrs.get(name) === BOUND,
@@ -72,7 +96,7 @@ export function createEngine({ classes = {} } = {}) {
 		let test = cache.get(key);
 		if (!test) {
 			const query = parse(selector).map((tokens) => forWorld(tokens, classes, world === '+'));
-			test = compile(query, { adapter: world === '+' ? favorableAdapter : adapter, pseudos, xmlMode: true });
+			test = compile(query, { adapter, pseudos, xmlMode: true });
 			cache.set(key, test);
 		}
 		return test(node);
@@ -126,15 +150,14 @@ export function createEngine({ classes = {} } = {}) {
 		walk(root, (node) => {
 			if (node.opaque) return;
 			const inMinus = matches(node, rule.context, '-');
-			const inPlus = inMinus || matches(node, rule.context, '+');
-			if (!inPlus) return;
+			const inPlus = matches(node, rule.context, '+');
+			if (!inMinus && !inPlus) return;
 			if (rule.ref) {
 				results.push({ node, outcome: refOutcome(rule, node, root) });
 				return;
 			}
 			const minus = inMinus && isViolated(rule, node, '-');
-			// A context can stop matching in W+ as well: `:not([x])` on a bound x.
-			const plus = matches(node, rule.context, '+') && isViolated(rule, node, '+');
+			const plus = inPlus && isViolated(rule, node, '+');
 			const outcome = minus && plus ? 'failed' : !minus && !plus ? 'passed' : 'cantTell';
 			results.push({ node, outcome });
 		});

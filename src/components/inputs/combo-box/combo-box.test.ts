@@ -383,6 +383,7 @@ describe('nldd-combo-box – Popover API', () => {
 		el._openMenu();
 
 		proto.showPopover = original;
+		expect(el.querySelector('nldd-menu')!.matches(':popover-open')).toBe(false);
 	});
 });
 

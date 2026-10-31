@@ -129,8 +129,9 @@ function checkStates(rule) {
 function checkNoWarnings() {
 	for (const [file, source] of componentSources) {
 		// Without this, a component could be imported on its own with no checks at all.
-		if (!file.endsWith('custom-element.ts') && /\{[^}]*\bcustomElement\b[^}]*\} from 'lit\/decorators\.js'/.test(source)) {
-			problems.push(`${relative(repoRoot, file)}: import customElement from utilities/custom-element.js.`);
+		const registers = /@customElement\(|customElements\.define\(/.test(source);
+		if (file.includes('/components/') && registers && !source.includes('custom-element.js')) {
+			problems.push(`${relative(repoRoot, file)}: registers a component without utilities/custom-element.js.`);
 		}
 		for (const match of source.matchAll(/console\.warn\(/g)) {
 			const line = source.slice(0, match.index).split('\n').length;

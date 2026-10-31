@@ -157,8 +157,12 @@ function valueRules(tags) {
 
 /** The rules the browser runs: plain CSS, so class pseudos become lists of tags. */
 export function buildDevRules(rules, classes, tags) {
+	// On a running page the field has set the attribute, so no exception is needed.
 	const expand = (selector) =>
-		selector && selector.replace(/:([a-z-]+)/g, (match, name) => (classes[name] ? `:is(${classes[name].join(', ')})` : match));
+		selector
+		&& selector
+			.replace(/, :named-by-field/, '')
+			.replace(/:([a-z-]+)/g, (match, name) => (classes[name] ? `:is(${classes[name].join(', ')})` : match));
 	const authored = rules
 		.filter((rule) => !rule.ref)
 		.map(({ id, context, assert, report, count, message }) => ({

@@ -99,7 +99,8 @@ Sla je dit over, dan bouwt alles, slagen alle tests en staat het component netje
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { styles } from './{naam}.styles.ts';
 import { template } from './{naam}.template.ts';
 

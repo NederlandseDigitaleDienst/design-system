@@ -275,6 +275,56 @@ describe('found in review', () => {
 		assert.deepEqual(await rulesIn(`<html><body>${markup}</body></html>`, 'a.html'), []);
 	});
 
+	it('names the input exactly as nldd-form-field finds it', async () => {
+		const page = (body) => `<html><body>${body}</body></html>`;
+		const field = (body) => `<nldd-form-field label="a">${body}</nldd-form-field>`;
+		const number = '<nldd-number-field></nldd-number-field>';
+		const text = '<nldd-text-field></nldd-text-field>';
+		const isNamed = async (body) => !(await rulesIn(page(body), 'a.html')).includes('number-field-needs-name');
+		assert.equal(await isNamed(field(`<div>${number}</div>`)), true);
+		assert.equal(await isNamed(field(`<div>${text}</div>${number}`)), false);
+		assert.equal(await isNamed(field(`${text}<div>${number}</div>`)), false);
+		assert.equal(await isNamed(field(`<div>${text}</div><div>${number}</div>`)), false);
+		const inGroup = `<nldd-radio-button-group accessible-label="b">${field(number)}</nldd-radio-button-group>`;
+		assert.equal(await isNamed(inGroup), true);
+	});
+
+	it('takes v-show for rendered, and a v-for for maybe nothing', async () => {
+		const page = (body) => vue(`<nldd-form-field label="a">${body}<nldd-number-field></nldd-number-field></nldd-form-field>`);
+		assert.ok((await rulesIn(page('<nldd-text-field v-show="x"></nldd-text-field>'))).includes('number-field-needs-name'));
+		assert.deepEqual(await rulesIn(page('<nldd-text-field v-for="x in y"></nldd-text-field>')), []);
+	});
+
+	it('takes a static camelCase attribute in HTML for what the browser does with it', async () => {
+		const found = await rulesIn('<html><body><nldd-icon-button icon="plus" accessibleLabel="Sluit"></nldd-icon-button></body></html>', 'a.html');
+		assert.ok(found.includes('icon-button-needs-name'));
+	});
+
+	it('reports a typo in a camelCase name outside plain HTML', async () => {
+		assert.ok((await rulesIn('const a = <nldd-button text="a" startIcom="plus" />;', 'a.tsx')).includes('unknown-attribute'));
+	});
+
+	it('treats a template inside a component as unknown content, not as absent', async () => {
+		const found = await rulesIn('<nldd-modal-dialog><nldd-button slot="actions" text="a"></nldd-button><template x-if="b"><nldd-button slot="actions" text="b"></nldd-button></template></nldd-modal-dialog>', 'a.html');
+		assert.deepEqual(found, []);
+	});
+
+	it('reads more template languages in a value', async () => {
+		assert.deepEqual(await rulesIn('<nldd-button text="a" start-icon="${icon}"></nldd-button>', 'a.html'), []);
+		assert.deepEqual(await rulesIn('<nldd-button text="a" start-icon="<%= icon %>"></nldd-button>', 'a.html'), []);
+	});
+
+	it('takes a reason without a space after the dashes', async () => {
+		const source = '<template>\n<!-- nldd-lint-disable-next-line unknown-element --later -->\n<nldd-gone />\n</template>';
+		assert.deepEqual(await rulesIn(source), []);
+	});
+
+	it('honors the config for the rule about suppressions', async () => {
+		const linter = createLinter(undefined, { severities: { 'suppression-needs-reason': 'off' } });
+		const source = '<template>\n<!-- nldd-lint-disable-next-line unknown-element -->\n<nldd-gone />\n</template>';
+		assert.deepEqual((await linter.lintSource(source, 'a.vue')).findings, []);
+	});
+
 	it('does not take a v-else branch for a second control', async () => {
 		const markup = '<nldd-text-field v-if="a"></nldd-text-field><nldd-number-field v-else></nldd-number-field>';
 		assert.deepEqual(await rulesIn(vue(markup)), []);

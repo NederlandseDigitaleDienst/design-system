@@ -27,11 +27,11 @@ const TRANSPARENT = new Set([
 	'ng-container',
 ]);
 
-const CONDITIONAL = new Set(['v-if', 'v-else', 'v-else-if', 'v-show', '*ngIf']);
+const CONDITIONAL = new Set(['v-if', 'v-else', 'v-else-if', '*ngIf']);
 const REPEATED = new Set(['v-for', '*ngFor']);
 
-/** A value a template language fills in: `{{ x }}`, `{% x %}`, or `{x}`. */
-const TEMPLATE_VALUE = /\{\{|\{%|^\{.*\}$/;
+/** A value a template language fills in: `{{ x }}`, `{% x %}`, `${x}`, `<%= x %>` or `{x}`. */
+const TEMPLATE_VALUE = /\{\{|\{%|\$\{|<%|^\{.*\}$/;
 
 /** Anything else cannot be an attribute, so a template language is writing into the tag. */
 const PLAIN_ATTRIBUTE = /^[a-zA-Z_][\w:.-]*$/;
@@ -39,14 +39,15 @@ const PLAIN_ATTRIBUTE = /^[a-zA-Z_][\w:.-]*$/;
 function readAttribute(element, name, value) {
 	if (CONDITIONAL.has(name)) element.conditional = true;
 	else if (REPEATED.has(name)) element.repeated = true;
+	else if (name === 'v-show') return;
 	else if (name === 'v-bind' || /^(v-bind)?:\[/.test(name)) element.spread = true;
 	else if (name === 'v-model') element.attrs.set('value', BOUND);
 	else if (name.startsWith('v-model:')) element.attrs.set(name.slice(8), BOUND);
 	else if (name.startsWith(':') || name.startsWith('v-bind:') || name.startsWith('.')) {
 		const bare = name.replace(/^(v-bind)?[:.]/, '').replace(/\.(prop|attr|camel)$/, '');
 		element.attrs.set(bare, BOUND);
-	} else if (/^\[(class|style)\./.test(name)) {
-		// Angular's way to set one class or style, which is no attribute of the component.
+	} else if (/^\[(class\.|style\.|@)/.test(name)) {
+		// Angular's way to set one class, one style or an animation: no attribute.
 	} else if (/^\[.+\]$/.test(name)) {
 		element.attrs.set(name.replace(/^\[\(?|\)?\]$/g, '').replace(/^attr\./, ''), BOUND);
 	} else if (/^(@|#|v-|\(|\*)/.test(name)) {
@@ -65,8 +66,11 @@ function readHtmlChildren(children, parent, inherited) {
 	for (const node of children) {
 		if (node.type !== 'tag') continue;
 		const { name, attribs } = node;
-		// In a document, a template is inert until something clones it elsewhere.
-		if (name === 'template' && inherited.inert) continue;
+		// In a document, a template is inert until something stamps it out, here or elsewhere.
+		if (name === 'template' && inherited.inert) {
+			appendUnknown(parent, node.startIndex ?? 0);
+			continue;
+		}
 		const isWrapper = (name === 'template' && !hasSlotName(attribs)) || TRANSPARENT.has(name);
 		if (isWrapper) {
 			readHtmlChildren(node.children, parent, {
@@ -148,8 +152,6 @@ function collectJsx(node, found) {
 	}
 }
 
-/** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
-/** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
 /** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
 function staticJsxValue(value) {
 	if (value === null) return '';

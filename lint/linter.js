@@ -56,12 +56,13 @@ export const BUILT_IN_RULES = {
 const toCamelCase = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 
 /** `[accessibleLabel]` and `:accessibleLabel` set the same thing as `accessible-label`. */
-function readPropertyNames(roots, tags) {
+function readPropertyNames(roots, tags, isPlainHtml) {
 	const visit = (node) => {
 		const contract = tags[node.name];
 		for (const [name, value] of contract ? [...node.attrs] : []) {
 			const attribute = name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
-			if (attribute === name || !contract.attrs[attribute]) continue;
+			// In HTML itself a capital means nothing: the browser lowercases the name.
+			if (attribute === name || !contract.attrs[attribute] || (isPlainHtml && value !== BOUND)) continue;
 			node.attrs.delete(name);
 			node.attrs.set(attribute, value);
 		}
@@ -70,7 +71,7 @@ function readPropertyNames(roots, tags) {
 	return roots;
 }
 
-function checkAttributes(node, { tags, icons, anyChildAttrs }, report) {
+function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, report) {
 	if (node.templated) return;
 	const contract = tags[node.name];
 	// A parent in another file may be the one reading it, so any child attribute goes.
@@ -91,8 +92,8 @@ function checkAttributes(node, { tags, icons, anyChildAttrs }, report) {
 			}
 		} else if (value === BOUND && contract.props.includes(toCamelCase(name))) {
 			// A property without an attribute, which only a binding can reach.
-		} else if (/[A-Z]/.test(name)) {
-			// HTML has no capitals, so this is a directive of a template language.
+		} else if (isPlainHtml && /[A-Z]/.test(name)) {
+			// HTML has no capitals, so in an .html file this is a template directive.
 		} else if (!GLOBAL_ATTRIBUTE.test(name.toLowerCase()) && !node.wrapped) {
 			report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
 		}
@@ -127,7 +128,7 @@ function builtInFindings(root, context) {
 	return findings;
 }
 
-const SUPPRESSION = /nldd-lint-disable-next-line\s+([\w-]+(?:\s*,\s*[\w-]+)*)(?:\s+--\s+(\S.*?))?\s*(?:-->|\*\/|#\}|$)/;
+const SUPPRESSION = /nldd-lint-disable-next-line\s+([\w-]+(?:\s*,\s*[\w-]+)*)(?:\s+--(?!>)\s*(\S.*?))?\s*(?:-->|\*\/|#\}|$)/;
 
 function readSuppressions(source, canonical) {
 	const suppressed = new Map();
@@ -181,11 +182,11 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		);
 	}
 
-	function lintRoots(roots) {
+	function lintRoots(roots, isPlainHtml) {
 		const findings = [];
 		const counts = { failed: 0, passed: 0, cantTell: 0 };
 		for (const root of roots) {
-			findings.push(...builtInFindings(root, context));
+			findings.push(...builtInFindings(root, { ...context, isPlainHtml }));
 			for (const rule of rules) {
 				for (const { node, outcome } of engine.evaluate(rule, root)) {
 					counts[outcome]++;
@@ -206,29 +207,30 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
 	async function lintSource(source, filename) {
 		const parsed = applyWrappers(await parseSource(source, filename), wrappers);
-		const roots = readPropertyNames(parsed, data.tags);
-		const { findings, counts } = lintRoots(roots);
+		const isPlainHtml = /\.html?$/.test(filename);
+		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
+		const { findings, counts } = lintRoots(roots, isPlainHtml);
 		const { suppressed, missingReason } = readSuppressions(source, canonical);
 		const position = createPositions(source);
+		const reasons = missingReason.map((line) => ({
+			rule: 'suppression-needs-reason',
+			severity: BUILT_IN_RULES['suppression-needs-reason'].severity,
+			message: BUILT_IN_RULES['suppression-needs-reason'].description,
+			tag: '',
+			line,
+			column: 1,
+		}));
 		const located = findings
 			.map(({ node, severity, removed, attribute, ...finding }) => ({
 				...finding,
-				severity: severities[finding.rule] ?? severity,
+				severity,
 				tag: node.name,
 				...position(node.offset),
 			}))
+			.concat(reasons)
+			.map((finding) => ({ ...finding, severity: severities[finding.rule] ?? finding.severity }))
 			.filter((finding) => finding.severity !== 'off')
 			.filter((finding) => !suppressed.get(finding.line)?.has(finding.rule));
-		for (const line of missingReason) {
-			located.push({
-				rule: 'suppression-needs-reason',
-				severity: BUILT_IN_RULES['suppression-needs-reason'].severity,
-				message: BUILT_IN_RULES['suppression-needs-reason'].description,
-				tag: '',
-				line,
-				column: 1,
-			});
-		}
 		located.sort((a, b) => a.line - b.line || a.column - b.column);
 		return { findings: located, counts };
 	}

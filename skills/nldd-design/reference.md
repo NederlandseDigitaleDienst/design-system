@@ -487,6 +487,7 @@ A customizable icon component that renders SVG icons from a predefined library. 
 **Rules** (`nldd lint`)
 
 - `icon-name-renamed`: The `name` attribute is now `icon`. Rename it here and on every other nldd-icon.
+- `icon-not-found`: An icon set here does not exist. See the icon list in the reference.
 
 **Attributes**
 
@@ -799,17 +800,8 @@ A field around one input: its label, supporting label, optional badge, validatio
 
 **Rules** (`nldd lint`)
 
-- `combo-box-needs-name`: nldd-combo-box needs `accessible-label` or a labeled nldd-form-field around it, or it has no accessible name.
-- `editor-needs-name`: An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).
 - `form-field-list-reads-first-control`: More than one control, and the validation list has rules that read a value: it reads the first one. Set `for` on the list if it should read another.
 - `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
-- `multi-line-text-field-needs-name`: nldd-multi-line-text-field needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name.
-- `number-field-needs-name`: nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.
-- `radio-button-group-needs-name`: nldd-radio-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
-- `segmented-control-needs-name`: nldd-segmented-control needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
-- `switch-needs-name`: nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.
-- `toggle-button-group-needs-name`: nldd-toggle-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
-- `toggle-button-needs-name`: nldd-toggle-button needs `text` or `accessible-label`, otherwise it has no accessible name.
 
 **Attributes**
 

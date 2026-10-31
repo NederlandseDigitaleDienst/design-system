@@ -1,6 +1,6 @@
 severity: error
 context: 'nldd-number-field'
-assert: '[accessible-label], nldd-form-field[label] :form-input:not(:form-input ~ *, :form-input *)'
+assert: '[accessible-label], :named-by-field'
 message: 'nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.'
 see: patronen/form
 examples:

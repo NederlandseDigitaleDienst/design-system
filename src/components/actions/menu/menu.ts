@@ -23,6 +23,7 @@ import { NLDDMenuGroup } from './menu-group.js';
 import { NLDDMenuDivider } from './menu-divider.js';
 import { nextTabbableAfter } from '../../../utilities/tab-order.js';
 import { setState } from '../../../utilities/element-state.js';
+import '../../../utilities/custom-element.js';
 
 export { NLDDMenuItem } from './menu-item.js';
 export { NLDDMenuGroup } from './menu-group.js';
