@@ -143,6 +143,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 	 * arrived later is the second, so one mistake is one fact.
 	 */
 	private _syncSecondMain(): void {
+		if (!import.meta.env?.DEV) return;
 		const [, ...rest] = [..._connectedPages].filter((page) => !page._isRegion);
 		setState(this, 'second-main', rest.includes(this));
 	}

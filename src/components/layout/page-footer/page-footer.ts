@@ -174,7 +174,7 @@ export class NLDDPageFooter extends LitElement {
 			// fragment) silently breaks HTML uniqueness (WCAG SC 4.1.1) and
 			// makes skip-links target the wrong instance. Check BEFORE
 			// setting this.id so we can't self-match.
-			setState(this, 'duplicate-id', document.getElementById('page-footer') !== null);
+			if (import.meta.env?.DEV) setState(this, 'duplicate-id', document.getElementById('page-footer') !== null);
 			this.id = 'page-footer';
 		}
 	}

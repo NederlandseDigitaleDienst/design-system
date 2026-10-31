@@ -3,8 +3,8 @@
  *
  * Some things are not in the markup: how wide a component turned out, whether a
  * value could be parsed. A component states that fact here and knows nothing about
- * what it means; a rule in src/rules/ reads it with a selector, and styles and
- * tests can too.
+ * what it means; a rule in src/rules/ reads it with a selector. While developing
+ * only: in production this does nothing.
  */
 
 const internals = new WeakMap<HTMLElement, ElementInternals>();
@@ -34,6 +34,7 @@ export function hasState(root: ParentNode, name: string): boolean {
  * only dashed names, throws here; a fact is not worth breaking a render for.
  */
 export function setState(element: HTMLElement, name: string, on: boolean): void {
+	if (!import.meta.env?.DEV) return;
 	if (!on && !internals.has(element)) return;
 	try {
 		const { states } = internalsOf(element);

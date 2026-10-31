@@ -1,7 +1,7 @@
 /** The `nldd` command, started from cli.js. */
 
 import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData } from './rule-data.js';
@@ -74,6 +74,7 @@ function noteOtherVersion(root) {
 }
 
 async function runLint(data, paths, options) {
+	if (Number.isNaN(Number(options['max-warnings'] ?? 0))) throw new Error('--max-warnings takes a number.');
 	const root = process.cwd();
 	const started = performance.now();
 	const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES)]);
@@ -82,7 +83,7 @@ async function runLint(data, paths, options) {
 	const canonical = createCanonical(data);
 
 	const inputs = options.stdin
-		? [{ filename: `${root}/${options.filename}`, source: readFileSync(0, 'utf8') }]
+		? [{ filename: resolve(root, options.filename), source: readFileSync(0, 'utf8') }]
 		: findFiles(paths, root, config.exclude).map((filename) => ({
 				filename,
 				source: readFileSync(filename, 'utf8'),

@@ -39,8 +39,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **Every warning is now a rule in `src/rules/`.** No component contains warning text any more. Warnings start with `[nldd]` and the id of the rule, arrive once per element, and no longer repeat the value at fault: the element is logged with it. Warnings that were always on, such as `hide-below="sm"`, now only appear while developing. An unknown key in `setTranslations` no longer warns.
-- **Custom states.** Where a fact is not in the markup, a component exposes it as `:state()`, such as `nldd-button-group:state(no-width)`. Rules read those, and styles and tests can too.
+- **Every warning is now a rule in `src/rules/`.** No component contains warning text any more. Warnings start with `[nldd]` and the id of the rule, arrive once per element, and no longer repeat the value at fault: the element is logged with it. Warnings that were always on, such as `hide-below="sm"`, now only appear while developing.
+- **Custom states while developing.** Where a fact is not in the markup, a component exposes it as `:state()`, such as `nldd-button-group:state(no-width)`, and a rule reads that. In production this does nothing.
 
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
 

@@ -133,7 +133,7 @@ export function createEngine({ classes = {} } = {}) {
 		const { of, min, max } = rule.count;
 		const counted = node.children.filter((child) => matches(child, of, world));
 		if (world === '-') {
-			const certain = counted.filter((child) => !child.conditional && !child.repeated && !child.toggled).length;
+			const certain = counted.filter((child) => !child.conditional && !child.repeated && !child.toggled && !child.opaque).length;
 			return (max !== undefined && certain > max) || (min !== undefined && certain < min);
 		}
 		const open = counted.some((child) => child.repeated) || node.children.some((child) => child.opaque);

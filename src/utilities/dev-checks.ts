@@ -87,8 +87,8 @@ export function findRoots(root: ParentNode = document): ParentNode[] {
 
 function createReporter() {
 	const reported = new WeakMap<Element, Set<string>>();
-	return () => {
-		for (const { rule, element } of findRoots().flatMap((root) => findViolations(root))) {
+	return (rules: DevRule[] = devRules) => {
+		for (const { rule, element } of findRoots().flatMap((root) => findViolations(root, rules))) {
 			const seen = reported.get(element) ?? new Set();
 			if (seen.has(rule.id)) continue;
 			reported.set(element, seen.add(rule.id));
@@ -97,16 +97,24 @@ function createReporter() {
 	};
 }
 
+/** A translation has no element to state a fact on, so this one reports itself. */
+export async function checkTranslationKeys(keys: string[]): Promise<void> {
+	const { nl } = await import('../translations/nl.generated.js');
+	const unknown = keys.filter((key) => !(key in nl));
+	if (unknown.length > 0) console.warn(`[nldd] setTranslations: no component knows ${unknown.join(', ')}.`);
+}
+
 let started = false;
 
 export function startDevChecks(): void {
 	if (started || typeof MutationObserver === 'undefined') return;
 	started = true;
 	const report = createReporter();
+	const stateRules = devRules.filter((rule) => rule.context.includes(':state('));
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	const schedule = () => {
 		clearTimeout(timer);
-		timer = setTimeout(report, SETTLE_MS);
+		timer = setTimeout(() => report(), SETTLE_MS);
 	};
 	new MutationObserver(schedule).observe(document.documentElement, {
 		subtree: true,
@@ -114,7 +122,7 @@ export function startDevChecks(): void {
 		attributes: true,
 	});
 	setInterval(() => {
-		if (!document.hidden) report();
+		if (!document.hidden) report(stateRules);
 	}, RECHECK_MS);
 	schedule();
 }

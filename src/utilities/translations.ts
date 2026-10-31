@@ -38,6 +38,9 @@ const store: Store = ((globalThis as Record<symbol, unknown>)[STORE_KEY] ??= { t
  */
 export function setTranslations(translations: Translations): void {
 	store.translations = { ...translations };
+	if (import.meta.env?.DEV && import.meta.env?.MODE !== 'test') {
+		void import('./dev-checks.js').then(({ checkTranslationKeys }) => checkTranslationKeys(Object.keys(translations)));
+	}
 	if (typeof document !== 'undefined') rerender(document);
 }
 

@@ -877,7 +877,6 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 **Rules** (`nldd lint`)
 
-- `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
 - `validation-item-rule-and-unmet`: This item has a rule of its own and is also named in `unmet`. The rule decides, and the name is ignored: it is a snapshot of the previous check and cannot be newer than the value. Drop it from `unmet`, or take the rule off the item.
 
 **Attributes**

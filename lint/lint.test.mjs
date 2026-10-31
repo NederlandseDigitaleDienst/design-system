@@ -334,6 +334,36 @@ describe('found in review', () => {
 		assert.ok((await rulesIn(source)).includes('unknown-element'));
 	});
 
+	it('takes text control flow in .html for what it is', async () => {
+		const two = '<nldd-button text="a"></nldd-button><nldd-button text="b"></nldd-button>';
+		assert.deepEqual(await rulesIn(`<nldd-button-group>@if (a) {${two}} @else {${two}}</nldd-button-group>`, 'a.html'), []);
+		assert.deepEqual(await rulesIn('<nldd-form-actions>{{ form_actions|safe }}</nldd-form-actions>', 'a.html'), []);
+		assert.deepEqual(await rulesIn('<nldd-toolbar-item>{% include "overflow.html" %}</nldd-toolbar-item>', 'a.html'), []);
+	});
+
+	it('does not count the condition of a JSX expression as a child', async () => {
+		const parts = '{a && <nldd-button text="a" />}'.repeat(4);
+		assert.deepEqual(await rulesIn(`const x = <nldd-button-group>${parts}</nldd-button-group>;`, 'a.tsx'), []);
+	});
+
+	it('reads self-closing components in an Angular template', async () => {
+		const markup = '<nldd-modal-dialog *ngIf="a"><nldd-button slot="actions" text="a" /><nldd-button slot="actions" text="b" /></nldd-modal-dialog>';
+		assert.deepEqual(await rulesIn(markup, 'a.html'), []);
+	});
+
+	it('takes the lowercase wrappers of Vue for wrappers', async () => {
+		assert.deepEqual(await rulesIn(vue('<nldd-list accessible-label="a"><nldd-list-item><transition><nldd-text-cell text="b" /></transition></nldd-list-item></nldd-list>')), []);
+	});
+
+	it('knows every event handler and other global attribute', async () => {
+		assert.deepEqual(await rulesIn('<nldd-button text="a" onpointerdown="b" itemscope i18n="@@c" i18n-text="@@d"></nldd-button>', 'a.html'), []);
+	});
+
+	it('still reports a field with only requirements in it', async () => {
+		const page = '<html><body><nldd-form-field label="a"><nldd-validation-list></nldd-validation-list></nldd-form-field></body></html>';
+		assert.ok((await rulesIn(page, 'a.html')).includes('form-field-needs-input'));
+	});
+
 	it('takes v-show for rendered, and a v-for for maybe nothing', async () => {
 		const page = (body) => vue(`<nldd-form-field label="a">${body}<nldd-number-field></nldd-number-field></nldd-form-field>`);
 		assert.ok((await rulesIn(page('<nldd-text-field v-show="x"></nldd-text-field>'))).includes('number-field-needs-name'));
@@ -514,6 +544,23 @@ describe('nldd command', () => {
 	it('lists the rules about a component, also where it is only mentioned', () => {
 		const output = execFileSync(process.execPath, [cli, 'rules', '--for', 'nldd-toggle-button'], { encoding: 'utf8' });
 		assert.match(output, /no-toggle-button-in-button-bar/);
+	});
+
+	it('refuses a level that does not exist', () => {
+		const root = project();
+		writeFileSync(join(root, '.nldd-lint.json'), '{ "rules": { "unknown-element": "none" } }');
+		assert.match(run(root, 'lint').stderr, /takes off, warn or error/);
+	});
+
+	it('refuses a max-warnings that is no number', () => {
+		assert.equal(run(project(), 'lint', '--max-warnings', 'abc').status, 2);
+	});
+
+	it('finds a file with a name git would otherwise quote', () => {
+		const root = project();
+		spawnSync('git', ['init', '-q'], { cwd: root });
+		writeFileSync(join(root, 'src/café.vue'), '<template><nldd-gone /></template>\n');
+		assert.match(run(root, 'lint').stdout, /café\.vue/);
 	});
 
 	it('refuses an unknown rule in the config', () => {

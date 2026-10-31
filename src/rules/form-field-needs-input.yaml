@@ -1,5 +1,5 @@
 severity: warn
-context: 'nldd-form-field:has(> :not(nldd-form-field-help-text, nldd-validation-list))'
+context: 'nldd-form-field:has(> :not(nldd-form-field-help-text))'
 assert: ':has(:form-input), :state(has-input)'
 message: 'nldd-form-field holds no form input, so the label cannot name anything or move focus into it.'
 see: patronen/form

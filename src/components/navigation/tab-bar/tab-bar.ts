@@ -46,6 +46,7 @@
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { customElement } from '../../../utilities/custom-element.js';
+import { setState } from '../../../utilities/element-state.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tabBarStyles, tabBarItemStyles } from './tab-bar.styles.js';
 import { tabBarTemplate, tabBarItemTemplate } from './tab-bar.template.js';
@@ -397,6 +398,7 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 
 	private _syncItems(): void {
 		const items = this._getItems();
+		setState(this, 'link-tabs', items.some((item) => item.href));
 
 		items.forEach(item => {
 			item._groupVariant = this.variant;

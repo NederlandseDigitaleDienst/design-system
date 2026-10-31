@@ -143,8 +143,10 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
-		setState(this, 'same-href', Boolean(this.logoHref) && Boolean(this.websiteHref)
-			&& resolvedHref(this.logoHref) === resolvedHref(this.websiteHref));
+		if (import.meta.env?.DEV) {
+			setState(this, 'same-href', Boolean(this.logoHref) && Boolean(this.websiteHref)
+				&& resolvedHref(this.logoHref) === resolvedHref(this.websiteHref));
+		}
 		// Not only on `translations`: setTranslations() re-renders without it.
 		const texts = this._translatedTexts();
 		if (texts !== this._appliedTexts) {

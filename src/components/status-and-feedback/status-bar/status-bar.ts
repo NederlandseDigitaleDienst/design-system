@@ -98,6 +98,7 @@ export class NLDDStatusBar extends LitElement {
 
 	/** Whether a top bar comes before the status bar. Top bars in an overlay are left out, since a sheet or dialog has its own. */
 	private _checkPlacement(): void {
+		if (!import.meta.env?.DEV) return;
 		const root = this.getRootNode() as Document | ShadowRoot;
 		const above = [...root.querySelectorAll('nldd-top-navigation-bar, nldd-top-title-bar')].some((bar) =>
 			!bar.closest('nldd-sheet, nldd-modal-dialog, nldd-popover, dialog')

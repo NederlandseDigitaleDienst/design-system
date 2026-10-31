@@ -22,14 +22,14 @@ function walkDirectory(directory, found) {
 /** `git ls-files` honors .gitignore without this tool parsing it. */
 function trackedFiles(root) {
 	try {
-		const output = execFileSync('git', ['ls-files', '-co', '--exclude-standard'], {
+		const output = execFileSync('git', ['ls-files', '-coz', '--exclude-standard'], {
 			cwd: root,
 			encoding: 'utf8',
 			stdio: ['ignore', 'pipe', 'ignore'],
 			maxBuffer: 256 * 1024 * 1024,
 		});
 		return output
-			.split('\n')
+			.split('\0')
 			.filter((file) => DEFAULT_EXTENSIONS.includes(extname(file)))
 			.map((file) => join(root, file));
 	} catch {
@@ -59,8 +59,11 @@ export function readConfig(root, knownRules) {
 	const path = join(root, CONFIG_FILE);
 	if (!existsSync(path)) return {};
 	const config = JSON.parse(readFileSync(path, 'utf8'));
-	for (const rule of Object.keys(config.rules ?? {})) {
+	for (const [rule, level] of Object.entries(config.rules ?? {})) {
 		if (!knownRules.has(rule)) throw new Error(`${CONFIG_FILE}: unknown rule "${rule}".`);
+		if (!['off', 'warn', 'error'].includes(level)) {
+			throw new Error(`${CONFIG_FILE}: "${rule}" takes off, warn or error, not ${JSON.stringify(level)}.`);
+		}
 	}
 	return config;
 }

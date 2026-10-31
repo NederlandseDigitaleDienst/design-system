@@ -22,6 +22,10 @@ const TRANSPARENT = new Set([
 	'TransitionGroup',
 	'KeepAlive',
 	'Suspense',
+	'transition',
+	'transition-group',
+	'keep-alive',
+	'suspense',
 	'Fragment',
 	'React.Fragment',
 	'ng-container',
@@ -32,6 +36,12 @@ const REPEATED = new Set(['v-for', '*ngFor']);
 
 /** A value a template language fills in: `{{ x }}`, `{% x %}`, `${x}`, `<%= x %>` or `{x}`. */
 const TEMPLATE_VALUE = /\{\{|\{%|\$\{|<%|^\{.*\}$/;
+
+/** Jinja, Django, Handlebars and Angular control flow, written between the tags. */
+const TEMPLATE_TEXT = /\{%|\{\{|@(if|else|for|switch|defer)\b/;
+
+/** Angular markup in an .html file, where `<nldd-x />` does close the element. */
+const ANGULAR = /\*ng[A-Z]|\[\(|\s\[[a-zA-Z.]+\]=|@(if|for|switch)\s*\(/;
 
 /** Anything else cannot be an attribute, so a template language is writing into the tag. */
 const PLAIN_ATTRIBUTE = /^[a-zA-Z_][\w:.-]*$/;
@@ -62,7 +72,11 @@ function hasSlotName(attribs) {
 	return Object.keys(attribs).some((name) => name.startsWith('#') || name.startsWith('v-slot'));
 }
 
-function readHtmlChildren(children, parent, inherited) {
+function readHtmlChildren(children, parent, given) {
+	// Control flow and includes are text in .html, so what is around them is uncertain.
+	const templated = given.inert && children.some((node) => node.type === 'text' && TEMPLATE_TEXT.test(node.data));
+	const inherited = templated ? { ...given, conditional: true } : given;
+	if (templated) appendUnknown(parent, children[0].startIndex ?? 0);
 	for (const node of children) {
 		if (node.type !== 'tag') continue;
 		const { name, attribs } = node;
@@ -102,7 +116,7 @@ function parseMarkup(source, { selfClosing }) {
 
 export function parseHtml(source) {
 	const root = createRoot({ closed: /<html[\s>]/i.test(source) });
-	readHtmlChildren(parseMarkup(source, { selfClosing: false }).children, root, { inert: true });
+	readHtmlChildren(parseMarkup(source, { selfClosing: ANGULAR.test(source) }).children, root, { inert: true });
 	return [root];
 }
 
@@ -200,7 +214,8 @@ function readJsxExpression(expression, parent, flags, roots) {
 		case 'TemplateLiteral':
 			break;
 		case 'LogicalExpression':
-			readJsxExpression(expression.left, parent, conditional, roots);
+			// The left of `a && <x />` renders nothing worth counting.
+			if (expression.operator !== '&&') readJsxExpression(expression.left, parent, conditional, roots);
 			readJsxExpression(expression.right, parent, conditional, roots);
 			break;
 		case 'ConditionalExpression':

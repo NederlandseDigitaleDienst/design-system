@@ -299,6 +299,7 @@ export class NLDDImage extends LitElement {
 	 * a source or media that arrives later is judged when it does.
 	 */
 	private _syncAlternative(): void {
+		if (!import.meta.env?.DEV) return;
 		const slotted = this._slottedMedia();
 		const inaccessible = !this.decorative && (slotted.length > 0
 			? !slotted.every(hasTextAlternative)

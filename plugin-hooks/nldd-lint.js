@@ -11,7 +11,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
 
-const EXTENSIONS = new Set(['.html', '.vue', '.jsx', '.tsx']);
+const EXTENSIONS = new Set(['.html', '.htm', '.vue', '.jsx', '.tsx']);
 
 function findProject(file) {
 	let directory = dirname(file);
@@ -27,9 +27,10 @@ function main() {
 	const input = JSON.parse(readFileSync(0, 'utf8'));
 	const file = input.tool_input?.file_path;
 	if (!file || !EXTENSIONS.has(extname(file)) || !existsSync(file)) return;
-	if (!readFileSync(file, 'utf8').includes('nldd-')) return;
 	const project = findProject(file);
 	if (!project) return;
+	const usesWrappers = existsSync(join(project, '.nldd-lint.json'));
+	if (!usesWrappers && !/nldd-|Nldd/.test(readFileSync(file, 'utf8'))) return;
 
 	const { stdout } = spawnSync(join(project, 'node_modules/.bin/nldd'), ['lint', '--format', 'json', file], {
 		cwd: project,

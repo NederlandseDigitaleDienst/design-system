@@ -85,6 +85,7 @@ export function isOpaqueTag(name) {
 		name.includes('.') ||
 		(name.includes('-') && !name.startsWith('nldd-')) ||
 		name === 'component' ||
+		name === 'teleport' ||
 		name === 'slot' ||
 		name === 'ng-content'
 	);
