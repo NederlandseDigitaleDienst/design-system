@@ -133,6 +133,7 @@ Een component zet je neer als een gewoon HTML-element, met attributen voor tekst
 <nldd-button text="Opties" expandable>
   <nldd-menu slot="popup">
     <nldd-menu-item text="Bewerken" icon="pencil"></nldd-menu-item>
+    <nldd-menu-divider></nldd-menu-divider>
     <nldd-menu-item text="Verwijderen" icon="trash" destructive></nldd-menu-item>
   </nldd-menu>
 </nldd-button>

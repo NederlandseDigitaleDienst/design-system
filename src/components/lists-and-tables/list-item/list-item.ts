@@ -182,6 +182,7 @@ const NESTED_CONTROLS = [
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
  * Divider markers, set on a CELL in the row rather than on the row itself:
+ * @childattr {boolean} reorderable-only - Show this cell only while the row is `reorderable`
  * @childattr {boolean} divider-start - The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.
  * @childattr {boolean} divider-end - The divider stops after this cell. With several markers the line runs from the first start to the last end.
  *

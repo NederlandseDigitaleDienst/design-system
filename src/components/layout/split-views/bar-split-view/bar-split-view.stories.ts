@@ -260,7 +260,7 @@ export const MetStatusbalk = {
 			<nldd-container
 				padding-inline="16"
 				padding-block="12"
-				sm-padding-bottom="none"
+				sm-padding-bottom="0"
 			>
 				<nldd-toolbar>
 					<nldd-toolbar-item
@@ -338,7 +338,7 @@ export const ResponsieveBalken = {
 			<nldd-container
 				padding-inline="16"
 				padding-block="12"
-				sm-padding-bottom="none"
+				sm-padding-bottom="0"
 			>
 				<nldd-toolbar>
 					<nldd-toolbar-item

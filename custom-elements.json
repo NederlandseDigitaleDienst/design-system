@@ -29526,6 +29526,38 @@
                 "text": "'bottom' | 'center' | 'top'"
               },
               "description": "'top' | 'center' | 'bottom'"
+            },
+            {
+              "name": "order",
+              "description": "Position of this child in the container",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "sm-order",
+              "description": "Position of this child at sm",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "md-order",
+              "description": "Position of this child at md",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "lg-order",
+              "description": "Position of this child at lg",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
             }
           ],
           "superclass": {
@@ -38857,6 +38889,14 @@
               }
             },
             {
+              "name": "reorderable-only",
+              "description": "Show this cell only while the row is `reorderable`",
+              "type": {
+                "text": "boolean"
+              },
+              "forChildren": true
+            },
+            {
               "name": "divider-start",
               "description": "The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.",
               "type": {
@@ -41074,6 +41114,13 @@
               "fieldName": "size",
               "expandedType": {
                 "text": "'lg' | 'md'"
+              }
+            },
+            {
+              "name": "variant",
+              "description": "Forces this presentation on this item, over the one from nldd-tab-bar",
+              "type": {
+                "text": "'icon-and-text'|'text'|'icon'"
               }
             }
           ],

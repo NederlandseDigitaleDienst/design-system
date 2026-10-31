@@ -36,6 +36,7 @@
  * @attr {boolean} current - The item you are on. A tab bar switching content manages it itself and renders it as `aria-selected`; a `navigation` bar leaves it to the consumer, since it follows the route, and renders it as `aria-current="page"`. Unlike a list row, which separates `current` from `selected` because it can be both at once, a tab bar has exactly one active item.
  * @attr {string} text - Tab text; also used as accessible name for icon-only items
  * @attr {string} href - Optional link URL; renders an anchor instead of a button
+ * @attr {'icon-and-text'|'text'|'icon'} variant - Forces this presentation on this item, over the one from nldd-tab-bar
  * @attr {string} icon - Icon name for nldd-icon; an alternative to the icon slot. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided.
  * @attr {'md'|'lg'} size - Size: 'md' (default) | 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout.
  *

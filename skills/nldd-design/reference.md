@@ -2090,6 +2090,10 @@ A simple layout primitive: pick a layout mode, give it a gap, optionally align c
 
 | Attribute | Type | Description |
 | --- | --- | --- |
+| `order` | `number` | Position of this child in the container |
+| `sm-order` | `number` | Position of this child at sm |
+| `md-order` | `number` | Position of this child at md |
+| `lg-order` | `number` | Position of this child at lg |
 | `layout` | `string` | 'stack' \| 'row' \| 'wrap' \| 'grid' \| 'columns' \| 'lanes' (default: 'stack') |
 | `column-count` | `number` | Force N columns (1-8) for layout=grid/columns/lanes |
 | `sm-column-count` | `number` | Column count when this container is sm-wide |
@@ -3157,6 +3161,7 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 | `current` | `boolean` | The item you are on. A tab bar switching content manages it itself and renders it as `aria-selected`; a `navigation` bar leaves it to the consumer, since it follows the route, and renders it as `aria-current="page"`. Unlike a list row, which separates `current` from `selected` because it can be both at once, a tab bar has exactly one active item. |
 | `text` | `string` | Tab text; also used as accessible name for icon-only items |
 | `href` | `string` | Optional link URL; renders an anchor instead of a button |
+| `variant` | `'icon-and-text'\|'text'\|'icon'` | Forces this presentation on this item, over the one from nldd-tab-bar |
 | `icon` | `string` | Icon name for nldd-icon; an alternative to the icon slot. The icon and icon-and-text variants fall back to a placeholder icon when neither is provided. |
 | `size` | `'md'\|'lg'` | Size: 'md' (default) \| 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout. |
 
@@ -3794,6 +3799,7 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 | `current` | `boolean` | Marks the item as the one you are on: the page a menu row points at, the record a list has open. Exactly one row in a list carries it, where `selected` may be on many. It paints like `selected` at rest, a quiet fill on purpose: the page itself says where you are, in its title, heading and breadcrumb, so the fill is an extra that should not pull attention from the content, and an automated check that flags its contrast is expected. It takes the highlighted fill while focus is anywhere in the row — including inside a nested `nldd-list-item-segment`, which is what a segmented row needs: the focus never reaches the row's own control, because there is none. In a `navigation` parent it puts `aria-current` on the inner action, with `current-type` as its value. On a segmented row set it on the segment that holds the link instead: the row reads `current` off its own segments and paints itself, so it is written once, where `aria-current` belongs. |
 | `current-type` | `'page'\|'step'\|'location'\|'date'\|'time'\|'true'` | The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on. |
 | `disabled` | `boolean` | Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row. |
+| `reorderable-only` | `boolean` | Show this cell only while the row is `reorderable` |
 | `divider-start` | `boolean` | The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line. |
 | `divider-end` | `boolean` | The divider stops after this cell. With several markers the line runs from the first start to the last end. |
 

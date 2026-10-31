@@ -60,6 +60,10 @@
  *
  * @element nldd-container
  *
+ * @childattr {number} order - Position of this child in the container
+ * @childattr {number} sm-order - Position of this child at sm
+ * @childattr {number} md-order - Position of this child at md
+ * @childattr {number} lg-order - Position of this child at lg
  * @attr {string} layout - 'stack' | 'row' | 'wrap' | 'grid' | 'columns' | 'lanes' (default: 'stack')
  * @attr {number} column-count - Force N columns (1-8) for layout=grid/columns/lanes
  * @attr {number} sm-column-count - Column count when this container is sm-wide

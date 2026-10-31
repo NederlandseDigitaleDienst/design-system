@@ -1,9 +1,10 @@
 /**
- * Checks the nldd-* markup in the skill docs with the linter's built-in rules.
+ * Checks the nldd-* markup in the skill docs and the README with every rule,
+ * hints included.
  *
  * Those code blocks are what a consumer, or an agent reading the skill, copies,
- * so a tag or attribute that does not exist is a bug we ship. Rules from
- * src/rules/ stay off: a skill can show on purpose what not to do.
+ * so they have to be the way we mean it. A block that shows on purpose what not
+ * to do says so with a suppression and a reason.
  *
  * Usage: node scripts/validate-skill-markup.js
  */
@@ -26,9 +27,9 @@ function skillFiles(directory) {
 	});
 }
 
-const linter = createLinter({ ...loadData(), rules: [] });
+const linter = createLinter(loadData());
 const errors = [];
-const files = skillFiles(resolve(repoRoot, 'skills')).sort();
+const files = [...skillFiles(resolve(repoRoot, 'skills')).sort(), resolve(repoRoot, 'README.md')];
 
 for (const file of files) {
 	const { findings } = await linter.lintSource(readFileSync(file, 'utf8'), file);
