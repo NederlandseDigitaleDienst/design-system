@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-combo-box'
+message: 'The Popover API is not supported in this browser. The dropdown will not open.'

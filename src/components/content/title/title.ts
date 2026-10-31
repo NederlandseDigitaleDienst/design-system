@@ -35,6 +35,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { titleStyles } from './title.styles.js';
 import { titleTemplate } from './title.template.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 type Size = 1 | 2 | 3 | 4 | 5 | 6;
 type TitleColor = 'content' | 'inherit';
@@ -122,7 +123,7 @@ export class NLDDTitle extends LitElement {
 		// no longer exists is not rendered and reports nothing, so say it here.
 		if (import.meta.env?.DEV && !warnedAboutSubtitle && this.querySelector(':scope > [slot="subtitle"]')) {
 			warnedAboutSubtitle = true;
-			console.warn('NLDDTitle: the subtitle slot is now supporting-text. Rename slot="subtitle" to slot="supporting-text", or use the supporting-text attribute, here and on every other nldd-title.');
+			reportRule('title-subtitle-slot-renamed', this);
 		}
 	}
 
@@ -155,7 +156,7 @@ export class NLDDTitle extends LitElement {
 			}
 			this.toggleAttribute(`data-${breakpoint}-custom-size`, valid);
 			if (import.meta.env?.DEV && value !== '' && !valid) {
-				this._warnOnce(`invalid-${breakpoint}-${value}`, `<nldd-title>: ${breakpoint}-custom-size="${value}" is not a size the title can use, so it keeps its size from the scale at ${breakpoint}. Use a length such as "96px" or "6rem", not a keyword.`);
+				if (this._firstTime(`invalid-${breakpoint}-${value}`)) reportRule('title-custom-size-invalid', this, `${breakpoint}-custom-size="${value}"`);
 			}
 		}
 	}
@@ -171,10 +172,10 @@ export class NLDDTitle extends LitElement {
 	/** DEV-only: warnings already given, so each says it once per title. */
 	private _warned = new Set<string>();
 
-	private _warnOnce(key: string, message: string): void {
-		if (this._warned.has(key)) return;
+	private _firstTime(key: string): boolean {
+		if (this._warned.has(key)) return false;
 		this._warned.add(key);
-		console.warn(message, this);
+		return true;
 	}
 
 	/** DEV-only: says so when a custom size is smaller than size 1, which then shows instead. */
@@ -195,7 +196,7 @@ export class NLDDTitle extends LitElement {
 				// CSS floor rather than measured here.
 				if (/%|\d(?:v[whib]|vmin|vmax|cq[whib]|cqmin|cqmax|em|ex|ch|cap|ic|lh)\b/.test(value)) continue;
 				if (px(value) < px(SIZE_1_FONT_SIZE[breakpoint]) - 0.5) {
-					this._warnOnce(`floor-${breakpoint}-${value}`, `<nldd-title>: custom size "${value}" is smaller than size 1 at ${breakpoint} and shows as size 1. Use size for headings up to size 1.`);
+					if (this._firstTime(`floor-${breakpoint}-${value}`)) reportRule('title-custom-size-below-floor', this, `"${value}" at ${breakpoint}`);
 				}
 			}
 		} finally {

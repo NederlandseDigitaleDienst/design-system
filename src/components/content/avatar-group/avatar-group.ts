@@ -52,6 +52,7 @@ import '../../lists-and-tables/cells/spacer-cell/spacer-cell.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddAvatarGroupTranslations } from './avatar-group.i18n.js';
 import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /** The smallest size at which a count of one, two, three and four digits fits. */
 const MIN_SIZE_FOR_COUNT = [24, 40, 56, 80];
@@ -178,7 +179,7 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 			const small = interactive && Number(this.size) * (1 - OVERLAP) < 24;
 			if (small && !this._warnedTargetSize) {
 				this._warnedTargetSize = true;
-				console.warn(`<nldd-avatar-group size="${this.size}">: avatars that are links or buttons overlap, so each keeps too small a target (WCAG 2.5.8). Use size 32 or larger.`);
+				reportRule('avatar-group-target-too-small', this, `size="${this.size}"`);
 			}
 			else if (!small) {
 				this._warnedTargetSize = false;

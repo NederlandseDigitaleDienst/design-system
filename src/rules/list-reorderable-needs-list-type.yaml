@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-list[reorderable]'
+report: '[type]:not([type="list"])'
+message: '`reorderable` is only valid when type="list", and is ignored here.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list reorderable accessible-label="Dossiers"></nldd-list>', '<nldd-list reorderable type="list" accessible-label="Dossiers"></nldd-list>']
+  failed: ['<nldd-list reorderable type="navigation" accessible-label="Dossiers"></nldd-list>']

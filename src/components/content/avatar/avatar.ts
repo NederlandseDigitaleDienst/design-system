@@ -79,6 +79,9 @@ import { nlddAvatarTranslations } from './avatar.i18n.js';
 import { avatarStyles } from './avatar.styles.js';
 import { avatarTemplate } from './avatar.template.js';
 import '../icon/icon.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type AvatarType = 'person' | 'organization';
 
@@ -109,7 +112,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 	@property({ type: Boolean, reflect: true, attribute: 'icon-aligned' })
 	iconAligned = false;
 
-	@property({ type: String })
+	@property({ type: String, reflect: true, converter: reflectWhenSet })
 	name = '';
 
 	@property({ type: String })
@@ -126,7 +129,7 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 
 	/** Accessible name of the link or button. Without it, it falls back to
 	 *  `name`. Only matters when the avatar is interactive. */
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })
@@ -166,7 +169,6 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 		return Boolean(this.href) || this.button;
 	}
 
-	private _warnedLabel = false;
 	private _warnedTargetSize = false;
 
 	/** Set when the image errors, so the template falls through to the next
@@ -248,25 +250,13 @@ export class NLDDAvatar extends withTranslations(LitElement, nlddAvatarTranslati
 			this.removeAttribute('role');
 			this.removeAttribute('aria-label');
 		}
-		// An interactive avatar without a name is a silent accessibility failure:
-		// the control holds nothing but an image or initials. Warn in dev, the same
-		// as nldd-card.
 		if (import.meta.env?.DEV) {
-			const missing = this.isInteractive
-				&& !(this.accessibleLabel || this.name).trim();
-			if (missing && !this._warnedLabel) {
-				this._warnedLabel = true;
-				console.warn('<nldd-avatar>: an avatar with `href` or `button` needs `accessible-label` (or `name`), or the control has no accessible name.');
-			}
-			else if (!missing) {
-				this._warnedLabel = false;
-			}
 			// WCAG 2.5.8: a target under 24px passes only with room around it, which
 			// the avatar cannot measure. `full` takes its size from the container.
 			const small = this.isInteractive && Number(this.size) < 24;
 			if (small && !this._warnedTargetSize) {
 				this._warnedTargetSize = true;
-				console.warn(`<nldd-avatar size="${this.size}">: a link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.`);
+				reportRule('avatar-target-too-small', this, `size="${this.size}"`);
 			}
 			else if (!small) {
 				this._warnedTargetSize = false;

@@ -59,6 +59,8 @@ import './../../actions/menu/menu.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 // Pointer movement threshold in px before drag mode activates.
 // Distinguishes a click (select) from a drag (reorder).
@@ -183,7 +185,7 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 	private static _idCounter = 0;
 	readonly _id = `nldd-document-tab-bar-${NLDDDocumentTabBar._idCounter++}`;
 
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	@property({ type: Boolean, reflect: true })
@@ -260,9 +262,6 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 	override firstUpdated(): void {
 		this._hasCustomLabel = Boolean(this.accessibleLabel);
-		if (!this._hasCustomLabel) {
-			import.meta.env?.DEV && console.warn('<nldd-document-tab-bar>: No accessible-label provided. Add an accessible-label attribute for a meaningful navigation landmark name. Falling back to "Tabbladen".');
-		}
 
 		const container = this.shadowRoot?.querySelector('.document-tab-bar__items') as HTMLElement;
 		if (container) {

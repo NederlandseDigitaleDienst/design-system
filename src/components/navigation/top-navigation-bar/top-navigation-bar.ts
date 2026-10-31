@@ -45,6 +45,7 @@ import { NLDDMenuBar } from '../menu-bar/menu-bar.js';
 import '../../content/icon/icon.js';
 import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import { TopNavigationMenuSheet } from './top-navigation-bar.menu-sheet.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /** The absolute URL an href goes to; an anchor resolves it without throwing. */
 function resolvedHref(href: string): string {
@@ -146,7 +147,7 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		if (import.meta.env?.DEV && !this._warnedSameHref && this.logoHref && this.websiteHref
 			&& resolvedHref(this.logoHref) === resolvedHref(this.websiteHref)) {
 			this._warnedSameHref = true;
-			console.warn('<nldd-top-navigation-bar>: `logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.');
+			reportRule('top-navigation-bar-same-href', this);
 		}
 		// Not only on `translations`: setTranslations() re-renders without it.
 		const texts = this._translatedTexts();

@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-tab-bar-item'
+message: '`selected` is now `current` and the old attribute does nothing; rename it.'

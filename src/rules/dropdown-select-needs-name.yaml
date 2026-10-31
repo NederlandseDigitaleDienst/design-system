@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-dropdown'
+message: 'The slotted `<select>` has no accessible name. Add an `aria-label` or `aria-labelledby` attribute to the `<select>` element.'

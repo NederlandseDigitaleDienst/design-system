@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-title'
+message: 'The subtitle slot is now supporting-text. Rename slot="subtitle" to slot="supporting-text", or use the `supporting-text` attribute, here and on every other nldd-title.'

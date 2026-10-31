@@ -141,7 +141,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities = {}
 		anyChildAttrs: Object.assign({}, ...Object.values(data.tags).map((tag) => tag.childAttrs)),
 	};
 	const engine = createEngine({ classes: data.classes });
-	const rules = data.rules.filter((rule) => severities[rule.id] !== 'off');
+	const rules = data.rules.filter((rule) => !rule.runtime && severities[rule.id] !== 'off');
 
 	function lintRoots(roots) {
 		const findings = [];

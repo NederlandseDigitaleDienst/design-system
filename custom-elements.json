@@ -4583,7 +4583,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "name"
+              "attribute": "name",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -4629,7 +4630,8 @@
               },
               "default": "''",
               "description": "Accessible name of the link or button. Without it, it falls back to\n`name`. Only matters when the avatar is interactive.",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -7679,7 +7681,8 @@
               },
               "default": "''",
               "description": "Label text. When empty no label is rendered but side-alignment indent is preserved.",
-              "attribute": "label"
+              "attribute": "label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -10596,6 +10599,7 @@
               },
               "default": "''",
               "attribute": "input-id",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -10692,6 +10696,7 @@
               },
               "default": "''",
               "attribute": "accessible-label",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -11134,7 +11139,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -14125,7 +14131,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "input-id"
+              "attribute": "input-id",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -14253,7 +14260,8 @@
               },
               "default": "''",
               "description": "Accessible label forwarded to the inner <textarea>. Set automatically by nldd-form-field.",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -14887,7 +14895,8 @@
               },
               "default": "''",
               "description": "Accessible label forwarded as aria-label to the native input.",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -16530,7 +16539,8 @@
               },
               "default": "''",
               "description": "Accessible name forwarded as aria-label to the group host.",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -16539,7 +16549,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-labeled-by"
+              "attribute": "accessible-labeled-by",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -18342,7 +18353,8 @@
               },
               "default": "''",
               "description": "Accessible name for the group (aria-label).",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -18352,7 +18364,8 @@
               },
               "default": "''",
               "description": "ID of an external label element (aria-labelledby).",
-              "attribute": "accessible-labeled-by"
+              "attribute": "accessible-labeled-by",
+              "reflects": true
             },
             {
               "kind": "method",
@@ -20209,7 +20222,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -23878,6 +23892,7 @@
               },
               "default": "''",
               "attribute": "input-id",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -23974,6 +23989,7 @@
               },
               "default": "''",
               "attribute": "accessible-label",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "NLDDCodeMirrorInput",
                 "module": "src/utilities/codemirror/codemirror-input.ts"
@@ -26538,7 +26554,8 @@
               },
               "default": "''",
               "description": "Accessible name forwarded as aria-label to the group host.",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -26548,7 +26565,8 @@
               },
               "default": "''",
               "description": "ID of an external label element forwarded as aria-labelledby to the group host.",
-              "attribute": "accessible-labeled-by"
+              "attribute": "accessible-labeled-by",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -26840,7 +26858,8 @@
               },
               "default": "''",
               "description": "Icon name for the nldd-icon element. When not set, the icon slot is used; the\nicon and icon-and-text variants show a placeholder icon when neither is provided.",
-              "attribute": "icon"
+              "attribute": "icon",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -26870,7 +26889,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -35552,7 +35572,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -37033,7 +37054,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "text"
+              "attribute": "text",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -37042,7 +37064,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "icon"
+              "attribute": "icon",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -39723,7 +39746,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -44889,7 +44913,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "input-id"
+              "attribute": "input-id",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -44957,7 +44982,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -44987,15 +45013,6 @@
               },
               "privacy": "private",
               "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "_accessibleLabelWarned",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
             },
             {
               "kind": "field",
@@ -45160,16 +45177,6 @@
               "kind": "field",
               "name": "_onScrollerPointerDown",
               "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_checkAccessibleLabel",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
             },
             {
               "kind": "method",
@@ -45703,69 +45710,6 @@
           "declaration": {
             "name": "DescribedBy",
             "module": "src/utilities/described-by-mixin.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/utilities/dev-checks-trigger.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/utilities/dev-checks.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "findViolations",
-          "parameters": [
-            {
-              "name": "root",
-              "type": {
-                "text": "ParentNode"
-              }
-            },
-            {
-              "name": "rules",
-              "default": "devRules",
-              "type": {
-                "text": "DevRule[]"
-              }
-            }
-          ],
-          "return": {
-            "type": {
-              "text": ""
-            }
-          }
-        },
-        {
-          "kind": "function",
-          "name": "startDevChecks",
-          "return": {
-            "type": {
-              "text": "void"
-            }
-          }
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "findViolations",
-          "declaration": {
-            "name": "findViolations",
-            "module": "src/utilities/dev-checks.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "startDevChecks",
-          "declaration": {
-            "name": "startDevChecks",
-            "module": "src/utilities/dev-checks.ts"
           }
         }
       ]
@@ -47316,31 +47260,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/utilities/reflect-when-set.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "reflectWhenSet",
-          "type": {
-            "text": "object"
-          },
-          "default": "{ toAttribute: (value: string | undefined) => value || null, }",
-          "description": "Reflects a string property only when it has a value.\n\nA rule in src/rules/ reads attributes, in the browser too, so what it names has\nto reflect. A plain `reflect: true` writes an unset string as `x=\"\"`, and other\ncode reads that attribute as set: nldd-form-field leaves a label alone then."
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "reflectWhenSet",
-          "declaration": {
-            "name": "reflectWhenSet",
-            "module": "src/utilities/reflect-when-set.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/utilities/render-marked.ts",
       "declarations": [
         {
@@ -47967,8 +47886,7 @@
           "type": {
             "text": "[\n\t'0', '2', '4', '6', '8', '10', '12', '16', '20', '24',\n\t'28', '32', '40', '44', '48', '56', '64', '80', '96',\n]"
           },
-          "default": "[ '0', '2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96', ]",
-          "description": "Every step there is. `'0'` is a value, not the absence of one."
+          "default": "[ '0', '2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96', ]"
         },
         {
           "kind": "function",

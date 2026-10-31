@@ -1,4 +1,5 @@
 import type { HeroLayout, HeroMainPosition } from './hero.js';
+import { reportRule } from '../../../../utilities/report-rule.js';
 
 export type HeroCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
@@ -55,12 +56,12 @@ function coveredCorners(host: CornerHost, position: CornerPosition): HeroCorner[
 
 const warned = new WeakMap<HTMLElement, Set<string>>();
 
-function warnOnce(host: HTMLElement, key: string, message: string): void {
+function firstTime(host: HTMLElement, key: string): boolean {
 	const keys = warned.get(host) ?? new Set<string>();
-	if (keys.has(key)) return;
+	if (keys.has(key)) return false;
 	keys.add(key);
 	warned.set(host, keys);
-	console.warn(message, host);
+	return true;
 }
 
 function clear(host: HTMLElement): void {
@@ -94,7 +95,7 @@ export function applyCorner(host: CornerHost): void {
 				host.layout !== 'contained' ? 'set layout="contained"' : '',
 				center ? `put the panel in a corner or along a side instead of main-position="${host.mainPosition}"` : '',
 			].filter(Boolean);
-			warnOnce(host, `unsupported-${host.layout !== 'contained' ? 'layout' : ''}-${center ? 'center' : ''}`, `<nldd-hero>: corner only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. To round it, ${fixes.join(' and ')}; or drop the corner.`);
+			if (firstTime(host, `unsupported-${host.layout !== 'contained' ? 'layout' : ''}-${center ? 'center' : ''}`)) reportRule('hero-corner-unsupported', host, fixes.join(' and '));
 		}
 		return;
 	}
@@ -119,13 +120,13 @@ export function applyCorner(host: CornerHost): void {
 
 	if (!import.meta.env?.DEV) return;
 	if (!chosen && value !== '' && value !== 'auto') {
-		warnOnce(host, `unknown-${value}`, `<nldd-hero>: corner="${value}" is not a corner, so the hero chooses one. Use "top-left", "top-right", "bottom-left" or "bottom-right", or leave the value empty.`);
+		if (firstTime(host, `unknown-${value}`)) reportRule('hero-corner-unknown', host, `corner="${value}"`);
 	}
 	if (chosen && covered.includes(chosen)) {
-		warnOnce(host, `covered-${chosen}`, `<nldd-hero>: corner="${chosen}" sits under the panel, so the rounded corner does not show. Choose a corner the panel leaves free, or leave the value empty to let the hero choose.`);
+		if (firstTime(host, `covered-${chosen}`)) reportRule('hero-corner-covered', host, `corner="${chosen}"`);
 	}
 	if (host.width === 'full') {
-		warnOnce(host, 'width-full', '<nldd-hero>: corner with width="full" runs the hero to the edge of the screen. A shape with a rounded corner always keeps a margin around it; leave width="full" off or drop the corner.');
+		if (firstTime(host, 'width-full')) reportRule('hero-corner-full-width', host);
 	}
 }
 

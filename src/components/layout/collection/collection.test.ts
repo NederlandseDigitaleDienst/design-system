@@ -124,13 +124,13 @@ describe('nldd-collection', () => {
 
 	it('says in development that item-width is now item-min-width, also when set after the first render, once per page', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		const renamed = () => warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('is now item-min-width'));
+		const renamed = () => warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('collection-item-width-renamed'));
 		try {
 			el = await fixture('<nldd-collection><div>Item</div></nldd-collection>');
 			await waitForUpdate(el);
 			el.setAttribute('item-width', '300px');
 			expect(renamed()).toHaveLength(1);
-			expect(String(renamed()[0][0])).toContain('item-min-width="300px"');
+			expect(String(renamed()[0][0])).toContain('item-width="300px"');
 			// A second collection on the same page stays quiet.
 			const other = document.createElement('nldd-collection');
 			other.setAttribute('item-width', '320px');

@@ -53,6 +53,8 @@ import './../../content/icon/icon.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
 export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
@@ -108,7 +110,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Icon name for the nldd-icon element. When not set, the icon slot is used; the
 	 *  icon and icon-and-text variants show a placeholder icon when neither is provided. */
-	@property({ type: String })
+	@property({ type: String, reflect: true, converter: reflectWhenSet })
 	icon = '';
 
 	/** Icon shown instead of `icon` while selected. On the transparent
@@ -119,7 +121,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault<ToggleButtonVariant | ''>('') })
 	variant: ToggleButtonVariant | '' = '';
 
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -145,9 +147,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 		 * changes. */
 		return this.querySelector(':scope > [slot="icon"]') !== null;
 	}
-
-	private _warnedA11y = false;
-	private _warnedEmptyIcon = false;
 
 
 	/**
@@ -183,24 +182,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	override updated(changed: PropertyValues): void {
-		/* A button needs an accessible name. That name comes from either
-		 * the visible text or the explicit accessible-label. Without
-		 * either, the button is anonymous to assistive tech. */
-		const inaccessible = !this.text && !this.accessibleLabel;
-		if (import.meta.env?.DEV && inaccessible && !this._warnedA11y) {
-			this._warnedA11y = true;
-			console.warn('<nldd-toggle-button>: Provide a text or accessible-label attribute for accessibility.');
-		} else if (!inaccessible) {
-			this._warnedA11y = false;
-		}
-		/* variant="icon" with no icon attribute and no slotted icon falls back
-		 * to a placeholder — flag the likely misconfiguration during development. */
-		if (import.meta.env?.DEV && this.variant === 'icon' && !this._hasIcon && !this._warnedEmptyIcon) {
-			this._warnedEmptyIcon = true;
-			console.warn('<nldd-toggle-button variant="icon">: No icon attribute or slot="icon" content provided. A placeholder icon is shown.');
-		} else if (this._hasIcon || this.variant !== 'icon') {
-			this._warnedEmptyIcon = false;
-		}
 		if (changed.has('selected') || changed.has('value') || changed.has('type')) {
 			this.commitFormValue();
 		}

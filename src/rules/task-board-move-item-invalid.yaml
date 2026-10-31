@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-task-board'
+message: 'moveItem() needs an item in one of the board''s columns and a column of the board.'

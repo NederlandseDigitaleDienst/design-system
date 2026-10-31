@@ -35,6 +35,9 @@ import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
 import { stepCellStyles } from './step-cell.styles.js';
 import { stepCellTemplate } from './step-cell.template.js';
 import '../../../content/icon/icon.js';
+import { reflectWhenSet } from '../../../../utilities/reflect-when-set.js';
+import '../../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../../utilities/report-rule.js';
 
 type Status = 'past' | 'current' | 'future';
 type Size = 'sm' | 'md';
@@ -107,10 +110,10 @@ export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container')
 	@property({ reflect: true, converter: reflectNonDefault<Line>('auto') })
 	line: Line = 'auto';
 
-	@property({ type: String })
+	@property({ type: String, reflect: true, converter: reflectWhenSet })
 	text = '';
 
-	@property({ type: String })
+	@property({ type: String, reflect: true, converter: reflectWhenSet })
 	icon = '';
 
 	/** Only a whole dot in a wide lane has room to read a number in: a minor one is
@@ -118,8 +121,6 @@ export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container')
 	get showsContent(): boolean {
 		return this.level === 'major' && this.size === 'md';
 	}
-
-	private _warnedContent = false;
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
@@ -132,17 +133,8 @@ export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container')
 			else this.style.removeProperty('--_step-cell-marker-offset');
 			this.toggleAttribute('data-marker-offset', valid);
 			if (import.meta.env?.DEV && offset !== '' && !valid) {
-				console.warn(`<nldd-step-cell>: marker-offset="${offset}" is not a CSS length or percentage, so the dot falls back to vertical-alignment. Use a length such as "1rem" or a percentage such as "25%".`, this);
+				reportRule('step-cell-marker-offset-invalid', this, `marker-offset="${offset}"`);
 			}
-		}
-		if (!import.meta.env?.DEV) return;
-		const ignored = !this.showsContent && Boolean(this.text || this.icon);
-		if (ignored && !this._warnedContent) {
-			this._warnedContent = true;
-			console.warn('<nldd-step-cell>: `text` and `icon` only fit in a full dot on a wide track (`size="md"` with `level="major"`); they are not shown here.');
-		}
-		else if (!ignored) {
-			this._warnedContent = false;
 		}
 	}
 

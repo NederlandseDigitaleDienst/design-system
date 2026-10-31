@@ -10,6 +10,8 @@ import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
 import { translate } from '../../../utilities/translations.js';
+import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';
 
@@ -404,9 +406,6 @@ export class NLDDList extends LitElement {
 	override updated(changed: Map<string, unknown>) {
 		this._syncTranslatedTexts();
 		if (changed.has('reorderable') || changed.has('type')) {
-			if (this.reorderable && this.type !== 'list' && import.meta.env?.DEV) {
-				console.warn('nldd-list: `reorderable` is only valid when type="list". Ignoring.');
-			}
 			this._updateItems();
 			this._warnArrowNav();
 		}
@@ -613,16 +612,9 @@ export class NLDDList extends LitElement {
 		// it answers the question: warning about the empty slot there would ask for
 		// a second sentence nobody will ever read.
 		if (this._hasItems && this._hasNoResultsState) return;
-		const slot = this._hasItems ? '[slot="no-results"]' : '[slot="empty"]';
-		const what = this._hasItems
-			? 'every item hidden and nothing in ' + slot
-			: 'no items and nothing in ' + slot;
 		this._warnedSilentEmpty = true;
-		console.warn(
-			`nldd-list: ${what}, so the list renders a blank area. `
-			+ 'Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.',
-			this,
-		);
+		if (this._hasItems) reportRule('list-hidden-rows-need-no-results', this);
+		else reportRule('list-empty-needs-empty-slot', this);
 	}
 
 	private _warnedSilentEmpty = false;
@@ -845,8 +837,6 @@ export class NLDDList extends LitElement {
 
 	private _rovingScheduled = false;
 
-	private _warnedActionRowInForm = false;
-
 	/**
 	 * Whether the control the Escape came from had a popover open when the key
 	 * went down. Read on the way in, because a control closes its own menu in its
@@ -896,14 +886,6 @@ export class NLDDList extends LitElement {
 		// when AT reaches the list). See _arrowNavActive — known limitation.
 		// Only where the keys go somewhere: a list of nothing but text has no stops
 		// to move between, and promising keys that do nothing is worse than silence.
-		if (import.meta.env?.DEV && this.type === 'form' && !this._warnedActionRowInForm) {
-			const action = rows.find((row) => row.href || row.button || row.checkbox
-				|| row.querySelector(':scope > nldd-list-item-segment'));
-			if (action) {
-				this._warnedActionRowInForm = true;
-				console.warn('nldd-list: type="form" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments, which contradicts that. Use type="list" for rows you activate, and put the action in a cell if it belongs to a form row.');
-			}
-		}
 		if (interactive.length > 0) {
 			this.setAttribute('aria-keyshortcuts', 'ArrowUp ArrowDown Home End');
 			this.setAttribute('aria-description', this._t('components.list.arrow-navigation-description-text'));
@@ -1125,7 +1107,7 @@ export class NLDDList extends LitElement {
 	private _warnArrowNav() {
 		if (!import.meta.env?.DEV) return;
 		if (this.hasAttribute('arrow-navigation')) {
-			console.warn('nldd-list: `arrow-navigation` is the default now and the attribute does nothing; remove it.');
+			reportRule('list-arrow-navigation-removed', this);
 		}
 		this._warnUnmanagedControls();
 	}
@@ -1173,7 +1155,7 @@ export class NLDDList extends LitElement {
 					// needs a laid-out box and answers false until the first layout.
 					if (this._hiddenWithin(row, el)) continue;
 					this._warnedUnmanaged.add(el);
-					console.warn(`nldd-list: <${el.tagName.toLowerCase()}> in a list-item keeps its tab stop in its own shadow root and has no \`no-tab\`, so the row cannot take it out of the tab order and the arrow keys skip that row. If the rows of this list are not actions themselves, it is a form: set type="form" and the roving falls away. Otherwise give the component \`no-tab\`, or wrap the control in an nldd-list-item-segment.`);
+					reportRule('list-control-keeps-tab-stop', this, `<${el.tagName.toLowerCase()}>`);
 				}
 			}
 		};

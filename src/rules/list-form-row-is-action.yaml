@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-list[type="form"] > nldd-list-item'
+report: ':is([href], [button], [checkbox], :has(> nldd-list-item-segment))'
+message: 'type="form" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments. Use type="list" for rows you activate, and put the action in a cell if it belongs to a form row.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list type="form" accessible-label="Dossiers"><nldd-list-item><nldd-text-cell text="Dossier D-318"></nldd-text-cell></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list type="form" accessible-label="Dossiers"><nldd-list-item href="/d-318"><nldd-text-cell text="Dossier D-318"></nldd-text-cell></nldd-list-item></nldd-list>', '<nldd-list type="form" accessible-label="Dossiers"><nldd-list-item><nldd-list-item-segment button></nldd-list-item-segment></nldd-list-item></nldd-list>']
+  cantTell: ['<nldd-list type="form" accessible-label="Dossiers"><nldd-list-item :href="url"><nldd-text-cell text="Dossier D-318"></nldd-text-cell></nldd-list-item></nldd-list>']

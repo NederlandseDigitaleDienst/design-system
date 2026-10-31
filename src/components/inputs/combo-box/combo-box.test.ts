@@ -385,7 +385,8 @@ describe('nldd-combo-box – Popover API', () => {
 		el._openMenu();
 
 		expect(warnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('Popover API')
+			expect.stringContaining('Popover API'),
+			expect.anything(),
 		);
 
 		proto.showPopover = original;

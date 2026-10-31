@@ -36,6 +36,7 @@ import {
 } from './page-footer.template.js';
 import { nlddPageFooterTranslations, type NLDDPageFooterTranslations } from './page-footer.i18n.js';
 import { translate } from '../../../utilities/translations.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 
 // # nldd-page-footer-legal-bar-item
@@ -174,10 +175,7 @@ export class NLDDPageFooter extends LitElement {
 			// makes skip-links target the wrong instance. Check BEFORE
 			// setting this.id so we can't self-match.
 			if (import.meta.env?.DEV && document.getElementById('page-footer')) {
-				console.warn(
-					'<nldd-page-footer>: another element already has id="page-footer"; ' +
-					'set a unique id on this instance so skip-links target the right one.',
-				);
+				reportRule('page-footer-duplicate-id', this);
 			}
 			this.id = 'page-footer';
 		}

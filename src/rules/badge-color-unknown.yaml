@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-badge'
+message: 'This `color` does not exist and falls back to "accent". For a color of its own, use `custom-color`.'

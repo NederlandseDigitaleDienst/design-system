@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-skip-link'
+message: 'No rendered element follows the skip link, so it has nothing to move focus to. Put the content it skips to right after it, or point `href` at the id of the target.'

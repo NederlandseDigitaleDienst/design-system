@@ -227,7 +227,8 @@ describe('nldd-dropdown – accessibility', () => {
 		`);
 		await waitForUpdate(el);
 		expect(warnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('accessible name')
+			expect.stringContaining('accessible name'),
+			expect.anything(),
 		);
 	});
 

@@ -78,6 +78,7 @@ import { heroStyles } from './hero.styles.js';
 import { heroTemplate } from './hero.template.js';
 import { heroCornerStyles } from './hero-corner.styles.js';
 import { applyCorner, clearCornerLimits, limitCorner } from './hero-corner.js';
+import { reportRule } from '../../../../utilities/report-rule.js';
 
 export type HeroMainPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'left' | 'right';
 export type HeroMainWidth = 'auto' | 'full' | (string & {});
@@ -200,13 +201,13 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			else this.style.removeProperty('--_hero-main-width');
 			this.toggleAttribute('data-main-width-length', valid);
 			if (import.meta.env?.DEV && length && !valid) {
-				console.warn(`<nldd-hero>: main-width="${width}" is not "auto", "full" or a CSS width, and falls back to "auto", which follows the content between 480px and 640px.`, this);
+				reportRule('hero-main-width-invalid', this, `main-width="${width}"`);
 			}
 		}
 		if (import.meta.env?.DEV && changed.has('mainBackground')) {
 			const background = this.mainBackground as string;
 			if (background !== 'accent' && background !== 'base') {
-				console.warn(`<nldd-hero>: main-background="${background}" is not "accent" or "base", and falls back to "accent". A color per hero is gone: pick the color for the whole site with a theme, data-nldd-theme on <html>.`, this);
+				reportRule('hero-main-background-invalid', this, `main-background="${background}"`);
 			}
 		}
 		if (changed.has('overlapSize')) {
@@ -231,7 +232,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 			this.style.removeProperty('min-height');
 			if (import.meta.env?.DEV && !this._warnedHeight) {
 				this._warnedHeight = true;
-				console.warn('<nldd-hero>: `height` is not used on a hero, whose height comes from its image. Use `media-height` for a fixed height, or `media-aspect-ratio`.', this);
+				reportRule('hero-height-unused', this);
 			}
 		}
 		if (changed.has('mediaAspectRatio')) {
@@ -304,7 +305,7 @@ export class NLDDHero extends PageSectionMixin(LitElement) {
 		}
 		if (this._warnedOverlap) return;
 		this._warnedOverlap = true;
-		console.warn('<nldd-hero>: With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout="contained" to keep the panel on the image.', this);
+		reportRule('hero-overlap-panel-too-short', this);
 	}
 
 	/** @internal Tracks the media slot so the no-media mode can collapse it. */

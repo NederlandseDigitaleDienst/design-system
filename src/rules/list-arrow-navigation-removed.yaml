@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-list'
+message: '`arrow-navigation` is the default now and the attribute does nothing; remove it.'

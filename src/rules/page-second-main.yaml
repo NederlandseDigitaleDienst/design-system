@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-page'
+message: 'A second page renders a main landmark, which a document may have only one of. Leave `landmarks` at "auto" on pages in a pane or an overlay, or set landmarks="region" on the ones that are not the document''s page.'

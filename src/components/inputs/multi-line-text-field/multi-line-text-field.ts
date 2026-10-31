@@ -35,6 +35,8 @@ import { multiLineTextFieldStyles } from './multi-line-text-field.styles.js';
 import { multiLineTextFieldTemplate } from './multi-line-text-field.template.js';
 import type { Keyboard, EnterKey } from '../text-field/text-field.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 
@@ -63,7 +65,7 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 	@property({ type: String })
 	value = '';
 
-	@property({ type: String, attribute: 'input-id' })
+	@property({ type: String, attribute: 'input-id', reflect: true, converter: reflectWhenSet })
 	inputId = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -105,7 +107,7 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 	resize: ResizeMode = 'auto';
 
 	/** Accessible label forwarded to the inner <textarea>. Set automatically by nldd-form-field. */
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 
@@ -131,9 +133,6 @@ export class NLDDMultiLineTextField extends DescribedBy(FormAssociated(LitElemen
 
 	override firstUpdated(): void {
 		this._initialValue = this.value;
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this.inputId) {
-			console.warn('<nldd-multi-line-text-field>: No accessible-label or input-id provided. Use nldd-form-field for labeled usage, or set accessible-label for screen reader accessibility.');
-		}
 	}
 
 	override updated(changed: PropertyValues): void {

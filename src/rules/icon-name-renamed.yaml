@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-icon'
+message: 'The `name` attribute is now `icon`. Rename it here and on every other nldd-icon.'

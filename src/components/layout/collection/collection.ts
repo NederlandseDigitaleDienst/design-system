@@ -62,6 +62,7 @@ import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import { spacingToValue, type SpacingSize } from '../../../utilities/spacing-scale.js';
 import { translate } from '../../../utilities/translations.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 type Layout = 'grid' | 'stack' | 'lanes' | 'horizontal-scroll';
 
@@ -198,7 +199,7 @@ export class NLDDCollection extends LitElement {
 		super.attributeChangedCallback(name, old, value);
 		if (import.meta.env?.DEV && name === 'item-width' && value !== null && !warnedAboutItemWidth) {
 			warnedAboutItemWidth = true;
-			console.warn(`<nldd-collection>: the item-width attribute is now item-min-width. Rename item-width="${value}" to item-min-width="${value}", here and on every other nldd-collection.`, this);
+			reportRule('collection-item-width-renamed', this, `item-width="${value}"`);
 		}
 	}
 

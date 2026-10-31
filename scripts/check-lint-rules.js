@@ -53,6 +53,15 @@ function checkTokens(tokens, ruleId) {
 	}
 }
 
+function sourceFiles(directory) {
+	return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+		const path = join(directory, entry.name);
+		if (entry.isDirectory()) return sourceFiles(path);
+		const skip = /\.(test|stories)\.ts$|(dev-checks|report-rule)\.ts$/;
+		return entry.name.endsWith('.ts') && !skip.test(entry.name) ? [path] : [];
+	});
+}
+
 function selectorsOf(rule) {
 	return [rule.context, rule.assert, rule.report, rule.count?.of, rule.ref?.target].filter(Boolean);
 }
@@ -103,7 +112,32 @@ async function checkPatterns() {
 	return files.length;
 }
 
+const componentSources = sourceFiles(join(repoRoot, 'src'))
+	.map((file) => [file, readFileSync(file, 'utf8')]);
+
+function checkReported(rule) {
+	const call = `reportRule('${rule.id}'`;
+	if (!componentSources.some(([, source]) => source.includes(call))) {
+		problems.push(`${rule.id}: runtime rule, but no component calls ${call}.`);
+	}
+}
+
+/** Text in a component is a second source. The only output left there is a real failure. */
+function checkNoWarnings() {
+	for (const [file, source] of componentSources) {
+		for (const match of source.matchAll(/console\.warn\(/g)) {
+			const line = source.slice(0, match.index).split('\n').length;
+			problems.push(`${relative(repoRoot, file)}:${line}: use a rule, not console.warn. See /rule.`);
+		}
+	}
+}
+
 for (const rule of data.rules) {
+	if (rule.runtime) {
+		checkSee(rule);
+		checkReported(rule);
+		continue;
+	}
 	for (const selector of selectorsOf(rule)) {
 		for (const tokens of parse(selector)) checkTokens(tokens, rule.id);
 	}
@@ -112,6 +146,7 @@ for (const rule of data.rules) {
 	await checkExamples(rule);
 }
 const patterns = await checkPatterns();
+checkNoWarnings();
 
 if (problems.length > 0) {
 	console.error(problems.join('\n'));

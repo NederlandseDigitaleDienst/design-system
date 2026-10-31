@@ -49,6 +49,7 @@ import { nlddProgressBarTranslations } from './progress-bar.i18n.js';
 import type { NLDDProgressBarTranslations } from './progress-bar.i18n.js';
 import '../../content/tooltip/tooltip.js';
 import { translate } from '../../../utilities/translations.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /** Indeterminate ↔ determinate crossfade duration. Must stay in sync with
  *  --primitives-transition-duration-slow used by the matching CSS animations
@@ -371,10 +372,7 @@ export class NLDDProgressBar extends LitElement {
 		const denominator = total > this.max ? total : this.max;
 
 		if (import.meta.env?.DEV && total > this.max && this._hasSegmentIndicators) {
-			console.warn(
-				`[nldd-progress-bar] Sum of segment values (${total}) exceeds max (${this.max}). ` +
-				'Segments are normalized proportionally.',
-			);
+			reportRule('progress-bar-segments-exceed-max', this, `sum ${total}, max ${this.max}`);
 		}
 
 		// Unified path for slotted and internal segment-indicators. The internal

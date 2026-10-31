@@ -94,6 +94,7 @@ import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/button/button.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /** The arrival keyframes: from the right, and from the top on a small screen. */
 const ARRIVALS = new Set(['notification-arrive', 'notification-arrive-from-top']);
@@ -328,12 +329,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 	_onActionsSlotChange = (e: Event): void => {
 		const assigned = (e.target as HTMLSlotElement).assignedElements();
 		this._hasActions = assigned.length > 0;
-		if (import.meta.env?.DEV && assigned.length > 2) {
-			console.warn(
-				'[nldd-notification] at most 2 actions: a message that needs three choices '
-				+ 'is a decision, and a decision belongs in a dialog that waits for it.',
-			);
-		}
+		if (import.meta.env?.DEV && assigned.length > 2) reportRule('notification-at-most-two-actions', this);
 	};
 
 	/** A move rather than an enter. A notification arrives at a fixed spot on the

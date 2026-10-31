@@ -64,6 +64,8 @@ import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 export type SegmentedControlAppearance = 'neutral-tinted' | 'neutral-base';
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
@@ -312,7 +314,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	private _warnedRequired = false;
 
 	static override styles = segmentedControlStyles;
 
@@ -365,11 +366,11 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	name = '';
 
 	/** Accessible name for the group (aria-label). */
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	/** ID of an external label element (aria-labelledby). */
-	@property({ type: String, attribute: 'accessible-labeled-by' })
+	@property({ type: String, attribute: 'accessible-labeled-by', reflect: true, converter: reflectWhenSet })
 	accessibleLabeledBy = '';
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
@@ -396,9 +397,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		this._syncItems();
 		this._initialValue = this.value;
 		this._initialValues = [...this.values];
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this.accessibleLabeledBy) {
-			console.warn('<nldd-segmented-control>: No accessible name provided. Add an accessible-label or accessible-labeled-by attribute for screen reader accessibility.');
-		}
 	}
 
 	override formValue(): FormValue {
@@ -504,15 +502,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		// Announced, not drawn. See the note on `invalid`.
 		if (this.invalid) this.setAttribute('aria-invalid', 'true');
 		else this.removeAttribute('aria-invalid');
-
-		if (import.meta.env?.DEV && this.required && this.type === 'checkbox' && !this._warnedRequired) {
-			this._warnedRequired = true;
-			console.warn(
-				`<${this.localName}>: \`required\` on a checkbox group is announced but not enforced. `
-				+ 'HTML has no way to say "at least one of these", so the form still submits with nothing '
-				+ 'selected. Check it yourself on submit, or use radio mode.',
-			);
-		}
 
 		const selectedValues = this._getSelectedValues();
 

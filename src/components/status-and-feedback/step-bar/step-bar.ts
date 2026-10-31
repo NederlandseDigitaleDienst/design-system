@@ -56,6 +56,8 @@ import { stepBarStyles, stepBarItemStyles } from './step-bar.styles.js';
 import { stepBarTemplate, stepBarItemTemplate } from './step-bar.template.js';
 import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import '../../content/icon/icon.js';
+import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /** The same three names as nldd-step-cell, so one flow reads in a
  *  single vocabulary whether it runs horizontally or vertically. */
@@ -189,8 +191,6 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 	 *  element: the derived statuses and the compact view follow it. */
 	private _observer = new MutationObserver(() => this.requestUpdate());
 
-	private _warnedMultipleCurrent = false;
-
 	/** Whether the compact view shows: the same width the container query in
 	 *  the styles compares. */
 	@state()
@@ -216,7 +216,7 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 	override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
 		super.attributeChangedCallback(name, old, value);
 		if (import.meta.env?.DEV && name === 'current' && value !== null) {
-			console.warn('<nldd-step-bar>: `current` moved to the step. Set `status="current"` on the current `nldd-step-bar-item` instead.');
+			reportRule('step-bar-current-moved', this);
 		}
 	}
 
@@ -240,16 +240,6 @@ export class NLDDStepBar extends withTranslations<NLDDStepBarTranslations>(
 		// willUpdate; without this call the override is silently ignored.
 		super.willUpdate(changed);
 		this._syncItems();
-		this._warnOnMultipleCurrent();
-	}
-
-	private _warnOnMultipleCurrent(): void {
-		if (!import.meta.env?.DEV) return;
-		const multiple = this._items.filter(item => item.status === 'current').length > 1;
-		if (multiple && !this._warnedMultipleCurrent) {
-			console.warn('<nldd-step-bar>: more than one step has `status="current"`; the last one wins. Mark only the step you are on.');
-		}
-		this._warnedMultipleCurrent = multiple;
 	}
 
 	/** Push position, derived status and status text down to the children. Push

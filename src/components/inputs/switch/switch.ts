@@ -31,6 +31,8 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { switchStyles } from './switch.styles.js';
 import { switchTemplate } from './switch.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 export type SwitchSize = 'xs' | 'sm';
 
@@ -67,7 +69,7 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	color: '' | 'inherit' = '';
 
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	@property({ type: String })
@@ -93,9 +95,6 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	invalid = false;
 
 	override firstUpdated(): void {
-		if (import.meta.env?.DEV && !this.accessibleLabel) {
-			console.warn('<nldd-switch>: No accessible-label provided. Use nldd-switch-field for labeled usage, or provide an accessible-label attribute for screen reader accessibility.');
-		}
 		this._initialChecked = this.checked;
 	}
 

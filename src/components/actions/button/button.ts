@@ -56,6 +56,7 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 type Appearance =
 	| 'primary'
@@ -330,9 +331,8 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 		// does not exist either, and that one has to be said as well.
 		if (import.meta.env?.DEV && this._warnedFormId !== id) {
 			this._warnedFormId = id;
-			console.warn(target
-				? `<nldd-button form="${id}">: that id is an <${target.tagName.toLowerCase()}> without a form, so this button submits nothing. An nldd-form only has one once it has rendered.`
-				: `<nldd-button form="${id}">: nothing in this root has that id, so this button submits nothing.`);
+			if (target) reportRule('button-form-id-not-a-form', this, `form="${id}", <${target.tagName.toLowerCase()}>`);
+			else reportRule('button-form-id-not-found', this, `form="${id}"`);
 		}
 		return null;
 	}

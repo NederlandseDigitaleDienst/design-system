@@ -187,11 +187,11 @@ describe('nldd-avatar-group', () => {
 			</nldd-avatar-group>
 		`);
 		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([m]) => String(m).includes('<nldd-avatar-group size="28">'))).toBe(true);
+		expect(warn.mock.calls.some(([m]) => String(m).includes('avatar-group-target-too-small') && String(m).includes('size="28"'))).toBe(true);
 		warn.mockClear();
 		(el as HTMLElement).setAttribute('size', '32');
 		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([m]) => String(m).includes('nldd-avatar-group'))).toBe(false);
+		expect(warn.mock.calls.some(([m]) => String(m).includes('avatar-group-target-too-small'))).toBe(false);
 		warn.mockRestore();
 	});
 

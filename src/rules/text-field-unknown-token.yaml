@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-text-field'
+message: 'This is not a value the browser knows, so it is dropped silently and the field falls back to the default keyboard.'

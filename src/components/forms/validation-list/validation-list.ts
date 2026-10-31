@@ -63,6 +63,7 @@ import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { validationListStyles, validationItemStyles } from './validation-list.styles.js';
 import { validationListTemplate, validationItemTemplate } from './validation-list.template.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /** A control that can report its own validity to the form. */
 interface ValidatableControl extends Element {
@@ -342,11 +343,7 @@ export class NLDDValidationList extends LitElement {
 			const failing = rule === null ? named.includes(item.id) : !rule;
 
 			if (import.meta.env?.DEV && rule !== null && named.includes(item.id)) {
-				console.warn(
-					`<nldd-validation-list>: item "${item.id}" has a rule of its own and is also named in \`unmet\`. `
-					+ 'The rule decides, and the name is ignored: it is a snapshot of the previous check and cannot be newer '
-					+ 'than the value. Drop it from `unmet`, or take the rule off the item.',
-				);
+				reportRule('validation-item-rule-and-unmet', this, `item "${item.id}"`);
 			}
 
 			item.unmet = invalid && failing;

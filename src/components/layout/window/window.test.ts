@@ -489,7 +489,7 @@ describe('nldd-window – accessible name', () => {
 		await waitForUpdate(el);
 		el.show();
 		expect(label(el)).toBe('Venster');
-		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(true);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('window-needs-name'))).toBe(true);
 	});
 
 	it('does not warn when its title bar names it', async () => {
@@ -497,7 +497,7 @@ describe('nldd-window – accessible name', () => {
 		el = await fixture<NLDDWindow>(withBar('', 'Filters'));
 		await waitForUpdate(el);
 		el.show();
-		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(false);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('window-needs-name'))).toBe(false);
 	});
 });
 

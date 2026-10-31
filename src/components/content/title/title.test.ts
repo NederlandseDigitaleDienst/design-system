@@ -285,7 +285,7 @@ describe('nldd-title – custom-size', () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await title('lg-custom-size="huge"');
 		expect(el.hasAttribute('data-lg-custom-size')).toBe(false);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('"huge" is not a size the title can use'))).toBe(true);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('title-custom-size-invalid') && String(call[0]).includes('"huge"'))).toBe(true);
 	});
 
 	it('takes no size keyword, which cannot go inside the floor', async () => {
@@ -296,7 +296,7 @@ describe('nldd-title – custom-size', () => {
 			cleanup(el);
 		}
 		el = undefined as unknown as HTMLElement;
-		expect(warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('is not a size the title can use'))).toHaveLength(3);
+		expect(warn.mock.calls.filter((call: unknown[]) => String(call[0]).includes('title-custom-size-invalid'))).toHaveLength(3);
 	});
 
 	it('takes a percentage or em and still keeps the size 1 floor', async () => {

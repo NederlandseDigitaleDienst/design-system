@@ -24,6 +24,8 @@ import { radioButtonGroupTemplate } from './radio-button-group.template.js';
 import type { NLDDRadioButtonField } from '../radio-button-field/radio-button-field.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { radioPositions } from '../../../utilities/radio-position.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 @customElement('nldd-radio-button-group')
 export class NLDDRadioButtonGroup extends LitElement {
@@ -43,10 +45,10 @@ export class NLDDRadioButtonGroup extends LitElement {
 	required = false;
 
 	/** Accessible name forwarded as aria-label to the group host. */
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
-	@property({ type: String, attribute: 'accessible-labeled-by' })
+	@property({ type: String, attribute: 'accessible-labeled-by', reflect: true, converter: reflectWhenSet })
 	accessibleLabeledBy = '';
 
 	/** The name this group wrote onto its host, so it only takes back its own. */
@@ -76,12 +78,6 @@ export class NLDDRadioButtonGroup extends LitElement {
 		super.disconnectedCallback();
 		this.removeEventListener('keydown', this._handleKeyDown);
 		this.removeEventListener('change', this._handleChange);
-	}
-
-	override firstUpdated(): void {
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this.accessibleLabeledBy) {
-			console.warn('<nldd-radio-button-group>: No accessible name provided. Add an accessible-label or accessible-labeled-by attribute for screen reader accessibility.');
-		}
 	}
 
 	override updated(changed: Map<PropertyKey, unknown>): void {

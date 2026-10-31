@@ -51,8 +51,7 @@ describe('nldd-step-bar', () => {
 		expect(items().map(item => item.resolvedStatus)).toEqual(['current', 'future']);
 	});
 
-	it('laat de laatste stap met status="current" winnen en waarschuwt', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('laat de laatste stap met status="current" winnen', async () => {
 		el = await fixture<NLDDStepBar>(`
 			<nldd-step-bar>
 				<nldd-step-bar-item text="Een" status="current"></nldd-step-bar-item>
@@ -62,8 +61,6 @@ describe('nldd-step-bar', () => {
 		`);
 		await waitForUpdate(el);
 		expect(items().map(item => item.resolvedStatus)).toEqual(['past', 'current', 'future']);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('the last one wins'));
-		warn.mockRestore();
 	});
 
 	it('waarschuwt als current nog op de ouder staat', async () => {
@@ -75,7 +72,7 @@ describe('nldd-step-bar', () => {
 			</nldd-step-bar>
 		`);
 		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('moved to the step'));
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('moved to the step'), expect.anything());
 		expect(items().map(item => item.resolvedStatus)).toEqual(['current', 'future']);
 		warn.mockRestore();
 	});
@@ -86,7 +83,7 @@ describe('nldd-step-bar', () => {
 		await waitForUpdate(el);
 		expect(warn).not.toHaveBeenCalled();
 		el.setAttribute('current', '3');
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('status="current"'));
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('status="current"'), expect.anything());
 		warn.mockRestore();
 	});
 

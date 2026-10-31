@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-step-bar'
+message: '`current` moved to the step. Set `status="current"` on the current nldd-step-bar-item instead.'

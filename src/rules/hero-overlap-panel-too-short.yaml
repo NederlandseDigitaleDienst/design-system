@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-hero'
+message: 'With layout="overlap" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout="contained" to keep the panel on the image.'

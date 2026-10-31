@@ -34,6 +34,7 @@ import { template } from './badge.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddBadgeTranslations } from './badge.i18n.js';
 import './../../content/icon/icon.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 type Color = 'critical' | 'accent' | 'neutral' | 'warning' | 'success' | 'inherit';
 const COLORS: ReadonlySet<string> = new Set<Color>(['critical', 'accent', 'neutral', 'warning', 'success', 'inherit']);
@@ -83,7 +84,7 @@ export class NLDDBadge extends withTranslations(LitElement, nlddBadgeTranslation
 		const known = COLORS.has(this.color);
 		this.toggleAttribute('data-color-fallback', !known);
 		if (import.meta.env?.DEV && !known) {
-			console.warn(`<nldd-badge>: color="${this.color}" is not one of ${[...COLORS].join(', ')}, and falls back to "accent". For a color of its own, use custom-color.`, this);
+			reportRule('badge-color-unknown', this, `color="${this.color}"; use one of: ${[...COLORS].join(', ')}`);
 		}
 	}
 

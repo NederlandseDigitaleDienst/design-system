@@ -78,6 +78,7 @@ import { nlddImageTranslations } from './image.i18n.js';
 import type { NLDDImageTranslations } from './image.i18n.js';
 import '../icon/icon.js';
 import { translate } from '../../../utilities/translations.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type ImageShape = 'square' | 'rounded' | 'circle';
 export type ImageObjectFit = 'cover' | 'contain' | 'fill' | 'scale-down' | 'none';
@@ -249,7 +250,7 @@ export class NLDDImage extends LitElement {
 		if (Number.isFinite(n) && n > 0) return n;
 		if (import.meta.env?.DEV && this.width !== null && this.width !== undefined && String(this.width) !== '' && !this._warnedWidth) {
 			this._warnedWidth = true;
-			console.warn(`<nldd-image>: width="${this.width}" is not a positive number. Falling back to "full".`);
+			reportRule('image-width-invalid', this, `width="${this.width}"`);
 		}
 		return undefined;
 	}
@@ -318,12 +319,8 @@ export class NLDDImage extends LitElement {
 		}
 		if (this._warnedAlt) return;
 		this._warnedAlt = true;
-		console.warn(
-			slotted.length > 0
-				? '<nldd-image>: The slotted image has no text alternative. Give the `<img>` an `alt` (empty when the image conveys no information), or give the `<svg>` `role="img"` and an `aria-label`, `aria-labelledby` or `<title>`.'
-				: '<nldd-image>: Non-decorative images need a non-empty `alt`. Set `decorative` if the image conveys no information.',
-			this,
-		);
+		if (slotted.length > 0) reportRule('image-slotted-needs-alternative', this);
+		else reportRule('image-needs-alt', this);
 	}
 
 	/** DEV-only "missing alt" warning latch; see _warnMissingAlt(). */

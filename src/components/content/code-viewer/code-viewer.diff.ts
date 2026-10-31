@@ -1,5 +1,6 @@
 import { Decoration, EditorView, GutterMarker, WidgetType, gutter, gutterLineClass, type BlockInfo } from '@codemirror/view';
 import { RangeSet, type Extension, type Range } from '@codemirror/state';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /* A unified diff, as git and every pull request tool hand it out, shown as the
  * code it changes: each line without its +, - or space, two columns with the
@@ -100,7 +101,7 @@ export function parseUnifiedDiff(raw: string): ParsedDiff {
 		hunk = null;
 	}
 	if (dropped > 0 && import.meta.env?.DEV) {
-		console.warn(`<nldd-code-viewer>: ${dropped} line(s) of the diff fall outside the line counts of their @@ header and are not shown. Check the counts in the hunk headers.`);
+		reportRule('code-viewer-diff-lines-dropped', undefined, `${dropped} line(s)`);
 	}
 	return { doc: lines.map((line) => line.text).join('\n'), lines, added, removed };
 }

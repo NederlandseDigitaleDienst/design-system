@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-list-item'
+message: '`expanded` needs somewhere to live: make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.'

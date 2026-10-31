@@ -35,6 +35,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { textFieldStyles } from './text-field.styles.js';
 import { textFieldTemplate } from './text-field.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type InputType = 'text' | 'email' | 'tel' | 'url';
 
@@ -174,7 +175,7 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  back to the default keyboard. */
 	private _warnUnknownToken(attribute: string, value: string | undefined, allowed: readonly string[]): void {
 		if (!import.meta.env?.DEV || !value || allowed.includes(value)) return;
-		console.warn(`<nldd-text-field>: ${attribute}="${value}" is not a value the browser knows. Use one of: ${allowed.join(', ')}.`);
+		reportRule('text-field-unknown-token', this, `${attribute}="${value}"; use one of: ${allowed.join(', ')}`);
 	}
 
 	/** A `type` other than text already asks for its own keyboard. Overriding it
@@ -185,7 +186,7 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 		const contradicts = !!this.keyboard && !!implied && this.keyboard !== implied;
 		if (import.meta.env?.DEV && contradicts && !this._warnedKeyboard) {
 			this._warnedKeyboard = true;
-			console.warn(`<nldd-text-field>: keyboard="${this.keyboard}" contradicts type="${this.type}", which already raises the ${implied} keyboard. Drop one of the two.`);
+			reportRule('text-field-keyboard-contradicts-type', this, `keyboard="${this.keyboard}", type="${this.type}"`);
 		} else if (!contradicts) {
 			this._warnedKeyboard = false;
 		}

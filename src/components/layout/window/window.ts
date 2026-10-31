@@ -49,6 +49,7 @@ import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { translate } from '../../../utilities/translations.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type NLDDWindowScheme = 'inherit' | 'light' | 'dark';
 
@@ -180,7 +181,7 @@ export class NLDDWindow extends LitElement {
 
 		if (import.meta.env?.DEV && !this.accessibleLabel && !this._titleBar.text && !this._hasWarnedLabel) {
 			this._hasWarnedLabel = true;
-			console.warn(`<nldd-window>: No accessible-label and no nldd-top-title-bar with text inside. Screen readers will announce this window as "${this._t('components.window.accessible-label')}". Give the title bar a text, or set accessible-label.`);
+			reportRule('window-needs-name', this);
 		}
 
 		dialog.showModal();

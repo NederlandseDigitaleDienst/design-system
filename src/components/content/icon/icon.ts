@@ -5,6 +5,7 @@ import { iconStyles } from './icon.styles.js';
 import { template } from './icon.template.js';
 import { aliases } from './icon-aliases.js';
 import { iconRegistry } from './icon-registry.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export { aliases };
 
@@ -123,7 +124,7 @@ export class NLDDIcon extends LitElement {
 		// without this the only sign of a missed rename is a dashed circle.
 		if (import.meta.env?.DEV && this.hasAttribute('name') && !warnedAboutName) {
 			warnedAboutName = true;
-			console.warn(`NLDDIcon: the name attribute is now icon. Rename name="${this.getAttribute('name')}" to icon="${this.getAttribute('name')}", here and on every other nldd-icon.`);
+			reportRule('icon-name-renamed', this, `name="${this.getAttribute('name')}"`);
 		}
 		this._iconSvg = this._loadIcon(this.icon);
 	}
@@ -146,7 +147,7 @@ export class NLDDIcon extends LitElement {
 			return svg;
 		}
 
-		if (import.meta.env?.DEV) console.warn(`NLDDIcon: icon "${resolvedName}" not found`);
+		if (import.meta.env?.DEV) reportRule('icon-not-found', this, resolvedName);
 		return null;
 	}
 

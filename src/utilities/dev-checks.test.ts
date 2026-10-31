@@ -19,7 +19,7 @@ describe('rules in the browser', () => {
 	afterEach(() => root?.remove());
 
 	for (const rule of devRules) {
-		const { examples } = data.rules.find(({ id }) => id === rule.id)!;
+		const examples = data.rules.find(({ id }) => id === rule.id)!.examples!;
 
 		it(`${rule.id} agrees with its examples`, async () => {
 			for (const example of examples.passed) {

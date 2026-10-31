@@ -54,6 +54,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { topTitleBarStyles } from './top-title-bar.styles.js';
 import { topTitleBarTemplate } from './top-title-bar.template.js';
 import type { NLDDPage } from '../../layout/page/page.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -164,10 +165,7 @@ export class NLDDTopTitleBar extends LitElement {
 
 		if (!this._anchorElement) {
 			if (import.meta.env?.DEV) {
-				console.warn(
-					`[nldd-top-title-bar] collapse-anchor="${this.collapseAnchor}" matches nothing yet. `
-					+ 'If it never renders, the bar keeps its own title and reads it out twice.',
-				);
+				reportRule('top-title-bar-anchor-missing', this, `collapse-anchor="${this.collapseAnchor}"`);
 			}
 			this._waitForAnchor(root);
 			return;

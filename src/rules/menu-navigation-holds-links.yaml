@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-menu[variant="navigation"] nldd-menu-item'
+report: ':is([type]:not([type="button"]), [shortcut])'
+message: 'variant="navigation" is a list of links. A checkbox or radio item, or a shortcut, belongs to an action menu and has no role to live in here. Use the default variant for actions.'
+examples:
+  passed: ['<nldd-menu variant="navigation"><nldd-menu-item text="Dossiers" href="/dossiers"></nldd-menu-item></nldd-menu>', '<nldd-menu><nldd-menu-item text="Vet" type="checkbox"></nldd-menu-item></nldd-menu>']
+  failed: ['<nldd-menu variant="navigation"><nldd-menu-item text="Vet" type="checkbox"></nldd-menu-item></nldd-menu>', '<nldd-menu variant="navigation"><nldd-menu-item text="Bewaar" shortcut="Mod+S"></nldd-menu-item></nldd-menu>']
+  cantTell: ['<nldd-menu variant="navigation"><nldd-menu-item text="Bewaar" :shortcut="toets"></nldd-menu-item></nldd-menu>']

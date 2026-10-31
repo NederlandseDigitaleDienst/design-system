@@ -13,6 +13,8 @@
  * attribute on that element.
  */
 
+import { reportRule } from './report-rule.js';
+
 type Translations = Record<string, string>;
 
 interface Store {
@@ -85,7 +87,7 @@ function warnUnknownKeys(translations: Translations): void {
 	import('../translations/nl.generated.js').then(({ nl }) => {
 		const unknown = Object.keys(translations).filter((key) => !(key in nl));
 		if (unknown.length) {
-			console.warn(`setTranslations: no component knows ${unknown.length === 1 ? 'this key, so it does' : 'these keys, so they do'} nothing: ${unknown.join(', ')}`);
+			reportRule('translation-key-unknown', undefined, unknown.join(', '));
 		}
 	}).catch(() => {});
 }

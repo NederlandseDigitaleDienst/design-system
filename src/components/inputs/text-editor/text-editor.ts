@@ -142,6 +142,7 @@ import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './t
 import { translate } from '../../../utilities/translations.js';
 import { tasks } from './text-editor.tasks.js';
 import { codeCopy } from './text-editor.code-copy.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 export type TextEditorAppearance = 'input-field' | 'simple';
@@ -678,7 +679,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			case 'copy': void this.copy(); break;
 			case 'cut': void this.cut(); break;
 			case 'paste': void this.paste(); break;
-			default: console.warn(`<nldd-text-editor>: runCommand('${name}') is not a command.`);
+			default: reportRule('text-editor-unknown-command', this, name);
 		}
 	}
 

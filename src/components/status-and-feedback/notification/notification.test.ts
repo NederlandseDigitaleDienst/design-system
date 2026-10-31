@@ -226,7 +226,7 @@ describe('nldd-notification', () => {
 				<button slot="actions">3</button>
 			</nldd-notification>
 		`);
-		expect(warn).toHaveBeenCalled();
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('notification-at-most-two-actions'), expect.anything());
 		warn.mockRestore();
 	});
 });

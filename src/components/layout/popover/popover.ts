@@ -69,6 +69,7 @@ import { translate } from '../../../utilities/translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
 import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -217,11 +218,7 @@ export class NLDDPopover extends LitElement {
 		if (changed.has('width')) {
 			const contentSized = NLDDPopover.CONTENT_WIDTHS.test((this.width ?? '').trim());
 			if (contentSized && import.meta.env?.DEV) {
-				console.warn(
-					`[nldd-popover] width="${this.width}" is not supported and is ignored: `
-					+ 'the popover is an inline-size query container, so its width cannot come '
-					+ 'from its own content. Give it a CSS length instead.',
-				);
+				reportRule('popover-width-content-sized', this, `width="${this.width}"`);
 			}
 			if (this.width && !contentSized) {
 				this.style.setProperty('--_popover-default-width', this.width);
@@ -268,7 +265,7 @@ export class NLDDPopover extends LitElement {
 	show(): void {
 		const anchorEl = this._getAnchorEl();
 		if (!anchorEl) {
-			if (import.meta.env?.DEV) console.warn('<nldd-popover>: anchor element not found. Set anchor=ID or anchorElement before calling show().');
+			if (import.meta.env?.DEV) reportRule('popover-anchor-not-found', this);
 			return;
 		}
 		(this as HTMLElement).showPopover();

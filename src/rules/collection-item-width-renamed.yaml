@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-collection'
+message: 'The `item-width` attribute is now `item-min-width`. Rename it here and on every other nldd-collection.'

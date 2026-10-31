@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-top-title-bar'
+message: '`collapse-anchor` matches nothing yet. If it never renders, the bar keeps its own title and reads it out twice.'

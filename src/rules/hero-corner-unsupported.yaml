@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-hero'
+message: '`corner` only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. Change what follows, or drop the corner.'

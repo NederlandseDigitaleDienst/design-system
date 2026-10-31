@@ -37,6 +37,7 @@ function explain(data, id) {
 	}
 	const lines = [`${rule.id}  (${rule.severity})`, '', rule.message];
 	if (rule.see) lines.push('', `Why: ${rule.see}`);
+	if (rule.runtime) lines.push('', 'The component reports this itself, in the browser while developing.');
 	if (rule.examples) {
 		lines.push('', 'Fine:', ...rule.examples.passed.map((example) => `  ${example}`));
 		lines.push('', 'Wrong:', ...rule.examples.failed.map((example) => `  ${example}`));

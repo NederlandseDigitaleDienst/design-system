@@ -180,7 +180,7 @@ Dezelfde regels draaien op drie plekken:
 | Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Daarom leest de linter geen `.astro` of Jinja |
 | Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen |
 
-De browser krijgt ze als gewone CSS in `src/utilities/dev-rules.generated.ts` en evalueert ze met `el.matches()`. Een `console.warn` in een component is alleen voor wat geen regel kan zijn, zoals bare tekst of een meting. Een nieuw attribuut in een selector moet reflecteren, anders ziet de browser een property niet: gebruik `reflect: true` met `converter: reflectWhenSet`; `lint:rules` bewaakt dat. Een `[x]` in een selector betekent "heeft een waarde", behalve bij booleans.
+De browser krijgt ze als gewone CSS in `src/utilities/dev-rules.generated.ts` en evalueert ze met `el.matches()`. Een component bevat geen meldingstekst: `lint:rules` faalt op `console.warn`. Wat geen selector kan zien, meldt het component met `reportRule(id, this)`, en de tekst staat in de regel. Een nieuw attribuut in een selector moet reflecteren, anders ziet de browser een property niet: gebruik `reflect: true` met `converter: reflectWhenSet`; `lint:rules` bewaakt dat. Een `[x]` in een selector betekent "heeft een waarde", behalve bij booleans.
 
 De linter hoort bij zijn eigen versie: hij zit in het pakket, dus een project draait de API die het heeft. Met `npx @nldd/design-system@latest lint` zie je wat een upgrade breekt.
 
@@ -195,7 +195,7 @@ Eén regel, één bestand in `src/rules/`, ook als hij over meer componenten gaa
 
 `message` zegt wat hier fout is, in het Engels, zoals een compilerfout. Het waarom staat op de pagina waar `see` naar wijst en wordt niet overgeschreven.
 
-Een regel komt erbij met een echte vondst. Hij heeft een `passed`- en `failed`-voorbeeld, en `npm run lint:rules` faalt als een voorbeeld niet doet wat het claimt, als een selector iets noemt dat niet bestaat, of als een patroon-`.html` de regel breekt. Zo faalt een hernoeming in dezelfde PR. Controleer met `npm run lint:corpus` wat een regel in echte apps doet; de paden komen uit `NLDD_LINT_CORPUS`, zodat er geen lokale paden in de repo belanden. Nieuwe regels komen als `warn`, want `feat:` is een patch en `^0.13.0` neemt die mee: een nieuwe `error` zou CI van consumers ongevraagd rood maken. `error` alleen via een `!`-commit.
+Een regel komt erbij met een echte vondst. Hij heeft een `passed`- en `failed`-voorbeeld, en `npm run lint:rules` faalt als een voorbeeld niet doet wat het claimt, als een selector iets noemt dat niet bestaat, of als een patroon-`.html` de regel breekt. Zo faalt een hernoeming in dezelfde PR. Controleer met `npm run lint:corpus` wat een regel in echte apps doet; de paden komen uit `NLDD_LINT_CORPUS`, zodat er geen lokale paden in de repo belanden. Nieuwe regels komen als `warn`, want `feat:` is een patch en `^0.13.0` neemt die mee: een nieuwe `error` zou CI van consumers ongevraagd rood maken. `error` alleen via een `!`-commit. De regels uit de eerste release zijn hierop de uitzondering, omdat er toen nog geen CI van consumers op draaide.
 
 Elke regel draait in twee werelden: in W+ valt alles wat onbekend is gunstig uit, in W- ongunstig. Geschonden in beide is `failed`, en alleen dat wordt gemeld. Een gebonden waarde of een kindcomponent uit een ander bestand is dus `cantTell` en nooit vals alarm. Hele pagina's zie je alleen op gebouwde HTML of in de browser.
 

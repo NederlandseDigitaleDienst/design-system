@@ -1,0 +1,9 @@
+severity: error
+context: 'nldd-switch'
+assert: '[accessible-label], nldd-form-field[label] *'
+message: 'nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.'
+see: patronen/form
+examples:
+  passed: ['<nldd-switch accessible-label="Meldingen"></nldd-switch>', '<nldd-form-field label="Meldingen"><nldd-switch></nldd-switch></nldd-form-field>']
+  failed: ['<html><body><nldd-switch></nldd-switch></body></html>']
+  cantTell: ['<nldd-switch></nldd-switch>']

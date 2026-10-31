@@ -65,6 +65,7 @@ import { findScrollModeProvider, whenScrollModeProviderDefined } from '../../../
 import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
 import { pageStyles } from './page.styles.js';
 import { pageTemplate } from './page.template.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 type Landmarks = 'auto' | 'page' | 'region';
 
@@ -148,7 +149,7 @@ export class NLDDPage extends LitElement implements ScrollModeConsumer {
 		const other = first === this ? undefined : first;
 		if (!other || !rest.includes(this)) return;
 		this._warnedDuplicateMain = true;
-		console.warn('nldd-page: a second page renders a main landmark, which a document may have only one of. Leave `landmarks` at "auto" on pages in a pane or an overlay, or set landmarks="region" on the ones that are not the document\'s page.', this, other);
+		reportRule('page-second-main', this);
 	}
 
 	private _scrollMode: 'nested' | 'root' = 'nested';

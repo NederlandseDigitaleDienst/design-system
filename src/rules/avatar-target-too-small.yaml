@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-avatar'
+message: 'A link or button under 24px is too small a target (WCAG 2.5.8) unless nothing else to click lies within 24px of its center. Use size 24 or larger.'

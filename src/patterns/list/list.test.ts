@@ -28,7 +28,7 @@ describe('patroon: lijst', () => {
 		it(`zet alles in een cel en nest geen control in een control (${name})`, async () => {
 			const warn = vi.spyOn(console, 'warn');
 			await mount(source);
-			expect(warn.mock.calls.filter(([message]) => String(message).includes('nldd-list-item'))).toEqual([]);
+			expect(warn.mock.calls.filter(([message]) => String(message).includes('[nldd] list-item'))).toEqual([]);
 		});
 	}
 

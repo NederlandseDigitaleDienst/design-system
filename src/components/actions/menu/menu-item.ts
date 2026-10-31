@@ -5,6 +5,7 @@ import { menuItemStyles } from './menu.styles.js';
 import { menuItemTemplate, type MenuVariant } from './menu.template.js';
 import type { QueryMarkMode } from '../../../utilities/render-marked.js';
 import type { NLDDMenu } from './menu.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /** Makes `host` a list item while its menu is a navigation menu, and takes
  *  that back when it is not. A `listitem` the consumer set by hand on an item
@@ -189,12 +190,7 @@ export class NLDDMenuItem extends LitElement {
 		this._submenuMutationObserver = new MutationObserver(() => {
 			const current = this.querySelector(':scope > nldd-menu');
 			if (current && current !== this._cachedSubmenuEl) {
-				console.warn(
-					'[nldd-menu-item] A nldd-menu child was added after mount. '
-					+ 'Submenu attachment is resolved once at firstUpdated in v1, '
-					+ 'so this menu will not be treated as a submenu. Define the '
-					+ 'nldd-menu child before the item is connected to the DOM.',
-				);
+				reportRule('submenu-added-after-mount', this);
 			}
 		});
 		this._submenuMutationObserver.observe(this, { childList: true });

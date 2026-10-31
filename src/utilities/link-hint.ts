@@ -16,6 +16,8 @@
  *
  * Returns null when the link needs no hint.
  */
+import { reportRule } from './report-rule.js';
+
 export type LinkHintKey = 'link-hint-external-lowercase-label' | 'link-hint-new-tab-lowercase-label' | 'link-hint-external-new-tab-lowercase-label';
 export type DownloadLinkHintKey = LinkHintKey | 'link-hint-download-lowercase-label';
 
@@ -55,5 +57,5 @@ const warnedDownloadTarget = new WeakSet<Element>();
 export function warnDownloadTarget(element: Element, download: string | null | undefined, target: string | null | undefined): void {
 	if (!import.meta.env?.DEV || download === undefined || download === null || !target || target === '_self' || warnedDownloadTarget.has(element)) return;
 	warnedDownloadTarget.add(element);
-	console.warn(`<${element.localName}>: \`target="${target}"\` does nothing with \`download\`, which saves the file instead of opening it. Remove one of the two.`);
+	reportRule('download-target-no-effect', element, `target="${target}"`);
 }

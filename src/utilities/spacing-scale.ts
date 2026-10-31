@@ -14,6 +14,8 @@
  */
 
 /** Every step there is. `'0'` is a value, not the absence of one. */
+import { reportRule } from './report-rule.js';
+
 export const SPACING_SCALE = [
 	'0', '2', '4', '6', '8', '10', '12', '16', '20', '24',
 	'28', '32', '40', '44', '48', '56', '64', '80', '96',
@@ -28,11 +30,10 @@ function looksLikeLength(value: string): boolean {
 
 const warned = new Set<string>();
 
-function warnOnce(element: string, attribute: string, message: string): void {
-	const key = `${element}.${attribute}.${message}`;
-	if (warned.has(key)) return;
+function firstTime(key: string): boolean {
+	if (warned.has(key)) return false;
 	warned.add(key);
-	console.warn(`<${element}>: ${message}`);
+	return true;
 }
 
 /**
@@ -53,14 +54,11 @@ export function spacingToValue(
 		return step === '0' ? '0' : `var(--primitives-space-${step})`;
 	}
 	if (import.meta.env?.DEV) {
-		const why = looksLikeLength(step)
-			? 'is a CSS length, and these attributes take a step of the spacing scale so the rhythm holds across the page'
-			: 'is not a step of the spacing scale';
-		warnOnce(
-			element,
-			attribute,
-			`${attribute}="${step}" ${why} (${SPACING_SCALE.join(', ')}). Nothing is written, so the default stands.`,
-		);
+		const detail = `<${element}> ${attribute}="${step}"; steps: ${SPACING_SCALE.join(', ')}`;
+		if (firstTime(detail)) {
+			if (looksLikeLength(step)) reportRule('spacing-value-is-length', undefined, detail);
+			else reportRule('spacing-value-off-scale', undefined, detail);
+		}
 	}
 	return null;
 }

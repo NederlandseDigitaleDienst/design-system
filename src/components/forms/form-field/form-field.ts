@@ -56,6 +56,8 @@ import {
 	formFieldTemplate,
 	formFieldHelpTextTemplate,
 } from './form-field.template.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
 
@@ -117,7 +119,7 @@ export class NLDDFormField extends LitElement {
 	labelAlignment: LabelAlignment | undefined = undefined;
 
 	/** Label text. When empty no label is rendered but side-alignment indent is preserved. */
-	@property({ type: String })
+	@property({ type: String, reflect: true, converter: reflectWhenSet })
 	label = '';
 
 	/**
@@ -290,11 +292,7 @@ export class NLDDFormField extends LitElement {
 			.some(item => item.hasAttribute('match') || item.hasAttribute('minlength') || item.hasAttribute('maxlength')));
 		if (!readsValue) return;
 
-		const which = this.label ? ` (label="${this.label}")` : '';
-		console.warn(
-			`<nldd-form-field>${which}: more than one control, and the validation list has rules that read a value. `
-			+ `It is reading <${input.localName}>, the first one. Set \`for\` on the list if it should read another.`,
-		);
+		reportRule('form-field-list-reads-first-control', this, `reads <${input.localName}>`);
 	}
 
 	/**

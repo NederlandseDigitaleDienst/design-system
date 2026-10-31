@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-hero'
+message: '`corner` with width="full" runs the hero to the edge of the screen. A shape with a rounded corner always keeps a margin around it; leave width="full" off or drop the corner.'

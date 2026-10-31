@@ -113,5 +113,14 @@ Een form field met een invoerveld erin is een van de meest voorkomende compositi
 
 `nldd lint` controleert dit:
 
+- `combo-box-needs-name`: nldd-combo-box needs `accessible-label` or a labeled nldd-form-field around it, or it has no accessible name.
+- `editor-needs-name`: An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).
 - `form-action-in-button-group`: Put the action in a nldd-button-group, also when there is only one.
 - `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
+- `form-section-needs-name`: nldd-form-section needs `text` or `supporting-text`: without either its fieldset has no accessible name, and a screen reader announces just "group" or nothing.
+- `multi-line-text-field-needs-name`: nldd-multi-line-text-field needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name.
+- `number-field-needs-name`: nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.
+- `radio-button-group-needs-name`: nldd-radio-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.
+- `segmented-control-required-not-enforced`: `required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.
+- `switch-needs-name`: nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.
+- `toggle-button-group-required-not-enforced`: `required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.

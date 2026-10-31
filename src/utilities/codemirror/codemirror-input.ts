@@ -6,6 +6,8 @@ import { FormAssociated, type FormValue } from '../form-associated-mixin.js';
 import { reflectNonDefault } from '../reflect-non-default.js';
 import { DescribedBy } from '../described-by-mixin.js';
 import { NLDDCodeMirrorElement } from './codemirror-element.js';
+import { reflectWhenSet } from '../reflect-when-set.js';
+import '../dev-checks-trigger.js';
 
 /**
  * Shared base for the CodeMirror editors that are form controls
@@ -33,7 +35,7 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 	@property({ type: String })
 	value = '';
 
-	@property({ type: String, attribute: 'input-id' })
+	@property({ type: String, attribute: 'input-id', reflect: true, converter: reflectWhenSet })
 	inputId = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -54,7 +56,7 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 	@property({ type: Number })
 	rows = 6;
 
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	/**
@@ -71,7 +73,6 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 
 	private _initialValue = '';
 	private _valueAtFocus = '';
-	private _accessibleLabelWarned = false;
 
 	private _editableCompartment = new Compartment();
 	private _placeholderCompartment = new Compartment();
@@ -157,7 +158,6 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 		// a caret; forward it to the nearest line so the padding is clickable too.
 		this.view?.scrollDOM.addEventListener('pointerdown', this._onScrollerPointerDown);
 		this.commitFormValue();
-		this._checkAccessibleLabel();
 	}
 
 	override updated(changed: PropertyValues): void {
@@ -185,7 +185,6 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 				this.refreshContentAttributes();
 			}
 		}
-		this._checkAccessibleLabel();
 	}
 
 	private _onDocChanged(): void {
@@ -215,16 +214,6 @@ export abstract class NLDDCodeMirrorInput extends DescribedBy(FormAssociated(NLD
 		this.focusFromPoint(event.clientX, event.clientY);
 		event.preventDefault();
 	};
-
-	/* From updated(), not firstUpdated(): a parent nldd-form-field sets input-id
-	 * slightly after the first render, so an earlier check would warn for the
-	 * standard form-field usage. It warns once if the label is still missing. */
-	private _checkAccessibleLabel(): void {
-		if (this._accessibleLabelWarned) return;
-		if (this.accessibleLabel || this.inputId) return;
-		this._accessibleLabelWarned = true;
-		console.warn(`<${this.localName}>: No accessible-label or input-id provided. Use nldd-form-field for labeled usage, or set accessible-label for screen reader accessibility (WCAG SC 4.1.2).`);
-	}
 
 	override formValue(): FormValue {
 		return this.value;

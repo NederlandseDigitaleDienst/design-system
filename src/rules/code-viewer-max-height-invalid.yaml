@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-code-viewer'
+message: '`max-height` is not a CSS length, so it is ignored. Give it a unit, such as "400px" or "50vh".'

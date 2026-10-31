@@ -45,6 +45,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { buttonGroupStyles } from './button-group.styles.js';
 import { template } from './button-group.template.js';
 import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 type Size = 'sm' | 'md';
 type Orientation = 'auto' | 'horizontal' | 'vertical';
@@ -80,7 +81,7 @@ export class NLDDButtonGroup extends LitElement {
 		for (const el of assigned) {
 			const own = el.getAttribute('size');
 			if (import.meta.env?.DEV && own !== null && own !== this.size && !this._sized.has(el)) {
-				console.warn(`nldd-button-group: a button has size="${own}", but the group sets size="${this.size}" on all its buttons. Set the size on the group.`);
+				reportRule('button-size-set-on-group', this, `size="${own}" in a group with size="${this.size}"`);
 			}
 			el.setAttribute('size', this.size);
 			this._sized.add(el);
@@ -151,7 +152,7 @@ export class NLDDButtonGroup extends LitElement {
 			this._collapseVerdict = window.setTimeout(() => {
 				if (!this.isConnected || this.getClientRects().length === 0) return;
 				if (this.getBoundingClientRect().width > 0) return;
-				console.warn('nldd-button-group: the group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query while orientation is auto), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.');
+				reportRule('button-group-zero-width', this);
 				this._stopWatchingForCollapse();
 			}, 250);
 		});

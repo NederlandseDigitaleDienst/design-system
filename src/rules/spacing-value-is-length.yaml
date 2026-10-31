@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-collection, nldd-container'
+message: 'This is a CSS length, and these attributes take a step of the spacing scale so the rhythm holds across the page. Nothing is written, so the default stands.'

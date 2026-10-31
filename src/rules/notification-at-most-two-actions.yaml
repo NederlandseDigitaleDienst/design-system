@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-notification'
+message: 'At most 2 actions: a message that needs three choices is a decision, and a decision belongs in a dialog that waits for it.'

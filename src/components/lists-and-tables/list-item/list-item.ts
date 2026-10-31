@@ -10,6 +10,7 @@ import { nlddListItemTranslations } from './list-item.i18n.js';
 import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
 import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type ListItemSize = 'sm' | 'md';
 
@@ -337,7 +338,6 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 
 	private _warnedDegenerateDivider = false;
 
-	private _warnedChildrenOutsideTree = false;
 	private _warnedExpandedInNavigation = false;
 	private _warnedStrayExpanded = false;
 	private _warnedStrayContent = false;
@@ -662,7 +662,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		if (this._showChildren && this._parentType === 'navigation') {
 			if (this._warnedExpandedInNavigation) return;
 			this._warnedExpandedInNavigation = true;
-			console.warn('nldd-list-item: `expanded` does nothing on a row with sub-pages in an nldd-list with type="navigation": they are always shown, so the attribute is ignored. Use type="tree" for sections that fold away.');
+			reportRule('list-item-expanded-in-navigation', this);
 			return;
 		}
 		if (this.href || this.button || this.checkbox) return;
@@ -670,7 +670,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		// Once per row: this also runs on every change to the row's children.
 		if (this._warnedStrayExpanded) return;
 		this._warnedStrayExpanded = true;
-		console.warn('nldd-list-item: `expanded` needs somewhere to live — make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.');
+		reportRule('list-item-expanded-needs-control', this);
 	}
 
 	/** Bare text, which no selector can see. Elements in a row are the rule
@@ -685,7 +685,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		this._warnOnNestedControl();
 		if (!stray) return;
 		this._warnedStrayContent = true;
-		console.warn(`nldd-list-item: bare text ("${stray.textContent!.trim().slice(0, 40)}") sits directly in a row. Wrap it in a cell, or it gets none of the typography, size and alignment, and falls back to the browser's button font in a clickable row.`);
+		reportRule('list-item-bare-text', this, `"${stray.textContent!.trim().slice(0, 40)}"`);
 	};
 
 	/** A row that is its own control cannot hold another one: a control inside a
@@ -702,7 +702,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			.find((el) => el.matches(NESTED_CONTROLS) && !el.matches('[decorative]') && !el.closest('[aria-hidden="true"], [inert]'));
 		if (!nested) return;
 		this._warnedNestedControl = true;
-		console.warn(`nldd-list-item: <${nested.localName}> sits in a row that is its own control (href, button, checkbox or radio). A control inside a control is invalid HTML and doubles the tab stop. With more than one action, give each its own nldd-list-item-segment and leave the row without an action.`);
+		reportRule('list-item-nested-control', this, `<${nested.localName}>`);
 	}
 
 	/** True when the item is an option in a `type="listbox"` parent. */
@@ -873,7 +873,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			// A start past the last end: authoring error, fall back to full width.
 			if (import.meta.env?.DEV && !this._warnedDegenerateDivider) {
 				this._warnedDegenerateDivider = true;
-				console.warn('<nldd-list-item>: divider-start lies past the last divider-end, so the divider falls back to the full content width.');
+				reportRule('list-item-divider-degenerate', this);
 			}
 			this.style.removeProperty('--_list-item-divider-inset-start');
 			this.style.removeProperty('--_list-item-divider-inset-end');
@@ -909,11 +909,6 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		}
 		if (!import.meta.env?.DEV) return;
 		this._warnOnStrayExpanded();
-		// Once per row: slotchange runs this again on every change to the branch.
-		if (this._showChildren && this._parentType !== 'tree' && this._parentType !== 'navigation' && !this._warnedChildrenOutsideTree) {
-			this._warnedChildrenOutsideTree = true;
-			console.warn('nldd-list-item: `slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree" or type="navigation". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.');
-		}
 	}
 
 	private _handleClick = (e: Event) => {

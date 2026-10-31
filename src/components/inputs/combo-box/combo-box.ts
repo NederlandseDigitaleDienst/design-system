@@ -79,6 +79,9 @@ import '../../content/icon/icon.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
@@ -157,7 +160,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	@property({ type: Number, attribute: 'max-items' })
 	maxItems = 8;
 
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	@property({ type: Object })
@@ -221,9 +224,6 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	// — Lifecycle ————————————————————————————————————————————————————————————
 
 	override firstUpdated(): void {
-		if (import.meta.env?.DEV && !this.accessibleLabel) {
-			console.warn('<nldd-combo-box>: No accessible-label provided. Add an accessible-label attribute for screen reader accessibility.');
-		}
 		this._initialValue = this.value;
 		this._initialText = this.text;
 	}
@@ -436,7 +436,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// state would wrongly suggest the input is invalid.
 		if (this.allowCustom && !this._hasVisibleMenuItems()) return;
 		if (!('showPopover' in this._menu)) {
-			console.warn('<nldd-combo-box>: Popover API is not supported in this browser. The dropdown will not open.');
+			reportRule('combo-box-needs-popover-api', this);
 			return;
 		}
 		this._updateMenuWidth();

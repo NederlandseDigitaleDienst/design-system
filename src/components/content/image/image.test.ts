@@ -367,7 +367,7 @@ describe('nldd-image missing-alt warning', () => {
 	/** The alt warnings logged so far, apart from anything else in the console. */
 	const altWarnings = () => warn.mock.calls
 		.map(([message]) => String(message))
-		.filter(message => message.startsWith('<nldd-image>') && message.includes('`alt`'));
+		.filter(message => message.startsWith('[nldd] image-') && message.includes('`alt`'));
 
 	beforeEach(() => {
 		warn = vi.spyOn(console, 'warn').mockImplementation(() => {});

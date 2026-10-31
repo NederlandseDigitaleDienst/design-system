@@ -944,7 +944,7 @@ describe('nldd-tab-bar-item selected -> current', () => {
 				<nldd-tab-bar-item text="Home" selected></nldd-tab-bar-item>
 			</nldd-tab-bar>`);
 		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('`selected` is now `current`'));
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('`selected` is now `current`'), expect.anything());
 		const item = el.querySelector('nldd-tab-bar-item') as HTMLElement & { current: boolean };
 		expect(item.current).toBe(false);
 	});

@@ -64,6 +64,8 @@
  * Children of the form-section are placed in `.form-section__main`.
  */
 
+import '../../../utilities/dev-checks-trigger.js';
+
 const FIELDSET_CLASS = 'form-section';
 const HEADER_CLASS = 'form-section__header';
 const TITLE_CLASS = 'form-section__title';
@@ -79,7 +81,6 @@ export class NLDDFormSection extends HTMLElement {
 	private _legend: HTMLLegendElement | null = null;
 	private _main: HTMLDivElement | null = null;
 	private _observer: MutationObserver | null = null;
-	private _hasWarnedNoLabel = false;
 
 	get text(): string {
 		return this.getAttribute('text') ?? '';
@@ -103,7 +104,6 @@ export class NLDDFormSection extends HTMLElement {
 		// inner <form>) skip this block but still re-attach the observer.
 		if (!this._fieldset) this._buildStructure();
 		this._renderLegend();
-		this._warnIfNoLabel();
 
 		// (Re-)attach observer on every connect to catch dynamically added
 		// children (which would otherwise land outside the inner fieldset).
@@ -130,20 +130,8 @@ export class NLDDFormSection extends HTMLElement {
 	attributeChangedCallback(name: string): void {
 		if (name === 'text' || name === 'supporting-text') {
 			// Pas re-renderen na _buildStructure (eerste connect).
-			if (this._legend) {
-				this._renderLegend();
-				this._warnIfNoLabel();
-			}
+			if (this._legend) this._renderLegend();
 		}
-	}
-
-	private _warnIfNoLabel(): void {
-		// Dev only, so an end user's production console stays clean.
-		if (!import.meta.env?.DEV) return;
-		if (this._hasWarnedNoLabel) return;
-		if (this.text || this.supportingText) return;
-		this._hasWarnedNoLabel = true;
-		console.warn('<nldd-form-section>: No `text` or `supporting-text` provided. The <fieldset> has no accessible name and screen readers may announce it as just "group" (Chrome) or nothing (Firefox). Set `text` for a group label, or document this section as purely visual grouping.');
 	}
 
 	private _buildStructure(): void {

@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-toggle-button-group[required]'
+report: ':not([type="radio"], [type="button"])'
+message: '`required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.'
+see: patronen/form
+examples:
+  passed: ['<nldd-toggle-button-group required type="radio" accessible-label="Opmaak"></nldd-toggle-button-group>', '<nldd-toggle-button-group accessible-label="Opmaak"></nldd-toggle-button-group>']
+  failed: ['<nldd-toggle-button-group required accessible-label="Opmaak"></nldd-toggle-button-group>', '<nldd-toggle-button-group required type="checkbox" accessible-label="Opmaak"></nldd-toggle-button-group>']
+  cantTell: ['<nldd-toggle-button-group required :type="soort" accessible-label="Opmaak"></nldd-toggle-button-group>']

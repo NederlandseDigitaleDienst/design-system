@@ -3016,12 +3016,11 @@ describe('nldd-menu – variant="navigation"', () => {
 		menu.hidePopover();
 	});
 
-	it('warns about checkable items, shortcuts and filter()', async () => {
+	it('warns about filter()', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const { menu } = await make('<nldd-menu-item text="Compact" type="checkbox"></nldd-menu-item>');
 		menu.filter('dak');
 		const said = warn.mock.calls.flat().join(' ');
-		expect(said).toContain('variant="navigation" is a list of links');
 		expect(said).toContain('filter() belongs to a menu of actions');
 	});
 });

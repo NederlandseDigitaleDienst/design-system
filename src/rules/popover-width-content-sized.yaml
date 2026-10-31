@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-popover'
+message: 'This `width` is not supported and is ignored: the popover is an inline-size query container, so its width cannot come from its own content. Give it a CSS length instead.'

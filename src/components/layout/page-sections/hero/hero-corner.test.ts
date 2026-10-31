@@ -105,7 +105,7 @@ describe('nldd-hero – corner', () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await hero('corner="middle" layout="contained"');
 		expect(el.getAttribute('data-media-corner')).toBe('top-right');
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('corner="middle" is not a corner'))).toBe(true);
+		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('hero-corner-unknown') && String(call[0]).includes('corner="middle"'))).toBe(true);
 	});
 
 	it('puts the panel against the edge of the image in contained', async () => {

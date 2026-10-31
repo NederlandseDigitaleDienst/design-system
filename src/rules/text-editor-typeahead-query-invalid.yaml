@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-text-editor'
+message: 'The query of this typeahead is not a valid regular expression; the default is used.'

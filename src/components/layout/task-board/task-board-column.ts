@@ -26,6 +26,8 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { taskBoardColumnStyles } from './task-board.styles.js';
 import { taskBoardColumnTemplate } from './task-board-column.template.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 @customElement('nldd-task-board-column')
 export class NLDDTaskBoardColumn extends LitElement {
@@ -34,7 +36,7 @@ export class NLDDTaskBoardColumn extends LitElement {
 	@property({ reflect: true, converter: reflectNonDefault('') })
 	text = '';
 
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	@property({ reflect: true, converter: reflectNonDefault('') })
@@ -135,9 +137,6 @@ export class NLDDTaskBoardColumn extends LitElement {
 	protected override firstUpdated(): void {
 		this._resizeObserver = new ResizeObserver(this._updateScroll);
 		this._observeItems();
-		if (import.meta.env?.DEV && !this.label) {
-			console.warn('nldd-task-board-column: a column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.');
-		}
 	}
 
 	protected override updated(changed: PropertyValues): void {

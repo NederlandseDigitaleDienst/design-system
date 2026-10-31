@@ -47,6 +47,7 @@ import { isPointerMode } from '../../../utilities/input-modality.js';
 import './../../content/icon/icon.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type DropdownSize = 'xs' | 'sm' | 'md';
 
@@ -145,7 +146,7 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		}
 
 		if (import.meta.env?.DEV && !this.accessibleLabel && !select.hasAttribute("aria-label") && !select.hasAttribute("aria-labelledby") && !select.labels?.length) {
-			console.warn('<nldd-dropdown>: The slotted <select> has no accessible name. Add an aria-label or aria-labelledby attribute to the <select> element.');
+			reportRule('dropdown-select-needs-name', this);
 		}
 
 		select.addEventListener('change', this._handleSelectChange);

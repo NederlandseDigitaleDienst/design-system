@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-icon'
+message: 'This icon does not exist.'

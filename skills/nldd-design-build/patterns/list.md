@@ -336,5 +336,10 @@ De meest voorkomende compositie op dit systeem, in elk onderzocht product en in 
 
 `nldd lint` controleert dit:
 
+- `list-form-row-is-action`: type="form" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments. Use type="list" for rows you activate, and put the action in a cell if it belongs to a form row.
+- `list-item-children-need-tree`: `slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree" or type="navigation". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.
 - `list-item-holds-cells`: A row takes cells and segments. Anything else sits outside its layout.
 - `list-item-needs-list`: nldd-list-item needs a parent nldd-list, which gives the row its type and keyboard behaviour.
+- `list-item-segment-disclosure-and-expanded`: `disclosure` takes aria-expanded from the row, so the `expanded` on this action is ignored. Drop one of the two.
+- `list-item-segment-no-control-in-listbox`: A segment in a type="listbox" list renders as a plain container: an `option` may not contain interactive descendants. Move the segment out of the listbox, or drive selection from the option itself.
+- `list-reorderable-needs-list-type`: `reorderable` is only valid when type="list", and is ignored here.

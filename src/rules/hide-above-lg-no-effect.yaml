@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-cell, nldd-text-cell, nldd-title-cell, nldd-description-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell'
+message: 'hide-above="lg" never hides anything: there is no breakpoint above lg. The smallest value that hides is "sm". Leave the attribute off if you meant "always visible".'

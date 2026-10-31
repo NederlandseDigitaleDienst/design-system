@@ -50,6 +50,7 @@ import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 type Placement = 'left' | 'right' | 'bottom';
 
@@ -124,7 +125,7 @@ export class NLDDSheet extends LitElement {
 				// per-value state to re-warn.
 				if (import.meta.env?.DEV && h && h !== 'full' && !this._hasWarnedHeight) {
 					this._hasWarnedHeight = true;
-					console.warn(`<nldd-sheet>: Invalid height value "${h}". Falling back to full height. Use 'full', 'fit-content', or a valid CSS length (e.g. '50dvh', '480px').`);
+					reportRule('sheet-height-invalid', this, `height="${h}"`);
 				}
 				this.style.removeProperty('--_sheet-height');
 			}
@@ -177,7 +178,7 @@ export class NLDDSheet extends LitElement {
 		// Warn once per instance when the sheet has no name of its own to go by
 		if (import.meta.env?.DEV && !this.accessibleLabel && !this._titleBar.text && !this._hasWarnedLabel) {
 			this._hasWarnedLabel = true;
-			console.warn('<nldd-sheet>: No accessible-label and no nldd-top-title-bar with text inside. Screen readers will announce this dialog as "Venster". Give the title bar a text, or set accessible-label.');
+			reportRule('sheet-needs-name', this);
 		}
 
 		if (this._closing) {

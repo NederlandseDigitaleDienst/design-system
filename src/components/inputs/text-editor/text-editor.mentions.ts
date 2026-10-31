@@ -11,6 +11,7 @@ import { Prec, StateEffect, StateField, type EditorState, type Extension } from 
 import { inCode } from './text-editor.syntax.js';
 import '../../content/avatar/avatar.js';
 import '../../content/icon/icon.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /* Typeaheads: a trigger character opens a list of candidates the consumer
  * supplies, and choosing one writes something in place of the trigger and the
@@ -45,7 +46,7 @@ function queryPattern(trigger: string, query: string): RegExp | null {
 	try {
 		pattern = new RegExp(`(^|\\s)(${trigger.replace(/[\\^$.*+?()[\]{}|/]/g, '\\$&')})(${query})$`, 'u');
 	} catch {
-		if (import.meta.env?.DEV) console.warn(`<nldd-text-editor>: the query of the "${trigger}" typeahead is not a valid regular expression; the default is used.`, query);
+		if (import.meta.env?.DEV) reportRule('text-editor-typeahead-query-invalid', undefined, `"${trigger}": ${query}`);
 		pattern = query === DEFAULT_TYPEAHEAD_QUERY ? null : queryPattern(trigger, DEFAULT_TYPEAHEAD_QUERY);
 	}
 	queryPatterns.set(key, pattern);

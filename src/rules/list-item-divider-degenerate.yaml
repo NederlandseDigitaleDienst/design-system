@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-list-item'
+message: '`divider-start` lies past the last `divider-end`, so the divider falls back to the full content width.'

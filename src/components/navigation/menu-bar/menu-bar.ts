@@ -24,6 +24,7 @@ import '../menu-bar-item/menu-bar-item.js';
 import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import '../../actions/menu/menu.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 /**
  * Minimal typed interface for nldd-menu.
@@ -101,7 +102,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 			// default label via slotchange have a chance to run first.
 			setTimeout(() => {
 				if (this.isConnected && !this.accessibleLabel && !this.hasAttribute('empty')) {
-					console.warn('<nldd-menu-bar>: no accessible-label set. A page with more than one nav landmark needs a unique label on each (WCAG 1.3.1).');
+					reportRule('menu-bar-needs-name', this);
 				}
 			}, 0);
 		}

@@ -461,7 +461,7 @@ describe('nldd-sheet – height', () => {
 		el = await fixture<NLDDSheet>('<nldd-sheet placement="bottom" height="not-a-length"></nldd-sheet>');
 		await waitForUpdate(el);
 		expect(warnSpy).toHaveBeenCalledTimes(1);
-		expect(warnSpy.mock.calls[0][0]).toContain('Invalid height value "not-a-length"');
+		expect(warnSpy.mock.calls[0][0]).toContain('height="not-a-length"');
 
 		el.height = 'also-bogus';
 		await waitForUpdate(el);
@@ -806,7 +806,7 @@ describe('nldd-sheet – accessible name', () => {
 		await waitForUpdate(el);
 		el.show();
 		expect(label(el)).toBe('Venster');
-		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(true);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('sheet-needs-name'))).toBe(true);
 	});
 
 	it('does not warn when its title bar names it', async () => {
@@ -814,7 +814,7 @@ describe('nldd-sheet – accessible name', () => {
 		el = await fixture<NLDDSheet>(withBar('', 'Filters'));
 		await waitForUpdate(el);
 		el.show();
-		expect(warn.mock.calls.some(([message]) => String(message).includes('No accessible-label'))).toBe(false);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('sheet-needs-name'))).toBe(false);
 	});
 });
 

@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-table'
+message: 'No rows and nothing in [slot="empty"], so the table renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.'

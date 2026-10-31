@@ -51,6 +51,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { statusBarStyles } from './status-bar.styles.js';
 import { statusBarTemplate } from './status-bar.template.js';
 import '../../content/icon/icon.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type StatusBarVariant = 'neutral' | 'accent' | 'success' | 'warning' | 'critical';
 
@@ -102,7 +103,7 @@ export class NLDDStatusBar extends LitElement {
 			&& (bar.compareDocumentPosition(this) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
 			&& !bar.contains(this));
 		if (above) {
-			console.warn('<nldd-status-bar>: The status bar sits below a top bar. It belongs above it, as the first thing on the screen.', this);
+			reportRule('status-bar-below-top-bar', this);
 		}
 	}
 

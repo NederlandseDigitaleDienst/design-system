@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-cell, nldd-text-cell, nldd-title-cell, nldd-description-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell'
+message: 'hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".'

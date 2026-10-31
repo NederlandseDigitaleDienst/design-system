@@ -258,21 +258,6 @@ describe('nldd-document-tab-bar – accessible label', () => {
 		expect(el.shadowRoot!.querySelector('.document-tab-bar__items')!.getAttribute('aria-label')).toBe('Tabbladen');
 	});
 
-	it('warns once when no accessible-label is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDDocumentTabBar>('<nldd-document-tab-bar></nldd-document-tab-bar>');
-		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledOnce();
-		expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('accessible-label'));
-	});
-
-	it('does not warn when accessible-label is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDDocumentTabBar>('<nldd-document-tab-bar accessible-label="Documenten"></nldd-document-tab-bar>');
-		await waitForUpdate(el);
-		expect(warnSpy).not.toHaveBeenCalled();
-	});
-
 	it('forwards accessible-label to container aria-label', async () => {
 		el = await fixture<NLDDDocumentTabBar>('<nldd-document-tab-bar accessible-label="Mijn documenten"></nldd-document-tab-bar>');
 		await waitForUpdate(el);

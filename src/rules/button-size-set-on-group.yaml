@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-button-group'
+message: 'A button has a size of its own, but the group sets its `size` on all its buttons. Set the size on the group.'

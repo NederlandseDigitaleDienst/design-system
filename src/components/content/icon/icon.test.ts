@@ -184,7 +184,7 @@ describe('nldd-icon – icon attribute', () => {
 		await waitForUpdate(el);
 		expect(el.icon).toBe('circle-dashed');
 		expect(warn).toHaveBeenCalledTimes(1);
-		expect(warn.mock.calls[0][0]).toContain('icon="heart"');
+		expect(warn.mock.calls[0][0]).toContain('name="heart"');
 		cleanup(el);
 
 		el = await fixture<NLDDIcon>('<nldd-icon name="star"></nldd-icon>');

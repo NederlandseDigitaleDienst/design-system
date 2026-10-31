@@ -108,12 +108,10 @@ describe('nldd-list-item-segment', () => {
 		expect(item.shadowRoot!.querySelector('.list-item__action')).toBeNull();
 	});
 
-	it('degrades to a plain container in a listbox parent, with a warning', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('degrades to a plain container in a listbox parent', async () => {
 		const [a] = await mount(LABEL, 'type="listbox"');
 		expect(control(a).tagName).toBe('DIV');
 		expect(a.querySelector('nldd-text-cell')).not.toBeNull();
-		expect(warn).toHaveBeenCalled();
 	});
 
 	it('grows only with width="full"', async () => {
@@ -252,7 +250,7 @@ describe('nldd-list-item – expanded', () => {
 	it('warns when expanded has nowhere to live', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await mount('expanded');
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('`expanded` needs somewhere to live'));
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('`expanded` needs somewhere to live'), expect.anything());
 	});
 
 	it('is happy when a disclosure action carries it, and hands it the state', async () => {
@@ -272,7 +270,7 @@ describe('nldd-list-item – expanded', () => {
 		await waitForUpdate(item);
 		await waitForUpdate(seg);
 		expect(seg.shadowRoot!.querySelector('.list-item-segment')!.getAttribute('aria-expanded')).toBe('true');
-		expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('`expanded` needs somewhere to live'));
+		expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('`expanded` needs somewhere to live'), expect.anything());
 	});
 
 	it('says a closed branch is collapsed from the start, before anything is pressed', async () => {
@@ -511,18 +509,6 @@ describe('nldd-list type="tree"', () => {
 		const branch = root.querySelector('nldd-list[type="tree"] > nldd-list-item') as HTMLElement;
 		await waitForUpdate(branch);
 		expect(group(branch)!.hasAttribute('hidden')).toBe(true);
-	});
-
-	it('warns when children are nested outside a tree', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		await mount(`
-			<nldd-list accessible-label="X">
-				<nldd-list-item expanded>
-					<nldd-text-cell text="Tak"></nldd-text-cell>
-					<nldd-list-item slot="children"><nldd-text-cell text="Blad"></nldd-text-cell></nldd-list-item>
-				</nldd-list-item>
-			</nldd-list>`);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('only carries meaning in an nldd-list with type="tree"'));
 	});
 
 	it('authors no aria-level, -posinset or -setsize — the nesting says it', async () => {

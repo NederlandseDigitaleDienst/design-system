@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-menu'
+message: 'filter() belongs to a menu of actions or options. A navigation menu is a short list of links and is not filtered.'

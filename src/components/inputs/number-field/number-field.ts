@@ -33,6 +33,8 @@ import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 export type NumberFieldSize = 'sm' | 'md';
 
@@ -81,7 +83,7 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	hideSpinButtons = false;
 
 	/** Accessible label forwarded as aria-label to the native input. */
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	/** Override one or more translation keys. Unspecified keys fall back to Dutch. */
@@ -107,9 +109,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	invalid = false;
 
 	override firstUpdated(): void {
-		if (import.meta.env?.DEV && !this.accessibleLabel) {
-			console.warn('<nldd-number-field>: No accessible-label provided. Add an accessible-label attribute so screen readers can announce the input\'s purpose.');
-		}
 		this._lastValidValue = this._clamp(this.value);
 		this._initialValue = this._lastValidValue;
 	}

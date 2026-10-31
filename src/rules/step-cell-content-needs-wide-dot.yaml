@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-step-cell:is([text], [icon])'
+assert: '[size="md"]:not([level="minor"], [level="none"])'
+message: '`text` and `icon` only fit in a full dot on a wide track (`size="md"` with `level="major"`); they are not shown here.'
+examples:
+  passed: ['<nldd-step-cell size="md" text="1"></nldd-step-cell>', '<nldd-step-cell size="md" level="major" icon="plus"></nldd-step-cell>']
+  failed: ['<nldd-step-cell text="1"></nldd-step-cell>', '<nldd-step-cell size="md" level="minor" icon="plus"></nldd-step-cell>']
+  cantTell: ['<nldd-step-cell :size="maat" text="1"></nldd-step-cell>']

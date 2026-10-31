@@ -448,7 +448,7 @@ describe('nldd-text-cell', () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const el = await fixture('<nldd-text-cell hide-below="sm" text="Test"></nldd-text-cell>');
 		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('never hides anything'));
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('never hides anything'), expect.anything());
 		warn.mockRestore();
 		cleanup(el);
 	});

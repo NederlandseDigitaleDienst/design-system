@@ -61,6 +61,7 @@ import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.j
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { translate } from '../../../utilities/translations.js';
 import '../../../utilities/dev-checks-trigger.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type TableBackground = 'base' | 'tinted';
 
@@ -206,11 +207,7 @@ export class NLDDTable extends LitElement {
 		// it answers the question.
 		if (hasRows && this.querySelector(':scope > [slot="no-results"]')) return;
 		this._warnedSilentEmpty = true;
-		console.warn(
-			'nldd-table: no rows and nothing in [slot="empty"], so the table renders a blank area. '
-			+ 'Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.',
-			this,
-		);
+		reportRule('table-silent-empty', this);
 	}
 
 	private _warnedSilentEmpty = false;

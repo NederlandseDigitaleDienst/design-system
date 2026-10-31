@@ -145,7 +145,7 @@ export function buildDevRules(rules, classes) {
 	const expand = (selector) =>
 		selector && selector.replace(/:([a-z-]+)/g, (match, name) => (classes[name] ? `:is(${classes[name].join(', ')})` : match));
 	return rules
-		.filter((rule) => !rule.ref)
+		.filter((rule) => !rule.ref && !rule.runtime)
 		.map(({ id, context, assert, report, count, message }) => ({
 			id,
 			message,
@@ -154,6 +154,11 @@ export function buildDevRules(rules, classes) {
 			...(report ? { report: expand(report) } : {}),
 			...(count ? { count: { ...count, of: expand(count.of) } } : {}),
 		}));
+}
+
+/** The texts of the rules a component reports itself, by id. */
+export function buildRuleMessages(rules) {
+	return Object.fromEntries(rules.filter((rule) => rule.runtime).map(({ id, message }) => [id, message]));
 }
 
 export function loadRules(rulesDir, schema) {

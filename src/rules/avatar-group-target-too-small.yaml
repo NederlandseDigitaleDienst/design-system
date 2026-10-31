@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-avatar-group'
+message: 'Avatars that are links or buttons overlap, so each keeps too small a target (WCAG 2.5.8). Use size 32 or larger.'

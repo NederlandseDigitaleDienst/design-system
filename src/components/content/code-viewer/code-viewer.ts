@@ -67,6 +67,7 @@ import { onColorSchemeChange, forceScrollLayerRepaint } from '../../../utilities
 import '../../actions/icon-button/icon-button.js';
 import '../tooltip/tooltip.js';
 import { translate } from '../../../utilities/translations.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 export type CodeViewerCopyState = 'idle' | 'success' | 'failure';
 
@@ -286,7 +287,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			} else {
 				this.style.removeProperty('--_code-viewer-max-height');
 				if (import.meta.env?.DEV && this.maxHeight) {
-					console.warn(`<nldd-code-viewer>: max-height="${this.maxHeight}" is not a CSS length, so it is ignored. Give it a unit, such as "400px" or "50vh".`);
+					reportRule('code-viewer-max-height-invalid', this, `max-height="${this.maxHeight}"`);
 				}
 			}
 		}
@@ -359,7 +360,7 @@ export class NLDDCodeViewer extends NLDDCodeMirrorElement {
 			},
 			// The diff still shows without them, so a failed load is no error.
 			(error) => {
-				if (import.meta.env?.DEV) console.warn('<nldd-code-viewer>: the word marks of a diff need @codemirror/merge, which did not load, so the diff shows without them.', error);
+				if (import.meta.env?.DEV) reportRule('code-viewer-diff-words-unavailable', this, String(error));
 			},
 		);
 	}

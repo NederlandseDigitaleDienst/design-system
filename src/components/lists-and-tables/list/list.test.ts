@@ -597,7 +597,6 @@ describe('nldd-list', () => {
 		// Nothing to disclose: the parent is a plain link, not a collapsed branch.
 		expect(parent.shadowRoot!.querySelector('a')!.hasAttribute('aria-expanded')).toBe(false);
 		expect(first.shadowRoot!.querySelector('a')!.getAttribute('aria-current')).toBe('page');
-		expect(warn.mock.calls.flat().join(' ')).not.toContain('slot="children"');
 		warn.mockRestore();
 
 		// The arrows walk the sub-pages like any other row: the entry point is
@@ -1471,14 +1470,6 @@ describe('nldd-list type="form"', () => {
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
 		await waitForUpdate(el);
 		expect(document.activeElement).toBe(before);
-	});
-
-	it('warns about a row that is an action itself', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture(formList('<nldd-list-item button><nldd-text-cell text="Delete"></nldd-text-cell></nldd-list-item>'));
-		await waitForUpdate(el);
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('type="form"'));
-		warn.mockRestore();
 	});
 });
 

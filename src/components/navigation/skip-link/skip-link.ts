@@ -37,6 +37,7 @@ import { template } from './skip-link.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddSkipLinkTranslations } from './skip-link.i18n.js';
 import { focusTemporarily, hashTarget, samePageHash } from '../../../utilities/focus-target.js';
+import { reportRule } from '../../../utilities/report-rule.js';
 
 @customElement('nldd-skip-link')
 export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTranslations) {
@@ -56,10 +57,7 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 		const next = this._target();
 		if (!next) {
 			if (import.meta.env?.DEV) {
-				console.warn(
-					'<nldd-skip-link>: no rendered element follows the skip link, so it has nothing to move focus to. '
-					+ 'Put the content it skips to right after it, or point `href` at the id of the target.',
-				);
+				reportRule('skip-link-no-target', this);
 			}
 			return;
 		}
@@ -99,7 +97,7 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 		this._restoreTarget?.();
 		this._restoreTarget = focusTemporarily(target) ?? undefined;
 		if (!this._restoreTarget && import.meta.env?.DEV) {
-			console.warn('<nldd-skip-link>: the target did not take focus, so the skip link did nothing. It is probably hidden or inert.', target);
+			reportRule('skip-link-target-not-focusable', target);
 		}
 	}
 

@@ -246,7 +246,8 @@ describe('nldd-text-editor line commands', () => {
 			el.runCommand('bald');
 			console.warn = original;
 			expect(el.value).toBe('Tekst');
-			expect(String(warnings[0])).toContain("runCommand('bald')");
+			expect(String(warnings[0])).toContain('text-editor-unknown-command');
+			expect(String(warnings[0])).toContain('(bald)');
 			cleanup(el);
 		});
 
