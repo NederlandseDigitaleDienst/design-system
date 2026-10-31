@@ -67,7 +67,9 @@ export function readConfig(root, knownRules) {
 	const isMap = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 	if (!isMap(config)) throw new Error(`${CONFIG_FILE}: expected an object.`);
 	if (config.rules !== undefined && !isMap(config.rules)) throw new Error(`${CONFIG_FILE}: "rules" takes an object.`);
-	if (config.wrappers !== undefined && !isMap(config.wrappers)) throw new Error(`${CONFIG_FILE}: "wrappers" takes an object.`);
+	if (config.wrappers !== undefined && (!isMap(config.wrappers) || !Object.values(config.wrappers).every((tag) => typeof tag === 'string'))) {
+		throw new Error(`${CONFIG_FILE}: "wrappers" maps a component to a tag name.`);
+	}
 	if (config.exclude !== undefined && !Array.isArray(config.exclude)) throw new Error(`${CONFIG_FILE}: "exclude" takes a list.`);
 	for (const [rule, level] of Object.entries(config.rules ?? {})) {
 		if (!knownRules.has(rule)) throw new Error(`${CONFIG_FILE}: unknown rule "${rule}".`);

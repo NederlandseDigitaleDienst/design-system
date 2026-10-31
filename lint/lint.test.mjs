@@ -690,6 +690,28 @@ describe('found in the sixth review', () => {
 		assert.deepEqual(await rulesIn('De `<nldd-gone>` staat hier.', 'a.md'), ['unknown-element']);
 	});
 
+	it('finds nothing in a mention of any tag', async () => {
+		const tags = Object.keys(loadData().tags);
+		const found = await Promise.all(tags.map((tag) => rulesIn(`\`<${tag}>\` en \`<${tag} />\``, 'a.md')));
+		assert.deepEqual(found.flat(), []);
+	});
+
+	it('closes a self-closing tag with a listener that has a dash', async () => {
+		const source = '<nldd-notification><nldd-button slot="actions" text="a" (action-click)="a()" /><nldd-button slot="actions" text="b" (action-click)="b()" /></nldd-notification>';
+		assert.deepEqual(await rulesIn(source, 'a.html'), []);
+	});
+
+	it('takes an arrow function in a script for no Angular', async () => {
+		const source = '<nldd-notification><nldd-button slot="actions" text="a" /><nldd-button slot="actions" text="b" /></nldd-notification><script>const f = (e)=> e;</script>';
+		assert.deepEqual(await rulesIn(source, 'a.html'), ['unknown-slot']);
+	});
+
+	it('wants a wrapper to name a tag', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, '.nldd-lint.json'), '{"wrappers":{"NlddX":1}}');
+		assert.match(run(root, 'lint').stderr, /"wrappers" maps a component to a tag name/);
+	});
+
 	it('reads Jinja in a Markdown fence', async () => {
 		assert.deepEqual(await rulesIn('```html\n<nldd-button{% if a %} text="b"{% endif %}></nldd-button>\n```', 'a.md'), []);
 	});

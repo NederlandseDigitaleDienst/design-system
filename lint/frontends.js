@@ -41,7 +41,7 @@ const TEMPLATE_VALUE = /\{\{|\{%|\$\{|<%|^\{.*\}$/;
 const TEMPLATE_TEXT = /\{%|\{\{|@(if|else|for|switch|defer)\b/;
 
 /** Angular markup in an .html file, where `<nldd-x />` does close the element. */
-const ANGULAR = /\*ng[A-Z]|\[\(|\s\[[a-zA-Z.-]+\]=|\s\([a-zA-Z.]+\)=|@(if|for|switch)\s*\(/;
+const ANGULAR = /\*ng[A-Z]|\[\(|\s\[[a-zA-Z.-]+\]=|\s\([a-zA-Z.-]+\)=["']|@(if|for|switch)\s*\(/;
 
 /** Anything else cannot be an attribute, so a template language is writing into the tag. */
 const PLAIN_ATTRIBUTE = /^[a-zA-Z_][\w:.-]*$/;
@@ -220,7 +220,7 @@ export function parseMarkdown(source) {
 	const prose = source.replace(fences, (block) => ' '.repeat(block.length));
 	// A bare `<nldd-button>` in a sentence names the tag and says nothing about its attributes.
 	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) {
-		read(match[1].replace(/^<([a-z-]+)>$/, '<$1 v-bind="x">'), match.index + 1);
+		read(match[1].replace(/^<([a-z-]+)\s*\/?>$/, '<$1 v-bind="x"><Mention /></$1>'), match.index + 1);
 	}
 	return roots;
 }
