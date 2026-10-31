@@ -40,16 +40,16 @@
  * @slot - Default slot for buttons (max 3)
  */
 import { LitElement } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { buttonGroupStyles } from './button-group.styles.js';
 import { template } from './button-group.template.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Size = 'sm' | 'md';
 type Orientation = 'auto' | 'horizontal' | 'vertical';
 type Width = '' | 'full';
-
-const MAX_BUTTONS = 3;
 
 @customElement('nldd-button-group')
 export class NLDDButtonGroup extends LitElement {
@@ -78,14 +78,9 @@ export class NLDDButtonGroup extends LitElement {
 	/** @internal */
 	_handleSlotChange(): void {
 		const assigned = this._slot.assignedElements({ flatten: true });
-		if (import.meta.env?.DEV && assigned.length > MAX_BUTTONS) {
-			console.warn(`nldd-button-group: holds ${MAX_BUTTONS} buttons at most; the rest are hidden.`);
-		}
 		for (const el of assigned) {
 			const own = el.getAttribute('size');
-			if (import.meta.env?.DEV && own !== null && own !== this.size && !this._sized.has(el)) {
-				console.warn(`nldd-button-group: a button has size="${own}", but the group sets size="${this.size}" on all its buttons. Set the size on the group.`);
-			}
+			if (own !== null && own !== this.size && !this._sized.has(el)) setState(this, 'own-size-overwritten', true);
 			el.setAttribute('size', this.size);
 			this._sized.add(el);
 		}
@@ -134,6 +129,7 @@ export class NLDDButtonGroup extends LitElement {
 		if (!import.meta.env?.DEV) return;
 		if (this.orientation !== 'auto' || this.width === 'full') {
 			this._stopWatchingForCollapse();
+			setState(this, 'no-width', false);
 			return;
 		}
 		if (this._collapseObserver) return;
@@ -144,7 +140,8 @@ export class NLDDButtonGroup extends LitElement {
 			if (!this.isConnected || this.getClientRects().length === 0) return;
 			if (!this._slot?.assignedElements({ flatten: true }).length) return;
 			if (this.getBoundingClientRect().width > 0) {
-				// It got a width, from the start or a tick late. Nothing to say.
+				// It got a width, from the start or a tick late.
+				setState(this, 'no-width', false);
 				this._stopWatchingForCollapse();
 				return;
 			}
@@ -155,7 +152,7 @@ export class NLDDButtonGroup extends LitElement {
 			this._collapseVerdict = window.setTimeout(() => {
 				if (!this.isConnected || this.getClientRects().length === 0) return;
 				if (this.getBoundingClientRect().width > 0) return;
-				console.warn('nldd-button-group: the group is 0 wide, so its buttons are invisible. It takes its width from its parent (it is a container query while orientation is auto), and a parent that sizes itself from its content leaves nothing to take. Give the group or that parent a width.');
+				setState(this, 'no-width', true);
 				this._stopWatchingForCollapse();
 			}, 250);
 		});

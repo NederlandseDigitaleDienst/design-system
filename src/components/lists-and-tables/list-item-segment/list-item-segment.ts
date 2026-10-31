@@ -1,12 +1,13 @@
 import { LitElement } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { listItemSegmentStyles } from './list-item-segment.styles.js';
 import { template, type ListItemSegmentControl } from './list-item-segment.template.js';
 import type { NLDDList } from '../list/list.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
-import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { nlddListItemSegmentTranslations } from './list-item-segment.i18n.js';
 
 export type ListItemSegmentWidth = 'fit-content' | 'full';
@@ -56,8 +57,8 @@ export type ListItemSegmentWidth = 'fit-content' | 'full';
  * @attr {boolean} disabled - Switches the segment off: a `button` or `checkbox` segment stops responding and dims, a `href` segment gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). The arrow keys skip a row whose only segment is off.
  *
  * Divider markers, set on a CELL inside the segment rather than on the segment itself:
- * @attr {boolean} divider-start - The row's divider starts at this cell instead of at its first text or title cell.
- * @attr {boolean} divider-end - The row's divider stops after this cell.
+ * @childattr {boolean} divider-start - The row's divider starts at this cell instead of at its first text or title cell.
+ * @childattr {boolean} divider-end - The row's divider stops after this cell.
  *
  * @slot - The cells that belong to this segment
  *
@@ -197,9 +198,6 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	/** Called by the parent nldd-list-item so a runtime type switch tracks. */
 	_applyParentType(type: string) {
 		this._parentType = type;
-		if (import.meta.env?.DEV && type === 'listbox' && this._wantsControl) {
-			console.warn('nldd-list-item-segment: rendered as a plain container because the parent nldd-list is type="listbox". An `option` may not contain interactive descendants — move the segment out of the listbox, or drive selection from the option itself.');
-		}
 	}
 
 	/** Whether the consumer asked for an interactive segment at all. */
@@ -291,11 +289,8 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 	}
 
 	override render() {
-		if (import.meta.env?.DEV && this.disclosure && this.expanded !== undefined) {
-			console.warn('nldd-list-item-segment: `disclosure` takes aria-expanded from the row, so the `expanded` on this action is ignored. Drop one of the two.');
-		}
 		const hintKey = this._controlType === 'link' ? downloadLinkHintKey(this.href, this.target, this.download) : null;
-		if (this._controlType === 'link') warnDownloadTarget(this, this.download, this.target);
+		if (this._controlType === 'link') markDownloadTarget(this, this.download, this.target);
 		return template(
 			this._controlType,
 			this.href,

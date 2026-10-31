@@ -45,11 +45,23 @@ function queryPattern(trigger: string, query: string): RegExp | null {
 	try {
 		pattern = new RegExp(`(^|\\s)(${trigger.replace(/[\\^$.*+?()[\]{}|/]/g, '\\$&')})(${query})$`, 'u');
 	} catch {
-		if (import.meta.env?.DEV) console.warn(`<nldd-text-editor>: the query of the "${trigger}" typeahead is not a valid regular expression; the default is used.`, query);
 		pattern = query === DEFAULT_TYPEAHEAD_QUERY ? null : queryPattern(trigger, DEFAULT_TYPEAHEAD_QUERY);
 	}
 	queryPatterns.set(key, pattern);
 	return pattern;
+}
+
+/** Whether a list sets a `query` that is no regular expression; see queryPattern. */
+export function hasInvalidQuery(typeaheads: readonly Typeahead[]): boolean {
+	return typeaheads.some(({ query }) => {
+		if (query === undefined) return false;
+		try {
+			new RegExp(query, 'u');
+			return false;
+		} catch {
+			return true;
+		}
+	});
 }
 
 /** One pattern per trigger. Lists on one trigger share it: the first list that

@@ -26,7 +26,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toggleButtonGroupStyles } from './toggle-button-group.styles.js';
 import { toggleButtonGroupTemplate } from './toggle-button-group.template.js';
@@ -54,7 +55,6 @@ export class NLDDToggleButtonGroup extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	required = false;
 
-	private _warnedRequired = false;
 
 	static override styles = toggleButtonGroupStyles;
 
@@ -118,11 +118,6 @@ export class NLDDToggleButtonGroup extends LitElement {
 		this.setAttribute('role', this.type === 'radio' ? 'radiogroup' : 'group');
 	}
 
-	override firstUpdated(): void {
-		import.meta.env?.DEV && !this.accessibleLabel && !this.accessibleLabeledBy &&
-			console.warn('<nldd-toggle-button-group>: No accessible name provided. Add an accessible-label or accessible-labeled-by attribute for screen reader accessibility.');
-	}
-
 	override updated(changed: Map<PropertyKey, unknown>): void {
 		if (changed.has('type') || changed.has('name') || changed.has('appearance') || changed.has('size') || changed.has('disabled')) {
 			this._syncButtons();
@@ -155,15 +150,6 @@ export class NLDDToggleButtonGroup extends LitElement {
 		// Announced, not drawn. See the note on `invalid`.
 		if (this.invalid) this.setAttribute('aria-invalid', 'true');
 		else this.removeAttribute('aria-invalid');
-
-		if (import.meta.env?.DEV && this.required && this.type === 'checkbox' && !this._warnedRequired) {
-			this._warnedRequired = true;
-			console.warn(
-				`<${this.localName}>: \`required\` on a checkbox group is announced but not enforced. `
-				+ 'HTML has no way to say "at least one of these", so the form still submits with nothing '
-				+ 'selected. Check it yourself on submit, or use radio mode.',
-			);
-		}
 
 		this._getButtons().forEach(button => {
 			button.type = this.type;

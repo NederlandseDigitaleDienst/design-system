@@ -86,7 +86,8 @@
  */
 import { relabel } from './text-editor.labels.js';
 import { type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { EditorView, drawSelection, dropCursor } from '@codemirror/view';
 import { Compartment, Prec, Transaction, type Extension } from '@codemirror/state';
@@ -96,6 +97,7 @@ import { nlddCodeMirrorTheme } from '../../../utilities/codemirror/theme.js';
 import { markdownEditing } from './text-editor.markdown.js';
 import { mentionInsert, mentionToken, mentionRangeAt } from './text-editor.mention.js';
 import {
+	hasInvalidQuery,
 	typeaheads as typeaheadExtension,
 	type MentionSource,
 	type MentionInsertedDetail,
@@ -142,6 +144,7 @@ import { nlddTextEditorTranslations, type NLDDTextEditorTranslations } from './t
 import { translate } from '../../../utilities/translations.js';
 import { tasks } from './text-editor.tasks.js';
 import { codeCopy } from './text-editor.code-copy.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 export type TextEditorAppearance = 'input-field' | 'simple';
@@ -436,6 +439,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
+		if (changed.has('typeaheads')) setState(this, 'invalid-typeahead-query', hasInvalidQuery(this.typeaheads));
 		if (!this.view) return;
 		// A render after setTranslations() or a new `translations`: the labels
 		// drawn inside the document follow when their text changed.
@@ -678,7 +682,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 			case 'copy': void this.copy(); break;
 			case 'cut': void this.cut(); break;
 			case 'paste': void this.paste(); break;
-			default: console.warn(`<nldd-text-editor>: runCommand('${name}') is not a command.`);
+			default: setState(this, 'unknown-command', true);
 		}
 	}
 

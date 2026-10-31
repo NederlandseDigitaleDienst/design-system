@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDNumberField } from './number-field.js';
 import './number-field.js';
@@ -344,35 +344,6 @@ describe('nldd-number-field – typing & clamping on commit', () => {
 	});
 });
 
-
-/* ============================================================
-   Accessibility
-   ============================================================ */
-
-describe('nldd-number-field – accessibility', () => {
-	let el: HTMLElement;
-
-	afterEach(() => {
-		if (el) cleanup(el);
-		vi.restoreAllMocks();
-	});
-
-	it('warns when accessible-label is not provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture('<nldd-number-field></nldd-number-field>');
-		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('accessible-label')
-		);
-	});
-
-	it('does not warn when accessible-label is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture('<nldd-number-field accessible-label="Aantal"></nldd-number-field>');
-		await waitForUpdate(el);
-		expect(warnSpy).not.toHaveBeenCalled();
-	});
-});
 
 describe('nldd-number-field – hide-spin-buttons', () => {
 	let el: HTMLElement;

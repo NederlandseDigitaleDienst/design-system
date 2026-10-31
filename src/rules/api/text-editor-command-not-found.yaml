@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-text-editor:state(unknown-command)'
+message: 'runCommand() got a name that is not a command.'

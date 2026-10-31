@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-page > :is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section) ~ nldd-hero'
+message: 'Make nldd-hero the first section, which says what the site is for.'
+see: patronen/home-page
+examples:
+  passed: ['<nldd-page><nldd-hero></nldd-hero><nldd-simple-section></nldd-simple-section></nldd-page>']
+  failed: ['<nldd-page><nldd-simple-section></nldd-simple-section><nldd-hero></nldd-hero></nldd-page>']

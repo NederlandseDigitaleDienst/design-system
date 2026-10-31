@@ -238,15 +238,11 @@ describe('nldd-text-editor line commands', () => {
 			cleanup(el);
 		});
 
-		it('waarschuwt bij een naam die geen commando is', async () => {
+		it('ziet het bij een naam die geen commando is', async () => {
 			const el = await withValue('Tekst');
-			const warnings: unknown[] = [];
-			const original = console.warn;
-			console.warn = (...args: unknown[]) => { warnings.push(args[0]); };
 			el.runCommand('bald');
-			console.warn = original;
 			expect(el.value).toBe('Tekst');
-			expect(String(warnings[0])).toContain("runCommand('bald')");
+			expect(el.matches(':state(unknown-command)')).toBe(true);
 			cleanup(el);
 		});
 

@@ -252,10 +252,9 @@ describe('<nldd-link> with download', () => {
 		expect(a.textContent).toContain('downloadt bestand');
 	});
 
-	it('warns once that target does nothing on a download', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that target does nothing on a download', async () => {
 		el = await fixture('<nldd-link href="/verslag.pdf" target="_blank" download="verslag.pdf" text="Verslag"></nldd-link>');
 		await waitForUpdate(el);
-		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
+		expect(el.matches(':state(download-with-target)')).toBe(true);
 	});
 });

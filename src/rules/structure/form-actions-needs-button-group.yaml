@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-form-actions'
+assert: ':has(> nldd-button-group)'
+message: 'Put the action in a nldd-button-group, also when there is only one.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-actions><nldd-button-group><nldd-button text="Verstuur"></nldd-button></nldd-button-group></nldd-form-actions>']
+  failed: ['<nldd-form-actions><nldd-button text="Verstuur"></nldd-button></nldd-form-actions>']

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-navigation-split-view nldd-page:not([landmarks="page"]) > nldd-top-title-bar:not([heading-level])'
+message: 'Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.'
+see: patronen/application
+examples:
+  passed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="primary-sidebar"><nldd-page accessible-label="Mappen"><nldd-top-title-bar slot="header" text="Mappen" heading-level="2"></nldd-top-title-bar></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']
+  failed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="primary-sidebar"><nldd-page accessible-label="Mappen"><nldd-top-title-bar slot="header" text="Mappen"></nldd-top-title-bar></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']

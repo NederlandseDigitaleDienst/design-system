@@ -103,13 +103,6 @@ describe('nldd-task-board', () => {
 		expect(without.shadowRoot!.querySelector('.task-board-column__footer')!.hasAttribute('hidden')).toBe(true);
 	});
 
-	it('warns about a column without a name', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDTaskBoard>('<nldd-task-board><nldd-task-board-column></nldd-task-board-column></nldd-task-board>');
-		await waitForUpdate(el.columns[0]);
-		expect(warn.mock.calls.some(([message]) => String(message).includes('needs `text`'))).toBe(true);
-	});
-
 	it('fades the side it can scroll to, and only that side', async () => {
 		const unloadTokens = loadTokens();
 		el = await fixture<NLDDTaskBoard>(`

@@ -54,12 +54,14 @@
  * @method moveItem(item, toColumn, toIndex?) - Moves an item to a column, given as its `value` or as the element, at `toIndex` or at the end; fires `nldd-move` and says where it landed. Returns whether it moved.
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddTaskBoardTranslations } from './task-board.i18n.js';
 import { taskBoardStyles } from './task-board.styles.js';
 import { taskBoardTemplate } from './task-board.template.js';
 import { NLDDTaskBoardColumn } from './task-board-column.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export { NLDDTaskBoardColumn };
 
@@ -205,7 +207,7 @@ export class NLDDTaskBoard extends withTranslations(LitElement, nlddTaskBoardTra
 			? this.columns.find((column) => this._columnKey(column) === toColumn)
 			: toColumn;
 		if (!from || !to || !this.columns.includes(to)) {
-			if (import.meta.env?.DEV) console.warn('nldd-task-board: moveItem() needs an item in one of the board\'s columns and a column of the board.');
+			setState(this, 'invalid-move', true);
 			return false;
 		}
 		const fromIndex = from.items.indexOf(item);

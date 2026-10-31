@@ -30,13 +30,15 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { skipLinkStyles } from './skip-link.styles.js';
 import { template } from './skip-link.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddSkipLinkTranslations } from './skip-link.i18n.js';
 import { focusTemporarily, hashTarget, samePageHash } from '../../../utilities/focus-target.js';
+import { setState } from '../../../utilities/element-state.js';
 
 @customElement('nldd-skip-link')
 export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTranslations) {
@@ -55,12 +57,7 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 	_handleClick = (): void => {
 		const next = this._target();
 		if (!next) {
-			if (import.meta.env?.DEV) {
-				console.warn(
-					'<nldd-skip-link>: no rendered element follows the skip link, so it has nothing to move focus to. '
-					+ 'Put the content it skips to right after it, or point `href` at the id of the target.',
-				);
-			}
+			setState(this, 'no-target', true);
 			return;
 		}
 		this._focus(next);
@@ -98,9 +95,7 @@ export class NLDDSkipLink extends withTranslations(LitElement, nlddSkipLinkTrans
 		// as the original and put that back for good. Settle the first one first.
 		this._restoreTarget?.();
 		this._restoreTarget = focusTemporarily(target) ?? undefined;
-		if (!this._restoreTarget && import.meta.env?.DEV) {
-			console.warn('<nldd-skip-link>: the target did not take focus, so the skip link did nothing. It is probably hidden or inert.', target);
-		}
+		if (!this._restoreTarget) setState(this, 'target-not-focusable', true);
 	}
 
 	/**

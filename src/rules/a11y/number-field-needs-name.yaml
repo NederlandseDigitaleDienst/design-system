@@ -1,0 +1,9 @@
+severity: error
+context: 'nldd-number-field'
+assert: '[accessible-label], :named-by-field'
+message: 'nldd-number-field needs `accessible-label` or a labeled nldd-form-field around it, or a screen reader cannot announce its purpose.'
+see: patronen/form
+examples:
+  passed: ['<nldd-number-field accessible-label="Aantal"></nldd-number-field>', '<nldd-form-field label="Aantal"><nldd-number-field></nldd-number-field></nldd-form-field>']
+  failed: ['<html><body><nldd-number-field></nldd-number-field></body></html>', '<html><body><nldd-form-field><nldd-number-field></nldd-number-field></nldd-form-field></body></html>']
+  cantTell: ['<nldd-number-field></nldd-number-field>']

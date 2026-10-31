@@ -10,13 +10,15 @@
  * @attr {'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'} color - Color variant of the icon (default: 'content')
  * @attr {string} vertical-alignment - Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')
  * @attr {string} icon - Icon name (renders `<nldd-icon>`). Takes precedence over the default slot.
+ * @attr {boolean} disclosure - Marks this icon as the chevron of a row or segment that opens and closes: the row turns it with `expanded`.
  *
  * @slot - Fallback for custom icon content when `icon` is not set.
  *
  * @csspart icon - The glyph itself, whether it comes from `icon` or from the slot. Transform this rather than the cell: a transform on the host changes the box `getBoundingClientRect()` reports, and a row measures its cells to place the divider.
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { iconCellStyles } from './icon-cell.styles.js';
 import { template } from './icon-cell.template.js';

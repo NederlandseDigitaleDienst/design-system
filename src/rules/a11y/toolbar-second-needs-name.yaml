@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-toolbar ~ nldd-toolbar:not([accessible-label])'
+message: 'Give each toolbar an `accessible-label` when a page has more than one.'
+see: patronen/toolbar-with-actions
+examples:
+  passed: ['<nldd-toolbar accessible-label="Dossiers"></nldd-toolbar><nldd-toolbar accessible-label="Weergave"></nldd-toolbar>']
+  failed: ['<nldd-toolbar accessible-label="Dossiers"></nldd-toolbar><nldd-toolbar></nldd-toolbar>']

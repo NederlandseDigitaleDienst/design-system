@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-list-item:state(expanded-in-navigation)'
+message: '`expanded` does nothing on a row with sub-pages in an nldd-list with type="navigation": they are always shown, so the attribute is ignored. Use type="tree" for sections that fold away.'

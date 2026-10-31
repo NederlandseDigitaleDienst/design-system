@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-list-item-segment:is([accessible-label="Meer" i], [accessible-label="Acties" i], [accessible-label="Opties" i], [accessible-label="Menu" i], [accessible-label="Meer acties" i], [accessible-label="Meer opties" i])'
+message: 'Name the row in the label, such as "Acties voor Dossier D-318": in twenty rows this says the same thing twenty times.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list-item-segment button accessible-label="Acties voor Dossier D-318"></nldd-list-item-segment>']
+  failed: ['<nldd-list-item-segment button accessible-label="Meer"></nldd-list-item-segment>']

@@ -9,7 +9,8 @@
  */
 
 import { LitElement, html, css } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { encodeLqip } from './lqip-encoder.js';
 import './image.js';
 

@@ -35,7 +35,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { avatarGroupStyles } from './avatar-group.styles.js';
 import { avatarGroupTemplate } from './avatar-group.template.js';
 import '../avatar/avatar.js';
@@ -156,8 +157,6 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 	 *  waiting for a slotchange that will not come. */
 	private _assigned: Element[] = [];
 
-	private _warnedTargetSize = false;
-
 	override willUpdate(changed: Map<string, unknown>): void {
 		if (changed.has('max') || changed.has('_fitMax') || changed.has('size')) this._recompute();
 	}
@@ -169,30 +168,6 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 
 	private _recompute(): void {
 		const assigned = this._assigned;
-		if (import.meta.env?.DEV) {
-			const strays = assigned.filter(el => el.localName !== 'nldd-avatar');
-			if (strays.length > 0) {
-				console.warn(
-					`[nldd-avatar-group] slot an nldd-avatar rather than <${strays[0].localName}>: `
-					+ 'the group sizes, stacks and rings its avatars, and only an nldd-avatar '
-					+ 'carries the name that the tooltip and the overflow list read.',
-				);
-			}
-		}
-		if (import.meta.env?.DEV) {
-			// Each avatar covers part of the next, so a link or button keeps only
-			// (1 - OVERLAP) of its width as a target, and the targets touch: no
-			// room for the WCAG 2.5.8 spacing exception.
-			const interactive = assigned.some(el => el.hasAttribute('href') || el.hasAttribute('button'));
-			const small = interactive && Number(this.size) * (1 - OVERLAP) < 24;
-			if (small && !this._warnedTargetSize) {
-				this._warnedTargetSize = true;
-				console.warn(`<nldd-avatar-group size="${this.size}">: avatars that are links or buttons overlap, so each keeps too small a target (WCAG 2.5.8). Use size 32 or larger.`);
-			}
-			else if (!small) {
-				this._warnedTargetSize = false;
-			}
-		}
 		const max = this._effectiveMax;
 		const hidden = max !== undefined && assigned.length > max
 			? assigned.slice(max)

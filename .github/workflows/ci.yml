@@ -61,6 +61,22 @@ jobs:
         run: npm run build:styles
       - name: Build components
         run: npm run build:components
+      # Without this the library build removes the DEV checks from the main export.
+      # The `?.` matters: a project without Vite has no import.meta.env.
+      - name: Verify DEV checks survive the build
+        run: |
+          grep -q 'import.meta.env?.DEV' dist/components/components.js
+          ! grep -q 'import.meta.env.DEV' dist/components/components.js
+      # The linter is what consumers run, from the tarball: lint/ has to be in it
+      # and its dependencies have to resolve outside this repository.
+      - name: Smoke test the packed linter
+        run: |
+          npm pack --silent --pack-destination "$RUNNER_TEMP"
+          cd "$RUNNER_TEMP"
+          npm init -y > /dev/null
+          npm install --silent --ignore-scripts ./nldd-design-system-*.tgz
+          echo '<template><nldd-button text="Bewaar"></nldd-button></template>' > a.vue
+          npx nldd lint a.vue
       - name: Verify exports map is up to date
         run: node scripts/generate-exports.js && git diff --exit-code package.json
       - name: Verify plugin manifests follow the package version

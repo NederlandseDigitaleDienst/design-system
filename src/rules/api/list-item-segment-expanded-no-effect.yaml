@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-list-item-segment[disclosure]'
+report: '[expanded=""], [expanded]'
+message: '`disclosure` takes aria-expanded from the row, so the `expanded` on this action is ignored. Drop one of the two.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list-item-segment disclosure button></nldd-list-item-segment>', '<nldd-list-item-segment expanded button></nldd-list-item-segment>']
+  failed: ['<nldd-list-item-segment disclosure expanded button></nldd-list-item-segment>']

@@ -1,5 +1,5 @@
 import { _setOSOverride } from '../../../utilities/os.js';
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate, deepActiveElement } from '../../../test-utils.js';
 import type { NLDDToggleButton } from './toggle-button.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
@@ -230,36 +230,6 @@ describe('nldd-toggle-button – variant', () => {
 		el = await fixture<NLDDToggleButton>('<nldd-toggle-button variant="icon-and-text" accessible-label="Leeg"></nldd-toggle-button>');
 		await waitForUpdate(el);
 		expect(el.shadowRoot!.querySelector('nldd-icon[icon="icon-placeholder"]')).not.toBeNull();
-	});
-
-	it('warns when neither text nor accessible-label is set', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-		el = await fixture<NLDDToggleButton>('<nldd-toggle-button icon="heart"></nldd-toggle-button>');
-		await waitForUpdate(el);
-
-		expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('accessible-label'));
-		warnSpy.mockRestore();
-	});
-
-	it('does not warn when accessible-label is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-		el = await fixture<NLDDToggleButton>('<nldd-toggle-button icon="heart" accessible-label="Favoriet"></nldd-toggle-button>');
-		await waitForUpdate(el);
-
-		expect(warnSpy).not.toHaveBeenCalled();
-		warnSpy.mockRestore();
-	});
-
-	it('does not warn when text is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-		el = await fixture<NLDDToggleButton>('<nldd-toggle-button text="Label"></nldd-toggle-button>');
-		await waitForUpdate(el);
-
-		expect(warnSpy).not.toHaveBeenCalled();
-		warnSpy.mockRestore();
 	});
 });
 

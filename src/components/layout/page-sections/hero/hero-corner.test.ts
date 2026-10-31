@@ -84,11 +84,10 @@ describe('nldd-hero – corner', () => {
 		expect(el.getAttribute('data-media-corner')).toBe('bottom-left');
 	});
 
-	it('takes auto as the hero choosing, without a warning', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('takes auto as the hero choosing', async () => {
 		await hero('corner="auto" layout="contained"');
 		expect(el.getAttribute('data-media-corner')).toBe('top-right');
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('is not a corner'))).toBe(false);
+		expect(el.matches(':state(corner-unknown)')).toBe(false);
 	});
 
 	it('treats an inherited key as an unknown main-position', async () => {
@@ -101,11 +100,10 @@ describe('nldd-hero – corner', () => {
 		expect(el.hasAttribute('data-main-corner')).toBe(false);
 	});
 
-	it('falls back to choosing the corner for an unknown value, and says so', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('falls back to choosing the corner for an unknown value', async () => {
 		await hero('corner="middle" layout="contained"');
 		expect(el.getAttribute('data-media-corner')).toBe('top-right');
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('corner="middle" is not a corner'))).toBe(true);
+		expect(el.matches(':state(corner-unknown)')).toBe(true);
 	});
 
 	it('puts the panel against the edge of the image in contained', async () => {
@@ -135,28 +133,16 @@ describe('nldd-hero – corner', () => {
 	});
 
 	it('stays rectangular in overlap and says so', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await hero('corner main-position="bottom-right"');
 		expect(el.hasAttribute('data-media-corner')).toBe(false);
 		expect(rounded('.hero__media')).toEqual([]);
-		const messages = warn.mock.calls.map((call: unknown[]) => String(call[0]));
-		expect(messages.some((message) => message.includes('set layout="contained"'))).toBe(true);
-		expect(messages.some((message) => message.includes('instead of main-position'))).toBe(false);
-	});
-
-	it('names both fixes when the layout and the position are both off', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		await hero('corner main-position="bottom-center"');
-		const message = warn.mock.calls.map((call: unknown[]) => String(call[0])).find((m) => m.includes('stays rectangular'))!;
-		expect(message).toContain('set layout="contained"');
-		expect(message).toContain('instead of main-position="bottom-center"');
+		expect(el.matches(':state(corner-unsupported)')).toBe(true);
 	});
 
 	it('stays rectangular with a centered panel and says so', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await hero('corner layout="contained" main-position="top-center"');
 		expect(el.hasAttribute('data-media-corner')).toBe(false);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('instead of main-position="top-center"'))).toBe(true);
+		expect(el.matches(':state(corner-unsupported)')).toBe(true);
 	});
 
 	it('moves a bottom corner to the top on mobile and keeps the panel square', async () => {
@@ -171,11 +157,10 @@ describe('nldd-hero – corner', () => {
 		expect(rounded('.hero__main')).toEqual(['top-right']);
 	});
 
-	it('rounds the hero without media in overlap, without a warning', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('rounds the hero without media in overlap', async () => {
 		await hero('corner layout="overlap"', 1200, '');
 		expect(rounded('.hero__body')).toEqual(['top-right']);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('corner'))).toBe(false);
+		expect(el.matches(':state(corner-unsupported)')).toBe(false);
 	});
 
 	it('takes half the radius without media', async () => {
@@ -237,22 +222,14 @@ describe('nldd-hero – corner', () => {
 		expect(rounded('.hero__media')).toEqual([]);
 	});
 
-	it('says so when the chosen corner sits under the panel', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('states that the chosen corner sits under the panel', async () => {
 		await hero('corner="bottom-left" layout="contained" main-position="bottom-left"');
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('sits under the panel'))).toBe(true);
+		expect(el.matches(':state(corner-covered)')).toBe(true);
 	});
 
-	it('says so with width="full"', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		await hero('corner width="full" layout="contained"');
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('width="full"'))).toBe(true);
-	});
-
-	it('stays quiet when the hero chooses the corner', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('covers nothing when the hero chooses the corner', async () => {
 		await hero('corner layout="contained" main-width="full"');
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('corner'))).toBe(false);
+		expect(el.matches(':state(corner-covered)')).toBe(false);
 	});
 	it('zet het paneel op mobiel onder de afbeelding, even breed', async () => {
 		await hero('corner="top-left" layout="contained" main-position="bottom-left"', 375);

@@ -1,0 +1,6 @@
+severity: warn
+context: ':cell[hide-below="sm"]'
+message: 'hide-below="sm" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is "md". Leave the attribute off if you meant "always visible".'
+examples:
+  passed: ['<nldd-text-cell hide-below="md" text="Aanvraag A-1042"></nldd-text-cell>']
+  failed: ['<nldd-text-cell hide-below="sm" text="Aanvraag A-1042"></nldd-text-cell>']

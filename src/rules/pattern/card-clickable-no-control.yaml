@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-card:is([href], [button]) :is(nldd-link, nldd-button, nldd-icon-button):not([slot="footer"])'
+message: 'Drop this control: the whole card already is one link and one tab stop.'
+see: patronen/navigation-page
+examples:
+  passed: ['<nldd-card href="/a" accessible-label="Aanvraag A-1042"><nldd-title text="Aanvraag A-1042"></nldd-title></nldd-card>']
+  failed: ['<nldd-card href="/a" accessible-label="Aanvraag A-1042"><nldd-link href="/a" text="Lees meer"></nldd-link></nldd-card>']

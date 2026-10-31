@@ -18,7 +18,8 @@
  * @fires change - Bubbles up from the checked field; detail: { checked: boolean, value: string }
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { radioButtonGroupStyles } from './radio-button-group.styles.js';
 import { radioButtonGroupTemplate } from './radio-button-group.template.js';
 import type { NLDDRadioButtonField } from '../radio-button-field/radio-button-field.js';
@@ -76,12 +77,6 @@ export class NLDDRadioButtonGroup extends LitElement {
 		super.disconnectedCallback();
 		this.removeEventListener('keydown', this._handleKeyDown);
 		this.removeEventListener('change', this._handleChange);
-	}
-
-	override firstUpdated(): void {
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this.accessibleLabeledBy) {
-			console.warn('<nldd-radio-button-group>: No accessible name provided. Add an accessible-label or accessible-labeled-by attribute for screen reader accessibility.');
-		}
 	}
 
 	override updated(changed: Map<PropertyKey, unknown>): void {

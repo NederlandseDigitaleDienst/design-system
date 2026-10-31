@@ -1,0 +1,7 @@
+severity: warn
+context: ':is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero):has(nldd-title[heading-level="1"], nldd-title > h1) ~ :is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero):has(nldd-title[heading-level="1"], nldd-title > h1)'
+message: 'Keep one h1 on a page and make this title an h2.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page><nldd-simple-section><nldd-title text="A" heading-level="1"></nldd-title></nldd-simple-section><nldd-simple-section><nldd-title text="B" heading-level="2"></nldd-title></nldd-simple-section></nldd-page>']
+  failed: ['<nldd-page><nldd-simple-section><nldd-title text="A" heading-level="1"></nldd-title></nldd-simple-section><nldd-simple-section><nldd-title text="B" heading-level="1"></nldd-title></nldd-simple-section></nldd-page>']

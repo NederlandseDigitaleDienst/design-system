@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-icon[name]'
+removed: ['name']
+message: 'The `name` attribute is now `icon`. Rename it here and on every other nldd-icon.'
+examples:
+  passed: ['<nldd-icon icon="plus"></nldd-icon>']
+  failed: ['<nldd-icon name="plus"></nldd-icon>']

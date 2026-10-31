@@ -9,6 +9,36 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Breaking
+
+- **Warnings changed shape.** Tests that spy on `console.warn` for a text of this package need the new text: `[nldd] <rule>: ...`. Most warnings now arrive a moment later, once per element.
+
+### Highlights
+
+- **`nldd lint`, a fast and deterministic check for code that uses the design system.** `npx @nldd/design-system lint`, with no configuration: unknown tags, attributes, slots, values and icons, missing accessible names, and mistakes in how components fit together. A value that only exists at runtime is never a finding, and `--update-baseline` accepts what is already there, so only new findings count. It reads HTML, Vue and JSX/TSX, and works as a pre-commit hook and in CI with `--format github`. See Added.
+
+### Added
+
+- **The same rules in the browser.** While developing with a bundler that sets `import.meta.env.DEV`, such as Vite, a page shows `[nldd]` warnings in the console. A rule then sees real values and what several components render together. A production build does not contain this.
+- **`nldd lint` reads Vue, TSX, JSX, Angular, Django, Jinja (`.j2`), htmx and plain HTML** as they are, and Astro, MkDocs and Hugo through what they build. What a template writes into a tag makes an element uncertain, never wrong.
+- **Rules come in groups.** `api`, `a11y`, `copy`, `structure` and `pattern`, for `--select`, `--ignore`, `rules --group` and `.nldd-lint.json`. A name starts with what it is about and says what is wrong, such as `tab-bar-needs-name`.
+- **Hints, about how something is meant to be done.** Every sentence in the design guidelines and the patterns was read, and what the markup shows became a rule or a hint. A hint never fails anything. It appears on the pattern it belongs to, and the output sums up each hint once.
+- **`nldd lint dist` reads built HTML,** as whole pages, for any framework that builds to HTML.
+- **`nldd lint`, `nldd explain` and `nldd rules`.** The package has a `bin`. `--format json` gives an agent everything it needs to fix a finding.
+- **`nldd-design-validate`, a sixth skill,** and a hook in the plugin that hands findings back to the agent after an edit. The hook only runs the linter installed in the project.
+- **Rules on the page.** The reference lists the rules per component, and a pattern shows the rules that belong to it.
+- **`custom-elements.json` spells out literal types.** An attribute typed `Appearance` now has `expandedType` with its values, and the manifest lists attributes that only have JSDoc.
+- **`disclosure` on `nldd-icon-cell`** is now documented.
+
+### Fixed
+
+- **DEV warnings reach the main export.** The library build removed almost all of them from `@nldd/design-system`, so only a per-component import showed them.
+
+### Changed
+
+- **Every warning is now a rule in `src/rules/`.** No component contains warning text any more. Warnings start with `[nldd]` and the id of the rule, arrive once per element, and no longer repeat the value at fault: the element is logged with it. Warnings that were always on, such as `hide-below="sm"`, now only appear while developing.
+- **Custom states while developing.** Where a fact is not in the markup, a component exposes it as `:state()`, such as `nldd-button-group:state(no-width)`, and a rule reads that. In production this does nothing.
+
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
 
 ### Highlights

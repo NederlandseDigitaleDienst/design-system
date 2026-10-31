@@ -19,6 +19,7 @@ npm run build            # Volledige build
 | Nieuwe branch starten | `/worktree <branch>` | Maakt worktree + kopieert .env en .claude/ |
 | Component maken/updaten | `/component <naam>` | Alle regels, formatting, BEM, CSS, templates |
 | Storybook beheren | `/storybook-manager` | Start/stop/status van Storybook instances |
+| Lintregel toevoegen | `/rule <wat er mis is>` | Schrijft de regel, test hem op patronen en echte apps |
 
 **Typische flow voor nieuwe feature:**
 ```
@@ -163,13 +164,62 @@ Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-
 
 Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `docs/CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
-Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Onbekende tag, attribuut, slot of icoonnaam laat CI falen. De logica zit in `scripts/lib/skill-markup.js` met tests in `skill-markup.test.mjs`; die gebruikt dezelfde JSDoc-parser als de referentie, zodat de drie niet uiteen kunnen lopen. Twee dingen zijn expres toegestaan: framework-bindingen (`:text`, `[attr.x]`, `v-if`) en attributen die een ouder voor zijn kinderen documenteert (`above`/`below`/`only` op de split views).
+Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) en de README wordt gecontroleerd met `npm run validate:skill-markup`, dat in `validate.yml` draait. Dat zijn alle regels van `nldd lint`, hints inbegrepen: dit is wat consumenten en agents overnemen. Hetzelfde geldt voor de Lit-templates in de stories, met `npm run lint:stories`: de documentatie volgt de eigen regels. Een voorbeeld dat bewust fout is, krijgt een onderdrukking met een reden; zie Linter.
 
 Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.mdx`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
 
+## Linter
+
+`nldd lint` (`lint/`, de `bin` van het pakket) controleert consumentencode: onbekende tags, attributen, slots, waarden en iconen, en fouten in het samenspel van componenten. Gebruik `/rule` om een regel toe te voegen.
+
+Dezelfde regels draaien op drie plekken:
+
+| Waar | Wat het ziet |
+|------|--------------|
+| Bron (`.vue`, `.tsx`, `.jsx`, `.html`, `.j2`, ook Angular, Django en htmx) | Vóór de commit, per bestand, alleen wat zeker fout is |
+| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Daarom leest de linter geen `.astro`: dat loopt via zijn output |
+| Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen. Alleen met een bundler die `import.meta.env.DEV` zet, zoals Vite; Angular en server-rendered apps hebben de eerste twee rijen |
+
+Wat een template in een tag schrijft (`{% if %}`, `{{ attrs }}`, `*ngIf`) maakt het element onzeker, nooit fout. Wijzig je de parser, draai dan `npm run lint:corpus` op elk soort consument uit de README: Vue, TSX, Angular, Jinja en gewone HTML.
+
+Een component geeft wat niet in de markup staat door met `setState`, alleen in dev. De browser krijgt de regels als gewone CSS in `src/utilities/dev-rules.generated.ts` en evalueert ze met `el.matches()`. Elke regel is een selector. Wat niet in de markup staat, stelt een component beschikbaar als feit met `setState(this, 'feit', conditie)`, een CSS custom state; de regel leest die met `:state(feit)` en krijgt `runtime: true`. Het feit beschrijft wat er is, nooit de fout: `no-width`, `invalid-max-height`. Een component bevat geen meldingstekst en weet niets van regels: `lint:rules` faalt op `console.warn` en op een state die niets zet. Een attribuut in een `assert` geldt in de browser ook als de property is gezet, want een selector ziet die niet. Een `[x]` in een selector betekent "heeft een waarde", behalve bij booleans.
+
+De linter hoort bij zijn eigen versie: hij zit in het pakket, dus een project draait de API die het heeft. Met `npx @nldd/design-system@latest lint` zie je wat een upgrade breekt.
+
+| Feit | Enige bron | Daaruit gegenereerd |
+|------|------------|---------------------|
+| API | JSDoc en TS-types | `custom-elements.json`, `reference.md`, de ingebouwde regels |
+| Regel | `src/rules/<groep>/<id>.yaml` | Linter, `reference.md`, sectie `Regels` op een patroon |
+| Patroon: hoe en waarom | `<slug>.mdx` | Storybook, skill-pagina |
+| Voorbeeld | `<slug>.html` | Story, docs, skill |
+
+Er zijn drie niveaus: `error` en `warn` kunnen CI laten falen; een `hint` nooit. Een hint zegt hoe iets bedoeld is en wijst met `see` naar het patroon of de richtlijn. Hints draaien op broncode en gebouwde pagina's, niet in de browser: daar schrijven componenten zelf `style` en `id`, en dat zou een hint voor de markup van de app aanzien.
+
+Eén regel, één bestand in `src/rules/<groep>/`, ook als hij over meer componenten gaat. De bestandsnaam is het regel-ID, en dat ID is API: consumers hebben het in baselines en onderdrukkingen staan. Hernoem via `aliases`. De groep is de map en zit niet in het ID, dus een regel verhuizen breekt niets. Loop de groepen van boven naar beneden af; de eerste die past, is het:
+
+| Groep | Vraag |
+|---|---|
+| `api` | Bestaat dit, en heeft het effect? |
+| `a11y` | Mist hulptechnologie iets? |
+| `copy` | Klopt de tekst? |
+| `structure` | Klopt de samenstelling? |
+| `pattern` | Is er een bedoelde manier? |
+
+Een naam begint met waar hij over gaat: de tag zonder `nldd-`, of een begrip uit `CONCEPTS` in `scripts/check-lint-rules.js`. Daarna één van vier vormen: `-needs-` (iets ontbreekt), `-no-` (mag niet), `-max-` (te veel), `-goes-` (verkeerde plek). In `api` eindigt hij op `-renamed`, `-invalid`, `-no-effect` of `-not-found`. `lint:rules` bewaakt dit. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.mdx` hoeft niet mee te veranderen.
+
+`message` zegt wat hier fout is, in het Engels, zoals een compilerfout. Het waarom staat op de pagina waar `see` naar wijst en wordt niet overgeschreven.
+
+Een regel komt erbij met een echte vondst. Hij heeft een `passed`- en `failed`-voorbeeld, en `npm run lint:rules` faalt als een voorbeeld niet doet wat het claimt, als een selector iets noemt dat niet bestaat, of als een patroon-`.html` de regel breekt. Zo faalt een hernoeming in dezelfde PR. Controleer met `npm run lint:corpus` wat een regel in echte apps doet; de paden komen uit `NLDD_LINT_CORPUS`, zodat er geen lokale paden in de repo belanden. Nieuwe regels komen als `warn`, want `feat:` is een patch en `^0.13.0` neemt die mee: een nieuwe `error` zou CI van consumers ongevraagd rood maken. `error` alleen via een `!`-commit. De regels uit de eerste release zijn hierop de uitzondering, omdat er toen nog geen CI van consumers op draaide.
+
+Elke regel draait in twee werelden: in W+ valt alles wat onbekend is gunstig uit, in W- ongunstig. Geschonden in beide is `failed`, en alleen dat wordt gemeld. Een gebonden waarde of een kindcomponent uit een ander bestand is dus `cantTell` en nooit vals alarm. Hele pagina's zie je alleen op gebouwde HTML of in de browser.
+
+Een attribuut dat een ouder van zijn kinderen leest (`only` op een pane) documenteer je met `@childattr` bij de ouder. Het is dan alleen op een kind van die ouder geldig.
+
+`lint/data.generated.json` en `src/utilities/dev-rules.generated.ts` komen uit `npm run generate:lint-data` en worden gecommit, zodat een pre-commit run geen manifest van 2 MB hoeft te lezen. `generate:cem` draait het mee.
+
 ## Plugin-versie
 
-De plugin heet `nldd-design-system` en staat in de NLDD-marketplace, een aparte repository (`NederlandseDigitaleDienst/ai-plugins`, marketplace-naam `nldd`) die naar deze repository verwijst. De manifesten hier (`.claude-plugin/plugin.json` voor Claude Code, `.cursor-plugin/plugin.json` voor Cursor) leveren de vijf consumentenskills (`nldd-design`, `nldd-design-build`, `nldd-design-migrate`, `nldd-design-upgrade`, `nldd-design-contribute`) uit `skills/`. Daarnaast staat er een zesde, `skills/nldd/`, die alleen doorverwijst: die vangt verwijzingen naar de oude skillnaam op en **hoort na 1 maart 2027 verwijderd te worden**, samen met de regel erover in de changelog. Die wegwijzer meldt ook de overstap naar de nieuwe marketplace. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skills nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
+De plugin heet `nldd-design-system` en staat in de NLDD-marketplace, een aparte repository (`NederlandseDigitaleDienst/ai-plugins`, marketplace-naam `nldd`) die naar deze repository verwijst. De manifesten hier (`.claude-plugin/plugin.json` voor Claude Code, `.cursor-plugin/plugin.json` voor Cursor) leveren de zes consumentenskills (`nldd-design`, `nldd-design-build`, `nldd-design-validate`, `nldd-design-migrate`, `nldd-design-upgrade`, `nldd-design-contribute`) uit `skills/`. Daarnaast staat er een zevende, `skills/nldd/`, die alleen doorverwijst: die vangt verwijzingen naar de oude skillnaam op en **hoort na 1 maart 2027 verwijderd te worden**, samen met de regel erover in de changelog. Die wegwijzer meldt ook de overstap naar de nieuwe marketplace. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skills nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
 
 Daarom volgt de plugin-versie automatisch de pakketversie. `package.json` is de enige bron; `npm run generate:plugin-version` (onderdeel van `generate:skill-docs`) schrijft die versie naar de plugin-manifesten en naar de oude marketplace. semantic-release draait dit in `prepareCmd` en commit de manifesten mee in de release-commit, zodat de plugin-versie meebeweegt met elke release die de skill-docs verandert. Bewerk de `version`-velden niet handmatig.
 

@@ -48,7 +48,8 @@
  * @slot - Default slot for the application content
  */
 import { LitElement, PropertyValues } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { ScrollModeController, SINGLE_COLUMN_CHANGE_EVENT } from '../../../utilities/scroll-mode-controller.js';
 import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';

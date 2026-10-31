@@ -21,7 +21,8 @@
  * @fires change - When the value is committed (blur/Enter or +/- button), clamped to [min, max]; empty input falls back to the last valid value. When the committed value differs from the typed value, a matching input event is fired immediately before this one. detail: { value: number }
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
@@ -107,9 +108,6 @@ export class NLDDNumberField extends DescribedBy(FormAssociated(LitElement)) {
 	invalid = false;
 
 	override firstUpdated(): void {
-		if (import.meta.env?.DEV && !this.accessibleLabel) {
-			console.warn('<nldd-number-field>: No accessible-label provided. Add an accessible-label attribute so screen readers can announce the input\'s purpose.');
-		}
 		this._lastValidValue = this._clamp(this.value);
 		this._initialValue = this._lastValidValue;
 	}

@@ -1,0 +1,9 @@
+severity: hint
+context: 'nldd-list:is([type="navigation"], [type="tree"], [type="listbox"], [type="radiogroup"])'
+assert: '[accessible-label]'
+message: 'Give the list an `accessible-label` that says what is in it, so several of them on a page can be told apart.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list type="navigation" accessible-label="Dossiers"></nldd-list>', '<nldd-list></nldd-list>']
+  failed: ['<nldd-list type="navigation"></nldd-list>']
+  cantTell: ['<nldd-list type="navigation" :accessible-label="naam"></nldd-list>']

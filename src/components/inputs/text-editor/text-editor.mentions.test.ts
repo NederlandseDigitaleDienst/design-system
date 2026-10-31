@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { EditorState } from '@codemirror/state';
 import { ensureSyntaxTree } from '@codemirror/language';
 import { markdown } from '@codemirror/lang-markdown';
-import { typeaheadQueryAt } from './text-editor.mentions.js';
+import { hasInvalidQuery, typeaheadQueryAt } from './text-editor.mentions.js';
 
 /** A parsed state with the caret where `|` sits in the fixture. */
 function at(fixture: string): { state: EditorState; pos: number } {
@@ -139,10 +139,14 @@ describe('wat er na een trigger mag staan', () => {
 		expect(typeaheadQueryAt(state, pos, [{ trigger: '@', query: NAME }, '#'])?.trigger).toBe('#');
 	});
 
+	it('herkent een ongeldige expressie', () => {
+		const source = () => [];
+		expect(hasInvalidQuery([{ trigger: '@', source, query: '[' }])).toBe(true);
+		expect(hasInvalidQuery([{ trigger: '@', source, query: '[a-z]+' }, { trigger: '#', source }])).toBe(false);
+	});
+
 	it('valt bij een ongeldige expressie terug op de standaard', () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const { state, pos } = at('@józef|');
 		expect(typeaheadQueryAt(state, pos, [{ trigger: '@', query: '[' }])?.query).toBe('józef');
-		warn.mockRestore();
 	});
 });

@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-form-field:has(> :not(nldd-form-field-help-text))'
+assert: ':has(:form-input), :state(has-input)'
+message: 'nldd-form-field holds no form input, so the label cannot name anything or move focus into it.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-field label="Naam"><nldd-text-field></nldd-text-field></nldd-form-field>']
+  failed: ['<nldd-form-field label="Naam"><nldd-button text="Kies"></nldd-button></nldd-form-field>']

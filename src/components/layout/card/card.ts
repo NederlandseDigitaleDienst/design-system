@@ -32,7 +32,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { cardStyles } from './card.styles.js';
 import { cardTemplate } from './card.template.js';
@@ -75,7 +76,6 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 	@property({ type: Boolean, reflect: true })
 	button = false;
 
-	private _warnedLabel = false;
 
 	/** True while the card's own overlay control holds keyboard focus. Drives the
 	 *  focus ring from JS rather than from `:has(… :focus-visible)` in CSS:
@@ -138,18 +138,6 @@ export class NLDDCard extends withTranslations(LitElement, nlddCardTranslations)
 
 	override updated(): void {
 		this.toggleAttribute('data-action-focused', this._actionFocused);
-		// An interactive card with no accessible name is a silent a11y failure —
-		// the overlay control has no text. Warn once in dev (like nldd-image does
-		// for alt); stay quiet in production.
-		if (import.meta.env?.DEV) {
-			const missing = (!!this.href || this.button) && !(this.accessibleLabel ?? '').trim();
-			if (missing && !this._warnedLabel) {
-				this._warnedLabel = true;
-				console.warn('<nldd-card>: a card with `href` or `button` needs `accessible-label` so the control has an accessible name.');
-			} else if (!missing) {
-				this._warnedLabel = false;
-			}
-		}
 	}
 
 	_onSlotChange = (e: Event): void => {

@@ -41,7 +41,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { sheetStyles } from './sheet.styles.js';
 import { sheetTemplate } from './sheet.template.js';
@@ -50,6 +51,7 @@ import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import { TitleBarLabelController } from '../../../utilities/title-bar-label-controller.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Placement = 'left' | 'right' | 'bottom';
 
@@ -115,24 +117,13 @@ export class NLDDSheet extends LitElement {
 			// fallback to `calc(100dvh - top-inset)`). Anything else flows
 			// through CSS.supports so typos and bogus values silently fall
 			// back to the default rather than producing a broken layout.
-			if (h && h !== 'full' && CSS.supports('height', h)) {
-				this.style.setProperty('--_sheet-height', h);
-			} else {
-				// One warning per instance for the element's lifetime (matches
-				// _hasWarnedLabel): a later distinct invalid value won't warn
-				// again. Acceptable for a dev-only nudge — not worth tracking
-				// per-value state to re-warn.
-				if (import.meta.env?.DEV && h && h !== 'full' && !this._hasWarnedHeight) {
-					this._hasWarnedHeight = true;
-					console.warn(`<nldd-sheet>: Invalid height value "${h}". Falling back to full height. Use 'full', 'fit-content', or a valid CSS length (e.g. '50dvh', '480px').`);
-				}
-				this.style.removeProperty('--_sheet-height');
-			}
+			const custom = Boolean(h) && h !== 'full';
+			const valid = custom && CSS.supports('height', h);
+			if (valid) this.style.setProperty('--_sheet-height', h);
+			else this.style.removeProperty('--_sheet-height');
+			setState(this, 'invalid-height', custom && !valid);
 		}
 	}
-
-	private _hasWarnedLabel = false;
-	private _hasWarnedHeight = false;
 
 	private _closing = false;
 
@@ -174,11 +165,7 @@ export class NLDDSheet extends LitElement {
 		// New open cycle: the next close may emit again.
 		this._closeEmitted = false;
 
-		// Warn once per instance when the sheet has no name of its own to go by
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this._titleBar.text && !this._hasWarnedLabel) {
-			this._hasWarnedLabel = true;
-			console.warn('<nldd-sheet>: No accessible-label and no nldd-top-title-bar with text inside. Screen readers will announce this dialog as "Venster". Give the title bar a text, or set accessible-label.');
-		}
+		setState(this, 'unnamed', !this.accessibleLabel && !this._titleBar.text);
 
 		if (this._closing) {
 			// Opened again while the close animation runs: call the close off.

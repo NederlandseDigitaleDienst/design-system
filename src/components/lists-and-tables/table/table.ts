@@ -51,7 +51,8 @@
  * @slot - The row's cells (`nldd-cell` and variants), one per column
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tableStyles, tableRowStyles } from './table.styles.js';
 import { tableTemplate, tableRowTemplate } from './table.template.js';
@@ -60,6 +61,7 @@ import type { NLDDTableTranslations } from './table.i18n.js';
 import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { translate } from '../../../utilities/translations.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type TableBackground = 'base' | 'tinted';
 
@@ -101,8 +103,6 @@ export class NLDDTable extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	selectable = false;
 
-	private _warnedColumns = false;
-	private _warnedLabel = false;
 	private _resizeObserver?: ResizeObserver;
 	private _rowsObserver?: MutationObserver;
 	/** Last observed content-box width, to resolve the active track list. */
@@ -188,33 +188,10 @@ export class NLDDTable extends LitElement {
 		this.classList.toggle('is-empty', isEmpty);
 		// See nldd-list: no rows and nothing slotted is not a thing on the page.
 		this.classList.toggle('is-blank', isEmpty && !noResults && !hasEmpty);
-		this._warnSilentEmpty(isEmpty, hasEmpty, rows.length > 0);
+		// Rows that are all hidden are the no-results state, not an empty table.
+		setState(this, 'empty', isEmpty && rows.length === 0);
+		setState(this, 'filtered', isEmpty && rows.length > 0);
 	}
-
-	/**
-	 * A table with no rows and nothing to say about that.
-	 *
-	 * There is no default text any more, because what an empty table means is
-	 * the app's to write and a house sentence was wrong more often than right.
-	 * That leaves a real risk of a blank area with nothing in the accessibility
-	 * tree either, so the table asks the person building it rather than
-	 * answering for them.
-	 */
-	private _warnSilentEmpty(isEmpty: boolean, hasEmpty: boolean, hasRows: boolean): void {
-		if (!import.meta.env?.DEV) return;
-		if (!isEmpty || this._warnedSilentEmpty || hasEmpty) return;
-		// Rows that are all hidden are the no-results state, and a slot that covers
-		// it answers the question.
-		if (hasRows && this.querySelector(':scope > [slot="no-results"]')) return;
-		this._warnedSilentEmpty = true;
-		console.warn(
-			'nldd-table: no rows and nothing in [slot="empty"], so the table renders a blank area. '
-			+ 'Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.',
-			this,
-		);
-	}
-
-	private _warnedSilentEmpty = false;
 
 	/** The track list for the current width: a breakpoint override when set,
 	 *  otherwise the base `columns`. */
@@ -279,18 +256,6 @@ export class NLDDTable extends LitElement {
 			for (const row of this.querySelectorAll<NLDDTableRow>('nldd-table-row')) {
 				row._syncAriaSelected();
 			}
-		}
-		if (import.meta.env?.DEV && !this.columns && !this._warnedColumns) {
-			this._warnedColumns = true;
-			console.warn('<nldd-table>: no `columns` set. Define a CSS grid track list (e.g. columns="200px 1fr 80px") so cells align into columns.');
-		} else if (this.columns) {
-			this._warnedColumns = false;
-		}
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this._warnedLabel) {
-			this._warnedLabel = true;
-			console.warn('<nldd-table>: no `accessible-label` set. role="table" needs an accessible name — add accessible-label="…".');
-		} else if (this.accessibleLabel) {
-			this._warnedLabel = false;
 		}
 	}
 

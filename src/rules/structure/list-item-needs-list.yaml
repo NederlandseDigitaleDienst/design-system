@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-list-item'
+assert: 'nldd-list nldd-list-item'
+message: 'nldd-list-item needs a parent nldd-list, which gives the row its type and keyboard behaviour.'
+see: patronen/list
+examples:
+  passed: ['<nldd-list accessible-label="Dossiers"><nldd-list-item></nldd-list-item></nldd-list>']
+  failed: ['<html><body><nldd-list-item></nldd-list-item></body></html>']
+  cantTell: ['<nldd-list-item></nldd-list-item>']

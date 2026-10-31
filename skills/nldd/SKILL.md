@@ -1,13 +1,13 @@
 ---
 name: nldd
-description: "Wegwijzer naar de vijf nldd-skills, voor wie op de oude naam `nldd` uitkomt. Gebruik nldd-design-build om een applicatie te bouwen met @nldd/design-system, nldd-design om een component, attribuut, slot, event of icoonnaam op te zoeken of te zien wat er in een versie veranderde, nldd-design-migrate om een bestaande frontend om te zetten, nldd-design-upgrade om een versie te verhogen, en nldd-design-contribute om een wijziging voor te stellen. Alle vijf zitten in de plugin die je al hebt, die nu nldd-design-system heet. Heb je hem als nldd@nldd-plugins, stap dan voor 1 maart 2027 over naar nldd-design-system@nldd. Deze wegwijzer verdwijnt na 1 maart 2027."
+description: "Wegwijzer naar de zes nldd-skills, voor wie op de oude naam `nldd` uitkomt. Gebruik nldd-design-build om een applicatie te bouwen met @nldd/design-system, nldd-design om een component, attribuut, slot, event of icoonnaam op te zoeken of te zien wat er in een versie veranderde, nldd-design-migrate om een bestaande frontend om te zetten, nldd-design-validate om code te controleren met nldd lint, nldd-design-upgrade om een versie te verhogen, en nldd-design-contribute om een wijziging voor te stellen. Alle zes zitten in de plugin die je al hebt, die nu nldd-design-system heet. Heb je hem als nldd@nldd-plugins, stap dan voor 1 maart 2027 over naar nldd-design-system@nldd. Deze wegwijzer verdwijnt na 1 maart 2027."
 metadata:
   type: reference
 ---
 
 # Welke nldd-skill je nodig hebt
 
-`nldd` is de organisatie en het npm-pakket, en daarmee geen naam die zegt wat een skill doet. De kennis zit daarom in vijf skills die dat wel doen. Deze pagina wijst je naar de juiste, en verder niets.
+`nldd` is de organisatie en het npm-pakket, en daarmee geen naam die zegt wat een skill doet. De kennis zit daarom in zes skills die dat wel doen. Deze pagina wijst je naar de juiste, en verder niets.
 
 ## De skills heb je al, de marketplace verhuist
 
@@ -27,7 +27,7 @@ Kijk in `enabledPlugins` (in `~/.claude/settings.json` of in `.claude/settings.j
 
 Staat de verwijzing in de `.claude/settings.json` van een project, vervang dan daar `nldd-plugins` onder `extraKnownMarketplaces` door `nldd` met als bron `NederlandseDigitaleDienst/ai-plugins`, en `nldd@nldd-plugins` onder `enabledPlugins` door `nldd-design-system@nldd`. Zeg het de gebruiker als je dit tegenkomt; pas het niet ongevraagd aan.
 
-Werkt een van de vijf niet, dan draai je een oude versie van de plugin. Werk de marketplace bij waar je hem uit hebt: `/plugin marketplace update nldd`, of `/plugin marketplace update nldd-plugins` voor de oude.
+Werkt een van de zes niet, dan draai je een oude versie van de plugin. Werk de marketplace bij waar je hem uit hebt: `/plugin marketplace update nldd`, of `/plugin marketplace update nldd-plugins` voor de oude.
 
 ## Welke van de vijf heb je nodig
 

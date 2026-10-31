@@ -83,7 +83,8 @@
  */
 
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { notificationStyles } from './notification.styles.js';
 import { notificationTemplate } from './notification.template.js';
@@ -326,14 +327,7 @@ export class NLDDNotification extends withTranslations(LitElement, nlddNotificat
 	}
 
 	_onActionsSlotChange = (e: Event): void => {
-		const assigned = (e.target as HTMLSlotElement).assignedElements();
-		this._hasActions = assigned.length > 0;
-		if (import.meta.env?.DEV && assigned.length > 2) {
-			console.warn(
-				'[nldd-notification] at most 2 actions: a message that needs three choices '
-				+ 'is a decision, and a decision belongs in a dialog that waits for it.',
-			);
-		}
+		this._hasActions = (e.target as HTMLSlotElement).assignedElements().length > 0;
 	};
 
 	/** A move rather than an enter. A notification arrives at a fixed spot on the

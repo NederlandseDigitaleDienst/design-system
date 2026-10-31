@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-step-bar[current]'
+removed: ['current']
+message: '`current` moved to the step. Set `status="current"` on the current nldd-step-bar-item instead.'
+examples:
+  passed: ['<nldd-step-bar><nldd-step-bar-item text="Controle" status="current"></nldd-step-bar-item></nldd-step-bar>']
+  failed: ['<nldd-step-bar current="1"><nldd-step-bar-item text="Controle"></nldd-step-bar-item></nldd-step-bar>']

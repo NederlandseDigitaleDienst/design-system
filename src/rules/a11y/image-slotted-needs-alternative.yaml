@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-image:state(slotted-without-alternative)'
+message: 'The slotted image has no text alternative. Give the `<img>` an `alt` (empty when the image conveys no information), or give the `<svg>` `role="img"` and an `aria-label`, `aria-labelledby` or `<title>`.'

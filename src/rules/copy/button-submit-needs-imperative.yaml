@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-button[type="submit"]:is([text="Inloggen" i], [text="Opslaan" i], [text="Bewaren" i], [text="Versturen" i], [text="Verzenden" i], [text="Indienen" i], [text="Verwijderen" i], [text="Bevestigen" i], [text="Toevoegen" i], [text="Wijzigen" i])'
+message: 'This button does it right now, so use the imperative, such as "Log in", and keep the full verb for a button that leads somewhere.'
+see: ontwerprichtlijnen/copywriting
+examples:
+  passed: ['<nldd-form><nldd-button type="submit" text="Log in"></nldd-button></nldd-form>']
+  failed: ['<nldd-form><nldd-button type="submit" text="Inloggen"></nldd-button></nldd-form>']

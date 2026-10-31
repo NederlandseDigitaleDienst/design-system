@@ -408,19 +408,17 @@ describe('nldd-step-cell – where the dot stands', () => {
 		expect(Math.abs(dotCenter(cell) - lane(cell).top - (padding + 20))).toBeLessThan(1);
 	});
 
-	it('falls back to vertical-alignment for an invalid marker-offset, and says so', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('falls back to vertical-alignment for an invalid marker-offset', async () => {
 		const { cell } = await row('marker-offset="hoog" vertical-alignment="top"');
 		expect(cell.hasAttribute('data-marker-offset')).toBe(false);
 		expect(againstPadding(cell)).toBeLessThan(1);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('marker-offset="hoog"'))).toBe(true);
+		expect(cell.matches(':state(invalid-marker-offset)')).toBe(true);
 	});
 
 	it('falls back for marker-offset="auto", which is not a length', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const { cell } = await row('marker-offset="auto" vertical-alignment="top"');
 		expect(cell.hasAttribute('data-marker-offset')).toBe(false);
-		expect(warn.mock.calls.some((call: unknown[]) => String(call[0]).includes('marker-offset="auto"'))).toBe(true);
+		expect(cell.matches(':state(invalid-marker-offset)')).toBe(true);
 	});
 
 	it('takes a percentage of the content height in marker-offset: 50% is the middle', async () => {

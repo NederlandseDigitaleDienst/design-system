@@ -21,7 +21,8 @@
  * @fires change - When checked state changes; detail: { checked: boolean, value: string }
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { checkboxFieldStyles } from './checkbox-field.styles.js';
 import { checkboxFieldTemplate } from './checkbox-field.template.js';

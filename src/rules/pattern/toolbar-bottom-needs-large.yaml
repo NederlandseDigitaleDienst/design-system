@@ -1,0 +1,8 @@
+severity: hint
+context: 'nldd-bar-split-view > [only="sm"] nldd-toolbar:not([size="lg"])'
+message: 'Set size="lg" on the bottom bar, which puts the labels under the icons and makes the actions fit next to the sections.'
+see: patronen/application
+examples:
+  passed: ['<nldd-bar-split-view><nldd-split-view-pane slot="toolbar-sm" only="sm"><nldd-toolbar size="lg"></nldd-toolbar></nldd-split-view-pane></nldd-bar-split-view>']
+  failed: ['<nldd-bar-split-view><nldd-split-view-pane slot="toolbar-sm" only="sm"><nldd-toolbar></nldd-toolbar></nldd-split-view-pane></nldd-bar-split-view>']
+  cantTell: ['<nldd-bar-split-view><nldd-split-view-pane slot="toolbar-sm" only="sm"><nldd-toolbar :size="maat"></nldd-toolbar></nldd-split-view-pane></nldd-bar-split-view>']

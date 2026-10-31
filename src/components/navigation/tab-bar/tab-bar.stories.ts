@@ -110,7 +110,7 @@ export const ToestandDisabled = {
 
 export const MetTekstVariant = {
 	render: () => html`
-	<nldd-tab-bar variant="text">
+	<nldd-tab-bar accessible-label="Secties" variant="text">
 		${tabBarItems}
 	</nldd-tab-bar>
 `,
@@ -119,7 +119,7 @@ export const MetTekstVariant = {
 
 export const MetIconenVariant = {
 	render: () => html`
-	<nldd-tab-bar variant="icon">
+	<nldd-tab-bar accessible-label="Secties" variant="icon">
 		${tabBarItems}
 	</nldd-tab-bar>
 `,
@@ -163,7 +163,7 @@ export const Groot = {
 export const Gecentreerd = {
 	render: () => html`
 	<div style="container-type: inline-size; container-name: layout-container;">
-		<nldd-tab-bar centered>
+		<nldd-tab-bar accessible-label="Secties" centered>
 			${tabBarItems}
 		</nldd-tab-bar>
 	</div>
@@ -173,7 +173,7 @@ export const Gecentreerd = {
 
 export const Gemengd = {
 	render: () => html`
-	<nldd-tab-bar>
+	<nldd-tab-bar accessible-label="Secties">
 		<nldd-tab-bar-item
 			current
 			variant="text"

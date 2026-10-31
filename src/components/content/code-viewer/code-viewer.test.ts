@@ -99,13 +99,11 @@ describe('nldd-code-viewer', () => {
 		expect(scroller.getAttribute('aria-label')).toBeTruthy();
 	});
 
-	it('max-height without a unit is ignored, with a warning', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('max-height without a unit is ignored', async () => {
 		el = await fixture('<nldd-code-viewer max-height="40">a: 1</nldd-code-viewer>');
 		await waitForUpdate(el);
 		expect(el.style.getPropertyValue('--_code-viewer-max-height')).toBe('');
-		expect(warn.mock.calls.flat().join(' ')).toContain('max-height="40"');
-		warn.mockRestore();
+		expect(el.matches(':state(invalid-max-height)')).toBe(true);
 	});
 
 	it('max-height leaves a short block at its own height, without a tab stop', async () => {
@@ -592,18 +590,11 @@ index 3333333..4444444 100644
 		expect([parsed.added, parsed.removed]).toEqual([2, 2]);
 	});
 
-	it('waarschuwt in development als regels buiten de telling van hun @@-kop vallen', () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		try {
-			const parsed = parseUnifiedDiff('@@ -1 +1 @@\n-a\n+b\n+te veel');
-			expect(parsed.lines.map((l) => l.text)).toEqual(['a', 'b']);
-			expect(warn).toHaveBeenCalledTimes(1);
-			warn.mockClear();
-			parseUnifiedDiff(`@@ -1 +1 @@\n-a\n+b\ndiff --git a/c b/c\n--- a/c\n+++ b/c\n@@ -1 +1 @@\n-c\n+d`);
-			expect(warn).not.toHaveBeenCalled();
-		} finally {
-			warn.mockRestore();
-		}
+	it('telt de regels die buiten de telling van hun @@-kop vallen', () => {
+		const parsed = parseUnifiedDiff('@@ -1 +1 @@\n-a\n+b\n+te veel');
+		expect(parsed.lines.map((l) => l.text)).toEqual(['a', 'b']);
+		expect(parsed.dropped).toBe(1);
+		expect(parseUnifiedDiff(`@@ -1 +1 @@\n-a\n+b\ndiff --git a/c b/c\n--- a/c\n+++ b/c\n@@ -1 +1 @@\n-c\n+d`).dropped).toBe(0);
 	});
 
 	it('nummert een nieuw en een verwijderd bestand zoals git', () => {

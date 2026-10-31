@@ -2,6 +2,7 @@ import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import { menuDividerStyles } from './menu.styles.js';
 import { menuDividerTemplate, type MenuVariant } from './menu.template.js';
+import '../../../utilities/custom-element.js';
 
 /**
  * A horizontal rule between groups of items in an `nldd-menu`.

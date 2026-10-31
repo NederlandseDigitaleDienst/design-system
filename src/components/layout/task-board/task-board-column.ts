@@ -22,7 +22,8 @@
  * @slot footer - Right under the last item, such as a button to add one; it scrolls along with the items
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { taskBoardColumnStyles } from './task-board.styles.js';
 import { taskBoardColumnTemplate } from './task-board-column.template.js';
@@ -135,9 +136,6 @@ export class NLDDTaskBoardColumn extends LitElement {
 	protected override firstUpdated(): void {
 		this._resizeObserver = new ResizeObserver(this._updateScroll);
 		this._observeItems();
-		if (import.meta.env?.DEV && !this.label) {
-			console.warn('nldd-task-board-column: a column needs `text` or `accessible-label`; it is what a screen reader hears when an item moves to it.');
-		}
 	}
 
 	protected override updated(changed: PropertyValues): void {

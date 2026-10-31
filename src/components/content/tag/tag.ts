@@ -22,11 +22,13 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tagStyles } from './tag.styles.js';
 import { template } from './tag.template.js';
 import './../icon/icon.js';
+import { setState } from '../../../utilities/element-state.js';
 
 type Color =
 	// Semantisch
@@ -140,10 +142,8 @@ export class NLDDTag extends LitElement {
 	override updated() {
 		// An icon-only tag with no accessible-label has no accessible name —
 		// the placeholder/icon is decorative (aria-hidden), so screen readers
-		// announce nothing. Warn in dev so consumers add a label.
-		if (import.meta.env?.DEV && this._effectiveVariant === 'icon' && !this.accessibleLabel) {
-			console.warn('nldd-tag: icon-only tag without an accessible-label has no accessible name. Add accessible-label so screen readers can announce it.', this);
-		}
+		// announce nothing.
+		setState(this, 'unnamed', this._effectiveVariant === 'icon' && !this.accessibleLabel);
 	}
 
 	override render() {

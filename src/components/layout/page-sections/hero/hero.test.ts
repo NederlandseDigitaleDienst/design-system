@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi, type MockInstance } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate } from '../../../../test-utils.js';
 import './hero.js';
 import { loadTokens } from '../../../../test-tokens.js';
@@ -153,15 +153,10 @@ describe('nldd-hero', () => {
 		}
 	});
 
-	it('falls back to auto for a fraction, and says so in development', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		try {
-			el = await fixture('<nldd-hero main-width="1/2"></nldd-hero>');
-			await waitForUpdate(el);
-			expect(warn.mock.calls.some(([message]) => String(message).includes('main-width="1/2"'))).toBe(true);
-		} finally {
-			warn.mockRestore();
-		}
+	it('falls back to auto for a fraction', async () => {
+		el = await fixture('<nldd-hero main-width="1/2"></nldd-hero>');
+		await waitForUpdate(el);
+		expect(el.matches(':state(invalid-main-width)')).toBe(true);
 	});
 
 	it('lays a full-width panel across the image, a gap from its sides', async () => {
@@ -213,20 +208,15 @@ describe('nldd-hero', () => {
 	});
 
 	it('does not take a CSS-wide keyword for a length, which CSS.supports would let through', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		try {
-			for (const keyword of ['inherit', 'initial', 'unset', 'revert']) {
-				el = await fixture(`<nldd-hero main-width="${keyword}" overlap-size="${keyword}" media-height="${keyword}" media-aspect-ratio="${keyword}" width="${keyword}"></nldd-hero>`);
-				await waitForUpdate(el);
-				for (const name of ['--_hero-main-width', '--_hero-overlap-size', '--_hero-media-height', '--_hero-media-aspect-ratio', '--_hero-max-width']) {
-					expect(el.style.getPropertyValue(name), `${name} for ${keyword}`).toBe('');
-				}
-				expect(el.hasAttribute('data-main-width-length')).toBe(false);
-				expect(warn.mock.calls.some(([message]) => String(message).includes(`main-width="${keyword}"`))).toBe(true);
-				cleanup(el);
+		for (const keyword of ['inherit', 'initial', 'unset', 'revert']) {
+			el = await fixture(`<nldd-hero main-width="${keyword}" overlap-size="${keyword}" media-height="${keyword}" media-aspect-ratio="${keyword}" width="${keyword}"></nldd-hero>`);
+			await waitForUpdate(el);
+			for (const name of ['--_hero-main-width', '--_hero-overlap-size', '--_hero-media-height', '--_hero-media-aspect-ratio', '--_hero-max-width']) {
+				expect(el.style.getPropertyValue(name), `${name} for ${keyword}`).toBe('');
 			}
-		} finally {
-			warn.mockRestore();
+			expect(el.hasAttribute('data-main-width-length')).toBe(false);
+			expect(el.matches(':state(invalid-main-width)')).toBe(true);
+			cleanup(el);
 		}
 	});
 
@@ -236,20 +226,13 @@ describe('nldd-hero', () => {
 		expect(el.style.getPropertyValue('--_hero-media-height')).toBe('');
 	});
 
-	it('ignores height, which would stretch the hero, and says so in development', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		try {
-			el = await fixture('<nldd-hero height="900px"></nldd-hero>');
-			await waitForUpdate(el);
-			expect(el.style.minHeight).toBe('');
-			expect(warn.mock.calls.some(([message]) => String(message).includes('media-height'))).toBe(true);
-		} finally {
-			warn.mockRestore();
-		}
+	it('ignores height, which would stretch the hero', async () => {
+		el = await fixture('<nldd-hero height="900px"></nldd-hero>');
+		await waitForUpdate(el);
+		expect(el.style.minHeight).toBe('');
 	});
 
-	it('gives a Rijkshuisstijl color for the panel the accent instead, and points to a theme in development', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('gives a Rijkshuisstijl color for the panel the accent instead', async () => {
 		const unloadTokens = loadTokens();
 		try {
 			const panelColor = async (attributes: string) => {
@@ -262,21 +245,14 @@ describe('nldd-hero', () => {
 			const accent = await panelColor('');
 			expect(accent).not.toBe('');
 			expect(await panelColor('main-background="donkerblauw"')).toBe(accent);
-			expect(warn.mock.calls.some(([message]) => String(message).includes('data-nldd-theme'))).toBe(true);
 		} finally {
 			unloadTokens();
-			warn.mockRestore();
 		}
 	});
 
 	describe('layout="overlap"', () => {
-		const overlapWarnings = (warn: MockInstance<typeof console.warn>) => warn.mock.calls
-			.map(([message]) => String(message))
-			.filter((message) => message.includes('layout="overlap"'));
-
 		it('is the layout of a hero that names none', async () => {
 			const unloadTokens = loadTokens();
-			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 			try {
 				el = await fixture(`<nldd-hero style="width: 1200px">${IMG}<p style="height: 300px">Tekst</p></nldd-hero>`);
 				await waitForUpdate(el);
@@ -286,14 +262,12 @@ describe('nldd-hero', () => {
 				expect(Math.round(media.bottom - main.top)).toBe(160);
 				expect(main.bottom).toBeGreaterThan(media.bottom);
 			} finally {
-				warn.mockRestore();
 				unloadTokens();
 			}
 		});
 
 		it('gives the image a fixed height and lets the panel fall overlap-size over it, running on below', async () => {
 			const unloadTokens = loadTokens();
-			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 			try {
 				const tall = '<p style="height: 300px">Tekst</p>';
 				el = await fixture(`<nldd-hero layout="overlap" style="width: 1200px">${IMG}${tall}</nldd-hero>`);
@@ -305,9 +279,8 @@ describe('nldd-hero', () => {
 				expect(Math.round(media.width)).toBe(Math.round(el.shadowRoot!.querySelector('.hero__body')!.getBoundingClientRect().width));
 				expect(Math.round(media.bottom - main.top)).toBe(160);
 				expect(main.bottom).toBeGreaterThan(media.bottom);
-				expect(overlapWarnings(warn)).toHaveLength(0);
+				expect(el.matches(':state(short-overlap-panel)')).toBe(false);
 			} finally {
-				warn.mockRestore();
 				unloadTokens();
 			}
 		});
@@ -335,33 +308,16 @@ describe('nldd-hero', () => {
 			}
 		});
 
-		it('says in development when the panel ends inside the image', async () => {
+		it('states in development that the panel ends inside the image', async () => {
 			const unloadTokens = loadTokens();
-			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 			try {
 				await geometry('layout="overlap"', 1200);
-				await expect.poll(() => overlapWarnings(warn).length).toBe(1);
+				await expect.poll(() => el.matches(':state(short-overlap-panel)')).toBe(true);
 			} finally {
-				warn.mockRestore();
 				unloadTokens();
 			}
 		});
 
-		it('says so again for a hero that left the page and came back', async () => {
-			const unloadTokens = loadTokens();
-			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-			try {
-				await geometry('layout="overlap"', 1200);
-				await expect.poll(() => overlapWarnings(warn).length).toBe(1);
-				const parent = el.parentElement!;
-				el.remove();
-				parent.append(el);
-				await expect.poll(() => overlapWarnings(warn).length).toBe(2);
-			} finally {
-				warn.mockRestore();
-				unloadTokens();
-			}
-		});
 	});
 
 	it('makes an nldd-image in the media slot fill the media area, before the photo has loaded', async () => {

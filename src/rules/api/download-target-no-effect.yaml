@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-link:state(download-with-target), nldd-button:state(download-with-target), nldd-icon-button:state(download-with-target), nldd-card:state(download-with-target), nldd-list-item:state(download-with-target), nldd-list-item-segment:state(download-with-target)'
+message: '`target` does nothing with `download`, which saves the file instead of opening it. Remove one of the two.'

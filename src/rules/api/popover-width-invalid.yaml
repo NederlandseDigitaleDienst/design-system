@@ -1,0 +1,6 @@
+severity: warn
+context: 'nldd-popover:is([width="auto"], [width="fit-content"], [width="min-content"], [width="max-content"], [width^="fit-content("])'
+message: 'This `width` is not supported and is ignored: the popover is an inline-size query container, so its width cannot come from its own content. Give it a CSS length instead.'
+examples:
+  passed: ['<nldd-popover width="320px"></nldd-popover>']
+  failed: ['<nldd-popover width="fit-content"></nldd-popover>']

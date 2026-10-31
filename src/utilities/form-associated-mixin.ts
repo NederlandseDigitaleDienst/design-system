@@ -1,4 +1,5 @@
 import type { LitElement, ReactiveController } from 'lit';
+import { internalsOf } from './element-state.js';
 
 /**
  * The flags a native control can raise, in the order the platform lists them.
@@ -62,7 +63,7 @@ export function FormAssociated<T extends Constructor<LitElement>>(Base: T) {
 	abstract class FormAssociatedMixin extends Base implements FormAssociatedElement {
 		static formAssociated = true;
 
-		readonly internals = this.attachInternals();
+		readonly internals = internalsOf(this);
 
 		constructor(...args: any[]) {
 			super(...args);

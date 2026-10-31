@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-avatar-group:is([size="16"], [size="20"], [size="24"], [size="28"])'
+report: ':has(> nldd-avatar:is([href], [button]))'
+message: 'Avatars that are links or buttons overlap, so each keeps too small a target (WCAG 2.5.8). Use size 32 or larger.'
+examples:
+  passed: ['<nldd-avatar-group size="32"><nldd-avatar href="/profiel" name="Team Uitvoering"></nldd-avatar></nldd-avatar-group>']
+  failed: ['<nldd-avatar-group size="28"><nldd-avatar href="/profiel" name="Team Uitvoering"></nldd-avatar></nldd-avatar-group>']

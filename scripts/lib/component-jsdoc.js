@@ -167,9 +167,12 @@ function parseComponent(block, filePath, fallbackTag) {
 				components.push(current);
 				collecting = true;
 				break;
-			case 'attr': {
+			case 'attr':
+			case 'childattr': {
 				if (!current) break;
 				const entry = parseTypedTag(rest);
+				// Set on a child and read by this component, like `only` on a pane.
+				if (tag === 'childattr') entry.forChildren = true;
 				current.attrs.push(entry);
 				lastEntry = entry;
 				break;

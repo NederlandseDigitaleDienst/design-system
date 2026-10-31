@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-avatar-group'
+report: ':has(> :not(nldd-avatar))'
+message: 'nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.'
+examples:
+  passed: ['<nldd-avatar-group><nldd-avatar name="Team Beleid"></nldd-avatar></nldd-avatar-group>']
+  failed: ['<nldd-avatar-group><nldd-image></nldd-image></nldd-avatar-group>']

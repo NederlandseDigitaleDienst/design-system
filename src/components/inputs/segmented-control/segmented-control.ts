@@ -47,7 +47,8 @@
  * @fires item-change - When item is activated; detail: { value: string, checked: boolean }
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { radioPositions, type RadioPosition } from '../../../utilities/radio-position.js';
@@ -312,7 +313,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 	@property({ type: Boolean, reflect: true })
 	invalid = false;
 
-	private _warnedRequired = false;
 
 	static override styles = segmentedControlStyles;
 
@@ -396,9 +396,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		this._syncItems();
 		this._initialValue = this.value;
 		this._initialValues = [...this.values];
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this.accessibleLabeledBy) {
-			console.warn('<nldd-segmented-control>: No accessible name provided. Add an accessible-label or accessible-labeled-by attribute for screen reader accessibility.');
-		}
 	}
 
 	override formValue(): FormValue {
@@ -504,15 +501,6 @@ export class NLDDSegmentedControl extends FormAssociated(LitElement) {
 		// Announced, not drawn. See the note on `invalid`.
 		if (this.invalid) this.setAttribute('aria-invalid', 'true');
 		else this.removeAttribute('aria-invalid');
-
-		if (import.meta.env?.DEV && this.required && this.type === 'checkbox' && !this._warnedRequired) {
-			this._warnedRequired = true;
-			console.warn(
-				`<${this.localName}>: \`required\` on a checkbox group is announced but not enforced. `
-				+ 'HTML has no way to say "at least one of these", so the form still submits with nothing '
-				+ 'selected. Check it yourself on submit, or use radio mode.',
-			);
-		}
 
 		const selectedValues = this._getSelectedValues();
 

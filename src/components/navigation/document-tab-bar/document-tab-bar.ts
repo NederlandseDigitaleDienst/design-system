@@ -49,7 +49,8 @@
  * @fires dismiss - Fired when the dismiss button is clicked; detail: { item }
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { documentTabBarStyles, documentTabBarItemStyles } from './document-tab-bar.styles.js';
 import { documentTabBarTemplate, documentTabBarItemTemplate } from './document-tab-bar.template.js';
@@ -260,9 +261,6 @@ export class NLDDDocumentTabBar extends withTranslations(LitElement, nlddDocumen
 
 	override firstUpdated(): void {
 		this._hasCustomLabel = Boolean(this.accessibleLabel);
-		if (!this._hasCustomLabel) {
-			import.meta.env?.DEV && console.warn('<nldd-document-tab-bar>: No accessible-label provided. Add an accessible-label attribute for a meaningful navigation landmark name. Falling back to "Tabbladen".');
-		}
 
 		const container = this.shadowRoot?.querySelector('.document-tab-bar__items') as HTMLElement;
 		if (container) {

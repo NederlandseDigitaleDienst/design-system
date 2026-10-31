@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-page-footer-legal-bar-item[text="Over" i]'
+message: 'Call it "Over deze website": "Over" could just as well be about the organization.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page-footer-legal-bar-item text="Over deze website" href="/over"></nldd-page-footer-legal-bar-item>']
+  failed: ['<nldd-page-footer-legal-bar-item text="Over" href="/over"></nldd-page-footer-legal-bar-item>']

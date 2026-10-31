@@ -26,9 +26,8 @@ describe('patroon: lijst', () => {
 
 	for (const [name, source] of [['standaard', markup], ['meerdere acties', actions], ['boom', tree]]) {
 		it(`zet alles in een cel en nest geen control in een control (${name})`, async () => {
-			const warn = vi.spyOn(console, 'warn');
 			await mount(source);
-			expect(warn.mock.calls.filter(([message]) => String(message).includes('nldd-list-item'))).toEqual([]);
+			expect(root.querySelector('nldd-list-item:is(:state(bare-text), :state(nested-control))')).toBeNull();
 		});
 	}
 

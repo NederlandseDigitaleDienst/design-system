@@ -25,7 +25,8 @@
  * that carries the padding
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { boxStyles } from './box.styles.js';
 import { boxTemplate } from './box.template.js';

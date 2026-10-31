@@ -18,6 +18,8 @@ import { existsSync, readdirSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { generatedHeader, readSource, writeGenerated } from './lib/skill-doc.js';
+import { rulesOfPattern } from '../lint/rule-index.js';
+import { loadData } from '../lint/linter.js';
 import { parsePatternStories, patternToMarkdown, referenceTags, storybookId } from './lib/skill-patterns.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -51,6 +53,8 @@ const slugs = readdirSync(patternsDir, { withFileTypes: true })
 	.filter((entry) => entry.isDirectory())
 	.map((entry) => entry.name);
 
+const lintRules = loadData().rules;
+
 for (const slug of slugs) {
 	const dir = join(patternsDir, slug);
 	const { title, markup: files } = parsePatternStories(readSource(join(dir, `${slug}.stories.ts`)));
@@ -68,7 +72,8 @@ for (const slug of slugs) {
 			return [story, readSource(path)];
 		}),
 	);
-	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context });
+	const rules = rulesOfPattern(lintRules, slug);
+	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context, rules });
 	const header = generatedHeader(`Bron: src/patterns/${slug}/ (de .mdx-pagina en de .html-voorbeelden ernaast).`);
 	writeGenerated(join(outputDir, `${slug}.md`), header + body);
 }

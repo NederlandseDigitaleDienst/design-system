@@ -86,6 +86,7 @@ export default [js.configs.recommended, {
     '.storybook/**',
     '.claude/**',
     'scripts/**',
+    'lint/**',
     '*.config.js',
   ],
 }, ...storybook.configs["flat/recommended"]];

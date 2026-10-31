@@ -1,0 +1,10 @@
+severity: hint
+context: 'nldd-toolbar:has(> nldd-toolbar-item):not(:has(> [slot="overflow"], > nldd-menu-item, > nldd-toolbar-item > :not(nldd-button, nldd-icon-button, [slot="overflow"])))'
+count:
+  of: 'nldd-toolbar-item, nldd-toolbar-title'
+  min: 2
+message: 'Use a plain button for a single action.'
+see: patronen/toolbar-with-actions
+examples:
+  passed: ['<nldd-toolbar><nldd-toolbar-item><nldd-button text="A"></nldd-button><nldd-menu-item slot="overflow" text="A"></nldd-menu-item></nldd-toolbar-item><nldd-toolbar-item><nldd-button text="B"></nldd-button><nldd-menu-item slot="overflow" text="B"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>', '<nldd-toolbar><nldd-toolbar-title slot="center" text="Dossier D-318"></nldd-toolbar-title></nldd-toolbar>']
+  failed: ['<nldd-toolbar><nldd-toolbar-item><nldd-button text="A"></nldd-button><nldd-menu-item slot="overflow" text="A"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>']

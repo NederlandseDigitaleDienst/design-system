@@ -79,6 +79,17 @@ export function rewriteLink(target, { patterns, tags }) {
 	throw new Error(`Geen bestemming in de skill voor ${target}`);
 }
 
+function renderRules(rules) {
+	const line = (rule) => `- \`${rule.id}\`: ${rule.message}`;
+	const required = rules.filter((rule) => rule.severity !== 'hint');
+	const hints = rules.filter((rule) => rule.severity === 'hint');
+	return [
+		'## Regels',
+		...(required.length ? ['', '`nldd lint` controleert dit:', '', ...required.map(line)] : []),
+		...(hints.length ? ['', 'Hints: zo is het bedoeld. Die laten niets falen.', '', ...hints.map(line)] : []),
+	];
+}
+
 /**
  * @param {object} input
  * @param {string} input.mdx - source of the pattern's .mdx page
@@ -86,7 +97,7 @@ export function rewriteLink(target, { patterns, tags }) {
  * @param {{ patterns: Record<string, string>, tags: Set<string> }} input.context
  * @returns {string} the Markdown body for the skill
  */
-export function patternToMarkdown({ mdx, markup, context }) {
+export function patternToMarkdown({ mdx, markup, context, rules = [] }) {
 	let inFence = false;
 	const lines = [];
 	for (const line of mdx.split('\n')) {
@@ -101,6 +112,10 @@ export function patternToMarkdown({ mdx, markup, context }) {
 			const source = markup[canvas[1]];
 			if (source === undefined) throw new Error(`Geen markup voor story ${canvas[1]}.`);
 			lines.push('```html', source.trimEnd(), '```');
+			continue;
+		}
+		if (/^<Rules pattern="[\w-]+" \/>$/.test(line)) {
+			if (rules.length > 0) lines.push(...renderRules(rules));
 			continue;
 		}
 		if (/^\s*<[A-Z]/.test(line)) throw new Error(`Niet te vertalen MDX: ${line.trim()}`);

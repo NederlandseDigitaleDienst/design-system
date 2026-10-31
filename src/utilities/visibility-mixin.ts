@@ -25,21 +25,6 @@ function customThreshold(value: string | undefined): string | null {
  * `hide-below="md"` and `hide-below="sm"` does nothing at all. Say so once,
  * rather than let it look applied.
  */
-function warnNoOp(
-	host: LitElement,
-	attribute: string,
-	value: string | undefined,
-	openEdge: string,
-	edgeLabel: string,
-): void {
-	if (value !== openEdge) return;
-	console.warn(
-		`[${host.localName}] ${attribute}="${openEdge}" never hides anything: there is no `
-		+ `breakpoint ${edgeLabel}. The value names the breakpoint you hide below, so the `
-		+ `smallest one that hides is "${attribute === 'hide-below' ? 'md' : 'sm'}". `
-		+ 'Leave the attribute off if you meant "always visible".',
-	);
-}
 
 /**
  * Adds `hide-below` and `hide-above` attributes that toggle visibility based
@@ -122,7 +107,6 @@ export function VisibilityMixin<TBase extends Constructor<LitElement>>(
 			const containerPrefix = containerName ? `${containerName} ` : '';
 			const rules: string[] = [];
 
-			warnNoOp(this, 'hide-below', this.hideBelow, 'sm', 'below sm');
 			const below = customThreshold(this.hideBelow);
 			if (below) {
 				rules.push(
@@ -130,7 +114,6 @@ export function VisibilityMixin<TBase extends Constructor<LitElement>>(
 				);
 			}
 
-			warnNoOp(this, 'hide-above', this.hideAbove, 'lg', 'above lg');
 			const above = customThreshold(this.hideAbove);
 			if (above) {
 				rules.push(

@@ -41,7 +41,8 @@
  */
 
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import type { RadioPosition } from '../../../utilities/radio-position.js';
@@ -146,9 +147,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 		return this.querySelector(':scope > [slot="icon"]') !== null;
 	}
 
-	private _warnedA11y = false;
-	private _warnedEmptyIcon = false;
-
 
 	/**
 	 * Marks the control as invalid.
@@ -183,24 +181,6 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	override updated(changed: PropertyValues): void {
-		/* A button needs an accessible name. That name comes from either
-		 * the visible text or the explicit accessible-label. Without
-		 * either, the button is anonymous to assistive tech. */
-		const inaccessible = !this.text && !this.accessibleLabel;
-		if (import.meta.env?.DEV && inaccessible && !this._warnedA11y) {
-			this._warnedA11y = true;
-			console.warn('<nldd-toggle-button>: Provide a text or accessible-label attribute for accessibility.');
-		} else if (!inaccessible) {
-			this._warnedA11y = false;
-		}
-		/* variant="icon" with no icon attribute and no slotted icon falls back
-		 * to a placeholder — flag the likely misconfiguration during development. */
-		if (import.meta.env?.DEV && this.variant === 'icon' && !this._hasIcon && !this._warnedEmptyIcon) {
-			this._warnedEmptyIcon = true;
-			console.warn('<nldd-toggle-button variant="icon">: No icon attribute or slot="icon" content provided. A placeholder icon is shown.');
-		} else if (this._hasIcon || this.variant !== 'icon') {
-			this._warnedEmptyIcon = false;
-		}
 		if (changed.has('selected') || changed.has('value') || changed.has('type')) {
 			this.commitFormValue();
 		}

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-form > nldd-title, nldd-form > form > nldd-title'
+message: 'Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form><nldd-form-section text="Adres"></nldd-form-section></nldd-form>']
+  failed: ['<nldd-form><nldd-title text="Adres" heading-level="2"></nldd-title></nldd-form>']

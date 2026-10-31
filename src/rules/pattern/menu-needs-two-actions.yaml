@@ -1,0 +1,10 @@
+severity: hint
+context: 'nldd-menu[slot="popup"]:not(:has(> nldd-menu-group))'
+count:
+  of: 'nldd-menu-item'
+  min: 2
+message: 'Use a plain button for a single action.'
+see: patronen/menu-from-a-button
+examples:
+  passed: ['<nldd-button text="Acties" expandable><nldd-menu slot="popup"><nldd-menu-item text="Dupliceer"></nldd-menu-item><nldd-menu-item text="Deel"></nldd-menu-item></nldd-menu></nldd-button>']
+  failed: ['<nldd-button text="Acties" expandable><nldd-menu slot="popup"><nldd-menu-item text="Dupliceer"></nldd-menu-item></nldd-menu></nldd-button>']

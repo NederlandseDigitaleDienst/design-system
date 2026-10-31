@@ -8,7 +8,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "A vertical rule between groups of buttons in an `nldd-button-bar`. Purely presentational: no attributes, no slots — place it between buttons.",
           "name": "anonymous_0",
           "superclass": {
             "name": "HTMLElement"
@@ -61,6 +61,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs'"
+              },
               "description": "Bar size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). At 'lg', icon-button children stack their label below the icon (mobile action-bar style)."
             },
             {
@@ -171,6 +174,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Button group size, set on every button in it: 'sm' | 'md' (default: 'md')"
             },
             {
@@ -180,6 +186,9 @@
               },
               "default": "'auto'",
               "fieldName": "orientation",
+              "expandedType": {
+                "text": "'auto' | 'horizontal' | 'vertical'"
+              },
               "description": "Layout direction: 'auto' | 'horizontal' | 'vertical' (default: 'auto')"
             },
             {
@@ -189,6 +198,9 @@
               },
               "default": "''",
               "fieldName": "width",
+              "expandedType": {
+                "text": "'' | 'full'"
+              },
               "description": "'full': the buttons fill the row in equal shares, and a button that does not fit moves to a line of its own (default: unset, each button as wide as its label)"
             }
           ],
@@ -627,6 +639,9 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
+              "expandedType": {
+                "text": "'accent-filled' | 'accent-transparent' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
+              },
               "description": "Visual style, color included: 'primary' | 'secondary' | 'destructive' | 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces; inherit-filled uses the surface color (--context-parent-background-color) as the label color, with a white/black contrast flip as a fallback."
             },
             {
@@ -636,6 +651,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs'"
+              },
               "description": "Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md'). 'lg' uses larger text and 24px start/end icons."
             },
             {
@@ -645,7 +663,10 @@
               },
               "default": "''",
               "description": "Horizontal alignment of the button content: 'left' | 'center' | 'right' (default: unset, centered). Most visible with width=\"full\" or a fixed width.",
-              "fieldName": "horizontalAlignment"
+              "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'' | 'center' | 'left' | 'right'"
+              }
             },
             {
               "name": "width",
@@ -698,7 +719,10 @@
                 "text": "PopupType | undefined"
               },
               "description": "Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.",
-              "fieldName": "popupType"
+              "fieldName": "popupType",
+              "expandedType": {
+                "text": "'dialog' | 'grid' | 'listbox' | 'menu' | 'tree'"
+              }
             },
             {
               "name": "type",
@@ -707,6 +731,9 @@
               },
               "default": "'button'",
               "fieldName": "type",
+              "expandedType": {
+                "text": "'button' | 'reset' | 'submit'"
+              },
               "description": "Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)"
             },
             {
@@ -892,6 +919,13 @@
                 "module": "src/utilities/with-translations.ts"
               },
               "description": "Override translation keys (e.g. the \"opens in new tab\" announcement); unset keys fall back to Dutch."
+            },
+            {
+              "name": "form",
+              "description": "Id of the form this button submits or resets, for a button that sits outside it. Takes an `nldd-form` as well as a plain `<form>`. Without it the button acts on the form it stands in. The id is looked up in the button's own root, as the platform does it: a button inside a shadow tree does not reach a form in the document around it. An id that finds nothing, or an `nldd-form` that has not rendered its form yet, says so in development rather than letting the click do nothing.",
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "mixins": [
@@ -1299,6 +1333,9 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
+              "expandedType": {
+                "text": "'accent-filled' | 'accent-transparent' | 'critical-tinted' | 'critical-transparent' | 'destructive' | 'inherit-filled' | 'inherit-tinted' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent' | 'primary' | 'secondary'"
+              },
               "description": "Visual style, color included: 'accent-filled' | 'accent-transparent' | 'neutral-tinted' | 'neutral-transparent' | 'critical-tinted' | 'critical-transparent' | 'inherit-filled' | 'inherit-tinted' | 'primary' | 'secondary' | 'destructive'. The inherit appearances derive their colors from currentColor, for buttons on colored surfaces."
             },
             {
@@ -1308,6 +1345,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs'"
+              },
               "description": "Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')"
             },
             {
@@ -1362,6 +1402,9 @@
               },
               "default": "'button'",
               "fieldName": "type",
+              "expandedType": {
+                "text": "'button' | 'reset' | 'submit'"
+              },
               "description": "Button type for form submission: 'button' | 'submit' | 'reset' (ignored when href is set)"
             },
             {
@@ -1397,7 +1440,10 @@
                 "text": "PopupType | undefined"
               },
               "description": "Type of popup container this button opens: 'menu' | 'listbox' | 'dialog' | 'tree' | 'grid'. Sets aria-haspopup on the inner button and forces aria-expanded to always be present (true/false) so screen readers know the popup state. An nldd-menu or nldd-popover in the `popup` slot, or anchored to this button, sets it itself from the first render; set it only for another kind of popup.",
-              "fieldName": "popupType"
+              "fieldName": "popupType",
+              "expandedType": {
+                "text": "'dialog' | 'grid' | 'listbox' | 'menu' | 'tree'"
+              }
             },
             {
               "name": "width",
@@ -1451,7 +1497,10 @@
               },
               "default": "'delay'",
               "description": "Forwarded to the inner nldd-tooltip's `timing`: 'delay' (the default, a 700 ms show-delay), 'instant', or 'never' (suppress the visual tooltip; screen readers still get the aria-label). Use 'never' when the surrounding context already explains the button (e.g. spin buttons in nldd-number-field, the chevron in nldd-split-button).",
-              "fieldName": "tooltipTiming"
+              "fieldName": "tooltipTiming",
+              "expandedType": {
+                "text": "'delay' | 'instant' | 'never'"
+              }
             },
             {
               "name": "shortcut",
@@ -2005,7 +2054,10 @@
               "description": "Item type: 'button' | 'checkbox' | 'radio'. Default: 'button'. One checkbox or radio item gives every item in its menu the check-mark column, so the text of the whole menu starts at one line, as in a native menu. Submenus decide for themselves.",
               "name": "type",
               "default": "'button'",
-              "fieldName": "type"
+              "fieldName": "type",
+              "expandedType": {
+                "text": "'button' | 'checkbox' | 'radio'"
+              }
             },
             {
               "type": {
@@ -2059,7 +2111,10 @@
               "description": "'match' | 'predictive' (default: 'predictive'). See text-cell for details.",
               "name": "query-mark-mode",
               "default": "'predictive'",
-              "fieldName": "queryMarkMode"
+              "fieldName": "queryMarkMode",
+              "expandedType": {
+                "text": "'match' | 'predictive'"
+              }
             },
             {
               "name": "shortcut-windows",
@@ -2986,7 +3041,10 @@
               "description": "What the menu is (default 'menu'). `menu` is a menu of actions: `role=\"menu\"` with menu items, for things you do. `listbox` is the popup of a combobox: `role=\"listbox\"` with options, focus stays in the field. `navigation` is a submenu in a site navigation: a list of links (`role=\"list\"`, each item a list item around a real link), because a screen reader treats a menu as an application and reads a list of links as what it is. Every item takes an `href`. Tab reaches each link, the arrow keys, Home and End move between them, Escape closes and returns focus to the trigger, and the menu closes when focus leaves it. The trigger says `aria-expanded` and promises no menu. Checkbox and radio items, shortcuts and `filter()` belong to actions and warn in development here. A submenu of a navigation menu is a navigation menu too. The variant sets `role=\"listitem\"` on its items and groups, and takes it off again when it changes back, also where you had set that role yourself.",
               "name": "variant",
               "default": "'menu'",
-              "fieldName": "variant"
+              "fieldName": "variant",
+              "expandedType": {
+                "text": "'listbox' | 'menu' | 'navigation'"
+              }
             },
             {
               "type": {
@@ -3258,6 +3316,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs'"
+              },
               "description": "Button size: 'xs' | 'sm' | 'md' | 'lg' (default: 'md')"
             },
             {
@@ -3720,7 +3781,10 @@
               "description": "Text alignment: 'left' | 'center' (default: 'left').",
               "name": "align",
               "default": "'left'",
-              "fieldName": "align"
+              "fieldName": "align",
+              "expandedType": {
+                "text": "'center' | 'left'"
+              }
             },
             {
               "type": {
@@ -4227,6 +4291,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm'"
+              },
               "description": "Toolbar size, propagated to all child controls: 'sm' | 'md' | 'lg' (default: 'md'). At 'lg' the overflow button (and lg-capable children like nldd-icon-button) stack their label below the icon."
             },
             {
@@ -4683,6 +4750,9 @@
               },
               "default": "'person'",
               "fieldName": "type",
+              "expandedType": {
+                "text": "'organization' | 'person'"
+              },
               "description": "`person` (circle, person icon) or `organization` (rounded, building icon); default `person`"
             },
             {
@@ -4692,6 +4762,9 @@
               },
               "default": "'full'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96' | 'full'"
+              },
               "description": "`full` (the default) scales with the container, like nldd-icon; or a fixed size in px (spacer-aligned: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96). The initials and the icon scale along"
             },
             {
@@ -4701,6 +4774,9 @@
               },
               "default": "'neutral'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'inherit' | 'neutral'"
+              },
               "description": "`neutral` (the default, a neutral fill) or `inherit` (fill in the content color: the `--context-content-color` channel, or `currentColor` when that is unset; text in the contrast color, so the avatar can replace an icon in a button for instance)"
             },
             {
@@ -4782,7 +4858,10 @@
               },
               "default": "'delay'",
               "description": "When the name appears as a tooltip on hover or focus: `delay` (the default, after 700ms), `instant`, or `never`. An avatar shows no text, so without a tooltip the name is readable by assistive software only. A `decorative` avatar shows none regardless: there the name already stands beside it as text",
-              "fieldName": "tooltipTiming"
+              "fieldName": "tooltipTiming",
+              "expandedType": {
+                "text": "'delay' | 'instant' | 'never'"
+              }
             },
             {
               "name": "href",
@@ -5179,7 +5258,10 @@
               },
               "default": "'box-tinted'",
               "description": "Visual style. The two `box` values are a framed card with rounded corners, padding, fill, and a 1px border ring, and differ in which surface they fill with; `box-tinted` is the default. `simple` drops the entire frame — use when embedding inside a parent surface.",
-              "fieldName": "appearance"
+              "fieldName": "appearance",
+              "expandedType": {
+                "text": "'box-base' | 'box-tinted' | 'simple'"
+              }
             },
             {
               "name": "language",
@@ -5362,7 +5444,10 @@
               "description": "`full` (the default) fills the container. `inherit` sizes the icon to the surrounding text (1em) and drops it onto that text's own line, for an icon set in a line of running text. Or a fixed spacer-aligned size in px (16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96).",
               "name": "size",
               "default": "'full'",
-              "fieldName": "size"
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96' | 'full' | 'inherit'"
+              }
             },
             {
               "type": {
@@ -5371,7 +5456,10 @@
               "description": "Functional (`primary-content`, `secondary-content`, `accent`, `critical`, `warning`, `success`) or rijkskleur (`lintblauw`, `donkerblauw`, `hemelblauw`, `lichtblauw`, `paars`, `violet`, `robijnrood`, `roze`, `rood`, `oranje`, `donkergeel`, `geel`, `donkerbruin`, `bruin`, `donkergroen`, `groen`, `mosgroen`, `mintgroen`). Empty = inherit `color` from parent.",
               "name": "color",
               "default": "''",
-              "fieldName": "color"
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'accent' | 'bruin' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'oranje' | 'paars' | 'primary-content' | 'robijnrood' | 'rood' | 'roze' | 'secondary-content' | 'success' | 'violet' | 'warning'"
+              }
             },
             {
               "type": {
@@ -5823,6 +5911,9 @@
               },
               "default": "'lazy'",
               "fieldName": "loading",
+              "expandedType": {
+                "text": "'eager' | 'lazy'"
+              },
               "description": "Loading strategy (default: 'lazy'). Lazy defers fetch until the image is near the viewport — the right choice for below-the-fold content. Set to 'eager' on images that appear in the initial viewport, especially the LCP candidate (hero illustration, top-of-list thumbnail); leaving them lazy silently regresses Core Web Vitals because the LCP fetch waits for the intersection observer. Pair with `fetchpriority=\"high\"` on the LCP image for the strongest signal."
             },
             {
@@ -5832,6 +5923,9 @@
               },
               "default": "'async'",
               "fieldName": "decoding",
+              "expandedType": {
+                "text": "'async' | 'auto' | 'sync'"
+              },
               "description": "Decoding hint (default: 'async')"
             },
             {
@@ -5840,6 +5934,9 @@
                 "text": "ImageFetchPriority | undefined"
               },
               "fieldName": "fetchPriority",
+              "expandedType": {
+                "text": "'auto' | 'high' | 'low'"
+              },
               "description": "Fetch priority hint"
             },
             {
@@ -5858,6 +5955,9 @@
               },
               "default": "'cover'",
               "fieldName": "objectFit",
+              "expandedType": {
+                "text": "'contain' | 'cover' | 'fill' | 'none' | 'scale-down'"
+              },
               "description": "default: 'cover'"
             },
             {
@@ -5867,6 +5967,9 @@
               },
               "default": "'center'",
               "fieldName": "objectPosition",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'left' | 'right' | 'top'"
+              },
               "description": "default: 'center'"
             },
             {
@@ -5876,6 +5979,9 @@
               },
               "default": "'square'",
               "fieldName": "shape",
+              "expandedType": {
+                "text": "'circle' | 'rounded' | 'square'"
+              },
               "description": "Corner shape (default: 'square')"
             },
             {
@@ -6209,6 +6315,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'inherit' | 'md' | 'sm'"
+              },
               "description": "Size: 'sm' | 'md' | 'inherit' (default: 'md'). 'inherit' takes the font-size from the container; in the box variant the keycaps then scale along in em."
             },
             {
@@ -6218,7 +6327,10 @@
               },
               "default": "'box'",
               "description": "'box' (default) shows each key as a keycap with a fill and a highlight edge. 'simple' shows the keys as plain text with separators: lighter, for inline use such as in a menu item.",
-              "fieldName": "appearance"
+              "fieldName": "appearance",
+              "expandedType": {
+                "text": "'box' | 'simple'"
+              }
             },
             {
               "name": "color",
@@ -6227,7 +6339,10 @@
               },
               "default": "'neutral'",
               "description": "'neutral' (default) uses the component colors of its own. 'inherit' lets the keys and separators follow the surrounding text color (currentColor), with a translucent contrast fill and highlight edge. Useful on a filled surface color or a highlighted row.",
-              "fieldName": "color"
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'inherit' | 'neutral'"
+              }
             },
             {
               "name": "always-visible",
@@ -6237,6 +6352,13 @@
               "default": "false",
               "fieldName": "alwaysVisible",
               "description": "Show on touch-only devices too, where shortcuts cannot be invoked."
+            },
+            {
+              "name": "debug-os",
+              "description": "Development aid: overrides the OS detection for this instance, so you can show several platform variants side by side in Storybook or documentation. Not meant for production use; leave it empty (default) so the real OS detection applies.",
+              "type": {
+                "text": "'mac'|'windows'|'linux'|'other'"
+              }
             }
           ],
           "superclass": {
@@ -6339,6 +6461,9 @@
               },
               "default": "'content'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'content' | 'inherit'"
+              },
               "description": "'content' (the default) takes the system's own content colors, each element its own. 'inherit' lets all text follow the color of the surface instead (for colored areas such as the filled categories). Links stay underlined as an affordance; secondary text (figcaption) gets the same color at a lowered opacity. Known v1 gaps: inline code, mark, tables and hr keep their own surfaces."
             },
             {
@@ -6348,6 +6473,9 @@
               },
               "default": "'snug'",
               "fieldName": "spacing",
+              "expandedType": {
+                "text": "'flat' | 'loose' | 'snug' | 'tight'"
+              },
               "description": "Spacing between elements: 'flat' | 'tight' | 'snug' (default) | 'loose'"
             },
             {
@@ -6481,6 +6609,9 @@
               },
               "default": "''",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'' | 'icon' | 'icon-and-text' | 'text'"
+              },
               "description": "What is visible: 'text' | 'icon' | 'icon-and-text'. Unset → detected from which of text/icon is present."
             },
             {
@@ -6490,6 +6621,9 @@
               },
               "default": "'neutral'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'bruin' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'neutral' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'success' | 'violet' | 'warning'"
+              },
               "description": "Color variant. Semantic: 'neutral' | 'accent' | 'success' | 'warning' | 'critical'. Rijkshuisstijl colors: 'lintblauw' | 'donkerblauw' | 'hemelblauw' | 'lichtblauw' | 'paars' | 'violet' | 'robijnrood' | 'roze' | 'rood' | 'oranje' | 'donkergeel' | 'geel' | 'donkerbruin' | 'bruin' | 'donkergroen' | 'groen' | 'mosgroen' | 'mintgroen'. (default: 'neutral')"
             },
             {
@@ -6499,6 +6633,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Tag size: 'sm' | 'md' (default: 'md')"
             },
             {
@@ -6634,6 +6771,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs' | 'xxs'"
+              },
               "description": "Text size on the body scale: 'xxs' | 'xs' | 'sm' | 'md' | 'lg' (default: 'md')"
             },
             {
@@ -6643,6 +6783,9 @@
               },
               "default": "'regular'",
               "fieldName": "weight",
+              "expandedType": {
+                "text": "'bold' | 'medium' | 'regular'"
+              },
               "description": "Font weight: 'regular' | 'medium' | 'bold' (default: 'regular'). With 'bold' a slotted `<strong>` no longer stands out: there is nothing bolder in the scale."
             },
             {
@@ -6652,6 +6795,9 @@
               },
               "default": "'snug'",
               "fieldName": "lineHeight",
+              "expandedType": {
+                "text": "'flat' | 'loose' | 'snug' | 'tight'"
+              },
               "description": "Line height: 'flat' | 'tight' | 'snug' | 'loose' (default: 'snug')"
             },
             {
@@ -6661,6 +6807,9 @@
               },
               "default": "'content'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'content' | 'critical' | 'inherit' | 'secondary' | 'success' | 'warning'"
+              },
               "description": "Text color: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical' | 'inherit'. 'content' and 'secondary' follow the surrounding content channel; 'inherit' takes the color it inherits, for text on a painted surface."
             },
             {
@@ -6670,6 +6819,9 @@
               },
               "default": "'left'",
               "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'center' | 'left' | 'right'"
+              },
               "description": "Alignment of the text within the block: 'left' | 'center' | 'right' (default: 'left'). Aligns the words; `horizontal-alignment` on nldd-container moves the box."
             }
           ],
@@ -6814,6 +6966,9 @@
               },
               "default": "3",
               "fieldName": "size",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
               "description": "Visual size of the title: 1–6 (default: 3)"
             },
             {
@@ -6850,6 +7005,9 @@
               },
               "default": "'content'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'content' | 'inherit'"
+              },
               "description": "'content' (the default) takes the system's own content colors. 'inherit' lets the title follow the text color of the surface instead (for colored areas such as the filled categories); overline and supporting-text get the same color at a lowered opacity."
             },
             {
@@ -6886,6 +7044,9 @@
               },
               "default": "null",
               "fieldName": "headingLevel",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
               "description": "Renders text as h1–h6; absent renders a p, for a title that is not a heading."
             }
           ],
@@ -7064,6 +7225,9 @@
               },
               "default": "'none'",
               "fieldName": "control",
+              "expandedType": {
+                "text": "'dismiss' | 'menu' | 'none'"
+              },
               "description": "Control type (default: 'none')"
             },
             {
@@ -7311,6 +7475,9 @@
               },
               "default": "'bottom'",
               "fieldName": "placement",
+              "expandedType": {
+                "text": "'bottom' | 'left' | 'right' | 'top'"
+              },
               "description": "Position: 'top' | 'bottom' | 'left' | 'right' (default: 'bottom'; automatically 'top' on touch devices)"
             },
             {
@@ -7320,6 +7487,9 @@
               },
               "default": "'delay'",
               "fieldName": "timing",
+              "expandedType": {
+                "text": "'delay' | 'instant' | 'never'"
+              },
               "description": "When the tooltip appears on hover: 'instant' — right away, without a show delay. 'delay' (the default) — after the standard show delay (700ms). 'never' — the tooltip is never shown; hover and focus events are ignored, aria-describedby is suppressed, and a tooltip that is already visible disappears. The hide delay and the touch suppression stay in force under every value. A focus trigger is always instant."
             }
           ],
@@ -7433,7 +7603,17 @@
               },
               "default": "undefined",
               "description": "'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.",
-              "fieldName": "labelAlignment"
+              "fieldName": "labelAlignment",
+              "expandedType": {
+                "text": "'left' | 'right' | 'top'"
+              }
+            },
+            {
+              "name": "form-label-alignment",
+              "description": "Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.",
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -7538,7 +7718,10 @@
               },
               "default": "undefined",
               "description": "'top' (default) | 'right' | 'left'. A value of its own always wins over the inherited form-label-alignment.",
-              "fieldName": "labelAlignment"
+              "fieldName": "labelAlignment",
+              "expandedType": {
+                "text": "'left' | 'right' | 'top'"
+              }
             },
             {
               "name": "label",
@@ -7575,6 +7758,13 @@
               "default": "'Optioneel'",
               "description": "Text for the optional badge. Defaults to 'Optioneel'.",
               "fieldName": "optionalLabel"
+            },
+            {
+              "name": "form-label-alignment",
+              "description": "Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code.",
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -7727,6 +7917,55 @@
             {
               "name": "label-alignment",
               "description": "Default `label-alignment` for descendant nldd-form-field and nldd-form-actions ('top' | 'right' | 'left'). Propagated to descendants as `form-label-alignment`. A `label-alignment` of its own on the descendant takes precedence through the CSS cascade."
+            },
+            {
+              "name": "name",
+              "description": "Form name",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "autocomplete",
+              "description": "'on' | 'off' (form-level autofill toggle)",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "target",
+              "description": "Submit target ('_self' | '_blank' | ...)",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "method",
+              "description": "HTTP method ('get' | 'post' | 'dialog')",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "action",
+              "description": "URL endpoint for submission",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "enctype",
+              "description": "Encoding type for submission",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "novalidate",
+              "description": "Skip native browser validation",
+              "type": {
+                "text": "boolean"
+              }
             }
           ],
           "superclass": {
@@ -9465,7 +9704,10 @@
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
-              "fieldName": "color"
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'inherit'"
+              }
             },
             {
               "name": "label",
@@ -9985,7 +10227,10 @@
               },
               "default": "''",
               "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
-              "fieldName": "color"
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'inherit'"
+              }
             },
             {
               "name": "accessible-label",
@@ -10517,6 +10762,9 @@
               },
               "default": "'auto'",
               "fieldName": "resize",
+              "expandedType": {
+                "text": "'auto' | 'none' | 'vertical'"
+              },
               "description": "'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)"
             },
             {
@@ -10526,6 +10774,9 @@
               },
               "default": "'simple'",
               "fieldName": "appearance",
+              "expandedType": {
+                "text": "'input-field' | 'simple'"
+              },
               "description": "'simple' (default, bare) | 'input-field' (framed surface)"
             },
             {
@@ -11235,6 +11486,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Size: 'sm' | 'md' (default: 'md')"
             },
             {
@@ -12143,6 +12397,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "'md' (default) | 'sm'. Set automatically by nldd-form-field."
             },
             {
@@ -12850,6 +13107,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm' | 'xs'"
+              },
               "description": "Size: 'xs' | 'sm' | 'md' (default: 'md')"
             },
             {
@@ -13664,6 +13924,9 @@
               },
               "default": "'control'",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'area' | 'control'"
+              },
               "description": "'control' (default): a row the height of a field. 'area': a tall surface with the upload icon and the accepted types when empty, and the file icon, name and buttons stacked once chosen; both states keep the same height"
             },
             {
@@ -13673,6 +13936,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Field size: 'md' (default) | 'sm'. Set automatically by nldd-form-field."
             },
             {
@@ -14263,6 +14529,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "'md' (default) | 'sm'. Set automatically by nldd-form-field."
             },
             {
@@ -14361,7 +14630,10 @@
                 "text": "Keyboard | undefined"
               },
               "description": "Which virtual keyboard a phone or tablet raises, forwarded as `inputmode`: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'. It changes nothing about what the field accepts, and nothing at all on a desktop.",
-              "fieldName": "keyboard"
+              "fieldName": "keyboard",
+              "expandedType": {
+                "text": "'decimal' | 'email' | 'none' | 'numeric' | 'search' | 'tel' | 'text' | 'url'"
+              }
             },
             {
               "name": "enter-key",
@@ -14369,7 +14641,10 @@
                 "text": "EnterKey | undefined"
               },
               "description": "What the Enter key of the virtual keyboard says, forwarded as `enterkeyhint`: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'. In a field where Enter starts a new line, leave it alone.",
-              "fieldName": "enterKey"
+              "fieldName": "enterKey",
+              "expandedType": {
+                "text": "'done' | 'enter' | 'go' | 'next' | 'previous' | 'search' | 'send'"
+              }
             },
             {
               "name": "rows",
@@ -14387,6 +14662,9 @@
               },
               "default": "'auto'",
               "fieldName": "resize",
+              "expandedType": {
+                "text": "'auto' | 'none' | 'vertical'"
+              },
               "description": "'none' | 'vertical' | 'auto' (default). 'auto' grows with content (native field-sizing), no manual handle."
             },
             {
@@ -14917,6 +15195,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Size: 'sm' | 'md' (default: 'md')"
             },
             {
@@ -15522,6 +15803,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "'md' (default) | 'sm'. Set automatically by nldd-form-field."
             },
             {
@@ -16127,7 +16411,10 @@
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
-              "fieldName": "color"
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'inherit'"
+              }
             },
             {
               "name": "label",
@@ -16823,7 +17110,10 @@
               },
               "default": "''",
               "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
-              "fieldName": "color"
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'inherit'"
+              }
             },
             {
               "name": "accessible-label",
@@ -17359,6 +17649,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Field size: 'sm' | 'md' (default: 'md')"
             },
             {
@@ -17792,7 +18085,10 @@
               },
               "default": "'neutral-tinted'",
               "description": "Visual style: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). Set by nldd-segmented-control.",
-              "fieldName": "appearance"
+              "fieldName": "appearance",
+              "expandedType": {
+                "text": "'neutral-base' | 'neutral-tinted'"
+              }
             },
             {
               "name": "size",
@@ -17801,7 +18097,10 @@
               },
               "default": "'md'",
               "description": "Control size: 'sm' | 'md' | 'lg' (default: 'md'). Set by nldd-segmented-control.",
-              "fieldName": "size"
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm'"
+              }
             },
             {
               "name": "variant",
@@ -17810,7 +18109,10 @@
               },
               "default": "'text'",
               "description": "Content type: 'text' | 'icon' | 'icon-and-text' (default: 'text'). Set by nldd-segmented-control.",
-              "fieldName": "variant"
+              "fieldName": "variant",
+              "expandedType": {
+                "text": "'icon' | 'icon-and-text' | 'text'"
+              }
             },
             {
               "name": "input-type",
@@ -17819,7 +18121,10 @@
               },
               "default": "'radio'",
               "description": "Selection mode: 'radio' | 'checkbox' (default: 'radio'). In radio mode the item is the radio itself, in checkbox mode it renders a native checkbox. Set by nldd-segmented-control.",
-              "fieldName": "inputType"
+              "fieldName": "inputType",
+              "expandedType": {
+                "text": "'checkbox' | 'radio'"
+              }
             },
             {
               "name": "group-name",
@@ -18291,6 +18596,9 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
+              "expandedType": {
+                "text": "'neutral-base' | 'neutral-tinted'"
+              },
               "description": "Visual style, color included: 'neutral-tinted' | 'neutral-base' (default: 'neutral-tinted'). neutral-base is for a tinted surface. For a quiet row without a track, use nldd-toggle-button-group with type=\"radio\" and a transparent appearance."
             },
             {
@@ -18300,6 +18608,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm'"
+              },
               "description": "Control size: 'sm' | 'md' | 'lg' (default: 'md')"
             },
             {
@@ -18309,6 +18620,9 @@
               },
               "default": "'radio'",
               "fieldName": "type",
+              "expandedType": {
+                "text": "'checkbox' | 'radio'"
+              },
               "description": "Selection mode: 'radio' | 'checkbox' (default: 'radio')."
             },
             {
@@ -18318,7 +18632,10 @@
               },
               "default": "'text'",
               "description": "Content type for all items: 'text' | 'icon' | 'icon-and-text' (default: 'text')",
-              "fieldName": "variant"
+              "fieldName": "variant",
+              "expandedType": {
+                "text": "'icon' | 'icon-and-text' | 'text'"
+              }
             },
             {
               "name": "disabled",
@@ -18867,6 +19184,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm' | 'xs'"
+              },
               "description": "Slider size: 'xs' | 'sm' | 'md' (default: 'md'), with the height of the other controls of that size. Set automatically by nldd-form-field."
             },
             {
@@ -18921,6 +19241,9 @@
               },
               "default": "'instant'",
               "fieldName": "tooltipTiming",
+              "expandedType": {
+                "text": "'instant' | 'never'"
+              },
               "description": "When the value shows above the thumb: 'instant' (the default: on hover, keyboard focus and while dragging) or 'never', for a slider whose value shows elsewhere, such as in fields above it"
             },
             {
@@ -19456,6 +19779,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm' | 'xs'"
+              },
               "description": "Size: 'xs' | 'sm' | 'md' (default: 'md')"
             },
             {
@@ -19727,7 +20053,10 @@
               },
               "default": "''",
               "description": "'inherit' draws the control and its label in the color of the text around it, for a field on a colored surface such as the panel of nldd-hero. Passed to the control inside.",
-              "fieldName": "color"
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'inherit'"
+              }
             },
             {
               "name": "label",
@@ -20206,6 +20535,9 @@
               },
               "default": "'sm'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'sm' | 'xs'"
+              },
               "description": "Switch size: 'xs' | 'sm' (default: 'sm')"
             },
             {
@@ -20215,7 +20547,10 @@
               },
               "default": "''",
               "description": "'inherit' draws the control in the color of the text around it, with the mark in the surface color (`--context-parent-background-color`) or else `--semantics-content-contrast-color`, white or black against the text color. For a control on a colored surface, such as the panel of nldd-hero, where the accent would not stand out. Without it the control uses the accent.",
-              "fieldName": "color"
+              "fieldName": "color",
+              "expandedType": {
+                "text": "'' | 'inherit'"
+              }
             },
             {
               "name": "accessible-label",
@@ -22201,6 +22536,24 @@
         },
         {
           "kind": "function",
+          "name": "hasInvalidQuery",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "typeaheads",
+              "type": {
+                "text": "readonly Typeahead[]"
+              }
+            }
+          ],
+          "description": "Whether a list sets a `query` that is no regular expression; see queryPattern."
+        },
+        {
+          "kind": "function",
           "name": "typeaheadQueryAt",
           "return": {
             "type": {
@@ -22267,6 +22620,14 @@
           "name": "DEFAULT_TYPEAHEAD_QUERY",
           "declaration": {
             "name": "DEFAULT_TYPEAHEAD_QUERY",
+            "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hasInvalidQuery",
+          "declaration": {
+            "name": "hasInvalidQuery",
             "module": "src/components/inputs/text-editor/text-editor.mentions.ts"
           }
         },
@@ -23744,6 +24105,9 @@
               },
               "default": "'auto'",
               "fieldName": "resize",
+              "expandedType": {
+                "text": "'auto' | 'none' | 'vertical'"
+              },
               "description": "'none' (fixed) | 'vertical' (drag) | 'auto' (grow, default)"
             },
             {
@@ -23753,6 +24117,9 @@
               },
               "default": "'simple'",
               "fieldName": "appearance",
+              "expandedType": {
+                "text": "'input-field' | 'simple'"
+              },
               "description": "'simple' (default, bare) | 'input-field' (framed surface)"
             },
             {
@@ -23762,6 +24129,9 @@
               },
               "default": "'visible'",
               "fieldName": "syntax",
+              "expandedType": {
+                "text": "'hidden' | 'visible'"
+              },
               "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
@@ -24569,6 +24939,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "'md' (default) | 'sm'. Set automatically by nldd-form-field."
             },
             {
@@ -24632,6 +25005,9 @@
               },
               "default": "'text'",
               "fieldName": "type",
+              "expandedType": {
+                "text": "'email' | 'tel' | 'text' | 'url'"
+              },
               "description": "Input type: 'text' | 'email' | 'tel' | 'url'"
             },
             {
@@ -24640,7 +25016,10 @@
                 "text": "Keyboard | undefined"
               },
               "description": "Which virtual keyboard a phone or tablet raises, forwarded as `inputmode`: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'. It changes nothing about what the field accepts, and nothing at all on a desktop. Reach for it where the value is digits but not a quantity you would step (a house number, a postcode, a rack unit): 'numeric'. The keyboard for 'tel', 'email' and 'url' already follows from `type`.",
-              "fieldName": "keyboard"
+              "fieldName": "keyboard",
+              "expandedType": {
+                "text": "'decimal' | 'email' | 'none' | 'numeric' | 'search' | 'tel' | 'text' | 'url'"
+              }
             },
             {
               "name": "enter-key",
@@ -24648,7 +25027,10 @@
                 "text": "EnterKey | undefined"
               },
               "description": "What the Enter key of the virtual keyboard says, forwarded as `enterkeyhint`: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'. It only labels the key; what Enter does is still up to the form, and on a desktop it changes nothing.",
-              "fieldName": "enterKey"
+              "fieldName": "enterKey",
+              "expandedType": {
+                "text": "'done' | 'enter' | 'go' | 'next' | 'previous' | 'search' | 'send'"
+              }
             },
             {
               "name": "name",
@@ -25537,6 +25919,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "'md' (default) | 'sm'. Set automatically by nldd-form-field."
             },
             {
@@ -26237,6 +26622,9 @@
               },
               "default": "'checkbox'",
               "fieldName": "type",
+              "expandedType": {
+                "text": "'button' | 'checkbox' | 'radio'"
+              },
               "description": "Selection mode (default: 'checkbox')"
             },
             {
@@ -26255,6 +26643,9 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
+              "expandedType": {
+                "text": "'accent-transparent' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent'"
+              },
               "description": "Forwarded to all buttons (default: 'neutral-tinted')"
             },
             {
@@ -26264,6 +26655,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs'"
+              },
               "description": "Forwarded to all buttons (default: 'md')"
             },
             {
@@ -26822,6 +27216,9 @@
               },
               "default": "'button'",
               "fieldName": "type",
+              "expandedType": {
+                "text": "'button' | 'checkbox' | 'radio'"
+              },
               "description": "What the button is: a button with aria-pressed, a native checkbox, or a radio (default: 'button')"
             },
             {
@@ -26831,6 +27228,9 @@
               },
               "default": "'neutral-tinted'",
               "fieldName": "appearance",
+              "expandedType": {
+                "text": "'accent-transparent' | 'neutral-base' | 'neutral-tinted' | 'neutral-transparent'"
+              },
               "description": "Visual style, color included (default: 'neutral-tinted'). Selected is filled in each of them; the transparent ones are for a toggle among transparent buttons, and with a selected-icon they stay quiet when on."
             },
             {
@@ -26840,6 +27240,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm' | 'xs'"
+              },
               "description": "Button size (default: 'md')"
             },
             {
@@ -26921,6 +27324,9 @@
               },
               "default": "''",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'' | 'icon' | 'icon-and-text' | 'text'"
+              },
               "description": "What renders: text, icon, or both. Unset → auto-detect from text/icon attributes."
             },
             {
@@ -27564,7 +27970,10 @@
               },
               "default": "'dismiss'",
               "description": "Trailing control per token: 'dismiss' (default, a ✕ that removes it) or 'menu' (a ⌄ opening a per-token action menu supplied by the template prototypes)",
-              "fieldName": "tokenControl"
+              "fieldName": "tokenControl",
+              "expandedType": {
+                "text": "'dismiss' | 'menu'"
+              }
             },
             {
               "name": "name",
@@ -27660,6 +28069,9 @@
               },
               "default": "'tinted'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'critical' | 'tinted'"
+              },
               "description": "Which surface this box draws, named as it is on nldd-shell, nldd-page, nldd-split-view-pane and nldd-card. It starts tinted where a card starts base: a box is there to stand out from the page, a card to sit on it. - `tinted` (default): a box on a plain page background. - `base`: a box on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card). - `accent-tinted`: a tint of the theme's accent, with the contrast of `tinted`, for a box that belongs to the service rather than to the page. - `critical`: a region whose actions are destructive or irreversible (a \"danger zone\"), tinted and outlined in critical. It carries no ARIA of its own: unlike nldd-banner this is not an announcement but a permanent part of the page, so the heading and the button labels have to name the danger — color is a reinforcement, never the only signal (WCAG 1.4.1). The box draws the surface and nothing else: it has no padding of its own, the same way nldd-card has none. Put an nldd-container inside it and let that set the inset, so one component owns spacing wherever it is used."
             }
           ],
@@ -27795,6 +28207,9 @@
               },
               "default": "'base'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'tinted'"
+              },
               "description": "Surface color of the card: `base` (default) on a plain page background, `tinted` when the card should stand out against a base surface, `accent-tinted` for a tint of the theme's accent with the contrast of `tinted`"
             },
             {
@@ -28032,15 +28447,15 @@
           ],
           "attributes": [
             {
-              "name": "item-width"
-            },
-            {
               "name": "layout",
               "type": {
                 "text": "Layout"
               },
               "default": "'grid'",
               "fieldName": "layout",
+              "expandedType": {
+                "text": "'grid' | 'horizontal-scroll' | 'lanes' | 'stack'"
+              },
               "description": "Layout mode: 'grid' | 'stack' | 'lanes' | 'horizontal-scroll' (default: 'grid')"
             },
             {
@@ -28065,7 +28480,10 @@
                 "text": "SpacingSize | undefined"
               },
               "description": "Gap between items, as a step of the spacing scale ('0', '2', '4', '6', '8', '10', '12', '16', '20', '24', '28', '32', '40', '44', '48', '56', '64', '80', '96'). Overrides the responsive default at every breakpoint; unset keeps the default.",
-              "fieldName": "gap"
+              "fieldName": "gap",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              }
             },
             {
               "name": "sm-gap",
@@ -28073,6 +28491,9 @@
                 "text": "SpacingSize | undefined"
               },
               "fieldName": "smGap",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Gap at sm, overriding `gap` there"
             },
             {
@@ -28081,6 +28502,9 @@
                 "text": "SpacingSize | undefined"
               },
               "fieldName": "mdGap",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Gap at md, overriding `gap` there"
             },
             {
@@ -28089,6 +28513,9 @@
                 "text": "SpacingSize | undefined"
               },
               "fieldName": "lgGap",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Gap at lg, overriding `gap` there"
             },
             {
@@ -28607,6 +29034,9 @@
                 "text": "Layout | undefined"
               },
               "fieldName": "layout",
+              "expandedType": {
+                "text": "'columns' | 'grid' | 'lanes' | 'row' | 'stack' | 'wrap'"
+              },
               "description": "'stack' | 'row' | 'wrap' | 'grid' | 'columns' | 'lanes' (default: 'stack')"
             },
             {
@@ -28615,6 +29045,9 @@
                 "text": "ColumnCount | undefined"
               },
               "fieldName": "columnCount",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8"
+              },
               "description": "Force N columns (1-8) for layout=grid/columns/lanes"
             },
             {
@@ -28623,6 +29056,9 @@
                 "text": "ColumnCount | undefined"
               },
               "fieldName": "smColumnCount",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8"
+              },
               "description": "Column count when this container is sm-wide"
             },
             {
@@ -28631,6 +29067,9 @@
                 "text": "ColumnCount | undefined"
               },
               "fieldName": "mdColumnCount",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8"
+              },
               "description": "Column count when this container is md-wide"
             },
             {
@@ -28639,6 +29078,9 @@
                 "text": "ColumnCount | undefined"
               },
               "fieldName": "lgColumnCount",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8"
+              },
               "description": "Column count when this container is lg-wide"
             },
             {
@@ -28684,6 +29126,9 @@
               },
               "default": "undefined",
               "fieldName": "gap",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Gap between children. One distance for all of them, so it fits children of one kind; for a stack of different kinds, space each seam with nldd-spacer instead."
             },
             {
@@ -28693,6 +29138,9 @@
               },
               "default": "undefined",
               "fieldName": "smGap",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Gap at sm breakpoint"
             },
             {
@@ -28702,6 +29150,9 @@
               },
               "default": "undefined",
               "fieldName": "mdGap",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Gap at md breakpoint"
             },
             {
@@ -28711,6 +29162,9 @@
               },
               "default": "undefined",
               "fieldName": "lgGap",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Gap at lg breakpoint"
             },
             {
@@ -28720,6 +29174,9 @@
               },
               "default": "undefined",
               "fieldName": "padding",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding for all sides"
             },
             {
@@ -28729,6 +29186,9 @@
               },
               "default": "undefined",
               "fieldName": "paddingInline",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding for left and right"
             },
             {
@@ -28738,6 +29198,9 @@
               },
               "default": "undefined",
               "fieldName": "paddingBlock",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding for top and bottom"
             },
             {
@@ -28747,6 +29210,9 @@
               },
               "default": "undefined",
               "fieldName": "paddingTop",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding top"
             },
             {
@@ -28756,6 +29222,9 @@
               },
               "default": "undefined",
               "fieldName": "paddingRight",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding right"
             },
             {
@@ -28765,6 +29234,9 @@
               },
               "default": "undefined",
               "fieldName": "paddingBottom",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding bottom"
             },
             {
@@ -28774,6 +29246,9 @@
               },
               "default": "undefined",
               "fieldName": "paddingLeft",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding left Breakpoints for the sm/md/lg padding attributes below: sm is up to 640px, md is 641px to 1007px, lg is 1008px and up. Each is emitted as both an"
             },
             {
@@ -28783,6 +29258,9 @@
               },
               "default": "undefined",
               "fieldName": "smPadding",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding for all sides at sm"
             },
             {
@@ -28792,6 +29270,9 @@
               },
               "default": "undefined",
               "fieldName": "smPaddingInline",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding left and right at sm"
             },
             {
@@ -28801,6 +29282,9 @@
               },
               "default": "undefined",
               "fieldName": "smPaddingBlock",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding top and bottom at sm"
             },
             {
@@ -28810,6 +29294,9 @@
               },
               "default": "undefined",
               "fieldName": "smPaddingTop",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding top at sm"
             },
             {
@@ -28819,6 +29306,9 @@
               },
               "default": "undefined",
               "fieldName": "smPaddingRight",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding right at sm"
             },
             {
@@ -28828,6 +29318,9 @@
               },
               "default": "undefined",
               "fieldName": "smPaddingBottom",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding bottom at sm"
             },
             {
@@ -28837,6 +29330,9 @@
               },
               "default": "undefined",
               "fieldName": "smPaddingLeft",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding left at sm"
             },
             {
@@ -28846,6 +29342,9 @@
               },
               "default": "undefined",
               "fieldName": "mdPadding",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding for all sides at md"
             },
             {
@@ -28855,6 +29354,9 @@
               },
               "default": "undefined",
               "fieldName": "mdPaddingInline",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding left and right at md"
             },
             {
@@ -28864,6 +29366,9 @@
               },
               "default": "undefined",
               "fieldName": "mdPaddingBlock",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding top and bottom at md"
             },
             {
@@ -28873,6 +29378,9 @@
               },
               "default": "undefined",
               "fieldName": "mdPaddingTop",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding top at md"
             },
             {
@@ -28882,6 +29390,9 @@
               },
               "default": "undefined",
               "fieldName": "mdPaddingRight",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding right at md"
             },
             {
@@ -28891,6 +29402,9 @@
               },
               "default": "undefined",
               "fieldName": "mdPaddingBottom",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding bottom at md"
             },
             {
@@ -28900,6 +29414,9 @@
               },
               "default": "undefined",
               "fieldName": "mdPaddingLeft",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding left at md"
             },
             {
@@ -28909,6 +29426,9 @@
               },
               "default": "undefined",
               "fieldName": "lgPadding",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding for all sides at lg"
             },
             {
@@ -28918,6 +29438,9 @@
               },
               "default": "undefined",
               "fieldName": "lgPaddingInline",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding left and right at lg"
             },
             {
@@ -28927,6 +29450,9 @@
               },
               "default": "undefined",
               "fieldName": "lgPaddingBlock",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding top and bottom at lg"
             },
             {
@@ -28936,6 +29462,9 @@
               },
               "default": "undefined",
               "fieldName": "lgPaddingTop",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding top at lg"
             },
             {
@@ -28945,6 +29474,9 @@
               },
               "default": "undefined",
               "fieldName": "lgPaddingRight",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding right at lg"
             },
             {
@@ -28954,6 +29486,9 @@
               },
               "default": "undefined",
               "fieldName": "lgPaddingBottom",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding bottom at lg"
             },
             {
@@ -28963,6 +29498,9 @@
               },
               "default": "undefined",
               "fieldName": "lgPaddingLeft",
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Padding left at lg"
             },
             {
@@ -28972,6 +29510,9 @@
               },
               "default": "undefined",
               "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'center' | 'left' | 'right'"
+              },
               "description": "'left' | 'center' | 'right'"
             },
             {
@@ -28981,7 +29522,42 @@
               },
               "default": "undefined",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "'top' | 'center' | 'bottom'"
+            },
+            {
+              "name": "order",
+              "description": "Position of this child in the container",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "sm-order",
+              "description": "Position of this child at sm",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "md-order",
+              "description": "Position of this child at md",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "lg-order",
+              "description": "Position of this child at lg",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
             }
           ],
           "superclass": {
@@ -29059,12 +29635,12 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A single entry in an `nldd-page-footer-legal-bar`. Renders as a link\nwhen `href` is set, as plain text otherwise. Uses the content color\n(not the link color) so the legal bar reads as a subdued utility row.",
+          "description": "A single entry in an `nldd-page-footer-legal-bar`. Renders as a link when `href` is set, as plain text otherwise. Uses the content color (not the link color) so the legal bar reads as a subdued utility row.",
           "name": "NLDDPageFooterLegalBarItem",
           "slots": [
             {
-              "description": "Item label (alternative to `text`).",
-              "name": ""
+              "name": "",
+              "description": "Item label (alternative to `text`)."
             }
           ],
           "members": [
@@ -29116,16 +29692,16 @@
         },
         {
           "kind": "class",
-          "description": "Holds the legal links row at the bottom of a `nldd-page-footer`. Items\nin `start` render flush-left, items in `end` flush-right, separated by\nspacing only (no separators). On narrow containers the two groups wrap\nto their own rows with `start` above `end`.",
+          "description": "Holds the legal links row at the bottom of a `nldd-page-footer`. Items in `start` render flush-left, items in `end` flush-right, separated by spacing only (no separators). On narrow containers the two groups wrap to their own rows with `start` above `end`.",
           "name": "NLDDPageFooterLegalBar",
           "slots": [
             {
-              "description": "Items rendered flush-left (e.g. © notice, version).",
-              "name": "start"
+              "name": "start",
+              "description": "Items rendered flush-left (e.g. © notice, version)."
             },
             {
-              "description": "Items rendered flush-right (e.g. privacy, accessibility).",
-              "name": "end"
+              "name": "end",
+              "description": "Items rendered flush-right (e.g. privacy, accessibility)."
             }
           ],
           "members": [
@@ -29515,6 +30091,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+              },
               "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
             {
@@ -29552,6 +30131,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Block (top and bottom) padding override (token 0-96; '0' strips it)."
             },
             {
@@ -29563,6 +30145,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               },
               "description": "Top padding override."
             },
@@ -29576,6 +30161,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Bottom padding override."
             },
             {
@@ -29588,6 +30176,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom})."
             },
             {
@@ -29599,6 +30190,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -29610,6 +30204,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -29621,6 +30218,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -29632,6 +30232,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -29643,6 +30246,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -29654,6 +30260,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -29665,6 +30274,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -29676,6 +30288,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             }
           ],
@@ -30180,6 +30795,9 @@
               },
               "default": "'overlap'",
               "fieldName": "layout",
+              "expandedType": {
+                "text": "'contained' | 'overlap'"
+              },
               "description": "How the panel relates to the image (default: 'overlap'). 'contained' keeps it on the image, in any of the eight positions; 'overlap' lets it fall `overlap-size` over the bottom of the image and run on below as far as its content needs, so the image keeps its height whatever the content. In 'overlap' the image has a fixed height (320px on md, 400px on lg) unless `media-height` or `media-aspect-ratio` is set, and only the horizontal side of `main-position` counts. A panel shorter than `overlap-size` ends inside the image and says so in development"
             },
             {
@@ -30189,6 +30807,9 @@
               },
               "default": "'accent'",
               "fieldName": "mainBackground",
+              "expandedType": {
+                "text": "'accent' | 'base'"
+              },
               "description": "Surface color of the panel: 'accent' (default), the accent color of the theme, or 'base', the base surface"
             },
             {
@@ -30207,6 +30828,9 @@
               },
               "default": "'bottom-left'",
               "fieldName": "mainPosition",
+              "expandedType": {
+                "text": "'bottom-center' | 'bottom-left' | 'bottom-right' | 'left' | 'right' | 'top-center' | 'top-left' | 'top-right'"
+              },
               "description": "Position of the text panel (default: 'bottom-left'); 'left'/'right' span the full height"
             },
             {
@@ -30283,6 +30907,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
+              },
               "description": "Surface behind the hero (section API)"
             },
             {
@@ -30319,6 +30946,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Block padding override, also per edge and responsive (section API)"
             },
             {
@@ -30330,6 +30960,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30341,6 +30974,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30352,6 +30988,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30363,6 +31002,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30374,6 +31016,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30385,6 +31030,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30396,6 +31044,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30407,6 +31058,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30418,6 +31072,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30429,6 +31086,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30440,6 +31100,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             }
           ],
@@ -30731,6 +31394,9 @@
               },
               "default": "'top'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
             },
             {
@@ -30743,6 +31409,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
               },
               "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
@@ -30781,6 +31450,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Block (top and bottom) padding override (token 0-96; '0' strips it)."
             },
             {
@@ -30792,6 +31464,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               },
               "description": "Top padding override."
             },
@@ -30805,6 +31480,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Bottom padding override."
             },
             {
@@ -30817,6 +31495,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom})."
             },
             {
@@ -30828,6 +31509,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30839,6 +31523,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30850,6 +31537,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30861,6 +31551,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30872,6 +31565,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30883,6 +31579,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30894,6 +31593,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -30905,6 +31607,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             }
           ],
@@ -31208,6 +31913,9 @@
               },
               "default": "'top'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
             },
             {
@@ -31220,6 +31928,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
               },
               "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
@@ -31258,6 +31969,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Block (top and bottom) padding override (token 0-96; '0' strips it)."
             },
             {
@@ -31269,6 +31983,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               },
               "description": "Top padding override."
             },
@@ -31282,6 +31999,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Bottom padding override."
             },
             {
@@ -31294,6 +32014,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom})."
             },
             {
@@ -31305,6 +32028,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31316,6 +32042,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31327,6 +32056,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31338,6 +32070,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31349,6 +32084,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31360,6 +32098,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31371,6 +32112,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31382,6 +32126,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             }
           ],
@@ -31888,6 +32635,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
               }
             },
             {
@@ -31923,6 +32673,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31934,6 +32687,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31945,6 +32701,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31956,6 +32715,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31967,6 +32729,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31978,6 +32743,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -31989,6 +32757,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32000,6 +32771,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32011,6 +32785,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32022,6 +32799,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32033,6 +32813,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32044,6 +32827,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             }
           ],
@@ -32358,7 +33144,10 @@
               },
               "default": "'left'",
               "description": "Where the body's children sit across the body ('left' default). Use it to place something narrower than the body, such as a container with a max-width.",
-              "fieldName": "horizontalAlignment"
+              "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'center' | 'left' | 'right'"
+              }
             },
             {
               "name": "vertical-alignment",
@@ -32367,6 +33156,9 @@
               },
               "default": "'top'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Where the body's children sit down the section ('top' default). Only visible when the section is taller than its content."
             },
             {
@@ -32379,6 +33171,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
               },
               "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
@@ -32417,6 +33212,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Block (top and bottom) padding override (token 0-96; '0' strips it)."
             },
             {
@@ -32428,6 +33226,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               },
               "description": "Top padding override."
             },
@@ -32441,6 +33242,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Bottom padding override."
             },
             {
@@ -32453,6 +33257,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom})."
             },
             {
@@ -32464,6 +33271,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32475,6 +33285,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32486,6 +33299,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32497,6 +33313,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32508,6 +33327,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32519,6 +33341,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32530,6 +33355,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32541,6 +33369,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             }
           ],
@@ -32836,6 +33667,9 @@
               },
               "default": "'top'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Where the shorter column sits next to the longer one ('top' default). Only where the columns stand side by side; stacked, they follow each other."
             },
             {
@@ -32848,6 +33682,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'accent-tinted' | 'base' | 'inherit' | 'tinted'"
               },
               "description": "Surface background ('inherit' default; 'base', 'tinted' and 'accent-tinted', a tint of the theme's accent with the contrast of 'tinted', paint and cascade a surface)."
             },
@@ -32886,6 +33723,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Block (top and bottom) padding override (token 0-96; '0' strips it)."
             },
             {
@@ -32897,6 +33737,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               },
               "description": "Top padding override."
             },
@@ -32910,6 +33753,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Bottom padding override."
             },
             {
@@ -32922,6 +33768,9 @@
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
               },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
+              },
               "description": "Responsive block padding (sm/md/lg, also per edge: {sm,md,lg}-padding-{top,bottom})."
             },
             {
@@ -32933,6 +33782,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32944,6 +33796,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32955,6 +33810,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32966,6 +33824,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32977,6 +33838,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32988,6 +33852,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -32999,6 +33866,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             },
             {
@@ -33010,6 +33880,9 @@
               "inheritedFrom": {
                 "name": "PageSectionMixin",
                 "module": "src/utilities/page-section-mixin.ts"
+              },
+              "expandedType": {
+                "text": "'0' | '10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96'"
               }
             }
           ],
@@ -33143,6 +34016,9 @@
               },
               "default": "'inherit'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'base' | 'inherit' | 'tinted'"
+              },
               "description": "Use a gray background instead of white"
             },
             {
@@ -33179,6 +34055,9 @@
               },
               "default": "'auto'",
               "fieldName": "landmarks",
+              "expandedType": {
+                "text": "'auto' | 'page' | 'region'"
+              },
               "description": "Whether this page carries the document's landmarks: 'auto' (default) derives it from where the page sits, 'page' keeps banner, main and contentinfo, 'region' drops all three"
             }
           ],
@@ -33430,6 +34309,9 @@
               },
               "default": "'bottom-start'",
               "fieldName": "placement",
+              "expandedType": {
+                "text": "'bottom' | 'bottom-end' | 'bottom-start' | 'left' | 'left-end' | 'left-start' | 'right' | 'right-end' | 'right-start' | 'top' | 'top-end' | 'top-start'"
+              },
               "description": "Floating UI placement (default: 'bottom-start')"
             },
             {
@@ -33503,6 +34385,13 @@
               "default": "false",
               "fieldName": "open",
               "description": "Whether the popover is open. Set it to open or close the popover, as an alternative to show() and hide(); opening needs an anchor, and without one it stays unset. The popover clears it itself when it closes another way (Escape, a click outside), so bind it together with the close event."
+            },
+            {
+              "name": "role",
+              "description": "ARIA role (default: 'dialog'). For informational content (a tooltip callout, a rich-text help panel) without a dialog interaction pattern, set `role=\"region\"`. For menu-style triggers, `role=\"menu\"` plus `aria-haspopup=\"menu\"` on the anchor. The popover never overwrites a role that was set explicitly.",
+              "type": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -33664,6 +34553,9 @@
               },
               "default": "'right'",
               "fieldName": "placement",
+              "expandedType": {
+                "text": "'bottom' | 'left' | 'right'"
+              },
               "description": "Sheet position: 'left' | 'right' | 'bottom' (default: 'right')"
             },
             {
@@ -33750,6 +34642,9 @@
               },
               "default": "'base'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'base' | 'tinted'"
+              },
               "description": "Background color (cascades to descendants)"
             }
           ],
@@ -33851,6 +34746,9 @@
               },
               "default": "'16'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96' | 'flexible'"
+              },
               "description": "Base spacer size. 'flexible' or one of the fixed tokens (2–96). Default: '16'."
             },
             {
@@ -33859,6 +34757,9 @@
                 "text": "SpacerSize | undefined"
               },
               "fieldName": "smSize",
+              "expandedType": {
+                "text": "'10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96' | 'flexible'"
+              },
               "description": "Spacer size at sm breakpoint (max-width: 640px)."
             },
             {
@@ -33867,6 +34768,9 @@
                 "text": "SpacerSize | undefined"
               },
               "fieldName": "mdSize",
+              "expandedType": {
+                "text": "'10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96' | 'flexible'"
+              },
               "description": "Spacer size at md breakpoint (641px–1007px)."
             },
             {
@@ -33875,6 +34779,9 @@
                 "text": "SpacerSize | undefined"
               },
               "fieldName": "lgSize",
+              "expandedType": {
+                "text": "'10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96' | 'flexible'"
+              },
               "description": "Spacer size at lg breakpoint (min-width: 1008px)."
             },
             {
@@ -33884,6 +34791,9 @@
               },
               "default": "'both'",
               "fieldName": "direction",
+              "expandedType": {
+                "text": "'both' | 'horizontal' | 'vertical'"
+              },
               "description": "Direction: 'horizontal' | 'vertical' | 'both' (default: 'both')"
             }
           ],
@@ -33942,7 +34852,58 @@
               },
               "default": "'inherit'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'base' | 'inherit' | 'tinted'"
+              },
               "description": "Background color variant (default: inherit)"
+            },
+            {
+              "name": "above",
+              "description": "Show this panel from this breakpoint and larger",
+              "type": {
+                "text": "'sm'|'md'|'lg'"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "below",
+              "description": "Show this panel up to and including this breakpoint",
+              "type": {
+                "text": "'sm'|'md'|'lg'"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "only",
+              "description": "Show this panel only at this breakpoint",
+              "type": {
+                "text": "'sm'|'md'|'lg'"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "sm-order",
+              "description": "Position of this panel at sm (lower comes first)",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "md-order",
+              "description": "Position of this panel at md (lower comes first)",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "lg-order",
+              "description": "Position of this panel at lg (lower comes first)",
+              "type": {
+                "text": "number"
+              },
+              "forChildren": true
             }
           ],
           "superclass": {
@@ -34171,7 +35132,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "deprecated": "Use primary-sidebar-as-sheet. Kept as an alias for backwards compatibility.",
+              "deprecated": "alias for primary-sidebar-as-sheet (kept for backwards compatibility)",
               "fieldName": "sidebarAsSheet",
               "description": "@deprecated alias for primary-sidebar-as-sheet (kept for backwards compatibility)"
             },
@@ -34181,7 +35142,7 @@
                 "text": "string"
               },
               "default": "''",
-              "deprecated": "Use primary-sidebar-accessible-label. Kept as an alias for backwards compatibility.\nEmpty by default so it does not clobber the new property's default.",
+              "deprecated": "alias for primary-sidebar-accessible-label (kept for backwards compatibility)",
               "fieldName": "sidebarAccessibleLabel",
               "description": "@deprecated alias for primary-sidebar-accessible-label (kept for backwards compatibility)"
             }
@@ -34281,6 +35242,9 @@
               },
               "default": "'inherit'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'base' | 'inherit' | 'tinted'"
+              },
               "description": "Use a tinted background color (cascades to descendants)"
             },
             {
@@ -34372,6 +35336,9 @@
               },
               "default": "'vertical'",
               "fieldName": "orientation",
+              "expandedType": {
+                "text": "'horizontal' | 'vertical'"
+              },
               "description": "Orientation: 'vertical' | 'horizontal'"
             },
             {
@@ -34459,6 +35426,9 @@
               },
               "default": "'inherit'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'base' | 'inherit' | 'tinted'"
+              },
               "description": "Use a tinted background color (cascades to descendants)"
             },
             {
@@ -34551,6 +35521,9 @@
               },
               "default": "'inherit'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'base' | 'inherit' | 'tinted'"
+              },
               "description": "Use a tinted background color (cascades to descendants)"
             },
             {
@@ -35080,6 +36053,9 @@
               },
               "default": "'inherit'",
               "fieldName": "scheme",
+              "expandedType": {
+                "text": "'dark' | 'inherit' | 'light'"
+              },
               "description": "Color scheme (default 'inherit')."
             },
             {
@@ -35347,6 +36323,9 @@
               },
               "default": "'left'",
               "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'center' | 'left' | 'right'"
+              },
               "description": "Horizontal alignment of slotted content (default: 'left')"
             },
             {
@@ -35356,6 +36335,9 @@
               },
               "default": "'center'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Vertical alignment of slotted content (default: 'center')"
             },
             {
@@ -35545,6 +36527,9 @@
               },
               "default": "'center'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Vertical alignment (default: 'center')"
             },
             {
@@ -35651,6 +36636,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Handle size: 'sm' | 'md' (default: 'md')"
             },
             {
@@ -35774,6 +36762,9 @@
               },
               "default": "'24'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'16' | '20' | '24' | '32'"
+              },
               "description": "Size: '16' | '20' | '24' | '32' (default: '24')"
             },
             {
@@ -35783,6 +36774,9 @@
               },
               "default": "'content'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'content' | 'critical' | 'secondary' | 'success' | 'warning'"
+              },
               "description": "Color variant of the icon (default: 'content')"
             },
             {
@@ -35792,6 +36786,9 @@
               },
               "default": "'center'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')"
             },
             {
@@ -35823,6 +36820,13 @@
               "inheritedFrom": {
                 "name": "VisibilityMixin",
                 "module": "src/utilities/visibility-mixin.ts"
+              }
+            },
+            {
+              "name": "disclosure",
+              "description": "Marks this icon as the chevron of a row or segment that opens and closes: the row turns it with `expanded`.",
+              "type": {
+                "text": "boolean"
               }
             }
           ],
@@ -35919,6 +36923,9 @@
               },
               "default": "'16'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'10' | '12' | '16' | '2' | '20' | '24' | '28' | '32' | '4' | '40' | '44' | '48' | '56' | '6' | '64' | '8' | '80' | '96' | 'flexible'"
+              },
               "description": "Spacer size in pixels: '2' | '4' | '6' | '8' | '10' | '12' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96' (default: '16')"
             },
             {
@@ -36132,7 +37139,10 @@
               },
               "default": "'major'",
               "description": "What stands in the lane: a whole dot (`major`, the default), a smaller one for a row that belongs under the one above it (`minor`), or nothing at all (`none`) for a row that carries what a step holds rather than being a step. A `none` row keeps its `size` and its `status`, so it stays in the same lane and the track runs on in the right color",
-              "fieldName": "level"
+              "fieldName": "level",
+              "expandedType": {
+                "text": "'major' | 'minor' | 'none'"
+              }
             },
             {
               "name": "status",
@@ -36141,6 +37151,9 @@
               },
               "default": "'past'",
               "fieldName": "status",
+              "expandedType": {
+                "text": "'current' | 'future' | 'past'"
+              },
               "description": "How far along this row is (default 'past'); the same values as `nldd-step-bar-item`. It colors the dot and the track around it: covered above where you are, still ahead below"
             },
             {
@@ -36150,7 +37163,10 @@
               },
               "default": "'sm'",
               "description": "How wide the lane is and so how big the dot: `sm` (default, 16px) for steps without a number, `md` (24px) where a number or an icon has to fit. Every row in one list takes the same size, or the track jumps",
-              "fieldName": "size"
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              }
             },
             {
               "name": "vertical-alignment",
@@ -36159,6 +37175,9 @@
               },
               "default": "'center'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Where the dot stands in the row (default 'center'). `top` puts it against the row's top padding and `bottom` against its bottom padding, as a whole dot would stand, so a `minor` dot lines up with a `major` one. To line it up with what stands beside it, such as the first line of a text cell or a title, use `marker-offset`. The track runs to the middle of the dot either way, so consecutive rows still connect"
             },
             {
@@ -36177,7 +37196,10 @@
               },
               "default": "'down'",
               "description": "The direction the timeline moves forward in: `down` (default) puts the past above, `up` below. Only the current step has half a track, so this only has an effect there",
-              "fieldName": "direction"
+              "fieldName": "direction",
+              "expandedType": {
+                "text": "'down' | 'up'"
+              }
             },
             {
               "name": "position",
@@ -36186,6 +37208,9 @@
               },
               "default": "'between'",
               "fieldName": "position",
+              "expandedType": {
+                "text": "'between' | 'first' | 'last' | 'only'"
+              },
               "description": "Place of the row in the list as it stands on screen (default 'between'): decides whether the line continues above the dot, below it, or on both sides. `first` is the top row and only has a line below, `last` the bottom row and only has a line above, also with `direction=\"up\"`: position is about where the row stands, `direction` about which way time runs. `only` is the single row in the series and gets a line on neither side: a track of one dot leads nowhere. On a `level=\"none\"` row, which is nothing but line, `only` leaves it out altogether: the track ends above it"
             },
             {
@@ -36195,7 +37220,10 @@
               },
               "default": "'auto'",
               "description": "Which halves of the track you have covered, when `status` and `direction` get it wrong (default 'auto', which is what those two say). The halves you name are drawn as covered and the other one as still ahead, so `none` covers neither. Which halves are drawn at all stays with `position`, except that naming a half draws it: `line=\"both\"` on a `first` row draws one above too. A row that opens a group of its own is the case for `both`, since the going carries on below it. A `level=\"none\"` row has one line rather than two halves, and no point where a fill could change over, so there the status colors the whole of it and `line` overrules the whole of it. On a `current` row that leans the way the timeline runs: what belongs to a point usually comes after it, so going `down` the stretch reads as still ahead and going `up` as behind you",
-              "fieldName": "line"
+              "fieldName": "line",
+              "expandedType": {
+                "text": "'auto' | 'both' | 'bottom' | 'none' | 'top'"
+              }
             },
             {
               "name": "text",
@@ -36447,6 +37475,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Cell size: 'sm' | 'md' (default: 'md')"
             },
             {
@@ -36456,6 +37487,9 @@
               },
               "default": "'content'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'content' | 'critical' | 'secondary' | 'success' | 'warning'"
+              },
               "description": "Text color variant: 'content' (the default) | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'. All variants other than those two apply to all three text fields so the cell reads as a coherent state."
             },
             {
@@ -36498,6 +37532,9 @@
               },
               "default": "'left'",
               "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'center' | 'left' | 'right'"
+              },
               "description": "Horizontal alignment: 'left' | 'center' | 'right' (default: 'left')"
             },
             {
@@ -36507,6 +37544,9 @@
               },
               "default": "'center'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Vertical alignment: 'top' | 'center' | 'bottom' (default: 'center')"
             },
             {
@@ -36552,6 +37592,9 @@
               },
               "default": "'predictive'",
               "fieldName": "queryMarkMode",
+              "expandedType": {
+                "text": "'match' | 'predictive'"
+              },
               "description": "'match' | 'predictive' (default: 'predictive')"
             },
             {
@@ -36804,6 +37847,9 @@
               },
               "default": "5",
               "fieldName": "size",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
               "description": "Visual size of the title (default: 5)"
             },
             {
@@ -36813,6 +37859,9 @@
               },
               "default": "'content'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'content' | 'critical' | 'secondary' | 'success' | 'warning'"
+              },
               "description": "Text color variant (default: 'content'). `secondary` demotes the title to match the muted overline/supporting-text. `accent`, `success`, `warning` and `critical` tint all three regions so the cell reads as a coherent state."
             },
             {
@@ -36855,6 +37904,9 @@
               },
               "default": "'left'",
               "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'center' | 'left' | 'right'"
+              },
               "description": "Horizontal alignment (default: 'left')"
             },
             {
@@ -36864,6 +37916,9 @@
               },
               "default": "'center'",
               "fieldName": "verticalAlignment",
+              "expandedType": {
+                "text": "'bottom' | 'center' | 'top'"
+              },
               "description": "Vertical alignment (default: 'center')"
             },
             {
@@ -36918,6 +37973,9 @@
               },
               "default": "'predictive'",
               "fieldName": "queryMarkMode",
+              "expandedType": {
+                "text": "'match' | 'predictive'"
+              },
               "description": "'match' | 'predictive' (default: 'predictive')"
             },
             {
@@ -37228,7 +38286,10 @@
               "description": "`full` lets the segment grow to fill the row (default: 'fit-content')",
               "name": "width",
               "default": "'fit-content'",
-              "fieldName": "width"
+              "fieldName": "width",
+              "expandedType": {
+                "text": "'fit-content' | 'full'"
+              }
             },
             {
               "type": {
@@ -37348,7 +38409,10 @@
               "description": "The `aria-current` value of a `current` segment (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.",
               "name": "current-type",
               "default": "'page'",
-              "fieldName": "currentType"
+              "fieldName": "currentType",
+              "expandedType": {
+                "text": "'date' | 'location' | 'page' | 'step' | 'time' | 'true'"
+              }
             },
             {
               "type": {
@@ -37358,20 +38422,6 @@
               "name": "disabled",
               "default": "false",
               "fieldName": "disabled"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "The row's divider starts at this cell instead of at its first text or title cell.",
-              "name": "divider-start"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "The row's divider stops after this cell.",
-              "name": "divider-end"
             },
             {
               "name": "translations",
@@ -37384,6 +38434,22 @@
                 "name": "withTranslations",
                 "module": "src/utilities/with-translations.ts"
               }
+            },
+            {
+              "name": "divider-start",
+              "description": "The row's divider starts at this cell instead of at its first text or title cell.",
+              "type": {
+                "text": "boolean"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "divider-end",
+              "description": "The row's divider stops after this cell.",
+              "type": {
+                "text": "boolean"
+              },
+              "forChildren": true
             }
           ],
           "mixins": [
@@ -37671,7 +38737,10 @@
               "description": "Row size (default: 'md'). Pushed onto the cells whose `size` means the same scale (nldd-text-cell, nldd-drag-handle-cell), so it is written once per row instead of once per cell. A size set on the cell itself wins. Cells where `size` means something else — pixels on nldd-icon-cell / nldd-spacer-cell, a heading scale on nldd-title-cell — are left alone.",
               "name": "size",
               "default": "'md'",
-              "fieldName": "size"
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              }
             },
             {
               "type": {
@@ -37793,7 +38862,10 @@
               "description": "The `aria-current` value a `current` or `selected` row puts on its action in a `navigation` parent (default 'page'). Use 'location' for a table of contents, whose rows point at sections of the page you are on.",
               "name": "current-type",
               "default": "'page'",
-              "fieldName": "currentType"
+              "fieldName": "currentType",
+              "expandedType": {
+                "text": "'date' | 'location' | 'page' | 'step' | 'time' | 'true'"
+              }
             },
             {
               "type": {
@@ -37803,20 +38875,6 @@
               "name": "disabled",
               "default": "false",
               "fieldName": "disabled"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.",
-              "name": "divider-start"
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "The divider stops after this cell. With several markers the line runs from the first start to the last end.",
-              "name": "divider-end"
             },
             {
               "name": "translations",
@@ -37829,6 +38887,30 @@
                 "name": "withTranslations",
                 "module": "src/utilities/with-translations.ts"
               }
+            },
+            {
+              "name": "reorderable-only",
+              "description": "Show this cell only while the row is `reorderable`",
+              "type": {
+                "text": "boolean"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "divider-start",
+              "description": "The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.",
+              "type": {
+                "text": "boolean"
+              },
+              "forChildren": true
+            },
+            {
+              "name": "divider-end",
+              "description": "The divider stops after this cell. With several markers the line runs from the first start to the last end.",
+              "type": {
+                "text": "boolean"
+              },
+              "forChildren": true
             }
           ],
           "mixins": [
@@ -37989,7 +39071,10 @@
               "description": "Visual style (default 'simple'): `simple` is a plain vertical strip with no chrome, the two `box` values a framed card with rounded corners, fill and inset border ring. `box-tinted` for a list on a plain page, `box-base` for one on an already-tinted parent (the border ring gets +2 palette steps so it still reads against a card-on-card)",
               "name": "appearance",
               "default": "'simple'",
-              "fieldName": "appearance"
+              "fieldName": "appearance",
+              "expandedType": {
+                "text": "'box-base' | 'box-tinted' | 'simple'"
+              }
             },
             {
               "type": {
@@ -37998,7 +39083,10 @@
               "description": "A11y role and behavior (default 'list'). See the docblock above.",
               "name": "type",
               "default": "'list'",
-              "fieldName": "type"
+              "fieldName": "type",
+              "expandedType": {
+                "text": "'form' | 'list' | 'listbox' | 'navigation' | 'radiogroup' | 'tree'"
+              }
             },
             {
               "type": {
@@ -38007,7 +39095,10 @@
               "description": "When to draw the lines between the items (default 'always'). `on-touch` draws them only where the primary input is touch, under `(pointer: coarse)`: a pointer has the hover highlight to tell one row from the next and a finger has nothing, so the line earns its place in the one case and is clutter in the other. `never` hides them everywhere",
               "name": "dividers",
               "default": "'always'",
-              "fieldName": "dividers"
+              "fieldName": "dividers",
+              "expandedType": {
+                "text": "'always' | 'never' | 'on-touch'"
+              }
             },
             {
               "type": {
@@ -38175,6 +39266,9 @@
               },
               "default": "'base'",
               "fieldName": "background",
+              "expandedType": {
+                "text": "'base' | 'tinted'"
+              },
               "description": "Surface fill of the box (default 'base')"
             },
             {
@@ -38349,12 +39443,12 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A single entry in an `nldd-breadcrumbs` list. Renders as a link when\n`href` is set, as plain text marked `aria-current=\"page\"` when `current`\nis set, and as plain text otherwise. Each item renders its own trailing\n`›` separator; the last item in the list hides it via `:host(:last-of-type)`.",
+          "description": "A single entry in an `nldd-breadcrumbs` list. Renders as a link when `href` is set, as plain text marked `aria-current=\"page\"` when `current` is set, and as plain text otherwise. Each item renders its own trailing `›` separator; the last item in the list hides it via `:host(:last-of-type)`.",
           "name": "NLDDBreadcrumbsItem",
           "slots": [
             {
-              "description": "Item label (alternative to `text`).",
-              "name": ""
+              "name": "",
+              "description": "Item label (alternative to `text`)."
             }
           ],
           "members": [
@@ -38997,6 +40091,9 @@
               },
               "default": "'inherit'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'inherit' | 'lg' | 'md' | 'sm' | 'xs'"
+              },
               "description": "Text size: 'inherit' (the default) follows the surrounding text and lays the link out inline, so it wraps in running prose. 'xs' | 'sm' | 'md' | 'lg' pin a size and switch to inline-flex, which baseline-aligns a start or end icon with an explicit gap."
             },
             {
@@ -39313,6 +40410,9 @@
               },
               "default": "'page'",
               "fieldName": "currentType",
+              "expandedType": {
+                "text": "'date' | 'location' | 'page' | 'step' | 'time' | 'true'"
+              },
               "description": "aria-current value when current is true ('page', 'step', 'location', 'true'). Default: 'page'"
             },
             {
@@ -39404,6 +40504,13 @@
               "default": "false",
               "fieldName": "expanded",
               "description": "Whether the matching popover is open; sets aria-expanded on the button when expandable or haspopup is set. Tracked automatically for a slotted `<nldd-menu>`."
+            },
+            {
+              "name": "open",
+              "description": "Whether the linked popover or menu is open",
+              "type": {
+                "text": "boolean"
+              }
             }
           ],
           "superclass": {
@@ -39974,7 +41081,10 @@
               },
               "default": "''",
               "description": "Set by nldd-tab-bar. Not part of the public API.",
-              "fieldName": "_groupVariant"
+              "fieldName": "_groupVariant",
+              "expandedType": {
+                "text": "'' | 'icon' | 'icon-and-text' | 'text'"
+              }
             },
             {
               "name": "text",
@@ -40001,7 +41111,17 @@
               },
               "default": "'md'",
               "description": "Size: 'md' (default) | 'lg'. Set by nldd-tab-bar from its own size; 'lg' enlarges the touch target while keeping the variant layout.",
-              "fieldName": "size"
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md'"
+              }
+            },
+            {
+              "name": "variant",
+              "description": "Forces this presentation on this item, over the one from nldd-tab-bar",
+              "type": {
+                "text": "'icon-and-text'|'text'|'icon'"
+              }
             }
           ],
           "superclass": {
@@ -40121,6 +41241,9 @@
               },
               "default": "''",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'' | 'icon' | 'icon-and-text' | 'text'"
+              },
               "description": "Visual mode: 'icon-and-text' | 'text' | 'icon'. When unset, the variant is inferred from each item's content. Drives the layout at every size."
             },
             {
@@ -40130,7 +41253,10 @@
               },
               "default": "'md'",
               "description": "Size: 'md' | 'lg' (default: 'md'). 'lg' enlarges the touch target; the per-variant layout is preserved (icon-and-text stacks the icon over the text, text renders large text, icon renders a larger icon-only control).",
-              "fieldName": "size"
+              "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md'"
+              }
             },
             {
               "name": "navigation",
@@ -40757,6 +41883,9 @@
               },
               "default": "1",
               "fieldName": "headingLevel",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
               "description": "Heading level of the title: 1–6 (default: 1). Lower it where the bar is not the top of the page, such as a pane beside content that already has its h1."
             },
             {
@@ -40920,6 +42049,9 @@
               },
               "default": "'32'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96'"
+              },
               "description": "Circle diameter on the icon scale: 16,20,24,28,32,40,44,48,56,64,80,96 (default '32')"
             },
             {
@@ -40947,7 +42079,10 @@
               },
               "default": "'delay'",
               "description": "'delay' (the default) waits 1000ms before showing (anti-flash); 'instant' shows immediately (the fade-in still plays).",
-              "fieldName": "timing"
+              "fieldName": "timing",
+              "expandedType": {
+                "text": "'delay' | 'instant'"
+              }
             },
             {
               "name": "complete",
@@ -41140,6 +42275,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Size: 'sm' | 'md' (default: 'md')"
             },
             {
@@ -41149,6 +42287,9 @@
               },
               "default": "'critical'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'critical' | 'inherit' | 'neutral' | 'success' | 'warning'"
+              },
               "description": "The meaning of the badge, the same set as nldd-status-bar, or 'inherit' to fill in the content color around it: the `--context-content-color` channel a list item, table row or menu sets, falling back to `currentColor`. Default: 'critical'. A badge is a signal, not a category, so it has no Rijkshuisstijl colors: the theme picks the accent, and `custom-color` takes any other. Another value falls back to 'accent' and says so in development."
             },
             {
@@ -41373,6 +42514,9 @@
               },
               "default": "'neutral'",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'accent' | 'critical' | 'neutral' | 'success' | 'warning'"
+              },
               "description": "Color and default icon (default: 'neutral')"
             },
             {
@@ -41382,6 +42526,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'md' | 'sm'"
+              },
               "description": "Banner size (default: 'md'). 'sm' tightens the padding to 8px, drops the icon to 24px and uses a smaller dismiss button — for a bar that sits between chrome and content rather than a standalone page-level notice. The typography is unchanged."
             },
             {
@@ -41418,6 +42565,9 @@
               },
               "default": "null",
               "fieldName": "headingLevel",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
               "description": "Renders text as h1–h6; absent renders a p"
             },
             {
@@ -41574,6 +42724,9 @@
               },
               "default": "''",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'' | 'alert' | 'loading' | 'success'"
+              },
               "description": "Semantic variant. 'alert' / 'success' force a matching icon and color; 'loading' shows an nldd-activity-indicator (a role=\"status\" spinner announcing \"Laden\") in place of the icon — for an empty state that is still loading."
             },
             {
@@ -41583,6 +42736,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md'"
+              },
               "description": "Typography size: 'md' (default) keeps body-md text + body-sm supporting; 'lg' bumps both up a step."
             },
             {
@@ -41601,6 +42757,9 @@
               },
               "default": "''",
               "fieldName": "iconColor",
+              "expandedType": {
+                "text": "'' | 'accent' | 'critical' | 'secondary' | 'success' | 'warning'"
+              },
               "description": "'secondary' | 'accent' | 'critical' | 'warning' | 'success'. Overrides the default and variant icon color."
             },
             {
@@ -41628,6 +42787,9 @@
               },
               "default": "null",
               "fieldName": "headingLevel",
+              "expandedType": {
+                "text": "1 | 2 | 3 | 4 | 5 | 6"
+              },
               "description": "Renders text as h1–h6; absent renders a p"
             },
             {
@@ -41637,6 +42799,9 @@
               },
               "default": "''",
               "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'' | 'center' | 'left'"
+              },
               "description": "Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Left alignment also lays the actions out in a row instead of stacked full-width."
             }
           ],
@@ -41821,6 +42986,9 @@
               },
               "default": "'auto'",
               "fieldName": "placement",
+              "expandedType": {
+                "text": "'auto' | 'bottom' | 'left' | 'right' | 'top'"
+              },
               "description": "'auto' | 'top' | 'bottom' | 'left' | 'right' (default 'auto')."
             },
             {
@@ -42018,6 +43186,9 @@
               },
               "default": "''",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'' | 'alert' | 'loading' | 'success'"
+              },
               "description": "Forwarded to nldd-inline-dialog; 'alert' forces icon and color"
             },
             {
@@ -42027,6 +43198,9 @@
               },
               "default": "''",
               "fieldName": "horizontalAlignment",
+              "expandedType": {
+                "text": "'' | 'center' | 'left'"
+              },
               "description": "Forwarded to nldd-inline-dialog. Unset derives it there: slotted content aligns left, a bare message stays centered."
             },
             {
@@ -42222,6 +43396,9 @@
               },
               "default": "'neutral'",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'accent' | 'critical' | 'neutral' | 'success' | 'warning'"
+              },
               "description": "What kind of message this is; sets the icon color and the ARIA role (default: 'neutral')"
             },
             {
@@ -42478,6 +43655,9 @@
               },
               "default": "'accent'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'bruin' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'neutral' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'success' | 'violet' | 'warning'"
+              },
               "description": "Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track."
             },
             {
@@ -42640,6 +43820,9 @@
               },
               "default": "'progress'",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'distribution' | 'progress'"
+              },
               "description": "Semantics for ARIA and visualization (default: 'progress')"
             },
             {
@@ -42667,6 +43850,9 @@
               },
               "default": "'accent'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'bruin' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'neutral' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'success' | 'violet' | 'warning'"
+              },
               "description": "Color for the single-segment shorthand (default: 'accent')"
             },
             {
@@ -42676,6 +43862,9 @@
               },
               "default": "'md'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'lg' | 'md' | 'sm'"
+              },
               "description": "Height of the bar (default: 'md')"
             },
             {
@@ -42694,6 +43883,9 @@
               },
               "default": "'percentage'",
               "fieldName": "valueFormat",
+              "expandedType": {
+                "text": "'absolute' | 'fraction' | 'percentage'"
+              },
               "description": "Format for the displayed value (default: 'percentage')"
             },
             {
@@ -42712,6 +43904,9 @@
               },
               "default": "'inline'",
               "fieldName": "valueDisplay",
+              "expandedType": {
+                "text": "'inline' | 'none' | 'tooltip'"
+              },
               "description": "Where the value shows: inline in the caption, in a tooltip on the bar, or hidden (default: 'inline')"
             },
             {
@@ -42865,6 +44060,9 @@
               },
               "default": "'accent'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'bruin' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'neutral' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'success' | 'violet' | 'warning'"
+              },
               "description": "Color (semantic or Rijkskleur). Default 'accent'. With more than one segment, give each a Rijkskleur (or success, warning and critical where they mean that): `accent` can turn near-black or match another segment in a theme, and `neutral` disappears against the track."
             },
             {
@@ -43017,6 +44215,9 @@
               },
               "default": "'progress'",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'distribution' | 'progress'"
+              },
               "description": "Semantics for ARIA and gap behavior (default: 'progress')"
             },
             {
@@ -43044,6 +44245,9 @@
               },
               "default": "'accent'",
               "fieldName": "color",
+              "expandedType": {
+                "text": "'accent' | 'bruin' | 'critical' | 'donkerblauw' | 'donkerbruin' | 'donkergeel' | 'donkergroen' | 'geel' | 'groen' | 'hemelblauw' | 'lichtblauw' | 'lintblauw' | 'mintgroen' | 'mosgroen' | 'neutral' | 'oranje' | 'paars' | 'robijnrood' | 'rood' | 'roze' | 'success' | 'violet' | 'warning'"
+              },
               "description": "Color. Semantic (neutral, accent, success, warning, critical) or a Rijkskleur. Default 'accent'."
             },
             {
@@ -43053,6 +44257,9 @@
               },
               "default": "'28'",
               "fieldName": "size",
+              "expandedType": {
+                "text": "'16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96'"
+              },
               "description": "Circle diameter in px. Matches nldd-icon sizes: 16, 20, 24, 28, 32, 40, 44, 48, 56, 64, 80, 96 (default: '28')"
             },
             {
@@ -43071,6 +44278,9 @@
               },
               "default": "'percentage'",
               "fieldName": "valueFormat",
+              "expandedType": {
+                "text": "'absolute' | 'fraction' | 'percentage'"
+              },
               "description": "Format of the displayed value (default: 'percentage')"
             },
             {
@@ -43089,6 +44299,9 @@
               },
               "default": "'tooltip'",
               "fieldName": "valueDisplay",
+              "expandedType": {
+                "text": "'inline' | 'none' | 'tooltip'"
+              },
               "description": "Where the value shows: inline below the label, in a tooltip, or hidden (default: 'tooltip')"
             },
             {
@@ -43253,6 +44466,9 @@
               },
               "default": "'neutral'",
               "fieldName": "variant",
+              "expandedType": {
+                "text": "'accent' | 'critical' | 'neutral' | 'success' | 'warning'"
+              },
               "description": "Color of the bar (default: 'neutral')"
             },
             {
@@ -43334,12 +44550,12 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "One step in an `nldd-step-bar`. `status=\"current\"` marks the step you\nare on; the parent derives the status of the others and the number of each,\nwhich live here as internal state rather than as public API. `past` and\n`future` override what is derived for this step.",
+          "description": "One step in an `nldd-step-bar`. `status=\"current\"` marks the step you are on; the parent derives the status of the others and the number of each, which live here as internal state rather than as public API. `past` and `future` override what is derived for this step.",
           "name": "NLDDStepBarItem",
           "slots": [
             {
-              "description": "Label (an alternative to `text`)",
-              "name": ""
+              "name": "",
+              "description": "Label (an alternative to `text`)"
             }
           ],
           "members": [
@@ -43409,7 +44625,10 @@
               },
               "description": "How far along this step is. `current` marks the step you are on (`aria-current=\"step\"`) and the parent derives the others from it: with none marked step 1 is current, with more than one the last wins. `past` and `future` override what is derived for this step only",
               "name": "status",
-              "fieldName": "status"
+              "fieldName": "status",
+              "expandedType": {
+                "text": "'current' | 'future' | 'past'"
+              }
             },
             {
               "type": {
@@ -43442,7 +44661,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "For flows without a URL per step (a process that runs inside one window). Ignored\nonce `href` is set: one step is one action, and a link outranks a button\n-- the same rule as nldd-card and nldd-avatar.",
+              "description": "Makes the step a button, for flows without a URL per step; ignored when `href` is set",
               "name": "button",
               "default": "false",
               "fieldName": "button"
@@ -43509,9 +44728,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "current"
-            },
             {
               "name": "accessible-label",
               "type": {
@@ -43835,15 +45051,6 @@
             },
             {
               "kind": "field",
-              "name": "_accessibleLabelWarned",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
               "name": "_editableCompartment",
               "privacy": "private",
               "default": "new Compartment()"
@@ -44005,16 +45212,6 @@
               "kind": "field",
               "name": "_onScrollerPointerDown",
               "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_checkAccessibleLabel",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
             },
             {
               "kind": "method",
@@ -44588,6 +45785,110 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/element-state.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "internalsOf",
+          "return": {
+            "type": {
+              "text": "ElementInternals"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "An element can attach its internals once, so everything that needs them comes here."
+        },
+        {
+          "kind": "function",
+          "name": "hasState",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "ParentNode"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Whether anything in this root states this. False where the browser has no `:state()`."
+        },
+        {
+          "kind": "function",
+          "name": "setState",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "on",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "Nothing to clear means no internals: most elements never state anything, and\nthis also runs in production. A browser that has no custom states, or takes\nonly dashed names, throws here; a fact is not worth breaking a render for."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "internalsOf",
+          "declaration": {
+            "name": "internalsOf",
+            "module": "src/utilities/element-state.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hasState",
+          "declaration": {
+            "name": "hasState",
+            "module": "src/utilities/element-state.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setState",
+          "declaration": {
+            "name": "setState",
+            "module": "src/utilities/element-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/focus-target.ts",
       "declarations": [
         {
@@ -45055,7 +46356,7 @@
         },
         {
           "kind": "function",
-          "name": "warnDownloadTarget",
+          "name": "markDownloadTarget",
           "return": {
             "type": {
               "text": "void"
@@ -45065,7 +46366,7 @@
             {
               "name": "element",
               "type": {
-                "text": "Element"
+                "text": "HTMLElement"
               }
             },
             {
@@ -45081,7 +46382,7 @@
               }
             }
           ],
-          "description": "In development, says once per element that `target` does nothing on a\ndownload link: the file is saved, no tab opens."
+          "description": "`target` does nothing on a download link: the file is saved, no tab opens."
         }
       ],
       "exports": [
@@ -45111,9 +46412,9 @@
         },
         {
           "kind": "js",
-          "name": "warnDownloadTarget",
+          "name": "markDownloadTarget",
           "declaration": {
-            "name": "warnDownloadTarget",
+            "name": "markDownloadTarget",
             "module": "src/utilities/link-hint.ts"
           }
         }
@@ -46741,21 +48042,9 @@
               "type": {
                 "text": "string | undefined"
               }
-            },
-            {
-              "name": "element",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "attribute",
-              "type": {
-                "text": "string"
-              }
             }
           ],
-          "description": "A step of the scale as the token it stands for.\n\nReturns null when there is nothing to set, so a caller can remove the\nproperty rather than write an empty one. `element` and `attribute` are only\nthere to name the offender in a dev warning."
+          "description": "A step of the scale as the token it stands for.\n\nReturns null when there is nothing to set, so a caller can remove the\nproperty rather than write an empty one."
         }
       ],
       "exports": [

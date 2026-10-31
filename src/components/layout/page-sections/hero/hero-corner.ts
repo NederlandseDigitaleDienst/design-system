@@ -1,4 +1,5 @@
 import type { HeroLayout, HeroMainPosition } from './hero.js';
+import { setState } from '../../../../utilities/element-state.js';
 
 export type HeroCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
@@ -12,7 +13,6 @@ interface CornerHost extends HTMLElement {
 	layout: HeroLayout;
 	mainPosition: HeroMainPosition;
 	mainWidth: string;
-	width: string;
 	readonly _hasMedia: boolean;
 }
 
@@ -53,19 +53,11 @@ function coveredCorners(host: CornerHost, position: CornerPosition): HeroCorner[
 	return [`${vertical}-left`, `${vertical}-right`];
 }
 
-const warned = new WeakMap<HTMLElement, Set<string>>();
-
-function warnOnce(host: HTMLElement, key: string, message: string): void {
-	const keys = warned.get(host) ?? new Set<string>();
-	if (keys.has(key)) return;
-	keys.add(key);
-	warned.set(host, keys);
-	console.warn(message, host);
-}
-
 function clear(host: HTMLElement): void {
 	host.removeAttribute('data-media-corner');
 	host.removeAttribute('data-main-corner');
+	setState(host, 'corner-covered', false);
+	setState(host, 'corner-unknown', false);
 }
 
 /**
@@ -77,6 +69,7 @@ function clear(host: HTMLElement): void {
 export function applyCorner(host: CornerHost): void {
 	if (host.corner === null || host.corner === undefined) {
 		clear(host);
+		setState(host, 'corner-unsupported', false);
 		return;
 	}
 
@@ -87,15 +80,10 @@ export function applyCorner(host: CornerHost): void {
 		: 'bottom-left';
 	// Without media the panel is the whole hero, so layout and position do not
 	// come into it.
-	if (host._hasMedia && (host.layout !== 'contained' || center)) {
+	const unsupported = host._hasMedia && (host.layout !== 'contained' || center);
+	setState(host, 'corner-unsupported', unsupported);
+	if (unsupported) {
 		clear(host);
-		if (import.meta.env?.DEV) {
-			const fixes = [
-				host.layout !== 'contained' ? 'set layout="contained"' : '',
-				center ? `put the panel in a corner or along a side instead of main-position="${host.mainPosition}"` : '',
-			].filter(Boolean);
-			warnOnce(host, `unsupported-${host.layout !== 'contained' ? 'layout' : ''}-${center ? 'center' : ''}`, `<nldd-hero>: corner only applies with layout="contained" and the panel in a corner or along a side, so this hero stays rectangular. To round it, ${fixes.join(' and ')}; or drop the corner.`);
-		}
 		return;
 	}
 
@@ -117,16 +105,8 @@ export function applyCorner(host: CornerHost): void {
 	if (mainCorner) host.setAttribute('data-main-corner', mainCorner);
 	else host.removeAttribute('data-main-corner');
 
-	if (!import.meta.env?.DEV) return;
-	if (!chosen && value !== '' && value !== 'auto') {
-		warnOnce(host, `unknown-${value}`, `<nldd-hero>: corner="${value}" is not a corner, so the hero chooses one. Use "top-left", "top-right", "bottom-left" or "bottom-right", or leave the value empty.`);
-	}
-	if (chosen && covered.includes(chosen)) {
-		warnOnce(host, `covered-${chosen}`, `<nldd-hero>: corner="${chosen}" sits under the panel, so the rounded corner does not show. Choose a corner the panel leaves free, or leave the value empty to let the hero choose.`);
-	}
-	if (host.width === 'full') {
-		warnOnce(host, 'width-full', '<nldd-hero>: corner with width="full" runs the hero to the edge of the screen. A shape with a rounded corner always keeps a margin around it; leave width="full" off or drop the corner.');
-	}
+	setState(host, 'corner-covered', chosen !== null && covered.includes(chosen));
+	setState(host, 'corner-unknown', chosen === null && value !== '' && value !== 'auto');
 }
 
 const LIMITS = ['--_hero-media-corner-limit', '--_hero-main-corner-limit'] as const;

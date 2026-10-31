@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-top-navigation-bar > [slot="global"]'
+message: 'Let the pages be the navigation: put the entries in the home as cards and lists, and keep search and language in `utility`.'
+see: patronen/home-page
+examples:
+  passed: ['<nldd-top-navigation-bar website-title="Mijn Dienst"><nldd-menu-bar slot="utility"></nldd-menu-bar></nldd-top-navigation-bar>']
+  failed: ['<nldd-top-navigation-bar website-title="Mijn Dienst"><nldd-menu-bar slot="global"></nldd-menu-bar></nldd-top-navigation-bar>']

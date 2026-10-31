@@ -22,7 +22,8 @@
  * @slot legal-bar - `nldd-page-footer-legal-bar` for the bottom row.
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import {
 	pageFooterStyles,
@@ -36,6 +37,7 @@ import {
 } from './page-footer.template.js';
 import { nlddPageFooterTranslations, type NLDDPageFooterTranslations } from './page-footer.i18n.js';
 import { translate } from '../../../utilities/translations.js';
+import { setState } from '../../../utilities/element-state.js';
 
 
 // # nldd-page-footer-legal-bar-item
@@ -168,17 +170,11 @@ export class NLDDPageFooter extends LitElement {
 		// in the light DOM, not one inside our shadow root. Set it on the
 		// host (don't override a consumer-provided id).
 		if (!this.id) {
-			// DEV: warn on duplicate id="page-footer" in the document — a
-			// second nldd-page-footer (SPA without cleanup, repeated layout
+			// A second nldd-page-footer (SPA without cleanup, repeated layout
 			// fragment) silently breaks HTML uniqueness (WCAG SC 4.1.1) and
 			// makes skip-links target the wrong instance. Check BEFORE
 			// setting this.id so we can't self-match.
-			if (import.meta.env?.DEV && document.getElementById('page-footer')) {
-				console.warn(
-					'<nldd-page-footer>: another element already has id="page-footer"; ' +
-					'set a unique id on this instance so skip-links target the right one.',
-				);
-			}
+			if (import.meta.env?.DEV) setState(this, 'duplicate-id', document.getElementById('page-footer') !== null);
 			this.id = 'page-footer';
 		}
 	}

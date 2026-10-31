@@ -588,3 +588,19 @@ Wat jij nog moet doen: `landmarks="page"` op dat ene paneel, een `accessible-lab
 ## Gezien in
 
 Elke applicatie op dit systeem begint zo. De twee dingen die het vaakst ontbreken zijn `landmarks="page"`, waardoor een scherm twee keer `main` aanbiedt of geen enkele keer, en het kopniveau van de titelbalk in het tweede paneel.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `bar-split-view-child-needs-slot`: Every child of nldd-bar-split-view needs a `slot`, or it does not render.
+- `split-view-needs-main-page`: Set landmarks="page" on the page in the pane with the main content, or the screen offers no main landmark or two.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `pane-page-needs-name`: Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
+- `pane-title-bar-needs-back`: Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.
+- `pane-title-bar-needs-level`: Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
+- `toolbar-bottom-goes-after-main`: Put the bar with only="sm" after slot="main" in the HTML: on a phone it belongs at the bottom, within reach of a thumb.
+- `toolbar-bottom-needs-large`: Set size="lg" on the bottom bar, which puts the labels under the icons and makes the actions fit next to the sections.
+- `toolbar-in-pane-needs-container`: Put the toolbar in an nldd-container with padding: the bar split view sets none itself.

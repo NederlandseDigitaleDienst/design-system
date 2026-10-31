@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-form-section'
+assert: '[text], [supporting-text]'
+message: 'nldd-form-section needs `text` or `supporting-text`: without either its fieldset has no accessible name, and a screen reader announces just "group" or nothing.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-section text="Adres"></nldd-form-section>', '<nldd-form-section supporting-text="Waar woont u?"></nldd-form-section>']
+  failed: ['<nldd-form-section></nldd-form-section>']
+  cantTell: ['<nldd-form-section :text="titel"></nldd-form-section>']

@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-segmented-control[required]'
+report: '[type="checkbox"]'
+message: '`required` on a checkbox group is announced but not enforced: HTML has no way to say "at least one of these", so the form still submits with nothing selected. Check it yourself on submit, or use radio mode.'
+see: patronen/form
+examples:
+  passed: ['<nldd-segmented-control required accessible-label="Weergave"></nldd-segmented-control>', '<nldd-segmented-control type="checkbox" accessible-label="Weergave"></nldd-segmented-control>']
+  failed: ['<nldd-segmented-control required type="checkbox" accessible-label="Weergave"></nldd-segmented-control>']
+  cantTell: ['<nldd-segmented-control required :type="soort" accessible-label="Weergave"></nldd-segmented-control>']

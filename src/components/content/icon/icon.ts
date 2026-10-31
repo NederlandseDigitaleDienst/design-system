@@ -1,10 +1,12 @@
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { iconStyles } from './icon.styles.js';
 import { template } from './icon.template.js';
 import { aliases } from './icon-aliases.js';
 import { iconRegistry } from './icon-registry.js';
+import { hasState, setState } from '../../../utilities/element-state.js';
 
 export { aliases };
 
@@ -12,9 +14,6 @@ export const ICONS: string[] = [
 	...iconRegistry.keys(),
 	...Object.keys(aliases),
 ].sort();
-
-/** One warning per page: a missed rename is one search-and-replace, not one per icon. */
-let warnedAboutName = false;
 
 export type IconSize = 'full' | 'inherit' | '16' | '20' | '24' | '28' | '32' | '40' | '44' | '48' | '56' | '64' | '80' | '96';
 
@@ -119,12 +118,6 @@ export class NLDDIcon extends LitElement {
 		if (!this.hasAttribute('aria-hidden')) {
 			this.setAttribute('aria-hidden', 'true');
 		}
-		// `name` was renamed to `icon`. An unknown attribute does nothing, so
-		// without this the only sign of a missed rename is a dashed circle.
-		if (import.meta.env?.DEV && this.hasAttribute('name') && !warnedAboutName) {
-			warnedAboutName = true;
-			console.warn(`NLDDIcon: the name attribute is now icon. Rename name="${this.getAttribute('name')}" to icon="${this.getAttribute('name')}", here and on every other nldd-icon.`);
-		}
 		this._iconSvg = this._loadIcon(this.icon);
 	}
 
@@ -138,16 +131,25 @@ export class NLDDIcon extends LitElement {
 		}
 	}
 
+	private _wasUnknown = false;
+
+	/** A name set on a button ends up here, in a shadow root the checks stay out of. */
+	private _syncHosts(): void {
+		let root = this.getRootNode();
+		while (root instanceof ShadowRoot && root.host.localName.startsWith('nldd-')) {
+			setState(root.host as HTMLElement, 'unknown-icon', hasState(root, 'unknown-icon'));
+			root = root.host.getRootNode();
+		}
+	}
+
 	private _loadIcon(name: string): string | null {
 		const resolvedName = aliases[name] ?? name;
 		const svg = iconRegistry.get(resolvedName);
 
-		if (svg) {
-			return svg;
-		}
-
-		if (import.meta.env?.DEV) console.warn(`NLDDIcon: icon "${resolvedName}" not found`);
-		return null;
+		setState(this, 'unknown-icon', !svg);
+		if (!svg || this._wasUnknown) this._syncHosts();
+		this._wasUnknown = !svg;
+		return svg ?? null;
 	}
 
 	override render() {

@@ -49,7 +49,8 @@
 
 import { LitElement } from 'lit';
 import type { PropertyValues } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { computePosition, autoUpdate, offset, shift } from '@floating-ui/dom';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';

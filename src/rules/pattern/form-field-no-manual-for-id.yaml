@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-form-field:not(:has(> :form-input ~ :form-input)) > :is(:form-input:not(input, select, textarea)[id], nldd-validation-list[for])'
+message: 'Drop this: nldd-form-field finds the input among its children and connects the label, the rules and the help text itself.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-field label="Naam"><nldd-text-field></nldd-text-field></nldd-form-field>', '<nldd-form-field label="Periode"><nldd-text-field></nldd-text-field><nldd-date-field accessible-label="Datum" id="datum"></nldd-date-field><nldd-validation-list for="datum"></nldd-validation-list></nldd-form-field>']
+  failed: ['<nldd-form-field label="Naam"><nldd-text-field id="naam"></nldd-text-field><nldd-validation-list for="naam"></nldd-validation-list></nldd-form-field>']

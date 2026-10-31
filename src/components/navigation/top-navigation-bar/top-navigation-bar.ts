@@ -32,7 +32,8 @@
  */
 
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { topNavigationBarStyles } from './top-navigation-bar.styles.js';
 import { template } from './top-navigation-bar.template.js';
@@ -45,6 +46,7 @@ import { NLDDMenuBar } from '../menu-bar/menu-bar.js';
 import '../../content/icon/icon.js';
 import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import { TopNavigationMenuSheet } from './top-navigation-bar.menu-sheet.js';
+import { setState } from '../../../utilities/element-state.js';
 
 /** The absolute URL an href goes to; an anchor resolves it without throwing. */
 function resolvedHref(href: string): string {
@@ -139,14 +141,11 @@ export class NLDDTopNavigationBar extends withTranslations(LitElement, nlddTopNa
 		].join('\n');
 	}
 
-	private _warnedSameHref = false;
-
 	override willUpdate(changed: PropertyValues): void {
 		super.willUpdate(changed);
-		if (import.meta.env?.DEV && !this._warnedSameHref && this.logoHref && this.websiteHref
-			&& resolvedHref(this.logoHref) === resolvedHref(this.websiteHref)) {
-			this._warnedSameHref = true;
-			console.warn('<nldd-top-navigation-bar>: `logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.');
+		if (import.meta.env?.DEV) {
+			setState(this, 'same-href', Boolean(this.logoHref) && Boolean(this.websiteHref)
+				&& resolvedHref(this.logoHref) === resolvedHref(this.websiteHref));
 		}
 		// Not only on `translations`: setTranslations() re-renders without it.
 		const texts = this._translatedTexts();

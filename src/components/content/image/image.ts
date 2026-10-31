@@ -70,7 +70,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { imageStyles } from './image.styles.js';
 import { imageTemplate } from './image.template.js';
@@ -78,6 +79,7 @@ import { nlddImageTranslations } from './image.i18n.js';
 import type { NLDDImageTranslations } from './image.i18n.js';
 import '../icon/icon.js';
 import { translate } from '../../../utilities/translations.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type ImageShape = 'square' | 'rounded' | 'circle';
 export type ImageObjectFit = 'cover' | 'contain' | 'fill' | 'scale-down' | 'none';
@@ -242,20 +244,13 @@ export class NLDDImage extends LitElement {
 	 *  Sentinel behavior: `width="0"` (and any other non-positive value)
 	 *  silently behaves as `width="full"`. A zero-width image is meaningless,
 	 *  so we treat the input as the consumer's mistake rather than a literal
-	 *  request — a DEV-mode warn flags it during development. */
+	 *  request. */
 	get _numericWidth(): number | undefined {
 		if (this.width === 'full') return undefined;
 		const n = Number(this.width);
 		if (Number.isFinite(n) && n > 0) return n;
-		if (import.meta.env?.DEV && this.width !== null && this.width !== undefined && String(this.width) !== '' && !this._warnedWidth) {
-			this._warnedWidth = true;
-			console.warn(`<nldd-image>: width="${this.width}" is not a positive number. Falling back to "full".`);
-		}
 		return undefined;
 	}
-
-	/** DEV-only "bad width" warning latch; see _numericWidth. */
-	private _warnedWidth = false;
 
 	get _hasCaption(): boolean {
 		return !!this.caption || !!this.credit || this._hasSlottedCaption;
@@ -264,12 +259,9 @@ export class NLDDImage extends LitElement {
 	override willUpdate(changed: Map<string, unknown>): void {
 		// Reset load/error flags when the src changes so the LQIP shows again
 		// for the new image until it finishes loading (or errors out anew).
-		// Also re-arm the alt-warning latch so swapping to a new src with a
-		// missing alt warns again instead of staying silent after the first hit.
 		if (changed.has('src')) {
 			this._imageLoaded = false;
 			this._imageErrored = false;
-			this._warnedAlt = false;
 		}
 	}
 
@@ -286,8 +278,10 @@ export class NLDDImage extends LitElement {
 			} else {
 				this.style.removeProperty('--_image-max-width');
 			}
+			setState(this, 'invalid-width', n === undefined && this.width !== 'full'
+				&& this.width !== null && this.width !== undefined && String(this.width) !== '');
 		}
-		this._warnMissingAlt();
+		this._syncAlternative();
 		// Reflect load/error state to host attributes so the whole component —
 		// and consumer CSS (`nldd-image[loaded]` / `[errored]`) — can react to
 		// it, not just the internal <img>.
@@ -296,38 +290,23 @@ export class NLDDImage extends LitElement {
 	}
 
 	/**
-	 * Says in DEV when an image has no text alternative. A non-decorative image
-	 * without one is a silent a11y failure (WCAG H37), so this surfaces it
-	 * during build and Storybook and stays quiet in production.
+	 * Whether the image lacks a text alternative. A non-decorative image without
+	 * one is a silent a11y failure (WCAG H37).
 	 *
 	 * Slotted media replaces the built-in `<img>` and carries its own
 	 * alternative, so once something is slotted, that is what gets judged.
 	 * With neither slotted media nor a `src` or `srcset` there is no image yet:
-	 * a source or media that arrives later is judged when it does. The latch
-	 * resets once the problem is solved, so bringing it back warns again.
+	 * a source or media that arrives later is judged when it does.
 	 */
-	private _warnMissingAlt(): void {
+	private _syncAlternative(): void {
 		if (!import.meta.env?.DEV) return;
 		const slotted = this._slottedMedia();
 		const inaccessible = !this.decorative && (slotted.length > 0
 			? !slotted.every(hasTextAlternative)
 			: Boolean(this.src || this.srcset) && !this.alt.trim());
-		if (!inaccessible) {
-			this._warnedAlt = false;
-			return;
-		}
-		if (this._warnedAlt) return;
-		this._warnedAlt = true;
-		console.warn(
-			slotted.length > 0
-				? '<nldd-image>: The slotted image has no text alternative. Give the `<img>` an `alt` (empty when the image conveys no information), or give the `<svg>` `role="img"` and an `aria-label`, `aria-labelledby` or `<title>`.'
-				: '<nldd-image>: Non-decorative images need a non-empty `alt`. Set `decorative` if the image conveys no information.',
-			this,
-		);
+		setState(this, 'slotted-without-alternative', inaccessible && slotted.length > 0);
+		setState(this, 'no-alt', inaccessible && slotted.length === 0);
 	}
-
-	/** DEV-only "missing alt" warning latch; see _warnMissingAlt(). */
-	private _warnedAlt = false;
 
 	/**
 	 * What the consumer put in the default slot, followed through a forwarded
@@ -355,7 +334,7 @@ export class NLDDImage extends LitElement {
 
 	_onMediaSlotChange = (): void => {
 		this.requestUpdate();
-		this._warnMissingAlt();
+		this._syncAlternative();
 	};
 
 	override firstUpdated(): void {

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-form-field:is([label$="*"], [label*="(verplicht)" i], [label*="(optioneel)" i])'
+message: 'Set `optional` on the fields that may stay empty, which shows the badge, and write no marker in the label.'
+see: patronen/form
+examples:
+  passed: ['<nldd-form-field label="Tussenvoegsel" optional><nldd-text-field></nldd-text-field></nldd-form-field>']
+  failed: ['<nldd-form-field label="Naam *"><nldd-text-field></nldd-text-field></nldd-form-field>', '<nldd-form-field label="Telefoon (optioneel)"><nldd-text-field></nldd-text-field></nldd-form-field>']

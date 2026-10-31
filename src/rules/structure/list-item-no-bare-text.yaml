@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-list-item:state(bare-text)'
+message: 'Bare text sits directly in a row. Wrap it in a cell, or it gets none of the typography, size and alignment, and falls back to the browser''s button font in a clickable row.'

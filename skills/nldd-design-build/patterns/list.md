@@ -331,3 +331,29 @@ Wat jij nog moet doen: een `accessible-label` op de lijst, het `type` dat past b
 ## Gezien in
 
 De meest voorkomende compositie op dit systeem, in elk onderzocht product en in elk framework. De lege toestanden zijn de uitzondering: `slot="empty"` en `slot="no-results"` worden vrijwel nergens gebruikt, ook niet in apps die honderden rijen tonen. Ze doen precies wat je anders zelf nabouwt, en vrijwel niemand vindt ze.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `list-form-no-action-rows`: type="form" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments. Use type="list" for rows you activate, and put the action in a cell if it belongs to a form row.
+- `list-item-children-needs-tree`: `slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree" or type="navigation". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.
+- `list-item-needs-list`: nldd-list-item needs a parent nldd-list, which gives the row its type and keyboard behaviour.
+- `list-item-no-other-children`: A row takes cells and segments. Anything else sits outside its layout.
+- `list-item-segment-disclosure-needs-button`: Add `button`: `disclosure` only marks which control opens the branch, and without it there is no hover, focus or keyboard.
+- `list-item-segment-expanded-no-effect`: `disclosure` takes aria-expanded from the row, so the `expanded` on this action is ignored. Drop one of the two.
+- `list-item-segment-icon-needs-name`: Give the segment an `accessible-label` that names the row: it holds only an icon.
+- `list-item-segment-no-control-in-listbox`: A segment in a type="listbox" list renders as a plain container: an `option` may not contain interactive descendants. Move the segment out of the listbox, or drive selection from the option itself.
+- `list-reorderable-no-effect`: `reorderable` is only valid when type="list", and is ignored here.
+- `row-max-one-control`: A row is one control: keep one of `href`, `button`, `checkbox` and `radio`.
+- `row-no-control-around-segments`: Move the `href` or `button` to a segment: both together put a control in a control.
+
+Hints: zo is het bedoeld. Die laten niets falen.
+
+- `cell-no-own-css`: Use the attributes of the cell, such as `color`, and an nldd-spacer-cell for the space next to it.
+- `list-item-segment-no-vague-label`: Name the row in the label, such as "Acties voor Dossier D-318": in twenty rows this says the same thing twenty times.
+- `list-needs-name`: Give the list an `accessible-label` that says what is in it, so several of them on a page can be told apart.
+- `list-no-hidden`: Leave the list in place and fill `slot="empty"` and `slot="no-results"`: hidden, the empty state goes with it.
+- `row-action-goes-in-segment`: Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.
+- `row-link-needs-chevron`: End the row with an nldd-icon-cell with icon="chevron-right", which says there is more behind it without the word "openen".
+- `status-dot-needs-decorative`: Set `decorative` on the dot and put the word next to it in an nldd-text-cell: the word carries the meaning.

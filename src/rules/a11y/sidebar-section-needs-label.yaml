@@ -1,0 +1,9 @@
+severity: hint
+context: 'nldd-sidebar-section:has(> [slot="sidebar"])'
+assert: '[sidebar-label]'
+message: 'Set `sidebar-label`: it names the sidebar and titles the sheet it becomes.'
+see: patronen/filtering
+examples:
+  passed: ['<nldd-sidebar-section sidebar-label="Filters"><nldd-container slot="sidebar"></nldd-container></nldd-sidebar-section>']
+  failed: ['<nldd-sidebar-section><nldd-container slot="sidebar"></nldd-container></nldd-sidebar-section>']
+  cantTell: ['<nldd-sidebar-section :sidebar-label="naam"><nldd-container slot="sidebar"></nldd-container></nldd-sidebar-section>']

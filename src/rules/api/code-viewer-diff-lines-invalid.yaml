@@ -1,0 +1,4 @@
+severity: warn
+runtime: true
+context: 'nldd-code-viewer:state(diff-lines-dropped)'
+message: 'Lines of the diff fall outside the line counts of their @@ header and are not shown. Check the counts in the hunk headers.'

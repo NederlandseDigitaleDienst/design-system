@@ -1,14 +1,16 @@
 import { LitElement } from 'lit';
 import type { PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { listItemStyles } from './list-item.styles.js';
 import { template } from './list-item.template.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddListItemTranslations } from './list-item.i18n.js';
-import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
+import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type ListItemSize = 'sm' | 'md';
 
@@ -180,8 +182,9 @@ const NESTED_CONTROLS = [
  * @attr {boolean} disabled - Switches the row's own control off: a `button` or `checkbox` row stops responding and dims, a `href` row gets `aria-disabled` and its click is blocked (a link cannot be disabled natively). A row without a control of its own has nothing to switch off, and segments carry their own `disabled`. The arrow keys skip a disabled row.
  *
  * Divider markers, set on a CELL in the row rather than on the row itself:
- * @attr {boolean} divider-start - The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.
- * @attr {boolean} divider-end - The divider stops after this cell. With several markers the line runs from the first start to the last end.
+ * @childattr {boolean} reorderable-only - Show this cell only while the row is `reorderable`
+ * @childattr {boolean} divider-start - The divider starts at this cell instead of at the row's first text or title cell. On the leading cell it restores the full-width line.
+ * @childattr {boolean} divider-end - The divider stops after this cell. With several markers the line runs from the first start to the last end.
  *
  * @slot - Cells and segments, in source order. Anything else, bare text included, gets none of a cell's typography, size and alignment, and warns in development.
  * @slot children - Child rows of this row, in an `nldd-list type="tree"` or `type="navigation"`. In a tree they render as a `role="group"` below the row, hidden while `expanded` is false. In a navigation list they are the sub-pages: a `role="list"` inside this list item, always shown, and without the tree's keyboard. For sub-pages that fold away, use a tree. Either way the nesting IS the hierarchy, so a screen reader reads the level from it and nothing is authored. The group has no styling of its own: repeat a spacer-cell per level to indent, or show depth some other way.
@@ -333,14 +336,6 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	private _dividerMarkerObserver: ResizeObserver | null = null;
 
 	private _observedMarkerTargets: Element[] = [];
-
-	private _warnedDegenerateDivider = false;
-
-	private _warnedChildrenOutsideTree = false;
-	private _warnedExpandedInNavigation = false;
-	private _warnedStrayExpanded = false;
-	private _warnedStrayContent = false;
-	private _warnedNestedControl = false;
 
 	override connectedCallback() {
 		super.connectedCallback();
@@ -527,7 +522,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		this._observeChildrenSlot();
 		// On the shadow root, not on the slot: the default slot is re-rendered
 		// inside a different wrapper when the row becomes a link or a button.
-		this.renderRoot.addEventListener('slotchange', this._warnOnStrayContent);
+		this.renderRoot.addEventListener('slotchange', this._onSlotChange);
 		// Read out of the row's own shadow DOM, so not before the first render,
 		// and deferred out of the update cycle: setting the state here would
 		// schedule a second update from inside the first.
@@ -597,11 +592,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		}
 		if (changed.has('button') || changed.has('checkbox') || changed.has('radio') || changed.has('href')) {
 			this._updateInteractive();
-			this._warnOnNestedControl();
+			this._syncNestedControl();
 		}
 		if (changed.has('expanded')) {
 			this._relayExpanded();
-			this._warnOnStrayExpanded();
+			this._syncExpandedFacts();
 		}
 		if (changed.has('_arrowNavigation') || changed.has('_rovingActive')) {
 			this._syncRovingTabStops();
@@ -654,61 +649,38 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			.forEach(segment => { segment._rowExpanded = this._resolvedExpanded; });
 	}
 
-	/** `expanded` needs a control to sit on; a plain container has none. */
-	private _warnOnStrayExpanded(): void {
-		if (!import.meta.env?.DEV) return;
-		if (this.expanded === undefined) return;
-		if (this._showChildren && this._parentType === 'navigation') {
-			if (this._warnedExpandedInNavigation) return;
-			this._warnedExpandedInNavigation = true;
-			console.warn('nldd-list-item: `expanded` does nothing on a row with sub-pages in an nldd-list with type="navigation": they are always shown, so the attribute is ignored. Use type="tree" for sections that fold away.');
-			return;
-		}
-		if (this.href || this.button || this.checkbox) return;
-		if (this._ownDescendants('nldd-list-item-segment[disclosure]').length > 0) return;
-		// Once per row: this also runs on every change to the row's children.
-		if (this._warnedStrayExpanded) return;
-		this._warnedStrayExpanded = true;
-		console.warn('nldd-list-item: `expanded` needs somewhere to live — make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.');
+	/** `expanded` needs a control to sit on; a plain container has none, and a
+	 *  row with sub-pages in a navigation list is always open. */
+	private _syncExpandedFacts(): void {
+		const set = this.expanded !== undefined;
+		const inNavigation = set && this._showChildren && this._parentType === 'navigation';
+		setState(this, 'expanded-in-navigation', inNavigation);
+		setState(this, 'expanded-without-control', set && !inNavigation
+			&& !this.href && !this.button && !this.checkbox
+			&& this._ownDescendants('nldd-list-item-segment[disclosure]').length === 0);
 	}
 
-	/** A row takes cells and segments. Anything else gets none of the typography,
-	 *  size and alignment a cell brings, and bare text in a clickable row falls
-	 *  back to the browser's button font. */
-	private _warnOnStrayContent = (e: Event): void => {
-		if (!import.meta.env?.DEV || this._warnedStrayContent) return;
+	/** Bare text, which no selector can see: it gets none of a cell's typography,
+	 *  and in a clickable row it falls back to the browser's button font. */
+	private _onSlotChange = (e: Event): void => {
 		const slot = e.target as HTMLSlotElement;
 		if (slot.name) return;
-		const stray = slot.assignedNodes({ flatten: true }).find((node) => {
-			if (node.nodeType === Node.TEXT_NODE) return (node.textContent ?? '').trim() !== '';
-			if (node.nodeType !== Node.ELEMENT_NODE) return false;
-			const tag = (node as Element).localName;
-			return tag !== 'nldd-list-item-segment' && !(tag.startsWith('nldd-') && tag.endsWith('-cell'));
-		});
-		this._warnOnNestedControl();
-		if (!stray) return;
-		this._warnedStrayContent = true;
-		const what = stray.nodeType === Node.TEXT_NODE
-			? `bare text ("${stray.textContent!.trim().slice(0, 40)}")`
-			: `<${(stray as Element).localName}>`;
-		console.warn(`nldd-list-item: ${what} sits directly in a row. A row takes cells and segments (nldd-text-cell, nldd-icon-cell, nldd-list-item-segment, …). Anything else gets none of their typography, size and alignment, and bare text in a clickable row falls back to the browser's button font. Wrap it in a cell.`);
+		setState(this, 'bare-text', slot.assignedNodes({ flatten: true })
+			.some((node) => node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim() !== ''));
+		this._syncNestedControl();
 	};
 
 	/** A row that is its own control cannot hold another one: a control inside a
 	 *  link or button is invalid HTML, doubles the tab stop, and a press on it can
 	 *  set off the row as well. A glyph that only shows the row's state is fine:
 	 *  a `decorative` radio button, or a checkbox marked `aria-hidden`. */
-	private _warnOnNestedControl(): void {
-		if (!import.meta.env?.DEV || this._warnedNestedControl) return;
-		if (this.hasAttribute('data-nldd-clone')) return;
-		if (!(this.href || this.button || this.checkbox || this.radio)) return;
-		const nested = [...this.children]
+	private _syncNestedControl(): void {
+		if (!import.meta.env?.DEV || this.hasAttribute('data-nldd-clone')) return;
+		const isControl = Boolean(this.href || this.button || this.checkbox || this.radio);
+		setState(this, 'nested-control', isControl && [...this.children]
 			.filter((child) => !child.slot)
 			.flatMap((child) => [child, ...child.querySelectorAll('*')])
-			.find((el) => el.matches(NESTED_CONTROLS) && !el.matches('[decorative]') && !el.closest('[aria-hidden="true"], [inert]'));
-		if (!nested) return;
-		this._warnedNestedControl = true;
-		console.warn(`nldd-list-item: <${nested.localName}> sits in a row that is its own control (href, button, checkbox or radio). A control inside a control is invalid HTML and doubles the tab stop. With more than one action, give each its own nldd-list-item-segment and leave the row without an action.`);
+			.some((el) => el.matches(NESTED_CONTROLS) && !el.matches('[decorative]') && !el.closest('[aria-hidden="true"], [inert]')));
 	}
 
 	/** True when the item is an option in a `type="listbox"` parent. */
@@ -726,12 +698,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 */
 	private _syncWithList() {
 		const list = this.closest<NLDDList>('nldd-list');
-		if (!list) {
-			if (import.meta.env?.DEV) {
-				console.warn('nldd-list-item: no parent nldd-list found. Variant/type sync will not work if appended into a list after first render.');
-			}
-			return;
-		}
+		if (!list) return;
 		this._applyAppearance(list.appearance);
 		this._applyParentType(list.type);
 	}
@@ -846,6 +813,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			}
 		}
 		if (targets.length === 0) {
+			setState(this, 'degenerate-divider', false);
 			this.style.removeProperty('--_list-item-divider-inset-start');
 			this.style.removeProperty('--_list-item-divider-inset-end');
 			return;
@@ -879,13 +847,11 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 			? Math.min(...visibleEnds.map(el => endInsetOf(el.getBoundingClientRect())))
 			: null;
 
-		if (insetStart !== null && insetEnd !== null
-			&& blockRect.width - insetStart - insetEnd <= 0) {
-			// A start past the last end: authoring error, fall back to full width.
-			if (import.meta.env?.DEV && !this._warnedDegenerateDivider) {
-				this._warnedDegenerateDivider = true;
-				console.warn('<nldd-list-item>: divider-start lies past the last divider-end, so the divider falls back to the full content width.');
-			}
+		// A start past the last end: authoring error, fall back to full width.
+		const degenerate = insetStart !== null && insetEnd !== null
+			&& blockRect.width - insetStart - insetEnd <= 0;
+		setState(this, 'degenerate-divider', degenerate);
+		if (degenerate) {
 			this.style.removeProperty('--_list-item-divider-inset-start');
 			this.style.removeProperty('--_list-item-divider-inset-end');
 			return;
@@ -918,13 +884,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 				item._applyParentType?.(this._parentType);
 			});
 		}
-		if (!import.meta.env?.DEV) return;
-		this._warnOnStrayExpanded();
-		// Once per row: slotchange runs this again on every change to the branch.
-		if (this._showChildren && this._parentType !== 'tree' && this._parentType !== 'navigation' && !this._warnedChildrenOutsideTree) {
-			this._warnedChildrenOutsideTree = true;
-			console.warn('nldd-list-item: `slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree" or type="navigation". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.');
-		}
+		this._syncExpandedFacts();
 	}
 
 	private _handleClick = (e: Event) => {
@@ -1185,7 +1145,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 
 	override render() {
 		const hintKey = downloadLinkHintKey(this.href, this.target, this.download);
-		if (this.href) warnDownloadTarget(this, this.download, this.target);
+		if (this.href) markDownloadTarget(this, this.download, this.target);
 		const linkHint = hintKey ? this._t(`components.list-item.${hintKey}`) : undefined;
 		// Listbox options are never separate tab stops — only the list's own
 		// search input is in the tab order, and active moves via

@@ -25,10 +25,12 @@ Een nieuwe minor zegt alleen dát er iets breekt, niet wat. Gebruik daarom [`cha
 ## Werkwijze
 
 1. **Lees elke versie tussen jouw huidige en de doelversie.** De entries staan nieuwste eerst, met een kop per release (versienummer + datum). Sla niets over: een breaking change kan in een tussenliggende patch zitten.
-2. **Scan de `Breaking` / `Breaking Changes` secties eerst.** Die bevatten concrete migratie-instructies: een verwijderd attribuut met zijn vervanger, hernoemde variabelen, gewijzigd gedrag. Een echt voorbeeld uit de changelog: `variant` op `nldd-button` en acht andere componenten heet nu `appearance`, met dezelfde waarden, dus `variant="primary"` wordt `<nldd-button appearance="primary">`.
+2. **Scan de `Breaking` / `Breaking Changes` secties eerst.** Die bevatten concrete migratie-instructies: een verwijderd attribuut met zijn vervanger, hernoemde variabelen, gewijzigd gedrag. Een echt voorbeeld uit de changelog: `variant` op `nldd-button` en acht andere componenten heet nu `appearance`, met dezelfde waarden, dus `variant="primary"` wordt `<nldd-button appearance="primary" text="Bewaar">`.
 3. **Pas de migraties toe in je code** voordat je de nieuwe versie in gebruik neemt. Zoek je app door op de verwijderde attributen, variabelenamen of componenten uit de breaking entries.
 4. **Lees `Highlights`, `Added` en `Changed`** voor nieuwe componenten of attributen die je oudere, omslachtigere code kunnen vervangen.
 5. **Verifieer tegen [`reference.md`](../nldd-design/reference.md)** of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij exact deze release.
+
+6. **Draai `npx @nldd/design-system@latest lint`, nog vóór je de versie verhoogt.** Dat is de nieuwe linter op je huidige code: elke bevinding is iets dat in de nieuwe versie niet meer klopt, en een baseline blijft geldig, dus wat erbij komt is je werklijst. Zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md).
 
 Vuistregel: lees bij elke nieuwe minor de `Breaking` sectie van die versie, en ga onder 0.9.0 niet meer dan een handvol patches in één sprong omhoog zonder de tussenliggende `Breaking` secties te lezen.
 

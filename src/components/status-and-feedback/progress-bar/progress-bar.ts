@@ -41,7 +41,8 @@
  * @attr {string} tooltip-text - Override of the auto-generated tooltip text
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { progressBarStyles, progressBarSegmentIndicatorStyles } from './progress-bar.styles.js';
 import { progressBarTemplate, segmentIndicatorTemplate } from './progress-bar.template.js';
@@ -49,6 +50,7 @@ import { nlddProgressBarTranslations } from './progress-bar.i18n.js';
 import type { NLDDProgressBarTranslations } from './progress-bar.i18n.js';
 import '../../content/tooltip/tooltip.js';
 import { translate } from '../../../utilities/translations.js';
+import { setState } from '../../../utilities/element-state.js';
 
 /** Indeterminate ↔ determinate crossfade duration. Must stay in sync with
  *  --primitives-transition-duration-slow used by the matching CSS animations
@@ -370,12 +372,7 @@ export class NLDDProgressBar extends LitElement {
 		const total = this._totalValue;
 		const denominator = total > this.max ? total : this.max;
 
-		if (import.meta.env?.DEV && total > this.max && this._hasSegmentIndicators) {
-			console.warn(
-				`[nldd-progress-bar] Sum of segment values (${total}) exceeds max (${this.max}). ` +
-				'Segments are normalized proportionally.',
-			);
-		}
+		setState(this, 'exceeds-max', total > this.max && this._hasSegmentIndicators);
 
 		// Unified path for slotted and internal segment-indicators. The internal
 		// segment-indicator lives in shadow DOM and is rendered by the template

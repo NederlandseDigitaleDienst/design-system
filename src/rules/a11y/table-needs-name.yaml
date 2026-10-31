@@ -1,0 +1,7 @@
+severity: error
+context: 'nldd-table'
+assert: '[accessible-label]'
+message: 'nldd-table needs `accessible-label`: role="table" takes its name from there.'
+examples:
+  passed: ['<nldd-table columns="1fr" accessible-label="Dossiers"></nldd-table>']
+  failed: ['<nldd-table columns="1fr"></nldd-table>']

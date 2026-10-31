@@ -14,7 +14,8 @@
  */
 
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { menuBarStyles } from './menu-bar.styles.js';
 import { template } from './menu-bar.template.js';
@@ -24,6 +25,7 @@ import '../menu-bar-item/menu-bar-item.js';
 import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import '../../actions/menu/menu.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { setState } from '../../../utilities/element-state.js';
 
 /**
  * Minimal typed interface for nldd-menu.
@@ -96,15 +98,10 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		this._setupOverflowDetection();
 		this._syncCompactAttribute();
 		this._syncEmpty();
-		if (import.meta.env?.DEV) {
-			// Defer one task so wrappers (e.g. top-navigation-bar) that set a
-			// default label via slotchange have a chance to run first.
-			setTimeout(() => {
-				if (this.isConnected && !this.accessibleLabel && !this.hasAttribute('empty')) {
-					console.warn('<nldd-menu-bar>: no accessible-label set. A page with more than one nav landmark needs a unique label on each (WCAG 1.3.1).');
-				}
-			}, 0);
-		}
+	}
+
+	override updated(changed: PropertyValues): void {
+		if (changed.has('accessibleLabel')) this._syncName();
 	}
 
 	/** Request a recalculation of overflow state. Call from parent when layout changes. */
@@ -123,6 +120,13 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 		const items = this._defaultSlot?.assignedElements({ flatten: true }) ?? [];
 		const hasItems = items.some(el => el.tagName === 'NLDD-MENU-BAR-ITEM');
 		this.toggleAttribute('empty', !hasItems);
+		this._syncName();
+	}
+
+	/** Also on a late label: a wrapper (top-navigation-bar) sets a default one
+	 *  from slotchange. */
+	private _syncName(): void {
+		setState(this, 'unnamed', !this.accessibleLabel && !this.hasAttribute('empty'));
 	}
 
 	/** Propagate compact attribute to slotted items. */

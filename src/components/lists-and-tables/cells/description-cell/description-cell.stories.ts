@@ -86,21 +86,21 @@ export const VerticaleUitlijning = {
 		<div style="display: flex; gap: 8px; height: 80px;">
 			<nldd-description-cell
 				vertical-alignment="top"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 			>
 				<p slot="title">Term</p>
 				<p slot="description">Boven</p>
 			</nldd-description-cell>
 			<nldd-description-cell
 				vertical-alignment="center"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 			>
 				<p slot="title">Term</p>
 				<p slot="description">Midden</p>
 			</nldd-description-cell>
 			<nldd-description-cell
 				vertical-alignment="bottom"
-				style="border: 1px dashed var(--primitives-color-neutral-150);"
+				class="cell-bounds"
 			>
 				<p slot="title">Term</p>
 				<p slot="description">Onder</p>

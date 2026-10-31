@@ -1,0 +1,8 @@
+severity: hint
+context: 'nldd-container:has(> nldd-token):not([layout="wrap"])'
+message: 'Set layout="wrap" on the strip: the default stacks the tokens under each other.'
+see: patronen/filtering
+examples:
+  passed: ['<nldd-container layout="wrap"><nldd-token text="Status: Afgerond"></nldd-token></nldd-container>']
+  failed: ['<nldd-container><nldd-token text="Status: Afgerond"></nldd-token></nldd-container>']
+  cantTell: ['<nldd-container :layout="vorm"><nldd-token text="Status: Afgerond"></nldd-token></nldd-container>']

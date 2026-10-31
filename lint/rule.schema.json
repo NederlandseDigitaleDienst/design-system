@@ -1,0 +1,53 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "nldd lint rule",
+	"description": "One rule in src/rules/. The file name is the rule id. A rule without assert, report, count or ref forbids its context.",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["severity", "context", "message"],
+	"if": { "properties": { "runtime": { "const": true } }, "required": ["runtime"] },
+	"then": {},
+	"else": { "required": ["examples"] },
+	"properties": {
+		"severity": { "enum": ["error", "warn", "hint"], "description": "error and warn can fail CI. A hint never does: it points at how this is meant to be done." },
+		"runtime": { "type": "boolean", "description": "Only the running page can tell, because the selector reads a :state() a component sets. The linter skips it, and it needs no examples." },
+		"tags": { "type": "array", "items": { "type": "string" }, "description": "Components this rule is about, when the selector does not name them." },
+		"removed": { "type": "array", "items": { "type": "string" }, "description": "Attributes that are gone from this component, which is what the rule is about. A selector may name them, and being there is enough." },
+		"context": { "type": "string", "description": "CSS selector for the elements the rule applies to." },
+		"assert": { "type": "string", "description": "Selector the context element must match." },
+		"report": { "type": "string", "description": "Selector the context element must not match." },
+		"count": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["of"],
+			"properties": {
+				"of": { "type": "string", "description": "Selector for the direct children to count." },
+				"min": { "type": "integer", "minimum": 0 },
+				"max": { "type": "integer", "minimum": 0 }
+			}
+		},
+		"ref": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["attr", "target"],
+			"properties": {
+				"attr": { "type": "string", "description": "Attribute holding the id of another element." },
+				"target": { "type": "string", "description": "Selector the referenced element must match." },
+				"equal": { "type": "string", "description": "Attribute that must have the same value on both." }
+			}
+		},
+		"message": { "type": "string", "description": "What is wrong here, in English, for the developer." },
+		"see": { "type": "string", "pattern": "^(patronen|ontwerprichtlijnen)/", "description": "Where the why is explained." },
+		"aliases": { "type": "array", "items": { "type": "string" }, "description": "Former ids, so baselines and suppressions keep working." },
+		"examples": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["passed", "failed"],
+			"properties": {
+				"passed": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+				"failed": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+				"cantTell": { "type": "array", "items": { "type": "string" } }
+			}
+		}
+	}
+}

@@ -28,13 +28,15 @@
  * @fires change - When input value is committed
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { textFieldStyles } from './text-field.styles.js';
 import { textFieldTemplate } from './text-field.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type InputType = 'text' | 'email' | 'tel' | 'url';
 
@@ -154,12 +156,8 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 		this._initialValue = this.value;
 	}
 
-	private _warnedKeyboard = false;
-
 	override updated(changed: PropertyValues): void {
-		if (changed.has('keyboard') || changed.has('type')) this._warnKeyboardVsType();
-		if (changed.has('keyboard')) this._warnUnknownToken('keyboard', this.keyboard, KEYBOARDS);
-		if (changed.has('enterKey')) this._warnUnknownToken('enter-key', this.enterKey, ENTER_KEYS);
+		if (changed.has('keyboard') || changed.has('type')) this._syncKeyboardConflict();
 		if (changed.has('width')) {
 			const w = this.width;
 			if (w && w !== 'full' && CSS.supports('width', w)) {
@@ -170,25 +168,12 @@ export class NLDDTextField extends DescribedBy(FormAssociated(LitElement)) {
 		}
 	}
 
-	/** A token the browser does not know is dropped silently, and the field falls
-	 *  back to the default keyboard. */
-	private _warnUnknownToken(attribute: string, value: string | undefined, allowed: readonly string[]): void {
-		if (!import.meta.env?.DEV || !value || allowed.includes(value)) return;
-		console.warn(`<nldd-text-field>: ${attribute}="${value}" is not a value the browser knows. Use one of: ${allowed.join(', ')}.`);
-	}
-
 	/** A `type` other than text already asks for its own keyboard. Overriding it
 	 *  with a different one gives a field that says "email" and shows digits,
 	 *  which is never what was meant. */
-	private _warnKeyboardVsType(): void {
+	private _syncKeyboardConflict(): void {
 		const implied = KEYBOARD_IMPLIED_BY_TYPE[this.type];
-		const contradicts = !!this.keyboard && !!implied && this.keyboard !== implied;
-		if (import.meta.env?.DEV && contradicts && !this._warnedKeyboard) {
-			this._warnedKeyboard = true;
-			console.warn(`<nldd-text-field>: keyboard="${this.keyboard}" contradicts type="${this.type}", which already raises the ${implied} keyboard. Drop one of the two.`);
-		} else if (!contradicts) {
-			this._warnedKeyboard = false;
-		}
+		setState(this, 'keyboard-contradicts-type', !!this.keyboard && !!implied && this.keyboard !== implied);
 	}
 
 	override formValue(): FormValue {

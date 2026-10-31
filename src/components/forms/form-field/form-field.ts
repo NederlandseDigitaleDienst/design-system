@@ -44,7 +44,8 @@
  * </nldd-form-field>
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { applyDescribedBy, type DescribedElement } from '../../../utilities/described-by-mixin.js';
 import {
@@ -55,6 +56,7 @@ import {
 	formFieldTemplate,
 	formFieldHelpTextTemplate,
 } from './form-field.template.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type LabelAlignment = 'top' | 'left' | 'right';
 
@@ -149,7 +151,6 @@ export class NLDDFormField extends LitElement {
 	private _appliedLabel: string | null = null;
 
 	/** Keeps the "no input found" warning to one per field rather than one per mutation. */
-	private _warnedNoInput = false;
 
 	override render() {
 		return formFieldTemplate(this);
@@ -202,20 +203,11 @@ export class NLDDFormField extends LitElement {
 
 	private _onSlotChange() {
 		const input = this._findInput();
+		// A consumer's own element can be an input too, which no selector can know.
+		setState(this, 'has-input', Boolean(input));
 		if (!input) {
-			// Only once there is something to look at. An empty field is usually one
-			// still being filled, and a component that forgot `static isFormInput`
-			// should be the one that stands out.
-			const hasContent = Array.from(this.children)
-				.some(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()));
-			if (import.meta.env?.DEV && hasContent && !this._warnedNoInput) {
-				this._warnedNoInput = true;
-				const which = this.label ? ` (label="${this.label}")` : '';
-				console.warn(`<nldd-form-field>${which}: No form input found among its children. The label cannot name anything or move focus into it. Every nldd input carries \`static isFormInput = true\`; a component of your own says the same, or names its control itself.`);
-			}
 			return;
 		}
-		this._warnedNoInput = false;
 
 		// Ensure the inner native input has an id so aria-describedby can reference it.
 		// `inputId` is a component that hands out the id of the control it renders, which
@@ -280,32 +272,21 @@ export class NLDDFormField extends LitElement {
 	 * group with an "Anders" text field beside it being the case this component
 	 * is built for. But a list that reads a value would then quietly read the
 	 * wrong one, and nothing on screen would show it: the rules simply never
-	 * match. Say so once, where it can still be fixed.
+	 * match.
 	 */
 	private _adoptValidationLists(input: Element): void {
 		const lists = Array.from(this.children)
 			.filter((el): el is HTMLElement & { control: Element | null } =>
 				el.tagName.toLowerCase() === 'nldd-validation-list');
-		if (!lists.length) return;
-
 		for (const list of lists) {
 			if (!list.getAttribute('for')) list.control = input;
 		}
 
-		if (!import.meta.env?.DEV) return;
-		const controls = Array.from(this.children)
-			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && isFormInput(el));
-		if (controls.length < 2) return;
-
 		const readsValue = lists.some(list => !list.getAttribute('for') && Array.from(list.children)
 			.some(item => item.hasAttribute('match') || item.hasAttribute('minlength') || item.hasAttribute('maxlength')));
-		if (!readsValue) return;
-
-		const which = this.label ? ` (label="${this.label}")` : '';
-		console.warn(
-			`<nldd-form-field>${which}: more than one control, and the validation list has rules that read a value. `
-			+ `It is reading <${input.localName}>, the first one. Set \`for\` on the list if it should read another.`,
-		);
+		const controls = Array.from(this.children)
+			.filter(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()) && isFormInput(el));
+		setState(this, 'list-reads-first-control', readsValue && controls.length > 1);
 	}
 
 	/**

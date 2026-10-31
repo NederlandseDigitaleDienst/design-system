@@ -40,6 +40,7 @@ De `nldd-design-system`-plugin geeft een AI-assistent de kennis om met `@nldd/de
 |-------|----------|
 | `nldd-design` | Opzoeken: welke componenten, attributen, slots, events en iconen er zijn, wat er per versie veranderde, en de ontwerprichtlijnen. |
 | `nldd-design-build` | Een applicatie bouwen: de visie erachter, de basispatronen en hoe je componenten samenstelt. |
+| `nldd-design-validate` | Controleren wat er gebouwd is, met `nldd lint`. |
 | `nldd-design-migrate` | Een bestaande frontend omzetten naar dit systeem. |
 | `nldd-design-upgrade` | Een applicatie die al op dit systeem draait naar een nieuwere versie brengen. |
 | `nldd-design-contribute` | Een wijziging voorstellen: een ontbrekend component, een patroon, of een bug. |
@@ -93,7 +94,7 @@ Eén ding verandert ook als je niet overstapt. De plugin zelf heet nu `nldd-desi
 
 ### Kom je van een versie met één `nldd`-skill?
 
-Waar er één skill `nldd` was, zijn er nu vijf met een naam die zegt waar ze over gaan. Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee zonder foutmelding:
+Waar er één skill `nldd` was, zijn er nu zes met een naam die zegt waar ze over gaan. Verwijs je ergens zelf naar de oude skillnaam, dan breekt dat, en de eerste twee zonder foutmelding:
 
 1. in je eigen `CLAUDE.md`, `.claude/rules/*.md` of `AGENTS.md` ("gebruik de nldd skill"). Claude vindt hem niet en gaat verder zonder;
 2. in subagent-definities (`.claude/agents/*.md`) en hooks die op de naam matchen;
@@ -132,6 +133,7 @@ Een component zet je neer als een gewoon HTML-element, met attributen voor tekst
 <nldd-button text="Opties" expandable>
   <nldd-menu slot="popup">
     <nldd-menu-item text="Bewerken" icon="pencil"></nldd-menu-item>
+    <nldd-menu-divider></nldd-menu-divider>
     <nldd-menu-item text="Verwijderen" icon="trash" destructive></nldd-menu-item>
   </nldd-menu>
 </nldd-button>

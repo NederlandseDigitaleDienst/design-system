@@ -1,0 +1,9 @@
+severity: warn
+context: 'nldd-link'
+assert: '[href]'
+message: 'Give it an `href`, or use nldd-button when it performs an action: what looks like a link has to be one.'
+see: ontwerprichtlijnen/visueel-en-layout
+examples:
+  passed: ['<nldd-link href="/a" text="Aanvraag A-1042"></nldd-link>']
+  failed: ['<nldd-link text="Aanvraag A-1042"></nldd-link>']
+  cantTell: ['<nldd-link :href="url" text="Aanvraag A-1042"></nldd-link>']

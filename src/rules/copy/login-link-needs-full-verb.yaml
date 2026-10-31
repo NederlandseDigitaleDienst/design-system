@@ -1,0 +1,7 @@
+severity: hint
+context: ':is(nldd-menu-bar-item, nldd-button, nldd-link)[href]:is([text="Log in" i], [text="Login" i])'
+message: 'A link to the login screen does not log in itself, so use the full verb: "Inloggen".'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-menu-bar-item text="Inloggen" href="/inloggen"></nldd-menu-bar-item>']
+  failed: ['<nldd-menu-bar-item text="Log in" href="/inloggen"></nldd-menu-bar-item>']

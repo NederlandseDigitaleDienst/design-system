@@ -20,7 +20,8 @@
  * @csspart bar - The button bar container
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { buttonBarStyles } from './button-bar.styles.js';
 import { template } from './button-bar.template.js';
@@ -158,8 +159,6 @@ export class NLDDButtonBar extends LitElement {
 				return { type: 'divider', id: this._idCounter++ } as BarChild;
 			}
 
-			if (tag === 'nldd-toggle-button') this._warnToggleButton();
-
 			if (BUTTON_TAGS.includes(tag)) {
 				el.setAttribute('size', this.size);
 				el.setAttribute('appearance', this.appearance);
@@ -176,18 +175,6 @@ export class NLDDButtonBar extends LitElement {
 		});
 
 		this._building = false;
-	}
-
-	private _warnedToggleButton = false;
-
-	private _warnToggleButton(): void {
-		if (!import.meta.env?.DEV || this._warnedToggleButton) return;
-		this._warnedToggleButton = true;
-		console.warn(
-			'<nldd-button-bar>: nldd-toggle-button is not supported here. The bar is one surface for actions, '
-			+ 'and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, '
-			+ 'or nldd-segmented-control for one choice out of a few options.',
-		);
 	}
 
 	override render() {

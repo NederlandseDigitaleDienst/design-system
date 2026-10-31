@@ -364,7 +364,7 @@ describe('nldd-combo-box – Popover API', () => {
 		vi.restoreAllMocks();
 	});
 
-	it('warns when Popover API is unavailable', async () => {
+	it('does nothing without the Popover API', async () => {
 		el = await fixture<NLDDComboBox>(`
 			<nldd-combo-box>
 				<nldd-menu>
@@ -374,8 +374,6 @@ describe('nldd-combo-box – Popover API', () => {
 		`);
 		await waitForUpdate(el);
 
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
 		// Simulate missing Popover API by deleting showPopover from the prototype
 		const proto = HTMLElement.prototype;
 		const original = proto.showPopover;
@@ -384,11 +382,8 @@ describe('nldd-combo-box – Popover API', () => {
 
 		el._openMenu();
 
-		expect(warnSpy).toHaveBeenCalledWith(
-			expect.stringContaining('Popover API')
-		);
-
 		proto.showPopover = original;
+		expect(el.querySelector('nldd-menu')!.matches(':popover-open')).toBe(false);
 	});
 });
 

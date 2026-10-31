@@ -217,18 +217,6 @@ describe('nldd-notification', () => {
 		expect(gezien).toHaveBeenCalled();
 	});
 
-	it('waarschuwt in DEV bij meer dan twee acties', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await maak(`
-			<nldd-notification text="Opgeslagen">
-				<button slot="actions">1</button>
-				<button slot="actions">2</button>
-				<button slot="actions">3</button>
-			</nldd-notification>
-		`);
-		expect(warn).toHaveBeenCalled();
-		warn.mockRestore();
-	});
 });
 
 describe('nldd-notification in a modal overlay', () => {

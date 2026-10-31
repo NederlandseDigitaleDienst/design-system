@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-menu-bar-item > nldd-avatar[slot="icon"]:not([icon-aligned][color="inherit"])'
+message: 'Set `icon-aligned` and color="inherit", so the avatar lines up with the icons next to it and takes their color.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-menu-bar-item text="Mijn account"><nldd-avatar slot="icon" name="Team Beleid" decorative icon-aligned color="inherit"></nldd-avatar></nldd-menu-bar-item>']
+  failed: ['<nldd-menu-bar-item text="Mijn account"><nldd-avatar slot="icon" name="Team Beleid" decorative></nldd-avatar></nldd-menu-bar-item>']

@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-navigation-split-view > [slot="main"] nldd-top-title-bar:not([back-text])'
+message: 'Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.'
+see: patronen/application
+examples:
+  passed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="main"><nldd-page landmarks="page"><nldd-top-title-bar slot="header" text="Dossier" back-text="Dossiers"></nldd-top-title-bar></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']
+  failed: ['<nldd-navigation-split-view><nldd-split-view-pane slot="main"><nldd-page landmarks="page"><nldd-top-title-bar slot="header" text="Dossier"></nldd-top-title-bar></nldd-page></nldd-split-view-pane></nldd-navigation-split-view>']

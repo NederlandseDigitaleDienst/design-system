@@ -1,0 +1,7 @@
+severity: hint
+context: 'nldd-list[type="navigation"] nldd-list-item nldd-title'
+message: 'Use the `text` of an nldd-text-cell: a row is not a heading.'
+see: patronen/navigation-page
+examples:
+  passed: ['<nldd-list type="navigation" accessible-label="Dossiers"><nldd-list-item href="/d-318"><nldd-text-cell text="Dossier D-318"></nldd-text-cell></nldd-list-item></nldd-list>']
+  failed: ['<nldd-list type="navigation" accessible-label="Dossiers"><nldd-list-item href="/d-318"><nldd-cell><nldd-title text="Dossier D-318"></nldd-title></nldd-cell></nldd-list-item></nldd-list>']

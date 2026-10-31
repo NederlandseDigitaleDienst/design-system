@@ -1,0 +1,8 @@
+severity: warn
+context: 'nldd-page[sticky-header]:has(nldd-top-navigation-bar)'
+message: 'A website lets its header scroll away: a fixed one takes room from the content.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-page sticky-header><nldd-top-title-bar text="Dossier"></nldd-top-title-bar></nldd-page>']
+  failed: ['<nldd-page sticky-header><nldd-top-navigation-bar></nldd-top-navigation-bar></nldd-page>']
+  cantTell: ['<nldd-page :sticky-header="sticky"><nldd-top-navigation-bar></nldd-top-navigation-bar></nldd-page>']

@@ -23,10 +23,7 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
 ```html
 <nldd-shell>
   <nldd-page>
-    <nldd-container
-      padding="16"
-      sm-padding="8"
-    >
+    <nldd-simple-section>
       <nldd-title
         size="1"
         text="Subsidieaanvraag"
@@ -51,14 +48,16 @@ RijksSans is uitsluitend bestemd voor publicaties van de Rijksoverheid en voor p
         </nldd-form-field>
 
         <nldd-form-actions>
-          <nldd-button
-            appearance="primary"
-            type="submit"
-            text="Aanvraag indienen"
-          ></nldd-button>
+          <nldd-button-group>
+            <nldd-button
+              appearance="primary"
+              type="submit"
+              text="Aanvraag indienen"
+            ></nldd-button>
+          </nldd-button-group>
         </nldd-form-actions>
       </nldd-form>
-    </nldd-container>
+    </nldd-simple-section>
   </nldd-page>
 </nldd-shell>
 ```
@@ -80,6 +79,9 @@ Let op:
       <option value="">Kies een regeling</option>
       <option value="wbso">WBSO</option>
       <option value="mit">MIT</option>
+      <option value="eia">EIA</option>
+      <option value="mia">MIA</option>
+      <option value="vamil">Vamil</option>
     </select>
   </nldd-dropdown>
 </nldd-form-field>

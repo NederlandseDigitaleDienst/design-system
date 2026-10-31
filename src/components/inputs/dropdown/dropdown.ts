@@ -39,7 +39,8 @@
  * ```
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { dropdownStyles } from './dropdown.styles.js';
 import { dropdownTemplate } from './dropdown.template.js';
@@ -47,6 +48,7 @@ import { isPointerMode } from '../../../utilities/input-modality.js';
 import './../../content/icon/icon.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type DropdownSize = 'xs' | 'sm' | 'md';
 
@@ -140,13 +142,12 @@ export class NLDDDropdown extends DescribedBy(LitElement) {
 		this._select = select;
 
 		if (!select) {
+			setState(this, 'unnamed-select', false);
 			this.expanded = false;
 			return;
 		}
 
-		if (import.meta.env?.DEV && !this.accessibleLabel && !select.hasAttribute("aria-label") && !select.hasAttribute("aria-labelledby") && !select.labels?.length) {
-			console.warn('<nldd-dropdown>: The slotted <select> has no accessible name. Add an aria-label or aria-labelledby attribute to the <select> element.');
-		}
+		setState(this, 'unnamed-select', !this.accessibleLabel && !select.hasAttribute("aria-label") && !select.hasAttribute("aria-labelledby") && !select.labels?.length);
 
 		select.addEventListener('change', this._handleSelectChange);
 		select.addEventListener('focus', this._handleSelectFocus);

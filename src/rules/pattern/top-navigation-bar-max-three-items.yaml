@@ -1,0 +1,10 @@
+severity: hint
+context: 'nldd-top-navigation-bar > nldd-menu-bar[slot="utility"]'
+count:
+  of: 'nldd-menu-bar-item'
+  max: 3
+message: 'Keep the bar to search, language and account: the pages together are the navigation.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-top-navigation-bar website-title="Mijn Dienst"><nldd-menu-bar slot="utility"><nldd-menu-bar-item text="Zoeken"></nldd-menu-bar-item></nldd-menu-bar></nldd-top-navigation-bar>', '<nldd-top-navigation-bar website-title="Mijn Dienst"><nldd-menu-bar slot="global"><nldd-menu-bar-item text="A"></nldd-menu-bar-item><nldd-menu-bar-item text="B"></nldd-menu-bar-item><nldd-menu-bar-item text="C"></nldd-menu-bar-item><nldd-menu-bar-item text="D"></nldd-menu-bar-item></nldd-menu-bar></nldd-top-navigation-bar>']
+  failed: ['<nldd-top-navigation-bar website-title="Mijn Dienst"><nldd-menu-bar slot="utility"><nldd-menu-bar-item text="A"></nldd-menu-bar-item><nldd-menu-bar-item text="B"></nldd-menu-bar-item><nldd-menu-bar-item text="C"></nldd-menu-bar-item><nldd-menu-bar-item text="D"></nldd-menu-bar-item></nldd-menu-bar></nldd-top-navigation-bar>']

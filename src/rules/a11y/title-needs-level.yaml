@@ -1,0 +1,8 @@
+severity: hint
+context: ':is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section) > nldd-title[slot="header"]:not([heading-level], :has(> :is(h1, h2, h3, h4, h5, h6))), nldd-box[background="critical"] nldd-title:not([heading-level], :has(> :is(h1, h2, h3, h4, h5, h6)))'
+message: 'Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.'
+see: patronen/page-structure
+examples:
+  passed: ['<nldd-simple-section><nldd-title slot="header" text="Kosten" heading-level="2"></nldd-title></nldd-simple-section>', '<nldd-simple-section><nldd-title slot="header"><h2>Kosten</h2></nldd-title></nldd-simple-section>']
+  failed: ['<nldd-simple-section><nldd-title slot="header" text="Kosten"></nldd-title></nldd-simple-section>']
+  cantTell: ['<nldd-simple-section><nldd-title slot="header" text="Kosten" :heading-level="niveau"></nldd-title></nldd-simple-section>']

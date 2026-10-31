@@ -4,6 +4,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { menuGroupStyles } from './menu.styles.js';
 import { menuGroupTemplate, type MenuVariant } from './menu.template.js';
 import { syncListItemRole } from './menu-item.js';
+import '../../../utilities/custom-element.js';
 
 /**
  * A labeled group of menu items inside an nldd-menu. Wraps its slotted
