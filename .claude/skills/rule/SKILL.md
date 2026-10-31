@@ -59,7 +59,7 @@ In selectors:
 
 ### Twee bijzondere gevallen
 
-**Een naam die weg is:** `removed: ['item-width']`, met de oude naam in het `failed`-voorbeeld.
+**Een naam die weg is:** `removed: ['item-width']`, met de oude naam in het `failed`-voorbeeld. Blijven waarde en betekenis gelijk, voor elke waarde, zet er dan `fix: { rename: { item-width: item-min-width } }` bij. Dan lost `--fix` hem op.
 
 **Iets wat niet in de markup staat,** zoals een meting of een verkeerde aanroep. Het component geeft het feit door, de regel leest het:
 

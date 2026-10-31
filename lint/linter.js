@@ -164,13 +164,16 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			for (const rule of rules) {
 				for (const { node, outcome } of engine.evaluate(rule, root)) {
 					counts[outcome]++;
-					if (outcome !== 'failed') continue;
+					// A name that is gone is wrong whatever the binding holds.
+					const namesRemoved = rule.removed?.some((name) => node.attrs.get(name) === BOUND);
+					if (outcome !== 'failed' && !(outcome === 'cantTell' && namesRemoved)) continue;
 					findings.push({
 						rule: rule.id,
 						severity: rule.severity,
 						message: rule.message,
 						node,
 						removed: rule.removed,
+						rename: rule.fix?.rename,
 					});
 				}
 			}
@@ -198,6 +201,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			...finding,
 			severity,
 			tag: node.name,
+			offset: node.offset,
 			...position(node.offset),
 		}));
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);

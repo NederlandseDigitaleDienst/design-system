@@ -67,23 +67,26 @@ export function formatText(results, { root, files, ms, skipped, explainRule }) {
 	const hints = count('hint') ? `, ${plural(count('hint'), 'hint')}` : '';
 	const known = skipped ? dim(` (${skipped} in baseline)`) : '';
 	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')}${hints} in ${plural(files, 'file')} (${ms} ms)`;
-	lines.push(`${errors + warnings ? red('✖') : '✔'} ${summary}${known}`);
+	const fixable = all.filter(({ rename }) => rename).length;
+	const canFix = fixable ? `, ${fixable} fixable with --fix` : '';
+	lines.push(`${errors + warnings ? red('✖') : '✔'} ${summary}${known}${canFix}`);
 	return lines.join('\n');
 }
 
 /** A count per rule, most first: where to start when a project has hundreds. */
 export function formatStatistics(results, { files, ms, skipped }) {
 	const counts = new Map();
-	for (const { rule, severity } of results.flatMap(({ findings }) => findings)) {
+	for (const { rule, severity, rename } of results.flatMap(({ findings }) => findings)) {
 		const entry = counts.get(rule) ?? { rule, severity, count: 0 };
 		entry.count += 1;
+		entry.fixable = Boolean(rename);
 		counts.set(rule, entry);
 	}
 	const rows = [...counts.values()].sort((a, b) => b.count - a.count || a.rule.localeCompare(b.rule));
 	const width = String(rows[0]?.count ?? 0).length;
 	const total = rows.reduce((sum, { count }) => sum + count, 0);
 	return [
-		...rows.map(({ count, severity, rule }) => `${String(count).padStart(width)}  ${severity.padEnd(5)}  ${rule}`),
+		...rows.map(({ count, severity, rule, fixable }) => `${String(count).padStart(width)}  ${severity.padEnd(5)}  ${rule}${fixable ? '  [--fix]' : ''}`),
 		...(rows.length > 0 ? [''] : []),
 		`${plural(total, 'finding')} in ${plural(files, 'file')} (${ms} ms)${skipped ? ` (${skipped} in baseline)` : ''}`,
 	].join('\n');
@@ -102,6 +105,8 @@ export function formatJson(results, { root, explainRule }) {
 				rule: finding.rule,
 				message: finding.message,
 				see: detail?.see,
+				url: detail?.url,
+				fixable: Boolean(finding.rename),
 				example: detail?.examples?.passed?.[0],
 			};
 		}),

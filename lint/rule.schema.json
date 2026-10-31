@@ -13,6 +13,14 @@
 		"runtime": { "type": "boolean", "description": "Only the running page can tell, because the selector reads a :state() a component sets. The linter skips it, and it needs no examples." },
 		"tags": { "type": "array", "items": { "type": "string" }, "description": "Components this rule is about, when the selector does not name them." },
 		"removed": { "type": "array", "items": { "type": "string" }, "description": "Attributes that are gone from this component, which is what the rule is about. A selector may name them, and being there is enough." },
+		"fix": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["rename"],
+			"properties": {
+				"rename": { "type": "object", "additionalProperties": { "type": "string" }, "description": "What `--fix` renames, old attribute to new. Only for a rename that keeps the value and the meaning, for every value." }
+			}
+		},
 		"context": { "type": "string", "description": "CSS selector for the elements the rule applies to." },
 		"assert": { "type": "string", "description": "Selector the context element must match." },
 		"report": { "type": "string", "description": "Selector the context element must not match." },

@@ -1,8 +1,9 @@
 /** The `nldd` command, started from cli.js. */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
+import { applyFixes } from './fix.js';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
@@ -11,6 +12,7 @@ import { applyBaseline, findFiles, readBaseline, readConfig, writeBaseline } fro
 const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
     --format text|json|github       default: text
+    --fix                           apply the fixes that are certain: renamed attributes
     --update-baseline               accept what is there now, report only new findings
     --max-warnings <n>              exit 1 above this number of warnings
     --select <groups or rules>      only these, comma separated
@@ -90,6 +92,9 @@ async function runLint(data, paths, options) {
 	}
 	const root = process.cwd();
 	const started = performance.now();
+	if (options.fix && (options.stdin || options['update-baseline'])) {
+		throw new Error('--fix writes files, so it takes no --stdin or --update-baseline.');
+	}
 	const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES), ...GROUPS]);
 	const list = (value) => value?.split(',').map((key) => key.trim());
 	const select = list(options.select);
@@ -111,14 +116,26 @@ async function runLint(data, paths, options) {
 	// Most files in an app use no component at all, and those need no parser either.
 	const relevant = inputs.filter(({ source }) => /nldd-|Nldd/.test(source) || config.wrappers);
 	const results = [];
+	let fixed = 0;
+	let fixedFiles = 0;
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
 		const linter = createLinter(data, { wrappers: config.wrappers, severities: resolveSeverities(data, config.rules, { select, ignore }) });
 		for (const { filename, source } of relevant) {
 			const { findings } = await linter.lintSource(source, filename);
-			results.push({ filename, source, findings });
+			const change = options.fix ? applyFixes(source, findings) : { fixed: 0 };
+			if (change.fixed === 0) {
+				results.push({ filename, source, findings });
+				continue;
+			}
+			writeFileSync(filename, change.source);
+			fixed += change.fixed;
+			fixedFiles += 1;
+			const after = await linter.lintSource(change.source, filename);
+			results.push({ filename, source: change.source, findings: after.findings });
 		}
 	}
+	if (options.fix) console.error(`Fixed ${fixed} in ${fixedFiles} of ${inputs.length} files.`);
 
 	if (options['update-baseline']) {
 		writeBaseline(results, root, canonical);
@@ -168,6 +185,7 @@ async function main() {
 			select: { type: 'string' },
 			ignore: { type: 'string' },
 			statistics: { type: 'boolean' },
+			fix: { type: 'boolean' },
 			json: { type: 'boolean' },
 			version: { type: 'boolean', short: 'v' },
 			help: { type: 'boolean', short: 'h' },

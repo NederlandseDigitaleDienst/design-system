@@ -518,6 +518,71 @@ describe('suppressions', () => {
 	});
 });
 
+describe('--fix', () => {
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });
+	const fixed = (name, text) => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, name), text);
+		const result = run(root, 'lint', '--fix', name);
+		return { text: readFileSync(join(root, name), 'utf8'), ...result };
+	};
+
+	it('renames an attribute and reports what is left', () => {
+		const { text, stdout, stderr } = fixed('a.html', '<nldd-button text="a" variant="primary"></nldd-button>');
+		assert.equal(text, '<nldd-button text="a" appearance="primary"></nldd-button>');
+		assert.match(stderr, /Fixed 1 in 1 of 1 files/);
+		assert.match(stdout, /0 errors, 0 warnings/);
+	});
+
+	it('keeps to the way a framework writes a name', () => {
+		const rename = (name, attribute) => fixed(name, attribute).text;
+		assert.equal(rename('a.vue', '<template><nldd-button text="a" :variant="b" /></template>'), '<template><nldd-button text="a" :appearance="b" /></template>');
+		assert.equal(rename('a.html', '<nldd-toolbar [label]="a" (click)="b()" /><nldd-toolbar [attr.label]="c" />'), '<nldd-toolbar [accessibleLabel]="a" (click)="b()" /><nldd-toolbar [attr.accessible-label]="c" />');
+		assert.equal(rename('a.tsx', 'const a = <nldd-toolbar label={b} />;'), 'const a = <nldd-toolbar accessible-label={b} />;');
+		assert.equal(rename('a.html.j2', '<nldd-icon name="{{ a }}"{% if b %} size="16"{% endif %}></nldd-icon>'), '<nldd-icon icon="{{ a }}"{% if b %} size="16"{% endif %}></nldd-icon>');
+	});
+
+	it('finds the attribute after text with another width', () => {
+		const { text } = fixed('a.tsx', 'const a = "é😀";\nconst b = <nldd-toolbar label="c" />;');
+		assert.equal(text, 'const a = "é😀";\nconst b = <nldd-toolbar accessible-label="c" />;');
+	});
+
+	it('leaves the value and other elements alone', () => {
+		const { text } = fixed('a.html', '<nldd-button text=" variant=x" variant="primary"></nldd-button><div variant="a"></div><nldd-progress-bar variant="b"></nldd-progress-bar>');
+		assert.equal(text, '<nldd-button text=" variant=x" appearance="primary"></nldd-button><div variant="a"></div><nldd-progress-bar variant="b"></nldd-progress-bar>');
+	});
+
+	it('does not choose between two attributes', () => {
+		const source = '<nldd-button text="a" variant="primary" appearance="secondary"></nldd-button>';
+		assert.equal(fixed('a.html', source).text, source);
+	});
+
+	it('fixes nothing on a suppressed line', () => {
+		const source = '<!-- nldd-lint-disable-next-line variant-renamed -- nog niet -->\n<nldd-button text="a" variant="primary"></nldd-button>';
+		assert.equal(fixed('a.html', source).text, source);
+	});
+
+	it('leaves a file without a fix untouched', () => {
+		const source = '<nldd-tab-bar></nldd-tab-bar>\r\n';
+		assert.equal(fixed('a.html', source).text, source);
+	});
+
+	it('refuses what it cannot write back', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		assert.equal(run(root, 'lint', '--fix', '--update-baseline').status, 2);
+		assert.equal(run(root, 'lint', '--fix', '--stdin').status, 2);
+	});
+
+	it('says what it can fix', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), '<nldd-button text="a" variant="primary"></nldd-button>');
+		assert.match(run(root, 'lint', 'a.html').stdout, /1 fixable with --fix/);
+		assert.match(run(root, 'lint', '--statistics', 'a.html').stdout, /variant-renamed {2}\[--fix\]/);
+		assert.equal(JSON.parse(run(root, 'lint', '--format', 'json', 'a.html').stdout).findings[0].fixable, true);
+	});
+});
+
 describe('statistics', () => {
 	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
 

@@ -1,6 +1,7 @@
 severity: warn
 context: ':is(nldd-button, nldd-button-bar, nldd-icon-button, nldd-split-button, nldd-keyboard-shortcut, nldd-code-viewer, nldd-code-editor, nldd-text-editor, nldd-list)[variant]'
 removed: ['variant']
+fix: { rename: { variant: appearance } }
 message: 'The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.'
 examples:
   passed: ['<nldd-button text="Bewaar" appearance="primary"></nldd-button>']

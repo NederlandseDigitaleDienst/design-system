@@ -73,6 +73,14 @@ function checkName({ id, group }) {
 	}
 }
 
+/** A fix renames what the rule says is gone, into something that exists. */
+function checkFix({ id, fix, removed = [] }) {
+	for (const [from, to] of Object.entries(fix?.rename ?? {})) {
+		if (!removed.includes(from)) problems.push(`${id}: the fix renames ${from}, which is not in removed.`);
+		if (!allAttributes.has(to)) problems.push(`${id}: the fix renames to ${to}, which no component has.`);
+	}
+}
+
 function checkSee(rule) {
 	if (!rule.see) return;
 	const [kind, slug] = rule.see.split('/');
@@ -166,6 +174,7 @@ for (const rule of data.rules) {
 		for (const tokens of parse(selector)) checkTokens(tokens, rule);
 	}
 	checkName(rule);
+	checkFix(rule);
 	checkSee(rule);
 	checkStates(rule);
 	if (!rule.runtime) await checkExamples(rule);
