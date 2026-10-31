@@ -1,5 +1,5 @@
 severity: hint
-context: 'nldd-sidebar-section nldd-token:not([control="dismiss"])'
+context: 'nldd-sidebar-section nldd-container[layout="wrap"] > nldd-token:not([control="dismiss"])'
 message: 'Set control="dismiss": each token is its own way back.'
 see: patronen/filtering
 examples:

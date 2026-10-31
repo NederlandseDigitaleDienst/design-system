@@ -1,7 +1,0 @@
-severity: hint
-context: 'nldd-one-third-two-thirds-section nldd-list-item[checkbox], nldd-two-thirds-one-third-section nldd-list-item[checkbox], nldd-one-half-one-half-section nldd-list-item[checkbox], nldd-container[layout="grid"] nldd-list-item[checkbox]'
-message: 'A filter column built by hand misses the sheet on small screens. Use nldd-sidebar-section, which moves it for you.'
-see: patronen/filtering
-examples:
-  passed: ['<nldd-sidebar-section sidebar-label="Filters"><nldd-list slot="sidebar" accessible-label="Status"><nldd-list-item checkbox><nldd-text-cell text="Afgerond"></nldd-text-cell></nldd-list-item></nldd-list></nldd-sidebar-section>']
-  failed: ['<nldd-one-third-two-thirds-section><nldd-list slot="left" accessible-label="Status"><nldd-list-item checkbox><nldd-text-cell text="Afgerond"></nldd-text-cell></nldd-list-item></nldd-list></nldd-one-third-two-thirds-section>']

@@ -26,6 +26,7 @@ here; consult the commit history if you need that level of detail.
 ### Added
 
 - **The same rules in the browser.** While developing, a page shows `[nldd]` warnings in the console. A rule then sees real values and what several components render together. A production build does not contain this.
+- **Hints, about how something is meant to be done.** Every sentence in the design guidelines and the patterns was read, and what the markup shows became a rule or a hint. A hint never fails anything. It appears on the pattern it belongs to, and the output sums up each hint once.
 - **`nldd lint dist` reads built HTML,** as whole pages, for any framework that builds to HTML.
 - **`nldd lint`, `nldd explain` and `nldd rules`.** The package has a `bin`. `--format json` gives an agent everything it needs to fix a finding.
 - **`nldd-design-validate`, a sixth skill,** and a hook in the plugin that hands findings back to the agent after an edit. The hook only runs the linter installed in the project.

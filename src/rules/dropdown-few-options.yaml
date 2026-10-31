@@ -1,5 +1,5 @@
 severity: hint
-context: 'nldd-dropdown > select:not(:has(> optgroup))'
+context: 'nldd-dropdown > select:not(:has(> optgroup)):has(> option)'
 count:
   of: 'option'
   min: 6

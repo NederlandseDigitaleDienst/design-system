@@ -79,7 +79,8 @@ function renderComponent(c) {
 	const rules = rulesAboutTag(lintRules, c.tag);
 	if (rules.length) {
 		out.push('**Rules** (`nldd lint`)', '');
-		out.push(...rules.map((rule) => `- \`${rule.id}\`: ${rule.message}`), '');
+		const label = (rule) => (rule.severity === 'hint' ? ' (hint)' : '');
+		out.push(...rules.map((rule) => `- \`${rule.id}\`${label(rule)}: ${rule.message}`), '');
 	}
 	if (c.attrs.length) {
 		out.push('**Attributes**', '');

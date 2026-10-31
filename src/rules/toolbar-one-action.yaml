@@ -1,5 +1,5 @@
 severity: hint
-context: 'nldd-toolbar:not(:has(> nldd-menu-item, > nldd-toolbar-item > :not(nldd-button, nldd-icon-button, [slot="overflow"])))'
+context: 'nldd-toolbar:not(:has(> [slot="overflow"], > nldd-menu-item, > nldd-toolbar-item > :not(nldd-button, nldd-icon-button, [slot="overflow"])))'
 count:
   of: 'nldd-toolbar-item, nldd-toolbar-title'
   min: 2

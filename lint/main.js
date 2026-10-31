@@ -46,7 +46,7 @@ function explain(data, id) {
 function listRules(data, { tag, json }) {
 	const rules = tag ? rulesAboutTag(data.rules, tag) : data.rules;
 	if (json) console.log(JSON.stringify(rules, null, 2));
-	else for (const rule of rules) console.log(`${rule.id}  ${rule.message}`);
+	else for (const rule of rules) console.log(`${rule.id}  (${rule.severity})  ${rule.message}`);
 	return 0;
 }
 
@@ -103,7 +103,7 @@ async function runLint(data, paths, options) {
 
 	if (options['update-baseline']) {
 		writeBaseline(results, root, canonical);
-		const accepted = results.reduce((sum, result) => sum + result.findings.length, 0);
+		const accepted = results.flatMap(({ findings }) => findings).filter(({ severity }) => severity !== 'hint').length;
 		console.log(`Baseline updated: ${accepted} findings accepted.`);
 		return 0;
 	}

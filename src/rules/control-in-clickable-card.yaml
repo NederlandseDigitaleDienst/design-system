@@ -1,5 +1,5 @@
-severity: warn
-context: 'nldd-card:is([href], [button]) :is(nldd-link, nldd-button, nldd-icon-button)'
+severity: hint
+context: 'nldd-card:is([href], [button]) :is(nldd-link, nldd-button, nldd-icon-button):not([slot="footer"])'
 message: 'Drop this control: the whole card already is one link and one tab stop.'
 see: patronen/navigation-page
 examples:

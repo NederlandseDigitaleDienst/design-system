@@ -40,10 +40,15 @@ function main() {
 	const findings = JSON.parse(stdout || '{}').findings ?? [];
 	if (findings.length === 0) return;
 
-	const lines = findings.map(
-		({ line, severity, rule, message }) => `${file}:${line} ${severity} ${rule}: ${message}`,
-	);
-	const additionalContext = `nldd lint found ${findings.length} problem(s). Fix them, or run \`npx @nldd/design-system explain <rule>\`.\n${lines.join('\n')}`;
+	const line = ({ line: at, severity, rule, message }) => `${file}:${at} ${severity} ${rule}: ${message}`;
+	const problems = findings.filter(({ severity }) => severity !== 'hint').map(line);
+	const hints = findings.filter(({ severity }) => severity === 'hint').map(line);
+	const additionalContext = [
+		problems.length ? `nldd lint found ${problems.length} problem(s). Fix them, or run \`npx @nldd/design-system explain <rule>\`.` : '',
+		...problems,
+		hints.length ? 'Hints: how this is meant to be done. Follow them unless you have a reason not to.' : '',
+		...hints,
+	].filter(Boolean).join('\n');
 	console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PostToolUse', additionalContext } }));
 }
 

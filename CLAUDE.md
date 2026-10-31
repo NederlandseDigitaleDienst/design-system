@@ -191,6 +191,8 @@ De linter hoort bij zijn eigen versie: hij zit in het pakket, dus een project dr
 | Patroon: hoe en waarom | `<slug>.mdx` | Storybook, skill-pagina |
 | Voorbeeld | `<slug>.html` | Story, docs, skill |
 
+Er zijn drie niveaus: `error` en `warn` kunnen CI laten falen; een `hint` nooit. Een hint zegt hoe iets bedoeld is en wijst met `see` naar het patroon of de richtlijn. Hints draaien op broncode en gebouwde pagina's, niet in de browser: daar schrijven componenten zelf `style` en `id`, en dat zou een hint voor de markup van de app aanzien.
+
 Eén regel, één bestand in `src/rules/`, ook als hij over meer componenten gaat. De bestandsnaam is het regel-ID, en dat ID is API: consumers hebben het in baselines en onderdrukkingen staan. Hernoem via `aliases`. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.mdx` hoeft niet mee te veranderen.
 
 `message` zegt wat hier fout is, in het Engels, zoals een compilerfout. Het waarom staat op de pagina waar `see` naar wijst en wordt niet overgeschreven.

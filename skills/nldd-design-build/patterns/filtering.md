@@ -369,7 +369,6 @@ Hints: zo is het bedoeld. Die laten niets falen.
 
 - `checkbox-row-needs-decorative`: Set `decorative`: the row is the checkbox, and this one only shows its state.
 - `clear-all-filters`: Let each nldd-token remove its own filter instead: one misclick here costs the whole selection, with no way back.
-- `filter-column-by-hand`: A filter column built by hand misses the sheet on small screens. Use nldd-sidebar-section, which moves it for you.
 - `filter-options-as-fields`: Make the options rows of an nldd-list, with `checkbox` on the row: the whole row is the target and there is nothing to submit.
 - `filter-sheet-needs-done`: Set the sheet's close button to "Klaar" through `translations`: a filter works at once, so there is nothing to abort.
 - `filter-sidebar-needs-skip-link`: Put an nldd-skip-link above the filters, with an `href` to the results, so a keyboard user need not pass every filter.

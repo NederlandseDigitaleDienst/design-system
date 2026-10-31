@@ -3,24 +3,6 @@ import type { DevRule } from './dev-checks.js';
 
 export const devRules: DevRule[] = [
 	{
-		"id": "about-link-too-vague",
-		"message": "Call it \"Over deze website\": \"Over\" could just as well be about the organization.",
-		"hint": true,
-		"context": "nldd-page-footer-legal-bar-item[text=\"Over\" i]"
-	},
-	{
-		"id": "account-avatar-needs-decorative",
-		"message": "Set `decorative`: the name and the text of the item are already there.",
-		"hint": true,
-		"context": "nldd-menu-bar-item nldd-avatar:not([decorative])"
-	},
-	{
-		"id": "account-avatar-not-aligned",
-		"message": "Set `icon-aligned` and color=\"inherit\", so the avatar lines up with the icons next to it and takes their color.",
-		"hint": true,
-		"context": "nldd-menu-bar-item > nldd-avatar[slot=\"icon\"]:not([icon-aligned][color=\"inherit\"])"
-	},
-	{
 		"id": "avatar-group-holds-avatars",
 		"message": "nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.",
 		"context": "nldd-avatar-group",
@@ -48,40 +30,10 @@ export const devRules: DevRule[] = [
 		"context": "nldd-avatar:is([href]:not([href=\"\"]), [button]):is([size=\"16\"], [size=\"20\"])"
 	},
 	{
-		"id": "avoid-disabled-button",
-		"message": "Leave the action available and say afterwards what is missing and how to fix it, in this view or the next.",
-		"hint": true,
-		"context": "nldd-button[disabled], nldd-icon-button[disabled]"
-	},
-	{
-		"id": "back-text-too-vague",
-		"message": "Name the page it goes to, such as \"Aanvragen\": it goes up a level, not back to where someone came from.",
-		"hint": true,
-		"context": "nldd-top-navigation-bar[back-text=\"Terug\" i], nldd-top-title-bar[back-text=\"Terug\" i], nldd-top-navigation-bar[back-href]:not([back-href=\"\"]):not([back-text]:not([back-text=\"\"]))"
-	},
-	{
 		"id": "bar-split-view-children-need-slot",
 		"message": "Every child of nldd-bar-split-view needs a `slot`, or it does not render.",
 		"context": "nldd-bar-split-view",
 		"report": ":has(> :not([slot]))"
-	},
-	{
-		"id": "bottom-toolbar-before-main",
-		"message": "Put the bar with only=\"sm\" after slot=\"main\" in the HTML: on a phone it belongs at the bottom, within reach of a thumb.",
-		"hint": true,
-		"context": "nldd-bar-split-view > [only=\"sm\"] ~ [slot=\"main\"]"
-	},
-	{
-		"id": "bottom-toolbar-not-large",
-		"message": "Set size=\"lg\" on the bottom bar, which puts the labels under the icons and makes the actions fit next to the sections.",
-		"hint": true,
-		"context": "nldd-bar-split-view > [only=\"sm\"] nldd-toolbar:not([size=\"lg\"])"
-	},
-	{
-		"id": "breadcrumbs-not-in-footer",
-		"message": "Put nldd-breadcrumbs in the `breadcrumbs` slot of nldd-page-footer, and leave the top of the page to the content.",
-		"hint": true,
-		"context": ":is([slot=\"header\"], nldd-top-navigation-bar, nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-breadcrumbs, nldd-page > nldd-breadcrumbs"
 	},
 	{
 		"id": "button-form-id-not-a-form",
@@ -123,12 +75,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-button-group:state(own-size-overwritten)"
 	},
 	{
-		"id": "button-starts-with-filler",
-		"message": "Start with the verb or noun that carries the meaning: people scan the first words.",
-		"hint": true,
-		"context": ":is(nldd-button, nldd-icon-button):is([text^=\"De \" i], [text^=\"Het \" i], [text^=\"Een \" i])"
-	},
-	{
 		"id": "card-link-needs-name",
 		"message": "A card that is a link or button needs `accessible-label`: the control has no text of its own.",
 		"context": "nldd-card:is([href]:not([href=\"\"]), [button])",
@@ -136,30 +82,6 @@ export const devRules: DevRule[] = [
 		"properties": [
 			"accessibleLabel"
 		]
-	},
-	{
-		"id": "card-title-needs-level",
-		"message": "Set `heading-level`: the title of a card that is a choice is a heading, directly below the page title or the section heading.",
-		"hint": true,
-		"context": "nldd-card:is([href]:not([href=\"\"]), [button]) nldd-title:not([heading-level]:not([heading-level=\"\"]), :has(> :is(h1, h2, h3, h4, h5, h6)))"
-	},
-	{
-		"id": "cell-own-css",
-		"message": "Use the attributes of the cell, such as `color`, and an nldd-spacer-cell for the space next to it.",
-		"hint": true,
-		"context": ":is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[style]:not([style=\"\"])"
-	},
-	{
-		"id": "checkbox-row-needs-decorative",
-		"message": "Set `decorative`: the row is the checkbox, and this one only shows its state.",
-		"hint": true,
-		"context": "nldd-list-item[checkbox] nldd-checkbox:not([decorative])"
-	},
-	{
-		"id": "clear-all-filters",
-		"message": "Let each nldd-token remove its own filter instead: one misclick here costs the whole selection, with no way back.",
-		"hint": true,
-		"context": ":is(nldd-link, nldd-button):is([text=\"Wis alles\" i], [text=\"Alles wissen\" i], [text=\"Wis filters\" i], [text=\"Filters wissen\" i], [text=\"Wis alle filters\" i], [text=\"Alle filters wissen\" i], [text=\"Reset filters\" i], [text=\"Filters resetten\" i])"
 	},
 	{
 		"id": "code-viewer-diff-lines-dropped",
@@ -191,32 +113,9 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "content-outside-section",
-		"message": "Put this in a section, such as nldd-simple-section, which sets the width and the white space.",
-		"hint": true,
-		"context": "nldd-page > :not([slot], nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero, nldd-top-navigation-bar, nldd-top-title-bar, nldd-skip-link, nldd-page-footer, nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover, nldd-notification)"
-	},
-	{
-		"id": "control-in-clickable-card",
-		"message": "Drop this control: the whole card already is one link and one tab stop.",
-		"context": "nldd-card:is([href]:not([href=\"\"]), [button]) :is(nldd-link, nldd-button, nldd-icon-button)"
-	},
-	{
 		"id": "control-row-holds-segments",
 		"message": "Move the `href` or `button` to a segment: both together put a control in a control.",
 		"context": "nldd-list-item:is([href]:not([href=\"\"]), [button]):has(> nldd-list-item-segment)"
-	},
-	{
-		"id": "destructive-menu-item-not-last",
-		"message": "Put the destructive item last, behind an nldd-menu-divider, away from the actions people click through.",
-		"hint": true,
-		"context": "nldd-menu > nldd-menu-item[destructive] ~ nldd-menu-item:not([destructive]), nldd-menu > nldd-menu-item:not([destructive]) + nldd-menu-item[destructive]"
-	},
-	{
-		"id": "direct-action-not-imperative",
-		"message": "This button does it right now, so use the imperative, such as \"Log in\", and keep the full verb for a button that leads somewhere.",
-		"hint": true,
-		"context": "nldd-button[type=\"submit\"]:is([text=\"Inloggen\" i], [text=\"Opslaan\" i], [text=\"Bewaren\" i], [text=\"Versturen\" i], [text=\"Verzenden\" i], [text=\"Indienen\" i], [text=\"Verwijderen\" i], [text=\"Bevestigen\" i], [text=\"Toevoegen\" i], [text=\"Wijzigen\" i])"
 	},
 	{
 		"id": "disclosure-segment-needs-button",
@@ -242,26 +141,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-link:state(download-with-target), nldd-button:state(download-with-target), nldd-icon-button:state(download-with-target), nldd-card:state(download-with-target), nldd-list-item:state(download-with-target), nldd-list-item-segment:state(download-with-target)"
 	},
 	{
-		"id": "dropdown-few-options",
-		"message": "With a handful of options, show them all with nldd-segmented-control, nldd-toggle-button-group or nldd-radio-button-group.",
-		"hint": true,
-		"context": "nldd-dropdown > select:not(:has(> optgroup))",
-		"count": {
-			"of": "option",
-			"min": 6
-		}
-	},
-	{
-		"id": "dropdown-long-list",
-		"message": "With many options typing is faster than scrolling: use nldd-combo-box.",
-		"hint": true,
-		"context": "nldd-dropdown > select:not(:has(> optgroup))",
-		"count": {
-			"of": "option",
-			"max": 15
-		}
-	},
-	{
 		"id": "dropdown-select-needs-name",
 		"message": "The slotted `<select>` has no accessible name. Add an `aria-label` or `aria-labelledby` attribute to the `<select>` element.",
 		"context": "nldd-dropdown:state(unnamed-select)"
@@ -277,77 +156,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "exit-next-to-primary",
-		"message": "Move this away from the primary action, for example to the title bar, so a misclick does not cost what was entered.",
-		"hint": true,
-		"context": "nldd-form-actions nldd-button:is([text=\"Annuleer\" i], [text=\"Annuleren\" i], [text=\"Reset\" i], [text=\"Terug\" i], [text=\"Vorige\" i], [text=\"Verwijder\" i], [text=\"Verwijderen\" i]), nldd-button-group:has(> [appearance=\"primary\"]) > nldd-button:is([text=\"Annuleer\" i], [text=\"Annuleren\" i], [text=\"Reset\" i], [text=\"Terug\" i], [text=\"Vorige\" i], [text=\"Verwijder\" i], [text=\"Verwijderen\" i])"
-	},
-	{
-		"id": "field-for-and-id-by-hand",
-		"message": "Drop this: nldd-form-field finds the input among its children and connects the label, the rules and the help text itself.",
-		"hint": true,
-		"context": "nldd-form-field:not(:has(> :is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea) ~ :is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea))) > :is(:is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea):not(input, select, textarea)[id]:not([id=\"\"]), nldd-validation-list[for]:not([for=\"\"]))"
-	},
-	{
-		"id": "field-marker-in-label",
-		"message": "Set `optional` on the fields that may stay empty, which shows the badge, and write no marker in the label.",
-		"hint": true,
-		"context": "nldd-form-field:is([label$=\"*\"], [label*=\"(verplicht)\" i], [label*=\"(optioneel)\" i])"
-	},
-	{
-		"id": "field-type-missing",
-		"message": "Set the `type` that fits, `email` or `tel`, which brings the right keyboard and validation.",
-		"hint": true,
-		"context": "nldd-form-field[label*=\"e-mail\" i] > nldd-text-field:not([type=\"email\"]), nldd-form-field:is([label*=\"telefoon\" i], [label*=\"mobiel\" i]) > nldd-text-field:not([type=\"tel\"])"
-	},
-	{
-		"id": "file-link-names-format",
-		"message": "Name the format and the size in the link text, such as \"Jaarverslag (pdf, 2 MB)\".",
-		"hint": true,
-		"context": ":is(nldd-link, nldd-button)[text]:not([text=\"\"]):is([href$=\".pdf\" i], [href$=\".docx\" i], [href$=\".xlsx\" i], [href$=\".csv\" i], [href$=\".zip\" i]):not([text*=\"pdf\" i], [text*=\"docx\" i], [text*=\"xlsx\" i], [text*=\"csv\" i], [text*=\"zip\" i])"
-	},
-	{
-		"id": "filter-column-by-hand",
-		"message": "A filter column built by hand misses the sheet on small screens. Use nldd-sidebar-section, which moves it for you.",
-		"hint": true,
-		"context": "nldd-one-third-two-thirds-section nldd-list-item[checkbox], nldd-two-thirds-one-third-section nldd-list-item[checkbox], nldd-one-half-one-half-section nldd-list-item[checkbox], nldd-container[layout=\"grid\"] nldd-list-item[checkbox]"
-	},
-	{
-		"id": "filter-options-as-fields",
-		"message": "Make the options rows of an nldd-list, with `checkbox` on the row: the whole row is the target and there is nothing to submit.",
-		"hint": true,
-		"context": "nldd-sidebar-section [slot=\"sidebar\"] nldd-checkbox-field, nldd-sidebar-section nldd-checkbox-field[slot=\"sidebar\"]"
-	},
-	{
-		"id": "filter-sheet-needs-done",
-		"message": "Set the sheet's close button to \"Klaar\" through `translations`: a filter works at once, so there is nothing to abort.",
-		"hint": true,
-		"context": "nldd-sidebar-section:has(> [slot=\"sidebar\"] nldd-list-item[checkbox]):not([translations*=\"sheet-dismiss-action\"])"
-	},
-	{
-		"id": "filter-sidebar-needs-skip-link",
-		"message": "Put an nldd-skip-link above the filters, with an `href` to the results, so a keyboard user need not pass every filter.",
-		"hint": true,
-		"context": "nldd-sidebar-section > [slot=\"sidebar\"]:has(nldd-list-item[checkbox]):not(:has(nldd-skip-link))"
-	},
-	{
-		"id": "filter-token-needs-dismiss",
-		"message": "Set control=\"dismiss\": each token is its own way back.",
-		"hint": true,
-		"context": "nldd-sidebar-section nldd-token:not([control=\"dismiss\"])"
-	},
-	{
 		"id": "form-action-in-button-group",
 		"message": "Put the action in a nldd-button-group, also when there is only one.",
 		"context": "nldd-form-actions",
 		"assert": ":has(> nldd-button-group)",
 		"properties": []
-	},
-	{
-		"id": "form-action-outside-actions",
-		"message": "Put the actions in nldd-form-actions, which lines them up with the fields instead of the labels.",
-		"hint": true,
-		"context": "nldd-form > :is(nldd-button, nldd-button-group), nldd-form > form > :is(nldd-button, nldd-button-group)"
 	},
 	{
 		"id": "form-field-list-reads-first-control",
@@ -370,12 +183,6 @@ export const devRules: DevRule[] = [
 			"text",
 			"supportingText"
 		]
-	},
-	{
-		"id": "heading-in-navigation-row",
-		"message": "Use the `text` of an nldd-text-cell: a row is not a heading.",
-		"hint": true,
-		"context": "nldd-list[type=\"navigation\"] nldd-list-item nldd-title"
 	},
 	{
 		"id": "hero-corner-covered",
@@ -408,12 +215,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-hero:state(invalid-main-width)"
 	},
 	{
-		"id": "hero-not-first",
-		"message": "Make nldd-hero the first section, which says what the site is for.",
-		"hint": true,
-		"context": "nldd-page > :is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section) ~ nldd-hero"
-	},
-	{
 		"id": "hero-overlap-panel-too-short",
 		"message": "With layout=\"overlap\" the panel is shorter than `overlap-size` and ends inside the image. Give it more content or a smaller `overlap-size`, or set layout=\"contained\" to keep the panel on the image.",
 		"context": "nldd-hero:state(short-overlap-panel)"
@@ -427,12 +228,6 @@ export const devRules: DevRule[] = [
 		"id": "hide-below-sm-no-effect",
 		"message": "hide-below=\"sm\" never hides anything: there is no breakpoint below sm. The value names the breakpoint you hide below, so the smallest one that hides is \"md\". Leave the attribute off if you meant \"always visible\".",
 		"context": ":is(nldd-cell, nldd-description-cell, nldd-drag-handle-cell, nldd-icon-cell, nldd-spacer-cell, nldd-step-cell, nldd-text-cell, nldd-title-cell)[hide-below=\"sm\"]"
-	},
-	{
-		"id": "hyphens-in-urls",
-		"message": "Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.",
-		"hint": true,
-		"context": ":is(nldd-link, nldd-button, nldd-icon-button, nldd-card, nldd-list-item, nldd-menu-item, nldd-menu-bar-item, nldd-tab-bar-item)[href^=\"/\"][href*=\"_\"]"
 	},
 	{
 		"id": "icon-button-needs-name",
@@ -457,7 +252,7 @@ export const devRules: DevRule[] = [
 	{
 		"id": "icon-segment-needs-name",
 		"message": "Give the segment an `accessible-label` that names the row: it holds only an icon.",
-		"context": "nldd-list-item-segment:is([button], [href]:not([href=\"\"])):has(> nldd-icon-cell):not(:has(> nldd-text-cell))",
+		"context": "nldd-list-item-segment:is([button], [href]:not([href=\"\"])):has(> nldd-icon-cell):not(:has(> :is(nldd-text-cell, nldd-title-cell, nldd-description-cell)))",
 		"assert": "[accessible-label]:not([accessible-label=\"\"])",
 		"properties": [
 			"accessibleLabel"
@@ -479,12 +274,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-image:state(invalid-width)"
 	},
 	{
-		"id": "label-alignment-per-field",
-		"message": "Set `label-alignment` on nldd-form, which passes it to every field and to the actions, so the buttons line up with the fields.",
-		"hint": true,
-		"context": "nldd-form nldd-form-field[label-alignment]:not([label-alignment=\"\"])"
-	},
-	{
 		"id": "language-item-needs-name",
 		"message": "Set an `accessible-label` such as \"Taal: Nederlands (NL)\": a screen reader otherwise spells out the letters.",
 		"context": "nldd-menu-bar-item:is([text=\"NL\"], [text=\"EN\"], [text=\"DE\"], [text=\"FR\"])",
@@ -503,12 +292,6 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "legal-bar-misses-privacy",
-		"message": "Add a direct link \"Privacy\": European privacy regulators ask for one on every page.",
-		"hint": true,
-		"context": "nldd-page-footer-legal-bar:has(> nldd-page-footer-legal-bar-item[text]:not([text=\"\"])):not(:has(> nldd-page-footer-legal-bar-item[text*=\"privacy\" i]))"
-	},
-	{
 		"id": "link-needs-href",
 		"message": "Give it an `href`, or use nldd-button when it performs an action: what looks like a link has to be one.",
 		"context": "nldd-link",
@@ -516,12 +299,6 @@ export const devRules: DevRule[] = [
 		"properties": [
 			"href"
 		]
-	},
-	{
-		"id": "link-row-needs-chevron",
-		"message": "End the row with an nldd-icon-cell with icon=\"chevron-right\", which says there is more behind it without the word \"openen\".",
-		"hint": true,
-		"context": "nldd-list:not([type]:not([type=\"\"])) > nldd-list-item[href]:not([href=\"\"]):not(:has(> nldd-icon-cell[icon=\"chevron-right\"], > nldd-step-cell))"
 	},
 	{
 		"id": "list-arrow-navigation-removed",
@@ -548,12 +325,6 @@ export const devRules: DevRule[] = [
 		"id": "list-hidden-rows-need-no-results",
 		"message": "Every item is hidden and nothing is in [slot=\"no-results\"], so the list renders a blank area. Put an nldd-inline-dialog in that slot saying what is not there and what the next move is.",
 		"context": "nldd-list:state(filtered):not(:has(> [slot=\"empty\"], > [slot=\"no-results\"]))"
-	},
-	{
-		"id": "list-hidden",
-		"message": "Leave the list in place and fill `slot=\"empty\"` and `slot=\"no-results\"`: hidden, the empty state goes with it.",
-		"hint": true,
-		"context": "nldd-list[hidden]"
 	},
 	{
 		"id": "list-item-bare-text",
@@ -613,61 +384,15 @@ export const devRules: DevRule[] = [
 		"report": ":is([href]:not([href=\"\"]), [button], [checkbox])"
 	},
 	{
-		"id": "list-needs-name",
-		"message": "Give the list an `accessible-label` that says what is in it, so several of them on a page can be told apart.",
-		"hint": true,
-		"context": "nldd-list:is([type=\"navigation\"], [type=\"tree\"], [type=\"listbox\"], [type=\"radiogroup\"])",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])",
-		"properties": [
-			"accessibleLabel"
-		]
-	},
-	{
 		"id": "list-reorderable-needs-list-type",
 		"message": "`reorderable` is only valid when type=\"list\", and is ignored here.",
 		"context": "nldd-list[reorderable]",
 		"report": "[type]:not([type=\"\"]):not([type=\"list\"])"
 	},
 	{
-		"id": "login-link-imperative",
-		"message": "A link to the login screen does not log in itself, so use the full verb: \"Inloggen\".",
-		"hint": true,
-		"context": ":is(nldd-menu-bar-item, nldd-button, nldd-link)[href]:not([href=\"\"]):is([text=\"Log in\" i], [text=\"Login\" i]), :is(nldd-menu-bar-item, nldd-menu-item, nldd-link)[href]:not([href=\"\"]):is([text=\"Registreer\" i])"
-	},
-	{
-		"id": "logout-is-a-link",
-		"message": "Make it a button: logging out happens at once.",
-		"hint": true,
-		"context": "nldd-menu-item[text=\"Log uit\" i][href]:not([href=\"\"])"
-	},
-	{
-		"id": "loose-link-in-card",
-		"message": "Set `href` and `accessible-label` on the card and drop this link: then each choice is one link and one tab stop.",
-		"hint": true,
-		"context": "nldd-card:not([href]:not([href=\"\"]), [button]) :is(nldd-link, nldd-button):is([text=\"Lees meer\" i], [text=\"Meer lezen\" i], [text=\"Meer informatie\" i], [text=\"Meer info\" i], [text=\"Bekijk\" i], [text=\"Bekijken\" i], [text=\"Open\" i], [text=\"Openen\" i], [text=\"Ga naar\" i])"
-	},
-	{
-		"id": "main-toolbar-needs-container",
-		"message": "Put the toolbar in an nldd-container with padding: the bar split view sets none itself.",
-		"hint": true,
-		"context": "nldd-bar-split-view > nldd-split-view-pane > nldd-toolbar"
-	},
-	{
-		"id": "menu-anchored-by-hand",
-		"message": "Nest it in the `popup` slot of the button, which anchors it, opens it and needs no id: `anchor` is for a trigger without that slot.",
-		"hint": true,
-		"context": "nldd-menu[anchor]:not([anchor=\"\"]):not(nldd-list ~ nldd-menu, nldd-table ~ nldd-menu)"
-	},
-	{
 		"id": "menu-bar-needs-name",
 		"message": "No `accessible-label` set. A page with more than one nav landmark needs a unique label on each (WCAG 1.3.1).",
 		"context": "nldd-menu-bar:state(unnamed)"
-	},
-	{
-		"id": "menu-choice-by-hand",
-		"message": "Use type=\"radio\" or type=\"checkbox\" with `selected`, which gives the item the role and the state a screen reader reads out.",
-		"hint": true,
-		"context": "nldd-menu-item:is([text^=\"✓\"], [text^=\"✔\"], [text$=\"✓\"], [text$=\"✔\"], [icon=\"check-mark\"], [icon=\"check-mark-small\"], [icon=\"checked\"], [icon=\"checked-small\"]):not([type=\"radio\"], [type=\"checkbox\"])"
 	},
 	{
 		"id": "menu-filter-in-navigation",
@@ -681,31 +406,9 @@ export const devRules: DevRule[] = [
 		"report": ":is([type]:not([type=\"\"]):not([type=\"button\"]), [shortcut]:not([shortcut=\"\"]))"
 	},
 	{
-		"id": "menu-one-action",
-		"message": "Use a plain button for a single action.",
-		"hint": true,
-		"context": "nldd-menu[slot=\"popup\"]:not(:has(> nldd-menu-group))",
-		"count": {
-			"of": "nldd-menu-item",
-			"min": 2
-		}
-	},
-	{
-		"id": "menu-row-in-top-bar",
-		"message": "Let the pages be the navigation: put the entries in the home as cards and lists, and keep search and language in `utility`.",
-		"hint": true,
-		"context": "nldd-top-navigation-bar > [slot=\"global\"]"
-	},
-	{
 		"id": "modal-destructive-first",
 		"message": "Put the way out above the destructive action: reaching it should not mean passing the button to avoid.",
 		"context": "nldd-modal-dialog > [slot=\"actions\"][appearance=\"destructive\"] + [slot=\"actions\"]"
-	},
-	{
-		"id": "modal-destructive-needs-alert",
-		"message": "Set variant=\"alert\" on a dialog about a destructive action, which brings the icon and color that go with it.",
-		"hint": true,
-		"context": "nldd-modal-dialog:has(> [slot=\"actions\"][appearance=\"destructive\"]):not([variant=\"alert\"])"
 	},
 	{
 		"id": "modal-dialog-needs-two-actions",
@@ -715,12 +418,6 @@ export const devRules: DevRule[] = [
 			"of": "[slot=\"actions\"]",
 			"min": 2
 		}
-	},
-	{
-		"id": "modal-holds-a-form",
-		"message": "Do work that needs its context in an nldd-sheet, which keeps the page visible and has room for the fields.",
-		"hint": true,
-		"context": "nldd-modal-dialog:has(nldd-form, :is(input, nldd-checkbox, nldd-checkbox-field, nldd-code-editor, nldd-combo-box, nldd-date-field, nldd-date-picker, nldd-dropdown, nldd-file-field, nldd-multi-line-text-field, nldd-number-field, nldd-password-field, nldd-radio-button, nldd-radio-button-field, nldd-radio-button-group, nldd-search-field, nldd-segmented-control, nldd-slider, nldd-stepper, nldd-switch, nldd-switch-field, nldd-text-editor, nldd-text-field, nldd-time-field, nldd-time-picker, nldd-toggle-button, nldd-toggle-button-group, nldd-token-field, select, textarea))"
 	},
 	{
 		"id": "modal-way-out-not-primary",
@@ -736,18 +433,6 @@ export const devRules: DevRule[] = [
 			"accessibleLabel",
 			"inputId"
 		]
-	},
-	{
-		"id": "name-in-parts",
-		"message": "Ask for the full name in one field, and for the form of address separately if you need it.",
-		"hint": true,
-		"context": "nldd-form-field:is([label=\"Voornaam\" i], [label=\"Voorletters\" i], [label=\"Tussenvoegsel\" i], [label=\"Tussenvoegsels\" i], [label=\"Achternaam\" i])"
-	},
-	{
-		"id": "no-all-caps-label",
-		"message": "Write this label in sentence case: capitals weaken the word shape and make scanning harder.",
-		"hint": true,
-		"context": ":is(nldd-form-field, nldd-checkbox-field, nldd-radio-button-field, nldd-switch-field)[label*=\" \"]:is([label*=\"A\"], [label*=\"B\"], [label*=\"C\"], [label*=\"D\"], [label*=\"E\"], [label*=\"F\"], [label*=\"G\"], [label*=\"H\"], [label*=\"I\"], [label*=\"J\"], [label*=\"K\"], [label*=\"L\"], [label*=\"M\"], [label*=\"N\"], [label*=\"O\"], [label*=\"P\"], [label*=\"Q\"], [label*=\"R\"], [label*=\"S\"], [label*=\"T\"], [label*=\"U\"], [label*=\"V\"], [label*=\"W\"], [label*=\"X\"], [label*=\"Y\"], [label*=\"Z\"]):not([label*=\"a\"], [label*=\"b\"], [label*=\"c\"], [label*=\"d\"], [label*=\"e\"], [label*=\"f\"], [label*=\"g\"], [label*=\"h\"], [label*=\"i\"], [label*=\"j\"], [label*=\"k\"], [label*=\"l\"], [label*=\"m\"], [label*=\"n\"], [label*=\"o\"], [label*=\"p\"], [label*=\"q\"], [label*=\"r\"], [label*=\"s\"], [label*=\"t\"], [label*=\"u\"], [label*=\"v\"], [label*=\"w\"], [label*=\"x\"], [label*=\"y\"], [label*=\"z\"])"
 	},
 	{
 		"id": "no-page-footer-in-section",
@@ -804,14 +489,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-page > nldd-page-footer:not([slot=\"footer\"])"
 	},
 	{
-		"id": "page-in-shell",
-		"message": "Put nldd-shell around it: the shell sets the background and decides who scrolls.",
-		"hint": true,
-		"context": "nldd-page:has(nldd-top-navigation-bar, nldd-page-footer), nldd-bar-split-view, nldd-navigation-split-view",
-		"assert": "nldd-shell *, nldd-sheet *, nldd-window *, nldd-modal-dialog *",
-		"properties": []
-	},
-	{
 		"id": "page-second-h1",
 		"message": "Keep one h1 on a page and make this title an h2.",
 		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero):has(nldd-title[heading-level=\"1\"], nldd-title > h1) ~ :is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero):has(nldd-title[heading-level=\"1\"], nldd-title > h1)"
@@ -820,28 +497,6 @@ export const devRules: DevRule[] = [
 		"id": "page-second-main",
 		"message": "A second page renders a main landmark, which a document may have only one of. Leave `landmarks` at \"auto\" on pages in a pane or an overlay, or set landmarks=\"region\" on the ones that are not the document's page.",
 		"context": "nldd-page:state(second-main)"
-	},
-	{
-		"id": "pane-page-needs-name",
-		"message": "Give this page an `accessible-label`, so it becomes a named region, or landmarks=\"page\" if it holds the main content.",
-		"hint": true,
-		"context": "nldd-navigation-split-view nldd-page:not([landmarks=\"page\"])",
-		"assert": "[accessible-label]:not([accessible-label=\"\"])",
-		"properties": [
-			"accessibleLabel"
-		]
-	},
-	{
-		"id": "pane-title-bar-needs-back",
-		"message": "Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.",
-		"hint": true,
-		"context": "nldd-navigation-split-view > [slot=\"main\"] nldd-top-title-bar:not([back-text]:not([back-text=\"\"]))"
-	},
-	{
-		"id": "pane-title-bar-needs-level",
-		"message": "Set heading-level=\"2\" on the title bar of a pane beside the main content: the screen has one h1.",
-		"hint": true,
-		"context": "nldd-navigation-split-view nldd-page:not([landmarks=\"page\"]) > nldd-top-title-bar:not([heading-level]:not([heading-level=\"\"]))"
 	},
 	{
 		"id": "popover-anchor-not-found",
@@ -863,12 +518,6 @@ export const devRules: DevRule[] = [
 		"context": "nldd-popover:is([width=\"auto\"], [width=\"fit-content\"], [width=\"min-content\"], [width=\"max-content\"], [width^=\"fit-content(\"])"
 	},
 	{
-		"id": "primary-action-needs-priority",
-		"message": "Give the primary action the highest `priority`, so it is the last to move to the overflow.",
-		"hint": true,
-		"context": "nldd-toolbar-item:has(> nldd-button[appearance=\"primary\"]):not([priority]:not([priority=\"\"]))"
-	},
-	{
 		"id": "progress-bar-segments-exceed-max",
 		"message": "The sum of the segment values exceeds `max`. Segments are normalized proportionally.",
 		"context": "nldd-progress-bar:state(exceeds-max)"
@@ -884,51 +533,9 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "remember-me-off",
-		"message": "Set `checked`: staying signed in is the right default, and who does not want it turns it off.",
-		"hint": true,
-		"context": "nldd-checkbox-field:is([label=\"Onthoud mij\" i], [label=\"Ingelogd blijven\" i], [label=\"Stay signed in\" i], [label=\"Remember me\" i]):not([checked])"
-	},
-	{
-		"id": "row-action-not-in-segment",
-		"message": "Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.",
-		"hint": true,
-		"context": "nldd-list:not([type=\"form\"]) nldd-list-item > nldd-cell > nldd-icon-button"
-	},
-	{
 		"id": "row-more-than-one-control",
 		"message": "A row is one control: keep one of `href`, `button`, `checkbox` and `radio`.",
 		"context": "nldd-list-item:is([href]:not([href=\"\"])[button], [href]:not([href=\"\"])[checkbox], [href]:not([href=\"\"])[radio], [button][checkbox], [button][radio], [checkbox][radio])"
-	},
-	{
-		"id": "second-action-in-sheet-form",
-		"message": "Keep one action under the form. The way out is `dismiss-text` on the title bar.",
-		"hint": true,
-		"context": "nldd-sheet nldd-form-actions nldd-button ~ nldd-button"
-	},
-	{
-		"id": "second-toolbar-needs-name",
-		"message": "Give each toolbar an `accessible-label` when a page has more than one.",
-		"hint": true,
-		"context": "nldd-toolbar ~ nldd-toolbar:not([accessible-label]:not([accessible-label=\"\"]))"
-	},
-	{
-		"id": "section-own-background",
-		"message": "Use `background` on the section: it cascades the surface to what is inside it.",
-		"hint": true,
-		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero, nldd-page)[style*=\"background\"]:not([background]:not([background=\"\"]))"
-	},
-	{
-		"id": "section-own-columns",
-		"message": "Swap the section instead of building columns in it, such as nldd-two-thirds-one-third-section.",
-		"hint": true,
-		"context": ":is(nldd-simple-section, nldd-full-bleed-section) > :is([style*=\"grid-template-columns\"], [style*=\"display: grid\"], [style*=\"display:grid\"], [style*=\"display: flex\"], [style*=\"display:flex\"])"
-	},
-	{
-		"id": "segment-label-too-vague",
-		"message": "Name the row in the label, such as \"Acties voor Dossier D-318\": in twenty rows this says the same thing twenty times.",
-		"hint": true,
-		"context": "nldd-list-item-segment:is([accessible-label=\"Meer\" i], [accessible-label=\"Acties\" i], [accessible-label=\"Opties\" i], [accessible-label=\"Menu\" i], [accessible-label=\"Meer acties\" i], [accessible-label=\"Meer opties\" i])"
 	},
 	{
 		"id": "segmented-control-needs-name",
@@ -967,31 +574,9 @@ export const devRules: DevRule[] = [
 		"context": "nldd-sheet:state(unnamed)"
 	},
 	{
-		"id": "sheet-title-bar-needs-anchor",
-		"message": "Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.",
-		"hint": true,
-		"context": "nldd-sheet nldd-page:has(nldd-form) > nldd-top-title-bar:not([collapse-anchor]:not([collapse-anchor=\"\"]))"
-	},
-	{
-		"id": "sidebar-section-needs-label",
-		"message": "Set `sidebar-label`: it names the sidebar and titles the sheet it becomes.",
-		"hint": true,
-		"context": "nldd-sidebar-section:has(> [slot=\"sidebar\"])",
-		"assert": "[sidebar-label]:not([sidebar-label=\"\"])",
-		"properties": [
-			"sidebarLabel"
-		]
-	},
-	{
 		"id": "skip-link-no-target",
 		"message": "No rendered element follows the skip link, so it has nothing to move focus to. Put the content it skips to right after it, or point `href` at the id of the target.",
 		"context": "nldd-skip-link:state(no-target)"
-	},
-	{
-		"id": "skip-link-not-around-header",
-		"message": "Wrap the bar in an nldd-skip-link in `slot=\"header\"`, so a keyboard user can go straight to the content.",
-		"hint": true,
-		"context": "nldd-page > nldd-top-navigation-bar[slot=\"header\"], nldd-skip-link:has(nldd-top-navigation-bar):not([slot=\"header\"])"
 	},
 	{
 		"id": "skip-link-target-not-focusable",
@@ -1009,12 +594,6 @@ export const devRules: DevRule[] = [
 		"id": "status-bar-below-top-bar",
 		"message": "The status bar sits below a top bar. It belongs above it, as the first thing on the screen.",
 		"context": "nldd-status-bar:state(below-top-bar)"
-	},
-	{
-		"id": "status-dot-needs-decorative",
-		"message": "Set `decorative` on the dot and put the word next to it in an nldd-text-cell: the word carries the meaning.",
-		"hint": true,
-		"context": "nldd-list-item nldd-badge:not([text]:not([text=\"\"]), [number]:not([number=\"\"]), [icon]:not([icon=\"\"]), [accessible-label]:not([accessible-label=\"\"]), [decorative])"
 	},
 	{
 		"id": "step-bar-current-moved",
@@ -1057,12 +636,6 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "subpage-misses-breadcrumbs",
-		"message": "Add an nldd-breadcrumbs to the footer: a page below the home has a back button and a breadcrumb.",
-		"hint": true,
-		"context": "nldd-page:has(nldd-top-navigation-bar[back-href]:not([back-href=\"\"])):has(nldd-page-footer):not(:has(nldd-page-footer nldd-breadcrumbs))"
-	},
-	{
 		"id": "switch-needs-name",
 		"message": "nldd-switch needs `accessible-label` or a labeled nldd-form-field around it, or use nldd-switch-field. Without one it has no accessible name.",
 		"context": "nldd-switch",
@@ -1084,18 +657,6 @@ export const devRules: DevRule[] = [
 		"properties": [
 			"accessibleLabel"
 		]
-	},
-	{
-		"id": "tab-bar-needs-priority",
-		"message": "Give the tab bar a high `priority`, so it is the last to move to the overflow.",
-		"hint": true,
-		"context": "nldd-toolbar:not([size=\"lg\"]) > nldd-toolbar-item:has(> nldd-tab-bar):not([priority]:not([priority=\"\"]))"
-	},
-	{
-		"id": "tab-bar-overflow-needs-radio-group",
-		"message": "Give the tab bar an nldd-menu-group in `slot=\"overflow\"`, with a type=\"radio\" item per tab.",
-		"hint": true,
-		"context": "nldd-toolbar-item:has(> nldd-tab-bar):has(> [slot=\"overflow\"]):not(:has(> nldd-menu-group[slot=\"overflow\"]))"
 	},
 	{
 		"id": "table-needs-columns",
@@ -1124,12 +685,6 @@ export const devRules: DevRule[] = [
 		"id": "tabs-with-href-need-navigation",
 		"message": "Tabs with `href` go to another page: add `navigation`, so the bar is a nav with aria-current=\"page\" instead of a tablist, and set `current` on the tab of the page you are on.",
 		"context": "nldd-tab-bar:not([navigation]):is(:has(nldd-tab-bar-item[href]:not([href=\"\"])), :state(link-tabs))"
-	},
-	{
-		"id": "tag-above-title",
-		"message": "Put the tags below the title, in its slot or after it: the reader needs the subject before the metadata means anything.",
-		"hint": true,
-		"context": "nldd-tag + nldd-title"
 	},
 	{
 		"id": "tag-icon-only-needs-name",
@@ -1177,39 +732,10 @@ export const devRules: DevRule[] = [
 		"context": "nldd-title:state(invalid-custom-size)"
 	},
 	{
-		"id": "title-full-stop",
-		"message": "Drop the full stop: a heading has none, also when it is a sentence.",
-		"context": "nldd-title[text$=\".\"]"
-	},
-	{
-		"id": "title-in-form",
-		"message": "Use nldd-form-section with `text`: its legend reaches a screen reader with every field in the group.",
-		"hint": true,
-		"context": "nldd-form > nldd-title, nldd-form > form > nldd-title"
-	},
-	{
-		"id": "title-is-a-question",
-		"message": "Give the answer as the heading, such as \"De beoordeling duurt zes weken\" for \"Hoe lang duurt het?\".",
-		"hint": true,
-		"context": "nldd-title[text$=\"?\"]"
-	},
-	{
-		"id": "title-needs-level",
-		"message": "Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.",
-		"hint": true,
-		"context": ":is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section) > nldd-title[slot=\"header\"]:not([heading-level]:not([heading-level=\"\"]), :has(> :is(h1, h2, h3, h4, h5, h6))), nldd-box[background=\"critical\"] nldd-title:not([heading-level]:not([heading-level=\"\"]), :has(> :is(h1, h2, h3, h4, h5, h6)))"
-	},
-	{
 		"id": "title-subtitle-slot-renamed",
 		"message": "The subtitle slot is now supporting-text. Rename slot=\"subtitle\" to slot=\"supporting-text\", or use the `supporting-text` attribute, here and on every other nldd-title.",
 		"context": "nldd-title",
 		"report": ":has(> [slot=\"subtitle\"])"
-	},
-	{
-		"id": "toc-heading-needs-id",
-		"message": "Give every h2 an `id`, so the table of contents can jump to it.",
-		"hint": true,
-		"context": "nldd-sidebar-section:has(> [slot=\"sidebar\"] nldd-list[type=\"navigation\"]) nldd-rich-text h2:not([id]:not([id=\"\"]))"
 	},
 	{
 		"id": "toc-row-needs-location",
@@ -1252,12 +778,6 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
-		"id": "token-strip-needs-wrap",
-		"message": "Set layout=\"wrap\" on the strip: the default stacks the tokens under each other.",
-		"hint": true,
-		"context": "nldd-container:has(> nldd-token):not([layout=\"wrap\"])"
-	},
-	{
 		"id": "toolbar-control-own-size",
 		"message": "The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.",
 		"context": "nldd-toolbar:not([size=\"sm\"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size=\"sm\"], nldd-toolbar:not([size=\"lg\"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size=\"lg\"]"
@@ -1270,32 +790,6 @@ export const devRules: DevRule[] = [
 		"properties": []
 	},
 	{
-		"id": "toolbar-one-action",
-		"message": "Use a plain button for a single action.",
-		"hint": true,
-		"context": "nldd-toolbar:not(:has(> nldd-menu-item, > nldd-toolbar-item > :not(nldd-button, nldd-icon-button, [slot=\"overflow\"])))",
-		"count": {
-			"of": "nldd-toolbar-item, nldd-toolbar-title",
-			"min": 2
-		}
-	},
-	{
-		"id": "toolbar-search-needs-limits",
-		"message": "Give the toolbar item a `min-width` and a `max-width`, so the field shrinks along without becoming unreadable.",
-		"hint": true,
-		"context": "nldd-toolbar-item:has(> nldd-search-field):not([min-width]:not([min-width=\"\"])[max-width]:not([max-width=\"\"]))"
-	},
-	{
-		"id": "top-bar-at-most-three-items",
-		"message": "Keep the bar to search, language and account: the pages together are the navigation.",
-		"hint": true,
-		"context": "nldd-top-navigation-bar > nldd-menu-bar",
-		"count": {
-			"of": "nldd-menu-bar-item",
-			"max": 3
-		}
-	},
-	{
 		"id": "top-navigation-bar-same-href",
 		"message": "`logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.",
 		"context": "nldd-top-navigation-bar:state(same-href)"
@@ -1304,30 +798,6 @@ export const devRules: DevRule[] = [
 		"id": "top-title-bar-anchor-missing",
 		"message": "`collapse-anchor` matches nothing yet. If it never renders, the bar keeps its own title and reads it out twice.",
 		"context": "nldd-top-title-bar:state(no-anchor)"
-	},
-	{
-		"id": "utility-item-needs-priority",
-		"message": "Set content-priority=\"text\", so \"Zoeken\" and \"NL\" stay readable on a narrow screen.",
-		"hint": true,
-		"context": "nldd-top-navigation-bar > nldd-menu-bar > nldd-menu-bar-item[icon]:not([icon=\"\"]):not([content-priority]:not([content-priority=\"\"]), [icon-only])"
-	},
-	{
-		"id": "vague-button-text",
-		"message": "Name the action, such as \"Bewaar\" or \"Verwijder account\": this text only makes sense after reading what is around it.",
-		"hint": true,
-		"context": ":is(nldd-button, nldd-icon-button):is([text=\"OK\" i], [text=\"Oké\" i], [text=\"Okay\" i], [text=\"Annuleren\" i])"
-	},
-	{
-		"id": "vague-link-text",
-		"message": "Make the destination or the subject the link text, such as \"Lees meer over dakisolatie\".",
-		"hint": true,
-		"context": ":is(nldd-link, nldd-button)[href]:not([href=\"\"]):is([text=\"Klik hier\" i], [text=\"Hier\" i], [text=\"Deze link\" i], [text=\"Lees meer\" i], [text=\"Meer info\" i], [text=\"Meer informatie\" i], [text=\"Meer\" i])"
-	},
-	{
-		"id": "vague-menu-label",
-		"message": "Name the subject or the goal instead, such as \"Ondersteuning\" for \"Service\", so nobody has to guess what is behind it.",
-		"hint": true,
-		"context": ":is(nldd-menu-bar-item, nldd-page-footer-legal-bar-item, nldd-list[type=\"navigation\"] nldd-text-cell):is([text=\"Informatie\" i], [text=\"Documenten\" i], [text=\"Downloads\" i], [text=\"Service\" i], [text=\"Folders\" i], [text=\"Algemeen\" i])"
 	},
 	{
 		"id": "validation-item-rule-and-unmet",

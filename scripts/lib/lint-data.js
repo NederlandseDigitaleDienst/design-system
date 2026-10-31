@@ -170,11 +170,12 @@ export function buildDevRules(rules, classes, tags) {
 			.replace(/, :named-by-field/, '')
 			.replace(/:([a-z-]+)/g, (match, name) => (classes[name] ? `:is(${classes[name].join(', ')})` : match));
 	const authored = rules
-		.filter((rule) => !rule.ref)
-		.map(({ id, severity, context, assert, report, count, message }) => ({
+		// Components write `style`, `id` and more on a live page, which a hint would take for
+		// the app's own markup. A hint is advice for whoever writes the source.
+		.filter((rule) => !rule.ref && rule.severity !== 'hint')
+		.map(({ id, context, assert, report, count, message }) => ({
 			id,
 			message,
-			...(severity === 'hint' ? { hint: true } : {}),
 			context: expand(context),
 			...(assert ? { assert: expand(assert), properties: propertiesIn(expand(assert)) } : {}),
 			...(report ? { report: expand(report) } : {}),

@@ -1,5 +1,5 @@
 severity: warn
-context: 'nldd-list-item-segment:is([button], [href]):has(> nldd-icon-cell):not(:has(> nldd-text-cell))'
+context: 'nldd-list-item-segment:is([button], [href]):has(> nldd-icon-cell):not(:has(> :is(nldd-text-cell, nldd-title-cell, nldd-description-cell)))'
 assert: '[accessible-label]'
 message: 'Give the segment an `accessible-label` that names the row: it holds only an icon.'
 see: patronen/list

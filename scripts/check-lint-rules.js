@@ -24,7 +24,7 @@ const problems = [];
 
 const guidelines = readFileSync(join(repoRoot, 'src/docs/design-guidelines.mdx'), 'utf8');
 const guidelineHeadings = new Set(
-	[...guidelines.matchAll(/^#+ (.+)$/gm)].map(([, heading]) => heading.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')),
+	[...guidelines.matchAll(/^#+ (.+)$/gm)].map(([, heading]) => heading.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')),
 );
 
 const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => [...Object.keys(tag.attrs), ...Object.keys(tag.childAttrs)]));

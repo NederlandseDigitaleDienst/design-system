@@ -1,5 +1,5 @@
 severity: hint
-context: ':is(nldd-link, nldd-button, nldd-icon-button, nldd-card, nldd-list-item, nldd-menu-item, nldd-menu-bar-item, nldd-tab-bar-item)[href^="/"][href*="_"]'
+context: ':is(nldd-link, nldd-button, nldd-icon-button, nldd-card, nldd-list-item, nldd-menu-item, nldd-menu-bar-item, nldd-tab-bar-item)[href^="/"][href*="_"]:not([href*="?"])'
 message: 'Use hyphens in this URL instead of underscores: a search engine reads an underscore as part of the word.'
 see: ontwerprichtlijnen/techniek-en-web-fundamenten
 examples:

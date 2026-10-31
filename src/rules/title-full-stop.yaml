@@ -1,4 +1,4 @@
-severity: warn
+severity: hint
 context: 'nldd-title[text$="."]'
 message: 'Drop the full stop: a heading has none, also when it is a sentence.'
 see: ontwerprichtlijnen/copywriting

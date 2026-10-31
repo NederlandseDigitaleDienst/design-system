@@ -28,13 +28,14 @@ function hintSummary(results, root, explainRule) {
 	for (const { filename, findings } of results) {
 		for (const { severity, rule, message, line } of findings) {
 			if (severity !== 'hint') continue;
-			const entry = grouped.get(rule) ?? { message, places: [] };
+			const key = `${rule}\n${message}`;
+			const entry = grouped.get(key) ?? { rule, message, places: [] };
 			entry.places.push(`${relative(root, filename)}:${line}`);
-			grouped.set(rule, entry);
+			grouped.set(key, entry);
 		}
 	}
 	const lines = [];
-	for (const [rule, { message, places }] of grouped) {
+	for (const { rule, message, places } of grouped.values()) {
 		const shown = places.slice(0, 2).join(', ');
 		const more = places.length > 2 ? `, +${places.length - 2}` : '';
 		lines.push(`  ${rule}  ${dim(`${places.length}× ${shown}${more}`)}`, `    ${message}`);
@@ -51,7 +52,7 @@ export function formatText(results, { root, files, ms, skipped, explainRule }) {
 		for (const finding of findings.filter(({ severity }) => severity !== 'hint')) {
 			const { line, column, severity, rule, message, tag } = finding;
 			const location = `${relative(root, filename)}:${line}:${column}`;
-			const label = { error: red('error'), warn: yellow('warn'), hint: blue('hint') }[severity];
+			const label = severity === 'error' ? red('error') : yellow('warn');
 			lines.push(`${bold(location)}  ${label}  ${rule}`, `  ${message}`);
 			if (tag) lines.push(codeFrame(sourceLines[line - 1] ?? '', line, column, tag));
 			lines.push(dim(`  → nldd explain ${rule}`), '');

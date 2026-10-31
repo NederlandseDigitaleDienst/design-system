@@ -1,5 +1,5 @@
 severity: hint
-context: 'nldd-sidebar-section:has(> [slot="sidebar"] nldd-list[type="navigation"]) nldd-rich-text h2:not([id])'
+context: 'nldd-sidebar-section:has(> [slot="sidebar"] nldd-list[type="navigation"], > nldd-list[slot="sidebar"][type="navigation"]) nldd-rich-text h2:not([id])'
 message: 'Give every h2 an `id`, so the table of contents can jump to it.'
 see: patronen/content-page
 examples:

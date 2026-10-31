@@ -18,7 +18,7 @@ describe('rules in the browser', () => {
 
 	afterEach(() => root?.remove());
 
-	for (const { id, examples } of data.rules.filter((each) => each.examples)) {
+	for (const { id, examples } of data.rules.filter((each) => each.examples && each.severity !== 'hint')) {
 		const rule = devRules.find((each) => each.id === id)!;
 
 		it(`${id} agrees with its examples`, async () => {
