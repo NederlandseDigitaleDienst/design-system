@@ -7,6 +7,7 @@ const paint = (code) => (text) => (useColor ? `\u001b[${code}m${text}\u001b[0m` 
 const red = paint(31);
 const yellow = paint(33);
 const dim = paint(2);
+const blue = paint(34);
 const bold = paint(1);
 
 function codeFrame(sourceLine, line, column, tag) {
@@ -28,18 +29,20 @@ export function formatText(results, { root, files, ms, skipped }) {
 		for (const finding of findings) {
 			const { line, column, severity, rule, message, tag } = finding;
 			const location = `${relative(root, filename)}:${line}:${column}`;
-			const label = severity === 'error' ? red('error') : yellow('warn');
+			const label = { error: red('error'), warn: yellow('warn'), hint: blue('hint') }[severity];
 			lines.push(`${bold(location)}  ${label}  ${rule}`, `  ${message}`);
 			if (tag) lines.push(codeFrame(sourceLines[line - 1] ?? '', line, column, tag));
 			lines.push(dim(`  → nldd explain ${rule}`), '');
 		}
 	}
 	const all = results.flatMap((result) => result.findings);
-	const errors = all.filter((finding) => finding.severity === 'error').length;
-	const warnings = all.length - errors;
+	const count = (level) => all.filter((finding) => finding.severity === level).length;
+	const errors = count('error');
+	const warnings = count('warn');
+	const hints = count('hint') ? `, ${plural(count('hint'), 'hint')}` : '';
 	const known = skipped ? dim(` (${skipped} in baseline)`) : '';
-	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')} in ${plural(files, 'file')} (${ms} ms)`;
-	lines.push(`${all.length ? red('✖') : '✔'} ${summary}${known}`);
+	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')}${hints} in ${plural(files, 'file')} (${ms} ms)`;
+	lines.push(`${errors + warnings ? red('✖') : '✔'} ${summary}${known}`);
 	return lines.join('\n');
 }
 
@@ -71,7 +74,7 @@ export function formatGithub(results, { root }) {
 	const lines = [];
 	for (const { filename, findings } of results) {
 		for (const { severity, line, column, rule, message } of findings) {
-			const level = severity === 'error' ? 'error' : 'warning';
+			const level = { error: 'error', warn: 'warning', hint: 'notice' }[severity];
 			const file = relative(root, filename);
 			lines.push(`::${level} file=${file},line=${line},col=${column},title=${rule}::${escapeGithub(message)}`);
 		}

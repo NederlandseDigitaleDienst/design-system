@@ -171,9 +171,10 @@ export function buildDevRules(rules, classes, tags) {
 			.replace(/:([a-z-]+)/g, (match, name) => (classes[name] ? `:is(${classes[name].join(', ')})` : match));
 	const authored = rules
 		.filter((rule) => !rule.ref)
-		.map(({ id, context, assert, report, count, message }) => ({
+		.map(({ id, severity, context, assert, report, count, message }) => ({
 			id,
 			message,
+			...(severity === 'hint' ? { hint: true } : {}),
 			context: expand(context),
 			...(assert ? { assert: expand(assert), properties: propertiesIn(expand(assert)) } : {}),
 			...(report ? { report: expand(report) } : {}),

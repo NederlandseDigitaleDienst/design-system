@@ -22,6 +22,11 @@ const data = loadData();
 const linter = createLinter(data);
 const problems = [];
 
+const guidelines = readFileSync(join(repoRoot, 'src/docs/design-guidelines.mdx'), 'utf8');
+const guidelineHeadings = new Set(
+	[...guidelines.matchAll(/^#+ (.+)$/gm)].map(([, heading]) => heading.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')),
+);
+
 const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => Object.keys(tag.attrs)));
 const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role']);
 
@@ -55,6 +60,9 @@ function checkSee(rule) {
 	const [kind, slug] = rule.see.split('/');
 	if (kind === 'patronen' && !existsSync(join(repoRoot, 'src/patterns', slug))) {
 		problems.push(`${rule.id}: see points at pattern "${slug}", which does not exist.`);
+	}
+	if (kind === 'ontwerprichtlijnen' && !guidelineHeadings.has(slug)) {
+		problems.push(`${rule.id}: see points at section "${slug}" of the guidelines, which does not exist.`);
 	}
 }
 

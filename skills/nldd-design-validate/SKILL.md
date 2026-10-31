@@ -17,7 +17,8 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 
 1. Los elke bevinding op. Je krijgt `rule`, `message`, de plek en vaak een goed voorbeeld.
 2. Is dat niet genoeg: `npx @nldd/design-system explain <rule>`.
-3. Draai opnieuw tot er niets meer staat.
+3. Draai opnieuw tot er geen `error` of `warn` meer staat.
+4. Lees elke `hint`. Die laat niets falen, maar zegt hoe dit bij dit systeem bedoeld is: volg het patroon of de richtlijn waar `see` naar wijst, tenzij je een reden hebt.
 
 | Wil je | Gebruik |
 |---|---|

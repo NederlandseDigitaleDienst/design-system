@@ -130,8 +130,9 @@ async function runLint(data, paths, options) {
 
 	const all = reported.flatMap((result) => result.findings);
 	const errors = all.filter((finding) => finding.severity === 'error').length;
+	const warnings = all.filter((finding) => finding.severity === 'warn').length;
 	const tooManyWarnings =
-		options['max-warnings'] !== undefined && all.length - errors > Number(options['max-warnings']);
+		options['max-warnings'] !== undefined && warnings > Number(options['max-warnings']);
 	return errors > 0 || tooManyWarnings ? 1 : 0;
 }
 

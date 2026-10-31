@@ -492,6 +492,16 @@ describe('suppressions', () => {
 	});
 });
 
+describe('a hint', () => {
+	const hint = { id: 'try-this', severity: 'hint', context: 'nldd-pane', message: 'Have a look at the pattern.' };
+	const data = { ...DATA, rules: [hint] };
+
+	it('reaches the findings with its level', async () => {
+		const { findings } = await createLinter(data).lintSource('<template><nldd-pane /></template>', 'a.vue');
+		assert.deepEqual(findings.map(({ rule, severity }) => [rule, severity]), [['try-this', 'hint']]);
+	});
+});
+
 describe('nldd command', () => {
 	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
 	const project = () => {
@@ -536,6 +546,24 @@ describe('nldd command', () => {
 		assert.equal(result.status, 1);
 	});
 
+	it('does not exit 1 on hints alone', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, '.nldd-lint.json'), '{ "rules": { "unknown-element": "hint" } }');
+		writeFileSync(join(root, 'a.vue'), '<template><nldd-gone /></template>');
+		const result = run(root, 'lint', '--max-warnings', '0', 'a.vue');
+		assert.equal(result.status, 0);
+		assert.match(result.stdout, /✔ 0 errors, 0 warnings, 1 hint/);
+		assert.match(run(root, 'lint', '--format', 'github', 'a.vue').stdout, /^::notice /);
+	});
+
+	it('keeps hints out of the baseline', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, '.nldd-lint.json'), '{ "rules": { "unknown-element": "hint" } }');
+		writeFileSync(join(root, 'a.vue'), '<template><nldd-gone /></template>');
+		run(root, 'lint', '--update-baseline', 'a.vue');
+		assert.equal(readFileSync(join(root, '.nldd-lint-baseline.json'), 'utf8').trim(), '{}');
+	});
+
 	it('explains a rule', () => {
 		const output = execFileSync(process.execPath, [cli, 'explain', 'toolbar-item-needs-overflow'], { encoding: 'utf8' });
 		assert.match(output, /patronen\/toolbar-with-actions/);
@@ -549,7 +577,7 @@ describe('nldd command', () => {
 	it('refuses a level that does not exist', () => {
 		const root = project();
 		writeFileSync(join(root, '.nldd-lint.json'), '{ "rules": { "unknown-element": "none" } }');
-		assert.match(run(root, 'lint').stderr, /takes off, warn or error/);
+		assert.match(run(root, 'lint').stderr, /takes off, hint, warn or error/);
 	});
 
 	it('refuses a max-warnings that is no number', () => {

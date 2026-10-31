@@ -38,9 +38,9 @@ examples:
 | `count` | `{ of, min, max }` telt directe kinderen |
 | `ref` | `{ attr, target, equal }` volgt een id naar een ander element |
 | Geen van vier | De context zelf is de fout |
-| `severity` | `warn`. `error` alleen voor toegankelijke namen en wat niet kan werken; een bestaande regel naar `error` vraagt een `!`-commit |
+| `severity` | `warn`. `error` alleen voor toegankelijke namen en wat niet kan werken; een bestaande regel naar `error` vraagt een `!`-commit. `hint` voor "zo bedoelen we het": laat CI nooit falen en wijst met `see` naar het patroon of de richtlijn |
 | `message` | Engels: wat hier fout is. Het waarom staat op de pagina van `see` |
-| `see` | `patronen/<slug>`: de regel verschijnt vanzelf op die pagina |
+| `see` | `patronen/<slug>`: de regel verschijnt vanzelf op die pagina. `ontwerprichtlijnen/<kop>`: de sectie met het waarom |
 
 In selectors:
 - `[href]` betekent "heeft een waarde", behalve bij booleans.

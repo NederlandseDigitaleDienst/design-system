@@ -61,8 +61,8 @@ export function readConfig(root, knownRules) {
 	const config = JSON.parse(readFileSync(path, 'utf8'));
 	for (const [rule, level] of Object.entries(config.rules ?? {})) {
 		if (!knownRules.has(rule)) throw new Error(`${CONFIG_FILE}: unknown rule "${rule}".`);
-		if (!['off', 'warn', 'error'].includes(level)) {
-			throw new Error(`${CONFIG_FILE}: "${rule}" takes off, warn or error, not ${JSON.stringify(level)}.`);
+		if (!['off', 'hint', 'warn', 'error'].includes(level)) {
+			throw new Error(`${CONFIG_FILE}: "${rule}" takes off, hint, warn or error, not ${JSON.stringify(level)}.`);
 		}
 	}
 	return config;
@@ -114,9 +114,10 @@ export function writeBaseline(results, root, canonical) {
 	for (const { filename, findings } of results) {
 		const key = relative(root, filename);
 		delete baseline[key];
-		if (findings.length === 0) continue;
+		if (findings.every(({ severity }) => severity === 'hint')) continue;
 		baseline[key] = {};
-		for (const finding of findings) {
+		// A hint fails nothing, so there is nothing to accept.
+		for (const finding of findings.filter(({ severity }) => severity !== 'hint')) {
 			const entry = baselineKey(finding);
 			baseline[key][entry] = (baseline[key][entry] ?? 0) + 1;
 		}

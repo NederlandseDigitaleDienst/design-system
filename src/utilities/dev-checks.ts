@@ -19,6 +19,7 @@ export interface DevRule {
 	assert?: string;
 	report?: string;
 	count?: { of: string; min?: number; max?: number };
+	hint?: boolean;
 	/** Properties that count as the attributes `assert` asks for. */
 	properties?: string[];
 }
@@ -92,7 +93,9 @@ function createReporter() {
 			const seen = reported.get(element) ?? new Set();
 			if (seen.has(rule.id)) continue;
 			reported.set(element, seen.add(rule.id));
-			console.warn(`[nldd] ${rule.id}: ${rule.message}`, element);
+			// A hint is advice, so it stays out of the way of what is wrong.
+			const say = rule.hint ? console.info : console.warn;
+			say(`[nldd] ${rule.id}: ${rule.message}`, element);
 		}
 	};
 }
