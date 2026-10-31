@@ -51,6 +51,7 @@ import '../../lists-and-tables/cells/text-cell/text-cell.js';
 import '../../lists-and-tables/cells/spacer-cell/spacer-cell.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddAvatarGroupTranslations } from './avatar-group.i18n.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 /** The smallest size at which a count of one, two, three and four digits fits. */
 const MIN_SIZE_FOR_COUNT = [24, 40, 56, 80];
@@ -169,16 +170,6 @@ export class NLDDAvatarGroup extends withTranslations(LitElement, nlddAvatarGrou
 
 	private _recompute(): void {
 		const assigned = this._assigned;
-		if (import.meta.env?.DEV) {
-			const strays = assigned.filter(el => el.localName !== 'nldd-avatar');
-			if (strays.length > 0) {
-				console.warn(
-					`[nldd-avatar-group] slot an nldd-avatar rather than <${strays[0].localName}>: `
-					+ 'the group sizes, stacks and rings its avatars, and only an nldd-avatar '
-					+ 'carries the name that the tooltip and the overflow list read.',
-				);
-			}
-		}
 		if (import.meta.env?.DEV) {
 			// Each avatar covers part of the next, so a link or button keeps only
 			// (1 - OVERLAP) of its width as a target, and the targets touch: no

@@ -9,6 +9,7 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddListItemTranslations } from './list-item.i18n.js';
 import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 export type ListItemSize = 'sm' | 'md';
 
@@ -672,26 +673,19 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 		console.warn('nldd-list-item: `expanded` needs somewhere to live — make the row interactive (href, button or checkbox), or mark the segment that does the disclosing with `disclosure`.');
 	}
 
-	/** A row takes cells and segments. Anything else gets none of the typography,
-	 *  size and alignment a cell brings, and bare text in a clickable row falls
-	 *  back to the browser's button font. */
+	/** Bare text, which no selector can see. Elements in a row are the rule
+	 *  list-item-holds-cells; text gets none of a cell's typography, and in a
+	 *  clickable row it falls back to the browser's button font. */
 	private _warnOnStrayContent = (e: Event): void => {
 		if (!import.meta.env?.DEV || this._warnedStrayContent) return;
 		const slot = e.target as HTMLSlotElement;
 		if (slot.name) return;
-		const stray = slot.assignedNodes({ flatten: true }).find((node) => {
-			if (node.nodeType === Node.TEXT_NODE) return (node.textContent ?? '').trim() !== '';
-			if (node.nodeType !== Node.ELEMENT_NODE) return false;
-			const tag = (node as Element).localName;
-			return tag !== 'nldd-list-item-segment' && !(tag.startsWith('nldd-') && tag.endsWith('-cell'));
-		});
+		const stray = slot.assignedNodes({ flatten: true })
+			.find((node) => node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim() !== '');
 		this._warnOnNestedControl();
 		if (!stray) return;
 		this._warnedStrayContent = true;
-		const what = stray.nodeType === Node.TEXT_NODE
-			? `bare text ("${stray.textContent!.trim().slice(0, 40)}")`
-			: `<${(stray as Element).localName}>`;
-		console.warn(`nldd-list-item: ${what} sits directly in a row. A row takes cells and segments (nldd-text-cell, nldd-icon-cell, nldd-list-item-segment, …). Anything else gets none of their typography, size and alignment, and bare text in a clickable row falls back to the browser's button font. Wrap it in a cell.`);
+		console.warn(`nldd-list-item: bare text ("${stray.textContent!.trim().slice(0, 40)}") sits directly in a row. Wrap it in a cell, or it gets none of the typography, size and alignment, and falls back to the browser's button font in a clickable row.`);
 	};
 
 	/** A row that is its own control cannot hold another one: a control inside a
@@ -726,12 +720,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	 */
 	private _syncWithList() {
 		const list = this.closest<NLDDList>('nldd-list');
-		if (!list) {
-			if (import.meta.env?.DEV) {
-				console.warn('nldd-list-item: no parent nldd-list found. Variant/type sync will not work if appended into a list after first render.');
-			}
-			return;
-		}
+		if (!list) return;
 		this._applyAppearance(list.appearance);
 		this._applyParentType(list.type);
 	}

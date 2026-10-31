@@ -114,4 +114,4 @@ Een form field met een invoerveld erin is een van de meest voorkomende compositi
 `nldd lint` controleert dit:
 
 - `form-action-in-button-group`: Put the action in a nldd-button-group, also when there is only one.
-- `form-field-needs-input`: nldd-form-field holds no form input, so the label has nothing to connect to.
+- `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.

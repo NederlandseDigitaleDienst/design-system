@@ -1,0 +1,78 @@
+/**
+ * Runs the rules from src/rules/ on the live page while developing.
+ *
+ * The same rules `nldd lint` runs on the source, so a rule has one definition.
+ * The two see different things: the linter finds a mistake before anyone opens the
+ * page, this sees the values a template only knows at runtime, and everything
+ * that different components rendered together.
+ *
+ * Rules are plain CSS, so the browser evaluates them itself. Only loaded in DEV,
+ * through dev-checks-trigger.ts; a production build does not contain it.
+ */
+
+import { devRules } from './dev-rules.generated.js';
+
+export interface DevRule {
+	id: string;
+	message: string;
+	context: string;
+	assert?: string;
+	report?: string;
+	count?: { of: string; min?: number; max?: number };
+}
+
+/** Long enough for a framework to finish a render, and for most first data. */
+const SETTLE_MS = 300;
+
+function isViolated(rule: DevRule, element: Element): boolean {
+	if (rule.assert) return !element.matches(rule.assert);
+	if (rule.report) return element.matches(rule.report);
+	if (rule.count) {
+		const { of, min, max } = rule.count;
+		const counted = [...element.children].filter((child) => child.matches(of)).length;
+		return (max !== undefined && counted > max) || (min !== undefined && counted < min);
+	}
+	return true;
+}
+
+/** @returns The rules each element breaks, per element in document order. */
+export function findViolations(root: ParentNode, rules: DevRule[] = devRules) {
+	const found: { rule: DevRule; element: Element }[] = [];
+	for (const rule of rules) {
+		for (const element of root.querySelectorAll(rule.context)) {
+			if (isViolated(rule, element)) found.push({ rule, element });
+		}
+	}
+	return found;
+}
+
+function createReporter() {
+	const reported = new WeakMap<Element, Set<string>>();
+	return () => {
+		for (const { rule, element } of findViolations(document)) {
+			const seen = reported.get(element) ?? new Set();
+			if (seen.has(rule.id)) continue;
+			reported.set(element, seen.add(rule.id));
+			console.warn(`[nldd] ${rule.id}: ${rule.message}`, element);
+		}
+	};
+}
+
+let started = false;
+
+export function startDevChecks(): void {
+	if (started || typeof MutationObserver === 'undefined') return;
+	started = true;
+	const report = createReporter();
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	const schedule = () => {
+		clearTimeout(timer);
+		timer = setTimeout(report, SETTLE_MS);
+	};
+	new MutationObserver(schedule).observe(document.documentElement, {
+		subtree: true,
+		childList: true,
+		attributes: true,
+	});
+	schedule();
+}

@@ -53,6 +53,8 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddTabBarTranslations } from './tab-bar.i18n.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 
 // # nldd-tab-bar-item
@@ -66,7 +68,7 @@ export class NLDDTabBarItem extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	current = false;
 
-	@property({ type: String })
+	@property({ type: String, reflect: true, converter: reflectWhenSet })
 	href = '';
 
 	/** Set by nldd-tab-bar. Not part of the public API. */
@@ -189,7 +191,7 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 	@property({ type: Boolean, reflect: true })
 	disabled = false;
 
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	// Tracks whether the author provided an explicit accessible label
@@ -372,8 +374,6 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 
 	override firstUpdated(): void {
 		this._hasCustomLabel = Boolean(this.accessibleLabel);
-		import.meta.env?.DEV && !this._hasCustomLabel &&
-			console.warn('<nldd-tab-bar>: No accessible-label provided. Add an accessible-label attribute for a meaningful navigation landmark name. Falling back to "Tabs".');
 		this._syncItems();
 	}
 
@@ -399,19 +399,8 @@ export class NLDDTabBar extends withTranslations(LitElement, nlddTabBarTranslati
 			);
 	}
 
-	private _warnedHrefWithoutNavigation = false;
-
 	private _syncItems(): void {
 		const items = this._getItems();
-
-		// Links that go to another page are navigation: the current tab follows the
-		// route and is said as aria-current="page". As a tablist the bar marks a tab
-		// selected on a click and an arrow key, which a screen reader then reports
-		// for a page that never opened.
-		if (import.meta.env?.DEV && !this.navigation && !this._warnedHrefWithoutNavigation && items.some(item => item.href)) {
-			this._warnedHrefWithoutNavigation = true;
-			console.warn('<nldd-tab-bar>: tabs with `href` go to another page; add `navigation` so the bar is a nav with aria-current="page" instead of a tablist, and set `current` on the tab of the page you are on.');
-		}
 
 		items.forEach(item => {
 			item._groupVariant = this.variant;

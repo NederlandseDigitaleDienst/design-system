@@ -3,7 +3,8 @@
  * The `nldd` command. One bin, so `npx @nldd/design-system lint` runs it too.
  */
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatText } from './format.js';
 import { BUILT_IN_RULES, createLinter, loadData } from './linter.js';
@@ -51,17 +52,26 @@ function listRules(data, { tag, json }) {
 	return 0;
 }
 
-function checkInstalledVersion(root) {
-	try {
-		const path = `${root}/node_modules/@nldd/design-system/package.json`;
-		const installed = JSON.parse(readFileSync(path, 'utf8')).version;
-		if (installed !== pkg.version) {
-			console.error(
-				`nldd ${pkg.version} checks against its own components, but this project has ${installed}.`,
-			);
-		}
-	} catch {
-		// A project without the package, such as a server-rendered one using the CDN.
+/** Walks up, so a package in a monorepo finds the version hoisted to the root. */
+function installedVersion(directory) {
+	for (;;) {
+		const path = join(directory, 'node_modules/@nldd/design-system/package.json');
+		if (existsSync(path)) return JSON.parse(readFileSync(path, 'utf8')).version;
+		const parent = dirname(directory);
+		if (parent === directory) return undefined;
+		directory = parent;
+	}
+}
+
+/**
+ * The linter knows the API of its own version, so a project's own `nldd` is always
+ * right. A newer one, through `npx @nldd/design-system@latest`, is how you see what
+ * an upgrade will break: useful, as long as it is clear that is what you are looking at.
+ */
+function noteOtherVersion(root) {
+	const installed = installedVersion(root);
+	if (installed && installed !== pkg.version) {
+		console.error(`Checking against ${pkg.version}, and this project has ${installed}: findings say what changes on upgrading.`);
 	}
 }
 
@@ -70,7 +80,7 @@ async function runLint(data, paths, options) {
 	const started = performance.now();
 	const known = new Set([...data.rules.map((r) => r.id), ...Object.keys(BUILT_IN_RULES)]);
 	const config = readConfig(root, known);
-	checkInstalledVersion(root);
+	noteOtherVersion(root);
 	const linter = createLinter(data, { wrappers: config.wrappers, severities: config.rules });
 
 	const inputs = options.stdin

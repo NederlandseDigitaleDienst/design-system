@@ -170,7 +170,19 @@ Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/do
 
 ## Linter
 
-`nldd lint` (`lint/`, de `bin` van het pakket) controleert consumentencode: onbekende tags, attributen, slots, waarden en iconen, en fouten in het samenspel van componenten. Het leest HTML, Vue, JSX/TSX en Markdown-fences. Gebruik `/rule` om een regel toe te voegen.
+`nldd lint` (`lint/`, de `bin` van het pakket) controleert consumentencode: onbekende tags, attributen, slots, waarden en iconen, en fouten in het samenspel van componenten. Gebruik `/rule` om een regel toe te voegen.
+
+Dezelfde regels draaien op drie plekken:
+
+| Waar | Wat het ziet |
+|------|--------------|
+| Bron (`.vue`, `.tsx`, `.html`) | Vóór de commit, per bestand, alleen wat zeker fout is |
+| Gebouwde HTML (`nldd lint dist`) | Hele pagina's, voor elk framework dat naar HTML bouwt. Daarom leest de linter geen `.astro` of Jinja |
+| Browser, in DEV (`src/utilities/dev-checks.ts`) | Echte waarden en wat componenten samen renderen |
+
+De browser krijgt ze als gewone CSS in `src/utilities/dev-rules.generated.ts` en evalueert ze met `el.matches()`. Een `console.warn` in een component is alleen voor wat geen regel kan zijn, zoals bare tekst of een meting. Een nieuw attribuut in een selector moet reflecteren, anders ziet de browser een property niet: gebruik `reflect: true` met `converter: reflectWhenSet`; `lint:rules` bewaakt dat. Een `[x]` in een selector betekent "heeft een waarde", behalve bij booleans.
+
+De linter hoort bij zijn eigen versie: hij zit in het pakket, dus een project draait de API die het heeft. Met `npx @nldd/design-system@latest lint` zie je wat een upgrade breekt.
 
 | Feit | Enige bron | Daaruit gegenereerd |
 |------|------------|---------------------|
@@ -185,11 +197,11 @@ Eén regel, één bestand in `src/rules/`, ook als hij over meer componenten gaa
 
 Een regel komt erbij met een echte vondst. Hij heeft een `passed`- en `failed`-voorbeeld, en `npm run lint:rules` faalt als een voorbeeld niet doet wat het claimt, als een selector iets noemt dat niet bestaat, of als een patroon-`.html` de regel breekt. Zo faalt een hernoeming in dezelfde PR. Controleer met `npm run lint:corpus` wat een regel in echte apps doet; de paden komen uit `NLDD_LINT_CORPUS`, zodat er geen lokale paden in de repo belanden. Nieuwe regels komen als `warn`, want `feat:` is een patch en `^0.13.0` neemt die mee: een nieuwe `error` zou CI van consumers ongevraagd rood maken. `error` alleen via een `!`-commit.
 
-Elke regel draait in twee werelden: in W+ valt alles wat onbekend is gunstig uit, in W- ongunstig. Geschonden in beide is `failed`, en alleen dat wordt gemeld. Een gebonden waarde of een kindcomponent uit een ander bestand is dus `cantTell` en nooit vals alarm. De linter werkt per bestand, dus hele pagina's controleert hij niet.
+Elke regel draait in twee werelden: in W+ valt alles wat onbekend is gunstig uit, in W- ongunstig. Geschonden in beide is `failed`, en alleen dat wordt gemeld. Een gebonden waarde of een kindcomponent uit een ander bestand is dus `cantTell` en nooit vals alarm. Hele pagina's zie je alleen op gebouwde HTML of in de browser.
 
 Een attribuut dat een ouder van zijn kinderen leest (`only` op een pane) documenteer je met `@childattr` bij de ouder. Het is dan alleen op een kind van die ouder geldig.
 
-`lint/data.generated.json` komt uit `npm run generate:lint-data` en wordt gecommit, zodat een pre-commit run geen manifest van 2 MB hoeft te lezen. `generate:cem` draait het mee.
+`lint/data.generated.json` en `src/utilities/dev-rules.generated.ts` komen uit `npm run generate:lint-data` en worden gecommit, zodat een pre-commit run geen manifest van 2 MB hoeft te lezen. `generate:cem` draait het mee.
 
 ## Plugin-versie
 

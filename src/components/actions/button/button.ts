@@ -54,6 +54,8 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 type Appearance =
 	| 'primary'
@@ -193,7 +195,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	endIcon = '';
 
 	/** Accessible label forwarded to the inner <button> or <a>. Use when visible text alone lacks context. */
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	@property({ reflect: true, converter: reflectNonDefault<string>('') })
@@ -228,7 +230,6 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	@property({ type: String })
 	rel: string | undefined = undefined;
 
-	private _warnedA11y = false;
 	private _warnedFormId: string | null = null;
 
 	/** Shared wiring for an overlay slotted into `popup`: anchors it to this
@@ -262,15 +263,6 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 			} else {
 				this.style.removeProperty('--_button-width');
 			}
-		}
-		const isEmpty = !this.text && !this.accessibleLabel;
-		if (import.meta.env?.DEV && isEmpty && !this._warnedA11y) {
-			this._warnedA11y = true;
-			console.warn(this.supportingText
-				? '<nldd-button>: supporting-text is set but text is empty, so the accessible name omits the main label. Set the text attribute (or accessible-label) so screen readers announce it.'
-				: '<nldd-button>: button has no text or accessible-label. This produces an inaccessible button (WCAG SC 4.1.2).');
-		} else if (!isEmpty) {
-			this._warnedA11y = false;
 		}
 	}
 

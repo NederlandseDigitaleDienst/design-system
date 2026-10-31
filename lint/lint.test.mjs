@@ -135,9 +135,9 @@ describe('two worlds', () => {
 
 const DATA = {
 	tags: {
-		'nldd-button': { attrs: { appearance: { values: ['primary'] }, icon: {}, old: { deprecated: 'Use new.' }, text: {} }, childAttrs: {}, slots: ['popup'], anySlot: false },
-		'nldd-pane': { attrs: {}, childAttrs: {}, slots: [], anySlot: false },
-		'nldd-view': { attrs: { own: {} }, childAttrs: { only: { values: ['sm', 'md'] } }, slots: ['main'], anySlot: false },
+		'nldd-button': { attrs: { appearance: { values: ['primary'] }, icon: {}, old: { deprecated: 'Use new.' }, text: {} }, childAttrs: {}, props: ['items', 'rowData'], slots: ['popup'], anySlot: false },
+		'nldd-pane': { attrs: {}, childAttrs: {}, props: [], slots: [], anySlot: false },
+		'nldd-view': { attrs: { own: {} }, childAttrs: { only: { values: ['sm', 'md'] } }, props: [], slots: ['main'], anySlot: false },
 	},
 	classes: {},
 	icons: ['plus'],
@@ -157,6 +157,11 @@ describe('built-in rules', () => {
 	it('flags an unknown attribute, also when bound', async () => {
 		assert.deepEqual(await rulesIn('<nldd-button nope="1" />'), ['unknown-attribute']);
 		assert.deepEqual(await rulesIn('<nldd-button :nope="a" />'), ['unknown-attribute']);
+	});
+
+	it('accepts a binding to a property without an attribute, and only a binding', async () => {
+		assert.deepEqual(await rulesIn('<nldd-button :items="a" :row-data="b" />'), []);
+		assert.deepEqual(await rulesIn('<nldd-button items="a" />'), ['unknown-attribute']);
 	});
 
 	it('leaves global, data and aria attributes alone', async () => {
@@ -281,6 +286,22 @@ describe('nldd command', () => {
 		const result = run(root, 'lint');
 		assert.equal(result.status, 2);
 		assert.match(result.stderr, /unknown rule "nope"/);
+	});
+
+	it('reads a built site as whole pages, when asked for the build directory', () => {
+		const root = project();
+		mkdirSync(join(root, 'dist'));
+		writeFileSync(join(root, 'dist/index.html'), '<html><body><nldd-list-item></nldd-list-item></body></html>');
+		assert.equal(run(root, 'lint').stdout.includes('dist/index.html'), false);
+		assert.match(run(root, 'lint', 'dist').stdout, /dist\/index\.html:1:13 {2}warn {2}list-item-needs-list/);
+	});
+
+	it('says so when it checks against another version than the project has', () => {
+		const root = project();
+		const installed = join(root, 'node_modules/@nldd/design-system');
+		mkdirSync(installed, { recursive: true });
+		writeFileSync(join(installed, 'package.json'), '{ "version": "0.0.1" }');
+		assert.match(run(root, 'lint').stderr, /this project has 0\.0\.1/);
 	});
 
 	it('ships a version', () => {

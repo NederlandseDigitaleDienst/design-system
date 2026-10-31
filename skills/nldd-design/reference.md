@@ -76,7 +76,7 @@ A horizontal container for grouping buttons with a neutral background. Automatic
 
 **Rules** (`nldd lint`)
 
-- `no-toggle-button-in-button-bar`: A button bar holds actions, not toggles: an active toggle looks like a pressed action here.
+- `no-toggle-button-in-button-bar`: The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.
 
 **Attributes**
 
@@ -368,7 +368,7 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 
 **Rules** (`nldd lint`)
 
-- `avatar-group-holds-avatars`: nldd-avatar-group sizes, stacks and rings its avatars, so it only takes nldd-avatar.
+- `avatar-group-holds-avatars`: nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.
 
 **Attributes**
 
@@ -399,7 +399,7 @@ Shows several avatars as one group: they overlap, and each one gets a ring in th
 
 **Rules** (`nldd lint`)
 
-- `avatar-group-holds-avatars`: nldd-avatar-group sizes, stacks and rings its avatars, so it only takes nldd-avatar.
+- `avatar-group-holds-avatars`: nldd-avatar-group sizes, stacks and rings its avatars, and only an nldd-avatar carries the name that the tooltip and the overflow list read.
 
 **Attributes**
 
@@ -753,7 +753,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 
 **Rules** (`nldd lint`)
 
-- `form-field-needs-input`: nldd-form-field holds no form input, so the label has nothing to connect to.
+- `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
 
 **Attributes**
 
@@ -776,7 +776,7 @@ A field around one input: its label, supporting label, optional badge, validatio
 
 **Rules** (`nldd lint`)
 
-- `form-field-needs-input`: nldd-form-field holds no form input, so the label has nothing to connect to.
+- `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
 
 **Slots**
 
@@ -823,7 +823,7 @@ Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a valu
 
 **Rules** (`nldd lint`)
 
-- `form-field-needs-input`: nldd-form-field holds no form input, so the label has nothing to connect to.
+- `form-field-needs-input`: nldd-form-field holds no form input, so the label cannot name anything or move focus into it.
 
 **Attributes**
 
@@ -1615,7 +1615,7 @@ A selectable button that toggles between selected and unselected. Available as a
 
 **Rules** (`nldd lint`)
 
-- `no-toggle-button-in-button-bar`: A button bar holds actions, not toggles: an active toggle looks like a pressed action here.
+- `no-toggle-button-in-button-bar`: The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.
 
 **Attributes**
 
@@ -2682,7 +2682,7 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 **Rules** (`nldd lint`)
 
 - `tab-bar-needs-name`: nldd-tab-bar needs `accessible-label`, so a screen reader can say what the tabs are for.
-- `tabs-with-href-need-navigation`: Tabs with `href` go to another page: add `navigation`, so the bar is a nav and not a tablist.
+- `tabs-with-href-need-navigation`: Tabs with `href` go to another page: add `navigation`, so the bar is a nav with aria-current="page" instead of a tablist, and set `current` on the tab of the page you are on.
 
 **Attributes**
 
@@ -2712,7 +2712,7 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 
 **Rules** (`nldd lint`)
 
-- `tabs-with-href-need-navigation`: Tabs with `href` go to another page: add `navigation`, so the bar is a nav and not a tablist.
+- `tabs-with-href-need-navigation`: Tabs with `href` go to another page: add `navigation`, so the bar is a nav with aria-current="page" instead of a tablist, and set `current` on the tab of the page you are on.
 
 **Attributes**
 
@@ -2927,7 +2927,7 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 
 **Rules** (`nldd lint`)
 
-- `modal-dialog-needs-two-actions`: A modal dialog with one action leaves nothing to choose: it needs a way out as well.
+- `modal-dialog-needs-two-actions`: One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.
 
 **Attributes**
 

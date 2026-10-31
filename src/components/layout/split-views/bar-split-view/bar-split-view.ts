@@ -40,6 +40,7 @@ import { barSplitViewStyles } from './bar-split-view.styles.js';
 import { barSplitViewTemplate } from './bar-split-view.template.js';
 import { breakpointPx, rootFontSize } from '../../../../assets/styles/breakpoints.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
+import '../../../../utilities/dev-checks-trigger.js';
 
 export type Breakpoint = 'sm' | 'md' | 'lg';
 type BreakpointOrUnmeasured = Breakpoint | null;
@@ -120,12 +121,7 @@ export class NLDDBarSplitView extends LitElement {
 
 	_getSortedChildren(): Element[] {
 		const all = Array.from(this.children).filter(el => {
-			if (!el.slot) {
-				if (import.meta.env?.DEV) {
-					console.warn('<nldd-bar-split-view>: every child must have a slot attribute (e.g. slot="toolbar", slot="status-bar", or slot="bar-1" if no meaningful name applies). Child without slot attribute is ignored:', el);
-				}
-				return false;
-			}
+			if (!el.slot) return false;
 			return this._isChildVisible(el);
 		});
 		if (this._currentBreakpoint === null) return all;

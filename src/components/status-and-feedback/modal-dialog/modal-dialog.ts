@@ -51,6 +51,7 @@ import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import type { InlineDialogVariant, InlineDialogHorizontalAlignment } from '../inline-dialog/inline-dialog.js';
 import '../inline-dialog/inline-dialog.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 @customElement('nldd-modal-dialog')
 export class NLDDModalDialog extends LitElement {
@@ -119,21 +120,9 @@ export class NLDDModalDialog extends LitElement {
 			if (dialog.open) return;
 			dialog.showModal();
 			this._manageFocus();
-			if (import.meta.env?.DEV) this._checkActions();
 		}
 		this.open = true;
 		this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
-	}
-
-	private _warnedSingleAction = false;
-
-	/** DEV-only: warns once when the dialog opens with a single action. */
-	private _checkActions(): void {
-		if (this._warnedSingleAction) return;
-		const actions = [...this.children].filter((child) => child.getAttribute('slot') === 'actions');
-		if (actions.length !== 1) return;
-		this._warnedSingleAction = true;
-		console.warn('<nldd-modal-dialog>: The dialog has one action, so there is nothing to choose. Tell the user with an nldd-notification or an inline message instead, or give the dialog a real choice.', this);
 	}
 
 	private _manageFocus(): void {

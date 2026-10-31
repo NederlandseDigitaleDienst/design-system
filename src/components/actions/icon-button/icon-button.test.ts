@@ -68,18 +68,6 @@ describe('nldd-icon-button – icon & text attributes', () => {
 		expect(textEl).toBeNull();
 	});
 
-	it('warns when slot-based icon-only has no accessible name', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDIconButton>(`
-			<nldd-icon-button>
-				<svg slot="icon" width="20" height="20"><circle cx="10" cy="10" r="8"/></svg>
-			</nldd-icon-button>
-		`);
-		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('accessible-label'));
-		warnSpy.mockRestore();
-	});
-
 	it('does not warn when slot-based icon has text', async () => {
 		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<NLDDIconButton>(`

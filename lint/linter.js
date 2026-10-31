@@ -49,6 +49,8 @@ export const BUILT_IN_RULES = {
 	},
 };
 
+const toCamelCase = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+
 function checkAttributes(node, { tags, icons, anyChildAttrs }, report) {
 	const contract = tags[node.name];
 	// A parent in another file may be the one reading it, so any child attribute goes.
@@ -67,6 +69,8 @@ function checkAttributes(node, { tags, icons, anyChildAttrs }, report) {
 				const allowed = attribute.values.filter(Boolean).join(', ');
 				report('invalid-value', `\`${name}="${value}"\` is not valid on ${node.name}: use ${allowed}.`);
 			}
+		} else if (value === BOUND && contract.props.includes(toCamelCase(name))) {
+			// A property without an attribute, which only a binding can reach.
 		} else if (!GLOBAL_ATTRIBUTE.test(name.toLowerCase()) && !node.wrapped) {
 			report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`);
 		}

@@ -47,6 +47,7 @@ import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { applyDescribedBy, type DescribedElement } from '../../../utilities/described-by-mixin.js';
+import '../../../utilities/dev-checks-trigger.js';
 import {
 	formFieldStyles,
 	formFieldHelpTextStyles,
@@ -149,7 +150,6 @@ export class NLDDFormField extends LitElement {
 	private _appliedLabel: string | null = null;
 
 	/** Keeps the "no input found" warning to one per field rather than one per mutation. */
-	private _warnedNoInput = false;
 
 	override render() {
 		return formFieldTemplate(this);
@@ -203,19 +203,8 @@ export class NLDDFormField extends LitElement {
 	private _onSlotChange() {
 		const input = this._findInput();
 		if (!input) {
-			// Only once there is something to look at. An empty field is usually one
-			// still being filled, and a component that forgot `static isFormInput`
-			// should be the one that stands out.
-			const hasContent = Array.from(this.children)
-				.some(el => !HELPER_TAGS.includes(el.tagName.toLowerCase()));
-			if (import.meta.env?.DEV && hasContent && !this._warnedNoInput) {
-				this._warnedNoInput = true;
-				const which = this.label ? ` (label="${this.label}")` : '';
-				console.warn(`<nldd-form-field>${which}: No form input found among its children. The label cannot name anything or move focus into it. Every nldd input carries \`static isFormInput = true\`; a component of your own says the same, or names its control itself.`);
-			}
 			return;
 		}
-		this._warnedNoInput = false;
 
 		// Ensure the inner native input has an id so aria-describedby can reference it.
 		// `inputId` is a component that hands out the id of the control it renders, which

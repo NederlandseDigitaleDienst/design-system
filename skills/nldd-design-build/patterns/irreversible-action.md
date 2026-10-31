@@ -88,4 +88,4 @@ Modals zijn in de onderzochte producten zeldzaam, en dat is de bedoeling: zie "w
 
 `nldd lint` controleert dit:
 
-- `modal-dialog-needs-two-actions`: A modal dialog with one action leaves nothing to choose: it needs a way out as well.
+- `modal-dialog-needs-two-actions`: One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.

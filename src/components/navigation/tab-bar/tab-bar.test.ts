@@ -401,14 +401,6 @@ describe('nldd-tab-bar – accessible label', () => {
 		expect(el.shadowRoot!.querySelector('.tab-bar__items')!.getAttribute('aria-label')).toBe('Tabs');
 	});
 
-	it('warns once when no accessible-label is provided', async () => {
-		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture<NLDDTabBar>('<nldd-tab-bar></nldd-tab-bar>');
-		await waitForUpdate(el);
-		expect(warnSpy).toHaveBeenCalledOnce();
-		expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('accessible-label'));
-	});
-
 	it('does not warn when accessible-label is provided', async () => {
 		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		el = await fixture<NLDDTabBar>('<nldd-tab-bar accessible-label="Navigatie"></nldd-tab-bar>');
@@ -1086,13 +1078,6 @@ describe('nldd-tab-bar – tabs with href', () => {
 
 	const warned = (warn: { mock: { calls: unknown[][] } }) =>
 		warn.mock.calls.some(([message]) => String(message).includes('add `navigation`'));
-
-	it('warns once when tabs go to another page without navigation', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		el = await fixture('<nldd-tab-bar accessible-label="Project"><nldd-tab-bar-item text="Overzicht" href="/overzicht" current></nldd-tab-bar-item><nldd-tab-bar-item text="Metrics" href="/metrics"></nldd-tab-bar-item></nldd-tab-bar>');
-		await waitForUpdate(el);
-		expect(warned(warn)).toBe(true);
-	});
 
 	it('says nothing with navigation', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});

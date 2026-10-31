@@ -1372,13 +1372,6 @@ describe('nldd-list-item – what goes in a row', () => {
 		expect(String(strayWarnings(warn)[0][0])).toContain('bare text ("Dossier 2024-001")');
 	});
 
-	it('warns about an element that is not a cell or a segment', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		await mount('<span>Dossier</span>');
-		expect(strayWarnings(warn)).toHaveLength(1);
-		expect(String(strayWarnings(warn)[0][0])).toContain('<span>');
-	});
-
 	it('does not warn about cells, segments or whitespace', async () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		await mount(`

@@ -67,6 +67,8 @@ import { isPointerMode } from '../../../utilities/input-modality.js';
 import { queryBreakpoints } from '../../../assets/styles/breakpoints.js';
 import { translate } from '../../../utilities/translations.js';
 import { isDismissFromTitleBar } from '../../../utilities/dismiss-from-title-bar.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 @customElement('nldd-popover')
 export class NLDDPopover extends LitElement {
@@ -106,7 +108,7 @@ export class NLDDPopover extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	centered = false;
 
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	/**
@@ -120,7 +122,6 @@ export class NLDDPopover extends LitElement {
 	open = false;
 
 	private _isOpen = false;
-	private _hasWarnedLabel = false;
 	private _previousFocus: HTMLElement | null = null;
 	private _pointerdownOnAnchorWhileOpen = false;
 	/** Cleanup function from Floating UI's autoUpdate, only active while open. */
@@ -157,12 +158,9 @@ export class NLDDPopover extends LitElement {
 		// Seed aria-expanded/aria-haspopup on the anchor so a screen reader
 		// announces the trigger as a toggle control right away, not only after the
 		// first open. Deferred to a microtask: an anchor referenced by id may not
-		// be in the DOM yet at connectedCallback time. The warning about a missing
-		// accessible-label rides along in the same deferred tick, so it also fires
-		// for popovertarget usage, where our component never calls show().
+		// be in the DOM yet at connectedCallback time.
 		Promise.resolve().then(() => {
 			this._updateAnchorAria(false);
-			this._warnIfMissingLabel();
 		});
 	}
 
@@ -268,21 +266,12 @@ export class NLDDPopover extends LitElement {
 	// — Public API ————————————————————————————————————————————————————————————
 
 	show(): void {
-		this._warnIfMissingLabel();
 		const anchorEl = this._getAnchorEl();
 		if (!anchorEl) {
 			if (import.meta.env?.DEV) console.warn('<nldd-popover>: anchor element not found. Set anchor=ID or anchorElement before calling show().');
 			return;
 		}
 		(this as HTMLElement).showPopover();
-	}
-
-	private _warnIfMissingLabel(): void {
-		// Dev only, so an end user's production console stays clean.
-		if (!import.meta.env?.DEV) return;
-		if (this.accessibleLabel || this._hasWarnedLabel) return;
-		this._hasWarnedLabel = true;
-		console.warn(`<nldd-popover>: No accessible-label provided. Screen readers will announce this popover as "${this._t('components.popover.accessible-label')}". Set accessible-label to a unique, descriptive name.`);
 	}
 
 	private _handleDismiss = (e: Event): void => {

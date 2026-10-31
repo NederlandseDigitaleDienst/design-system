@@ -488,7 +488,8 @@
               },
               "default": "''",
               "description": "Accessible label forwarded to the inner <button> or <a>. Use when visible text alone lacks context.",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1198,7 +1199,8 @@
               },
               "default": "''",
               "description": "Accessible label for screen readers. Overrides text as aria-label and title tooltip.\nThe text is still shown visually in lg size regardless.",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -28107,7 +28109,8 @@
               "type": {
                 "text": "string | undefined"
               },
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -34160,7 +34163,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -40933,7 +40937,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "href"
+              "attribute": "href",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -41132,7 +41137,8 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "accessible-label"
+              "attribute": "accessible-label",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -45703,6 +45709,69 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utilities/dev-checks-trigger.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/dev-checks.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "findViolations",
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "ParentNode"
+              }
+            },
+            {
+              "name": "rules",
+              "default": "devRules",
+              "type": {
+                "text": "DevRule[]"
+              }
+            }
+          ],
+          "return": {
+            "type": {
+              "text": ""
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "startDevChecks",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "findViolations",
+          "declaration": {
+            "name": "findViolations",
+            "module": "src/utilities/dev-checks.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "startDevChecks",
+          "declaration": {
+            "name": "startDevChecks",
+            "module": "src/utilities/dev-checks.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/utilities/dismiss-from-title-bar.ts",
       "declarations": [
         {
@@ -47241,6 +47310,31 @@
           "declaration": {
             "name": "reflectNonDefault",
             "module": "src/utilities/reflect-non-default.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/reflect-when-set.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "reflectWhenSet",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ toAttribute: (value: string | undefined) => value || null, }",
+          "description": "Reflects a string property only when it has a value.\n\nA rule in src/rules/ reads attributes, in the browser too, so what it names has\nto reflect. A plain `reflect: true` writes an unset string as `x=\"\"`, and other\ncode reads that attribute as set: nldd-form-field leaves a label alone then."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "reflectWhenSet",
+          "declaration": {
+            "name": "reflectWhenSet",
+            "module": "src/utilities/reflect-when-set.ts"
           }
         }
       ]

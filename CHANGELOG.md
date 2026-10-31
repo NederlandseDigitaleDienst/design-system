@@ -15,14 +15,22 @@ here; consult the commit history if you need that level of detail.
 
 ### Added
 
+- **The same rules in the browser.** While developing, a page shows `[nldd]` warnings in the console. A rule then sees real values and what several components render together. A production build does not contain this.
+- **`nldd lint dist` reads built HTML,** as whole pages, for any framework that builds to HTML.
 - **`nldd lint`, `nldd explain` and `nldd rules`.** The package has a `bin`. `--format json` gives an agent everything it needs to fix a finding.
 - **`nldd-design-validate`, a sixth skill,** and a hook in the plugin that hands findings back to the agent after an edit. The hook only runs the linter installed in the project.
 - **Rules on the page.** The reference lists the rules per component, and a pattern shows the rules that belong to it.
 - **`custom-elements.json` spells out literal types.** An attribute typed `Appearance` now has `expandedType` with its values, and the manifest lists attributes that only have JSDoc.
 - **`disclosure` on `nldd-icon-cell`** is now documented.
 
+### Fixed
+
+- **DEV warnings reach the main export.** The library build removed almost all of them from `@nldd/design-system`, so only a per-component import showed them.
+
 ### Changed
 
+- **Warnings that a rule covers moved to that rule,** such as a missing `accessible-label`. They now start with `[nldd]` and the id of the rule.
+- **`accessible-label` reflects** on `nldd-button`, `nldd-icon-button`, `nldd-card`, `nldd-popover` and `nldd-tab-bar`, and `href` on `nldd-tab-bar-item`. An unset value writes no attribute.
 - **Node 20.19 or later**, because of the dependencies of the linter. Using the components in a browser is not affected.
 
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)

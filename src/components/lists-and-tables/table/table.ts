@@ -60,6 +60,7 @@ import type { NLDDTableTranslations } from './table.i18n.js';
 import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { translate } from '../../../utilities/translations.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 export type TableBackground = 'base' | 'tinted';
 
@@ -101,8 +102,6 @@ export class NLDDTable extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	selectable = false;
 
-	private _warnedColumns = false;
-	private _warnedLabel = false;
 	private _resizeObserver?: ResizeObserver;
 	private _rowsObserver?: MutationObserver;
 	/** Last observed content-box width, to resolve the active track list. */
@@ -279,18 +278,6 @@ export class NLDDTable extends LitElement {
 			for (const row of this.querySelectorAll<NLDDTableRow>('nldd-table-row')) {
 				row._syncAriaSelected();
 			}
-		}
-		if (import.meta.env?.DEV && !this.columns && !this._warnedColumns) {
-			this._warnedColumns = true;
-			console.warn('<nldd-table>: no `columns` set. Define a CSS grid track list (e.g. columns="200px 1fr 80px") so cells align into columns.');
-		} else if (this.columns) {
-			this._warnedColumns = false;
-		}
-		if (import.meta.env?.DEV && !this.accessibleLabel && !this._warnedLabel) {
-			this._warnedLabel = true;
-			console.warn('<nldd-table>: no `accessible-label` set. role="table" needs an accessible name — add accessible-label="…".');
-		} else if (this.accessibleLabel) {
-			this._warnedLabel = false;
 		}
 	}
 

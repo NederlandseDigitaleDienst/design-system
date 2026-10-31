@@ -28,6 +28,14 @@ Een snippet controleren vóór je hem opslaat kan ook:
 echo '<nldd-icon-button icon="plus"></nldd-icon-button>' | npx @nldd/design-system lint --stdin --filename snippet.html
 ```
 
+Bij een site die naar HTML bouwt (Astro, MkDocs, Hugo, Django, Jinja) lint je de gerenderde pagina's. Dat werkt voor elk framework en de linter ziet dan de hele pagina:
+
+```bash
+npm run build && npx @nldd/design-system lint dist
+```
+
+Tijdens het ontwikkelen draaien dezelfde regels ook in de browser: ze staan als `[nldd] ...` in de console. Daar ziet een regel de echte waarden en wat verschillende componenten samen renderen.
+
 Wat er geldt voor een component vóór je het gebruikt, vraag je op met `npx @nldd/design-system rules --for nldd-toolbar`.
 
 ## Wat je met een bevinding doet
@@ -42,7 +50,17 @@ Past een regel structureel niet, dan is dat een voorstel voor het designsysteem:
 
 ## Wat de linter niet ziet
 
-Hij leest per bestand en meldt alleen wat zeker fout is. Een waarde die pas bij het draaien bekend is, of een kind uit een ander component, blijft dus buiten beeld. Wat hij niet meldt is daarmee niet bewezen goed: hele pagina's, koppenstructuur en bedoeling kun je alleen zelf beoordelen, aan de hand van de patronen in [`nldd-design-build`](../nldd-design-build/SKILL.md).
+In broncode leest hij per bestand en meldt hij alleen wat zeker fout is. Een waarde die pas bij het draaien bekend is, of een kind uit een ander component, blijft dus buiten beeld. Wat hij niet meldt is daarmee niet bewezen goed: hele pagina's, koppenstructuur en bedoeling kun je alleen zelf beoordelen, aan de hand van de patronen in [`nldd-design-build`](../nldd-design-build/SKILL.md).
+
+## Welke versie
+
+Een project draait zijn eigen versie: de linter zit in het pakket en kent precies die API. Wil je zien wat een upgrade breekt, draai dan de nieuwe versie op je huidige code:
+
+```bash
+npx @nldd/design-system@latest lint
+```
+
+Staat het pakket niet in het project, pin dan de versie die je gebruikt, zoals `@nldd/design-system@0.14.0`. Zonder pin krijg je de nieuwste.
 
 ## In een project opnemen
 

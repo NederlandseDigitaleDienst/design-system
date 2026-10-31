@@ -34,6 +34,8 @@ export default {
 		// Story support: which icons the gallery tags as New/Updated. Declares no
 		// element and is not part of the shipped API.
 		'**/icon-gallery-status.ts',
+		// Rule data for the browser check; declares no element.
+		'**/dev-rules.generated.ts',
 	],
 	outdir: '.',
 	litelement: true,

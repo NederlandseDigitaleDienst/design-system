@@ -44,12 +44,11 @@ import { customElement, property, query } from 'lit/decorators.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { buttonGroupStyles } from './button-group.styles.js';
 import { template } from './button-group.template.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 type Size = 'sm' | 'md';
 type Orientation = 'auto' | 'horizontal' | 'vertical';
 type Width = '' | 'full';
-
-const MAX_BUTTONS = 3;
 
 @customElement('nldd-button-group')
 export class NLDDButtonGroup extends LitElement {
@@ -78,9 +77,6 @@ export class NLDDButtonGroup extends LitElement {
 	/** @internal */
 	_handleSlotChange(): void {
 		const assigned = this._slot.assignedElements({ flatten: true });
-		if (import.meta.env?.DEV && assigned.length > MAX_BUTTONS) {
-			console.warn(`nldd-button-group: holds ${MAX_BUTTONS} buttons at most; the rest are hidden.`);
-		}
 		for (const el of assigned) {
 			const own = el.getAttribute('size');
 			if (import.meta.env?.DEV && own !== null && own !== this.size && !this._sized.has(el)) {

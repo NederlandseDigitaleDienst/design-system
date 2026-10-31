@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, waitForUpdate, nextFrames, installUniversalReset } from '../../../test-utils.js';
 import type { NLDDTable, NLDDTableRow } from './table.js';
 import './table.js';
@@ -52,14 +52,10 @@ describe('nldd-table', () => {
 		expect(el.getAttribute('aria-label')).toBe('Gebruikers');
 	});
 
-	it('DEV-warns and falls back to a generic name when accessible-label is missing', async () => {
-		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+	it('falls back to a generic name when accessible-label is missing', async () => {
 		el = await fixture<NLDDTable>('<nldd-table columns="1fr"></nldd-table>');
 		await waitForUpdate(el);
-		// Never nameless: a generic fallback names it, and the consumer is warned.
 		expect(el.getAttribute('aria-label')).toBe('Tabel');
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('accessible-label'));
-		warn.mockRestore();
 	});
 
 	it('defaults the background to base and reflects tinted', async () => {

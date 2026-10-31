@@ -1,6 +1,7 @@
 /**
  * Writes lint/data.generated.json from custom-elements.json, the icon set and
- * src/rules/. The file is committed and CI checks it for drift, like the manifest.
+ * src/rules/, plus the same rules as plain CSS for the browser. Both are committed
+ * and CI checks them for drift, like the manifest.
  *
  * Usage: node scripts/generate-lint-data.js
  */
@@ -9,7 +10,7 @@ import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { aliases } from '../src/components/content/icon/icon-aliases.js';
-import { buildClasses, buildContract, loadRules } from './lib/lint-data.js';
+import { booleanAttributes, buildClasses, buildContract, buildDevRules, loadRules, normalizeSelectors } from './lib/lint-data.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => JSON.parse(readFileSync(resolve(repoRoot, path), 'utf8'));
@@ -22,12 +23,20 @@ const icons = iconFiles
 	.concat(Object.keys(aliases))
 	.sort();
 
-const data = {
-	tags: buildContract(manifest),
-	classes: buildClasses(manifest),
-	icons,
-	rules: loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.json')),
-};
+const booleans = booleanAttributes(manifest);
+const classes = buildClasses(manifest);
+const rules = loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.json')).map((rule) =>
+	normalizeSelectors(rule, booleans),
+);
+const data = { tags: buildContract(manifest), classes, icons, rules };
 
 writeFileSync(resolve(repoRoot, 'lint/data.generated.json'), `${JSON.stringify(data)}\n`);
+writeFileSync(
+	resolve(repoRoot, 'src/utilities/dev-rules.generated.ts'),
+	`// Generated from src/rules/ by scripts/generate-lint-data.js. Do not edit.
+import type { DevRule } from './dev-checks.js';
+
+export const devRules: DevRule[] = ${JSON.stringify(buildDevRules(rules, classes), null, '\t')};
+`,
+);
 console.log(`lint data: ${Object.keys(data.tags).length} tags, ${data.rules.length} rules`);

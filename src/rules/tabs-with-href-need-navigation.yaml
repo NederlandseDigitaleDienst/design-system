@@ -1,6 +1,6 @@
 severity: warn
 context: 'nldd-tab-bar:not([navigation]):has(nldd-tab-bar-item[href])'
-message: 'Tabs with `href` go to another page: add `navigation`, so the bar is a nav and not a tablist.'
+message: 'Tabs with `href` go to another page: add `navigation`, so the bar is a nav with aria-current="page" instead of a tablist, and set `current` on the tab of the page you are on.'
 examples:
   passed: ['<nldd-tab-bar navigation accessible-label="Secties"><nldd-tab-bar-item href="/a" text="A"></nldd-tab-bar-item></nldd-tab-bar>']
   failed: ['<nldd-tab-bar accessible-label="Secties"><nldd-tab-bar-item href="/a" text="A"></nldd-tab-bar-item></nldd-tab-bar>']

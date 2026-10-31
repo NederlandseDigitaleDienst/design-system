@@ -61,6 +61,12 @@ jobs:
         run: npm run build:styles
       - name: Build components
         run: npm run build:components
+      # Without this the library build removes the DEV checks from the main export.
+      # The `?.` matters: a project without Vite has no import.meta.env.
+      - name: Verify DEV checks survive the build
+        run: |
+          grep -q 'import.meta.env?.DEV' dist/components/components.js
+          ! grep -q 'import.meta.env.DEV' dist/components/components.js
       # The linter is what consumers run, from the tarball: lint/ has to be in it
       # and its dependencies have to resolve outside this repository.
       - name: Smoke test the packed linter

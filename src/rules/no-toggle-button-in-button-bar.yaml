@@ -1,7 +1,7 @@
 severity: warn
 context: 'nldd-button-bar'
 report: ':has(nldd-toggle-button)'
-message: 'A button bar holds actions, not toggles: an active toggle looks like a pressed action here.'
+message: 'The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.'
 examples:
   passed: ['<nldd-button-bar><nldd-button text="Bewaar"></nldd-button></nldd-button-bar>']
   failed: ['<nldd-button-bar><nldd-toggle-button text="Vet"></nldd-toggle-button></nldd-button-bar>']

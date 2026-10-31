@@ -3,7 +3,7 @@ context: 'nldd-modal-dialog:has(> [slot=actions])'
 count:
   of: '[slot=actions]'
   min: 2
-message: 'A modal dialog with one action leaves nothing to choose: it needs a way out as well.'
+message: 'One action leaves nothing to choose. Tell the user with an nldd-notification or an inline message, or give the dialog a real choice.'
 see: patronen/irreversible-action
 examples:
   passed: ['<nldd-modal-dialog><nldd-button slot="actions" text="Behoud"></nldd-button><nldd-button slot="actions" text="Verwijder"></nldd-button></nldd-modal-dialog>']

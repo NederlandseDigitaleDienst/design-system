@@ -2,6 +2,13 @@ import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 
 export default defineConfig({
+	// A library build would turn these into constants, which removes every DEV
+	// warning from the main export. Left in, the consumer's own build decides. The
+	// `?.` has to stay: without a bundler that sets it, import.meta.env is undefined.
+	define: {
+		'import.meta.env.DEV': 'import.meta.env?.DEV',
+		'import.meta.env.MODE': 'import.meta.env?.MODE',
+	},
 	build: {
 		lib: {
 			entry: resolve(import.meta.dirname, 'src/components/index.ts'),

@@ -30,6 +30,8 @@ function widenTokens(tokens, classes) {
 		if (token.type === 'tag' || (token.type === 'pseudo' && token.name in classes)) {
 			return { type: 'pseudo', name: 'is', data: [[token], [unknown]] };
 		}
+		// "Not empty" is about a value we have, and a bound value is not empty.
+		if (token.type === 'attribute' && token.action === 'equals' && token.value === '') return token;
 		if (token.type === 'attribute') {
 			const bound = { type: 'pseudo', name: 'bound', data: token.name };
 			return { type: 'pseudo', name: 'is', data: [[token], [bound]] };

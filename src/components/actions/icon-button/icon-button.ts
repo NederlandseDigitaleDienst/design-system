@@ -56,6 +56,8 @@ import { PopupAnchorController } from '../../../utilities/popup-anchor-controlle
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
+import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
+import '../../../utilities/dev-checks-trigger.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
 export type Appearance =
@@ -180,7 +182,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 
 	/** Accessible label for screen readers. Overrides text as aria-label and title tooltip.
 	 *  The text is still shown visually in lg size regardless. */
-	@property({ type: String, attribute: 'accessible-label' })
+	@property({ type: String, attribute: 'accessible-label', reflect: true, converter: reflectWhenSet })
 	accessibleLabel = '';
 
 	/** Forwarded to the inner nldd-tooltip's `timing`. Use `'never'` to
@@ -227,7 +229,6 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 		return (slot?.assignedElements().length ?? 0) > 0;
 	}
 
-	private _warnedA11y = false;
 
 	/** Shared wiring for an overlay slotted into `popup`: anchors it to this
 	 * button and turns clicks into open/close. Not private: the template module
@@ -253,13 +254,6 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 			} else {
 				this.style.removeProperty('--_icon-button-width');
 			}
-		}
-		const inaccessible = this._hasIcon && !this.text && !this.accessibleLabel;
-		if (import.meta.env?.DEV && inaccessible && !this._warnedA11y) {
-			this._warnedA11y = true;
-			console.warn('<nldd-icon-button>: icon is set without text or accessible-label. This produces an inaccessible button (WCAG SC 4.1.2). Add a text or accessible-label attribute.');
-		} else if (!inaccessible) {
-			this._warnedA11y = false;
 		}
 	}
 
