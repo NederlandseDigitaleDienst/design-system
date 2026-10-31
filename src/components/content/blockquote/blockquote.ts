@@ -11,7 +11,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { blockquoteStyles } from './blockquote.styles.js';
 import { template } from './blockquote.template.js';
 

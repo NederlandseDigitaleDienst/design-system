@@ -17,7 +17,8 @@
  * @csspart icon - The glyph itself, whether it comes from `icon` or from the slot. Transform this rather than the cell: a transform on the host changes the box `getBoundingClientRect()` reports, and a row measures its cells to place the divider.
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { iconCellStyles } from './icon-cell.styles.js';
 import { template } from './icon-cell.template.js';

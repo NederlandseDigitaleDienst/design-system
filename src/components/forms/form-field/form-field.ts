@@ -44,10 +44,10 @@
  * </nldd-form-field>
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { applyDescribedBy, type DescribedElement } from '../../../utilities/described-by-mixin.js';
-import '../../../utilities/dev-checks-trigger.js';
 import {
 	formFieldStyles,
 	formFieldHelpTextStyles,
@@ -204,6 +204,8 @@ export class NLDDFormField extends LitElement {
 
 	private _onSlotChange() {
 		const input = this._findInput();
+		// A consumer's own element can be an input too, which no selector can know.
+		setState(this, 'has-input', Boolean(input));
 		if (!input) {
 			return;
 		}

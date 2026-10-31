@@ -20,7 +20,7 @@ function walkDirectory(directory, found) {
 	return found;
 }
 
-/** `git ls-files` honours .gitignore without this tool parsing it. */
+/** `git ls-files` honors .gitignore without this tool parsing it. */
 function trackedFiles(root) {
 	try {
 		const output = execFileSync('git', ['ls-files', '-co', '--exclude-standard'], {
@@ -73,9 +73,21 @@ export const BASELINE_FILE = '.nldd-lint-baseline.json';
  * does not turn accepted findings into new ones. The findings in a file beyond
  * the accepted count are the new ones.
  */
-export function readBaseline(root) {
+export function readBaseline(root, canonical = (id) => id) {
 	const path = join(root, BASELINE_FILE);
-	return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : {};
+	if (!existsSync(path)) return {};
+	const baseline = JSON.parse(readFileSync(path, 'utf8'));
+	return Object.fromEntries(
+		Object.entries(baseline).map(([file, entries]) => [
+			file,
+			Object.fromEntries(
+				Object.entries(entries).map(([key, count]) => {
+					const [rule, ...tag] = key.split('|');
+					return [[canonical(rule), ...tag].join('|'), count];
+				}),
+			),
+		]),
+	);
 }
 
 const baselineKey = ({ rule, tag }) => `${rule}|${tag}`;
@@ -90,8 +102,8 @@ export function applyBaseline(filename, findings, baseline, root) {
 	});
 }
 
-export function writeBaseline(results, root) {
-	const baseline = readBaseline(root);
+export function writeBaseline(results, root, canonical) {
+	const baseline = readBaseline(root, canonical);
 	for (const { filename, findings } of results) {
 		const key = relative(root, filename);
 		delete baseline[key];

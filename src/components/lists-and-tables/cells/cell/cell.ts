@@ -21,7 +21,8 @@
  * @slot - Default slot for any content (buttons, switches, icons, etc.)
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { cellStyles } from './cell.styles.js';
 import { template } from './cell.template.js';

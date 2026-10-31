@@ -1,6 +1,7 @@
 import { LitElement } from 'lit';
 import type { PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { listItemStyles } from './list-item.styles.js';
 import { template } from './list-item.template.js';
@@ -9,7 +10,6 @@ import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddListItemTranslations } from './list-item.i18n.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import type { NLDDList, ListType } from '../list/list.js';
-import '../../../utilities/dev-checks-trigger.js';
 import { setState } from '../../../utilities/element-state.js';
 
 export type ListItemSize = 'sm' | 'md';

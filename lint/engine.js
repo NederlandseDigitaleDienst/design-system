@@ -15,6 +15,12 @@ import { BOUND, adapter, walk } from './tree.js';
 
 const BUILT_IN_PSEUDOS = new Set(['is', 'not', 'has', 'where', 'matches']);
 
+/** In W+ a sibling behind a condition might not render, as with `v-if` and `v-else`. */
+const favorableAdapter = {
+	...adapter,
+	getSiblings: (node) => adapter.getSiblings(node).filter((each) => each === node || !each.conditional),
+};
+
 function classPseudos(classes) {
 	return Object.fromEntries(
 		Object.entries(classes).map(([name, tags]) => {
@@ -24,9 +30,19 @@ function classPseudos(classes) {
 	);
 }
 
-function widenTokens(tokens, classes) {
+/**
+ * Rewrites a selector for one world. W+ lets what is unknown match, W- does not, and
+ * `:not()` turns that around: unknown content that might be `x` makes `:not(x)` true
+ * in W+ only because there it is not taken for an `x`.
+ */
+function forWorld(tokens, classes, widen) {
 	const unknown = { type: 'pseudo', name: 'unknown', data: null };
 	return tokens.map((token) => {
+		if (token.type === 'pseudo' && BUILT_IN_PSEUDOS.has(token.name) && Array.isArray(token.data)) {
+			const inner = token.name === 'not' ? !widen : widen;
+			return { ...token, data: token.data.map((each) => forWorld(each, classes, inner)) };
+		}
+		if (!widen) return token;
 		if (token.type === 'tag' || (token.type === 'pseudo' && token.name in classes)) {
 			return { type: 'pseudo', name: 'is', data: [[token], [unknown]] };
 		}
@@ -36,22 +52,18 @@ function widenTokens(tokens, classes) {
 			const bound = { type: 'pseudo', name: 'bound', data: token.name };
 			return { type: 'pseudo', name: 'is', data: [[token], [bound]] };
 		}
-		if (token.type === 'pseudo' && BUILT_IN_PSEUDOS.has(token.name) && Array.isArray(token.data)) {
-			return { ...token, data: token.data.map((inner) => widenTokens(inner, classes)) };
-		}
 		return token;
 	});
 }
 
+/** `:state()` only exists on a running page, so in source it is never true. */
 export function createEngine({ classes = {} } = {}) {
 	const shared = classPseudos(classes);
-	const pseudosFor = {
-		'+': {
-			...shared,
-			unknown: (node) => node.opaque,
-			bound: (node, name) => node.opaque || node.spread || node.attrs.get(name) === BOUND,
-		},
-		'-': { ...shared, unknown: () => false, bound: () => false },
+	const pseudos = {
+		...shared,
+		state: () => false,
+		unknown: (node) => node.opaque,
+		bound: (node, name) => node.opaque || node.spread || node.attrs.get(name) === BOUND,
 	};
 	const cache = new Map();
 
@@ -59,25 +71,26 @@ export function createEngine({ classes = {} } = {}) {
 		const key = world + selector;
 		let test = cache.get(key);
 		if (!test) {
-			const query =
-				world === '+'
-					? parse(selector).map((tokens) => widenTokens(tokens, classes))
-					: selector;
-			test = compile(query, { adapter, pseudos: pseudosFor[world], xmlMode: true });
+			const query = parse(selector).map((tokens) => forWorld(tokens, classes, world === '+'));
+			test = compile(query, { adapter: world === '+' ? favorableAdapter : adapter, pseudos, xmlMode: true });
 			cache.set(key, test);
 		}
 		return test(node);
 	}
 
+	/**
+	 * W- counts what certainly renders, W+ whatever might. So `v-if` and `v-else` do
+	 * not add up, and four static buttons are too many, whatever a `v-for` adds.
+	 */
 	function countViolated(rule, node, world) {
 		const { of, min, max } = rule.count;
 		const counted = node.children.filter((child) => matches(child, of, world));
-		const repeats = node.children.some((c) => c.repeated && matches(c, of, '+'));
-		if (repeats) return false;
-		const tooMany = max !== undefined && counted.length > max;
-		const unknownChild = world === '+' && node.children.some((child) => child.opaque);
-		const tooFew = min !== undefined && !unknownChild && counted.length < min;
-		return tooMany || tooFew;
+		if (world === '-') {
+			const certain = counted.filter((child) => !child.conditional && !child.repeated).length;
+			return (max !== undefined && certain > max) || (min !== undefined && certain < min);
+		}
+		const open = counted.some((child) => child.repeated) || node.children.some((child) => child.opaque);
+		return (max !== undefined && counted.length > max) || (min !== undefined && !open && counted.length < min);
 	}
 
 	function isViolated(rule, node, world) {
@@ -120,7 +133,8 @@ export function createEngine({ classes = {} } = {}) {
 				return;
 			}
 			const minus = inMinus && isViolated(rule, node, '-');
-			const plus = isViolated(rule, node, '+');
+			// A context can stop matching in W+ as well: `:not([x])` on a bound x.
+			const plus = matches(node, rule.context, '+') && isViolated(rule, node, '+');
 			const outcome = minus && plus ? 'failed' : !minus && !plus ? 'passed' : 'cantTell';
 			results.push({ node, outcome });
 		});

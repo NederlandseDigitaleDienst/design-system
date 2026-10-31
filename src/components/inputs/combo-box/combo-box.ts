@@ -65,7 +65,8 @@
  * ```
  */
 import { LitElement } from 'lit';
-import { customElement, property, state, query } from 'lit/decorators.js';
+import { property, state, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { comboBoxStyles } from './combo-box.styles.js';
@@ -80,8 +81,6 @@ import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
-import { setState } from '../../../utilities/element-state.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
@@ -435,10 +434,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// with nothing left to offer stays closed — the "nothing found" empty
 		// state would wrongly suggest the input is invalid.
 		if (this.allowCustom && !this._hasVisibleMenuItems()) return;
-		if (!('showPopover' in this._menu)) {
-			setState(this, 'no-popover-api', true);
-			return;
-		}
+		if (!('showPopover' in this._menu)) return;
 		this._updateMenuWidth();
 		(this._menu as HTMLElement).showPopover();
 	}

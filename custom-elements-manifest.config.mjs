@@ -38,7 +38,7 @@ export default {
 		'**/dev-checks.ts',
 		'**/dev-checks-trigger.ts',
 		'**/dev-rules.generated.ts',
-		'**/rule-messages.generated.ts',
+		'**/custom-element.ts',
 		'**/reflect-when-set.ts',
 	],
 	outdir: '.',

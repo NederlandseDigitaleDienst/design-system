@@ -51,7 +51,8 @@
  * @slot - The row's cells (`nldd-cell` and variants), one per column
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tableStyles, tableRowStyles } from './table.styles.js';
 import { tableTemplate, tableRowTemplate } from './table.template.js';
@@ -60,7 +61,6 @@ import type { NLDDTableTranslations } from './table.i18n.js';
 import { breakpointPx, rootFontSize } from '../../../assets/styles/breakpoints.js';
 import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import { translate } from '../../../utilities/translations.js';
-import '../../../utilities/dev-checks-trigger.js';
 import { setState } from '../../../utilities/element-state.js';
 
 export type TableBackground = 'base' | 'tinted';

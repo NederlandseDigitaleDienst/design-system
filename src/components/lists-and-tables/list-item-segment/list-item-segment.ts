@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { listItemSegmentStyles } from './list-item-segment.styles.js';
@@ -8,7 +9,6 @@ import type { NLDDList } from '../list/list.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { downloadLinkHintKey, markDownloadTarget } from '../../../utilities/link-hint.js';
 import { nlddListItemSegmentTranslations } from './list-item-segment.i18n.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 export type ListItemSegmentWidth = 'fit-content' | 'full';
 

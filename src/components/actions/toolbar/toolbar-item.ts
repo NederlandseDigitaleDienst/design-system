@@ -1,9 +1,9 @@
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toolbarItemStyles } from './toolbar.styles.js';
 import { toolbarItemTemplate } from './toolbar-item.template.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 export type Size = 'sm' | 'md' | 'lg';
 

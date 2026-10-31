@@ -14,7 +14,8 @@
  */
 
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { menuBarStyles } from './menu-bar.styles.js';
 import { template } from './menu-bar.template.js';

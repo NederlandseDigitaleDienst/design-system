@@ -69,7 +69,8 @@
  * @method toggle() - Opens or closes the sidebar sheet (collapsed only).
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { breakpointPx } from '../../../../assets/styles/breakpoints.js';

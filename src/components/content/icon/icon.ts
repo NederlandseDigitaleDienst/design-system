@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { iconStyles } from './icon.styles.js';
 import { template } from './icon.template.js';
@@ -134,7 +135,10 @@ export class NLDDIcon extends LitElement {
 		const resolvedName = aliases[name] ?? name;
 		const svg = iconRegistry.get(resolvedName);
 
-		setState(this, 'unknown-icon', !svg);
+		// A name set on a button ends up here, in a shadow root the checks stay out of.
+		for (let host: HTMLElement | undefined = this; host?.localName.startsWith('nldd-'); host = (host.getRootNode() as ShadowRoot).host as HTMLElement | undefined) {
+			setState(host, 'unknown-icon', !svg);
+		}
 		return svg ?? null;
 	}
 

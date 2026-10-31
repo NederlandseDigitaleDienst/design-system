@@ -38,7 +38,8 @@
  * @method hideSidebarSheet() - @deprecated alias for hidePrimarySidebarSheet() (kept for backwards compatibility)
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { isPointerMode } from '../../../../utilities/input-modality.js';
 import { ScrollModeController, SINGLE_COLUMN_CHANGE_EVENT } from '../../../../utilities/scroll-mode-controller.js';
 import type { SingleColumnChangeDetail } from '../../../../utilities/scroll-mode-controller.js';

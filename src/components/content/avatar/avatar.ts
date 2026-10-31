@@ -72,7 +72,8 @@
  * ```
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddAvatarTranslations } from './avatar.i18n.js';
@@ -80,7 +81,6 @@ import { avatarStyles } from './avatar.styles.js';
 import { avatarTemplate } from './avatar.template.js';
 import '../icon/icon.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 export type AvatarType = 'person' | 'organization';
 

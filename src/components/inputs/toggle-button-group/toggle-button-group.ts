@@ -26,7 +26,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { toggleButtonGroupStyles } from './toggle-button-group.styles.js';
 import { toggleButtonGroupTemplate } from './toggle-button-group.template.js';
@@ -34,7 +35,6 @@ import type { NLDDToggleButton, ToggleButtonAppearance, ToggleButtonSize } from 
 import { setOwnedAttribute } from '../../../utilities/owned-attribute.js';
 import { radioPositions } from '../../../utilities/radio-position.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 type GroupType = 'button' | 'checkbox' | 'radio';
 

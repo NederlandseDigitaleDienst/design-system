@@ -40,7 +40,8 @@
  * @attr {string} name - Optional name used in the combined tooltip + screenreader text
  */
 import { LitElement, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { progressCircleStyles, progressCircleSegmentIndicatorStyles } from './progress-circle.styles.js';
 import { progressCircleTemplate, getCircumference, getStrokeWidthPx } from './progress-circle.template.js';

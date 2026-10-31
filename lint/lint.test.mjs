@@ -7,7 +7,8 @@ import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { createEngine } from './engine.js';
 import { parseHtml, parseJsx, parseMarkdown, parseVue } from './frontends.js';
-import { createLinter } from './linter.js';
+import { createCanonical, createLinter } from './linter.js';
+import { readBaseline } from './project.js';
 import { BOUND, walk } from './tree.js';
 
 const first = (roots, name) => {
@@ -116,9 +117,9 @@ describe('two worlds', () => {
 		assert.equal(outcome(input, '<nldd-field><nldd-button /></nldd-field>'), 'failed');
 	});
 
-	it('does not count what repeats', () => {
+	it('cannot tell a minimum from what repeats', () => {
 		const count = { context: 'nldd-dialog', count: { of: '[slot=actions]', min: 2 } };
-		assert.equal(outcome(count, '<nldd-dialog><nldd-b slot="actions" v-for="a in b" /></nldd-dialog>'), 'passed');
+		assert.equal(outcome(count, '<nldd-dialog><nldd-b slot="actions" v-for="a in b" /></nldd-dialog>'), 'cantTell');
 		assert.equal(outcome(count, '<nldd-dialog><nldd-b slot="actions" /></nldd-dialog>'), 'failed');
 	});
 
@@ -212,11 +213,134 @@ describe('built-in rules', () => {
 	});
 });
 
+describe('found in review', () => {
+	const real = createLinter();
+	const rulesIn = async (source, filename = 'a.vue') =>
+		(await real.lintSource(source, filename)).findings.map((finding) => finding.rule);
+	const vue = (markup) => `<template>${markup}</template>`;
+
+	it('does not report on a bound value that decides the context', async () => {
+		const tabs = '<nldd-tab-bar-item href="/a" text="A"></nldd-tab-bar-item>';
+		assert.ok(!(await rulesIn(vue(`<nldd-tab-bar accessible-label="a" :navigation="n">${tabs}</nldd-tab-bar>`))).includes('tabs-with-href-need-navigation'));
+		assert.ok(!(await rulesIn(vue(`<nldd-tab-bar accessible-label="a" v-bind="o">${tabs}</nldd-tab-bar>`))).includes('tabs-with-href-need-navigation'));
+		assert.ok((await rulesIn(vue(`<nldd-tab-bar accessible-label="a">${tabs}</nldd-tab-bar>`))).includes('tabs-with-href-need-navigation'));
+	});
+
+	it('maps a camelCase binding to its attribute', async () => {
+		for (const markup of [
+			'<nldd-icon-button icon="plus" [accessibleLabel]="l"></nldd-icon-button>',
+			'<nldd-icon-button icon="plus" :accessibleLabel="l"></nldd-icon-button>',
+			'<nldd-icon-button icon="plus" .accessibleLabel="l"></nldd-icon-button>',
+		]) {
+			assert.deepEqual(await rulesIn(vue(markup)), [], markup);
+		}
+		assert.deepEqual(await rulesIn('const a = <nldd-icon-button icon="plus" accessibleLabel={l} />;', 'a.tsx'), []);
+	});
+
+	it('counts a native control as a form input', async () => {
+		assert.deepEqual(await rulesIn(vue('<nldd-form-field label="a"><input></nldd-form-field>')), []);
+	});
+
+	it('reads Angular bindings', async () => {
+		const markup = '<nldd-text-field [(value)]="v" [(ngModel)]="m" [ngClass]="c" [class.a]="b" [style.width]="w" formControlName="x"></nldd-text-field>';
+		assert.deepEqual((await rulesIn(markup, 'a.html')).filter((rule) => rule === 'unknown-attribute'), []);
+	});
+
+	it('does not add up branches of v-if and v-else', async () => {
+		const buttons = '<nldd-button text="a"></nldd-button><nldd-button text="b"></nldd-button>';
+		const branches = '<nldd-button v-if="x" text="c"></nldd-button><nldd-button v-else text="d"></nldd-button>';
+		assert.deepEqual(await rulesIn(vue(`<nldd-button-group>${buttons}${branches}</nldd-button-group>`)), []);
+	});
+
+	it('still counts what certainly renders next to a v-for', async () => {
+		const four = '<nldd-button text="a"></nldd-button>'.repeat(4);
+		const repeated = '<nldd-button v-for="x in y" text="b"></nldd-button>';
+		assert.ok((await rulesIn(vue(`<nldd-button-group>${four}${repeated}</nldd-button-group>`))).includes('button-group-at-most-three'));
+	});
+
+	it('allows a toggle button group in a button bar', async () => {
+		const group = '<nldd-toggle-button-group accessible-label="a"><nldd-toggle-button text="b"></nldd-toggle-button></nldd-toggle-button-group>';
+		assert.deepEqual(await rulesIn(vue(`<nldd-button-bar>${group}</nldd-button-bar>`)), []);
+	});
+
+	it('names only the input a form field hands its label to', async () => {
+		const named = await rulesIn('<html><body><nldd-form-field label="a"><nldd-text-field></nldd-text-field><nldd-number-field></nldd-number-field></nldd-form-field></body></html>', 'a.html');
+		assert.ok(named.includes('number-field-needs-name'));
+		const nested = await rulesIn('<html><body><nldd-form-field label="a"><nldd-toggle-button-group accessible-label="b"><nldd-toggle-button icon="plus"></nldd-toggle-button></nldd-toggle-button-group></nldd-form-field></body></html>', 'a.html');
+		assert.ok(nested.includes('toggle-button-needs-name'));
+	});
+
+	it('finds the input of a form field at any depth, as the field does', async () => {
+		const markup = '<nldd-form-field label="a"><div><nldd-number-field></nldd-number-field></div></nldd-form-field>';
+		assert.deepEqual(await rulesIn(`<html><body>${markup}</body></html>`, 'a.html'), []);
+	});
+
+	it('does not take a v-else branch for a second control', async () => {
+		const markup = '<nldd-text-field v-if="a"></nldd-text-field><nldd-number-field v-else></nldd-number-field>';
+		assert.deepEqual(await rulesIn(vue(markup)), []);
+	});
+
+	it('treats a child component the same in :not as anywhere else', async () => {
+		assert.deepEqual(await rulesIn(vue('<nldd-avatar-group><MyAvatar /></nldd-avatar-group>')), []);
+		assert.ok((await rulesIn(vue('<nldd-avatar-group><nldd-image></nldd-image></nldd-avatar-group>'))).includes('avatar-group-holds-avatars'));
+	});
+
+	it('takes false and null in JSX as off', async () => {
+		assert.deepEqual(await rulesIn('const a = <nldd-page sticky-header={false}><nldd-top-navigation-bar /></nldd-page>;', 'a.tsx'), []);
+		assert.deepEqual(await rulesIn('const a = <nldd-button text="a" appearance={null} />;', 'a.tsx'), []);
+	});
+
+	it('leaves a tag alone that a template language writes into', async () => {
+		assert.deepEqual(await rulesIn('<nldd-button text="a" {% if x %}disabled{% endif %}></nldd-button>', 'a.html'), []);
+		assert.deepEqual(await rulesIn('<nldd-button text="a" start-icon={name}></nldd-button>', 'a.html'), []);
+	});
+
+	it('skips the inert content of a template in a document', async () => {
+		assert.deepEqual(await rulesIn('<html><body><template><nldd-list-item></nldd-list-item></template></body></html>', 'a.html'), []);
+	});
+
+	it('does not hide a bad slot behind an unrelated rule', async () => {
+		const found = await rulesIn(vue('<nldd-page><nldd-modal-dialog slot="nope"><nldd-button slot="actions" text="a"></nldd-button></nldd-modal-dialog></nldd-page>'));
+		assert.ok(found.includes('unknown-slot'));
+	});
+
+	it('honors a suppression in a line comment', async () => {
+		const source = 'const a = (\n// nldd-lint-disable-next-line unknown-element -- komt nog\n<nldd-gone />\n);';
+		assert.deepEqual(await rulesIn(source, 'a.tsx'), []);
+	});
+
+	it('explains its own rule about suppressions', () => {
+		const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+		assert.equal(spawnSync(process.execPath, [cli, 'explain', 'suppression-needs-reason']).status, 0);
+	});
+});
+
+describe('a renamed rule', () => {
+	const data = { ...DATA, rules: [{ id: 'new-id', aliases: ['old-id'], severity: 'warn', context: 'nldd-pane', message: 'm', examples: {} }] };
+
+	it('keeps a suppression with the former id working', async () => {
+		const { findings } = await createLinter(data).lintSource('<template>\n<!-- nldd-lint-disable-next-line old-id -- reden -->\n<nldd-pane />\n</template>', 'a.vue');
+		assert.deepEqual(findings, []);
+	});
+
+	it('keeps a config with the former id working', async () => {
+		const { findings } = await createLinter(data, { severities: { 'old-id': 'off' } }).lintSource('<template><nldd-pane /></template>', 'a.vue');
+		assert.deepEqual(findings, []);
+	});
+
+	it('keeps a baseline with the former id working', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, '.nldd-lint-baseline.json'), '{ "a.vue": { "old-id|nldd-pane": 1 } }');
+		assert.deepEqual(readBaseline(root, createCanonical(data))['a.vue'], { 'new-id|nldd-pane': 1 });
+	});
+});
+
 describe('a rule about a removed name', () => {
 	const rule = {
 		id: 'old-name',
 		severity: 'warn',
 		context: 'nldd-button[old-name]',
+		removed: ['old-name'],
 		message: 'Use the new name.',
 		examples: { passed: [], failed: [] },
 	};

@@ -49,7 +49,8 @@
  * @fires dismiss - Fired when the dismiss button is clicked; detail: { item }
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { documentTabBarStyles, documentTabBarItemStyles } from './document-tab-bar.styles.js';
 import { documentTabBarTemplate, documentTabBarItemTemplate } from './document-tab-bar.template.js';
@@ -60,7 +61,6 @@ import type { NLDDMenu } from '../../actions/menu/menu.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { carryContext } from '../../../utilities/carried-context.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 // Pointer movement threshold in px before drag mode activates.
 // Distinguishes a click (select) from a drag (reorder).

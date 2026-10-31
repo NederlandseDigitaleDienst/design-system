@@ -60,7 +60,8 @@
  * @slot footer - Footer content
  */
 import { LitElement, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { findScrollModeProvider, whenScrollModeProviderDefined } from '../../../utilities/scroll-mode-controller.js';
 import type { ScrollMode, ScrollModeConsumer, ScrollModeProvider } from '../../../utilities/scroll-mode-controller.js';
 import { pageStyles } from './page.styles.js';

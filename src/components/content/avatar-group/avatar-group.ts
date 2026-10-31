@@ -35,7 +35,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { avatarGroupStyles } from './avatar-group.styles.js';
 import { avatarGroupTemplate } from './avatar-group.template.js';
 import '../avatar/avatar.js';
@@ -51,7 +52,6 @@ import '../../lists-and-tables/cells/text-cell/text-cell.js';
 import '../../lists-and-tables/cells/spacer-cell/spacer-cell.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddAvatarGroupTranslations } from './avatar-group.i18n.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 /** The smallest size at which a count of one, two, three and four digits fits. */
 const MIN_SIZE_FOR_COUNT = [24, 40, 56, 80];

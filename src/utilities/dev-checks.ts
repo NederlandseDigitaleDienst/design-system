@@ -39,6 +39,14 @@ function isViolated(rule: DevRule, element: Element): boolean {
 }
 
 /** An older browser without `:state()` rejects the selector; that rule then does not run. */
+function holdsNot(rule: DevRule, element: Element): boolean {
+	try {
+		return isViolated(rule, element);
+	} catch {
+		return false;
+	}
+}
+
 function selectAll(root: ParentNode, selector: string): NodeListOf<Element> | Element[] {
 	try {
 		return root.querySelectorAll(selector);
@@ -52,7 +60,7 @@ export function findViolations(root: ParentNode, rules: DevRule[] = devRules) {
 	const found: { rule: DevRule; element: Element }[] = [];
 	for (const rule of rules) {
 		for (const element of selectAll(root, rule.context)) {
-			if (isViolated(rule, element)) found.push({ rule, element });
+			if (holdsNot(rule, element)) found.push({ rule, element });
 		}
 	}
 	return found;
@@ -99,6 +107,8 @@ export function startDevChecks(): void {
 		childList: true,
 		attributes: true,
 	});
-	setInterval(report, RECHECK_MS);
+	setInterval(() => {
+		if (!document.hidden) report();
+	}, RECHECK_MS);
 	schedule();
 }

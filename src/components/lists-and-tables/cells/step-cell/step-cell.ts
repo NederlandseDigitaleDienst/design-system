@@ -29,14 +29,14 @@
  * @slot - Custom content in the dot (an alternative to `text` and `icon`)
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { VisibilityMixin } from '../../../../utilities/visibility-mixin.js';
 import { stepCellStyles } from './step-cell.styles.js';
 import { stepCellTemplate } from './step-cell.template.js';
 import '../../../content/icon/icon.js';
 import { reflectWhenSet } from '../../../../utilities/reflect-when-set.js';
-import '../../../../utilities/dev-checks-trigger.js';
 import { setState } from '../../../../utilities/element-state.js';
 
 type Status = 'past' | 'current' | 'future';

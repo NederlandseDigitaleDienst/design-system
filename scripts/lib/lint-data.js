@@ -98,7 +98,8 @@ export function buildClasses(manifest) {
 		.filter((declaration) => declaration.customElement && declaration.tagName);
 	const tags = (predicate) => elements.filter(predicate).map((element) => element.tagName).sort();
 	return {
-		'form-input': tags((element) => element.members?.some((member) => member.name === 'isFormInput')),
+		// Native controls count too, as in nldd-form-field. Natives have no manifest entry.
+		'form-input': [...tags((element) => element.members?.some((member) => member.name === 'isFormInput')), 'input', 'select', 'textarea'].sort(),
 		cell: tags((element) => element.tagName.endsWith('-cell')),
 	};
 }

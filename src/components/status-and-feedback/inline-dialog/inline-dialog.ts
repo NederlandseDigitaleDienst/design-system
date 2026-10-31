@@ -19,7 +19,8 @@
  * @slot actions - nldd-button elements, wrapped in nldd-button-group (max 3)
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { inlineDialogStyles } from './inline-dialog.styles.js';
 import { inlineDialogTemplate } from './inline-dialog.template.js';

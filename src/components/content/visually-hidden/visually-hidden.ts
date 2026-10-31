@@ -24,7 +24,7 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { visuallyHiddenStyles } from './visually-hidden.styles.js';
 import { template } from './visually-hidden.template.js';
 

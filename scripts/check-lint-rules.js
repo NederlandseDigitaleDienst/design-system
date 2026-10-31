@@ -15,7 +15,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'css-what';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
-import { tagsOf } from '../lint/rule-index.js';
+import { selectorsOf, tagsOf } from '../lint/rule-index.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const data = loadData();
@@ -62,10 +62,6 @@ function sourceFiles(directory) {
 		const skip = /\.(test|stories)\.ts$|dev-checks\.ts$/;
 		return entry.name.endsWith('.ts') && !skip.test(entry.name) ? [path] : [];
 	});
-}
-
-function selectorsOf(rule) {
-	return [rule.context, rule.assert, rule.report, rule.count?.of, rule.ref?.target].filter(Boolean);
 }
 
 function checkSee(rule) {
@@ -120,7 +116,8 @@ const componentSources = sourceFiles(join(repoRoot, 'src'))
 
 /** A rule on a state nothing sets would never fire, and look fine. */
 function checkStates(rule) {
-	for (const [, state] of rule.context.matchAll(/:state\(([a-z-]+)\)/g)) {
+	const selectors = selectorsOf(rule).join(' ');
+	for (const [, state] of selectors.matchAll(/:state\(([a-z-]+)\)/g)) {
 		const set = `'${state}'`;
 		if (!componentSources.some(([, source]) => source.includes('setState(') && source.includes(set))) {
 			problems.push(`${rule.id}: no component sets the state ${state}.`);
@@ -131,6 +128,10 @@ function checkStates(rule) {
 /** Text in a component is a second source. The only output left there is a real failure. */
 function checkNoWarnings() {
 	for (const [file, source] of componentSources) {
+		// Without this, a component could be imported on its own with no checks at all.
+		if (!file.endsWith('custom-element.ts') && /\{[^}]*\bcustomElement\b[^}]*\} from 'lit\/decorators\.js'/.test(source)) {
+			problems.push(`${relative(repoRoot, file)}: import customElement from utilities/custom-element.js.`);
+		}
 		for (const match of source.matchAll(/console\.warn\(/g)) {
 			const line = source.slice(0, match.index).split('\n').length;
 			problems.push(`${relative(repoRoot, file)}:${line}: use a rule, not console.warn. See /rule.`);
@@ -139,17 +140,13 @@ function checkNoWarnings() {
 }
 
 for (const rule of data.rules) {
-	if (rule.runtime) {
-		checkSee(rule);
-		checkStates(rule);
-		continue;
-	}
 	for (const selector of selectorsOf(rule)) {
 		for (const tokens of parse(selector)) checkTokens(tokens, rule);
 	}
 	checkSee(rule);
+	checkStates(rule);
 	checkReflected(rule);
-	await checkExamples(rule);
+	if (!rule.runtime) await checkExamples(rule);
 }
 const patterns = await checkPatterns();
 checkNoWarnings();

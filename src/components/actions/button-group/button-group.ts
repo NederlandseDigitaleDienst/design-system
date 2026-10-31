@@ -40,11 +40,11 @@
  * @slot - Default slot for buttons (max 3)
  */
 import { LitElement } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { buttonGroupStyles } from './button-group.styles.js';
 import { template } from './button-group.template.js';
-import '../../../utilities/dev-checks-trigger.js';
 import { setState } from '../../../utilities/element-state.js';
 
 type Size = 'sm' | 'md';

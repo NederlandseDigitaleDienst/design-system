@@ -32,14 +32,14 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { cardStyles } from './card.styles.js';
 import { cardTemplate } from './card.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddCardTranslations } from './card.i18n.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 export type CardBackground = 'base' | 'tinted' | 'accent-tinted';
 

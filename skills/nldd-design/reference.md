@@ -487,7 +487,6 @@ A customizable icon component that renders SVG icons from a predefined library. 
 **Rules** (`nldd lint`)
 
 - `icon-name-renamed`: The `name` attribute is now `icon`. Rename it here and on every other nldd-icon.
-- `icon-not-found`: This icon does not exist.
 
 **Attributes**
 
@@ -995,7 +994,6 @@ A text input with autocomplete dropdown via nldd-menu. Add a slotted nldd-menu w
 **Rules** (`nldd lint`)
 
 - `combo-box-needs-name`: nldd-combo-box needs `accessible-label` or a labeled nldd-form-field around it, or it has no accessible name.
-- `combo-box-needs-popover-api`: The Popover API is not supported in this browser. The dropdown will not open.
 
 **Attributes**
 

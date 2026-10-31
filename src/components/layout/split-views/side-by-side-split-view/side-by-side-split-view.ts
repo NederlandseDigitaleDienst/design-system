@@ -18,7 +18,8 @@
  * @slot pane-n - Each subsequent pane based on the `panes` attribute
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { SINGLE_COLUMN_CHANGE_EVENT } from '../../../../utilities/scroll-mode-controller.js';
 import { ScrollModeController } from '../../../../utilities/scroll-mode-controller.js';
 import type { SingleColumnChangeDetail } from '../../../../utilities/scroll-mode-controller.js';

@@ -1,5 +1,5 @@
 /**
- * The normalised element tree every frontend produces and the engine reads.
+ * The normalized element tree every frontend produces and the engine reads.
  *
  * A template is not a document. Part of what ends up in the DOM is unknown when
  * reading the source: a bound value, a spread, a child component. The tree
@@ -21,6 +21,7 @@ export const BOUND = Symbol('bound');
  * @property {boolean} conditional Rendered only some of the time.
  * @property {boolean} repeated Rendered any number of times.
  * @property {boolean} wrapped A framework wrapper standing in for this tag.
+ * @property {boolean} templated A template language writes into the tag itself.
  */
 
 /** @returns {TreeNode} */
@@ -36,6 +37,7 @@ export function createNode(name, offset = 0) {
 		conditional: false,
 		repeated: false,
 		wrapped: false,
+		templated: false,
 	};
 }
 

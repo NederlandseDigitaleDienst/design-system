@@ -32,7 +32,8 @@
  */
 
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { topNavigationBarStyles } from './top-navigation-bar.styles.js';
 import { template } from './top-navigation-bar.template.js';

@@ -28,7 +28,8 @@
  * @fires change - When value is committed (blur)
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { FormAssociated, type FormValue } from '../../../utilities/form-associated-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { multiLineTextFieldStyles } from './multi-line-text-field.styles.js';
@@ -36,7 +37,6 @@ import { multiLineTextFieldTemplate } from './multi-line-text-field.template.js'
 import type { Keyboard, EnterKey } from '../text-field/text-field.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 export type ResizeMode = 'none' | 'vertical' | 'auto';
 

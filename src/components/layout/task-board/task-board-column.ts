@@ -22,12 +22,12 @@
  * @slot footer - Right under the last item, such as a button to add one; it scrolls along with the items
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { taskBoardColumnStyles } from './task-board.styles.js';
 import { taskBoardColumnTemplate } from './task-board-column.template.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 @customElement('nldd-task-board-column')
 export class NLDDTaskBoardColumn extends LitElement {

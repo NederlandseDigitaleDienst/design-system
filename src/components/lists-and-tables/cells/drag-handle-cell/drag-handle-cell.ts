@@ -25,7 +25,8 @@
  * @attr {object} translations - Override translation keys; unset keys fall back to Dutch. Sets the handle's accessible label.
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { dragHandleCellStyles } from './drag-handle-cell.styles.js';
 import { template } from './drag-handle-cell.template.js';

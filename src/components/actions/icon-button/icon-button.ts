@@ -46,7 +46,8 @@
  * @fires click - When button is clicked (not fired when disabled)
  */
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { iconButtonStyles } from './icon-button.styles.js';
 import { template } from './icon-button.template.js';
@@ -58,7 +59,6 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { internalsOf } from '../../../utilities/element-state.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
 export type Appearance =

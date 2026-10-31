@@ -1,6 +1,6 @@
 /** What connects a rule to the docs: the components it names and the pattern it explains. */
 
-function selectorsOf(rule) {
+export function selectorsOf(rule) {
 	return [rule.context, rule.assert, rule.report, rule.count?.of, rule.ref?.target].filter(Boolean);
 }
 

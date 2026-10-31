@@ -1,6 +1,6 @@
 severity: error
 context: 'nldd-toggle-button-group'
-assert: '[accessible-label], [accessible-labeled-by], nldd-form-field[label] *'
+assert: '[accessible-label], [accessible-labeled-by], nldd-form-field[label] :form-input:not(:form-input ~ *, :form-input *)'
 message: 'nldd-toggle-button-group needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.'
 examples:
   passed: ['<nldd-toggle-button-group accessible-label="Opmaak"></nldd-toggle-button-group>', '<nldd-form-field label="Opmaak"><nldd-toggle-button-group></nldd-toggle-button-group></nldd-form-field>']

@@ -40,7 +40,8 @@
  * @fires change - When the content is committed on blur (detail: { value })
  */
 import { type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { EditorView, keymap, drawSelection, lineNumbers as cmLineNumbers } from '@codemirror/view';
 import { Compartment, type Extension } from '@codemirror/state';

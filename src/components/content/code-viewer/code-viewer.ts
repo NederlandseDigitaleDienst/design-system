@@ -51,7 +51,8 @@
  *
  * @slot - Default slot for the code/text content (also the copy source)
  */
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { EditorView } from '@codemirror/view';
 import { Compartment, EditorState, type Extension } from '@codemirror/state';

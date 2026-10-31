@@ -167,7 +167,3 @@ export { NLDDJustInTimeEducation } from './status-and-feedback/just-in-time-educ
 export { setTranslations } from '../utilities/translations.js';
 
 // Auto-register happens on import of individual component files
-
-// # Rule checks while developing
-
-import '../utilities/dev-checks-trigger.js';

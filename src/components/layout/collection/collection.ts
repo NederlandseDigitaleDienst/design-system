@@ -50,7 +50,8 @@
  * @fires load-more - When the load-more button is clicked
  */
 import { LitElement } from 'lit';
-import { customElement, property, state, query } from 'lit/decorators.js';
+import { property, state, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { collectionStyles } from './collection.styles.js';
 import { collectionTemplate } from './collection.template.js';

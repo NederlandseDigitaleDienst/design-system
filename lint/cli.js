@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatText } from './format.js';
-import { BUILT_IN_RULES, createLinter, loadData } from './linter.js';
+import { BUILT_IN_RULES, createCanonical, createLinter, loadData } from './linter.js';
 import { rulesAboutTag } from './rule-index.js';
 import { applyBaseline, findFiles, readBaseline, readConfig, writeBaseline } from './project.js';
 
@@ -79,9 +79,10 @@ function noteOtherVersion(root) {
 async function runLint(data, paths, options) {
 	const root = process.cwd();
 	const started = performance.now();
-	const known = new Set([...data.rules.map((r) => r.id), ...Object.keys(BUILT_IN_RULES)]);
+	const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES)]);
 	const config = readConfig(root, known);
 	noteOtherVersion(root);
+	const canonical = createCanonical(data);
 	const linter = createLinter(data, { wrappers: config.wrappers, severities: config.rules });
 
 	const inputs = options.stdin
@@ -100,13 +101,13 @@ async function runLint(data, paths, options) {
 	}
 
 	if (options['update-baseline']) {
-		writeBaseline(results, root);
+		writeBaseline(results, root, canonical);
 		const accepted = results.reduce((sum, result) => sum + result.findings.length, 0);
 		console.log(`Baseline updated: ${accepted} findings accepted.`);
 		return 0;
 	}
 
-	const baseline = readBaseline(root);
+	const baseline = readBaseline(root, canonical);
 	let skipped = 0;
 	const reported = results.map((result) => {
 		const fresh = applyBaseline(result.filename, result.findings, baseline, root);

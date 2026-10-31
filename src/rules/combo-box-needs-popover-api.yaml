@@ -1,4 +1,0 @@
-severity: warn
-runtime: true
-context: 'nldd-combo-box:state(no-popover-api)'
-message: 'The Popover API is not supported in this browser. The dropdown will not open.'

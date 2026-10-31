@@ -38,7 +38,8 @@
  * @slot supporting-text - Supporting text as rich content (a time element, for instance)
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { identityStyles } from './identity.styles.js';
 import { identityTemplate } from './identity.template.js';

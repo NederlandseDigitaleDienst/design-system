@@ -1,6 +1,6 @@
 severity: error
 context: 'nldd-segmented-control'
-assert: '[accessible-label], [accessible-labeled-by], nldd-form-field[label] *'
+assert: '[accessible-label], [accessible-labeled-by], nldd-form-field[label] :form-input:not(:form-input ~ *, :form-input *)'
 message: 'nldd-segmented-control needs `accessible-label`, `accessible-labeled-by` or a labeled nldd-form-field around it, or it has no accessible name.'
 examples:
   passed: ['<nldd-segmented-control accessible-label="Weergave"></nldd-segmented-control>', '<nldd-form-field label="Weergave"><nldd-segmented-control></nldd-segmented-control></nldd-form-field>']

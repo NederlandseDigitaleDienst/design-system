@@ -71,7 +71,8 @@
  * @slot - Content of the text panel (nldd-title and nldd-rich-text with color="inherit", for instance)
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../../utilities/custom-element.js';
 import { PageSectionMixin } from '../../../../utilities/page-section-mixin.js';
 import { reflectNonDefault } from '../../../../utilities/reflect-non-default.js';
 import { heroStyles } from './hero.styles.js';

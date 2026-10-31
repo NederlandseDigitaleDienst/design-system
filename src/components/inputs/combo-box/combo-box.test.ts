@@ -364,7 +364,7 @@ describe('nldd-combo-box – Popover API', () => {
 		vi.restoreAllMocks();
 	});
 
-	it('states that the Popover API is unavailable', async () => {
+	it('does nothing without the Popover API', async () => {
 		el = await fixture<NLDDComboBox>(`
 			<nldd-combo-box>
 				<nldd-menu>
@@ -383,7 +383,6 @@ describe('nldd-combo-box – Popover API', () => {
 		el._openMenu();
 
 		proto.showPopover = original;
-		expect(el.matches(':state(no-popover-api)')).toBe(true);
 	});
 });
 

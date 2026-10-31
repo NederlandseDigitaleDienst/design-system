@@ -20,11 +20,11 @@
  * @csspart bar - The button bar container
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { buttonBarStyles } from './button-bar.styles.js';
 import { template } from './button-bar.template.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 /**
  * A vertical rule between groups of buttons in an `nldd-button-bar`. Purely

@@ -60,7 +60,8 @@
  * </nldd-form-field>
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { validationListStyles, validationItemStyles } from './validation-list.styles.js';
 import { validationListTemplate, validationItemTemplate } from './validation-list.template.js';
 import { setState } from '../../../utilities/element-state.js';

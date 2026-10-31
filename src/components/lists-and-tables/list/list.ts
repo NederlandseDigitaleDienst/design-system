@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { listStyles } from './list.styles.js';
 import { template } from './list.template.js';
@@ -10,7 +11,6 @@ import '../../status-and-feedback/inline-dialog/inline-dialog.js';
 import '../../content/icon/icon.js';
 import '../../actions/icon-button/icon-button.js';
 import { translate } from '../../../utilities/translations.js';
-import '../../../utilities/dev-checks-trigger.js';
 import { setState } from '../../../utilities/element-state.js';
 
 export type ListDividers = 'always' | 'on-touch' | 'never';

@@ -44,7 +44,8 @@
  * @fires select - When the item is activated; detail: { item: NLDDTabBarItem }
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { tabBarStyles, tabBarItemStyles } from './tab-bar.styles.js';
 import { tabBarTemplate, tabBarItemTemplate } from './tab-bar.template.js';
@@ -54,7 +55,6 @@ import { nlddTabBarTranslations } from './tab-bar.i18n.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../actions/menu/menu.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 
 // # nldd-tab-bar-item

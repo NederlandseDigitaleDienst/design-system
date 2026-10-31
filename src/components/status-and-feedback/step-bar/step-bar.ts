@@ -48,7 +48,8 @@
  * ```
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddStepBarTranslations, type NLDDStepBarTranslations } from './step-bar.i18n.js';
@@ -56,7 +57,6 @@ import { stepBarStyles, stepBarItemStyles } from './step-bar.styles.js';
 import { stepBarTemplate, stepBarItemTemplate } from './step-bar.template.js';
 import { breakpointPx } from '../../../assets/styles/breakpoints.js';
 import '../../content/icon/icon.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 /** The same three names as nldd-step-cell, so one flow reads in a
  *  single vocabulary whether it runs horizontally or vertically. */

@@ -22,7 +22,6 @@ import { SafeTriangleController, rectContainsPoint, type Point } from './menu.sa
 import { NLDDMenuGroup } from './menu-group.js';
 import { NLDDMenuDivider } from './menu-divider.js';
 import { nextTabbableAfter } from '../../../utilities/tab-order.js';
-import '../../../utilities/dev-checks-trigger.js';
 import { setState } from '../../../utilities/element-state.js';
 
 export { NLDDMenuItem } from './menu-item.js';

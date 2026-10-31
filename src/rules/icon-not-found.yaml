@@ -1,4 +1,4 @@
 severity: warn
 runtime: true
-context: 'nldd-icon:state(unknown-icon)'
-message: 'This icon does not exist.'
+context: ':state(unknown-icon)'
+message: 'An icon set here does not exist. See the icon list in the reference.'

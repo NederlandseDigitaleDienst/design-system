@@ -54,7 +54,8 @@
  * @method moveItem(item, toColumn, toIndex?) - Moves an item to a column, given as its `value` or as the element, at `toIndex` or at the end; fires `nldd-move` and says where it landed. Returns whether it moved.
  */
 import { LitElement, type PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { nlddTaskBoardTranslations } from './task-board.i18n.js';
 import { taskBoardStyles } from './task-board.styles.js';

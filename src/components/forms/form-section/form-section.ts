@@ -64,7 +64,6 @@
  * Children of the form-section are placed in `.form-section__main`.
  */
 
-import '../../../utilities/dev-checks-trigger.js';
 
 const FIELDSET_CLASS = 'form-section';
 const HEADER_CLASS = 'form-section__header';

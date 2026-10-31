@@ -41,7 +41,8 @@
  * @attr {string} tooltip-text - Override of the auto-generated tooltip text
  */
 import { LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { progressBarStyles, progressBarSegmentIndicatorStyles } from './progress-bar.styles.js';
 import { progressBarTemplate, segmentIndicatorTemplate } from './progress-bar.template.js';

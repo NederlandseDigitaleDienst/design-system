@@ -57,6 +57,22 @@ describe('rules in the browser', () => {
 		expect(roots.flatMap((each) => findViolations(each)).map(({ rule }) => rule.id)).toEqual(['icon-button-needs-name']);
 	});
 
+	it('reports an icon that does not exist on the component that renders it', async () => {
+		await mount('<nldd-button text="Bewaar" start-icon="bestaat-niet"></nldd-button>');
+		await (root.firstElementChild as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete;
+		await new Promise((resolve) => setTimeout(resolve, 20));
+		expect(findViolations(root).map(({ rule }) => rule.id)).toContain('icon-not-found');
+	});
+
+	it('takes a consumer element that says it is an input for an input', async () => {
+		class MyInput extends HTMLElement {
+			static isFormInput = true;
+		}
+		customElements.define('my-dev-checks-input', MyInput);
+		await mount('<nldd-form-field label="Naam"><my-dev-checks-input></my-dev-checks-input></nldd-form-field>');
+		expect(findViolations(root).map(({ rule }) => rule.id)).not.toContain('form-field-needs-input');
+	});
+
 	it('sees a value set as a property, as a framework does', async () => {
 		await mount('<nldd-icon-button icon="plus"></nldd-icon-button>');
 		const rule = devRules.filter(({ id }) => id === 'icon-button-needs-name');

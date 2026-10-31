@@ -1,5 +1,5 @@
 /**
- * Turns source files into normalised trees. One function per template language;
+ * Turns source files into normalized trees. One function per template language;
  * rules never see the difference.
  *
  * Bound attributes keep their name and lose their value, so `:selected` on a tab
@@ -30,24 +30,31 @@ const TRANSPARENT = new Set([
 const CONDITIONAL = new Set(['v-if', 'v-else', 'v-else-if', 'v-show', '*ngIf']);
 const REPEATED = new Set(['v-for', '*ngFor']);
 
+/** A value a template language fills in: `{{ x }}`, `{% x %}`, or `{x}`. */
+const TEMPLATE_VALUE = /\{\{|\{%|^\{.*\}$/;
+
 /** Anything else cannot be an attribute, so a template language is writing into the tag. */
 const PLAIN_ATTRIBUTE = /^[a-zA-Z_][\w:.-]*$/;
 
 function readAttribute(element, name, value) {
 	if (CONDITIONAL.has(name)) element.conditional = true;
 	else if (REPEATED.has(name)) element.repeated = true;
-	else if (name === 'v-bind') element.spread = true;
+	else if (name === 'v-bind' || /^(v-bind)?:\[/.test(name)) element.spread = true;
 	else if (name === 'v-model') element.attrs.set('value', BOUND);
 	else if (name.startsWith('v-model:')) element.attrs.set(name.slice(8), BOUND);
 	else if (name.startsWith(':') || name.startsWith('v-bind:') || name.startsWith('.')) {
 		const bare = name.replace(/^(v-bind)?[:.]/, '').replace(/\.(prop|attr|camel)$/, '');
 		element.attrs.set(bare, BOUND);
+	} else if (/^\[(class|style)\./.test(name)) {
+		// Angular's way to set one class or style, which is no attribute of the component.
 	} else if (/^\[.+\]$/.test(name)) {
-		element.attrs.set(name.slice(1, -1).replace(/^attr\./, ''), BOUND);
+		element.attrs.set(name.replace(/^\[\(?|\)?\]$/g, '').replace(/^attr\./, ''), BOUND);
 	} else if (/^(@|#|v-|\(|\*)/.test(name)) {
 		// Listeners, directives and template references add no attribute.
-	} else if (!PLAIN_ATTRIBUTE.test(name)) element.spread = true;
-	else element.attrs.set(name, value.includes('{{') ? BOUND : value);
+	} else if (!PLAIN_ATTRIBUTE.test(name)) {
+		element.spread = true;
+		element.templated = true;
+	} else element.attrs.set(name, TEMPLATE_VALUE.test(value) ? BOUND : value);
 }
 
 function hasSlotName(attribs) {
@@ -58,12 +65,15 @@ function readHtmlChildren(children, parent, inherited) {
 	for (const node of children) {
 		if (node.type !== 'tag') continue;
 		const { name, attribs } = node;
+		// In a document, a template is inert until something clones it elsewhere.
+		if (name === 'template' && inherited.inert) continue;
 		const isWrapper = (name === 'template' && !hasSlotName(attribs)) || TRANSPARENT.has(name);
 		if (isWrapper) {
 			readHtmlChildren(node.children, parent, {
 				conditional:
 					inherited.conditional || Object.keys(attribs).some((key) => CONDITIONAL.has(key)),
 				repeated: inherited.repeated || Object.keys(attribs).some((key) => REPEATED.has(key)),
+				inert: inherited.inert,
 			});
 			continue;
 		}
@@ -73,7 +83,7 @@ function readHtmlChildren(children, parent, inherited) {
 		element.repeated ||= inherited.repeated;
 		element.opaque = isOpaqueTag(name) || name === 'template';
 		appendChild(parent, element);
-		readHtmlChildren(node.children, element, { conditional: false, repeated: false });
+		readHtmlChildren(node.children, element, { inert: inherited.inert });
 	}
 }
 
@@ -88,7 +98,7 @@ function parseMarkup(source, { selfClosing }) {
 
 export function parseHtml(source) {
 	const root = createRoot({ closed: /<html[\s>]/i.test(source) });
-	readHtmlChildren(parseMarkup(source, { selfClosing: false }).children, root, {});
+	readHtmlChildren(parseMarkup(source, { selfClosing: false }).children, root, { inert: true });
 	return [root];
 }
 
@@ -138,12 +148,18 @@ function collectJsx(node, found) {
 	}
 }
 
+/** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
+/** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
+/** `undefined` means the attribute is not there: `x={false}` and `x={null}` switch it off. */
 function staticJsxValue(value) {
 	if (value === null) return '';
 	if (value.type === 'Literal') return String(value.value);
 	if (value.type !== 'JSXExpressionContainer') return BOUND;
 	const { expression } = value;
-	if (expression.type === 'Literal') return String(expression.value);
+	if (expression.type === 'Literal') {
+		if (expression.value === false || expression.value === null) return undefined;
+		return expression.value === true ? '' : String(expression.value);
+	}
 	if (expression.type === 'TemplateLiteral' && expression.expressions.length === 0) {
 		return expression.quasis[0].value.cooked;
 	}
@@ -158,9 +174,8 @@ function readJsxAttributes(element, attributes, roots) {
 		}
 		const name = jsxName(attribute.name);
 		const isHandler = /^on[A-Z]/.test(name) || name === 'key' || name === 'ref';
-		if (!isHandler) {
-			element.attrs.set(name === 'className' ? 'class' : name, staticJsxValue(attribute.value));
-		}
+		const value = staticJsxValue(attribute.value);
+		if (!isHandler && value !== undefined) element.attrs.set(name === 'className' ? 'class' : name, value);
 		// An element passed as a prop renders elsewhere, so it is a tree of its own.
 		const nested = [];
 		collectJsx(attribute.value, nested);

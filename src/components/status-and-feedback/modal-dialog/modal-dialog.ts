@@ -42,7 +42,8 @@ import { LitElement } from 'lit';
  *  close always wins on animationend, short enough that a paused or dropped
  *  animation does not leave the dialog stuck. */
 const MODAL_DIALOG_CLOSE_TIMEOUT_MS = 1000;
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { modalDialogStyles } from './modal-dialog.styles.js';
 import { modalDialogTemplate } from './modal-dialog.template.js';
@@ -51,7 +52,6 @@ import { focusAutofocusTarget } from '../../../utilities/autofocus.js';
 import { openWhenRendered } from '../../../utilities/open-when-rendered.js';
 import type { InlineDialogVariant, InlineDialogHorizontalAlignment } from '../inline-dialog/inline-dialog.js';
 import '../inline-dialog/inline-dialog.js';
-import '../../../utilities/dev-checks-trigger.js';
 
 @customElement('nldd-modal-dialog')
 export class NLDDModalDialog extends LitElement {

@@ -16,7 +16,7 @@ export function loadData() {
 const GLOBAL_ATTRIBUTE =
 	/^(id|class|style|slot|hidden|lang|dir|title|role|tabindex|part|inert|draggable|contenteditable|spellcheck|translate|accesskey|autofocus|enterkeyhint|inputmode|is|nonce|popover|key|ref|exportparts|itemprop|data-.*|aria-.*|on(click|change|input|submit|focus|blur|load|error|key[a-z]+|mouse[a-z]+))$/;
 
-const ICON_ATTRIBUTES = new Set(['icon', 'start-icon', 'end-icon']);
+const ICON_ATTRIBUTES = new Set(['icon', 'start-icon', 'end-icon', 'selected-icon']);
 
 /**
  * Kept in the code rather than src/rules/: they are generated from the contract,
@@ -47,11 +47,31 @@ export const BUILT_IN_RULES = {
 		severity: 'warn',
 		description: 'This still works, but will go away in a later version.',
 	},
+	'suppression-needs-reason': {
+		severity: 'warn',
+		description: 'Say why after `--`, so the next reader knows why this rule is off here.',
+	},
 };
 
 const toCamelCase = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 
+/** `[accessibleLabel]` and `:accessibleLabel` set the same thing as `accessible-label`. */
+function readPropertyNames(roots, tags) {
+	const visit = (node) => {
+		const contract = tags[node.name];
+		for (const [name, value] of contract ? [...node.attrs] : []) {
+			const attribute = name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+			if (attribute === name || !contract.attrs[attribute]) continue;
+			node.attrs.delete(name);
+			node.attrs.set(attribute, value);
+		}
+	};
+	for (const root of roots) walk(root, visit);
+	return roots;
+}
+
 function checkAttributes(node, { tags, icons, anyChildAttrs }, report) {
+	if (node.templated) return;
 	const contract = tags[node.name];
 	// A parent in another file may be the one reading it, so any child attribute goes.
 	const fromParent = node.parent.opaque ? anyChildAttrs : (tags[node.parent.name]?.childAttrs ?? {});
@@ -71,6 +91,8 @@ function checkAttributes(node, { tags, icons, anyChildAttrs }, report) {
 			}
 		} else if (value === BOUND && contract.props.includes(toCamelCase(name))) {
 			// A property without an attribute, which only a binding can reach.
+		} else if (/[A-Z]/.test(name)) {
+			// HTML has no capitals, so this is a directive of a template language.
 		} else if (!GLOBAL_ATTRIBUTE.test(name.toLowerCase()) && !node.wrapped) {
 			report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
 		}
@@ -105,16 +127,16 @@ function builtInFindings(root, context) {
 	return findings;
 }
 
-const SUPPRESSION = /nldd-lint-disable-next-line\s+([\w-]+(?:\s*,\s*[\w-]+)*)(?:\s+--\s*(\S.*?))?\s*(?:-->|\*\/|#\})/;
+const SUPPRESSION = /nldd-lint-disable-next-line\s+([\w-]+(?:\s*,\s*[\w-]+)*)(?:\s+--\s+(\S.*?))?\s*(?:-->|\*\/|#\}|$)/;
 
-function readSuppressions(source) {
+function readSuppressions(source, canonical) {
 	const suppressed = new Map();
 	const missingReason = [];
 	source.split('\n').forEach((text, index) => {
-		const match = text.match(SUPPRESSION);
+		const match = text.trimEnd().match(SUPPRESSION);
 		if (!match) return;
 		if (!match[2]) missingReason.push(index + 1);
-		suppressed.set(index + 2, new Set(match[1].split(',').map((id) => id.trim())));
+		suppressed.set(index + 2, new Set(match[1].split(',').map((id) => canonical(id.trim()))));
 	});
 	return { suppressed, missingReason };
 }
@@ -134,7 +156,15 @@ function createPositions(source) {
 	};
 }
 
-export function createLinter(data = loadData(), { wrappers = {}, severities = {} } = {}) {
+/** A rule id is API: a former id keeps working wherever consumers wrote it down. */
+export function createCanonical(data) {
+	const former = new Map(data.rules.flatMap(({ id, aliases = [] }) => aliases.map((alias) => [alias, id])));
+	return (id) => former.get(id) ?? id;
+}
+
+export function createLinter(data = loadData(), { wrappers = {}, severities: configured = {} } = {}) {
+	const canonical = createCanonical(data);
+	const severities = Object.fromEntries(Object.entries(configured).map(([id, level]) => [canonical(id), level]));
 	const context = {
 		tags: data.tags,
 		icons: new Set(data.icons),
@@ -147,8 +177,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities = {}
 	function withoutCovered(findings) {
 		return findings.filter(
 			({ attribute, node }) =>
-				!attribute ||
-				!findings.some((other) => other.node === node && other.selector?.includes(`[${attribute}`)),
+				!attribute || !findings.some((other) => other.node === node && other.removed?.includes(attribute)),
 		);
 	}
 
@@ -166,7 +195,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities = {}
 						severity: rule.severity,
 						message: rule.message,
 						node,
-						selector: rule.context,
+						removed: rule.removed,
 					});
 				}
 			}
@@ -176,12 +205,13 @@ export function createLinter(data = loadData(), { wrappers = {}, severities = {}
 
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
 	async function lintSource(source, filename) {
-		const roots = applyWrappers(await parseSource(source, filename), wrappers);
+		const parsed = applyWrappers(await parseSource(source, filename), wrappers);
+		const roots = readPropertyNames(parsed, data.tags);
 		const { findings, counts } = lintRoots(roots);
-		const { suppressed, missingReason } = readSuppressions(source);
+		const { suppressed, missingReason } = readSuppressions(source, canonical);
 		const position = createPositions(source);
 		const located = findings
-			.map(({ node, severity, selector, attribute, ...finding }) => ({
+			.map(({ node, severity, removed, attribute, ...finding }) => ({
 				...finding,
 				severity: severities[finding.rule] ?? severity,
 				tag: node.name,
@@ -192,8 +222,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities = {}
 		for (const line of missingReason) {
 			located.push({
 				rule: 'suppression-needs-reason',
-				severity: 'warn',
-				message: 'Add the reason after `--`, so the next reader knows why this rule is off here.',
+				severity: BUILT_IN_RULES['suppression-needs-reason'].severity,
+				message: BUILT_IN_RULES['suppression-needs-reason'].description,
 				tag: '',
 				line,
 				column: 1,

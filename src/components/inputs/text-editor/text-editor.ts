@@ -86,7 +86,8 @@
  */
 import { relabel } from './text-editor.labels.js';
 import { type PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { EditorView, drawSelection, dropCursor } from '@codemirror/view';
 import { Compartment, Prec, Transaction, type Extension } from '@codemirror/state';

@@ -43,7 +43,8 @@
  */
 
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { customElement } from '../../../utilities/custom-element.js';
 import { buttonStyles } from './button.styles.js';
 import { template } from './button.template.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
@@ -56,7 +57,6 @@ import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import { internalsOf } from '../../../utilities/element-state.js';
 import { reflectWhenSet } from '../../../utilities/reflect-when-set.js';
-import '../../../utilities/dev-checks-trigger.js';
 import { setState } from '../../../utilities/element-state.js';
 
 type Appearance =
