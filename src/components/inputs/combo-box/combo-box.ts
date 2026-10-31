@@ -80,6 +80,7 @@ import '../../content/icon/icon.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { setState } from '../../../utilities/element-state.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
@@ -433,7 +434,10 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 		// with nothing left to offer stays closed — the "nothing found" empty
 		// state would wrongly suggest the input is invalid.
 		if (this.allowCustom && !this._hasVisibleMenuItems()) return;
-		if (!('showPopover' in this._menu)) return;
+		if (!('showPopover' in this._menu)) {
+			setState(this, 'no-popover', true);
+			return;
+		}
 		this._updateMenuWidth();
 		(this._menu as HTMLElement).showPopover();
 	}

@@ -28,7 +28,7 @@ const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url),
 function findRule(data, id) {
 	const rule = data.rules.find((r) => r.id === id || r.aliases?.includes(id));
 	if (rule) return rule;
-	return BUILT_IN_RULES[id] ? { id, ...BUILT_IN_RULES[id], message: BUILT_IN_RULES[id].description } : undefined;
+	return BUILT_IN_RULES[id] ? { id, group: 'api', ...BUILT_IN_RULES[id], message: BUILT_IN_RULES[id].description } : undefined;
 }
 
 function explain(data, id) {
@@ -81,6 +81,13 @@ function noteOtherVersion(root) {
 
 async function runLint(data, paths, options) {
 	if (Number.isNaN(Number(options['max-warnings'] ?? 0))) throw new Error('--max-warnings takes a number.');
+	const formatName = options.format ?? 'text';
+	const chosen = { text: formatText, json: formatJson, github: formatGithub }[formatName];
+	if (!chosen) throw new Error(`Unknown format: ${formatName}`);
+	if (options.statistics && formatName !== 'text') throw new Error('--statistics is plain text, so it takes no --format.');
+	if (options['update-baseline'] && (options.select || options.ignore)) {
+		throw new Error('--update-baseline takes no --select or --ignore: it would forget every finding outside them.');
+	}
 	const root = process.cwd();
 	const started = performance.now();
 	const known = new Set([...data.rules.flatMap((r) => [r.id, ...(r.aliases ?? [])]), ...Object.keys(BUILT_IN_RULES), ...GROUPS]);
@@ -95,7 +102,7 @@ async function runLint(data, paths, options) {
 	const canonical = createCanonical(data);
 
 	const inputs = options.stdin
-		? [{ filename: resolve(root, options.filename), source: readFileSync(0, 'utf8') }]
+		? [{ filename: resolve(root, options.filename ?? 'stdin.html'), source: readFileSync(0, 'utf8') }]
 		: findFiles(paths, root, config.exclude).map((filename) => ({
 				filename,
 				source: readFileSync(filename, 'utf8'),
@@ -135,8 +142,7 @@ async function runLint(data, paths, options) {
 		skipped,
 		explainRule: (id) => findRule(data, id),
 	};
-	const format = options.statistics ? formatStatistics : { text: formatText, json: formatJson, github: formatGithub }[options.format];
-	if (!format) throw new Error(`Unknown format: ${options.format}`);
+	const format = options.statistics ? formatStatistics : chosen;
 	const output = format(reported, context);
 	if (output) console.log(output);
 
@@ -152,11 +158,11 @@ async function main() {
 	const { values, positionals } = parseArgs({
 		allowPositionals: true,
 		options: {
-			format: { type: 'string', default: 'text' },
+			format: { type: 'string' },
 			'update-baseline': { type: 'boolean' },
 			'max-warnings': { type: 'string' },
 			stdin: { type: 'boolean' },
-			filename: { type: 'string', default: 'stdin.html' },
+			filename: { type: 'string' },
 			for: { type: 'string' },
 			group: { type: 'string' },
 			select: { type: 'string' },

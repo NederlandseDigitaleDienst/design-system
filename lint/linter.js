@@ -13,7 +13,10 @@ export { BUILT_IN_RULES, createCanonical, loadData };
 
 /** Valid on any element, so the manifest does not list them per component. */
 const GLOBAL_ATTRIBUTE =
-	/^(id|class|style|slot|hidden|lang|dir|title|role|tabindex|part|inert|draggable|contenteditable|spellcheck|translate|accesskey|autofocus|enterkeyhint|inputmode|is|nonce|popover|key|ref|exportparts|item(prop|scope|type|id|ref)|i18n(-.*)?|data-.*|aria-.*|hx-.*|on(?!ly$)[a-z]+)$/;
+	/^(id|class|style|slot|hidden|lang|dir|title|role|tabindex|part|inert|draggable|contenteditable|spellcheck|translate|accesskey|autofocus|enterkeyhint|inputmode|is|nonce|popover|key|ref|exportparts|item(prop|scope|type|id|ref)|i18n(-.*)?|data-.*|aria-.*|hx-.*|x-.*|on(?!ly$)[a-z]+)$/;
+
+/** Set as a property on any element: in markup these are bindings, not attributes. */
+const DOM_PROPERTY = /^(textContent|innerHTML|innerText|outerHTML|className|tabIndex|aria[A-Z].*)$/;
 
 const ICON_ATTRIBUTES = new Set(['icon', 'start-icon', 'end-icon', 'selected-icon']);
 
@@ -57,6 +60,8 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 			}
 		} else if (value === BOUND && contract.props.includes(toCamelCase(name))) {
 			// A property without an attribute, which only a binding can reach.
+		} else if (value === BOUND && DOM_PROPERTY.test(name)) {
+			// Every element has this one.
 		} else if (isPlainHtml && /[A-Z]/.test(name)) {
 			// HTML has no capitals, so in an .html file this is a template directive.
 		} else if (contract.attrs[name.toLowerCase()]) {
@@ -95,7 +100,7 @@ function builtInFindings(root, context) {
 	return findings;
 }
 
-const SUPPRESSION = /nldd-lint-disable-next-line\s+([\w-]+(?:\s*,\s*[\w-]+)*)(?:\s+--(?!-*>)\s*(\S.*?))?\s*(?:-->|\*\/|#\}|$)/;
+const SUPPRESSION = /nldd-lint-disable-next-line\s+([\w-]+(?:\s*,\s*[\w-]+)*)(?:\s+--(?!-*>)\s*(\S.*?))?\s*(?:-->|\*\/|-?#\}|$)/;
 
 function readSuppressions(source, canonical) {
 	const suppressed = new Map();
@@ -107,6 +112,12 @@ function readSuppressions(source, canonical) {
 		suppressed.set(index + 2, new Set(match[1].split(',').map((id) => canonical(id.trim()))));
 	});
 	return { suppressed, missingReason };
+}
+
+function syntaxError({ message, offset }, position) {
+	const rule = 'syntax-error';
+	const { severity, description } = BUILT_IN_RULES[rule];
+	return { rule, severity, message: `${description} ${message}`, tag: '', ...position(offset) };
 }
 
 function createPositions(source) {
@@ -170,7 +181,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	/** @returns {Promise<{ findings: object[], counts: object }>} */
 	async function lintSource(source, filename) {
 		const parsed = applyWrappers(await parseSource(source, filename), wrappers);
-		const isPlainHtml = /\.html?$/.test(filename);
+		const isPlainHtml = /\.(html?|j2|jinja2?)$/.test(filename);
 		const roots = readPropertyNames(parsed, data.tags, isPlainHtml);
 		const { findings, counts } = lintRoots(roots, isPlainHtml);
 		const { suppressed, missingReason } = readSuppressions(source, canonical);
@@ -191,7 +202,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		}));
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
-		const unneeded = /\.md$/.test(filename)
+		const unneeded = /\.md$/.test(filename) || parsed.length === 0 || parsed.syntaxError
 			? []
 			: [...suppressed].flatMap(([line, ids]) =>
 					[...ids]
@@ -201,6 +212,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		const located = all
 			.filter((finding) => !suppressed.get(finding.line)?.has(finding.rule))
 			.concat(missingReason.map((line) => aboutSuppression('suppression-needs-reason', line)), unneeded)
+			.concat(parsed.syntaxError ? [syntaxError(parsed.syntaxError, position)] : [])
 			.map((finding) => ({ ...finding, severity: severities[finding.rule] ?? finding.severity }))
 			.filter((finding) => finding.severity !== 'off');
 		located.sort((a, b) => a.line - b.line || a.column - b.column);

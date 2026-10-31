@@ -1,5 +1,5 @@
 severity: hint
-context: 'nldd-top-navigation-bar > nldd-menu-bar > nldd-menu-bar-item[icon]:not([content-priority], [icon-only])'
+context: 'nldd-top-navigation-bar > nldd-menu-bar[slot="utility"] > nldd-menu-bar-item[icon]:not([content-priority], [icon-only])'
 message: 'Set content-priority="text", so "Zoeken" and "NL" stay readable on a narrow screen.'
 see: patronen/page-structure
 examples:

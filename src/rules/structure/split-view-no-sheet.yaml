@@ -1,6 +1,6 @@
 severity: warn
-context: 'nldd-split-view-pane nldd-sheet'
-message: 'Render nldd-sheet at the document root: inside a pane it is clipped by that pane.'
+context: ':is(nldd-split-view-pane, nldd-navigation-split-view, nldd-bar-split-view) > nldd-sheet'
+message: 'Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.'
 see: patronen/edit-in-a-sheet
 examples:
   passed: ['<nldd-sheet accessible-label="Bewerk"></nldd-sheet>']

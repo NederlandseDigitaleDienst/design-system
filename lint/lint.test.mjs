@@ -624,6 +624,100 @@ describe('Jinja and Django', () => {
 	});
 });
 
+describe('found in the sixth review', () => {
+	const rulesIn = async (source, file) => {
+		const { findings } = await createLinter(loadData()).lintSource(source, file);
+		return findings.filter(({ severity }) => severity !== 'hint').map(({ rule }) => rule);
+	};
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const run = (root, ...args) => spawnSync(process.execPath, [cli, ...args], { cwd: root, encoding: 'utf8' });
+
+	it('cannot check a tag whose name a template fills in', async () => {
+		assert.deepEqual(await rulesIn('<nldd-{{ kind }} text="x"></nldd-{{ kind }}>', 'a.j2'), []);
+	});
+
+	it('skips a Django comment block', async () => {
+		assert.deepEqual(await rulesIn('{% comment %}<nldd-gone></nldd-gone>{% endcomment %}', 'a.html'), []);
+	});
+
+	it('closes a self-closing tag in Angular with only listeners', async () => {
+		const source = '<nldd-notification><nldd-button slot="actions" text="a" (click)="a()" /><nldd-button slot="actions" text="b" (click)="b()" /></nldd-notification>';
+		assert.deepEqual(await rulesIn(source, 'a.html'), []);
+	});
+
+	it('does not count a template outlet as no content', async () => {
+		const source = '<nldd-button text="a"><nldd-menu slot="popup"><ng-container [ngTemplateOutlet]="items"></ng-container></nldd-menu></nldd-button>';
+		const { findings } = await createLinter(loadData()).lintSource(source, 'a.html');
+		assert.equal(findings.some(({ rule }) => rule === 'menu-needs-two-actions'), false);
+	});
+
+	it('says nothing about suppressions when no tree was read', async () => {
+		const source = '<template lang="pug">\n<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->\nnldd-tab-bar\n</template>';
+		assert.deepEqual(await rulesIn('<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->', 'a.astro'), []);
+		assert.equal((await rulesIn(source.replaceAll('template', 'script'), 'a.vue')).length, 0);
+	});
+
+	it('reports a file it cannot read', async () => {
+		assert.deepEqual(await rulesIn('const a = <nldd-nope><<<', 'a.tsx'), ['syntax-error']);
+	});
+
+	it('refuses a baseline of part of the rules', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		assert.equal(run(root, 'lint', '--update-baseline', '--select', 'api').status, 2);
+	});
+
+	it('refuses a format it does not have, and statistics as json', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		assert.equal(run(root, 'lint', '--format', 'bogus').status, 2);
+		assert.equal(run(root, 'lint', '--statistics', '--format', 'json').status, 2);
+	});
+
+	it('leaves properties of every element alone', async () => {
+		assert.deepEqual(await rulesIn('<template><nldd-rich-text :innerHTML="a" /><nldd-title :textContent="b" /></template>', 'a.vue'), []);
+	});
+
+	it('leaves Alpine alone and reads its binding', async () => {
+		assert.deepEqual(await rulesIn('<nldd-tab-bar x-show="a" x-on:click="b" x-bind:accessible-label="c"></nldd-tab-bar>', 'a.html'), []);
+	});
+
+	it('honors a suppression in a trimmed Jinja comment', async () => {
+		const source = '{#- nldd-lint-disable-next-line tab-bar-needs-name -- x -#}\n<nldd-tab-bar></nldd-tab-bar>';
+		assert.deepEqual(await rulesIn(source, 'a.j2'), []);
+	});
+
+	it('reads a tag named in a sentence as a mention', async () => {
+		assert.deepEqual(await rulesIn('De `<nldd-button>` staat hier.', 'a.md'), []);
+		assert.deepEqual(await rulesIn('De `<nldd-gone>` staat hier.', 'a.md'), ['unknown-element']);
+	});
+
+	it('reads Jinja in a Markdown fence', async () => {
+		assert.deepEqual(await rulesIn('```html\n<nldd-button{% if a %} text="b"{% endif %}></nldd-button>\n```', 'a.md'), []);
+	});
+
+	it('treats a capital in Jinja as in HTML', async () => {
+		assert.deepEqual(await rulesIn('<nldd-button accessibleLabel="x"></nldd-button>', 'a.j2'), ['button-needs-name']);
+	});
+
+	it('says what is wrong with a config', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, '.nldd-lint.json'), '{"exclude":"a"}');
+		assert.match(run(root, 'lint').stderr, /"exclude" takes a list/);
+		writeFileSync(join(root, '.nldd-lint.json'), '{"rules":null}');
+		assert.match(run(root, 'lint').stderr, /"rules" takes an object/);
+		writeFileSync(join(root, '.nldd-lint.json'), '{nope');
+		assert.match(run(root, 'lint').stderr, /\.nldd-lint\.json/);
+	});
+
+	it('sees a size the toolbar overwrites, also the default in a small toolbar', async () => {
+		const source = '<nldd-toolbar size="sm"><nldd-toolbar-item><nldd-button text="a" size="md"></nldd-button><nldd-menu-item slot="overflow" text="a"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>';
+		assert.deepEqual(await rulesIn(source, 'a.html'), ['toolbar-control-size-no-effect']);
+	});
+
+	it('gives a built-in rule a group in explain', () => {
+		assert.match(execFileSync(process.execPath, [cli, 'explain', 'unknown-element'], { encoding: 'utf8' }), /\(api, error\)/);
+	});
+});
+
 describe('sections on v-show', () => {
 	it('does not count the tabs that are not showing', async () => {
 		const section = '<nldd-simple-section v-show="a"><nldd-title heading-level="1" text="B"></nldd-title></nldd-simple-section>';

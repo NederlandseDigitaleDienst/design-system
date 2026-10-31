@@ -1,5 +1,5 @@
 severity: hint
-context: 'nldd-page > nldd-top-navigation-bar[slot="header"], nldd-skip-link:has(nldd-top-navigation-bar):not([slot="header"])'
+context: 'nldd-page > nldd-top-navigation-bar[slot="header"], nldd-page > nldd-skip-link:has(nldd-top-navigation-bar):not([slot="header"])'
 message: 'Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.'
 see: patronen/page-structure
 examples:

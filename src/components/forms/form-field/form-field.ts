@@ -281,6 +281,7 @@ export class NLDDFormField extends LitElement {
 		for (const list of lists) {
 			if (!list.getAttribute('for')) list.control = input;
 		}
+		if (!import.meta.env?.DEV) return;
 
 		const readsValue = lists.some(list => !list.getAttribute('for') && Array.from(list.children)
 			.some(item => item.hasAttribute('match') || item.hasAttribute('minlength') || item.hasAttribute('maxlength')));

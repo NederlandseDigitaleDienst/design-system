@@ -149,10 +149,12 @@ export function normalizeSelectors(rule, booleans) {
 	return normalized;
 }
 
-/** These set `size` or `appearance` on what is in them, so a child's value is theirs. */
+/** These write `size` or `appearance` on what is in them, so a child's value of those two is theirs. */
 const PARENT_WRITTEN = ['nldd-toolbar', 'nldd-button-bar', 'nldd-button-group', 'nldd-list-item', 'nldd-avatar-group', 'nldd-notification']
 	.map((tag) => `${tag} *`)
 	.join(', ');
+
+const WRITTEN_BY_PARENT = new Set(['size', 'appearance']);
 
 /** The fixed values from the manifest as rules, so the browser checks them like the linter does. */
 function valueRules(tags) {
@@ -162,7 +164,7 @@ function valueRules(tags) {
 			.map(([attribute, { values }]) => ({
 				id: `invalid-value-${tag.replace('nldd-', '')}-${attribute}`,
 				message: `\`${attribute}\` on ${tag} takes: ${values.filter(Boolean).join(', ')}.`,
-				context: `${tag}[${attribute}]:not(${[...values.map((value) => `[${attribute}="${value}"]`), PARENT_WRITTEN].join(', ')})`,
+				context: `${tag}[${attribute}]:not(${[...values.map((value) => `[${attribute}="${value}"]`), ...(WRITTEN_BY_PARENT.has(attribute) ? [PARENT_WRITTEN] : [])].join(', ')})`,
 			})),
 	);
 }

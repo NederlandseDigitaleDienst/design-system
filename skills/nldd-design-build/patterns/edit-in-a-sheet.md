@@ -141,10 +141,9 @@ Deze compositie komt voor in vrijwel elke applicatie op dit systeem, in Vue, Ang
 `nldd lint` controleert dit:
 
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
-- `split-view-no-sheet`: Render nldd-sheet at the document root: inside a pane it is clipped by that pane.
+- `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
 
 Hints: zo is het bedoeld. Die laten niets falen.
 
-- `modal-dialog-no-form`: Do work that needs its context in an nldd-sheet, which keeps the page visible and has room for the fields.
 - `sheet-form-max-one-action`: Keep one action under the form. The way out is `dismiss-text` on the title bar.
 - `sheet-title-bar-needs-anchor`: Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.

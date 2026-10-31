@@ -1,5 +1,5 @@
 severity: warn
-context: 'nldd-step-cell:is([text], [icon])'
+context: 'nldd-step-cell:is([text], [icon], :state(hidden-content))'
 assert: '[size="md"]:not([level="minor"], [level="none"])'
 message: '`text` and `icon` only fit in a full dot on a wide track (`size="md"` with `level="major"`); they are not shown here.'
 examples:

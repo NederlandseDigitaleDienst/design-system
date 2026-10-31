@@ -1,5 +1,5 @@
 severity: warn
-context: ':is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section) nldd-page-footer'
+context: ':is(nldd-simple-section, nldd-full-bleed-section, nldd-sidebar-section, nldd-one-half-one-half-section, nldd-one-third-two-thirds-section, nldd-two-thirds-one-third-section, nldd-hero) nldd-page-footer'
 message: 'nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.'
 see: patronen/page-structure
 examples:

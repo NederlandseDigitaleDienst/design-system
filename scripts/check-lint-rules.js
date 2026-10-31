@@ -28,7 +28,7 @@ const guidelineHeadings = new Set(
 );
 
 const allAttributes = new Set(Object.values(data.tags).flatMap((tag) => [...Object.keys(tag.attrs), ...Object.keys(tag.childAttrs)]));
-const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role', 'style', 'lang']);
+const GLOBAL_IN_SELECTORS = new Set(['slot', 'id', 'class', 'hidden', 'role', 'style', 'lang', 'aria-label', 'aria-labelledby']);
 
 function checkTokens(tokens, rule) {
 	const ruleId = rule.id;

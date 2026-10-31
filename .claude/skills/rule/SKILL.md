@@ -48,7 +48,7 @@ examples:
 | `count` | `{ of, min, max }` telt directe kinderen |
 | `ref` | `{ attr, target, equal }` volgt een id naar een ander element |
 | Geen van vier | De context zelf is de fout |
-| `severity` | `warn`. `error` alleen voor toegankelijke namen en wat niet kan werken; een bestaande regel naar `error` vraagt een `!`-commit. `hint` voor "zo bedoelen we het": laat CI nooit falen en wijst met `see` naar het patroon of de richtlijn |
+| `severity` | `warn`. Een nieuwe regel of een bestaande naar `error` vraagt een `!`-commit, omdat CI van consumers anders ongevraagd rood wordt. `hint` voor "zo bedoelen we het": laat CI nooit falen en wijst met `see` naar het patroon of de richtlijn |
 | `message` | Engels: wat hier fout is. Het waarom staat op de pagina van `see` |
 | `see` | `patronen/<slug>`: de regel verschijnt vanzelf op die pagina. `ontwerprichtlijnen/<kop>`: de sectie met het waarom |
 
@@ -84,8 +84,8 @@ Breekt een patroon de regel, dan klopt de regel niet of het patroon: zoek uit we
 
 ## 4. Leg de gevolgen voor
 
-Hoe vaak vuurt hij, in hoeveel apps, met drie voorbeelden. Vraag: terecht? De aanvrager kiest `warn`, `error` of toch niet. Vals alarm komt er niet in. Hernoem-ruis van apps op een oude versie telt niet mee.
+Hoe vaak vuurt hij, in hoeveel apps, met drie voorbeelden. Vraag: terecht? De aanvrager kiest `warn`, `hint` of toch niet; `error` kan alleen met een `!`-commit. Vals alarm komt er niet in. Hernoem-ruis van apps op een oude versie telt niet mee.
 
 ## 5. Rond af
 
-`npm run generate:skill-docs`, haal weg wat de regel nu dubbel maakt (een assert in de `.test.ts` van het patroon), en commit met `feat(lint): ...`.
+`npm run generate:skill-docs`, haal weg wat de regel nu dubbel maakt (een assert in de `.test.ts` van het patroon), en commit met `feat(lint): ...`, of `feat(lint)!: ...` bij een `error`.

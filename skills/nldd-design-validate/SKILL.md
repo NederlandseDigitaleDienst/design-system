@@ -30,7 +30,7 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 | Een site die naar HTML bouwt (Astro, MkDocs, Hugo) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
 | Zien wat een upgrade breekt | `npx @nldd/design-system@latest lint` op je huidige code |
 
-Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @nldd/design-system@<versie> lint`. Zonder pin krijg je de nieuwste.
+`.tsx` en `.jsx` lezen vraagt Node 20.19 of nieuwer; de rest draait op Node 18. Staat het pakket niet in het project, pin dan de versie die je gebruikt: `npx @nldd/design-system@<versie> lint`. Zonder pin krijg je de nieuwste.
 
 ## Wat hij niet ziet
 
@@ -56,7 +56,7 @@ npx @nldd/design-system lint --update-baseline   # accepteer wat er staat; commi
 
 | Plek | Hoe |
 |---|---|
-| lint-staged | `{ "*.{html,j2,vue,tsx}": "nldd lint" }` |
+| lint-staged | `{ "*.{html,j2,vue,tsx,jsx}": "nldd lint" }` |
 | CI | `npx @nldd/design-system lint --format github` |
 | pre-commit | Zie hieronder |
 

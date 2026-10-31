@@ -66,6 +66,10 @@ export const BUILT_IN_RULES = {
 		severity: 'warn',
 		description: 'Say why after `--`, so the next reader knows why this rule is off here.',
 	},
+	'syntax-error': {
+		severity: 'warn',
+		description: 'This file could not be read, so most of it was not checked.',
+	},
 	'suppression-not-needed': {
 		severity: 'warn',
 		description: 'This rule does not fire on the next line, so the suppression can go.',

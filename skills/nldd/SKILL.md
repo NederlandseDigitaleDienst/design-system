@@ -29,7 +29,7 @@ Staat de verwijzing in de `.claude/settings.json` van een project, vervang dan d
 
 Werkt een van de zes niet, dan draai je een oude versie van de plugin. Werk de marketplace bij waar je hem uit hebt: `/plugin marketplace update nldd`, of `/plugin marketplace update nldd-plugins` voor de oude.
 
-## Welke van de vijf heb je nodig
+## Welke van de zes heb je nodig
 
 | Je gaat | Gebruik | Wat erin zit |
 |---|---|---|
@@ -38,6 +38,7 @@ Werkt een van de zes niet, dan draai je een oude versie van de plugin. Werk de m
 | een bestaande frontend omzetten naar dit systeem | **`nldd-design-migrate`** | wat er stil misgaat, per herkomst: Tailwind, een ander design system, server-gerenderd |
 | een applicatie die al op dit systeem draait naar een nieuwere versie brengen | **`nldd-design-upgrade`** | het upgradepad uit de changelog, en waarom het versienummer niets zegt |
 | iets voorstellen: een ontbrekend component, een patroon, een bug | **`nldd-design-contribute`** | hoe je een issue opbouwt, en waarom het probleem vóór de oplossing komt |
+| controleren of je code klopt | **`nldd-design-validate`** | `nldd lint`, wat de meldingen betekenen en hoe je hem in een project opneemt |
 
 Weet je het niet zeker: begin bij `nldd-design-build`. Die verwijst door naar de naslag waar dat nodig is.
 

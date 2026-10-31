@@ -8,6 +8,11 @@
  */
 
 import module from 'node:module';
+import util from 'node:util';
 
+if (!util.parseArgs) {
+	console.error('nldd needs Node 18.3 or newer.');
+	process.exit(2);
+}
 module.enableCompileCache?.();
 await import('./main.js');

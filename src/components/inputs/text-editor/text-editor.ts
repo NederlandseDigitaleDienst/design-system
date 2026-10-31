@@ -439,7 +439,7 @@ export class NLDDTextEditor extends NLDDCodeMirrorInput {
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
-		if (changed.has('typeaheads')) setState(this, 'invalid-typeahead-query', hasInvalidQuery(this.typeaheads));
+		if (import.meta.env?.DEV && changed.has('typeaheads')) setState(this, 'invalid-typeahead-query', hasInvalidQuery(this.typeaheads));
 		if (!this.view) return;
 		// A render after setTranslations() or a new `translations`: the labels
 		// drawn inside the document follow when their text changed.

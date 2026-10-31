@@ -72,7 +72,7 @@ export function formatText(results, { root, files, ms, skipped, explainRule }) {
 }
 
 /** A count per rule, most first: where to start when a project has hundreds. */
-export function formatStatistics(results, { files, ms }) {
+export function formatStatistics(results, { files, ms, skipped }) {
 	const counts = new Map();
 	for (const { rule, severity } of results.flatMap(({ findings }) => findings)) {
 		const entry = counts.get(rule) ?? { rule, severity, count: 0 };
@@ -85,7 +85,7 @@ export function formatStatistics(results, { files, ms }) {
 	return [
 		...rows.map(({ count, severity, rule }) => `${String(count).padStart(width)}  ${severity.padEnd(5)}  ${rule}`),
 		...(rows.length > 0 ? [''] : []),
-		`${plural(total, 'finding')} in ${plural(files, 'file')} (${ms} ms)`,
+		`${plural(total, 'finding')} in ${plural(files, 'file')} (${ms} ms)${skipped ? ` (${skipped} in baseline)` : ''}`,
 	].join('\n');
 }
 
@@ -113,13 +113,15 @@ function escapeGithub(text) {
 	return text.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
 }
 
+const escapeProperty = (text) => escapeGithub(text).replace(/:/g, '%3A').replace(/,/g, '%2C');
+
 export function formatGithub(results, { root }) {
 	const lines = [];
 	for (const { filename, findings } of results) {
 		for (const { severity, line, column, rule, message } of findings) {
 			const level = { error: 'error', warn: 'warning', hint: 'notice' }[severity];
 			const file = relative(root, filename);
-			lines.push(`::${level} file=${file},line=${line},col=${column},title=${rule}::${escapeGithub(message)}`);
+			lines.push(`::${level} file=${escapeProperty(file)},line=${line},col=${column},title=${rule}::${escapeGithub(message)}`);
 		}
 	}
 	return lines.join('\n');

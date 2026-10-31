@@ -1,7 +1,7 @@
 severity: warn
-context: 'nldd-toolbar:not([size="sm"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size="sm"], nldd-toolbar:not([size="lg"]) nldd-toolbar-item > :is(nldd-button, nldd-icon-button)[size="lg"]'
+context: 'nldd-toolbar:is(:not([size]), [size="md"]) nldd-toolbar-item > [size]:not([size="md"], [slot="overflow"]), nldd-toolbar[size="sm"] nldd-toolbar-item > [size]:not([size="sm"], [slot="overflow"]), nldd-toolbar[size="lg"] nldd-toolbar-item > [size]:not([size="lg"], [slot="overflow"])'
 message: 'The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.'
 see: patronen/toolbar-with-actions
 examples:
   passed: ['<nldd-toolbar size="sm"><nldd-toolbar-item><nldd-button text="Bewaar"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>', '<nldd-toolbar size="sm"><nldd-toolbar-item><nldd-button text="Bewaar" size="sm"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>']
-  failed: ['<nldd-toolbar><nldd-toolbar-item><nldd-button text="Bewaar" size="sm"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>']
+  failed: ['<nldd-toolbar><nldd-toolbar-item><nldd-button text="Bewaar" size="sm"></nldd-button><nldd-menu-item slot="overflow" text="Bewaar"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>', '<nldd-toolbar><nldd-toolbar-item><nldd-toggle-button text="Vet" size="lg"></nldd-toggle-button><nldd-menu-item slot="overflow" text="Vet"></nldd-menu-item></nldd-toolbar-item></nldd-toolbar>']

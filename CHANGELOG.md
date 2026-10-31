@@ -21,6 +21,7 @@ here; consult the commit history if you need that level of detail.
 
 - **The same rules in the browser.** While developing with a bundler that sets `import.meta.env.DEV`, such as Vite, a page shows `[nldd]` warnings in the console. A rule then sees real values and what several components render together. A production build does not contain this.
 - **`nldd lint` reads Vue, TSX, JSX, Angular, Django, Jinja (`.j2`), htmx and plain HTML** as they are, and Astro, MkDocs and Hugo through what they build. What a template writes into a tag makes an element uncertain, never wrong.
+- **Reading `.tsx` and `.jsx` needs Node 20.19 or newer,** through the optional `oxc-parser`. The rest of `nldd lint` runs on Node 18.
 - **`--statistics` counts findings per rule,** for a project with hundreds. A suppression that no longer suppresses anything gets a warning of its own, and a rule links to its page in Storybook.
 - **Rules come in groups.** `api`, `a11y`, `copy`, `structure` and `pattern`, for `--select`, `--ignore`, `rules --group` and `.nldd-lint.json`. A name starts with what it is about and says what is wrong, such as `tab-bar-needs-name`.
 - **Hints, about how something is meant to be done.** Every sentence in the design guidelines and the patterns was read, and what the markup shows became a rule or a hint. A hint never fails anything. It appears on the pattern it belongs to, and the output sums up each hint once.

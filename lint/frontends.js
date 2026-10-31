@@ -41,7 +41,7 @@ const TEMPLATE_VALUE = /\{\{|\{%|\$\{|<%|^\{.*\}$/;
 const TEMPLATE_TEXT = /\{%|\{\{|@(if|else|for|switch|defer)\b/;
 
 /** Angular markup in an .html file, where `<nldd-x />` does close the element. */
-const ANGULAR = /\*ng[A-Z]|\[\(|\s\[[a-zA-Z.]+\]=|@(if|for|switch)\s*\(/;
+const ANGULAR = /\*ng[A-Z]|\[\(|\s\[[a-zA-Z.-]+\]=|\s\([a-zA-Z.]+\)=|@(if|for|switch)\s*\(/;
 
 /** Anything else cannot be an attribute, so a template language is writing into the tag. */
 const PLAIN_ATTRIBUTE = /^[a-zA-Z_][\w:.-]*$/;
@@ -53,8 +53,8 @@ function readAttribute(element, name, value) {
 	else if (name === 'v-bind' || /^(v-bind)?:\[/.test(name)) element.spread = true;
 	else if (name === 'v-model') element.attrs.set('value', BOUND);
 	else if (name.startsWith('v-model:')) element.attrs.set(name.slice(8), BOUND);
-	else if (/^(:|v-bind:|\.|\?)/.test(name)) {
-		const bare = name.replace(/^(v-bind)?[:.?]/, '').replace(/\.(prop|attr|camel)$/, '');
+	else if (/^(:|v-bind:|x-bind:|\.|\?)/.test(name)) {
+		const bare = name.replace(/^(v-bind|x-bind)?[:.?]/, '').replace(/\.(prop|attr|camel)$/, '');
 		element.attrs.set(bare, BOUND);
 	} else if (/^\[(class\.|style\.|@)/.test(name)) {
 		// Angular's way to set one class, one style or an animation: no attribute.
@@ -85,6 +85,11 @@ function readHtmlChildren(children, parent, given) {
 		const { name, attribs } = node;
 		// In a document, a template is inert until something stamps it out, here or elsewhere.
 		if (name === 'template' && inherited.inert) {
+			appendUnknown(parent, node.startIndex ?? 0);
+			continue;
+		}
+		// This one stamps out a template from somewhere else.
+		if (name === 'ng-container' && Object.keys(attribs).some((key) => /ngTemplateOutlet\]?$/.test(key))) {
 			appendUnknown(parent, node.startIndex ?? 0);
 			continue;
 		}
@@ -132,7 +137,10 @@ const blank = (text) => text.replace(/[^\n]/g, ' ');
  * spread, and a whole `{% if %}` block goes: what is in it may not be there.
  */
 function quietTemplateTags(source) {
-	const text = source.replace(/\{#[\s\S]*?#\}/g, blank);
+	const text = source
+		.replace(/\{#[\s\S]*?#\}|\{%-?\s*comment\b[\s\S]*?\{%-?\s*endcomment\s*-?%\}/g, blank)
+		// A name the template fills in is a tag nobody can check.
+		.replace(/(<\/?)([a-zA-Z][\w-]*\{\{.*?\}\}[\w-]*)/g, (_, open, name) => `${open}x-${'x'.repeat(name.length - 2)}`);
 	let out = '';
 	let at = 0;
 	let inTag = false;
@@ -177,10 +185,11 @@ function quietTemplateTags(source) {
 	return out;
 }
 
+const quietIfTemplated = (source) => (/\{[%{#]/.test(source) ? quietTemplateTags(source) : source);
+
 export function parseHtml(source) {
 	const root = createRoot({ closed: /<html[\s>]/i.test(source) });
-	const text = /\{[%{#]/.test(source) ? quietTemplateTags(source) : source;
-	readHtmlChildren(parseMarkup(text, { selfClosing: ANGULAR.test(source) }).children, root, { inert: true });
+	readHtmlChildren(parseMarkup(quietIfTemplated(source), { selfClosing: ANGULAR.test(source) }).children, root, { inert: true });
 	return [root];
 }
 
@@ -200,7 +209,7 @@ export function parseMarkdown(source) {
 	const roots = [];
 	const read = (text, offset) => {
 		const root = createRoot();
-		const padded = ' '.repeat(offset) + text;
+		const padded = ' '.repeat(offset) + quietIfTemplated(text);
 		readHtmlChildren(parseMarkup(padded, { selfClosing: true }).children, root, {});
 		roots.push(root);
 	};
@@ -209,7 +218,10 @@ export function parseMarkdown(source) {
 		if (match[2].includes('<nldd-')) read(match[2], match.index + match[0].indexOf('\n') + 1);
 	}
 	const prose = source.replace(fences, (block) => ' '.repeat(block.length));
-	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) read(match[1], match.index + 1);
+	// A bare `<nldd-button>` in a sentence names the tag and says nothing about its attributes.
+	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) {
+		read(match[1].replace(/^<([a-z-]+)>$/, '<$1 v-bind="x">'), match.index + 1);
+	}
 	return roots;
 }
 
@@ -413,13 +425,16 @@ let oxcParser;
 
 export async function parseJsx(source, filename) {
 	oxcParser ??= await import('oxc-parser').catch(() => {
-		throw new Error(`Reading ${filename} needs the optional dependency oxc-parser.`);
+		throw new Error(`Reading ${filename} needs the optional dependency oxc-parser, which needs Node 20.19 or newer.`);
 	});
-	const { program } = oxcParser.parseSync(filename, source);
+	const { program, errors } = oxcParser.parseSync(filename, source);
 	const found = [];
 	collectJsx(program, found);
 	const roots = [];
 	for (const node of found) roots.push(jsxTree(node, roots));
+	if (errors?.length) {
+		roots.syntaxError = { message: errors[0].message, offset: errors[0].labels?.[0]?.start ?? 0 };
+	}
 	return roots;
 }
 

@@ -652,6 +652,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/** `expanded` needs a control to sit on; a plain container has none, and a
 	 *  row with sub-pages in a navigation list is always open. */
 	private _syncExpandedFacts(): void {
+		if (!import.meta.env?.DEV) return;
 		const set = this.expanded !== undefined;
 		const inNavigation = set && this._showChildren && this._parentType === 'navigation';
 		setState(this, 'expanded-in-navigation', inNavigation);
@@ -663,6 +664,7 @@ export class NLDDListItem extends withTranslations(LitElement, nlddListItemTrans
 	/** Bare text, which no selector can see: it gets none of a cell's typography,
 	 *  and in a clickable row it falls back to the browser's button font. */
 	private _onSlotChange = (e: Event): void => {
+		if (!import.meta.env?.DEV) return;
 		const slot = e.target as HTMLSlotElement;
 		if (slot.name) return;
 		setState(this, 'bare-text', slot.assignedNodes({ flatten: true })

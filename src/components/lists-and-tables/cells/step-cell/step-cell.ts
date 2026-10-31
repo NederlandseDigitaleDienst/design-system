@@ -123,6 +123,7 @@ export class NLDDStepCell extends VisibilityMixin(LitElement, 'cells-container')
 
 	override updated(changed: PropertyValues): void {
 		super.updated(changed);
+		setState(this, 'hidden-content', Boolean(this.text || this.icon) && !this.showsContent);
 		if (changed.has('markerOffset')) {
 			const offset = (this.markerOffset ?? '').trim();
 			// margin-top takes a length or a percentage, as the offset does, and also

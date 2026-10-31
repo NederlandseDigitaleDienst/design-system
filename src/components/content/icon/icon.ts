@@ -135,6 +135,7 @@ export class NLDDIcon extends LitElement {
 
 	/** A name set on a button ends up here, in a shadow root the checks stay out of. */
 	private _syncHosts(): void {
+		if (!import.meta.env?.DEV) return;
 		let root = this.getRootNode();
 		while (root instanceof ShadowRoot && root.host.localName.startsWith('nldd-')) {
 			setState(root.host as HTMLElement, 'unknown-icon', hasState(root, 'unknown-icon'));
