@@ -135,6 +135,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	};
 	const engine = createEngine({ classes: data.classes });
 	const rules = data.rules.filter((rule) => !rule.runtime && severities[rule.id] !== 'off');
+	const ranInSource = (id) => severities[id] !== 'off' && (rules.some((rule) => rule.id === id) || id in BUILT_IN_RULES);
 
 	/** A rule about a removed name says what to use instead; the generic finding adds nothing. */
 	function withoutCovered(findings) {
@@ -174,23 +175,32 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		const { findings, counts } = lintRoots(roots, isPlainHtml);
 		const { suppressed, missingReason } = readSuppressions(source, canonical);
 		const position = createPositions(source);
-		const reasons = missingReason.map((line) => ({
-			rule: 'suppression-needs-reason',
-			severity: BUILT_IN_RULES['suppression-needs-reason'].severity,
-			message: BUILT_IN_RULES['suppression-needs-reason'].description,
+		const aboutSuppression = (rule, line, detail = BUILT_IN_RULES[rule].description) => ({
+			rule,
+			severity: BUILT_IN_RULES[rule].severity,
+			message: detail,
 			tag: '',
 			line,
 			column: 1,
+		});
+		const all = findings.map(({ node, severity, removed, attribute, ...finding }) => ({
+			...finding,
+			severity,
+			tag: node.name,
+			...position(node.offset),
 		}));
-		const located = findings
-			.map(({ node, severity, removed, attribute, ...finding }) => ({
-				...finding,
-				severity,
-				tag: node.name,
-				...position(node.offset),
-			}))
+		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
+		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
+		const unneeded = /\.md$/.test(filename)
+			? []
+			: [...suppressed].flatMap(([line, ids]) =>
+					[...ids]
+						.filter((id) => ranInSource(id) && !fires(line, id))
+						.map((id) => aboutSuppression('suppression-not-needed', line - 1, `\`${id}\` does not fire on the next line, so this suppression can go.`)),
+				);
+		const located = all
 			.filter((finding) => !suppressed.get(finding.line)?.has(finding.rule))
-			.concat(reasons)
+			.concat(missingReason.map((line) => aboutSuppression('suppression-needs-reason', line)), unneeded)
 			.map((finding) => ({ ...finding, severity: severities[finding.rule] ?? finding.severity }))
 			.filter((finding) => finding.severity !== 'off');
 		located.sort((a, b) => a.line - b.line || a.column - b.column);

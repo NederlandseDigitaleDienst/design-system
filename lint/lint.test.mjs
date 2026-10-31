@@ -490,6 +490,57 @@ describe('suppressions', () => {
 		const { findings } = await lint('<template>\n<!-- nldd-lint-disable-next-line unknown-element -->\n<nldd-gone />\n</template>');
 		assert.deepEqual(findings.map((finding) => finding.rule), ['suppression-needs-reason']);
 	});
+
+	it('says when a suppression does nothing', async () => {
+		const { findings } = await lint('<template>\n<!-- nldd-lint-disable-next-line unknown-element -- komt in 0.14 -->\n<nldd-button text="a" />\n</template>');
+		assert.deepEqual(findings.map(({ rule, line }) => [rule, line]), [['suppression-not-needed', 2]]);
+	});
+
+	it('names the one rule of two that does nothing', async () => {
+		const { findings } = await lint('<template>\n<!-- nldd-lint-disable-next-line unknown-element, unknown-slot -- komt in 0.14 -->\n<nldd-gone />\n</template>');
+		assert.equal(findings.length, 1);
+		assert.match(findings[0].message, /unknown-slot/);
+	});
+
+	it('keeps quiet about a rule that did not run', async () => {
+		const source = '<template>\n<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->\n<nldd-button text="a" />\n</template>';
+		const { findings } = await createLinter(DATA, { severities: { 'tab-bar-needs-name': 'off' } }).lintSource(source, 'a.vue');
+		assert.deepEqual(findings, []);
+		const real = loadData();
+		const runtime = real.rules.find((rule) => rule.runtime).id;
+		const onlyInBrowser = await createLinter(real).lintSource(`<template>\n<!-- nldd-lint-disable-next-line ${runtime} -- x -->\n<nldd-button text="a" />\n</template>`, 'a.vue');
+		assert.deepEqual(onlyInBrowser.findings, []);
+	});
+
+	it('does not count an example in Markdown', async () => {
+		const { findings } = await createLinter(DATA).lintSource('```html\n<!-- nldd-lint-disable-next-line unknown-element -- x -->\n```', 'a.md');
+		assert.deepEqual(findings, []);
+	});
+});
+
+describe('statistics', () => {
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+
+	it('counts per rule, most first', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), '<nldd-gone></nldd-gone><nldd-gone></nldd-gone><nldd-tab-bar></nldd-tab-bar>');
+		const { stdout, status } = spawnSync(process.execPath, [cli, 'lint', '--statistics', 'a.html'], { cwd: root, encoding: 'utf8' });
+		assert.deepEqual(stdout.trim().split('\n').slice(0, 2).map((line) => line.trim().split(/\s+/).slice(0, 3)), [
+			['2', 'error', 'unknown-element'],
+			['1', 'error', 'tab-bar-needs-name'],
+		]);
+		assert.equal(status, 1);
+	});
+});
+
+describe('a rule points at its page', () => {
+	it('gives a link the Storybook of the design system opens', () => {
+		const { rules } = loadData();
+		const url = (id) => rules.find((rule) => rule.id === id).url;
+		assert.equal(url('form-actions-needs-button-group'), 'https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/patronen-formulier--docs');
+		const guideline = rules.find((rule) => rule.see?.startsWith('ontwerprichtlijnen/'));
+		assert.equal(guideline.url, `https://nederlandsedigitaledienst.github.io/design-system/?path=/docs/docs-ontwerprichtlijnen--docs#${guideline.see.split('/')[1]}`);
+	});
 });
 
 describe('Lit in a .ts file', () => {
@@ -708,7 +759,7 @@ describe('nldd command', () => {
 
 	it('explains a rule', () => {
 		const output = execFileSync(process.execPath, [cli, 'explain', 'toolbar-item-needs-overflow'], { encoding: 'utf8' });
-		assert.match(output, /patronen\/toolbar-with-actions/);
+		assert.match(output, /patronen-werkbalk-met-acties--docs/);
 	});
 
 	it('lists the rules about a component, also where it is only mentioned', () => {

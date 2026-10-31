@@ -785,6 +785,11 @@ export const devRules: DevRule[] = [
 		"properties": []
 	},
 	{
+		"id": "toolbar-label-renamed",
+		"message": "The `label` attribute is now `accessible-label`. Rename it here and on every other nldd-toolbar.",
+		"context": "nldd-toolbar[label]"
+	},
+	{
 		"id": "top-navigation-bar-no-same-href",
 		"message": "`logo-href` and `website-href` go to the same page; leave out `logo-href` so the start page is one link instead of two.",
 		"context": "nldd-top-navigation-bar:state(same-href)"
@@ -798,6 +803,11 @@ export const devRules: DevRule[] = [
 		"id": "validation-item-unmet-no-effect",
 		"message": "This item has a rule of its own and is also named in `unmet`. The rule decides, and the name is ignored: it is a snapshot of the previous check and cannot be newer than the value. Drop it from `unmet`, or take the rule off the item.",
 		"context": "nldd-validation-list:state(rule-and-unmet)"
+	},
+	{
+		"id": "variant-renamed",
+		"message": "The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.",
+		"context": ":is(nldd-button, nldd-button-bar, nldd-icon-button, nldd-split-button, nldd-keyboard-shortcut, nldd-code-viewer, nldd-code-editor, nldd-text-editor, nldd-list)[variant]"
 	},
 	{
 		"id": "website-no-sticky-header",

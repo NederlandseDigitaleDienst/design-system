@@ -39,7 +39,7 @@ function hintSummary(results, root, explainRule) {
 		const shown = places.slice(0, 2).join(', ');
 		const more = places.length > 2 ? `, +${places.length - 2}` : '';
 		lines.push(`  ${rule}  ${dim(`${places.length}× ${shown}${more}`)}`, `    ${message}`);
-		const see = explainRule?.(rule)?.see;
+		const see = explainRule?.(rule)?.url;
 		if (see) lines.push(dim(`    → ${see}`));
 	}
 	return lines;
@@ -69,6 +69,24 @@ export function formatText(results, { root, files, ms, skipped, explainRule }) {
 	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')}${hints} in ${plural(files, 'file')} (${ms} ms)`;
 	lines.push(`${errors + warnings ? red('✖') : '✔'} ${summary}${known}`);
 	return lines.join('\n');
+}
+
+/** A count per rule, most first: where to start when a project has hundreds. */
+export function formatStatistics(results, { files, ms }) {
+	const counts = new Map();
+	for (const { rule, severity } of results.flatMap(({ findings }) => findings)) {
+		const entry = counts.get(rule) ?? { rule, severity, count: 0 };
+		entry.count += 1;
+		counts.set(rule, entry);
+	}
+	const rows = [...counts.values()].sort((a, b) => b.count - a.count || a.rule.localeCompare(b.rule));
+	const width = String(rows[0]?.count ?? 0).length;
+	const total = rows.reduce((sum, { count }) => sum + count, 0);
+	return [
+		...rows.map(({ count, severity, rule }) => `${String(count).padStart(width)}  ${severity.padEnd(5)}  ${rule}`),
+		...(rows.length > 0 ? [''] : []),
+		`${plural(total, 'finding')} in ${plural(files, 'file')} (${ms} ms)`,
+	].join('\n');
 }
 
 /** Everything an agent needs to fix a finding without opening the docs. */

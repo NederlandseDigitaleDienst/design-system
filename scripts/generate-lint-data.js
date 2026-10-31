@@ -10,7 +10,7 @@ import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { aliases } from '../src/components/content/icon/icon-aliases.js';
-import { booleanAttributes, buildClasses, buildContract, buildDevRules, loadRules, normalizeSelectors } from './lib/lint-data.js';
+import { booleanAttributes, buildClasses, buildContract, buildDevRules, loadRules, normalizeSelectors, seeUrl } from './lib/lint-data.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => JSON.parse(readFileSync(resolve(repoRoot, path), 'utf8'));
@@ -25,9 +25,14 @@ const icons = iconFiles
 
 const booleans = booleanAttributes(manifest);
 const classes = buildClasses(manifest);
-const rules = loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.json')).map((rule) =>
-	normalizeSelectors(rule, booleans),
-);
+const patternTitle = (slug) => {
+	const stories = readFileSync(resolve(repoRoot, `src/patterns/${slug}/${slug}.stories.ts`), 'utf8');
+	return stories.match(/title: (['"])(.+?)\1/)[2];
+};
+const rules = loadRules(resolve(repoRoot, 'src/rules'), read('lint/rule.schema.json')).map((rule) => {
+	const url = seeUrl(rule.see, patternTitle);
+	return { ...normalizeSelectors(rule, booleans), ...(url && { url }) };
+});
 const tags = buildContract(manifest);
 const data = { tags, classes, icons, rules };
 

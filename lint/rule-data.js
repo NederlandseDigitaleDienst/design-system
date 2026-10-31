@@ -66,6 +66,10 @@ export const BUILT_IN_RULES = {
 		severity: 'warn',
 		description: 'Say why after `--`, so the next reader knows why this rule is off here.',
 	},
+	'suppression-not-needed': {
+		severity: 'warn',
+		description: 'This rule does not fire on the next line, so the suppression can go.',
+	},
 };
 
 /** A rule id is API: a former id keeps working wherever consumers wrote it down. */

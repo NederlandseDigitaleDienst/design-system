@@ -40,6 +40,7 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 - `toolbar-control-size-no-effect`: The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.
 - `toolbar-needs-two-actions` (hint): Use a plain button for a single action.
 - `toolbar-primary-needs-priority` (hint): Give the primary action the highest `priority`, so it is the last to move to the overflow.
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
 
@@ -99,6 +100,7 @@ A horizontal container for grouping buttons with a neutral background. Automatic
 **Rules** (`nldd lint`)
 
 - `button-bar-no-toggle-button`: The bar is one surface for actions, and a selected toggle breaks it. Use nldd-toggle-button-group for a row of toggles, or nldd-segmented-control for one choice out of a few.
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
 
@@ -159,6 +161,7 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 - `row-action-goes-in-segment` (hint): Use an nldd-list-item-segment, so the hover looks like the rest of the row and not like a surface on top of it.
 - `toolbar-control-size-no-effect`: The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.
 - `toolbar-needs-two-actions` (hint): Use a plain button for a single action.
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
 
@@ -312,6 +315,10 @@ A single item within an nldd-menu.
 
 A split button combines a primary action button with a dropdown trigger. The main button performs the default action, while the icon button opens a menu or popover. Provide the dropdown by slotting an `nldd-menu` (with its `nldd-menu-item` / `nldd-menu-divider` children) or an `nldd-popover` directly: ```html <nldd-split-button text="Opslaan"> <nldd-menu> <nldd-menu-item text="Opslaan als…"></nldd-menu-item> </nldd-menu> </nldd-split-button> ``` The slotted overlay stays in the light DOM — no item-moving — so consumers keep their references and the full overlay API. The split-button anchors it to the chevron and opens it on click. When no overlay is slotted, the chevron dispatches `menu-click` and the consumer manages their own popover.
 
+**Rules** (`nldd lint`)
+
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -351,6 +358,7 @@ A row of controls that belong to a whole screen or pane, with an overflow menu f
 - `toolbar-bottom-needs-large` (hint): Set size="lg" on the bottom bar, which puts the labels under the icons and makes the actions fit next to the sections.
 - `toolbar-control-size-no-effect`: The toolbar overwrites this size with its own. Set `size` on nldd-toolbar, which passes it to every control in it.
 - `toolbar-in-pane-needs-container` (hint): Put the toolbar in an nldd-container with padding: the bar split view sets none itself.
+- `toolbar-label-renamed`: The `label` attribute is now `accessible-label`. Rename it here and on every other nldd-toolbar.
 - `toolbar-needs-two-actions` (hint): Use a plain button for a single action.
 - `toolbar-second-needs-name` (hint): Give each toolbar an `accessible-label` when a page has more than one.
 
@@ -527,6 +535,7 @@ A read-only block of code/text built on a non-editable CodeMirror 6 view. Visual
 - `code-viewer-diff-lines-invalid`: Lines of the diff fall outside the line counts of their @@ header and are not shown. Check the counts in the hunk headers.
 - `code-viewer-max-height-invalid`: `max-height` is not a CSS length, so it is ignored. Give it a unit, such as "400px" or "50vh".
 - `code-viewer-merge-package-not-found`: The word marks of a diff need @codemirror/merge, which did not load, so the diff shows without them.
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
 
@@ -630,6 +639,10 @@ Wraps a native `<img>` with design-system styling: corner radius variants, aspec
 ### `<nldd-keyboard-shortcut>`
 
 Shows a key combination (such as Cmd+K or Ctrl+Shift+P) in one combined container with a semantic <kbd> element per key. On touch-only devices (no hover-capable input) the shortcut is hidden by default, because it cannot be invoked there. Use the `always-visible` attribute when the shortcut is purely informative and should stay visible. For cross-platform shortcuts you can set `mac-keys`, `windows-keys` and `linux-keys`. The component picks the right one from the detected OS, with `keys` as the fallback for unknown platforms.
+
+**Rules** (`nldd lint`)
+
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
 
@@ -1063,6 +1076,7 @@ A monospace editor for code, YAML, JSON and other technical content, built on Co
 **Rules** (`nldd lint`)
 
 - `editor-needs-name`: An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
 
@@ -1694,6 +1708,7 @@ A hybrid markdown editor built on CodeMirror 6 (via NLDDCodeMirrorElement): the 
 - `editor-needs-name`: An editor needs `accessible-label`, `input-id` or a labeled nldd-form-field around it, or it has no accessible name (WCAG SC 4.1.2).
 - `text-editor-command-not-found`: runCommand() got a name that is not a command.
 - `text-editor-typeahead-query-invalid`: The query of this typeahead is not a valid regular expression; the default is used.
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
 
@@ -3721,6 +3736,7 @@ A container for `nldd-list-item` elements. The `type` attribute switches the lis
 - `row-navigation-no-heading` (hint): Use the `text` of an nldd-text-cell: a row is not a heading.
 - `toc-heading-needs-id` (hint): Give every h2 an `id`, so the table of contents can jump to it.
 - `toc-row-needs-location`: Set current-type="location": this row points at part of this page, and a screen reader otherwise calls it the current page.
+- `variant-renamed`: The `variant` attribute is now `appearance`. Rename it here and on every other element like this one.
 
 **Attributes**
 

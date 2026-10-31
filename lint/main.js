@@ -3,7 +3,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
-import { formatGithub, formatJson, formatText } from './format.js';
+import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
 import { applyBaseline, findFiles, readBaseline, readConfig, writeBaseline } from './project.js';
@@ -15,6 +15,7 @@ const USAGE = `Usage:
     --max-warnings <n>              exit 1 above this number of warnings
     --select <groups or rules>      only these, comma separated
     --ignore <groups or rules>      all but these
+    --statistics                    count per rule instead of listing every finding
     --stdin --filename <name>       check a snippet instead of files
   nldd explain <rule>               what a rule checks, and why
   nldd rules [--for <tag>] [--group <group>] [--json]
@@ -37,7 +38,7 @@ function explain(data, id) {
 		return 2;
 	}
 	const lines = [`${rule.id}  (${rule.group}, ${rule.severity})`, '', rule.message];
-	if (rule.see) lines.push('', `Why: ${rule.see}`);
+	if (rule.url) lines.push('', `Why: ${rule.url}`);
 	if (rule.runtime) lines.push('', 'Only the running page can tell, so this runs in the browser while developing.');
 	if (rule.examples) {
 		lines.push('', 'Fine:', ...rule.examples.passed.map((example) => `  ${example}`));
@@ -134,7 +135,7 @@ async function runLint(data, paths, options) {
 		skipped,
 		explainRule: (id) => findRule(data, id),
 	};
-	const format = { text: formatText, json: formatJson, github: formatGithub }[options.format];
+	const format = options.statistics ? formatStatistics : { text: formatText, json: formatJson, github: formatGithub }[options.format];
 	if (!format) throw new Error(`Unknown format: ${options.format}`);
 	const output = format(reported, context);
 	if (output) console.log(output);
@@ -160,6 +161,7 @@ async function main() {
 			group: { type: 'string' },
 			select: { type: 'string' },
 			ignore: { type: 'string' },
+			statistics: { type: 'boolean' },
 			json: { type: 'boolean' },
 			version: { type: 'boolean', short: 'v' },
 			help: { type: 'boolean', short: 'h' },

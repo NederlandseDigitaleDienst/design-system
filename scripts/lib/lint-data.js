@@ -50,6 +50,18 @@ function literalValues(text) {
 	return [...text.matchAll(/'([^']*)'|(-?\d+(?:\.\d+)?)/g)].map((match) => match[1] ?? match[2]);
 }
 
+const STORYBOOK = 'https://nederlandsedigitaledienst.github.io/design-system/?path=/docs';
+
+/** Where `see` opens in the published Storybook, so a finding can be a link in a terminal. */
+export function seeUrl(see, patternTitle) {
+	if (!see) return undefined;
+	const [kind, slug] = see.split('/');
+	if (kind === 'ontwerprichtlijnen') return `${STORYBOOK}/docs-ontwerprichtlijnen--docs#${slug}`;
+	if (kind !== 'patronen') return undefined;
+	const id = patternTitle(slug).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+	return `${STORYBOOK}/${id}--docs`;
+}
+
 /** Set on any form control and read by nldd-validation-list, which is its sibling. */
 const FORM_INPUT_ATTRS = { unmet: {} };
 

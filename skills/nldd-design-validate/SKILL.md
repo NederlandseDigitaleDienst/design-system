@@ -24,6 +24,7 @@ npx @nldd/design-system lint --format json src/views/Aanvraag.vue
 |---|---|
 | Regels voor een component, vóór je het gebruikt | `npx @nldd/design-system rules --for nldd-toolbar` |
 | Eén soort regels | `... lint --select a11y` of `--ignore copy`; groepen: `api`, `a11y`, `copy`, `structure`, `pattern` |
+| Beginnen in een project met honderden meldingen | `... lint --statistics`: telling per regel, grootste eerst |
 | Een snippet checken zonder bestand | `... lint --stdin --filename snippet.html` |
 | Vue, React, Angular, Django, Jinja, htmx of gewone HTML | `... lint`: leest `.vue`, `.tsx`, `.jsx`, `.html` en `.j2` |
 | Een site die naar HTML bouwt (Astro, MkDocs, Hugo) | `... lint dist`: werkt voor elk framework en ziet hele pagina's |
