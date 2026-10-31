@@ -131,3 +131,9 @@ Wat jij nog moet doen: een `text` op elke `nldd-icon-button`, een `label` op de 
 ## Gezien in
 
 Werkbalken staan in elke applicatie op dit systeem. De lege overloop is in meerdere producten los van elkaar tegengekomen: die is op een breed scherm onzichtbaar en valt pas op als iemand het venster smal maakt.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `toolbar-item-needs-overflow`: Give this item an alternative in `slot="overflow"`: on a narrow screen it moves to the overflow menu, and without one it is gone.

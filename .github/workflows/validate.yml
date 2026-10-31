@@ -105,8 +105,13 @@ jobs:
         run: |
           set -e
           npm run generate:cem
-          git diff --exit-code custom-elements.json \
-            || (echo "::error::custom-elements.json is verouderd. Draai 'npm run generate:cem' en commit het resultaat." && exit 1)
+          git diff --exit-code custom-elements.json lint/data.generated.json \
+            || (echo "::error::custom-elements.json of lint/data.generated.json is verouderd. Draai 'npm run generate:cem' en commit het resultaat." && exit 1)
+
+      # Every example does what it claims, no selector names something that does
+      # not exist, and every pattern passes. A rename fails here, in its own PR.
+      - name: Check lint rules
+        run: npm run lint:rules
 
       # Compiling a real Vue template is the only thing that proves the generated
       # declarations are usable. Generating them only proves a file was written:

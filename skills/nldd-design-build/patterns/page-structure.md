@@ -771,3 +771,10 @@ Op de home, zonder kruimelpad:
 De componenten regelen de breedte, de witruimte, de vlakken en de koppen die de titels renderen. Ze geven de terugknop, de zoekfunctie, de taalkeuze, de skip link, het kruimelpad en de juridische links ook de juiste semantiek.
 
 Geef zelf elke titel het juiste `heading-level` en zorg voor één `h1` per pagina. Dat geldt ook voor de titels in de hoofdinhoud van de footer, zodat ze aansluiten op de koppen van de pagina. Geef het taalitem een `accessible-label` die de taal voluit noemt en de afkorting erin houdt, zoals "Taal: Nederlands (NL)": een schermlezer spelt "NL" anders als losse letters, en wie het item met spraak bedient moet het nog bij zijn zichtbare naam kunnen noemen. Geef taalnamen in andere talen een `lang`, zodat een schermlezer "English" Engels uitspreekt.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `no-page-footer-in-section`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `no-sticky-header-on-website`: A website lets its header scroll away: a fixed one takes room from the content.

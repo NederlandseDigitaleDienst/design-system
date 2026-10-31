@@ -331,3 +331,10 @@ Wat jij nog moet doen: een `accessible-label` op de lijst, het `type` dat past b
 ## Gezien in
 
 De meest voorkomende compositie op dit systeem, in elk onderzocht product en in elk framework. De lege toestanden zijn de uitzondering: `slot="empty"` en `slot="no-results"` worden vrijwel nergens gebruikt, ook niet in apps die honderden rijen tonen. Ze doen precies wat je anders zelf nabouwt, en vrijwel niemand vindt ze.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `list-item-holds-cells`: A row takes cells and segments. Anything else sits outside its layout.
+- `list-item-needs-list`: nldd-list-item needs a parent nldd-list, which gives the row its type and keyboard behaviour.

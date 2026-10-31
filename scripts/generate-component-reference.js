@@ -17,6 +17,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, dirname, join, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { rulesAboutTag } from '../lint/rule-index.js';
 import { generatedHeader, writeGenerated } from './lib/skill-doc.js';
 import { extractComponentBlocks, extractLeadingBlock, parseComponent, parseTypedTag, parseNamedTag } from './lib/component-jsdoc.js';
 
@@ -68,10 +69,17 @@ function escapeCell(text) {
 }
 
 /** Render one component as a markdown section. */
+const lintRules = JSON.parse(readFileSync(resolve(__dirname, '../lint/data.generated.json'), 'utf-8')).rules;
+
 function renderComponent(c) {
 	const out = [`### \`<${c.tag}>\``, ''];
 	if (c.summary) {
 		out.push(c.summary, '');
+	}
+	const rules = rulesAboutTag(lintRules, c.tag);
+	if (rules.length) {
+		out.push('**Rules** (`nldd lint`)', '');
+		out.push(...rules.map((rule) => `- \`${rule.id}\`: ${rule.message}`), '');
 	}
 	if (c.attrs.length) {
 		out.push('**Attributes**', '');

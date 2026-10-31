@@ -213,6 +213,10 @@ Wat jij nog moet doen:
 - Test op **toetsenbordbediening**, **200% zoom** en **400% herschaling zonder horizontale scroll**.
 - Geef betekenisvolle `accessible-label`s waar je tekst weglaat (icon-only knoppen, geslotte inhoud).
 
+## Controleren
+
+Draai `npx @nldd/design-system lint` voordat je klaar bent: hij vindt onbekende tags, attributen en waarden, ontbrekende namen en fouten in het samenspel. Zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md).
+
 ## Upgraden naar een nieuwe versie
 
 Draait je applicatie al op dit systeem en moet de versie omhoog, gebruik dan [`nldd-design-upgrade`](../nldd-design-upgrade/SKILL.md). Kort waarom het een eigen skill is: dit project brengt alles uit als patch, ook een breaking change, dus het versienummer zegt niet of een sprong veilig is. De changelog wel.

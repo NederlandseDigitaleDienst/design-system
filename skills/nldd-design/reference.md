@@ -15,6 +15,10 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 
 ### `<nldd-button>`
 
+**Rules** (`nldd lint`)
+
+- `button-needs-name`: nldd-button needs `text` or `accessible-label`, otherwise it has no accessible name.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -70,6 +74,10 @@ Elk custom element met zijn attributen, slots en events. Dit is een offline snel
 
 A horizontal container for grouping buttons with a neutral background. Automatically propagates its size and appearance to all child nldd-button and nldd-icon-button elements. Renders nldd-button-bar-divider elements as internal dividers — no separate component needed. The bar is one surface for actions; on/off buttons do not go in it. For a row of toggles use nldd-toggle-button-group, and for one choice out of a few options on one surface nldd-segmented-control. An nldd-toggle-button placed here is shown as it is, and a warning says so in development.
 
+**Rules** (`nldd lint`)
+
+- `no-toggle-button-in-button-bar`: A button bar holds actions, not toggles: an active toggle looks like a pressed action here.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -92,6 +100,11 @@ A vertical rule between groups of buttons in an `nldd-button-bar`. Purely presen
 
 A container for grouping related buttons together, in a row or stacked. `auto`, the default, is a row, and a stack over the full width in a container of 30rem (480px) or less, the width of a phone, where two labels beside each other leave no room for either. A card or a dialog between 480px and the sm breakpoint keeps its row. The group is its own container, so it follows the width it was given rather than the width of the window: the same group is a row in a page and a stack in a sheet beside it. Being a container has one consequence to know: the width has to come from the parent, since a container may not size itself from what is inside it. In a parent that shrink-wraps its content (an inline-flex box, a float, a table cell, a flex item at `width: auto`) the group measures zero and its buttons are invisible. It says so once in development. Give the group or that parent a width. A stack fills the width with its buttons, except an `nldd-icon-button`, which keeps its own size: a bar with a single glyph in the middle is not a bigger target, only a wider one. With `width="full"` the buttons fill the row and share it equally. A button whose label does not fit its share takes the width it needs, and the others share what is left. A button that does not fit beside the others moves to the next line and fills it: two buttons stack, three end up as two over one. That replaces the 480px rule of `auto`, and the group is no container then. With `orientation="horizontal"` it stays a row, and a label that does not fit wraps instead. An `nldd-icon-button` takes no share of the row. The group sets its `size` on every button in it: buttons in one group are the same size. It holds three buttons at most and hides the rest.
 
+**Rules** (`nldd lint`)
+
+- `button-group-at-most-three`: nldd-button-group holds three buttons at most; the rest are hidden.
+- `form-action-in-button-group`: Put the action in a nldd-button-group, also when there is only one.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -107,6 +120,10 @@ A container for grouping related buttons together, in a row or stacked. `auto`, 
 | _(default)_ | Default slot for buttons (max 3) |
 
 ### `<nldd-icon-button>`
+
+**Rules** (`nldd lint`)
+
+- `icon-button-needs-name`: nldd-icon-button needs `text` or `accessible-label`, otherwise it has no accessible name.
 
 **Attributes**
 
@@ -289,6 +306,10 @@ A row of controls that belong to a whole screen or pane, with an overflow menu f
 
 One control in an nldd-toolbar, with its alternative for the overflow menu.
 
+**Rules** (`nldd lint`)
+
+- `toolbar-item-needs-overflow`: Give this item an alternative in `slot="overflow"`: on a narrow screen it moves to the overflow menu, and without one it is gone.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -345,6 +366,10 @@ The title of an nldd-toolbar, with optional media before it and an action after 
 
 Shows one person or organization as a compact, round (person) or rounded (organization) representation. The content follows a fixed fallback chain: an image when `src` loads, otherwise the initials (from `initials` or derived from `name`), and otherwise a fallback icon. `type` sets both the shape and the fallback icon: `person` gives a circle with a person icon, `organization` a rounded square with a building icon. The shape belongs to the meaning and cannot be set on its own. Override the fallback icon with `icon` where that helps. Without `size` the avatar scales with its container, like `nldd-icon`; a fixed size (the same spacer-aligned scale, 16 through 96) is the exception. The initials and the icon scale along. Wide initials (WW, MMM) are scaled down automatically so they stay inside the shape. Accessibility: the host element carries the meaning. With a `name` (and without `decorative`) it gets `role="img"` with the name as its label. When the name already stands beside it as text, in an identity for instance, set `decorative` so the avatar stays hidden from assistive software. A dead `src` falls back to the initials or the icon, never to a broken-image icon.
 
+**Rules** (`nldd lint`)
+
+- `avatar-group-holds-avatars`: nldd-avatar-group sizes, stacks and rings its avatars, so it only takes nldd-avatar.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -371,6 +396,10 @@ Shows one person or organization as a compact, round (person) or rounded (organi
 ### `<nldd-avatar-group>`
 
 Shows several avatars as one group: they overlap, and each one gets a ring in the surface color so they stay apart where they meet. The ring uses the same mechanism as the badge, so on a colored surface you hand the color over through `--context-parent-background-color`. Slot `nldd-avatar` elements, not bare `img`. An avatar already knows what to do with a dead image, when to fall back to initials, and how to show its name as a tooltip; a loose image would have to reproduce all of that and cannot do the last one. Set `decorative` when the names already stand beside the group as text; otherwise give every avatar a name, because the group itself describes nobody. The size applies to the whole group: it is imposed on the avatars, a slotted `img` included. That keeps the row on one line whatever a consumer hands over. Avatars that are links or buttons need size 32 or larger: they overlap, so each keeps only part of its width as a target (WCAG 2.5.8). On sm the list behind the button is a bottom sheet with a title bar, which names the group (its `accessible-label`) and closes it. The row never overflows its container. Where there is no room for every avatar, the group shows as many as fit and puts the rest behind the "+N" button, as `max` does; `max` is then the most it shows, not a fixed count.
+
+**Rules** (`nldd lint`)
+
+- `avatar-group-holds-avatars`: nldd-avatar-group sizes, stacks and rings its avatars, so it only takes nldd-avatar.
 
 **Attributes**
 
@@ -701,6 +730,10 @@ Nederlandse Digitale Dienst Form Component Plain custom element (extends HTMLEle
 
 A layout wrapper for the action buttons at the bottom of a form (typically a submit button or a button group). Follows the same responsive layout as `nldd-form-field`: with `label-alignment="right"` or `"left"` the content gets the same indent as the fields above it, thanks to a `::before` pseudo-element that acts as the spacer column where the label would sit. Inherits `label-alignment` automatically from a wrapping `<nldd-form>`: the form propagates its own `label-alignment` as `form-label-alignment` to descendant `nldd-form-actions` (and `nldd-form-field`) through a MutationObserver. An explicit `label-alignment` on the form-actions itself wins through the CSS cascade, and the form code never touches the `label-alignment` attribute of the descendant. <nldd-form label-alignment="right"> <nldd-form-field>...</nldd-form-field> <nldd-form-actions> <nldd-button-group> <nldd-button appearance="primary" type="submit" text="Bewaar"></nldd-button> </nldd-button-group> </nldd-form-actions> </nldd-form>
 
+**Rules** (`nldd lint`)
+
+- `form-action-in-button-group`: Put the action in a nldd-button-group, also when there is only one.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -717,6 +750,10 @@ A layout wrapper for the action buttons at the bottom of a form (typically a sub
 ### `<nldd-form-field>`
 
 A field around one input: its label, supporting label, optional badge, validation and help text. It finds the input among its children, hands it the label as its accessible name and gives it an id, so you write no `for` or `id` yourself. Mark the optional fields with `optional`, not the required ones; the design guidelines say why. Put the requirements on a value in an nldd-validation-list inside the same field. What only your server knows, such as a password found in a breach, the app names in `unmet` on the input itself: see nldd-validation-list.
+
+**Rules** (`nldd lint`)
+
+- `form-field-needs-input`: nldd-form-field holds no form input, so the label has nothing to connect to.
 
 **Attributes**
 
@@ -736,6 +773,10 @@ A field around one input: its label, supporting label, optional badge, validatio
 | _(default)_ | The slotted input (e.g. nldd-text-field), its nldd-validation-list and its nldd-form-field-help-text. |
 
 ### `<nldd-form-field-help-text>`
+
+**Rules** (`nldd lint`)
+
+- `form-field-needs-input`: nldd-form-field holds no form input, so the label has nothing to connect to.
 
 **Slots**
 
@@ -779,6 +820,10 @@ One requirement of a value, with the rule that checks it. Give every item an id 
 ### `<nldd-validation-list>`
 
 Nederlandse Digitale Dienst Validation List (Lit + TypeScript) Everything a value has to satisfy, in one list. A requirement you can state up front is an item with a rule, and it checks itself while you type. One only a server can decide is an item without a rule, and the app names it in `unmet` on the control. The list has two modes and `judging` is the switch. Before a verdict it shows its hints, which are the requirements of the field. After one it shows everything the value does not satisfy, and the hints are gone. It throws that switch itself the moment its control turns `invalid`, so when the field is judged is the consumer's decision, and the right moment is on submit. Hints are off by default. A phone number does not need its format spelled out before anyone has typed, while the rules for a password do. There are no checkmarks. The control already shows a validation icon of its own, and repeating that per line says the same thing three times.
+
+**Rules** (`nldd lint`)
+
+- `form-field-needs-input`: nldd-form-field holds no form input, so the label has nothing to connect to.
 
 **Attributes**
 
@@ -1568,6 +1613,10 @@ Two columns, hours and minutes, that slide like a wheel past the selection in th
 
 A selectable button that toggles between selected and unselected. Available as a button (aria-pressed), a checkbox, or a radio. The label stays the same in both states: the state is in aria-pressed (or checked) and in the fill, so a screen reader says "Favoriet, pressed". A label that changes with the state ("Volgen", then "Ontvolgen") says what the button does next; that is an nldd-button whose text you change, not a toggle. In radio mode the button itself is the radio: it carries the role, the state and its place in the group. A native radio in a shadow root of its own would be a group of one, counted as "1 of 1" and stopped at by Tab.
 
+**Rules** (`nldd lint`)
+
+- `no-toggle-button-in-button-bar`: A button bar holds actions, not toggles: an active toggle looks like a pressed action here.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1680,6 +1729,10 @@ A multi-select input that looks like a normal input field: chosen values show as
 
 A vertical split view with a main area and an unlimited number of bar panels. Each child determines its order per breakpoint via sm-order, md-order, and lg-order. Children without order attributes are sorted by DOM order. All bars are in normal flow at every breakpoint and stack vertically. A divider is drawn only where the main pane meets an adjacent bar — directly above and/or below main — at every breakpoint (including sm). Two stacked bars on the same side never get a divider between them, so a toolbar and a tab-bar read as one visual unit. Consumers never manage dividers themselves. Give each bar a unique slot name (e.g. slot="toolbar", slot="status-bar"). Use slot="bar-1", slot="bar-2" if no meaningful name applies. The main panel always uses slot="main". Sets --context-parent-background-color, which cascades to all descendants.
 
+**Rules** (`nldd lint`)
+
+- `bar-split-view-children-need-slot`: Every child of nldd-bar-split-view needs a `slot`, or it does not render.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1718,6 +1771,10 @@ Use a box to visually group related components in a distinct, contained region. 
 ### `<nldd-card>`
 
 A visually bounded card with optional header, body and footer sections. The card is elevated by default. Padding is left to nested containers. With `href` the whole card becomes a link (an overlay anchor across the card), with `button` a button (an overlay button that fires a plain, composed `click`, so a click listener or htmx attribute on the card itself works directly, and Enter/Space work natively). `href` wins when both are set. Nested interactive content, footer buttons for instance, has to be lifted above it with `position: relative; z-index: 1` to stay clickable. A card that is a link or button steps its surface and border one shade up on hover and one more while pressed, as a neutral-base button does; content lifted above the overlay does not set it off. On a touch screen there is no hover, and a touch that turns into a scroll lets go of the pressed shade.
+
+**Rules** (`nldd lint`)
+
+- `card-link-needs-name`: A card that is a link or button needs `accessible-label`: the control has no text of its own.
 
 **Attributes**
 
@@ -1838,6 +1895,10 @@ A rule that visually separates sections of content.
 ### `<nldd-full-bleed-section>`
 
 A section that spans the full width without horizontal padding. Useful for background colors, images, or other content that runs edge to edge. Vertical padding and gap adjust via container queries.
+
+**Rules** (`nldd lint`)
+
+- `no-page-footer-in-section`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
 
 **Attributes**
 
@@ -1978,6 +2039,10 @@ A section with a 1/3 sidebar on the left and 2/3 main content on the right. The 
 
 A page layout with optional sticky header and footer. Without sticky-header, the host is the scroll container and the header is in normal flow. With sticky-header, the header becomes absolute and .page__scroll takes over scrolling, padded by the measured header height. That padding freezes once you scroll, so a collapsing bar cannot drag the content up under the cursor. In root-scroll mode (--context-scroll-mode: root, derived upstream by nldd-shell) the page stops owning a scroller: the document scrolls and the sticky header/footer stick against the document, offset by --context-inset-top/bottom. The mode is read on connect/resize and reflected to [data-scroll] so the CSS can branch. The page passes those insets on to its own content, with its sticky header and footer added: anything sticky inside (an nldd-sidebar-section, a sticky table head) reads --context-inset-top / --context-inset-bottom and clears every bar above and below it without being told a number. The heights are measured, because a top title bar shrinks as you scroll past its anchor. While the page owns the scroller, only its own bars count: the chrome above the page sits outside that scroller and does not push sticky content down. A page carries the landmarks of a document: its header is the banner, its content the main landmark, its footer the contentinfo. A document has one of each, so a page that sits beside another one cannot have them. Such a page renders a section and a plain div instead, which drops all three at once: a header inside sectioning content is no longer a banner. With `accessible-label` that section is a named region, so there is still one landmark to jump to; without a name it is no landmark at all, which beats an unnamed one. `landmarks` says which of the two a page is, and `auto` (the default) reads it off where the page sits: - in an overlay (nldd-sheet, nldd-modal-dialog, nldd-window, nldd-popover) a region, because the overlay is not the document; - in a pane of nldd-navigation-split-view, nldd-side-by-side-split-view or nldd-stacked-split-view a region, because those place pages beside each other; - anywhere else the page, including the `main` slot of an nldd-bar-split-view, which stacks bars around a single content area. So an app shell has no main until you say which pane holds the primary content, with `landmarks="page"` on that one page. Only the application knows which pane that is. Two pages that both render a main is invalid HTML, and the page says so in development.
 
+**Rules** (`nldd lint`)
+
+- `no-sticky-header-on-website`: A website lets its header scroll away: a fixed one takes room from the content.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -1999,6 +2064,10 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 ### `<nldd-page-footer>`
 
 The footer band at the bottom of a page. Hosts three optional rows in a fixed order: breadcrumbs (top), consumer-defined main content (middle), and a legal-bar (bottom). Dividers are drawn automatically between non-empty rows. Establishes its own container query (`page-footer-container`) so the responsive padding and gap react to the footer's own width, not the viewport. The host has `id="page-footer"` so a skip-link can target it directly. Use the sub-components `nldd-page-footer-legal-bar` and `nldd-page-footer-legal-bar-item` for the bottom row.
+
+**Rules** (`nldd lint`)
+
+- `no-page-footer-in-section`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
 
 **Attributes**
 
@@ -2053,6 +2122,10 @@ A single entry in an `nldd-page-footer-legal-bar`. Renders as a link when `href`
 
 A non-modal floating panel anchored to a trigger element. Built on the native Popover API (popover="auto") with Floating UI for positioning. The browser handles opening, toggling and light dismiss; this component only handles positioning and focus. The recommended use is through popovertarget, so the browser owns the toggle: <nldd-button id="info-trigger" popovertarget="info-popover">Info</nldd-button> <nldd-popover id="info-popover" anchor="info-trigger" accessible-label="Info"> <nldd-container> <p>Content of the popover.</p> </nldd-container> </nldd-popover> To open it from your own state instead, bind `open` together with the close event: the popover clears `open` itself on light dismiss, Escape or a click on its anchor. It needs that anchor to open against. For a custom focus target inside the popover, put `autofocus` on the child you want. Without it the popover host itself takes focus. On sm the popover is a bottom sheet that closes with Escape or a tap outside it. Where that is not enough, give its content a title bar of its own, as in a sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The popover catches the dismiss of that bar and closes. It draws no bar itself.
 
+**Rules** (`nldd lint`)
+
+- `popover-needs-name`: nldd-popover needs `accessible-label`, or a screen reader announces it without a name.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -2087,6 +2160,10 @@ A non-modal floating panel anchored to a trigger element. Built on the native Po
 ### `<nldd-sheet>`
 
 An overlay component that slides in from the side or bottom of the screen. Based on the native <dialog> element for built-in accessibility, focus management, and Escape key support. On small (sm) viewports the sheet always renders as a bottom sheet, regardless of the configured placement. Render the sheet at the document root (teleport/portal it to `document.body`), never inside a split view's content flow: as a slotted flex child it would steal pane height (see `nldd-split-view-pane`). A sheet holds a whole nldd-page: an nldd-top-title-bar in its header slot, the content, and a footer when there are actions. The page behaves as it does anywhere else, with only the middle scrolling, and the text of the bar is also the sheet's accessible name. Do not build a header of your own. Open and close it with `open`, bound to your state together with the close event: the sheet clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the sheet in the DOM rather than mounting it when it opens, or the animations are skipped.
+
+**Rules** (`nldd lint`)
+
+- `no-sheet-in-split-view`: Render nldd-sheet at the document root: inside a pane it is clipped by that pane.
 
 **Attributes**
 
@@ -2151,6 +2228,10 @@ A horizontal split view with multiple equal panes side by side. The number of pa
 
 A page section with a left sidebar alongside the main content. - **Wide (section >= 1008px):** two columns. The sidebar is a sticky, scrollable box (max-width 320px) beside the main content. It takes the surface of the section around it and is edged by a divider line, so it reads as a block without drawing the eye away from the main. Its sticky top/bottom insets default to 16px; override with `sticky-top` / `sticky-bottom` so it clears other sticky page elements (e.g. a sticky header). - **Narrow (section < 1008px):** the sidebar collapses behind a sheet (a left panel on md+ viewports, a bottom sheet on mobile), and the host reflects a `collapsed` attribute. The consumer owns the trigger: place any chrome (a button, a chosen-filters bar, …) wherever you want, show it only while collapsed (e.g. `nldd-sidebar-section[collapsed] .my-trigger { … }` or by reading `collapsed` / listening to `collapse-change`), and call `show()` / `toggle()` to open the sheet. Bind `aria-expanded` via the `open`/`close` events. The sheet gets a sticky title bar by default — the `sidebar-label` as title plus a "Sluit" button — overridable via the `sheet-top-title-bar` slot. A link in the sheet to a place on the page beside it, such as a row of a table of contents, closes the sheet first and then scrolls to that place and moves focus there, with a temporary tab stop as a skip link does. Left to the browser, the page would scroll under a sheet that is still open, and on closing the browser gives focus back to the trigger without scrolling to it, so focus ends up out of sight. A link that opens elsewhere (another page, a new tab, a modifier key, a `download`) or points into the sidebar itself is left alone, as is a click the consumer has already handled with `preventDefault()`. The address gets the fragment through `replaceState`, without a new history entry and without a `hashchange` event or a `:target` match: a router that listens for those does not see the jump. The sidebar content lives in `slot="sidebar"`. Its slot outlet moves between the box (expanded) and the sheet (collapsed) so there is a single, never-duplicated copy — the light DOM (and its state) is preserved across the switch. The box <-> sheet switch follows the section's OWN width (a ResizeObserver on the host), not the viewport — so a sidebar-section in a narrow column or a split-view pane collapses to the sheet just like one in a narrow viewport, and the sidebar never stacks above or crowds the main. Set `no-collapse` to opt out: a narrow section then stacks the sidebar (full-width) above the main instead of using a sheet. Inherits block `padding` and `height` from PageSectionMixin.
 
+**Rules** (`nldd lint`)
+
+- `no-page-footer-in-section`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -2185,6 +2266,10 @@ A page section with a left sidebar alongside the main content. - **Wide (section
 ### `<nldd-simple-section>`
 
 A basic section with responsive padding and gap based on container size. Contains optional header and footer slots. The padding and spacing between slots adjust automatically via container queries. Use one section per content block and repeat the section rather than building columns inside one: the section sets the reading width and the padding itself. For two columns there are nldd-one-half-one-half-section, nldd-two-thirds-one-third-section, nldd-one-third-two-thirds-section and nldd-sidebar-section. Give a section its surface with `background` instead of a background color of your own; that is how the components inside know which surface they are on.
+
+**Rules** (`nldd lint`)
+
+- `no-page-footer-in-section`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
 
 **Attributes**
 
@@ -2237,6 +2322,10 @@ A divider line between panels in a split view. The divider runs from edge to edg
 ### `<nldd-split-view-pane>`
 
 A simple pane container for use inside split views. The split view automatically sets context: whether a back button should be shown. The consumer sets `has-content` to indicate the pane has content. The consumer sets `back-text` on the `nldd-top-title-bar` inside the pane. The split view sets `hide-back` when the back button is not applicable. The pane automatically hides the back button via CSS when `hide-back` is active. The pane sets `--context-parent-background-color` which cascades down to all descendants. Set `background="tinted"` on a pane to give it a tinted background independently of sibling panes. Descendants such as `nldd-page` read `--context-parent-background-color` automatically. A pane stretches its slotted content to fill it (`::slotted(*) { flex-grow: 1 }`), so slot only layout content here. Overlays (`nldd-sheet`, popovers, dialogs, menus) belong at the document root — teleport/portal them to `document.body`. Do not leave an overlay as a light-DOM sibling of a split view: it gets slotted into the main pane and becomes an extra flex-grow child that steals pane height, so in document-scroll (root) mode a short page's sticky footer floats mid-screen instead of docking.
+
+**Rules** (`nldd lint`)
+
+- `no-sheet-in-split-view`: Render nldd-sheet at the document root: inside a pane it is clipped by that pane.
 
 **Attributes**
 
@@ -2590,6 +2679,11 @@ Accessibility pattern that lets keyboard users skip past content. Wraps content 
 
 A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBar and NLDDTabBarItem. When the tabs do not fit, the ones that do not fit go behind a "Meer tabs" button at the end, in a menu. The current tab always stays in the bar: if it would fall in the part that does not fit, another tab goes to the menu in its place. While tabs are in the menu, the bar fills its container and the tabs in it share the width in proportion to their own. Choosing a tab in the bar changes nothing about what is shown; choosing one from the menu swaps it with the last tab in the bar, so the bar does not jump. `centered` has no effect then. In an nldd-toolbar the other items go to the toolbar's menu first, by their priority; when it is the bar's turn, it narrows down to the current tab beside its button, and only then moves into the toolbar's menu as a whole. Tabs are hidden, never moved, so a framework that renders them finds them where it put them. Only a tab that does not fit on its own is cut off.
 
+**Rules** (`nldd lint`)
+
+- `tab-bar-needs-name`: nldd-tab-bar needs `accessible-label`, so a screen reader can say what the tabs are for.
+- `tabs-with-href-need-navigation`: Tabs with `href` go to another page: add `navigation`, so the bar is a nav and not a tablist.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -2616,6 +2710,10 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 
 ### `<nldd-tab-bar-item>`
 
+**Rules** (`nldd lint`)
+
+- `tabs-with-href-need-navigation`: Tabs with `href` go to another page: add `navigation`, so the bar is a nav and not a tablist.
+
 **Attributes**
 
 | Attribute | Type | Description |
@@ -2641,6 +2739,10 @@ A horizontal navigation bar with mutually exclusive tabs. Exports both NLDDTabBa
 ### `<nldd-top-navigation-bar>`
 
 The top bar of a page: a logo bar with the Rijkslogo and an optional wordmark, and below it the main bar with the website title, a back button, the global navigation and the utility navigation. On narrow widths the global navigation moves into a menu sheet behind the menu button. The top bar of a website, and of nothing else: put it in the `header` slot of an `nldd-page`. Do not combine it with a split view. A split view is the layout of an application, whose panes carry a bar of their own, usually an `nldd-toolbar`, and a site header above it gives a second layer of navigation and a second thing that scrolls. Does a page need a sidebar under this bar, use an `nldd-sidebar-section` inside that `nldd-page`.
+
+**Rules** (`nldd lint`)
+
+- `no-sticky-header-on-website`: A website lets its header scroll away: a fixed one takes room from the content.
 
 **Attributes**
 
@@ -2822,6 +2924,10 @@ A guided-discovery coach mark. Put a control (nldd-search-field, for instance) i
 ### `<nldd-modal-dialog>`
 
 A modal window with overlay backdrop, based on the native <dialog> element. Internally renders an <nldd-inline-dialog> for the visual structure. Use it only when there is no way back, and give it a real choice: a dialog with one button offers nothing to decide, so tell the user with an nldd-notification or an inline message instead. In a destructive dialog the safe way out comes first, as the primary button. Work that needs the page as context, such as editing, belongs in an nldd-sheet. The design guidelines say why. A dialog that opens with one action says so in development. Open and close it with `open`, bound to your state together with the close event: the dialog clears `open` itself when the user closes it. show() and hide() do the same for code without a binding. Keep the dialog in the DOM rather than mounting it when it opens, or the animations are skipped.
+
+**Rules** (`nldd lint`)
+
+- `modal-dialog-needs-two-actions`: A modal dialog with one action leaves nothing to choose: it needs a way out as well.
 
 **Attributes**
 
@@ -3075,6 +3181,7 @@ A cell component for displaying icons in lists with configurable alignment and s
 | `color` | `'content' \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'` | Color variant of the icon (default: 'content') |
 | `vertical-alignment` | `string` | Vertical alignment: 'top' \| 'center' \| 'bottom' (default: 'center') |
 | `icon` | `string` | Icon name (renders `<nldd-icon>`). Takes precedence over the default slot. |
+| `disclosure` | `boolean` | Marks this icon as the chevron of a row or segment that opens and closes: the row turns it with `expanded`. |
 | `hide-below` | `string` | Hides the element below this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. The value names the breakpoint you hide BELOW, so `hide-below="md"` is hidden in sm and visible from md up. `sm` is the open edge and never hides (DEV-warns). |
 | `hide-above` | `string` | Hides the element above this breakpoint: `sm` \| `md` \| `lg`, or a CSS length. `hide-above="sm"` is hidden in md and lg. `lg` is the open edge and never hides (DEV-warns). |
 
@@ -3087,6 +3194,10 @@ A cell component for displaying icons in lists with configurable alignment and s
 ### `<nldd-list>`
 
 A container for `nldd-list-item` elements. The `type` attribute switches the list's a11y role and behavior: - `list` (default) — `role="list"`, items `role="listitem"`. Reorderable allowed. - `radiogroup` — `role="radiogroup"`, for a set of `nldd-list-item radio` rows: one choice, laid out as rows so each option can carry a count or a second line. The rows step out of the accessibility tree themselves (`role="none"`), so the radios are the group's own children. The arrows move focus here and activation checks, rather than the selection following focus as it does in `nldd-radio-button-group`. - `tree` — `role="tree"`, items `role="treeitem"`. Branch rows put their child rows in their own `slot="children"`, which the item renders as a `role="group"`. Level, position and set size are NOT authored: the nesting represents the hierarchy, so assistive technology derives them. A branch row must carry `expanded`; the group is hidden while it is false. Visual indentation is the consumer's — repeat a spacer-cell per level. Comes with its own keyboard, see "Tree" below. - `navigation` — host `role="navigation"`, items with `selected` get `aria-current="page"` on their inner `<a>` or `<button>`. Sub-pages go in their parent row's `slot="children"`, which the item renders as a list inside the list item, so a screen reader hears the level and how many there are. They are always shown and the arrows walk them like any other row; a spacer-cell alone indents but says nothing. Visual indentation is still the consumer's. - `form` — rows that are not actions themselves: the controls inside them are. A row of a label and a field, a switch, a menu button, or a value you cannot change at all. Semantically the same as `list` (`role="list"`, `role="listitem"`), and everything visual is unchanged; what falls away is the keyboard of a list you walk through. No arrow navigation, so no promise of it either, and no tab stop on the row: Tab goes straight to the controls, in source order, the way it does in any form. Rows that ARE actions (`href`, `button`, `checkbox`, or a segment) contradict that and warn in development. SwiftUI draws the same line between `List` and `Form`, for the same reason. - `listbox` — an accessible, filterable listbox (combobox pattern). The list renders its OWN search input (`role="combobox"`) pinned above the options; `.list__items` becomes `role="listbox"` and items become `role="option"`. Focus stays in the input, the active option moves via `aria-activedescendant`, and filtering is consumer-managed via the `input` event (toggle `[hidden]` on items). See "Listbox" below. Selection state is consumer-managed: the list never mutates `selected` itself. A list you walk through answers to the arrow keys, and there is no attribute to switch that on. Whether the keys do something is not a property of one list: it is what a reader may assume about all of them, and a per-list setting made that unknowable from the outside. It follows the type, which you can see before you touch a key. - ArrowUp / ArrowDown — move focus between the rows there is something to do with. A row of nothing but text is skipped, because focus that leads nowhere is a dead end. - Home / End — the first / last of those rows. - Tab — the list is ONE tab stop, so Tab moves past it rather than through it. Within the current row Tab walks that row's own controls: a chevron beside a checkbox, a menu button at the end. The same controls in the other rows are held out of the tab order (`tabindex="-1"`, or `no-tab` on a design-system control that keeps its tab stop in its own shadow root), and so are this row's once focus leaves the list, so tabbing back in lands on the row again. - Escape — out of a control the row holds, back onto the row. One level up, where Shift+Tab is one step back. On the row itself the list claims nothing, so Escape carries on to whatever holds the list, and a control showing a menu keeps the first press for closing that menu. While focus sits in a control a row holds, the list stands down: those keys are the control's, and a list that took them anyway would pull focus out of a combo box or a text field mid-word. What the row IS — its own link, button or segments — keeps answering here. Arrows move focus only; selection stays consumer-managed. Three types answer differently, and all three say so on screen before you touch a key: a listbox runs its keyboard from its search field, a reorderable list moves rows with the arrows, and a form has no rows to move between at all. In `type="listbox"` the list owns a native `<input role="combobox">` (mirroring how `nldd-combo-box` wires an input to a slotted listbox). Keyboard, handled on the input so focus never leaves it: - ArrowDown / ArrowUp — move the active option among the VISIBLE (non-`[hidden]`) options (wrap around). - Home / End — first / last visible option. - Enter — activate the active option by triggering its inner action (a link navigates, a button fires the consumer's handler). Selection stays consumer-managed. - Escape — clear the search value (and refire `input`). On every active change the input's `aria-activedescendant` is set to the active option's id and the option is scrolled into view. The active option (`_highlighted` on the item, a highlight) is distinct from `selected`. Filtering is the consumer's job: listen to `input` (`{ detail: { value } }`) and toggle `[hidden]` on items; after the visible set changes the list resets the active option to the first visible one. `reorderable` and the roving arrow keys are ignored in listbox mode (listbox has its own keyboard). A tree adds to that keyboard, and counts the rows of an open branch as part of the order the arrows walk: - ArrowRight — opens a closed branch; on an open one it steps to its first child. - ArrowLeft — closes an open branch; on a leaf it steps out to the parent row. - Enter — follows the row: its own link or button, or on a segmented branch the first action that is not the chevron. A branch with only a chevron folds instead. - Space — open and close, the same as Right and Left. Only while focus sits on the row itself: a row that is its own control, and a segmented action you tabbed into, handle both keys themselves. Opening and closing runs through the row's own disclosure control — the segment marked `disclosure`, or the row itself when it is a button. The list activates that control rather than writing `expanded`, so the state keeps being set in one place: the consumer's handler. A row that is a link is never activated this way, since that would navigate away. The tree is one tab stop. Focus lands on the row itself when the row has no control of its own, because that is where `treeitem` sits and it makes assistive technology announce the row rather than a button inside it. Tab then walks the controls of THAT row (a chevron beside a checkbox, say) and leaves the list after the last one. A deliberate deviation: strictly speaking a row with several controls is a `treegrid`, not a `tree`. We keep the tree semantics — level and set size are what matters here, not rows and columns — and borrow the "Tab within the row" behavior from the grid pattern. Should a tree with real columns come up, that is when `treegrid` earns its own type. On reorder (type="list" + reorderable), the list dispatches `nldd-reorder` with `fromIndex` / `toIndex` and expects the consumer to mutate the DOM (or their data model that renders the DOM). Focus is restored to the moved item's drag handle via a single `requestAnimationFrame` — this assumes the consumer reorders **synchronously** in the event handler. Async renderers (React, Vue, …) that update the DOM on a later tick will miss the focus restore and should manage focus themselves after their render commits.
+
+**Rules** (`nldd lint`)
+
+- `list-item-needs-list`: nldd-list-item needs a parent nldd-list, which gives the row its type and keyboard behaviour.
 
 **Attributes**
 
@@ -3120,6 +3231,11 @@ A container for `nldd-list-item` elements. The `type` attribute switches the lis
 ### `<nldd-list-item>`
 
 A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox when `checkbox` is set, as a button when `button` is set, or as a plain container otherwise. All cells and segments share one flat slot, in source order. With one action, make the row itself the control (`href`, `button`, `checkbox` or `radio`): the whole row is then one hit area. With two or more, give each its own `nldd-list-item-segment` and leave the row without an action of its own. Both at once nests a control inside a control, and the item warns about that in development. Two rules govern every row: 1. State fills always paint the WIDENED row geometry — the row box extended by the indicator inline inset on both sides — whether or not the row is interactive. Paint never differs between a selected plain row and a selected interactive row. 2. The widened strip belongs to the ROW, never to a segment. A row with any action (its own `href`/`button`/`checkbox`, or a slotted segment) pulls itself outward (`is-interactive` host class → negative inline margin) and pads the row block back by the same amount, so content stays on the grid. A row-wide action owns that padding itself, making the whole widened box one hit area; slotted segments stay in the grid, so their footprint is position-independent and tree columns line up at any depth. By default the divider starts at the row's first text or title cell, so the line lands on the words rather than on whatever leads up to them — an icon, an avatar, a checkbox, or the spacers a tree indents with. Rows of different shapes then still line their dividers up with each other, and a tree's dividers step inward with its indentation. Text inside an `nldd-list-item-segment` counts as the row's content, and the marker is that text cell rather than the action: the action carries its own inline padding, so its edge sits before the words. A row with no text or title cell keeps the full content width. Mark a cell with `divider-start` and/or `divider-end` to place it yourself instead — an explicit marker replaces the derived one entirely, so `divider-start` on the leading cell restores the full-width line. Multiple markers resolve as the union: first `divider-start` through last `divider-end`. A start past the last end is an authoring error — the item DEV-warns and falls back to the full content width. A branch row can disclose its children in two ways: a dedicated `nldd-list-item-segment[disclosure]` segment (only the chevron is clickable), or the row itself as the control (`button` + `expanded`, the whole row toggles). In the second case, mark the chevron's `nldd-icon-cell` with `disclosure` and the row turns it with `expanded` — the same affordance, without having to trade a clickable row for a turning chevron. `checkbox` makes the WHOLE row the control: the inner action becomes a `role="checkbox"` button carrying `aria-checked`, it toggles `checked` on activation and fires `change`. Slot an `nldd-checkbox decorative` (or any glyph) before the text: it only shows the state, since the row already conveys role and state, and a second focusable control would double the tab stops. Do NOT nest a real `<input type="checkbox">` in the action: interactive content inside a `<button>` is invalid HTML and AT announces the button, not the checked state. A `<label>` variant is not offered for the same reason it cannot work — label-to-input association walks the DOM tree, and a slotted input is not a descendant of a label in the shadow root. When it renders as a link, `target` and `rel` are forwarded to the inner `<a>` (e.g. `target="_blank" rel="noopener noreferrer"`). With `target="_blank"` the item also injects a visually hidden "opens in new tab" announcement for assistive technology (WCAG 2.1 SC 3.2.2), and an `href` to another website a visually hidden "andere website". An `nldd-icon-cell` with `external-link` is only the picture of that; the row says it either way. The item synchronizes its ARIA with its parent `nldd-list`'s `type`: - `list` parent → `role="listitem"` - `navigation` parent → `role="listitem"` + `aria-current` on the inner `<a>` / `<button>` when `current` or `selected`, with `current-type` as its value (`page` unless set) - `listbox` parent → `role="option"` + `aria-selected` reflecting `selected`. The list points its search input's `aria-activedescendant` at the active option via `_highlighted` (separate from `selected`).
+
+**Rules** (`nldd lint`)
+
+- `list-item-holds-cells`: A row takes cells and segments. Anything else sits outside its layout.
+- `list-item-needs-list`: nldd-list-item needs a parent nldd-list, which gives the row its type and keyboard behaviour.
 
 **Attributes**
 
@@ -3160,6 +3276,10 @@ A row within an `nldd-list`. Renders as a link when `href` is set, as a checkbox
 ### `<nldd-list-item-segment>`
 
 A segment inside an `nldd-list-item`: it groups a run of cells and makes just that run clickable. Use it when a row needs more than one segment — a tree row whose chevron expands while the label toggles a checkbox, or a row that navigates with a separate button beside it. Put it in the row where its cells would go: the item has one flat slot, and a segment takes the place of the cells it covers. Where the divider starts or stops is marked on the cells themselves (`divider-start` / `divider-end`), not by the slot a segment sits in. A row is EITHER row-level interactive (`href` / `button` / `checkbox` on the `nldd-list-item`) OR segmented (one or more of these). Both at once nests a control inside a control, which is invalid HTML; the item DEV-warns. Unlike the row-wide action this does not bleed outward: a segment sits between siblings, so an outward inset would overlap them. It owns its inline padding and never drops below the row's control size, so an icon-only one still meets the WCAG 2.5.8 target size — do not add spacer cells inside it for room or hit area, that doubles the space. In a `type="listbox"` list the segment renders as a plain container (no control, not focusable) and DEV-warns: an `option` may not contain interactive descendants. The cells render unchanged, so nothing shifts.
+
+**Rules** (`nldd lint`)
+
+- `list-item-holds-cells`: A row takes cells and segments. Anything else sits outside its layout.
 
 **Attributes**
 
@@ -3238,6 +3358,11 @@ A cell that draws steps under each other in an `nldd-list`: a vertical track wit
 ### `<nldd-table>`
 
 Exports both NLDDTable and NLDDTableRow. A data table presented as a boxed surface (rounded corners, an inset border ring, a base or tinted fill) that aligns content into shared columns using a CSS grid + subgrid. Row dividers run full-bleed to the edges; the inline padding lives on the rows, so it insets the cell content but not the dividers. Column widths are defined ONCE on the table via the `columns` attribute (a CSS grid track list), like an HTML `<colgroup>`. Rows are `<nldd-table-row>` elements whose children are the existing `nldd-cell` family — every row uses `grid-template-columns: subgrid`, so all rows snap to the same columns. Header: put one `<nldd-table-row slot="header">` in the `header` slot. Its cells become column headers (role="columnheader"). Responsive: two complementary strategies. (1) Give columns a minimum width (e.g. `minmax(160px,1fr)`) — the table is its own scroll container, so it scrolls horizontally when too narrow (no wrapper needed). (2) Drop columns at breakpoints: provide `sm-columns`/`md-columns`/ `lg-columns` (shorter track lists) and hide the dropped columns' cells with `hide-below`/`hide-above` at the matching breakpoint. The table picks the track list for its own width via the standard sm/md/lg breakpoints. Selection and sorting are intentionally NOT built in: add a column with an `nldd-cell` + `nldd-checkbox` for selection, and drive sorting from an external control (e.g. a dropdown).
+
+**Rules** (`nldd lint`)
+
+- `table-needs-columns`: nldd-table needs `columns`, a CSS grid track list, or its cells do not line up.
+- `table-needs-name`: nldd-table needs `accessible-label`: role="table" takes its name from there.
 
 **Attributes**
 

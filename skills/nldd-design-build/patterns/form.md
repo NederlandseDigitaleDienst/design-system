@@ -108,3 +108,10 @@ Wat jij nog moet doen: `autocomplete` per veld, want de browser kan niet raden w
 ## Gezien in
 
 Een form field met een invoerveld erin is een van de meest voorkomende composities op dit systeem. De form section juist niet, terwijl apps de groepering wel met de hand nabouwen: daarom staat die hier in de compositie.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `form-action-in-button-group`: Put the action in a nldd-button-group, also when there is only one.
+- `form-field-needs-input`: nldd-form-field holds no form input, so the label has nothing to connect to.

@@ -71,6 +71,10 @@ describe('frontends', () => {
 		const source = '# Kop\n\n```html\n<nldd-a></nldd-a>\n```\n';
 		assert.equal(first(parseMarkdown(source), 'nldd-a').offset, source.indexOf('<nldd-a'));
 	});
+
+	it('reads inline tags from Markdown', () => {
+		assert.ok(first(parseMarkdown('Gebruik `<nldd-a text="b">` hier.'), 'nldd-a'));
+	});
 });
 
 describe('two worlds', () => {

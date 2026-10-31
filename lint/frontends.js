@@ -103,14 +103,21 @@ export function parseVue(source) {
 	return [root];
 }
 
-/** Every fenced html/vue block in a Markdown file is a tree of its own. */
+/** Every code block and inline tag in a Markdown file is a tree of its own. */
 export function parseMarkdown(source) {
 	const roots = [];
-	for (const match of source.matchAll(/^```(html|vue)[^\n]*\n([\s\S]*?)^```/gm)) {
-		const offset = match.index + match[0].indexOf('\n') + 1;
-		const padded = ' '.repeat(offset) + match[2];
-		roots.push(...parseHtml(padded).map((root) => ((root.opaque = true), root)));
+	const read = (text, offset) => {
+		const root = createRoot();
+		const padded = ' '.repeat(offset) + text;
+		readHtmlChildren(parseMarkup(padded, { selfClosing: true }).children, root, {});
+		roots.push(root);
+	};
+	const fences = /^( *)```[^\n]*\n([\s\S]*?)^ *```/gm;
+	for (const match of source.matchAll(fences)) {
+		if (match[2].includes('<nldd-')) read(match[2], match.index + match[0].indexOf('\n') + 1);
 	}
+	const prose = source.replace(fences, (block) => ' '.repeat(block.length));
+	for (const match of prose.matchAll(/`(<nldd-[^`\n]*)`/g)) read(match[1], match.index + 1);
 	return roots;
 }
 

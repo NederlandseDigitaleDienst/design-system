@@ -9,6 +9,22 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd lint`, a fast and deterministic check for code that uses the design system.** `npx @nldd/design-system lint`, with no configuration: unknown tags, attributes, slots, values and icons, missing accessible names, and mistakes in how components fit together. A value that only exists at runtime is never a finding, and `--update-baseline` accepts what is already there, so only new findings count. It reads HTML, Vue and JSX/TSX, and works as a pre-commit hook and in CI with `--format github`. See Added.
+
+### Added
+
+- **`nldd lint`, `nldd explain` and `nldd rules`.** The package has a `bin`. `--format json` gives an agent everything it needs to fix a finding.
+- **`nldd-design-validate`, a sixth skill,** and a hook in the plugin that hands findings back to the agent after an edit. The hook only runs the linter installed in the project.
+- **Rules on the page.** The reference lists the rules per component, and a pattern shows the rules that belong to it.
+- **`custom-elements.json` spells out literal types.** An attribute typed `Appearance` now has `expandedType` with its values, and the manifest lists attributes that only have JSDoc.
+- **`disclosure` on `nldd-icon-cell`** is now documented.
+
+### Changed
+
+- **Node 20.19 or later**, because of the dependencies of the linter. Using the components in a browser is not affected.
+
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
 
 ### Highlights

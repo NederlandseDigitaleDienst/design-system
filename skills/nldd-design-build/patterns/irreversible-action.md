@@ -83,3 +83,9 @@ Wat jij nog moet doen: een `heading-level` op het kopje van de zone, zodat die m
 ## Gezien in
 
 Modals zijn in de onderzochte producten zeldzaam, en dat is de bedoeling: zie "wanneer niet" hierboven. Waar ze staan, staan ze voor dit geval. Het vlak met de kritieke rand komt uit Fundament, waar onomkeerbare acties in zo'n zone bij elkaar staan in plaats van los tussen de rest.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `modal-dialog-needs-two-actions`: A modal dialog with one action leaves nothing to choose: it needs a way out as well.

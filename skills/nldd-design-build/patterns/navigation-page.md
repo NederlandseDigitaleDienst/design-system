@@ -431,3 +431,9 @@ Wat jij nog moet doen: wat bij de [paginaopbouw](page-structure.md) staat, een `
 ## Gezien in
 
 De pagina [Over deze website](https://digitaledienst.overheid.nl/over/) van de Nederlandse Digitale Dienst is een navigatiepagina met de lijst: een titel, een intro van twee regels, en een rij links met een chevron naar toegankelijkheid, privacy, copyright, archivering en het melden van een kwetsbaarheid. Het kruimelpad staat in de footer.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `card-link-needs-name`: A card that is a link or button needs `accessible-label`: the control has no text of its own.

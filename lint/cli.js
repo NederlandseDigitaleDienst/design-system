@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { formatGithub, formatJson, formatText } from './format.js';
 import { BUILT_IN_RULES, createLinter, loadData } from './linter.js';
+import { rulesAboutTag } from './rule-index.js';
 import { applyBaseline, findFiles, readBaseline, readConfig, writeBaseline } from './project.js';
 
 const USAGE = `Usage:
@@ -27,15 +28,6 @@ function findRule(data, id) {
 	return BUILT_IN_RULES[id] ? { id, ...BUILT_IN_RULES[id], message: BUILT_IN_RULES[id].description } : undefined;
 }
 
-function tagsIn(selector) {
-	return [...selector.matchAll(/nldd-[a-z0-9-]+/g)].map((match) => match[0]);
-}
-
-function rulesFor(data, tag) {
-	const about = (rule) => JSON.stringify([rule.context, rule.assert, rule.report, rule.count, rule.ref]);
-	return data.rules.filter((rule) => !tag || tagsIn(about(rule)).includes(tag));
-}
-
 function explain(data, id) {
 	const rule = findRule(data, id);
 	if (!rule) {
@@ -53,7 +45,7 @@ function explain(data, id) {
 }
 
 function listRules(data, { tag, json }) {
-	const rules = rulesFor(data, tag);
+	const rules = tag ? rulesAboutTag(data.rules, tag) : data.rules;
 	if (json) console.log(JSON.stringify(rules, null, 2));
 	else for (const rule of rules) console.log(`${rule.id}  ${rule.message}`);
 	return 0;

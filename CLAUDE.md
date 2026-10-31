@@ -19,6 +19,7 @@ npm run build            # Volledige build
 | Nieuwe branch starten | `/worktree <branch>` | Maakt worktree + kopieert .env en .claude/ |
 | Component maken/updaten | `/component <naam>` | Alle regels, formatting, BEM, CSS, templates |
 | Storybook beheren | `/storybook-manager` | Start/stop/status van Storybook instances |
+| Lintregel toevoegen | `/rule <wat er mis is>` | Schrijft de regel, test hem op patronen en echte apps |
 
 **Typische flow voor nieuwe feature:**
 ```
@@ -163,13 +164,36 @@ Verwijs je naar een component, dan is de linktekst de tag in backticks: `[`nldd-
 
 Een patroon komt erbij via een issue, met het probleem en het bewijs erbij (waar draait het, welke taak lost het op); zie `docs/CONTRIBUTING.md`. Een patroon dat niemand meer gebruikt haal je weg.
 
-Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Onbekende tag, attribuut, slot of icoonnaam laat CI falen. De logica zit in `scripts/lib/skill-markup.js` met tests in `skill-markup.test.mjs`; die gebruikt dezelfde JSDoc-parser als de referentie, zodat de drie niet uiteen kunnen lopen. Twee dingen zijn expres toegestaan: framework-bindingen (`:text`, `[attr.x]`, `v-if`) en attributen die een ouder voor zijn kinderen documenteert (`above`/`below`/`only` op de split views).
+Elk `nldd-*`-element in de skill-documentatie (`SKILL.md`, `patterns/*.md`, `examples/*.md`) wordt gecontroleerd tegen de echte component-API met `npm run validate:skill-markup`, dat in `validate.yml` draait. Dat zijn de ingebouwde regels van `nldd lint`; zie Linter.
 
 Wat compositie is hoort in een patroon; wat een ontwerpkeuze is hoort in `src/docs/design-guidelines.mdx`. Die richtlijnen wijzen wizards en megamenu's expliciet af, dus daar komt geen patroon voor.
 
+## Linter
+
+`nldd lint` (`lint/`, de `bin` van het pakket) controleert consumentencode: onbekende tags, attributen, slots, waarden en iconen, en fouten in het samenspel van componenten. Het leest HTML, Vue, JSX/TSX en Markdown-fences. Gebruik `/rule` om een regel toe te voegen.
+
+| Feit | Enige bron | Daaruit gegenereerd |
+|------|------------|---------------------|
+| API | JSDoc en TS-types | `custom-elements.json`, `reference.md`, de ingebouwde regels |
+| Regel | `src/rules/<id>.yaml` | Linter, `reference.md`, sectie `Regels` op een patroon |
+| Patroon: hoe en waarom | `<slug>.mdx` | Storybook, skill-pagina |
+| Voorbeeld | `<slug>.html` | Story, docs, skill |
+
+Eén regel, één bestand in `src/rules/`, ook als hij over meer componenten gaat. De bestandsnaam is het regel-ID, en dat ID is API: consumers hebben het in baselines en onderdrukkingen staan. Hernoem via `aliases`. Een regel hoort bij een patroon door er met `see: patronen/<slug>` naar te wijzen; hij verschijnt dan vanzelf op die pagina. Een patroon is daarmee recept plus regels, en de `.mdx` hoeft niet mee te veranderen.
+
+`message` zegt wat hier fout is, in het Engels, zoals een compilerfout. Het waarom staat op de pagina waar `see` naar wijst en wordt niet overgeschreven.
+
+Een regel komt erbij met een echte vondst. Hij heeft een `passed`- en `failed`-voorbeeld, en `npm run lint:rules` faalt als een voorbeeld niet doet wat het claimt, als een selector iets noemt dat niet bestaat, of als een patroon-`.html` de regel breekt. Zo faalt een hernoeming in dezelfde PR. Controleer met `npm run lint:corpus` wat een regel in echte apps doet; de paden komen uit `NLDD_LINT_CORPUS`, zodat er geen lokale paden in de repo belanden. Nieuwe regels komen als `warn`, want `feat:` is een patch en `^0.13.0` neemt die mee: een nieuwe `error` zou CI van consumers ongevraagd rood maken. `error` alleen via een `!`-commit.
+
+Elke regel draait in twee werelden: in W+ valt alles wat onbekend is gunstig uit, in W- ongunstig. Geschonden in beide is `failed`, en alleen dat wordt gemeld. Een gebonden waarde of een kindcomponent uit een ander bestand is dus `cantTell` en nooit vals alarm. De linter werkt per bestand, dus hele pagina's controleert hij niet.
+
+Een attribuut dat een ouder van zijn kinderen leest (`only` op een pane) documenteer je met `@childattr` bij de ouder. Het is dan alleen op een kind van die ouder geldig.
+
+`lint/data.generated.json` komt uit `npm run generate:lint-data` en wordt gecommit, zodat een pre-commit run geen manifest van 2 MB hoeft te lezen. `generate:cem` draait het mee.
+
 ## Plugin-versie
 
-De plugin heet `nldd-design-system` en staat in de NLDD-marketplace, een aparte repository (`NederlandseDigitaleDienst/ai-plugins`, marketplace-naam `nldd`) die naar deze repository verwijst. De manifesten hier (`.claude-plugin/plugin.json` voor Claude Code, `.cursor-plugin/plugin.json` voor Cursor) leveren de vijf consumentenskills (`nldd-design`, `nldd-design-build`, `nldd-design-migrate`, `nldd-design-upgrade`, `nldd-design-contribute`) uit `skills/`. Daarnaast staat er een zesde, `skills/nldd/`, die alleen doorverwijst: die vangt verwijzingen naar de oude skillnaam op en **hoort na 1 maart 2027 verwijderd te worden**, samen met de regel erover in de changelog. Die wegwijzer meldt ook de overstap naar de nieuwe marketplace. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skills nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
+De plugin heet `nldd-design-system` en staat in de NLDD-marketplace, een aparte repository (`NederlandseDigitaleDienst/ai-plugins`, marketplace-naam `nldd`) die naar deze repository verwijst. De manifesten hier (`.claude-plugin/plugin.json` voor Claude Code, `.cursor-plugin/plugin.json` voor Cursor) leveren de zes consumentenskills (`nldd-design`, `nldd-design-build`, `nldd-design-validate`, `nldd-design-migrate`, `nldd-design-upgrade`, `nldd-design-contribute`) uit `skills/`. Daarnaast staat er een zevende, `skills/nldd/`, die alleen doorverwijst: die vangt verwijzingen naar de oude skillnaam op en **hoort na 1 maart 2027 verwijderd te worden**, samen met de regel erover in de changelog. Die wegwijzer meldt ook de overstap naar de nieuwe marketplace. Claude Code cachet een plugin op de versie in `plugin.json`: verandert die versie niet, dan halen consumers de skills nooit opnieuw op, hoezeer de inhoud ook is gewijzigd.
 
 Daarom volgt de plugin-versie automatisch de pakketversie. `package.json` is de enige bron; `npm run generate:plugin-version` (onderdeel van `generate:skill-docs`) schrijft die versie naar de plugin-manifesten en naar de oude marketplace. semantic-release draait dit in `prepareCmd` en commit de manifesten mee in de release-commit, zodat de plugin-versie meebeweegt met elke release die de skill-docs verandert. Bewerk de `version`-velden niet handmatig.
 

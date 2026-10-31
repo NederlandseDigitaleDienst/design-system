@@ -588,3 +588,9 @@ Wat jij nog moet doen: `landmarks="page"` op dat ene paneel, een `accessible-lab
 ## Gezien in
 
 Elke applicatie op dit systeem begint zo. De twee dingen die het vaakst ontbreken zijn `landmarks="page"`, waardoor een scherm twee keer `main` aanbiedt of geen enkele keer, en het kopniveau van de titelbalk in het tweede paneel.
+
+## Regels
+
+`nldd lint` controleert dit:
+
+- `bar-split-view-children-need-slot`: Every child of nldd-bar-split-view needs a `slot`, or it does not render.
