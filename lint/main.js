@@ -130,7 +130,7 @@ async function fixUntilStable(linter, original, filename) {
 }
 
 async function runLint(data, paths, options) {
-	if (Number.isNaN(Number(options['max-warnings'] ?? 0))) throw new Error('--max-warnings takes a number.');
+	if (!/^\d+$/.test(options['max-warnings'] ?? '0')) throw new Error('--max-warnings takes a whole number, 0 or more.');
 	const formatName = options.format ?? 'text';
 	const chosen = { text: formatText, json: formatJson, github: formatGithub }[formatName];
 	if (!chosen) throw new Error(`Unknown format: ${formatName}`);

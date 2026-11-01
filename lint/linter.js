@@ -155,6 +155,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	const engine = createEngine({ classes: data.classes });
 	const rules = data.rules.filter((rule) => !rule.runtime && severities[rule.id] !== 'off');
 	const ranInSource = (id) => severities[id] !== 'off' && (rules.some((rule) => rule.id === id) || id in BUILT_IN_RULES);
+	const isRule = (id) => id in BUILT_IN_RULES || data.rules.some((rule) => rule.id === id);
 
 	/** A rule about a name or value that is gone says what to use instead; the generic finding adds nothing. */
 	function withoutCovered(findings) {
@@ -230,8 +231,11 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			? []
 			: [...suppressed].flatMap(([line, ids]) =>
 					[...ids]
-						.filter((id) => ranInSource(id) && !fires(line, id))
-						.map((id) => aboutSuppression('suppression-not-needed', line - 1, `\`${id}\` does not fire on the next line, so this suppression can go.`)),
+						.filter((id) => !isRule(id) || (ranInSource(id) && !fires(line, id)))
+						.map((id) => {
+							const detail = isRule(id) ? 'does not fire on the next line, so this suppression can go.' : 'is not a rule, so this suppression does nothing.';
+							return aboutSuppression('suppression-not-needed', line - 1, `\`${id}\` ${detail}`);
+						}),
 				);
 		const located = all
 			.filter((finding) => !suppressed.get(finding.line)?.has(finding.rule))
