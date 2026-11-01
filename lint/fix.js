@@ -6,32 +6,48 @@
 
 const toCamelCase = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 
-/** The start tag from `start`, with strings and `{ }` blanked: a value can hold anything. */
-function maskedTag(source, start) {
-	let masked = '';
-	let quote = '';
+/** Where a template language opens a hole in a string: `${ }`, `{{ }}` or `{% %}`. */
+const isHole = (source, at) => source.startsWith('${', at) || source.startsWith('{{', at) || source.startsWith('{%', at);
+
+/** The closing quote of the string at `start`, past the holes in it, which hold quotes of their own. */
+function endOfString(source, start) {
+	for (let at = start + 1; at < source.length; at++) {
+		if (source[at] === source[start]) return at;
+		if (isHole(source, at)) {
+			at = endOfBraces(source, source.indexOf('{', at));
+			if (at === undefined) return undefined;
+		}
+	}
+	return undefined;
+}
+
+/** The last `}` of the braces at `start`. */
+function endOfBraces(source, start) {
 	let depth = 0;
 	for (let at = start; at < source.length; at++) {
 		const char = source[at];
-		if (quote) {
-			if (char === quote) quote = '';
-			masked += ' ';
-		} else if (char === '"' || char === "'" || char === '`') {
-			quote = char;
-			masked += ' ';
-		} else if (char === '{') {
-			depth += 1;
-			masked += ' ';
-		} else if (char === '}') {
-			depth -= 1;
-			masked += ' ';
-		} else if (depth > 0) {
-			masked += ' ';
-		} else if (char === '>') {
-			return masked;
-		} else {
-			masked += char;
-		}
+		if (/["'`]/.test(char)) {
+			at = endOfString(source, at);
+			if (at === undefined) return undefined;
+		} else if (char === '{') depth += 1;
+		else if (char === '}' && --depth === 0) return at;
+	}
+	return undefined;
+}
+
+/** The start tag from `start`, with strings and `{ }` blanked: a value can hold anything. */
+function maskedTag(source, start) {
+	let masked = '';
+	for (let at = start; at < source.length; at++) {
+		const char = source[at];
+		const quoted = /["'`]/.test(char);
+		if (char === '>') return masked;
+		if (quoted || char === '{') {
+			const end = quoted ? endOfString(source, at) : endOfBraces(source, at);
+			if (end === undefined) return masked;
+			masked += ' '.repeat(end - at + 1);
+			at = end;
+		} else masked += char;
 	}
 	return masked;
 }
@@ -76,31 +92,22 @@ function valueEdits(source, offset, name, values) {
 	});
 }
 
-/** The end of an attribute's value, or undefined when it is not closed. */
+const endsValue = (source, at) => at >= source.length || /[\s>]/.test(source[at]) || source.startsWith('/>', at);
+
+/** The end of an attribute's value, or undefined when it does not end where a value ends. */
 function endOfValue(source, name) {
 	const closers = /^[\])]*/.exec(source.slice(name))[0].length;
 	const equals = /^\s*=\s*/.exec(source.slice(name + closers));
 	if (!equals) return name + closers;
 	const start = name + closers + equals[0].length;
-	const first = source[start];
-	if (first === '"' || first === "'") {
-		const closing = source.indexOf(first, start + 1);
-		return closing === -1 ? undefined : closing + 1;
+	if (source.startsWith('{%', start)) return undefined;
+	let at = start;
+	while (at !== undefined && !endsValue(source, at)) {
+		if (/["'`]/.test(source[at])) at = endOfString(source, at);
+		else if (source[at] === '{') at = endOfBraces(source, at);
+		if (at !== undefined) at += 1;
 	}
-	// A bare value ends at a space, but `${a && b}` and `{a && b}` hold spaces of their own.
-	let depth = 0;
-	let quote = '';
-	for (let at = start; at < source.length; at++) {
-		const char = source[at];
-		if (quote) {
-			if (char === '\\') at += 1;
-			else if (char === quote) quote = '';
-		} else if (depth > 0 && /["'`]/.test(char)) quote = char;
-		else if (char === '{') depth += 1;
-		else if (char === '}') depth -= 1;
-		else if (depth === 0 && (/[\s>]/.test(char) || source.startsWith('/>', at))) return at;
-	}
-	return undefined;
+	return at;
 }
 
 function removeEdits(source, offset, name) {
@@ -140,6 +147,27 @@ function editsOf(source, { fix, offset, endOffset, tag }) {
 /** False when a finding has a fix that does not apply here, such as with both names present. */
 export const canFix = (source, finding) => editsOf(source, finding).length > 0;
 
+const withoutComments = (source) => source.replace(/<!--[^]*?-->|\{#[^]*?#\}|\{%\s*comment\s*%\}[^]*?\{%\s*endcomment\s*%\}/g, '');
+
+/**
+ * Half a rename breaks a template, so a tag goes everywhere in a file or nowhere.
+ * Control flow in text is invisible to the parser, which sees one element in
+ * `{% if a %}<x>{% else %}<x>{% endif %}</x>` and in the reverse with two closers.
+ * JSX has no such thing: there the parser is enough.
+ * @returns {Set<string>} Tags that stay as they are.
+ */
+export function stuckTags(source, findings, isJsx) {
+	const stuck = new Set();
+	const renamed = findings.filter(({ fix }) => fix?.tag);
+	for (const tag of new Set(renamed.map((finding) => finding.tag))) {
+		const edits = renamed.filter((finding) => finding.tag === tag).map((finding) => editsOf(source, finding));
+		const closers = withoutComments(source).match(new RegExp(`</${tag}\\s*>`, 'g'))?.length ?? 0;
+		const paired = edits.filter((list) => list.length === 2).length;
+		if (edits.some((list) => list.length === 0) || (!isJsx && closers !== paired)) stuck.add(tag);
+	}
+	return stuck;
+}
+
 const toClass = (tag) => `NLDD${toCamelCase(tag.replace(/^nldd-/, '-'))}`;
 const entryPoint = (tag) => `@nldd/design-system/${tag.replace(/^nldd-/, '')}`;
 const translationKey = (tag) => `components.${tag.replace(/^nldd-/, '')}`;
@@ -147,11 +175,43 @@ const translationKey = (tag) => `components.${tag.replace(/^nldd-/, '')}`;
 const escaped = (name) => name.replace(/[/@.-]/g, '\\$&');
 const nameIn = (name) => new RegExp(`(?<![\\w-])${escaped(name)}(?![\\w-])`, 'g');
 
-/** Not `.nldd-x`, `#nldd-x` or `./nldd-x.css`: those are a class, an id and a file of the app. */
-const tagIn = (tag) => new RegExp(`(?<![\\w.#-])(?<!(?:^|[^<])/)${escaped(tag)}(?![\\w-]|\\.(?:css|scss|less|js|mjs|cjs|ts|vue)\\b)`, 'g');
+/** Not `.nldd-x`, `#nldd-x` or a path: those are a class, an id and a file of the app. */
+const tagName = (tag) => `(?<![\\w.#/-])${escaped(tag)}(?![\\w-])`;
 
-/** A bundle of the design system itself, which a text rename would only break. */
-const DEFINES_ELEMENT = /(customElements\.define|customElement)\(\s*['"`]nldd-/;
+/** The arguments that can only be a selector or a tag. */
+const SELECTOR_CALL = /((?:querySelector(?:All)?|closest|matches|locator|createElement|getElementsByTagName)\(\s*)(["'`])([^"'`\n]*)\2/g;
+
+function renameInScript(source, tag, to) {
+	let count = 0;
+	const inMarkup = source.replace(new RegExp(`(<\\\\?/?)${escaped(tag)}(?=[\\s/>])`, 'g'), (_, opening) => {
+		count += 1;
+		return opening + to;
+	});
+	const text = inMarkup.replace(SELECTOR_CALL, (call, name, quote, selector) => {
+		const renamed = selector.replace(new RegExp(tagName(tag), 'g'), () => {
+			count += 1;
+			return to;
+		});
+		return `${name}${quote}${renamed}${quote}`;
+	});
+	return { text, count };
+}
+
+/** In a stylesheet a bare name is a selector, except on a line that loads a file. */
+function renameInStyles(source, tag, to) {
+	let count = 0;
+	const text = source
+		.split('\n')
+		.map((line) => {
+			if (/url\(|@import|@use/.test(line)) return line;
+			return line.replace(new RegExp(tagName(tag), 'g'), () => {
+				count += 1;
+				return to;
+			});
+		})
+		.join('\n');
+	return { text, count };
+}
 
 function replaceAll(source, pattern, to) {
 	let count = 0;
@@ -163,34 +223,35 @@ function replaceAll(source, pattern, to) {
 }
 
 /**
- * Renames what names a renamed tag outside its markup. An import, a class and a
- * translation key are unmistakable anywhere; the bare tag only outside markup, and
- * not in a file with a suppression, which may be about that tag.
+ * Renames what names a renamed tag outside its markup, where that is certain: an
+ * import and a class anywhere, a tag in a stylesheet, in a selector call or in
+ * markup in a script. Not in a file with a suppression, which may be about that
+ * tag, or one that defines the old tag. The rest, `linesNaming` points at.
+ * @param {'markup' | 'script' | 'styles'} kind
  * @returns {{ source: string, fixed: number }}
  */
-export function renameReferences(source, renamedTags, { bareTags }) {
-	if (DEFINES_ELEMENT.test(source)) return { source, fixed: 0 };
-	const withTags = bareTags && !source.includes('nldd-lint-disable');
-	const names = [...renamedTags].flatMap(([from, to]) => [
-		[nameIn(entryPoint(from)), entryPoint(to)],
-		[nameIn(toClass(from)), toClass(to)],
-		[nameIn(translationKey(from)), translationKey(to)],
-		...(withTags ? [[tagIn(from), to]] : []),
-	]);
+export function renameReferences(source, renamedTags, kind) {
 	let text = source;
 	let fixed = 0;
-	for (const [pattern, to] of names) {
-		const replaced = replaceAll(text, pattern, to);
-		text = replaced.text;
-		fixed += replaced.count;
+	const apply = ({ text: changed, count }) => {
+		text = changed;
+		fixed += count;
+	};
+	for (const [from, to] of renamedTags) {
+		if (new RegExp(`(define|customElement)\\(\\s*["'\`]${from}["'\`]`).test(source)) continue;
+		apply(replaceAll(text, nameIn(entryPoint(from)), entryPoint(to)));
+		apply(replaceAll(text, nameIn(toClass(from)), toClass(to)));
+		if (source.includes('nldd-lint-disable')) continue;
+		if (kind === 'script') apply(renameInScript(text, from, to));
+		if (kind === 'styles') apply(renameInStyles(text, from, to));
 	}
 	return { source: text, fixed };
 }
 
-/** Lines that still name a renamed tag: a string or a `<style>` that markup does not cover. */
+/** Lines that still name a renamed tag or its translation keys, for someone to look at. */
 export function linesNaming(source, renamedTags) {
-	const tags = [...renamedTags.keys()].map((tag) => tagIn(tag));
-	return source.split('\n').flatMap((line, index) => (tags.some((tag) => line.search(tag) !== -1) ? [index + 1] : []));
+	const names = [...renamedTags.keys()].flatMap((tag) => [new RegExp(tagName(tag)), nameIn(translationKey(tag))]);
+	return source.split('\n').flatMap((line, index) => (names.some((name) => line.search(name) !== -1) ? [index + 1] : []));
 }
 
 /**

@@ -118,7 +118,8 @@ export function applyBaseline(filename, findings, baseline, root) {
 	const accepted = { ...baseline[relative(root, filename)] };
 	return findings.filter((finding) => {
 		const key = baselineKey(finding);
-		if (!accepted[key]) return true;
+		// A hint is never in a baseline, so it must not use up a warning of the same rule.
+		if (finding.severity === 'hint' || !accepted[key]) return true;
 		accepted[key]--;
 		return false;
 	});

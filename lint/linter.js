@@ -4,7 +4,7 @@
  */
 
 import { createEngine } from './engine.js';
-import { canFix } from './fix.js';
+import { canFix, stuckTags } from './fix.js';
 import { applyWrappers, parseSource } from './frontends.js';
 import { BUILT_IN_RULES, createCanonical, loadData } from './rule-data.js';
 import { BOUND, walk } from './tree.js';
@@ -166,7 +166,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 
 	/** A wrapper has an API of its own, and a bound name can be the input of a directive. */
 	function isOurs(node, rule, isPlainHtml) {
-		const maybeInput = isPlainHtml && hasAppDirective(node) && rule.removed?.some((name) => node.attrs.get(name) === BOUND);
+		const maybeInput = isPlainHtml && hasAppDirective(node) && rule.removed?.some((name) => node.attrs.has(name));
 		return !node.wrapped && !maybeInput;
 	}
 
@@ -220,10 +220,9 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				endOffset: node.endOffset,
 				...position(node.offset),
 			}));
-		// Half a rename breaks the template: in `{% if %}<a>{% else %}<a>{% endif %}</a>`, one tag has no end.
-		const stuckTags = new Set(all.filter((finding) => finding.fix?.tag && !canFix(source, finding)).map(({ tag }) => tag));
+		const stuck = stuckTags(source, all, /\.[jt]sx$/.test(filename));
 		for (const finding of all) {
-			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuckTags.has(finding.tag)))) finding.fix = undefined;
+			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuck.has(finding.tag)))) finding.fix = undefined;
 		}
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.

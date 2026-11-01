@@ -89,16 +89,17 @@ function isUtf8(filename) {
 
 /** The tag is gone from the markup; what still names it would break or stop matching. */
 function fixReferences(renamedTags, paths, root, exclude) {
-	const isBuilt = (file) => /\.min\.[cm]?js$/.test(file) || relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
+	const isBuilt = (file) => relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
 	const inMarkup = findFiles(paths, root, exclude);
 	const elsewhere = findFiles(paths, root, exclude, REFERENCE_EXTENSIONS).filter((file) => REFERENCE_EXTENSIONS.includes(extname(file)));
 	let fixed = 0;
 	let files = 0;
 	const remaining = [];
-	for (const [list, bareTags] of [[inMarkup, false], [elsewhere, true]]) {
-		for (const filename of list.filter((file) => !isBuilt(file))) {
+	const kindOf = (file) => (inMarkup.includes(file) ? 'markup' : /\.(css|scss|less)$/.test(file) ? 'styles' : 'script');
+	for (const list of [inMarkup, elsewhere]) {
+		for (const filename of list.filter((file) => !/\.min\.[cm]?js$/.test(file))) {
 			const source = readFileSync(filename, 'utf8');
-			const change = renameReferences(source, renamedTags, { bareTags });
+			const change = isBuilt(filename) ? { source, fixed: 0 } : renameReferences(source, renamedTags, kindOf(filename));
 			if (change.fixed > 0 && isUtf8(filename)) {
 				writeFileSync(filename, change.source);
 				fixed += change.fixed;
