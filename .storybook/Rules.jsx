@@ -1,12 +1,16 @@
 import data from '../lint/data.generated.json';
 import { rulesOfPattern } from '../lint/rule-index.js';
 
+/** A message marks an attribute with backticks, as in a compiler error and in Markdown. */
+const withCode = (message) =>
+	message.split('`').map((part, index) => (index % 2 === 1 ? <code key={index}>{part}</code> : part));
+
 function RuleList({ rules }) {
 	return (
 		<ul>
 			{rules.map((rule) => (
 				<li key={rule.id}>
-					<code>{rule.id}</code>: {rule.message}
+					<code>{rule.id}</code>: {withCode(rule.message)}
 				</li>
 			))}
 		</ul>
