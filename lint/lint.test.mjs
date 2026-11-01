@@ -504,9 +504,9 @@ describe('suppressions', () => {
 
 	it('keeps quiet about a rule that did not run', async () => {
 		const source = '<template>\n<!-- nldd-lint-disable-next-line tab-bar-needs-name -- x -->\n<nldd-button text="a" />\n</template>';
-		const { findings } = await createLinter(DATA, { severities: { 'tab-bar-needs-name': 'off' } }).lintSource(source, 'a.vue');
-		assert.deepEqual(findings, []);
 		const real = loadData();
+		const { findings } = await createLinter(real, { severities: { 'tab-bar-needs-name': 'off' } }).lintSource(source, 'a.vue');
+		assert.deepEqual(findings, []);
 		const runtime = real.rules.find((rule) => rule.runtime).id;
 		const onlyInBrowser = await createLinter(real).lintSource(`<template>\n<!-- nldd-lint-disable-next-line ${runtime} -- x -->\n<nldd-button text="a" />\n</template>`, 'a.vue');
 		assert.deepEqual(onlyInBrowser.findings, []);
@@ -515,6 +515,32 @@ describe('suppressions', () => {
 	it('does not count an example in Markdown', async () => {
 		const { findings } = await createLinter(DATA).lintSource('```html\n<!-- nldd-lint-disable-next-line unknown-element -- x -->\n```', 'a.md');
 		assert.deepEqual(findings, []);
+	});
+});
+
+describe('what a typo in the options does', () => {
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const lint = (source, ...args) => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), source);
+		return spawnSync(process.execPath, [cli, 'lint', ...args, 'a.html'], { cwd: root, encoding: 'utf8' });
+	};
+
+	it('says when a suppression names no rule', () => {
+		const { stdout } = lint('<!-- nldd-lint-disable-next-line buton-no-vague-text -- reden -->\n<nldd-button text="a"></nldd-button>');
+		assert.match(stdout, /`buton-no-vague-text` is not a rule/);
+	});
+
+	it('takes a rule of the browser as a rule', () => {
+		const { stdout } = lint('<!-- nldd-lint-disable-next-line icon-not-found -- reden -->\n<nldd-button text="a"></nldd-button>');
+		assert.doesNotMatch(stdout, /is not a rule/);
+	});
+
+	it('refuses a limit that is no whole number', () => {
+		for (const limit of ['', '-1', '1.5', 'many']) {
+			assert.equal(lint('<p></p>', `--max-warnings=${limit}`).status, 2, limit);
+		}
+		assert.equal(lint('<p></p>', '--max-warnings=0').status, 0);
 	});
 });
 
