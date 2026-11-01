@@ -599,6 +599,15 @@ describe('--fix', () => {
 			assert.equal(read(root, 'b.css'), css);
 		});
 
+		it('changes a tag only where it is a selector', () => {
+			const css = '[data-component="nldd-app-view"] { color: red; }\n@keyframes nldd-app-view { to { opacity: 0; } }\na { background: image-set("nldd-app-view.png"); }\n@forward \'nldd-app-view\';\na { animation: nldd-app-view 1s; }';
+			const script = "a.querySelector('[data-component=nldd-app-view]');";
+			const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'b.scss': css, 'c.ts': script });
+			run(root, 'lint', '--fix');
+			assert.equal(read(root, 'b.scss'), css);
+			assert.equal(read(root, 'c.ts'), script);
+		});
+
 		it('leaves a bundle of the design system and what is built', () => {
 			const define = "customElements.define('nldd-app-view', A);";
 			const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'b.js': define, 'c.min.js': "a('nldd-app-view');" });
@@ -643,10 +652,10 @@ describe('--fix', () => {
 		it('keeps a longer name that starts the same', () => {
 			const root = project({
 				'a.html': '<nldd-step-indicator accessible-label="a"></nldd-step-indicator>',
-				'b.css': 'nldd-step-indicator-item { color: red; } nldd-step-indicator { color: blue; }',
+				'b.css': 'nldd-step-indicator-item { color: red; }\nnldd-step-indicator { color: blue; }',
 			});
 			run(root, 'lint', '--fix');
-			assert.equal(read(root, 'b.css'), 'nldd-step-indicator-item { color: red; } nldd-step-bar { color: blue; }');
+			assert.equal(read(root, 'b.css'), 'nldd-step-indicator-item { color: red; }\nnldd-step-bar { color: blue; }');
 		});
 
 		it('leaves everything alone when no tag was renamed', () => {
@@ -719,6 +728,13 @@ describe('--fix', () => {
 		assert.equal(fixed('a.ts', lit).text, 'const a = html`<nldd-sheet accessible-label="e"></nldd-sheet>`;');
 		const block = '<nldd-sheet full-height={% if a %}b c{% endif %} accessible-label="d"></nldd-sheet>';
 		assert.equal(fixed('a.j2', block).text, block);
+	});
+
+	it('reads an escaped quote in code as part of the string', () => {
+		const props = "const a = <nldd-toolbar title={'foto\\'s'} label=\"a\"><nldd-toolbar-item label=\"b\" /></nldd-toolbar>;";
+		assert.match(fixed('a.tsx', props).text, /<nldd-toolbar title=\{'foto\\'s'\} accessible-label="a"><nldd-toolbar-item label="b" \/>/);
+		const removed = "const a = <nldd-sheet full-height={'foto\\'s'} accessible-label=\"b\">c</nldd-sheet>;";
+		assert.equal(fixed('a.tsx', removed).text, 'const a = <nldd-sheet accessible-label="b">c</nldd-sheet>;');
 	});
 
 	it('removes a Lit hole with spaces whole', () => {
@@ -878,6 +894,14 @@ describe('an Angular directive of the app', () => {
 	it('is not a template reference or an Angular directive of its own', () => {
 		assert.deepEqual(rulesOf(sheet('#mySheet [show]="a"')), ['unknown-attribute']);
 		assert.deepEqual(rulesOf(sheet('*ngIf="b" [show]="a"')), ['unknown-attribute']);
+	});
+
+	it('is not one of Angular itself: `routerLink` takes no `variant`', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), '<nldd-button [routerLink]="a" text="b" variant="primary" [txet]="c"></nldd-button>');
+		const { stdout } = spawnSync(process.execPath, [cli, 'lint', '--fix', '--format', 'json', 'a.html'], { cwd: root, encoding: 'utf8' });
+		assert.match(readFileSync(join(root, 'a.html'), 'utf8'), /appearance="primary"/);
+		assert.deepEqual(JSON.parse(stdout).findings.map(({ severity }) => severity), ['warn']);
 	});
 });
 

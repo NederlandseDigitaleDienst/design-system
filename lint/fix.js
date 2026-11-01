@@ -9,11 +9,15 @@ const toCamelCase = (name) => name.replace(/-([a-z])/g, (_, letter) => letter.to
 /** Where a template language opens a hole in a string: `${ }`, `{{ }}` or `{% %}`. */
 const isHole = (source, at) => source.startsWith('${', at) || source.startsWith('{{', at) || source.startsWith('{%', at);
 
-/** The closing quote of the string at `start`, past the holes in it, which hold quotes of their own. */
-function endOfString(source, start) {
+/**
+ * The closing quote of the string at `start`, past the holes in it, which hold
+ * quotes of their own. A backslash escapes only in code: HTML has no such thing.
+ */
+function endOfString(source, start, inCode = false) {
 	for (let at = start + 1; at < source.length; at++) {
-		if (source[at] === source[start]) return at;
-		if (isHole(source, at)) {
+		if (inCode && source[at] === '\\') at += 1;
+		else if (source[at] === source[start]) return at;
+		else if (isHole(source, at)) {
 			at = endOfBraces(source, source.indexOf('{', at));
 			if (at === undefined) return undefined;
 		}
@@ -27,7 +31,7 @@ function endOfBraces(source, start) {
 	for (let at = start; at < source.length; at++) {
 		const char = source[at];
 		if (/["'`]/.test(char)) {
-			at = endOfString(source, at);
+			at = endOfString(source, at, true);
 			if (at === undefined) return undefined;
 		} else if (char === '{') depth += 1;
 		else if (char === '}' && --depth === 0) return at;
@@ -178,6 +182,9 @@ const nameIn = (name) => new RegExp(`(?<![\\w-])${escaped(name)}(?![\\w-])`, 'g'
 /** Not `.nldd-x`, `#nldd-x` or a path: those are a class, an id and a file of the app. */
 const tagName = (tag) => `(?<![\\w.#/-])${escaped(tag)}(?![\\w-])`;
 
+/** In a selector, a tag stands free: `[a="nldd-x"]` and `[a=nldd-x]` are values. */
+const selectorName = (tag) => `(?<!["'=])${tagName(tag)}(?!["'])`;
+
 /** The arguments that can only be a selector or a tag. */
 const SELECTOR_CALL = /((?:querySelector(?:All)?|closest|matches|locator|createElement|getElementsByTagName)\(\s*)(["'`])([^"'`\n]*)\2/g;
 
@@ -188,7 +195,7 @@ function renameInScript(source, tag, to) {
 		return opening + to;
 	});
 	const text = inMarkup.replace(SELECTOR_CALL, (call, name, quote, selector) => {
-		const renamed = selector.replace(new RegExp(tagName(tag), 'g'), () => {
+		const renamed = selector.replace(new RegExp(selectorName(tag), 'g'), () => {
 			count += 1;
 			return to;
 		});
@@ -197,17 +204,20 @@ function renameInScript(source, tag, to) {
 	return { text, count };
 }
 
-/** In a stylesheet a bare name is a selector, except on a line that loads a file. */
+/** In a stylesheet a name is a selector, except in an at-rule, a declaration or a file name. */
 function renameInStyles(source, tag, to) {
 	let count = 0;
 	const text = source
 		.split('\n')
 		.map((line) => {
-			if (/url\(|@import|@use/.test(line)) return line;
-			return line.replace(new RegExp(tagName(tag), 'g'), () => {
+			if (/^\s*@|;\s*$|url\(|image-set\(/.test(line)) return line;
+			const brace = line.indexOf('{');
+			const selector = brace === -1 ? line : line.slice(0, brace);
+			const renamed = selector.replace(new RegExp(selectorName(tag), 'g'), () => {
 				count += 1;
 				return to;
 			});
+			return renamed + line.slice(selector.length);
 		})
 		.join('\n');
 	return { text, count };

@@ -19,8 +19,8 @@ const GLOBAL_ATTRIBUTE =
 /** Set as a property on any element: in markup these are bindings, not attributes. */
 const DOM_PROPERTY = /^(textContent|innerHTML|innerText|outerHTML|className|tabIndex|aria[A-Z].*)$/;
 
-/** An Angular directive of the app. Angular's own, such as `ngIf`, take no inputs here. */
-const APP_DIRECTIVE = /^(?!ng[A-Z])[a-z]+[A-Z]/;
+/** An Angular directive of the app. Angular's own, such as `ngIf` and `routerLink`, take no inputs here. */
+const APP_DIRECTIVE = /^(?!(ng|router|form)[A-Z])[a-z]+[A-Z]/;
 const hasAppDirective = (node) => [...node.attrs.keys()].some((name) => APP_DIRECTIVE.test(name));
 
 const ICON_ATTRIBUTES = new Set(['icon', 'start-icon', 'end-icon', 'selected-icon']);
