@@ -30,7 +30,13 @@ function endOfBraces(source, start) {
 	let depth = 0;
 	for (let at = start; at < source.length; at++) {
 		const char = source[at];
-		if (/["'`]/.test(char)) {
+		if (source.startsWith('/*', at)) {
+			at = source.indexOf('*/', at) + 1;
+			if (at === 0) return undefined;
+		} else if (source.startsWith('//', at)) {
+			at = source.indexOf('\n', at);
+			if (at === -1) return undefined;
+		} else if (/["'`]/.test(char)) {
 			at = endOfString(source, at, true);
 			if (at === undefined) return undefined;
 		} else if (char === '{') depth += 1;
@@ -204,15 +210,16 @@ function renameInScript(source, tag, to) {
 	return { text, count };
 }
 
-/** In a stylesheet a name is a selector, except in an at-rule, a declaration or a file name. */
+/** A selector stands before the brace of a rule, or on a line of a list that ends in a comma. */
 function renameInStyles(source, tag, to) {
 	let count = 0;
 	const text = source
 		.split('\n')
 		.map((line) => {
-			if (/^\s*@|;\s*$|url\(|image-set\(/.test(line)) return line;
 			const brace = line.indexOf('{');
 			const selector = brace === -1 ? line : line.slice(0, brace);
+			const opensRule = brace !== -1 || /,\s*$/.test(line);
+			if (!opensRule || /^\s*@|:\s|url\(|image-set\(/.test(selector)) return line;
 			const renamed = selector.replace(new RegExp(selectorName(tag), 'g'), () => {
 				count += 1;
 				return to;

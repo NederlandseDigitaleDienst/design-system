@@ -600,12 +600,18 @@ describe('--fix', () => {
 		});
 
 		it('changes a tag only where it is a selector', () => {
-			const css = '[data-component="nldd-app-view"] { color: red; }\n@keyframes nldd-app-view { to { opacity: 0; } }\na { background: image-set("nldd-app-view.png"); }\n@forward \'nldd-app-view\';\na { animation: nldd-app-view 1s; }';
+			const css = '[data-component="nldd-app-view"] { color: red; }\n@keyframes nldd-app-view { to { opacity: 0; } }\na { background: image-set("nldd-app-view.png"); }\n@forward \'nldd-app-view\';\na { animation: nldd-app-view 1s; }\nb {\n  animation: nldd-app-view 1s\n}\n$a: (nldd-app-view: 1,\n  nldd-app-view: 2);';
 			const script = "a.querySelector('[data-component=nldd-app-view]');";
 			const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'b.scss': css, 'c.ts': script });
 			run(root, 'lint', '--fix');
 			assert.equal(read(root, 'b.scss'), css);
 			assert.equal(read(root, 'c.ts'), script);
+		});
+
+		it('renames a selector before a brace and in a list', () => {
+			const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'b.css': 'a,\nnldd-app-view,\n#c:has(> nldd-app-view) { color: red; }' });
+			run(root, 'lint', '--fix');
+			assert.equal(read(root, 'b.css'), 'a,\nnldd-shell,\n#c:has(> nldd-shell) { color: red; }');
 		});
 
 		it('leaves a bundle of the design system and what is built', () => {
@@ -735,6 +741,11 @@ describe('--fix', () => {
 		assert.match(fixed('a.tsx', props).text, /<nldd-toolbar title=\{'foto\\'s'\} accessible-label="a"><nldd-toolbar-item label="b" \/>/);
 		const removed = "const a = <nldd-sheet full-height={'foto\\'s'} accessible-label=\"b\">c</nldd-sheet>;";
 		assert.equal(fixed('a.tsx', removed).text, 'const a = <nldd-sheet accessible-label="b">c</nldd-sheet>;');
+	});
+
+	it('skips a comment in code, whatever it holds', () => {
+		const source = "const a = () => { return <nldd-sheet full-height={/* it's */ b} accessible-label=\"c\">d</nldd-sheet>; };";
+		assert.equal(fixed('a.tsx', source).text, 'const a = () => { return <nldd-sheet accessible-label="c">d</nldd-sheet>; };');
 	});
 
 	it('removes a Lit hole with spaces whole', () => {
