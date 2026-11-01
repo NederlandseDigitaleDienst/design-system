@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { extname, join, relative, resolve } from 'node:path';
 
-const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
+export const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.nuxt']);
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
 const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.vue', '.jsx', '.tsx'];
 
@@ -53,7 +53,7 @@ export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENS
 					if (!existsSync(full)) throw new Error(`No such file or directory: ${path}`);
 					return statSync(full).isDirectory() ? walkDirectory(full, [], extensions) : [full];
 				});
-	return files.filter((file) => existsSync(file) && !matchesExclude(relative(root, file), exclude));
+	return [...new Set(files)].filter((file) => existsSync(file) && !matchesExclude(relative(root, file), exclude));
 }
 
 const CONFIG_FILE = '.nldd-lint.json';

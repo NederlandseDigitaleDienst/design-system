@@ -44,7 +44,10 @@ function attributePattern(name) {
 
 /** Where the attribute stands in the start tag at `offset`, if it does. */
 function findAttribute(source, offset, name) {
-	const match = attributePattern(name).exec(maskedTag(source, offset));
+	const masked = maskedTag(source, offset);
+	// A comment in a tag can hold anything, and a line comment takes what follows it.
+	if (/\/[*/]/.test(masked)) return undefined;
+	const match = attributePattern(name).exec(masked);
 	if (!match) return undefined;
 	const [, prefix = '', written] = match;
 	const start = offset + match.index + prefix.length;
@@ -84,11 +87,18 @@ function endOfValue(source, name) {
 		const closing = source.indexOf(first, start + 1);
 		return closing === -1 ? undefined : closing + 1;
 	}
-	if (first !== '{') return start + /^[^\s/>]*/.exec(source.slice(start))[0].length;
+	// A bare value ends at a space, but `${a && b}` and `{a && b}` hold spaces of their own.
 	let depth = 0;
+	let quote = '';
 	for (let at = start; at < source.length; at++) {
-		if (source[at] === '{') depth += 1;
-		if (source[at] === '}' && --depth === 0) return at + 1;
+		const char = source[at];
+		if (quote) {
+			if (char === '\\') at += 1;
+			else if (char === quote) quote = '';
+		} else if (depth > 0 && /["'`]/.test(char)) quote = char;
+		else if (char === '{') depth += 1;
+		else if (char === '}') depth -= 1;
+		else if (depth === 0 && (/[\s>]/.test(char) || source.startsWith('/>', at))) return at;
 	}
 	return undefined;
 }
@@ -102,35 +112,28 @@ function removeEdits(source, offset, name) {
 	return [{ from, to: end, text: '' }];
 }
 
-function closingTag(source, offset, name) {
-	const tags = new RegExp(`<(/?)${name}(?=[\\s/>])`, 'g');
-	tags.lastIndex = offset + 1;
-	let depth = 1;
-	for (let match = tags.exec(source); match; match = tags.exec(source)) {
-		if (match[1]) depth -= 1;
-		else if (!maskedTag(source, match.index).trimEnd().endsWith('/')) depth += 1;
-		if (depth === 0) return match.index + 2;
-	}
-	return undefined;
-}
-
-/** A wrapper such as `<NlddAppView>` has the name of its own, and stays as it is. */
-function tagEdits(source, offset, name, to) {
-	if (!source.startsWith(`<${name}`, offset)) return [];
+/**
+ * The parser says where an element ends: a comment or a string that looks like its
+ * closing tag does not count. Without a closing tag of its own it stays as it is.
+ */
+function tagEdits(source, offset, endOffset, name, to) {
+	// An element the file never closes ends past the last character.
+	if (endOffset === undefined || endOffset >= source.length || !source.startsWith(`<${name}`, offset)) return [];
 	const open = { from: offset + 1, to: offset + 1 + name.length, text: to };
-	if (maskedTag(source, offset).trimEnd().endsWith('/')) return [open];
-	const closing = closingTag(source, offset, name);
-	if (closing === undefined) return [];
-	return [open, { from: closing, to: closing + name.length, text: to, closing: true }];
+	const startTag = maskedTag(source, offset);
+	if (startTag.trimEnd().endsWith('/') && offset + startTag.length === endOffset) return [open];
+	const closing = source.lastIndexOf('</', endOffset);
+	if (closing <= offset || !new RegExp(`^</${name}\\s*>$`).test(source.slice(closing, endOffset + 1))) return [];
+	return [open, { from: closing + 2, to: closing + 2 + name.length, text: to, closing: true }];
 }
 
 /** An edit is `{ from, to, text }` in the source. What is not certain makes none. */
-function editsOf(source, { fix, offset, tag }) {
+function editsOf(source, { fix, offset, endOffset, tag }) {
 	return [
 		...Object.entries(fix.rename ?? {}).flatMap(([from, to]) => renameEdits(source, offset, from, to)),
 		...Object.entries(fix.value ?? {}).flatMap(([name, values]) => valueEdits(source, offset, name, values)),
 		...(fix.remove ?? []).flatMap((name) => removeEdits(source, offset, name)),
-		...(fix.tag ? tagEdits(source, offset, tag, fix.tag) : []),
+		...(fix.tag ? tagEdits(source, offset, endOffset, tag, fix.tag) : []),
 	];
 }
 
@@ -139,11 +142,20 @@ export const canFix = (source, finding) => editsOf(source, finding).length > 0;
 
 const toClass = (tag) => `NLDD${toCamelCase(tag.replace(/^nldd-/, '-'))}`;
 const entryPoint = (tag) => `@nldd/design-system/${tag.replace(/^nldd-/, '')}`;
+const translationKey = (tag) => `components.${tag.replace(/^nldd-/, '')}`;
 
-function replaceName(source, from, to) {
+const escaped = (name) => name.replace(/[/@.-]/g, '\\$&');
+const nameIn = (name) => new RegExp(`(?<![\\w-])${escaped(name)}(?![\\w-])`, 'g');
+
+/** Not `.nldd-x`, `#nldd-x` or `./nldd-x.css`: those are a class, an id and a file of the app. */
+const tagIn = (tag) => new RegExp(`(?<![\\w.#-])(?<!(?:^|[^<])/)${escaped(tag)}(?![\\w-]|\\.(?:css|scss|less|js|mjs|cjs|ts|vue)\\b)`, 'g');
+
+/** A bundle of the design system itself, which a text rename would only break. */
+const DEFINES_ELEMENT = /(customElements\.define|customElement)\(\s*['"`]nldd-/;
+
+function replaceAll(source, pattern, to) {
 	let count = 0;
-	const name = new RegExp(`(?<![\\w-])${from.replace(/[/@-]/g, '\\$&')}(?![\\w-])`, 'g');
-	const text = source.replace(name, () => {
+	const text = source.replace(pattern, () => {
 		count += 1;
 		return to;
 	});
@@ -151,24 +163,34 @@ function replaceName(source, from, to) {
 }
 
 /**
- * Renames what names a renamed tag outside its markup. An import and a class are
- * unmistakable anywhere; the bare tag only where no suppression can stand on it.
+ * Renames what names a renamed tag outside its markup. An import, a class and a
+ * translation key are unmistakable anywhere; the bare tag only outside markup, and
+ * not in a file with a suppression, which may be about that tag.
  * @returns {{ source: string, fixed: number }}
  */
 export function renameReferences(source, renamedTags, { bareTags }) {
+	if (DEFINES_ELEMENT.test(source)) return { source, fixed: 0 };
+	const withTags = bareTags && !source.includes('nldd-lint-disable');
 	const names = [...renamedTags].flatMap(([from, to]) => [
-		[entryPoint(from), entryPoint(to)],
-		[toClass(from), toClass(to)],
-		...(bareTags ? [[from, to]] : []),
+		[nameIn(entryPoint(from)), entryPoint(to)],
+		[nameIn(toClass(from)), toClass(to)],
+		[nameIn(translationKey(from)), translationKey(to)],
+		...(withTags ? [[tagIn(from), to]] : []),
 	]);
 	let text = source;
 	let fixed = 0;
-	for (const [from, to] of names) {
-		const replaced = replaceName(text, from, to);
+	for (const [pattern, to] of names) {
+		const replaced = replaceAll(text, pattern, to);
 		text = replaced.text;
 		fixed += replaced.count;
 	}
 	return { source: text, fixed };
+}
+
+/** Lines that still name a renamed tag: a string or a `<style>` that markup does not cover. */
+export function linesNaming(source, renamedTags) {
+	const tags = [...renamedTags.keys()].map((tag) => tagIn(tag));
+	return source.split('\n').flatMap((line, index) => (tags.some((tag) => line.search(tag) !== -1) ? [index + 1] : []));
 }
 
 /**

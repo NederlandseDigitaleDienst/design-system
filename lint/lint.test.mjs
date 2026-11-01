@@ -592,6 +592,39 @@ describe('--fix', () => {
 			assert.match(stderr, /Renamed 6 imports, classes and selectors of old tags in 3 files/);
 		});
 
+		it('leaves what only looks like the tag', () => {
+			const css = "@import './nldd-app-view.css';\n.nldd-app-view { color: red; }\n#nldd-app-view { color: blue; }";
+			const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'b.css': css });
+			run(root, 'lint', '--fix');
+			assert.equal(read(root, 'b.css'), css);
+		});
+
+		it('leaves a bundle of the design system and what is built', () => {
+			const define = "customElements.define('nldd-app-view', A);";
+			const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'b.js': define, 'c.min.js': "a('nldd-app-view');" });
+			mkdirSync(join(root, 'dist'));
+			writeFileSync(join(root, 'dist/d.js'), "a('nldd-app-view');");
+			run(root, 'lint', '--fix');
+			assert.equal(read(root, 'b.js'), define);
+			assert.equal(read(root, 'c.min.js'), "a('nldd-app-view');");
+			assert.equal(read(root, 'dist/d.js'), "a('nldd-app-view');");
+		});
+
+		it('takes a translation key along', () => {
+			const root = project({ 'a.html': '<nldd-step-indicator accessible-label="a"></nldd-step-indicator>', 'b.ts': "t('components.step-indicator.label');" });
+			run(root, 'lint', '--fix');
+			assert.equal(read(root, 'b.ts'), "t('components.step-bar.label');");
+		});
+
+		it('keeps a tag out of a file with a suppression, and points at what is left', () => {
+			const lit = "// nldd-lint-disable-next-line shell-tag-renamed -- nog niet\nconst a = html`<nldd-app-view></nldd-app-view>`;";
+			const root = project({ 'a.vue': '<template><nldd-app-view></nldd-app-view></template>\n<style>nldd-app-view { color: red; }</style>', 'b.ts': lit });
+			const { stderr } = run(root, 'lint', '--fix');
+			assert.equal(read(root, 'b.ts'), lit);
+			assert.match(stderr, /Still names an old tag: a\.vue:2/);
+			assert.match(stderr, /Still names an old tag: b\.ts:2/);
+		});
+
 		it('keeps a longer name that starts the same', () => {
 			const root = project({
 				'a.html': '<nldd-step-indicator accessible-label="a"></nldd-step-indicator>',
@@ -635,6 +668,63 @@ describe('--fix', () => {
 	it('leaves a tag without a closing tag alone', () => {
 		const source = '<template><nldd-app-view></template>';
 		assert.equal(fixed('a.html', source).text, source);
+	});
+
+	it('finds the closing tag the parser found, not text that looks like it', () => {
+		assert.equal(fixed('a.html', '<nldd-app-view><!-- </nldd-app-view> --></nldd-app-view>').text, '<nldd-shell><!-- </nldd-app-view> --></nldd-shell>');
+		assert.equal(
+			fixed('a.tsx', 'const a = <nldd-app-view>{/* </nldd-app-view> */}{"</nldd-app-view>"}</nldd-app-view>;').text,
+			'const a = <nldd-shell>{/* </nldd-app-view> */}{"</nldd-app-view>"}</nldd-shell>;',
+		);
+	});
+
+	it('does not read a slash at the end of a value as a closed tag', () => {
+		assert.equal(fixed('a.html', '<nldd-app-view class=/a/>x</nldd-app-view>').text, '<nldd-shell class=/a/>x</nldd-shell>');
+		assert.equal(fixed('a.html', '<nldd-app-view />x</nldd-app-view>').text, '<nldd-shell />x</nldd-shell>');
+	});
+
+	it('renames every tag of a name or none: half a rename breaks the template', () => {
+		const jinja = '{% if a %}<nldd-app-view class="a">{% else %}<nldd-app-view class="b">{% endif %}x</nldd-app-view>';
+		assert.equal(fixed('a.j2', jinja).text, jinja);
+		const angular = '@if (a) { <nldd-app-view class="a"> } @else { <nldd-app-view class="b"> } x</nldd-app-view>';
+		assert.equal(fixed('a.html', angular).text, angular);
+	});
+
+	it('removes a Lit hole with spaces whole', () => {
+		const lit = (attribute) => `const a = html\`<nldd-sheet ${attribute} accessible-label="b"></nldd-sheet>\`;`;
+		assert.equal(fixed('a.ts', lit('?full-height=${a && b}')).text, lit('').replace('  ', ' '));
+		assert.equal(fixed('a.ts', lit('.full-height=${a ? "}" : 2}')).text, lit('').replace('  ', ' '));
+	});
+
+	it('leaves a tag with a comment in it alone', () => {
+		const inside = 'const a = <nldd-button /* variant="old" */ variant="primary" text="b" />;';
+		assert.equal(fixed('a.tsx', inside).text, inside);
+		assert.match(fixed('a.tsx', inside).stderr, /Fixed 0/);
+		const line = 'const a = <nldd-sheet // keep\n  full-height accessible-label="b" />;';
+		assert.equal(fixed('a.tsx', line).text, line);
+	});
+
+	it('leaves a file in another encoding alone, and says so', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		const bytes = Buffer.from('<nldd-button text="caf\xe9" variant="primary"></nldd-button>', 'latin1');
+		writeFileSync(join(root, 'a.html'), bytes);
+		assert.match(run(root, 'lint', '--fix', 'a.html').stderr, /Skipped a\.html: it is not UTF-8/);
+		assert.ok(readFileSync(join(root, 'a.html')).equals(bytes));
+	});
+
+	it('counts a path given twice once', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), '<nldd-button text="a" variant="primary"></nldd-button>');
+		assert.match(run(root, 'lint', '--fix', 'a.html', 'a.html').stderr, /Fixed 1 in 1 of 1 files/);
+	});
+
+	it('leaves the props of a wrapper alone: that API is not ours', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		const source = '<template><MyButton text="a" variant="primary" /></template>';
+		writeFileSync(join(root, 'a.vue'), source);
+		writeFileSync(join(root, '.nldd-lint.json'), '{ "wrappers": { "MyButton": "nldd-button" } }');
+		run(root, 'lint', '--fix', 'a.vue');
+		assert.equal(readFileSync(join(root, 'a.vue'), 'utf8'), source);
 	});
 
 	it('leaves a wrapper its own name', () => {
@@ -724,8 +814,20 @@ describe('an Angular directive of the app', () => {
 	};
 	const sheet = (attributes) => `<nldd-sheet accessible-label="a" ${attributes}></nldd-sheet>`;
 
-	it('owns the bound inputs next to it', () => {
-		assert.deepEqual(rulesOf(sheet('#mySheet appSheetSync [show]="a"')), []);
+	it('makes a bound name a hint: it is an input, or a typo', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), sheet('#mySheet appSheetSync [show]="a"'));
+		const { stdout, status } = spawnSync(process.execPath, [cli, 'lint', '--format', 'json', 'a.html'], { cwd: root, encoding: 'utf8' });
+		assert.deepEqual(JSON.parse(stdout).findings.map(({ rule, severity }) => [rule, severity]), [['unknown-attribute', 'hint']]);
+		assert.equal(status, 0);
+	});
+
+	it('takes no fix: a bound name that is gone can be its input', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		const source = '<nldd-tab-bar-item appTabSync [selected]="a" text="b"></nldd-tab-bar-item>';
+		writeFileSync(join(root, 'a.html'), source);
+		spawnSync(process.execPath, [cli, 'lint', '--fix', 'a.html'], { cwd: root, encoding: 'utf8' });
+		assert.equal(readFileSync(join(root, 'a.html'), 'utf8'), source);
 	});
 
 	it('does not excuse a name written out', () => {

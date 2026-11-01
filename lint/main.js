@@ -1,13 +1,13 @@
 /** The `nldd` command, started from cli.js. */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, extname, join, resolve } from 'node:path';
+import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { parseArgs } from 'node:util';
-import { applyFixes, renameReferences } from './fix.js';
+import { applyFixes, linesNaming, renameReferences } from './fix.js';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
-import { applyBaseline, findFiles, readBaseline, readConfig, REFERENCE_EXTENSIONS, writeBaseline } from './project.js';
+import { applyBaseline, findFiles, IGNORED_DIRECTORIES, readBaseline, readConfig, REFERENCE_EXTENSIONS, writeBaseline } from './project.js';
 
 const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
@@ -81,23 +81,33 @@ function noteOtherVersion(root) {
 	}
 }
 
+/** Writing back what was read as UTF-8 would destroy any other encoding. */
+function isUtf8(filename) {
+	const bytes = readFileSync(filename);
+	return bytes.equals(Buffer.from(bytes.toString('utf8')));
+}
+
 /** The tag is gone from the markup; what still names it would break or stop matching. */
 function fixReferences(renamedTags, paths, root, exclude) {
+	const isBuilt = (file) => /\.min\.[cm]?js$/.test(file) || relative(root, file).split(sep).some((part) => IGNORED_DIRECTORIES.has(part));
 	const inMarkup = findFiles(paths, root, exclude);
 	const elsewhere = findFiles(paths, root, exclude, REFERENCE_EXTENSIONS).filter((file) => REFERENCE_EXTENSIONS.includes(extname(file)));
 	let fixed = 0;
 	let files = 0;
+	const remaining = [];
 	for (const [list, bareTags] of [[inMarkup, false], [elsewhere, true]]) {
-		for (const filename of list) {
+		for (const filename of list.filter((file) => !isBuilt(file))) {
 			const source = readFileSync(filename, 'utf8');
 			const change = renameReferences(source, renamedTags, { bareTags });
-			if (change.fixed === 0) continue;
-			writeFileSync(filename, change.source);
-			fixed += change.fixed;
-			files += 1;
+			if (change.fixed > 0 && isUtf8(filename)) {
+				writeFileSync(filename, change.source);
+				fixed += change.fixed;
+				files += 1;
+			}
+			for (const line of linesNaming(change.source, renamedTags)) remaining.push(`${relative(root, filename)}:${line}`);
 		}
 	}
-	return { fixed, files };
+	return { fixed, files, remaining };
 }
 
 const MAX_FIX_PASSES = 10;
@@ -160,7 +170,9 @@ async function runLint(data, paths, options) {
 		const { createLinter } = await import('./linter.js');
 		const linter = createLinter(data, { wrappers: config.wrappers, severities: resolveSeverities(data, config.rules, { select, ignore }) });
 		for (const { filename, source } of relevant) {
-			if (!options.fix) {
+			const canWrite = options.fix && isUtf8(filename);
+			if (options.fix && !canWrite) console.error(`Skipped ${relative(root, filename)}: it is not UTF-8.`);
+			if (!canWrite) {
 				results.push({ filename, source, ...(await linter.lintSource(source, filename)) });
 				continue;
 			}
@@ -178,6 +190,7 @@ async function runLint(data, paths, options) {
 	if (renamedTags.size > 0) {
 		const references = fixReferences(renamedTags, paths, root, config.exclude);
 		if (references.fixed > 0) console.error(`Renamed ${references.fixed} imports, classes and selectors of old tags in ${references.files} files.`);
+		for (const place of references.remaining) console.error(`Still names an old tag: ${place}`);
 		if (paths.some((path) => resolve(root, path) !== root)) {
 			console.error('Only in the paths you named: run it without paths to reach the rest of the project.');
 		}

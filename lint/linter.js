@@ -21,6 +21,7 @@ const DOM_PROPERTY = /^(textContent|innerHTML|innerText|outerHTML|className|tabI
 
 /** An Angular directive of the app. Angular's own, such as `ngIf`, take no inputs here. */
 const APP_DIRECTIVE = /^(?!ng[A-Z])[a-z]+[A-Z]/;
+const hasAppDirective = (node) => [...node.attrs.keys()].some((name) => APP_DIRECTIVE.test(name));
 
 const ICON_ATTRIBUTES = new Set(['icon', 'start-icon', 'end-icon', 'selected-icon']);
 
@@ -68,12 +69,13 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 			// Every element has this one.
 		} else if (isPlainHtml && /[A-Z]/.test(name)) {
 			// HTML has no capitals, so in an .html file this is a template directive.
-		} else if (isPlainHtml && value === BOUND && [...node.attrs.keys()].some((other) => APP_DIRECTIVE.test(other))) {
-			// `[show]` next to `appSheetSync` is an input of that directive, not of the element.
 		} else if (contract.attrs[name.toLowerCase()]) {
 			// `maxLength`: no such property, so it ends up as the attribute, in lowercase.
 		} else if (!GLOBAL_ATTRIBUTE.test(name.toLowerCase()) && !node.wrapped) {
-			report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
+			// `[show]` next to `appSheetSync` may be an input of that directive, or a typo.
+			const maybeInput = isPlainHtml && value === BOUND && hasAppDirective(node);
+			if (maybeInput) report('unknown-attribute', `${node.name} has no attribute \`${name}\`. That is fine if a directive on this element takes it.`, name, 'hint');
+			else report('unknown-attribute', `${node.name} has no attribute \`${name}\`.`, name);
 		}
 	}
 }
@@ -93,8 +95,8 @@ function builtInFindings(root, context) {
 	const findings = [];
 	walk(root, (node) => {
 		if (!node.name.startsWith('nldd-')) return;
-		const report = (rule, message, attribute) =>
-			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, node, attribute });
+		const report = (rule, message, attribute, severity = BUILT_IN_RULES[rule].severity) =>
+			findings.push({ rule, severity, message, node, attribute });
 		const contract = tags[node.name];
 		if (!contract) {
 			report('unknown-element', `${node.name} does not exist in this version.`, node.name);
@@ -162,6 +164,12 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 		);
 	}
 
+	/** A wrapper has an API of its own, and a bound name can be the input of a directive. */
+	function isOurs(node, rule, isPlainHtml) {
+		const maybeInput = isPlainHtml && hasAppDirective(node) && rule.removed?.some((name) => node.attrs.get(name) === BOUND);
+		return !node.wrapped && !maybeInput;
+	}
+
 	function lintRoots(roots, isPlainHtml) {
 		const findings = [];
 		const counts = { failed: 0, passed: 0, cantTell: 0 };
@@ -179,7 +187,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 						message: rule.message,
 						node,
 						covers: [...(rule.removed ?? []), ...Object.keys(rule.fix?.value ?? {})],
-						fix: rule.fix,
+						fix: isOurs(node, rule, isPlainHtml) ? rule.fix : undefined,
 					});
 				}
 			}
@@ -209,9 +217,14 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 				severity,
 				tag: node.name,
 				offset: node.offset,
+				endOffset: node.endOffset,
 				...position(node.offset),
-			}))
-			.map((finding) => (finding.fix && !canFix(source, finding) ? { ...finding, fix: undefined } : finding));
+			}));
+		// Half a rename breaks the template: in `{% if %}<a>{% else %}<a>{% endif %}</a>`, one tag has no end.
+		const stuckTags = new Set(all.filter((finding) => finding.fix?.tag && !canFix(source, finding)).map(({ tag }) => tag));
+		for (const finding of all) {
+			if (finding.fix && (!canFix(source, finding) || (finding.fix.tag && stuckTags.has(finding.tag)))) finding.fix = undefined;
+		}
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
 		const unneeded = /\.md$/.test(filename) || parsed.length === 0 || parsed.syntaxError

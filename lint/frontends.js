@@ -105,6 +105,7 @@ function readHtmlChildren(children, parent, given) {
 			continue;
 		}
 		const element = createNode(name, node.startIndex ?? 0);
+		element.endOffset = node.endIndex ?? undefined;
 		for (const [key, value] of Object.entries(attribs)) readAttribute(element, key, value);
 		element.conditional ||= inherited.conditional;
 		element.repeated ||= inherited.repeated;
@@ -120,6 +121,7 @@ function parseMarkup(source, { selfClosing }) {
 		lowerCaseAttributeNames: false,
 		recognizeSelfClosing: selfClosing,
 		withStartIndices: true,
+		withEndIndices: true,
 	});
 }
 
@@ -407,6 +409,7 @@ function readJsxNode(node, parent, flags, roots) {
 		return;
 	}
 	const element = createNode(name, node.start);
+	element.endOffset = node.end - 1;
 	element.conditional = Boolean(flags.conditional);
 	element.repeated = Boolean(flags.repeated);
 	element.opaque = isOpaqueTag(name);
