@@ -30,7 +30,7 @@ Een nieuwe minor zegt alleen dát er iets breekt, niet wat. Gebruik daarom [`cha
 4. **Lees `Highlights`, `Added` en `Changed`** voor nieuwe componenten of attributen die je oudere, omslachtigere code kunnen vervangen.
 5. **Verifieer tegen [`reference.md`](../nldd-design/reference.md)** of een attribuut, slot of event in de doelversie bestaat zoals je verwacht. Die referentie hoort bij exact deze release.
 
-6. **Draai `npx @nldd/design-system@latest lint`, nog vóór je de versie verhoogt, en daarna met `--fix` voor de hernoemde attributen.** Dat is de nieuwe linter op je huidige code: elke bevinding is iets dat in de nieuwe versie niet meer klopt, en een baseline blijft geldig, dus wat erbij komt is je werklijst. Zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md).
+6. **Draai `npx @nldd/design-system@latest lint`, nog vóór je de versie verhoogt, en daarna met `--fix` voor wat alleen een andere naam kreeg.** Dat is de nieuwe linter op je huidige code: elke bevinding is iets dat in de nieuwe versie niet meer klopt, en een baseline blijft geldig, dus wat erbij komt is je werklijst. Zie [`nldd-design-validate`](../nldd-design-validate/SKILL.md).
 
 Vuistregel: lees bij elke nieuwe minor de `Breaking` sectie van die versie, en ga onder 0.9.0 niet meer dan een handvol patches in één sprong omhoog zonder de tussenliggende `Breaking` secties te lezen.
 

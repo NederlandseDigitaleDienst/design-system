@@ -1,0 +1,7 @@
+severity: warn
+context: 'nldd-list[appearance="box"]:not([background])'
+fix: { value: { appearance: { box: box-tinted } } }
+message: '`box` is now `box-tinted`. Rename it here and on every other nldd-list.'
+examples:
+  passed: ['<nldd-list appearance="box-tinted" accessible-label="Aanvragen"></nldd-list>']
+  failed: ['<nldd-list appearance="box" accessible-label="Aanvragen"></nldd-list>']

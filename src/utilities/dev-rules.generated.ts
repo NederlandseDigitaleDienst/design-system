@@ -301,6 +301,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-list[arrow-navigation]"
 	},
 	{
+		"id": "list-box-renamed",
+		"message": "`box` is now `box-tinted`. Rename it here and on every other nldd-list.",
+		"context": "nldd-list[appearance=\"box\"]:not([background]:not([background=\"\"]))"
+	},
+	{
 		"id": "list-form-no-action-rows",
 		"message": "type=\"form\" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments. Use type=\"list\" for rows you activate, and put the action in a cell if it belongs to a form row.",
 		"context": "nldd-list[type=\"form\"] > nldd-list-item",
@@ -453,6 +458,11 @@ export const devRules: DevRule[] = [
 		]
 	},
 	{
+		"id": "navigation-split-view-sidebar-renamed",
+		"message": "The sidebar attributes now start with `primary-`, because a split view can have two. Rename it here and on every other nldd-navigation-split-view.",
+		"context": "nldd-navigation-split-view:is([sidebar-accessible-label], [sidebar-as-sheet])"
+	},
+	{
 		"id": "notification-max-two-actions",
 		"message": "At most 2 actions: a message that needs three choices is a decision, and a decision belongs in a dialog that waits for it.",
 		"context": "nldd-notification",
@@ -556,6 +566,11 @@ export const devRules: DevRule[] = [
 		"report": "[type=\"checkbox\"]"
 	},
 	{
+		"id": "sheet-full-height-no-effect",
+		"message": "A sheet is full height by default and `full-height` does nothing; remove it.",
+		"context": "nldd-sheet[full-height]"
+	},
+	{
 		"id": "sheet-height-invalid",
 		"message": "Invalid `height`. Falling back to full height. Use \"full\", \"fit-content\", or a valid CSS length (such as \"50dvh\" or \"480px\").",
 		"context": "nldd-sheet:state(invalid-height)"
@@ -574,6 +589,11 @@ export const devRules: DevRule[] = [
 		"id": "sheet-needs-name",
 		"message": "No `accessible-label` and no nldd-top-title-bar with text inside. Screen readers will announce this dialog with a generic name. Give the title bar a text, or set `accessible-label`.",
 		"context": "nldd-sheet:state(unnamed)"
+	},
+	{
+		"id": "shell-tag-renamed",
+		"message": "`nldd-app-view` is now `nldd-shell`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-app-view"
 	},
 	{
 		"id": "skip-link-needs-target",
@@ -608,6 +628,11 @@ export const devRules: DevRule[] = [
 		"context": "nldd-step-bar[current]"
 	},
 	{
+		"id": "step-bar-item-tag-renamed",
+		"message": "`nldd-step-indicator-item` is now `nldd-step-bar-item`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-step-indicator-item"
+	},
+	{
 		"id": "step-bar-max-one-current",
 		"message": "More than one step has `status=\"current\"`; the last one wins. Mark only the step you are on.",
 		"context": "nldd-step-bar",
@@ -615,6 +640,11 @@ export const devRules: DevRule[] = [
 			"of": "nldd-step-bar-item[status=\"current\"]",
 			"max": 1
 		}
+	},
+	{
+		"id": "step-bar-tag-renamed",
+		"message": "`nldd-step-indicator` is now `nldd-step-bar`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-step-indicator"
 	},
 	{
 		"id": "step-cell-content-no-effect",
@@ -627,6 +657,16 @@ export const devRules: DevRule[] = [
 		"id": "step-cell-marker-offset-invalid",
 		"message": "`marker-offset` is not a CSS length or percentage, so the dot falls back to `vertical-alignment`. Use a length such as \"1rem\" or a percentage such as \"25%\".",
 		"context": "nldd-step-cell:state(invalid-marker-offset)"
+	},
+	{
+		"id": "step-cell-tag-renamed",
+		"message": "`nldd-timeline-track-cell` is now `nldd-step-cell`. Rename the tag, its import and its class, here and on every page.",
+		"context": "nldd-timeline-track-cell"
+	},
+	{
+		"id": "step-cell-variant-renamed",
+		"message": "The `variant` attribute is now `level`. Rename it here and on every other nldd-step-cell.",
+		"context": "nldd-step-cell[variant]"
 	},
 	{
 		"id": "switch-needs-name",
@@ -726,9 +766,8 @@ export const devRules: DevRule[] = [
 	},
 	{
 		"id": "title-subtitle-slot-renamed",
-		"message": "The subtitle slot is now supporting-text. Rename slot=\"subtitle\" to slot=\"supporting-text\", or use the `supporting-text` attribute, here and on every other nldd-title.",
-		"context": "nldd-title",
-		"report": ":has(> [slot=\"subtitle\"])"
+		"message": "The subtitle slot is now supporting-text, and what is in the old one is not shown. Rename it here and on every other nldd-title.",
+		"context": "nldd-title > [slot=\"subtitle\"]"
 	},
 	{
 		"id": "toc-row-needs-location",

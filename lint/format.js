@@ -67,7 +67,7 @@ export function formatText(results, { root, files, ms, skipped, explainRule }) {
 	const hints = count('hint') ? `, ${plural(count('hint'), 'hint')}` : '';
 	const known = skipped ? dim(` (${skipped} in baseline)`) : '';
 	const summary = `${plural(errors, 'error')}, ${plural(warnings, 'warning')}${hints} in ${plural(files, 'file')} (${ms} ms)`;
-	const fixable = all.filter(({ rename }) => rename).length;
+	const fixable = all.filter(({ fix }) => fix).length;
 	const canFix = fixable ? `, ${fixable} fixable with --fix` : '';
 	lines.push(`${errors + warnings ? red('✖') : '✔'} ${summary}${known}${canFix}`);
 	return lines.join('\n');
@@ -76,10 +76,10 @@ export function formatText(results, { root, files, ms, skipped, explainRule }) {
 /** A count per rule, most first: where to start when a project has hundreds. */
 export function formatStatistics(results, { files, ms, skipped }) {
 	const counts = new Map();
-	for (const { rule, severity, rename } of results.flatMap(({ findings }) => findings)) {
+	for (const { rule, severity, fix } of results.flatMap(({ findings }) => findings)) {
 		const entry = counts.get(rule) ?? { rule, severity, count: 0 };
 		entry.count += 1;
-		entry.fixable = Boolean(rename);
+		entry.fixable = Boolean(fix);
 		counts.set(rule, entry);
 	}
 	const rows = [...counts.values()].sort((a, b) => b.count - a.count || a.rule.localeCompare(b.rule));
@@ -106,7 +106,7 @@ export function formatJson(results, { root, explainRule }) {
 				message: finding.message,
 				see: detail?.see,
 				url: detail?.url,
-				fixable: Boolean(finding.rename),
+				fixable: Boolean(finding.fix),
 				example: detail?.examples?.passed?.[0],
 			};
 		}),

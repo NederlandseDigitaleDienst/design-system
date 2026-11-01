@@ -59,7 +59,7 @@ In selectors:
 
 ### Twee bijzondere gevallen
 
-**Een naam die weg is:** `removed: ['item-width']`, met de oude naam in het `failed`-voorbeeld. Blijven waarde en betekenis gelijk, voor elke waarde, zet er dan `fix: { rename: { item-width: item-min-width } }` bij. Dan lost `--fix` hem op.
+**Een naam die weg is:** `removed: ['item-width']`, met de oude naam in het `failed`-voorbeeld. Blijft de betekenis gelijk, voor elke waarde, geef de regel dan een `fix`, dan lost `--fix` hem op: `rename: { item-width: item-min-width }` voor een attribuut, `value: { appearance: { box: box-tinted } }` voor een waarde of slot, `remove: [full-height]` voor iets dat niets meer doet, `tag: nldd-shell` voor een tag. Het `failed`-voorbeeld bewijst de fix: `lint:rules` past hem toe en eist dat de melding weg is.
 
 **Iets wat niet in de markup staat,** zoals een meting of een verkeerde aanroep. Het component geeft het feit door, de regel leest het:
 

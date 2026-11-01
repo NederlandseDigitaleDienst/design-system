@@ -743,7 +743,7 @@ A title bar with an optional overline, title, and supporting text on the left, a
 - `title-needs-level` (hint): Set `heading-level`: without it the title renders as a paragraph and is missing from the heading structure.
 - `title-no-full-stop` (hint): Drop the full stop: a heading has none, also when it is a sentence.
 - `title-no-question` (hint): Give the answer as the heading, such as "De beoordeling duurt zes weken" for "Hoe lang duurt het?".
-- `title-subtitle-slot-renamed`: The subtitle slot is now supporting-text. Rename slot="subtitle" to slot="supporting-text", or use the `supporting-text` attribute, here and on every other nldd-title.
+- `title-subtitle-slot-renamed`: The subtitle slot is now supporting-text, and what is in the old one is not shown. Rename it here and on every other nldd-title.
 
 **Attributes**
 
@@ -2253,6 +2253,7 @@ A four-column layout with a primary sidebar, secondary sidebar, main content are
 
 **Rules** (`nldd lint`)
 
+- `navigation-split-view-sidebar-renamed`: The sidebar attributes now start with `primary-`, because a split view can have two. Rename it here and on every other nldd-navigation-split-view.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
 - `pane-title-bar-needs-back` (hint): Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.
@@ -2520,6 +2521,7 @@ An overlay component that slides in from the side or bottom of the screen. Based
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
 - `sheet-form-max-one-action` (hint): Keep one action under the form. The way out is `dismiss-text` on the title bar.
+- `sheet-full-height-no-effect`: A sheet is full height by default and `full-height` does nothing; remove it.
 - `sheet-height-invalid`: Invalid `height`. Falling back to full height. Use "full", "fit-content", or a valid CSS length (such as "50dvh" or "480px").
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
 - `sheet-needs-name`: No `accessible-label` and no nldd-top-title-bar with text inside. Screen readers will announce this dialog with a generic name. Give the title bar a text, or set `accessible-label`.
@@ -3724,6 +3726,7 @@ A container for `nldd-list-item` elements. The `type` attribute switches the lis
 **Rules** (`nldd lint`)
 
 - `list-arrow-navigation-no-effect`: `arrow-navigation` is the default now and the attribute does nothing; remove it.
+- `list-box-renamed`: `box` is now `box-tinted`. Rename it here and on every other nldd-list.
 - `list-form-no-action-rows`: type="form" says the rows are not actions and the controls inside them are, so its rows carry no keyboard of their own. This one is a link, a button, a checkbox or a set of segments. Use type="list" for rows you activate, and put the action in a cell if it belongs to a form row.
 - `list-item-children-needs-tree`: `slot="children"` nests rows, which only carries meaning in an nldd-list with type="tree" or type="navigation". Elsewhere the group has no owner and assistive technology cannot read the hierarchy.
 - `list-item-control-no-own-tab-stop`: A control in a list-item keeps its tab stop in its own shadow root and has no `no-tab`, so the row cannot take it out of the tab order and the arrow keys skip that row. If the rows of this list are not actions themselves, it is a form: set type="form" and the roving falls away. Otherwise give the component `no-tab`, or wrap the control in an nldd-list-item-segment.
@@ -3909,6 +3912,7 @@ A cell that draws steps under each other in an `nldd-list`: a vertical track wit
 - `row-link-needs-chevron` (hint): End the row with an nldd-icon-cell with icon="chevron-right", which says there is more behind it without the word "openen".
 - `step-cell-content-no-effect`: `text` and `icon` only fit in a full dot on a wide track (`size="md"` with `level="major"`); they are not shown here.
 - `step-cell-marker-offset-invalid`: `marker-offset` is not a CSS length or percentage, so the dot falls back to `vertical-alignment`. Use a length such as "1rem" or a percentage such as "25%".
+- `step-cell-variant-renamed`: The `variant` attribute is now `level`. Rename it here and on every other nldd-step-cell.
 
 **Attributes**
 

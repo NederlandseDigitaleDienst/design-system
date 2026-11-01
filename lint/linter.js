@@ -51,12 +51,12 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 		}
 		if (attribute?.deprecated) {
 			const detail = attribute.deprecated === true ? '' : ` ${attribute.deprecated}`;
-			report('deprecated', `\`${name}\` on ${node.name} is deprecated.${detail}`);
+			report('deprecated', `\`${name}\` on ${node.name} is deprecated.${detail}`, name);
 		}
 		if (attribute) {
 			if (attribute.values && typeof value === 'string' && !attribute.values.includes(value)) {
 				const allowed = attribute.values.filter(Boolean).join(', ');
-				report('invalid-value', `\`${name}="${value}"\` is not valid on ${node.name}: use ${allowed}.`);
+				report('invalid-value', `\`${name}="${value}"\` is not valid on ${node.name}: use ${allowed}.`, name);
 			}
 		} else if (value === BOUND && contract.props.includes(toCamelCase(name))) {
 			// A property without an attribute, which only a binding can reach.
@@ -91,7 +91,7 @@ function builtInFindings(root, context) {
 			findings.push({ rule, severity: BUILT_IN_RULES[rule].severity, message, node, attribute });
 		const contract = tags[node.name];
 		if (!contract) {
-			report('unknown-element', `${node.name} does not exist in this version.`);
+			report('unknown-element', `${node.name} does not exist in this version.`, node.name);
 			return;
 		}
 		checkAttributes(node, context, report);
@@ -148,11 +148,11 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 	const rules = data.rules.filter((rule) => !rule.runtime && severities[rule.id] !== 'off');
 	const ranInSource = (id) => severities[id] !== 'off' && (rules.some((rule) => rule.id === id) || id in BUILT_IN_RULES);
 
-	/** A rule about a removed name says what to use instead; the generic finding adds nothing. */
+	/** A rule about a name or value that is gone says what to use instead; the generic finding adds nothing. */
 	function withoutCovered(findings) {
 		return findings.filter(
 			({ attribute, node }) =>
-				!attribute || !findings.some((other) => other.node === node && other.removed?.includes(attribute)),
+				!attribute || !findings.some((other) => other.node === node && other.covers?.includes(attribute)),
 		);
 	}
 
@@ -172,8 +172,8 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 						severity: rule.severity,
 						message: rule.message,
 						node,
-						removed: rule.removed,
-						rename: rule.fix?.rename,
+						covers: [...(rule.removed ?? []), ...Object.keys(rule.fix?.value ?? {})],
+						fix: rule.fix,
 					});
 				}
 			}
@@ -197,7 +197,7 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			line,
 			column: 1,
 		});
-		const all = findings.map(({ node, severity, removed, attribute, ...finding }) => ({
+		const all = findings.map(({ node, severity, covers, attribute, ...finding }) => ({
 			...finding,
 			severity,
 			tag: node.name,

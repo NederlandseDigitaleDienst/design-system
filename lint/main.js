@@ -12,7 +12,7 @@ import { applyBaseline, findFiles, readBaseline, readConfig, writeBaseline } fro
 const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
     --format text|json|github       default: text
-    --fix                           apply the fixes that are certain: renamed attributes
+    --fix                           apply the fixes that are certain: what only got another name
     --update-baseline               accept what is there now, report only new findings
     --max-warnings <n>              exit 1 above this number of warnings
     --select <groups or rules>      only these, comma separated
@@ -81,6 +81,24 @@ function noteOtherVersion(root) {
 	}
 }
 
+const MAX_FIX_PASSES = 10;
+
+/** One fix can open the way for the next: a renamed tag has rules of its own. */
+async function fixUntilStable(linter, original, filename) {
+	let source = original;
+	let fixed = 0;
+	const renamedTags = new Map();
+	for (let pass = 0; pass < MAX_FIX_PASSES; pass++) {
+		const { findings } = await linter.lintSource(source, filename);
+		const change = applyFixes(source, findings);
+		if (change.fixed === 0) return { source, fixed, renamedTags, findings };
+		source = change.source;
+		fixed += change.fixed;
+		for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
+	}
+	return { source, fixed, renamedTags, findings: (await linter.lintSource(source, filename)).findings };
+}
+
 async function runLint(data, paths, options) {
 	if (Number.isNaN(Number(options['max-warnings'] ?? 0))) throw new Error('--max-warnings takes a number.');
 	const formatName = options.format ?? 'text';
@@ -118,24 +136,29 @@ async function runLint(data, paths, options) {
 	const results = [];
 	let fixed = 0;
 	let fixedFiles = 0;
+	const renamedTags = new Map();
 	if (relevant.length > 0) {
 		const { createLinter } = await import('./linter.js');
 		const linter = createLinter(data, { wrappers: config.wrappers, severities: resolveSeverities(data, config.rules, { select, ignore }) });
 		for (const { filename, source } of relevant) {
-			const { findings } = await linter.lintSource(source, filename);
-			const change = options.fix ? applyFixes(source, findings) : { fixed: 0 };
-			if (change.fixed === 0) {
-				results.push({ filename, source, findings });
+			if (!options.fix) {
+				results.push({ filename, source, ...(await linter.lintSource(source, filename)) });
 				continue;
 			}
-			writeFileSync(filename, change.source);
-			fixed += change.fixed;
-			fixedFiles += 1;
-			const after = await linter.lintSource(change.source, filename);
-			results.push({ filename, source: change.source, findings: after.findings });
+			const change = await fixUntilStable(linter, source, filename);
+			if (change.fixed > 0) {
+				writeFileSync(filename, change.source);
+				fixed += change.fixed;
+				fixedFiles += 1;
+				for (const [from, to] of change.renamedTags) renamedTags.set(from, to);
+			}
+			results.push({ filename, source: change.source, findings: change.findings });
 		}
 	}
 	if (options.fix) console.error(`Fixed ${fixed} in ${fixedFiles} of ${inputs.length} files.`);
+	for (const [from, to] of renamedTags) {
+		console.error(`${from} is now ${to}: change its import, its class and any CSS or test that names it.`);
+	}
 
 	if (options['update-baseline']) {
 		writeBaseline(results, root, canonical);

@@ -1,0 +1,8 @@
+severity: error
+context: 'nldd-step-indicator'
+removed: ['nldd-step-indicator']
+fix: { tag: nldd-step-bar }
+message: '`nldd-step-indicator` is now `nldd-step-bar`. Rename the tag, its import and its class, here and on every page.'
+examples:
+  passed: ['<nldd-step-bar accessible-label="Stappen"></nldd-step-bar>']
+  failed: ['<nldd-step-indicator accessible-label="Stappen"></nldd-step-indicator>']

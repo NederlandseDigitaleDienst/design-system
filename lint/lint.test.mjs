@@ -563,6 +563,76 @@ describe('--fix', () => {
 		assert.equal(fixed('a.html', source).text, source);
 	});
 
+	it('renames a tag with its closing tag, and says what is left to do', () => {
+		const { text, stderr } = fixed('a.vue', '<template><nldd-app-view background="tinted"><nldd-app-view></nldd-app-view></nldd-app-view></template>');
+		assert.equal(text, '<template><nldd-shell background="tinted"><nldd-shell></nldd-shell></nldd-shell></template>');
+		assert.match(stderr, /Fixed 2 in 1 of 1 files/);
+		assert.match(stderr, /nldd-app-view is now nldd-shell: change its import/);
+	});
+
+	it('renames a self-closed tag', () => {
+		assert.equal(fixed('a.vue', '<template><nldd-timeline-track-cell status="past" /></template>').text, '<template><nldd-step-cell status="past" /></template>');
+	});
+
+	it('leaves a tag without a closing tag alone', () => {
+		const source = '<template><nldd-app-view></template>';
+		assert.equal(fixed('a.html', source).text, source);
+	});
+
+	it('leaves a wrapper its own name', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.vue'), '<template><NlddAppView /></template>');
+		writeFileSync(join(root, '.nldd-lint.json'), '{ "wrappers": { "NlddAppView": "nldd-app-view" } }');
+		run(root, 'lint', '--fix', 'a.vue');
+		assert.equal(readFileSync(join(root, 'a.vue'), 'utf8'), '<template><NlddAppView /></template>');
+	});
+
+	it('goes on until nothing is left: a new tag has rules of its own', () => {
+		const { text } = fixed('a.vue', '<template><nldd-timeline-track-cell status="past" variant="major" /></template>');
+		assert.equal(text, '<template><nldd-step-cell status="past" level="major" /></template>');
+	});
+
+	it('changes a value only when it is written out', () => {
+		assert.equal(fixed('a.html', '<nldd-list appearance="box" accessible-label="a"></nldd-list>').text, '<nldd-list appearance="box-tinted" accessible-label="a"></nldd-list>');
+		assert.equal(fixed('a.html', "<nldd-list appearance='box' accessible-label=\"a\"></nldd-list>").text, "<nldd-list appearance='box-tinted' accessible-label=\"a\"></nldd-list>");
+		assert.equal(fixed('a.html', '<nldd-list appearance=box accessible-label="a"></nldd-list>').text, '<nldd-list appearance=box-tinted accessible-label="a"></nldd-list>');
+		const bound = '<template><nldd-list :appearance="box" accessible-label="a"></nldd-list></template>';
+		assert.equal(fixed('a.vue', bound).text, bound);
+	});
+
+	it('does not choose a fill for a list with a background', () => {
+		const source = '<nldd-list appearance="box" background="base" accessible-label="a"></nldd-list>';
+		const { text, stdout } = fixed('a.html', source);
+		assert.equal(text, source);
+		assert.match(stdout, /invalid-value/);
+	});
+
+	it('renames a slot on the child that fills it', () => {
+		const { text } = fixed('a.html', '<nldd-title text="a"><span slot="subtitle">b</span></nldd-title><div slot="subtitle"></div>');
+		assert.equal(text, '<nldd-title text="a"><span slot="supporting-text">b</span></nldd-title><div slot="subtitle"></div>');
+	});
+
+	it('removes an attribute with its value, in every spelling', () => {
+		const remove = (name, source) => fixed(name, source).text;
+		assert.equal(remove('a.html', '<nldd-sheet full-height accessible-label="a"></nldd-sheet>'), '<nldd-sheet accessible-label="a"></nldd-sheet>');
+		assert.equal(remove('a.vue', '<template><nldd-sheet\n  accessible-label="a"\n  :full-height="b > c"\n  @close="d"\n/></template>'), '<template><nldd-sheet\n  accessible-label="a"\n  @close="d"\n/></template>');
+		assert.equal(remove('a.tsx', 'const a = <nldd-sheet accessible-label="a" full-height={b ? { c: 1 } : 2} />;'), 'const a = <nldd-sheet accessible-label="a" />;');
+		assert.equal(remove('a.html', '<nldd-sheet accessible-label="a" [full-height]="b"></nldd-sheet>'), '<nldd-sheet accessible-label="a"></nldd-sheet>');
+	});
+
+	it('replaces a deprecated attribute, and the rule takes over its finding', () => {
+		const { text, stdout } = fixed('a.html', '<nldd-navigation-split-view sidebar-accessible-label="a"></nldd-navigation-split-view>');
+		assert.equal(text, '<nldd-navigation-split-view primary-sidebar-accessible-label="a"></nldd-navigation-split-view>');
+		assert.doesNotMatch(stdout, /deprecated/);
+	});
+
+	it('reports a gone tag once, with what to use instead', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), '<nldd-app-view></nldd-app-view>');
+		const { findings } = JSON.parse(run(root, 'lint', '--format', 'json', 'a.html').stdout);
+		assert.deepEqual(findings.map(({ rule }) => rule), ['shell-tag-renamed']);
+	});
+
 	it('leaves a file without a fix untouched', () => {
 		const source = '<nldd-tab-bar></nldd-tab-bar>\r\n';
 		assert.equal(fixed('a.html', source).text, source);
