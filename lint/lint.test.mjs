@@ -563,11 +563,69 @@ describe('--fix', () => {
 		assert.equal(fixed('a.html', source).text, source);
 	});
 
-	it('renames a tag with its closing tag, and says what is left to do', () => {
+	it('renames a tag with its closing tag', () => {
 		const { text, stderr } = fixed('a.vue', '<template><nldd-app-view background="tinted"><nldd-app-view></nldd-app-view></nldd-app-view></template>');
 		assert.equal(text, '<template><nldd-shell background="tinted"><nldd-shell></nldd-shell></nldd-shell></template>');
 		assert.match(stderr, /Fixed 2 in 1 of 1 files/);
-		assert.match(stderr, /nldd-app-view is now nldd-shell: change its import/);
+	});
+
+	describe('what names a renamed tag outside its markup', () => {
+		const project = (files) => {
+			const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+			for (const [name, text] of Object.entries(files)) writeFileSync(join(root, name), text);
+			return root;
+		};
+		const read = (root, name) => readFileSync(join(root, name), 'utf8');
+
+		it('follows along in imports, classes, selectors and strings', () => {
+			const root = project({
+				'a.vue': "<template><nldd-app-view></nldd-app-view></template>\n<script>import '@nldd/design-system/app-view';</script>",
+				'main.ts': "import { NLDDAppView } from '@nldd/design-system/app-view';\nconst a = html`<nldd-app-view></nldd-app-view>`;",
+				'style.css': 'nldd-app-view { color: red; }',
+				'unrelated.ts': 'const a = 1;',
+			});
+			const { stderr } = run(root, 'lint', '--fix');
+			assert.match(read(root, 'a.vue'), /import '@nldd\/design-system\/shell'/);
+			assert.equal(read(root, 'main.ts'), "import { NLDDShell } from '@nldd/design-system/shell';\nconst a = html`<nldd-shell></nldd-shell>`;");
+			assert.equal(read(root, 'style.css'), 'nldd-shell { color: red; }');
+			assert.equal(read(root, 'unrelated.ts'), 'const a = 1;');
+			assert.match(stderr, /Renamed 6 imports, classes and selectors of old tags in 3 files/);
+		});
+
+		it('keeps a longer name that starts the same', () => {
+			const root = project({
+				'a.html': '<nldd-step-indicator accessible-label="a"></nldd-step-indicator>',
+				'b.css': 'nldd-step-indicator-item { color: red; } nldd-step-indicator { color: blue; }',
+			});
+			run(root, 'lint', '--fix');
+			assert.equal(read(root, 'b.css'), 'nldd-step-indicator-item { color: red; } nldd-step-bar { color: blue; }');
+		});
+
+		it('leaves everything alone when no tag was renamed', () => {
+			const root = project({ 'a.html': '<nldd-button text="a" variant="primary"></nldd-button>', 'b.css': 'nldd-app-view { color: red; }' });
+			run(root, 'lint', '--fix');
+			assert.equal(read(root, 'b.css'), 'nldd-app-view { color: red; }');
+		});
+
+		it('keeps a suppressed tag in markup', () => {
+			const source = "<!-- nldd-lint-disable-next-line shell-tag-renamed -- nog niet -->\n<nldd-app-view></nldd-app-view>\n<nldd-app-view></nldd-app-view>";
+			const root = project({ 'a.html': source });
+			run(root, 'lint', '--fix');
+			assert.equal(read(root, 'a.html'), "<!-- nldd-lint-disable-next-line shell-tag-renamed -- nog niet -->\n<nldd-app-view></nldd-app-view>\n<nldd-shell></nldd-shell>");
+		});
+
+		it('stays in the paths it was given, and says so', () => {
+			const root = project({ 'a.html': '<nldd-app-view></nldd-app-view>', 'b.css': 'nldd-app-view { color: red; }' });
+			assert.match(run(root, 'lint', '--fix', 'a.html').stderr, /Only in the paths you named/);
+			assert.equal(read(root, 'b.css'), 'nldd-app-view { color: red; }');
+		});
+	});
+
+	it('does not call a finding fixable when the fix would not apply', () => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), '<nldd-button text="a" variant="primary" appearance="secondary"></nldd-button>');
+		assert.equal(JSON.parse(run(root, 'lint', '--format', 'json', 'a.html').stdout).findings[0].fixable, false);
+		assert.doesNotMatch(run(root, 'lint', 'a.html').stdout, /fixable with --fix/);
 	});
 
 	it('renames a self-closed tag', () => {
@@ -585,6 +643,9 @@ describe('--fix', () => {
 		writeFileSync(join(root, '.nldd-lint.json'), '{ "wrappers": { "NlddAppView": "nldd-app-view" } }');
 		run(root, 'lint', '--fix', 'a.vue');
 		assert.equal(readFileSync(join(root, 'a.vue'), 'utf8'), '<template><NlddAppView /></template>');
+		const [finding] = JSON.parse(run(root, 'lint', '--format', 'json', 'a.vue').stdout).findings;
+		assert.equal(finding.rule, 'shell-tag-renamed');
+		assert.equal(finding.fixable, false);
 	});
 
 	it('goes on until nothing is left: a new tag has rules of its own', () => {
@@ -650,6 +711,30 @@ describe('--fix', () => {
 		assert.match(run(root, 'lint', 'a.html').stdout, /1 fixable with --fix/);
 		assert.match(run(root, 'lint', '--statistics', 'a.html').stdout, /variant-renamed {2}\[--fix\]/);
 		assert.equal(JSON.parse(run(root, 'lint', '--format', 'json', 'a.html').stdout).findings[0].fixable, true);
+	});
+});
+
+describe('an Angular directive of the app', () => {
+	const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
+	const rulesOf = (source) => {
+		const root = mkdtempSync(join(tmpdir(), 'nldd-lint-'));
+		writeFileSync(join(root, 'a.html'), source);
+		const { stdout } = spawnSync(process.execPath, [cli, 'lint', '--format', 'json', 'a.html'], { cwd: root, encoding: 'utf8' });
+		return JSON.parse(stdout).findings.map(({ rule }) => rule);
+	};
+	const sheet = (attributes) => `<nldd-sheet accessible-label="a" ${attributes}></nldd-sheet>`;
+
+	it('owns the bound inputs next to it', () => {
+		assert.deepEqual(rulesOf(sheet('#mySheet appSheetSync [show]="a"')), []);
+	});
+
+	it('does not excuse a name written out', () => {
+		assert.deepEqual(rulesOf(sheet('appSheetSync show="a"')), ['unknown-attribute']);
+	});
+
+	it('is not a template reference or an Angular directive of its own', () => {
+		assert.deepEqual(rulesOf(sheet('#mySheet [show]="a"')), ['unknown-attribute']);
+		assert.deepEqual(rulesOf(sheet('*ngIf="b" [show]="a"')), ['unknown-attribute']);
 	});
 });
 

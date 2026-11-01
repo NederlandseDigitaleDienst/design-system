@@ -4,6 +4,7 @@
  */
 
 import { createEngine } from './engine.js';
+import { canFix } from './fix.js';
 import { applyWrappers, parseSource } from './frontends.js';
 import { BUILT_IN_RULES, createCanonical, loadData } from './rule-data.js';
 import { BOUND, walk } from './tree.js';
@@ -17,6 +18,9 @@ const GLOBAL_ATTRIBUTE =
 
 /** Set as a property on any element: in markup these are bindings, not attributes. */
 const DOM_PROPERTY = /^(textContent|innerHTML|innerText|outerHTML|className|tabIndex|aria[A-Z].*)$/;
+
+/** An Angular directive of the app. Angular's own, such as `ngIf`, take no inputs here. */
+const APP_DIRECTIVE = /^(?!ng[A-Z])[a-z]+[A-Z]/;
 
 const ICON_ATTRIBUTES = new Set(['icon', 'start-icon', 'end-icon', 'selected-icon']);
 
@@ -64,6 +68,8 @@ function checkAttributes(node, { tags, icons, anyChildAttrs, isPlainHtml }, repo
 			// Every element has this one.
 		} else if (isPlainHtml && /[A-Z]/.test(name)) {
 			// HTML has no capitals, so in an .html file this is a template directive.
+		} else if (isPlainHtml && value === BOUND && [...node.attrs.keys()].some((other) => APP_DIRECTIVE.test(other))) {
+			// `[show]` next to `appSheetSync` is an input of that directive, not of the element.
 		} else if (contract.attrs[name.toLowerCase()]) {
 			// `maxLength`: no such property, so it ends up as the attribute, in lowercase.
 		} else if (!GLOBAL_ATTRIBUTE.test(name.toLowerCase()) && !node.wrapped) {
@@ -197,13 +203,15 @@ export function createLinter(data = loadData(), { wrappers = {}, severities: con
 			line,
 			column: 1,
 		});
-		const all = findings.map(({ node, severity, covers, attribute, ...finding }) => ({
-			...finding,
-			severity,
-			tag: node.name,
-			offset: node.offset,
-			...position(node.offset),
-		}));
+		const all = findings
+			.map(({ node, severity, covers, attribute, ...finding }) => ({
+				...finding,
+				severity,
+				tag: node.name,
+				offset: node.offset,
+				...position(node.offset),
+			}))
+			.map((finding) => (finding.fix && !canFix(source, finding) ? { ...finding, fix: undefined } : finding));
 		const fires = (line, id) => all.some((finding) => finding.line === line && finding.rule === id);
 		// A rule that did not run here says nothing, and Markdown shows a suppression as an example.
 		const unneeded = /\.md$/.test(filename) || parsed.length === 0 || parsed.syntaxError

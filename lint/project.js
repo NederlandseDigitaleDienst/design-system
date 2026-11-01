@@ -8,11 +8,14 @@ const IGNORED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage'
 /** Markdown is linted on request: documentation is full of deliberately wrong examples. */
 const DEFAULT_EXTENSIONS = ['.html', '.htm', '.j2', '.jinja', '.jinja2', '.vue', '.jsx', '.tsx'];
 
-function walkDirectory(directory, found) {
+/** Where a tag name stands outside markup: the linter does not read these, a renamed tag does. */
+export const REFERENCE_EXTENSIONS = ['.js', '.mjs', '.cjs', '.ts', '.css', '.scss', '.less'];
+
+function walkDirectory(directory, found, extensions) {
 	for (const entry of readdirSync(directory, { withFileTypes: true })) {
 		if (entry.isDirectory()) {
-			if (!IGNORED_DIRECTORIES.has(entry.name)) walkDirectory(join(directory, entry.name), found);
-		} else if (DEFAULT_EXTENSIONS.includes(extname(entry.name))) {
+			if (!IGNORED_DIRECTORIES.has(entry.name)) walkDirectory(join(directory, entry.name), found, extensions);
+		} else if (extensions.includes(extname(entry.name))) {
 			found.push(join(directory, entry.name));
 		}
 	}
@@ -20,7 +23,7 @@ function walkDirectory(directory, found) {
 }
 
 /** `git ls-files` honors .gitignore without this tool parsing it. */
-function trackedFiles(root) {
+function trackedFiles(root, extensions) {
 	try {
 		const output = execFileSync('git', ['ls-files', '-coz', '--exclude-standard'], {
 			cwd: root,
@@ -30,7 +33,7 @@ function trackedFiles(root) {
 		});
 		return output
 			.split('\0')
-			.filter((file) => DEFAULT_EXTENSIONS.includes(extname(file)))
+			.filter((file) => extensions.includes(extname(file)))
 			.map((file) => join(root, file));
 	} catch {
 		return undefined;
@@ -41,14 +44,14 @@ function matchesExclude(path, patterns) {
 	return patterns.some((pattern) => path.includes(pattern));
 }
 
-export function findFiles(paths, root, exclude = []) {
+export function findFiles(paths, root, exclude = [], extensions = DEFAULT_EXTENSIONS) {
 	const files =
 		paths.length === 0
-			? (trackedFiles(root) ?? walkDirectory(root, []))
+			? (trackedFiles(root, extensions) ?? walkDirectory(root, [], extensions))
 			: paths.flatMap((path) => {
 					const full = resolve(root, path);
 					if (!existsSync(full)) throw new Error(`No such file or directory: ${path}`);
-					return statSync(full).isDirectory() ? walkDirectory(full, []) : [full];
+					return statSync(full).isDirectory() ? walkDirectory(full, [], extensions) : [full];
 				});
 	return files.filter((file) => existsSync(file) && !matchesExclude(relative(root, file), exclude));
 }

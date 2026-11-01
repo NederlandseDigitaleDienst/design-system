@@ -134,6 +134,43 @@ function editsOf(source, { fix, offset, tag }) {
 	];
 }
 
+/** False when a finding has a fix that does not apply here, such as with both names present. */
+export const canFix = (source, finding) => editsOf(source, finding).length > 0;
+
+const toClass = (tag) => `NLDD${toCamelCase(tag.replace(/^nldd-/, '-'))}`;
+const entryPoint = (tag) => `@nldd/design-system/${tag.replace(/^nldd-/, '')}`;
+
+function replaceName(source, from, to) {
+	let count = 0;
+	const name = new RegExp(`(?<![\\w-])${from.replace(/[/@-]/g, '\\$&')}(?![\\w-])`, 'g');
+	const text = source.replace(name, () => {
+		count += 1;
+		return to;
+	});
+	return { text, count };
+}
+
+/**
+ * Renames what names a renamed tag outside its markup. An import and a class are
+ * unmistakable anywhere; the bare tag only where no suppression can stand on it.
+ * @returns {{ source: string, fixed: number }}
+ */
+export function renameReferences(source, renamedTags, { bareTags }) {
+	const names = [...renamedTags].flatMap(([from, to]) => [
+		[entryPoint(from), entryPoint(to)],
+		[toClass(from), toClass(to)],
+		...(bareTags ? [[from, to]] : []),
+	]);
+	let text = source;
+	let fixed = 0;
+	for (const [from, to] of names) {
+		const replaced = replaceName(text, from, to);
+		text = replaced.text;
+		fixed += replaced.count;
+	}
+	return { source: text, fixed };
+}
+
 /**
  * @returns {{ source: string, fixed: number, renamedTags: Map<string, string> }}
  */

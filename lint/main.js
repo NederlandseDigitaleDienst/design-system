@@ -1,13 +1,13 @@
 /** The `nldd` command, started from cli.js. */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, extname, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
-import { applyFixes } from './fix.js';
+import { applyFixes, renameReferences } from './fix.js';
 import { formatGithub, formatJson, formatStatistics, formatText } from './format.js';
 import { BUILT_IN_RULES, createCanonical, loadData, GROUPS, resolveSeverities } from './rule-data.js';
 import { rulesAboutTag } from './rule-index.js';
-import { applyBaseline, findFiles, readBaseline, readConfig, writeBaseline } from './project.js';
+import { applyBaseline, findFiles, readBaseline, readConfig, REFERENCE_EXTENSIONS, writeBaseline } from './project.js';
 
 const USAGE = `Usage:
   nldd lint [paths...]              check files; without paths, the whole project
@@ -79,6 +79,25 @@ function noteOtherVersion(root) {
 	if (installed && installed !== pkg.version) {
 		console.error(`Checking against ${pkg.version}, and this project has ${installed}: findings say what changes on upgrading.`);
 	}
+}
+
+/** The tag is gone from the markup; what still names it would break or stop matching. */
+function fixReferences(renamedTags, paths, root, exclude) {
+	const inMarkup = findFiles(paths, root, exclude);
+	const elsewhere = findFiles(paths, root, exclude, REFERENCE_EXTENSIONS).filter((file) => REFERENCE_EXTENSIONS.includes(extname(file)));
+	let fixed = 0;
+	let files = 0;
+	for (const [list, bareTags] of [[inMarkup, false], [elsewhere, true]]) {
+		for (const filename of list) {
+			const source = readFileSync(filename, 'utf8');
+			const change = renameReferences(source, renamedTags, { bareTags });
+			if (change.fixed === 0) continue;
+			writeFileSync(filename, change.source);
+			fixed += change.fixed;
+			files += 1;
+		}
+	}
+	return { fixed, files };
 }
 
 const MAX_FIX_PASSES = 10;
@@ -156,8 +175,12 @@ async function runLint(data, paths, options) {
 		}
 	}
 	if (options.fix) console.error(`Fixed ${fixed} in ${fixedFiles} of ${inputs.length} files.`);
-	for (const [from, to] of renamedTags) {
-		console.error(`${from} is now ${to}: change its import, its class and any CSS or test that names it.`);
+	if (renamedTags.size > 0) {
+		const references = fixReferences(renamedTags, paths, root, config.exclude);
+		if (references.fixed > 0) console.error(`Renamed ${references.fixed} imports, classes and selectors of old tags in ${references.files} files.`);
+		if (paths.some((path) => resolve(root, path) !== root)) {
+			console.error('Only in the paths you named: run it without paths to reach the rest of the project.');
+		}
 	}
 
 	if (options['update-baseline']) {
