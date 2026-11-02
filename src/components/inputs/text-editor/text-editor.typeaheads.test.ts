@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import type { EditorView } from '@codemirror/view';
-import { acceptCompletion, completionStatus, moveCompletionSelection, startCompletion } from '@codemirror/autocomplete';
+import { acceptCompletion, closeCompletion, completionStatus, moveCompletionSelection, startCompletion } from '@codemirror/autocomplete';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { setTranslations } from '../../../utilities/translations.js';
 import './text-editor.js';
@@ -157,6 +157,17 @@ describe('nldd-text-editor typeaheads', () => {
 		expect(avatars[0]?.getAttribute('size')).toBe('32');
 		expect(avatars[0]?.hasAttribute('decorative')).toBe(true);
 		expect(avatars[1]?.getAttribute('type')).toBe('organization');
+		// A list whose text is a username names the person for the initials.
+		closeCompletion(el.view);
+		el.mentionSource = undefined;
+		el.typeaheads = [{ trigger: '@', source: () => [{ id: 'u1', text: 'anouk.dv', supportingText: 'Anouk de Vries', avatar: { name: 'Anouk de Vries' } }] }];
+		const named = await openList(el);
+		expect(named[0].querySelector('nldd-avatar')?.getAttribute('name')).toBe('Anouk de Vries');
+		expect(labels(named)).toEqual(['@anouk.dv']);
+		closeCompletion(el.view);
+		el.typeaheads = [{ trigger: '@', source: () => [{ id: 'u1', text: 'anouk.dv', avatar: { initials: 'KvK' } }] }];
+		expect((await openList(el))[0].querySelector('nldd-avatar')?.getAttribute('name')).toBe('anouk.dv');
+		expect(el.shadowRoot.querySelector('.cm-tooltip-autocomplete nldd-avatar')?.getAttribute('initials')).toBe('KvK');
 		expect(personRows[0].classList.contains('cm-nldd-row-avatar')).toBe(true);
 		// The label and the detail stack: the detail sits under the label, not beside it.
 		const label = personRows[0].querySelector('.cm-completionLabel')!.getBoundingClientRect();

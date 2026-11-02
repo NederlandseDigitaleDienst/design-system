@@ -116,9 +116,12 @@ export interface TypeaheadCandidate {
 	 *  thing itself, for a list where that is its best picture. */
 	symbol?: string;
 	/** A person or organization in front of the text: an image, or initials
-	 *  from the text when there is none. `avatar: {}` is enough for initials.
+	 *  from `name` when there is none. `name` is the full name of whom the row is
+	 *  about, for when `text` is not, as with a username; without it the
+	 *  initials come from the text. `initials` sets them outright, as on
+	 *  nldd-avatar. `avatar: {}` is enough for initials.
 	 *  The row then takes two lines, with the supporting text under the text. */
-	avatar?: { src?: string; type?: 'person' | 'organization' };
+	avatar?: { src?: string; type?: 'person' | 'organization'; name?: string; initials?: string };
 }
 
 /** The candidates for what was typed after the trigger. The source filters;
@@ -198,9 +201,10 @@ function renderLead(completion: Completion): Node | null {
 	const { candidate } = completion as CandidateCompletion;
 	if (candidate.avatar) {
 		const avatar = document.createElement('nldd-avatar');
-		avatar.setAttribute('name', candidate.text);
+		avatar.setAttribute('name', candidate.avatar.name ?? candidate.text);
 		avatar.setAttribute('size', '32');
 		avatar.setAttribute('decorative', '');
+		if (candidate.avatar.initials) avatar.setAttribute('initials', candidate.avatar.initials);
 		if (candidate.avatar.src) avatar.setAttribute('src', candidate.avatar.src);
 		if (candidate.avatar.type) avatar.setAttribute('type', candidate.avatar.type);
 		return avatar;
