@@ -2407,7 +2407,6 @@ The footer band at the bottom of a page. Hosts three optional rows in a fixed or
 
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
-- `page-footer-needs-legal-bar` (hint): Add an nldd-page-footer-legal-bar in slot `legal-bar`: that row holds the links a page has to offer, such as privacy.
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-footer-no-duplicate-id`: Another element already has id="page-footer". Set a unique id on this instance so skip links target the right one.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.

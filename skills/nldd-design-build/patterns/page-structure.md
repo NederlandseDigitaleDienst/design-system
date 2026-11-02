@@ -792,7 +792,6 @@ Hints: zo is het bedoeld. Die laten niets falen.
 - `login-link-needs-full-verb`: A link to the login screen does not log in itself, so use the full verb: "Inloggen".
 - `logout-no-link`: Make it a button: logging out happens at once.
 - `page-content-goes-in-section`: Put this in a section, such as nldd-simple-section, which sets the width and the white space.
-- `page-footer-needs-legal-bar`: Add an nldd-page-footer-legal-bar in slot `legal-bar`: that row holds the links a page has to offer, such as privacy.
 - `page-footer-needs-privacy-link`: Add a direct link "Privacy": European privacy regulators ask for one on every page.
 - `page-footer-no-vague-about`: Call it "Over deze website": "Over" could just as well be about the organization.
 - `page-needs-shell`: Put nldd-shell around it: the shell sets the background and decides who scrolls.
