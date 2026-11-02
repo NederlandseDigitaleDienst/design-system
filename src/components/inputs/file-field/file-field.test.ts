@@ -510,7 +510,7 @@ describe('nldd-file-field – variant="area"', () => {
 		const value = box('.file-field__value');
 		const button = box('.file-field__actions nldd-button');
 		expect(Math.round(value.top - icon.bottom)).toBe(2);
-		expect(Math.round(button.top - value.bottom)).toBe(16);
+		expect(Math.round(button.top - value.bottom)).toBe(12);
 		expect(Math.abs((icon.top - field.top) - (field.bottom - button.bottom))).toBeLessThanOrEqual(1);
 	});
 
