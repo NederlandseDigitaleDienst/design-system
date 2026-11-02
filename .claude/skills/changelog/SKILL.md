@@ -1,6 +1,6 @@
 ---
 name: changelog
-description: Bewerk CHANGELOG.md — voeg release-notes/entries toe boven de laatste versie. Gebruik bij "changelog bijwerken", "release-notes schrijven", of het noteren van wijzigingen die semantic-release niet uit de commits haalt. Legt vast welke ### kopjes mogen (Highlights, Added, Changed, Breaking, Fixed) en wat de pipeline zelf doet.
+description: Bewerk CHANGELOG.md — voeg release-notes/entries toe boven de laatste versie. Gebruik bij "changelog bijwerken", "release-notes schrijven", of het noteren van wijzigingen die semantic-release niet uit de commits haalt. Legt vast welke ### kopjes mogen, in welke volgorde (Highlights altijd eerst, dan Breaking, Added, Changed, Fixed), en wat de pipeline zelf doet.
 user-invocable: true
 ---
 
@@ -30,9 +30,13 @@ Handmatige entries komen **bovenaan het bestand, bóven het nieuwste versieblok*
 
 ### Highlights          ← jouw nieuwe entries, bovenaan, niveau ###
 - …
+### Breaking
+- …
 ### Added
 - …
-### Breaking
+### Changed
+- …
+### Fixed
 - …
 
 ## [0.8.56](…/compare/v0.8.55...v0.8.56) (2026-06-03)   ← vorige (laatste) release, blijft staan
@@ -55,17 +59,29 @@ Handmatige entries komen **bovenaan het bestand, bóven het nieuwste versieblok*
 - ❌ **Geen** `##` voor je secties — gebruik `###`.
 - ❌ Niet onderaan of in een ouder versieblok plakken — altijd helemaal bovenaan, boven de laatste `## [x.y.z](…) (datum)`.
 - ❌ Versie niet zelf verhogen — conventionele commits bepalen de bump.
+- ❌ Niets boven `### Highlights`, ook `### Breaking` niet. Hoe belangrijk een breaking change ook is: hij komt direct onder Highlights, en als hij ertoe doet staat hij daarnaast als bullet in Highlights zelf.
 
 ## De kopjes (`###`)
 
-Volgorde: **`### Highlights` altijd eerst**, daarna per type. Gebruik alleen wat van toepassing is.
+Altijd in deze volgorde, en alleen de kopjes die van toepassing zijn:
+
+1. `### Highlights`
+2. `### Breaking`
+3. `### Added`
+4. `### Changed`
+5. `### Deprecated`
+6. `### Removed`
+7. `### Fixed`
+8. `### Security`
+
+Highlights staat altijd bovenaan, ook als er iets breekt. Een belangrijke breaking change krijgt een bullet in Highlights (verwijs dan met "See Breaking.") en staat daarnaast in volle lengte onder `### Breaking`.
 
 | Kopje | Waarvoor |
 |-------|----------|
-| `### Highlights` | Korte prozasamenvatting van de belangrijkste punten van de release. Project-specifiek; staat altijd vooraan. **Nieuwe iconen horen hier altijd (ook) in** — alle nieuwe iconen samen in één Highlights-bullet ("2 new icons."), nooit een bullet per icoon, ook bij een verder kleine release (naast hun `### Added`-regel). |
+| `### Highlights` | Korte prozasamenvatting van de belangrijkste punten van de release. Project-specifiek; staat altijd vooraan. **Nieuwe iconen horen hier altijd (ook) in** — alle nieuwe iconen samen in één Highlights-bullet ("2 new icons."), nooit een bullet per icoon, ook bij een verder kleine release (naast hun `### Added`-regel). **Toegankelijkheidsfixes ook**: zitten er in de batch, dan altijd één bullet met het aantal ("6 accessibility fixes."), met in één zin waar ze over gaan en een verwijzing naar de secties waar ze staan. Tel elke wijziging die iets oplost voor hulptechnologie, toetsenbord, zoom of contrast, ook als ze onder `### Changed` staat. |
 | `### Added` | Nieuwe features, componenten, tokens, icons. |
 | `### Changed` | Wijzigingen in bestaand gedrag die **niet** breaking zijn. |
-| `### Breaking` | Breaking changes: renames, verwijderde/gewijzigde API, gewijzigde import-paden. Maak prominent — het is het major-/SemVer-signaal. |
+| `### Breaking` | Breaking changes: renames, verwijderde/gewijzigde API, gewijzigde import-paden. Direct onder Highlights, nooit erboven; is hij belangrijk, herhaal hem dan als bullet in Highlights. Onder 1.0 geeft hij een minor release (zie de hoofd-`CLAUDE.md`). |
 | `### Fixed` | Bugfixes. |
 
 ### Alleen wijzigingen t.o.v. de laatste release

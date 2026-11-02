@@ -12,6 +12,7 @@ here; consult the commit history if you need that level of detail.
 ### Highlights
 
 - **`nldd-slider`, improved.** A click on its icons or Shift with an arrow key steps the value a tenth of the range, and the chosen part of the histogram now stands out in every theme. See Added and Changed.
+- **7 accessibility fixes,** most from two audit rounds: `focus()` that works right after a component is added, a field that says why it is red, a focused card that comes fully into view, lists a screen reader can count, a heading that stays when a title bar collapses, a link that keeps its underline on focus, and a slider histogram whose chosen part stands out. See Added, Changed and Fixed.
 
 ### Added
 
