@@ -103,7 +103,7 @@ export const inlineDialogStyles = css`
 		text-align: center;
 		color: var(--semantics-content-color);
 		font: var(--_inline-dialog-text-font);
-		text-wrap: pretty;
+		text-wrap: balance;
 	}
 
 	.inline-dialog__text:focus-visible {
@@ -116,12 +116,13 @@ export const inlineDialogStyles = css`
 		text-align: center;
 		color: var(--semantics-content-color);
 		font: var(--_inline-dialog-supporting-text-font);
-		text-wrap: pretty;
+		text-wrap: balance;
 	}
 
 	.inline-dialog--left-aligned .inline-dialog__text,
 	.inline-dialog--left-aligned .inline-dialog__supporting-text {
 		text-align: left;
+		text-wrap: pretty;
 	}
 
 	.inline-dialog__content {
