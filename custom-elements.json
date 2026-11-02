@@ -22228,6 +22228,24 @@
       "path": "src/components/inputs/text-editor/text-editor.markdown.ts",
       "declarations": [
         {
+          "kind": "function",
+          "name": "prefixLength",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The length of the list and quote markers a line starts with, which the\nhanging indent of the line counts in mono advances."
+        },
+        {
           "kind": "variable",
           "name": "markdownEditing",
           "type": {
@@ -22238,6 +22256,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "prefixLength",
+          "declaration": {
+            "name": "prefixLength",
+            "module": "src/components/inputs/text-editor/text-editor.markdown.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "markdownEditing",
@@ -24212,7 +24238,7 @@
               "expandedType": {
                 "text": "'hidden' | 'visible'"
               },
-              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left; with the caret anywhere in it, its `>` marks show instead, in the same place. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
+              "description": "'visible' (default): every formatting mark stays in view, dimmed, a bullet as the character you typed (`-`, `*` or `+`). 'hidden': the marks of bold, italic, strikethrough, inline code, links and the `#` of a heading are hidden and come back where the caret or the selection touches that construct, so the text reads closer to the result while what you edit is still the markdown. A bullet reads as a dot, and shows its character on the line the caret is on. A quote reads as a line on the left per level, as in nldd-rich-text, with the spaces after a `>` beyond the first hidden; with the caret anywhere in it, its `>` marks and spaces show instead. A `---` line reads as a divider until the caret is on it, and a code block loses its closing ``` line until the caret is in it, since its own tint and edge already say what it is. Its opening line stays as the head of the block, with only the backticks hidden: the language as a label on the left, the copy button on the right. The numbers of a numbered list stay, in the color of the text: they are content. Read-only and disabled hide every mark, which makes a clean read view. The value is plain markdown either way."
             },
             {
               "name": "annotatable",
