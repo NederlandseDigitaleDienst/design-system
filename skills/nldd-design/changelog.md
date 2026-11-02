@@ -33,6 +33,7 @@ here; consult the commit history if you need that level of detail.
 ### Changed
 
 - **The actions of a centered `nldd-inline-dialog` are at most 360px wide.** They took the full width of the dialog, up to 480px, which made a single button in an empty state weigh heavily. They still stack, the same way every time; the text keeps its 480px. Left-aligned, they stay in a row.
+- **The buttons of an `nldd-file-field` with `variant="area"` keep their own width.** "Wijzigen" and "Wis selectie" sat in a row of up to 320px and stretched to fill it. They now sit side by side in the middle, as wide as their labels.
 - **`nldd-modal-dialog` is narrower:** its content is at most 360px wide, so the dialog with its padding is 392px on sm and 408px from md up, where it was 480px. Its actions fill the content.
 - **`nldd-link` keeps its underline when it has focus.** It dropped the underline under the focus ring, while a link in `nldd-rich-text` or `nldd-text` kept it. The underline is what says it is a link, so now every link keeps it.
 - **Centered text in `nldd-inline-dialog` is balanced.** The text and supporting text break into lines of about equal length, so a short last line no longer sits under a long first one. Left-aligned text keeps its usual line breaks.

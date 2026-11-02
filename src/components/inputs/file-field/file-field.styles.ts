@@ -42,7 +42,6 @@ export const fileFieldStyles = css`
 		--_file-field-area-gap: var(--primitives-space-2);
 		--_file-field-area-icon-size: var(--primitives-space-40);
 		--_file-field-area-actions-padding-top: var(--primitives-space-16);
-		--_file-field-area-actions-max-width: var(--primitives-area-320);
 		--_file-field-accepted-types-color: var(--semantics-content-secondary-color);
 		--_file-field-accepted-types-font: var(--primitives-font-body-sm-regular-tight);
 
@@ -441,8 +440,9 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field--area .file-field__actions {
-		width: 100%;
-		max-width: var(--_file-field-area-actions-max-width);
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--primitives-space-8);
 		padding-top: calc(var(--_file-field-area-actions-padding-top) - var(--_file-field-area-gap));
 		padding-right: var(--primitives-space-0);
 	}

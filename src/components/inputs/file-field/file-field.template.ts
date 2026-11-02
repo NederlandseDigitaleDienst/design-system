@@ -2,7 +2,6 @@ import { html, nothing, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import type { NLDDFileField } from './file-field.js';
 import '../../actions/button/button.js';
-import '../../actions/button-group/button-group.js';
 import '../../actions/icon-button/icon-button.js';
 import '../../content/icon/icon.js';
 import '../../content/tooltip/tooltip.js';
@@ -218,28 +217,25 @@ function renderChosen(component: NLDDFileField): TemplateResult {
 				<span class="file-field__value">${renderStack(nameVariants)}</span>
 				${area ? html`
 					<div class="file-field__actions">
-						<nldd-button-group
+						<nldd-button
+							appearance="neutral-tinted"
 							size=${component.size}
-							width="full"
-						>
-							<nldd-button
-								appearance="neutral-tinted"
-								text=${component._t('components.file-field.to-change-action')}
-								popup-type=${component.directory ? 'menu' : nothing}
-								?expandable=${component.directory}
-								?expanded=${component._menuOpen}
-								accessible-label=${component._changeAccessibleLabel() || nothing}
-								?disabled=${component.disabled}
-								@click=${(e: Event) => component._handleChoose(e)}
-							></nldd-button>
-							<nldd-button
-								appearance="neutral-base"
-								text=${component._t('components.file-field.clear-action')}
-								accessible-label=${component._clearAccessibleLabel()}
-								?disabled=${component.disabled}
-								@click=${component._handleClear}
-							></nldd-button>
-						</nldd-button-group>
+							text=${component._t('components.file-field.to-change-action')}
+							popup-type=${component.directory ? 'menu' : nothing}
+							?expandable=${component.directory}
+							?expanded=${component._menuOpen}
+							accessible-label=${component._changeAccessibleLabel() || nothing}
+							?disabled=${component.disabled}
+							@click=${(e: Event) => component._handleChoose(e)}
+						></nldd-button>
+						<nldd-button
+							appearance="neutral-base"
+							size=${component.size}
+							text=${component._t('components.file-field.clear-action')}
+							accessible-label=${component._clearAccessibleLabel()}
+							?disabled=${component.disabled}
+							@click=${component._handleClear}
+						></nldd-button>
 					</div>
 				` : html`
 					<div class="file-field__actions">
