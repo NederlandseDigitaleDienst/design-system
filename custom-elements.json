@@ -7729,7 +7729,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Field label text. Omit for no-label layout.",
+              "description": "Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers.",
               "fieldName": "label"
             },
             {
@@ -7738,7 +7738,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Short supporting text below the label. Same typography as optional badge.",
+              "description": "Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax.",
               "fieldName": "supportingLabel"
             },
             {
@@ -47867,6 +47867,24 @@
         },
         {
           "kind": "function",
+          "name": "stripBold",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The text of `**bold**` markdown without its markers, for an accessible name."
+        },
+        {
+          "kind": "function",
           "name": "renderQueryMark",
           "return": {
             "type": {
@@ -47903,6 +47921,14 @@
           "name": "renderBold",
           "declaration": {
             "name": "renderBold",
+            "module": "src/utilities/render-marked.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "stripBold",
+          "declaration": {
+            "name": "stripBold",
             "module": "src/utilities/render-marked.ts"
           }
         },

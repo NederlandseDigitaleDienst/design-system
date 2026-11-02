@@ -921,8 +921,8 @@ A field around one input: its label, supporting label, optional badge, validatio
 | Attribute | Type | Description |
 | --- | --- | --- |
 | `label-alignment` | `string` | 'top' (default) \| 'right' \| 'left'. A value of its own always wins over the inherited form-label-alignment. |
-| `label` | `string` | Field label text. Omit for no-label layout. |
-| `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. |
+| `label` | `string` | Field label text. Omit for no-label layout. Supports **bold** markdown syntax, for the word to type in a confirmation; the accessible name of the control takes the text without the markers. |
+| `supporting-label` | `string` | Short supporting text below the label. Same typography as optional badge. Supports **bold** markdown syntax. |
 | `optional` | `boolean` | Shows an optional badge next to the label. |
 | `optional-label` | `string` | Text for the optional badge. Defaults to 'Optioneel'. |
 | `form-label-alignment` | `string` | Set by a wrapping nldd-form as a fallback. Do not set it yourself in consumer code. |
