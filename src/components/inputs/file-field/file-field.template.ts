@@ -101,7 +101,7 @@ function renderChoices(component: NLDDFileField): TemplateResult {
 	const files = component._t('components.file-field.to-choose-files-action');
 	const folder = component._t('components.file-field.to-choose-folder-action');
 	return html`
-		<nldd-button-group class="file-field__choices" width="full">
+		<div class="file-field__choices">
 			<nldd-button
 				appearance="neutral-tinted"
 				size=${component.size}
@@ -120,7 +120,7 @@ function renderChoices(component: NLDDFileField): TemplateResult {
 				?disabled=${component.disabled}
 				@click=${component._chooseFolder}
 			></nldd-button>
-		</nldd-button-group>
+		</div>
 	`;
 }
 

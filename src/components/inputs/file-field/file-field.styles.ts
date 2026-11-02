@@ -305,7 +305,11 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__choices {
-		max-width: 360px;
+		display: flex;
+		margin-bottom: var(--primitives-space-8);
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--primitives-space-8);
 	}
 
 	.file-field__name {
