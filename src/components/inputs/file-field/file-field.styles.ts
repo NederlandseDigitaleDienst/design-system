@@ -41,7 +41,11 @@ export const fileFieldStyles = css`
 		--_file-field-area-padding: var(--primitives-space-16);
 		--_file-field-area-gap: var(--primitives-space-2);
 		--_file-field-area-icon-size: var(--primitives-space-40);
-		--_file-field-area-actions-padding-top: var(--primitives-space-12);
+		--_file-field-area-actions-padding-top: var(--primitives-space-8);
+		--_file-field-area-buttons-gap: var(--primitives-space-8);
+		--_file-field-area-choices-margin-top: var(--primitives-space-4);
+		--_file-field-area-choices-margin-bottom: var(--primitives-space-8);
+		--_file-field-area-choices-hint-color: var(--semantics-content-color);
 		--_file-field-accepted-types-color: var(--semantics-content-secondary-color);
 		--_file-field-accepted-types-font: var(--primitives-font-body-sm-regular-tight);
 
@@ -293,7 +297,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__browse-surface .file-field__hint {
-		color: var(--semantics-content-color);
+		color: var(--_file-field-area-choices-hint-color);
 	}
 
 	.file-field__value {
@@ -309,11 +313,11 @@ export const fileFieldStyles = css`
 
 	.file-field__choices {
 		display: flex;
-		margin-top: var(--primitives-space-10);
-		margin-bottom: var(--primitives-space-8);
+		margin-top: var(--_file-field-area-choices-margin-top);
+		margin-bottom: var(--_file-field-area-choices-margin-bottom);
 		flex-wrap: wrap;
 		justify-content: center;
-		gap: var(--primitives-space-8);
+		gap: var(--_file-field-area-buttons-gap);
 	}
 
 	.file-field__name {
@@ -447,8 +451,8 @@ export const fileFieldStyles = css`
 	.file-field--area .file-field__actions {
 		flex-wrap: wrap;
 		justify-content: center;
-		gap: var(--primitives-space-8);
-		padding-top: calc(var(--_file-field-area-actions-padding-top) - var(--_file-field-area-gap));
+		gap: var(--_file-field-area-buttons-gap);
+		padding-top: var(--_file-field-area-actions-padding-top);
 		padding-right: var(--primitives-space-0);
 	}
 
