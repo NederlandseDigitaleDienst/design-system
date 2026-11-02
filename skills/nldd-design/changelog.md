@@ -15,6 +15,10 @@ the type of conventional-commit determines the release. Conventional types
 `chore`, `docs`, `ci`, `style`, `test`, `build` are intentionally omitted
 here; consult the commit history if you need that level of detail.
 
+### Highlights
+
+- **`nldd-slider`, improved.** A click on its icons steps the value a tenth of the range, as the speakers beside a volume slider in macOS do, and the chosen part of the histogram now stands out in every theme. See Added and Changed.
+
 ### Added
 
 - **Row headers in `nldd-table`.** Put `row-header` on the cell that says what a row is about, and the row gives it `role="rowheader"` instead of `role="cell"`, so a screen reader names the row when it reads any other cell in it, as with `<th scope="row">`. It works on `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` and `nldd-description-cell`, and it changes the semantics only: the cell variant still decides how a row header looks. In the header row a cell stays a column header, `row-header` or not.
