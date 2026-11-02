@@ -31,6 +31,7 @@ import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { switchStyles } from './switch.styles.js';
 import { switchTemplate } from './switch.template.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type SwitchSize = 'xs' | 'sm';
 
@@ -196,6 +197,7 @@ export class NLDDSwitch extends DescribedBy(FormAssociated(LitElement)) {
 	 * call `switchEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLInputElement>('.switch__input')?.focus(options);
 	}
 

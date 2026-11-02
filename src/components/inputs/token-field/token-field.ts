@@ -49,6 +49,7 @@ import '../../actions/menu/menu.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 /** Trailing control rendered on each token. */
 export type TokenFieldControl = 'dismiss' | 'menu';
@@ -339,6 +340,7 @@ export class NLDDTokenField extends DescribedBy(FormAssociated(LitElement)) {
 	/** Programmatic focus goes to the inner input, or — when it is hidden (all values
 	 *  in, no custom, no options left) — to the token holding the roving tabindex. */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		if (this._input) this._input.focus(options);
 		else this._focusTokenAt(this._rovingIndex);
 	}

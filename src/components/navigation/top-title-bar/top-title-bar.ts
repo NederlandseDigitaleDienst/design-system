@@ -24,6 +24,10 @@
  * twice. Sighted readers see one at a time, and this makes that true for
  * everyone. Anchor at the heading, then, and not at some other element that
  * happens to sit at the right height: the bar hands its title over to it.
+ * An `nldd-title` anchor without a `heading-level` gets the bar's own, so the
+ * title it takes over is a heading of the same level. An anchor that is no
+ * heading at all, and holds none, would leave the page without one: the bar
+ * then keeps its own title for assistive technology and warns in development.
  *
  * The title stays on one line and is cut off with an ellipsis when it does not
  * fit, which on a narrow screen or at 400% zoom is soon. The bar is therefore
@@ -122,6 +126,9 @@ export class NLDDTopTitleBar extends LitElement {
 		} else if (changed.has('text')) {
 			this._updateAutoCompact();
 		}
+		if (changed.has('_anchorElement') || (changed.has('headingLevel') && this._gaveHeadingLevel)) {
+			this._syncAnchorHeading();
+		}
 	}
 
 	// Without a scroll anchor the bar can't toggle compact state on scroll,
@@ -154,6 +161,40 @@ export class NLDDTopTitleBar extends LitElement {
 	get _hasAnchor(): boolean {
 		return this._anchorElement !== null;
 	}
+
+	/** Whether the anchor takes over the title as a heading, so the bar's own
+	 *  copy can go. See the class description. */
+	get _hidesTitle(): boolean {
+		const anchor = this._anchorElement;
+		if (!anchor) return false;
+		const heading = 'h1, h2, h3, h4, h5, h6, [role="heading"]';
+		return anchor.localName === 'nldd-title'
+			|| anchor.matches(heading)
+			|| anchor.querySelector(heading) !== null;
+	}
+
+	/** Hands the bar's heading level to an nldd-title anchor that has none, and
+	 *  warns about an anchor that is no heading. */
+	private _syncAnchorHeading(): void {
+		const anchor = this._anchorElement;
+		if (!anchor) return;
+		if (anchor.localName === 'nldd-title') {
+			if (!anchor.hasAttribute('heading-level') || this._gaveHeadingLevel) {
+				anchor.setAttribute('heading-level', String(this.headingLevel));
+				this._gaveHeadingLevel = true;
+			}
+			return;
+		}
+		if (this._hidesTitle || !import.meta.env?.DEV) return;
+		console.warn(
+			`[nldd-top-title-bar] collapse-anchor="${this.collapseAnchor}" points at <${anchor.localName}>, which is no heading `
+			+ 'and holds none. The bar keeps its own title as the heading, so the page has one, but a screen reader '
+			+ 'now finds the title twice. Point the anchor at the nldd-title that starts the content.',
+			anchor,
+		);
+	}
+
+	private _gaveHeadingLevel = false;
 
 	private _connectAnchor(): void {
 		if (!this.collapseAnchor) return;
@@ -247,6 +288,7 @@ export class NLDDTopTitleBar extends LitElement {
 	}
 
 	private _teardownAnchor(): void {
+		this._gaveHeadingLevel = false;
 		this._activeScrollTarget?.removeEventListener('scroll', this._boundOnScroll);
 		this._activeScrollTarget = null;
 		this._anchorElement = null;

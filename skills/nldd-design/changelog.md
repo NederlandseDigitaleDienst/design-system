@@ -24,6 +24,7 @@ here; consult the commit history if you need that level of detail.
 - **Row headers in `nldd-table`.** Put `row-header` on the cell that says what a row is about, and the row gives it `role="rowheader"` instead of `role="cell"`, so a screen reader names the row when it reads any other cell in it, as with `<th scope="row">`. It works on `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` and `nldd-description-cell`, and it changes the semantics only: the cell variant still decides how a row header looks. In the header row a cell stays a column header, `row-header` or not.
 - **A larger step on `nldd-slider`, by click or by key.** A click on `start-icon` moves the value a tenth of the range down, on `end-icon` a tenth up, and at least one `step`: the jump Page Up and Page Down take. Shift with an arrow key now takes it too, on the thumb with focus, also in a range; a Mac keyboard has no Page Up. The icons stay out of the tab order, and in a range they only explain the ends.
 - **Icon alias `no-volume`** for `speaker`, the speaker without waves, for the quiet end of a volume slider.
+- **A field never turns red without a reason under it.** When a control is `invalid` and no item of its `nldd-validation-list` fails, the list says what is wrong itself: an invalid e-mail or web address, an empty required field, too short, too long, too low or too high, as the browser reports it, and "Controleer wat je hebt ingevuld." when it cannot tell. The line is read out with the field like any other item, and every text can be translated. An item of your own that fails always wins.
 
 ### Changed
 
@@ -31,10 +32,15 @@ here; consult the commit history if you need that level of detail.
 - **Centered text in `nldd-inline-dialog` is balanced.** The text and supporting text break into lines of about equal length, so a short last line no longer sits under a long first one. Left-aligned text keeps its usual line breaks.
 - **The histogram of `nldd-slider` reads more clearly.** The bars within the chosen value or range take the color of the fill, rather than a pale tint of it, so they stand out from the other bars in every theme, light and dark. The bars now stop 2px above the track, so a bar never runs into it. The histogram now spans the part of the track the thumb travels, half a thumb in from each end, so every bar stands right above the values it counts and no bar sticks out beside a thumb at the minimum or maximum.
 - **`nldd-title-cell` is `size="6"` in a table.** In an `nldd-table-row` a title cell without a `size` of its own is as large as the other cells, in bold, rather than the larger size 5 it has in a list. A `size` in the markup still wins, 5 included. Outside a table nothing changes, but `size` is now unset by default rather than 5: the cell looks the same, while the `size` property reads `undefined` and there is no `size="5"` on the element.
+- **`nldd-collection`, `nldd-menu-bar` and the legal bar of `nldd-page-footer` are lists for assistive technology.** A screen reader now says how many items or links there are. The items get `role="listitem"`, unless they have a role of their own: an `nldd-card` keeps its article inside. A collection that scrolls sideways is now a named list instead of a region.
+- **An `nldd-title` that a `nldd-top-title-bar` points at with `collapse-anchor` gets the bar's heading level** when it has none. An anchor that is no heading leaves the bar's own title in place as the heading, so a page never ends up without one, and development warns about it.
+- **`nldd-list-item` warns in development when `accessible-label` does not start with the row's visible title**, so voice control can find the row by the words on screen.
 
 ### Fixed
 
 - **Dragging on `nldd-task-board` works on an iPhone.** After holding an item, the first move scrolled the board instead, and the drag broke off. iOS decides whether a touch may scroll as it starts, and the board now says so from the start.
+- **`focus()` right after a component is put in the page works.** A text field, button, checkbox and every other component that hands focus to an element inside it did nothing before its first render, so a site that adds a field and focuses it left focus where it was. The call now waits for that render, unless focus has moved on in the meantime.
+- **A card in an `nldd-collection` that scrolls sideways comes fully into view when something in it takes focus.** The browser only scrolled the focused link in, so a card could stay half outside the row with its focus ring cut off.
 
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
 

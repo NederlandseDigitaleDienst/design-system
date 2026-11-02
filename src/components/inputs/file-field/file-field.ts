@@ -92,6 +92,7 @@ import {
 import { textMeasurer, truncateMiddle } from './file-field.truncate.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 /** How long the message of a refused drop stays in the field. */
 const REJECTION_MS = 4000;
@@ -515,6 +516,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 * sees as the control.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._chooseButton()?.focus(options);
 	}
 

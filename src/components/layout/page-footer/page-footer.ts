@@ -36,6 +36,7 @@ import {
 } from './page-footer.template.js';
 import { nlddPageFooterTranslations, type NLDDPageFooterTranslations } from './page-footer.i18n.js';
 import { translate } from '../../../utilities/translations.js';
+import { markListItems } from '../../../utilities/list-items.js';
 
 
 // # nldd-page-footer-legal-bar-item
@@ -116,6 +117,7 @@ export class NLDDPageFooterLegalBar extends LitElement {
 
 	_onSlotChange = (e: Event) => {
 		const slot = e.target as HTMLSlotElement;
+		markListItems(slot.assignedElements());
 		const hasContent = slot.assignedElements().length > 0;
 		const name = slot.getAttribute('name') ?? '';
 		if (name === 'start') this._hasStart = hasContent;

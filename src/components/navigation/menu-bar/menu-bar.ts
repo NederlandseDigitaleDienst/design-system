@@ -24,6 +24,7 @@ import '../menu-bar-item/menu-bar-item.js';
 import type { NLDDMenuBarItem } from '../menu-bar-item/menu-bar-item.js';
 import '../../actions/menu/menu.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { markListItems } from '../../../utilities/list-items.js';
 
 /**
  * Minimal typed interface for nldd-menu.
@@ -113,6 +114,7 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 	}
 
 	private _onSlotChange = (): void => {
+		markListItems(this._defaultSlot?.assignedElements({ flatten: true }) ?? []);
 		this._syncCompactAttribute();
 		this._scheduleOverflowUpdate();
 		this._syncEmpty();
@@ -146,6 +148,8 @@ export class NLDDMenuBar extends withTranslations(LitElement, nlddMenuBarTransla
 			this._resizeObserver.observe(this);
 			if (this._defaultSlot) {
 				this._defaultSlot.addEventListener('slotchange', this._onSlotChange);
+				// The first slotchange came before this listener did.
+				markListItems(this._defaultSlot.assignedElements({ flatten: true }));
 			}
 			this._scheduleOverflowUpdate();
 		});

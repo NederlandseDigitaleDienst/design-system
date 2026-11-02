@@ -35,6 +35,7 @@ import { nlddTimePickerTranslations, type NLDDTimePickerTranslations } from './t
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 const LAST_MINUTE_OF_DAY = 23 * 60 + 59;
 
@@ -282,6 +283,7 @@ export class NLDDTimePicker extends DescribedBy(LitElement) {
 	 * the arrow keys dead until the user tabbed into the selection themselves.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const hour = this.shadowRoot?.querySelector<HTMLElement>('.time-picker__value');
 		if (hour) hour.focus(options);
 		else super.focus(options);

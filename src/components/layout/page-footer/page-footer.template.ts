@@ -51,6 +51,7 @@ export function pageFooterLegalBarTemplate(component: NLDDPageFooterLegalBar): T
 			?hidden=${!component._hasStart && !component._hasEnd}
 		>
 			<div class="page-footer__legal-bar-start"
+				role="list"
 				?hidden=${!component._hasStart}
 			>
 				<slot
@@ -59,6 +60,7 @@ export function pageFooterLegalBarTemplate(component: NLDDPageFooterLegalBar): T
 				></slot>
 			</div>
 			<div class="page-footer__legal-bar-end"
+				role="list"
 				?hidden=${!component._hasEnd}
 			>
 				<slot

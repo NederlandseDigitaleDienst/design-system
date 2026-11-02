@@ -43,6 +43,7 @@ import './../../actions/icon-button/icon-button.js';
 import './../../actions/button/button.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { reflectNonDefault } from '../../../utilities/reflect-non-default.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 /**
  * All arithmetic runs on UTC-midnight Dates and ISO strings. UTC keeps a DST
@@ -347,6 +348,7 @@ export class NLDDDatePicker extends DescribedBy(withTranslations<NLDDDatePickerT
 	 * until the user has tabbed into the grid themselves.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const cell = this._focusedCell();
 		if (cell) cell.focus(options);
 		else super.focus(options);

@@ -79,6 +79,7 @@ import '../../content/icon/icon.js';
 import { submitOnEnter } from '../../../utilities/implicit-submission.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ComboBoxSize = 'sm' | 'md';
 
@@ -706,6 +707,7 @@ export class NLDDComboBox extends DescribedBy(FormAssociated(LitElement)) {
 	 * `comboBoxEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._input?.focus(options);
 	}
 

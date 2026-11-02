@@ -22,6 +22,7 @@ import { switchFieldStyles } from './switch-field.styles.js';
 import { switchFieldTemplate } from './switch-field.template.js';
 import type { NLDDSwitch } from '../switch/switch.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 @customElement('nldd-switch-field')
 export class NLDDSwitchField extends DescribedBy(LitElement) {
@@ -89,6 +90,7 @@ export class NLDDSwitchField extends DescribedBy(LitElement) {
 	 * reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<NLDDSwitch>('nldd-switch')?.focus(options);
 	}
 

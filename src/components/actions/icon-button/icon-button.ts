@@ -56,6 +56,7 @@ import { PopupAnchorController } from '../../../utilities/popup-anchor-controlle
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
 import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';
 export type Appearance =
@@ -297,6 +298,7 @@ export class NLDDIconButton extends withTranslations(LitElement, nlddIconButtonT
 	 * consumers can call `iconButtonEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLElement>('.icon-button')?.focus(options);
 	}
 

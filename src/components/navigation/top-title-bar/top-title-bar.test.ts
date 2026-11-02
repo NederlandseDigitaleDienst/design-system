@@ -260,6 +260,41 @@ describe('nldd-top-title-bar – is-compact', () => {
 		cleanup(container);
 	});
 
+	it('gives an nldd-title anchor without a heading-level its own level', async () => {
+		const container = await fixture<HTMLElement>(`
+			<div>
+				<nldd-top-title-bar text="Aanvraag A-1042" heading-level="2" collapse-anchor="title"></nldd-top-title-bar>
+				<nldd-title id="title" text="Aanvraag A-1042"></nldd-title>
+				<nldd-title id="other" text="Dossier D-318" heading-level="3"></nldd-title>
+			</div>
+		`);
+		el = container.querySelector('nldd-top-title-bar')!;
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		expect(container.querySelector('#title')!.getAttribute('heading-level')).toBe('2');
+		const group = el.shadowRoot!.querySelector('.top-title-bar__title-group');
+		expect(group!.getAttribute('aria-hidden')).toBe('true');
+		cleanup(container);
+	});
+
+	it('keeps its own title and warns when the anchor is no heading', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const container = await fixture<HTMLElement>(`
+			<div>
+				<nldd-top-title-bar text="Aanvraag A-1042" collapse-anchor="intro"></nldd-top-title-bar>
+				<div id="intro">Aanvraag A-1042</div>
+			</div>
+		`);
+		el = container.querySelector('nldd-top-title-bar')!;
+		await waitForUpdate(el);
+		await waitForUpdate(el);
+		const group = el.shadowRoot!.querySelector('.top-title-bar__title-group');
+		expect(group!.hasAttribute('aria-hidden')).toBe(false);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('no heading'))).toBe(true);
+		warn.mockRestore();
+		cleanup(container);
+	});
+
 	it('keeps its title exposed without an anchor, because nothing else carries it', async () => {
 		el = await fixture<NLDDTopTitleBar>('<nldd-top-title-bar text="Titel"></nldd-top-title-bar>');
 		await waitForUpdate(el);

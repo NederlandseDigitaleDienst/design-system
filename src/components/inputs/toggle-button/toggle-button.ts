@@ -53,6 +53,7 @@ import './../../content/icon/icon.js';
 import type { NLDDTooltip } from '../../content/tooltip/tooltip.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController, shortcutLabel } from '../../../utilities/shortcut.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ToggleButtonType = 'button' | 'checkbox' | 'radio';
 export type ToggleButtonAppearance = 'neutral-tinted' | 'neutral-base' | 'neutral-transparent' | 'accent-transparent';
@@ -353,6 +354,7 @@ export class NLDDToggleButton extends DescribedBy(FormAssociated(LitElement)) {
 	 * reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		// In radio mode this element is the control, and it is focusable itself.
 		if (this.type === 'radio') {
 			super.focus(options);

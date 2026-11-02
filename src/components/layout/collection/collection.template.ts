@@ -13,8 +13,8 @@ export function collectionTemplate(component: NLDDCollection): TemplateResult {
 	return html`
 		<div class="collection__scroll-area">
 			<div class="collection__items"
+				role="list"
 				tabindex=${ifDefined(scrollable ? '0' : undefined)}
-				role=${ifDefined(scrollable ? 'region' : undefined)}
 				aria-label=${ifDefined(scrollable ? component._t('components.collection.region-label') : undefined)}
 			>
 				<slot @slotchange=${(e: Event) => component._onSlotChange(e)}></slot>

@@ -79,6 +79,7 @@ import { translate } from '../../../utilities/translations.js';
 import { nlddSliderTranslations, type NLDDSliderTranslations } from './slider.i18n.js';
 import { sliderStyles } from './slider.styles.js';
 import { sliderTemplate } from './slider.template.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 type Size = 'xs' | 'sm' | 'md';
 type Thumb = 'value' | 'start' | 'end';
@@ -271,6 +272,7 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 
 	/** Moves focus to the thumb (the start one of a range). */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._inputs?.[0]?.focus(options);
 	}
 

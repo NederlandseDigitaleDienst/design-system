@@ -18,11 +18,23 @@
  * There are no checkmarks. The control already shows a validation icon of its
  * own, and repeating that per line says the same thing three times.
  *
+ * A field can be `invalid` while no item fails: the browser rejects
+ * `naam@` as an e-mail address, and a `match="@"` item passes it. The list
+ * then says what it can itself, so a field never turns red without a reason
+ * under it. It reads the control's `validity` and names what is wrong (an
+ * invalid e-mail or web address, an empty required field, too short, too long,
+ * too low, too high), and says "Controleer wat je hebt ingevuld." when it
+ * cannot tell. An item of your own that fails always wins over this line.
+ * The line is an nldd-validation-item the list adds to its own children while
+ * it is needed, so nldd-form-field reads it to the control as it does every
+ * other item: a line in the list's shadow root would be out of its reach.
+ *
  * @element nldd-validation-list
  *
  * @attr {string} for - Id of the control this list is about. Not needed inside an nldd-form-field, which hands its own control over.
  * @attr {boolean} hint - Show every item before there is a verdict, as the requirements of the field. Overridable per item.
  * @attr {boolean} judging - Drop the hints, because this field has been judged. Turned on by the list itself once its control is `invalid`, and settable by hand. What turns red follows `invalid`, not this.
+ * @attr {object} translations - Override translation keys (the line the list shows when the field is invalid and no item fails); unset keys fall back to Dutch.
  *
  * @slot - nldd-validation-item elements.
  *
@@ -63,12 +75,17 @@ import { LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { validationListStyles, validationItemStyles } from './validation-list.styles.js';
 import { validationListTemplate, validationItemTemplate } from './validation-list.template.js';
+import { nlddValidationListTranslations } from './validation-list.i18n.js';
+import type { NLDDValidationListTranslations } from './validation-list.i18n.js';
+import { translate } from '../../../utilities/translations.js';
 
 /** A control that can report its own validity to the form. */
 interface ValidatableControl extends Element {
 	internals?: ElementInternals;
+	validity?: ValidityState;
 	setCustomValidity?: (message: string) => void;
 	value?: unknown;
+	type?: string;
 }
 
 
@@ -206,6 +223,13 @@ export class NLDDValidationList extends LitElement {
 	@property({ attribute: false })
 	value?: string;
 
+	@property({ type: Object })
+	translations: Partial<NLDDValidationListTranslations> = {};
+
+	_t(key: keyof NLDDValidationListTranslations, vars?: Record<string, string | number>): string {
+		return translate(this.translations, nlddValidationListTranslations, key, vars);
+	}
+
 	@state()
 	private _resolved: Element | null = null;
 
@@ -255,8 +279,11 @@ export class NLDDValidationList extends LitElement {
 
 	private get _items(): NLDDValidationItem[] {
 		return Array.from(this.children)
-			.filter((el): el is NLDDValidationItem => el instanceof NLDDValidationItem);
+			.filter((el): el is NLDDValidationItem => el instanceof NLDDValidationItem && el !== this._fallbackItem);
 	}
+
+	/** The item the list adds itself, see the note on the fallback line above. */
+	private _fallbackItem: NLDDValidationItem | null = null;
 
 	/**
 	 * Finds the control and starts listening to it.
@@ -358,8 +385,50 @@ export class NLDDValidationList extends LitElement {
 			}
 		}
 
-		this.classList.toggle('has-items', anyVisible);
+		const fallback = invalid && !items.some((item) => item.unmet) ? this._fallbackText() : '';
+		this._syncFallbackItem(fallback);
+		this.classList.toggle('has-items', anyVisible || Boolean(fallback));
 		this._reportValidity(anyRuleFails, messages);
+	}
+
+	/** Adds, updates or removes the item that carries the fallback line. */
+	private _syncFallbackItem(text: string): void {
+		if (!text) {
+			this._fallbackItem?.remove();
+			this._fallbackItem = null;
+			return;
+		}
+		if (!this._fallbackItem) {
+			this._fallbackItem = document.createElement('nldd-validation-item');
+			this._fallbackItem.toggleAttribute('data-fallback', true);
+		}
+		if (this._fallbackItem.textContent !== text) this._fallbackItem.textContent = text;
+		this._fallbackItem.unmet = true;
+		this._fallbackItem.visible = true;
+		if (this._fallbackItem.parentElement !== this) this.append(this._fallbackItem);
+	}
+
+	/**
+	 * What the list can say about an invalid field when none of its items does.
+	 *
+	 * The platform's own verdict, read from `validity`. Its rule of its own, a
+	 * failing `match` and the like, never reaches here: that item would be unmet.
+	 */
+	private _fallbackText(): string {
+		const control = this._resolved as ValidatableControl | null;
+		const validity = control?.internals?.validity ?? control?.validity;
+		const attr = (name: string) => control?.getAttribute(name) ?? '';
+		if (validity?.typeMismatch) {
+			const type = control?.type ?? attr('type');
+			if (type === 'email') return this._t('components.validation-list.email-text');
+			if (type === 'url') return this._t('components.validation-list.url-text');
+		}
+		if (validity?.valueMissing) return this._t('components.validation-list.value-missing-text');
+		if (validity?.tooShort) return this._t('components.validation-list.too-short-text', { minlength: attr('minlength') });
+		if (validity?.tooLong) return this._t('components.validation-list.too-long-text', { maxlength: attr('maxlength') });
+		if (validity?.rangeUnderflow) return this._t('components.validation-list.range-underflow-text', { min: attr('min') });
+		if (validity?.rangeOverflow) return this._t('components.validation-list.range-overflow-text', { max: attr('max') });
+		return this._t('components.validation-list.fallback-text');
 	}
 
 	/**

@@ -54,6 +54,7 @@ import './../../content/icon/icon.js';
 import './../../status-and-feedback/activity-indicator/activity-indicator.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { ShortcutAvailabilityController } from '../../../utilities/shortcut.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 type Appearance =
 	| 'primary'
@@ -350,6 +351,7 @@ export class NLDDButton extends DescribedBy(withTranslations(LitElement, nlddBut
 	 * consumers can call `buttonEl.focus()` without reaching into shadow DOM.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLElement>('.button')?.focus(options);
 	}
 

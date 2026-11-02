@@ -38,6 +38,7 @@ import { menuBarItemStyles } from './menu-bar-item.styles.js';
 import { template } from './menu-bar-item.template.js';
 import '../../content/icon/icon.js';
 import '../../actions/menu/menu.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 /**
  * Minimal typed interface for nldd-menu.
@@ -170,6 +171,7 @@ export class NLDDMenuBarItem extends LitElement {
 	};
 
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		const focusable = this.shadowRoot?.querySelector<HTMLElement>('button, a');
 		focusable?.focus(options);
 	}

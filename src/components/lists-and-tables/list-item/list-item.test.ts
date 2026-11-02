@@ -1491,4 +1491,25 @@ describe('<nldd-list-item> with download', () => {
 		await waitForUpdate(el);
 		expect(warn.mock.calls.some(([message]) => String(message).includes('does nothing with `download`'))).toBe(true);
 	});
+
+	it('warns in development when accessible-label does not start with the row\'s title', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		el = await fixture(`
+			<nldd-list-item href="#" accessible-label="Open de aanvraag">
+				<nldd-title-cell text="Aanvraag A-1042" supporting-text="Dakisolatie"></nldd-title-cell>
+			</nldd-list-item>
+		`);
+		await waitForUpdate(el);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('2.5.3'))).toBe(true);
+		warn.mockClear();
+		cleanup(el);
+		el = await fixture(`
+			<nldd-list-item href="#" accessible-label="Aanvraag A-1042, in behandeling">
+				<nldd-title-cell text="Aanvraag A-1042"></nldd-title-cell>
+			</nldd-list-item>
+		`);
+		await waitForUpdate(el);
+		expect(warn.mock.calls.some(([message]) => String(message).includes('2.5.3'))).toBe(false);
+		warn.mockRestore();
+	});
 });

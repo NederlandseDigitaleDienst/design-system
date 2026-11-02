@@ -164,6 +164,21 @@ describe('nldd-page-footer-legal-bar', () => {
 		if (el) cleanup(el);
 	});
 
+	it('puts its links in a list per side, so a screen reader says how many there are', async () => {
+		el = await fixture(`
+			<nldd-page-footer-legal-bar>
+				<nldd-page-footer-legal-bar-item slot="start" text="Mijn Dienst"></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item slot="end" text="Privacy" href="/privacy/"></nldd-page-footer-legal-bar-item>
+				<nldd-page-footer-legal-bar-item slot="end" text="Toegankelijkheid" href="/toegankelijkheid/"></nldd-page-footer-legal-bar-item>
+			</nldd-page-footer-legal-bar>
+		`);
+		await waitForUpdate(el);
+		const lists = [...el.shadowRoot!.querySelectorAll('nav [role="list"]')];
+		expect(lists.length).toBe(2);
+		const roles = [...el.querySelectorAll('nldd-page-footer-legal-bar-item')].map((item) => item.getAttribute('role'));
+		expect(roles).toEqual(['listitem', 'listitem', 'listitem']);
+	});
+
 	it('renders a nav landmark with the default aria-label', async () => {
 		el = await fixture(`
 			<nldd-page-footer-legal-bar>

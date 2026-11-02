@@ -29,6 +29,7 @@ import './../../actions/icon-button/icon-button.js';
 import './../../content/icon/icon.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type StepperSize = 'xs' | 'sm' | 'md';
 
@@ -181,6 +182,7 @@ export class NLDDStepper extends DescribedBy(FormAssociated(LitElement)) {
 	 * disabled, because the spinbutton drops its tabindex then.
 	 */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLElement>('.stepper')?.focus(options);
 	}
 

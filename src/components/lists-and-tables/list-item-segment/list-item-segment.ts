@@ -8,6 +8,7 @@ import type { NLDDList } from '../list/list.js';
 import { withTranslations } from '../../../utilities/with-translations.js';
 import { downloadLinkHintKey, warnDownloadTarget } from '../../../utilities/link-hint.js';
 import { nlddListItemSegmentTranslations } from './list-item-segment.i18n.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 export type ListItemSegmentWidth = 'fit-content' | 'full';
 
@@ -279,6 +280,7 @@ export class NLDDListItemSegment extends withTranslations(LitElement, nlddListIt
 
 	/** Delegates focus to the inner control so consumers needn't reach into shadow DOM. */
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this._control?.focus(options);
 	}
 

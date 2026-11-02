@@ -59,6 +59,7 @@ import './../../actions/menu/menu.js';
 import type { NLDDMenu } from '../../actions/menu/menu.js';
 import { isPointerMode } from '../../../utilities/input-modality.js';
 import { carryContext } from '../../../utilities/carried-context.js';
+import { deferFocus } from '../../../utilities/defer-focus.js';
 
 // Pointer movement threshold in px before drag mode activates.
 // Distinguishes a click (select) from a drag (reorder).
@@ -146,6 +147,7 @@ export class NLDDDocumentTabBarItem extends LitElement {
 	_navigation = false;
 
 	override focus(options?: FocusOptions): void {
+		if (deferFocus(this, options)) return;
 		this.shadowRoot?.querySelector<HTMLElement>('.document-tab-bar__item-tab')?.focus(options);
 	}
 
