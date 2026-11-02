@@ -27,6 +27,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
+- **`nldd-link` keeps its underline when it has focus.** It dropped the underline under the focus ring, while a link in `nldd-rich-text` or `nldd-text` kept it. The underline is what says it is a link, so now every link keeps it.
 - **Centered text in `nldd-inline-dialog` is balanced.** The text and supporting text break into lines of about equal length, so a short last line no longer sits under a long first one. Left-aligned text keeps its usual line breaks.
 - **The histogram of `nldd-slider` reads more clearly.** The bars within the chosen value or range take the color of the fill, rather than a pale tint of it, so they stand out from the other bars in every theme, light and dark. The bars now stop 2px above the track, so a bar never runs into it. The histogram now spans the part of the track the thumb travels, half a thumb in from each end, so every bar stands right above the values it counts and no bar sticks out beside a thumb at the minimum or maximum.
 - **`nldd-title-cell` is `size="6"` in a table.** In an `nldd-table-row` a title cell without a `size` of its own is as large as the other cells, in bold, rather than the larger size 5 it has in a list. A `size` in the markup still wins, 5 included. Outside a table nothing changes, but `size` is now unset by default rather than 5: the cell looks the same, while the `size` property reads `undefined` and there is no `size="5"` on the element.
