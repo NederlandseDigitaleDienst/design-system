@@ -42946,7 +42946,7 @@
               "expandedType": {
                 "text": "'' | 'center' | 'left'"
               },
-              "description": "Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 320px wide, even where two would fit side by side. Left-aligned, they take the full width of the dialog."
+              "description": "Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 400px wide, even where two would fit side by side. Left-aligned, they take the full width of the dialog."
             }
           ],
           "superclass": {

@@ -30,7 +30,8 @@ here; consult the commit history if you need that level of detail.
 
 ### Changed
 
-- **The actions of a centered `nldd-inline-dialog` are at most 320px wide.** They took the full width of the dialog, up to 480px, which made a single button in an empty state weigh heavily. They still stack, the same way every time; the text keeps its 480px. This holds for `nldd-modal-dialog` too.
+- **The actions of a centered `nldd-inline-dialog` are at most 400px wide.** They took the full width of the dialog, up to 480px, which made a single button in an empty state weigh heavily. They still stack, the same way every time; the text keeps its 480px.
+- **`nldd-modal-dialog` is narrower:** its content is at most 400px wide, the dialog with its padding 432px or 448px, where it was 480px in all. Its actions fill that width.
 - **`nldd-link` keeps its underline when it has focus.** It dropped the underline under the focus ring, while a link in `nldd-rich-text` or `nldd-text` kept it. The underline is what says it is a link, so now every link keeps it.
 - **Centered text in `nldd-inline-dialog` is balanced.** The text and supporting text break into lines of about equal length, so a short last line no longer sits under a long first one. Left-aligned text keeps its usual line breaks.
 - **The histogram of `nldd-slider` reads more clearly.** The bars within the chosen value or range take the color of the fill, rather than a pale tint of it, so they stand out from the other bars in every theme, light and dark. The bars now stop 2px above the track, so a bar never runs into it. The histogram now spans the part of the track the thumb travels, half a thumb in from each end, so every bar stands right above the values it counts and no bar sticks out beside a thumb at the minimum or maximum.
