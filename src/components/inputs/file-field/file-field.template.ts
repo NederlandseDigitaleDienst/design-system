@@ -114,7 +114,7 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 	return html`
 		<button class="file-field__browse-button"
 			type="button"
-			aria-label=${component._chooseAccessibleLabel() || component._chooseLabel()}
+			aria-label=${component._chooseAccessibleLabel()}
 			?disabled=${component.disabled}
 			@click=${component._handleChoose}
 		>${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}<span class="file-field__sentence">${renderStack([

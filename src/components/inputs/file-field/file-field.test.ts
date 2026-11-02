@@ -3,6 +3,7 @@ import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDFileField } from './file-field.js';
 import './file-field.js';
+import axe from 'axe-core';
 
 /** Puts a FileList on the inner input, the way a real pick would, and fires the
  *  change the component listens for. `input.files` is settable from script; only
@@ -59,11 +60,22 @@ describe('nldd-file-field', () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage"></nldd-file-field>');
 		await waitForUpdate(el);
 		expect(browseText(el)).toBe('Bestand kiezen of sleep het hierheen');
-		expect(el.shadowRoot!.querySelector('.file-field__browse-button')!.getAttribute('aria-label')).toBe('Bestand kiezen, Bijlage');
+		expect(el.shadowRoot!.querySelector('.file-field__browse-button')!.getAttribute('aria-label')).toBe('Bestand kiezen of sleep het hierheen, Bijlage');
 		expect(el.shadowRoot!.querySelector('nldd-icon-button')).toBeNull();
 		const click = vi.spyOn(el.shadowRoot!.querySelector('input')!, 'click').mockImplementation(() => {});
 		el.shadowRoot!.querySelector<HTMLElement>('.file-field__browse-button')!.click();
 		expect(click).toHaveBeenCalledOnce();
+	});
+
+	it.each(['control', 'area'])('names the empty button after its visible text, so axe finds no label mismatch (%s)', async (variant) => {
+		el = await fixture<NLDDFileField>(`<nldd-file-field accessible-label="Bijlage" variant="${variant}" accept=".pdf"></nldd-file-field>`);
+		await waitForUpdate(el);
+		const button = el.shadowRoot!.querySelector('.file-field__browse-button')!;
+		expect(button.getAttribute('aria-label')).toBe(variant === 'area'
+			? 'Bestand kiezen of sleep het hierheen, Toegestaan: PDF, Bijlage'
+			: 'Bestand kiezen of sleep het hierheen, Bijlage');
+		const result = await axe.run(el, { runOnly: ['label-content-name-mismatch'] });
+		expect(result.violations).toEqual([]);
 	});
 
 	it('shows the file name after one file is chosen', async () => {

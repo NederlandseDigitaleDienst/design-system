@@ -209,13 +209,25 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	/**
 	 * The native input carries the field's label but is hidden, so it is not in
 	 * the accessibility tree. The button is what you tab to, and on its own it
-	 * only says "choose a file" — for which field is the part that matters.
+	 * does not say for which field, so the label comes in its name.
+	 *
+	 * After everything the button shows, and not in place of part of it: a voice
+	 * command or an audit compares the name with the visible text, and "Bestand
+	 * kiezen, Bijlage" under "Bestand kiezen of sleep het hierheen" is a mismatch
+	 * (WCAG 2.5.3). The change button does the same.
 	 *
 	 * @internal
 	 */
 	public _chooseAccessibleLabel(): string {
-		if (!this.accessibleLabel) return '';
-		return `${this._chooseLabel()}, ${this.accessibleLabel}`;
+		const hint = this.multiple
+			? this._t('components.file-field.drop-hint-multiple-lowercase-text')
+			: this._t('components.file-field.drop-hint-lowercase-text');
+		const types = this.variant === 'area' ? this._acceptTypes() : null;
+		return [
+			`${this._chooseLabel()} ${hint}`,
+			types ? this._t('components.file-field.accepted-types-text', { types }) : '',
+			this.accessibleLabel,
+		].filter(Boolean).join(', ');
 	}
 
 	/**
