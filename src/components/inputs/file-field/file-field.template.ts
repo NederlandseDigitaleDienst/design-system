@@ -97,13 +97,15 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 /** "{files} of {folder} kiezen" with a button on each of the two words, for an
  *  area with `directory`: room enough to offer both without a menu. */
 function renderChoices(component: NLDDFileField): TemplateResult {
-	const choices: Record<string, { text: string; name: string; choose: () => void }> = {
+	const choices: Record<string, { icon: string; text: string; name: string; choose: () => void }> = {
 		'{files}': {
+			icon: 'files',
 			text: component._t('components.file-field.files-choice-action'),
 			name: component._t('components.file-field.files-menu-action'),
 			choose: () => component._chooseFiles(),
 		},
 		'{folder}': {
+			icon: 'folder',
 			text: component._t('components.file-field.folder-choice-action'),
 			name: component._t('components.file-field.folder-menu-action'),
 			choose: () => component._chooseFolder(),
@@ -115,12 +117,15 @@ function renderChoices(component: NLDDFileField): TemplateResult {
 		if (!choice) {
 			return part;
 		}
-		return html`<button class="file-field__choice"
-			type="button"
-			aria-label=${[choice.name, component.accessibleLabel].filter(Boolean).join(', ')}
+		return html`<nldd-button class="file-field__choice"
+			appearance="neutral-tinted"
+			size=${component.size === 'sm' ? 'xs' : 'sm'}
+			start-icon=${choice.icon}
+			text=${choice.text}
+			accessible-label=${[choice.name, component.accessibleLabel].filter(Boolean).join(', ')}
 			?disabled=${component.disabled}
 			@click=${choice.choose}
-		>${choice.text}</button>`;
+		></nldd-button>`;
 	})}</span>`;
 }
 

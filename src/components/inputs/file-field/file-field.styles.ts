@@ -252,34 +252,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__choice {
-		margin: 0;
-		border: none;
-		border-radius: var(--primitives-corner-radius-xs);
-		padding: 0;
-		background: none;
-		color: inherit;
-		font: inherit;
-		text-decoration: underline;
-		text-underline-offset: 0.15em;
-		cursor: pointer;
-	}
-
-	.file-field__choice:hover {
-		color: var(--semantics-links-is-hovered-color);
-	}
-
-	.file-field__choice:active {
-		color: var(--semantics-links-is-active-color);
-	}
-
-	.file-field__choice:focus-visible {
-		outline: var(--semantics-focus-ring-outline);
-		outline-offset: var(--semantics-focus-ring-outline-offset);
-		box-shadow: var(--semantics-focus-ring-box-shadow);
-	}
-
-	.file-field__choice:focus:not(:focus-visible) {
-		outline: none;
+		vertical-align: middle;
 	}
 
 	.file-field__file-icon {

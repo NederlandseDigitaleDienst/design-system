@@ -136,7 +136,7 @@ export const fy: Partial<Record<TranslationKey, string>> = {
 	'components.file-field.folder-menu-action': 'Map kieze…',
 	'components.file-field.choose-files-or-folder-text': '{files} of {folder} kieze',
 	'components.file-field.files-choice-action': 'Bestannen',
-	'components.file-field.folder-choice-action': 'map',
+	'components.file-field.folder-choice-action': 'Map',
 	'components.file-field.to-change-action': 'Wizigje',
 	'components.file-field.drop-hint-lowercase-text': 'of sleep it hjirhinne',
 	'components.file-field.drop-hint-multiple-lowercase-text': 'of sleep se hjirhinne',

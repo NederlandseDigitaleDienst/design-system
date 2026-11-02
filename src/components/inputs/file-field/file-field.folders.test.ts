@@ -247,9 +247,11 @@ describe('nldd-file-field – directory', () => {
 		await waitForUpdate(el);
 		const root = el.shadowRoot!;
 		expect(root.querySelector('.file-field__browse-button')).toBeNull();
-		const [files, folder] = [...root.querySelectorAll<HTMLButtonElement>('.file-field__choice')];
-		expect(root.querySelector('.file-field__sentence')!.textContent!.replace(/\s+/g, ' ')).toContain('Bestanden of map kiezen of sleep ze hierheen');
-		expect([files.getAttribute('aria-label'), folder.getAttribute('aria-label')]).toEqual(['Bestanden kiezen…, Site', 'Map kiezen…, Site']);
+		const [files, folder] = [...root.querySelectorAll<HTMLElement>('.file-field__choice')];
+		expect([files.getAttribute('text'), folder.getAttribute('text')]).toEqual(['Bestanden', 'Map']);
+		expect([files.getAttribute('size'), folder.getAttribute('icon') ?? folder.getAttribute('start-icon')]).toEqual(['sm', 'folder']);
+		expect(root.querySelector('.file-field__sentence')!.textContent!.replace(/\s+/g, ' ')).toContain('of kiezen of sleep ze hierheen');
+		expect([files.getAttribute('accessible-label'), folder.getAttribute('accessible-label')]).toEqual(['Bestanden kiezen…, Site', 'Map kiezen…, Site']);
 		const pickFiles = vi.spyOn(root.querySelector<HTMLInputElement>('.file-field__input')!, 'click').mockImplementation(() => {});
 		const pickFolder = vi.spyOn(root.querySelector<HTMLInputElement>('.file-field__folder-input')!, 'click').mockImplementation(() => {});
 		folder.click();
