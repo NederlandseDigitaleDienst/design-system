@@ -167,6 +167,14 @@ export const sliderStyles = css`
 		flex-basis: 0;
 	}
 
+	.slider__histogram-bar:first-child {
+		border-end-start-radius: var(--_slider-histogram-bar-corner-radius);
+	}
+
+	.slider__histogram-bar:last-child {
+		border-end-end-radius: var(--_slider-histogram-bar-corner-radius);
+	}
+
 	.slider__histogram-bar.is-selected {
 		background-color: var(--_slider-histogram-selected-color);
 	}
