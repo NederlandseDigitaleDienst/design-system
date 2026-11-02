@@ -11,11 +11,11 @@ Een menu bij een knop toont extra acties of keuzes wanneer iemand die nodig heef
 ## Compositie
 
 ```
-nldd-button                expandable; of nldd-icon-button
-  └─ nldd-menu             slot="popup"
-       ├─ nldd-menu-item   text, icon, shortcut, href
-       ├─ nldd-menu-divider
-       └─ nldd-menu-group  text; een kopje boven een groep items
+nldd-button (of nldd-icon-button)  expandable
+  └─ nldd-menu                     slot="popup"
+       ├─ nldd-menu-group          text; een kopje boven een groep items; optioneel
+       │    └─ nldd-menu-item
+       └─ nldd-menu-item           text, icon, shortcut, href
 ```
 
 ```html
@@ -35,7 +35,6 @@ nldd-button                expandable; of nldd-icon-button
         icon="copy"
       ></nldd-menu-item>
     </nldd-menu-group>
-    <nldd-menu-divider></nldd-menu-divider>
     <nldd-menu-item
       text="Verwijder"
       icon="delete"

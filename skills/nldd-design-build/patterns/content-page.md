@@ -17,16 +17,16 @@ nldd-shell                                   de buitenste schil
        │    └─ nldd-skip-link                om de balk heen
        │         └─ nldd-top-navigation-bar  back-text, back-href; naar de pagina erboven
        │              └─ nldd-menu-bar       slot="utility"; zoeken en taal
-       ├─ nldd-sidebar-section               sidebar-label, grow; met een inhoudsopgave, breed een kolom, smal een sheet
+       ├─ nldd-sidebar-section               sidebar-label, grow; met een inhoudsopgave, breed een kolom, smal een sheet; optioneel
        │    ├─ slot="header"                 de nldd-title met de h1, en op smal de knop naar de sheet
        │    ├─ slot="sidebar"                de inhoudsopgave, een nldd-list type="navigation" met current-type="location"
        │    ├─ nldd-rich-text                de uitleg, met een id op elke h2
        │    └─ nldd-card                     de actie, na de uitleg
-       ├─ nldd-two-thirds-one-third-section  of, kort met een vervolgactie
+       ├─ nldd-two-thirds-one-third-section  of, kort met een vervolgactie; optioneel
        │    ├─ slot="header"                 de nldd-title met de h1
        │    ├─ slot="left"                   de nldd-rich-text met de uitleg
        │    └─ slot="right"                  de nldd-card met de actie
-       ├─ nldd-simple-section                of, kort zonder vervolgactie: de h1 in het header-slot, de nldd-rich-text eronder
+       ├─ nldd-simple-section                of, kort zonder vervolgactie: de h1 in het header-slot, de nldd-rich-text eronder; optioneel
        ├─ nldd-simple-section                background="tinted"; waar je hierna heen kunt
        │    └─ nldd-collection
        │         └─ nldd-card                href

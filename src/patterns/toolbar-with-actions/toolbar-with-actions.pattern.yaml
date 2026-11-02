@@ -3,16 +3,16 @@ composition:
     attrs: [size, accessible-label]
     children:
       - tag: nldd-toolbar-item
+        slot: [start, center, end]
         attrs: [priority]
-        note: slot="start" | "center" | "end"
         children:
           - label: de control
             any-of: [nldd-button, nldd-icon-button, nldd-search-field]
           - tag: nldd-menu-item
             optional: true
-            attrs: ['slot="overflow"']
+            slot: overflow
             note: dezelfde actie in het menu
-      - tag: nldd-menu-item
+      - slot: overflow
         optional: true
-        attrs: ['slot="overflow"']
+        any-of: [nldd-menu-item, nldd-menu-group]
         note: acties die altijd in het menu staan

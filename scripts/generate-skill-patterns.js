@@ -3,7 +3,8 @@
  * Storybook pages.
  *
  * Every directory in src/patterns/ holds one pattern: its example markup as
- * .html, the stories that render it and the .mdx page around it. The
+ * .html, the stories that render it, the .mdx page around it and the
+ * composition as .pattern.yaml. The
  * translation itself lives in scripts/lib/skill-patterns.js; this script finds
  * the files, supplies what the links resolve against and writes the result to
  * skills/nldd-design-build/patterns/<slug>.md.
@@ -75,10 +76,8 @@ for (const slug of slugs) {
 		}),
 	);
 	const rules = rulesOfPattern(lintRules, slug);
-	const specPath = join(dir, `${slug}.pattern.yaml`);
-	const composition = existsSync(specPath) ? renderComposition(parseYaml(readSource(specPath)).composition) : undefined;
+	const composition = renderComposition(parseYaml(readSource(join(dir, `${slug}.pattern.yaml`))).composition);
 	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context, rules, composition });
-	const sources = composition === undefined ? 'de .mdx-pagina en de .html-voorbeelden ernaast' : 'de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast';
-	const header = generatedHeader(`Bron: src/patterns/${slug}/ (${sources}).`);
+	const header = generatedHeader(`Bron: src/patterns/${slug}/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).`);
 	writeGenerated(join(outputDir, `${slug}.md`), header + body);
 }

@@ -8,11 +8,12 @@ composition:
       - tag: nldd-page
         children:
           - tag: nldd-top-title-bar
-            attrs: ['slot="header"', text, dismiss-text, collapse-anchor]
+            slot: header
+            attrs: [text, dismiss-text, collapse-anchor]
           - tag: nldd-simple-section
             children:
               - tag: nldd-title
-                attrs: ['slot="header"']
+                slot: header
                 note: het id waar de balk naar wijst
               - tag: nldd-form
                 children:

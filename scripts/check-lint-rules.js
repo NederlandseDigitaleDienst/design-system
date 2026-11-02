@@ -7,14 +7,14 @@
  *  - its `see` points at something that exists;
  *  - every pattern's example passes every rule, so a pattern is always valid;
  *  - every state a rule reads is set, and every state that is set is read;
- *  - every pattern spec has the shape of its schema, names what exists, and its
- *    pattern's examples follow it.
+ *  - every pattern has a spec with the shape of its schema, its page draws that
+ *    spec, it names what exists, and its examples follow it.
  *
  * Usage: node scripts/check-lint-rules.js
  */
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Ajv from 'ajv';
 import { parse } from 'css-what';
@@ -227,14 +227,22 @@ function checkCompositions() {
 			problems.push(`patterns/${entry.name}: has no ${entry.name}.pattern.yaml.`);
 			continue;
 		}
-		const spec = parseYaml(readFileSync(specPath, 'utf8'));
+		let spec;
+		try {
+			spec = parseYaml(readFileSync(specPath, 'utf8'));
+		} catch (error) {
+			problems.push(`patterns/${entry.name}: ${error.message}`);
+			continue;
+		}
 		if (!validate(spec)) {
 			problems.push(`patterns/${entry.name}: ${validate.errors.map(({ instancePath, message }) => `${instancePath} ${message}`).join('; ')}`);
 			continue;
 		}
-		const { composition } = spec;
-		const examples = patternFiles(join(directory, entry.name)).flatMap((file) => parseHtml(readFileSync(file, 'utf8')));
-		for (const problem of checkComposition(composition, { tags: data.tags, examples })) {
+		const page = readFileSync(join(directory, entry.name, `${entry.name}.mdx`), 'utf8');
+		if (!page.includes(`<Composition pattern="${entry.name}" />`)) problems.push(`patterns/${entry.name}: the page does not draw its spec with <Composition pattern="${entry.name}" />.`);
+		if (/[├└]─/.test(page)) problems.push(`patterns/${entry.name}: the page has a hand-drawn tree.`);
+		const examples = patternFiles(join(directory, entry.name)).map((file) => ({ file: basename(file), roots: parseHtml(readFileSync(file, 'utf8')) }));
+		for (const problem of checkComposition(spec.composition, { tags: data.tags, examples, partial: spec.partial })) {
 			problems.push(`patterns/${entry.name}: ${problem}`);
 		}
 	}

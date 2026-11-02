@@ -18,8 +18,10 @@ composition:
     attrs: [open, 'variant="alert"', text, supporting-text]
     children:
       - tag: nldd-button
-        attrs: ['slot="actions"', 'appearance="primary"']
+        slot: actions
+        attrs: ['appearance="primary"']
         note: de uitweg
       - tag: nldd-button
-        attrs: ['slot="actions"', 'appearance="destructive"']
+        slot: actions
+        attrs: ['appearance="destructive"']
         note: de actie

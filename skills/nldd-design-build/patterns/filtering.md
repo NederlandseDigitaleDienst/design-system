@@ -22,8 +22,9 @@ nldd-page
        ├─ nldd-container       layout="wrap"; de strip met actieve filters
        │    └─ nldd-token      control="dismiss"; één per actieve waarde
        ├─ nldd-text            het aantal resultaten, met aria-live
-       └─ nldd-list            met slot="no-results"
-            └─ nldd-list-item  de naam, de status als dot, een chevron
+       └─ nldd-list
+            ├─ nldd-list-item  de naam, de status als dot, een chevron
+            └─ slot="no-results"
 ```
 
 ```html

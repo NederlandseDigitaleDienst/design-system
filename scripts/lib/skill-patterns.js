@@ -2,9 +2,9 @@
  * Turns a pattern's Storybook page into the Markdown page the skill ships.
  *
  * A pattern lives in src/patterns/<slug>/: the example markup as .html, a
- * stories file that renders it through patternStory(), and an .mdx page with
- * the prose around it. The .mdx is Markdown plus three things only Storybook
- * understands, and each is translated here:
+ * stories file that renders it through patternStory(), an .mdx page with the
+ * prose around it and its composition as .pattern.yaml. The .mdx is Markdown
+ * plus four things only Storybook understands, and each is translated here:
  *
  * - the import lines and <Meta>, which are dropped;
  * - <Canvas of={Stories.X} />, which becomes an html code block holding the
@@ -12,10 +12,9 @@
  *   example runs;
  * - links of the form ?path=/docs/..., which point into Storybook and become
  *   links a reader of the skill can follow: another pattern, the component in
- *   reference.md, or the design guidelines.
- *
- * <Composition pattern="x" /> becomes the tree from <slug>.pattern.yaml, drawn as
- * a code block.
+ *   reference.md, or the design guidelines;
+ * - <Composition pattern="x" />, which becomes the tree from <slug>.pattern.yaml,
+ *   drawn as a code block.
  *
  * Anything else that looks like JSX is an error rather than something to pass
  * through, because a stray <Canvas> in the skill would be a broken example.

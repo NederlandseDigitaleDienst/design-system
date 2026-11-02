@@ -4,7 +4,7 @@ composition:
     children:
       - tag: nldd-page
         children:
-          - label: slot="header"
+          - slot: header
             note: de header
             children:
               - tag: nldd-skip-link
@@ -15,20 +15,21 @@ composition:
           - tag: nldd-hero
             note: de h1, een korte uitleg en de hoofdtaak
             children:
-              - label: slot="media"
+              - slot: media
                 note: nldd-image, hier nog zonder beeld
           - tag: nldd-one-half-one-half-section
             note: tekst links, afbeelding rechts
             children:
-              - label: slot="left"
+              - slot: left
                 note: titel, tekst en een nldd-link verder
               - tag: nldd-image
-                attrs: ['slot="right"', aspect-ratio]
+                slot: right
+                attrs: [aspect-ratio]
           - tag: nldd-simple-section
             attrs: ['background="tinted"']
             note: wat je moet weten
             children:
-              - label: slot="header"
+              - slot: header
                 note: de titel en een intro van een zin of twee
               - tag: nldd-collection
                 children:
@@ -37,10 +38,11 @@ composition:
                     note: naar pagina's waar ze ook staan
           - tag: nldd-one-third-two-thirds-section
             children:
-              - label: slot="left"
+              - slot: left
                 note: de titel en een korte uitleg
               - tag: nldd-list
-                attrs: ['slot="right"', 'type="navigation"']
+                slot: right
+                attrs: ['type="navigation"']
                 note: naar de pagina's eronder
           - tag: nldd-simple-section
             attrs: ['background="tinted"']
@@ -52,7 +54,7 @@ composition:
                     attrs: [href]
                     note: naar het andere onderwerp
           - tag: nldd-page-footer
-            attrs: ['slot="footer"']
+            slot: footer
             children:
-              - label: slot="breadcrumbs"
-              - label: slot="legal-bar"
+              - slot: breadcrumbs
+              - slot: legal-bar

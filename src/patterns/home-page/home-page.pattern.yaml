@@ -4,7 +4,7 @@ composition:
     children:
       - tag: nldd-page
         children:
-          - label: slot="header"
+          - slot: header
             note: de header
             children:
               - tag: nldd-skip-link
@@ -16,13 +16,14 @@ composition:
             attrs: [main-background]
             note: de opening
             children:
-              - label: slot="media"
+              - slot: media
                 note: nldd-image, hier nog zonder beeld
           - tag: nldd-simple-section
             attrs: ['background="tinted"']
             note: wat je hier kunt
             children:
-              - label: slot="header"
+              - slot: header
+                optional: true
                 note: de titel en een intro van een zin of twee
               - tag: nldd-collection
                 optional: true
@@ -34,26 +35,27 @@ composition:
             note: afbeelding links, tekst rechts
             children:
               - tag: nldd-image
-                attrs: ['slot="left"', aspect-ratio]
-              - label: slot="right"
+                slot: left
+                attrs: [aspect-ratio]
+              - slot: right
                 note: titel, tekst en een nldd-link verder
           - tag: nldd-two-thirds-one-third-section
             attrs: ['background="tinted"']
             children:
-              - label: slot="left"
+              - slot: left
                 note: de titel en de lopende uitleg
-              - label: slot="right"
+              - slot: right
                 note: een ondersteunende kaart
           - tag: nldd-one-third-two-thirds-section
             children:
-              - label: slot="left"
+              - slot: left
                 note: de titel en een korte uitleg
-              - label: slot="right"
+              - slot: right
                 note: een nldd-list type="navigation" naar de onderwerpen
           - tag: nldd-simple-section
             attrs: ['background="tinted"']
             note: de oproep
           - tag: nldd-page-footer
-            attrs: ['slot="footer"']
+            slot: footer
             children:
-              - label: slot="legal-bar"
+              - slot: legal-bar

@@ -4,7 +4,7 @@ composition:
     children:
       - tag: nldd-page
         children:
-          - label: slot="header"
+          - slot: header
             note: de header
             children:
               - tag: nldd-skip-link
@@ -16,22 +16,23 @@ composition:
             optional: true
             note: met een lijst
             children:
-              - label: slot="left"
+              - slot: left
                 note: de nldd-title met de h1 en een korte intro
               - tag: nldd-list
-                attrs: ['slot="right"', 'type="navigation"']
+                slot: right
+                attrs: ['type="navigation"']
           - tag: nldd-simple-section
             optional: true
             note: of, met kaarten
             children:
-              - label: slot="header"
+              - slot: header
                 note: de nldd-title met de h1 en een korte intro
               - tag: nldd-collection
                 attrs: ['layout="grid"']
                 note: met een nldd-card per pagina
           - tag: nldd-page-footer
-            attrs: ['slot="footer"']
+            slot: footer
             children:
-              - label: slot="breadcrumbs"
+              - slot: breadcrumbs
                 note: waar deze pagina staat
-              - label: slot="legal-bar"
+              - slot: legal-bar

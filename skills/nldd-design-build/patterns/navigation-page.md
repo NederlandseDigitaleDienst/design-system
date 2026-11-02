@@ -16,10 +16,10 @@ nldd-shell                                   de buitenste schil
        ├─ slot="header"                      de header
        │    └─ nldd-skip-link                om de balk heen
        │         └─ nldd-top-navigation-bar  zoeken en taal, terug naar de home
-       ├─ nldd-one-third-two-thirds-section  met een lijst
+       ├─ nldd-one-third-two-thirds-section  met een lijst; optioneel
        │    ├─ slot="left"                   de nldd-title met de h1 en een korte intro
        │    └─ nldd-list                     slot="right", type="navigation"
-       ├─ nldd-simple-section                of, met kaarten
+       ├─ nldd-simple-section                of, met kaarten; optioneel
        │    ├─ slot="header"                 de nldd-title met de h1 en een korte intro
        │    └─ nldd-collection               layout="grid"; met een nldd-card per pagina
        └─ nldd-page-footer                   slot="footer"

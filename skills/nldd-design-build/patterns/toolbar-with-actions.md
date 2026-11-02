@@ -12,10 +12,10 @@ Een werkbalk bundelt acties die gelden voor een heel scherm of paneel, zoals iet
 
 ```
 nldd-toolbar              size, accessible-label
-  ├─ nldd-toolbar-item    priority; slot="start" | "center" | "end"
+  ├─ nldd-toolbar-item    slot="start" | "center" | "end", priority
   │    ├─ de control      nldd-button, nldd-icon-button, nldd-search-field, …
-  │    └─ nldd-menu-item  slot="overflow"; dezelfde actie in het menu
-  └─ nldd-menu-item       slot="overflow"; acties die altijd in het menu staan
+  │    └─ nldd-menu-item  slot="overflow"; dezelfde actie in het menu; optioneel
+  └─ slot="overflow"      nldd-menu-item, nldd-menu-group, …; acties die altijd in het menu staan; optioneel
 ```
 
 ```html
@@ -60,6 +60,12 @@ nldd-toolbar              size, accessible-label
       icon="settings"
     ></nldd-menu-item>
   </nldd-toolbar-item>
+
+  <nldd-menu-item
+    slot="overflow"
+    text="Exporteer"
+    icon="download"
+  ></nldd-menu-item>
 </nldd-toolbar>
 ```
 

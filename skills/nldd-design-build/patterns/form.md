@@ -12,11 +12,11 @@ Een formulier verzamelt de gegevens die nodig zijn om een taak uit te voeren of 
 
 ```
 nldd-form                                 name, method, label-alignment
-  ├─ nldd-form-section                    text, supporting-text; een groep velden
+  ├─ nldd-form-section                    text, supporting-text; een groep velden; optioneel
   │    └─ nldd-form-field                 label, optional
   │         ├─ het invoerveld             nldd-text-field, nldd-dropdown, …
-  │         ├─ nldd-validation-list       de eisen aan de waarde
-  │         └─ nldd-form-field-help-text  uitleg die niets tegenhoudt
+  │         ├─ nldd-validation-list       de eisen aan de waarde; optioneel
+  │         └─ nldd-form-field-help-text  uitleg die niets tegenhoudt; optioneel
   └─ nldd-form-actions
        └─ nldd-button-group               de primaire actie, type="submit"
 ```
