@@ -245,6 +245,32 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		unloadTokens();
 	});
 
+	it('draws a lazy line at the level of the paragraph it goes on in, and no lines on empty lines at the end', async () => {
+		const unloadTokens = loadTokens();
+		el = await make('syntax="hidden" readonly');
+		el.value = '> > > Drie\n> > lui\nook lui\n> >\n> > Twee\n> > >\n\nSlot.';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')];
+		const levels = (l: Element) => (l.classList.contains('cm-md-quote-line') ? getComputedStyle(l).backgroundPositionX.split(',').length : 0);
+		const textLeft = (l: Element) => {
+			const walker = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+			for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+				const at = n.textContent!.search(/[A-Za-z]/);
+				if (at === -1) continue;
+				const range = document.createRange();
+				range.setStart(n, at);
+				range.setEnd(n, at + 1);
+				return Math.round(range.getBoundingClientRect().left);
+			}
+			return NaN;
+		};
+		expect(lines.slice(0, 6).map(levels)).toEqual([3, 3, 3, 2, 2, 0]);
+		expect(textLeft(lines[1])).toBe(textLeft(lines[0]));
+		expect(textLeft(lines[2])).toBe(textLeft(lines[0]));
+		unloadTokens();
+	});
+
 	it('keeps hiding the marks of bold inside a quote the caret is in', async () => {
 		el = await make();
 		el.value = '> Een **vet** woord\n> en meer\n\nSlot.';

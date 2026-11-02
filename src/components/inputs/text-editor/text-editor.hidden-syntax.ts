@@ -96,6 +96,42 @@ function outermostQuote(node: SyntaxNode): SyntaxNode {
 	return outer;
 }
 
+/** The width of one quote level in mono advances, of "> ". */
+const QUOTE_STEP = 2;
+
+// A lazy line has fewer `>` than its level, so its text is pushed in by the
+// levels it misses, as if their `> ` were there. !important for the same
+// reason as prefixIndent.
+const lazyIndentCache: Record<string, Decoration> = {};
+function lazyIndent(prefix: number, extra: number): Decoration {
+	return (lazyIndentCache[`${prefix},${extra}`] ??= Decoration.line({
+		attributes: {
+			style: `text-indent:calc(${prefix} * var(--_text-editor-marker-advance) * -1) !important;padding-left:calc(${prefix + extra} * var(--_text-editor-marker-advance)) !important`,
+		},
+	}));
+}
+
+/** How many quotes each line of a quote lies in, per line start. */
+function quoteDepths(state: EditorState, quote: SyntaxNode): Map<number, number> {
+	const depths = new Map<number, number>();
+	syntaxTree(state).iterate({
+		from: quote.from,
+		to: quote.to,
+		enter: (node) => {
+			if (node.name !== 'Blockquote') return;
+			forEachLineStart(state, node.from, node.to, (lineFrom) => depths.set(lineFrom, (depths.get(lineFrom) ?? 0) + 1));
+		},
+	});
+	return depths;
+}
+
+/** The start of the last line of a quote with more than its marks on it. */
+function lastLineWithText(state: EditorState, quote: SyntaxNode): number {
+	for (let line = state.doc.lineAt(quote.to); ; line = state.doc.line(line.number - 1)) {
+		if (/[^\s>]/.test(line.text) || line.from <= quote.from) return line.from;
+	}
+}
+
 /** The spaces after each `>` beyond the first, as [from, to) columns: 2 to 4
  *  spaces are padding the result ignores, while 5 or more start an indented
  *  code block in the quote, which keeps them. */
@@ -221,19 +257,31 @@ function buildHidden(view: EditorView): DecorationSet {
 					const outer = outermostQuote(node.node);
 					if (outer !== node.node || revealed(outer.from, outer.to)) return;
 					const columns = quoteColumns(state, outer);
-					// A lazy line, without `>` of its own, goes on in the quote above it.
+					const depths = quoteDepths(state, outer);
+					// The lines go as deep as the parser puts a line, which is not always
+					// its number of `>`: a line with fewer, or none, right under a
+					// paragraph goes on in that paragraph (a lazy line), as it will in
+					// the result. Empty lines at the end show nothing there, so no lines.
+					const lastText = lastLineWithText(state, outer);
 					let last: number[] = [0];
 					forEachLineStart(state, outer.from, outer.to, (lineFrom) => {
-						const marks = columns.get(lineFrom);
-						if (marks) {
-							const line = state.doc.lineAt(lineFrom);
-							const spare = spareSpaces(line.text, marks);
-							last = marks.map((column) => column - spare.filter(([from]) => from < column).reduce((sum, [from, to]) => sum + to - from, 0));
-							for (const [from, to] of spare) ranges.push(hideMark.range(lineFrom + from, lineFrom + to));
-							const hidden = spare.reduce((sum, [from, to]) => sum + to - from, 0);
-							if (hidden) ranges.push(prefixIndent(prefixLength(line.text) - hidden).range(lineFrom));
-						}
-						ranges.push(quoteLine(last).range(lineFrom));
+						if (lineFrom > lastText) return;
+						const line = state.doc.lineAt(lineFrom);
+						const marks = columns.get(lineFrom) ?? [];
+						const spare = spareSpaces(line.text, marks);
+						const hidden = spare.reduce((sum, [from, to]) => sum + to - from, 0);
+						for (const [from, to] of spare) ranges.push(hideMark.range(lineFrom + from, lineFrom + to));
+						const own = marks.map((column) => column - spare.filter(([from]) => from < column).reduce((sum, [from, to]) => sum + to - from, 0));
+						const depth = Math.max(1, depths.get(lineFrom) ?? 0);
+						const prefix = prefixLength(line.text) - hidden;
+						// A line without `>` lines up under the levels of the line above it.
+						const rules = (own.length ? own : last).slice(0, depth);
+						while (rules.length < depth) rules.push(rules.length ? rules[rules.length - 1] + QUOTE_STEP : 0);
+						const missing = own.length ? (depth - own.length) * QUOTE_STEP : rules[rules.length - 1] + QUOTE_STEP;
+						if (missing > 0) ranges.push(lazyIndent(prefix, missing).range(lineFrom));
+						else if (hidden) ranges.push(prefixIndent(prefix).range(lineFrom));
+						ranges.push(quoteLine(rules).range(lineFrom));
+						last = rules;
 					});
 					return;
 				}
