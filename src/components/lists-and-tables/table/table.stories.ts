@@ -210,7 +210,7 @@ export const MetRijkoppen = {
 		controls: { disable: true },
 		docs: {
 			description: {
-				story: 'Zet `row-header` op de cel die zegt waar de rij over gaat. Die cel krijgt `role="rowheader"` in plaats van `role="cell"`, zodat een schermlezer bij elke andere cel in de rij ook de rij noemt. Het werkt op `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` en `nldd-description-cell`, en verandert alleen de semantiek: hoe de rijkop eruitziet kies je met de celvariant. De cel erboven in de kop blijft een `columnheader`.',
+				story: 'Zet `row-header` op de cel die zegt waar de rij over gaat. Die cel krijgt `role="rowheader"` in plaats van `role="cell"`, zodat een schermlezer bij elke andere cel in de rij ook de rij noemt. Het werkt op `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` en `nldd-description-cell`, en verandert alleen de semantiek: hoe de rijkop eruitziet kies je met de celvariant. Een `nldd-title-cell` zonder `size` krijgt in een tabel `size="6"`: even groot als de andere cellen, maar vet. De cel erboven in de kop blijft een `columnheader`.',
 			},
 		},
 	},

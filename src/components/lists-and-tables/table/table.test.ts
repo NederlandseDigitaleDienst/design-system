@@ -390,6 +390,17 @@ describe('nldd-table-row', () => {
 		expect(getComputedStyle(label(header)).fontWeight).toBe(getComputedStyle(label(plain)).fontWeight);
 	});
 
+	it('gives a title cell without a size size 6, and keeps a size from the markup', async () => {
+		el = await fixture(`<nldd-table-row>
+			<nldd-title-cell text="A"></nldd-title-cell>
+			<nldd-title-cell text="B" size="5"></nldd-title-cell>
+			<nldd-title-cell text="C" size="3"></nldd-title-cell>
+		</nldd-table-row>`);
+		await waitForUpdate(el);
+		const sizes = [...el.querySelectorAll('nldd-title-cell')].map((cell) => cell.size);
+		expect(sizes).toEqual([6, 5, 3]);
+	});
+
 	it('defaults a generic nldd-cell without width to width="full"', async () => {
 		el = await fixture('<nldd-table-row><nldd-cell></nldd-cell></nldd-table-row>');
 		await waitForUpdate(el);

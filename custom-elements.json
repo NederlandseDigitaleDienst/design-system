@@ -36727,9 +36727,9 @@
               "kind": "field",
               "name": "size",
               "type": {
-                "text": "TitleCellSize"
+                "text": "TitleCellSize | undefined"
               },
-              "default": "5",
+              "description": "Unset looks like 5, and like 6 in an nldd-table-row, which is why it\nhas no value of its own: the row can only tell an unset size from a\nchosen 5 when unset is not 5.",
               "attribute": "size",
               "reflects": true
             },
@@ -36904,11 +36904,10 @@
             {
               "name": "size",
               "type": {
-                "text": "TitleCellSize"
+                "text": "TitleCellSize | undefined"
               },
-              "default": "5",
-              "fieldName": "size",
-              "description": "Visual size of the title (default: 5)"
+              "description": "Visual size of the title (unset: looks like 5, and becomes 6 in an `nldd-table-row`, where a title the size of the other cells reads better)",
+              "fieldName": "size"
             },
             {
               "name": "color",

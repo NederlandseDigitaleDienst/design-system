@@ -61,6 +61,11 @@
  * Assigns each slotted cell its role: "columnheader" in a header row,
  * "rowheader" for a body cell with `row-header`, "cell" otherwise.
  *
+ * An `nldd-title-cell` without a `size` gets `size="6"`: the same
+ * size as the other cells, in bold. Its default of 5 is made to stand out
+ * above the supporting text of a list item, and in a table it towers over the
+ * row. A `size` in the markup wins, 5 included.
+ *
  * @slot - The row's cells (`nldd-cell` and variants), one per column
  */
 import { LitElement } from 'lit';
@@ -388,6 +393,15 @@ export class NLDDTableRow extends LitElement {
 				if (w === null || w === '' || w === 'fit-content') {
 					cell.setAttribute('width', 'full');
 				}
+			}
+			// A title cell's size is unset unless someone chose one. The property
+			// covers a size set before the cell reflected it.
+			if (
+				cell.localName === 'nldd-title-cell'
+				&& !cell.hasAttribute('size')
+				&& (cell as HTMLElement & { size?: number }).size === undefined
+			) {
+				cell.setAttribute('size', '6');
 			}
 		}
 	}

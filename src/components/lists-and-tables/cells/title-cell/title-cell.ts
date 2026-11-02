@@ -19,7 +19,7 @@
  * slotted content is rendered as-is.
  *
  * @element nldd-title-cell
- * @attr {1|2|3|4|5|6} size - Visual size of the title (default: 5)
+ * @attr {1|2|3|4|5|6} size - Visual size of the title (unset: looks like 5, and becomes 6 in an `nldd-table-row`, where a title the size of the other cells reads better)
  * @attr {'content' | 'secondary' | 'accent' | 'success' | 'warning' | 'critical'} color - Text color variant (default: 'content'). `secondary` demotes the title to match the muted overline/supporting-text. `accent`, `success`, `warning` and `critical` tint all three regions so the cell reads as a coherent state.
  * @attr {string} width - 'full' | 'fit-content' | CSS length (e.g. '200px', '20rem'). Default: 'full'
  * @attr {string} min-width - Minimum width as CSS length (e.g. '80px', '5rem')
@@ -70,8 +70,11 @@ type VerticalAlignment = 'top' | 'center' | 'bottom';
 export class NLDDTitleCell extends RowHeaderMixin(VisibilityMixin(LitElement, 'cells-container')) {
 	static override styles = [titleCellStyles];
 
+	/** Unset looks like 5, and like 6 in an nldd-table-row, which is why it
+	 *  has no value of its own: the row can only tell an unset size from a
+	 *  chosen 5 when unset is not 5. */
 	@property({ type: Number, reflect: true })
-	size: TitleCellSize = 5;
+	size?: TitleCellSize;
 
 	@property({ reflect: true, converter: reflectNonDefault<Color>('content') })
 	color: Color = 'content';

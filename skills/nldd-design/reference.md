@@ -3318,7 +3318,7 @@ A cell component for displaying a title with optional overline and supporting te
 
 | Attribute | Type | Description |
 | --- | --- | --- |
-| `size` | `1\|2\|3\|4\|5\|6` | Visual size of the title (default: 5) |
+| `size` | `1\|2\|3\|4\|5\|6` | Visual size of the title (unset: looks like 5, and becomes 6 in an `nldd-table-row`, where a title the size of the other cells reads better) |
 | `color` | `'content' \| 'secondary' \| 'accent' \| 'success' \| 'warning' \| 'critical'` | Text color variant (default: 'content'). `secondary` demotes the title to match the muted overline/supporting-text. `accent`, `success`, `warning` and `critical` tint all three regions so the cell reads as a coherent state. |
 | `width` | `string` | 'full' \| 'fit-content' \| CSS length (e.g. '200px', '20rem'). Default: 'full' |
 | `min-width` | `string` | Minimum width as CSS length (e.g. '80px', '5rem') |

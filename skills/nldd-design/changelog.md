@@ -19,6 +19,10 @@ here; consult the commit history if you need that level of detail.
 
 - **Row headers in `nldd-table`.** Put `row-header` on the cell that says what a row is about, and the row gives it `role="rowheader"` instead of `role="cell"`, so a screen reader names the row when it reads any other cell in it, as with `<th scope="row">`. It works on `nldd-cell`, `nldd-title-cell`, `nldd-text-cell` and `nldd-description-cell`, and it changes the semantics only: the cell variant still decides how a row header looks. In the header row a cell stays a column header, `row-header` or not.
 
+### Changed
+
+- **`nldd-title-cell` is `size="6"` in a table.** In an `nldd-table-row` a title cell without a `size` of its own is as large as the other cells, in bold, rather than the larger size 5 it has in a list. A `size` in the markup still wins, 5 included. Outside a table nothing changes, but `size` is now unset by default rather than 5: the cell looks the same, while the `size` property reads `undefined` and there is no `size="5"` on the element.
+
 ## [0.13.2](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.1...v0.13.2) (2026-10-29)
 
 ### Highlights
