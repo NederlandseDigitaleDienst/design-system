@@ -147,11 +147,12 @@ Hetzelfde geldt een laag lager voor gedrag: wat een component doet, documenteer 
 
 Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. Ze staan in Storybook onder "Patronen" en reizen als `skills/nldd-design-build/patterns/*.md` met de plugin mee naar consumenten.
 
-Een patroon woont in `src/patterns/<slug>/`, met vier bestanden:
+Een patroon woont in `src/patterns/<slug>/`, met vijf bestanden:
 
 - `<slug>.html`: de voorbeeldmarkup, zonder framework. Dit is de enige bron: de live story rendert hem, het codeblok op de docs-pagina toont hem en de skill neemt hem over.
 - `<slug>.stories.ts`: rendert de markup via `patternStory()` uit `src/patterns/pattern-story.ts`, plus het beetje gedrag dat een consument zelf schrijft (een knop die een sheet opent).
-- `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet, de compositie en waarom zo.
+- `<slug>.pattern.yaml`: de compositie als data: welke componenten, in welke nesting, wat optioneel is. De velden staan in `scripts/lib/pattern-spec.js`. De boom op de pagina en in de skill wordt hieruit getekend (`<Composition pattern="<slug>" />`), en `lint:rules` faalt op een tag of attribuut dat niet bestaat, een deel dat geen voorbeeld toont, of een voorbeeld dat een verplicht deel mist.
+- `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet en waarom zo.
 - `<slug>.test.ts`: test wat het patroon belooft, op dezelfde markup.
 
 `npm run generate:skill-patterns` (onderdeel van `generate:skill-docs`) maakt daar de skill-pagina van. De vertaling zit in `scripts/lib/skill-patterns.js` met tests ernaast: `<Canvas>` wordt het `.html`-bestand, en een link `?path=/docs/...` wordt een link naar het andere patroon, naar de component in `reference.md` of naar de ontwerprichtlijnen. `validate.yml` controleert dat de gegenereerde pagina's bij hun bron passen. Link in de MDX dus naar Storybook, en naar de voorbeelden in `examples/` via hun GitHub-URL. De titel en de bestandsnaam van elk patroon staan in `PATTERNS` in `scripts/generate-skill-patterns.js`.

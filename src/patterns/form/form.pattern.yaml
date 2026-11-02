@@ -1,0 +1,24 @@
+composition:
+  - tag: nldd-form
+    attrs: [name, method, label-alignment]
+    children:
+      - tag: nldd-form-section
+        optional: true
+        attrs: [text, supporting-text]
+        note: een groep velden
+        children:
+          - tag: nldd-form-field
+            attrs: [label, optional]
+            children:
+              - label: het invoerveld
+                any-of: [nldd-text-field, nldd-dropdown]
+              - tag: nldd-validation-list
+                optional: true
+                note: de eisen aan de waarde
+              - tag: nldd-form-field-help-text
+                optional: true
+                note: uitleg die niets tegenhoudt
+      - tag: nldd-form-actions
+        children:
+          - tag: nldd-button-group
+            note: de primaire actie, type="submit"

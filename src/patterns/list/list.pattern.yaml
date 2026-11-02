@@ -1,0 +1,31 @@
+composition:
+  - tag: nldd-list
+    attrs: [accessible-label, appearance, type]
+    children:
+      - tag: nldd-list-item
+        optional: true
+        attrs: [size]
+        one-of: [href, button, checkbox, radio]
+        children:
+          - label: cellen, in de volgorde waarin ze staan
+            flat: true
+            children:
+              - tag: nldd-icon-cell
+                optional: true
+                note: een icoon vooraan
+              - tag: nldd-spacer-cell
+                optional: true
+                note: de ruimte tussen twee cellen
+              - tag: nldd-text-cell
+                attrs: [text, overline, supporting-text]
+                note: vult de rij
+              - tag: nldd-cell
+                optional: true
+                note: een badge, een checkbox, wat de rij verder draagt
+              - tag: nldd-text-cell
+                optional: true
+                attrs: ['width="fit-content"']
+                note: komt daardoor achteraan
+              - tag: nldd-icon-cell
+                optional: true
+                note: de chevron van een rij die iets opent

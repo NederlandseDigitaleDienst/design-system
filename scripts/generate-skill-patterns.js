@@ -17,6 +17,8 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parse as parseYaml } from 'yaml';
+import { renderComposition } from './lib/pattern-spec.js';
 import { generatedHeader, readSource, writeGenerated } from './lib/skill-doc.js';
 import { rulesOfPattern } from '../lint/rule-index.js';
 import { loadData } from '../lint/linter.js';
@@ -73,7 +75,10 @@ for (const slug of slugs) {
 		}),
 	);
 	const rules = rulesOfPattern(lintRules, slug);
-	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context, rules });
-	const header = generatedHeader(`Bron: src/patterns/${slug}/ (de .mdx-pagina en de .html-voorbeelden ernaast).`);
+	const specPath = join(dir, `${slug}.pattern.yaml`);
+	const composition = existsSync(specPath) ? renderComposition(parseYaml(readSource(specPath)).composition) : undefined;
+	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context, rules, composition });
+	const sources = composition === undefined ? 'de .mdx-pagina en de .html-voorbeelden ernaast' : 'de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast';
+	const header = generatedHeader(`Bron: src/patterns/${slug}/ (${sources}).`);
 	writeGenerated(join(outputDir, `${slug}.md`), header + body);
 }

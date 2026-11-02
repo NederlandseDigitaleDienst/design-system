@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/form/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/form/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,14 +11,14 @@ Een formulier verzamelt de gegevens die nodig zijn om een taak uit te voeren of 
 ## Compositie
 
 ```
-nldd-form                              name, method, label-alignment
-  ├─ nldd-form-section                 text, supporting-text; een groep velden
-  │    └─ nldd-form-field              label, optional
-  │         ├─ het invoerveld          nldd-text-field, nldd-dropdown, …
-  │         ├─ nldd-validation-list    de eisen aan de waarde
+nldd-form                                 name, method, label-alignment
+  ├─ nldd-form-section                    text, supporting-text; een groep velden
+  │    └─ nldd-form-field                 label, optional
+  │         ├─ het invoerveld             nldd-text-field, nldd-dropdown, …
+  │         ├─ nldd-validation-list       de eisen aan de waarde
   │         └─ nldd-form-field-help-text  uitleg die niets tegenhoudt
   └─ nldd-form-actions
-       └─ nldd-button-group            de primaire actie, type="submit"
+       └─ nldd-button-group               de primaire actie, type="submit"
 ```
 
 ```html
@@ -61,6 +61,7 @@ nldd-form                              name, method, label-alignment
         <nldd-validation-item required>Een e-mailadres is nodig om te kunnen antwoorden.</nldd-validation-item>
         <nldd-validation-item match="@">Een e-mailadres bevat een apenstaartje.</nldd-validation-item>
       </nldd-validation-list>
+      <nldd-form-field-help-text>We sturen een bevestigingsmail naar dit adres.</nldd-form-field-help-text>
     </nldd-form-field>
 
   </nldd-form-section>

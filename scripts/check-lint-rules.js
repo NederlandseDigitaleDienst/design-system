@@ -6,7 +6,8 @@
  *    renaming a component fails here, in the same pull request;
  *  - its `see` points at something that exists;
  *  - every pattern's example passes every rule, so a pattern is always valid;
- *  - every state a rule reads is set, and every state that is set is read.
+ *  - every state a rule reads is set, and every state that is set is read;
+ *  - every composition names what exists, and its pattern's examples follow it.
  *
  * Usage: node scripts/check-lint-rules.js
  */
@@ -16,8 +17,11 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'css-what';
 import { applyFixes } from '../lint/fix.js';
+import { parse as parseYaml } from 'yaml';
+import { parseHtml } from '../lint/frontends.js';
 import { BUILT_IN_RULES, createLinter, loadData } from '../lint/linter.js';
 import { selectorsOf } from '../lint/rule-index.js';
+import { checkComposition } from './lib/pattern-spec.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const data = loadData();
@@ -210,6 +214,20 @@ function checkStatesAreRead() {
 	}
 }
 
+/** The drawn tree of a pattern has to name what exists, and the example has to follow it. */
+function checkCompositions() {
+	const directory = join(repoRoot, 'src/patterns');
+	for (const entry of readdirSync(directory, { withFileTypes: true })) {
+		const specPath = join(directory, entry.name, `${entry.name}.pattern.yaml`);
+		if (!entry.isDirectory() || !existsSync(specPath)) continue;
+		const { composition } = parseYaml(readFileSync(specPath, 'utf8'));
+		const examples = patternFiles(join(directory, entry.name)).flatMap((file) => parseHtml(readFileSync(file, 'utf8')));
+		for (const problem of checkComposition(composition, { tags: data.tags, examples })) {
+			problems.push(`patterns/${entry.name}: ${problem}`);
+		}
+	}
+}
+
 /** Text in a component is a second source. The only output left there is a real failure. */
 function checkNoWarnings() {
 	for (const [file, source] of componentSources) {
@@ -246,6 +264,7 @@ for (const rule of data.rules) {
 }
 const patterns = await checkPatterns();
 checkStatesAreRead();
+checkCompositions();
 checkNoWarnings();
 checkBrowserSelectors();
 

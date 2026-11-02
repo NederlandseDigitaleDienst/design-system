@@ -14,6 +14,9 @@
  *   links a reader of the skill can follow: another pattern, the component in
  *   reference.md, or the design guidelines.
  *
+ * <Composition pattern="x" /> becomes the tree from <slug>.pattern.yaml, drawn as
+ * a code block.
+ *
  * Anything else that looks like JSX is an error rather than something to pass
  * through, because a stray <Canvas> in the skill would be a broken example.
  */
@@ -95,9 +98,10 @@ function renderRules(rules) {
  * @param {string} input.mdx - source of the pattern's .mdx page
  * @param {Record<string, string>} input.markup - story name to markup source
  * @param {{ patterns: Record<string, string>, tags: Set<string> }} input.context
+ * @param {string} [input.composition] - the drawn tree of the pattern
  * @returns {string} the Markdown body for the skill
  */
-export function patternToMarkdown({ mdx, markup, context, rules = [] }) {
+export function patternToMarkdown({ mdx, markup, context, rules = [], composition }) {
 	let inFence = false;
 	const lines = [];
 	for (const line of mdx.split('\n')) {
@@ -112,6 +116,11 @@ export function patternToMarkdown({ mdx, markup, context, rules = [] }) {
 			const source = markup[canvas[1]];
 			if (source === undefined) throw new Error(`Geen markup voor story ${canvas[1]}.`);
 			lines.push('```html', source.trimEnd(), '```');
+			continue;
+		}
+		if (/^<Composition pattern="[\w-]+" \/>$/.test(line)) {
+			if (composition === undefined) throw new Error('Geen .pattern.yaml voor <Composition>.');
+			lines.push('```', composition, '```');
 			continue;
 		}
 		if (/^<Rules pattern="[\w-]+" \/>$/.test(line)) {

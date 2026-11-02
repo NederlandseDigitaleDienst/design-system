@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/list/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/list/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,15 +11,15 @@ Een lijst toont vergelijkbare items in een vorm die bezoekers snel kunnen scanne
 ## Compositie
 
 ```
-nldd-list                      accessible-label, appearance, type
-  └─ nldd-list-item            size, en hoogstens één van href, button, checkbox, radio
+nldd-list                     accessible-label, appearance, type
+  └─ nldd-list-item           size, en hoogstens één van href, button, checkbox, radio
        └─ cellen, in de volgorde waarin ze staan
-            nldd-icon-cell     een icoon vooraan
-            nldd-spacer-cell   de ruimte tussen twee cellen
-            nldd-text-cell     text, overline, supporting-text; vult de rij
-            nldd-cell          een badge, een checkbox, wat de rij verder draagt
-            nldd-text-cell     width="fit-content", komt daardoor achteraan
-            nldd-icon-cell     de chevron van een rij die iets opent
+            nldd-icon-cell    een icoon vooraan
+            nldd-spacer-cell  de ruimte tussen twee cellen
+            nldd-text-cell    text, overline, supporting-text; vult de rij
+            nldd-cell         een badge, een checkbox, wat de rij verder draagt
+            nldd-text-cell    width="fit-content"; komt daardoor achteraan
+            nldd-icon-cell    de chevron van een rij die iets opent
 ```
 
 ```html
