@@ -25,7 +25,10 @@
  * On md and up the popover closes with Escape or a click outside it, and that
  * click goes on to what it lands on, as with any native popover: the page has
  * no backdrop and stays in use, so a click on another control does what it
- * says in one go. It needs no close button of its own.
+ * says in one go. It needs no close button of its own. Content that does, because
+ * a stray click must not close it (a form, a few steps, work you would lose),
+ * is more than a popover holds: use an nldd-sheet. nldd-just-in-time-education
+ * is the exception, a manual popover that stays until it is dismissed.
  *
  * On sm the popover is a bottom sheet with a dimmed backdrop, which closes with
  * Escape or a tap outside it. That tap stops at the backdrop, as on every
