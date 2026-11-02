@@ -42951,7 +42951,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Optional custom content between text and actions"
+              "description": "Optional custom content between text and actions. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout=\"stack\" and a gap."
             },
             {
               "name": "actions",
@@ -43395,7 +43395,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Optional custom content, forwarded to nldd-inline-dialog"
+              "description": "Optional custom content, forwarded to nldd-inline-dialog. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout=\"stack\" and a gap."
             },
             {
               "name": "actions",

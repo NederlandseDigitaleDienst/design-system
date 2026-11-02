@@ -26,7 +26,7 @@
  * @attr {string} accessible-label - Accessible name for the dialog (aria-label); falls back to text
  * @attr {boolean} open - Whether the dialog is open. Set it to open or close the dialog, as an alternative to show() and hide(). The dialog clears it itself when it closes another way (Escape, the backdrop), so bind it together with the close event.
  *
- * @slot - Optional custom content, forwarded to nldd-inline-dialog
+ * @slot - Optional custom content, forwarded to nldd-inline-dialog. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout="stack" and a gap.
  * @slot actions - nldd-button elements, forwarded to nldd-inline-dialog
  * @slot notifications - Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone.
  *

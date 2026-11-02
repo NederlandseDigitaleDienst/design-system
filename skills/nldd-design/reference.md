@@ -3380,7 +3380,7 @@ An inline status component for empty state, confirmations and feedback. Fills th
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Optional custom content between text and actions |
+| _(default)_ | Optional custom content between text and actions. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout="stack" and a gap. |
 | `actions` | nldd-button elements, wrapped in nldd-button-group (max 3) |
 
 ### `<nldd-just-in-time-education>`
@@ -3441,7 +3441,7 @@ A modal window with overlay backdrop, based on the native <dialog> element. Inte
 
 | Slot | Description |
 | --- | --- |
-| _(default)_ | Optional custom content, forwarded to nldd-inline-dialog |
+| _(default)_ | Optional custom content, forwarded to nldd-inline-dialog. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout="stack" and a gap. |
 | `actions` | nldd-button elements, forwarded to nldd-inline-dialog |
 | `notifications` | Where the notifications area lands while this overlay is open, so a notification is not left inert behind it. Filled by the package; leave it alone. |
 

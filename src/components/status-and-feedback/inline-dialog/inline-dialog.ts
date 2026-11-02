@@ -15,7 +15,7 @@
  * @attr {1|2|3|4|5|6} heading-level - Renders text as h1–h6; absent renders a p
  * @attr {'left'|'center'} horizontal-alignment - Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Left alignment also lays the actions out in a row instead of stacked full-width.
  *
- * @slot - Optional custom content between text and actions
+ * @slot - Optional custom content between text and actions. Puts no space between its children, as a sheet or card does not: the app decides the distance. Put an nldd-spacer between different components, and a group of the same, such as form fields, in an nldd-container with layout="stack" and a gap.
  * @slot actions - nldd-button elements, wrapped in nldd-button-group (max 3)
  */
 import { LitElement } from 'lit';
