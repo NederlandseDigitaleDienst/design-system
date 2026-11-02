@@ -51,12 +51,16 @@ export default {
 	args: {
 		size: 'md',
 		range: false,
+		histogram: '',
 		startIcon: '',
 		endIcon: '',
 		accessibleLabel: 'Volume',
+		tooltipTiming: 'instant',
 		invalid: false,
 		disabled: false,
 		value: 40,
+		startValue: undefined,
+		endValue: undefined,
 		min: 0,
 		max: 100,
 		step: 1,
@@ -72,6 +76,10 @@ export default {
 			control: 'boolean',
 			description: 'Kiest een bereik, met een thumb voor elk uiteinde',
 			table: { defaultValue: { summary: false } },
+		},
+		histogram: {
+			control: 'text',
+			description: 'Aantallen als balken boven de baan, één per vak, gescheiden door komma\'s (bijv. `2, 4, 7, 12`)',
 		},
 		startIcon: {
 			name: 'start-icon',
@@ -94,6 +102,13 @@ export default {
 			control: 'text',
 			description: 'Toegankelijke naam; een range zet er "minimum" en "maximum" achter',
 		},
+		tooltipTiming: {
+			name: 'tooltip-timing',
+			control: 'select',
+			options: ['instant', 'never'],
+			description: 'Wanneer de waarde boven de thumb staat: bij hover, focus en slepen, of nooit',
+			table: { defaultValue: { summary: 'instant' } },
+		},
 		invalid: {
 			control: 'boolean',
 			description: 'Markeert de slider als ongeldig',
@@ -107,6 +122,18 @@ export default {
 		value: {
 			control: 'number',
 			description: 'De waarde (zonder `range`)',
+		},
+		startValue: {
+			name: 'start-value',
+			control: 'number',
+			description: 'Het begin van een bereik (met `range`)',
+			table: { defaultValue: { summary: 'min' } },
+		},
+		endValue: {
+			name: 'end-value',
+			control: 'number',
+			description: 'Het eind van een bereik (met `range`)',
+			table: { defaultValue: { summary: 'max' } },
 		},
 		min: {
 			control: 'number',
@@ -131,12 +158,16 @@ export const Standaard = {
 		<nldd-slider
 			size=${args.size}
 			?range=${args.range}
+			histogram=${args.histogram || nothing}
 			start-icon=${args.startIcon || nothing}
 			end-icon=${args.endIcon || nothing}
 			accessible-label=${args.accessibleLabel || nothing}
+			tooltip-timing=${args.tooltipTiming}
 			?invalid=${args.invalid}
 			?disabled=${args.disabled}
 			value=${args.value}
+			start-value=${args.startValue ?? nothing}
+			end-value=${args.endValue ?? nothing}
 			min=${args.min}
 			max=${args.max}
 			step=${args.step}
