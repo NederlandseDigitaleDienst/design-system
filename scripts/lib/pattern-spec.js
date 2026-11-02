@@ -5,7 +5,8 @@
  * component was renamed or when the example stopped matching it. As data it is
  * drawn from one source and checked against the components and the example.
  *
- * A node is a component (`tag`) or something the app chooses (`label`):
+ * src/patterns/pattern.schema.json holds the shape of the file. A node is a
+ * component (`tag`) or something the app chooses (`label`):
  *
  *   tag        the element
  *   label      a place in the tree that is no single element
@@ -77,10 +78,16 @@ export function checkComposition(nodes, { tags, examples }) {
 	const problems = [];
 	const elements = examples.flatMap((root) => descendants(root));
 
+	/** Inside, not directly under: `label` nodes and wrappers such as `form` sit in between. */
+	const shownInside = (parent, tag) =>
+		elements.some((element) => element.name === parent && descendants(element).some(({ name }) => name === tag));
+
 	const visit = (node, parent) => {
-		if (Boolean(node.tag) === Boolean(node.label)) problems.push(`A node needs a tag or a label: ${JSON.stringify(node)}`);
 		for (const tag of node['any-of'] ?? []) {
 			if (!tags[tag]) problems.push(`any-of names ${tag}, which does not exist.`);
+		}
+		if (parent && node['any-of'] && !node['any-of'].some((tag) => shownInside(parent, tag))) {
+			problems.push(`No example shows any of ${node['any-of'].join(', ')} inside ${parent}.`);
 		}
 		const owner = node.tag ?? parent;
 		if (node.tag && !tags[node.tag]) problems.push(`Names ${node.tag}, which does not exist.`);
@@ -92,6 +99,7 @@ export function checkComposition(nodes, { tags, examples }) {
 			}
 			const shown = elements.filter((element) => element.name === node.tag);
 			if (shown.length === 0) problems.push(`No example shows ${node.tag}.`);
+			else if (parent && !shownInside(parent, node.tag)) problems.push(`No example shows ${node.tag} inside ${parent}.`);
 			const needed = requiredTags(node.children ?? []);
 			for (const element of shown) {
 				const inside = new Set(descendants(element).map(({ name }) => name));

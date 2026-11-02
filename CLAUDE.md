@@ -151,7 +151,7 @@ Een patroon woont in `src/patterns/<slug>/`, met vijf bestanden:
 
 - `<slug>.html`: de voorbeeldmarkup, zonder framework. Dit is de enige bron: de live story rendert hem, het codeblok op de docs-pagina toont hem en de skill neemt hem over.
 - `<slug>.stories.ts`: rendert de markup via `patternStory()` uit `src/patterns/pattern-story.ts`, plus het beetje gedrag dat een consument zelf schrijft (een knop die een sheet opent).
-- `<slug>.pattern.yaml`: de compositie als data: welke componenten, in welke nesting, wat optioneel is. De velden staan in `scripts/lib/pattern-spec.js`. De boom op de pagina en in de skill wordt hieruit getekend (`<Composition pattern="<slug>" />`), en `lint:rules` faalt op een tag of attribuut dat niet bestaat, een deel dat geen voorbeeld toont, of een voorbeeld dat een verplicht deel mist.
+- `<slug>.pattern.yaml`: de compositie als data: welke componenten, in welke nesting, wat optioneel is. De vorm staat in `src/patterns/pattern.schema.json`. De boom op de pagina en in de skill wordt hieruit getekend (`<Composition pattern="<slug>" />`), en `lint:rules` faalt op een onbekend veld, een tag of attribuut dat niet bestaat, een deel dat geen voorbeeld toont of dat ergens anders staat dan de boom zegt, of een voorbeeld dat een verplicht deel mist. Een fout die een app moet zien, blijft een regel in `src/rules/`: de spec beschrijft de bedoelde vorm en wordt alleen hier gecontroleerd.
 - `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet en waarom zo.
 - `<slug>.test.ts`: test wat het patroon belooft, op dezelfde markup.
 

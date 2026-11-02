@@ -108,3 +108,14 @@ test('patternToMarkdown refuses MDX it cannot translate', () => {
 test('referenceTags lists the components reference.md has a section for', () => {
 	assert.deepEqual([...referenceTags('### `<nldd-sheet>`\n\ntekst\n\n### `<nldd-title>`\n')], ['nldd-sheet', 'nldd-title']);
 });
+
+test('patternToMarkdown draws <Composition> as a code block', () => {
+	const mdx = 'import x from "./x";\n\n# Titel\n\n<Composition pattern="form" />\n';
+	const markdown = patternToMarkdown({ mdx, markup: {}, context, composition: 'nldd-form\n  └─ nldd-form-actions' });
+	assert.match(markdown, /```\nnldd-form\n {2}└─ nldd-form-actions\n```/);
+});
+
+test('patternToMarkdown stops when <Composition> has no spec', () => {
+	const mdx = '# Titel\n\n<Composition pattern="form" />\n';
+	assert.throws(() => patternToMarkdown({ mdx, markup: {}, context }), /Geen \.pattern\.yaml/);
+});

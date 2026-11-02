@@ -1,7 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import Ajv from 'ajv';
 import { parseHtml } from '../../lint/frontends.js';
 import { checkComposition, renderComposition } from './pattern-spec.js';
+
+const schema = JSON.parse(readFileSync(new URL('../../src/patterns/pattern.schema.json', import.meta.url), 'utf8'));
+const validate = new Ajv({ allErrors: true }).compile(schema);
 
 const tags = {
 	'nldd-form': { attrs: { name: {} }, childAttrs: {} },
@@ -60,7 +65,36 @@ test('checkComposition reports a part no example shows', () => {
 });
 
 test('checkComposition leaves an optional child alone', () => {
-	const examples = parseHtml('<nldd-form><nldd-form-field></nldd-form-field></nldd-form>');
+	const examples = parseHtml('<nldd-form><nldd-form-field><nldd-text-field></nldd-text-field></nldd-form-field></nldd-form>');
 	const problems = checkComposition(composition, { tags, examples });
 	assert.deepEqual(problems, ['No example shows nldd-form-field-help-text.']);
+});
+
+test('checkComposition reports a required part an example leaves out', () => {
+	const examples = parseHtml(`${good}<nldd-form></nldd-form>`);
+	const problems = checkComposition(composition, { tags, examples });
+	assert.deepEqual(problems, ['An example has nldd-form without nldd-form-field.']);
+});
+
+test('checkComposition reports a part that sits somewhere else than the tree says', () => {
+	const reversed = [{ tag: 'nldd-form-field', children: [{ tag: 'nldd-form' }] }];
+	const examples = parseHtml('<nldd-form><nldd-form-field></nldd-form-field></nldd-form>');
+	const problems = checkComposition(reversed, { tags, examples });
+	assert.ok(problems.includes('No example shows nldd-form inside nldd-form-field.'));
+});
+
+test('checkComposition reports an any-of no example fills', () => {
+	const examples = parseHtml('<nldd-form><nldd-form-field></nldd-form-field></nldd-form>');
+	const problems = checkComposition(composition.map((node) => ({ ...node, attrs: [] })), { tags, examples });
+	assert.ok(problems.includes('No example shows any of nldd-text-field inside nldd-form-field.'));
+});
+
+test('the schema refuses a field it does not know', () => {
+	assert.equal(validate({ composition: [{ tag: 'nldd-form', optionl: true }] }), false);
+});
+
+test('the schema wants a tag or a label, not both', () => {
+	assert.equal(validate({ composition: [{ note: 'iets' }] }), false);
+	assert.equal(validate({ composition: [{ tag: 'nldd-form', label: 'iets' }] }), false);
+	assert.equal(validate({ composition: [{ tag: 'nldd-form', children: [{ label: 'iets' }] }] }), true);
 });
