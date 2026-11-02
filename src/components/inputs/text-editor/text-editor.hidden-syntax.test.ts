@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { EditorView } from '@codemirror/view';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
+import { loadTokens } from '../../../test-tokens.js';
 import './text-editor.js';
 
 /* syntax="hidden": marks are hidden where the caret is not, and come back for
@@ -179,6 +180,39 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		expect(lines().map(ruled)).toEqual([false, false]);
 		expect(lines().map(hidden)).toEqual([false, false]);
 		expect(lines().map(textLeft)).toEqual(left);
+	});
+
+	it('draws a line per level of a nested quote, where each > is, as nldd-rich-text does', async () => {
+		const unloadTokens = loadTokens();
+		el = await make('syntax="hidden" readonly');
+		el.value = '> Niveau een\n> > Niveau twee\n> > > Niveau drie\n\n- > In een lijst';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')];
+		const rules = (l: Element) => getComputedStyle(l).backgroundPositionX.split(',').map((x) => parseFloat(x));
+		// Where each > of the prefix is, from the left of its line.
+		const marks = (l: Element) => {
+			const left = l.getBoundingClientRect().left;
+			const at: number[] = [];
+			const walker = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+			for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+				const text = n.textContent!;
+				for (let i = text.indexOf('>'); i !== -1; i = text.indexOf('>', i + 1)) {
+					const range = document.createRange();
+					range.setStart(n, i);
+					range.setEnd(n, i + 1);
+					at.push(range.getBoundingClientRect().left - left);
+				}
+			}
+			return at;
+		};
+		expect([0, 1, 2, 4].map((i) => rules(lines[i]).length)).toEqual([1, 2, 3, 1]);
+		for (const i of [0, 1, 2, 4]) {
+			const at = marks(lines[i]);
+			expect(at).toHaveLength(rules(lines[i]).length);
+			rules(lines[i]).forEach((x, n) => expect(Math.abs(x - at[n])).toBeLessThanOrEqual(1));
+		}
+		unloadTokens();
 	});
 
 	it('keeps hiding the marks of bold inside a quote the caret is in', async () => {

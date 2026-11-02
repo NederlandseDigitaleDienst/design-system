@@ -225,7 +225,9 @@ const markDecorationPlugin = ViewPlugin.fromClass(
  * line's text and every wrapped line line up — no per-line measurement, and it
  * holds in both the sans and mono body fonts. Layout-affecting → a StateField. */
 // A task's box belongs to the prefix, so its text wraps under the text, not under the box.
-const HANGING_RE = /^(\s*(?:[-*+]\s+(?:\[[ xX]\]\s+)?|\d+[.)]\s+)|\s*>+\s?)/;
+// Every `>` of a nested quote does too, spaced or not ("> > >", ">>>"), so a
+// deeper level wraps under its own text.
+const HANGING_RE = /^(\s*(?:[-*+]\s+(?:\[[ xX]\]\s+)?|\d+[.)]\s+)|(?:\s*>\s?)+)/;
 const prefixMonoDeco = Decoration.mark({ class: 'cm-md-listprefix' });
 const hangingLineCache: Record<number, Decoration> = {};
 function hangingLineDeco(length: number): Decoration {

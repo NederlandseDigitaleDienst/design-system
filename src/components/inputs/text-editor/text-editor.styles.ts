@@ -58,6 +58,7 @@ export const textEditorStyles = css`
 		--_text-editor-rule-thickness: var(--semantics-dividers-thickness);
 		--_text-editor-quote-border-width: var(--primitives-border-width-regular);
 		--_text-editor-quote-border-color: var(--semantics-content-color);
+		--_text-editor-quote-rule: linear-gradient(var(--_text-editor-quote-border-color), var(--_text-editor-quote-border-color));
 		--_text-editor-rule-color: var(--semantics-dividers-color);
 		--_text-editor-heading-marker-scale: 75%;
 		--_text-editor-token-corner-radius: var(--primitives-corner-radius-sm);
@@ -510,9 +511,7 @@ export const textEditorStyles = css`
 	/* A gradient, not an inset shadow with an offset: iOS Safari leaves a hairline
 	   of such a shadow along the bottom of a line with a fractional height. */
 	.cm-md-quote-line {
-		background-image: linear-gradient(var(--_text-editor-quote-border-color), var(--_text-editor-quote-border-color));
 		background-repeat: no-repeat;
-		background-position: left;
 		background-size: var(--_text-editor-quote-border-width) 100%;
 	}
 

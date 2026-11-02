@@ -48,10 +48,21 @@ function taskIndent(length: number): Decoration {
 // The number of a numbered list is content, so it takes the color of the text
 // rather than the dimmed color of a mark. Only the color: the mono width stays.
 const ordinal = Decoration.mark({ class: 'cm-md-ordinal' });
-// A quote reads as a line on the left. Its `>` keeps its width, so the text
-// starts in the same place whether the line or the marks show. The whole quote
-// is the construct: the caret anywhere in it shows every `>` and drops the line.
-const quoteLine = Decoration.line({ class: 'cm-md-quote-line' });
+// A quote reads as a line on the left, one per level, each where its `>` is,
+// as nldd-rich-text draws a border per nested blockquote. The `>` keeps its
+// width, so the text starts in the same place whether the lines or the marks
+// show. The whole quote is the construct: the caret anywhere in it shows every
+// `>` and drops the lines.
+const quoteLineCache: Record<string, Decoration> = {};
+function quoteLine(columns: number[]): Decoration {
+	const key = columns.join(',');
+	return (quoteLineCache[key] ??= Decoration.line({
+		class: 'cm-md-quote-line',
+		attributes: {
+			style: `background-image:${columns.map(() => 'var(--_text-editor-quote-rule)').join(',')};background-position:${columns.map((column) => `calc(${column} * var(--_text-editor-marker-advance)) 0`).join(',')}`,
+		},
+	}));
+}
 const quoteMark = Decoration.mark({ class: 'cm-md-quote-mark-hidden' });
 // With its backticks hidden, inline code gets room inside its tint as padding on
 // the text. Not as a widget: Safari measured the selection wrong beside one.
@@ -79,6 +90,23 @@ function outermostQuote(node: SyntaxNode): SyntaxNode {
 	let outer = node;
 	for (let up = node.parent; up; up = up.parent) if (up.name === 'Blockquote') outer = up;
 	return outer;
+}
+
+/** The column of every `>` in a quote, per line start. */
+function quoteColumns(state: EditorState, quote: SyntaxNode): Map<number, number[]> {
+	const columns = new Map<number, number[]>();
+	syntaxTree(state).iterate({
+		from: quote.from,
+		to: quote.to,
+		enter: (node) => {
+			if (node.name !== 'QuoteMark') return;
+			const line = state.doc.lineAt(node.from);
+			const list = columns.get(line.from) ?? [];
+			list.push(node.from - line.from);
+			columns.set(line.from, list);
+		},
+	});
+	return columns;
 }
 
 function revealsAnything(state: EditorState): boolean {
@@ -176,7 +204,13 @@ function buildHidden(view: EditorView): DecorationSet {
 					// The outermost quote is the construct; a nested one lies inside it.
 					const outer = outermostQuote(node.node);
 					if (outer !== node.node || revealed(outer.from, outer.to)) return;
-					forEachLineStart(state, outer.from, outer.to, (lineFrom) => ranges.push(quoteLine.range(lineFrom)));
+					const columns = quoteColumns(state, outer);
+					// A lazy line, without `>` of its own, goes on in the quote above it.
+					let last: number[] = [0];
+					forEachLineStart(state, outer.from, outer.to, (lineFrom) => {
+						last = columns.get(lineFrom) ?? last;
+						ranges.push(quoteLine(last).range(lineFrom));
+					});
 					return;
 				}
 				if (!parent) return;
