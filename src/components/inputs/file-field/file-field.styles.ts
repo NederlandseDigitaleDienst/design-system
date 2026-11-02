@@ -41,7 +41,7 @@ export const fileFieldStyles = css`
 		--_file-field-area-padding: var(--primitives-space-16);
 		--_file-field-area-gap: var(--primitives-space-2);
 		--_file-field-area-icon-size: var(--primitives-space-40);
-		--_file-field-area-actions-padding-top: var(--primitives-space-16);
+		--_file-field-area-actions-padding-top: var(--primitives-space-12);
 		--_file-field-accepted-types-color: var(--semantics-content-secondary-color);
 		--_file-field-accepted-types-font: var(--primitives-font-body-sm-regular-tight);
 
@@ -305,6 +305,7 @@ export const fileFieldStyles = css`
 
 	.file-field__choices {
 		display: flex;
+		margin-top: var(--primitives-space-8);
 		margin-bottom: var(--primitives-space-8);
 		flex-wrap: wrap;
 		justify-content: center;
