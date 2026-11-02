@@ -32,9 +32,10 @@
  *
  * On sm the popover is a bottom sheet with a dimmed backdrop, which closes with
  * Escape or a tap outside it. That tap stops at the backdrop, as on every
- * native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a
- * sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The
- * popover catches the dismiss of that bar and closes. It draws no bar itself.
+ * native sheet: the dimming says the page is out of play. Where that is not
+ * enough, give its content a title bar of its own, as in a sheet: an nldd-page
+ * with an nldd-top-title-bar and a `dismiss-text`. The popover catches the
+ * dismiss of that bar and closes. It draws no bar itself.
  *
  * @element nldd-popover
  *

@@ -264,7 +264,6 @@ export const fileFieldStyles = css`
 		font: var(--_file-field-browse-action-font);
 	}
 
-
 	.file-field__file-icon {
 		flex-shrink: 0;
 		margin-left: var(--_file-field-inline-padding);
