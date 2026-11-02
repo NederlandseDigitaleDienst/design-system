@@ -15,7 +15,7 @@ export const modalDialogStyles = css`
 	:host {
 		--_modal-dialog-max-height: 90vh;
 		--_modal-dialog-padding: var(--primitives-space-16);
-		--_modal-dialog-content-max-width: var(--primitives-area-400);
+		--_modal-dialog-content-max-width: var(--primitives-area-360);
 
 		@media (min-width: ${mdMin}) {
 			--_modal-dialog-padding: var(--primitives-space-24);

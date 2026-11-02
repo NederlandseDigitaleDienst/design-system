@@ -3374,7 +3374,7 @@ An inline status component for empty state, confirmations and feedback. Fills th
 | `text` | `string` | Main text (heading or paragraph, depending on heading-level) |
 | `supporting-text` | `string` | Supporting text below the heading |
 | `heading-level` | `1\|2\|3\|4\|5\|6` | Renders text as h1–h6; absent renders a p |
-| `horizontal-alignment` | `'left'\|'center'` | Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 400px wide, even where two would fit side by side. Left-aligned, they take the full width of the dialog. |
+| `horizontal-alignment` | `'left'\|'center'` | Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 360px wide, even where two would fit side by side. Left-aligned, they take the full width of the dialog. |
 
 **Slots**
 

@@ -14,7 +14,7 @@ export const inlineDialogStyles = css`
 		--_inline-dialog-icon-color: var(--semantics-content-color);
 		--_inline-dialog-text-font: var(--primitives-font-body-md-bold-tight);
 		--_inline-dialog-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
-		--_inline-dialog-footer-max-width: var(--primitives-area-400);
+		--_inline-dialog-footer-max-width: var(--primitives-area-360);
 
 		${inheritedTextReset}
 		display: flex;
