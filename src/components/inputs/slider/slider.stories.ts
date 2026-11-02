@@ -289,7 +289,10 @@ export const MetHistogramEnVelden = {
 
 /**
  * Iconen aan de uiteinden zeggen wat de baan betekent, zoals Apple de
- * luidsprekers bij het volume zet.
+ * luidsprekers bij het volume zet. Net als daar zet een klik op een icoon de
+ * waarde een tiende van het bereik omlaag of omhoog. Met het toetsenbord doe
+ * je dat met Page Up en Page Down, dus de iconen zijn geen tabstop. In een
+ * range zijn ze alleen uitleg.
  */
 export const MetIconen = {
 	name: 'Met iconen',

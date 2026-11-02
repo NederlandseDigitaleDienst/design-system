@@ -60,6 +60,44 @@ describe('nldd-slider', () => {
 		expect(seen).toEqual(['input 70', 'change 70']);
 	});
 
+	it('moves a tenth of the range down or up on a click on its icons', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider start-icon="no-volume" end-icon="high-volume" value="40"></nldd-slider>');
+		const seen: string[] = [];
+		el.addEventListener('input', (event) => seen.push(`input ${(event as CustomEvent).detail.value}`));
+		el.addEventListener('change', (event) => seen.push(`change ${(event as CustomEvent).detail.value}`));
+		const [start, end] = ['.slider__start-icon', '.slider__end-icon']
+			.map((selector) => el.shadowRoot!.querySelector<HTMLElement>(selector)!);
+		end.click();
+		expect(el.value).toBe(50);
+		start.click();
+		start.click();
+		expect(el.value).toBe(30);
+		await waitForUpdate(el);
+		expect(inputs(el)[0].value).toBe('30');
+		expect(seen).toEqual(['input 50', 'change 50', 'input 40', 'change 40', 'input 30', 'change 30']);
+	});
+
+	it('takes at least one step on an icon click, and stops at the ends without an event', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider end-icon="high-volume" min="0" max="5" step="2" value="4"></nldd-slider>');
+		const change = vi.fn();
+		el.addEventListener('change', change);
+		const end = el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!;
+		end.click();
+		expect(el.value).toBe(5);
+		end.click();
+		expect(change).toHaveBeenCalledTimes(1);
+	});
+
+	it('does nothing on an icon click when disabled or a range', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider end-icon="high-volume" value="40" disabled></nldd-slider>');
+		el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!.click();
+		expect(el.value).toBe(40);
+		cleanup(el);
+		el = await fixture<NLDDSlider>('<nldd-slider range end-icon="high-volume" start-value="20" end-value="60"></nldd-slider>');
+		el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!.click();
+		expect([el.startValue, el.endValue]).toEqual([20, 60]);
+	});
+
 	it('submits its value under name, and resets with its form', async () => {
 		const form = document.createElement('form');
 		document.body.append(form);

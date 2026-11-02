@@ -1,3 +1,5 @@
+/* eslint-disable lit-a11y/click-events-have-key-events -- the icons step the
+   value on a click; the keyboard does that on the thumb with Page Up and Down. */
 import { html, nothing, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -67,7 +69,9 @@ export function sliderTemplate(component: NLDDSlider): TemplateResult {
 	return html`
 		<div class="slider">
 			${component.startIcon ? html`
-				<span class="slider__start-icon">
+				<span class="slider__start-icon"
+					@click=${range ? nothing : () => component._handleIconClick(-1)}
+				>
 					<nldd-icon icon=${component.startIcon}></nldd-icon>
 				</span>
 			` : nothing}
@@ -95,7 +99,9 @@ export function sliderTemplate(component: NLDDSlider): TemplateResult {
 				`}
 			</div>
 			${component.endIcon ? html`
-				<span class="slider__end-icon">
+				<span class="slider__end-icon"
+					@click=${range ? nothing : () => component._handleIconClick(1)}
+				>
 					<nldd-icon icon=${component.endIcon}></nldd-icon>
 				</span>
 			` : nothing}

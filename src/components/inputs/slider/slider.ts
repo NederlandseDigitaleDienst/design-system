@@ -36,6 +36,13 @@
  * within the chosen value or range is colored. The bars are decoration for a
  * screen reader: say what they show in the text around it.
  *
+ * A click on `start-icon` or `end-icon` moves the value a larger step down or
+ * up than the arrow keys do: a tenth of the range, and at least one `step`, as
+ * the speakers beside a volume slider in macOS do. The icons stay out of the
+ * tab order and out of the accessibility tree, because the keyboard already has
+ * Page Up and Page Down for it. In a range they only explain the ends, since a
+ * click could not say which thumb to move.
+ *
  * In a form a slider submits its value under `name`; a range submits both ends
  * under it, the start first.
  *
@@ -43,8 +50,8 @@
  * @attr {string} size - Slider size: 'xs' | 'sm' | 'md' (default: 'md'), with the height of the other controls of that size. Set automatically by nldd-form-field.
  * @attr {boolean} range - Picks a range, with a thumb for each end: `start-value` and `end-value` in place of `value`
  * @attr {string} histogram - Counts drawn as bars above the track, one per bucket of (max - min) / n, comma- or space-separated; as a property, an array of numbers. The bars within the chosen value or range are colored.
- * @attr {string} start-icon - Icon at the start of the track, such as a quiet speaker for a volume
- * @attr {string} end-icon - Icon at the end of the track
+ * @attr {string} start-icon - Icon at the start of the track, such as a quiet speaker for a volume. A click on it moves the value a tenth of the range down (not in a range).
+ * @attr {string} end-icon - Icon at the end of the track. A click on it moves the value a tenth of the range up (not in a range).
  * @attr {string} accessible-label - Accessible name; a range adds "minimum" and "maximum" to it for its thumbs. Set automatically by nldd-form-field.
  * @attr {string} tooltip-timing - When the value shows above the thumb: 'instant' (the default: on hover, keyboard focus and while dragging) or 'never', for a slider whose value shows elsewhere, such as in fields above it
  * @attr {boolean} invalid - Marks the control as invalid. Announced with aria-invalid; nothing is drawn for it.
@@ -284,6 +291,19 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	/** @internal */
 	_handleChange(event: Event): void {
 		event.stopPropagation();
+		this._emit('change');
+	}
+
+	/** Moves the value a tenth of the range, at least one step, down (-1) or up (1).
+	 *  @internal */
+	_handleIconClick(direction: -1 | 1): void {
+		if (this.disabled) return;
+		const page = Math.max(this.step > 0 ? this.step : 1, (this.max - this.min) / 10);
+		const before = this._value;
+		const input = this.shadowRoot?.querySelector<HTMLInputElement>('.slider__input--value') ?? undefined;
+		this._set('value', before + direction * page, input);
+		if (this._value === before) return;
+		this._emit('input');
 		this._emit('change');
 	}
 
