@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, cleanup, waitForUpdate } from '../../../test-utils.js';
 import { loadTokens } from '../../../test-tokens.js';
 import type { NLDDSlider } from './slider.js';
@@ -96,6 +97,33 @@ describe('nldd-slider', () => {
 		el = await fixture<NLDDSlider>('<nldd-slider range end-icon="high-volume" start-value="20" end-value="60"></nldd-slider>');
 		el.shadowRoot!.querySelector<HTMLElement>('.slider__end-icon')!.click();
 		expect([el.startValue, el.endValue]).toEqual([20, 60]);
+	});
+
+	it('takes the same tenth of the range on Shift with an arrow key as on Page Up', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider value="40"></nldd-slider>');
+		const seen: string[] = [];
+		el.addEventListener('change', (event) => seen.push(`change ${(event as CustomEvent).detail.value}`));
+		inputs(el)[0].focus();
+		await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
+		expect(el.value).toBe(50);
+		await userEvent.keyboard('{Shift>}{ArrowDown}{ArrowDown}{/Shift}');
+		expect(el.value).toBe(30);
+		await userEvent.keyboard('{PageUp}');
+		expect(el.value).toBe(40);
+		await userEvent.keyboard('{ArrowRight}');
+		expect(el.value).toBe(41);
+		expect(seen.slice(0, 3)).toEqual(['change 50', 'change 40', 'change 30']);
+	});
+
+	it('moves the focused thumb of a range on Shift with an arrow key', async () => {
+		el = await fixture<NLDDSlider>('<nldd-slider range start-value="20" end-value="60"></nldd-slider>');
+		inputs(el)[1].focus();
+		await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
+		inputs(el)[0].focus();
+		await userEvent.keyboard('{Shift>}{ArrowLeft}{/Shift}');
+		expect([el.startValue, el.endValue]).toEqual([10, 70]);
+		await waitForUpdate(el);
+		expect(inputs(el).map((input) => input.value)).toEqual(['10', '70']);
 	});
 
 	it('submits its value under name, and resets with its form', async () => {

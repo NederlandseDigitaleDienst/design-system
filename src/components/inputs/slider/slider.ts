@@ -36,10 +36,11 @@
  * within the chosen value or range is colored. The bars are decoration for a
  * screen reader: say what they show in the text around it.
  *
- * A click on `start-icon` or `end-icon` moves the value a larger step down or
- * up than the arrow keys do: a tenth of the range, and at least one `step`.
- * The icons stay out of the tab order and out of the accessibility tree,
- * because the keyboard already has Page Up and Page Down for it. In a range
+ * A larger step than the arrow keys take is a tenth of the range, and at least
+ * one `step`: what Page Up and Page Down do, what Shift with an arrow key does
+ * (a Mac keyboard has no Page Up), and what a click on `start-icon` or
+ * `end-icon` does. The icons stay out of the tab order and out of the
+ * accessibility tree, because the keyboard already has those keys. In a range
  * they only explain the ends, since a click could not say which thumb to move.
  *
  * In a form a slider submits its value under `name`; a range submits both ends
@@ -297,11 +298,36 @@ export class NLDDSlider extends DescribedBy(FormAssociated(LitElement)) {
 	 *  @internal */
 	_handleIconClick(direction: -1 | 1): void {
 		if (this.disabled) return;
+		this._page('value', direction);
+	}
+
+	/** Shift with an arrow key takes the larger step; the native input only
+	 *  takes one step for it.
+	 *  @internal */
+	_handleKeyDown(event: KeyboardEvent, thumb: Thumb): void {
+		if (!event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;
+		const rtl = getComputedStyle(this).direction === 'rtl';
+		const directions: Record<string, -1 | 1> = {
+			ArrowUp: 1,
+			ArrowDown: -1,
+			ArrowRight: rtl ? -1 : 1,
+			ArrowLeft: rtl ? 1 : -1,
+		};
+		const direction = directions[event.key];
+		if (!direction) return;
+		event.preventDefault();
+		this._page(thumb, direction);
+	}
+
+	/** Moves a thumb a tenth of the range, at least one step, the jump the
+	 *  native input takes on Page Up and Page Down. */
+	private _page(thumb: Thumb, direction: -1 | 1): void {
 		const page = Math.max(this.step > 0 ? this.step : 1, (this.max - this.min) / 10);
-		const before = this._value;
-		const input = this.shadowRoot?.querySelector<HTMLInputElement>('.slider__input--value') ?? undefined;
-		this._set('value', before + direction * page, input);
-		if (this._value === before) return;
+		const current = () => (thumb === 'value' ? this._value : thumb === 'start' ? this._start : this._end);
+		const before = current();
+		const input = this.shadowRoot?.querySelector<HTMLInputElement>(`.slider__input--${thumb}`) ?? undefined;
+		this._set(thumb, before + direction * page, input);
+		if (current() === before) return;
 		this._emit('input');
 		this._emit('change');
 	}

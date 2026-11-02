@@ -19,6 +19,7 @@ function thumbInput(component: NLDDSlider, thumb: 'value' | 'start' | 'end', val
 			aria-invalid=${component.invalid ? 'true' : nothing}
 			?disabled=${component.disabled}
 			@input=${(event: Event) => component._handleInput(event, thumb)}
+			@keydown=${(event: KeyboardEvent) => component._handleKeyDown(event, thumb)}
 			@change=${component._handleChange}
 		>
 	`;
