@@ -35,6 +35,7 @@ here; consult the commit history if you need that level of detail.
 - **Dragging on `nldd-task-board` works on an iPhone.** After holding an item, the first move scrolled the board instead, and the drag broke off. iOS decides whether a touch may scroll as it starts, and the board now says so from the start.
 - **`focus()` right after a component is put in the page works.** A text field, button, checkbox and every other component that hands focus to an element inside it did nothing before its first render, so a site that adds a field and focuses it left focus where it was. The call now waits for that render, unless focus has moved on in the meantime.
 - **A card in an `nldd-collection` that scrolls sideways comes fully into view when something in it takes focus.** The browser only scrolled the focused link in, so a card could stay half outside the row with its focus ring cut off.
+- **`button-group-needs-width` no longer warns about a group that gets its width while the page loads.** The group judged a zero width 250ms after it first measured one, which on a loading page, such as a card in an `nldd-collection` that scrolls sideways, came before the width did, and it kept the verdict once the width arrived. It now waits for the page to load, and takes the verdict back when a width comes later.
 
 ## [0.14.0](https://github.com/NederlandseDigitaleDienst/design-system/compare/v0.13.2...v0.14.0) (2026-11-02)
 
