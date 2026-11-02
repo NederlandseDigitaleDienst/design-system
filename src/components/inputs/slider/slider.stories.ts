@@ -32,7 +32,22 @@ export default {
 			repository: 'https://github.com/NederlandseDigitaleDienst/design-system',
 		},
 		status: { type: 'beta' },
+		// The canvas spacing below is not part of the example, so keep it out
+		// of the code a reader copies.
+		docs: { source: { excludeDecorators: true } },
 	},
+	// Room above the track for the value tooltip, which would otherwise fall
+	// off the top of the canvas.
+	decorators: [
+		(story: () => unknown) => html`
+			<nldd-container
+				padding-top="40"
+				max-width="480px"
+			>
+				${story()}
+			</nldd-container>
+		`,
+	],
 	args: {
 		size: 'md',
 		range: false,
@@ -113,24 +128,19 @@ export default {
 
 export const Standaard = {
 	render: (args: Record<string, any>) => html`
-		<nldd-container
-			padding-top="40"
-			max-width="480px"
-		>
-			<nldd-slider
-				size=${args.size}
-				?range=${args.range}
-				start-icon=${args.startIcon || nothing}
-				end-icon=${args.endIcon || nothing}
-				accessible-label=${args.accessibleLabel || nothing}
-				?invalid=${args.invalid}
-				?disabled=${args.disabled}
-				value=${args.value}
-				min=${args.min}
-				max=${args.max}
-				step=${args.step}
-			></nldd-slider>
-		</nldd-container>
+		<nldd-slider
+			size=${args.size}
+			?range=${args.range}
+			start-icon=${args.startIcon || nothing}
+			end-icon=${args.endIcon || nothing}
+			accessible-label=${args.accessibleLabel || nothing}
+			?invalid=${args.invalid}
+			?disabled=${args.disabled}
+			value=${args.value}
+			min=${args.min}
+			max=${args.max}
+			step=${args.step}
+		></nldd-slider>
 	`,
 };
 
@@ -141,21 +151,16 @@ export const Standaard = {
  */
 export const Range = {
 	render: () => html`
-		<nldd-container
-			padding-top="40"
-			max-width="480px"
-		>
-			<nldd-slider
-				range
-				accessible-label="Prijs"
-				min="0"
-				max="2000"
-				step="50"
-				start-value="200"
-				end-value="1200"
-				.formatValue=${(value: number) => `€ ${value.toLocaleString('nl-NL')}`}
-			></nldd-slider>
-		</nldd-container>
+		<nldd-slider
+			range
+			accessible-label="Prijs"
+			min="0"
+			max="2000"
+			step="50"
+			start-value="200"
+			end-value="1200"
+			.formatValue=${(value: number) => `€ ${value.toLocaleString('nl-NL')}`}
+		></nldd-slider>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -191,7 +196,7 @@ export const Range = {
 export const MetHistogramEnVelden = {
 	name: 'Met histogram en velden',
 	render: () => {
-		const root = (event: Event) => (event.target as Element).closest('nldd-container')!;
+		const root = (event: Event) => (event.target as Element).closest('nldd-container:has(> nldd-slider)')!;
 		const fromSlider = (event: Event) => {
 			const { startValue, endValue } = (event as CustomEvent).detail;
 			const [start, end] = root(event).querySelectorAll('nldd-number-field');
@@ -207,7 +212,6 @@ export const MetHistogramEnVelden = {
 		return html`
 			<nldd-container
 				gap="16"
-				max-width="480px"
 			>
 				<nldd-container
 					layout="row"
@@ -259,17 +263,12 @@ export const MetHistogramEnVelden = {
 export const MetIconen = {
 	name: 'Met iconen',
 	render: () => html`
-		<nldd-container
-			padding-top="40"
-			max-width="480px"
-		>
-			<nldd-slider
-				accessible-label="Volume"
-				start-icon="no-volume"
-				end-icon="high-volume"
-				value="60"
-			></nldd-slider>
-		</nldd-container>
+		<nldd-slider
+			accessible-label="Volume"
+			start-icon="no-volume"
+			end-icon="high-volume"
+			value="60"
+		></nldd-slider>
 	`,
 	parameters: { controls: { disable: true } },
 };
@@ -278,9 +277,7 @@ export const MetIconen = {
 export const Grootten = {
 	render: () => html`
 		<nldd-container
-			padding-top="40"
 			gap="40"
-			max-width="480px"
 		>
 			<nldd-slider
 				accessible-label="Volume md"
@@ -314,21 +311,16 @@ export const Grootten = {
 export const InEenFormulierveld = {
 	name: 'In een formulierveld',
 	render: () => html`
-		<nldd-container
-			padding-top="16"
-			max-width="480px"
-		>
-			<nldd-form-field label="Bijdrage in de kosten">
-				<nldd-slider
-					name="bijdrage"
-					min="0"
-					max="100"
-					step="5"
-					value="50"
-					.formatValue=${(value: number) => `${value}%`}
-				></nldd-slider>
-			</nldd-form-field>
-		</nldd-container>
+		<nldd-form-field label="Bijdrage in de kosten">
+			<nldd-slider
+				name="bijdrage"
+				min="0"
+				max="100"
+				step="5"
+				value="50"
+				.formatValue=${(value: number) => `${value}%`}
+			></nldd-slider>
+		</nldd-form-field>
 	`,
 	parameters: { controls: { disable: true } },
 };
