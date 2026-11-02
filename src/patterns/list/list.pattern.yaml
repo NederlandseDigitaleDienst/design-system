@@ -1,9 +1,10 @@
+partial:
+  list.empty.html: [nldd-list-item]
 composition:
   - tag: nldd-list
     attrs: [accessible-label, appearance, type]
     children:
       - tag: nldd-list-item
-        optional: true
         attrs: [size]
         one-of: [href, button, checkbox, radio]
         children:

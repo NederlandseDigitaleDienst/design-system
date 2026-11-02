@@ -81,12 +81,13 @@ test('checkComposition knows no attribute every component has', () => {
 
 test('checkComposition reports a part no example shows', () => {
 	const problems = check(composition, '<nldd-form></nldd-form>');
-	assert.ok(problems.includes('No example shows nldd-form-field.'));
+	assert.ok(problems.includes('No example shows nldd-form-field inside nldd-form.'));
+	assert.ok(check([{ tag: 'nldd-dropdown' }], '<nldd-form></nldd-form>').includes('No example shows nldd-dropdown.'));
 });
 
 test('checkComposition leaves an optional child out of what an example needs', () => {
 	const problems = check(composition, '<nldd-form><nldd-form-field><nldd-text-field></nldd-text-field></nldd-form-field></nldd-form>');
-	assert.deepEqual(problems, ['No example shows nldd-form-field-help-text.']);
+	assert.deepEqual(problems, ['No example shows nldd-form-field-help-text inside nldd-form-field.']);
 });
 
 test('checkComposition names the file of an example that leaves out a required part', () => {
@@ -96,14 +97,23 @@ test('checkComposition names the file of an example that leaves out a required p
 
 test('checkComposition lets a partial example leave out a required part', () => {
 	const examples = [example(good), example('<nldd-form></nldd-form>', 'b.html')];
-	assert.deepEqual(checkComposition(composition, { tags, examples, partial: ['b.html'] }), []);
-	assert.deepEqual(checkComposition(composition, { tags, examples: [example(good)], partial: ['b.html'] }), ['partial names b.html, which is no example.']);
+	assert.deepEqual(checkComposition(composition, { tags, examples, partial: { 'b.html': ['nldd-form-field'] } }), []);
+	assert.deepEqual(checkComposition(composition, { tags, examples: [example(good)], partial: { 'b.html': ['nldd-form-field'] } }), ['partial names b.html, which is no example.']);
+});
+
+test('checkComposition keeps the rest of a partial example required', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ tag: 'nldd-form-field' }, { tag: 'nldd-dropdown' }] }];
+	const examples = [
+		example('<nldd-form><nldd-form-field></nldd-form-field><nldd-dropdown></nldd-dropdown></nldd-form>'),
+		example('<nldd-form></nldd-form>', 'b.html'),
+	];
+	assert.deepEqual(checkComposition(nodes, { tags, examples, partial: { 'b.html': ['nldd-form-field'] } }), ['b.html: nldd-form without nldd-dropdown.']);
 });
 
 test('checkComposition wants a child directly under its parent', () => {
 	const wrong = [{ tag: 'nldd-form', children: [{ tag: 'nldd-text-field' }] }];
 	const problems = check(wrong, '<nldd-form><nldd-form-field><nldd-text-field></nldd-text-field></nldd-form-field></nldd-form>');
-	assert.ok(problems.includes('No example shows nldd-text-field directly inside nldd-form.'));
+	assert.ok(problems.includes('No example shows nldd-text-field inside nldd-form.'));
 });
 
 test('checkComposition looks through a plain element', () => {
@@ -114,12 +124,71 @@ test('checkComposition looks through a plain element', () => {
 test('checkComposition reports a part that sits somewhere else than the tree says', () => {
 	const reversed = [{ tag: 'nldd-form-field', children: [{ tag: 'nldd-form' }] }];
 	const problems = check(reversed, '<nldd-form><nldd-form-field></nldd-form-field></nldd-form>');
-	assert.ok(problems.includes('No example shows nldd-form directly inside nldd-form-field.'));
+	assert.ok(problems.includes('No example shows nldd-form inside nldd-form-field.'));
+});
+
+test('checkComposition looks through a plain element in a slot', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ slot: 'actions', children: [{ tag: 'nldd-form-field' }] }] }];
+	assert.deepEqual(check(nodes, '<nldd-form><div slot="actions"><nldd-form-field></nldd-form-field></div></nldd-form>'), []);
+});
+
+test('checkComposition wants every required root in every example', () => {
+	const roots = [{ tag: 'nldd-form' }, { tag: 'nldd-dropdown' }];
+	const examples = [example('<nldd-form></nldd-form><nldd-dropdown></nldd-dropdown>'), example('<nldd-form></nldd-form>', 'b.html')];
+	assert.deepEqual(checkComposition(roots, { tags, examples }), ['b.html: misses nldd-dropdown.']);
+	assert.deepEqual(checkComposition(roots, { tags, examples, partial: { 'b.html': ['nldd-dropdown'] } }), []);
+});
+
+test('checkComposition gives every element to one sibling', () => {
+	const nodes = [{ tag: 'nldd-form', children: [
+		{ tag: 'nldd-form-field' },
+		{ tag: 'nldd-form-field', attrs: ['label="a"'] },
+	] }];
+	const problems = check(nodes, '<nldd-form><nldd-form-field label="a"></nldd-form-field></nldd-form>');
+	assert.deepEqual(problems, ['No example shows nldd-form-field inside nldd-form.']);
+});
+
+test('checkComposition matches identical siblings to the one that fits', () => {
+	const nodes = [{ tag: 'nldd-form', children: [
+		{ tag: 'nldd-form-field', children: [{ tag: 'nldd-text-field' }] },
+		{ tag: 'nldd-form-field', children: [{ tag: 'nldd-dropdown' }] },
+	] }];
+	const fields = '<nldd-form-field><nldd-dropdown></nldd-dropdown></nldd-form-field><nldd-form-field><nldd-text-field></nldd-text-field></nldd-form-field>';
+	assert.deepEqual(check(nodes, `<nldd-form>${fields}</nldd-form>`), []);
+});
+
+test('checkComposition treats a tag without slot as the default slot', () => {
+	const nodes = [{ tag: 'nldd-form', children: [{ tag: 'nldd-form-field', optional: true }] }];
+	const problems = check(nodes, '<nldd-form><nldd-form-field slot="actions"></nldd-form-field></nldd-form>');
+	assert.deepEqual(problems, ['No example shows nldd-form-field inside nldd-form.']);
+});
+
+test('checkComposition checks a slot under a slot against what fills the outer one', () => {
+	const local = { ...tags, 'nldd-form-field': component(['label'], ['', 'inner']) };
+	const nodes = [{ tag: 'nldd-form', children: [{ slot: 'actions', children: [{ slot: 'inner' }] }] }];
+	const markup = '<nldd-form><nldd-form-field slot="actions"><nldd-text-field slot="inner"></nldd-text-field></nldd-form-field></nldd-form>';
+	assert.deepEqual(checkComposition(nodes, { tags: local, examples: [example(markup)] }), []);
+});
+
+test('checkComposition checks the children of `or` against every tag', () => {
+	const nodes = [{ tag: 'nldd-form', or: ['nldd-dropdown'], children: [{ slot: 'actions' }] }];
+	const problems = check(nodes, '<nldd-form><nldd-text-field slot="actions"></nldd-text-field></nldd-form>');
+	assert.ok(problems.includes('nldd-form, nldd-dropdown has no slot actions.'));
+});
+
+test('checkComposition wants a required any-of in every element', () => {
+	const nodes = [{ tag: 'nldd-form-field', children: [
+		{ label: 'x', 'any-of': ['nldd-text-field'] },
+		{ tag: 'nldd-form-field-help-text', optional: true },
+	] }];
+	const filled = '<nldd-form-field><nldd-dropdown></nldd-dropdown><nldd-form-field-help-text></nldd-form-field-help-text></nldd-form-field><nldd-form-field><nldd-text-field></nldd-text-field></nldd-form-field>';
+	assert.deepEqual(check(nodes, filled), []);
+	assert.deepEqual(check(nodes, `${filled}<nldd-form-field><nldd-form-field-help-text></nldd-form-field-help-text></nldd-form-field>`), ['a.html: nldd-form-field without x.']);
 });
 
 test('checkComposition reports an any-of no example fills', () => {
 	const nodes = [{ tag: 'nldd-form-field', children: [{ label: 'x', 'any-of': ['nldd-text-field'] }] }];
-	assert.deepEqual(check(nodes, '<nldd-form-field></nldd-form-field>'), ['No example shows any of nldd-text-field inside nldd-form-field.']);
+	assert.ok(check(nodes, '<nldd-form-field></nldd-form-field>').includes('No example shows any of nldd-text-field inside nldd-form-field.'));
 	assert.deepEqual(check([{ label: 'x', 'any-of': ['nldd-text-field'] }], '<nldd-form></nldd-form>'), ['No example shows any of nldd-text-field.']);
 });
 
@@ -180,4 +249,7 @@ test('the schema refuses a field that would go unchecked on this kind of node', 
 	assert.equal(validate({ composition: [{ label: 'x', 'one-of': ['a'] }] }), false);
 	assert.equal(validate({ composition: [{ tag: 'nldd-form', 'any-of': ['nldd-form'] }] }), false);
 	assert.equal(validate({ composition: [{ tag: 'nldd-form', attrs: ['slot="a"'] }] }), true);
+	assert.equal(validate({ composition: [{ tag: 'nldd-form', attrs: [] }] }), false);
+	assert.equal(validate({ composition: [{ tag: 'nldd-form', 'one-of': [] }] }), false);
+	assert.equal(validate({ composition: [{ tag: 'nldd-form', 'one-of': ['href="x"', 'button'] }] }), false);
 });

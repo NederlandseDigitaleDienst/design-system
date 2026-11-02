@@ -26,7 +26,7 @@ nldd-shell                                   de buitenste schil
        │    ├─ slot="header"                 de nldd-title met de h1
        │    ├─ slot="left"                   de nldd-rich-text met de uitleg
        │    └─ slot="right"                  de nldd-card met de actie
-       ├─ nldd-simple-section                of, kort zonder vervolgactie: de h1 in het header-slot, de nldd-rich-text eronder; optioneel
+       ├─ of, kort zonder vervolgactie       nldd-simple-section, de h1 in het header-slot, de nldd-rich-text eronder
        ├─ nldd-simple-section                background="tinted"; waar je hierna heen kunt
        │    └─ nldd-collection
        │         └─ nldd-card                href

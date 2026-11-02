@@ -77,7 +77,7 @@ for (const slug of slugs) {
 	);
 	const rules = rulesOfPattern(lintRules, slug);
 	const composition = renderComposition(parseYaml(readSource(join(dir, `${slug}.pattern.yaml`))).composition);
-	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context, rules, composition });
+	const body = patternToMarkdown({ mdx: readSource(join(dir, `${slug}.mdx`)), markup, context, rules, composition, slug });
 	const header = generatedHeader(`Bron: src/patterns/${slug}/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).`);
 	writeGenerated(join(outputDir, `${slug}.md`), header + body);
 }

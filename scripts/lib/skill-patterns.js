@@ -98,9 +98,10 @@ function renderRules(rules) {
  * @param {Record<string, string>} input.markup - story name to markup source
  * @param {{ patterns: Record<string, string>, tags: Set<string> }} input.context
  * @param {string} [input.composition] - the drawn tree of the pattern
+ * @param {string} [input.slug] - the pattern, which is the only tree its page can draw
  * @returns {string} the Markdown body for the skill
  */
-export function patternToMarkdown({ mdx, markup, context, rules = [], composition }) {
+export function patternToMarkdown({ mdx, markup, context, rules = [], composition, slug }) {
 	let inFence = false;
 	const lines = [];
 	for (const line of mdx.split('\n')) {
@@ -117,8 +118,9 @@ export function patternToMarkdown({ mdx, markup, context, rules = [], compositio
 			lines.push('```html', source.trimEnd(), '```');
 			continue;
 		}
-		if (/^<Composition pattern="[\w-]+" \/>$/.test(line)) {
-			if (composition === undefined) throw new Error('Geen .pattern.yaml voor <Composition>.');
+		const tree = line.match(/^<Composition pattern="([\w-]+)" \/>$/);
+		if (tree) {
+			if (tree[1] !== slug) throw new Error(`<Composition> tekent ${tree[1]} op de pagina van ${slug}.`);
 			lines.push('```', composition, '```');
 			continue;
 		}

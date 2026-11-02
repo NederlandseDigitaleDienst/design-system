@@ -15,7 +15,8 @@ nldd-button (of nldd-icon-button)  expandable
   └─ nldd-menu                     slot="popup"
        ├─ nldd-menu-group          text; een kopje boven een groep items; optioneel
        │    └─ nldd-menu-item
-       └─ nldd-menu-item           text, icon, shortcut, href
+       ├─ nldd-menu-item           text, icon, shortcut, href
+       └─ nldd-menu-divider        vóór een destructieve actie; optioneel
 ```
 
 ```html
@@ -35,6 +36,11 @@ nldd-button (of nldd-icon-button)  expandable
         icon="copy"
       ></nldd-menu-item>
     </nldd-menu-group>
+    <nldd-menu-item
+      text="Exporteer"
+      icon="download"
+    ></nldd-menu-item>
+    <nldd-menu-divider></nldd-menu-divider>
     <nldd-menu-item
       text="Verwijder"
       icon="delete"

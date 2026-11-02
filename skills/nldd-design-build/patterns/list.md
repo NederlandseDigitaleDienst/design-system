@@ -12,7 +12,7 @@ Een lijst toont vergelijkbare items in een vorm die bezoekers snel kunnen scanne
 
 ```
 nldd-list                         accessible-label, appearance, type
-  └─ nldd-list-item               size, en hoogstens één van href, button, checkbox, radio; optioneel
+  └─ nldd-list-item               size, en hoogstens één van href, button, checkbox, radio
        ├─ nldd-list-item-segment  een deel van de rij met een eigen actie, met zijn eigen cellen; optioneel
        └─ cellen, in de volgorde waarin ze staan
             nldd-icon-cell        een icoon vooraan; optioneel

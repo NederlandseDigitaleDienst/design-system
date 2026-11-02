@@ -7,7 +7,13 @@
 	"required": ["composition"],
 	"properties": {
 		"composition": { "$ref": "#/definitions/nodes" },
-		"partial": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "\\.html$" }, "description": "Examples that show only a part of the pattern, so they may leave out what is required." }
+		"partial": {
+			"type": "object",
+			"minProperties": 1,
+			"description": "Examples that show only a part of the pattern, each with what it leaves out. Everything else stays required in that example.",
+			"propertyNames": { "pattern": "\\.html$" },
+			"additionalProperties": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+		}
 	},
 	"definitions": {
 		"nodes": {
@@ -36,8 +42,8 @@
 					"oneOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 } }]
 				},
 				"label": { "type": "string", "description": "A place in the tree that is no single element." },
-				"attrs": { "type": "array", "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(=\"[^\"]*\")?$" }, "description": "Attributes worth naming here. `name=\"value\"` is a fixed value, and the node then only means elements with that value. A slot goes in `slot`." },
-				"one-of": { "type": "array", "items": { "type": "string" }, "description": "Attributes of which at most one applies." },
+				"attrs": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(=\"[^\"]*\")?$" }, "description": "Attributes worth naming here. `name=\"value\"` is a fixed value, and the node then only means elements with that value. A slot goes in `slot`." },
+				"one-of": { "type": "array", "minItems": 2, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }, "description": "Attributes of which at most one applies." },
 				"any-of": { "$ref": "#/definitions/tags", "description": "Tags that can fill a `label` or `slot`. The list is never complete." },
 				"note": { "type": "string", "description": "What the node is for, in a few words." },
 				"optional": { "type": "boolean", "description": "The pattern also holds without it." },

@@ -23,10 +23,8 @@ composition:
             note: wat je hier kunt
             children:
               - slot: header
-                optional: true
                 note: de titel en een intro van een zin of twee
               - tag: nldd-collection
-                optional: true
                 attrs: ['layout="grid"', item-min-width]
                 children:
                   - tag: nldd-card

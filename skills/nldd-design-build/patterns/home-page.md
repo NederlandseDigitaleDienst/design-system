@@ -19,8 +19,8 @@ nldd-shell                                   de buitenste schil
        ├─ nldd-hero                          main-background; de opening
        │    └─ slot="media"                  nldd-image, hier nog zonder beeld
        ├─ nldd-simple-section                background="tinted"; wat je hier kunt
-       │    ├─ slot="header"                 de titel en een intro van een zin of twee; optioneel
-       │    └─ nldd-collection               layout="grid", item-min-width; optioneel
+       │    ├─ slot="header"                 de titel en een intro van een zin of twee
+       │    └─ nldd-collection               layout="grid", item-min-width
        │         └─ nldd-card                een onderwerp, een zin en een knop met de actie in de footer
        ├─ nldd-one-half-one-half-section     afbeelding links, tekst rechts
        │    ├─ nldd-image                    slot="left", aspect-ratio

@@ -14,3 +14,6 @@ composition:
               - tag: nldd-menu-item
           - tag: nldd-menu-item
             attrs: [text, icon, shortcut, href]
+          - tag: nldd-menu-divider
+            optional: true
+            note: vóór een destructieve actie

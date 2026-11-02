@@ -40,9 +40,8 @@ composition:
                 note: de nldd-rich-text met de uitleg
               - slot: right
                 note: de nldd-card met de actie
-          - tag: nldd-simple-section
-            optional: true
-            note: 'of, kort zonder vervolgactie: de h1 in het header-slot, de nldd-rich-text eronder'
+          - label: of, kort zonder vervolgactie
+            note: nldd-simple-section, de h1 in het header-slot, de nldd-rich-text eronder
           - tag: nldd-simple-section
             attrs: ['background="tinted"']
             note: waar je hierna heen kunt

@@ -1,11 +1,11 @@
 partial:
-  - page-structure.footer-home.html
-  - page-structure.footer.html
-  - page-structure.header-account.html
-  - page-structure.header-home.html
-  - page-structure.header-login.html
-  - page-structure.header-status.html
-  - page-structure.header.html
+  page-structure.header.html: [nldd-page-footer]
+  page-structure.header-account.html: [nldd-page-footer]
+  page-structure.header-home.html: [nldd-page-footer]
+  page-structure.header-login.html: [nldd-page-footer]
+  page-structure.header-status.html: [nldd-page-footer]
+  page-structure.footer.html: ['slot="header"']
+  page-structure.footer-home.html: ['slot="header"']
 composition:
   - tag: nldd-shell
     note: de buitenste schil
