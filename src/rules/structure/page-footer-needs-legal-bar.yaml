@@ -1,0 +1,10 @@
+severity: hint
+context: 'nldd-page-footer'
+assert: ':has(> [slot="legal-bar"])'
+message: 'Add an nldd-page-footer-legal-bar in slot `legal-bar`: that row holds the links a page has to offer, such as privacy.'
+see: patronen/page-structure
+examples:
+  passed:
+    - '<nldd-page-footer><nldd-page-footer-legal-bar slot="legal-bar"></nldd-page-footer-legal-bar></nldd-page-footer>'
+  failed:
+    - '<nldd-page-footer></nldd-page-footer>'

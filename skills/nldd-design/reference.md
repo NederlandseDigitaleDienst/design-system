@@ -2374,6 +2374,7 @@ A page layout with optional sticky header and footer. Without sticky-header, the
 - `pane-page-needs-name` (hint): Give this page an `accessible-label`, so it becomes a named region, or landmarks="page" if it holds the main content.
 - `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
 - `section-no-own-background` (hint): Use `background` on the section: it cascades the surface to what is inside it.
+- `sheet-no-own-header` (hint): Use nldd-top-title-bar in the header slot: it names the sheet and holds the way out, so there is no header to build yourself.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 - `skip-link-goes-around-header` (hint): Wrap the bar in an nldd-skip-link in `slot="header"`, so a keyboard user can go straight to the content.
 - `split-view-needs-main-page`: Set landmarks="page" on the page in the pane with the main content, or the screen offers no main landmark or two.
@@ -2406,6 +2407,7 @@ The footer band at the bottom of a page. Hosts three optional rows in a fixed or
 
 - `page-content-goes-in-section` (hint): Put this in a section, such as nldd-simple-section, which sets the width and the white space.
 - `page-footer-goes-in-page`: nldd-page-footer has its own slot on nldd-page and sets its own width and spacing.
+- `page-footer-needs-legal-bar` (hint): Add an nldd-page-footer-legal-bar in slot `legal-bar`: that row holds the links a page has to offer, such as privacy.
 - `page-footer-needs-slot`: Set slot="footer": the page gives the footer its place and it sets its own width and spacing.
 - `page-footer-no-duplicate-id`: Another element already has id="page-footer". Set a unique id on this instance so skip links target the right one.
 - `page-needs-shell` (hint): Put nldd-shell around it: the shell sets the background and decides who scrolls.
@@ -2525,6 +2527,7 @@ An overlay component that slides in from the side or bottom of the screen. Based
 - `sheet-height-invalid`: Invalid `height`. Falling back to full height. Use "full", "fit-content", or a valid CSS length (such as "50dvh" or "480px").
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
 - `sheet-needs-name`: No `accessible-label` and no nldd-top-title-bar with text inside. Screen readers will announce this dialog with a generic name. Give the title bar a text, or set `accessible-label`.
+- `sheet-no-own-header` (hint): Use nldd-top-title-bar in the header slot: it names the sheet and holds the way out, so there is no header to build yourself.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 - `split-view-no-sheet`: Render nldd-sheet at the document root: as a slotted child it takes the height of the pane, and a sticky footer comes loose.
 
@@ -3251,6 +3254,7 @@ A toolbar for page and container headings with optional navigation and action bu
 - `pane-title-bar-needs-back` (hint): Set `back-text` to the name of the previous pane: on a smaller screen that pane goes away, and this is the way back to it.
 - `pane-title-bar-needs-level` (hint): Set heading-level="2" on the title bar of a pane beside the main content: the screen has one h1.
 - `sheet-needs-dismiss`: Set `dismiss-text` on the title bar, so the sheet has a visible way out.
+- `sheet-no-own-header` (hint): Use nldd-top-title-bar in the header slot: it names the sheet and holds the way out, so there is no header to build yourself.
 - `sheet-title-bar-needs-anchor` (hint): Put an nldd-title above the form and point `collapse-anchor` at it: the bar stays quiet until the heading scrolls away.
 - `top-title-bar-anchor-not-found`: `collapse-anchor` matches nothing yet. If it never renders, the bar keeps its own title and reads it out twice.
 
