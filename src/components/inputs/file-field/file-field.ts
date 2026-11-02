@@ -94,6 +94,7 @@ import { textMeasurer, truncateMiddle } from './file-field.truncate.js';
 import { DescribedBy } from '../../../utilities/described-by-mixin.js';
 import { translate } from '../../../utilities/translations.js';
 import { deferFocus } from '../../../utilities/defer-focus.js';
+import { fileDragAndDropAvailable, FileDragAndDropAvailabilityController } from '../../../utilities/file-drag-and-drop.js';
 
 /** How long the message of a refused drop stays in the field. */
 const REJECTION_MS = 4000;
@@ -191,6 +192,10 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	@state()
 	_rejection: DropRejection | null = null;
 
+	/** Renders again when dragging files becomes possible or not, so the drop
+	 *  hint in the name of the button follows the one on screen. */
+	private _fileDrag = new FileDragAndDropAvailabilityController(this);
+
 	@query('.file-field__input')
 	private _input!: HTMLInputElement;
 
@@ -216,15 +221,19 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 * kiezen, Bijlage" under "Bestand kiezen of sleep het hierheen" is a mismatch
 	 * (WCAG 2.5.3). The change button does the same.
 	 *
+	 * The drop hint only where it shows: a device without hover cannot drag, so
+	 * there the hint is gone from the field and from the name alike, and a screen
+	 * reader is not told to do what cannot be done.
+	 *
 	 * @internal
 	 */
 	public _chooseAccessibleLabel(): string {
-		const hint = this.multiple
+		const hint = !fileDragAndDropAvailable() ? '' : this.multiple
 			? this._t('components.file-field.drop-hint-multiple-lowercase-text')
 			: this._t('components.file-field.drop-hint-lowercase-text');
 		const types = this.variant === 'area' ? this._acceptTypes() : null;
 		return [
-			`${this._chooseLabel()} ${hint}`,
+			hint ? `${this._chooseLabel()} ${hint}` : this._chooseLabel(),
 			types ? this._t('components.file-field.accepted-types-text', { types }) : '',
 			this.accessibleLabel,
 		].filter(Boolean).join(', ');

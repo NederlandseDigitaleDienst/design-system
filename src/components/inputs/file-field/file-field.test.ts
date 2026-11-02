@@ -78,6 +78,21 @@ describe('nldd-file-field', () => {
 		expect(result.violations).toEqual([]);
 	});
 
+	it('leaves the drop hint out of the name on a device without hover, as it does on screen', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Bijlage" variant="area" accept=".pdf"></nldd-file-field>');
+		await waitForUpdate(el);
+		// A device without hover: the query the styles hide the hint on matches.
+		const real = window.matchMedia;
+		const spy = vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => (query === '(hover: none)'
+			? { ...real.call(window, query), matches: true }
+			: real.call(window, query)));
+		el.requestUpdate();
+		await waitForUpdate(el);
+		spy.mockRestore();
+		expect(el.shadowRoot!.querySelector('.file-field__browse-button')!.getAttribute('aria-label'))
+			.toBe('Bestand kiezen, Toegestaan: PDF, Bijlage');
+	});
+
 	it('shows the file name after one file is chosen', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field></nldd-file-field>');
 		await waitForUpdate(el);
