@@ -39,7 +39,7 @@ here; consult the commit history if you need that level of detail.
 
 ### Fixed
 
-- **A nested quote in `nldd-text-editor` with `syntax="hidden"` shows a line per level**, where each `>` is, as `nldd-rich-text` draws a border per blockquote. It showed one line for the whole quote. A wrapped line of a deeper level now lines up under its own text, where it went back to the first level.
+- **A nested quote in `nldd-text-editor` with `syntax="hidden"` shows a line per level**, where each `>` is, also with extra spaces or in a list, as `nldd-rich-text` draws a border per blockquote. It showed one line for the whole quote. A wrapped line of a deeper level now lines up under its own text, where it went back to the first level.
 - **Dragging on `nldd-task-board` works on an iPhone.** After holding an item, the first move scrolled the board instead, and the drag broke off. iOS decides whether a touch may scroll as it starts, and the board now says so from the start.
 - **`focus()` right after a component is put in the page works.** A text field, button, checkbox and every other component that hands focus to an element inside it did nothing before its first render, so a site that adds a field and focuses it left focus where it was. The call now waits for that render, unless focus has moved on in the meantime.
 - **A card in an `nldd-collection` that scrolls sideways comes fully into view when something in it takes focus.** The browser only scrolled the focused link in, so a card could stay half outside the row with its focus ring cut off.

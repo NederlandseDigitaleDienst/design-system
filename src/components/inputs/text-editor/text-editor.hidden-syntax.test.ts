@@ -185,7 +185,7 @@ describe('nldd-text-editor syntax="hidden"', () => {
 	it('draws a line per level of a nested quote, where each > is, as nldd-rich-text does', async () => {
 		const unloadTokens = loadTokens();
 		el = await make('syntax="hidden" readonly');
-		el.value = '> Niveau een\n> > Niveau twee\n> > > Niveau drie\n\n- > In een lijst';
+		el.value = '> Niveau een\n> > Niveau twee\n> > > Niveau drie\n\n- > In een lijst\n\n- >   > Met spaties\n\n> Citaat\n>   - > met een lijst';
 		await el.updateComplete;
 		await waitForUpdate(el);
 		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')];
@@ -206,8 +206,8 @@ describe('nldd-text-editor syntax="hidden"', () => {
 			}
 			return at;
 		};
-		expect([0, 1, 2, 4].map((i) => rules(lines[i]).length)).toEqual([1, 2, 3, 1]);
-		for (const i of [0, 1, 2, 4]) {
+		expect([0, 1, 2, 4, 6, 9].map((i) => rules(lines[i]).length)).toEqual([1, 2, 3, 1, 2, 2]);
+		for (const i of [0, 1, 2, 4, 6, 9]) {
 			const at = marks(lines[i]);
 			expect(at).toHaveLength(rules(lines[i]).length);
 			rules(lines[i]).forEach((x, n) => expect(Math.abs(x - at[n])).toBeLessThanOrEqual(1));
