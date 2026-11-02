@@ -1,4 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Composition } from '../../../.storybook/Composition.jsx';
 import { Rules } from '../../../.storybook/Rules.jsx';
 import * as Stories from './form.stories';
 
@@ -10,16 +11,7 @@ Een formulier verzamelt de gegevens die nodig zijn om een taak uit te voeren of 
 
 ## Compositie
 
-```
-nldd-form                              name, method, label-alignment
-  ├─ nldd-form-section                 text, supporting-text; een groep velden
-  │    └─ nldd-form-field              label, optional
-  │         ├─ het invoerveld          nldd-text-field, nldd-dropdown, …
-  │         ├─ nldd-validation-list    de eisen aan de waarde
-  │         └─ nldd-form-field-help-text  uitleg die niets tegenhoudt
-  └─ nldd-form-actions
-       └─ nldd-button-group            de primaire actie, type="submit"
-```
+<Composition pattern="form" />
 
 <Canvas of={Stories.Standaard} />
 

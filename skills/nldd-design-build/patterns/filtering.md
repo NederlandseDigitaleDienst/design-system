@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/filtering/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/filtering/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -12,18 +12,19 @@ Met filters verkleinen bezoekers een lijst tot de resultaten die aan hun voorwaa
 
 ```
 nldd-page
-  └─ nldd-sidebar-section           sidebar-label, breed een kolom, smal een sheet
-       ├─ nldd-title                slot="header", boven beide kolommen
-       ├─ nldd-container            slot="sidebar", met padding
-       │    ├─ nldd-skip-link       href naar de resultaten, alleen in de kolom
-       │    ├─ nldd-title           per filtergroep
-       │    └─ nldd-list            een rij per optie, de rij is de checkbox
-       ├─ nldd-toolbar              zoeken links, de knop naar de filters rechts
-       ├─ nldd-container            layout="wrap", de strip met actieve filters
-       │    └─ nldd-token           control="dismiss", één per actieve waarde
-       ├─ nldd-text                 het aantal resultaten, met aria-live
-       └─ nldd-list                 met slot="no-results"
-            └─ nldd-list-item       de naam, de status als dot, een chevron
+  └─ nldd-sidebar-section      sidebar-label; breed een kolom, smal een sheet
+       ├─ nldd-title           slot="header"; boven beide kolommen
+       ├─ nldd-container       slot="sidebar"; met padding
+       │    ├─ nldd-skip-link  href; naar de resultaten, alleen in de kolom
+       │    ├─ nldd-title      per filtergroep
+       │    └─ nldd-list       een rij per optie, de rij is de checkbox
+       ├─ nldd-toolbar         zoeken links, de knop naar de filters rechts
+       ├─ nldd-container       layout="wrap"; de strip met actieve filters
+       │    └─ nldd-token      control="dismiss"; één per actieve waarde
+       ├─ nldd-text            het aantal resultaten, met aria-live
+       └─ nldd-list
+            ├─ nldd-list-item  de naam, de status als dot, een chevron
+            └─ slot="no-results"
 ```
 
 ```html

@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/menu-from-a-button/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/menu-from-a-button/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,11 +11,12 @@ Een menu bij een knop toont extra acties of keuzes wanneer iemand die nodig heef
 ## Compositie
 
 ```
-nldd-button (of nldd-icon-button)   expandable
-  └─ nldd-menu                      slot="popup"
-       ├─ nldd-menu-item            text, icon, shortcut, href
-       ├─ nldd-menu-divider
-       └─ nldd-menu-group           text, een kopje boven een groep items
+nldd-button (of nldd-icon-button)  expandable
+  └─ nldd-menu                     slot="popup"
+       ├─ nldd-menu-group          text; een kopje boven een groep items; optioneel
+       │    └─ nldd-menu-item
+       ├─ nldd-menu-item           text, icon, shortcut, href
+       └─ nldd-menu-divider        vóór een destructieve actie; optioneel
 ```
 
 ```html
@@ -24,14 +25,20 @@ nldd-button (of nldd-icon-button)   expandable
   expandable
 >
   <nldd-menu slot="popup">
+    <nldd-menu-group text="Aanvraag">
+      <nldd-menu-item
+        text="Bewerk"
+        icon="edit"
+        shortcut="Cmd+E"
+      ></nldd-menu-item>
+      <nldd-menu-item
+        text="Dupliceer"
+        icon="copy"
+      ></nldd-menu-item>
+    </nldd-menu-group>
     <nldd-menu-item
-      text="Bewerk"
-      icon="edit"
-      shortcut="Cmd+E"
-    ></nldd-menu-item>
-    <nldd-menu-item
-      text="Dupliceer"
-      icon="copy"
+      text="Exporteer"
+      icon="download"
     ></nldd-menu-item>
     <nldd-menu-divider></nldd-menu-divider>
     <nldd-menu-item

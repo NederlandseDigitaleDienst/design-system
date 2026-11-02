@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/page-structure/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/page-structure/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,19 +11,19 @@ De paginaopbouw beschrijft de vaste basis van een websitepagina: de shell, de he
 ## Compositie
 
 ```
-nldd-shell                            de buitenste schil
+nldd-shell                                 de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                  de header
-       │    ├─ nldd-status-bar           alleen als er iets te melden is, boven de balk
-       │    └─ nldd-skip-link            om de balk heen
-       │         └─ nldd-top-navigation-bar    website-title, en back-text en back-href
-       │              └─ slot="utility"  nldd-menu-bar met zoeken en taal
-       ├─ nldd-simple-section            één sectie per inhoudsblok, met de h1 in de eerste
-       ├─ nldd-simple-section            background="tinted", een vlak
-       └─ slot="footer"                  de footer: nldd-page-footer
-            ├─ slot="breadcrumbs"        nldd-breadcrumbs, waar deze pagina staat
-            ├─ nldd-container            de hoofdinhoud, vrij in te vullen
-            └─ slot="legal-bar"          nldd-page-footer-legal-bar
+       ├─ slot="header"                    de header; de balk krijgt website-title, en back-text en back-href waar dat kan
+       │    ├─ nldd-status-bar             alleen als er iets te melden is, boven de balk; optioneel
+       │    └─ nldd-skip-link              om de balk heen
+       │         └─ nldd-top-navigation-bar
+       │              └─ nldd-menu-bar     slot="utility"; zoeken en taal; optioneel
+       ├─ nldd-simple-section              één sectie per inhoudsblok, met de h1 in de eerste
+       ├─ nldd-simple-section              background="tinted"; een vlak; optioneel
+       └─ nldd-page-footer                 slot="footer"; de footer
+            ├─ nldd-breadcrumbs            slot="breadcrumbs"; waar deze pagina staat; optioneel
+            ├─ nldd-container              de hoofdinhoud, vrij in te vullen; optioneel
+            └─ nldd-page-footer-legal-bar  slot="legal-bar"
 ```
 
 ```html

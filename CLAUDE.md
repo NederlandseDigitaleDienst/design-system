@@ -147,11 +147,12 @@ Hetzelfde geldt een laag lager voor gedrag: wat een component doet, documenteer 
 
 Een patroon beschrijft hoe je bestaande componenten samenstelt tot iets dat een taak afhandelt; een component beschrijft één ding. Ze staan in Storybook onder "Patronen" en reizen als `skills/nldd-design-build/patterns/*.md` met de plugin mee naar consumenten.
 
-Een patroon woont in `src/patterns/<slug>/`, met vier bestanden:
+Een patroon woont in `src/patterns/<slug>/`, met vijf bestanden:
 
-- `<slug>.html`: de voorbeeldmarkup, zonder framework. Dit is de enige bron: de live story rendert hem, het codeblok op de docs-pagina toont hem en de skill neemt hem over.
+- `<slug>.html`: de voorbeeldmarkup, zonder framework. Elk voorbeeld staat alleen hier: de live story rendert hem, het codeblok op de docs-pagina toont hem en de skill neemt hem over.
 - `<slug>.stories.ts`: rendert de markup via `patternStory()` uit `src/patterns/pattern-story.ts`, plus het beetje gedrag dat een consument zelf schrijft (een knop die een sheet opent).
-- `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet, de compositie en waarom zo.
+- `<slug>.pattern.yaml`: de compositie als data: welke componenten, in welke nesting, wat optioneel is. Dat beschrijft dezelfde structuur als de voorbeelden, maar dan wat ervan bedoeld is; `lint:rules` houdt de twee gelijk. De vorm staat in `src/patterns/pattern.schema.json`. De boom op de pagina en in de skill wordt hieruit getekend (`<Composition pattern="<slug>" />`), en `lint:rules` faalt op een onbekend veld, een tag, attribuut of slot dat niet bestaat, een deel dat geen voorbeeld direct onder zijn ouder toont, of een voorbeeld dat een verplicht deel mist. Het model is dat van RELAX NG, in YAML: `choice` voor alternatieven, `define` en `ref` voor wat terugkomt (wat meer patronen delen, staat in `src/patterns/shared.pattern.yaml`). Toont een voorbeeld expres maar een deel van het patroon, laat het dan onder `examples` bij een `define` beginnen, in plaats van onderdelen `optional` te maken. Een fout die een app moet zien, blijft een regel in `src/rules/`: de spec beschrijft de bedoelde vorm en wordt alleen hier gecontroleerd.
+- `<slug>.mdx`: de pagina in Storybook, met het probleem, wanneer wel en niet en waarom zo.
 - `<slug>.test.ts`: test wat het patroon belooft, op dezelfde markup.
 
 `npm run generate:skill-patterns` (onderdeel van `generate:skill-docs`) maakt daar de skill-pagina van. De vertaling zit in `scripts/lib/skill-patterns.js` met tests ernaast: `<Canvas>` wordt het `.html`-bestand, en een link `?path=/docs/...` wordt een link naar het andere patroon, naar de component in `reference.md` of naar de ontwerprichtlijnen. `validate.yml` controleert dat de gegenereerde pagina's bij hun bron passen. Link in de MDX dus naar Storybook, en naar de voorbeelden in `examples/` via hun GitHub-URL. De titel en de bestandsnaam van elk patroon staan in `PATTERNS` in `scripts/generate-skill-patterns.js`.
@@ -190,6 +191,7 @@ De linter hoort bij zijn eigen versie: hij zit in het pakket, dus een project dr
 |------|------------|---------------------|
 | API | JSDoc en TS-types | `custom-elements.json`, `reference.md`, de ingebouwde regels |
 | Regel | `src/rules/<groep>/<id>.yaml` | Linter, `reference.md`, sectie `Regels` op een patroon |
+| Patroon: compositie | `<slug>.pattern.yaml` | Storybook, skill-pagina |
 | Patroon: hoe en waarom | `<slug>.mdx` | Storybook, skill-pagina |
 | Voorbeeld | `<slug>.html` | Story, docs, skill |
 

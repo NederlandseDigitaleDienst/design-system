@@ -1,6 +1,6 @@
 <!--
   GEGENEREERD BESTAND — niet handmatig bewerken.
-  Bron: src/patterns/navigation-page/ (de .mdx-pagina en de .html-voorbeelden ernaast).
+  Bron: src/patterns/navigation-page/ (de .mdx-pagina, de .html-voorbeelden en de .pattern.yaml ernaast).
   Hergenereren: npm run generate:skill-docs
 -->
 
@@ -11,20 +11,24 @@ Een navigatiepagina helpt bezoekers hun weg te vinden naar onderliggende pagina�
 ## Compositie
 
 ```
-nldd-shell                            de buitenste schil
+nldd-shell                                        de buitenste schil
   └─ nldd-page
-       ├─ slot="header"                  de header
-       │    └─ nldd-skip-link            om de balk heen
-       │         └─ nldd-top-navigation-bar   zoeken en taal, terug naar de home
-       ├─ nldd-one-third-two-thirds-section    met een lijst
-       │    ├─ slot="left"               de nldd-title met de h1 en een korte intro
-       │    └─ slot="right"              een nldd-list type="navigation"
-       ├─ nldd-simple-section            of, met kaarten
-       │    ├─ slot="header"             de nldd-title met de h1 en een korte intro
-       │    └─ nldd-collection           layout="grid", met een nldd-card per pagina
-       └─ slot="footer"                  nldd-page-footer
-            ├─ slot="breadcrumbs"        waar deze pagina staat
-            └─ slot="legal-bar"
+       ├─ slot="header"                           de header, met back-text en back-href naar de home
+       │    ├─ nldd-status-bar                    alleen als er iets te melden is, boven de balk; optioneel
+       │    └─ nldd-skip-link                     om de balk heen
+       │         └─ nldd-top-navigation-bar
+       │              └─ nldd-menu-bar            slot="utility"; zoeken en taal; optioneel
+       ├─ één van
+       │    ├─ nldd-one-third-two-thirds-section  met een lijst
+       │    │    ├─ slot="left"                   de nldd-title met de h1 en een korte intro
+       │    │    └─ nldd-list                     slot="right", type="navigation"
+       │    └─ nldd-simple-section                met kaarten
+       │         ├─ slot="header"                 de nldd-title met de h1 en een korte intro
+       │         └─ nldd-collection               layout="grid"; met een nldd-card per pagina
+       └─ nldd-page-footer                        slot="footer"; de footer
+            ├─ nldd-breadcrumbs                   slot="breadcrumbs"; waar deze pagina staat; optioneel
+            ├─ nldd-container                     de hoofdinhoud, vrij in te vullen; optioneel
+            └─ nldd-page-footer-legal-bar         slot="legal-bar"
 ```
 
 Met een lijst:

@@ -1,4 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { Composition } from '../../../.storybook/Composition.jsx';
 import { Rules } from '../../../.storybook/Rules.jsx';
 import * as Stories from './navigation-page.stories';
 
@@ -10,22 +11,7 @@ Een navigatiepagina helpt bezoekers hun weg te vinden naar onderliggende pagina�
 
 ## Compositie
 
-```
-nldd-shell                            de buitenste schil
-  └─ nldd-page
-       ├─ slot="header"                  de header
-       │    └─ nldd-skip-link            om de balk heen
-       │         └─ nldd-top-navigation-bar   zoeken en taal, terug naar de home
-       ├─ nldd-one-third-two-thirds-section    met een lijst
-       │    ├─ slot="left"               de nldd-title met de h1 en een korte intro
-       │    └─ slot="right"              een nldd-list type="navigation"
-       ├─ nldd-simple-section            of, met kaarten
-       │    ├─ slot="header"             de nldd-title met de h1 en een korte intro
-       │    └─ nldd-collection           layout="grid", met een nldd-card per pagina
-       └─ slot="footer"                  nldd-page-footer
-            ├─ slot="breadcrumbs"        waar deze pagina staat
-            └─ slot="legal-bar"
-```
+<Composition pattern="navigation-page" />
 
 Met een lijst:
 

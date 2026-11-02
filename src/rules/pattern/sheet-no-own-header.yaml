@@ -1,0 +1,13 @@
+severity: hint
+context: 'nldd-sheet > nldd-page:not(:has(> nldd-top-title-bar[slot="header"], > [slot="header"] nldd-top-title-bar)) > [slot="header"]'
+message: 'Use nldd-top-title-bar in the header slot: it names the sheet and holds the way out, so there is no header to build yourself.'
+see: patronen/edit-in-a-sheet
+examples:
+  passed:
+    - '<nldd-sheet><nldd-page><nldd-top-title-bar slot="header" text="Aanvraag A-1042" dismiss-text="Sluit"></nldd-top-title-bar></nldd-page></nldd-sheet>'
+    - '<nldd-sheet><nldd-page><nldd-simple-section></nldd-simple-section></nldd-page></nldd-sheet>'
+    - '<nldd-page><div slot="header"></div></nldd-page>'
+    - '<nldd-sheet><nldd-page><nldd-container slot="header"><nldd-top-title-bar text="Aanvraag A-1042" dismiss-text="Sluit"></nldd-top-title-bar></nldd-container></nldd-page></nldd-sheet>'
+  failed:
+    - '<nldd-sheet><nldd-page><nldd-top-title-bar text="a" dismiss-text="b"></nldd-top-title-bar><div slot="header"><h2>Aanvraag A-1042</h2></div></nldd-page></nldd-sheet>'
+    - '<nldd-sheet><nldd-page><div slot="header"><h2>Aanvraag A-1042</h2></div></nldd-page></nldd-sheet>'

@@ -1,0 +1,50 @@
+composition:
+  - tag: nldd-shell
+    note: de buitenste schil
+    children:
+      - tag: nldd-page
+        children:
+          - ref: page-header
+            note: de header, met back-text en back-href naar de onderwerpen
+          - tag: nldd-hero
+            note: de h1, een korte uitleg en de hoofdtaak
+            children:
+              - slot: media
+                note: nldd-image, hier nog zonder beeld
+          - tag: nldd-one-half-one-half-section
+            note: tekst links, afbeelding rechts
+            children:
+              - slot: left
+                note: titel, tekst en een nldd-link verder
+              - tag: nldd-image
+                slot: right
+                attrs: [aspect-ratio]
+          - tag: nldd-simple-section
+            attrs: ['background="tinted"']
+            note: wat je moet weten
+            children:
+              - slot: header
+                note: de titel en een intro van een zin of twee
+              - tag: nldd-collection
+                children:
+                  - tag: nldd-card
+                    attrs: [href]
+                    note: naar pagina's waar ze ook staan
+          - tag: nldd-one-third-two-thirds-section
+            children:
+              - slot: left
+                note: de titel en een korte uitleg
+              - tag: nldd-list
+                slot: right
+                attrs: ['type="navigation"']
+                note: naar de pagina's eronder
+          - tag: nldd-simple-section
+            attrs: ['background="tinted"']
+            note: verwante onderwerpen
+            children:
+              - tag: nldd-collection
+                children:
+                  - tag: nldd-card
+                    attrs: [href]
+                    note: naar het andere onderwerp
+          - ref: page-footer

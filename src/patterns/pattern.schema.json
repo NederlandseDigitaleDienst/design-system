@@ -1,0 +1,66 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "nldd pattern",
+	"description": "The structured part of a pattern, in src/patterns/<slug>/<slug>.pattern.yaml. The tree on the page and in the skill is drawn from it.",
+	"type": "object",
+	"additionalProperties": false,
+	"anyOf": [{ "required": ["composition"] }, { "required": ["define"] }],
+	"properties": {
+		"composition": { "$ref": "#/definitions/nodes" },
+		"define": {
+			"type": "object",
+			"minProperties": 1,
+			"description": "Named parts, for `ref` and as the start of an example.",
+			"additionalProperties": { "$ref": "#/definitions/node" }
+		},
+		"examples": {
+			"type": "object",
+			"minProperties": 1,
+			"description": "Examples that show only a part of the pattern, each with the definition it starts at.",
+			"propertyNames": { "pattern": "\\.html$" },
+			"additionalProperties": { "type": "string" }
+		}
+	},
+	"definitions": {
+		"nodes": {
+			"type": "array",
+			"minItems": 1,
+			"items": { "$ref": "#/definitions/node" }
+		},
+		"tags": {
+			"type": "array",
+			"minItems": 1,
+			"items": { "type": "string", "pattern": "^nldd-[a-z0-9-]+$" }
+		},
+		"node": {
+			"type": "object",
+			"additionalProperties": false,
+			"oneOf": [
+				{ "required": ["tag"], "not": { "anyOf": [{ "required": ["label"] }, { "required": ["choice"] }, { "required": ["ref"] }, { "required": ["any-of"] }] } },
+				{ "required": ["label"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["slot"] }, { "required": ["choice"] }, { "required": ["ref"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }] } },
+				{ "required": ["slot"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["label"] }, { "required": ["choice"] }, { "required": ["ref"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }] } },
+				{ "required": ["choice"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["label"] }, { "required": ["slot"] }, { "required": ["ref"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }, { "required": ["any-of"] }, { "required": ["children"] }, { "required": ["flat"] }] } },
+				{ "required": ["ref"], "not": { "anyOf": [{ "required": ["tag"] }, { "required": ["label"] }, { "required": ["slot"] }, { "required": ["choice"] }, { "required": ["or"] }, { "required": ["attrs"] }, { "required": ["one-of"] }, { "required": ["any-of"] }, { "required": ["children"] }, { "required": ["flat"] }] } }
+			],
+			"dependencies": { "flat": ["children"] },
+			"properties": {
+				"tag": { "type": "string", "pattern": "^nldd-[a-z0-9-]+$", "description": "The element." },
+				"or": { "$ref": "#/definitions/tags", "description": "Other tags that can take its place." },
+				"slot": {
+					"description": "The slot it sits in. A list means any of them. Without a tag, the node is the slot itself.",
+					"oneOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 } }]
+				},
+				"label": { "type": "string", "description": "A place in the tree that is no single element." },
+				"choice": { "type": "array", "minItems": 2, "items": { "$ref": "#/definitions/node" }, "description": "Nodes of which one has to be there." },
+				"ref": { "type": "string", "description": "A name under `define`, here or in shared.pattern.yaml." },
+				"attrs": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(=\"[^\"]*\")?$" }, "description": "Attributes worth naming here. `name=\"value\"` is a fixed value, and the node then only means elements with that value. A slot goes in `slot`." },
+				"one-of": { "type": "array", "minItems": 2, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }, "description": "Attributes of which at most one applies." },
+				"any-of": { "$ref": "#/definitions/tags", "description": "Tags that can fill a `label` or `slot`. The list is never complete." },
+				"note": { "type": "string", "description": "What the node is for, in a few words." },
+				"optional": { "type": "boolean", "description": "The pattern also holds without it." },
+				"flat": { "type": "boolean", "description": "Children are a sequence in this order, drawn without tree lines." },
+				"children": { "$ref": "#/definitions/nodes", "description": "The nodes inside it." }
+			}
+		}
+	}
+}

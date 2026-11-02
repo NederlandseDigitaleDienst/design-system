@@ -1,0 +1,42 @@
+examples:
+  list.empty.html: empty-list
+
+define:
+  empty-list:
+    tag: nldd-list
+    attrs: [accessible-label]
+
+composition:
+  - tag: nldd-list
+    attrs: [accessible-label, appearance, type]
+    children:
+      - tag: nldd-list-item
+        attrs: [size]
+        one-of: [href, button, checkbox, radio]
+        children:
+          - tag: nldd-list-item-segment
+            optional: true
+            note: een deel van de rij met een eigen actie, met zijn eigen cellen
+          - tag: nldd-spacer-cell
+            optional: true
+            note: de ruimte tussen twee cellen, waar die nodig is
+          - label: cellen, in de volgorde waarin ze staan
+            flat: true
+            children:
+              - tag: nldd-icon-cell
+                optional: true
+                note: een icoon vooraan
+              - tag: nldd-text-cell
+                optional: true
+                attrs: [text, overline, supporting-text]
+                note: vult de rij, of zit in een segment
+              - tag: nldd-cell
+                optional: true
+                note: een badge, een checkbox, wat de rij verder draagt
+              - tag: nldd-text-cell
+                optional: true
+                attrs: ['width="fit-content"']
+                note: komt daardoor achteraan
+              - tag: nldd-icon-cell
+                optional: true
+                note: de chevron van een rij die iets opent

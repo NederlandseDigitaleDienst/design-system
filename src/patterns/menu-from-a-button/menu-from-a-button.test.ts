@@ -40,7 +40,9 @@ describe('patroon: menu bij een knop', () => {
 		const button = await mount(markup);
 		const children = [...button.querySelector('nldd-menu')!.children];
 		expect(children[children.length - 1].hasAttribute('destructive')).toBe(true);
-		expect(children[children.length - 2].tagName).toBe('NLDD-MENU-DIVIDER');
+		const divider = children[children.length - 2];
+		expect(divider.tagName).toBe('NLDD-MENU-DIVIDER');
+		expect(divider.hasAttribute('hidden')).toBe(false);
 	});
 
 	it('laat een keuze voorlezen als keuze, met zijn stand', async () => {
