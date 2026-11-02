@@ -22,8 +22,14 @@
  * For a custom focus target inside the popover, put `autofocus` on the child you
  * want. Without it the popover host itself takes focus.
  *
- * On sm the popover is a bottom sheet that closes with Escape or a tap outside
- * it. Where that is not enough, give its content a title bar of its own, as in a
+ * On md and up the popover closes with Escape or a click outside it, and that
+ * click goes on to what it lands on, as with any native popover: the page has
+ * no backdrop and stays in use, so a click on another control does what it
+ * says in one go. It needs no close button of its own.
+ *
+ * On sm the popover is a bottom sheet with a dimmed backdrop, which closes with
+ * Escape or a tap outside it. That tap stops at the backdrop, as on every
+ * native sheet: the dimming says the page is out of play. Where that is not enough, give its content a title bar of its own, as in a
  * sheet: an nldd-page with an nldd-top-title-bar and a `dismiss-text`. The
  * popover catches the dismiss of that bar and closes. It draws no bar itself.
  *

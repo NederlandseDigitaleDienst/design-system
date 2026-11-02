@@ -761,6 +761,40 @@ describe('nldd-popover slikt de eerste tik op klein scherm', () => {
 		expect(popover.matches(':popover-open')).toBe(false);
 	});
 
+	// On md and up there is no backdrop: the page stays in use, so a click outside
+	// is left to the native light dismiss and reaches what it lands on.
+	it('laat de klik buiten door op md en breder', async () => {
+		const wrapper = await fixture(`
+			<div>
+				<button id="md-trigger">Open</button>
+				<button id="md-target">Doel</button>
+				<nldd-popover anchor="md-trigger" accessible-label="Test"></nldd-popover>
+			</div>
+		`);
+		el = wrapper;
+		const popover = wrapper.querySelector('nldd-popover') as NLDDPopover;
+		(popover as unknown as { _smQuery: MediaQueryList })._smQuery = {
+			matches: false,
+			addEventListener: () => {},
+			removeEventListener: () => {},
+		} as unknown as MediaQueryList;
+		await waitForUpdate(popover);
+		popover.show();
+		await waitForUpdate(popover);
+		const target = wrapper.querySelector('#md-target') as HTMLElement;
+		let raakt = 0;
+		target.addEventListener('click', () => { raakt += 1; });
+
+		const down = new PointerEvent('pointerdown', { bubbles: true, composed: true, cancelable: true });
+		document.dispatchEvent(down);
+		const click = new MouseEvent('click', { bubbles: true, composed: true, cancelable: true });
+		target.dispatchEvent(click);
+
+		expect(down.defaultPrevented).toBe(false);
+		expect(raakt).toBe(1);
+		expect(click.defaultPrevented).toBe(false);
+	});
+
 	// A tap that turns into a scroll or drag ends without a click, so the
 	// swallow flag must not linger and catch a later, unrelated click. After the
 	// swallowed tap the popover is closed, so a new gesture no longer absorbs and
