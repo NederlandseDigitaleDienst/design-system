@@ -245,6 +245,33 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		unloadTokens();
 	});
 
+	it('gives a > without a space after it the room of one, so every level is the same step', async () => {
+		const unloadTokens = loadTokens();
+		el = await make('syntax="hidden" readonly');
+		el.value = '> > > Ruim\n\n>>> Krap\n\n> >>Half';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		const lines = [...el.view.contentDOM.querySelectorAll('.cm-line')];
+		const textLeft = (l: Element) => {
+			const walker = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+			for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+				const at = n.textContent!.search(/[A-Za-z]/);
+				if (at === -1) continue;
+				const range = document.createRange();
+				range.setStart(n, at);
+				range.setEnd(n, at + 1);
+				return Math.round(range.getBoundingClientRect().left);
+			}
+			return NaN;
+		};
+		const rules = (l: Element) => getComputedStyle(l).backgroundPositionX;
+		for (const i of [2, 4]) {
+			expect(rules(lines[i])).toBe(rules(lines[0]));
+			expect(textLeft(lines[i])).toBe(textLeft(lines[0]));
+		}
+		unloadTokens();
+	});
+
 	it('draws a lazy line at the level of the paragraph it goes on in, and no lines on empty lines at the end', async () => {
 		const unloadTokens = loadTokens();
 		el = await make('syntax="hidden" readonly');

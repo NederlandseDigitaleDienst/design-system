@@ -68,6 +68,9 @@ function quoteLine(columns: number[]): Decoration {
 	}));
 }
 const quoteMark = Decoration.mark({ class: 'cm-md-quote-mark-hidden' });
+// A `>` with no space after it gets the room of one, since ">>" is "> >" in the
+// result, so every level is a step of the same width.
+const quoteGap = Decoration.mark({ class: 'cm-md-quote-gap' });
 // With its backticks hidden, inline code gets room inside its tint as padding on
 // the text. Not as a widget: Safari measured the selection wrong beside one.
 const bareCode = Decoration.mark({ class: 'cm-md-code-bare' });
@@ -271,15 +274,17 @@ function buildHidden(view: EditorView): DecorationSet {
 						const spare = spareSpaces(line.text, marks);
 						const hidden = spare.reduce((sum, [from, to]) => sum + to - from, 0);
 						for (const [from, to] of spare) ranges.push(hideMark.range(lineFrom + from, lineFrom + to));
-						const own = marks.map((column) => column - spare.filter(([from]) => from < column).reduce((sum, [from, to]) => sum + to - from, 0));
+						const tight = marks.filter((column) => /[^ \t]/.test(line.text.charAt(column + 1)));
+						for (const column of tight) ranges.push(quoteGap.range(lineFrom + column, lineFrom + column + 1));
+						const own = marks.map((column) => column - spare.filter(([from]) => from < column).reduce((sum, [from, to]) => sum + to - from, 0) + tight.filter((mark) => mark < column).length);
 						const depth = Math.max(1, depths.get(lineFrom) ?? 0);
-						const prefix = prefixLength(line.text) - hidden;
+						const prefix = prefixLength(line.text) - hidden + tight.length;
 						// A line without `>` lines up under the levels of the line above it.
 						const rules = (own.length ? own : last).slice(0, depth);
 						while (rules.length < depth) rules.push(rules.length ? rules[rules.length - 1] + QUOTE_STEP : 0);
 						const missing = own.length ? (depth - own.length) * QUOTE_STEP : rules[rules.length - 1] + QUOTE_STEP;
 						if (missing > 0) ranges.push(lazyIndent(prefix, missing).range(lineFrom));
-						else if (hidden) ranges.push(prefixIndent(prefix).range(lineFrom));
+						else if (hidden || tight.length) ranges.push(prefixIndent(prefix).range(lineFrom));
 						ranges.push(quoteLine(rules).range(lineFrom));
 						last = rules;
 					});

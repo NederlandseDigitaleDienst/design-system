@@ -515,6 +515,10 @@ export const textEditorStyles = css`
 		background-size: var(--_text-editor-quote-border-width) 100%;
 	}
 
+	.cm-md-quote-gap {
+		padding-inline-end: var(--_text-editor-marker-advance);
+	}
+
 	:host .cm-md-quote-mark-hidden,
 	:host .cm-md-quote-mark-hidden * {
 		color: transparent;
