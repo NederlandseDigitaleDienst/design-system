@@ -112,7 +112,7 @@ function renderChoices(component: NLDDFileField): TemplateResult {
 		},
 	};
 	const parts = component._t('components.file-field.choose-files-or-folder-text').split(/(\{files\}|\{folder\})/);
-	return html`<span class="file-field__browse-action">${parts.map((part) => {
+	return html`<span class="file-field__choices">${parts.map((part) => {
 		const choice = choices[part];
 		if (!choice) {
 			return part;
