@@ -203,7 +203,7 @@ export const Meerdere = {
  * Met `directory` kun je ook een map aanleveren, met alles wat erin staat. Een
  * dialoog kiest bestanden of een map, nooit allebei, dus kiezen en wijzigen
  * openen een menu met de twee. Een vlak heeft ruimte voor allebei en toont
- * twee knoppen in de zin. Slepen kan met allebei tegelijk. Het veld noemt
+ * twee knoppen, met de sleephint eronder. Slepen kan met allebei tegelijk. Het veld noemt
  * de map ("site (124 bestanden)"), `paths` zegt waar elk bestand stond, en een
  * formulier stuurt elk bestand mee met zijn pad als naam.
  */

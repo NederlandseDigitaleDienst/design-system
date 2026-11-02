@@ -251,9 +251,6 @@ export const fileFieldStyles = css`
 		font: var(--_file-field-browse-action-font);
 	}
 
-	.file-field__choice {
-		vertical-align: middle;
-	}
 
 	.file-field__file-icon {
 		flex-shrink: 0;
@@ -301,9 +298,14 @@ export const fileFieldStyles = css`
 	}
 
 	@media (hover: none) {
-		.file-field__hint {
+		.file-field__hint,
+		.file-field__browse-surface .file-field__sentence {
 			display: none;
 		}
+	}
+
+	.file-field__choices {
+		max-width: 360px;
 	}
 
 	.file-field__name {

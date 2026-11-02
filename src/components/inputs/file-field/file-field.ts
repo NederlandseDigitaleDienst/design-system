@@ -33,8 +33,9 @@
  * `directory` offers a folder in the file dialog too. A dialog picks files or a
  * folder, never both, so with it the field says "Bestanden of map kiezen" and
  * a click opens a menu with both where it lands, as a context menu does; the
- * keyboard opens it under the button. An area has room for both, so there each
- * of the two words is a button and the surface around them only takes a drop.
+ * keyboard opens it under the button. An area has room for both, so there it
+ * shows "Bestanden kiezen" and "Map kiezen" as two buttons with the drop hint
+ * under them, and the surface around them only takes a drop.
  * "Wijzigen" opens the menu under itself. A folder is many files, so `directory`
  * takes several without `multiple`. Safari on iOS picks a folder as well; a
  * browser that cannot opens a dialog for files instead.
@@ -665,7 +666,7 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	 *  empty, or the first of its two choices in an area with `directory`, and
 	 *  "Wijzigen" once it has a file. */
 	private _chooseButton(): HTMLElement | null {
-		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse-button, .file-field__choice, nldd-button') ?? null;
+		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse-button, nldd-button') ?? null;
 	}
 
 	/**
