@@ -305,7 +305,7 @@ export const fileFieldStyles = css`
 
 	.file-field__choices {
 		display: flex;
-		margin-top: var(--primitives-space-8);
+		margin-top: var(--primitives-space-10);
 		margin-bottom: var(--primitives-space-8);
 		flex-wrap: wrap;
 		justify-content: center;
