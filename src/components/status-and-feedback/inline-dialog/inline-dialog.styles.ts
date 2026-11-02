@@ -14,6 +14,7 @@ export const inlineDialogStyles = css`
 		--_inline-dialog-icon-color: var(--semantics-content-color);
 		--_inline-dialog-text-font: var(--primitives-font-body-md-bold-tight);
 		--_inline-dialog-supporting-text-font: var(--primitives-font-body-sm-regular-tight);
+		--_inline-dialog-footer-max-width: var(--primitives-area-320);
 
 		${inheritedTextReset}
 		display: flex;
@@ -143,7 +144,12 @@ export const inlineDialogStyles = css`
 
 	.inline-dialog__footer {
 		width: 100%;
+		max-width: var(--_inline-dialog-footer-max-width);
 		padding-top: var(--primitives-space-16);
+	}
+
+	.inline-dialog--left-aligned .inline-dialog__footer {
+		max-width: none;
 	}
 
 	.inline-dialog__footer[hidden] {

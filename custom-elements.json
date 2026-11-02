@@ -42946,7 +42946,7 @@
               "expandedType": {
                 "text": "'' | 'center' | 'left'"
               },
-              "description": "Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Left alignment also lays the actions out in a row instead of stacked full-width."
+              "description": "Overrides the alignment of text, icon and actions. Unset (the default) derives it: content in the default slot means a task, which aligns left; a bare message stays centered. Centered, the actions stack at most 320px wide, even where two would fit side by side. Left-aligned, they take the full width of the dialog."
             }
           ],
           "superclass": {
@@ -46072,6 +46072,83 @@
           "declaration": {
             "name": "setState",
             "module": "src/utilities/element-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utilities/file-drag-and-drop.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "fileDragAndDropAvailable",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "description": "Whether files can be dragged onto the page on this device, so a hint for it is worth showing."
+        },
+        {
+          "kind": "class",
+          "description": "Renders the host again when dragging files becomes available or unavailable,\nsuch as when a trackpad is attached to a tablet, so a drop hint in its\naccessible name follows the visible one. Pass `onChange` for work that a\nrender does not redo.",
+          "name": "FileDragAndDropAvailabilityController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_query",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onChange",
+              "type": {
+                "text": "() => void"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostDisconnected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "fileDragAndDropAvailable",
+          "declaration": {
+            "name": "fileDragAndDropAvailable",
+            "module": "src/utilities/file-drag-and-drop.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FileDragAndDropAvailabilityController",
+          "declaration": {
+            "name": "FileDragAndDropAvailabilityController",
+            "module": "src/utilities/file-drag-and-drop.ts"
           }
         }
       ]
