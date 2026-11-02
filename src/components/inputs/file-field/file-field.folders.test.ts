@@ -242,6 +242,25 @@ describe('nldd-file-field – directory', () => {
 		expect(change.expanded).toBe(true);
 	});
 
+	it('offers both as buttons in the sentence of an area, without a menu', async () => {
+		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory variant="area"></nldd-file-field>');
+		await waitForUpdate(el);
+		const root = el.shadowRoot!;
+		expect(root.querySelector('.file-field__browse-button')).toBeNull();
+		const [files, folder] = [...root.querySelectorAll<HTMLButtonElement>('.file-field__choice')];
+		expect(root.querySelector('.file-field__sentence')!.textContent!.replace(/\s+/g, ' ')).toContain('Bestanden of map kiezen of sleep ze hierheen');
+		expect([files.getAttribute('aria-label'), folder.getAttribute('aria-label')]).toEqual(['Bestanden kiezen…, Site', 'Map kiezen…, Site']);
+		const pickFiles = vi.spyOn(root.querySelector<HTMLInputElement>('.file-field__input')!, 'click').mockImplementation(() => {});
+		const pickFolder = vi.spyOn(root.querySelector<HTMLInputElement>('.file-field__folder-input')!, 'click').mockImplementation(() => {});
+		folder.click();
+		expect(pickFolder).toHaveBeenCalledOnce();
+		files.click();
+		expect(pickFiles).toHaveBeenCalledOnce();
+		expect(menu()!.matches(':popover-open')).toBe(false);
+		el.focus();
+		expect(root.activeElement).toBe(files);
+	});
+
 	it('shows an icon on both options', async () => {
 		el = await fixture<NLDDFileField>('<nldd-file-field accessible-label="Site" directory></nldd-file-field>');
 		await waitForUpdate(el);

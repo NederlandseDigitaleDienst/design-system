@@ -31,10 +31,11 @@
  * cannot be a folder. Only a drop tells a folder apart, not the drag.
  *
  * `directory` offers a folder in the file dialog too. A dialog picks files or a
- * folder, never both, so with it choosing and changing open a menu with
- * "Bestanden kiezen" and "Map kiezen", and the field says "Bestanden of map
- * kiezen". A click opens the menu where it lands, as a context menu does; the
- * keyboard opens it under the button. A folder is many files, so `directory`
+ * folder, never both, so with it the field says "Bestanden of map kiezen" and
+ * a click opens a menu with both where it lands, as a context menu does; the
+ * keyboard opens it under the button. An area has room for both, so there each
+ * of the two words is a button and the surface around them only takes a drop.
+ * "Wijzigen" opens the menu under itself. A folder is many files, so `directory`
  * takes several without `multiple`. Safari on iOS picks a folder as well; a
  * browser that cannot opens a dialog for files instead.
  *
@@ -72,7 +73,7 @@
  * @attr {string} size - Field size: 'md' (default) | 'sm'. Set automatically by nldd-form-field.
  * @attr {string} accept - Comma-separated list of accepted file types, forwarded to the input (e.g. ".pdf,image/*")
  * @attr {boolean} multiple - Allows choosing more than one file, and dropping a folder
- * @attr {boolean} directory - Offers a folder beside files: choosing and changing open a menu with both, since one dialog picks either. Takes several files, as `multiple` does
+ * @attr {boolean} directory - Offers a folder beside files, since one dialog picks either: choosing and changing open a menu with both, and an area shows a button for each. Takes several files, as `multiple` does
  * @attr {string} accessible-label - Accessible label forwarded to the inner input. Set automatically by nldd-form-field.
  * @attr {string} input-id - Sets the id on the native input. Set automatically by nldd-form-field.
  * @attr {boolean} valid - Marks the field as valid; shows a check icon on the right, like nldd-dropdown
@@ -661,9 +662,10 @@ export class NLDDFileField extends DescribedBy(FormAssociated(LitElement)) {
 	}
 
 	/** The button that opens the dialog: the whole surface while the field is
-	 *  empty, "Wijzigen" once it has a file. */
+	 *  empty, or the first of its two choices in an area with `directory`, and
+	 *  "Wijzigen" once it has a file. */
 	private _chooseButton(): HTMLElement | null {
-		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse-button, nldd-button') ?? null;
+		return this.shadowRoot?.querySelector<HTMLElement>('.file-field__browse-button, .file-field__choice, nldd-button') ?? null;
 	}
 
 	/**

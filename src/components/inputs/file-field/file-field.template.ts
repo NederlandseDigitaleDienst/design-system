@@ -94,9 +94,41 @@ function dragVariants(component: NLDDFileField, dragText: string, dropText: stri
 	return variants;
 }
 
+/** "{files} of {folder} kiezen" with a button on each of the two words, for an
+ *  area with `directory`: room enough to offer both without a menu. */
+function renderChoices(component: NLDDFileField): TemplateResult {
+	const choices: Record<string, { text: string; name: string; choose: () => void }> = {
+		'{files}': {
+			text: component._t('components.file-field.files-choice-action'),
+			name: component._t('components.file-field.files-menu-action'),
+			choose: () => component._chooseFiles(),
+		},
+		'{folder}': {
+			text: component._t('components.file-field.folder-choice-action'),
+			name: component._t('components.file-field.folder-menu-action'),
+			choose: () => component._chooseFolder(),
+		},
+	};
+	const parts = component._t('components.file-field.choose-files-or-folder-text').split(/(\{files\}|\{folder\})/);
+	return html`<span class="file-field__browse-action">${parts.map((part) => {
+		const choice = choices[part];
+		if (!choice) {
+			return part;
+		}
+		return html`<button class="file-field__choice"
+			type="button"
+			aria-label=${[choice.name, component.accessibleLabel].filter(Boolean).join(', ')}
+			?disabled=${component.disabled}
+			@click=${choice.choose}
+		>${choice.text}</button>`;
+	})}</span>`;
+}
+
 /** The empty field is one button over the whole surface, read as one sentence:
  *  "Bestand kiezen of sleep het hierheen". The validation icon sits inside it,
- *  so a press on the icon opens the dialog too. */
+ *  so a press on the icon opens the dialog too. An area with `directory` has a
+ *  button on each choice instead, and the surface around them is only a place
+ *  to drop. */
 function renderBrowse(component: NLDDFileField): TemplateResult {
 	const drags = dragVariants(
 		component,
@@ -107,11 +139,21 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 			? component._t('components.file-field.drop-here-multiple-text')
 			: component._t('components.file-field.drop-here-text'),
 	);
-	const sentence = html`<span class="file-field__browse-action">${component._chooseLabel()}</span> <span class="file-field__hint">${component._multiple
+	const area = component.variant === 'area';
+	const choices = area && component.directory;
+	const sentence = html`${choices
+		? renderChoices(component)
+		: html`<span class="file-field__browse-action">${component._chooseLabel()}</span>`} <span class="file-field__hint">${component._multiple
 		? component._t('components.file-field.drop-hint-multiple-lowercase-text')
 		: component._t('components.file-field.drop-hint-lowercase-text')}</span>`;
-	const area = component.variant === 'area';
 	const types = area ? component._acceptTypes() : null;
+	const content = html`${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}<span class="file-field__sentence">${renderStack([
+		{ content: sentence, active: !drags.some((variant) => variant.active) },
+		...drags,
+	])}</span>${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}${renderValidationIcon(component)}`;
+	if (choices) {
+		return html`<div class="file-field__browse-surface">${content}</div>`;
+	}
 	return html`
 		<button class="file-field__browse-button"
 			type="button"
@@ -120,10 +162,7 @@ function renderBrowse(component: NLDDFileField): TemplateResult {
 			aria-expanded=${component.directory ? String(component._menuOpen) : nothing}
 			?disabled=${component.disabled}
 			@click=${(e: Event) => component._handleChoose(e)}
-		>${area ? html`<nldd-icon class="file-field__upload-icon" icon="upload-to-cloud" aria-hidden="true"></nldd-icon>` : nothing}<span class="file-field__sentence">${renderStack([
-			{ content: sentence, active: !drags.some((variant) => variant.active) },
-			...drags,
-		])}</span>${types ? html`<span class="file-field__accepted-types">${component._t('components.file-field.accepted-types-text', { types })}</span>` : nothing}${renderValidationIcon(component)}</button>
+		>${content}</button>
 	`;
 }
 

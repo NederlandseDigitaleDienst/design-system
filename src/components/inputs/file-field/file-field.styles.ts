@@ -144,6 +144,7 @@ export const fileFieldStyles = css`
 	}
 
 	.file-field__browse-button,
+	.file-field__browse-surface,
 	.file-field__replace-area {
 		box-sizing: border-box;
 		display: flex;
@@ -248,6 +249,37 @@ export const fileFieldStyles = css`
 	.file-field__browse-action {
 		color: var(--_file-field-browse-action-color);
 		font: var(--_file-field-browse-action-font);
+	}
+
+	.file-field__choice {
+		margin: 0;
+		border: none;
+		border-radius: var(--primitives-corner-radius-xs);
+		padding: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+		cursor: pointer;
+	}
+
+	.file-field__choice:hover {
+		color: var(--semantics-links-is-hovered-color);
+	}
+
+	.file-field__choice:active {
+		color: var(--semantics-links-is-active-color);
+	}
+
+	.file-field__choice:focus-visible {
+		outline: var(--semantics-focus-ring-outline);
+		outline-offset: var(--semantics-focus-ring-outline-offset);
+		box-shadow: var(--semantics-focus-ring-box-shadow);
+	}
+
+	.file-field__choice:focus:not(:focus-visible) {
+		outline: none;
 	}
 
 	.file-field__file-icon {
@@ -380,7 +412,7 @@ export const fileFieldStyles = css`
 		min-height: var(--_file-field-area-min-height);
 	}
 
-	.file-field--area :is(.file-field__browse-button, .file-field__replace-area, .file-field__chosen-file) {
+	.file-field--area :is(.file-field__browse-button, .file-field__browse-surface, .file-field__replace-area, .file-field__chosen-file) {
 		padding: var(--_file-field-area-padding);
 		flex-direction: column;
 		gap: var(--_file-field-area-gap);
