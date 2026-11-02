@@ -229,6 +229,12 @@ const markDecorationPlugin = ViewPlugin.fromClass(
 // "- > ", "> - "): a deeper level wraps under its own text, and a quote line
 // drawn at the column of its `>` lands on it.
 const HANGING_RE = /^((?:[ \t]*(?:[-*+][ \t]+(?:\[[ xX]\][ \t]+)?|\d+[.)][ \t]+|>[ \t]?))+)/;
+
+/** The length of the list and quote markers a line starts with, which the
+ *  hanging indent of the line counts in mono advances. */
+export function prefixLength(text: string): number {
+	return HANGING_RE.exec(text)?.[1].length ?? 0;
+}
 const prefixMonoDeco = Decoration.mark({ class: 'cm-md-listprefix' });
 const hangingLineCache: Record<number, Decoration> = {};
 function hangingLineDeco(length: number): Decoration {

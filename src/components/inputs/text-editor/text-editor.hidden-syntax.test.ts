@@ -215,6 +215,36 @@ describe('nldd-text-editor syntax="hidden"', () => {
 		unloadTokens();
 	});
 
+	it('hides the spare spaces after a >, which the result ignores, and keeps those of code', async () => {
+		const unloadTokens = loadTokens();
+		el = await make();
+		el.value = '> > Zonder\n>   > Met\n\n>     code\n\nSlot.';
+		await el.updateComplete;
+		await waitForUpdate(el);
+		caret(el, el.view.state.doc.length);
+		const lines = () => [...el.view.contentDOM.querySelectorAll('.cm-line')];
+		const textLeft = (l: Element) => {
+			const walker = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+			for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+				const at = n.textContent!.search(/[A-Za-z]/);
+				if (at === -1) continue;
+				const range = document.createRange();
+				range.setStart(n, at);
+				range.setEnd(n, at + 1);
+				return Math.round(range.getBoundingClientRect().left);
+			}
+			return NaN;
+		};
+		const rules = (l: Element) => getComputedStyle(l).backgroundPositionX;
+		expect(textLeft(lines()[1])).toBe(textLeft(lines()[0]));
+		expect(rules(lines()[1])).toBe(rules(lines()[0]));
+		expect(lines()[1].textContent).toBe('> > Met');
+		expect(lines()[3].textContent).toBe('>     code');
+		caret(el, el.value.indexOf('Met'));
+		expect(lines()[1].textContent).toBe('>   > Met');
+		unloadTokens();
+	});
+
 	it('keeps hiding the marks of bold inside a quote the caret is in', async () => {
 		el = await make();
 		el.value = '> Een **vet** woord\n> en meer\n\nSlot.';
